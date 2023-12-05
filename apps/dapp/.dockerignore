@@ -1,0 +1,6 @@
+Dockerfile
+.env
+.github
+docker-compose.yml
+deploy
+node_modules
