@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  dapp:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/dapp.Dockerfile
+      target: application
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=${WEB_API_PORT}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PORT=5432
+    command: pm2-runtime apps/dapp/build/index.js
+
+  notification:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/notification.Dockerfile
+      target: application
+    expose:
+      - "9000"
+    ports:
+      - "4000:4000"
+      - "9000:9000"
+    environment:
+      - INTERNAL_API_PORT=${NOTIFICATION_INTERNAL_API_PORT}
+      - WEBSOCKET_PORT=${NOTIFICATION_WEBSOCKET_PORT}
+    command: pm2-runtime apps/notification/dist/index.js
+
+  transaction-stream:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/transaction-stream.Dockerfile
+      target: application
+    environment:
+      - GATEWAY_BASE_URL=${GATEWAY_BASE_URL}
+      - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    command: pm2-runtime apps/transaction-stream/dist/index.js
+
+  workers:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/workers.Dockerfile
+      target: application
+    environment:
+      - GATEWAY_BASE_URL=${GATEWAY_BASE_URL}
+      - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - NOTIFICATION_INTERNAL_API_PORT=${NOTIFICATION_INTERNAL_API_PORT}
+      - NOTIFICATION_WEBSOCKET_HOST=${NOTIFICATION_WEBSOCKET_HOST}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PORT=5432
+    command: pm2-runtime apps/workers/dist/index.js
