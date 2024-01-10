@@ -4,14 +4,19 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
+    "dev:dapp": "turbo dev --filter dapp",
+    "dev:notification": "turbo dev --filter notification",
+    "db:build": "turbo db:build --filter database",
+    "db:push": "turbo db:push --filter database",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "@repo/eslint-config": "*",
-    "@repo/typescript-config": "*",
+    "@commitlint/cli": "^18.4.4",
+    "@commitlint/config-conventional": "^18.4.4",
+    "husky": "^8.0.3",
     "prettier": "^3.1.0",
-    "turbo": "latest"
+    "turbo": "^1.11.3"
   },
   "engines": {
     "node": ">=18"
