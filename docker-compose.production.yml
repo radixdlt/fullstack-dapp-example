@@ -19,6 +19,14 @@ services:
       - POSTGRES_PORT=5432
     command: pm2-runtime apps/dapp/build/index.js
 
+  storybook:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/dapp.Dockerfile
+      target: storybook
+    ports:
+      - "3001:80"
+
   notification:
     build:
       context: ./
