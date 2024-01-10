@@ -5,7 +5,7 @@ module.exports = {
     "scope-enum": () => [
       2,
       "always",
-      ["web", "notification", "stream", "workers", "db", "core"],
+      ["dapp", "notification", "stream", "workers", "db", "core"],
     ],
     "scope-empty": [2, "never"],
     "type-enum": () => [
