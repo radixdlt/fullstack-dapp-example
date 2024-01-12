@@ -25,3 +25,4 @@ jobs:
         run: npm run build
         env:
           PUBLIC_NETWORK_ID: 2
+          LOG_LEVEL: debug
