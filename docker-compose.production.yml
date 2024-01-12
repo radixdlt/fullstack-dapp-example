@@ -6,6 +6,8 @@ services:
       context: ./
       dockerfile: ./dockerfiles/dapp.Dockerfile
       target: application
+      args:
+        PUBLIC_NETWORK_ID: 2
     expose:
       - "3000"
     ports:
@@ -17,6 +19,10 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_PORT=5432
+      - JWT_SECRET=${JWT_SECRET}
+      - EXPECTED_ORIGIN=http://localhost:3000
+      - PUBLIC_DAPP_DEFINITION_ADDRESS=${PUBLIC_DAPP_DEFINITION_ADDRESS}
+      - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
     command: pm2-runtime apps/dapp/build/index.js
 
   storybook:

@@ -1,6 +1,6 @@
 FROM node:21.4-bullseye-slim AS base
 
-ARG NETWORK_NAME
+ARG PUBLIC_NETWORK_ID
 ARG NPM_LOCAL_CACHE=.cache
 
 FROM base AS prepare-build

@@ -3,8 +3,8 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev",
-    "dev:dapp": "turbo dev --filter dapp",
+    "dev": "npx --node-options='-r dotenv/config' turbo dev",
+    "dev:dapp": "npx --node-options='-r dotenv/config' turbo dev --filter dapp",
     "dev:notification": "turbo dev --filter notification",
     "db:build": "turbo db:build --filter database",
     "db:push": "turbo db:push --filter database",
@@ -14,6 +14,7 @@
   "devDependencies": {
     "@commitlint/cli": "^18.4.4",
     "@commitlint/config-conventional": "^18.4.4",
+    "@types/jsonwebtoken": "^9.0.5",
     "husky": "^8.0.3",
     "prettier": "^3.1.0",
     "turbo": "^1.11.3"
