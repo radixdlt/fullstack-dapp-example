@@ -9,4 +9,5 @@ export const config = {
     port: parseInt(process.env.REDIS_PORT ?? "6379", 10),
     password: process.env.REDIS_PASSWORD ?? "password",
   },
+  logLevel: process.env.LOG_LEVEL!,
 };

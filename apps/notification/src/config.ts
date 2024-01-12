@@ -14,4 +14,5 @@ export const config = {
       ? parseInt(process.env.INTERNAL_API_PORT)
       : 4000,
   },
+  logLevel: process.env.LOG_LEVEL!,
 };

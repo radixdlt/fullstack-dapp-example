@@ -18,5 +18,6 @@ export const config = {
 		expectedOrigin: process.env.EXPECTED_ORIGIN!,
 		networkId: parseInt(process.env.PUBLIC_NETWORK_ID!, 10),
 		dAppDefinitionAddress: process.env.PUBLIC_DAPP_DEFINITION_ADDRESS!
-	}
+	},
+	logLevel: process.env.LOG_LEVEL!
 };
