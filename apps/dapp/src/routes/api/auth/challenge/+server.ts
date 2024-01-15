@@ -5,12 +5,12 @@ import { appLogger } from '$lib/helpers/logger';
 
 /** @type {import('./$types').RequestHandler} */
 export const GET: RequestHandler = async () => {
-  const result = await authController.createChallenge();
+	const result = await authController.createChallenge();
 
-  if (result.isErr()) {
-    appLogger.error(result.error);
-    throw error(result.error.httpResponseCode, result.error.reason);
-  }
+	if (result.isErr()) {
+		appLogger.error(result.error);
+		throw error(result.error.httpResponseCode, result.error.reason);
+	}
 
-  return json(result.value.data, { status: result.value.httpResponseCode });
+	return json(result.value.data, { status: result.value.httpResponseCode });
 };
