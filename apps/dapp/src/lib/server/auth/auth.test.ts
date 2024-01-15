@@ -34,7 +34,7 @@ describe('AuthController', () => {
 
 	it('should create a challenge', async () => {
 		mockCtx.prisma.challenge.create.mockResolvedValue(
-			Promise.resolve({ challenge: 'deedbeef' }) as any
+			Promise.resolve({ challenge: 'deadbeef' }) as any
 		);
 
 		const result = await controller.createChallenge();
@@ -43,7 +43,7 @@ describe('AuthController', () => {
 
 		const { data, httpResponseCode } = result.value;
 
-		expect(data.challenge).toBe('deadbeef');
+		expect(data.challenge).eq('deadbeef');
 		expect(httpResponseCode).toBe(201);
 	});
 
