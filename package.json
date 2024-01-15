@@ -5,7 +5,7 @@
     "build": "turbo build",
     "dev": "npx --node-options='-r dotenv/config' turbo dev",
     "dev:dapp": "npx --node-options='-r dotenv/config' turbo dev --filter dapp",
-    "dev:notification": "turbo dev --filter notification",
+    "dev:notification": "npx --node-options='-r dotenv/config' turbo dev --filter notification",
     "db:build": "turbo db:build --filter database",
     "db:push": "turbo db:push --filter database",
     "lint": "turbo lint",

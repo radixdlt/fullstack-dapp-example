@@ -1,52 +1,60 @@
-import { config } from "./config";
-import { logger } from "./helpers/logger";
+import { config } from './config';
+import { logger } from './helpers/logger';
+import cookie from 'cookie';
 
-import uWS from "uWebSockets.js";
+import uWS from 'uWebSockets.js';
+import { verifyToken } from './helpers/verifyAuthToken';
 const websocketPort = config.websocket.port;
-const internalApiPort = config.internalApi.port;
 
-const webSocketApp = uWS
-  .App()
-  .ws("/*", {
-    /* Options */
-    compression: uWS.SHARED_COMPRESSOR,
-    maxPayloadLength: 16 * 1024 * 1024,
-    idleTimeout: 10,
-    /* Handlers */
-    open: (ws) => {
-      logger.debug("A WebSocket connected!");
-    },
-    message: (ws, message, isBinary) => {
-      /* Ok is false if backpressure was built up, wait for drain */
-      let ok = ws.send(message, isBinary);
-    },
-    drain: (ws) => {
-      logger.debug("WebSocket backpressure: " + ws.getBufferedAmount());
-    },
-    close: (ws, code, message) => {
-      logger.debug("WebSocket closed");
-    },
-  })
-  .any("/*", (res, req) => {
-    res.end("Nothing to see here!");
-  })
-  .listen(websocketPort, (token) => {
-    if (token) {
-      logger.debug("websocket app listening to port " + websocketPort);
-    } else {
-      logger.debug("websocket app failed to listen to port " + websocketPort);
-    }
-  });
+const activeSockets = new Map<string, uWS.WebSocket<{ identityAddress: string }>>();
 
-const internalApi = uWS
-  .App()
-  .any("/*", (res, req) => {
-    res.end("Nothing to see here!");
-  })
-  .listen(internalApiPort, (token) => {
-    if (token) {
-      logger.debug("internal api listening to port " + internalApiPort);
-    } else {
-      logger.debug("internal api failed to listen to port " + internalApiPort);
-    }
-  });
+uWS
+	.App()
+	.ws('/*', {
+		/* Options */
+		compression: uWS.SHARED_COMPRESSOR,
+		maxPayloadLength: 16 * 1024 * 1024,
+		idleTimeout: 10,
+		/* Handlers */
+		upgrade: (res, req, context) => {
+			const cookies = cookie.parse(req.getHeader('cookie'));
+
+			verifyToken(cookies.jwt)
+				.map((identityAddress) => {
+					res.upgrade(
+						{
+							identityAddress
+						},
+						req.getHeader('sec-websocket-key'),
+						req.getHeader('sec-websocket-protocol'),
+						req.getHeader('sec-websocket-extensions'),
+						context
+					);
+				})
+				.mapErr((error) => {
+					logger.debug({ error, reason: 'failedToVerifyAuthToken', method: 'upgrade' });
+					res.writeStatus('401').end();
+				});
+		},
+		open: (ws: uWS.WebSocket<{ identityAddress: string }>) => {
+			logger.debug(ws.getUserData());
+			activeSockets.set(ws.getUserData().identityAddress, ws);
+		},
+		message: () => {
+			/* Ok is false if backpressure was built up, wait for drain */
+		},
+		drain: (ws) => {
+			logger.debug('WebSocket backpressure: ' + ws.getBufferedAmount());
+		},
+		close: (ws) => {
+			logger.debug('WebSocket closed');
+			activeSockets.delete(ws.getUserData().identityAddress);
+		}
+	})
+	.listen(websocketPort, (token) => {
+		if (token) {
+			logger.debug('websocket app listening to port ' + websocketPort);
+		} else {
+			logger.debug('websocket app failed to listen to port ' + websocketPort);
+		}
+	});

@@ -24,4 +24,11 @@ const logout = () =>
 		})
 	);
 
-export const authApi = { login, logout, createChallenge } as const;
+const authToken = () =>
+	fetchWrapper<{ authToken: string }>(
+		fetch('/api/auth/token', {
+			method: 'get'
+		})
+	).map(({ data }) => data.authToken);
+
+export const authApi = { login, logout, createChallenge, authToken } as const;

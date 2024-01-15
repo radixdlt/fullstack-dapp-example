@@ -24,7 +24,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (event.route.id?.includes('(protected)')) {
 		const result = authController
 			.renewAuthToken(event.cookies)
-			.andThen(authController.verifyAuthToken);
+			.andThen((authToken) =>
+				authController
+					.verifyAuthToken(authToken)
+					.map((identityAddress) => ({ identityAddress, authToken }))
+			);
 
 		if (result.isErr()) {
 			event.cookies.delete('jwt', { path: '/' });
@@ -36,7 +40,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 			});
 		}
 
-		event.locals.identityAddress = result.value;
+		event.locals.identityAddress = result.value.identityAddress;
+		event.locals.authToken = result.value.authToken;
 
 		return await resolve(event);
 	}

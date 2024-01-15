@@ -43,7 +43,7 @@ describe('AuthController', () => {
 
 		const { data, httpResponseCode } = result.value;
 
-		expect(data.challenge).toBeDefined();
+		expect(data.challenge).toBe('deadbeef');
 		expect(httpResponseCode).toBe(201);
 	});
 

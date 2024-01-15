@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3.9'
 
 services:
   dapp:
@@ -9,9 +9,9 @@ services:
       args:
         PUBLIC_NETWORK_ID: 2
     expose:
-      - "3000"
+      - '3000'
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - PORT=${WEB_API_PORT}
       - POSTGRES_DATABASE=${POSTGRES_DATABASE}
@@ -32,7 +32,7 @@ services:
       dockerfile: ./dockerfiles/dapp.Dockerfile
       target: storybook
     ports:
-      - "3001:80"
+      - '3001:80'
 
   notification:
     build:
@@ -40,13 +40,14 @@ services:
       dockerfile: ./dockerfiles/notification.Dockerfile
       target: application
     expose:
-      - "9000"
+      - '9000'
     ports:
-      - "4000:4000"
-      - "9000:9000"
+      - '4000:4000'
+      - '9000:9000'
     environment:
       - INTERNAL_API_PORT=${NOTIFICATION_INTERNAL_API_PORT}
       - WEBSOCKET_PORT=${NOTIFICATION_WEBSOCKET_PORT}
+      - JWT_SECRET=${JWT_SECRET}
       - LOG_LEVEL=debug
     command: pm2-runtime apps/notification/dist/index.js
 

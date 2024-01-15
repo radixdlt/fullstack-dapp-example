@@ -5,6 +5,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			identityAddress: string;
+			authToken: string;
 		}
 		// interface PageData {}
 		// interface Platform {}
