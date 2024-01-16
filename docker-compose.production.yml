@@ -7,7 +7,8 @@ services:
       dockerfile: ./dockerfiles/dapp.Dockerfile
       target: application
       args:
-        PUBLIC_NETWORK_ID: 2
+        - PUBLIC_NETWORK_ID=2
+        - PUBLIC_LOG_LEVEL=debug
     expose:
       - '3000'
     ports:
@@ -23,7 +24,8 @@ services:
       - EXPECTED_ORIGIN=http://localhost:3000
       - PUBLIC_DAPP_DEFINITION_ADDRESS=${PUBLIC_DAPP_DEFINITION_ADDRESS}
       - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
-      - LOG_LEVEL=debug
+      - PUBLIC_LOG_LEVEL=debug
+      - PUBLIC_NOTIFICATION_URL=${PUBLIC_NOTIFICATION_URL}
     command: pm2-runtime apps/dapp/build/index.js
 
   storybook:
