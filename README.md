@@ -57,6 +57,11 @@ npm update PACKAGE_NAME --workspace=NAME_OF_APP
 npm uninstall PACKAGE_NAME --workspace=NAME_OF_APP
 ```
 
+## User authentication
+
+![user auth flow](docs/user-authentication-flow.png)
+![notification auth flow](docs/notification-authentication-flow.png)
+
 ## Architecture
 
 ![architecture diagram](docs/architecture-diagram.png)

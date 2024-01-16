@@ -16,10 +16,16 @@ jobs:
       - name: Use Node.js
         uses: RDXWorks-actions/setup-node@main
         with:
-          node-version: "20.3.0"
+          node-version: '20.3.0'
 
       - name: Install dependencies
         run: npm install
 
+      - name: Unit tests
+        run: npm run test
+
       - name: Build
         run: npm run build
+        env:
+          PUBLIC_NETWORK_ID: 2
+          PUBLIC_LOG_LEVEL: debug

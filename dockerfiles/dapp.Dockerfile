@@ -1,7 +1,11 @@
 FROM node:21.4-bullseye-slim AS base
 
-ARG NETWORK_NAME
+ARG PUBLIC_NETWORK_ID
+ARG PUBLIC_LOG_LEVEL
 ARG NPM_LOCAL_CACHE=.cache
+
+ENV PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
+ENV PUBLIC_LOG_LEVEL=${PUBLIC_LOG_LEVEL}
 
 FROM base AS prepare-build
 
@@ -21,7 +25,6 @@ COPY --from=prepare-build /app/out/package-lock.json ./package-lock.json
 RUN npm install
 
 COPY --from=prepare-build /app/out/full/ .
-RUN echo "PUBLIC_NETWORK_NAME=$NETWORK_NAME" >> apps/dapp/.env.production
 
 RUN npx turbo run build --filter=dapp
 
