@@ -112,6 +112,7 @@ The commit contains the following structural elements, to communicate intent to 
 
 - **feat**: introduces a new feature to the codebase (this correlates with MINOR in Semantic Versioning).
 - **fix**: patches a bug in your codebase (this correlates with PATCH in Semantic Versioning).
+- **code**: code logic addition that is not a feature.
 - **build**: somehow related to building the applications.
 - **chore**: updating dependencies or similar minor change.
 - **ci**: changes related to CI/CD
