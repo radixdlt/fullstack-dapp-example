@@ -1,0 +1,41 @@
+image: 
+    tag: {{ .StateValues.ci.tag }}
+
+params:
+  POSTGRES_DATABASE: radquest
+  POSTGRES_HOST: radquest-mainnet-rds.rtlj-prod.internal
+  POSTGRES_PORT: 5432
+  NOTIFICATION_INTERNAL_API_PORT: 4000
+  NOTIFICATION_WEBSOCKET_HOST: 9000
+  GATEWAY_BASE_URL: https://mainnet.radixdlt.com
+  REDIS_HOST: radquest-mainnet-redis.rtlj-prod.internal
+  REDIS_PORT: 6379
+  REDIS_PASSWORD: 
+  LOG_LEVEL: debug
+
+secrets:
+  - name: postgres-user
+    variable: "POSTGRES_USER"
+    path: "rtlj-prod/eks/radquest/mainnet/postgres"
+    secretProperty: "postgresqlUsername"
+    secretName: "database-user"
+  - name: postgres-pass
+    variable: "POSTGRES_PASSWORD"
+    path: "rtlj-prod/eks/radquest/mainnet/postgres"
+    secretProperty: "postgresql-password"
+    secretName: "database-password"
+
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi

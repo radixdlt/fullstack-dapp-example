@@ -1,0 +1,22 @@
+image: 
+    tag: {{ .StateValues.ci.tag }}
+
+params:
+  GATEWAY_BASE_URL: https://babylon-stokenet-gateway.radixdlt.com
+  REDIS_HOST: radquest-stokenet-redis.rtlj-prod.internal
+  REDIS_PORT: 6379
+  REDIS_PASSWORD: ""
+  LOG_LEVEL: debug
+
+secrets:
+
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi

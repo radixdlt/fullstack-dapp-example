@@ -1,0 +1,30 @@
+image: 
+    tag: {{ .StateValues.ci.tag }}
+
+params:
+  POSTGRES_DATABASE: radquest
+  POSTGRES_HOST: postgres-postgresql
+  POSTGRES_PORT: 5432
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: secretString123
+  DATABASE_URL: "postgresql://postgres:secretString123@postgres-postgresql:5432/radquest?schema=public"
+  NOTIFICATION_INTERNAL_API_PORT: 4000
+  NOTIFICATION_WEBSOCKET_HOST: 9000
+  GATEWAY_BASE_URL: "https://babylon-stokenet-gateway.radixdlt.com"
+  REDIS_HOST: "redis-master"
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: ""
+  LOG_LEVEL: debug
+
+secrets:
+
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi

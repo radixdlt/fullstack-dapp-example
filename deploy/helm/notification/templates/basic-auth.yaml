@@ -1,0 +1,21 @@
+{{- if .Values.ingress.basic_auth.enabled -}}
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  # name of ExternalSecret under CRD section
+  name: notification-basic-auth
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: main
+    kind: ClusterSecretStore
+  target:
+    # name of actual secret under Config/Secrets, not required will use .metadata.name
+    creationPolicy: Owner
+  data:
+  - secretKey: auth
+    remoteRef:
+      key: {{ .Values.ingress.basic_auth.secret_name }}
+      version: "AWSCURRENT"
+      property: auth
+{{- end }}

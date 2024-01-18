@@ -1,0 +1,88 @@
+helmDefaults:
+  verify: false
+  wait: false
+  timeout: 600
+  recreatePods: false
+  force: false
+  createNamespace: false
+environments:
+  dev: {}
+  pr: {}
+  stokenet: {}
+  mainnet: {}
+repositories:
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+  - name: rdx-works
+    url: https://raw.githubusercontent.com/radixdlt/helm-charts/master/
+    username: {{ requiredEnv "HELM_GH_USER" }}
+    password: {{ requiredEnv "HELM_GH_PASS" }}
+releases:
+  - name: dapp
+    chart: ./dapp
+    values:
+      - environments/{{ .Environment.Name }}/dapp.yaml.gotmpl
+
+  - name: dapp-storybook
+    installed: {{ and (ne .Environment.Name "mainnet") (ne .Environment.Name "stokenet") }}
+    chart: ./dapp-storybook
+    values:
+      - environments/{{ .Environment.Name }}/dapp-storybook.yaml.gotmpl
+
+  - name: notification
+    chart: ./notification
+    values:
+      - environments/{{ .Environment.Name }}/notification.yaml.gotmpl
+
+  - name: transaction-stream
+    chart: ./transaction-stream
+    values:
+      - environments/{{ .Environment.Name }}/transaction-stream.yaml.gotmpl
+
+  - name: worker
+    chart: ./worker
+    values:
+      - environments/{{ .Environment.Name }}/worker.yaml.gotmpl
+
+  - name: postgres
+    chart: bitnami/postgresql
+    version:  12.12.10
+    installed: {{ eq .Environment.Name "pr" }}
+    values:
+      - auth:
+          postgresPassword: "secretString123"
+          database: radquest
+        primary:
+          persistence:
+            enabled: false
+
+  - name: redis
+    chart: bitnami/redis
+    version:  18.6.4
+    installed: {{ eq .Environment.Name "pr" }}
+    values:
+      - architecture: standalone
+        auth:
+          enabled: false
+        master:
+          persistence:
+            enabled: false
+
+  - name: redis-commander
+    chart: ./redis-commander
+    values:
+      - environments/{{ .Environment.Name }}/redis-commander.yaml.gotmpl
+
+  - name: developer-access
+    chart: rdx-works/developer-access
+    version: 1.0.0
+    values:
+      - project: radquest
+      - environments/{{ .Environment.Name }}/developer-access.yaml.gotmpl
+
+  - name: alertmanager
+    chart: rdx-works/alertmanager-configs
+    version: 1.1.0
+    installed: {{ ne .Environment.Name "pr" }}
+    values:
+      - environments/{{ .Environment.Name }}/alertmanager.yaml.gotmpl

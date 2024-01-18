@@ -1,0 +1,32 @@
+image:
+  repository: rediscommander/redis-commander
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+replicaCount: 1
+
+nameOverride: "redis-commander"
+
+fullnameOverride: "redis-commander"
+
+params: {}
+
+service:
+  type: ClusterIP
+  port: 3000
+
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

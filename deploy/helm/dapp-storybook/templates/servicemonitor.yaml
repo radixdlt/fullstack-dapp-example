@@ -1,0 +1,19 @@
+{{- if .Values.metrics.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "radquest-dapp-storybook.serviceAccountName" . }}
+  labels:
+    release: prometheus-operator
+    {{- include "radquest-dapp-storybook.labels" . | nindent 4 }}
+spec:
+  endpoints:
+  - port: metrics
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace | quote }}
+  selector:
+    matchLabels:
+      {{- include "radquest-dapp-storybook.selectorLabels" . | nindent 6 }}
+{{- end }}

@@ -1,0 +1,44 @@
+image: 
+    tag: {{ .StateValues.ci.tag }}
+
+enable_db_migrations: true
+
+params:
+  PORT: 3000
+  POSTGRES_DATABASE: radquest
+  POSTGRES_HOST: postgres-postgresql
+  POSTGRES_PORT: 5432
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: secretString123
+  DATABASE_URL: "postgresql://postgres:secretString123@postgres-postgresql:5432/radquest?schema=public"
+  EXPECTED_ORIGIN: sea-urchin-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
+  PUBLIC_DAPP_DEFINITION_ADDRESS: 
+  PUBLIC_NETWORK_ID: 2
+  PUBLIC_NOTIFICATION_URL: sea-urchin-notification-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
+  JWT_SECRET: FkaGHXoq32rYBcEHwAn2rkhawtUCe4sE
+
+secrets:
+
+ingress:
+  enabled: false
+  basic_auth:
+    enabled: true
+    secret_name: rdx-works-main/eks/radquest/temp-basic-auth
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: dapp-basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: 'Auth Required'
+  hosts:
+    - host: sea-urchin-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+autoscaling:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
