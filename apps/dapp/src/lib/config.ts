@@ -6,14 +6,14 @@ import {
 	POSTGRES_PASSWORD,
 	POSTGRES_PORT,
 	POSTGRES_USER
-} from '$env/static/private';
+} from '$env/static/private'
 import {
 	PUBLIC_DAPP_DEFINITION_ADDRESS,
 	PUBLIC_LOG_LEVEL,
 	PUBLIC_NETWORK_ID
-} from '$env/static/public';
+} from '$env/static/public'
 
-export type Config = typeof config;
+export type Config = typeof config
 
 export const config = {
 	jwt: {
@@ -35,4 +35,4 @@ export const config = {
 		dAppDefinitionAddress: PUBLIC_DAPP_DEFINITION_ADDRESS
 	},
 	logLevel: PUBLIC_LOG_LEVEL
-};
+}

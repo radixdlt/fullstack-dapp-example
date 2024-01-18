@@ -8,4 +8,4 @@ export const config = {
 		password: process.env.REDIS_PASSWORD ?? 'password'
 	},
 	logLevel: process.env.LOG_LEVEL!
-};
+}

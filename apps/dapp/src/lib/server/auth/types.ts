@@ -1,1 +1,1 @@
-export type Challenge = { challenge: string; createdAt: Date };
+export type Challenge = { challenge: string; createdAt: Date }

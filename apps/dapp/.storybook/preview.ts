@@ -1,5 +1,5 @@
-import '../src/global.scss';
-import type { Preview } from '@storybook/svelte';
+import '../src/global.scss'
+import type { Preview } from '@storybook/svelte'
 
 const preview: Preview = {
 	parameters: {
@@ -29,6 +29,6 @@ const preview: Preview = {
 			}
 		}
 	}
-};
+}
 
-export default preview;
+export default preview

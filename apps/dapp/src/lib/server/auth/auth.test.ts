@@ -1,22 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { describe, it, expect, beforeEach } from 'vitest';
-import { AuthController } from './controller';
-import { AuthModel } from './model';
-import { type MockContext, type Context, createMockContext } from '$lib/db/context';
-import type { SignedChallenge } from '@radixdlt/radix-dapp-toolkit';
-import { AuthDbClient } from './db';
-import { createAppLogger } from '$lib/helpers/logger';
-import { UserModel } from '../user/model';
-import { UserDbClient } from '../user/db';
+import { describe, it, expect, beforeEach } from 'vitest'
+import { AuthController } from './controller'
+import { AuthModel } from './model'
+import { type MockContext, type Context, createMockContext } from '$lib/db/context'
+import type { SignedChallenge } from '@radixdlt/radix-dapp-toolkit'
+import { AuthDbClient } from './db'
+import { createAppLogger } from '$lib/helpers/logger'
+import { UserModel } from '../user/model'
+import { UserDbClient } from '../user/db'
 
-let mockCtx: MockContext;
-let ctx: Context;
-let controller: AuthController;
+let mockCtx: MockContext
+let ctx: Context
+let controller: AuthController
 
 describe('AuthController', () => {
 	beforeEach(() => {
-		mockCtx = createMockContext();
-		ctx = mockCtx as unknown as Context;
+		mockCtx = createMockContext()
+		ctx = mockCtx as unknown as Context
 
 		controller = AuthController({
 			authModel: AuthModel(AuthDbClient(ctx.prisma)),
@@ -29,23 +29,23 @@ describe('AuthController', () => {
 					'account_tdx_21_12x4zx09f8962a9wesfqvxaue0qn6m39r3cpysrjd6dtqppzhrkjrsr',
 				networkId: 33
 			}
-		});
-	});
+		})
+	})
 
 	it('should create a challenge', async () => {
 		mockCtx.prisma.challenge.create.mockResolvedValue(
 			Promise.resolve({ challenge: 'deadbeef' }) as any
-		);
+		)
 
-		const result = await controller.createChallenge();
+		const result = await controller.createChallenge()
 
-		if (result.isErr()) throw result.error;
+		if (result.isErr()) throw result.error
 
-		const { data, httpResponseCode } = result.value;
+		const { data, httpResponseCode } = result.value
 
-		expect(data.challenge).eq('deadbeef');
-		expect(httpResponseCode).toBe(201);
-	});
+		expect(data.challenge).eq('deadbeef')
+		expect(httpResponseCode).toBe(201)
+	})
 
 	it('should successfully verify a valid challenge', async () => {
 		const signedChallenge = {
@@ -58,14 +58,14 @@ describe('AuthController', () => {
 			},
 			address: 'identity_tdx_21_122e2z3e5ejjt5scy68jq0papztuddq49frm928vp5u24wn72qqzalc',
 			type: 'persona'
-		} satisfies SignedChallenge;
+		} satisfies SignedChallenge
 
 		mockCtx.prisma.challenge.delete.mockResolvedValue(
 			Promise.resolve({
 				challenge: signedChallenge.challenge,
 				createdAt: new Date()
 			}) as any
-		);
+		)
 
 		mockCtx.gatewayApi.state.getEntityDetailsVaultAggregated.mockResolvedValue({
 			metadata: {
@@ -79,18 +79,18 @@ describe('AuthController', () => {
 					}
 				]
 			}
-		} as any);
+		} as any)
 
 		mockCtx.prisma.user.upsert.mockResolvedValue(
 			Promise.resolve({ identityAddress: signedChallenge.address }) as any
-		);
+		)
 
-		const result = await controller.login(signedChallenge, ctx.cookies);
+		const result = await controller.login(signedChallenge, ctx.cookies)
 
 		if (result.isErr()) {
-			throw result.error;
+			throw result.error
 		}
 
-		expect(result.value.data.authToken).toBeDefined();
-	});
-});
+		expect(result.value.data.authToken).toBeDefined()
+	})
+})

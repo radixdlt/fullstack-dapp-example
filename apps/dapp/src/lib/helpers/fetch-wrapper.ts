@@ -1,13 +1,13 @@
-import { ResultAsync, errAsync, okAsync } from 'neverthrow';
+import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 
-const typedError = <E = Error>(error: unknown) => error as E;
+const typedError = <E = Error>(error: unknown) => error as E
 
 const resolveFetch = (fetchable: ReturnType<typeof fetch>) =>
 	ResultAsync.fromPromise(fetchable, typedError).mapErr((error) => ({
 		reason: 'FailedToFetch',
 		error,
 		status: 0
-	}));
+	}))
 
 export const fetchWrapper = <R = unknown, ER = unknown>(
 	fetchable: ReturnType<typeof fetch>
@@ -34,4 +34,4 @@ export const fetchWrapper = <R = unknown, ER = unknown>(
 							data: data as ER
 					  })
 			)
-	);
+	)
