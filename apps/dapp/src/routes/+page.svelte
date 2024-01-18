@@ -1,8 +1,6 @@
 <script lang="ts">
 	import '../global.scss';
 	import { onMount } from 'svelte';
-
-	import Button from '../stories/Button.svelte';
 	import { DataRequestBuilder, RadixDappToolkit, createLogger } from '@radixdlt/radix-dapp-toolkit';
 	import { authApi } from './api/auth/auth-api';
 	import { userApi } from './api/(protected)/user/user-api';
@@ -67,7 +65,6 @@
 
 <h1>Welcome to SvelteKit</h1>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-<Button label="Just a button"></Button>
 
 <style lang="scss">
 	div {
