@@ -1,4 +1,5 @@
 <script lang="ts">
+	import '../global.scss';
 	import { onMount } from 'svelte';
 
 	import Button from '../stories/Button.svelte';
