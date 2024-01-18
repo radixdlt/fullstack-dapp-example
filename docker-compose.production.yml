@@ -64,6 +64,7 @@ services:
       - REDIS_PORT=${REDIS_PORT}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - LOG_LEVEL=debug
+      - FROM_STATE_VERSION=${FROM_STATE_VERSION}
     command: pm2-runtime apps/transaction-stream/dist/index.js
 
   workers:

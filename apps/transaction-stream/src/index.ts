@@ -1,37 +1,21 @@
-import { GatewayApiClient } from '@radixdlt/babylon-gateway-api-sdk'
 import { config } from './config'
-import { logger } from './helpers/logger'
-import { Queue, ConnectionOptions } from 'bullmq'
+import { GatewayApi } from './gateway'
+import { TransactionStream } from './transaction-stream/transaction-stream'
 
-const connection: ConnectionOptions = config.redis
-
-const myQueue = new Queue('foo', {
-	connection
+const stream = TransactionStream({
+	fromStateVersion: config.ledger.fromStateVersion,
+	dependencies: { gatewayApi: GatewayApi({}) }
 })
 
-const { stream } = GatewayApiClient.initialize({
-	applicationName: 'RadQuest Transaction Stream',
-	basePath: config.gateway.baseUrl
+stream.transactions$.subscribe((value) => {
+	// TODO: filter out transactions that are not from the RadQuest app and add them to a queue
 })
 
-const getTransactionsList = () => {
-	stream
-		.getTransactionsList()
-		.then((transactions) => {
-			// test implementation of message queue
-			const transaction = transactions.items[0]
-			return myQueue.add('transaction', transaction, {
-				jobId: transaction.intent_hash
-			})
-		})
-		.catch((err) => {
-			logger.error('Error getting transaction stream', err)
-		})
-}
+stream.error$.subscribe((error) => {
+	// TODO: implement handler of different errors types
+	// NotSynced - error might need to wait for a while before restarting the stream
+	// InternalError, InvalidRequest, UnknownError  - might need to alert the team
 
-getTransactionsList()
-
-// to be removed, just to keep application alive
-setInterval(() => {
-	getTransactionsList()
-}, 1000 * 10)
+	// errors cause the stream to stop, so we need to restart it depending on the error type
+	stream.setStatus('run')
+})
