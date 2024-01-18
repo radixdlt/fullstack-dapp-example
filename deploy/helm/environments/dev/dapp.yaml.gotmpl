@@ -8,10 +8,10 @@ params:
   POSTGRES_DATABASE: radquest
   POSTGRES_HOST: radquest-dev-rds.rdx-works-main.internal
   POSTGRES_PORT: 5432
-  EXPECTED_ORIGIN: sea-urchin-pr-.rdx-works-main.extratools.works
+  EXPECTED_ORIGIN: https://radquest-dev.rdx-works-main.extratools.works
   PUBLIC_DAPP_DEFINITION_ADDRESS: 
   PUBLIC_NETWORK_ID: 2
-  PUBLIC_NOTIFICATION_URL: sea-urchin-notification-.rdx-works-main.extratools.works
+  PUBLIC_NOTIFICATION_URL: wss://radquest-notification-dev.rdx-works-main.extratools.works
 
 secrets:
   - name: postgres-user
@@ -24,11 +24,6 @@ secrets:
     path: "rdx-works-main-dev/eks/radquest/dev/postgres"
     secretProperty: "postgresql-password"
     secretName: "database-password"
-  - name: database-url
-    variable: "DATABASE_URL"
-    path: "rdx-works-main-dev/eks/radquest/dev/postgres"
-    secretProperty: "database-url"
-    secretName: "database-url"
   - name: database-url
     variable: "DATABASE_URL"
     path: "rdx-works-main-dev/eks/radquest/dev/postgres"
@@ -51,7 +46,7 @@ ingress:
     nginx.ingress.kubernetes.io/auth-secret: dapp-basic-auth
     nginx.ingress.kubernetes.io/auth-realm: 'Auth Required'
   hosts:
-    - host: sea-urchin-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
+    - host: radquest-dev.rdx-works-main.extratools.works
       paths:
         - path: /
           pathType: ImplementationSpecific

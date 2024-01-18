@@ -16,7 +16,7 @@ ingress:
     nginx.ingress.kubernetes.io/auth-secret: dapp-storybook-basic-auth
     nginx.ingress.kubernetes.io/auth-realm: 'Auth Required'
   hosts:
-    - host: sea-urchin-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
+    - host: radquest-storybook-dev.rdx-works-main.extratools.works
       paths:
         - path: /
           pathType: ImplementationSpecific
