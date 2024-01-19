@@ -23,7 +23,7 @@ ingress:
     nginx.ingress.kubernetes.io/auth-type: basic
     nginx.ingress.kubernetes.io/auth-secret: notification-basic-auth
   hosts:
-    - host: sea-urchin-pr-{{ .StateValues.ci.prNumber }}.rtlj-prod.extratools.works
+    - host: radquest-notification.radixdlt.com
       paths:
         - path: /
           pathType: ImplementationSpecific

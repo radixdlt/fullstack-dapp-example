@@ -8,10 +8,10 @@ params:
   POSTGRES_DATABASE: radquest
   POSTGRES_HOST: radquest-stokenet-rds.rtlj-prod.internal
   POSTGRES_PORT: 5432
-  EXPECTED_ORIGIN: https://sea-urchin-pr.rtlj-prod.extratools.works
+  EXPECTED_ORIGIN: https://radquest-stokenet.rtlj-prod.extratools.works
   PUBLIC_DAPP_DEFINITION_ADDRESS: 
   PUBLIC_NETWORK_ID: 2
-  PUBLIC_NOTIFICATION_URL: wss://sea-urchin-notification-pr.rtlj-prod.extratools.works
+  PUBLIC_NOTIFICATION_URL: wss://radquest-notification-stokenet.rtlj-prod.extratools.works
 
 secrets:
   - name: postgres-user
@@ -37,17 +37,13 @@ secrets:
 
 
 ingress:
-  enabled: false
-  basic_auth:
-    enabled: true
-    secret_name: rtlj-prod/eks/radquest/temp-basic-auth
+  enabled: true
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/auth-type: basic
-    nginx.ingress.kubernetes.io/auth-secret: dapp-basic-auth
-    nginx.ingress.kubernetes.io/auth-realm: 'Auth Required'
+    nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.rtlj-prod.extratools.works/oauth2/start
+    nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.rtlj-prod.extratools.works/oauth2/auth
   hosts:
-    - host: sea-urchin-pr-{{ .StateValues.ci.prNumber }}.rtlj-prod.extratools.works
+    - host: radquest-stokenet.rtlj-prod.extratools.works
       paths:
         - path: /
           pathType: ImplementationSpecific

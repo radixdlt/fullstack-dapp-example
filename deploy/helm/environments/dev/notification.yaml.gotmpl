@@ -14,14 +14,9 @@ secrets:
     secretName: "notification_jwt_secret"
 
 ingress:
-  enabled: false
-  basic_auth:
-    enabled: true
-    secret_name: rdx-works-main/eks/radquest/temp-basic-auth
+  enabled: true
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/auth-type: basic
-    nginx.ingress.kubernetes.io/auth-secret: notification-basic-auth
   hosts:
     - host: radquest-notification-dev.rdx-works-main.extratools.works
       paths:

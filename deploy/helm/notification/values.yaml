@@ -38,7 +38,6 @@ service:
 
 ingress:
   enabled: false
-  basic_auth: false
   className: ""
   hosts:
     - host: chart-example.local

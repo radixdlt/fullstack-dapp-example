@@ -509,7 +509,7 @@ jobs:
       - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
         with:
           role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'dashboard'
+          app_name: 'radquest'
           step_name: 'snyk-monitor'
           secret_prefix: 'SNYK'
           secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
@@ -520,15 +520,12 @@ jobs:
           args: --all-projects --org=${{ env.SNYK_PROJECTS_ORG_ID }} --target-reference=${{ github.ref_name }}
           command: monitor
 
-  snyk-container-monitor:
+  snyk-container-monitor-dapp:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
       - push-dapp
       - push-dapp-storybook
-      - push-notification
-      - push-transaction-stream
-      - push-worker
       - setup-tags
     steps:
       - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
@@ -540,24 +537,48 @@ jobs:
           snyk_org_id: ${{ secrets.SNYK_ORG_ID }}
           image: docker.io/radixdlt/radquest-dapp:${{ needs.setup-tags.outputs.tag-with-network }}
           target_ref: ${{ github.ref_name }}
+
+  snyk-container-monitor-notification:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs:
+      - push-notification
+      - setup-tags
+    steps:
       - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
         with:
           role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'radquest'
+          app_name: 'rqst-ntfcn'
           dockerhub_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/dockerhub-credentials'
           snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
           snyk_org_id: ${{ secrets.SNYK_ORG_ID }}
           image: docker.io/radixdlt/radquest-notification:${{ needs.setup-tags.outputs.tag-with-network }}
           target_ref: ${{ github.ref_name }}
+
+  snyk-container-monitor-transaction-stream:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs:
+      - push-transaction-stream
+      - setup-tags
+    steps:
       - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
         with:
           role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'rqst-ts'
+          app_name: 'rqst-tr-str'
           dockerhub_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/dockerhub-credentials'
           snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
           snyk_org_id: ${{ secrets.SNYK_ORG_ID }}
           image: docker.io/radixdlt/radquest-transaction-stream:${{ needs.setup-tags.outputs.tag-with-network }}
           target_ref: ${{ github.ref_name }}
+
+  snyk-container-monitor-worker:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs:
+      - push-worker
+      - setup-tags
+    steps:
       - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
         with:
           role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
