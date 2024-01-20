@@ -10,7 +10,7 @@
 		"db:build": "turbo db:build --filter database",
 		"db:push": "turbo db:push --filter database",
 		"lint": "turbo lint",
-		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
+		"format": "prettier --write apps/**/* packages/**/*",
 		"prepare": "husky install"
 	},
 	"devDependencies": {

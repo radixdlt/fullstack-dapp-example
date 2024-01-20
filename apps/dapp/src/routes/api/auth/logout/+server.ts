@@ -1,9 +1,9 @@
-import type { RequestHandler } from './$types';
-import { json } from '@sveltejs/kit';
+import type { RequestHandler } from './$types'
+import { json } from '@sveltejs/kit'
 
 /** @type {import('./$types').RequestHandler} */
 export const POST: RequestHandler = async ({ cookies }) => {
-	cookies.delete('jwt', { path: '/' });
+	cookies.delete('jwt', { path: '/' })
 
 	return json(
 		{
@@ -12,5 +12,5 @@ export const POST: RequestHandler = async ({ cookies }) => {
 		{
 			status: 200
 		}
-	);
-};
+	)
+}
