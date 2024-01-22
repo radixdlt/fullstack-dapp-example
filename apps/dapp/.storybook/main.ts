@@ -1,6 +1,5 @@
 import type { StorybookConfig } from '@storybook/sveltekit'
 import { join, dirname } from 'path'
-import { mergeConfig, searchForWorkspaceRoot } from 'vite'
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -23,6 +22,7 @@ const config: StorybookConfig = {
 	},
 	docs: {
 		autodocs: 'tag'
-	}
+	},
+	staticDirs: ['../src/static']
 }
 export default config
