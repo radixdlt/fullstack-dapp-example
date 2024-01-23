@@ -14,6 +14,11 @@
 			"cache": false,
 			"persistent": true
 		},
+		"dev:inspect": {
+			"dependsOn": ["^db:generate"],
+			"cache": false,
+			"persistent": true
+		},
 		"db:generate": {
 			"cache": false
 		},
