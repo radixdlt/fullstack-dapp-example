@@ -10,7 +10,7 @@
 <style lang="scss">
 	button {
 		cursor: pointer;
-		background: var(--color-main);
+		background: var(--color-primary);
 		color: var(--color-light);
 		display: flex;
 		padding: 0.9rem 3.2rem;

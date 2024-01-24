@@ -37,7 +37,10 @@
 /* Colors */
 body {
 	/* Core colors */
-	--color-main: #6260ff;
+	--color-primary: #6260ff;
+	--color-secondary: #faeae1;
+	--color-tertiary: #faeae1;
+	--color-neutral: #dfdbd5;
 	--color-background-dark: #192d3a;
 	--color-background-light: #fffbf4;
 
@@ -46,10 +49,10 @@ body {
 	--gradient-2: linear-gradient(67deg, #f9dfcf 0%, #e6b2bb 102.4%);
 	--gradient-3: linear-gradient(67deg, #faeae1 0%, #a9adbc 102.4%);
 	--gradient-4: linear-gradient(270deg, #0f151a 0%, #192d3a 100%);
-	--gradient-5: linear-gradient(0deg, #fffbf4 0%, #fffbf4 100%), #fff;
+	--gradient-5: linear-gradient(0deg, #fffbf4 0%, #fffbf4 100%);
 
 	/* Light and Dark */
-	--color-light: #ffffff;
+	--color-light: #fffbf4;
 	--color-dark: #000000;
 }
 
@@ -95,7 +98,7 @@ body {
 	/* Borders */
 	--border-radius-sm: 2px;
 	--border-radius-md: 4px;
-	--border-radius-lg: 8px;
+	--border-radius-lg: 16px;
 	--border-radius-xl: 40px;
 	--border: 1.5px solid;
 }
@@ -112,7 +115,7 @@ body {
 	background: var(--gradient-5);
 	border-radius: var(--border-radius-xl);
 	box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.2);
-	padding: var(--spacing-3xl);
+	padding: var(--spacing-2xl);
 }
 
 .text-title {
@@ -202,6 +205,7 @@ body {
 	--radix-connect-button-border-radius: 12px;
 	font-family: var(--font-main);
 	margin: 0;
+	padding: 0;
 }
 
 a {
@@ -252,4 +256,5 @@ h3 {
 		@content;
 	}
 }
+
 /* ------------------ */
