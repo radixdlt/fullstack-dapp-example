@@ -108,7 +108,7 @@
 		position: relative;
 		display: flex;
 		align-items: center;
-		gap: var(--spacing-xl);
+		overflow: visible;
 		overflow-x: scroll;
 
 		scroll-snap-type: x mandatory;
