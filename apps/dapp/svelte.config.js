@@ -9,6 +9,7 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		alias: {
+			'@fonts': './src/static/fonts',
 			'@images': './src/static/images'
 		}
 	}
