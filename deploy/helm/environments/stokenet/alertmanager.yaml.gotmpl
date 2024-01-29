@@ -1,7 +1,8 @@
-env: "stokenet"
-nameOverride: "radquest-amcfg"
-slackConfig:
-  channel: "feed--alerts-radquest-stokenet"
-secrets:
-  region: eu-west-2
-  name: "rtlj-prod/eks/radquest/stokenet/alertmanager-integration-keys"
+alertmanager:
+  env: "stokenet"
+  nameOverride: "radquest-amcfg"
+  slackConfig:
+    channel: "feed--alerts-radquest-stokenet"
+  secrets:
+    region: eu-west-2
+    name: "rtlj-prod/eks/radquest/stokenet/alertmanager-integration-keys"
