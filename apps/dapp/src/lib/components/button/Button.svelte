@@ -13,7 +13,8 @@
 		background: var(--color-primary);
 		color: var(--color-light);
 		display: flex;
-		padding: 0.7rem 3.7rem;
+		white-space: nowrap;
+		padding: 0.7rem 1.5rem;
 		justify-content: center;
 		align-items: center;
 		gap: var(--spacing-lg);
@@ -22,6 +23,7 @@
 		font-weight: var(--font-weight-bold);
 		font-size: var(--text-xs);
 		height: 2.7rem;
+		min-width: 7rem;
 	}
 
 	.secondary {
