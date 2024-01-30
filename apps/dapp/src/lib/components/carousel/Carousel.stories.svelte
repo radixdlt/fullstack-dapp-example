@@ -37,7 +37,6 @@
 						title="Introduction to Radar"
 						description="Get familiar with Radar, the radically better Web3 network."
 						minutesToComplete={1}
-						unlocked={true}
 					/>
 				</Item>
 			{/each}
