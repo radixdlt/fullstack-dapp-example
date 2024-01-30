@@ -17,7 +17,7 @@
 	},
 	"type": "module",
 	"scripts": {
-		"build": "rollup -c",
+		"wallet:build": "rollup -c",
 		"wallet:list:accounts": "npx tsx ./src/scripts/account-address.ts",
 		"wallet:create:mnemonic": "npx tsx ./src/scripts/generate-mnemonic.ts",
 		"wallet:generate-mnemonic": "npx tsx ./src/scripts/generate-mnemonic.ts",

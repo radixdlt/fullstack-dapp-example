@@ -2,7 +2,7 @@
 	"$schema": "https://turbo.build/schema.json",
 	"pipeline": {
 		"build": {
-			"dependsOn": ["^db:build"],
+			"dependsOn": ["^db:build", "^wallet:build"],
 			"outputs": [".svelte-kit/**"]
 		},
 		"lint": {
@@ -10,7 +10,7 @@
 		},
 		"test": { "dependsOn": ["^db:build"] },
 		"dev": {
-			"dependsOn": ["^db:generate"],
+			"dependsOn": ["^db:generate", "^wallet:build"],
 			"cache": false,
 			"persistent": true
 		},
@@ -44,6 +44,9 @@
 			"cache": false
 		},
 		"wallet:mint-user-badge": {
+			"cache": false
+		},
+		"wallet:build": {
 			"cache": false
 		}
 	}
