@@ -21,14 +21,12 @@ export const handle: Handle = async ({ event, resolve }) => {
     )
   }
 
-  if (event.route.id?.includes('(protected)')) {
-    const result = authController
-      .renewAuthToken(event.cookies)
-      .andThen((authToken) =>
-        authController
-          .verifyAuthToken(authToken)
-          .map((identityAddress) => ({ identityAddress, authToken }))
-      )
+	if (event.route.id?.includes('(protected)')) {
+		const result = authController
+			.renewAuthToken(event.cookies)
+			.andThen((authToken) =>
+				authController.verifyAuthToken(authToken).map((userId) => ({ userId, authToken }))
+			)
 
     if (result.isErr()) {
       event.cookies.delete('jwt', { path: '/' })
@@ -40,8 +38,8 @@ export const handle: Handle = async ({ event, resolve }) => {
       })
     }
 
-    event.locals.identityAddress = result.value.identityAddress
-    event.locals.authToken = result.value.authToken
+		event.locals.userId = result.value.userId
+		event.locals.authToken = result.value.authToken
 
     return await resolve(event)
   }

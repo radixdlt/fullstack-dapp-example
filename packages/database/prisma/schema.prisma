@@ -12,10 +12,11 @@ datasource db {
 }
 
 model User {
-  identityAddress   String   @id
+  id                String          @id @default("")
+  identityAddress   String          @unique
 }
 
 model Challenge {
-  challenge   String    @id
-  createdAt   DateTime    @default(now())
+  challenge         String          @id
+  createdAt         DateTime        @default(now())
 }

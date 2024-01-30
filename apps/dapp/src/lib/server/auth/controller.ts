@@ -3,7 +3,7 @@ import type { ControllerMethodOutput } from '../_types'
 
 import { hasChallengeExpired } from './helpers/has-challenge-expired'
 import { Rola } from '@radixdlt/rola'
-import { SignedChallenge, GatewayApiClient } from '@radixdlt/radix-dapp-toolkit'
+import { SignedChallenge, type GatewayApiClient } from '@radixdlt/radix-dapp-toolkit'
 
 import { err, errAsync, ok } from 'neverthrow'
 import { JWT } from './jwt'
@@ -54,28 +54,28 @@ export const AuthController = ({
         reason: 'invalidRequestBody'
       })
 
-    return authModel
-      .getAndDeleteChallenge(signedChallenge.challenge)
-      .andThen((challenge) =>
-        challenge ? ok(challenge) : err({ reason: 'challengeNotFound', jsError: undefined })
-      )
-      .andThen(hasChallengeExpired)
-      .andThen(() => verifySignedChallenge(signedChallenge))
-      .mapErr(({ reason, jsError }) => ({
-        httpResponseCode: 400,
-        reason,
-        jsError
-      }))
-      .andThen(() => userModel.create(signedChallenge.address))
-      .andThen(({ identityAddress }) => jwt.createTokens(identityAddress))
-      .map(({ authToken, refreshToken }) => ({
-        data: {
-          authToken,
-          headers: jwt.createRefreshTokenCookie(refreshToken, cookies)
-        },
-        httpResponseCode: 200
-      }))
-  }
+		return authModel
+			.getAndDeleteChallenge(signedChallenge.challenge)
+			.andThen((challenge) =>
+				challenge ? ok(challenge) : err({ reason: 'challengeNotFound', jsError: undefined })
+			)
+			.andThen(hasChallengeExpired)
+			.andThen(() => verifySignedChallenge(signedChallenge))
+			.mapErr(({ reason, jsError }) => ({
+				httpResponseCode: 400,
+				reason,
+				jsError
+			}))
+			.andThen(() => userModel.create(signedChallenge.address))
+			.andThen(({ id }) => jwt.createTokens(id))
+			.map(({ authToken, refreshToken }) => ({
+				data: {
+					authToken,
+					headers: jwt.createRefreshTokenCookie(refreshToken, cookies)
+				},
+				httpResponseCode: 200
+			}))
+	}
 
   const renewAuthToken = (cookies: Cookies) => jwt.renewAuthToken(cookies)
 

@@ -16,11 +16,11 @@ export const UserDbClient = (db = dbClient) => {
     )
   }
 
-  const getById = (identityAddress: string) =>
-    ResultAsync.fromPromise<User | null, Error>(
-      dbClient.user.findUnique({ where: { identityAddress } }),
-      typedError
-    )
+	const getById = (id: string) =>
+		ResultAsync.fromPromise<User | null, Error>(
+			dbClient.user.findUnique({ where: { id } }),
+			typedError
+		)
 
   return { upsert, getById }
 }
