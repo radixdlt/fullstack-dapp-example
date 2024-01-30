@@ -71,6 +71,8 @@
 			title={args.title}
 			description={args.description}
 			minutesToComplete={args.minutesToComplete}
+			minutesSingular="minute"
+			minutesPlural="minutes"
 			state={args.state}
 			backgroundImage={args.background ? JettyPlatform : ''}
 			rewards={getRewardData(args.rewards)}
@@ -97,6 +99,8 @@
 			description="Get familiar with Radar, the radically better Web3 network."
 			minutesToComplete={1}
 			state="unlocked"
+			minutesSingular="minute"
+			minutesPlural="minutes"
 			backgroundImage={JettyPlatform}
 			rewards={getRewardData(3)}
 		/>

@@ -3,6 +3,8 @@
 	export let title: string
 	export let description: string
 	export let minutesToComplete: number
+	export let minutesSingular: string
+	export let minutesPlural: string
 </script>
 
 <div class="text-content">
@@ -13,7 +15,7 @@
 		<img src={ClockIcon} alt="Clock icon" />
 		<p class="text-label">
 			{minutesToComplete}
-			{minutesToComplete === 1 ? 'minute' : 'minutes'}
+			{minutesToComplete === 1 ? minutesSingular : minutesPlural}
 		</p>
 	</div>
 	<p class="text-extra-light description">

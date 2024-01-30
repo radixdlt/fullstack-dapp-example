@@ -37,6 +37,8 @@
 						title="Introduction to Radar"
 						description="Get familiar with Radar, the radically better Web3 network."
 						minutesToComplete={1}
+						minutesSingular="minute"
+						minutesPlural="minutes"
 					/>
 				</Item>
 			{/each}

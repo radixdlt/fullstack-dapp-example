@@ -15,6 +15,8 @@
 		icon: string
 		amount: BigNumber
 	}[] = []
+	export let minutesSingular: string
+	export let minutesPlural: string
 </script>
 
 <div
@@ -22,7 +24,13 @@
 	style:--background-image={backgroundImage ? `url(${backgroundImage})` : ''}
 >
 	<div class="content">
-		<QuestOverviewText {title} {description} {minutesToComplete} />
+		<QuestOverviewText
+			{title}
+			{description}
+			{minutesToComplete}
+			{minutesPlural}
+			{minutesSingular}
+		/>
 
 		<div class="start-button">
 			<Button disabled={state === 'locked'}>
