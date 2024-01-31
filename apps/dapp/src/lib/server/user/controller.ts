@@ -4,7 +4,7 @@ import type { AppLogger } from '@radixdlt/radix-dapp-toolkit'
 import { ResultAsync } from 'neverthrow'
 import type { ApiError, ControllerMethodOutput } from '../_types'
 import z from 'zod'
-import { mintUserBadge as mintUserBadgeFn } from 'typescript-wallet'
+
 import { appLogger } from '$lib/helpers/logger'
 import { typedError } from '$lib/helpers/typed-error'
 
@@ -29,18 +29,26 @@ const UserController = ({ userModel = UserModel() }: UserControllerInput) => {
 	}: {
 		accountAddress: string
 		userId: string
-	}): ControllerMethodOutput<undefined> =>
-		validateAccountAddress(accountAddress).andThen(() =>
-			mintUserBadgeFn(userId, accountAddress)
-				.mapErr((error) => {
-					appLogger.error({ error, method: 'mintUserBadge', event: 'error' })
-					return { httpResponseCode: 500, reason: 'mintUserBadgeError' }
-				})
-				.map(() => ({
-					httpResponseCode: 201,
-					data: undefined
-				}))
-		)
+	}): ControllerMethodOutput<undefined> => {
+		return ResultAsync.fromPromise(import('typescript-wallet'), typedError)
+			.mapErr((error) => {
+				appLogger.error({ error, method: 'mintUserBadge', event: 'error' })
+				return { httpResponseCode: 500, reason: 'mintUserBadgeError' }
+			})
+			.andThen((value) => {
+				return validateAccountAddress(accountAddress)
+					.andThen(() =>
+						value.mintUserBadge(userId, accountAddress).mapErr((error) => {
+							appLogger.error({ error, method: 'mintUserBadge', event: 'error' })
+							return { httpResponseCode: 500, reason: 'mintUserBadgeError' }
+						})
+					)
+					.map(() => ({
+						httpResponseCode: 201,
+						data: undefined
+					}))
+			})
+	}
 
 	return { getUser, mintUserBadge }
 }
