@@ -18,6 +18,11 @@ params:
   JWT_SECRET: FkaGHXoq32rYBcEHwAn2rkhawtUCe4sE
 
 secrets:
+  - name: mnemonic
+    variable: "MNEMONIC"
+    path: "rdx-works-main/eks/radquest/dev/secrets"
+    secretProperty: "stokenet_mnemonic"
+    secretName: "stokenet_mnemonic"
 
 ingress:
   enabled: true

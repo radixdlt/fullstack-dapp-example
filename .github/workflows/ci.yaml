@@ -367,7 +367,7 @@ jobs:
       - name: Trigger ansible job to deploy PR
         uses: RDXWorks-actions/jenkins-job-trigger-action@master
         with:
-          jenkins_url: "https://jenkins-preprod.radixdlt.com"
+          jenkins_url: ${{ secrets.JENKINS_URL }}
           jenkins_user: radixbot
           jenkins_token: ${{ secrets.GH_JENKINS_API_TOKEN }}
           job_name: ${{ env.jenkins_job_name }}
@@ -387,9 +387,10 @@ jobs:
             }
           job_timeout: "3600"
           fetch_logs: "false"
-      # - name: Write URL to GH summary
-      #   run: |
-      #     echo "PR URL is: https://radquest-pr-${{ github.event.number }}.rdx-works-main.extratools.works" >> $GITHUB_STEP_SUMMARY
+      - name: Write URL to GH summary
+        run: |
+          echo "PR URL is: https://radquest-pr-${{ github.event.number }}.rdx-works-main.extratools.works" >> $GITHUB_STEP_SUMMARY
+          echo "PR URL is: https://radquest-storybook-pr-${{ github.event.number }}.rdx-works-main.extratools.works" >> $GITHUB_STEP_SUMMARY
 
 
   deploy_dev:
@@ -407,7 +408,7 @@ jobs:
       - name: Trigger ansible job to deploy dev
         uses: RDXWorks-actions/jenkins-job-trigger-action@master
         with:
-          jenkins_url: "https://jenkins-preprod.radixdlt.com"
+          jenkins_url: ${{ secrets.JENKINS_URL }}
           jenkins_user: radixbot
           jenkins_token: ${{ secrets.GH_JENKINS_API_TOKEN }}
           job_name: ${{ env.jenkins_job_name }}
@@ -441,7 +442,7 @@ jobs:
       - name: Trigger ansible job to deploy dev
         uses: RDXWorks-actions/jenkins-job-trigger-action@master
         with:
-          jenkins_url: "https://jenkins-preprod.radixdlt.com"
+          jenkins_url: ${{ secrets.JENKINS_URL }}
           jenkins_user: radixbot
           jenkins_token: ${{ secrets.GH_JENKINS_API_TOKEN }}
           job_name: ${{ env.jenkins_job_name }}
@@ -475,7 +476,7 @@ jobs:
       - name: Trigger ansible job to deploy dev
         uses: RDXWorks-actions/jenkins-job-trigger-action@master
         with:
-          jenkins_url: "https://jenkins-preprod.radixdlt.com"
+          jenkins_url: ${{ secrets.JENKINS_URL }}
           jenkins_user: radixbot
           jenkins_token: ${{ secrets.GH_JENKINS_API_TOKEN }}
           job_name: ${{ env.jenkins_job_name }}
