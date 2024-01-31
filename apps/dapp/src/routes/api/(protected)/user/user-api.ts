@@ -5,7 +5,7 @@ const me = () => fetchWrapper<User>(fetch('/api/user')).map(({ data }) => data)
 
 const mintUserBadge = (accountAddress: string) =>
 	fetchWrapper<void>(
-		fetch('/api/user', {
+		fetch('/api/user/badge', {
 			method: 'POST',
 			body: JSON.stringify({ accountAddress })
 		})
