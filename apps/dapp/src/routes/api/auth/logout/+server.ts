@@ -3,14 +3,14 @@ import { json } from '@sveltejs/kit'
 
 /** @type {import('./$types').RequestHandler} */
 export const POST: RequestHandler = async ({ cookies }) => {
-	cookies.delete('jwt', { path: '/' })
+  cookies.delete('jwt', { path: '/' })
 
-	return json(
-		{
-			status: 200
-		},
-		{
-			status: 200
-		}
-	)
+  return json(
+    {
+      status: 200
+    },
+    {
+      status: 200
+    }
+  )
 }

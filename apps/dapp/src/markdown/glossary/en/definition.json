@@ -1,10 +1,10 @@
 [
-	{
-		"title": "DEXes",
-		"path": "dexes.md"
-	},
-	{
-		"title": "dApps",
-		"path": "dapps.md"
-	}
+  {
+    "title": "DEXes",
+    "path": "dexes.md"
+  },
+  {
+    "title": "dApps",
+    "path": "dapps.md"
+  }
 ]

@@ -14,5 +14,5 @@ class PrismaClient extends _PrismaClient {}
 
 export type DbClient = typeof dbClient
 export const dbClient = new PrismaClient({
-	datasourceUrl: `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`
+  datasourceUrl: `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`
 })
