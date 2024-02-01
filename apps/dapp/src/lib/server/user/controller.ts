@@ -29,16 +29,16 @@ const UserController = ({ userModel = UserModel() }: UserControllerInput) => {
 	}: {
 		accountAddress: string
 		userId: string
-	}): ControllerMethodOutput<undefined> => {
-		return ResultAsync.fromPromise(import('typescript-wallet'), typedError)
+	}): ControllerMethodOutput<undefined> =>
+		ResultAsync.fromPromise(import('typescript-wallet'), typedError)
 			.mapErr((error) => {
 				appLogger.error({ error, method: 'mintUserBadge', event: 'error' })
 				return { httpResponseCode: 500, reason: 'mintUserBadgeError' }
 			})
-			.andThen((value) => {
-				return validateAccountAddress(accountAddress)
+			.andThen(({ mintUserBadge: mintUserBadgeFn }) =>
+				validateAccountAddress(accountAddress)
 					.andThen(() =>
-						value.mintUserBadge(userId, accountAddress).mapErr((error) => {
+						mintUserBadgeFn(userId, accountAddress).mapErr((error) => {
 							appLogger.error({ error, method: 'mintUserBadge', event: 'error' })
 							return { httpResponseCode: 500, reason: 'mintUserBadgeError' }
 						})
@@ -47,8 +47,7 @@ const UserController = ({ userModel = UserModel() }: UserControllerInput) => {
 						httpResponseCode: 201,
 						data: undefined
 					}))
-			})
-	}
+			)
 
 	return { getUser, mintUserBadge }
 }

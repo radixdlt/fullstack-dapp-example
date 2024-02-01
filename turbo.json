@@ -10,7 +10,7 @@
 		},
 		"test": { "dependsOn": ["^db:build"] },
 		"dev": {
-			"dependsOn": ["^db:generate", "^wallet:build"],
+			"dependsOn": ["^db:generate"],
 			"cache": false,
 			"persistent": true
 		},

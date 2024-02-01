@@ -1,4 +1,4 @@
-import { mintUserBadge } from './helpers/mintUserBadge'
+import { mintUserBadge } from '../helpers/mintUserBadge'
 import crypto from 'node:crypto'
 
 mintUserBadge(

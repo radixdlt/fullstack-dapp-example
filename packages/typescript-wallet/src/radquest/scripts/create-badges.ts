@@ -1,7 +1,7 @@
-import { radixEngineClient } from '../config'
-import { logger } from '../helpers/logger'
-import { createBadgeResources } from './helpers/createBadgeResources'
-import { mintAdminBadge } from './helpers/mintAdminBadge'
+import { radixEngineClient } from '../../config'
+import { logger } from '../../helpers/logger'
+import { createBadgeResources } from '../helpers/createBadgeResources'
+import { mintAdminBadge } from '../helpers/mintAdminBadge'
 
 const mintAdminBadgeToSystemAccount = (adminBadgeAddress: string, superAdminBadgeAddress: string) =>
 	radixEngineClient.getAddresses().andThen(({ accountAddress }) =>

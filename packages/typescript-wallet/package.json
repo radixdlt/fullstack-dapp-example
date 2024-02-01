@@ -1,13 +1,13 @@
 {
 	"name": "typescript-wallet",
 	"version": "0.1.0",
-	"main": "./dist/index.js",
-	"module": "./dist/index.mjs",
+	"main": "./index.ts",
+	"types": "./index.ts",
 	"exports": {
 		".": {
 			"import": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.mjs"
+				"default": "./src/index.ts",
+				"types": "./src/index.ts"
 			},
 			"require": {
 				"types": "./dist/index.d.ts",
@@ -20,11 +20,9 @@
 		"wallet:build": "rollup -c",
 		"wallet:list:accounts": "npx tsx ./src/scripts/account-address.ts",
 		"wallet:create:mnemonic": "npx tsx ./src/scripts/generate-mnemonic.ts",
-		"wallet:generate-mnemonic": "npx tsx ./src/scripts/generate-mnemonic.ts",
 		"wallet:faucet": "npx tsx ./src/scripts/faucet.ts",
-		"wallet:create:badges": "npx tsx ./src/radquest/create-badges.ts",
-		"wallet:mint-admin-badge": "npx tsx ./src/radquest/mint-admin-badge.ts",
-		"wallet:mint-user-badge": "npx tsx ./src/radquest/mint-user-badge.ts",
+		"wallet:create:badges": "npx tsx ./src/radquest/scripts/create-badges.ts",
+		"wallet:mint-user-badge": "npx tsx ./src/radquest/scripts/mint-user-badge.ts",
 		"gw:well-known": "npx tsx ./src/scripts/gw/well-known.ts",
 		"gw:tx:lookup": "npx tsx ./src/scripts/gw/lookup-tx.ts",
 		"gw:status": "npx tsx ./src/scripts/gw/status.ts",
