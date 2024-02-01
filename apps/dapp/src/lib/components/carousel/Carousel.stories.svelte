@@ -7,7 +7,7 @@
 <script lang="ts">
 	import { Story, Template } from '@storybook/addon-svelte-csf'
 	import Carousel from './Carousel.svelte'
-	import QuestCard from '../quest-card/QuestCard.svelte'
+	import QuestOverviewCard from '../quest-overview/QuestOverview.svelte'
 	import { fireEvent } from '@storybook/testing-library'
 	import { expect } from '@storybook/jest'
 
@@ -33,10 +33,12 @@
 		<Carousel let:Item>
 			{#each Array(10) as _}
 				<Item>
-					<QuestCard
+					<QuestOverviewCard
 						title="Introduction to Radar"
-						subtitle="QUEST • 1 MIN"
 						description="Get familiar with Radar, the radically better Web3 network."
+						minutesToComplete={1}
+						minutesSingular="minute"
+						minutesPlural="minutes"
 					/>
 				</Item>
 			{/each}

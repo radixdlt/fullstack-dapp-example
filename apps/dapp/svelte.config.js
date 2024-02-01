@@ -7,7 +7,11 @@ const config = {
 	// for more information about preprocessors
 	preprocess: vitePreprocess(),
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		alias: {
+			'@fonts': './src/static/fonts',
+			'@images': './src/static/images'
+		}
 	}
 }
 
