@@ -2,6 +2,7 @@
   import type BigNumber from 'bignumber.js'
   import QuestOverviewText from '../quest-overview/quest-overview-text/QuestOverviewText.svelte'
   import QuestRewards from '../quest-rewards/QuestRewards.svelte'
+  import {i18n} from '$lib/i18n'
 
   export let title: string
   export let description: string
@@ -10,8 +11,7 @@
     icon: string
     amount: BigNumber
   }[] = []
-  export let minutesSingular: string
-  export let minutesPlural: string
+
 </script>
 
 <div class="content">
@@ -20,13 +20,11 @@
       {title}
       {description}
       {minutesToComplete}
-      {minutesSingular}
-      {minutesPlural}
     />
   </div>
   {#if rewards.length > 0}
     <div class="rewards">
-      <div class="title">Rewards</div>
+      <div class="title">{$i18n.t('quest_rewards')}</div>
       <QuestRewards {rewards} />
     </div>
   {/if}

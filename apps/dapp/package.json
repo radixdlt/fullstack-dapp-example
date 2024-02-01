@@ -61,8 +61,10 @@
     "@radixdlt/radix-dapp-toolkit": "^1.4.1",
     "@radixdlt/rola": "^1.0.2",
     "bignumber.js": "^9.1.2",
+    "i18next": "^23.8.2",
     "jsonwebtoken": "^9.0.2",
     "neverthrow": "^6.1.0",
-    "pino": "^8.17.2"
+    "pino": "^8.17.2",
+    "svelte-i18next": "^2.2.2"
   }
 }

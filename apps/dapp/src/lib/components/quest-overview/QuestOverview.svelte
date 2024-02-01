@@ -15,8 +15,6 @@
     icon: string
     amount: BigNumber
   }[] = []
-  export let minutesSingular: string
-  export let minutesPlural: string
 </script>
 
 <div
@@ -28,8 +26,6 @@
       {title}
       {description}
       {minutesToComplete}
-      {minutesPlural}
-      {minutesSingular}
     />
 
     <div class="start-button">

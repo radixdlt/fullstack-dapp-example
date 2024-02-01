@@ -7,6 +7,7 @@
   import Header from './Header.svelte'
   import Paragraph from './Paragraph.svelte'
   import { fly } from 'svelte/transition'
+  import { i18n } from '$lib/i18n'
 
   export let title: string
   export let steps: number
@@ -79,7 +80,7 @@
       class="footer intro-footer"
       transition:fly={{ x: -width * 2, opacity: 1, duration: animationDuration }}
     >
-      <Button on:click={progressActions.next}>{nextButtonTexts[progress] ?? 'Next'}</Button>
+      <Button on:click={progressActions.next}>{nextButtonTexts[progress] ?? $i18n.t('quest_nextButton')}</Button>
     </div>
   {/if}
   {#if progress > 0}
@@ -88,8 +89,8 @@
       transition:fly={{ y: 200, opacity: 1, duration: animationDuration }}
     >
       <div class="footer quest-footer">
-        <Button secondary on:click={progressActions.prev}>Back</Button>
-        <Button on:click={progressActions.next}>{nextButtonTexts[progress] ?? 'Next'}</Button>
+        <Button secondary on:click={progressActions.prev}>{$i18n.t('quest_previousButton')}</Button>
+        <Button on:click={progressActions.next}>{nextButtonTexts[progress] ?? $i18n.t('quest_nextButton')}</Button>
       </div>
     </div>
   {/if}
