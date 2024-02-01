@@ -16,7 +16,7 @@
     justify-content: center;
     align-items: center;
     gap: var(--spacing-lg);
-    border-radius: var(--border-radius-xl);
+    border-radius: var(--border-radius-2xl);
     backdrop-filter: blur(10px);
     font-weight: var(--font-weight-bold);
     font-size: var(--text-xs);
