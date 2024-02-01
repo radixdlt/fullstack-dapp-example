@@ -5,14 +5,14 @@ import type { ResultAsync } from 'neverthrow'
 import type { ApiError } from '../_types'
 
 export type UserControllerInput = Partial<{
-	userModel: UserModel
-	logger: AppLogger
+  userModel: UserModel
+  logger: AppLogger
 }>
 const UserController = ({ userModel = UserModel() }: UserControllerInput) => {
-	const getUser = (identityAddress: string): ResultAsync<User | null, ApiError> =>
-		userModel.getById(identityAddress)
+  const getUser = (identityAddress: string): ResultAsync<User | null, ApiError> =>
+    userModel.getById(identityAddress)
 
-	return { getUser }
+  return { getUser }
 }
 
 export const userController = UserController({})

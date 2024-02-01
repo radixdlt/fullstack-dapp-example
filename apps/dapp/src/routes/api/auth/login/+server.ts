@@ -4,18 +4,18 @@ import { authController } from '$lib/server/auth/controller'
 
 /** @type {import('./$types').RequestHandler} */
 export const POST: RequestHandler = async ({ request, cookies }) => {
-	const requestBody = await request.json()
-	const result = await authController.login(requestBody, cookies)
+  const requestBody = await request.json()
+  const result = await authController.login(requestBody, cookies)
 
-	if (result.isErr()) throw error(result.error.httpResponseCode, result.error.reason)
+  if (result.isErr()) throw error(result.error.httpResponseCode, result.error.reason)
 
-	const { authToken, headers } = result.value.data
+  const { authToken, headers } = result.value.data
 
-	return json(
-		{ authToken },
-		{
-			status: result.value.httpResponseCode,
-			headers
-		}
-	)
+  return json(
+    { authToken },
+    {
+      status: result.value.httpResponseCode,
+      headers
+    }
+  )
 }

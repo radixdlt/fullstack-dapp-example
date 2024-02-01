@@ -1,11 +1,11 @@
 declare module 'virtual:*' {
-	const GlossaryContent: Record<
-		'en',
-		{
-			title: string
-			content: string
-		}[]
-	>
+  const GlossaryContent: Record<
+    'en',
+    {
+      title: string
+      content: string
+    }[]
+  >
 
-	export { GlossaryContent }
+  export { GlossaryContent }
 }

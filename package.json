@@ -1,35 +1,35 @@
 {
-	"name": "radquest",
-	"private": true,
-	"scripts": {
-		"build": "turbo build",
-		"dev": "npx --node-options='-r dotenv/config' turbo dev",
-		"dev:dapp": "npx --node-options='-r dotenv/config' turbo dev --filter dapp",
-		"dev:notification": "npx --node-options='-r dotenv/config' turbo dev --filter notification",
-		"dev:stream": "npx --node-options='-r dotenv/config' turbo dev --filter transaction-stream",
-		"dev:stream:inspect": "npx --node-options='-r dotenv/config' turbo dev:inspect --filter transaction-stream",
-		"test": "npx --node-options='-r dotenv/config' turbo test",
-		"test:stream": "npx --node-options='-r dotenv/config' turbo test --filter transaction-stream",
-		"db:build": "turbo db:build --filter database",
-		"db:push": "turbo db:push --filter database",
-		"lint": "turbo lint",
-		"format": "prettier --write apps/**/* packages/**/*",
-		"prepare": "husky install"
-	},
-	"devDependencies": {
-		"@commitlint/cli": "^18.4.4",
-		"@commitlint/config-conventional": "^18.4.4",
-		"@types/jsonwebtoken": "^9.0.5",
-		"husky": "^8.0.3",
-		"prettier": "^3.1.0",
-		"turbo": "^1.11.3"
-	},
-	"engines": {
-		"node": ">=18"
-	},
-	"packageManager": "npm@9.6.7",
-	"workspaces": [
-		"apps/*",
-		"packages/*"
-	]
+  "name": "radquest",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "npx --node-options='-r dotenv/config' turbo dev",
+    "dev:dapp": "npx --node-options='-r dotenv/config' turbo dev --filter dapp",
+    "dev:notification": "npx --node-options='-r dotenv/config' turbo dev --filter notification",
+    "dev:stream": "npx --node-options='-r dotenv/config' turbo dev --filter transaction-stream",
+    "dev:stream:inspect": "npx --node-options='-r dotenv/config' turbo dev:inspect --filter transaction-stream",
+    "test": "npx --node-options='-r dotenv/config' turbo test",
+    "test:stream": "npx --node-options='-r dotenv/config' turbo test --filter transaction-stream",
+    "db:build": "turbo db:build --filter database",
+    "db:push": "turbo db:push --filter database",
+    "lint": "turbo lint",
+    "format": "prettier --write apps/**/* packages/**/*",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.4",
+    "@commitlint/config-conventional": "^18.4.4",
+    "@types/jsonwebtoken": "^9.0.5",
+    "husky": "^8.0.3",
+    "prettier": "^3.1.0",
+    "turbo": "^1.11.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "npm@9.6.7",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }

@@ -1,8 +1,8 @@
-import { config } from './config';
-import { Queue, ConnectionOptions } from 'bullmq';
+import { config } from './config'
+import { Queue, ConnectionOptions } from 'bullmq'
 
-const connection: ConnectionOptions = config.redis;
+const connection: ConnectionOptions = config.redis
 
 export const handleTransactionQueue = new Queue('foo', {
-	connection
-});
+  connection
+})

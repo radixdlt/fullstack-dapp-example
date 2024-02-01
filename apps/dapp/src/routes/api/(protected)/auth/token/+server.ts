@@ -3,7 +3,7 @@ import { json } from '@sveltejs/kit'
 
 /** @type {import('./$types').RequestHandler} */
 export const GET: RequestHandler = async ({ locals }) => {
-	const { authToken } = locals
+  const { authToken } = locals
 
-	return json({ authToken }, { status: 200 })
+  return json({ authToken }, { status: 200 })
 }
