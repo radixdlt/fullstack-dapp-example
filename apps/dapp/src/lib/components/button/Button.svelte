@@ -25,9 +25,9 @@
   }
 
   .primary {
-    background: var(--color-main);
+    background: var(--color-primary);
     color: var(--color-light);
-    border: var(--border) var(--color-main);
+    border: var(--border) var(--color-primary);
 
     &:hover {
       filter: brightness(0.8);
