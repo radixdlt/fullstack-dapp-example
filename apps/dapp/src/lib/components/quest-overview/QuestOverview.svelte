@@ -22,11 +22,7 @@
   style:--background-image={backgroundImage ? `url(${backgroundImage})` : ''}
 >
   <div class="content">
-    <QuestOverviewText
-      {title}
-      {description}
-      {minutesToComplete}
-    />
+    <QuestOverviewText {title} {description} {minutesToComplete} />
 
     <div class="start-button">
       <Button disabled={state === 'locked'}>
