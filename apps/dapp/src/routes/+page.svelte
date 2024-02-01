@@ -6,6 +6,7 @@
 	import { userApi } from './api/(protected)/user/user-api'
 	import { env } from '$env/dynamic/public'
 	import { ResultAsync } from 'neverthrow'
+	import { GlossaryContent } from 'virtual:glossary'
 
 	// TODO: move dApp toolkit to a better location
 	onMount(() => {
@@ -65,6 +66,12 @@
 
 <h1>Welcome to SvelteKit</h1>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+
+
+{#each GlossaryContent['en'] as entry}
+	<h1>{entry.title}</h1>
+	{@html entry.content}
+{/each}
 
 <style lang="scss">
 	div {
