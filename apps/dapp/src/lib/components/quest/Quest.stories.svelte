@@ -60,8 +60,7 @@
           description={args.description}
           minutesToComplete={10}
           rewards={getRewardData(args.rewards)}
-          minutesSingular="minute"
-          minutesPlural="minutes"
+     
         />
       {/if}
 

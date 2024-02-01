@@ -1,10 +1,9 @@
 <script lang="ts">
+  import { i18n } from '$lib/i18n'
   import ClockIcon from '@images/clock.svg'
   export let title: string
   export let description: string
   export let minutesToComplete: number
-  export let minutesSingular: string
-  export let minutesPlural: string
 </script>
 
 <div class="text-content">
@@ -14,8 +13,7 @@
   <div class="icon-and-label">
     <img src={ClockIcon} alt="Clock icon" />
     <p class="text-label">
-      {minutesToComplete}
-      {minutesToComplete === 1 ? minutesSingular : minutesPlural}
+      {$i18n.t('questOverview_minutesToComplete', { count: minutesToComplete })}
     </p>
   </div>
   <p class="text-extra-light description">
