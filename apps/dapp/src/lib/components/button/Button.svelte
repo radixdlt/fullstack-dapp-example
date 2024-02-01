@@ -3,15 +3,13 @@
 	export let secondary = false
 </script>
 
-<button on:click class:disabled class:secondary>
+<button on:click class:disabled class:primary={!secondary} class:secondary>
 	<slot />
 </button>
 
 <style lang="scss">
 	button {
 		cursor: pointer;
-		background: var(--color-primary);
-		color: var(--color-light);
 		display: flex;
 		white-space: nowrap;
 		padding: 0.7rem 1.5rem;
@@ -26,9 +24,30 @@
 		min-width: 7rem;
 	}
 
+	.primary {
+		background: var(--color-main);
+		color: var(--color-light);
+		border: var(--border) var(--color-main);
+
+		&:hover {
+			filter: brightness(0.8);
+		}
+
+		transition: filter 0.2s ease-in-out;
+	}
+
 	.secondary {
 		background: var(--color-light);
 		color: var(--color-dark);
 		border: var(--border) var(--color-dark);
+
+		&:hover {
+			color: var(--color-light);
+			background: var(--color-dark);
+		}
+
+		transition:
+			color 0.2s ease-in-out,
+			background 0.2s ease-in-out;
 	}
 </style>
