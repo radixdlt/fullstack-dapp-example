@@ -2,7 +2,11 @@ module.exports = {
   extends: ['@commitlint/config-conventional'],
   rules: {
     'header-max-length': () => [0, 'always', 150],
-    'scope-enum': () => [2, 'always', ['dapp', 'notification', 'stream', 'workers', 'db', 'core']],
+    'scope-enum': () => [
+      2,
+      'always',
+      ['dapp', 'notification', 'stream', 'workers', 'db', 'wallet', 'core', 'common']
+    ],
     'scope-empty': [2, 'never'],
     'type-enum': () => [
       2,

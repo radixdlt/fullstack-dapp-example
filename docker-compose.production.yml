@@ -26,6 +26,7 @@ services:
       - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
       - PUBLIC_LOG_LEVEL=debug
       - PUBLIC_NOTIFICATION_URL=${PUBLIC_NOTIFICATION_URL}
+      - MNEMONIC=${MNEMONIC}
     command: pm2-runtime apps/dapp/build/index.js
 
   storybook:

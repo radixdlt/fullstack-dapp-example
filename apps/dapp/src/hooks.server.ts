@@ -25,9 +25,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     const result = authController
       .renewAuthToken(event.cookies)
       .andThen((authToken) =>
-        authController
-          .verifyAuthToken(authToken)
-          .map((identityAddress) => ({ identityAddress, authToken }))
+        authController.verifyAuthToken(authToken).map((userId) => ({ userId, authToken }))
       )
 
     if (result.isErr()) {
@@ -40,7 +38,7 @@ export const handle: Handle = async ({ event, resolve }) => {
       })
     }
 
-    event.locals.identityAddress = result.value.identityAddress
+    event.locals.userId = result.value.userId
     event.locals.authToken = result.value.authToken
 
     return await resolve(event)

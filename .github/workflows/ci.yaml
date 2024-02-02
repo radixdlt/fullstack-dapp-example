@@ -12,7 +12,6 @@ on:
       - prereleased # A release was created and identified as a pre-release.
       - released # A release was published, or a pre-release was changed to a release.
 
-
 env:
   active_network: 'stokenet'
   active_public_network_id: '2'
@@ -36,7 +35,6 @@ permissions:
   packages: write
 
 jobs:
-
   setup-tags:
     runs-on: ubuntu-latest
     steps:
@@ -169,6 +167,7 @@ jobs:
         env:
           PUBLIC_NETWORK_ID: ${{ needs.setup-tags.outputs.public-network-id }}
           PUBLIC_LOG_LEVEL: ${{ needs.setup-tags.outputs.public-log-level }}
+          MNEMONIC: 'come cute gather early best front witness fade journey high fresh wait pizza adult vital tower skill analyst polar route erase lend access chat'
 
   snyk-scan-deps-licences:
     runs-on: ubuntu-latest
@@ -385,13 +384,12 @@ jobs:
               "helm_folder" : "${{ env.helm_dir }}",
               "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }},ci.prNumber=${{ github.event.number }}"
             }
-          job_timeout: "3600"
-          fetch_logs: "false"
+          job_timeout: '3600'
+          fetch_logs: 'false'
       - name: Write URL to GH summary
         run: |
           echo "PR URL is: https://radquest-pr-${{ github.event.number }}.rdx-works-main.extratools.works" >> $GITHUB_STEP_SUMMARY
           echo "PR URL is: https://radquest-storybook-pr-${{ github.event.number }}.rdx-works-main.extratools.works" >> $GITHUB_STEP_SUMMARY
-
 
   deploy_dev:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -424,8 +422,8 @@ jobs:
               "helm_folder" : "${{ env.helm_dir }}",
               "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}"
             }
-          job_timeout: "3600"
-          fetch_logs: "false"
+          job_timeout: '3600'
+          fetch_logs: 'false'
 
   deploy_stokenet:
     if: github.event_name == 'release' && github.event.action == 'prereleased'
@@ -458,8 +456,8 @@ jobs:
               "helm_folder" : "${{ env.helm_dir }}",
               "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}"
             }
-          job_timeout: "3600"
-          fetch_logs: "false"
+          job_timeout: '3600'
+          fetch_logs: 'false'
 
   deploy_mainnet:
     if: github.event_name == 'release' && github.event.action == 'released'
@@ -492,8 +490,8 @@ jobs:
               "helm_folder" : "${{ env.helm_dir }}",
               "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}"
             }
-          job_timeout: "3600"
-          fetch_logs: "false"
+          job_timeout: '3600'
+          fetch_logs: 'false'
 
   snyk-monitor:
     runs-on: ubuntu-latest

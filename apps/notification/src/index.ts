@@ -6,7 +6,7 @@ import uWS from 'uWebSockets.js'
 import { verifyToken } from './helpers/verifyAuthToken'
 const websocketPort = config.websocket.port
 
-const activeSockets = new Map<string, uWS.WebSocket<{ identityAddress: string }>>()
+const activeSockets = new Map<string, uWS.WebSocket<{ userId: string }>>()
 
 uWS
   .App()
@@ -20,10 +20,10 @@ uWS
       const cookies = cookie.parse(req.getHeader('cookie'))
 
       verifyToken(cookies.jwt)
-        .map((identityAddress) => {
+        .map((userId) => {
           res.upgrade(
             {
-              identityAddress
+              userId
             },
             req.getHeader('sec-websocket-key'),
             req.getHeader('sec-websocket-protocol'),
@@ -36,9 +36,9 @@ uWS
           res.writeStatus('401').end()
         })
     },
-    open: (ws: uWS.WebSocket<{ identityAddress: string }>) => {
+    open: (ws: uWS.WebSocket<{ userId: string }>) => {
       logger.debug(ws.getUserData())
-      activeSockets.set(ws.getUserData().identityAddress, ws)
+      activeSockets.set(ws.getUserData().userId, ws)
     },
     message: () => {
       /* Ok is false if backpressure was built up, wait for drain */
@@ -48,7 +48,7 @@ uWS
     },
     close: (ws) => {
       logger.debug('WebSocket closed')
-      activeSockets.delete(ws.getUserData().identityAddress)
+      activeSockets.delete(ws.getUserData().userId)
     }
   })
   .listen(websocketPort, (token) => {

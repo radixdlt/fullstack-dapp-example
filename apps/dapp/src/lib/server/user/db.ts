@@ -16,9 +16,9 @@ export const UserDbClient = (db = dbClient) => {
     )
   }
 
-  const getById = (identityAddress: string) =>
+  const getById = (id: string) =>
     ResultAsync.fromPromise<User | null, Error>(
-      dbClient.user.findUnique({ where: { identityAddress } }),
+      dbClient.user.findUnique({ where: { id } }),
       typedError
     )
 

@@ -1,4 +1,9 @@
-import {
+import { env as privateEnv } from '$env/dynamic/private'
+import { publicConfig } from './public-config'
+
+export type Config = typeof config
+
+const {
   EXPECTED_ORIGIN,
   JWT_SECRET,
   POSTGRES_DATABASE,
@@ -6,14 +11,10 @@ import {
   POSTGRES_PASSWORD,
   POSTGRES_PORT,
   POSTGRES_USER
-} from '$env/static/private'
-import {
-  PUBLIC_DAPP_DEFINITION_ADDRESS,
-  PUBLIC_LOG_LEVEL,
-  PUBLIC_NETWORK_ID
-} from '$env/static/public'
+} = privateEnv
 
-export type Config = typeof config
+// $env/dynamic/public does not work in CI build
+const { PUBLIC_LOG_LEVEL = 'debug' } = process.env
 
 export const config = {
   jwt: {
@@ -31,8 +32,8 @@ export const config = {
   },
   dapp: {
     expectedOrigin: EXPECTED_ORIGIN,
-    networkId: parseInt(PUBLIC_NETWORK_ID, 10),
-    dAppDefinitionAddress: PUBLIC_DAPP_DEFINITION_ADDRESS
+    networkId: publicConfig.networkId,
+    dAppDefinitionAddress: publicConfig.dAppDefinitionAddress
   },
   logLevel: PUBLIC_LOG_LEVEL
 }

@@ -1,32 +1,40 @@
 {
-  "name": "radquest",
-  "private": true,
-  "scripts": {
-    "build": "turbo build",
-    "dev": "npx --node-options='-r dotenv/config' turbo dev",
-    "dev:dapp": "npx --node-options='-r dotenv/config' turbo dev --filter dapp",
-    "dev:notification": "npx --node-options='-r dotenv/config' turbo dev --filter notification",
-    "dev:stream": "npx --node-options='-r dotenv/config' turbo dev --filter transaction-stream",
-    "dev:stream:inspect": "npx --node-options='-r dotenv/config' turbo dev:inspect --filter transaction-stream",
-    "test": "npx --node-options='-r dotenv/config' turbo test",
-    "test:stream": "npx --node-options='-r dotenv/config' turbo test --filter transaction-stream",
-    "db:build": "turbo db:build --filter database",
-    "db:push": "turbo db:push --filter database",
-    "lint": "turbo lint",
-    "format": "prettier --write apps/**/* packages/**/*"
-  },
-  "devDependencies": {
-    "@commitlint/config-conventional": "^18.4.4",
-    "@types/jsonwebtoken": "^9.0.5",
-    "prettier": "^3.1.0",
-    "turbo": "^1.11.3"
-  },
-  "engines": {
-    "node": ">=18"
-  },
-  "packageManager": "npm@9.6.7",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+	"name": "radquest",
+	"private": true,
+	"scripts": {
+		"build": "turbo build",
+		"dev": "npx --node-options='-r dotenv/config' turbo dev",
+		"dev:dapp": "npx --node-options='-r dotenv/config' turbo dev --filter dapp",
+		"dev:notification": "npx --node-options='-r dotenv/config' turbo dev --filter notification",
+		"dev:stream": "npx --node-options='-r dotenv/config' turbo dev --filter transaction-stream",
+		"dev:stream:inspect": "npx --node-options='-r dotenv/config' turbo dev:inspect --filter transaction-stream",
+		"test": "npx --node-options='-r dotenv/config' turbo test",
+		"test:stream": "npx --node-options='-r dotenv/config' turbo test --filter transaction-stream",
+		"wallet:create:badges": "npx --node-options='-r dotenv/config' turbo wallet:create:badges --filter typescript-wallet",
+		"wallet:create:mnemonic": "npx --node-options='-r dotenv/config' turbo wallet:create:mnemonic --filter typescript-wallet",
+		"wallet:list:accounts": "npx --node-options='-r dotenv/config' turbo wallet:list:accounts --filter typescript-wallet",
+		"wallet:mint-admin-badge": "npx --node-options='-r dotenv/config' turbo wallet:mint-admin-badge --filter typescript-wallet",
+		"wallet:mint-user-badge": "npx --node-options='-r dotenv/config' turbo wallet:mint-user-badge --filter typescript-wallet",
+		"wallet:faucet": "npx --node-options='-r dotenv/config' turbo wallet:faucet --filter typescript-wallet",
+		"wallet:build": "turbo build --filter typescript-wallet",
+		"db:build": "turbo db:build --filter database",
+		"db:push": "turbo db:push --filter database",
+		"lint": "turbo lint",
+		"format": "prettier --write apps/**/* packages/**/*"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^18.4.4",
+		"@commitlint/config-conventional": "^18.4.4",
+		"@types/jsonwebtoken": "^9.0.5",
+		"prettier": "^3.1.0",
+		"turbo": "^1.11.3"
+	},
+	"engines": {
+		"node": ">=18"
+	},
+	"packageManager": "npm@9.6.7",
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	]
 }

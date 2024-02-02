@@ -3,7 +3,7 @@ import type { ControllerMethodOutput } from '../_types'
 
 import { hasChallengeExpired } from './helpers/has-challenge-expired'
 import { Rola } from '@radixdlt/rola'
-import { SignedChallenge, GatewayApiClient } from '@radixdlt/radix-dapp-toolkit'
+import { SignedChallenge, type GatewayApiClient } from '@radixdlt/radix-dapp-toolkit'
 
 import { err, errAsync, ok } from 'neverthrow'
 import { JWT } from './jwt'
@@ -67,7 +67,7 @@ export const AuthController = ({
         jsError
       }))
       .andThen(() => userModel.create(signedChallenge.address))
-      .andThen(({ identityAddress }) => jwt.createTokens(identityAddress))
+      .andThen(({ id }) => jwt.createTokens(id))
       .map(({ authToken, refreshToken }) => ({
         data: {
           authToken,
