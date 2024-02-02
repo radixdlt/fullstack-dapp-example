@@ -1,5 +1,9 @@
 import { env as privateEnv } from '$env/dynamic/private'
-import { env as publicEnv } from '$env/dynamic/public'
+import {
+  PUBLIC_DAPP_DEFINITION_ADDRESS,
+  PUBLIC_LOG_LEVEL,
+  PUBLIC_NETWORK_ID
+} from '$env/static/public'
 
 export type Config = typeof config
 
@@ -12,8 +16,6 @@ const {
   POSTGRES_PORT,
   POSTGRES_USER
 } = privateEnv
-
-const { PUBLIC_DAPP_DEFINITION_ADDRESS, PUBLIC_LOG_LEVEL, PUBLIC_NETWORK_ID } = publicEnv
 
 export const config = {
   jwt: {
