@@ -33,7 +33,7 @@ export const config = {
   dapp: {
     expectedOrigin: EXPECTED_ORIGIN,
     networkId: publicConfig.networkId,
-    dAppDefinitionAddress: publicConfig.dAppDefinitionAddress
+    dAppDefinitionAddress: publicConfig.dAppDefinitionAddress ?? ''
   },
   logLevel: PUBLIC_LOG_LEVEL
 }
