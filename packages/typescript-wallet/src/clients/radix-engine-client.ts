@@ -94,7 +94,7 @@ export const RadixEngineClient = <
 
   const payerKeys = result.value[0]
 
-  const gatewayClient = GatewayClient(networkConfig)
+  const gatewayClient = GatewayClient()
 
   const getAccountAddress = () =>
     ResultAsync.combine(

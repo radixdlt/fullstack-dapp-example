@@ -10,7 +10,7 @@ export type GatewayClient = ReturnType<typeof GatewayClient>
 export const GatewayClient = () => {
   const wellKnownAddresses = () => callApi('getNetworkConfiguration')
 
-  const getEpoch = () => callApi('getCurrent')
+  const getEpoch = () => callApi('getCurrent').map((value) => value.ledger_state.epoch)
 
   const getStatus = () => callApi('getNetworkConfiguration')
 
