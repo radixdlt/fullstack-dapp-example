@@ -1,40 +1,22 @@
-import {
-  GatewayApiClient,
-  NetworkConfig,
-  TransactionPreviewRequest,
-  TransactionStatus
-} from '@radixdlt/radix-dapp-toolkit'
 import { ResultAsync, err, errAsync, okAsync } from 'neverthrow'
 import { typedError } from '../helpers/typed-error'
 import { filter, first, firstValueFrom, switchMap } from 'rxjs'
 import { logger } from '../helpers/logger'
 import { ExponentialBackoff } from '../helpers/exponential-backoff'
+import { callApi, gatewayApiClient, networkConfig } from 'common'
+import { TransactionStatus } from '@radixdlt/radix-dapp-toolkit'
 
 export type GatewayClient = ReturnType<typeof GatewayClient>
-export const GatewayClient = (networkConfig: NetworkConfig) => {
-  const { status, transaction, state } = GatewayApiClient.initialize({
-    basePath: networkConfig.gatewayUrl,
-    applicationName: 'RadQuest programmatic wallet'
-  })
+export const GatewayClient = () => {
+  const wellKnownAddresses = () => callApi('getNetworkConfiguration')
 
-  const wellKnownAddresses = () =>
-    ResultAsync.fromPromise(status.getNetworkConfiguration(), typedError).map(
-      (response) => response
-    )
+  const getEpoch = () => callApi('getCurrent')
 
-  const getEpoch = () =>
-    ResultAsync.fromPromise(status.getCurrent(), typedError).map(
-      (response) => response.ledger_state.epoch
-    )
-
-  const getStatus = () =>
-    ResultAsync.fromPromise(status.getNetworkConfiguration(), typedError).map(
-      (response) => response
-    )
+  const getStatus = () => callApi('getNetworkConfiguration')
 
   const submitNotarizedTransactionHex = (notarized_transaction_hex: string) =>
     ResultAsync.fromPromise(
-      transaction.innerClient.transactionSubmit({
+      gatewayApiClient.transaction.innerClient.transactionSubmit({
         transactionSubmitRequest: {
           notarized_transaction_hex
         }
@@ -42,11 +24,10 @@ export const GatewayClient = (networkConfig: NetworkConfig) => {
       typedError
     )
 
-  const getTransactionStatus = (txId: string) =>
-    ResultAsync.fromPromise(transaction.getStatus(txId), typedError)
+  const getTransactionStatus = (txId: string) => callApi('getStatus', txId)
 
   const getCommittedDetails = (txId: string) =>
-    ResultAsync.fromPromise(transaction.getCommittedDetails(txId), typedError).map((res) => ({
+    callApi('getCommittedDetails', txId).map((res) => ({
       epoch: res.transaction.epoch,
       round: res.transaction.round,
       status: res.transaction.transaction_status,
@@ -64,15 +45,19 @@ export const GatewayClient = (networkConfig: NetworkConfig) => {
 
   const getState = (addresses: string[]) =>
     ResultAsync.fromPromise(
-      state.innerClient.stateEntityDetails({
+      gatewayApiClient.state.innerClient.stateEntityDetails({
         stateEntityDetailsRequest: { addresses }
       }),
       typedError
     )
 
-  const preview = (transactionPreviewRequest: TransactionPreviewRequest) =>
+  const preview = (
+    transactionPreviewRequest: Parameters<
+      typeof gatewayApiClient.transaction.innerClient.transactionPreview
+    >[0]['transactionPreviewRequest']
+  ) =>
     ResultAsync.fromPromise(
-      transaction.innerClient.transactionPreview({
+      gatewayApiClient.transaction.innerClient.transactionPreview({
         transactionPreviewRequest
       }),
       typedError
