@@ -12,15 +12,18 @@
   import { env } from '$env/dynamic/public'
   import { ResultAsync } from 'neverthrow'
   import { GlossaryContent } from 'virtual:glossary'
+  import { publicConfig } from '$lib/public-config'
 
   let radixDappToolkit: RadixDappToolkit
   let connected: boolean = false
 
+  const { dAppDefinitionAddress, networkId } = publicConfig
+
   // TODO: move dApp toolkit to a better location
   onMount(() => {
     radixDappToolkit = RadixDappToolkit({
-      networkId: parseInt(env.PUBLIC_NETWORK_ID),
-      dAppDefinitionAddress: env.PUBLIC_DAPP_DEFINITION_ADDRESS,
+      networkId,
+      dAppDefinitionAddress,
       logger: createLogger(1),
       onDisconnect: () => {
         // TODO: handle application state cleanup

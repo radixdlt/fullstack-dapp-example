@@ -1,9 +1,6 @@
 import { env as privateEnv } from '$env/dynamic/private'
-import {
-  PUBLIC_DAPP_DEFINITION_ADDRESS,
-  PUBLIC_LOG_LEVEL,
-  PUBLIC_NETWORK_ID
-} from '$env/static/public'
+import { env as publicEnv } from '$env/dynamic/public'
+import { publicConfig } from './public-config'
 
 export type Config = typeof config
 
@@ -16,6 +13,8 @@ const {
   POSTGRES_PORT,
   POSTGRES_USER
 } = privateEnv
+
+const { PUBLIC_LOG_LEVEL, PUBLIC_NETWORK_ID } = publicEnv
 
 export const config = {
   jwt: {
@@ -33,8 +32,8 @@ export const config = {
   },
   dapp: {
     expectedOrigin: EXPECTED_ORIGIN,
-    networkId: parseInt(PUBLIC_NETWORK_ID, 10),
-    dAppDefinitionAddress: PUBLIC_DAPP_DEFINITION_ADDRESS
+    networkId: parseInt(PUBLIC_NETWORK_ID!, 10),
+    dAppDefinitionAddress: publicConfig.dAppDefinitionAddress
   },
   logLevel: PUBLIC_LOG_LEVEL
 }
