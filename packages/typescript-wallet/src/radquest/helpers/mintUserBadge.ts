@@ -2,21 +2,21 @@ import { config } from '../../config'
 import { radixEngineClient } from '../../config'
 
 export const mintUserBadge = (
-	userId: string,
-	accountAddress: string,
-	badgeAddresses?: Partial<{
-		userBadgeAddress: string
-		adminBadgeAddress: string
-	}>
+  userId: string,
+  accountAddress: string,
+  badgeAddresses?: Partial<{
+    userBadgeAddress: string
+    adminBadgeAddress: string
+  }>
 ) => {
-	const {
-		userBadgeAddress = config.radQuest.badges.userBadgeAddress,
-		adminBadgeAddress = config.radQuest.badges.adminBadgeAddress
-	} = badgeAddresses ?? {}
-	return radixEngineClient
-		.getManifestBuilder()
-		.andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
-			const transactionManifest = `
+  const {
+    userBadgeAddress = config.radQuest.badges.userBadgeAddress,
+    adminBadgeAddress = config.radQuest.badges.adminBadgeAddress
+  } = badgeAddresses ?? {}
+  return radixEngineClient
+    .getManifestBuilder()
+    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
+      const transactionManifest = `
         CALL_METHOD 
           Address("${wellKnownAddresses.accountAddress.payerAccount}") 
           "lock_fee"
@@ -41,11 +41,11 @@ export const mintUserBadge = (
           Expression("ENTIRE_WORKTOP")
           Enum<0u8>()
         ;`
-			console.log(transactionManifest)
-			return convertStringManifest(transactionManifest)
-				.andThen((transactionManifest) => submitTransaction(transactionManifest, ['systemAccount']))
-				.andThen(({ txId }) =>
-					radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-				)
-		})
+      console.log(transactionManifest)
+      return convertStringManifest(transactionManifest)
+        .andThen((transactionManifest) => submitTransaction(transactionManifest, ['systemAccount']))
+        .andThen(({ txId }) =>
+          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
+        )
+    })
 }

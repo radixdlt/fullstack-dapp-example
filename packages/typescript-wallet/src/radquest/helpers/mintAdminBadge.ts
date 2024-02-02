@@ -1,18 +1,18 @@
 import { radixEngineClient } from '../../config'
 
 export const mintAdminBadge = ({
-	adminBadgeAddress,
-	accountAddress,
-	superAdminBadgeAddress
+  adminBadgeAddress,
+  accountAddress,
+  superAdminBadgeAddress
 }: {
-	superAdminBadgeAddress: string
-	accountAddress: string
-	adminBadgeAddress: string
+  superAdminBadgeAddress: string
+  accountAddress: string
+  adminBadgeAddress: string
 }) =>
-	radixEngineClient
-		.getManifestBuilder()
-		.andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
-			convertStringManifest(`
+  radixEngineClient
+    .getManifestBuilder()
+    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
+      convertStringManifest(`
         CALL_METHOD 
           Address("${wellKnownAddresses.accountAddress.payerAccount}") 
           "lock_fee"
@@ -39,10 +39,10 @@ export const mintAdminBadge = ({
         ;
         
         `)
-				.andThen((transactionManifest) =>
-					submitTransaction(transactionManifest, ['dAppDefinitionAccount'])
-				)
-				.andThen(({ txId }) =>
-					radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-				)
-		)
+        .andThen((transactionManifest) =>
+          submitTransaction(transactionManifest, ['dAppDefinitionAccount'])
+        )
+        .andThen(({ txId }) =>
+          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
+        )
+    )

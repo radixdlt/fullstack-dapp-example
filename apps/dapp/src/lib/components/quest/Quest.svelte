@@ -80,7 +80,9 @@
       class="footer intro-footer"
       transition:fly={{ x: -width * 2, opacity: 1, duration: animationDuration }}
     >
-      <Button on:click={progressActions.next}>{nextButtonTexts[progress] ?? $i18n.t('quest_nextButton')}</Button>
+      <Button on:click={progressActions.next}
+        >{nextButtonTexts[progress] ?? $i18n.t('quest_nextButton')}</Button
+      >
     </div>
   {/if}
   {#if progress > 0}
@@ -90,7 +92,9 @@
     >
       <div class="footer quest-footer">
         <Button secondary on:click={progressActions.prev}>{$i18n.t('quest_previousButton')}</Button>
-        <Button on:click={progressActions.next}>{nextButtonTexts[progress] ?? $i18n.t('quest_nextButton')}</Button>
+        <Button on:click={progressActions.next}
+          >{nextButtonTexts[progress] ?? $i18n.t('quest_nextButton')}</Button
+        >
       </div>
     </div>
   {/if}

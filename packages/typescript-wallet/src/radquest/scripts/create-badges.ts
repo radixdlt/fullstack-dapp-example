@@ -4,16 +4,16 @@ import { createBadgeResources } from '../helpers/createBadgeResources'
 import { mintAdminBadge } from '../helpers/mintAdminBadge'
 
 const mintAdminBadgeToSystemAccount = (adminBadgeAddress: string, superAdminBadgeAddress: string) =>
-	radixEngineClient.getAddresses().andThen(({ accountAddress }) =>
-		mintAdminBadge({
-			adminBadgeAddress,
-			superAdminBadgeAddress,
-			accountAddress: accountAddress.systemAccount
-		})
-	)
+  radixEngineClient.getAddresses().andThen(({ accountAddress }) =>
+    mintAdminBadge({
+      adminBadgeAddress,
+      superAdminBadgeAddress,
+      accountAddress: accountAddress.systemAccount
+    })
+  )
 
 createBadgeResources().andThen(({ adminBadgeAddress, superAdminBadgeAddress, userBadgeAddress }) =>
-	mintAdminBadgeToSystemAccount(adminBadgeAddress, superAdminBadgeAddress).map(() =>
-		logger.debug({ adminBadgeAddress, superAdminBadgeAddress, userBadgeAddress })
-	)
+  mintAdminBadgeToSystemAccount(adminBadgeAddress, superAdminBadgeAddress).map(() =>
+    logger.debug({ adminBadgeAddress, superAdminBadgeAddress, userBadgeAddress })
+  )
 )

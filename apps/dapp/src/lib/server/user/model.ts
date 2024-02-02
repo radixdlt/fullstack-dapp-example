@@ -12,11 +12,11 @@ export const UserModel = (db = UserDbClient()) => {
       return createApiError('failed to create user', 400)()
     })
 
-	const getById = (userId: string): ResultAsync<User | null, ApiError> =>
-		db.getById(userId).mapErr((error) => {
-			appLogger.error({ error, method: 'getById' })
-			return createApiError('failed to get user', 400)()
-		})
+  const getById = (userId: string): ResultAsync<User | null, ApiError> =>
+    db.getById(userId).mapErr((error) => {
+      appLogger.error({ error, method: 'getById' })
+      return createApiError('failed to get user', 400)()
+    })
 
   return { create, getById }
 }

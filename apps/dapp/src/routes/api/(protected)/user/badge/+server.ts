@@ -4,18 +4,18 @@ import type { RequestHandler } from './$types'
 
 /** @type {import('./$types').RequestHandler} */
 export const POST: RequestHandler = async ({ request, locals }) => {
-	const { accountAddress }: { accountAddress: string } = await request.json()
+  const { accountAddress }: { accountAddress: string } = await request.json()
 
-	const result = await userController.mintUserBadge({ userId: locals.userId, accountAddress })
+  const result = await userController.mintUserBadge({ userId: locals.userId, accountAddress })
 
-	if (result.isErr()) {
-		throw error(result.error.httpResponseCode, result.error.reason)
-	}
+  if (result.isErr()) {
+    throw error(result.error.httpResponseCode, result.error.reason)
+  }
 
-	return json(
-		{},
-		{
-			status: result.value.httpResponseCode
-		}
-	)
+  return json(
+    {},
+    {
+      status: result.value.httpResponseCode
+    }
+  )
 }

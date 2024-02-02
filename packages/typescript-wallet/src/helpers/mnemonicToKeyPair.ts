@@ -5,8 +5,7 @@ import { secureRandom } from './secure-random'
 
 export const generateMnemonic = () => bip39.entropyToMnemonic(secureRandom(32))
 
-const mnemonicToSeed = (mnemonic: string) =>
-  ok(bip39.mnemonicToSeedSync(mnemonic).toString('hex'))
+const mnemonicToSeed = (mnemonic: string) => ok(bip39.mnemonicToSeedSync(mnemonic).toString('hex'))
 
 const deriveChildKey = (derivationPath: string, seedHex: string) =>
   ok(derivePath(derivationPath, seedHex))
@@ -16,5 +15,5 @@ export const mnemonicToKeyPair = (mnemonic: string, derivationPath: string) =>
     .andThen((seedHex: string) => deriveChildKey(derivationPath, seedHex))
     .map(({ key }) => ({
       privateKey: key.toString('hex'),
-      publicKey: getPublicKey(key, false).toString('hex'),
+      publicKey: getPublicKey(key, false).toString('hex')
     }))

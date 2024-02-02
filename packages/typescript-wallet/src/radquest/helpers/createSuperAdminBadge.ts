@@ -1,10 +1,10 @@
 import { radixEngineClient } from '../../config'
 
 export const createSuperAdminBadge = () =>
-	radixEngineClient
-		.getManifestBuilder()
-		.andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
-			convertStringManifest(`
+  radixEngineClient
+    .getManifestBuilder()
+    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
+      convertStringManifest(`
           CALL_METHOD
             Address("${wellKnownAddresses.accountAddress.payerAccount}")
             "lock_fee"
@@ -81,12 +81,12 @@ export const createSuperAdminBadge = () =>
             Expression("ENTIRE_WORKTOP")
             Enum<0u8>()
           ;`)
-				.andThen((transactionManifest) =>
-					submitTransaction(transactionManifest, ['dAppDefinitionAccount'])
-				)
-				.andThen(({ txId }) =>
-					radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-				)
-				.andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
-				.map((details): string => details.createdEntities[0].entity_address!)
-		)
+        .andThen((transactionManifest) =>
+          submitTransaction(transactionManifest, ['dAppDefinitionAccount'])
+        )
+        .andThen(({ txId }) =>
+          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
+        )
+        .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
+        .map((details): string => details.createdEntities[0].entity_address!)
+    )

@@ -13,43 +13,43 @@ export type UserControllerInput = Partial<{
   logger: AppLogger
 }>
 const UserController = ({ userModel = UserModel() }: UserControllerInput) => {
-	const getUser = (userId: string): ResultAsync<User | null, ApiError> => userModel.getById(userId)
+  const getUser = (userId: string): ResultAsync<User | null, ApiError> => userModel.getById(userId)
 
-	const validateAccountAddress = (accountAddress: string): ResultAsync<string, ApiError> =>
-		ResultAsync.fromPromise(z.string().safeParseAsync(accountAddress), typedError)
-			.map(() => accountAddress)
-			.mapErr(() => ({
-				httpResponseCode: 400,
-				reason: 'invalidRequestBody'
-			}))
+  const validateAccountAddress = (accountAddress: string): ResultAsync<string, ApiError> =>
+    ResultAsync.fromPromise(z.string().safeParseAsync(accountAddress), typedError)
+      .map(() => accountAddress)
+      .mapErr(() => ({
+        httpResponseCode: 400,
+        reason: 'invalidRequestBody'
+      }))
 
-	const mintUserBadge = ({
-		accountAddress,
-		userId
-	}: {
-		accountAddress: string
-		userId: string
-	}): ControllerMethodOutput<undefined> =>
-		ResultAsync.fromPromise(import('typescript-wallet'), typedError)
-			.mapErr((error) => {
-				appLogger.error({ error, method: 'mintUserBadge', event: 'error' })
-				return { httpResponseCode: 500, reason: 'mintUserBadgeError' }
-			})
-			.andThen(({ mintUserBadge: mintUserBadgeFn }) =>
-				validateAccountAddress(accountAddress)
-					.andThen(() =>
-						mintUserBadgeFn(userId, accountAddress).mapErr((error) => {
-							appLogger.error({ error, method: 'mintUserBadge', event: 'error' })
-							return { httpResponseCode: 500, reason: 'mintUserBadgeError' }
-						})
-					)
-					.map(() => ({
-						httpResponseCode: 201,
-						data: undefined
-					}))
-			)
+  const mintUserBadge = ({
+    accountAddress,
+    userId
+  }: {
+    accountAddress: string
+    userId: string
+  }): ControllerMethodOutput<undefined> =>
+    ResultAsync.fromPromise(import('typescript-wallet'), typedError)
+      .mapErr((error) => {
+        appLogger.error({ error, method: 'mintUserBadge', event: 'error' })
+        return { httpResponseCode: 500, reason: 'mintUserBadgeError' }
+      })
+      .andThen(({ mintUserBadge: mintUserBadgeFn }) =>
+        validateAccountAddress(accountAddress)
+          .andThen(() =>
+            mintUserBadgeFn(userId, accountAddress).mapErr((error) => {
+              appLogger.error({ error, method: 'mintUserBadge', event: 'error' })
+              return { httpResponseCode: 500, reason: 'mintUserBadgeError' }
+            })
+          )
+          .map(() => ({
+            httpResponseCode: 201,
+            data: undefined
+          }))
+      )
 
-	return { getUser, mintUserBadge }
+  return { getUser, mintUserBadge }
 }
 
 export const userController = UserController({})

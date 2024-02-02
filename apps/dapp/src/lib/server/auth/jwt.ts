@@ -13,24 +13,24 @@ export type JWT = ReturnType<typeof JWT>
 export const JWT = (input: JWTInput) => {
   const { secret, refreshToken, authToken } = input
 
-	const createAuthToken = (userId: string) =>
-		ok(
-			jwt.sign({ userId }, secret, {
-				expiresIn: authToken.expiresIn
-			})
-		)
+  const createAuthToken = (userId: string) =>
+    ok(
+      jwt.sign({ userId }, secret, {
+        expiresIn: authToken.expiresIn
+      })
+    )
 
-	const createRefreshToken = (userId: string) =>
-		ok(
-			jwt.sign({ userId }, secret, {
-				expiresIn: refreshToken.expiresIn
-			})
-		)
+  const createRefreshToken = (userId: string) =>
+    ok(
+      jwt.sign({ userId }, secret, {
+        expiresIn: refreshToken.expiresIn
+      })
+    )
 
-	const createTokens = (userId: string) =>
-		Result.combine([createAuthToken(userId), createRefreshToken(userId)]).map(
-			([authToken, refreshToken]) => ({ authToken, refreshToken })
-		)
+  const createTokens = (userId: string) =>
+    Result.combine([createAuthToken(userId), createRefreshToken(userId)]).map(
+      ([authToken, refreshToken]) => ({ authToken, refreshToken })
+    )
 
   const getRefreshTokenFromCookies = (
     cookies: Cookies
@@ -39,15 +39,15 @@ export const JWT = (input: JWTInput) => {
     return token ? ok(token) : err({ reason: 'invalidRefreshToken' })
   }
 
-	const verifyToken = (token: string): Result<string, { reason: string; jsError?: Error }> => {
-		try {
-			const decoded = jwt.verify(token, secret) as JwtPayload
-			return ok(typeof decoded === 'string' ? decoded : decoded.userId)
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		} catch (error: any) {
-			return err({ jsError: error, reason: 'invalidToken' })
-		}
-	}
+  const verifyToken = (token: string): Result<string, { reason: string; jsError?: Error }> => {
+    try {
+      const decoded = jwt.verify(token, secret) as JwtPayload
+      return ok(typeof decoded === 'string' ? decoded : decoded.userId)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      return err({ jsError: error, reason: 'invalidToken' })
+    }
+  }
 
   const createRefreshTokenCookie = (token: string, cookies: Cookies) => ({
     'Set-Cookie': cookies.serialize(refreshToken.key, token, createRefreshTokenOptions())

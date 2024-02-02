@@ -13,13 +13,12 @@ export const sortEntities = (
       const isResource = value.startsWith('resource')
 
       if (isPackage) return { ...acc, packages: [...acc.packages, value] }
-      else if (isComponent)
-        return { ...acc, components: [...acc.components, value] }
+      else if (isComponent) return { ...acc, components: [...acc.components, value] }
       else if (isResource) {
         const iconUrl = iconUrlMap[key]
         return {
           ...acc,
-          tokens: [...acc.tokens, { address: value, iconUrl }],
+          tokens: [...acc.tokens, { address: value, iconUrl }]
         }
       }
       return acc
@@ -27,6 +26,6 @@ export const sortEntities = (
     {
       packages: [],
       components: [],
-      tokens: [],
+      tokens: []
     }
   )

@@ -13,7 +13,7 @@ export const ExponentialBackoff = ({
   maxDelayTime = 10_000,
   multiplier = 2,
   timeout,
-  interval = 2_000,
+  interval = 2_000
 }: ExponentialBackoffInput = {}) => {
   const trigger = new Subject<void>()
   let numberOfRetries = 0
@@ -37,9 +37,7 @@ export const ExponentialBackoff = ({
   const withBackoffAndTimeout$: Observable<Result<number, SdkError>> = timeout
     ? merge(
         backoff$,
-        timer(timeout).pipe(
-          map(() => err(createSdkError('failedToPollSubmittedTransaction', '')))
-        )
+        timer(timeout).pipe(map(() => err(createSdkError('failedToPollSubmittedTransaction', ''))))
       )
     : backoff$
 

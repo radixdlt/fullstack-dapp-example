@@ -6,12 +6,11 @@ export const getOwnerBadge = (
   ownerBadgeNonFungibleId: string
 } => {
   const nftDepositEvent = events.find(
-    (event: any) =>
-      event.name === 'DepositEvent' && event.data.variant_name === 'NonFungible'
+    (event: any) => event.name === 'DepositEvent' && event.data.variant_name === 'NonFungible'
   )!
 
   const {
-    data: { fields },
+    data: { fields }
   } = nftDepositEvent
 
   const ownerBadgeResourceAddress: string = fields.find(
@@ -27,6 +26,6 @@ export const getOwnerBadge = (
   return {
     ownerBadgeAddress,
     ownerBadgeNonFungibleId,
-    ownerBadgeResourceAddress,
+    ownerBadgeResourceAddress
   }
 }
