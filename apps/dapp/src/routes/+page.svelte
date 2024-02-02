@@ -23,7 +23,7 @@
   onMount(() => {
     radixDappToolkit = RadixDappToolkit({
       networkId,
-      dAppDefinitionAddress,
+      dAppDefinitionAddress: dAppDefinitionAddress ?? '',
       logger: createLogger(1),
       onDisconnect: () => {
         // TODO: handle application state cleanup
