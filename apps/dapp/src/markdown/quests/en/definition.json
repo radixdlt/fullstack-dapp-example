@@ -1,0 +1,141 @@
+{
+  "RadixQuest": {
+    "title": "Introduction to Radix",
+    "description": "Get familiar with Radar, the radically better Web3 network.",
+    "minutesToComplete": 1,
+    "pages": [
+      "RadixQuest/0.md",
+      "RadixQuest/1.md",
+      "RadixQuest/2.md",
+      "RadixQuest/3.md",
+      "RadixQuest/4.md"
+    ]
+  },
+  "RadQuest": {
+    "title": "Your Quest to Learn About RadQuest",
+    "description": "Find out what you'll learn and what to expect during your quest",
+    "minutesToComplete": 1,
+    "rewards": [
+      {
+        "type": "Fragment",
+        "amount": 20
+      }
+    ],
+    "pages": [
+      {
+        "content": ["RadQuest.md"],
+        "actions": {
+          "next": "Cool, let's try"
+        }
+      }
+    ]
+  },
+  "RadixWalletQuest": {
+    "title": "Set Up Your Radar Wallet",
+    "description": "Learn about the Radar Wallet. Install & set up the Wallet app",
+    "minutesToComplete": 3,
+    "rewards": [
+      {
+        "type": "XRD",
+        "amount": 10
+      },
+      {
+        "type": "Fragment",
+        "amount": 20
+      },
+      {
+        "type": "Purple Card",
+        "amount": 1
+      }
+    ],
+    "pages": [
+      {
+        "content": ["RadixWalletQuest/0.md", { "type": "placeholder", "id": "radix-wallet-input" }],
+        "actions": {
+          "next": "Cool, let's try"
+        }
+      },
+      {
+        "content": ["RadixWalletQuest/1.md"],
+        "actions": {
+          "next": "Cool, let's try"
+        }
+      },
+      {
+        "content": ["RadixWalletQuest/2.md"],
+        "actions": {
+          "next": "Cool, let's try"
+        }
+      }
+    ]
+  },
+  "ConnectQuest": {
+    "title": "Login with Your Radix Wallet",
+    "description": "Learn how to use your wallet to log in to dApps on the Radar network.",
+    "minutesToComplete": 2,
+    "pages": []
+  },
+  "FirstTransactionQuest": {
+    "title": "Your First Transaction on Radix",
+    "description": "Try your first transaction on the Radar network",
+    "minutesToComplete": 4,
+    "pages": []
+  },
+  "ProofOfHuman": {
+    "title": "Proof of Human",
+    "description": "Register your email to be able to receive XRD tokens.",
+    "minutesToComplete": 6,
+    "pages": []
+  },
+  "SendAssetsQuest": {
+    "title": "Send a Web3 Asset on Radix",
+    "description": "Learn how to send a web3 asset to somebody else on Radix",
+    "minutesToComplete": 3,
+    "pages": []
+  },
+  "ConvertElementsQuest": {
+    "title": "Convert Elements Into Gemstones (NFTs)",
+    "description": "Learn how to use Jetty’s superpower!",
+    "minutesToComplete": 3,
+    "pages": []
+  },
+
+  "SwapQuest": {
+    "id": "SwapQuest",
+    "title": "Decentralized Exchange (DEX)",
+    "description": "Learn how to use your wallet to log in to dApps on the Radix network",
+    "minutesToComplete": 5,
+    "rewards": [
+      {
+        "type": "XRD",
+        "amount": 10
+      }
+    ],
+    "pages": [
+      {
+        "content": ["SwapQuest/page-0.md"],
+        "actions": {
+          "next": "Ok, I got it"
+        }
+      },
+      {
+        "content": [
+          "SwapQuest/page-1.md",
+          {
+            "type": "placeholder",
+            "id": "dex-login"
+          }
+        ],
+        "actions": {
+          "next": "I'm ready"
+        }
+      },
+      {
+        "content": ["SwapQuest/page-2.md"],
+        "actions": {
+          "next": "Ok, I got it"
+        }
+      }
+    ]
+  }
+}

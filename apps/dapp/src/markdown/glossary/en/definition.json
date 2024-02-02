@@ -1,10 +1,10 @@
 [
   {
     "title": "DEXes",
-    "path": "dexes.md"
+    "id": "dexes"
   },
   {
     "title": "dApps",
-    "path": "dapps.md"
+    "id": "dapps"
   }
 ]

@@ -1,68 +1,44 @@
-import { readMdFileSync } from './helpers/readMdFileSync'
-import { readdirSync } from 'fs'
-import { resolve } from 'path'
-import { cwd } from 'process'
 import ts from 'typescript'
-import markdownit from 'markdown-it'
-import { isNotJunk } from 'junk'
-import { readJsonFileSync } from './helpers/readJsonFileSync'
 import { tsPrinter } from './helpers/tsPrinter'
-import { createStringObjectEntry } from './helpers/tsFactoryHelpers'
+import { createArrayEntry, createStringEntry } from './helpers/tsFactoryHelpers'
+import { virtualModuleFactory } from './helpers/virtualModuleFactory'
+import { convertMarkdownFilePathToHtml } from './helpers/mdParser'
+import { readDefinitionJson } from './helpers/readDefinitionJson'
 
 type GlossaryEntry = {
   title: string
-  path: string
+  id: string
 }
 
 type GlossaryDefinition = GlossaryEntry[]
 
 export function virtualGlossary() {
-  const mdParser = markdownit()
-  const virtualModuleId = 'virtual:glossary'
-  const resolvedVirtualModuleId = '\0' + virtualModuleId
-
-  return {
+  return virtualModuleFactory({
     name: 'glossary',
-    resolveId(id: string) {
-      if (id === virtualModuleId) {
-        return resolvedVirtualModuleId
-      }
-    },
-    load(id: string) {
+    loadFn({ directory, languages }) {
       try {
-        if (id === resolvedVirtualModuleId) {
-          const glossaryDir = resolve(cwd(), 'src', 'markdown', 'glossary')
-          const languages = readdirSync(glossaryDir).filter(isNotJunk)
+        const node = ts.factory.createObjectLiteralExpression(
+          languages.map((language) =>
+            createArrayEntry(
+              language,
+              readDefinitionJson<GlossaryDefinition>(directory, language).map(({ title, id }) => {
+                const html = convertMarkdownFilePathToHtml(directory, language, `${id}.md`)
 
-          const node = ts.factory.createObjectLiteralExpression(
-            languages.map((language) => {
-              const glossaryDefinition = readJsonFileSync<GlossaryDefinition>(
-                resolve(glossaryDir, language, 'definition.json')
-              )
-              return ts.factory.createPropertyAssignment(
-                language,
-                ts.factory.createArrayLiteralExpression(
-                  glossaryDefinition.map((glossaryEntry) => {
-                    return ts.factory.createObjectLiteralExpression([
-                      createStringObjectEntry('title', glossaryEntry.title),
-                      createStringObjectEntry(
-                        'content',
-                        mdParser.render(
-                          readMdFileSync(resolve(glossaryDir, language, glossaryEntry.path))
-                        )
-                      )
-                    ])
-                  })
-                )
-              )
-            })
+                return ts.factory.createObjectLiteralExpression([
+                  createStringEntry('id', id),
+                  createStringEntry('title', title),
+                  createStringEntry('content', html)
+                ])
+              })
+            )
           )
+        )
 
-          return `export const GlossaryContent = ${tsPrinter(node)};`
-        }
+        return `export const GlossaryContent = ${tsPrinter(node)};`
       } catch (e) {
-        return 'export const GlossaryContent = {}'
+        console.error(e)
+        return 'export const GlossaryContent = {};'
       }
     }
-  }
+  })
 }

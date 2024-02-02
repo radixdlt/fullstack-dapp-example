@@ -1,15 +1,15 @@
 <script lang="ts">
-  import type BigNumber from 'bignumber.js'
   import QuestOverviewText from '../quest-overview/quest-overview-text/QuestOverviewText.svelte'
   import QuestRewards from '../quest-rewards/QuestRewards.svelte'
   import { i18n } from '$lib/i18n'
+  import type { QuestRewardType } from 'virtual:quests'
 
   export let title: string
   export let description: string
   export let minutesToComplete: number
   export let rewards: {
-    icon: string
-    amount: BigNumber
+    type: QuestRewardType
+    amount: number
   }[] = []
 </script>
 

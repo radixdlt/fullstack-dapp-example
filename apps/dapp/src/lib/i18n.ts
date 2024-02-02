@@ -8,7 +8,9 @@ i18next.init({
       translation: {
         quest_rewards: 'Rewards',
         quest_nextButton: 'Next',
+        quest_keyImageAlt: 'Quest Image',
         quest_previousButton: 'Back',
+        quest_placeholderNotFound: 'Placeholder {{id}} not found',
         questOverview_minutesToComplete_one: '{{count}} minute',
         questOverview_minutesToComplete_other: '{{count}} minutes'
       }

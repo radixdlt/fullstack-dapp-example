@@ -19,7 +19,7 @@
     top: 0;
     left: 0;
     height: 100%;
-    width: calc(calc(var(--step) + 1) / var(--steps) * 100%);
+    width: calc(calc(var(--step)) / var(--steps) * 100%);
     background: var(--color-background-dark);
     border-radius: var(--border-radius-lg);
     transition: width 0.3s ease-in-out;

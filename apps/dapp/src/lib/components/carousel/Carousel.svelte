@@ -117,6 +117,7 @@
 
     -ms-overflow-style: none;
     scrollbar-width: none;
+    padding: 1.5rem 0;
   }
   ::-webkit-scrollbar {
     display: none;

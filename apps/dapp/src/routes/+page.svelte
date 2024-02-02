@@ -13,13 +13,18 @@
   import { ResultAsync } from 'neverthrow'
   import { GlossaryContent } from 'virtual:glossary'
   import { publicConfig } from '$lib/public-config'
-
+  import { QuestsContent, type QuestDefinition } from 'virtual:quests'
+  import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
+  import Carousel from '$lib/components/carousel/Carousel.svelte'
+  import { writable } from 'svelte/store'
+  import Quest from '$lib/components/quest/Quest.svelte'
+  import Input from '$lib/components/input/Input.svelte'
+  // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
   let connected: boolean = false
 
   const { dAppDefinitionAddress, networkId } = publicConfig
 
-  // TODO: move dApp toolkit to a better location
   onMount(() => {
     radixDappToolkit = RadixDappToolkit({
       networkId,
@@ -82,6 +87,31 @@
         return userApi.mintUserBadge(account.address)
       })
   }
+  const currentQuest = writable<QuestDefinition | undefined>()
+  const currentInputValue = writable<string>('')
+
+  const questConfig = {
+    placeholders: {
+      'radix-wallet-input': {
+        component: Input,
+        props: {
+          onInput: (value: string) => currentInputValue.set(value)
+        }
+      }
+    },
+    events: {
+      onNextClick: () => {
+        return ResultAsync.fromPromise(
+          new Promise<void>((resolve) => {
+            setTimeout(() => {
+              resolve()
+            }, 1000)
+          }),
+          () => new Error('Failed to complete quest')
+        )
+      }
+    }
+  }
 </script>
 
 <div><radix-connect-button></radix-connect-button></div>
@@ -94,8 +124,33 @@
   </div>
 {/if}
 
+<div>
+  input value: {$currentInputValue}
+</div>
+
+<Carousel let:Item>
+  {#each Object.values(QuestsContent['en']) as quest}
+    <Item>
+      <QuestOverview
+        title={quest.title}
+        description={quest.description}
+        minutesToComplete={quest.minutesToComplete}
+        rewards={quest.rewards}
+        backgroundImage={quest.splashImage}
+        state="unlocked"
+        on:click={() => currentQuest.set(quest)}
+      />
+    </Item>
+  {/each}
+</Carousel>
+
+{#if $currentQuest}
+  <Quest quest={$currentQuest} {questConfig} on:closeClick={() => currentQuest.set(undefined)}
+  ></Quest>
+{/if}
+
 {#each GlossaryContent['en'] as entry}
-  <h1>{entry.title}</h1>
+  <h3>{entry.title}</h3>
   {@html entry.content}
 {/each}
 
