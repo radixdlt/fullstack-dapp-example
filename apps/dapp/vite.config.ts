@@ -6,5 +6,14 @@ export default defineConfig({
   plugins: [sveltekit(), virtualGlossary()],
   test: {
     include: ['src/**/*.{test,spec}.{js,ts}']
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `
+          @use 'src/mixins' as *;
+        `
+      }
+    }
   }
 })
