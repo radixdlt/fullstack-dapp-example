@@ -9,7 +9,7 @@ export const GET: RequestHandler = async () => {
 
   if (result.isErr()) {
     appLogger.error(result.error)
-    throw error(result.error.httpResponseCode, result.error.reason)
+    error(result.error.httpResponseCode, result.error.reason);
   }
 
   return json(result.value.data, { status: result.value.httpResponseCode })
