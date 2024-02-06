@@ -7,7 +7,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
   const requestBody = await request.json()
   const result = await authController.login(requestBody, cookies)
 
-  if (result.isErr()) throw error(result.error.httpResponseCode, result.error.reason)
+  if (result.isErr()) error(result.error.httpResponseCode, result.error.reason);
 
   const { authToken, headers } = result.value.data
 
