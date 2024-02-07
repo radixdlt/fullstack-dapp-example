@@ -1,4 +1,4 @@
-import { GatewayApi, GetTransactionsErrorOutput, Transaction } from '../gateway'
+import { GatewayApiClient } from '../gateway'
 import { concatMap, from, tap, map, withLatestFrom, filter, merge } from 'rxjs'
 import { TransactionStreamSubjects } from './subjects'
 import { HandleTransactionResult, handleTransactionResult } from './helpers/handleTransactionResult'
@@ -6,7 +6,7 @@ import { HandleTransactionResult, handleTransactionResult } from './helpers/hand
 export type TransactionStreamInput = {
   fromStateVersion?: number
   initialStatus?: 'run' | 'stop'
-  dependencies: { gatewayApi: GatewayApi; subjects?: TransactionStreamSubjects }
+  dependencies: { gatewayApiClient: GatewayApiClient; subjects?: TransactionStreamSubjects }
 }
 export type TransactionStream = ReturnType<typeof TransactionStream>
 export const TransactionStream = ({
@@ -16,7 +16,7 @@ export const TransactionStream = ({
 }: TransactionStreamInput) => {
   const subjects =
     dependencies.subjects ?? TransactionStreamSubjects({ fromStateVersion, status: initialStatus })
-  const { getTransactions } = dependencies.gatewayApi
+  const { getTransactions } = dependencies.gatewayApiClient
 
   const fetchAndProcessTransactions = (stateVersion: number) =>
     from(getTransactions(stateVersion)).pipe(

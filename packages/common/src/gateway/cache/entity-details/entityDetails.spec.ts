@@ -1,12 +1,12 @@
 import type { StateEntityDetailsVaultResponseItem } from '@radixdlt/babylon-gateway-api-sdk'
 import { entityDetailsCache } from './entityDetails'
-import type { gatewayApi } from '../..'
+import type { GatewayApi } from '../..'
 import { describe, beforeEach, it, expect } from 'vitest'
 
 const mockResponse = (...responses: { address: string; data?: any }[]) =>
   responses as StateEntityDetailsVaultResponseItem[]
 
-type Params = Parameters<(typeof gatewayApi)['getEntityDetailsVaultAggregated']>
+type Params = Parameters<GatewayApi['extractedMethods']['getEntityDetailsVaultAggregated']>
 
 describe('entity details cache', () => {
   beforeEach(() => {

@@ -1,13 +1,13 @@
 import { expect, describe, beforeEach, it } from 'vitest'
 import { TransactionStream } from './transaction-stream'
 import { firstValueFrom } from 'rxjs'
-import { GatewayApi } from '../gateway'
+import { GatewayApiClient } from '../gateway'
 import { errAsync, okAsync } from 'neverthrow'
 import { afterEach } from 'node:test'
 import { DeepMockProxy, mockDeep, mockReset } from 'vitest-mock-extended'
 
 let transactionStream: TransactionStream
-let gatewayApiMock: DeepMockProxy<GatewayApi>
+let gatewayApiMock: DeepMockProxy<GatewayApiClient>
 
 const getNextErrorValueFromStream = async () => firstValueFrom(transactionStream.error$)
 
@@ -25,13 +25,13 @@ const asyncDelay = (ms: number) => new Promise((resolve) => setTimeout(resolve, 
 
 describe('transaction stream handler', () => {
   beforeEach(() => {
-    gatewayApiMock = mockDeep<GatewayApi>()
+    gatewayApiMock = mockDeep<GatewayApiClient>()
 
     transactionStream = TransactionStream({
       fromStateVersion: 0,
       initialStatus: 'stop',
       dependencies: {
-        gatewayApi: gatewayApiMock
+        gatewayApiClient: gatewayApiMock
       }
     })
   })

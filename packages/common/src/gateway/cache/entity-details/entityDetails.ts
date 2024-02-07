@@ -1,17 +1,19 @@
-import type { gatewayApi } from '../../'
+import type { GatewayApi } from '../../'
 import type { Cache } from '..'
 import type { StateEntityDetailsVaultResponseItem } from '@radixdlt/babylon-gateway-api-sdk'
 
 const storage = new Map<string, StateEntityDetailsVaultResponseItem>()
 
 const key =
-  (params: Parameters<(typeof gatewayApi)['getEntityDetailsVaultAggregated']>) =>
+  (params: Parameters<GatewayApi['extractedMethods']['getEntityDetailsVaultAggregated']>) =>
   (address: string) =>
     `${address}${params[1] ? JSON.stringify(params[1]) : ''}${
       params[2] ? JSON.stringify(params[2]) : ''
     }`
 
-export const entityDetailsCache: Cache<(typeof gatewayApi)['getEntityDetailsVaultAggregated']> = {
+export const entityDetailsCache: Cache<
+  GatewayApi['extractedMethods']['getEntityDetailsVaultAggregated']
+> = {
   set: (params, response) => {
     params[0].forEach((address) => {
       const item = response.find((item) => item.address === address)

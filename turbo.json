@@ -1,53 +1,56 @@
 {
-	"$schema": "https://turbo.build/schema.json",
-	"pipeline": {
-		"build": {
-			"dependsOn": ["^db:build", "^wallet:build"],
-			"outputs": [".svelte-kit/**"]
-		},
-		"lint": {
-			"dependsOn": ["^lint"]
-		},
-		"test": { "dependsOn": ["^db:build"] },
-		"dev": {
-			"dependsOn": ["^db:generate"],
-			"cache": false,
-			"persistent": true
-		},
-		"dev:inspect": {
-			"dependsOn": ["^db:generate"],
-			"cache": false,
-			"persistent": true
-		},
-		"db:generate": {
-			"cache": false
-		},
-		"db:push": {
-			"cache": false
-		},
-		"db:build": {
-			"cache": false
-		},
-		"wallet:create:mnemonic": {
-			"cache": false
-		},
-		"wallet:create:badges": {
-			"cache": false
-		},
-		"wallet:list:accounts": {
-			"cache": false
-		},
-		"wallet:faucet": {
-			"cache": false
-		},
-		"wallet:mint-admin-badge": {
-			"cache": false
-		},
-		"wallet:mint-user-badge": {
-			"cache": false
-		},
-		"wallet:build": {
-			"cache": false
-		}
-	}
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^db:build", "^common:build", "^wallet:build"],
+      "outputs": [".svelte-kit/**"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "test": { "dependsOn": ["^db:build"] },
+    "dev": {
+      "dependsOn": ["^db:generate"],
+      "cache": false,
+      "persistent": true
+    },
+    "dev:inspect": {
+      "dependsOn": ["^db:generate"],
+      "cache": false,
+      "persistent": true
+    },
+    "db:generate": {
+      "cache": false
+    },
+    "db:push": {
+      "cache": false
+    },
+    "db:build": {
+      "cache": false
+    },
+    "wallet:create:mnemonic": {
+      "cache": false
+    },
+    "wallet:create:badges": {
+      "cache": false
+    },
+    "wallet:list:accounts": {
+      "cache": false
+    },
+    "wallet:faucet": {
+      "cache": false
+    },
+    "wallet:mint-admin-badge": {
+      "cache": false
+    },
+    "wallet:mint-user-badge": {
+      "cache": false
+    },
+    "wallet:build": {
+      "cache": false
+    },
+    "common:build": {
+      "cache": false
+    }
+  }
 }

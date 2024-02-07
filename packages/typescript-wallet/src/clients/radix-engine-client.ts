@@ -17,8 +17,7 @@ import { typedError } from '../helpers/typed-error'
 import { mnemonicToKeyPair } from '../helpers/mnemonicToKeyPair'
 import { GatewayClient } from './gateway-client'
 import { logger } from '../helpers/logger'
-import { RadixNetworkConfig } from '@radixdlt/radix-dapp-toolkit'
-import { getNetworkConfig } from '../helpers/getNetworkConfig'
+import { GatewayApi } from 'common'
 
 const getSignerKeys = (mnemonic: string, derivationPath: string) => {
   const { privateKey } = mnemonicToKeyPair(mnemonic, derivationPath).unwrapOr({
@@ -51,15 +50,15 @@ export const RadixEngineClient = <
     [accountName: string]: number
   }
 >({
-  networkName,
   mnemonic,
-  accounts
+  accounts,
+  gatewayApi
 }: {
-  networkName: keyof typeof RadixNetworkConfig
   mnemonic: string
   accounts: T
+  gatewayApi: GatewayApi
 }) => {
-  const networkConfig = getNetworkConfig(networkName)
+  const networkConfig = gatewayApi.networkConfig
   const { networkId, dashboardUrl } = networkConfig
 
   const KEY_TYPE = {
@@ -94,7 +93,7 @@ export const RadixEngineClient = <
 
   const payerKeys = result.value[0]
 
-  const gatewayClient = GatewayClient()
+  const gatewayClient = GatewayClient(gatewayApi)
 
   const getAccountAddress = () =>
     ResultAsync.combine(

@@ -1,12 +1,10 @@
 import {
-  GatewayApiClient,
   StreamTransactionsResponse,
   type ErrorResponse as GatewayErrorResponse
 } from '@radixdlt/babylon-gateway-api-sdk'
-import { config } from './config'
 import { Result, ResultAsync } from 'neverthrow'
-import { typedError } from './helpers/typed-error'
 import { logger } from './helpers/logger'
+import { GatewayApi } from 'common'
 
 export type Transaction = StreamTransactionsResponse['items'][0]
 
@@ -15,36 +13,22 @@ export type GetTransactionsOutput = {
   ledgerStateVersion: number
 }
 
-export type GetTransactionsErrorOutput =
-  | GatewayErrorResponse
-  | {
-      message: 'unknown error'
-      details: { type: 'UnknownError'; stack: Error['stack']; message: string }
-    }
+export type GetTransactionsAwaitedResult = Result<GetTransactionsOutput, GatewayErrorResponse>
 
-export type GetTransactionsAwaitedResult = Result<GetTransactionsOutput, GetTransactionsErrorOutput>
-
-export type GatewayApiInput = {
-  dependencies?: { GatewayApiClient?: GatewayApiClient }
+export type GatewayApiClientInput = {
+  dependencies: { gatewayApi: GatewayApi }
 }
-export type GatewayApi = ReturnType<typeof GatewayApi>
-export const GatewayApi = ({ dependencies }: GatewayApiInput) => {
-  const { stream } =
-    dependencies?.GatewayApiClient ??
-    GatewayApiClient.initialize({
-      applicationName: 'RadQuest',
-      basePath: config.gateway.baseUrl
-    })
-
+export type GatewayApiClient = ReturnType<typeof GatewayApiClient>
+export const GatewayApiClient = ({ dependencies }: GatewayApiClientInput) => {
   const getTransactions = (
     fromStateVersion?: number
-  ): ResultAsync<GetTransactionsOutput, GetTransactionsErrorOutput> => {
+  ): ResultAsync<GetTransactionsOutput, GatewayErrorResponse> => {
     const from_ledger_state = fromStateVersion ? { state_version: fromStateVersion } : undefined
 
     logger.trace({ method: 'getTransactions', event: 'start', fromStateVersion })
 
-    return ResultAsync.fromPromise(
-      stream.innerClient.streamTransactions({
+    return dependencies.gatewayApi
+      .callApi('streamTransactions', {
         streamTransactionsRequest: {
           kind_filter: 'User',
           order: 'Asc',
@@ -55,9 +39,7 @@ export const GatewayApi = ({ dependencies }: GatewayApiInput) => {
             receipt_state_changes: true
           }
         }
-      }),
-      typedError<any>
-    )
+      })
       .map((response): GetTransactionsOutput => {
         logger.trace({
           method: 'getTransactions',
@@ -70,15 +52,10 @@ export const GatewayApi = ({ dependencies }: GatewayApiInput) => {
           ledgerStateVersion: response.ledger_state.state_version
         }
       })
-      .mapErr((error): GetTransactionsErrorOutput => {
-        logger.trace({ method: 'getTransactions', event: 'error', error })
+      .mapErr((error): GatewayErrorResponse => {
+        logger.trace({ method: 'getTransactions', event: 'error', ...error })
 
-        if (typeof error === 'object' && error.details) return error as GatewayErrorResponse
-
-        return {
-          message: 'unknown error',
-          details: { type: 'UnknownError', stack: error.stack, message: error.name }
-        }
+        return error
       })
   }
 
