@@ -2,7 +2,7 @@ image:
   repository: docker.io/radixdlt/radquest-transaction-stream
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: ''
 
 imagePullSecrets:
   - name: dockerhub-dev-transaction-stream
@@ -13,22 +13,22 @@ metrics:
   enabled: false
   port: 9209
 
-nameOverride: "transaction-stream"
+nameOverride: 'transaction-stream'
 
-fullnameOverride: "transaction-stream"
+fullnameOverride: 'transaction-stream'
 
 params:
-  GATEWAY_BASE_URL: "https://babylon-stokenet-gateway.radixdlt.com"
-  REDIS_HOST: "redis-master"
-  REDIS_PORT: "6379"
-  REDIS_PASSWORD: ""
+  PUBLIC_NETWORK_ID: 2
+  REDIS_HOST: 'redis-master'
+  REDIS_PORT: '6379'
+  REDIS_PASSWORD: ''
 
 secrets: {}
 
 serviceAccount:
   create: true
   annotations: {}
-  name: ""
+  name: ''
 
 podAnnotations: {}
 
@@ -43,7 +43,7 @@ service:
 ingress:
   enabled: false
   basic_auth: false
-  className: ""
+  className: ''
   hosts:
     - host: chart-example.local
       paths:
@@ -75,5 +75,5 @@ docker:
     name: docker.io/radixdlt
 
 # Set it to true if you want to secret to be deployed.
-docker_secret: 
-    enabled: true
+docker_secret:
+  enabled: true

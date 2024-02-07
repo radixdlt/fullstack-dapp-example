@@ -1,7 +1,4 @@
 export const config = {
-  gateway: {
-    baseUrl: process.env.GATEWAY_BASE_URL!
-  },
   redis: {
     host: process.env.REDIS_HOST!,
     port: parseInt(process.env.REDIS_PORT!, 10),

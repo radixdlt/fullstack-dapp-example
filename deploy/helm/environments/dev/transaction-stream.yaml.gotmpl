@@ -2,11 +2,11 @@ image:
     tag: {{ .StateValues.ci.tag }}
 
 params:
-  GATEWAY_BASE_URL: https://babylon-stokenet-gateway.radixdlt.com
   REDIS_HOST: radquest-dev-redis.rdx-works-main.internal
   REDIS_PORT: 6379
   REDIS_PASSWORD: ""
   LOG_LEVEL: debug
+  PUBLIC_NETWORK_ID: 2
 
 secrets:
 
