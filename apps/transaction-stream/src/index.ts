@@ -29,13 +29,23 @@ const app = async () => {
     // TODO: filter out transactions that are not from the RadQuest app and add them to a queue
   })
 
-  stream.error$.subscribe((error) => {
-    // TODO: implement handler of different errors types
-    // NotSynced - error might need to wait for a while before restarting the stream
-    // InternalError, InvalidRequest, UnknownError  - might need to alert the team
+  stream.error$.subscribe(async (error) => {
+    logger.error({ method: 'stream.error$', error })
 
-    // errors cause the stream to stop, so we need to restart it depending on the error type
-    stream.setStatus('run')
+    const isRateLimitError = error.status === 429
+    const ONE_MINUTE = 1000 * 60
+    const TEN_SECONDS = 1000 * 60
+
+    if (isRateLimitError) {
+      // wait for a while before restarting the stream
+      stream.setStatus('run', ONE_MINUTE)
+    } else {
+      // TODO: implement handler of different errors types
+      // NotSynced - error might need to wait for a while before restarting the stream
+      // InternalError, InvalidRequest, UnknownError  - might need to alert the team
+      // implement exponential backoff for repeating errors
+      stream.setStatus('run', TEN_SECONDS)
+    }
   })
 }
 

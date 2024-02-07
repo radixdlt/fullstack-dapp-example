@@ -1,3 +1,4 @@
+import { ErrorResponse } from '@radixdlt/babylon-gateway-api-sdk'
 import {
   GetTransactionsAwaitedResult,
   GetTransactionsErrorOutput,
