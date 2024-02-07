@@ -1,10 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { AppLogger } from '$lib/helpers/logger'
+import type { NumericRange } from '@sveltejs/kit'
 import type { ResultAsync } from 'neverthrow'
 
 export type ApiError = ReturnType<ReturnType<typeof createApiError>>
 export const createApiError =
-  (reason: string, httpResponseCode: number) =>
-  (jsError?: any): { jsError?: Error; httpResponseCode: number; reason: string } => ({
+  (reason: string, httpResponseCode: NumericRange<400, 599>) =>
+  (
+    jsError?: any
+  ): { jsError?: Error; httpResponseCode: NumericRange<400, 599>; reason: string } => ({
     jsError,
     httpResponseCode,
     reason
@@ -14,3 +18,7 @@ export type ControllerMethodOutput<T = any> = ResultAsync<
   { data: T; httpResponseCode: number },
   ApiError
 >
+
+export type ControllerMethodContext = {
+  logger: AppLogger
+}

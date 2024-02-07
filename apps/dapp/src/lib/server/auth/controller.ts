@@ -1,9 +1,9 @@
-import { appLogger, type AppLogger } from '$lib/helpers/logger'
-import type { ControllerMethodOutput } from '../_types'
+import type { ApiError, ControllerMethodContext, ControllerMethodOutput } from '../_types'
 
 import { hasChallengeExpired } from './helpers/has-challenge-expired'
 import { Rola } from '@radixdlt/rola'
-import { SignedChallenge, type GatewayApiClient } from '@radixdlt/radix-dapp-toolkit'
+import { SignedChallenge } from '@radixdlt/radix-dapp-toolkit'
+import { GatewayApi } from 'common'
 
 import { err, errAsync, ok } from 'neverthrow'
 import { JWT } from './jwt'
@@ -18,55 +18,98 @@ export type AuthControllerInput = Partial<{
   userModel: UserModel
   jwt: JWT
   dAppConfig: Config['dapp']
-  logger: AppLogger
-  gatewayApiClient: GatewayApiClient
+  gatewayApiClient: GatewayApi['gatewayApiClient']
 }>
 export type AuthController = ReturnType<typeof AuthController>
 export const AuthController = ({
+  jwt = JWT(config.jwt),
+  dAppConfig = config.dapp,
   authModel = AuthModel(),
   userModel = UserModel(),
-  jwt = JWT(config.jwt),
-  logger = appLogger,
-  dAppConfig = config.dapp,
   gatewayApiClient
 }: AuthControllerInput) => {
+  const { dAppDefinitionAddress, networkId, expectedOrigin } = dAppConfig
+  const gatewayApi = GatewayApi(networkId)
+
   const { verifySignedChallenge } = Rola({
     applicationName: 'RadQuest dApp',
-    gatewayApiClient,
-    ...dAppConfig
+    gatewayApiClient: gatewayApiClient ?? gatewayApi.gatewayApiClient,
+    dAppDefinitionAddress,
+    networkId,
+    expectedOrigin
   })
 
-  const createChallenge = (): ControllerMethodOutput<{ challenge: string }> =>
-    authModel.createChallenge().map((challenge) => ({ data: { challenge }, httpResponseCode: 201 }))
+  const createChallenge = (
+    ctx: ControllerMethodContext
+  ): ControllerMethodOutput<{ challenge: string }> =>
+    authModel(ctx.logger)
+      .createChallenge()
+      .map((challenge) => {
+        ctx.logger.debug({ method: 'createChallenge', event: 'success', challenge })
+        return { data: { challenge }, httpResponseCode: 201 }
+      })
+      .mapErr((error) => {
+        ctx.logger.debug({ method: 'createChallenge', event: 'error', error })
+        return error
+      })
 
   const login = (
+    ctx: ControllerMethodContext,
     signedChallenge: SignedChallenge,
     cookies: Cookies
   ): ControllerMethodOutput<{
     authToken: string
     headers: { ['Set-Cookie']: string }
   }> => {
-    logger?.trace({ signedChallenge, method: 'login' })
-
-    if (!SignedChallenge.safeParse(signedChallenge))
+    ctx.logger.debug({ signedChallenge, method: 'login', event: 'start' })
+    const parsedResult = SignedChallenge.safeParse(signedChallenge)
+    if (!parsedResult.success) {
+      ctx.logger.error({
+        method: 'login.parseSignedChallenge',
+        event: 'error',
+        error: parsedResult.error
+      })
       return errAsync({
         httpResponseCode: 400,
         reason: 'invalidRequestBody'
       })
+    }
 
-    return authModel
+    return authModel(ctx.logger)
       .getAndDeleteChallenge(signedChallenge.challenge)
+      .andThen((challenge) => {
+        if (challenge) return ok(challenge)
+        ctx.logger.error({
+          method: 'login.getAndDeleteChallenge',
+          event: 'error',
+          error: 'challengeNotFound'
+        })
+        return challenge
+          ? ok(challenge)
+          : err({
+              reason: 'challengeNotFound',
+              jsError: undefined,
+              httpResponseCode: 400
+            } satisfies ApiError)
+      })
       .andThen((challenge) =>
-        challenge ? ok(challenge) : err({ reason: 'challengeNotFound', jsError: undefined })
+        hasChallengeExpired(challenge).mapErr((error): ApiError => {
+          ctx.logger.error({ error, method: 'login.hasChallengeExpired', event: 'error' })
+          return error
+        })
       )
-      .andThen(hasChallengeExpired)
-      .andThen(() => verifySignedChallenge(signedChallenge))
-      .mapErr(({ reason, jsError }) => ({
-        httpResponseCode: 400,
-        reason,
-        jsError
-      }))
-      .andThen(() => userModel.create(signedChallenge.address))
+      .andThen(() =>
+        verifySignedChallenge(signedChallenge).mapErr((error) => {
+          ctx.logger.error({ error, method: 'login.verifySignedChallenge', event: 'error' })
+          return {
+            httpResponseCode: 400,
+            reason: error.reason,
+            jsError: error.jsError
+          } satisfies ApiError
+        })
+      )
+
+      .andThen(() => userModel(ctx.logger).create(signedChallenge.address))
       .andThen(({ id }) => jwt.createTokens(id))
       .map(({ authToken, refreshToken }) => ({
         data: {

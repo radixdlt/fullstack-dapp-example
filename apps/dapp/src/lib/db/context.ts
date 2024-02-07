@@ -1,23 +1,23 @@
 import { mockDeep, type DeepMockProxy } from 'vitest-mock-extended'
 import type { Cookies } from '@sveltejs/kit'
-import type { PrismaClient } from 'database'
 import type { GatewayApiClient } from '@radixdlt/radix-dapp-toolkit'
+import type { DbClient } from './index'
 
 export type Context = {
-  prisma: PrismaClient
+  prisma: DbClient
   gatewayApi: GatewayApiClient
   cookies: Cookies
 }
 
 export type MockContext = {
-  prisma: DeepMockProxy<PrismaClient>
+  prisma: DeepMockProxy<DbClient>
   gatewayApi: DeepMockProxy<GatewayApiClient>
   cookies: DeepMockProxy<Cookies>
 }
 
 export const createMockContext = (): MockContext => {
   return {
-    prisma: mockDeep<PrismaClient>(),
+    prisma: mockDeep<DbClient>(),
     gatewayApi: mockDeep<GatewayApiClient>(),
     cookies: mockDeep<Cookies>()
   }

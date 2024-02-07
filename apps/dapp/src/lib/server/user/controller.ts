@@ -1,19 +1,15 @@
 import { UserModel } from './model'
 import type { User } from 'database'
-import type { AppLogger } from '@radixdlt/radix-dapp-toolkit'
 import { ResultAsync } from 'neverthrow'
-import type { ApiError, ControllerMethodOutput } from '../_types'
+import type { ApiError, ControllerMethodContext, ControllerMethodOutput } from '../_types'
 import z from 'zod'
-
-import { appLogger } from '$lib/helpers/logger'
 import { typedError } from '$lib/helpers/typed-error'
 
-export type UserControllerInput = Partial<{
-  userModel: UserModel
-  logger: AppLogger
-}>
-const UserController = ({ userModel = UserModel() }: UserControllerInput) => {
-  const getUser = (userId: string): ResultAsync<User | null, ApiError> => userModel.getById(userId)
+const UserController = (userModel = UserModel()) => {
+  const getUser = (
+    ctx: ControllerMethodContext,
+    userId: string
+  ): ResultAsync<User | null, ApiError> => userModel(ctx.logger).getById(userId)
 
   const validateAccountAddress = (accountAddress: string): ResultAsync<string, ApiError> =>
     ResultAsync.fromPromise(z.string().safeParseAsync(accountAddress), typedError)
@@ -23,24 +19,27 @@ const UserController = ({ userModel = UserModel() }: UserControllerInput) => {
         reason: 'invalidRequestBody'
       }))
 
-  const mintUserBadge = ({
-    accountAddress,
-    userId
-  }: {
-    accountAddress: string
-    userId: string
-  }): ControllerMethodOutput<undefined> =>
+  const mintUserBadge = (
+    ctx: ControllerMethodContext,
+    {
+      accountAddress,
+      userId
+    }: {
+      accountAddress: string
+      userId: string
+    }
+  ): ControllerMethodOutput<undefined> =>
     ResultAsync.fromPromise(import('typescript-wallet'), typedError)
       .mapErr((error) => {
-        appLogger.error({ error, method: 'mintUserBadge', event: 'error' })
-        return { httpResponseCode: 500, reason: 'mintUserBadgeError' }
+        ctx.logger.error({ error, method: 'mintUserBadge.importWallet', event: 'error' })
+        return { httpResponseCode: 500, reason: 'mintUserBadgeError' } satisfies ApiError
       })
       .andThen(({ mintUserBadge: mintUserBadgeFn }) =>
         validateAccountAddress(accountAddress)
           .andThen(() =>
             mintUserBadgeFn(userId, accountAddress).mapErr((error) => {
-              appLogger.error({ error, method: 'mintUserBadge', event: 'error' })
-              return { httpResponseCode: 500, reason: 'mintUserBadgeError' }
+              ctx.logger.error({ error, method: 'mintUserBadge', event: 'error' })
+              return { httpResponseCode: 500, reason: 'mintUserBadgeError' } satisfies ApiError
             })
           )
           .map(() => ({
@@ -52,4 +51,4 @@ const UserController = ({ userModel = UserModel() }: UserControllerInput) => {
   return { getUser, mintUserBadge }
 }
 
-export const userController = UserController({})
+export const userController = UserController()
