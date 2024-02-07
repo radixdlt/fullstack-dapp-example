@@ -1,18 +1,27 @@
 <script lang="ts">
-  import type BigNumber from 'bignumber.js'
   import Icon from '../icon/Icon.svelte'
+  import FragmentIcon from '@images/fragment.png'
+  import XRDIcon from '@images/xrd.png'
+  import PurpleCardIcon from '@images/purple-card.svg'
+  import type { QuestRewardType } from 'virtual:quests'
 
   export let rewards: {
-    icon: string
-    amount: BigNumber
+    type: QuestRewardType
+    amount: number
   }[] = []
+
+  const typeToIcon: Record<QuestRewardType, string> = {
+    XRD: XRDIcon,
+    Fragment: FragmentIcon,
+    'Purple Card': PurpleCardIcon
+  }
 </script>
 
 <div class="rewards">
-  {#each rewards as { icon, amount }}
+  {#each rewards as { type, amount }}
     <div>
-      <Icon url={icon} size="small">
-        {amount.toString()}
+      <Icon url={typeToIcon[type]} size="small">
+        {amount}
       </Icon>
     </div>
   {/each}

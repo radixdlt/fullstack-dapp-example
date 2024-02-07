@@ -22,6 +22,11 @@
 </div>
 
 <style lang="scss">
+  h3,
+  p {
+    margin: 0;
+  }
+
   .text-content {
     display: flex;
     flex-direction: column;

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { BigNumber } from 'bignumber.js'
+  import type { QuestRewardType } from 'virtual:quests'
   import QuestRewards from '../quest-rewards/QuestRewards.svelte'
   import QuestOverviewText from './quest-overview-text/QuestOverviewText.svelte'
   import Button from '../button/Button.svelte'
@@ -12,12 +12,14 @@
   export let state: 'locked' | 'unlocked' | 'completed' = 'locked'
   export let backgroundImage: string | undefined = undefined
   export let rewards: {
-    icon: string
-    amount: BigNumber
+    type: QuestRewardType
+    amount: number
   }[] = []
 </script>
 
 <div
+  role="button"
+  tabindex="0"
   class="card quest-card"
   style:--background-image={backgroundImage ? `url(${backgroundImage})` : ''}
 >
@@ -25,7 +27,7 @@
     <QuestOverviewText {title} {description} {minutesToComplete} />
 
     <div class="start-button">
-      <Button disabled={state === 'locked'}>
+      <Button on:click disabled={state === 'locked'}>
         <div class="button-content">
           {#if state === 'unlocked'}
             Start
@@ -57,9 +59,10 @@
     min-height: 32rem;
     justify-content: flex-end;
     background: var(--color-light);
+    background-size: contain;
     background-image: linear-gradient(transparent 30%, var(--color-light) 50%),
       var(--background-image), var(--gradient-5);
-    background-position-y: 3.5rem;
+    background-position-y: 1.5rem;
 
     @media (max-width: 25rem) {
       width: 84vw;

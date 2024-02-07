@@ -35,33 +35,27 @@
   import { Story, Template } from '@storybook/addon-svelte-csf'
   import QuestOverview from './QuestOverview.svelte'
   import JettyPlatform from '@images/jetty-platform.png'
-  import FragmentIcon from '@images/fragment.png'
-  import XRDIcon from '@images/xrd.png'
-  import PurpleCardIcon from '@images/purple-card.svg'
-  import BigNumber from 'bignumber.js'
 
-  const rewards = {
-    XRD: {
-      icon: XRDIcon,
-      amount: new BigNumber(10)
+  const rewards = [
+    {
+      type: 'XRD',
+      amount: 10
     },
-    Fragment: {
-      icon: FragmentIcon,
-      amount: new BigNumber(100)
+    {
+      type: 'Fragment',
+      amount: 100
     },
-    'Purple Card': {
-      icon: PurpleCardIcon,
-      amount: new BigNumber(1)
+    {
+      type: 'Purple Card',
+      amount: 1
     }
-  }
+  ] as const
 
   const getRewardData = (count: number) =>
     Array(count)
       .fill(undefined)
       .map((_, i) => {
-        return rewards[
-          Object.keys(rewards)[i % Object.keys(rewards).length] as keyof typeof rewards
-        ]
+        return rewards[i % rewards.length]
       })
 </script>
 
