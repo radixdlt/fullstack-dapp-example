@@ -6,7 +6,11 @@ import uWS from 'uWebSockets.js'
 import { verifyToken } from './helpers/verifyAuthToken'
 const websocketPort = config.websocket.port
 
-const activeSockets = new Map<string, uWS.WebSocket<{ userId: string }>>()
+type WebSocket = uWS.WebSocket<{ userId: string; traceId: string }>
+
+const activeSockets = new Map<string, WebSocket>()
+
+const getLogger = (ctx: Partial<{ traceId: string; userId: string }>) => logger.child(ctx)
 
 uWS
   .App()
@@ -17,13 +21,24 @@ uWS
     idleTimeout: 10,
     /* Handlers */
     upgrade: (res, req, context) => {
+      const traceId = crypto.randomUUID()
+      const childLogger = getLogger({ traceId })
+
       const cookies = cookie.parse(req.getHeader('cookie'))
+
+      childLogger.debug({ method: 'upgrade', cookies })
 
       verifyToken(cookies.jwt)
         .map((userId) => {
+          childLogger.debug({
+            method: 'upgrade.verifyToken',
+            userId,
+            event: 'success'
+          })
           res.upgrade(
             {
-              userId
+              userId,
+              traceId
             },
             req.getHeader('sec-websocket-key'),
             req.getHeader('sec-websocket-protocol'),
@@ -32,29 +47,44 @@ uWS
           )
         })
         .mapErr((error) => {
-          logger.debug({ error, reason: 'failedToVerifyAuthToken', method: 'upgrade' })
+          childLogger.debug({
+            error,
+            method: 'upgrade.verifyToken',
+            event: 'error'
+          })
           res.writeStatus('401').end()
         })
     },
-    open: (ws: uWS.WebSocket<{ userId: string }>) => {
-      logger.debug(ws.getUserData())
-      activeSockets.set(ws.getUserData().userId, ws)
+    open: (ws: WebSocket) => {
+      const { userId, traceId } = ws.getUserData()
+      const childLogger = getLogger({ traceId, userId })
+      childLogger.debug({ method: 'open' })
+      activeSockets.set(userId, ws)
     },
-    message: () => {
-      /* Ok is false if backpressure was built up, wait for drain */
+    message: (ws: WebSocket, message) => {
+      const { userId, traceId } = ws.getUserData()
+      const websocket = activeSockets.get(userId)
+      const childLogger = getLogger({ traceId, userId })
+
+      childLogger.debug({ method: 'message', message })
+      websocket?.send('Hello from the server')
     },
     drain: (ws) => {
-      logger.debug('WebSocket backpressure: ' + ws.getBufferedAmount())
+      const { userId, traceId } = ws.getUserData()
+      const childLogger = getLogger({ traceId, userId })
+      childLogger.debug({ method: 'drain', backpressure: ws.getBufferedAmount() })
     },
     close: (ws) => {
-      logger.debug('WebSocket closed')
-      activeSockets.delete(ws.getUserData().userId)
+      const { userId, traceId } = ws.getUserData()
+      const childLogger = getLogger({ traceId, userId })
+      childLogger.debug({ method: 'close' })
+      activeSockets.delete(userId)
     }
   })
   .listen(websocketPort, (token) => {
     if (token) {
-      logger.debug('websocket app listening to port ' + websocketPort)
+      logger.debug({ method: 'listen', event: 'success', port: websocketPort })
     } else {
-      logger.debug('websocket app failed to listen to port ' + websocketPort)
+      logger.debug({ method: 'listen', event: 'error', port: websocketPort })
     }
   })
