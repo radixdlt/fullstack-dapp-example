@@ -69,7 +69,7 @@
             // TODO:
             // - bootstrap the application state (quest progress, user, notifications etc...) and connect to notifications websocket
             // - improve the websocket connection logic and handle reconnection
-            new WebSocket(env.PUBLIC_NOTIFICATION_URL)
+            if (authToken) new WebSocket(env.PUBLIC_NOTIFICATION_URL, ['Authorization', authToken])
           })
           .mapErr(({ status }) => {
             // TODO: logout user and give feedback that the session has expired

@@ -1,6 +1,5 @@
 import { config } from './config'
 import { logger } from './helpers/logger'
-import cookie from 'cookie'
 
 import uWS from 'uWebSockets.js'
 import { verifyToken } from './helpers/verifyAuthToken'
@@ -24,11 +23,13 @@ uWS
       const traceId = crypto.randomUUID()
       const childLogger = getLogger({ traceId })
 
-      const cookies = cookie.parse(req.getHeader('cookie'))
+      const rawHeader = req.getHeader('sec-websocket-protocol')
 
-      childLogger.debug({ method: 'upgrade', cookies })
+      const [, jwt] = rawHeader.split(', ')
 
-      verifyToken(cookies.jwt)
+      childLogger.debug({ method: 'upgrade', jwt })
+
+      verifyToken(jwt)
         .map((userId) => {
           childLogger.debug({
             method: 'upgrade.verifyToken',
