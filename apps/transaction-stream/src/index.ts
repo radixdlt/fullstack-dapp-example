@@ -33,12 +33,25 @@ const app = async () => {
     logger.error({ method: 'stream.error$', error })
 
     const isRateLimitError = error.status === 429
-    const ONE_MINUTE = 1000 * 60
-    const TEN_SECONDS = 1000 * 60
+    const isBeyondTheEndOfKnownLedgerError =
+      error.status === 400 &&
+      error.reason === 'RequestStatusNotOk' &&
+      error.data.details?.type === 'InvalidRequestError' &&
+      error.data.details.validation_errors.some((item) =>
+        item.errors.some((error) =>
+          error.includes('State version is beyond the end of the known ledger')
+        )
+      )
+    const TEN_SECONDS = 1000 * 10
+    const THIRTY_SECONDS = 1000 * 30
+    const SIXTY_SECONDS = 1000 * 60
 
     if (isRateLimitError) {
-      // wait for a while before restarting the stream
-      stream.setStatus('run', ONE_MINUTE)
+      // rate limit hit, wait 60 seconds before restarting the stream
+      stream.setStatus('run', SIXTY_SECONDS)
+    } else if (isBeyondTheEndOfKnownLedgerError) {
+      // current state version is beyond the end of the known ledger, wait 30 seconds before restarting the stream
+      stream.setStatus('run', THIRTY_SECONDS)
     } else {
       // TODO: implement handler of different errors types
       // NotSynced - error might need to wait for a while before restarting the stream
