@@ -6,6 +6,7 @@ import { GatewayApi } from 'common'
 
 const app = async () => {
   const gatewayApi = GatewayApi(config.networkId)
+  const gatewayApiClient = GatewayApiClient({ dependencies: { gatewayApi } })
 
   const result = await gatewayApi.callApi('getCurrent')
 
@@ -18,11 +19,7 @@ const app = async () => {
   const stream = TransactionStream({
     // TODO: should start from the latest processed state version
     fromStateVersion: latestStateVersion,
-    dependencies: {
-      gatewayApiClient: GatewayApiClient({
-        dependencies: { gatewayApi: GatewayApi(config.networkId) }
-      })
-    }
+    dependencies: { gatewayApiClient }
   })
 
   stream.transactions$.subscribe((value) => {
