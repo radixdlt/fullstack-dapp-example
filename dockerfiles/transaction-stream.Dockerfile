@@ -28,6 +28,7 @@ FROM base AS application
 WORKDIR /app
 
 COPY --from=build /app/apps/ apps
+COPY --from=build /app/packages/ packages
 COPY --from=build /app/node_modules node_modules
 
 RUN npm install pm2 -g && \

@@ -1,12 +1,11 @@
 import {
-  GatewayApiClient,
   StreamTransactionsResponse,
   type ErrorResponse as GatewayErrorResponse
 } from '@radixdlt/babylon-gateway-api-sdk'
-import { config } from './config'
 import { Result, ResultAsync } from 'neverthrow'
-import { typedError } from './helpers/typed-error'
 import { logger } from './helpers/logger'
+import { GatewayApi } from 'common'
+import { ErrorReason, FetchWrapperError, fetchWrapper } from './helpers/fetch-wrapper'
 
 export type Transaction = StreamTransactionsResponse['items'][0]
 
@@ -15,27 +14,15 @@ export type GetTransactionsOutput = {
   ledgerStateVersion: number
 }
 
-export type GetTransactionsErrorOutput =
-  | GatewayErrorResponse
-  | {
-      message: 'unknown error'
-      details: { type: 'UnknownError'; stack: Error['stack']; message: string }
-    }
+export type GetTransactionsErrorOutput = FetchWrapperError<GatewayErrorResponse>
 
 export type GetTransactionsAwaitedResult = Result<GetTransactionsOutput, GetTransactionsErrorOutput>
 
-export type GatewayApiInput = {
-  dependencies?: { GatewayApiClient?: GatewayApiClient }
+export type GatewayApiClientInput = {
+  dependencies: { gatewayApi: GatewayApi }
 }
-export type GatewayApi = ReturnType<typeof GatewayApi>
-export const GatewayApi = ({ dependencies }: GatewayApiInput) => {
-  const { stream } =
-    dependencies?.GatewayApiClient ??
-    GatewayApiClient.initialize({
-      applicationName: 'RadQuest',
-      basePath: config.gateway.baseUrl
-    })
-
+export type GatewayApiClient = ReturnType<typeof GatewayApiClient>
+export const GatewayApiClient = ({ dependencies }: GatewayApiClientInput) => {
   const getTransactions = (
     fromStateVersion?: number
   ): ResultAsync<GetTransactionsOutput, GetTransactionsErrorOutput> => {
@@ -43,9 +30,15 @@ export const GatewayApi = ({ dependencies }: GatewayApiInput) => {
 
     logger.trace({ method: 'getTransactions', event: 'start', fromStateVersion })
 
-    return ResultAsync.fromPromise(
-      stream.innerClient.streamTransactions({
-        streamTransactionsRequest: {
+    return fetchWrapper<StreamTransactionsResponse, GatewayErrorResponse>(
+      fetch(`${dependencies.gatewayApi.networkConfig.gatewayUrl}/stream/transactions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify({
+          limit_per_page: 100,
           kind_filter: 'User',
           order: 'Asc',
           from_ledger_state,
@@ -54,14 +47,14 @@ export const GatewayApi = ({ dependencies }: GatewayApiInput) => {
             affected_global_entities: true,
             receipt_state_changes: true
           }
-        }
-      }),
-      typedError<any>
+        })
+      })
     )
-      .map((response): GetTransactionsOutput => {
+      .map(({ data: response, status }): GetTransactionsOutput => {
         logger.trace({
           method: 'getTransactions',
           event: 'success',
+          status,
           items: response.items.length,
           ledgerStateVersion: response.ledger_state.state_version
         })
@@ -70,15 +63,9 @@ export const GatewayApi = ({ dependencies }: GatewayApiInput) => {
           ledgerStateVersion: response.ledger_state.state_version
         }
       })
-      .mapErr((error): GetTransactionsErrorOutput => {
+      .mapErr((error) => {
         logger.trace({ method: 'getTransactions', event: 'error', error })
-
-        if (typeof error === 'object' && error.details) return error as GatewayErrorResponse
-
-        return {
-          message: 'unknown error',
-          details: { type: 'UnknownError', stack: error.stack, message: error.name }
-        }
+        return error
       })
   }
 

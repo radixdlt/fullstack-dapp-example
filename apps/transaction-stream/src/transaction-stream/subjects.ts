@@ -16,7 +16,7 @@ export const TransactionStreamSubjects = ({
   startStateVersionSubject: new BehaviorSubject<number | undefined>(fromStateVersion),
   currentStateVersionSubject: new BehaviorSubject<number>(fromStateVersion),
   statusSubject: new BehaviorSubject<'stop' | 'run'>(status),
-  triggerSubject: new Subject<void>(),
+  triggerSubject: new Subject<number>(),
   errorSubject: new Subject<GetTransactionsErrorOutput>(),
   transactionsSubject: new Subject<StreamTransactionsResponse['items']>()
 })

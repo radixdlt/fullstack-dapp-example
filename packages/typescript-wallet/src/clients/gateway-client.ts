@@ -3,11 +3,11 @@ import { typedError } from '../helpers/typed-error'
 import { filter, first, firstValueFrom, switchMap } from 'rxjs'
 import { logger } from '../helpers/logger'
 import { ExponentialBackoff } from '../helpers/exponential-backoff'
-import { callApi, gatewayApiClient, networkConfig } from 'common'
+import { GatewayApi } from 'common'
 import { TransactionStatus } from '@radixdlt/radix-dapp-toolkit'
 
 export type GatewayClient = ReturnType<typeof GatewayClient>
-export const GatewayClient = () => {
+export const GatewayClient = ({ callApi, gatewayApiClient, networkConfig }: GatewayApi) => {
   const wellKnownAddresses = () => callApi('getNetworkConfiguration')
 
   const getEpoch = () => callApi('getCurrent').map((value) => value.ledger_state.epoch)

@@ -1,8 +1,19 @@
 import { authController } from '$lib/server/auth/controller'
 import type { Handle } from '@sveltejs/kit'
 import { config } from '$lib/config'
+import { appLogger } from '$lib/helpers/logger'
 
 export const handle: Handle = async ({ event, resolve }) => {
+  const traceId = crypto.randomUUID()
+  event.locals.context = {
+    traceId,
+    logger: appLogger.child({
+      traceId,
+      path: event.url.pathname,
+      method: event.request.method
+    })
+  }
+
   if (event.url.pathname === '/.well-known/radix.json') {
     return new Response(
       JSON.stringify({

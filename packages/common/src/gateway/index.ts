@@ -6,79 +6,92 @@ import {
 } from '@radixdlt/babylon-gateway-api-sdk'
 import { cache } from './cache'
 
-export const networkConfig =
-  RadixNetworkConfigById[process.env.PUBLIC_NETWORK_ID! as unknown as number]
-
-export const gatewayApiClient = GatewayApiClient.initialize({
-  applicationName: 'RadQuest',
-  basePath: networkConfig.gatewayUrl
-})
-
-type RawGatewayError = {
+export type RawGatewayError = {
   errorResponse: ErrorResponse
-}
-
-const isGatewayError = (error: any): error is RawGatewayError =>
-  error.hasOwnProperty('errorResponse')
-
-const handleError = (error: unknown): ErrorResponse => {
-  if (isGatewayError(error)) {
-    return error.errorResponse
-  } else {
-    return {
-      message: 'Unknown network error.'
-    }
-  }
 }
 
 type MethodsOf<T> = {
   [K in keyof T]: T[K] extends (...args: any[]) => any ? T[K] : never
 }
 
-function extractMethods<T>(instance: T): MethodsOf<T> {
-  const methodNames = Object.getOwnPropertyNames(Object.getPrototypeOf(instance))
-  const methods: Partial<MethodsOf<T>> = {}
+export type GatewayApi = ReturnType<typeof GatewayApi>
 
-  for (const methodName of methodNames) {
-    const method = (instance as any)[methodName]
-    if (typeof method === 'function') {
-      methods[methodName as keyof T] = method.bind(instance)
+export const GatewayApi = (networkId: number) => {
+  const networkConfig = RadixNetworkConfigById[networkId]
+
+  if (!networkConfig) throw new Error(`Network with id ${networkId} is not supported.`)
+
+  const gatewayApiClient = GatewayApiClient.initialize({
+    applicationName: 'RadQuest',
+    basePath: networkConfig.gatewayUrl
+  })
+
+  const isGatewayError = (error: any): error is RawGatewayError =>
+    error.hasOwnProperty('errorResponse')
+
+  const handleError = (error: unknown): ErrorResponse => {
+    if (isGatewayError(error)) {
+      return error.errorResponse
+    } else {
+      return {
+        message: 'Unknown network error.'
+      }
     }
   }
 
-  return methods as MethodsOf<T>
-}
+  function extractMethods<T>(instance: T): MethodsOf<T> {
+    const methodNames = Object.getOwnPropertyNames(Object.getPrototypeOf(instance))
+    const methods: Partial<MethodsOf<T>> = {}
 
-export type GatewayApi = typeof gatewayApiClient
-export const gatewayApi = {
-  ...extractMethods(gatewayApiClient.state),
-  ...extractMethods(gatewayApiClient.stream),
-  ...extractMethods(gatewayApiClient.status),
-  ...extractMethods(gatewayApiClient.transaction),
-  ...extractMethods(gatewayApiClient.statistics)
-}
+    for (const methodName of methodNames) {
+      const method = (instance as any)[methodName]
+      if (typeof method === 'function') {
+        methods[methodName as keyof T] = method.bind(instance)
+      }
+    }
 
-export const callApiWithCache = <T extends keyof typeof gatewayApi>(
-  ...[methodName, ...args]: Parameters<typeof callApi<T>>
-): ReturnType<typeof callApi<T>> => {
-  const _cache = cache[methodName]
+    return methods as MethodsOf<T>
+  }
 
-  if (_cache && _cache.has(args)) return okAsync(_cache.get(args))
+  const extractedMethods = {
+    ...extractMethods(gatewayApiClient.state),
+    ...extractMethods(gatewayApiClient.stream),
+    ...extractMethods(gatewayApiClient.status),
+    ...extractMethods(gatewayApiClient.transaction),
+    ...extractMethods(gatewayApiClient.statistics),
+    ...extractMethods(gatewayApiClient.stream.innerClient)
+  }
 
-  return callApi(methodName, ...args)
-}
-
-export const callApi = <T extends keyof typeof gatewayApi>(
-  methodName: T,
-  ...args: Parameters<(typeof gatewayApi)[T]>
-) =>
-  (
-    fromPromise((gatewayApi[methodName] as any)(...args), handleError) as ResultAsync<
-      Awaited<ReturnType<(typeof gatewayApi)[T]>>,
-      ReturnType<typeof handleError>
-    >
-  ).map((res) => {
+  const callApiWithCache = <T extends keyof typeof extractedMethods>(
+    ...[methodName, ...args]: Parameters<typeof callApi<T>>
+  ): ReturnType<typeof callApi<T>> => {
     const _cache = cache[methodName]
-    if (_cache) _cache.set(args, res)
-    return res
-  })
+
+    if (_cache && _cache.has(args)) return okAsync(_cache.get(args))
+
+    return callApi(methodName, ...args)
+  }
+
+  const callApi = <T extends keyof typeof extractedMethods>(
+    methodName: T,
+    ...args: Parameters<(typeof extractedMethods)[T]>
+  ) =>
+    (
+      fromPromise((extractedMethods[methodName] as any)(...args), handleError) as ResultAsync<
+        Awaited<ReturnType<(typeof extractedMethods)[T]>>,
+        ReturnType<typeof handleError>
+      >
+    ).map((res) => {
+      const _cache = cache[methodName]
+      if (_cache) _cache.set(args, res)
+      return res
+    })
+
+  return {
+    networkConfig,
+    gatewayApiClient,
+    extractedMethods,
+    callApi,
+    callApiWithCache
+  }
+}

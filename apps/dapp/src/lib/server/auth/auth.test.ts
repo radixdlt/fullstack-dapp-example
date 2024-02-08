@@ -5,13 +5,15 @@ import { AuthModel } from './model'
 import { type MockContext, type Context, createMockContext } from '$lib/db/context'
 import type { SignedChallenge } from '@radixdlt/radix-dapp-toolkit'
 import { AuthDbClient } from './db'
-import { createAppLogger } from '$lib/helpers/logger'
 import { UserModel } from '../user/model'
 import { UserDbClient } from '../user/db'
+import { appLogger } from '$lib/helpers/logger'
 
 let mockCtx: MockContext
 let ctx: Context
 let controller: AuthController
+
+const methodCtx = { logger: appLogger }
 
 describe('AuthController', () => {
   beforeEach(() => {
@@ -21,7 +23,6 @@ describe('AuthController', () => {
     controller = AuthController({
       authModel: AuthModel(AuthDbClient(ctx.prisma)),
       userModel: UserModel(UserDbClient(ctx.prisma)),
-      logger: createAppLogger({ level: 'debug' }),
       gatewayApiClient: ctx.gatewayApi,
       dAppConfig: {
         expectedOrigin: 'http://localhost:5173',
@@ -37,7 +38,7 @@ describe('AuthController', () => {
       Promise.resolve({ challenge: 'deadbeef' }) as any
     )
 
-    const result = await controller.createChallenge()
+    const result = await controller.createChallenge(methodCtx)
 
     if (result.isErr()) throw result.error
 
@@ -85,7 +86,7 @@ describe('AuthController', () => {
       Promise.resolve({ identityAddress: signedChallenge.address }) as any
     )
 
-    const result = await controller.login(signedChallenge, ctx.cookies)
+    const result = await controller.login(methodCtx, signedChallenge, ctx.cookies)
 
     if (result.isErr()) {
       throw result.error

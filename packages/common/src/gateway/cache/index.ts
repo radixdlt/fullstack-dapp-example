@@ -1,8 +1,8 @@
-import type { gatewayApi } from '../index'
+import type { GatewayApi } from '../index'
 import { entityDetailsCache } from './entity-details/entityDetails'
 
 export type Cache<
-  ApiCall extends (typeof gatewayApi)[keyof typeof gatewayApi],
+  ApiCall extends GatewayApi['extractedMethods'][keyof GatewayApi['extractedMethods']],
   Params = Parameters<ApiCall>,
   Response = Awaited<ReturnType<ApiCall>>
 > = {
@@ -13,7 +13,7 @@ export type Cache<
 }
 
 export type ApiCache = {
-  [apiCall in keyof typeof gatewayApi]?: Cache<(typeof gatewayApi)[apiCall]>
+  [apiCall in keyof GatewayApi['extractedMethods']]?: Cache<GatewayApi['extractedMethods'][apiCall]>
 }
 
 export const cache: ApiCache = {
