@@ -2,8 +2,8 @@ image:
     tag: {{ .StateValues.ci.tag }}
 
 params:
-  INTERNAL_API_PORT: 4000
-  WEBSOCKET_PORT: 9000
+  NOTIFICATION_INTERNAL_API_PORT: 4000
+  NOTIFICATION_WEBSOCKET_PORT: 9000
   LOG_LEVEL: debug
 
 secrets:
@@ -23,8 +23,10 @@ ingress:
         - path: /
           pathType: ImplementationSpecific
 
+replicaCount: 1
+
 autoscaling:
-  enabled: true
+  enabled: false
   minReplicas: 1
   maxReplicas: 2
   targetCPUUtilizationPercentage: 70

@@ -46,9 +46,6 @@ spec:
                 key: {{ $secret.secretName }}
           {{- end }}
           ports:
-            - name: http
-              containerPort: 4000
-              protocol: TCP
           {{- if .Values.metrics.enabled }}
             - name: metrics
               containerPort: {{ .Values.metrics.port }}
