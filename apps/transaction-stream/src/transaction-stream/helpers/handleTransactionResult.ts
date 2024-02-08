@@ -13,11 +13,7 @@ export const handleTransactionResult = (
   result: GetTransactionsAwaitedResult,
   stateVersion: number
 ): Result<{ stateVersion: number; transactions: Transaction[] }, GetTransactionsErrorOutput> => {
-  if (result.isErr()) {
-    const error = result.error
-    logger.error({ method: 'handleTransactionResult', event: 'error', error })
-    return err(error)
-  }
+  if (result.isErr()) return err(result.error)
 
   const { transactions, ledgerStateVersion } = result.value
 
