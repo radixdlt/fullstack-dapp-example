@@ -16,7 +16,8 @@ module.exports = {
         'common',
         'content',
         'markdown',
-        'multiple'
+        'multiple',
+        'scrypto'
       ]
     ],
     'scope-empty': [2, 'never'],
