@@ -6,7 +6,7 @@ if (!process.env.PUBLIC_NETWORK_ID) throw new Error('PUBLIC_NETWORK_ID env var n
 
 const networkId = parseInt(process.env.PUBLIC_NETWORK_ID)
 const gatewayApi = GatewayApi(networkId)
-const { badges } = Addresses(parseInt(process.env.PUBLIC_NETWORK_ID))
+const radQuestEntityAddresses = Addresses(parseInt(process.env.PUBLIC_NETWORK_ID))
 
 const networkName = gatewayApi.networkConfig.networkName
 
@@ -21,7 +21,5 @@ export const radixEngineClient = RadixEngineClient({
 export const config = {
   networkName,
   network: radixEngineClient.gatewayClient.networkConfig,
-  radQuest: {
-    badges
-  }
+  radQuest: radQuestEntityAddresses
 }

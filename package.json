@@ -12,6 +12,7 @@
 		"test:stream": "npx --node-options='-r dotenv/config' turbo test --filter transaction-stream",
 		"wallet:create:badges": "npx --node-options='-r dotenv/config' turbo wallet:create:badges --filter typescript-wallet",
 		"wallet:create:mnemonic": "npx --node-options='-r dotenv/config' turbo wallet:create:mnemonic --filter typescript-wallet",
+    "wallet:create:element": "npx --node-options='-r dotenv/config' turbo wallet:create:element --filter typescript-wallet",
 		"wallet:list:accounts": "npx --node-options='-r dotenv/config' turbo wallet:list:accounts --filter typescript-wallet",
 		"wallet:mint-admin-badge": "npx --node-options='-r dotenv/config' turbo wallet:mint-admin-badge --filter typescript-wallet",
 		"wallet:mint-user-badge": "npx --node-options='-r dotenv/config' turbo wallet:mint-user-badge --filter typescript-wallet",

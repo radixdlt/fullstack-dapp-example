@@ -19,6 +19,7 @@
     "wallet:faucet": "npx tsx ./src/scripts/faucet.ts",
     "wallet:create:badges": "npx tsx ./src/radquest/scripts/create-badges.ts",
     "wallet:mint-user-badge": "npx tsx ./src/radquest/scripts/mint-user-badge.ts",
+    "wallet:create:element": "npx tsx ./src/radquest/scripts/create-element.ts",
     "gw:well-known": "npx tsx ./src/scripts/gw/well-known.ts",
     "gw:tx:lookup": "npx tsx ./src/scripts/gw/lookup-tx.ts",
     "gw:status": "npx tsx ./src/scripts/gw/status.ts",
