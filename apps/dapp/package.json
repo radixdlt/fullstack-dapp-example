@@ -15,7 +15,8 @@
     "test:unit": "vitest",
     "test:storybook": "test-storybook --stories-json",
     "storybook": "storybook dev -p 6006",
-    "build:storybook": "storybook build"
+    "build:storybook": "storybook build",
+    "chromatic": "npx chromatic --project-token=chpt_49e81d173e53f13 --build-script-name build:storybook"
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
@@ -35,6 +36,7 @@
     "@types/markdown-it": "^13.0.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "chromatic": "^10.6.1",
     "database": "*",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^9.0.0",
@@ -60,12 +62,13 @@
   "dependencies": {
     "@radixdlt/radix-dapp-toolkit": "^1.4.1",
     "@radixdlt/rola": "^1.0.2",
+    "common": "*",
+    "bignumber.js": "^9.1.2",
     "i18next": "^23.8.2",
     "jsonwebtoken": "^9.0.2",
     "neverthrow": "^6.1.0",
     "pino": "^8.17.2",
     "typescript-wallet": "*",
-    "common": "*",
     "svelte-i18next": "^2.2.2"
   }
 }

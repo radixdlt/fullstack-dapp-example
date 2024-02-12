@@ -51,16 +51,7 @@ jobs:
             type=sha,event=pr
             type=sha,event=branch
             type=semver,pattern={{version}}
-      - name: Docker tags for storybook
-        id: dapp-storybook-tags
-        uses: RDXWorks-actions/metadata-action@master
-        with:
-          images: |
-            docker.io/radixdlt/radquest-dapp-storybook
-          tags: |
-            type=sha,event=pr
-            type=sha,event=branch
-            type=semver,pattern={{version}}
+      
       - name: Docker tags for storybook
         id: notification-tags
         uses: RDXWorks-actions/metadata-action@master
@@ -125,9 +116,6 @@ jobs:
       dapp-tags: ${{ steps.dapp-tags.outputs.tags }}
       dapp-labels: ${{ steps.dapp-tags.outputs.labels }}
       dapp-json: ${{ steps.dapp-tags.outputs.json }}
-      dapp-storybook-tags: ${{ steps.dapp-storybook-tags.outputs.tags }}
-      dapp-storybook-labels: ${{ steps.dapp-storybook-tags.outputs.labels }}
-      dapp-storybook-json: ${{ steps.dapp-storybook-tags.outputs.json }}
       notification-tags: ${{ steps.notification-tags.outputs.tags }}
       notification-labels: ${{ steps.notification-tags.outputs.labels }}
       notification-json: ${{ steps.notification-tags.outputs.json }}
@@ -168,6 +156,13 @@ jobs:
 
       - name: Unit tests
         run: npm run test
+
+      - name: Publish to Chromatic
+        uses: chromaui/action@05a82adb1e6919df177f54777e81a2ef3e312323 # v10.6.1
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          buildScriptName: "build:storybook"
+          workingDir: apps/dapp
 
   snyk-scan-deps-licences:
     runs-on: ubuntu-latest
@@ -260,32 +255,6 @@ jobs:
         PUBLIC_NETWORK_ID=${{ needs.setup-tags.outputs.public-network-id }}
         PUBLIC_LOG_LEVEL=${{ needs.setup-tags.outputs.public-log-level }}
 
-  push-dapp-storybook:
-    name: Docker dapp storybook
-    needs:
-      - setup-tags
-      - snyk-scan-deps-licences
-      - snyk-scan-code
-    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
-    with:
-      runs_on: ubuntu-latest
-      image_registry: 'docker.io'
-      image_organization: 'radixdlt'
-      target: 'storybook'
-      image_name: 'radquest-dapp-storybook'
-      tag: ${{ needs.setup-tags.outputs.tag-with-network }}
-      context: '.'
-      dockerfile: './dockerfiles/dapp.Dockerfile'
-      platforms: 'linux/amd64'
-      scan_image: true
-      provenance: false
-      snyk_target_ref: ${{ github.ref_name }}
-      with_sbom: false
-      build-args: |
-        NETWORK_NAME=${{ needs.setup-tags.outputs.network-name }}
-        PUBLIC_NETWORK_ID=${{ needs.setup-tags.outputs.public-network-id }}
-        PUBLIC_LOG_LEVEL=${{ needs.setup-tags.outputs.public-log-level }}
-
   push-notification:
     name: Docker notification
     needs:
@@ -357,7 +326,6 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - push-dapp
-      - push-dapp-storybook
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -389,7 +357,6 @@ jobs:
       - name: Write URL to GH summary
         run: |
           echo "PR URL is: https://radquest-pr-${{ github.event.number }}.rdx-works-main.extratools.works" >> $GITHUB_STEP_SUMMARY
-          echo "PR URL is: https://radquest-storybook-pr-${{ github.event.number }}.rdx-works-main.extratools.works" >> $GITHUB_STEP_SUMMARY
 
   deploy_dev:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -397,7 +364,6 @@ jobs:
     environment: dev
     needs:
       - push-dapp
-      - push-dapp-storybook
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -431,7 +397,6 @@ jobs:
     environment: stokenet
     needs:
       - push-dapp
-      - push-dapp-storybook
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -465,7 +430,6 @@ jobs:
     environment: mainnet
     needs:
       - push-dapp
-      - push-dapp-storybook
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -498,7 +462,6 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
       - push-dapp
-      - push-dapp-storybook
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -524,7 +487,6 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
       - push-dapp
-      - push-dapp-storybook
       - setup-tags
     steps:
       - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
