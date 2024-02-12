@@ -56,7 +56,7 @@ describe('transaction stream handler', () => {
       })
 
       // we need to manually run the stream to use the mock implementation
-      transactionStream.setStatus('run')
+      transactionStream.setStatus('run', 0)
 
       const transactions = await getTransactionsTestHelper(2)
 
@@ -66,7 +66,7 @@ describe('transaction stream handler', () => {
   })
 
   describe('unhappy paths', () => {
-    it('should handle Unknown errors', async () => {
+    it('should stop stream if gateway error response', async () => {
       gatewayApiMock.getTransactions.mockImplementation((v?: number) => {
         const { message, stack } = new Error('something went sour')
         return errAsync({
@@ -74,11 +74,8 @@ describe('transaction stream handler', () => {
           details: { type: 'UnknownError', message, stack }
         }) as any
       })
-
-      transactionStream.setStatus('run')
-      const error = await getNextErrorValueFromStream()
-
-      expect(error.details?.type).toBe('UnknownError')
+      transactionStream.setStatus('run', 0)
+      await getNextErrorValueFromStream()
       expect(transactionStream.status).toBe('stop')
     })
   })

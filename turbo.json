@@ -3,12 +3,13 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^db:build", "^common:build", "^wallet:build"],
-      "outputs": [".svelte-kit/**"]
+      "outputs": [".svelte-kit/**"],
+      "cache": false
     },
     "lint": {
       "dependsOn": ["^lint"]
     },
-    "test": { "dependsOn": ["^db:build"] },
+    "test": { "dependsOn": ["^db:build"], "cache": false },
     "dev": {
       "dependsOn": ["^db:generate"],
       "cache": false,

@@ -159,15 +159,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Unit tests
-        run: npm run test
-
       - name: Build
         run: npm run build
         env:
           PUBLIC_NETWORK_ID: ${{ needs.setup-tags.outputs.public-network-id }}
           PUBLIC_LOG_LEVEL: ${{ needs.setup-tags.outputs.public-log-level }}
           MNEMONIC: 'come cute gather early best front witness fade journey high fresh wait pizza adult vital tower skill analyst polar route erase lend access chat'
+
+      - name: Unit tests
+        run: npm run test
 
   snyk-scan-deps-licences:
     runs-on: ubuntu-latest
