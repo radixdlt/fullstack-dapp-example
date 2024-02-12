@@ -6,31 +6,16 @@
   import Button from '$lib/components/button/Button.svelte'
   import { fly } from 'svelte/transition'
   import { i18n } from '$lib/i18n'
-  import type { QuestDefinition } from 'virtual:quests'
+  import { createEventDispatcher } from 'svelte'
   import type { ResultAsync } from 'neverthrow'
-  import { createEventDispatcher, type SvelteComponent } from 'svelte'
 
-  export let quest: QuestDefinition
-  export let questConfig: {
-    placeholders?: Record<
-      string,
-      {
-        component: new (...args: any[]) => SvelteComponent
-        props: Record<string, unknown>
-      }
-    >
-    events?: {
-      onNextClick: (page: number) => ResultAsync<void, Error>
-    }
-  } = {}
-
-  $: {
-    setProgress(0)
-    quest
-  }
-
-  const dispatch = createEventDispatcher()
-
+  export let title: string
+  export let steps: number
+  export let buttonTexts: {
+    prev: string
+    next: string
+  }[] = []
+  export let onNextClick: ((page: number) => ResultAsync<void, Error>) | undefined = undefined
   export const setProgress = (_progress: number) => {
     progress = _progress
   }
@@ -40,12 +25,14 @@
     prev: () => void
   }
 
+  let nextDisabled: boolean = false
+
   let progressActions: ProgressActions = {
     next: () => {
-      if (progress < quest.pages.length) {
-        if (questConfig?.events?.onNextClick) {
+      if (progress < steps - 1) {
+        if (onNextClick) {
           nextDisabled = true
-          questConfig.events.onNextClick(progress).map(() => {
+          onNextClick(progress).map(() => {
             progress++
             nextDisabled = false
           })
@@ -66,7 +53,6 @@
   const animationDuration = 800
 
   let animating = false
-  let nextDisabled = false
 
   let timeout: ReturnType<typeof setTimeout>
 
@@ -78,84 +64,62 @@
       animating = false
     }, animationDuration)
   }
+
+  const dispatch = createEventDispatcher<{
+    close: undefined
+  }>()
 </script>
 
 <div class="card quest" class:hide-scrollbar={animating} bind:clientWidth={width}>
   <div class="header">
-    <button class="icon" on:click={() => dispatch('closeClick')}>
+    <button class="icon" on:click={() => dispatch('close')}>
       <Icon url={CrossIcon} />
     </button>
     <header class="title">
-      {quest.title}
+      {title}
     </header>
     <div />
   </div>
 
-  <ProgressBar totalSteps={quest.pages.length} bind:step={progress} />
+  <ProgressBar totalSteps={steps} bind:step={progress} />
 
-  {#if progress === 0}
-    <div class="content card">
+  <div class="content card">
+    {#key progress}
       <div
         class="slot-container"
         transition:fly={{ x: -width * 2, opacity: 1, duration: animationDuration }}
       >
-        <Intro
-          title={quest.title}
-          description={quest.description}
-          minutesToComplete={quest.minutesToComplete}
-          rewards={quest.rewards}
-        ></Intro>
+        <slot {progress} {Intro} />
       </div>
-      <div
-        class="footer intro-footer"
-        transition:fly={{ x: -width * 2, opacity: 1, duration: animationDuration }}
+    {/key}
+  </div>
+
+  {#if progress === 0}
+    <div
+      class="footer intro-footer"
+      transition:fly={{ x: -width * 2, opacity: 1, duration: animationDuration }}
+    >
+      <Button on:click={progressActions.next} disabled={nextDisabled}
+        >{$i18n.t('quest_nextButton')}</Button
       >
+    </div>
+  {/if}
+
+  {#if progress > 0}
+    <div
+      class="footer-container"
+      transition:fly={{ y: 200, opacity: 1, duration: animationDuration }}
+    >
+      <div class="footer quest-footer">
+        <Button secondary on:click={progressActions.prev}
+          >{buttonTexts[progress - 1].prev ?? $i18n.t('quest_previousButton')}</Button
+        >
         <Button on:click={progressActions.next} disabled={nextDisabled}
-          >{$i18n.t('quest_nextButton')}</Button
+          >{buttonTexts[progress - 1].next ?? $i18n.t('quest_nextButton')}</Button
         >
       </div>
     </div>
   {/if}
-
-  {#each quest.pages as page, index}
-    {#if progress === index + 1}
-      <div class="content card">
-        <div
-          class="slot-container"
-          transition:fly={{ x: -width * 2, opacity: 1, duration: animationDuration }}
-        >
-          <div class="key-image">
-            <img src={quest.keyImage} alt={$i18n.t('quest_keyImageAlt')} />
-          </div>
-          {#each page.content as block}
-            {#if block.type === 'html'}
-              {@html block.html}
-            {:else if block.type === 'placeholder'}
-              {@const fill = questConfig?.placeholders?.[block.id]}
-              {#if fill}
-                <svelte:component this={fill.component} {...fill.props}></svelte:component>
-              {:else}
-                <h2>{$i18n.t('quest_placeholderNotFound', { id: block.id })}</h2>
-              {/if}
-            {/if}
-          {/each}
-        </div>
-      </div>
-      <div
-        class="footer-container"
-        transition:fly={{ x: -width * 2, opacity: 1, duration: animationDuration }}
-      >
-        <div class="footer quest-footer">
-          <Button secondary on:click={progressActions.prev}
-            >{page?.actions?.prev || $i18n.t('quest_previousButton')}</Button
-          >
-          <Button on:click={progressActions.next}
-            >{page?.actions?.next || $i18n.t('quest_nextButton')}</Button
-          >
-        </div>
-      </div>
-    {/if}
-  {/each}
 </div>
 
 <style lang="scss">
@@ -164,15 +128,6 @@
       @content;
     }
   }
-
-  .key-image {
-    text-align: center;
-
-    img {
-      height: 10rem;
-    }
-  }
-
   .quest {
     display: grid;
     grid-template-rows: 3rem auto 1fr;

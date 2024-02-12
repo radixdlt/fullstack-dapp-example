@@ -20,8 +20,8 @@
 
 <script lang="ts">
   import { Story, Template } from '@storybook/addon-svelte-csf'
-  import Quest from './Quest.svelte'
   import type { QuestDefinition } from 'virtual:quests'
+  import MdQuest from './MDQuest.svelte'
 
   const rewards = [
     {
@@ -77,7 +77,7 @@
 
 <Template let:args>
   <div class="container">
-    <Quest quest={getQuest(args)} />
+    <MdQuest quest={getQuest(args)} />
   </div>
 </Template>
 
@@ -85,7 +85,8 @@
   name="Primary"
   args={{
     title: 'Your first transaction on Radar',
-    description: 'Get familiar with Radar, the radically better Web3 network.'
+    description: 'Get familiar with Radar, the radically better Web3 network.',
+    minutesToComplete: 5
   }}
 />
 

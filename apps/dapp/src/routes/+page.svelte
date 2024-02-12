@@ -17,8 +17,8 @@
   import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
   import Carousel from '$lib/components/carousel/Carousel.svelte'
   import { writable } from 'svelte/store'
-  import Quest from '$lib/components/quest/Quest.svelte'
   import Input from '$lib/components/input/Input.svelte'
+  import MdQuest from '$lib/components/quest/MDQuest.svelte'
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
   let connected: boolean = false
@@ -145,8 +145,8 @@
 </Carousel>
 
 {#if $currentQuest}
-  <Quest quest={$currentQuest} {questConfig} on:closeClick={() => currentQuest.set(undefined)}
-  ></Quest>
+  <MdQuest quest={$currentQuest} {questConfig} on:closeClick={() => currentQuest.set(undefined)}
+  ></MdQuest>
 {/if}
 
 {#each GlossaryContent['en'] as entry}
