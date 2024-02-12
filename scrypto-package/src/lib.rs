@@ -1,2 +1,2 @@
-mod quest_reward;
-mod refinery;
+pub mod quest_rewards;
+pub mod refinery;
