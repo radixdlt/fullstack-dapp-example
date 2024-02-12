@@ -1,22 +1,21 @@
 import typescript from '@rollup/plugin-typescript'
-import commonjs from '@rollup/plugin-commonjs'
+import { dts } from 'rollup-plugin-dts'
 
 export default [
   {
-    input: 'index.ts',
+    input: 'src/index.ts',
     output: [
       {
         file: 'dist/index.mjs',
         format: 'esm',
         sourcemap: true
-      },
-      {
-        file: 'dist/index.js',
-        format: 'cjs',
-        sourcemap: true,
-        name: 'transaction-stream'
       }
     ],
-    plugins: [typescript(), commonjs()]
+    plugins: [typescript()]
+  },
+  {
+    input: 'dist/types/index.d.ts',
+    output: [{ file: 'dist/index.d.ts', format: 'es' }],
+    plugins: [dts()]
   }
 ]

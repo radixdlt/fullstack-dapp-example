@@ -1,5 +1,4 @@
 import typescript from '@rollup/plugin-typescript'
-import commonjs from '@rollup/plugin-commonjs'
 import { dts } from 'rollup-plugin-dts'
 
 export default [
@@ -10,15 +9,9 @@ export default [
         file: 'dist/index.mjs',
         format: 'esm',
         sourcemap: true
-      },
-      {
-        file: 'dist/index.js',
-        format: 'cjs',
-        sourcemap: true,
-        name: 'typescript-wallet'
       }
     ],
-    plugins: [typescript(), commonjs()]
+    plugins: [typescript()]
   },
   {
     input: 'dist/types/index.d.ts',
