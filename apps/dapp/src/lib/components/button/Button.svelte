@@ -29,7 +29,7 @@
     color: var(--color-light);
     border: var(--border) var(--color-primary);
 
-    &:hover {
+    &:hover:not(.disabled) {
       filter: brightness(0.8);
     }
 
@@ -41,7 +41,7 @@
     color: var(--color-dark);
     border: var(--border) var(--color-dark);
 
-    &:hover {
+    &:hover:not(.disabled) {
       color: var(--color-light);
       background: var(--color-dark);
     }
