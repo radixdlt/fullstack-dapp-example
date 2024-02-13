@@ -19,8 +19,9 @@
 		"wallet:build": "turbo build --filter typescript-wallet",
 		"db:build": "turbo db:build --filter database",
 		"db:push": "turbo db:push --filter database",
-		"lint": "turbo lint",
-		"format": "prettier --write apps/**/* packages/**/*"
+		"prettier:fix": "prettier --cache --write --check apps/*/src packages/*/src",
+		"lint": "turbo run lint",
+		"format": "turbo run format"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^18.4.4",
