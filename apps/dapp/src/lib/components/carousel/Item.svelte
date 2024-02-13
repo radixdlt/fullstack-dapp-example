@@ -3,13 +3,15 @@
 
   let item: HTMLElement
 
+  let disabled = false
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          item.classList.remove('disabled')
+          disabled = false
         } else {
-          item.classList.add('disabled')
+          disabled = true
         }
       })
     },
@@ -28,7 +30,7 @@
   })
 </script>
 
-<div class="item" bind:this={item}>
+<div class="item" class:disabled bind:this={item}>
   <slot />
 </div>
 

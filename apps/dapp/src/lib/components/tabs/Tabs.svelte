@@ -71,10 +71,4 @@
     background: var(--color-dark);
     border-radius: var(--border-radius-md);
   }
-
-  .tabs-content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
-  }
 </style>

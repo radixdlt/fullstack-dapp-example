@@ -46,7 +46,6 @@
 
   if (!isMobile()) afterUpdate(updateButtonPosition)
 
-  let scrollTimer: ReturnType<typeof setTimeout>
   let canScroll = true
 
   const handleWheelScroll = (e: WheelEvent) => {
@@ -54,7 +53,7 @@
     if (e.deltaY > 0) scrollToNextItem()
     else scrollToPreviousItem()
     canScroll = false
-    scrollTimer = setTimeout(() => {
+    setTimeout(() => {
       canScroll = true
     }, 300)
   }

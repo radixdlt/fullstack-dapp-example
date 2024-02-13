@@ -4,8 +4,8 @@ import { isNotJunk } from 'junk'
 import { cwd } from 'process'
 
 /**
- * Helper function that abstracts away boilerplate code for creating a virtual module. 
- * Additionally it iterates over the `src/markdown/{name}` directory and returns its content 
+ * Helper function that abstracts away boilerplate code for creating a virtual module.
+ * Additionally it iterates over the `src/markdown/{name}` directory and returns its content
  * (in this case it's supported languages)
  */
 export function virtualModuleFactory({

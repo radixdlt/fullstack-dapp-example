@@ -9,6 +9,8 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
+    "format": {},
+    "svelte:check": {},
     "test": { "dependsOn": ["^db:build"], "cache": false },
     "dev": {
       "dependsOn": ["^db:generate"],

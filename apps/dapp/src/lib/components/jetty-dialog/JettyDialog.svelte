@@ -6,8 +6,7 @@
   import { scale } from 'svelte/transition'
 
   export let dialogs: number
-
-  let currentDialog = 0
+  export let currentDialog = 0
 
   export const setCurrentDialog = (index: number) => {
     currentDialog = index

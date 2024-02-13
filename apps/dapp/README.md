@@ -14,20 +14,23 @@
 
 # Markdown Content
 
-We've custom vite plugins which create virtual modules. You can look for references by searching imports from `virtual:glossary` and `virtual:quests`. These plugins will convert `definiton.json` files during build time into TypeScript objects imported by svelte. Plugins main responsibility is to convert markdown files into HTML string. 
+We've custom vite plugins which create virtual modules. You can look for references by searching imports from `virtual:glossary` and `virtual:quests`. These plugins will convert `definiton.json` files during build time into TypeScript objects imported by svelte. Plugins main responsibility is to convert markdown files into HTML string.
 
 ## Virtual Module
 
 [Vite bundler feature](https://vitejs.dev/guide/api-plugin#virtual-modules-convention) - allows passing custom build time information to source files using ESM import syntax. In order to be able to import actual TypeScript code with correct types to svelte files (not just stringified object) we're using TypeScript factory functions. In other words, using mentioned factory functions we're creating AST node which is later printed as valid TypeScript code (which we import in svelte file). Example creation of object using TypeScript factory functions
+
 ```
 const node = ts.factory.createObjectLiteralExpression([
   ts.factory.createPropertyAssignment('propertyName', ts.factory.createStringLiteral('propertyValue'))
   ts.factory.createPropertyAssignment('another', ts.factory.createNumberLiteral(5))
 ])
 ```
+
 printing above node will result in following TypeScript code
+
 ```
-{ 
+{
   propertyName: 'propertyValue',
   another: 5
 }
