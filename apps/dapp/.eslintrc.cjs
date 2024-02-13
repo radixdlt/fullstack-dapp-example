@@ -28,5 +28,14 @@ module.exports = {
         parser: '@typescript-eslint/parser'
       }
     }
-  ]
+  ],
+  rules: {
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      { vars: 'all', args: 'after-used', argsIgnorePattern: '_' }
+    ],
+    'no-undef': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    'svelte/no-at-html-tags': 'off'
+  }
 }

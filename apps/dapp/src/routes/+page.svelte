@@ -50,7 +50,7 @@
       DataRequestBuilder.accounts().exactly(1)
     )
 
-    radixDappToolkit.walletApi.dataRequestControl(async ({ proofs, accounts }) => {
+    radixDappToolkit.walletApi.dataRequestControl(async ({ proofs }) => {
       const personaProof = proofs.find((proof) => proof.type === 'persona')
       if (personaProof) {
         // TODO: set the current user in a store
@@ -65,7 +65,7 @@
       if (persona?.identityAddress) {
         connected = true
         ResultAsync.combine([userApi.me(), authApi.authToken()])
-          .map(([user, authToken]) => {
+          .map(([_, authToken]) => {
             // TODO:
             // - bootstrap the application state (quest progress, user, notifications etc...) and connect to notifications websocket
             // - improve the websocket connection logic and handle reconnection
