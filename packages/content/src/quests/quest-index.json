@@ -1,0 +1,55 @@
+{
+  "ConnectQuest": {
+    "en": [
+      "0.md"
+    ]
+  },
+  "ConvertElementsQuest": {
+    "en": [
+      "0.md"
+    ]
+  },
+  "FirstTransactionQuest": {
+    "en": [
+      "0.md"
+    ]
+  },
+  "ProofOfHuman": {
+    "en": [
+      "0.md"
+    ]
+  },
+  "RadQuest": {
+    "en": [
+      "0.md"
+    ]
+  },
+  "RadixQuest": {
+    "en": [
+      "0.md",
+      "1.md",
+      "2.md",
+      "3.md",
+      "4.md"
+    ]
+  },
+  "RadixWalletQuest": {
+    "en": [
+      "0.md",
+      "1.md",
+      "2.md"
+    ]
+  },
+  "SendAssetsQuest": {
+    "en": [
+      "0.md"
+    ]
+  },
+  "SwapQuest": {
+    "en": [
+      "0.md",
+      "1.md",
+      "2.md"
+    ]
+  }
+}

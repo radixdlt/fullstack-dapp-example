@@ -3,6 +3,7 @@
   import type { SvelteComponent } from 'svelte'
   import type { LoadedQuest } from 'content'
   import Quest from './Quest.svelte'
+  import markdown from 'markdown-it'
 
   export let quest: LoadedQuest
 
