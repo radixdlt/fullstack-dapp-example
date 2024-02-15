@@ -1,9 +1,13 @@
 <script lang="ts">
   export let totalSteps: number
-  export let step: number = 0
+  export let progress: number = 0
+
+  export const setProgress = (_progress: number) => {
+    progress = _progress
+  }
 </script>
 
-<div class="progress-bar" style:--steps={totalSteps} style:--step={step}></div>
+<div class="progress-bar" style:--steps={totalSteps} style:--step={progress}></div>
 
 <style lang="scss">
   .progress-bar {
