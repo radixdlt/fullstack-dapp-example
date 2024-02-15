@@ -36,7 +36,11 @@
 
 <style>
   .item {
+    height: 100%;
+    display: flex;
+    align-items: center;
     scroll-snap-align: center;
+    transition: opacity 0.3s;
   }
 
   .disabled {

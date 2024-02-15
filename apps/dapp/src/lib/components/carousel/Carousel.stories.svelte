@@ -17,7 +17,9 @@
 
     expect(items[0]).not.toHaveClass('disabled')
 
-    await fireEvent.scroll(carousel, {
+    await new Promise((resolve) => setTimeout(resolve, 200))
+
+    fireEvent.scroll(carousel, {
       target: { scrollLeft: 2000 }
     })
 
