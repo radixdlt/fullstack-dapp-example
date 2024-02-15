@@ -37,6 +37,9 @@
     "wallet:create:badges": {
       "cache": false
     },
+    "wallet:create:element": {
+      "cache": false
+    },
     "wallet:list:accounts": {
       "cache": false
     },
