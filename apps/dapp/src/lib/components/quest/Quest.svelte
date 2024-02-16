@@ -1,13 +1,12 @@
 <script lang="ts">
   import Icon from '$lib/components/icon/Icon.svelte'
   import CrossIcon from '@images/cross.svg'
-  import ProgressBar from './ProgressBar.svelte'
   import Intro from './Intro.svelte'
   import Button from '$lib/components/button/Button.svelte'
   import { fly } from 'svelte/transition'
   import { i18n } from '$lib/i18n'
-  import { createEventDispatcher } from 'svelte'
   import type { ResultAsync } from 'neverthrow'
+  import ProgressCard from '../progress-card/ProgressCard.svelte'
 
   export let title: string
   export let steps: number
@@ -20,59 +19,16 @@
     progress = _progress
   }
 
-  type ProgressActions = {
-    next: () => void
-    prev: () => void
-  }
-
-  let nextDisabled: boolean = false
-
-  let progressActions: ProgressActions = {
-    next: () => {
-      if (progress < steps - 1) {
-        if (onNextClick) {
-          nextDisabled = true
-          onNextClick(progress).map(() => {
-            progress++
-            nextDisabled = false
-          })
-        } else {
-          progress++
-        }
-      }
-    },
-    prev: () => {
-      if (progress > 0) progress--
-    }
-  }
-
   let progress: number = 0
 
-  let width: number
+  let progressCard: ProgressCard
 
-  const animationDuration = 800
-
-  let animating = false
-
-  let timeout: ReturnType<typeof setTimeout>
-
-  $: {
-    progress
-    animating = true
-    clearTimeout(timeout)
-    timeout = setTimeout(() => {
-      animating = false
-    }, animationDuration)
-  }
-
-  const dispatch = createEventDispatcher<{
-    close: undefined
-  }>()
+  let nextDisabled: boolean
 </script>
 
-<div class="card quest" class:hide-scrollbar={animating} bind:clientWidth={width}>
-  <div class="header">
-    <button class="icon" on:click={() => dispatch('close')}>
+<ProgressCard {steps} {onNextClick} bind:this={progressCard} bind:nextDisabled bind:progress>
+  <div slot="header" class="header">
+    <button class="icon" on:click={() => progressCard.close()}>
       <Icon url={CrossIcon} />
     </button>
     <header class="title">
@@ -81,46 +37,43 @@
     <div />
   </div>
 
-  <ProgressBar totalSteps={steps} bind:step={progress} />
+  <svelte:fragment slot="content" let:animationDuration let:width>
+    <div class="content card">
+      {#key progress}
+        <div transition:fly={{ x: -width * 2, opacity: 1, duration: animationDuration }}>
+          <slot {progress} {Intro} />
+        </div>
+      {/key}
+    </div>
 
-  <div class="content card">
-    {#key progress}
+    {#if progress === 0}
       <div
-        class="slot-container"
+        class="footer intro-footer"
         transition:fly={{ x: -width * 2, opacity: 1, duration: animationDuration }}
       >
-        <slot {progress} {Intro} />
+        <Button on:click={progressCard.progressActions.next} disabled={nextDisabled}
+          >{$i18n.t('quest_nextButton')}</Button
+        >
       </div>
-    {/key}
-  </div>
+    {/if}
 
-  {#if progress === 0}
-    <div
-      class="footer intro-footer"
-      transition:fly={{ x: -width * 2, opacity: 1, duration: animationDuration }}
-    >
-      <Button on:click={progressActions.next} disabled={nextDisabled}
-        >{$i18n.t('quest_nextButton')}</Button
+    {#if progress > 0}
+      <div
+        class="footer-container"
+        transition:fly={{ y: 200, opacity: 1, duration: animationDuration }}
       >
-    </div>
-  {/if}
-
-  {#if progress > 0}
-    <div
-      class="footer-container"
-      transition:fly={{ y: 200, opacity: 1, duration: animationDuration }}
-    >
-      <div class="footer quest-footer">
-        <Button secondary on:click={progressActions.prev}
-          >{buttonTexts[progress - 1].prev ?? $i18n.t('quest_previousButton')}</Button
-        >
-        <Button on:click={progressActions.next} disabled={nextDisabled}
-          >{buttonTexts[progress - 1].next ?? $i18n.t('quest_nextButton')}</Button
-        >
+        <div class="footer quest-footer">
+          <Button secondary on:click={progressCard.progressActions.prev}
+            >{buttonTexts[progress - 1].prev ?? $i18n.t('quest_previousButton')}</Button
+          >
+          <Button on:click={progressCard.progressActions.next} disabled={nextDisabled}
+            >{buttonTexts[progress - 1].next ?? $i18n.t('quest_nextButton')}</Button
+          >
+        </div>
       </div>
-    </div>
-  {/if}
-</div>
+    {/if}
+  </svelte:fragment>
+</ProgressCard>
 
 <style lang="scss">
   @mixin mobile {
@@ -128,14 +81,11 @@
       @content;
     }
   }
-  .quest {
-    display: grid;
-    grid-template-rows: 3rem auto 1fr;
-    padding: 0;
-    height: 100%;
-    min-height: 35rem;
-    min-width: 20rem;
-    overflow-y: hidden;
+
+  .title {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-background-dark);
   }
 
   .header {
@@ -144,12 +94,6 @@
     align-items: center;
     padding: var(--spacing-xl);
     border-bottom: 1px solid var(--color-light);
-  }
-
-  .title {
-    font-size: var(--text-xs);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-background-dark);
   }
 
   .content {

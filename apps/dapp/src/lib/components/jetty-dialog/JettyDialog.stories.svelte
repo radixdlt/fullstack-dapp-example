@@ -13,6 +13,14 @@
   import Button from '../button/Button.svelte'
 
   let show = true
+
+  const toggle = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+    const toggle = canvasElement.getElementsByTagName('button')[0]
+
+    await toggle.click()
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await toggle.click()
+  }
 </script>
 
 <Template let:args>
@@ -79,6 +87,8 @@
     dialogs: 2
   }}
 />
+
+<Story name="Test:Toggle" play={toggle} />
 
 <style>
   .container {

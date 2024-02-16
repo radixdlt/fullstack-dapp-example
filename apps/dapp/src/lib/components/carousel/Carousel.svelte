@@ -19,10 +19,16 @@
     ) as HTMLCollectionOf<HTMLElement>
 
     const left = navigateButtons[0]
-    const right = navigateButtons[1]
+    const right = isScrolledToStart ? navigateButtons[0] : navigateButtons[1]
 
-    if (left) left.style.top = `${rect.top + rect.height / 2}px`
-    if (right) right.style.top = `${rect.top + rect.height / 2}px`
+    if (left) {
+      left.style.top = `${rect.top + rect.height / 2}px`
+      left.style.left = `${rect.left + 10}px`
+    }
+    if (right) {
+      right.style.top = `${rect.top + rect.height / 2}px`
+      right.style.left = `${rect.right - right.offsetWidth - 10}px`
+    }
   }
 
   onMount(() => {
@@ -33,9 +39,19 @@
 
     window.addEventListener('wheel', handleWheelScroll)
 
-    carousel.scrollIntoView({ behavior: 'smooth', inline: 'center' })
+    setTimeout(() => {
+      carousel.scrollTo({ left: 0, behavior: 'instant' })
+    }, 0)
 
-    let items = Array.from(carousel.querySelectorAll('.item'))
+    let items = Array.from(carousel.querySelectorAll('.item')) as HTMLElement[]
+
+    if (items.length === 0) return
+
+    items[0].style.marginLeft = `${(carousel.offsetWidth - items[0].offsetWidth) / 2}px`
+    items[items.length - 1].style.marginRight = `${
+      (carousel.offsetWidth - items[items.length - 1].offsetWidth) / 2
+    }px`
+
     observer = new MutationObserver(() => {
       isScrolledToEnd = !items[items.length - 1].classList.contains('disabled')
       isScrolledToStart = !items[0].classList.contains('disabled')
@@ -107,16 +123,13 @@
     position: relative;
     display: flex;
     align-items: center;
-    overflow: visible;
-    overflow-x: scroll;
-
+    overflow: scroll;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     height: 100%;
 
     -ms-overflow-style: none;
     scrollbar-width: none;
-    padding: 1.5rem 0;
   }
   ::-webkit-scrollbar {
     display: none;
