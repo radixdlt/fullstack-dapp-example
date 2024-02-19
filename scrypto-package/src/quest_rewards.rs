@@ -8,10 +8,10 @@ pub struct UserId(String);
 #[sbor(transparent)]
 pub struct QuestId(String);
 
-// #[derive(ScryptoSbor)]
-// struct KycData {
-//     expires: UtcDateTime,
-// }
+#[derive(ScryptoSbor, NonFungibleData)]
+struct KycData {
+    expires: Instant,
+}
 
 #[derive(ScryptoSbor)]
 enum RewardState {
@@ -72,12 +72,12 @@ mod quest_rewards {
             .globalize()
         }
 
-        pub fn claim_reward(
-            &mut self,
+        fn authorize_claim(
+            &self,
+            quest_id: &QuestId,
             user_badge: Proof,
-            quest_id: QuestId,
             kyc_badge: Option<Proof>,
-        ) -> Vec<Bucket> {
+        ) -> UserId {
             let user_badge = user_badge.check(self.user_badge_address);
             let user_id = UserId(
                 user_badge
@@ -85,8 +85,49 @@ mod quest_rewards {
                     .non_fungible_local_id()
                     .to_string(),
             );
-
             let reward_state = self
+                .rewards_record
+                .get(&(user_id.clone(), quest_id.clone()))
+                .unwrap();
+
+            let kyc_required = self.user_kyc.get(&user_id);
+
+            match *reward_state {
+                RewardState::Claimed => {
+                    panic!("Reward already claimed")
+                }
+                RewardState::Unclaimed {
+                    ref resources_record,
+                } => {
+                    if resources_record.contains_key(&XRD) && kyc_required.is_some() {
+                        // Check kyc_badge for expiration
+                        let non_fungible_data: KycData = kyc_badge
+                            .unwrap()
+                            .check(self.kyc_badge_address)
+                            .as_non_fungible()
+                            .non_fungible()
+                            .data();
+                        if Clock::current_time_is_at_or_before(
+                            non_fungible_data.expires,
+                            TimePrecision::Second,
+                        ) {
+                            panic!("KYC expired!")
+                        }
+                    };
+                }
+            }
+            user_id
+        }
+
+        pub fn claim_reward(
+            &mut self,
+            quest_id: QuestId,
+            user_badge: Proof,
+            kyc_badge: Option<Proof>,
+        ) -> Vec<Bucket> {
+            let user_id = self.authorize_claim(&quest_id, user_badge, kyc_badge);
+
+            let mut reward_state = self
                 .rewards_record
                 .get_mut(&(user_id.clone(), quest_id.clone()))
                 .unwrap();
@@ -96,21 +137,8 @@ mod quest_rewards {
                     panic!("Reward already claimed")
                 }
                 RewardState::Unclaimed {
-                    mut resources_record,
+                    ref mut resources_record,
                 } => {
-                    // Authorize XRD claim;
-                    let kyc_required = self.user_kyc.get(&user_id);
-                    if resources_record.contains_key(&XRD) && kyc_required.is_some() {
-                        kyc_badge.unwrap().check(self.kyc_badge_address);
-
-                        // TODO: check kyc_badge for expiration
-                        // let non_fungible_data: NonFungible<KycData> =
-                        //     kyc_badge.unwrap().as_non_fungible().non_fungible_data();
-                        // if non_fungible_data.expires < UtcDateTime::new() {
-                        //     panic!("KYC expired!")
-                        // }
-                    }
-
                     Runtime::emit_event(RewardClaimedEvent {
                         user_id,
                         quest_id,
@@ -185,7 +213,7 @@ mod quest_rewards {
             };
             match *reward_state {
                 RewardState::Unclaimed {
-                    mut resources_record,
+                    ref mut resources_record,
                 } => {
                     resources_record.insert(reward.resource_address(), reward_amount);
                 }
