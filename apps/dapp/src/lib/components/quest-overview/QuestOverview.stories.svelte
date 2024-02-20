@@ -38,16 +38,12 @@
 
   const rewards = [
     {
-      type: 'XRD',
+      name: 'xrd',
       amount: 10
     },
     {
-      type: 'Fragment',
+      name: 'element',
       amount: 100
-    },
-    {
-      type: 'Purple Card',
-      amount: 1
     }
   ] as const
 

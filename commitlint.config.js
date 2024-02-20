@@ -5,7 +5,19 @@ module.exports = {
     'scope-enum': () => [
       2,
       'always',
-      ['dapp', 'notification', 'stream', 'workers', 'db', 'wallet', 'core', 'common']
+      [
+        'dapp',
+        'notification',
+        'stream',
+        'workers',
+        'db',
+        'wallet',
+        'core',
+        'common',
+        'content',
+        'markdown',
+        'multiple'
+      ]
     ],
     'scope-empty': [2, 'never'],
     'type-enum': () => [
@@ -23,7 +35,8 @@ module.exports = {
         'revert',
         'style',
         'test',
-        'code'
+        'code',
+        'quest'
       ]
     ]
   }

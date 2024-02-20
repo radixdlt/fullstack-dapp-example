@@ -1,16 +1,13 @@
 <script lang="ts">
   import QuestOverviewText from '../quest-overview/quest-overview-text/QuestOverviewText.svelte'
-  import QuestRewards from '../quest-rewards/QuestRewards.svelte'
   import { i18n } from '$lib/i18n'
-  import type { QuestRewardType } from 'virtual:quests'
+  import type { QuestReward } from 'content'
+  import QuestRewards from '../quest-rewards/QuestRewards.svelte'
 
   export let title: string
   export let description: string
   export let minutesToComplete: number
-  export let rewards: {
-    type: QuestRewardType
-    amount: number
-  }[] = []
+  export let rewards: QuestReward[] = []
 </script>
 
 <div class="content">

@@ -1,6 +1,6 @@
 import { config } from './config'
 import { logger } from './helpers/logger'
-
+import crypto from 'node:crypto'
 import uWS from 'uWebSockets.js'
 import { verifyToken } from './helpers/verifyAuthToken'
 const websocketPort = config.websocket.port

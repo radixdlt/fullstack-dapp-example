@@ -3,24 +3,21 @@
   import FragmentIcon from '@images/fragment.png'
   import XRDIcon from '@images/xrd.png'
   import PurpleCardIcon from '@images/purple-card.svg'
-  import type { QuestRewardType } from 'virtual:quests'
+  import type { QuestReward } from 'content'
 
-  export let rewards: {
-    type: QuestRewardType
-    amount: number
-  }[] = []
+  export let rewards: QuestReward[] = []
 
-  const typeToIcon: Record<QuestRewardType, string> = {
-    XRD: XRDIcon,
-    Fragment: FragmentIcon,
+  const typeToIcon: Record<string, string> = {
+    xrd: XRDIcon,
+    element: FragmentIcon,
     'Purple Card': PurpleCardIcon
   }
 </script>
 
 <div class="rewards">
-  {#each rewards as { type, amount }}
+  {#each rewards as { name, amount }}
     <div>
-      <Icon url={typeToIcon[type]} size="small">
+      <Icon url={typeToIcon[name]} size="small">
         {amount}
       </Icon>
     </div>

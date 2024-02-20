@@ -11,14 +11,13 @@
   import { userApi } from './api/(protected)/user/user-api'
   import { env } from '$env/dynamic/public'
   import { ResultAsync } from 'neverthrow'
-  import { GlossaryContent } from 'virtual:glossary'
   import { publicConfig } from '$lib/public-config'
-  import { QuestsContent, type QuestDefinition } from 'virtual:quests'
-  import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
-  import Carousel from '$lib/components/carousel/Carousel.svelte'
   import { writable } from 'svelte/store'
-  import Input from '$lib/components/input/Input.svelte'
+  import { loadQuests, type LoadedQuest } from 'content'
+  import Carousel from '$lib/components/carousel/Carousel.svelte'
+  import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
   import MdQuest from '$lib/components/quest/MDQuest.svelte'
+
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
   let connected: boolean = false
@@ -87,18 +86,11 @@
         return userApi.mintUserBadge(account.address)
       })
   }
-  const currentQuest = writable<QuestDefinition | undefined>()
   const currentInputValue = writable<string>('')
 
+  const currentQuest = writable<LoadedQuest | undefined>()
   const questConfig = {
-    placeholders: {
-      'radix-wallet-input': {
-        component: Input,
-        props: {
-          onInput: (value: string) => currentInputValue.set(value)
-        }
-      }
-    },
+    placeholders: {},
     events: {
       onNextClick: () => {
         return ResultAsync.fromPromise(
@@ -128,31 +120,32 @@
   input value: {$currentInputValue}
 </div>
 
-<Carousel let:Item>
-  {#each Object.values(QuestsContent['en']) as quest}
-    <Item>
-      <QuestOverview
-        title={quest.title}
-        description={quest.description}
-        minutesToComplete={quest.minutesToComplete}
-        rewards={quest.rewards}
-        backgroundImage={quest.splashImage}
-        state="unlocked"
-        on:click={() => currentQuest.set(quest)}
-      />
-    </Item>
-  {/each}
-</Carousel>
+{#await loadQuests('en')}
+  <p>...loading quest</p>
+{:then quests}
+  <Carousel let:Item>
+    {#each quests as quest}
+      <Item>
+        <QuestOverview
+          title={quest.title}
+          description={quest.description}
+          minutesToComplete={quest.minutesToComplete}
+          rewards={quest.rewards}
+          backgroundImage={quest.splashImage}
+          state="unlocked"
+          on:click={() => currentQuest.set(quest)}
+        />
+      </Item>
+    {/each}
+  </Carousel>
+{:catch error}
+  <p style="color: red">{error.message}</p>
+{/await}
 
 {#if $currentQuest}
   <MdQuest quest={$currentQuest} {questConfig} on:closeClick={() => currentQuest.set(undefined)}
   ></MdQuest>
 {/if}
-
-{#each GlossaryContent['en'] as entry}
-  <h3>{entry.title}</h3>
-  {@html entry.content}
-{/each}
 
 <style lang="scss">
   div {

@@ -1,20 +1,17 @@
 <script lang="ts">
-  import type { QuestRewardType } from 'virtual:quests'
   import QuestRewards from '../quest-rewards/QuestRewards.svelte'
   import QuestOverviewText from './quest-overview-text/QuestOverviewText.svelte'
   import Button from '../button/Button.svelte'
   import PadlockIcon from '@images/padlock.svg'
   import CheckmarkIcon from '@images/checkmark.svg'
+  import type { QuestReward } from 'content'
 
   export let title: string
   export let description: string
   export let minutesToComplete: number
   export let state: 'locked' | 'unlocked' | 'completed' = 'locked'
   export let backgroundImage: string | undefined = undefined
-  export let rewards: {
-    type: QuestRewardType
-    amount: number
-  }[] = []
+  export let rewards: QuestReward[] = []
 </script>
 
 <div

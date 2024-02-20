@@ -20,50 +20,49 @@
 
 <script lang="ts">
   import { Story, Template } from '@storybook/addon-svelte-csf'
-  import type { QuestDefinition } from 'virtual:quests'
   import MdQuest from './MDQuest.svelte'
+  import type { LoadedQuest } from 'content'
 
   const rewards = [
     {
-      type: 'XRD',
+      name: 'xrd',
+      amount: 5
+    },
+    {
+      name: 'element',
       amount: 10
-    },
-    {
-      type: 'Fragment',
-      amount: 100
-    },
-    {
-      type: 'Purple Card',
-      amount: 1
     }
   ] as const
 
   const getRewardData = (count: number) =>
     Array(count)
       .fill(undefined)
-      .map((_, i) => {
-        return rewards[i % rewards.length]
-      })
+      .map((_, i) => rewards[i % rewards.length])
 
-  const getQuest = (args: any): QuestDefinition => {
+  const getQuest = (args: any) => {
     return {
-      id: 'storybook',
+      id: 'ConnectQuest',
       title: args.title,
       description: args.description,
-      keyImage: '/quests-images/key/ConnectQuest.webp',
-      splashImage: '/quests-images/splash/ConnectQuest.webp',
-      rewards: getRewardData(args.rewards),
       minutesToComplete: args.minutesToComplete,
+      rewards: getRewardData(args.rewards),
+      splashImage: '',
+      preRequisites: [],
+      category: 'Basic',
+      requirements: [],
       pages: [
         {
+          type: 'QuestPage',
           content: [
             {
-              type: 'html',
-              html: '<h1>What can the Radar wallet do?</h1><p>The Radar Wallet is a mobile app that securely holds your web3 assets and identities on the Radar Network (but not other networks e.g. Ethereum). You can use your wallet to log into dApps on the Radar Network and approve web3 transactions using your digital assets.</p>'
+              type: 'markdown',
+              value:
+                '<h1>What can the Radar wallet do?</h1><p>The Radar Wallet is a mobile app that securely holds your web3 assets and identities on the Radar Network (but not other networks e.g. Ethereum). You can use your wallet to log into dApps on the Radar Network and approve web3 transactions using your digital assets.</p>'
             },
             {
-              type: 'html',
-              html: "<strong>Use your wallet to log in to any web3 apps on the Radar network</strong><p>Let's make it web3 official! It's time to use your wallet to formally log in to RadQuest.Did you know? We call web3 apps like RadQuest, dApps.</p>"
+              type: 'markdown',
+              value:
+                "<strong>Use your wallet to log in to any web3 apps on the Radar network</strong><p>Let's make it web3 official! It's time to use your wallet to formally log in to RadQuest.Did you know? We call web3 apps like RadQuest, dApps.</p>"
             }
           ],
           actions: {
@@ -71,7 +70,7 @@
           }
         }
       ]
-    }
+    } satisfies LoadedQuest
   }
 </script>
 

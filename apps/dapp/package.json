@@ -68,6 +68,7 @@
     "neverthrow": "^6.1.0",
     "pino": "^8.17.2",
     "typescript-wallet": "*",
-    "svelte-i18next": "^2.2.2"
+    "svelte-i18next": "^2.2.2",
+    "content": "*"
   }
 }
