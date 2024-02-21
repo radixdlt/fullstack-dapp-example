@@ -22,8 +22,6 @@
     image: string
   }[] = []
 
-  let progressCard: ProgressCard
-
   let transformCardComponents: TransformCard[] = []
   let gemCardComponents: GemCard[] = []
 
@@ -58,19 +56,21 @@
   const dispatch = createEventDispatcher<{
     complete: undefined
   }>()
+
+  let progress: number
 </script>
 
-<ProgressCard steps={3} bind:this={progressCard}>
-  <div slot="header" class="header" let:progress>
+<ProgressCard bind:progress steps={Array(3).fill({})}>
+  <div slot="header" class="header">
     {#if progress > 0}
-      <button class="back-btn" on:click={() => progressCard.progressActions.prev()}>
+      <button class="back-btn" on:click={() => progress--}>
         <Icon url={ChevronLeft} />
         {$i18n.t('transformGems_back')}
       </button>
     {/if}
   </div>
 
-  <div class="content" slot="content" let:progress>
+  <div class="content" slot="content">
     <div class="title">
       {#if progress === 0}
         {$i18n.t('transformGems_title_0')}
@@ -152,17 +152,13 @@
 
     <div class="next-btn">
       {#if progress === 0}
-        <Button
-          disabled={selectedTransformCard === undefined}
-          on:click={() => progressCard.progressActions.next()}
+        <Button disabled={selectedTransformCard === undefined} on:click={() => progress++}
           >{$i18n.t('transformGems_next_button')}</Button
         >
       {/if}
 
       {#if progress === 1}
-        <Button
-          disabled={selectedGems.length < 2}
-          on:click={() => progressCard.progressActions.next()}
+        <Button disabled={selectedGems.length < 2} on:click={() => progress++}
           >{$i18n.t('transformGems_next_button')}</Button
         >
       {/if}

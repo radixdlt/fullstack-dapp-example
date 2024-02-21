@@ -2,15 +2,11 @@
   import ProgressBar from '$lib/components/progress-bar/ProgressBar.svelte'
   import type { ResultAsync } from 'neverthrow'
 
-  type ProgressActions = {
-    next: () => void
-    prev: () => void
-  }
+  export let steps: {
+    onNextClick?: (page: number) => ResultAsync<void, string>
+  }[]
 
-  export let steps: number
-  export let onNextClick: ((page: number) => ResultAsync<void, Error>) | undefined = undefined
   export const close = () => {}
-  export let nextDisabled: boolean = false
   export let progress: number = 0
 
   let width: number
@@ -30,25 +26,6 @@
       animating = false
     }, animationDuration)
   }
-
-  export const progressActions: ProgressActions = {
-    next: () => {
-      if (progress < steps - 1) {
-        if (onNextClick) {
-          nextDisabled = true
-          onNextClick(progress).map(() => {
-            progress++
-            nextDisabled = false
-          })
-        } else {
-          progress++
-        }
-      }
-    },
-    prev: () => {
-      if (progress > 0) progress--
-    }
-  }
 </script>
 
 <div
@@ -59,7 +36,7 @@
 >
   <slot name="header" {progress} />
 
-  <ProgressBar totalSteps={steps} bind:progress />
+  <ProgressBar totalSteps={steps.length} bind:progress />
 
   <slot name="content" {animationDuration} {width} {height} {progress} />
 </div>

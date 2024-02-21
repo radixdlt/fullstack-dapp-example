@@ -55,18 +55,65 @@
           type: 'QuestPage',
           content: [
             {
-              type: 'markdown',
+              type: 'html',
               value:
                 '<h1>What can the Radar wallet do?</h1><p>The Radar Wallet is a mobile app that securely holds your web3 assets and identities on the Radar Network (but not other networks e.g. Ethereum). You can use your wallet to log into dApps on the Radar Network and approve web3 transactions using your digital assets.</p>'
             },
             {
-              type: 'markdown',
+              type: 'html',
               value:
                 "<strong>Use your wallet to log in to any web3 apps on the Radar network</strong><p>Let's make it web3 official! It's time to use your wallet to formally log in to RadQuest.Did you know? We call web3 apps like RadQuest, dApps.</p>"
             }
           ],
           actions: {
             next: 'Coolio!'
+          }
+        },
+        {
+          type: 'JettyPage',
+          jetty: { emotion: 'Excited' },
+          content: [
+            {
+              type: 'html',
+              value: 'Hello I am Jetty'
+            },
+            {
+              type: 'html',
+              value: "I'm here to help you get started with the Radar network."
+            }
+          ],
+          actions: {
+            previous: 'Back',
+            next: 'Coolio!'
+          }
+        },
+        {
+          type: 'QuestPage',
+          content: [
+            {
+              type: 'html',
+              value: '<h1>Some more cool info.</p>'
+            },
+            {
+              type: 'html',
+              value: '<strong>Nice job on the quest so far.</p>'
+            }
+          ],
+          actions: {
+            next: 'Coolio!'
+          }
+        },
+        {
+          type: 'JettyPage',
+          jetty: { emotion: 'Excited' },
+          content: [
+            {
+              type: 'html',
+              value: 'Congrats on completing the quest!'
+            }
+          ],
+          actions: {
+            previous: 'Back'
           }
         }
       ]
