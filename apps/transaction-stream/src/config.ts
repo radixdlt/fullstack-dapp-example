@@ -8,5 +8,8 @@ export const config = {
   ledger: {
     fromStateVersion: parseInt(process.env.FROM_STATE_VERSION!, 10)
   },
-  networkId: parseInt(process.env.PUBLIC_NETWORK_ID!, 10)
+  networkId: parseInt(process.env.PUBLIC_NETWORK_ID!, 10),
+  stream: {
+    limitPerPage: 100
+  }
 }

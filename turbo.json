@@ -59,6 +59,7 @@
       "cache": false
     },
     "content:build": {
+      "dependsOn": ["^common:build"],
       "cache": false
     }
   }
