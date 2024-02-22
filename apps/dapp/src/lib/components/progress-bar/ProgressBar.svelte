@@ -2,7 +2,13 @@
   export let totalSteps: number
   export let progress: number = 0
 
+  $: {
+    if (progress < 0) progress = 0
+    if (progress >= totalSteps) progress = totalSteps - 1
+  }
+
   export const setProgress = (_progress: number) => {
+    if (_progress < 0 || _progress >= totalSteps) return
     progress = _progress
   }
 </script>

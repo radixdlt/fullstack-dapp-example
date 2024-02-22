@@ -99,7 +99,7 @@
               resolve()
             }, 1000)
           }),
-          () => new Error('Failed to complete quest')
+          () => 'Failed to complete quest'
         )
       }
     }
