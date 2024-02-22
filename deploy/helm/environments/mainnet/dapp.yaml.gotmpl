@@ -39,6 +39,16 @@ secrets:
     path: "rtlj-prod/eks/radquest/mainnet/secrets"
     secretProperty: "mainnet_mnemonic"
     secretName: "mainnet_mnemonic"
+  - name: twilio-account-sid
+    variable: "TWILIO_ACCOUNT_SID"
+    path: "rtlj-prod/eks/radquest/mainnet/secrets"
+    secretProperty: "twilio_account_sid"
+    secretName: "twilio_account_sid"
+  - name: twilio-auth-token
+    variable: "TWILIO_AUTH_TOKEN"
+    path: "rtlj-prod/eks/radquest/mainnet/secrets"
+    secretProperty: "twilio_auth_token"
+    secretName: "twilio_auth_token"
 
 ingress:
   enabled: false

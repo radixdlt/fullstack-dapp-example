@@ -23,6 +23,16 @@ secrets:
     path: "rdx-works-main/eks/radquest/dev/secrets"
     secretProperty: "stokenet_mnemonic"
     secretName: "stokenet_mnemonic"
+  - name: twilio-account-sid
+    variable: "TWILIO_ACCOUNT_SID"
+    path: "rdx-works-main/eks/radquest/dev/secrets"
+    secretProperty: "twilio_account_sid"
+    secretName: "twilio_account_sid"
+  - name: twilio-auth-token
+    variable: "TWILIO_AUTH_TOKEN"
+    path: "rdx-works-main/eks/radquest/dev/secrets"
+    secretProperty: "twilio_auth_token"
+    secretName: "twilio_auth_token"
 
 ingress:
   enabled: true
