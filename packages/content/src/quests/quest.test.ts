@@ -3,6 +3,6 @@ import { loadQuests } from './load-quests'
 
 describe('load quests', () => {
   it('should successfully load', async () => {
-    expect((await loadQuests('en')).length).greaterThan(1)
+    expect(loadQuests('en', 2).length).greaterThan(1)
   })
 })

@@ -18,7 +18,8 @@
     "pino": "^8.17.2",
     "ramda": "^0.29.1",
     "rxjs": "^7.8.1",
-    "common": "*"
+    "common": "*",
+    "content": "*"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.5",

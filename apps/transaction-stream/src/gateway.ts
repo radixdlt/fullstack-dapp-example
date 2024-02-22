@@ -5,7 +5,8 @@ import {
 import { Result, ResultAsync } from 'neverthrow'
 import { logger } from './helpers/logger'
 import { GatewayApi } from 'common'
-import { ErrorReason, FetchWrapperError, fetchWrapper } from './helpers/fetch-wrapper'
+import { FetchWrapperError, fetchWrapper } from './helpers/fetch-wrapper'
+import { config } from './config'
 
 export type Transaction = StreamTransactionsResponse['items'][0]
 
@@ -38,14 +39,12 @@ export const GatewayApiClient = ({ dependencies }: GatewayApiClientInput) => {
           Accept: 'application/json'
         },
         body: JSON.stringify({
-          limit_per_page: 100,
+          limit_per_page: config.stream.limitPerPage,
           kind_filter: 'User',
           order: 'Asc',
           from_ledger_state,
           opt_ins: {
-            receipt_events: true,
-            affected_global_entities: true,
-            receipt_state_changes: true
+            receipt_events: true
           }
         })
       })

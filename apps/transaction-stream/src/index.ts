@@ -1,8 +1,14 @@
+import { QuestDefinitions } from 'content'
 import { config } from './config'
+import { getTrackedEvents } from './filter-transactions/tracked-events'
 import { GatewayApiClient } from './gateway'
 import { logger } from './helpers/logger'
 import { TransactionStream } from './transaction-stream/transaction-stream'
 import { GatewayApi } from 'common'
+import { filterTransactionsFactory } from './filter-transactions/filter-transactions'
+
+const trackedEvents = getTrackedEvents(QuestDefinitions(config.networkId))
+const filterTransactions = filterTransactionsFactory(trackedEvents)
 
 const app = async () => {
   const gatewayApi = GatewayApi(config.networkId)
@@ -22,8 +28,16 @@ const app = async () => {
     dependencies: { gatewayApiClient }
   })
 
-  stream.transactions$.subscribe((value) => {
-    // TODO: filter out transactions that are not from the RadQuest app and add them to a queue
+  stream.transactions$.subscribe((transactions) => {
+    const filteredTransactions = filterTransactions(transactions)
+
+    // TODO: add to tracked events db table and send to quest queue for processing
+    if (filteredTransactions.length) {
+      logger.debug({
+        method: 'stream.transactions$.filteredTransactions',
+        transactions: filteredTransactions
+      })
+    }
   })
 
   stream.error$.subscribe(async (error) => {

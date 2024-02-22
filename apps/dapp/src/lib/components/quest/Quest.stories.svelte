@@ -49,7 +49,7 @@
       splashImage: '',
       preRequisites: [],
       category: 'Basic',
-      requirements: [],
+      requirements: {},
       pages: [
         {
           type: 'QuestPage',

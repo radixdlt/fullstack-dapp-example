@@ -104,6 +104,8 @@
       }
     }
   }
+
+  let quests = loadQuests('en', networkId)
 </script>
 
 <div><radix-connect-button></radix-connect-button></div>
@@ -120,9 +122,7 @@
   input value: {$currentInputValue}
 </div>
 
-{#await loadQuests('en')}
-  <p>...loading quest</p>
-{:then quests}
+{#if quests}
   <Carousel let:Item>
     {#each quests as quest}
       <Item>
@@ -138,9 +138,7 @@
       </Item>
     {/each}
   </Carousel>
-{:catch error}
-  <p style="color: red">{error.message}</p>
-{/await}
+{/if}
 
 {#if $currentQuest}
   <MdQuest quest={$currentQuest} {questConfig} on:closeClick={() => currentQuest.set(undefined)}
