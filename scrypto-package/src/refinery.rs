@@ -7,11 +7,6 @@ struct RadGem {
     material: String,
     rarity: String,
 }
-// type ClaimTicketNftId = String;
-#[derive(ScryptoSbor, NonFungibleData)]
-struct ClaimTicketNftId {
-    name: String,
-}
 
 #[derive(ScryptoSbor, ScryptoEvent)]
 struct RegisteredEvent {
@@ -19,43 +14,32 @@ struct RegisteredEvent {
 }
 
 #[blueprint]
-#[events(RegisteredEvent)]
+#[events(
+    ElelmentsCombineDepositedEvent,
+    ElelmentsCombineProccessedEvent,
+    ElelmentsCombineClaimedEvent,
+    RadgemsTransformedEvent
+)]
 mod refinery {
     struct Refinery {
         radgem_resource_manager: ResourceManager,
-        claim_ticket_nft_resource_manager: ResourceManager,
         // radgem_deposit: KeyValueStore<ClaimTicketNftId, Vault>,
         radgem_vault: Vault,
-        admin_badge: Vault,
+        admin_badge: ResourceAddress,
     }
 
     impl Refinery {
         // Instantiate the Refinery
-        pub fn new_refinery() -> Global<Refinery> {
-            // Create Admin Badge
-            let admin_badge: Bucket = ResourceBuilder::new_fungible(OwnerRole::None)
-                .divisibility(DIVISIBILITY_NONE)
-                .metadata(metadata! {
-                    init {
-                          "name" => "Admin Badge", locked;
-                     }
-                })
-                .mint_initial_supply(1)
-                .into();
-
+        pub fn new_refinery(
+            owner_badge_address: ResourceAddress,
+            admin_badge_address: ResourceAddress,
+            user_badge_address: ResourceAddress,
+        ) -> Global<Refinery> {
             // Create RadGem NFT
             let radgem_resource_manager =
                 ResourceBuilder::new_ruid_non_fungible::<RadGem>(OwnerRole::None)
                     .mint_roles(mint_roles!(
-                        minter => rule!(require(admin_badge.resource_address()));
-                        minter_updater => rule!(deny_all);
-                    ))
-                    .create_with_no_initial_supply();
-            // Create Claim Ticket NFT
-            let claim_ticket_nft_resource_manager =
-                ResourceBuilder::new_ruid_non_fungible::<RadGem>(OwnerRole::None)
-                    .mint_roles(mint_roles!(
-                        minter => rule!(require(admin_badge.resource_address()));
+                        minter => rule!(require(admin_badge_address));
                         minter_updater => rule!(deny_all);
                     ))
                     .create_with_no_initial_supply();
@@ -63,9 +47,8 @@ mod refinery {
             Self {
                 radgem_resource_manager: radgem_resource_manager,
                 radgem_vault: Vault::new(radgem_resource_manager.address()),
-                claim_ticket_nft_resource_manager: claim_ticket_nft_resource_manager,
                 // radgem_deposit: KeyValueStore::new(),
-                admin_badge: Vault::with_bucket(admin_badge),
+                admin_badge: admin_badge_address,
             }
             .instantiate()
             .prepare_to_globalize(OwnerRole::None)
@@ -77,14 +60,14 @@ mod refinery {
         fn combine_elements_deposit(&self, elements: Bucket) -> () {
             // burn the elements
             elements.burn();
-            Runtime::emit_event(RegisteredEvent {
+            Runtime::emit_event(ElelmentsCombineDepositedEvent {
                 event: "elements_combine_deposited".to_string(),
             });
         }
 
         // combine_elements_process Mint a Random RadGem NFT
         // emit elements_combine_proccessed event
-        pub fn combine_elements_process(&mut self, elements: Bucket) -> Bucket {
+        pub fn combine_elements_process(&mut self, elements: Bucket) -> () {
             // Burn the elements
             self.combine_elements_deposit(elements);
             // Mint a RadGem
@@ -95,18 +78,57 @@ mod refinery {
                 rarity: "common".to_string(),
             });
             self.radgem_vault.put(radgem_bucket);
-            // mint a claim ticket
-            let claim_ticket_nft = self
-                .claim_ticket_nft_resource_manager
-                .mint_ruid_non_fungible(ClaimTicketNftId {
-                    name: "Claim Ticket".to_string(),
-                });
+            // TODO Store the User ID and the RadGem ID in a KeyValueStore
+
             // Emit the event
-            Runtime::emit_event(RegisteredEvent {
+            Runtime::emit_event(ElelmentsCombineProccessedEvent {
                 event: "elements_combine_proccessed".to_string(),
             });
-            // Return the claim ticket
-            claim_ticket_nft
+        }
+        // combine_elements_claim create a function to claim the RadGem
+        // emit elements_combine_claimed event
+        pub fn combine_elements_claim(&mut self, user_id: String, radgem_id: String) -> () {
+            // TODO Get the RadGem from the Vault
+            // TODO Transfer the RadGem to the User
+            // TODO Remove the User ID and the RadGem ID from the KeyValueStore or mark it as claimed
+            Runtime::emit_event(ElelmentsCombineClaimedEvent {
+                event: "elements_combine_claimed".to_string(),
+            });
+        }
+
+        // transform_radgems create a function to transform RadGems & Morph Card into a new RadMorph NFT
+        // emit radgems_transformed event
+        pub fn transform_radgems(&mut self, radgems: Bucket, morph_card: Bucket) -> () {
+            // Burn the RadGems
+            radgems.burn();
+            // Burn the Morph Card
+            morph_card.burn();
+            // Mint a RadMorph
+            // TODO
+            // Emit the event
+            Runtime::emit_event(RadgemsTransformedEvent {
+                event: "radgems_transformed".to_string(),
+            });
         }
     }
+}
+
+#[derive(ScryptoSbor, ScryptoEvent)]
+pub struct ElelmentsCombineDepositedEvent {
+    event: String,
+}
+
+#[derive(ScryptoSbor, ScryptoEvent)]
+pub struct ElelmentsCombineProccessedEvent {
+    event: String,
+}
+
+#[derive(ScryptoSbor, ScryptoEvent)]
+pub struct ElelmentsCombineClaimedEvent {
+    event: String,
+}
+
+#[derive(ScryptoSbor, ScryptoEvent)]
+pub struct RadgemsTransformedEvent {
+    event: String,
 }
