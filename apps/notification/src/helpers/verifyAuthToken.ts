@@ -8,7 +8,7 @@ export const verifyToken = (
 ): Result<string, { reason: string; jsError?: Error }> => {
   try {
     const decoded = jwt.verify(token, secret) as JwtPayload
-    return ok(typeof decoded === 'string' ? decoded : decoded.identityAddress)
+    return ok(typeof decoded === 'string' ? decoded : decoded.userId)
   } catch (error: unknown) {
     return err({ jsError: error as Error, reason: 'invalidToken' })
   }

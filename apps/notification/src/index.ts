@@ -1,9 +1,15 @@
+import { hasStringUserId } from './helpers/validation'
 import { config } from './config'
 import { logger } from './helpers/logger'
 import crypto from 'node:crypto'
 import uWS from 'uWebSockets.js'
+import http from 'http'
 import { verifyToken } from './helpers/verifyAuthToken'
+import { readRequestBody } from './helpers/readRequestBody'
+import { respondFactory } from './helpers/respondFactory'
+
 const websocketPort = config.websocket.port
+const internalApiPort = config.api.port
 
 type WebSocket = uWS.WebSocket<{ userId: string; traceId: string }>
 
@@ -89,3 +95,39 @@ uWS
       logger.debug({ method: 'listen', event: 'error', port: websocketPort })
     }
   })
+
+http
+  .createServer((request: http.IncomingMessage, response: http.ServerResponse) => {
+    const respond = respondFactory(response)
+    const apiLogger = logger.child({ method: `${request.method} ${request.url}` })
+    switch (`${request.method} ${request.url}`) {
+      case 'POST /api/send':
+        readRequestBody(request)
+          .map((body) => {
+            const userId = body?.userId
+
+            if (!hasStringUserId(userId)) {
+              respond.error(400, 'invalid request')
+              return
+            }
+
+            const activeSocket = activeSockets.get(userId)
+
+            if (!activeSocket) {
+              respond.error(404, 'user have no active websocket')
+              return
+            }
+
+            activeSocket.send(JSON.stringify(body.data))
+            apiLogger.debug({ userId, data: body.data, event: 'success' })
+            respond.success()
+          })
+          .mapErr((error) => {
+            apiLogger.error({ error, event: 'error' })
+            respond.error(400, 'invalid request')
+          })
+
+        break
+    }
+  })
+  .listen(internalApiPort)
