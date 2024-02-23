@@ -7,8 +7,12 @@
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/content.js",
-        "types": "./dist/index.d.ts"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/content.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/content.umd.cjs"
       }
     }
   },

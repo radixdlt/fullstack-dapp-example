@@ -6,13 +6,23 @@ import { logger } from './helpers/logger'
 import { TransactionStream } from './transaction-stream/transaction-stream'
 import { GatewayApi } from 'common'
 import { filterTransactionsFactory } from './filter-transactions/filter-transactions'
-
-const trackedEvents = getTrackedEvents(QuestDefinitions(config.networkId))
-const filterTransactions = filterTransactionsFactory(trackedEvents)
+import { PrismaClient } from 'database'
+import { getQueues } from 'queues'
 
 const app = async () => {
+  const { user, password, host, port, database } = config.postgres
+
+  const db = new PrismaClient({
+    datasourceUrl: `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`
+  })
+
+  const trackedEvents = getTrackedEvents(QuestDefinitions(config.networkId))
+  const filterTransactions = filterTransactionsFactory(trackedEvents)
+
   const gatewayApi = GatewayApi(config.networkId)
   const gatewayApiClient = GatewayApiClient({ dependencies: { gatewayApi } })
+
+  const { eventQueue } = getQueues(config.redis)
 
   const result = await gatewayApi.callApi('getCurrent')
 
@@ -28,11 +38,23 @@ const app = async () => {
     dependencies: { gatewayApiClient }
   })
 
-  stream.transactions$.subscribe((transactions) => {
+  stream.transactions$.subscribe(async (transactions) => {
     const filteredTransactions = filterTransactions(transactions)
 
-    // TODO: add to tracked events db table and send to quest queue for processing
     if (filteredTransactions.length) {
+      await db.event.createMany({
+        data: filteredTransactions.map((item) => ({
+          id: item.eventId,
+          questId: item.questId,
+          transactionId: item.transactionId,
+          userId: item.userId
+        }))
+      })
+
+      await eventQueue.addBulk(
+        filteredTransactions.map((item) => ({ name: item.transactionId, data: item }))
+      )
+
       logger.debug({
         method: 'stream.transactions$.filteredTransactions',
         transactions: filteredTransactions

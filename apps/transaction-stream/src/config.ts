@@ -11,5 +11,12 @@ export const config = {
   networkId: parseInt(process.env.PUBLIC_NETWORK_ID!, 10),
   stream: {
     limitPerPage: 100
+  },
+  postgres: {
+    database: process.env.POSTGRES_DATABASE ?? 'radquest',
+    host: process.env.POSTGRES_HOST ?? 'localhost',
+    user: process.env.POSTGRES_USER ?? 'user',
+    password: process.env.POSTGRES_PASSWORD ?? 'password',
+    port: parseInt(process.env.POSTGRES_PORT ?? '5433', 10)
   }
 }

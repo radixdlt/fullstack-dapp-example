@@ -2,6 +2,9 @@ image:
     tag: {{ .StateValues.ci.tag }}
 
 params:
+  POSTGRES_DATABASE: radquest
+  POSTGRES_HOST: radquest-mainnet-rds.rtlj-prod.internal
+  POSTGRES_PORT: 5432
   REDIS_HOST: radquest-mainnet-redis.rtlj-prod.internal
   REDIS_PORT: 6379
   REDIS_PASSWORD: ""
