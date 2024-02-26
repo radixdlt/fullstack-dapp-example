@@ -33,7 +33,7 @@ export const TransactionStream = ({
 
     const { transactions, stateVersion } = result.value
     subjects.currentStateVersionSubject.next(stateVersion)
-    subjects.transactionsSubject.next(transactions)
+    subjects.transactionsSubject.next({ transactions, continueStream, stateVersion })
   }
 
   const stateVersion$ = subjects.triggerSubject.pipe(
@@ -45,9 +45,7 @@ export const TransactionStream = ({
 
   const stream$ = stateVersion$.pipe(
     concatMap(fetchAndProcessTransactions),
-    tap(emitValuesToObservers),
-    filter((result) => !result.isErr()),
-    tap(() => continueStream(1_000))
+    tap(emitValuesToObservers)
   )
 
   const subscription = stream$.subscribe()
