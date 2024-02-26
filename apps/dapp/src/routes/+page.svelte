@@ -16,7 +16,7 @@
   import { loadQuests, type LoadedQuest } from 'content'
   import Carousel from '$lib/components/carousel/Carousel.svelte'
   import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
-  import MdQuest from '$lib/components/quest/MDQuest.svelte'
+  import DefQuest from '$lib/components/quest/DefQuest.svelte'
 
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
@@ -141,8 +141,8 @@
 {/if}
 
 {#if $currentQuest}
-  <MdQuest quest={$currentQuest} {questConfig} on:closeClick={() => currentQuest.set(undefined)}
-  ></MdQuest>
+  <DefQuest quest={$currentQuest} {questConfig} on:closeClick={() => currentQuest.set(undefined)}
+  ></DefQuest>
 {/if}
 
 <style lang="scss">

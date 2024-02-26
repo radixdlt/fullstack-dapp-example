@@ -20,7 +20,7 @@
 
 <script lang="ts">
   import { Story, Template } from '@storybook/addon-svelte-csf'
-  import MdQuest from './MDQuest.svelte'
+  import DefQuest from './DefQuest.svelte'
   import type { LoadedQuest } from 'content'
 
   const rewards = [
@@ -123,7 +123,7 @@
 
 <Template let:args>
   <div class="container">
-    <MdQuest quest={getQuest(args)} />
+    <DefQuest quest={getQuest(args)} />
   </div>
 </Template>
 

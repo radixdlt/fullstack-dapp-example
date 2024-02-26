@@ -22,7 +22,9 @@ i18next.init({
         transformGems_next_button: 'Next',
         transformGems_complete_button: 'Send to Jetty',
         transformGems_gemcard_gemstone: 'Gemstone',
-        transformGems_gemcard_rarity: 'Rarity'
+        transformGems_gemcard_rarity: 'Rarity',
+
+        glossary_back: 'Back'
       }
     }
   }

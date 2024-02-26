@@ -1,14 +1,13 @@
 <script lang="ts">
   import Carousel from '$lib/components/carousel/Carousel.svelte'
-  import Icon from '$lib/components/icon/Icon.svelte'
   import Button from '../button/Button.svelte'
   import ProgressCard from '../progress-card/ProgressCard.svelte'
-  import ChevronLeft from '@images/chevron-left.svg'
   import TransformCard from './TransformCard.svelte'
   import { fade } from 'svelte/transition'
   import GemCard from './GemCard.svelte'
   import { i18n } from '$lib/i18n'
   import { createEventDispatcher } from 'svelte'
+  import CardHeader from '../card-header/CardHeader.svelte'
 
   export let transformCards: {
     title: string
@@ -63,10 +62,9 @@
 <ProgressCard bind:progress steps={Array(3).fill({})}>
   <div slot="header" class="header">
     {#if progress > 0}
-      <button class="back-btn" on:click={() => progress--}>
-        <Icon url={ChevronLeft} />
+      <CardHeader on:click={() => progress--}>
         {$i18n.t('transformGems_back')}
-      </button>
+      </CardHeader>
     {/if}
   </div>
 
@@ -176,11 +174,8 @@
   .header {
     display: flex;
     align-items: center;
-    padding: 1.6rem;
-    font-weight: var(--font-weight-bold);
-    gap: var(--spacing-md);
+    padding: 0 1rem;
   }
-
   .container {
     display: grid;
     grid-area: 2 / 1;
@@ -203,11 +198,5 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .back-btn {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
   }
 </style>
