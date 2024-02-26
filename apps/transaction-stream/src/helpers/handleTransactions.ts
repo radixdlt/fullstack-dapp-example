@@ -1,12 +1,11 @@
-import { State, StreamTransactionsResponse } from '@radixdlt/babylon-gateway-api-sdk'
+import { StreamTransactionsResponse } from '@radixdlt/babylon-gateway-api-sdk'
 import { FilterTransactions } from '../filter-transactions/filter-transactions'
 import { EventsModel } from '../events/events.model'
 import { randomUUID } from 'node:crypto'
-import { RedisConnection, getQueues } from 'queues'
+import { getQueues } from 'queues'
 import { Logger } from 'pino'
-import { ResultAsync } from 'neverthrow'
-import { typedError } from 'common'
 import { StateVersionModel } from '../state-version/state-version.model'
+import { ok } from 'neverthrow'
 
 export const HandleTransactions =
   ({
@@ -38,14 +37,15 @@ export const HandleTransactions =
           .map(() => filteredTransactions.map((item) => ({ ...item, traceId: randomUUID() })))
       )
       .andThen((items) => eventQueue.addBulk(items).map(() => items))
-      .andThen((items) => stateVersionModel.setLatestStateVersion(stateVersion).map(() => items))
-      .map((items) => {
-        if (items.length)
+      .andThen((items) => {
+        if (items.length) {
           logger.debug({
-            method: 'stream.transactions$',
+            method: 'HandleTransactions',
             stateVersion,
             transactions: items
           })
-
+          return stateVersionModel.setLatestStateVersion(stateVersion).map(() => items)
+        }
         continueStream(items.length ? 0 : 1000)
+        return ok(items)
       })

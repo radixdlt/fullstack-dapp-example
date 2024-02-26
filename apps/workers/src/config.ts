@@ -11,5 +11,9 @@ export const config = {
     password: process.env.POSTGRES_PASSWORD ?? 'password',
     port: parseInt(process.env.POSTGRES_PORT ?? '5433', 10)
   },
-  logLevel: process.env.LOG_LEVEL!
+  logLevel: process.env.LOG_LEVEL!,
+  notification: {
+    baseUrl: process.env.NOTIFICATION_INTERNAL_API_HOST,
+    port: process.env.NOTIFICATION_INTERNAL_API_PORT
+  }
 }

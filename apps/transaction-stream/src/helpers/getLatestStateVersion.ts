@@ -13,17 +13,17 @@ export const getLatestStateVersion = ({
   gatewayApi: GatewayApi
 }) =>
   stateVersionModel
-    .getLatestStateVersion()
+    .getLatestProcessedStateVersion()
     .andThen((value) =>
       value
-        ? ok(value)
+        ? ok(value + 1)
         : eventsModel
             .getLastAddedTransactionId()
             .andThen((lastTransactionId) =>
               lastTransactionId
                 ? gatewayApi
                     .callApi('getStatus', lastTransactionId)
-                    .map((item) => item.committed_state_version!)
+                    .map((item) => item.committed_state_version! + 1)
                 : gatewayApi.callApi('getCurrent').map((item) => item.ledger_state.state_version)
             )
     )

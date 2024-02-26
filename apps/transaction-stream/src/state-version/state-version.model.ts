@@ -11,13 +11,13 @@ export const StateVersionModel = (redisClient: RedisConnection) => {
       ResultAsync.fromPromise(client.set('latestStateVersion', stateVersion.toString()), typedError)
     )
 
-  const getLatestStateVersion = () =>
+  const getLatestProcessedStateVersion = () =>
     getRedisClient()
       .andThen((client) => ResultAsync.fromPromise(client.get('latestStateVersion'), typedError))
       .map((item) => (item ? parseInt(item) : undefined))
 
   return {
     setLatestStateVersion,
-    getLatestStateVersion
+    getLatestProcessedStateVersion
   }
 }

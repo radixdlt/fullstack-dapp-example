@@ -30,15 +30,14 @@ const app = async (dependencies: Dependencies) => {
 
   if (result.isErr()) throw new Error('Failed to get current ledger state')
 
-  const latestStateVersion = result.value
+  const fromStateVersion = result.value
 
   const gatewayApiClient = GatewayApiClient({ dependencies: { gatewayApi } })
 
-  logger.debug({ method: 'transactionStream', stateVersion: latestStateVersion })
+  logger.debug({ method: 'transactionStream.start', fromStateVersion })
 
   const stream = TransactionStream({
-    // TODO: should start from the latest processed state version
-    fromStateVersion: latestStateVersion,
+    fromStateVersion,
     dependencies: { gatewayApiClient }
   })
 
@@ -51,7 +50,17 @@ const app = async (dependencies: Dependencies) => {
   })
   const handleStreamError = HandleStreamError(logger, stream)
 
-  stream.transactions$.subscribe(handleTransactions)
+  stream.transactions$.subscribe(async (transactions) => {
+    const result = await handleTransactions(transactions)
+
+    if (result.isErr()) {
+      logger.error({
+        method: 'handleTransactions',
+        error: result.error
+      })
+      throw result.error
+    }
+  })
 
   stream.error$.subscribe(handleStreamError)
 }
