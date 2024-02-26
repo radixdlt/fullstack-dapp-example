@@ -92,15 +92,18 @@ mod quest_rewards {
             &mut self,
             user_id: UserId,
             quest_id: QuestId,
-            reward: Bucket,
-        ) -> Bucket {
+            rewards: Vec<Bucket>,
+        ) -> Vec<Bucket> {
             Runtime::emit_event(RewardDepositedEvent {
                 user_id,
                 quest_id,
-                reward: reward.resource_address(),
+                rewards: rewards
+                    .iter()
+                    .map(|reward| reward.resource_address())
+                    .collect(),
             });
 
-            reward
+            rewards
         }
 
         pub fn update_user_kyc_requirement(&mut self, user_id: UserId, require_kyc: bool) {
@@ -124,5 +127,5 @@ pub struct RewardClaimedEvent {
 pub struct RewardDepositedEvent {
     user_id: UserId,
     quest_id: QuestId,
-    reward: ResourceAddress,
+    rewards: Vec<ResourceAddress>,
 }
