@@ -130,4 +130,6 @@ http
         break
     }
   })
-  .listen(internalApiPort)
+  .listen(internalApiPort, () => {
+    logger.debug({ method: 'internalApi.listen', port: internalApiPort })
+  })
