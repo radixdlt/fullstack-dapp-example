@@ -2,10 +2,9 @@ import { StreamTransactionsResponse } from '@radixdlt/babylon-gateway-api-sdk'
 import { FilterTransactions } from '../filter-transactions/filter-transactions'
 import { EventsModel } from '../events/events.model'
 import { randomUUID } from 'node:crypto'
-import { getQueues } from 'queues'
+import { EventJob, getQueues } from 'queues'
 import { Logger } from 'pino'
 import { StateVersionModel } from '../state-version/state-version.model'
-import { ok } from 'neverthrow'
 
 export const HandleTransactions =
   ({
@@ -32,9 +31,17 @@ export const HandleTransactions =
   }) =>
     filterTransactions(transactions)
       .asyncAndThen((filteredTransactions) =>
-        eventsModel
-          .addFilteredTransactionsToDb(filteredTransactions)
-          .map(() => filteredTransactions.map((item) => ({ ...item, traceId: randomUUID() })))
+        eventsModel.addFilteredTransactionsToDb(filteredTransactions).map((items) =>
+          items.map(
+            ({ transactionId, questId, id: eventId, userId }): EventJob => ({
+              userId,
+              transactionId,
+              questId: questId || undefined,
+              eventId,
+              traceId: randomUUID()
+            })
+          )
+        )
       )
       .andThen((items) => eventQueue.addBulk(items).map(() => items))
       .andThen((items) => {
@@ -44,8 +51,8 @@ export const HandleTransactions =
             stateVersion,
             transactions: items
           })
-          return stateVersionModel.setLatestStateVersion(stateVersion).map(() => items)
         }
+
         continueStream(items.length ? 0 : 1000)
-        return ok(items)
+        return stateVersionModel.setLatestStateVersion(stateVersion)
       })

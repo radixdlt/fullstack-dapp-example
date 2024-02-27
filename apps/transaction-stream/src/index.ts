@@ -6,7 +6,7 @@ import { logger } from './helpers/logger'
 import { TransactionStream } from './transaction-stream/transaction-stream'
 import { GatewayApi } from 'common'
 import { FilterTransactions } from './filter-transactions/filter-transactions'
-import { PrismaClient } from 'database'
+import { Prisma, PrismaClient } from 'database'
 import { getQueues, RedisConnection } from 'queues'
 import { EventsModel } from './events/events.model'
 import { HandleStreamError } from './helpers/handleStreamError'
@@ -20,6 +20,7 @@ type Dependencies = {
   eventsModel: EventsModel
   filterTransactions: FilterTransactions
   stateVersionModel: StateVersionModel
+  db: PrismaClient
 }
 
 const app = async (dependencies: Dependencies) => {
@@ -69,11 +70,10 @@ const { user, password, host, port, database } = config.postgres
 
 const gatewayApi = GatewayApi(config.networkId)
 const { eventQueue } = getQueues(config.redis)
-const eventsModel = EventsModel(
-  new PrismaClient({
-    datasourceUrl: `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`
-  })
-)
+const db = new PrismaClient({
+  datasourceUrl: `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`
+})
+const eventsModel = EventsModel(db)
 const questDefinitions = QuestDefinitions(config.networkId)
 const trackedEvents = getTrackedEvents(questDefinitions)
 const filterTransactions = FilterTransactions(trackedEvents)
@@ -84,5 +84,6 @@ app({
   eventQueue,
   eventsModel,
   filterTransactions,
-  stateVersionModel
+  stateVersionModel,
+  db
 })

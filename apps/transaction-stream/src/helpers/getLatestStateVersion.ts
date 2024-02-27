@@ -16,14 +16,14 @@ export const getLatestStateVersion = ({
     .getLatestProcessedStateVersion()
     .andThen((value) =>
       value
-        ? ok(value + 1)
+        ? ok(value)
         : eventsModel
             .getLastAddedTransactionId()
             .andThen((lastTransactionId) =>
               lastTransactionId
                 ? gatewayApi
                     .callApi('getStatus', lastTransactionId)
-                    .map((item) => item.committed_state_version! + 1)
+                    .map((item) => item.committed_state_version!)
                 : gatewayApi.callApi('getCurrent').map((item) => item.ledger_state.state_version)
             )
     )
