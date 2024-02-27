@@ -17,9 +17,7 @@ const app = async () => {
 
   const connection: ConnectionOptions = config.redis
 
-  const notificationApi = NotificationApi(
-    `http://${config.notification.baseUrl}:${config.notification.port}`
-  )
+  const notificationApi = NotificationApi(config.notification.baseUrl)
 
   EventWorker(connection, {
     notificationApi,
