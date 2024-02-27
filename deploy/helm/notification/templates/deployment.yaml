@@ -46,7 +46,7 @@ spec:
                 key: {{ $secret.secretName }}
           {{- end }}
           ports:
-            - name: wss
+            - name: ws
               containerPort: 9000
               protocol: TCP
             - name: http-internal
