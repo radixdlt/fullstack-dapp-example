@@ -49,6 +49,11 @@ secrets:
     path: "rtlj-prod/eks/radquest/stokenet/secrets"
     secretProperty: "twilio_auth_token"
     secretName: "twilio_auth_token"
+  - name: twilio-service-sid
+    variable: "TWILIO_SERVICE_SID"
+    path: "rtlj-prod/eks/radquest/stokenet/secrets"
+    secretProperty: "twilio_service_sid"
+    secretName: "twilio_service_sid"
 
 ingress:
   enabled: true
