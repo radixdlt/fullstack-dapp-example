@@ -14,9 +14,33 @@ datasource db {
 model User {
   id                String          @id @default("")
   identityAddress   String          @unique
+  
+  events            Event[]
+  notifications     Notification[]
 }
 
 model Challenge {
   challenge         String          @id
   createdAt         DateTime        @default(now())
 }
+
+model Event {
+  transactionId     String          @id
+  id                String
+  questId           String?
+  userId            String
+  createdAt         DateTime        @default(now())
+  processedAt       DateTime?
+
+  user              User            @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  id                Int             @id @default(autoincrement()) 
+  userId            String
+  createdAt         DateTime        @default(now())
+  seenAt            DateTime?
+  data              Json
+
+  user              User            @relation(fields: [userId], references: [id])
+} 

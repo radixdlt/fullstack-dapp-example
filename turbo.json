@@ -2,7 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^db:build", "^common:build", "^wallet:build", "^content:build"],
+      "dependsOn": ["^db:build", "^common:build", "^wallet:build", "^content:build", "^queues:build"],
       "outputs": [".svelte-kit/**"],
       "cache": false
     },
@@ -12,8 +12,9 @@
     "format": {},
     "svelte:check": {},
     "test": { "dependsOn": ["^db:build"], "cache": false },
+    "test:integration": { "dependsOn": ["^db:build", "^common:build", "^wallet:build", "^content:build", "^queues:build"], "cache": false },
     "dev": {
-      "dependsOn": ["^db:generate", "^content:build"],
+      "dependsOn": ["^db:generate", "^common:build", "^content:build", "^queues:build"],
       "cache": false,
       "persistent": true
     },
@@ -60,6 +61,9 @@
     },
     "content:build": {
       "dependsOn": ["^common:build"],
+      "cache": false
+    },
+    "queues:build": {
       "cache": false
     }
   }

@@ -120,7 +120,7 @@ http
 
             activeSocket.send(JSON.stringify(body.data))
             apiLogger.debug({ userId, data: body.data, event: 'success' })
-            respond.success()
+            respond.success(200, {})
           })
           .mapErr((error) => {
             apiLogger.error({ error, event: 'error' })
@@ -130,4 +130,6 @@ http
         break
     }
   })
-  .listen(internalApiPort)
+  .listen(internalApiPort, () => {
+    logger.debug({ method: 'internalApi.listen', port: internalApiPort })
+  })

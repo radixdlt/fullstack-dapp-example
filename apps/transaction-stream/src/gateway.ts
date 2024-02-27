@@ -4,8 +4,7 @@ import {
 } from '@radixdlt/babylon-gateway-api-sdk'
 import { Result, ResultAsync } from 'neverthrow'
 import { logger } from './helpers/logger'
-import { GatewayApi } from 'common'
-import { FetchWrapperError, fetchWrapper } from './helpers/fetch-wrapper'
+import { GatewayApi, FetchWrapperError, fetchWrapper } from 'common'
 import { config } from './config'
 
 export type Transaction = StreamTransactionsResponse['items'][0]

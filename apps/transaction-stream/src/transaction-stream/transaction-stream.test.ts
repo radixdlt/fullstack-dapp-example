@@ -11,15 +11,7 @@ let gatewayApiMock: DeepMockProxy<GatewayApiClient>
 
 const getNextErrorValueFromStream = async () => firstValueFrom(transactionStream.error$)
 
-const getTransactionsTestHelper = async (iterations = 0) => {
-  let transactions: any[] = []
-
-  for (const _ of new Array(iterations).fill(null)) {
-    transactions = transactions.concat(await firstValueFrom(transactionStream.transactions$))
-  }
-
-  return transactions
-}
+const getTransactionsTestHelper = async () => await firstValueFrom(transactionStream.transactions$)
 
 const asyncDelay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -58,9 +50,13 @@ describe('transaction stream handler', () => {
       // we need to manually run the stream to use the mock implementation
       transactionStream.setStatus('run', 0)
 
-      const transactions = await getTransactionsTestHelper(2)
+      const { transactions, continueStream } = await getTransactionsTestHelper()
+      expect(transactions.length).toBe(100)
+      expect(transactionStream.currentStateVersion).toBe(101)
 
-      expect(transactions.length).toBe(200)
+      continueStream(0)
+
+      await getTransactionsTestHelper()
       expect(transactionStream.currentStateVersion).toBe(201)
     })
   })

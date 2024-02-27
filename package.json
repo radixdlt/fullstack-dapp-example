@@ -3,12 +3,14 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "dev": "npx --node-options='-r dotenv/config' turbo dev",
+    "dev": "npx --node-options='-r dotenv/config' turbo dev --concurrency 11",
     "dev:dapp": "npx --node-options='-r dotenv/config' turbo dev --filter dapp",
     "dev:notification": "npx --node-options='-r dotenv/config' turbo dev --filter notification",
     "dev:stream": "npx --node-options='-r dotenv/config' turbo dev --filter transaction-stream",
     "dev:stream:inspect": "npx --node-options='-r dotenv/config' turbo dev:inspect --filter transaction-stream",
+    "dev:workers": "npx --node-options='-r dotenv/config' turbo dev --filter workers",
     "test": "npx --node-options='-r dotenv/config' turbo test",
+    "test:integration": "npx --node-options='-r dotenv/config' turbo test:integration",
     "test:stream": "npx --node-options='-r dotenv/config' turbo test --filter transaction-stream",
     "wallet:create:badges": "npx --node-options='-r dotenv/config' turbo wallet:create:badges --filter typescript-wallet",
     "wallet:create:mnemonic": "npx --node-options='-r dotenv/config' turbo wallet:create:mnemonic --filter typescript-wallet",
@@ -22,7 +24,8 @@
     "db:push": "turbo db:push --filter database",
     "lint": "turbo lint",
     "format": "prettier --write apps/**/* packages/**/*",
-    "content:build": "turbo content:build --filter content"
+    "content:build": "turbo content:build --filter content",
+    "queues:build": "turbo content:build --filter content"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.4.4",

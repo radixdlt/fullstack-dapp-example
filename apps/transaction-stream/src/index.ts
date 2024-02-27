@@ -5,77 +5,85 @@ import { GatewayApiClient } from './gateway'
 import { logger } from './helpers/logger'
 import { TransactionStream } from './transaction-stream/transaction-stream'
 import { GatewayApi } from 'common'
-import { filterTransactionsFactory } from './filter-transactions/filter-transactions'
+import { FilterTransactions } from './filter-transactions/filter-transactions'
+import { Prisma, PrismaClient } from 'database'
+import { getQueues, RedisConnection } from 'queues'
+import { EventsModel } from './events/events.model'
+import { HandleStreamError } from './helpers/handleStreamError'
+import { HandleTransactions } from './helpers/handleTransactions'
+import { StateVersionModel } from './state-version/state-version.model'
+import { getLatestStateVersion } from './helpers/getLatestStateVersion'
 
-const trackedEvents = getTrackedEvents(QuestDefinitions(config.networkId))
-const filterTransactions = filterTransactionsFactory(trackedEvents)
+type Dependencies = {
+  gatewayApi: GatewayApi
+  eventQueue: ReturnType<typeof getQueues>['eventQueue']
+  eventsModel: EventsModel
+  filterTransactions: FilterTransactions
+  stateVersionModel: StateVersionModel
+  db: PrismaClient
+}
 
-const app = async () => {
-  const gatewayApi = GatewayApi(config.networkId)
-  const gatewayApiClient = GatewayApiClient({ dependencies: { gatewayApi } })
+const app = async (dependencies: Dependencies) => {
+  const { eventsModel, gatewayApi, eventQueue, filterTransactions, stateVersionModel } =
+    dependencies
 
-  const result = await gatewayApi.callApi('getCurrent')
+  const result = await getLatestStateVersion({ eventsModel, gatewayApi, stateVersionModel })
 
   if (result.isErr()) throw new Error('Failed to get current ledger state')
 
-  const latestStateVersion = result.value.ledger_state.state_version
+  const fromStateVersion = result.value
 
-  logger.debug({ method: 'StartTransactionStream', stateVersion: latestStateVersion })
+  const gatewayApiClient = GatewayApiClient({ dependencies: { gatewayApi } })
+
+  logger.debug({ method: 'transactionStream.start', fromStateVersion })
 
   const stream = TransactionStream({
-    // TODO: should start from the latest processed state version
-    fromStateVersion: latestStateVersion,
+    fromStateVersion,
     dependencies: { gatewayApiClient }
   })
 
-  stream.transactions$.subscribe((transactions) => {
-    const filteredTransactions = filterTransactions(transactions)
-
-    // TODO: add to tracked events db table and send to quest queue for processing
-    if (filteredTransactions.length) {
-      logger.debug({
-        method: 'stream.transactions$.filteredTransactions',
-        transactions: filteredTransactions
-      })
-    }
+  const handleTransactions = HandleTransactions({
+    filterTransactions,
+    eventsModel,
+    eventQueue,
+    logger,
+    stateVersionModel
   })
+  const handleStreamError = HandleStreamError(logger, stream)
 
-  stream.error$.subscribe(async (error) => {
-    const isRateLimitError = error.status === 429
-    const isBeyondTheEndOfKnownLedgerError =
-      error.status === 400 &&
-      error.reason === 'RequestStatusNotOk' &&
-      error.data.details?.type === 'InvalidRequestError' &&
-      error.data.details.validation_errors.some((item) =>
-        item.errors.some((error) =>
-          error.includes('State version is beyond the end of the known ledger')
-        )
-      )
-    const TEN_SECONDS = 1000 * 10
-    const THIRTY_SECONDS = 1000 * 30
-    const SIXTY_SECONDS = 1000 * 60
+  stream.transactions$.subscribe(async (transactions) => {
+    const result = await handleTransactions(transactions)
 
-    if (isRateLimitError) {
-      logger.error({ method: 'stream.error$', errorType: 'RateLimitError', ...error })
-      // rate limit hit, wait 60 seconds before restarting the stream
-      stream.setStatus('run', SIXTY_SECONDS)
-    } else if (isBeyondTheEndOfKnownLedgerError) {
+    if (result.isErr()) {
       logger.error({
-        method: 'stream.error$',
-        errorType: 'StateVersionBeyondEndOfKnownLedgerError',
-        ...error
+        method: 'handleTransactions',
+        error: result.error
       })
-      // current state version is beyond the end of the known ledger, wait 30 seconds before restarting the stream
-      stream.setStatus('run', THIRTY_SECONDS)
-    } else {
-      logger.error({ method: 'stream.error$', errorType: 'UnhandledError', ...error })
-      // TODO: implement handler of different errors types
-      // NotSynced - error might need to wait for a while before restarting the stream
-      // InternalError, InvalidRequest, UnknownError  - might need to alert the team
-      // implement exponential backoff for repeating errors
-      stream.setStatus('run', TEN_SECONDS)
+      throw result.error
     }
   })
+
+  stream.error$.subscribe(handleStreamError)
 }
 
-app()
+const { user, password, host, port, database } = config.postgres
+
+const gatewayApi = GatewayApi(config.networkId)
+const { eventQueue } = getQueues(config.redis)
+const db = new PrismaClient({
+  datasourceUrl: `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`
+})
+const eventsModel = EventsModel(db)
+const questDefinitions = QuestDefinitions(config.networkId)
+const trackedEvents = getTrackedEvents(questDefinitions)
+const filterTransactions = FilterTransactions(trackedEvents)
+const stateVersionModel = StateVersionModel(new RedisConnection(config.redis))
+
+app({
+  gatewayApi,
+  eventQueue,
+  eventsModel,
+  filterTransactions,
+  stateVersionModel,
+  db
+})

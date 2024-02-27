@@ -10,7 +10,6 @@
     "svelte:check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "lint": "prettier --check . && eslint . && npm run svelte:check",
     "format": "prettier --write --no-cache .",
-    "test:integration": "playwright test",
     "test:unit": "vitest",
     "test:storybook": "test-storybook --stories-json",
     "storybook": "storybook dev -p 6006",

@@ -17,7 +17,9 @@ module.exports = {
         'content',
         'markdown',
         'multiple',
-        'scrypto'
+        'scrypto',
+        'queues',
+        'integration'
       ]
     ],
     'scope-empty': [2, 'never'],

@@ -5,6 +5,7 @@ import { getEventDataFields } from './helpers/getEventDataFields'
 import { findFieldMatch } from './helpers/findFieldMatch'
 import { getUserIdFromEventDataFields } from './helpers/getUserIdFromEventDataFields'
 import { EventId } from 'content'
+import { Result, ok } from 'neverthrow'
 
 export type FilteredTransaction = {
   questId: string
@@ -13,41 +14,48 @@ export type FilteredTransaction = {
   eventId: EventId
 }
 
-export const filterTransactionsFactory =
+export type FilterTransactions = ReturnType<typeof FilterTransactions>
+export const FilterTransactions =
   (trackedEvents: TrackedEvents) =>
-  (transactions: CommittedTransactionInfo[]): FilteredTransaction[] =>
-    transactions
-      .map((transaction) => {
-        const events = transaction.receipt?.events
+  (transactions: CommittedTransactionInfo[]): Result<FilteredTransaction[], never> =>
+    ok(
+      transactions
+        .map((transaction) => {
+          const events = transaction.receipt?.events
 
-        if (transaction.transaction_status === 'CommittedSuccess' && events)
-          return events.map((event) => {
-            const trackedEvent = isTrackedEvent(event.name, trackedEvents)
-            const eventDataFields = getEventDataFields(event.data)
+          if (transaction.transaction_status === 'CommittedSuccess' && events)
+            return events.map((event) => {
+              const trackedEvent = isTrackedEvent(event.name, trackedEvents)
+              const eventDataFields = getEventDataFields(event.data)
 
-            if (trackedEvent && eventDataFields) {
-              const eventDataFieldMatch = trackedEvent.find(
-                (item) => findFieldMatch(eventDataFields, item.matchField).length > 0
-              )
+              if (trackedEvent && eventDataFields) {
+                const eventDataFieldMatch = trackedEvent.find(
+                  (item) => findFieldMatch(eventDataFields, item.matchField).length > 0
+                )
 
-              if (eventDataFieldMatch) {
-                const transactionId = transaction.intent_hash!
-                const { eventId, questId } = eventDataFieldMatch
-                const userId = getUserIdFromEventDataFields(transactionId, eventId, eventDataFields)
+                if (eventDataFieldMatch) {
+                  const transactionId = transaction.intent_hash!
+                  const { eventId, questId } = eventDataFieldMatch
+                  const userId = getUserIdFromEventDataFields(
+                    transactionId,
+                    eventId,
+                    eventDataFields
+                  )
 
-                return {
-                  questId,
-                  eventId,
-                  userId,
-                  transactionId
+                  return {
+                    questId,
+                    eventId,
+                    userId,
+                    transactionId
+                  }
                 }
               }
-            }
 
-            return
-          })
+              return
+            })
 
-        return
-      })
-      .flat()
-      .filter((item): item is FilteredTransaction => !!item)
+          return
+        })
+        .flat()
+        .filter((item): item is FilteredTransaction => !!item)
+    )

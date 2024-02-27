@@ -1,16 +1,20 @@
 import { describe, it, expect } from 'vitest'
 import { getTrackedEvents } from './tracked-events'
-import { filterTransactionsFactory } from './filter-transactions'
+import { FilterTransactions } from './filter-transactions'
 import DepositUserBadge from '../fixtures/transactions/deposit-user-badge'
 import { QuestDefinitions } from 'content'
 import { config } from '../config'
 
 const trackedEvents = getTrackedEvents(QuestDefinitions(config.networkId))
-const filterTransactions = filterTransactionsFactory(trackedEvents)
+const filterTransactions = FilterTransactions(trackedEvents)
 
 describe('filter transactions', () => {
   it('should find DepositUserBadge transaction', () => {
-    const filteredTransactions = filterTransactions(DepositUserBadge)
+    const result = filterTransactions(DepositUserBadge)
+
+    if (result.isErr()) throw result.error
+
+    const filteredTransactions = result.value
 
     expect(filteredTransactions.length).toEqual(1)
 

@@ -1,41 +1,28 @@
 import { config } from './config'
-import { logger } from './helpers/logger'
-import { Worker, ConnectionOptions } from 'bullmq'
+import { ConnectionOptions } from 'bullmq'
 import { PrismaClient } from 'database'
+import { EventWorker } from './workers/event-worker'
+import { NotificationApi } from 'common'
+import { logger } from './helpers/logger'
 
-const { user, password, host, port, database } = config.postgres
+const app = async () => {
+  const { user, password, host, port, database } = config.postgres
 
-const dbClient = new PrismaClient({
-  datasourceUrl: `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`
-})
-
-const connection: ConnectionOptions = config.redis
-
-const worker = new Worker(
-  'foo',
-  async (job) => {
-    logger.debug(job.data)
-    try {
-      // test db connection
-      await dbClient.user.findFirst()
-      logger.debug('db connection success')
-    } catch (error) {
-      logger.debug('db connection failed')
-    }
-  },
-  { connection }
-)
-
-worker.on('completed', (job) => {
-  logger.debug(`${job.id} has completed!`)
-})
-
-// test db connection
-dbClient.user
-  .findFirst()
-  .then(() => {
-    logger.debug('db connection success')
+  const dbClient = new PrismaClient({
+    datasourceUrl: `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`
   })
-  .catch(() => {
-    logger.debug('db connection failed')
+
+  // test db connection
+  await dbClient.user.findFirst()
+
+  const connection: ConnectionOptions = config.redis
+
+  const notificationApi = NotificationApi(config.notification.baseUrl)
+
+  EventWorker(connection, {
+    notificationApi,
+    logger
   })
+}
+
+app()
