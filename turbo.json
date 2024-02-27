@@ -12,6 +12,7 @@
     "format": {},
     "svelte:check": {},
     "test": { "dependsOn": ["^db:build"], "cache": false },
+    "test:integration": { "dependsOn": ["^db:build", "^common:build", "^wallet:build", "^content:build", "^queues:build"], "cache": false },
     "dev": {
       "dependsOn": ["^db:generate", "^common:build", "^content:build", "^queues:build"],
       "cache": false,

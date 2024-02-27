@@ -44,6 +44,13 @@ const deriveAccountAddressFromPublicKey = (publicKey: PublicKey, networkId: numb
   )
 }
 
+const deriveIdentityAddressFromPublicKey = (publicKey: PublicKey, networkId: number) => {
+  return ResultAsync.fromPromise(
+    RadixEngineToolkit.Derive.virtualIdentityAddressFromPublicKey(publicKey, networkId),
+    typedError
+  )
+}
+
 export type RadixEngineClient = ReturnType<typeof RadixEngineClient>
 export const RadixEngineClient = <
   const T extends {
@@ -90,6 +97,17 @@ export const RadixEngineClient = <
   const accountKeys = Object.fromEntries(
     result.value.map(({ name, publicKey, privateKey }) => [name, { publicKey, privateKey }])
   ) as { [n in keyof T]: Omit<(typeof result.value)[0], 'name'> }
+
+  const getIdentityAddressAtDerivationIndex = (derivationIndex: number) =>
+    getSignerKeys(
+      mnemonic,
+      `m/44'/1022'/${networkId}'/${ENTITY_TYPE.IDENTITY}'/${KEY_TYPE.AUTHENTICATION_SIGNING}'/${derivationIndex}'`
+    )
+      .map(({ publicKey, privateKey }) => ({
+        publicKey,
+        privateKey
+      }))
+      .asyncAndThen((item) => deriveIdentityAddressFromPublicKey(item.publicKey, networkId))
 
   const payerKeys = result.value[0]
 
@@ -298,6 +316,7 @@ export const RadixEngineClient = <
     gatewayClient,
     decodeSbor,
     convertStringManifest,
-    getXrdFromFaucet
+    getXrdFromFaucet,
+    getIdentityAddressAtDerivationIndex
   }
 }

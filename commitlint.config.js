@@ -18,7 +18,8 @@ module.exports = {
         'markdown',
         'multiple',
         'scrypto',
-        'queues'
+        'queues',
+        'integration'
       ]
     ],
     'scope-empty': [2, 'never'],
