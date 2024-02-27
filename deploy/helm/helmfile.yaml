@@ -67,6 +67,8 @@ releases:
         master:
           persistence:
             enabled: false
+          extraFlags: 
+          - "--maxmemory-policy noeviction"
 
   - name: redis-commander
     chart: ./redis-commander
