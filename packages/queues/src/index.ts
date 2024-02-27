@@ -7,9 +7,9 @@ export * from 'bullmq'
 export const Queues = { EventQueue: 'EventQueue' } as const
 
 export type EventJob = {
-  transactionId: string
   userId: string
   eventId: string
+  transactionId?: string
   questId?: string
   traceId: string
 }
@@ -22,7 +22,7 @@ export const getQueues = (connection: ConnectionOptions) => {
   const addBulk = (items: EventJob[]) =>
     ResultAsync.fromPromise(
       eventQueue.addBulk(
-        items.map((item) => ({ name: item.transactionId, data: item, jobId: item.transactionId }))
+        items.map((item) => ({ name: item.traceId, data: item, opts: { jobId: item.traceId } }))
       ),
       typedError
     )

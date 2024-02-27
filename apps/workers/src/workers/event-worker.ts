@@ -29,6 +29,8 @@ export const EventWorker = (
       switch (eventId) {
         case 'DepositUserBadge':
           {
+            // TODO: check if all quest requirements are completed
+
             await dbClient.$transaction([
               dbClient.event.update({
                 where: { transactionId },
@@ -72,7 +74,7 @@ export const EventWorker = (
   )
 
   worker.on('completed', (job) => {
-    logger.debug(`${job.id} has completed!`)
+    logger.debug({ method: 'eventWorker.completed', id: job.id, data: job.data })
   })
 
   return worker
