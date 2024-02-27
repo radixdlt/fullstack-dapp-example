@@ -25,7 +25,6 @@ export const readRequestBody = (request: http.IncomingMessage) => {
         } catch (e) {
           reject(e)
         }
-        
       })
       request.on('error', (error) => {
         reject(error)

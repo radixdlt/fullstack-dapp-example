@@ -19,19 +19,18 @@
   }[]
   export let progress: number
 
-  let progressCard: ProgressCard
-
   let nextDisabled: boolean
 
   const dispatch = createEventDispatcher<{
     next: undefined
     prev: undefined
+    close: undefined
   }>()
 </script>
 
-<ProgressCard {steps} bind:this={progressCard} bind:progress>
+<ProgressCard {steps} bind:progress>
   <div slot="header" class="header">
-    <button class="icon" on:click={() => progressCard.close()}>
+    <button class="icon" on:click={() => dispatch('close')}>
       <Icon url={CrossIcon} />
     </button>
     <header class="title">
@@ -79,12 +78,6 @@
 </ProgressCard>
 
 <style lang="scss">
-  @mixin mobile {
-    @media (max-width: 768px) {
-      @content;
-    }
-  }
-
   .title {
     font-size: var(--text-xs);
     font-weight: var(--font-weight-bold);

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte'
+  import { onMount } from 'svelte'
 
   export let direction: 'left' | 'right'
 
@@ -12,10 +12,10 @@
 
   onMount(() => {
     window.addEventListener('mousemove', onMouseMove)
-  })
 
-  onDestroy(() => {
-    window.removeEventListener('mousemove', onMouseMove)
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove)
+    }
   })
 
   const onMouseMove = (event: MouseEvent) => {

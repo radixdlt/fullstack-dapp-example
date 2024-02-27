@@ -1,10 +1,11 @@
 <script lang="ts">
   import Menu from './Menu.svelte'
   import Actions from './Actions.svelte'
+  import ClaimRewards from './ClaimRewards.svelte'
 </script>
 
 <div class="speech-bubble">
-  <slot {Menu} {Actions} />
+  <slot {Menu} {Actions} {ClaimRewards} />
 </div>
 
 <style lang="scss">

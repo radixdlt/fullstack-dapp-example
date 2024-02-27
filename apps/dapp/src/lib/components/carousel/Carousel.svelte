@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { afterUpdate, onDestroy, onMount } from 'svelte'
+  import { afterUpdate, onMount } from 'svelte'
   import Item from './Item.svelte'
   import NavigateButton from './NavigateButton.svelte'
   import { isMobile } from '$lib/utils'
@@ -58,6 +58,13 @@
     })
     observer.observe(items[0], { attributes: true })
     observer.observe(items[items.length - 1], { attributes: true })
+
+    return () => {
+      window.removeEventListener('scroll', updateButtonPosition)
+      window.removeEventListener('resize', updateButtonPosition)
+      window.removeEventListener('wheel', handleWheelScroll)
+      observer.disconnect()
+    }
   })
 
   if (!isMobile()) afterUpdate(updateButtonPosition)
@@ -97,13 +104,6 @@
 
   const scrollToNextItem = scrollToItem.bind(null, 'next')
   const scrollToPreviousItem = scrollToItem.bind(null, 'previous')
-
-  onDestroy(() => {
-    window.removeEventListener('scroll', updateButtonPosition)
-    window.removeEventListener('resize', updateButtonPosition)
-    window.removeEventListener('wheel', handleWheelScroll)
-    observer.disconnect()
-  })
 </script>
 
 <div bind:this={carousel} class="carousel">
@@ -130,6 +130,7 @@
 
     -ms-overflow-style: none;
     scrollbar-width: none;
+    padding: 1rem 0;
   }
   ::-webkit-scrollbar {
     display: none;

@@ -60,6 +60,7 @@
   let:progress
   on:next={progressActions.next}
   on:prev={progressActions.prev}
+  on:close
 >
   <slot {Intro} questCardProgress={progress} />
 </QuestCard>

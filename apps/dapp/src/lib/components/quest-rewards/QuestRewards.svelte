@@ -1,17 +1,9 @@
 <script lang="ts">
+  import { typeToIcon } from '$lib/utils'
   import Icon from '../icon/Icon.svelte'
-  import FragmentIcon from '@images/fragment.png'
-  import XRDIcon from '@images/xrd.png'
-  import PurpleCardIcon from '@images/purple-card.svg'
   import type { QuestReward } from 'content'
 
   export let rewards: QuestReward[] = []
-
-  const typeToIcon: Record<string, string> = {
-    xrd: XRDIcon,
-    element: FragmentIcon,
-    'Purple Card': PurpleCardIcon
-  }
 </script>
 
 <div class="rewards">

@@ -63,6 +63,7 @@
       description={quest.description}
       minutesToComplete={quest.minutesToComplete}
       rewards={quest.rewards}
+      requirements={[]}
     />
   {/if}
 

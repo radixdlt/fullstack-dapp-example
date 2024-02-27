@@ -7,10 +7,12 @@ i18next.init({
     en: {
       translation: {
         quest_rewards: 'Rewards',
+        quest_requirements: 'What You Need to Do',
         quest_nextButton: 'Next',
         quest_keyImageAlt: 'Quest Image',
         quest_previousButton: 'Back',
         quest_placeholderNotFound: 'Placeholder {{id}} not found',
+        quest_claimButton: 'Claim Your Reward',
 
         questOverview_minutesToComplete_one: '{{count}} minute',
         questOverview_minutesToComplete_other: '{{count}} minutes',

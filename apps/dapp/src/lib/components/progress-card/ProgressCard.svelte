@@ -45,6 +45,7 @@
   .progress-card {
     padding: 0;
     height: 100%;
+    width: 100%;
     display: grid;
     grid-template-rows: 3rem auto 1fr;
     min-height: 28rem;

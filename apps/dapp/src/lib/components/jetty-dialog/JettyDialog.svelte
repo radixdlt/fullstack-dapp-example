@@ -26,8 +26,8 @@
         out:scale|global
         animate:flip={{ delay: 250, duration: 250, easing: sineInOut }}
       >
-        <SpeechBubble let:Menu let:Actions>
-          <slot {i} {Menu} {Actions} />
+        <SpeechBubble let:Menu let:Actions let:ClaimRewards>
+          <slot {i} {Menu} {Actions} {ClaimRewards} />
         </SpeechBubble>
       </div>
     {/each}
