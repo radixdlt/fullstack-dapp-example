@@ -13,7 +13,7 @@ export const fetchWrapper = <R = unknown, ER = unknown>(
   fetchable: ReturnType<typeof fetch>
 ): ResultAsync<
   { status: number; data: R },
-  { status: number; error?: Error; reason: string; data?: unknown }
+  { status: number; error?: Error; reason: string; data?: ER }
 > =>
   resolveFetch(fetchable).andThen((response) =>
     ResultAsync.fromPromise<unknown, Error>(response.json(), typedError)

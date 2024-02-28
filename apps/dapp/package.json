@@ -66,6 +66,7 @@
     "jsonwebtoken": "^9.0.2",
     "neverthrow": "^6.1.0",
     "pino": "^8.17.2",
+    "twilio": "^4.22.0",
     "typescript-wallet": "*",
     "svelte-i18next": "^2.2.2",
     "content": "*"

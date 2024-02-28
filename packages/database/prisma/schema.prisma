@@ -17,6 +17,15 @@ model User {
   
   events            Event[]
   notifications     Notification[]
+  phoneNumber       UserPhoneNumber?
+}
+
+model UserPhoneNumber {
+  userId          String    @unique
+  phoneNumber     String    @id @unique
+  createdAt       DateTime  @default(now())
+
+  user            User      @relation(fields: [userId], references: [id])
 }
 
 model Challenge {

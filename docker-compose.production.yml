@@ -27,6 +27,9 @@ services:
       - PUBLIC_LOG_LEVEL=debug
       - PUBLIC_NOTIFICATION_URL=${PUBLIC_NOTIFICATION_URL}
       - MNEMONIC=${MNEMONIC}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_SERVICE_SID=${TWILIO_SERVICE_SID}
     command: pm2-runtime apps/dapp/build/index.js
 
   storybook:

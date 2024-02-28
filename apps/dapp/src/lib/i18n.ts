@@ -26,7 +26,14 @@ i18next.init({
         transformGems_gemcard_gemstone: 'Gemstone',
         transformGems_gemcard_rarity: 'Rarity',
 
-        glossary_back: 'Back'
+        glossary_back: 'Back',
+
+        verifyPhoneNumber_failedToSendOtp: 'Failed to send OTP',
+        verifyPhoneNumber_phoneNumberExists: 'Phone number exists',
+        verifyPhoneNumber_invalidPhoneNumber: 'Invalid phone number',
+        verifyPhoneNumber_invalidOtp: 'Invalid one time password',
+        verifyPhoneNumber_invalidRequest: 'Invalid request',
+        verifyPhoneNumber_failedToAddPhoneNumber: 'Failed to add phone number'
       }
     }
   }

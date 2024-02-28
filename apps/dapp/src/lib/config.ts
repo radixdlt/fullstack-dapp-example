@@ -10,7 +10,10 @@ const {
   POSTGRES_HOST,
   POSTGRES_PASSWORD,
   POSTGRES_PORT,
-  POSTGRES_USER
+  POSTGRES_USER,
+  TWILIO_ACCOUNT_SID,
+  TWILIO_AUTH_TOKEN,
+  TWILIO_SERVICE_SID
 } = privateEnv
 
 // $env/dynamic/public does not work in CI build
@@ -29,6 +32,11 @@ export const config = {
     user: POSTGRES_USER,
     password: POSTGRES_PASSWORD,
     port: parseInt(POSTGRES_PORT, 10)
+  },
+  twilio: {
+    accountSid: TWILIO_ACCOUNT_SID || 'AC',
+    authToken: TWILIO_AUTH_TOKEN || '',
+    serviceSid: TWILIO_SERVICE_SID || ''
   },
   dapp: {
     expectedOrigin: EXPECTED_ORIGIN,
