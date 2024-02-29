@@ -101,10 +101,6 @@
       grid-area: 1 / 1;
     }
 
-    @include mobile {
-      padding: var(--spacing-xl) var(--spacing-xl);
-    }
-
     overflow-y: auto;
   }
 

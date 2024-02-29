@@ -1,5 +1,5 @@
 <script>
-  import { fade } from 'svelte/transition'
+  import { fade, fly } from 'svelte/transition'
 
   export let zIndex = 2
   export let duration = 300
@@ -9,7 +9,13 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="backdrop fixed" transition:fade={{ duration }} on:click|self style:z-index={zIndex} />
 
-<div class="content fixed" style:z-index={zIndex + 1}>
+<div
+  class="content fixed"
+  style:z-index={zIndex + 1}
+  transition:fly={{
+    x: -1000
+  }}
+>
   <slot />
 </div>
 
@@ -30,5 +36,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: var(--spacing-xl);
   }
 </style>

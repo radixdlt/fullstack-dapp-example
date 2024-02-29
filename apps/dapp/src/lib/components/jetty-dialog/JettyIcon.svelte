@@ -4,11 +4,12 @@
   import { scale } from 'svelte/transition'
 </script>
 
-<div
+<button
   transition:scale={{ easing: backOut }}
   class="jetty-icon"
   style:--image={`url(${HappyJetty})`}
-></div>
+  on:click
+></button>
 
 <style lang="scss">
   .jetty-icon {

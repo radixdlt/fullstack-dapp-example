@@ -16,6 +16,10 @@
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
   import { i18n } from '$lib/i18n'
+  import JettyDialog from '$lib/components/jetty-dialog/JettyDialog.svelte'
+  import GlossaryIcon from '@images/book-open.svg'
+  import Glossary from '$lib/components/glossary/Glossary.svelte'
+  import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
 
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
@@ -84,7 +88,23 @@
   let advancedQuests = loadedQuests.filter((quest) => quest.category === 'Advanced')
 
   let activeTab: string
+
+  let showJettyMenu = false
+
+  let showGlossary = false
+
+  const handleKeydown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      if (showGlossary) {
+        showGlossary = false
+      } else {
+        showJettyMenu = false
+      }
+    }
+  }
 </script>
+
+<svelte:window on:keydown={(e) => handleKeydown(e)} />
 
 <Layout>
   <Header slot="header" />
@@ -136,5 +156,28 @@
     {/if}
   </svelte:fragment>
 </Layout>
+
+<JettyDialog
+  dialogs={showJettyMenu ? 1 : 0}
+  let:Menu
+  on:click={() => (showJettyMenu = !showJettyMenu)}
+>
+  {$i18n.t('jettyDialog_menu_text')}
+  <Menu
+    options={[
+      {
+        text: $i18n.t('jettyDialog_menu_glossary'),
+        iconUrl: GlossaryIcon,
+        onClick: () => (showGlossary = true)
+      }
+    ]}
+  />
+</JettyDialog>
+
+{#if showGlossary}
+  <Backdrop>
+    <Glossary on:close={() => (showGlossary = false)} />
+  </Backdrop>
+{/if}
 
 <slot />

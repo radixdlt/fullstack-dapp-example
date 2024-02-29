@@ -38,7 +38,10 @@ i18next.init({
         radquest_logo_alt: 'RadQuest Logo',
 
         tabs_basics: 'Basics',
-        tabs_advanced: 'Advanced'
+        tabs_advanced: 'Advanced',
+
+        jettyDialog_menu_glossary: 'Glossary',
+        jettyDialog_menu_text: 'Hi friend, how can I help you?'
       }
     }
   }

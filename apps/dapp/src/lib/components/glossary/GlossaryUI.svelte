@@ -2,6 +2,7 @@
   import { crossfade, fade } from 'svelte/transition'
   import CardHeader from '../card-header/CardHeader.svelte'
   import { i18n } from '$lib/i18n'
+  import { createEventDispatcher } from 'svelte'
 
   export let glossary: {
     title: string
@@ -19,11 +20,21 @@
   const [send, receive] = crossfade({
     duration: crossfadeDuration
   })
+
+  const dispatch = createEventDispatcher<{ close: undefined }>()
 </script>
 
 <div class="glossary card">
   <div class="header">
-    <CardHeader on:click={() => (page = 'glossary')}>{$i18n.t('glossary_back')}</CardHeader>
+    <CardHeader
+      on:click={() => {
+        if (page === 'title') {
+          page = 'glossary'
+        } else {
+          dispatch('close')
+        }
+      }}>{$i18n.t('glossary_back')}</CardHeader
+    >
   </div>
 
   {#if page === 'title'}
@@ -77,6 +88,7 @@
     height: 70vh;
     max-height: 40rem;
     max-width: 50rem;
+    width: 100%;
   }
 
   .header {

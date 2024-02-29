@@ -2,7 +2,6 @@
   import { goto } from '$app/navigation'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import DefQuest from '$lib/components/quest/DefQuest.svelte'
-  import { fly } from 'svelte/transition'
   import { quests } from '../../../stores'
   import type { PageData } from './$types'
 
@@ -21,12 +20,7 @@
 
 <Backdrop>
   <div class="container">
-    <div
-      class="quest"
-      transition:fly={{
-        x: -1000
-      }}
-    >
+    <div class="quest">
       <DefQuest {quest} on:close={close} />
     </div>
   </div>

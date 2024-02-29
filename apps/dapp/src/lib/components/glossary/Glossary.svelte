@@ -5,4 +5,4 @@
   const definitionGlossary = loadGlossary('en')
 </script>
 
-<Glossary glossary={definitionGlossary} />
+<Glossary glossary={definitionGlossary} on:close />

@@ -4,7 +4,6 @@
   import SpeechBubble from './speech-bubble/SpeechBubble.svelte'
   import { sineInOut } from 'svelte/easing'
   import { scale } from 'svelte/transition'
-  import Backdrop from '../backdrop/Backdrop.svelte'
 
   export let dialogs: number
   export let currentDialog = 0
@@ -18,24 +17,22 @@
   }
 </script>
 
-<Backdrop>
-  <div class="jetty-dialog">
-    {#each Array(dialogs) as _, i (i)}
-      <div
-        in:scale|global={{ delay: 250 }}
-        out:scale|global
-        animate:flip={{ delay: 250, duration: 250, easing: sineInOut }}
-      >
-        <SpeechBubble let:Menu let:Actions let:ClaimRewards>
-          <slot {i} {Menu} {Actions} {ClaimRewards} />
-        </SpeechBubble>
-      </div>
-    {/each}
-    <div>
-      <JettyIcon />
+<div class="jetty-dialog">
+  {#each Array(dialogs) as _, i (i)}
+    <div
+      in:scale|global={{ delay: 250 }}
+      out:scale|global
+      animate:flip={{ delay: 250, duration: 250, easing: sineInOut }}
+    >
+      <SpeechBubble let:Menu let:Actions let:ClaimRewards>
+        <slot {i} {Menu} {Actions} {ClaimRewards} />
+      </SpeechBubble>
     </div>
+  {/each}
+  <div>
+    <JettyIcon on:click />
   </div>
-</Backdrop>
+</div>
 
 <style lang="scss">
   .jetty-dialog {
