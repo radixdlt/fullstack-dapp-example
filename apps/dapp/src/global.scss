@@ -208,6 +208,16 @@ body {
   padding: 0;
 }
 
+// Prevent iOS overscroll
+html {
+  overflow: hidden;
+  height: 100%;
+}
+body {
+  height: 100%;
+  overflow: auto;
+}
+
 a {
   cursor: pointer;
 }

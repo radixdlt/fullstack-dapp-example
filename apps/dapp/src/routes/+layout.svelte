@@ -12,6 +12,10 @@
   import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
   import { goto } from '$app/navigation'
   import { quests } from '../stores'
+  import Header from '$lib/components/header/Header.svelte'
+  import Layout from '$lib/components/layout/Layout.svelte'
+  import Tabs from '$lib/components/tabs/Tabs.svelte'
+  import { i18n } from '$lib/i18n'
 
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
@@ -72,56 +76,65 @@
   })
 
   let loadedQuests = loadQuests('en', networkId)
+
   quests.set(loadedQuests)
 
-  let questsContainerHeight: number
+  let basicQuests = loadedQuests.filter((quest) => quest.category === 'Basic')
+
+  let advancedQuests = loadedQuests.filter((quest) => quest.category === 'Advanced')
+
+  let activeTab: string
 </script>
 
-<div class="header">
-  <radix-connect-button class="radix-btn" />
-</div>
+<Layout>
+  <Header slot="header" />
 
-<div
-  class="quests"
-  bind:clientHeight={questsContainerHeight}
-  style:--offsetHeight={`${questsContainerHeight / 2}px`}
->
-  <Carousel let:Item>
-    {#each loadedQuests as quest}
-      <Item>
-        <QuestOverview
-          title={quest.title}
-          description={quest.description}
-          minutesToComplete={quest.minutesToComplete}
-          rewards={quest.rewards}
-          backgroundImage={quest.splashImage}
-          state="unlocked"
-          on:click={() => goto(`/quest/${quest.id}`)}
-        />
-      </Item>
-    {/each}
-  </Carousel>
-</div>
+  <Tabs
+    slot="tabs"
+    tabs={[
+      { name: $i18n.t('tabs_basics'), id: 'basics' },
+      { name: $i18n.t('tabs_advanced'), id: 'advanced' }
+    ]}
+    bind:activeTab
+  />
+
+  <svelte:fragment slot="quests">
+    {#if activeTab === 'basics'}
+      <Carousel let:Item>
+        {#each basicQuests as quest}
+          <Item>
+            <QuestOverview
+              title={quest.title}
+              description={quest.description}
+              minutesToComplete={quest.minutesToComplete}
+              rewards={quest.rewards}
+              backgroundImage={quest.splashImage}
+              state="unlocked"
+              on:click={() => goto(`/quest/${quest.id}`)}
+            />
+          </Item>
+        {/each}
+      </Carousel>
+    {/if}
+
+    {#if activeTab === 'advanced'}
+      <Carousel let:Item>
+        {#each advancedQuests as quest}
+          <Item>
+            <QuestOverview
+              title={quest.title}
+              description={quest.description}
+              minutesToComplete={quest.minutesToComplete}
+              rewards={quest.rewards}
+              backgroundImage={quest.splashImage}
+              state="unlocked"
+              on:click={() => goto(`/quest/${quest.id}`)}
+            />
+          </Item>
+        {/each}
+      </Carousel>
+    {/if}
+  </svelte:fragment>
+</Layout>
 
 <slot />
-
-<style lang="scss">
-  :global(body) {
-    background: var(--gradient-3) no-repeat center fixed;
-  }
-
-  .radix-btn {
-    z-index: 1;
-  }
-  .header {
-    display: flex;
-    justify-content: flex-end;
-    padding: var(--spacing-xl);
-  }
-  .quests {
-    position: fixed;
-    top: calc(50% - var(--offsetHeight));
-    left: 0;
-    right: 0;
-  }
-</style>

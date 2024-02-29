@@ -33,7 +33,12 @@ i18next.init({
         verifyPhoneNumber_invalidPhoneNumber: 'Invalid phone number',
         verifyPhoneNumber_invalidOtp: 'Invalid one time password',
         verifyPhoneNumber_invalidRequest: 'Invalid request',
-        verifyPhoneNumber_failedToAddPhoneNumber: 'Failed to add phone number'
+        verifyPhoneNumber_failedToAddPhoneNumber: 'Failed to add phone number',
+
+        radquest_logo_alt: 'RadQuest Logo',
+
+        tabs_basics: 'Basics',
+        tabs_advanced: 'Advanced'
       }
     }
   }

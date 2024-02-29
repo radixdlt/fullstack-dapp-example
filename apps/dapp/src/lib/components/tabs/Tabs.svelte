@@ -1,7 +1,12 @@
 <script lang="ts">
   import { crossfade } from 'svelte/transition'
 
-  export let tabs: string[] = []
+  export let tabs: {
+    name: string
+    id: string
+  }[] = []
+
+  export let activeTab = tabs[0].id
 
   export const setActiveTab = (tab: string) => {
     activeTab = tab
@@ -10,10 +15,6 @@
   const [send, receive] = crossfade({
     duration: 300
   })
-
-  let activeTab: string = tabs[0].toLowerCase()
-
-  $: activeTabLowerCase = activeTab.toLowerCase()
 </script>
 
 <div class="tabs">
@@ -21,21 +22,19 @@
     <div class="tab-container">
       <div class="tab">
         <button
-          class:active={activeTabLowerCase === tab.toLowerCase()}
-          class:inactive={activeTabLowerCase !== tab.toLowerCase()}
-          on:click={() => (activeTab = tab.toLowerCase())}
+          class:active={activeTab === tab.id}
+          class:inactive={activeTab !== tab.id}
+          on:click={() => (activeTab = tab.id)}
         >
-          {tab}
+          {tab.name}
         </button>
-        {#if activeTabLowerCase === tab.toLowerCase()}
+        {#if activeTab === tab.id}
           <div class="underline" out:send={{ key: 1 }} in:receive={{ key: 1 }} />
         {/if}
       </div>
     </div>
   {/each}
 </div>
-
-<slot {activeTab} />
 
 <style lang="scss">
   .tabs {

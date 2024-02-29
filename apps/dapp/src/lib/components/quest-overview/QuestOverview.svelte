@@ -53,7 +53,6 @@
     width: 21.5rem;
     height: 100%;
     max-height: 35.3rem;
-    min-height: 32rem;
     justify-content: flex-end;
     background: var(--color-light);
     background-size: contain;
