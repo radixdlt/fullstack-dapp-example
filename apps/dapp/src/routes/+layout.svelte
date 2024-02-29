@@ -93,6 +93,8 @@
 
   let showGlossary = false
 
+  $: if (showGlossary) showJettyMenu = false
+
   const handleKeydown = (event: KeyboardEvent) => {
     if (event.key === 'Escape') {
       if (showGlossary) {
@@ -160,7 +162,11 @@
 <JettyDialog
   dialogs={showJettyMenu ? 1 : 0}
   let:Menu
-  on:click={() => (showJettyMenu = !showJettyMenu)}
+  on:click={() => {
+    if (showGlossary) showGlossary = false
+    else showJettyMenu = !showJettyMenu
+  }}
+  close={showGlossary}
 >
   {$i18n.t('jettyDialog_menu_text')}
   <Menu

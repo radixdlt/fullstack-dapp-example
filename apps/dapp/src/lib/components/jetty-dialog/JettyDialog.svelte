@@ -7,6 +7,7 @@
 
   export let dialogs: number
   export let currentDialog = 0
+  export let close = false
 
   export const setCurrentDialog = (index: number) => {
     currentDialog = index
@@ -30,17 +31,18 @@
     </div>
   {/each}
   <div>
-    <JettyIcon on:click />
+    <JettyIcon on:click {close} />
   </div>
 </div>
 
 <style lang="scss">
   .jetty-dialog {
     position: fixed;
-    bottom: 1rem;
-    right: 1rem;
+    bottom: 0.5rem;
+    right: 0.5rem;
     display: flex;
     flex-direction: column;
+    z-index: 4;
 
     > * {
       align-self: flex-end;
