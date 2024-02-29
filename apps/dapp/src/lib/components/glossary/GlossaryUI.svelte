@@ -15,7 +15,7 @@
 
   $: html = glossary.find((g) => g.title === selectedTitle)?.html
 
-  const crossfadeDuration = 1000
+  const crossfadeDuration = 500
 
   const [send, receive] = crossfade({
     duration: crossfadeDuration
