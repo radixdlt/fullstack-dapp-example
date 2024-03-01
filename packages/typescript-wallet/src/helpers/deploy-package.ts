@@ -1,5 +1,5 @@
 import { radixEngineClient } from '../config'
-import { bufferToUnit8Array } from './blake2b'
+import { bufferToUint8Array } from './blake2b'
 import { getOwnerBadge } from './getOwnerBadge'
 import { hash } from './hash'
 
@@ -55,7 +55,7 @@ export const deployPackage = ({
             submitTransaction(
               {
                 instructions,
-                blobs: [bufferToUnit8Array(wasmBuffer)]
+                blobs: [bufferToUint8Array(wasmBuffer)]
               },
               []
             )

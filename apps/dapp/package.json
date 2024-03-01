@@ -60,15 +60,15 @@
   "dependencies": {
     "@radixdlt/radix-dapp-toolkit": "^1.4.1",
     "@radixdlt/rola": "^1.0.2",
-    "common": "*",
     "bignumber.js": "^9.1.2",
+    "common": "*",
+    "content": "*",
     "i18next": "^23.8.2",
     "jsonwebtoken": "^9.0.2",
     "neverthrow": "^6.1.0",
     "pino": "^8.17.2",
     "twilio": "^4.22.0",
-    "typescript-wallet": "*",
     "svelte-i18next": "^2.2.2",
-    "content": "*"
+    "typescript-wallet": "*"
   }
 }
