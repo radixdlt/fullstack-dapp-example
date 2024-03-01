@@ -2,15 +2,16 @@ use scrypto::prelude::*;
 
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 #[sbor(transparent)]
-pub struct UserId(String);
+pub struct UserId(pub String);
 
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 #[sbor(transparent)]
-pub struct QuestId(String);
+pub struct QuestId(pub String);
 
+// TODO: Update with actual KycData struct when available
 #[derive(ScryptoSbor, NonFungibleData)]
-struct KycData {
-    expires: Instant,
+pub struct KycData {
+    pub expires: Instant,
 }
 
 #[derive(ScryptoSbor)]
