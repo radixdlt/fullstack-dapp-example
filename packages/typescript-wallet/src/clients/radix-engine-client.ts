@@ -260,7 +260,8 @@ export const RadixEngineClient = <
     ).map((instructions) => ({ instructions, blobs: [] }))
 
   const convertStringManifest = (
-    stringManifest: string
+    stringManifest: string,
+    blobs: Uint8Array[] = []
   ): ResultAsync<TransactionManifest, Error> => {
     return ResultAsync.fromPromise(
       RadixEngineToolkit.Instructions.convert(
@@ -270,7 +271,7 @@ export const RadixEngineClient = <
       ),
       typedError
     )
-      .map((instructions) => ({ instructions, blobs: [] }))
+      .map((instructions) => ({ instructions, blobs }))
       .mapErr((err) => {
         console.log(err)
         return err
