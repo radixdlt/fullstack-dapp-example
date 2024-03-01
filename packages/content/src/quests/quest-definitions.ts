@@ -146,7 +146,12 @@ export const QuestDefinitions = (networkId: number): Record<QuestId, QuestDefini
         en: {
           title: 'Your Quest to Learn About RadQuest',
           description: "Find out what you'll learn and what to expect during your quest",
-          pages: []
+          pages: [
+            {
+              type: 'QuestPage',
+              content: [{ type: 'markdown', path: '0.md' }]
+            }
+          ]
         }
       }
     },
@@ -158,16 +163,29 @@ export const QuestDefinitions = (networkId: number): Record<QuestId, QuestDefini
       minutesToComplete: 3,
       i18n: {
         en: {
-          title: 'Set Up Your Radar Wallet',
+          title: 'Set Up Your Radix Wallet',
           description: 'Learn about the Radar Wallet. Install & set up the Wallet app',
-          pages: []
+          pages: [
+            {
+              type: 'QuestPage',
+              content: [{ type: 'markdown', path: '0.md' }]
+            },
+            {
+              type: 'QuestPage',
+              content: [{ type: 'markdown', path: '1.md' }]
+            },
+            {
+              type: 'QuestPage',
+              content: [{ type: 'markdown', path: '2.md' }]
+            }
+          ]
         }
       }
     },
     ConnectQuest: {
       category: 'Basic',
       rewards: [],
-      preRequisites: ['RadixWalletQuest'],
+      preRequisites: [],
       requirements: {},
       minutesToComplete: 3,
       i18n: {

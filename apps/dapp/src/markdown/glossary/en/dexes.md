@@ -1,1 +1,0 @@
-**Decentralised Exchange** - buy and sell tokens on a market place that isn't controlled by a company
