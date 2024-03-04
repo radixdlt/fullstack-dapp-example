@@ -34,7 +34,7 @@ export const deployPackage = ({
 
         return convertStringManifest(`
           CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress}")
+            Address("${wellKnownAddresses.accountAddress.payerAccount}")
             "lock_fee"
             Decimal("${lockFee}")
           ;
@@ -46,7 +46,7 @@ export const deployPackage = ({
           ;
           
           CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress}")
+            Address("${wellKnownAddresses.accountAddress.systemAccount}")
             "deposit_batch"
             Expression("ENTIRE_WORKTOP")
           ;
