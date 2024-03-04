@@ -41,7 +41,7 @@ fn arrange_test_environment() -> Result<
     )?;
 
     let quest_rewards = QuestRewards::new(
-        owner_badge.resource_address(&mut env)?,
+        OwnerRole::Fixed(rule!(require(owner_badge.resource_address(&mut env)?))),
         admin_badge.resource_address(&mut env)?,
         user_badge.resource_address(&mut env)?,
         kyc_badge.resource_address(&mut env)?,

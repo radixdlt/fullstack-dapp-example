@@ -52,7 +52,7 @@ mod quest_rewards {
 
     impl QuestRewards {
         pub fn new(
-            owner_badge_address: ResourceAddress,
+            owner_role: OwnerRole,
             admin_badge_address: ResourceAddress,
             user_badge_address: ResourceAddress,
             kyc_badge_address: ResourceAddress,
@@ -66,7 +66,7 @@ mod quest_rewards {
                 admin_badge_address,
             }
             .instantiate()
-            .prepare_to_globalize(OwnerRole::Fixed(rule!(require(owner_badge_address))))
+            .prepare_to_globalize(owner_role)
             .roles(roles!(
                 admin => rule!(require(admin_badge_address));
             ))

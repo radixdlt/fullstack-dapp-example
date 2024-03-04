@@ -7,7 +7,17 @@ CALL_FUNCTION
     Address("${package}")
     "QuestRewards"
     "new"
-    Address("${owner_badge}")
+    Enum<OwnerRole::Fixed>(
+        Enum<AccessRule::Protected>(
+            Enum<AccessRuleNode::ProofRule>(
+                Enum<ProofRule::Require>(
+                    Enum<ResourceOrNonFungible::Resource>(
+                        Address("${owner_badge}")
+                        )
+                    )
+                )
+            )
+        )
     Address("${admin_badge}")
     Address("${user_badge}")
     Address("${kyc_badge}")
