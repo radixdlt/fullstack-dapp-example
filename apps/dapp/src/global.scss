@@ -98,9 +98,10 @@ body {
   /* Borders */
   --border-radius-sm: 2px;
   --border-radius-md: 4px;
-  --border-radius-lg: 16px;
-  --border-radius-xl: 24px;
-  --border-radius-2xl: 40px;
+  --border-radius-lg: 8px;
+  --border-radius-xl: 16px;
+  --border-radius-2xl: 24px;
+  --border-radius-3xl: 40px;
   --border: 1.5px solid;
 }
 
@@ -114,7 +115,7 @@ body {
 
 .card {
   background: var(--gradient-5);
-  border-radius: var(--border-radius-2xl);
+  border-radius: var(--border-radius-3xl);
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.2);
   padding: var(--spacing-2xl);
 }
@@ -213,6 +214,7 @@ html {
   overflow: hidden;
   height: 100%;
 }
+
 body {
   height: 100%;
   overflow: auto;

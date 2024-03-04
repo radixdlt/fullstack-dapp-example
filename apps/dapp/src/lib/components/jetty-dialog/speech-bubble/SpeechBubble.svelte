@@ -22,7 +22,7 @@
     }
 
     background: $background-color;
-    border-radius: var(--border-radius-xl);
+    border-radius: var(--border-radius-3xl);
     padding: var(--spacing-xl);
     margin-bottom: var(--spacing-2xl);
     display: flex;

@@ -31,7 +31,7 @@
     height: 100%;
     width: calc(var(--step) / calc(var(--steps) - 1) * 100%);
     background: var(--color-background-dark);
-    border-radius: var(--border-radius-lg);
+    border-radius: var(--border-radius-3xl);
     transition: width 0.3s ease-in-out;
   }
 </style>
