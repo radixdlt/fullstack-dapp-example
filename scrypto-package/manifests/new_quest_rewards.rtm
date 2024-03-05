@@ -13,11 +13,11 @@ CALL_FUNCTION
                 Enum<ProofRule::Require>(
                     Enum<ResourceOrNonFungible::Resource>(
                         Address("${owner_badge}")
-                        )
                     )
                 )
             )
         )
+    )
     Address("${admin_badge}")
     Address("${user_badge}")
     Address("${kyc_badge}")

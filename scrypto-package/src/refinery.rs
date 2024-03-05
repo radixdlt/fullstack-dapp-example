@@ -15,9 +15,9 @@ struct RegisteredEvent {
 
 #[blueprint]
 #[events(
-    ElelmentsCombineDepositedEvent,
-    ElelmentsCombineProccessedEvent,
-    ElelmentsCombineClaimedEvent,
+    ElementsCombineDepositedEvent,
+    ElementsCombineProcessedEvent,
+    ElementsCombineClaimedEvent,
     RadgemsTransformedEvent
 )]
 mod refinery {
@@ -55,18 +55,18 @@ mod refinery {
             .globalize()
         }
 
-        // combine_elements_deposit create a function that takes a Bucket of elemtents and burns them
+        // combine_elements_deposit create a function that takes a Bucket of elements and burns them
         // emit elements_combine_deposited event
         fn combine_elements_deposit(&self, elements: Bucket) -> () {
             // burn the elements
             elements.burn();
-            Runtime::emit_event(ElelmentsCombineDepositedEvent {
+            Runtime::emit_event(ElementsCombineDepositedEvent {
                 event: "elements_combine_deposited".to_string(),
             });
         }
 
         // combine_elements_process Mint a Random RadGem NFT
-        // emit elements_combine_proccessed event
+        // emit elements_combine_processed event
         pub fn combine_elements_process(&mut self, elements: Bucket) -> () {
             // Burn the elements
             self.combine_elements_deposit(elements);
@@ -81,7 +81,7 @@ mod refinery {
             // TODO Store the User ID and the RadGem ID in a KeyValueStore
 
             // Emit the event
-            Runtime::emit_event(ElelmentsCombineProccessedEvent {
+            Runtime::emit_event(ElementsCombineProcessedEvent {
                 event: "elements_combine_proccessed".to_string(),
             });
         }
@@ -91,7 +91,7 @@ mod refinery {
             // TODO Get the RadGem from the Vault
             // TODO Transfer the RadGem to the User
             // TODO Remove the User ID and the RadGem ID from the KeyValueStore or mark it as claimed
-            Runtime::emit_event(ElelmentsCombineClaimedEvent {
+            Runtime::emit_event(ElementsCombineClaimedEvent {
                 event: "elements_combine_claimed".to_string(),
             });
         }
@@ -114,17 +114,17 @@ mod refinery {
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
-pub struct ElelmentsCombineDepositedEvent {
+pub struct ElementsCombineDepositedEvent {
     event: String,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
-pub struct ElelmentsCombineProccessedEvent {
+pub struct ElementsCombineProcessedEvent {
     event: String,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
-pub struct ElelmentsCombineClaimedEvent {
+pub struct ElementsCombineClaimedEvent {
     event: String,
 }
 

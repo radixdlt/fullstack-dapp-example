@@ -3,6 +3,8 @@
     "./scrypto-package/Cargo.toml"
   ],
   "cSpell.words": [
+    "radgem",
+    "Radgems",
     "radquest",
     "ruid",
     "Sbor"
