@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "vite dev",
+    "dev": "vite dev | npx pino-pretty",
     "build": "vite build && npm run build:storybook",
     "preview": "vite preview",
     "test": "npm run test:unit",
