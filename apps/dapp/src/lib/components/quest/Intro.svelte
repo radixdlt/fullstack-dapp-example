@@ -27,14 +27,16 @@
     </div>
   {/if}
 
-  <div class="requirements">
-    <div class="requirements-title">{$i18n.t('quest_requirements')}:</div>
-    {#each requirements as { text, complete }}
-      <Requirement {complete}>
-        {text}
-      </Requirement>
-    {/each}
-  </div>
+  {#if requirements && requirements.length > 0}
+    <div class="requirements">
+      <div class="requirements-title">{$i18n.t('quest_requirements')}:</div>
+      {#each requirements as { text, complete }}
+        <Requirement {complete}>
+          {text}
+        </Requirement>
+      {/each}
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">

@@ -14,5 +14,6 @@ export const config = {
   logLevel: process.env.LOG_LEVEL!,
   notification: {
     baseUrl: process.env.NOTIFICATION_INTERNAL_API_URL!
-  }
+  },
+  networkId: parseInt(process.env.PUBLIC_NETWORK_ID ?? '2', 10)
 }

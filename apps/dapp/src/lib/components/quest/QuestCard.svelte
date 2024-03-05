@@ -5,7 +5,6 @@
   import Button from '$lib/components/button/Button.svelte'
   import { fly } from 'svelte/transition'
   import { i18n } from '$lib/i18n'
-  import type { ResultAsync } from 'neverthrow'
   import ProgressCard from '../progress-card/ProgressCard.svelte'
   import { createEventDispatcher } from 'svelte'
 
@@ -15,11 +14,10 @@
       prev: string
       next: string
     }
-    onNextClick?: () => ResultAsync<void, string>
   }[]
   export let progress: number
 
-  let nextDisabled: boolean
+  export let nextDisabled: boolean
 
   const dispatch = createEventDispatcher<{
     next: undefined

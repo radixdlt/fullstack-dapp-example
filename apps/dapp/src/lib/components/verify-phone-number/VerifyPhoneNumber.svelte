@@ -1,9 +1,12 @@
 <script lang="ts">
   import { writable } from 'svelte/store'
-  import { otpApi, type OtpError, OtpErrorCodes } from '../../../routes/api/(protected)/otp/otp-api'
+  import { otpApi } from '../../../routes/api/(protected)/otp/otp-api'
   import Button from '../button/Button.svelte'
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher, getContext, onMount } from 'svelte'
   import { i18n } from '$lib/i18n'
+  import { type OtpError, OtpErrorCodes } from '$lib/errors'
+
+  export let requirements: Record<string, boolean>
 
   const values = {
     phoneNumber: '',
@@ -21,6 +24,14 @@
 
   const dispatch = createEventDispatcher()
   const otpError = writable<OtpError | undefined>()
+  const navigationDirection =
+    getContext<ReturnType<typeof writable<'next' | 'prev'>>>('navigationDirection')
+
+  onMount(() => {
+    if (requirements.VerifyPhoneNumber) {
+      setTimeout(() => dispatch($navigationDirection), 0)
+    }
+  })
 
   const handleInputChange = (name: keyof typeof values) => (event: Event) => {
     const target = event.target as HTMLInputElement

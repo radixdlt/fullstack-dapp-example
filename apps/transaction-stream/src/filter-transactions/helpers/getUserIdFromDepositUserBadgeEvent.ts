@@ -4,6 +4,7 @@ import {
   ProgrammaticScryptoSborValueNonFungibleLocalId
 } from '@radixdlt/babylon-gateway-api-sdk'
 import { Result, err, ok } from 'neverthrow'
+import { stripNonFungibleLocalId } from './stripNonFungibleLocalId'
 
 const findNonFungibleIdField = (
   fields: ProgrammaticScryptoSborValue[]
@@ -26,8 +27,6 @@ const findNonFungibleLocalIdElement = (
 
   return result ? ok(result) : err('NonFungibleLocalId value not found')
 }
-
-const stripNonFungibleLocalId = (value: string) => value.slice(1, -1)
 
 export const getUserIdFromDepositUserBadgeEvent = (fields: ProgrammaticScryptoSborValue[]) =>
   findNonFungibleIdField(fields).andThen(findNonFungibleLocalIdElement).map(stripNonFungibleLocalId)

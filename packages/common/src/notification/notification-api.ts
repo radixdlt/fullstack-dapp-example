@@ -1,11 +1,18 @@
 import { fetchWrapper } from 'common'
 
-export const NotificationType = { QuestRequirementCompleted: 'QuestRequirementCompleted' } as const
+export const NotificationType = {
+  QuestRequirementCompleted: 'QuestRequirementCompleted',
+  QuestRewardsDeposited: 'QuestRewardsDeposited'
+} as const
 
 type Notifications = {
   [NotificationType.QuestRequirementCompleted]: {
     questId: string
     requirementId: string
+    traceId: string
+  }
+  [NotificationType.QuestRewardsDeposited]: {
+    questId: string
     traceId: string
   }
 }

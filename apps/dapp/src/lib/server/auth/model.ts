@@ -1,22 +1,29 @@
-import type { ResultAsync } from 'neverthrow'
-import { AuthDbClient } from './db'
+import { ResultAsync } from 'neverthrow'
 import { createApiError, type ApiError } from '../_types'
 import type { Challenge } from './types'
 import type { AppLogger } from '$lib/helpers/logger'
+import { dbClient } from '$lib/db'
+import { secureRandom } from '$lib/server/auth/helpers/secure-random'
+import { config } from '$lib/config'
 
 export type AuthModel = ReturnType<typeof AuthModel>
 
 export const AuthModel =
-  (client = AuthDbClient()) =>
+  (db = dbClient) =>
   (logger: AppLogger) => {
-    const createChallenge = (): ResultAsync<string, ApiError> =>
-      client.createChallenge().mapErr((error) => {
-        logger?.error({ error, method: 'createChallenge', model: 'auth', event: 'error' })
-        return createApiError('createChallengeFailed', 500)()
-      })
+    const createChallenge = (
+      byteLength = config.challenge.byteLength
+    ): ResultAsync<string, ApiError> =>
+      ResultAsync.fromPromise(
+        db.challenge.create({ data: { challenge: secureRandom(byteLength) } }),
+        (error) => {
+          logger?.error({ error, method: 'createChallenge', model: 'auth', event: 'error' })
+          return createApiError('createChallengeFailed', 500)()
+        }
+      ).map(({ challenge }) => challenge)
 
     const getAndDeleteChallenge = (challenge: string): ResultAsync<Challenge, ApiError> =>
-      client.getAndDelete(challenge).mapErr((error) => {
+      ResultAsync.fromPromise(db.challenge.delete({ where: { challenge } }), (error) => {
         logger?.error({ error, method: 'getAndDelete', model: 'auth', event: 'error' })
         return createApiError('challengeNotFound', 404)()
       })

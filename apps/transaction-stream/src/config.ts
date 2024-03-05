@@ -1,3 +1,7 @@
+import { Addresses } from 'common'
+
+const networkId = parseInt(process.env.PUBLIC_NETWORK_ID!, 10)
+
 export const config = {
   redis: {
     host: process.env.REDIS_HOST!,
@@ -8,9 +12,12 @@ export const config = {
   ledger: {
     fromStateVersion: parseInt(process.env.FROM_STATE_VERSION!, 10)
   },
-  networkId: parseInt(process.env.PUBLIC_NETWORK_ID!, 10),
+  networkId,
   stream: {
     limitPerPage: 100
+  },
+  radQuest: {
+    ...Addresses(networkId)
   },
   postgres: {
     database: process.env.POSTGRES_DATABASE ?? 'radquest',

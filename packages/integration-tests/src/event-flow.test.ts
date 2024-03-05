@@ -36,8 +36,16 @@ let identityAddress: string
 let user: Awaited<ReturnType<typeof createUser>>
 let queues: ReturnType<typeof getQueues>
 
-const createUser = async (identityAddress: string, id = crypto.randomUUID().replace(/-/g, '')) =>
-  db.user.create({ data: { identityAddress, id } })
+const createUser = async (
+  identityAddress: string,
+  accountAddress: string,
+  id = crypto.randomUUID().replace(/-/g, '')
+) => db.user.create({ data: { identityAddress, accountAddress, id } })
+
+const addVerifiedPhoneNumberRequirement = async (userId: string) =>
+  db.completedQuestRequirement.create({
+    data: { userId, questId: 'FirstTransactionQuest', requirementId: 'VerifyPhoneNumber' }
+  })
 
 describe('Event flows', () => {
   beforeAll(async () => {
@@ -49,7 +57,8 @@ describe('Event flows', () => {
     const value = result.value
     accountAddress = value[0].testAccount
     identityAddress = value[1]
-    user = await createUser(identityAddress)
+    user = await createUser(identityAddress, accountAddress)
+    await addVerifiedPhoneNumberRequirement(user.id)
     queues = getQueues(config.redis)
   })
   it(
@@ -68,11 +77,15 @@ describe('Event flows', () => {
         where: { userId: user.id, id: eventId, transactionId }
       })
       const notification = await db.notification.findFirst({ where: { userId: user.id } })
+      const completedRequirements = await db.completedQuestRequirement.findMany({
+        where: { userId: user.id, questId: 'FirstTransactionQuest' }
+      })
 
       expect(event?.questId).toBe('FirstTransactionQuest')
       expect(event?.userId).toBe(user.id)
       expect(event?.id).toBe('DepositUserBadge')
       expect(event?.transactionId).toBe(transactionId)
+      expect(completedRequirements.length).toBe(2)
       expect(notification?.data).toEqual({
         type: 'QuestRequirementCompleted',
         questId: 'FirstTransactionQuest',

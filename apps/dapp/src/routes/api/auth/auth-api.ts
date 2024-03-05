@@ -1,14 +1,17 @@
 import type { SignedChallenge } from '@radixdlt/radix-dapp-toolkit'
 import { fetchWrapper } from '$lib/helpers/fetch-wrapper'
 
-const login = (signedChallenge: SignedChallenge) =>
+const login = (personaProof: SignedChallenge, accountProof: SignedChallenge) =>
   fetchWrapper<{ authToken: string }>(
     fetch('/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(signedChallenge)
+      body: JSON.stringify({
+        personaProof,
+        accountProof
+      })
     })
   ).map(({ data }) => data.authToken)
 

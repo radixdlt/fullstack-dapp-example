@@ -6,12 +6,14 @@ import { findFieldMatch } from './helpers/findFieldMatch'
 import { getUserIdFromEventDataFields } from './helpers/getUserIdFromEventDataFields'
 import { EventId } from 'content'
 import { Result, ok } from 'neverthrow'
+import { isGloballyTrackedEvent } from './helpers/isGloballyTrackedEvent'
+import { getDataFromGloballyTrackedEvent } from './helpers/getDataFromGloballyTrackedEvent'
 
 export type FilteredTransaction = {
   questId: string
   transactionId: string
   userId: string
-  eventId: EventId
+  eventId: EventId | 'RewardDepositedEvent' | 'RewardClaimedEvent'
 }
 
 export type FilterTransactions = ReturnType<typeof FilterTransactions>
@@ -48,6 +50,23 @@ export const FilterTransactions =
                     userId,
                     transactionId
                   }
+                }
+              }
+
+              if (isGloballyTrackedEvent(event)) {
+                const transactionId = transaction.intent_hash!
+                const eventId = event.name
+                const data = getDataFromGloballyTrackedEvent(event)
+
+                if (!data) return
+
+                const { questId, userId } = data
+
+                return {
+                  questId,
+                  eventId,
+                  userId,
+                  transactionId
                 }
               }
 

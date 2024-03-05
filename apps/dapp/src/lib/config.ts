@@ -1,6 +1,6 @@
 import { env as privateEnv } from '$env/dynamic/private'
 import { publicConfig } from './public-config'
-
+import { Addresses } from 'common'
 export type Config = typeof config
 
 const {
@@ -41,7 +41,8 @@ export const config = {
   dapp: {
     expectedOrigin: EXPECTED_ORIGIN,
     networkId: publicConfig.networkId,
-    dAppDefinitionAddress: publicConfig.dAppDefinitionAddress ?? ''
+    dAppDefinitionAddress: publicConfig.dAppDefinitionAddress ?? '',
+    ...Addresses(publicConfig.networkId)
   },
   logLevel: PUBLIC_LOG_LEVEL
 }

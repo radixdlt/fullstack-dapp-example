@@ -26,7 +26,7 @@
 <Template let:args>
   <div class="container">
     {#if show}
-      <JettyDialog {...args} let:i let:Menu let:Actions let:ClaimRewards>
+      <JettyDialog {...args} let:i let:Menu let:Actions let:ClaimRewardsUI>
         {#if i === 0}
           Hey, I'm Jetty! I'm here to help you get started with the Radar network.
         {/if}
@@ -76,7 +76,7 @@
         {/if}
 
         {#if i === 5}
-          <ClaimRewards
+          <ClaimRewardsUI
             rewards={[
               {
                 name: 'xrd',
@@ -89,7 +89,7 @@
             ]}
           >
             Wow speedy, you're a fast learner! Here are your rewards for this quest.
-          </ClaimRewards>
+          </ClaimRewardsUI>
         {/if}
       </JettyDialog>
     {/if}

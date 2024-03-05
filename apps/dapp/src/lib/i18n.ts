@@ -41,7 +41,9 @@ i18next.init({
         tabs_advanced: 'Advanced',
 
         jettyDialog_menu_glossary: 'Glossary',
-        jettyDialog_menu_text: 'Hi friend, how can I help you?'
+        jettyDialog_menu_text: 'Hi friend, how can I help you?',
+
+        completeQuest_complete: 'Complete Quest'
       }
     }
   }

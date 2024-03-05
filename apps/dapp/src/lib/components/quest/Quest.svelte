@@ -1,11 +1,5 @@
 <script lang="ts">
-  import type { ResultAsync } from 'neverthrow'
   import QuestCard from './QuestCard.svelte'
-
-  type ProgressActions = {
-    next: () => void
-    prev: () => void
-  }
 
   export let title: string
   export let steps: {
@@ -13,31 +7,10 @@
       prev: string
       next: string
     }
-    onNextClick?: () => ResultAsync<void, string>
     useJetty?: boolean
   }[]
   export let progress: number
   export let nextDisabled: boolean = false
-
-  export const progressActions: ProgressActions = {
-    next: () => {
-      if (progress < steps.length - 1) {
-        const { onNextClick } = steps[progress]
-        if (onNextClick) {
-          nextDisabled = true
-          onNextClick().map(() => {
-            progress++
-            nextDisabled = false
-          })
-        } else {
-          progress++
-        }
-      }
-    },
-    prev: () => {
-      if (progress > 0) progress--
-    }
-  }
 
   let questCardProgress = 0
 
@@ -56,11 +29,12 @@
   bind:progress={questCardProgress}
   {title}
   steps={nonJettySteps}
+  {nextDisabled}
   let:Intro
   let:progress
-  on:next={progressActions.next}
-  on:prev={progressActions.prev}
   on:close
+  on:next
+  on:prev
 >
   <slot {Intro} questCardProgress={progress} />
 </QuestCard>

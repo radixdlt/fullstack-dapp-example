@@ -14,10 +14,12 @@ datasource db {
 model User {
   id                String          @id @default("")
   identityAddress   String          @unique
+  accountAddress    String          @unique
   
   events            Event[]
   notifications     Notification[]
   phoneNumber       UserPhoneNumber?
+  completedQuestRequirements CompletedQuestRequirement[]
 }
 
 model UserPhoneNumber {
@@ -53,3 +55,30 @@ model Notification {
 
   user              User            @relation(fields: [userId], references: [id])
 } 
+
+model CompletedQuestRequirement {
+  questId         String
+  userId          String
+  requirementId   String
+  createdAt       DateTime        @default(now())
+  
+  user            User            @relation(fields: [userId], references: [id])
+  
+  @@id([questId, userId, requirementId])
+}
+
+model QuestProgress {
+  questId           String
+  userId            String  
+  progress          Int             @default(0)
+  status            QuestStatus     @default(IN_PROGRESS)
+
+  @@id([questId, userId])
+}
+
+enum QuestStatus {
+  IN_PROGRESS
+  REWARDS_DEPOSITED
+  REWARDS_CLAIMED
+  COMPLETED
+}
