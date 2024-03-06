@@ -4,13 +4,14 @@ import {
   type ControllerMethodContext,
   type ControllerMethodOutput
 } from '../_types'
-import { UserQuestModel } from './model'
+import { UserQuestModel } from 'common'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions } from 'content'
 import { ResultAsync, errAsync } from 'neverthrow'
+import { dbClient } from '$lib/db'
 
 const UserQuestController = ({
-  userQuestModel = UserQuestModel()
+  userQuestModel = UserQuestModel(dbClient)
 }: Partial<{
   userQuestModel: UserQuestModel
 }>) => {

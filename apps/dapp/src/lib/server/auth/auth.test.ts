@@ -6,9 +6,9 @@ import { AuthModel } from './model'
 import { type MockContext, type Context, createMockContext } from '$lib/db/context'
 import type { SignedChallenge } from '@radixdlt/radix-dapp-toolkit'
 import { UserModel } from '../user/model'
-import { appLogger } from '$lib/helpers/logger'
+import { appLogger } from 'common'
 import { publicConfig } from '$lib/public-config'
-import { UserQuestModel } from '../user-quest/model'
+import { UserQuestModel } from 'common'
 
 let mockCtx: MockContext
 let ctx: Context

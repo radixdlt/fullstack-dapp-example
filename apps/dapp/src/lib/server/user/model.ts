@@ -1,7 +1,7 @@
 import { createApiError, type ApiError } from '../_types'
 import { ResultAsync } from 'neverthrow'
 import type { User, UserPhoneNumber } from 'database'
-import type { AppLogger } from '$lib/helpers/logger'
+import type { AppLogger } from 'common'
 import { dbClient } from '$lib/db'
 
 export type UserModel = ReturnType<typeof UserModel>

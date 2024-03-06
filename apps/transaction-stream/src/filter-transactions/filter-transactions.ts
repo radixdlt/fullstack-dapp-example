@@ -4,7 +4,6 @@ import { isTrackedEvent } from './helpers/isTrackedEvent'
 import { getEventDataFields } from './helpers/getEventDataFields'
 import { findFieldMatch } from './helpers/findFieldMatch'
 import { getUserIdFromEventDataFields } from './helpers/getUserIdFromEventDataFields'
-import { EventId } from 'content'
 import { Result, ok } from 'neverthrow'
 import { isGloballyTrackedEvent } from './helpers/isGloballyTrackedEvent'
 import { getDataFromGloballyTrackedEvent } from './helpers/getDataFromGloballyTrackedEvent'
@@ -13,7 +12,7 @@ export type FilteredTransaction = {
   questId: string
   transactionId: string
   userId: string
-  eventId: EventId | 'RewardDepositedEvent' | 'RewardClaimedEvent'
+  eventId: string
 }
 
 export type FilterTransactions = ReturnType<typeof FilterTransactions>

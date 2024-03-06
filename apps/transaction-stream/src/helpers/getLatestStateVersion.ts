@@ -1,15 +1,15 @@
 import { ok } from 'neverthrow'
 import { StateVersionModel } from '../state-version/state-version.model'
-import { EventsModel } from '../events/events.model'
+import { EventModelMethods } from 'common'
 import { GatewayApi } from 'common'
 
 export const getLatestStateVersion = ({
   stateVersionModel,
-  eventsModel,
+  eventModel,
   gatewayApi
 }: {
   stateVersionModel: StateVersionModel
-  eventsModel: EventsModel
+  eventModel: EventModelMethods
   gatewayApi: GatewayApi
 }) =>
   stateVersionModel
@@ -17,7 +17,7 @@ export const getLatestStateVersion = ({
     .andThen((value) =>
       value
         ? ok(value)
-        : eventsModel
+        : eventModel
             .getLastAddedTransactionId()
             .andThen((lastTransactionId) =>
               lastTransactionId

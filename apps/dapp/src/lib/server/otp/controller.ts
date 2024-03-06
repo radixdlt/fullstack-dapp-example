@@ -4,14 +4,16 @@ import {
   type ApiError,
   type ControllerMethodOutput
 } from '../_types'
-import { UserQuestModel } from './../user-quest/model'
 import { UserModel } from '../user/model'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 import z from 'zod'
 import { twilioService } from './twilioClient'
 import { OtpErrorCodes } from '../../errors'
+import { dbClient } from '$lib/db'
+import { UserQuestModel } from 'common'
+
 export const OneTimePasswordController = ({
-  userQuestModel = UserQuestModel(),
+  userQuestModel = UserQuestModel(dbClient),
   userModel = UserModel(),
   twilio = twilioService
 }: Partial<{

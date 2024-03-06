@@ -1,23 +1,22 @@
 import { StreamTransactionsResponse } from '@radixdlt/babylon-gateway-api-sdk'
 import { FilterTransactions } from '../filter-transactions/filter-transactions'
-import { EventsModel } from '../events/events.model'
+import { AppLogger, EventModelMethods } from 'common'
 import { randomUUID } from 'node:crypto'
 import { EventJob, getQueues } from 'queues'
-import { Logger } from 'pino'
 import { StateVersionModel } from '../state-version/state-version.model'
 
 export const HandleTransactions =
   ({
     filterTransactions,
-    eventsModel,
+    eventModel,
     eventQueue,
     logger,
     stateVersionModel
   }: {
     filterTransactions: FilterTransactions
-    eventsModel: EventsModel
+    eventModel: EventModelMethods
     eventQueue: ReturnType<typeof getQueues>['eventQueue']
-    logger: Logger<never>
+    logger: AppLogger
     stateVersionModel: StateVersionModel
   }) =>
   ({
@@ -31,7 +30,7 @@ export const HandleTransactions =
   }) =>
     filterTransactions(transactions)
       .asyncAndThen((filteredTransactions) =>
-        eventsModel.addFilteredTransactionsToDb(filteredTransactions).map((items) =>
+        eventModel.addMultiple(filteredTransactions).map((items) =>
           items.map(
             ({ transactionId, questId, id: eventId, userId }): EventJob => ({
               userId,

@@ -6,5 +6,6 @@
     "radquest",
     "ruid",
     "Sbor"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

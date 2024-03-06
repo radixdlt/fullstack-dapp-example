@@ -3,9 +3,10 @@ import { config } from './config'
 import { ConnectionOptions } from 'bullmq'
 import { PrismaClient } from 'database'
 import { EventWorker } from './workers/event-worker'
-import { NotificationApi } from 'common'
+import { EventModel, NotificationApi, NotificationModel, UserQuestModel } from 'common'
 import { logger } from './helpers/logger'
 import { getQueues } from 'queues'
+import { EventWorkerController } from './controllers/event-worker'
 
 const app = async () => {
   const { user, password, host, port, database } = config.postgres
@@ -21,7 +22,18 @@ const app = async () => {
 
   const { transactionQueue } = getQueues(config.redis)
 
-  const notificationApi = NotificationApi(config.notification.baseUrl)
+  const notificationApi = NotificationApi({
+    baseUrl: config.notification.baseUrl,
+    logger
+  })
+
+  const eventWorkerController = EventWorkerController({
+    userQuestModel: UserQuestModel(dbClient)(logger),
+    notificationModel: NotificationModel(dbClient)(logger),
+    notificationApi,
+    transactionQueue,
+    logger
+  })
 
   TransactionWorker(connection, {
     notificationApi,
@@ -29,8 +41,8 @@ const app = async () => {
   })
 
   EventWorker(connection, {
-    notificationApi,
-    transactionQueue,
+    eventWorkerController,
+    eventModel: EventModel(dbClient)(logger),
     logger
   })
 }

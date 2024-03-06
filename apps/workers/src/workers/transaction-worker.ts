@@ -2,19 +2,17 @@ import { radixEngineClient } from 'typescript-wallet'
 import { logger } from '../helpers/logger'
 import { Worker, ConnectionOptions, Queues } from 'queues'
 import { QuestDefinitions } from 'content'
-import { dbClient } from '../db-client'
-import { Addresses, NotificationApi } from 'common'
-import { Logger } from 'pino'
+import { Addresses, AppLogger, NotificationApi } from 'common'
 import { config } from '../config'
 
 export const TransactionWorker = (
   connection: ConnectionOptions,
   dependencies: {
     notificationApi: NotificationApi
-    logger: Logger<never>
+    logger: AppLogger
   }
 ) => {
-  const { notificationApi, logger } = dependencies
+  const { logger } = dependencies
   const worker = new Worker<{
     questId: string
     userId: string
@@ -100,8 +98,7 @@ export const TransactionWorker = (
             .andThen(({ txId }) =>
               radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
             )
-            .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
-            .map((details) => {
+            .map(() => {
               logger.debug({
                 method: 'transactionWorker.getCommittedDetails',
                 id: job.id,

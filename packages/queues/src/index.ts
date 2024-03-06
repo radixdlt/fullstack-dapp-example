@@ -10,18 +10,22 @@ export const Queues = {
 } as const
 
 export type EventJob = {
+  questId?: string
   userId: string
   eventId: string
-  transactionId?: string
-  questId?: string
   traceId: string
+  transactionId?: string
 }
 
 export type TransactionJob = {
   traceId: string
   userId: string
-  questId: string
+  questId?: string
 }
+
+type TQueues = ReturnType<typeof getQueues>
+export type TransactionQueue = TQueues['transactionQueue']
+export type EventQueue = TQueues['eventQueue']
 
 export const getQueues = (connection: ConnectionOptions) => {
   const eventQueue = new Queue<EventJob>(Queues.EventQueue, {

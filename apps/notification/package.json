@@ -10,7 +10,6 @@
   "dependencies": {
     "jsonwebtoken": "^9.0.2",
     "neverthrow": "^6.1.0",
-    "pino": "^8.17.2",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.39.0"
   },
   "devDependencies": {

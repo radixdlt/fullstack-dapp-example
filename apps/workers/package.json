@@ -12,8 +12,7 @@
     "database": "*",
     "queues": "*",
     "content": "*",
-    "typescript-wallet": "*",
-    "pino": "^8.17.2"
+    "typescript-wallet": "*"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.5",

@@ -12,7 +12,8 @@ import type { Cookies } from '@sveltejs/kit'
 
 import { config, type Config } from '$lib/config'
 import { UserModel } from '../user/model'
-import { UserQuestModel } from '../user-quest/model'
+import { UserQuestModel } from 'common'
+import { dbClient } from '$lib/db'
 
 export type AuthControllerInput = Partial<{
   authModel: AuthModel
@@ -28,7 +29,7 @@ export const AuthController = ({
   dAppConfig = config.dapp,
   authModel = AuthModel(),
   userModel = UserModel(),
-  userQuestModel = UserQuestModel(),
+  userQuestModel = UserQuestModel(dbClient),
   gatewayApiClient
 }: AuthControllerInput) => {
   const { dAppDefinitionAddress, networkId, expectedOrigin } = dAppConfig

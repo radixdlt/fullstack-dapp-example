@@ -1,7 +1,7 @@
 import { ResultAsync } from 'neverthrow'
 import { createApiError, type ApiError } from '../_types'
 import type { Challenge } from './types'
-import type { AppLogger } from '$lib/helpers/logger'
+import type { AppLogger } from 'common'
 import { dbClient } from '$lib/db'
 import { secureRandom } from '$lib/server/auth/helpers/secure-random'
 import { config } from '$lib/config'
