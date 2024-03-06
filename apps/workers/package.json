@@ -12,6 +12,7 @@
     "database": "*",
     "queues": "*",
     "content": "*",
+    "typescript-wallet": "*",
     "pino": "^8.17.2"
   },
   "devDependencies": {
