@@ -5,14 +5,8 @@
   - Added the required column `accountAddress` to the `User` table without a default value. This is not possible if the table is not empty.
 
 */
-SET FOREIGN_KEY_CHECKS = 0;
 
-TRUNCATE TABLE "Event";
-TRUNCATE TABLE "Notification";
-TRUNCATE TABLE "User";
-
-SET FOREIGN_KEY_CHECKS = 1;
-
+TRUNCATE TABLE "User" CASCADE;
 
 -- CreateEnum
 CREATE TYPE "QuestStatus" AS ENUM ('IN_PROGRESS', 'READY_TO_CLAIM_REWARDS', 'COMPLETED');
