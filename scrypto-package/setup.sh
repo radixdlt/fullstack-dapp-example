@@ -19,7 +19,9 @@ export admin_badge=`resim new-badge-fixed 2 | grep "Resource:" | grep -o "resour
 export user_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
 export kyc_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
 
-export component=`resim run manifests/new_quest_rewards.rtm | grep "Component" | grep -o "component_.*"`
+export qr_component=`resim run manifests/new_quest_rewards.rtm | grep "Component" | grep -o "component_.*"`
+
+export r_component=`resim run manifests/new_refinery.rtm | grep "Component" | grep -o "component_.*"`
 
 echo "\nSetup Complete"
 echo "--------------------------"
@@ -33,4 +35,5 @@ echo "owner_badge = $owner_badge"
 echo "admin_badge = $admin_badge"
 echo "user_badge = $user_badge"
 echo "kyc_badge = $kyc_badge"
-echo "component = $component"
+echo "qr_component = $qr_component"
+echo "r_component = $r_component"
