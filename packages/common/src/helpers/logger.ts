@@ -1,6 +1,8 @@
 import Pino from 'pino'
 
-const { PUBLIC_LOG_LEVEL = 'debug' } = process.env
+const { PUBLIC_LOG_LEVEL = 'debug' } = (
+  typeof process === 'undefined' ? { env: { PUBLIC_LOG_LEVEL: 'debug' } } : process
+).env
 
 export type AppLogger = typeof appLogger
 
