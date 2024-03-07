@@ -18,6 +18,8 @@ export owner_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s
 export admin_badge=`resim new-badge-fixed 2 | grep "Resource:" | grep -o "resource_.\S*" | sed -e "s/://"`
 export user_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
 export kyc_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
+export element=`resim new-token-mutable $admin_badge | grep "Resource" | grep -o "resource_.*"`
+export morph_card=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
 
 export qr_component=`resim run manifests/new_quest_rewards.rtm | grep "Component" | grep -o "component_.*"`
 
@@ -35,5 +37,7 @@ echo "owner_badge = $owner_badge"
 echo "admin_badge = $admin_badge"
 echo "user_badge = $user_badge"
 echo "kyc_badge = $kyc_badge"
+echo "element = $element"
+echo "morph_card = $morph_card"
 echo "qr_component = $qr_component"
 echo "r_component = $r_component"

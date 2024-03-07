@@ -1,17 +1,11 @@
+use crate::{
+    morph_card_factory::MorphCard, radgem_factory::radgem_factory::RadgemFactory,
+    radgem_factory::Radgem, radmorph_factory::radmorph_factory::RadmorphFactory,
+};
 use scrypto::prelude::*;
-
-#[derive(ScryptoSbor, NonFungibleData)]
-struct RadGem {
-    name: String,
-    color: String,
-    material: String,
-    rarity: String,
-}
-
-#[derive(ScryptoSbor, ScryptoEvent)]
-struct RegisteredEvent {
-    event: String,
-}
+#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
+#[sbor(transparent)]
+pub struct UserId(pub String);
 
 #[blueprint]
 #[events(
@@ -21,114 +15,184 @@ struct RegisteredEvent {
     RadgemsTransformedEvent
 )]
 mod refinery {
+
+    enable_method_auth! {
+        roles {
+            admin => updatable_by: [OWNER];
+        },
+        methods {
+            combine_elements_deposit => PUBLIC;
+            combine_elements_process => restrict_to: [admin];
+            combine_elements_claim => PUBLIC;
+            transform_radgems => PUBLIC;
+        }
+    }
+
     struct Refinery {
-        radgem_resource_manager: ResourceManager,
-        // radgem_deposit: KeyValueStore<ClaimTicketNftId, Vault>,
+        radgem_records: KeyValueStore<UserId, Vec<NonFungibleLocalId>>,
         radgem_vault: Vault,
-        admin_badge: ResourceAddress,
+        element_address: ResourceAddress,
+        morph_card_address: ResourceAddress,
+        admin_badge_address: ResourceAddress,
+        user_badge_address: ResourceAddress,
+        radgem_factory: Global<RadgemFactory>,
+        radmorph_factory: Global<RadmorphFactory>,
     }
 
     impl Refinery {
         // Instantiate the Refinery
-        pub fn new_refinery(
-            owner_badge_address: ResourceAddress,
+        pub fn new(
+            owner_role: OwnerRole,
+            element_address: ResourceAddress,
+            morph_card_address: ResourceAddress,
             admin_badge_address: ResourceAddress,
             user_badge_address: ResourceAddress,
         ) -> Global<Refinery> {
-            // Create RadGem NFT
-            let radgem_resource_manager =
-                ResourceBuilder::new_ruid_non_fungible::<RadGem>(OwnerRole::None)
-                    .mint_roles(mint_roles!(
-                        minter => rule!(require(admin_badge_address));
-                        minter_updater => rule!(deny_all);
-                    ))
-                    .create_with_no_initial_supply();
+            let radgem_factory =
+                RadgemFactory::new(owner_role.clone(), admin_badge_address.clone());
+            let radmorph_factory =
+                RadmorphFactory::new(owner_role.clone(), admin_badge_address.clone());
 
             Self {
-                radgem_resource_manager: radgem_resource_manager,
-                radgem_vault: Vault::new(radgem_resource_manager.address()),
-                // radgem_deposit: KeyValueStore::new(),
-                admin_badge: admin_badge_address,
+                radgem_records: KeyValueStore::new(),
+                radgem_vault: Vault::new(radgem_factory.get_radgem_address()),
+                element_address,
+                morph_card_address,
+                admin_badge_address,
+                user_badge_address,
+                radgem_factory,
+                radmorph_factory,
             }
             .instantiate()
-            .prepare_to_globalize(OwnerRole::None)
+            .prepare_to_globalize(owner_role)
             .globalize()
         }
 
-        // combine_elements_deposit create a function that takes a Bucket of elements and burns them
-        // emit elements_combine_deposited event
-        fn combine_elements_deposit(&self, elements: Bucket) -> () {
-            // burn the elements
+        // User deposits Elements to be turned into a RadGem
+        pub fn combine_elements_deposit(&self, user_badge: Proof, elements: Bucket) -> UserId {
+            assert_eq!(elements.resource_address(), self.element_address);
+            assert_eq!(elements.amount(), dec!(3));
+            let user_id = UserId(
+                user_badge
+                    .check(self.user_badge_address)
+                    .as_non_fungible()
+                    .non_fungible_local_id()
+                    .to_string(),
+            );
+
             elements.burn();
+
             Runtime::emit_event(ElementsCombineDepositedEvent {
-                event: "elements_combine_deposited".to_string(),
+                user_id: user_id.clone(),
             });
+
+            user_id
         }
 
-        // combine_elements_process Mint a Random RadGem NFT
-        // emit elements_combine_processed event
-        pub fn combine_elements_process(&mut self, elements: Bucket) -> () {
-            // Burn the elements
-            self.combine_elements_deposit(elements);
-            // Mint a RadGem
-            let radgem_bucket = self.radgem_resource_manager.mint_ruid_non_fungible(RadGem {
-                name: "RadGem".to_string(),
-                color: "Red".to_string(),
-                material: "radiant".to_string(),
-                rarity: "common".to_string(),
-            });
+        // Mint a random RadGem
+        pub fn combine_elements_process(&mut self, user_id: UserId, rand_num: Decimal) -> () {
+            let radgem_bucket = self.radgem_factory.mint_radgem(rand_num);
+
+            // Update the user's RadGem record
+            if self.radgem_records.get(&user_id).is_none() {
+                self.radgem_records.insert(
+                    user_id.clone(),
+                    vec![radgem_bucket.as_non_fungible().non_fungible_local_id()],
+                );
+            } else {
+                self.radgem_records
+                    .get_mut(&user_id)
+                    .unwrap()
+                    .push(radgem_bucket.as_non_fungible().non_fungible_local_id());
+            }
+
+            // Deposit the RadGem into the vault for the user to claim later
             self.radgem_vault.put(radgem_bucket);
-            // TODO Store the User ID and the RadGem ID in a KeyValueStore
 
-            // Emit the event
-            Runtime::emit_event(ElementsCombineProcessedEvent {
-                event: "elements_combine_proccessed".to_string(),
-            });
-        }
-        // combine_elements_claim create a function to claim the RadGem
-        // emit elements_combine_claimed event
-        pub fn combine_elements_claim(&mut self, user_id: String, radgem_id: String) -> () {
-            // TODO Get the RadGem from the Vault
-            // TODO Transfer the RadGem to the User
-            // TODO Remove the User ID and the RadGem ID from the KeyValueStore or mark it as claimed
-            Runtime::emit_event(ElementsCombineClaimedEvent {
-                event: "elements_combine_claimed".to_string(),
-            });
+            Runtime::emit_event(ElementsCombineProcessedEvent { user_id });
         }
 
-        // transform_radgems create a function to transform RadGems & Morph Card into a new RadMorph NFT
-        // emit radgems_transformed event
-        pub fn transform_radgems(&mut self, radgems: Bucket, morph_card: Bucket) -> () {
-            // Burn the RadGems
+        // User claims RadGem by presenting user badge
+        pub fn combine_elements_claim(&mut self, user_badge: Proof) -> NonFungibleBucket {
+            let user_id = UserId(
+                user_badge
+                    .check(self.user_badge_address)
+                    .as_non_fungible()
+                    .non_fungible_local_id()
+                    .to_string(),
+            );
+
+            // Get the user's RadGem IDs from the record
+            let radgem_ids = self.radgem_records.get(&user_id).unwrap();
+            // Take the RadGems from the vault using the IDs
+            let radgems = self
+                .radgem_vault
+                .as_non_fungible()
+                .take_non_fungibles(&radgem_ids.iter().cloned().collect());
+            // Remove the RadGem IDs from the user's record
+            self.radgem_records.remove(&user_id);
+
+            Runtime::emit_event(ElementsCombineClaimedEvent { user_id });
+
+            radgems
+        }
+
+        // transforms RadGems and RadCard into a RadMorph
+        pub fn transform_radgems(&mut self, radgems: Bucket, morph_card: Bucket) -> Bucket {
+            // Confirm the resources
+            assert_eq!(
+                radgems.resource_address(),
+                self.radgem_factory.get_radgem_address()
+            );
+            assert_eq!(morph_card.resource_address(), self.morph_card_address);
+            assert_eq!(radgems.amount(), dec!(2));
+            assert_eq!(morph_card.amount(), dec!(1));
+
+            // Get the RadGem and MorphCard data
+            let mut radgems_data: Vec<Radgem> = radgems
+                .as_non_fungible()
+                .non_fungibles::<Radgem>()
+                .iter()
+                .map(|gem| gem.data())
+                .collect();
+            let morph_card_data = morph_card
+                .as_non_fungible()
+                .non_fungible::<MorphCard>()
+                .data();
+
+            // Burn resources
             radgems.burn();
-            // Burn the Morph Card
             morph_card.burn();
+
             // Mint a RadMorph
-            // TODO
+            let radmorph = self.radmorph_factory.mint_radmorph(
+                radgems_data.pop().unwrap(),
+                radgems_data.pop().unwrap(),
+                morph_card_data,
+            );
+
             // Emit the event
-            Runtime::emit_event(RadgemsTransformedEvent {
-                event: "radgems_transformed".to_string(),
-            });
+            Runtime::emit_event(RadgemsTransformedEvent {});
+
+            radmorph
         }
     }
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
 pub struct ElementsCombineDepositedEvent {
-    event: String,
+    user_id: UserId,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
 pub struct ElementsCombineProcessedEvent {
-    event: String,
+    user_id: UserId,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
 pub struct ElementsCombineClaimedEvent {
-    event: String,
+    user_id: UserId,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
-pub struct RadgemsTransformedEvent {
-    event: String,
-}
+pub struct RadgemsTransformedEvent {}
