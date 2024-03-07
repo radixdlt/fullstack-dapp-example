@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite dev | npx pino-pretty",
-    "build": "vite build && npm run build:storybook",
+    "build": "vite build",
     "preview": "vite preview",
     "test": "npm run test:unit",
     "svelte:check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",

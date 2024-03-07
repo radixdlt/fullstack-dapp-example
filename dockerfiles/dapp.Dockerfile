@@ -28,6 +28,7 @@ COPY --from=prepare-build /app/out/full/ .
 
 RUN npm run build:dependencies
 RUN npx turbo run build --filter=dapp
+RUN npx turbo run build:storybook --filter=dapp
 
 FROM base AS application
 

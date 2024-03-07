@@ -27,7 +27,8 @@
     "lint": "turbo lint",
     "format": "prettier --write apps/**/* packages/**/*",
     "content:build": "turbo content:build --filter content",
-    "queues:build": "turbo queues:build --filter queues"
+    "queues:build": "turbo queues:build --filter queues",
+    "storybook:build": "npx turbo run build:storybook --filter=dapp"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.4.4",
