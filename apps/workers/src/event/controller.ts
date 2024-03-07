@@ -1,12 +1,7 @@
 import { ResultAsync, okAsync } from 'neverthrow'
 import { EventJob, Job, TransactionQueue } from 'queues'
-import type { AppLogger } from 'common'
-import {
-  NotificationApi,
-  UserQuestModelMethods,
-  NotificationModelMethods,
-  NotificationType
-} from 'common'
+import type { AppLogger, NotificationModel, UserQuestModel } from 'common'
+import { NotificationApi, NotificationType } from 'common'
 import { QuestDefinitions } from 'content'
 import { config } from '../config'
 
@@ -19,15 +14,15 @@ export const EventWorkerController = ({
   transactionQueue
 }: {
   notificationApi: NotificationApi
-  userQuestModel: UserQuestModelMethods
-  notificationModel: NotificationModelMethods
+  userQuestModel: UserQuestModel
+  notificationModel: NotificationModel
   logger: AppLogger
   transactionQueue: TransactionQueue
 }) => {
-  const hasAllRequirements = (questId: string, userId: string) => {
+  const hasAllRequirements = (childLogger: AppLogger, questId: string, userId: string) => {
     const questDefinition = QuestDefinitions(config.networkId)[questId]
     const requirements = Object.keys(questDefinition.requirements)
-    return userQuestModel
+    return userQuestModel(childLogger)
       .findCompletedRequirements(userId, questId)
       .map((completedRequirements) => completedRequirements.length === requirements.length)
   }
@@ -35,11 +30,17 @@ export const EventWorkerController = ({
   const handler = (job: Job<EventJob>) => {
     const { eventId, transactionId, traceId } = job.data
 
+    const childLogger = logger.child({ traceId, transactionId, eventId })
+
     switch (eventId) {
       case 'RewardDepositedEvent':
         ResultAsync.combine([
-          userQuestModel.updateQuestStatus(job.data.questId!, job.data.userId, 'REWARDS_DEPOSITED'),
-          notificationModel.add(job.data.userId, {
+          userQuestModel(childLogger).updateQuestStatus(
+            job.data.questId!,
+            job.data.userId,
+            'REWARDS_DEPOSITED'
+          ),
+          notificationModel(childLogger).add(job.data.userId, {
             type: 'QuestRewardsDeposited',
             questId: job.data.questId
           })
@@ -53,8 +54,12 @@ export const EventWorkerController = ({
         break
       case 'RewardClaimedEvent':
         ResultAsync.combine([
-          userQuestModel.updateQuestStatus(job.data.questId!, job.data.userId, 'REWARDS_CLAIMED'),
-          notificationModel.add(job.data.userId, {
+          userQuestModel(childLogger).updateQuestStatus(
+            job.data.questId!,
+            job.data.userId,
+            'REWARDS_CLAIMED'
+          ),
+          notificationModel(childLogger).add(job.data.userId, {
             type: 'QuestRewardsDeposited',
             questId: job.data.questId
           })
@@ -69,18 +74,18 @@ export const EventWorkerController = ({
         break
       case 'DepositUserBadge':
         ResultAsync.combine([
-          userQuestModel.addCompletedRequirement(
+          userQuestModel(childLogger).addCompletedRequirement(
             job.data.questId!,
             job.data.userId,
             job.data.eventId
           ),
-          notificationModel.add(job.data.userId, {
+          notificationModel(childLogger).add(job.data.userId, {
             type: 'QuestRequirementCompleted',
             questId: job.data.questId,
             requirementId: job.data.eventId
           })
         ])
-          .andThen(() => hasAllRequirements(job.data.questId!, job.data.userId))
+          .andThen(() => hasAllRequirements(childLogger, job.data.questId!, job.data.userId))
           .andThen((hasAll) =>
             hasAll
               ? transactionQueue

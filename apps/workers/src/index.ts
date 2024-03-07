@@ -28,8 +28,8 @@ const app = async () => {
   })
 
   const eventWorkerController = EventWorkerController({
-    userQuestModel: UserQuestModel(dbClient)(logger),
-    notificationModel: NotificationModel(dbClient)(logger),
+    userQuestModel: UserQuestModel(dbClient),
+    notificationModel: NotificationModel(dbClient),
     notificationApi,
     transactionQueue,
     logger
@@ -42,7 +42,7 @@ const app = async () => {
 
   EventWorker(connection, {
     eventWorkerController,
-    eventModel: EventModel(dbClient)(logger),
+    eventModel: EventModel(dbClient),
     logger
   })
 }
