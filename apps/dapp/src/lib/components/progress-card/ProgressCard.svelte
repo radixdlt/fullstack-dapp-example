@@ -1,12 +1,7 @@
 <script lang="ts">
   import ProgressBar from '$lib/components/progress-bar/ProgressBar.svelte'
-  import type { ResultAsync } from 'neverthrow'
 
-  export let steps: {
-    onNextClick?: (page: number) => ResultAsync<void, string>
-  }[]
-
-  export const close = () => {}
+  export let steps: unknown[]
   export let progress: number = 0
 
   let width: number

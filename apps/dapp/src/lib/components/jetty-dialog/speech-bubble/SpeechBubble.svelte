@@ -1,11 +1,11 @@
 <script lang="ts">
   import Menu from './Menu.svelte'
   import Actions from './Actions.svelte'
-  import ClaimRewards from './ClaimRewards.svelte'
+  import ClaimRewardsUI from '../../claim-rewards/ClaimRewardsUI.svelte'
 </script>
 
 <div class="speech-bubble">
-  <slot {Menu} {Actions} {ClaimRewards} />
+  <slot {Menu} {Actions} {ClaimRewardsUI} />
 </div>
 
 <style lang="scss">

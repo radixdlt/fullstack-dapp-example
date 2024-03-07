@@ -21,6 +21,7 @@ RUN npm install
 
 COPY --from=prepare-build /app/out/full/ .
 
+RUN npm run build:dependencies
 RUN npx turbo run build --filter=notification
 
 FROM base AS application
@@ -28,6 +29,7 @@ FROM base AS application
 WORKDIR /app
 
 COPY --from=build /app/apps/ apps
+COPY --from=build /app/packages/ packages
 COPY --from=build /app/node_modules node_modules
 
 RUN npm install pm2 -g && \

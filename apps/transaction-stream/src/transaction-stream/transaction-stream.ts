@@ -1,5 +1,5 @@
 import { GatewayApiClient } from '../gateway'
-import { concatMap, from, tap, map, withLatestFrom, filter, delay, switchMap, timer } from 'rxjs'
+import { concatMap, from, tap, map, withLatestFrom, filter, switchMap, timer } from 'rxjs'
 import { TransactionStreamSubjects } from './subjects'
 import { HandleTransactionResult, handleTransactionResult } from './helpers/handleTransactionResult'
 

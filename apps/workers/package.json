@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx --watch src/index.ts",
+    "dev": "tsx --watch src/index.ts | npx pino-pretty",
     "clean": "rm -rf dist",
     "build": "npm run clean && rollup -c"
   },
@@ -12,7 +12,7 @@
     "database": "*",
     "queues": "*",
     "content": "*",
-    "pino": "^8.17.2"
+    "typescript-wallet": "*"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.5",

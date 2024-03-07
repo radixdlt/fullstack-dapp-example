@@ -11,7 +11,7 @@
   import Carousel from '$lib/components/carousel/Carousel.svelte'
   import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
   import { goto } from '$app/navigation'
-  import { quests } from '../stores'
+  import { quests, user } from '../stores'
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
@@ -20,6 +20,7 @@
   import GlossaryIcon from '@images/book-open.svg'
   import Glossary from '$lib/components/glossary/Glossary.svelte'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
+  import { resolveRDT } from '$lib/rdt'
 
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
@@ -48,14 +49,16 @@
 
     radixDappToolkit.walletApi.setRequestData(
       DataRequestBuilder.persona().withProof(),
-      DataRequestBuilder.accounts().exactly(1)
+      DataRequestBuilder.accounts().exactly(1).withProof()
     )
 
-    radixDappToolkit.walletApi.dataRequestControl(async ({ proofs }) => {
+    radixDappToolkit.walletApi.dataRequestControl(async (data) => {
+      const { proofs } = data
       const personaProof = proofs.find((proof) => proof.type === 'persona')
-      if (personaProof) {
+      const accountProof = proofs.find((proof) => proof.type === 'account')
+      if (personaProof && accountProof) {
         // TODO: set the current user in a store
-        const result = await authApi.login(personaProof)
+        const result = await authApi.login(personaProof, accountProof)
 
         // TODO: handle login failure and give user some feedback
         if (result.isErr()) throw new Error('Failed to login')
@@ -65,11 +68,17 @@
     radixDappToolkit.walletApi.walletData$.subscribe(({ persona }) => {
       if (persona?.identityAddress) {
         ResultAsync.combine([userApi.me(), authApi.authToken()])
-          .map(([_, authToken]) => {
+          .map(([me, authToken]) => {
+            user.set(me)
             // TODO:
             // - bootstrap the application state (quest progress, user, notifications etc...) and connect to notifications websocket
             // - improve the websocket connection logic and handle reconnection
-            if (authToken) new WebSocket(env.PUBLIC_NOTIFICATION_URL, ['Authorization', authToken])
+            if (authToken) {
+              const ws = new WebSocket(env.PUBLIC_NOTIFICATION_URL, ['Authorization', authToken])
+              ws.onmessage = (event) => {
+                console.log(event.data)
+              }
+            }
           })
           .mapErr(({ status }) => {
             // TODO: logout user and give feedback that the session has expired
@@ -77,6 +86,8 @@
           })
       }
     })
+
+    resolveRDT(radixDappToolkit)
   })
 
   let loadedQuests = loadQuests('en', networkId)

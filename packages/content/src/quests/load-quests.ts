@@ -10,7 +10,7 @@ export const loadQuests = (language: Language, networkId: number) => {
       if (!i18n[language])
         throw new Error(`Language '${language}' is not supported for quest: '${questId}'`)
 
-      const { pages: unresolvedPages, title, description } = i18n[language]
+      const { pages: unresolvedPages, title, description, requirements } = i18n[language]
 
       type MarkdownFilePath = keyof (typeof QuestIndex)[typeof questId][typeof language]
 
@@ -19,8 +19,8 @@ export const loadQuests = (language: Language, networkId: number) => {
       const resolvedPages = unresolvedPages.map((page) => {
         const content = page.content.map((item) =>
           item.type === 'markdown'
-            ? { type: 'html', value: pages[item.path as MarkdownFilePath] }
-            : item
+            ? { type: 'html' as const, value: pages[item.path as MarkdownFilePath] }
+            : (item as { type: 'component'; name: string })
         )
         return { ...page, content }
       })
@@ -31,6 +31,7 @@ export const loadQuests = (language: Language, networkId: number) => {
         title,
         description,
         pages: resolvedPages,
+        requirementTexts: requirements,
         splashImage: questDefinitionsRest.splashImage || `/quests-images/splash/${questId}.webp`
       }
     }

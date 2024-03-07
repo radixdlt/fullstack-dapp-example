@@ -1,3 +1,5 @@
 export * from './fetch-wrapper'
 export * from './parse-json'
 export * from './typed-error'
+export * from './create-api-error'
+export * from './logger'

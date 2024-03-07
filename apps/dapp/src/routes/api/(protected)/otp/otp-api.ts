@@ -1,15 +1,5 @@
 import { fetchWrapper } from '$lib/helpers/fetch-wrapper'
-
-export const OtpErrorCodes = {
-  InvalidPhoneNumber: 'InvalidPhoneNumber',
-  PhoneNumberExists: 'PhoneNumberExists',
-  FailedToSendOtp: 'FailedToSendOtp',
-  InvalidOtp: 'InvalidOtp',
-  FailedToAddPhoneNumber: 'FailedToAddPhoneNumber',
-  InvalidRequest: 'InvalidRequest'
-} as const
-
-export type OtpError = (typeof OtpErrorCodes)[keyof typeof OtpErrorCodes]
+import type { OtpError } from '$lib/errors'
 
 const sendOneTimePassword = (phoneNumber: string) =>
   fetchWrapper<{ status: 'pending' | 'approved' | 'cancelled' }, { message: OtpError }>(

@@ -13,12 +13,17 @@ export const getTrackedEvents = (
     .map(([questId, questDefinition]) =>
       Object.entries(questDefinition.requirements)
         .filter(([, requirement]) => requirement.type === 'event')
-        .map(([eventId, requirement]) => ({ questId, eventId: eventId as EventId, ...requirement }))
+        .map(([eventId, requirement]) => ({
+          questId,
+          eventId: eventId as EventId,
+          ...(requirement as any)
+        }))
     )
     .flat()
     .reduce<TrackedEvents>(
       (acc, curr) => {
-        if (acc[curr.eventName]) acc[curr.eventName].push(curr)
+        if (acc[curr.eventName as keyof TrackedEvents])
+          acc[curr.eventName as keyof TrackedEvents].push(curr)
         return acc
       },
       { DepositEvent: [] }

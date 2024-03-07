@@ -9,11 +9,16 @@ const UserController = (userModel = UserModel()) => {
   const getUser = (
     ctx: ControllerMethodContext,
     userId: string
-  ): ResultAsync<User | null, ApiError> => userModel(ctx.logger).getById(userId)
+  ): ControllerMethodOutput<User | null> =>
+    userModel(ctx.logger)
+      .getById(userId)
+      .map((data) => ({ data, httpResponseCode: 200 }))
 
-  const validateAccountAddress = (accountAddress: string): ResultAsync<string, ApiError> =>
+  const validateAccountAddress = (
+    accountAddress: string | undefined | null
+  ): ResultAsync<string, ApiError> =>
     ResultAsync.fromPromise(z.string().safeParseAsync(accountAddress), typedError)
-      .map(() => accountAddress)
+      .map(() => accountAddress as string)
       .mapErr(() => ({
         httpResponseCode: 400,
         reason: 'invalidRequestBody'
@@ -22,10 +27,8 @@ const UserController = (userModel = UserModel()) => {
   const mintUserBadge = (
     ctx: ControllerMethodContext,
     {
-      accountAddress,
       userId
     }: {
-      accountAddress: string
       userId: string
     }
   ): ControllerMethodOutput<undefined> =>
@@ -35,17 +38,19 @@ const UserController = (userModel = UserModel()) => {
         return { httpResponseCode: 500, reason: 'mintUserBadgeError' } satisfies ApiError
       })
       .andThen(({ mintUserBadge: mintUserBadgeFn }) =>
-        validateAccountAddress(accountAddress)
-          .andThen(() =>
-            mintUserBadgeFn(userId, accountAddress).mapErr((error) => {
-              ctx.logger.error({ error, method: 'mintUserBadge', event: 'error' })
-              return { httpResponseCode: 500, reason: 'mintUserBadgeError' } satisfies ApiError
-            })
-          )
-          .map(() => ({
-            httpResponseCode: 201,
-            data: undefined
-          }))
+        getUser(ctx, userId).andThen(({ data }) =>
+          validateAccountAddress(data?.accountAddress)
+            .andThen((accountAddress) =>
+              mintUserBadgeFn(userId, accountAddress).mapErr((error) => {
+                ctx.logger.error({ error, method: 'mintUserBadge', event: 'error' })
+                return { httpResponseCode: 500, reason: 'mintUserBadgeError' } satisfies ApiError
+              })
+            )
+            .map(() => ({
+              httpResponseCode: 201,
+              data: undefined
+            }))
+        )
       )
 
   return { getUser, mintUserBadge }

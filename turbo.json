@@ -2,12 +2,12 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["^db:build", "^common:build", "^wallet:build", "^content:build", "^queues:build"],
+      "dependsOn": ["db:generate"],
       "outputs": [".svelte-kit/**"],
       "cache": false
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["^lint", "^common:build"]
     },
     "format": {},
     "svelte:check": {},

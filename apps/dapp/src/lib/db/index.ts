@@ -30,4 +30,4 @@ export const dbClient = new PrismaClient({
       }
     }
   }
-})
+}) as PrismaClient

@@ -1,21 +1,24 @@
-import type { ApiError, ControllerMethodContext, ControllerMethodOutput } from '../_types'
+import { type ApiError, type ControllerMethodContext, type ControllerMethodOutput } from '../_types'
 
 import { hasChallengeExpired } from './helpers/has-challenge-expired'
 import { Rola } from '@radixdlt/rola'
 import { SignedChallenge } from '@radixdlt/radix-dapp-toolkit'
 import { GatewayApi } from 'common'
 
-import { err, errAsync, ok } from 'neverthrow'
+import { err, errAsync, ok, ResultAsync } from 'neverthrow'
 import { JWT } from './jwt'
 import { AuthModel } from './model'
 import type { Cookies } from '@sveltejs/kit'
 
 import { config, type Config } from '$lib/config'
 import { UserModel } from '../user/model'
+import { UserQuestModel } from 'common'
+import { dbClient } from '$lib/db'
 
 export type AuthControllerInput = Partial<{
   authModel: AuthModel
   userModel: UserModel
+  userQuestModel: UserQuestModel
   jwt: JWT
   dAppConfig: Config['dapp']
   gatewayApiClient: GatewayApi['gatewayApiClient']
@@ -26,6 +29,7 @@ export const AuthController = ({
   dAppConfig = config.dapp,
   authModel = AuthModel(),
   userModel = UserModel(),
+  userQuestModel = UserQuestModel(dbClient),
   gatewayApiClient
 }: AuthControllerInput) => {
   const { dAppDefinitionAddress, networkId, expectedOrigin } = dAppConfig
@@ -55,20 +59,36 @@ export const AuthController = ({
 
   const login = (
     ctx: ControllerMethodContext,
-    signedChallenge: SignedChallenge,
+    proofs: {
+      personaProof: SignedChallenge
+      accountProof: SignedChallenge
+    },
     cookies: Cookies
   ): ControllerMethodOutput<{
     authToken: string
     headers: { ['Set-Cookie']: string }
   }> => {
-    ctx.logger.debug({ signedChallenge, method: 'login', event: 'start' })
-    const parsedResult = SignedChallenge.safeParse(signedChallenge)
-    if (!parsedResult.success) {
-      ctx.logger.error({
-        method: 'login.parseSignedChallenge',
-        event: 'error',
-        error: parsedResult.error
-      })
+    const { personaProof, accountProof } = proofs
+    ctx.logger.debug({ personaProof, accountProof, method: 'login', event: 'start' })
+    const parsedPersonaResult = SignedChallenge.safeParse(personaProof)
+    const parsedAccountResult = SignedChallenge.safeParse(accountProof)
+    if (!parsedPersonaResult.success || !parsedAccountResult.success) {
+      if (!parsedPersonaResult.success) {
+        ctx.logger.error({
+          method: 'login.parseSignedChallenge',
+          event: 'error',
+          error: parsedPersonaResult.error
+        })
+      }
+
+      if (!parsedAccountResult.success) {
+        ctx.logger.error({
+          method: 'login.parseSignedChallenge',
+          event: 'error',
+          error: parsedAccountResult.error
+        })
+      }
+
       return errAsync({
         httpResponseCode: 400,
         reason: 'invalidRequestBody'
@@ -76,7 +96,7 @@ export const AuthController = ({
     }
 
     return authModel(ctx.logger)
-      .getAndDeleteChallenge(signedChallenge.challenge)
+      .getAndDeleteChallenge(personaProof.challenge)
       .andThen((challenge) => {
         if (challenge) return ok(challenge)
         ctx.logger.error({
@@ -99,8 +119,16 @@ export const AuthController = ({
         })
       )
       .andThen(() =>
-        verifySignedChallenge(signedChallenge).mapErr((error) => {
-          ctx.logger.error({ error, method: 'login.verifySignedChallenge', event: 'error' })
+        ResultAsync.combine([
+          verifySignedChallenge(personaProof).mapErr((error) => {
+            ctx.logger.error({ error, method: 'login.verifyPersonaProof', event: 'error' })
+            return error
+          }),
+          verifySignedChallenge(accountProof).mapErr((error) => {
+            ctx.logger.error({ error, method: 'login.verifyAccountProof', event: 'error' })
+            return error
+          })
+        ]).mapErr((error) => {
           return {
             httpResponseCode: 400,
             reason: error.reason,
@@ -108,8 +136,15 @@ export const AuthController = ({
           } satisfies ApiError
         })
       )
-
-      .andThen(() => userModel(ctx.logger).create(signedChallenge.address))
+      .map(() => {
+        ctx.logger.debug({ method: 'login.verifiedSignedChallenges', event: 'success' })
+      })
+      .andThen(() => userModel(ctx.logger).create(personaProof.address, accountProof.address))
+      .andThen(({ id }) =>
+        userQuestModel(ctx.logger)
+          .addCompletedRequirement('ConnectQuest', id, 'ConnectWallet')
+          .map(() => ({ id }))
+      )
       .andThen(({ id }) => jwt.createTokens(id))
       .map(({ authToken, refreshToken }) => ({
         data: {

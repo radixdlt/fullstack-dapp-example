@@ -50,6 +50,7 @@
       preRequisites: [],
       category: 'Basic',
       requirements: {},
+      requirementTexts: {},
       pages: [
         {
           type: 'QuestPage',

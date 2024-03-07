@@ -1,9 +1,9 @@
-import { Logger } from 'pino'
 import { GetTransactionsErrorOutput } from '../gateway'
 import { TransactionStream } from '../transaction-stream/transaction-stream'
+import { AppLogger } from 'common'
 
 export const HandleStreamError =
-  (logger: Logger<never>, stream: TransactionStream) => (error: GetTransactionsErrorOutput) => {
+  (logger: AppLogger, stream: TransactionStream) => (error: GetTransactionsErrorOutput) => {
     const isRateLimitError = error.status === 429
     const isBeyondTheEndOfKnownLedgerError =
       error.status === 400 &&

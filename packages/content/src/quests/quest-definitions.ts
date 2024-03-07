@@ -14,11 +14,19 @@ export type QuestRequirements = {
     type: 'event'
     matchField: MatchField
   }
+  VerifyPhoneNumber: {
+    type: 'offLedger'
+  }
+  ConnectWallet: {
+    type: 'offLedger'
+  }
 }
 
 export type EventId = keyof typeof EventId
 export const EventId = {
-  DepositUserBadge: 'DepositUserBadge'
+  DepositUserBadge: 'DepositUserBadge',
+  VerifyPhoneNumber: 'VerifyPhoneNumber',
+  ConnectWallet: 'ConnectWallet'
 } as const
 
 export type QuestRequirement = Record<
@@ -81,6 +89,7 @@ export type Page = {
 export type QuestContentDefinition = {
   title: string
   description: string
+  requirements?: Partial<Record<EventId, string>>
   pages: Page[]
 }
 
@@ -186,21 +195,61 @@ export const QuestDefinitions = (networkId: number): Record<QuestId, QuestDefini
       category: 'Basic',
       rewards: [],
       preRequisites: [],
-      requirements: {},
+      requirements: {
+        ConnectWallet: {
+          type: 'offLedger',
+          eventName: 'ConnectWallet'
+        }
+      },
       minutesToComplete: 3,
       i18n: {
         en: {
           title: 'Login with Your Radix Wallet',
           description: 'Learn how to use your wallet to log in to dApps on the Radar network.',
-          pages: []
+          requirements: {
+            ConnectWallet: 'Connect your wallet to the Radar network'
+          },
+          pages: [
+            {
+              type: 'QuestPage',
+              content: [{ type: 'markdown', path: '0.md' }]
+            },
+            {
+              type: 'JettyPage',
+              actions: {
+                next: 'Go',
+                previous: 'Back'
+              },
+              jetty: { emotion: 'Happy' },
+              content: [
+                {
+                  type: 'markdown',
+                  path: '1.md'
+                },
+                {
+                  type: 'component',
+                  name: 'CompleteQuest'
+                }
+              ]
+            }
+          ]
         }
       }
     },
     FirstTransactionQuest: {
       category: 'Basic',
-      rewards: [],
+      rewards: [
+        {
+          name: 'element',
+          amount: 20
+        }
+      ],
       preRequisites: ['ConnectQuest'],
       requirements: {
+        VerifyPhoneNumber: {
+          type: 'offLedger',
+          eventName: 'VerifyPhoneNumber'
+        },
         DepositUserBadge: {
           type: 'event',
           eventName: 'DepositEvent',
@@ -216,7 +265,67 @@ export const QuestDefinitions = (networkId: number): Record<QuestId, QuestDefini
         en: {
           title: 'Your First Transaction on Radix',
           description: 'Try your first transaction on the Radar network',
-          pages: []
+          requirements: {
+            VerifyPhoneNumber: 'Verify your phone number',
+            DepositUserBadge: 'Deposit user badge to your account'
+          },
+          pages: [
+            {
+              type: 'JettyPage',
+              actions: {
+                next: 'Go',
+                previous: 'Back'
+              },
+              jetty: { emotion: 'Playful' },
+              content: [
+                {
+                  type: 'markdown',
+                  path: '0.md'
+                },
+                {
+                  type: 'markdown',
+                  path: '1.md'
+                }
+              ]
+            },
+            {
+              type: 'QuestPage',
+              content: [{ type: 'component', name: 'VerifyPhoneNumber' }]
+            },
+            {
+              type: 'QuestPage',
+              content: [{ type: 'component', name: 'DepositUserBadge' }]
+            },
+            { type: 'QuestPage', content: [{ type: 'component', name: 'VerifyRequirements' }] },
+            {
+              type: 'JettyPage',
+              jetty: { emotion: 'Happy' },
+              actions: {
+                next: 'Go',
+                previous: 'Back'
+              },
+              content: [
+                {
+                  type: 'component',
+                  name: 'ClaimRewards'
+                }
+              ]
+            },
+            {
+              type: 'JettyPage',
+              actions: {
+                next: 'Go',
+                previous: 'Back'
+              },
+              jetty: { emotion: 'Greeting' },
+              content: [
+                {
+                  type: 'markdown',
+                  path: 'greeting.md'
+                }
+              ]
+            }
+          ]
         }
       }
     },

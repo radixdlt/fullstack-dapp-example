@@ -4,18 +4,35 @@ import { typedError } from 'common'
 
 export * from 'bullmq'
 
-export const Queues = { EventQueue: 'EventQueue' } as const
+export const Queues = {
+  EventQueue: 'EventQueue',
+  TransactionQueue: 'TransactionQueue'
+} as const
 
 export type EventJob = {
+  questId?: string
   userId: string
   eventId: string
-  transactionId?: string
-  questId?: string
   traceId: string
+  transactionId?: string
 }
+
+export type TransactionJob = {
+  traceId: string
+  userId: string
+  questId?: string
+}
+
+type TQueues = ReturnType<typeof getQueues>
+export type TransactionQueue = TQueues['transactionQueue']
+export type EventQueue = TQueues['eventQueue']
 
 export const getQueues = (connection: ConnectionOptions) => {
   const eventQueue = new Queue<EventJob>(Queues.EventQueue, {
+    connection
+  })
+
+  const transactionQueue = new Queue<TransactionJob>(Queues.TransactionQueue, {
     connection
   })
 
@@ -27,5 +44,11 @@ export const getQueues = (connection: ConnectionOptions) => {
       typedError
     )
 
-  return { eventQueue: { addBulk, queue: eventQueue } }
+  const addDepositRewardsJob = (item: TransactionJob) =>
+    ResultAsync.fromPromise(transactionQueue.add(item.traceId, item), typedError)
+
+  return {
+    eventQueue: { addBulk, queue: eventQueue },
+    transactionQueue: { queue: transactionQueue, addDepositRewards: addDepositRewardsJob }
+  }
 }

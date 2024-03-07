@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { AppLogger } from '$lib/helpers/logger'
+import type { AppLogger } from 'common'
 import type { NumericRange } from '@sveltejs/kit'
 import type { ResultAsync } from 'neverthrow'
 

@@ -1,7 +1,11 @@
 import { authController } from '$lib/server/auth/controller'
 import type { Handle } from '@sveltejs/kit'
 import { config } from '$lib/config'
-import { appLogger } from '$lib/helpers/logger'
+import { appLogger } from 'common'
+import { PUBLIC_NETWORK_ID } from '$env/static/public'
+import { QuestDefinitions } from 'content'
+
+const NetworkQuestDefinitions = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))
 
 export const handle: Handle = async ({ event, resolve }) => {
   const traceId = crypto.randomUUID()
@@ -30,6 +34,17 @@ export const handle: Handle = async ({ event, resolve }) => {
         }
       }
     )
+  }
+
+  if (event.params.questId) {
+    if (!Object.keys(NetworkQuestDefinitions).includes(event.params.questId)) {
+      return new Response(JSON.stringify({ error: 'invalid quest id', status: 400 }), {
+        headers: {
+          'content-type': 'application/json'
+        },
+        status: 400
+      })
+    }
   }
 
   if (event.route.id?.includes('(protected)')) {

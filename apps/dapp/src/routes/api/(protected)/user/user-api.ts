@@ -3,11 +3,11 @@ import type { User } from 'database'
 
 const me = () => fetchWrapper<User>(fetch('/api/user')).map(({ data }) => data)
 
-const mintUserBadge = (accountAddress: string) =>
+const mintUserBadge = () =>
   fetchWrapper<void>(
     fetch('/api/user/badge', {
       method: 'POST',
-      body: JSON.stringify({ accountAddress })
+      body: '{}'
     })
   ).map(({ data }) => data)
 

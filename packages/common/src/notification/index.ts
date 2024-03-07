@@ -1,1 +1,2 @@
-export * from './notification-api'
+export * from './api'
+export * from './model'

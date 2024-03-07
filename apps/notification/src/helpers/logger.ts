@@ -1,4 +1,4 @@
-import { pino } from 'pino'
+import { createAppLogger } from 'common'
 import { config } from '../config'
 
-export const logger = pino({ level: config.logLevel })
+export const logger = createAppLogger({ level: config.logLevel })
