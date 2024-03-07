@@ -26,6 +26,11 @@ secrets:
     path: "rtlj-prod/eks/radquest/stokenet/postgres"
     secretProperty: "postgresql-password"
     secretName: "database-password"
+  - name: workers-mnemonic
+    variable: "MNEMONIC"
+    path: "rtlj-prod/eks/radquest/stokenet/secrets"
+    secretProperty: "stokenet_mnemonic"
+    secretName: "workers_stokenet_mnemonic"
 
 ingress:
   enabled: false

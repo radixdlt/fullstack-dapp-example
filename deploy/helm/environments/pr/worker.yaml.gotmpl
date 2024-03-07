@@ -19,6 +19,11 @@ params:
   NOTIFICATION_INTERNAL_API_URL: http://notification-http-internal:3001
 
 secrets:
+  - name: workers-mnemonic
+    variable: "MNEMONIC"
+    path: "rdx-works-main/eks/radquest/dev/secrets"
+    secretProperty: "stokenet_mnemonic"
+    secretName: "workers_stokenet_mnemonic"
 
 ingress:
   enabled: false
