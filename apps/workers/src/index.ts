@@ -1,12 +1,12 @@
-import { TransactionWorker } from './workers/transaction-worker'
 import { config } from './config'
 import { ConnectionOptions } from 'bullmq'
 import { PrismaClient } from 'database'
-import { EventWorker } from './workers/event-worker'
 import { EventModel, NotificationApi, NotificationModel, UserQuestModel } from 'common'
 import { logger } from './helpers/logger'
 import { getQueues } from 'queues'
-import { EventWorkerController } from './controllers/event-worker'
+import { EventWorkerController } from './event/controller'
+import { TransactionWorker } from './transaction/worker'
+import { EventWorker } from './event/worker'
 
 const app = async () => {
   const { user, password, host, port, database } = config.postgres

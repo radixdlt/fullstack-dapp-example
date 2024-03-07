@@ -1,7 +1,7 @@
-import { EventWorkerController } from './../controllers/event-worker'
 import { logger } from '../helpers/logger'
 import { Worker, ConnectionOptions, Queues, EventJob } from 'queues'
 import { AppLogger, EventModelMethods } from 'common'
+import { EventWorkerController } from './controller'
 
 export const EventWorker = (
   connection: ConnectionOptions,
