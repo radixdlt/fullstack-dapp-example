@@ -166,7 +166,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run build
+        run: npm run build:dependencies && npm run build
         env:
           PUBLIC_NETWORK_ID: ${{ needs.setup-tags.outputs.public-network-id }}
           PUBLIC_LOG_LEVEL: ${{ needs.setup-tags.outputs.public-log-level }}
@@ -182,8 +182,8 @@ jobs:
         uses: chromaui/action@05a82adb1e6919df177f54777e81a2ef3e312323 # v10.6.1
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          autoAcceptChanges: "main"
-          buildScriptName: "build:storybook"
+          autoAcceptChanges: 'main'
+          buildScriptName: 'build:storybook'
           workingDir: apps/dapp
 
   snyk-scan-deps-licences:

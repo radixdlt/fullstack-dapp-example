@@ -21,6 +21,7 @@ RUN npm install
 
 COPY --from=prepare-build /app/out/full/ .
 
+RUN npm run build:dependencies
 RUN npx turbo run build --filter=notification
 
 FROM base AS application
