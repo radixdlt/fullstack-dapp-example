@@ -1,4 +1,4 @@
-import { fetchWrapper } from 'common'
+import { fetchWrapper } from '../helpers/fetch-wrapper'
 import { AppLogger } from '../helpers/logger'
 
 export const NotificationType = {

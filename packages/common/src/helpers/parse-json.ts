@@ -1,4 +1,4 @@
-import { typedError } from 'common'
+import { typedError } from './typed-error'
 import type { Result } from 'neverthrow'
 import { err, ok } from 'neverthrow'
 
