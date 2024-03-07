@@ -7,7 +7,7 @@
       "cache": false
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["^lint", "^common:build"]
     },
     "format": {},
     "svelte:check": {},
