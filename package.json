@@ -2,7 +2,7 @@
   "name": "radquest",
   "private": true,
   "scripts": {
-    "build": "npm run db:build && npm run common:build && npm run content:build && turbo build",
+    "build": "npm run db:build && npm run common:build && npm run content:build && npm run wallet:build && turbo build",
     "dev": "npx --node-options='-r dotenv/config' turbo dev --concurrency 11",
     "dev:dapp": "npx --node-options='-r dotenv/config' turbo dev --filter dapp",
     "dev:notification": "npx --node-options='-r dotenv/config' turbo dev --filter notification",

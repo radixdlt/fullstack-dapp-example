@@ -2,7 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["db:generate", "wallet:build", "queues:build"],
+      "dependsOn": ["db:generate", "queues:build"],
       "outputs": [".svelte-kit/**"],
       "cache": false
     },
