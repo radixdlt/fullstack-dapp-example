@@ -18,25 +18,25 @@ params:
   JWT_SECRET: FkaGHXoq32rYBcEHwAn2rkhawtUCe4sE
 
 secrets:
-  - name: mnemonic
-    variable: "MNEMONIC"
-    path: "rdx-works-main/eks/radquest/dev/secrets"
-    secretProperty: "stokenet_mnemonic"
+  - external_secret_name: mnemonic
+    env_variable: "MNEMONIC"
+    aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
+    aws_secret_key: "stokenet_mnemonic"
     secretName: "stokenet_mnemonic"
-  - name: twilio-account-sid
-    variable: "TWILIO_ACCOUNT_SID"
-    path: "rdx-works-main/eks/radquest/dev/secrets"
-    secretProperty: "twilio_account_sid"
+  - external_secret_name: twilio-account-sid
+    env_variable: "TWILIO_ACCOUNT_SID"
+    aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
+    aws_secret_key: "twilio_account_sid"
     secretName: "twilio_account_sid"
-  - name: twilio-auth-token
-    variable: "TWILIO_AUTH_TOKEN"
-    path: "rdx-works-main/eks/radquest/dev/secrets"
-    secretProperty: "twilio_auth_token"
+  - external_secret_name: twilio-auth-token
+    env_variable: "TWILIO_AUTH_TOKEN"
+    aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
+    aws_secret_key: "twilio_auth_token"
     secretName: "twilio_auth_token"
-  - name: twilio-service-sid
-    variable: "TWILIO_SERVICE_SID"
-    path: "rdx-works-main/eks/radquest/dev/secrets"
-    secretProperty: "twilio_service_sid"
+  - external_secret_name: twilio-service-sid
+    env_variable: "TWILIO_SERVICE_SID"
+    aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
+    aws_secret_key: "twilio_service_sid"
     secretName: "twilio_service_sid"
 
 ingress:

@@ -43,10 +43,10 @@ spec:
             value: {{ $value | quote }}
           {{- end }}
           {{- range $secret := .Values.secrets }}
-          - name: {{ $secret.variable }}
+          - name: {{ $secret.env_variable }}
             valueFrom:
               secretKeyRef:
-                name: {{ $secret.name }}
+                name: {{ $secret.external_secret_name }}
                 key: {{ $secret.secretName }}
           {{- end }}
       {{- end }}
@@ -62,10 +62,10 @@ spec:
             value: {{ $value | quote }}
           {{- end }}
           {{- range $secret := .Values.secrets }}
-          - name: {{ $secret.variable }}
+          - name: {{ $secret.env_variable }}
             valueFrom:
               secretKeyRef:
-                name: {{ $secret.name }}
+                name: {{ $secret.external_secret_name }}
                 key: {{ $secret.secretName }}
           {{- end }}
           ports:
