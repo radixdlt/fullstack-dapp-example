@@ -4,7 +4,7 @@
   import Quest from './Quest.svelte'
   import JettyDialog from '../jetty-dialog/JettyDialog.svelte'
   import Button from '../button/Button.svelte'
-  import { questApi } from '../../../routes/api/(protected)/quest/quest-api'
+  import { questApi } from '$lib/api/quest-api'
   import BlockRenderer from './BlockRenderer.svelte'
   import { writable } from 'svelte/store'
 

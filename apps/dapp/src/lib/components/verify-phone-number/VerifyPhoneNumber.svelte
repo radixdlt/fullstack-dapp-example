@@ -1,6 +1,6 @@
 <script lang="ts">
   import { writable } from 'svelte/store'
-  import { otpApi } from '../../../routes/api/(protected)/otp/otp-api'
+  import { otpApi } from '$lib/api/otp-api'
   import Button from '../button/Button.svelte'
   import { createEventDispatcher, getContext, onMount } from 'svelte'
   import { i18n } from '$lib/i18n'
