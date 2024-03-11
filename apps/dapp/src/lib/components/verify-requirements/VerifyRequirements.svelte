@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher, getContext, onMount } from 'svelte'
-  import { questApi } from '../../../routes/api/(protected)/quest/quest-api'
+  import { questApi } from '$lib/api/quest-api'
   import { quests } from '../../../stores'
   import RequirementsPage from '../quest/RequirementsPage.svelte'
   import type { writable } from 'svelte/store'

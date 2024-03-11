@@ -5,7 +5,7 @@
   import { err } from 'neverthrow'
   import { getContext, onMount } from 'svelte'
   import Button from '../button/Button.svelte'
-  import { userApi } from '../../../routes/api/(protected)/user/user-api'
+  import { userApi } from '$lib/api/user-api'
   import { createEventDispatcher } from 'svelte'
   import type { writable } from 'svelte/store'
   import { user } from '../../../stores'
