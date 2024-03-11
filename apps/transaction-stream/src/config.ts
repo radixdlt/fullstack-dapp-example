@@ -20,10 +20,10 @@ export const config = {
     ...Addresses(networkId)
   },
   postgres: {
-    database: process.env.POSTGRES_DATABASE ?? 'radquest',
-    host: process.env.POSTGRES_HOST ?? 'localhost',
-    user: process.env.POSTGRES_USER ?? 'user',
-    password: process.env.POSTGRES_PASSWORD ?? 'password',
-    port: parseInt(process.env.POSTGRES_PORT ?? '5433', 10)
+    database: process.env.POSTGRES_DATABASE,
+    host: process.env.POSTGRES_HOST,
+    user: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
+    port: parseInt(process.env.POSTGRES_PORT!, 10)
   }
 }
