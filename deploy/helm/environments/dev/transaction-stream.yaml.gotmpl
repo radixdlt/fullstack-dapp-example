@@ -12,6 +12,16 @@ params:
   PUBLIC_NETWORK_ID: 2
 
 secrets:
+  - name: postgres-user
+    variable: "POSTGRES_USER"
+    path: "rdx-works-main-dev/eks/radquest/dev/postgres"
+    secretProperty: "postgresqlUsername"
+    secretName: "database-user"
+  - name: postgres-pass
+    variable: "POSTGRES_PASSWORD"
+    path: "rdx-works-main-dev/eks/radquest/dev/postgres"
+    secretProperty: "postgresql-password"
+    secretName: "database-password"
 
 ingress:
   enabled: false
