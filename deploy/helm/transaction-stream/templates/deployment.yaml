@@ -39,11 +39,11 @@ spec:
             value: {{ $value | quote }}
           {{- end }}
           {{- range $secret := .Values.secrets }}
-          - name: {{ $secret.variable }}
+          - name: {{ $secret.env_variable }}
             valueFrom:
               secretKeyRef:
-                name: {{ $secret.name }}
-                key: {{ $secret.secretName }}
+                name: {{ $secret.external_secret_name }}
+                key: {{ $secret.secret_key }}
           {{- end }}
           ports:
           {{- if .Values.metrics.enabled }}

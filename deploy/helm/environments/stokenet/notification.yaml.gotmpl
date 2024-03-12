@@ -7,11 +7,11 @@ params:
   LOG_LEVEL: debug
 
 secrets:
-  - name: notification-jwt-secret
-    variable: "JWT_SECRET"
-    path: "rtlj-prod/eks/radquest/stokenet/secrets"
-    secretProperty: "notification_jwt_secret"
-    secretName: "notification_jwt_secret"
+  - external_secret_name: notification-jwt-secret
+    env_variable: "JWT_SECRET"
+    aws_secret_name: "rtlj-prod/eks/radquest/stokenet/secrets"
+    aws_secret_key: "notification_jwt_secret"
+    secret_key: "notification_jwt_secret"
 
 ingress:
   enabled: false

@@ -7,11 +7,11 @@ params:
   LOG_LEVEL: debug
 
 secrets:
-  - name: notification-jwt-secret
-    variable: "JWT_SECRET"
-    path: "rdx-works-main/eks/radquest/dev/secrets"
-    secretProperty: "dapp_jwt_secret"
-    secretName: "dapp_jwt_secret"
+  - external_secret_name: notification-jwt-secret
+    env_variable: "JWT_SECRET"
+    aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
+    aws_secret_key: "notification_jwt_secret"
+    secret_key: "notification_jwt_secret"
 
 ingress:
   enabled: true
