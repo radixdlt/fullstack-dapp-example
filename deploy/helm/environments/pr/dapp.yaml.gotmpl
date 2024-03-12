@@ -22,25 +22,25 @@ secrets:
     env_variable: "MNEMONIC"
     aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
     aws_secret_key: "stokenet_mnemonic"
-    secretName: "stokenet_mnemonic"
+    secret_key: "stokenet_mnemonic"
 
   - external_secret_name: dapp-twilio-account-sid
     env_variable: "TWILIO_ACCOUNT_SID"
     aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
     aws_secret_key: "twilio_account_sid"
-    secretName: "twilio_account_sid"
+    secret_key: "twilio_account_sid"
 
   - external_secret_name: dapp-twilio-auth-token
     env_variable: "TWILIO_AUTH_TOKEN"
     aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
     aws_secret_key: "twilio_auth_token"
-    secretName: "twilio_auth_token"
+    secret_key: "twilio_auth_token"
 
   - external_secret_name: dapp-twilio-service-sid
     env_variable: "TWILIO_SERVICE_SID"
     aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
     aws_secret_key: "twilio_service_sid"
-    secretName: "twilio_service_sid"
+    secret_key: "twilio_service_sid"
 
 ingress:
   enabled: true
