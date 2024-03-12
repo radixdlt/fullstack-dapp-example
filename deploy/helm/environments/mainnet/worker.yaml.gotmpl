@@ -15,21 +15,23 @@ params:
   NOTIFICATION_INTERNAL_API_URL: http://notification-http-internal:3001
 
 secrets:
-  - name: postgres-user
-    variable: "POSTGRES_USER"
-    path: "rtlj-prod/eks/radquest/mainnet/postgres"
-    secretProperty: "postgresqlUsername"
-    secretName: "database-user"
-  - name: postgres-pass
-    variable: "POSTGRES_PASSWORD"
-    path: "rtlj-prod/eks/radquest/mainnet/postgres"
-    secretProperty: "postgresql-password"
-    secretName: "database-password"
-  - name: workers-mnemonic
-    variable: "MNEMONIC"
-    path: "rtlj-prod/eks/radquest/mainnet/secrets"
-    secretProperty: "mainnet_mnemonic"
-    secretName: "workers_mainnet_mnemonic"
+  - external_secret_name: worker-postgres-user
+    env_variable: "POSTGRES_USER"
+    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/postgres"
+    aws_secret_key: "postgresqlUsername"
+    secret_key: "workers-database-user"
+
+  - external_secret_name: worker-postgres-pass
+    env_variable: "POSTGRES_PASSWORD"
+    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/postgres"
+    aws_secret_key: "postgresql-password"
+    secret_key: "workers-database-password"
+
+  - external_secret_name: worker-mnemonic
+    env_variable: "MNEMONIC"
+    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/secrets"
+    aws_secret_key: "mainnet_mnemonic"
+    secret_key: "workers_mainnet_mnemonic"
 
 ingress:
   enabled: false

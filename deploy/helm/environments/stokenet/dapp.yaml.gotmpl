@@ -14,46 +14,53 @@ params:
   PUBLIC_NOTIFICATION_URL: wss://radquest-notification-stokenet.rtlj-prod.extratools.works
 
 secrets:
-  - name: postgres-user
-    variable: "POSTGRES_USER"
-    path: "rtlj-prod/eks/radquest/stokenet/postgres"
-    secretProperty: "postgresqlUsername"
-    secretName: "database-user"
-  - name: database-url-v2
-    variable: "POSTGRES_PASSWORD"
-    path: "rtlj-prod/eks/radquest/stokenet/postgres"
-    secretProperty: "postgresql-password"
-    secretName: "database-password"
-  - name: database-url
-    variable: "DATABASE_URL"
-    path: "rtlj-prod/eks/radquest/stokenet/postgres"
-    secretProperty: "database-url"
-    secretName: "database-url"
-  - name: dapp-jwt-secret
-    variable: "JWT_SECRET"
-    path: "rtlj-prod/eks/radquest/stokenet/secrets"
-    secretProperty: "dapp_jwt_secret"
-    secretName: "dapp_jwt_secret"
-  - name: mnemonic
-    variable: "MNEMONIC"
-    path: "rtlj-prod/eks/radquest/stokenet/secrets"
-    secretProperty: "stokenet_mnemonic"
-    secretName: "stokenet_mnemonic"
-  - name: twilio-account-sid
-    variable: "TWILIO_ACCOUNT_SID"
-    path: "rtlj-prod/eks/radquest/stokenet/secrets"
-    secretProperty: "twilio_account_sid"
-    secretName: "twilio_account_sid"
-  - name: twilio-auth-token
-    variable: "TWILIO_AUTH_TOKEN"
-    path: "rtlj-prod/eks/radquest/stokenet/secrets"
-    secretProperty: "twilio_auth_token"
-    secretName: "twilio_auth_token"
-  - name: twilio-service-sid
-    variable: "TWILIO_SERVICE_SID"
-    path: "rtlj-prod/eks/radquest/stokenet/secrets"
-    secretProperty: "twilio_service_sid"
-    secretName: "twilio_service_sid"
+  - external_secret_name: dapp-postgres-user
+    env_variable: "POSTGRES_USER"
+    aws_secret_name: "rtlj-prod/eks/radquest/stokenet/postgres"
+    aws_secret_key: "postgresqlUsername"
+    secret_key: "database-user"
+
+  - external_secret_name: dapp-postgress-pass
+    env_variable: "POSTGRES_PASSWORD"
+    aws_secret_name: "rtlj-prod/eks/radquest/stokenet/postgres"
+    aws_secret_key: "postgresql-password"
+    secret_key: "database-password"
+
+  - external_secret_name: dapp-database-url
+    env_variable: "DATABASE_URL"
+    aws_secret_name: "rtlj-prod/eks/radquest/stokenet/postgres"
+    aws_secret_key: "database-url"
+    secret_key: "database-url"
+
+  - external_secret_name: dapp-jwt-secret
+    env_variable: "JWT_SECRET"
+    aws_secret_name: "rtlj-prod/eks/radquest/stokenet/secrets"
+    aws_secret_key: "dapp_jwt_secret"
+    secret_key: "dapp_jwt_secret"
+
+  - external_secret_name: dapp-mnemonic
+    env_variable: "MNEMONIC"
+    aws_secret_name: "rtlj-prod/eks/radquest/stokenet/secrets"
+    aws_secret_key: "stokenet_mnemonic"
+    secret_key: "stokenet_mnemonic"
+
+  - external_secret_name: dapp-twilio-account-sid
+    env_variable: "TWILIO_ACCOUNT_SID"
+    aws_secret_name: "rtlj-prod/eks/radquest/stokenet/secrets"
+    aws_secret_key: "twilio_account_sid"
+    secret_key: "twilio_account_sid"
+
+  - external_secret_name: dapp-twilio-auth-token
+    env_variable: "TWILIO_AUTH_TOKEN"
+    aws_secret_name: "rtlj-prod/eks/radquest/stokenet/secrets"
+    aws_secret_key: "twilio_auth_token"
+    secret_key: "twilio_auth_token"
+
+  - external_secret_name: dapp-twilio-service-sid
+    env_variable: "TWILIO_SERVICE_SID"
+    aws_secret_name: "rtlj-prod/eks/radquest/stokenet/secrets"
+    aws_secret_key: "twilio_service_sid"
+    secret_key: "twilio_service_sid"
 
 ingress:
   enabled: true

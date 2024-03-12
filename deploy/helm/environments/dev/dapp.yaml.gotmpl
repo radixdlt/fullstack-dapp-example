@@ -14,46 +14,53 @@ params:
   PUBLIC_NOTIFICATION_URL: wss://radquest-notification-dev.rdx-works-main.extratools.works
 
 secrets:
-  - external_secret_name: postgres-user
+  - external_secret_name: dapp-postgres-user
     env_variable: "POSTGRES_USER"
     aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
     aws_secret_key: "postgresqlUsername"
-    secretName: "database-user"
-  - external_secret_name: database-url-v2
+    secret_key: "database-user"
+
+  - external_secret_name: dapp-postgress-pass
     env_variable: "POSTGRES_PASSWORD"
     aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
     aws_secret_key: "postgresql-password"
-    secretName: "database-password"
-  - external_secret_name: database-url
+    secret_key: "database-password"
+
+  - external_secret_name: dapp-database-url
     env_variable: "DATABASE_URL"
     aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
     aws_secret_key: "database-url"
-    secretName: "database-url"
+    secret_key: "database-url"
+
   - external_secret_name: dapp-jwt-secret
     env_variable: "JWT_SECRET"
     aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
     aws_secret_key: "dapp_jwt_secret"
-    secretName: "dapp_jwt_secret"
-  - external_secret_name: mnemonic
+    secret_key: "dapp_jwt_secret"
+
+  - external_secret_name: dapp-mnemonic
     env_variable: "MNEMONIC"
     aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
     aws_secret_key: "stokenet_mnemonic"
-    secretName: "stokenet_mnemonic"
-  - external_secret_name: twilio-account-sid
+    secret_key: "stokenet_mnemonic"
+
+  - external_secret_name: dapp-twilio-account-sid
     env_variable: "TWILIO_ACCOUNT_SID"
     aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
     aws_secret_key: "twilio_account_sid"
-    secretName: "twilio_account_sid"
-  - external_secret_name: twilio-auth-token
+    secret_key: "twilio_account_sid"
+
+  - external_secret_name: dapp-twilio-auth-token
     env_variable: "TWILIO_AUTH_TOKEN"
     aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
     aws_secret_key: "twilio_auth_token"
-    secretName: "twilio_auth_token"
-  - external_secret_name: twilio-service-sid
+    secret_key: "twilio_auth_token"
+
+  - external_secret_name: dapp-twilio-service-sid
     env_variable: "TWILIO_SERVICE_SID"
     aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
     aws_secret_key: "twilio_service_sid"
-    secretName: "twilio_service_sid"
+    secret_key: "twilio_service_sid"
 
 ingress:
   enabled: true

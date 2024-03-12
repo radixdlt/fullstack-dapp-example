@@ -12,16 +12,17 @@ params:
   PUBLIC_NETWORK_ID: 2
 
 secrets:
-  - name: transaction-stream-postgres-user
-    variable: "POSTGRES_USER"
-    path: "rdx-works-main-dev/eks/radquest/dev/postgres"
-    secretProperty: "postgresqlUsername"
-    secretName: "transaction-stream-database-user"
-  - name: transaction-stream-postgres-pass
-    variable: "POSTGRES_PASSWORD"
-    path: "rdx-works-main-dev/eks/radquest/dev/postgres"
-    secretProperty: "postgresql-password"
-    secretName: "transaction-stream-database-password"
+  - external_secret_name: transaction-stream-postgres-user
+    env_variable: "POSTGRES_USER"
+    aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
+    aws_secret_key: "postgresqlUsername"
+    secret_key: "transaction-stream-database-user"
+
+  - external_secret_name: transaction-stream-postgres-pass
+    env_variable: "POSTGRES_PASSWORD"
+    aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
+    aws_secret_key: "postgresql-password"
+    secret_key: "transaction-stream-database-password"
 
 ingress:
   enabled: false

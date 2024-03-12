@@ -10,6 +10,17 @@ params:
   INTERNAL_GATEWAY_URL: "http://gateway-api.ng-babylon-stokenet.svc.cluster.local:8080"
 
 secrets:
+  - external_secret_name: transaction-stream-postgres-user
+    env_variable: "POSTGRES_USER"
+    aws_secret_name: "rtlj-prod/eks/radquest/stokenet/postgres"
+    aws_secret_key: "postgresqlUsername"
+    secret_key: "transaction-stream-database-user"
+
+  - external_secret_name: transaction-stream-postgres-pass
+    env_variable: "POSTGRES_PASSWORD"
+    aws_secret_name: "rtlj-prod/eks/radquest/stokenet/postgres"
+    aws_secret_key: "postgresql-password"
+    secret_key: "transaction-stream-database-password"
 
 ingress:
   enabled: false
