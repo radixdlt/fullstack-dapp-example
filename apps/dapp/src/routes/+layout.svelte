@@ -4,14 +4,13 @@
   import { DataRequestBuilder, RadixDappToolkit, createLogger } from '@radixdlt/radix-dapp-toolkit'
   import { authApi } from '$lib/api/auth-api'
   import { userApi } from '$lib/api/user-api'
-  import { env } from '$env/dynamic/public'
   import { ResultAsync } from 'neverthrow'
   import { publicConfig } from '$lib/public-config'
   import { loadQuests } from 'content'
   import Carousel from '$lib/components/carousel/Carousel.svelte'
   import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
   import { goto } from '$app/navigation'
-  import { quests, user } from '../stores'
+  import { quests, user, webSocketClient } from '../stores'
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
@@ -21,6 +20,8 @@
   import Glossary from '$lib/components/glossary/Glossary.svelte'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import { resolveRDT } from '$lib/rdt'
+  import { WebSocketClient } from '$lib/websocket-client'
+  import { notificationApi } from '$lib/api/notification-api'
 
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
@@ -35,6 +36,7 @@
       onDisconnect: () => {
         // TODO: handle application state cleanup
         authApi.logout()
+        $webSocketClient?.close()
       }
     })
 
@@ -72,12 +74,15 @@
             user.set(me)
             // TODO:
             // - bootstrap the application state (quest progress, user, notifications etc...) and connect to notifications websocket
-            // - improve the websocket connection logic and handle reconnection
+
             if (authToken) {
-              const ws = new WebSocket(env.PUBLIC_NOTIFICATION_URL, ['Authorization', authToken])
-              ws.onmessage = (event) => {
-                console.log(event.data)
+              if (!$webSocketClient) {
+                const ws = WebSocketClient({ authToken })
+                webSocketClient.set(ws)
+                ws.onMessage(console.log)
               }
+
+              notificationApi.getAll().map(console.log)
             }
           })
           .mapErr(({ status }) => {

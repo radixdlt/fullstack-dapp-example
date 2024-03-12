@@ -84,26 +84,25 @@ export const EventWorkerController = ({
             questId: job.data.questId,
             requirementId: job.data.eventId
           })
-        ])
-          .andThen(() => hasAllRequirements(childLogger, job.data.questId!, job.data.userId))
-          .andThen((hasAll) =>
-            hasAll
-              ? transactionQueue
-                  .addDepositRewards({
+        ]).andThen(() =>
+          ResultAsync.combineWithAllErrors([
+            hasAllRequirements(childLogger, job.data.questId!, job.data.userId).andThen((hasAll) =>
+              hasAll
+                ? transactionQueue.addDepositRewards({
                     userId: job.data.userId,
                     questId: job.data.questId!,
                     traceId: job.data.traceId
                   })
-                  .andThen(() =>
-                    notificationApi.send(job.data.userId, {
-                      type: NotificationType.QuestRequirementCompleted,
-                      questId: job.data.questId!,
-                      requirementId: 'DepositUserBadge',
-                      traceId: job.data.traceId
-                    })
-                  )
-              : okAsync('')
-          )
+                : okAsync('')
+            ),
+            notificationApi.send(job.data.userId, {
+              type: NotificationType.QuestRequirementCompleted,
+              questId: job.data.questId!,
+              requirementId: 'DepositUserBadge',
+              traceId: job.data.traceId
+            })
+          ])
+        )
         break
 
       default:
