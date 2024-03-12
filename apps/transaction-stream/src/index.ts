@@ -4,7 +4,7 @@ import { getTrackedEvents } from './filter-transactions/tracked-events'
 import { GatewayApiClient } from './gateway'
 import { logger } from './helpers/logger'
 import { TransactionStream } from './transaction-stream/transaction-stream'
-import { EventModelMethods, GatewayApi } from 'common'
+import { GatewayApi } from 'common'
 import { FilterTransactions } from './filter-transactions/filter-transactions'
 import { PrismaClient } from 'database'
 import { getQueues, RedisConnection } from 'queues'
@@ -13,18 +13,20 @@ import { HandleStreamError } from './helpers/handleStreamError'
 import { HandleTransactions } from './helpers/handleTransactions'
 import { StateVersionModel } from './state-version/state-version.model'
 import { getLatestStateVersion } from './helpers/getLatestStateVersion'
+import { DbClient } from './db-client'
 
 type Dependencies = {
   gatewayApi: GatewayApi
   eventQueue: ReturnType<typeof getQueues>['eventQueue']
-  eventModel: EventModelMethods
   filterTransactions: FilterTransactions
   stateVersionModel: StateVersionModel
-  db: PrismaClient
+  getDbClient: () => Promise<PrismaClient>
 }
 
 const app = async (dependencies: Dependencies) => {
-  const { eventModel, gatewayApi, eventQueue, filterTransactions, stateVersionModel } = dependencies
+  const db = await dependencies.getDbClient()
+  const eventModel = EventModel(db)(logger)
+  const { gatewayApi, eventQueue, filterTransactions, stateVersionModel } = dependencies
 
   const result = await getLatestStateVersion({ eventModel, gatewayApi, stateVersionModel })
 
@@ -65,14 +67,8 @@ const app = async (dependencies: Dependencies) => {
   stream.error$.subscribe(handleStreamError)
 }
 
-const { user, password, host, port, database } = config.postgres
-
 const gatewayApi = GatewayApi(config.networkId)
 const { eventQueue } = getQueues(config.redis)
-const db = new PrismaClient({
-  datasourceUrl: `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`
-})
-const eventModel = EventModel(db)(logger)
 const questDefinitions = QuestDefinitions(config.networkId)
 const trackedEvents = getTrackedEvents(questDefinitions)
 const filterTransactions = FilterTransactions(trackedEvents)
@@ -81,8 +77,7 @@ const stateVersionModel = StateVersionModel(new RedisConnection(config.redis))
 app({
   gatewayApi,
   eventQueue,
-  eventModel,
   filterTransactions,
   stateVersionModel,
-  db
+  getDbClient: DbClient
 })

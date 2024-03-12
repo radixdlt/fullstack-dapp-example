@@ -7,13 +7,10 @@ import { getQueues } from 'queues'
 import { EventWorkerController } from './event/controller'
 import { TransactionWorker } from './transaction/worker'
 import { EventWorker } from './event/worker'
+import { DbClient } from './db-client'
 
 const app = async () => {
-  const { user, password, host, port, database } = config.postgres
-
-  const dbClient = new PrismaClient({
-    datasourceUrl: `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`
-  })
+  const dbClient = await DbClient()
 
   // test db connection
   await dbClient.user.findFirst()

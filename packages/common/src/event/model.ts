@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'
-import { PrismaClient } from 'database'
+import type { PrismaClient } from 'database'
 import { ResultAsync } from 'neverthrow'
 import { ApiError, createApiError } from '../helpers/create-api-error'
 import { AppLogger } from '../helpers'

@@ -1,6 +1,6 @@
-import { appLogger } from 'common'
-import { config } from './config'
 import { PrismaClient } from 'database'
+import { config } from './config'
+import { appLogger } from 'common'
 
 const { user, password, host, port, database } = config.postgres
 

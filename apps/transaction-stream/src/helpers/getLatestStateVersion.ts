@@ -1,6 +1,6 @@
 import { ok } from 'neverthrow'
 import { StateVersionModel } from '../state-version/state-version.model'
-import { EventModelMethods } from 'common'
+import type { EventModelMethods } from 'common'
 import { GatewayApi } from 'common'
 
 export const getLatestStateVersion = ({
