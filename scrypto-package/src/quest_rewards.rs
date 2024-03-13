@@ -22,10 +22,16 @@ enum RewardState {
     Claimed,
 }
 
-#[derive(ScryptoSbor)]
+#[derive(ScryptoSbor, Clone)]
 enum RewardAmount {
     FungibleAmount(Decimal),
     NonFungibleAmount(Vec<NonFungibleLocalId>),
+}
+
+#[derive(ScryptoSbor)]
+struct RewardInfo {
+    resource_address: ResourceAddress,
+    reward_amount: RewardAmount,
 }
 
 #[blueprint]
@@ -145,7 +151,10 @@ mod quest_rewards {
                         quest_id,
                         rewards: resources_record
                             .iter()
-                            .map(|resource_record| resource_record.0.clone())
+                            .map(|resource_record| RewardInfo {
+                                resource_address: resource_record.0.clone(),
+                                reward_amount: resource_record.1.clone(),
+                            })
                             .collect(),
                     });
 
@@ -181,16 +190,6 @@ mod quest_rewards {
         }
 
         pub fn deposit_reward(&mut self, user_id: UserId, quest_id: QuestId, rewards: Vec<Bucket>) {
-            // Emit deposit event
-            Runtime::emit_event(RewardDepositedEvent {
-                user_id: user_id.clone(),
-                quest_id: quest_id.clone(),
-                rewards: rewards
-                    .iter()
-                    .map(|reward| reward.resource_address().clone())
-                    .collect(),
-            });
-
             // If missing, add the reward to the rewards record
             if self
                 .rewards_record
@@ -204,6 +203,9 @@ mod quest_rewards {
                     },
                 )
             };
+
+            // Capture the deposited rewards info for event emission
+            let mut rewards_info: Vec<RewardInfo> = vec![];
 
             let mut reward_state = self
                 .rewards_record
@@ -224,18 +226,24 @@ mod quest_rewards {
                             .collect(),
                     ),
                 };
+
                 match *reward_state {
                     RewardState::Unclaimed {
                         ref mut resources_record,
                     } => {
-                        resources_record.insert(reward.resource_address(), reward_amount);
+                        resources_record.insert(reward.resource_address(), reward_amount.clone());
                     }
                     RewardState::Claimed => {
                         let mut resources_record = HashMap::new();
-                        resources_record.insert(reward.resource_address(), reward_amount);
+                        resources_record.insert(reward.resource_address(), reward_amount.clone());
                         *reward_state = RewardState::Unclaimed { resources_record }
                     }
                 };
+
+                rewards_info.push(RewardInfo {
+                    resource_address: reward.resource_address(),
+                    reward_amount,
+                });
 
                 // If missing, add the reward resource vault to rewards
                 if self.rewards.get(&reward.resource_address()).is_none() {
@@ -248,6 +256,13 @@ mod quest_rewards {
                 let mut reward_vault = self.rewards.get_mut(&reward.resource_address()).unwrap();
                 reward_vault.put(reward);
             }
+
+            // Emit deposit event
+            Runtime::emit_event(RewardDepositedEvent {
+                user_id: user_id.clone(),
+                quest_id: quest_id.clone(),
+                rewards: rewards_info,
+            });
         }
 
         pub fn update_user_kyc_requirement(&mut self, user_id: UserId, require_kyc: bool) {
@@ -264,12 +279,12 @@ mod quest_rewards {
 pub struct RewardClaimedEvent {
     user_id: UserId,
     quest_id: QuestId,
-    rewards: Vec<ResourceAddress>,
+    rewards: Vec<RewardInfo>,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
 pub struct RewardDepositedEvent {
     user_id: UserId,
     quest_id: QuestId,
-    rewards: Vec<ResourceAddress>,
+    rewards: Vec<RewardInfo>,
 }

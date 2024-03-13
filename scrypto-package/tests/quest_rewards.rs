@@ -72,7 +72,8 @@ fn can_deposit_rewards() -> Result<(), RuntimeError> {
         arrange_test_environment()?;
 
     let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
-    let reward_2 = BucketFactory::create_fungible_bucket(XRD, 200.into(), Mock, &mut env)?;
+    let reward_2 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
 
     env.disable_auth_module();
 
@@ -104,7 +105,10 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
         arrange_test_environment()?;
 
     let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
-    let reward_2 = BucketFactory::create_fungible_bucket(XRD, 200.into(), Mock, &mut env)?;
+    let reward_2 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
+    let reward_1_address = reward_1.resource_address(&mut env)?;
+    let reward_2_address = reward_2.resource_address(&mut env)?;
 
     let quest_id = QuestId("1".into());
 
@@ -117,12 +121,15 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
     )?;
     env.enable_auth_module();
 
-    quest_rewards.claim_reward(
+    let response = quest_rewards.claim_reward(
         quest_id,
         user_badge.create_proof_of_all(&mut env)?,
         None,
         &mut env,
     )?;
+
+    assert_eq!(response[0].resource_address(&mut env)?, reward_1_address);
+    assert_eq!(response[1].resource_address(&mut env)?, reward_2_address);
 
     Ok(())
 }
