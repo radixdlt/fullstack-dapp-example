@@ -7,11 +7,13 @@
 <script lang="ts">
   import { Story, Template } from '@storybook/addon-svelte-csf'
   import PhoneNumberInput from './PhoneNumberInput.svelte'
+
+  let number: string
 </script>
 
 <Template>
   <div class="container">
-    <PhoneNumberInput />
+    <PhoneNumberInput bind:number />
   </div>
 </Template>
 

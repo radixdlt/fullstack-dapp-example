@@ -9,8 +9,11 @@
 </script>
 
 <div class="requirements-page">
-  <div class="text">
-    {$i18n.t('quests:requirements')}
+  <div class="text-faded">
+    {$i18n.t('quests:requirementsDescription')}
+  </div>
+  <div class="title">
+    {$i18n.t('quests:requirementsTitle')}:
   </div>
   {#each requirements as { text, complete }}
     <Requirement {complete}>
@@ -24,9 +27,10 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-2xl);
+    align-items: center;
   }
 
-  .text {
-    opacity: 0.6;
+  .title {
+    font-weight: bold;
   }
 </style>

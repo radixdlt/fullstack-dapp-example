@@ -22,6 +22,7 @@
     font-size: var(--text-xs);
     height: 2.7rem;
     min-width: 7rem;
+    width: fit-content;
   }
 
   .primary {

@@ -50,7 +50,7 @@
 
   .gemstone {
     position: relative;
-    border-radius: var(--border-radius-3xl);
+    border-radius: var(--border-radius-2xl);
     border: 1px solid #bbbbbb;
     height: 80%;
     width: 80%;

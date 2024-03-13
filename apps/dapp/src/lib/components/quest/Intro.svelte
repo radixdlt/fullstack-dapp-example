@@ -11,8 +11,8 @@
   export let requirements: {
     text: string
     complete: boolean
-  }[]
-  export let rewards: QuestReward[] = []
+  }[] = []
+  export let rewards: Readonly<QuestReward[]> = []
 </script>
 
 <div class="content">
@@ -29,7 +29,7 @@
 
   {#if requirements && requirements.length > 0}
     <div class="requirements">
-      <div class="requirements-title">{$i18n.t('quests:requirements')}:</div>
+      <div class="requirements-title">{$i18n.t('quests:requirementsTitle')}:</div>
       {#each requirements as { text, complete }}
         <Requirement {complete}>
           {text}

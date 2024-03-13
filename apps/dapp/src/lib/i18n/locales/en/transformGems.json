@@ -1,10 +1,10 @@
 {
-    "back":"Back",
-    "title0":"Pick a Transform card",
-    "title1":"Pick two gems",
-    "title2":"Ready to transform?",
-    "next-button":"Next",
-    "complete-button":"Send to Jetty",
-    "gemcard-gemstone":"Gemstone",
-    "gemcard-rarity":"Rarity"
- }
+  "back": "Back",
+  "title0": "Pick a Transform card",
+  "title1": "Pick two gems",
+  "title2": "Ready to transform?",
+  "next-button": "Next",
+  "complete-button": "Send to Jetty",
+  "gemcard-gemstone": "Gemstone",
+  "gemcard-rarity": "Rarity"
+}

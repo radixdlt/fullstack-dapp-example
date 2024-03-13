@@ -6,7 +6,7 @@ import {
 } from '../_types'
 import { UserQuestModel } from 'common'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
-import { QuestDefinitions } from 'content'
+import { QuestDefinitions, type Quests } from 'content'
 import { ResultAsync, errAsync } from 'neverthrow'
 import { dbClient } from '$lib/db'
 
@@ -38,7 +38,7 @@ const UserQuestController = ({
   const completeQuest = (
     ctx: ControllerMethodContext,
     userId: string,
-    questId: string
+    questId: keyof Quests
   ): ControllerMethodOutput<void> =>
     userQuestModel(ctx.logger)
       .findCompletedRequirements(userId, questId)
@@ -55,14 +55,9 @@ const UserQuestController = ({
   const setQuestProgress = (
     ctx: ControllerMethodContext,
     userId: string,
-    questId: string,
-    progress: number
+    questId: keyof Quests
   ) => {
     const questDefinition = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId]
-
-    if (progress > questDefinition.i18n.en.pages.length) {
-      return errAsync(createApiError('Invalid progress', 400)())
-    }
 
     const preRequisites = questDefinition.preRequisites as string[]
 
@@ -78,7 +73,7 @@ const UserQuestController = ({
       .map(() => ({ httpResponseCode: 200, data: undefined }))
   }
 
-  const getQuestProgress = (ctx: ControllerMethodContext, userId: string, questId: string) =>
+  const getQuestProgress = (ctx: ControllerMethodContext, userId: string, questId: keyof Quests) =>
     ResultAsync.combine([
       userQuestModel(ctx.logger).getQuestStatus(userId, questId),
       userQuestModel(ctx.logger).findCompletedRequirements(userId, questId)
@@ -102,7 +97,9 @@ const UserQuestController = ({
 
       return {
         data: {
-          status: questStatus?.status || 'NOT_STARTED',
+          status:
+            questStatus?.status ||
+            ('NOT_STARTED' as NonNullable<typeof questStatus>['status'] | 'NOT_STARTED'),
           requirements
         },
         httpResponseCode: 200

@@ -15,7 +15,6 @@ docker-compose.yml
 .babelrc
 package.json
 README.md
-*.json
 # Ignore files for PNPM, NPM and YARN
 pnpm-lock.yaml
 pnpm-workspace.yaml

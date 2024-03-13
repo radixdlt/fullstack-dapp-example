@@ -23,7 +23,7 @@
 
     background: $background-color;
     border-radius: var(--border-radius-3xl);
-    padding: var(--spacing-xl);
+    padding: var(--spacing-2xl);
     margin-bottom: var(--spacing-2xl);
     display: flex;
     flex-direction: column;

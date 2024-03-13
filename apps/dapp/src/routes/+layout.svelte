@@ -6,7 +6,6 @@
   import { userApi } from '$lib/api/user-api'
   import { ResultAsync } from 'neverthrow'
   import { publicConfig } from '$lib/public-config'
-  import { loadQuests } from 'content'
   import Carousel from '$lib/components/carousel/Carousel.svelte'
   import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
   import { goto } from '$app/navigation'
@@ -17,7 +16,6 @@
   import { i18n } from '$lib/i18n/i18n'
   import { resolveRDT } from '$lib/rdt'
   import { WebSocketClient } from '$lib/websocket-client'
-  import { notificationApi } from '$lib/api/notification-api'
 
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
@@ -74,11 +72,8 @@
             if (authToken) {
               if (!$webSocketClient) {
                 const ws = WebSocketClient({ authToken })
-                webSocketClient.set(ws)
-                ws.onMessage(console.log)
+                $webSocketClient = ws
               }
-
-              notificationApi.getAll().map(console.log)
             }
           })
           .mapErr(({ status }) => {
@@ -91,13 +86,10 @@
     resolveRDT(radixDappToolkit)
   })
 
-  let loadedQuests = loadQuests('en', networkId)
-
-  quests.set(loadedQuests)
-
-  let basicQuests = loadedQuests.filter((quest) => quest.category === 'Basic')
-
-  let advancedQuests = loadedQuests.filter((quest) => quest.category === 'Advanced')
+  let _quests = Object.entries($quests) as [
+    keyof typeof $quests,
+    (typeof $quests)[keyof typeof $quests]
+  ][]
 
   let activeTab: string
 </script>
@@ -117,36 +109,20 @@
   <svelte:fragment slot="quests">
     {#if activeTab === 'basics'}
       <Carousel let:Item>
-        {#each basicQuests as quest}
-          <Item>
-            <QuestOverview
+        {#each _quests as [id, quest]}
+          {#if quest.category === 'Basic'}
+            <Item>
+              <QuestOverview
                 title={$i18n.t(`${id}.title`, { ns: 'quests' })}
                 description={$i18n.t(`${id}.description`, { ns: 'quests' })}
-              minutesToComplete={quest.minutesToComplete}
-              rewards={quest.rewards}
-              backgroundImage={quest.splashImage}
-              state="unlocked"
-              on:click={() => goto(`/quest/${quest.id}`)}
-            />
-          </Item>
-        {/each}
-      </Carousel>
-    {/if}
-
-    {#if activeTab === 'advanced'}
-      <Carousel let:Item>
-        {#each advancedQuests as quest}
-          <Item>
-            <QuestOverview
-              title={quest.title}
-              description={quest.description}
-              minutesToComplete={quest.minutesToComplete}
-              rewards={quest.rewards}
-              backgroundImage={quest.splashImage}
-              state="unlocked"
-              on:click={() => goto(`/quest/${quest.id}`)}
-            />
-          </Item>
+                minutesToComplete={quest.minutesToComplete}
+                rewards={quest.rewards}
+                backgroundImage={quest.splashImage}
+                state="unlocked"
+                on:click={() => goto(`/quest/${id}`)}
+              />
+            </Item>
+          {/if}
         {/each}
       </Carousel>
     {/if}

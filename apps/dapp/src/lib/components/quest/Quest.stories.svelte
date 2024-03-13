@@ -1,27 +1,12 @@
 <script lang="ts" context="module">
   export const meta = {
-    tags: ['autodocs'],
-    argTypes: {
-      title: {
-        control: 'text',
-        description: 'The title of the quest'
-      },
-      description: {
-        control: 'text',
-        description: 'The description of the quest'
-      },
-      rewards: {
-        control: 'number',
-        description: 'Amount of rewards to be displayed'
-      }
-    }
+    tags: ['autodocs']
   }
 </script>
 
 <script lang="ts">
   import { Story, Template } from '@storybook/addon-svelte-csf'
-  import DefQuest from './DefQuest.svelte'
-  import type { LoadedQuest } from 'content'
+  import Quest from './Quest.svelte'
 
   const rewards = [
     {
@@ -34,108 +19,107 @@
     }
   ] as const
 
-  const getRewardData = (count: number) =>
-    Array(count)
-      .fill(undefined)
-      .map((_, i) => rewards[i % rewards.length])
-
-  const getQuest = (args: any) => {
-    return {
-      id: 'ConnectQuest',
-      title: args.title,
-      description: args.description,
-      minutesToComplete: args.minutesToComplete,
-      rewards: getRewardData(args.rewards),
-      splashImage: '',
-      preRequisites: [],
-      category: 'Basic',
-      requirements: {},
-      requirementTexts: {},
-      pages: [
-        {
-          type: 'QuestPage',
-          content: [
-            {
-              type: 'html',
-              value:
-                '<h1>What can the Radar wallet do?</h1><p>The Radar Wallet is a mobile app that securely holds your web3 assets and identities on the Radar Network (but not other networks e.g. Ethereum). You can use your wallet to log into dApps on the Radar Network and approve web3 transactions using your digital assets.</p>'
-            },
-            {
-              type: 'html',
-              value:
-                "<strong>Use your wallet to log in to any web3 apps on the Radar network</strong><p>Let's make it web3 official! It's time to use your wallet to formally log in to RadQuest.Did you know? We call web3 apps like RadQuest, dApps.</p>"
-            }
-          ],
-          actions: {
-            next: 'Coolio!'
-          }
-        },
-        {
-          type: 'JettyPage',
-          jetty: { emotion: 'Excited' },
-          content: [
-            {
-              type: 'html',
-              value: 'Hello I am Jetty'
-            },
-            {
-              type: 'html',
-              value: "I'm here to help you get started with the Radar network."
-            }
-          ],
-          actions: {
-            previous: 'Back',
-            next: 'Coolio!'
-          }
-        },
-        {
-          type: 'QuestPage',
-          content: [
-            {
-              type: 'html',
-              value: '<h1>Some more cool info.</p>'
-            },
-            {
-              type: 'html',
-              value: '<strong>Nice job on the quest so far.</p>'
-            }
-          ],
-          actions: {
-            next: 'Coolio!'
-          }
-        },
-        {
-          type: 'JettyPage',
-          jetty: { emotion: 'Excited' },
-          content: [
-            {
-              type: 'html',
-              value: 'Congrats on completing the quest!'
-            }
-          ],
-          actions: {
-            previous: 'Back'
-          }
-        }
-      ]
-    } satisfies LoadedQuest
-  }
+  let quest: Quest
 </script>
 
-<Template let:args>
+<Template>
   <div class="container">
-    <DefQuest quest={getQuest(args)} />
+    <Quest
+      bind:this={quest}
+      id="RadixQuest"
+      title="First Quest"
+      description="This is your introduction to Radix"
+      minutesToComplete={3}
+      {rewards}
+      steps={[
+        {
+          id: 'text1',
+          type: 'regular',
+          footer: {
+            type: 'navigation'
+          }
+        },
+        {
+          id: 'text2',
+          type: 'regular',
+          footer: {
+            type: 'navigation'
+          }
+        },
+        {
+          id: 'jetty',
+          type: 'jetty',
+          dialogs: 2
+        },
+        {
+          id: 'text3',
+          type: 'regular',
+          footer: {
+            type: 'action',
+            action: {
+              text: 'Start Over',
+              onClick: () => quest.setProgress(0)
+            }
+          }
+        }
+      ]}
+      let:render
+    >
+      {#if render('text1')}
+        <p>
+          It's time that the Elements you've earned aren't just things that I'm holding for you on
+          RadQuest. They're real things and you should hold them in your own wallet!
+        </p>
+        <p>
+          To do that, you're going to do a transaction with the Radix Network to claim them, moving
+          them from RadQuest to your own account.
+        </p>
+      {/if}
+
+      {#if render('text2')}
+        <p><strong> Web3 networks </strong></p>
+        <p>There are many Web3 networks (blockchains) such as Ethereum.</p>
+        <p>Each network has its own ecosystem (cryptocurrencies, NFTs, wallets, dApps, etc).</p>
+        <p>And the Radar network is not just one of them but much better than others!</p>
+
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+          est laborum."
+        </p>
+      {/if}
+
+      <svelte:fragment slot="jetty" let:render let:dialog let:Button let:next>
+        {#if render('jetty')}
+          {#if dialog === 0}
+            <p>
+              Welcome to the Radix Network! You're about to make your first transaction on the
+              network.
+            </p>
+          {/if}
+          {#if dialog === 1}
+            <p>
+              This is a big step! You're about to claim your first rewards on the Radix Network.
+            </p>
+            <Button on:click={next}>OK</Button>
+          {/if}
+        {/if}
+      </svelte:fragment>
+
+      {#if render('text3')}
+        <p>
+          You've completed your first transaction on the Radix Network! You've claimed your rewards
+          and they're now in your wallet.
+        </p>
+      {/if}
+    </Quest>
   </div>
 </Template>
 
-<Story
-  name="Primary"
-  args={{
-    title: 'Your first transaction on Radar',
-    description: 'Get familiar with Radar, the radically better Web3 network.',
-    minutesToComplete: 5
-  }}
-/>
+<Story name="Primary" />
 
 <style>
   .container {

@@ -3,24 +3,27 @@
   import { rdt, sendTransaction } from '$lib/rdt'
   import { GatewayApi } from 'common'
   import { err } from 'neverthrow'
-  import { getContext, onMount } from 'svelte'
-  import Button from '../button/Button.svelte'
-  import { userApi } from '$lib/api/user-api'
+  import { onMount } from 'svelte'
   import { createEventDispatcher } from 'svelte'
-  import type { writable } from 'svelte/store'
-  import { user } from '../../../stores'
+  import { user, webSocketClient } from '../../../stores'
+  import Button from '$lib/components/button/Button.svelte'
+  import { userApi } from '$lib/api/user-api'
+  import type { Quests } from 'content'
+
+  export let questId: keyof Quests
 
   let state: 'loading' | 'hasUserBadge' | 'canAcceptUserBadge' | 'updateDepositRules' | 'minted' =
     'loading'
 
   let mintingInProgress = false
-  const navigationDirection =
-    getContext<ReturnType<typeof writable<'next' | 'prev'>>>('navigationDirection')
+
   type ComponentStateDetails = {
     default_deposit_rule: 'Accept'
   }
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher<{
+    next: undefined
+  }>()
 
   const getSetResourcePreferenceManifest = (accountAddress: string) => `CALL_METHOD
     Address("${accountAddress}")
@@ -47,13 +50,23 @@
 
   const handleMintUserBadge = () => {
     if (mintingInProgress) return
-    userApi.mintUserBadge().map(() => {
+    userApi.mintUserBadge().map(async () => {
       state = 'minted'
-      dispatch('next')
     })
   }
 
   onMount(() => {
+    $webSocketClient?.onMessage((event) => {
+      const body = JSON.parse(event as any)
+      if (
+        body.questId === questId &&
+        body.type === 'QuestRequirementCompleted' &&
+        body.requirementId === 'DepositUserBadge'
+      ) {
+        dispatch('next')
+      }
+    })
+
     rdt.then(() => {
       const address = $user?.accountAddress || ''
       const gatewayApi = GatewayApi(publicConfig.networkId)
@@ -64,7 +77,8 @@
 
         if (hasUserBadge) {
           state = 'hasUserBadge'
-          dispatch($navigationDirection)
+
+          dispatch('next')
           return
         }
 
@@ -91,12 +105,22 @@
   })
 </script>
 
-{#if state === 'loading'}
-  <div>Checking third party deposits...</div>
-{:else if state === 'canAcceptUserBadge'}
-  <Button on:click={handleMintUserBadge} disabled={mintingInProgress}>Mint User Badge</Button>
-{:else if state === 'minted'}
-  Minted!
-{:else if state === 'updateDepositRules'}
-  <Button on:click={handleUpdateDepositRule}>Update Deposit Rules</Button>
-{/if}
+<div class="deposit-user-badge">
+  {#if state === 'loading'}
+    <div>Checking third party deposits...</div>
+  {:else if state === 'canAcceptUserBadge'}
+    <Button on:click={handleMintUserBadge} disabled={mintingInProgress}>Mint User Badge</Button>
+  {:else if state === 'minted'}
+    Minted!
+  {:else if state === 'updateDepositRules'}
+    <Button on:click={handleUpdateDepositRule}>Update Deposit Rules</Button>
+  {/if}
+</div>
+
+<style>
+  .deposit-user-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+</style>

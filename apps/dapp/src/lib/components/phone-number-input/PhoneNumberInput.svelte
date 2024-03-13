@@ -14,10 +14,9 @@
   onMount(async () => {
     iti = intlTelInput(input, {
       //@ts-ignore
-      utilsScript: await import('intl-tel-input/build/js/utils.js') // show loading state when loading this
+      utilsScript: await import('intl-tel-input/build/js/utils.js') // TODO show loading state when loading this
     })
   })
-
 
   let isValid = true
 </script>

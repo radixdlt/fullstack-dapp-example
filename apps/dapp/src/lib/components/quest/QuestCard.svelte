@@ -1,22 +1,16 @@
 <script lang="ts">
   import Icon from '$lib/components/icon/Icon.svelte'
   import CrossIcon from '@images/cross.svg'
-  import Intro from './Intro.svelte'
   import Button from '$lib/components/button/Button.svelte'
   import { fly } from 'svelte/transition'
-  import { i18n } from '$lib/i18n'
+  import { i18n } from '$lib/i18n/i18n'
   import ProgressCard from '../progress-card/ProgressCard.svelte'
   import { createEventDispatcher } from 'svelte'
 
   export let title: string
-  export let steps: {
-    buttonTexts: {
-      prev: string
-      next: string
-    }
-  }[]
+  export let steps: number
   export let progress: number
-
+  export let cardDisabled = false
   export let nextDisabled: boolean
 
   const dispatch = createEventDispatcher<{
@@ -26,7 +20,7 @@
   }>()
 </script>
 
-<ProgressCard {steps} bind:progress>
+<ProgressCard {steps} bind:progress disabled={cardDisabled}>
   <div slot="header" class="header">
     <button class="icon" on:click={() => dispatch('close')}>
       <Icon url={CrossIcon} />
@@ -41,7 +35,7 @@
     <div class="content card">
       {#key progress}
         <div transition:fly={{ x: -width * 2, opacity: 1, duration: animationDuration }}>
-          <slot {progress} {Intro} />
+          <slot {progress} />
         </div>
       {/key}
     </div>
@@ -52,25 +46,13 @@
         transition:fly={{ x: -width * 2, opacity: 1, duration: animationDuration }}
       >
         <Button on:click={() => dispatch('next')} disabled={nextDisabled}
-          >{steps[0].buttonTexts.next}</Button
+          >{$i18n.t('quests:intro-begin-quest')}</Button
         >
       </div>
     {/if}
 
     {#if progress > 0}
-      <div
-        class="footer-container"
-        transition:fly={{ y: 200, opacity: 1, duration: animationDuration }}
-      >
-        <div class="footer quest-footer">
-          <Button secondary on:click={() => dispatch('prev')}
-            >{steps[progress].buttonTexts.prev ?? $i18n.t('quest_previousButton')}</Button
-          >
-          <Button on:click={() => dispatch('next')} disabled={nextDisabled}
-            >{steps[progress].buttonTexts.next ?? $i18n.t('quest_nextButton')}</Button
-          >
-        </div>
-      </div>
+      <slot name="footer" {width} {animationDuration} />
     {/if}
   </svelte:fragment>
 </ProgressCard>
@@ -100,22 +82,6 @@
     }
 
     overflow-y: auto;
-  }
-
-  .footer-container {
-    grid-area: 4 / 1;
-    border-top: 1px solid rgba(0, 0, 0, 0.2);
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .quest-footer {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--spacing-lg);
-    width: 100%;
   }
 
   .intro-footer {

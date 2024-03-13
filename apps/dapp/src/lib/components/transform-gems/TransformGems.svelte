@@ -59,7 +59,7 @@
   let progress: number
 </script>
 
-<ProgressCard bind:progress steps={Array(3).fill({})}>
+<ProgressCard bind:progress steps={3}>
   <div slot="header" class="header">
     {#if progress > 0}
       <CardHeader on:click={() => progress--}>

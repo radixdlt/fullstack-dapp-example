@@ -1,10 +1,20 @@
 <script lang="ts">
+  import { createEventDispatcher, onMount } from 'svelte'
+
   let digits = 6
 
   export let error = false
   export let values: string[] = Array(digits).fill('')
 
+  const dispatch = createEventDispatcher<{
+    completed: undefined
+  }>()
+
   let inputs: HTMLElement[] = Array(digits)
+
+  onMount(() => {
+    inputs[0].focus()
+  })
 
   const focusNext = (i: number) => inputs[i + 1].focus()
 
@@ -49,7 +59,11 @@
       if (values[i] !== '') {
         values[i] = e.currentTarget.value
       }
-      if (i !== digits - 1) focusNext(i)
+      if (i !== digits - 1) {
+        focusNext(i)
+      } else {
+        dispatch('completed')
+      }
     }
 </script>
 

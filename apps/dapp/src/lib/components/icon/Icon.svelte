@@ -1,9 +1,12 @@
 <script lang="ts">
   export let url: string
   export let size: 'small' | 'medium' | 'large' = 'small'
+  export let clickable = false
 </script>
 
-<div class="icon">
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<div class="icon" class:clickable on:click>
   <img class={size} src={url} alt="icon" />
   {#if $$slots['default']}
     <div class="text">
@@ -23,8 +26,8 @@
   }
 
   .small {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: var(--size, 1.5rem);
+    height: var(--size, 1.5rem);
   }
   .medium {
     width: 2rem;
@@ -34,5 +37,9 @@
   .large {
     width: 3rem;
     height: 3rem;
+  }
+
+  .clickable {
+    cursor: pointer;
   }
 </style>
