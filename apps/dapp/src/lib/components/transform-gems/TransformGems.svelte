@@ -5,7 +5,7 @@
   import TransformCard from './TransformCard.svelte'
   import { fade } from 'svelte/transition'
   import GemCard from './GemCard.svelte'
-  import { i18n } from '$lib/i18n'
+  import { i18n } from '$lib/i18n/i18n'
   import { createEventDispatcher } from 'svelte'
   import CardHeader from '../card-header/CardHeader.svelte'
 
@@ -63,7 +63,7 @@
   <div slot="header" class="header">
     {#if progress > 0}
       <CardHeader on:click={() => progress--}>
-        {$i18n.t('transformGems_back')}
+        {$i18n.t('transformGems:back')}
       </CardHeader>
     {/if}
   </div>
@@ -71,13 +71,13 @@
   <div class="content" slot="content">
     <div class="title">
       {#if progress === 0}
-        {$i18n.t('transformGems_title_0')}
+        {$i18n.t('transformGems:title0')}
       {/if}
       {#if progress === 1}
-        {$i18n.t('transformGems_title_1')}
+        {$i18n.t('transformGems:title1')}
       {/if}
       {#if progress === 2}
-        {$i18n.t('transformGems_title_2')}
+        {$i18n.t('transformGems:title2')}
       {/if}
     </div>
 
@@ -151,19 +151,19 @@
     <div class="next-btn">
       {#if progress === 0}
         <Button disabled={selectedTransformCard === undefined} on:click={() => progress++}
-          >{$i18n.t('transformGems_next_button')}</Button
+          >{$i18n.t('transformGems:next-button')}</Button
         >
       {/if}
 
       {#if progress === 1}
         <Button disabled={selectedGems.length < 2} on:click={() => progress++}
-          >{$i18n.t('transformGems_next_button')}</Button
+          >{$i18n.t('transformGems:next-button')}</Button
         >
       {/if}
 
       {#if progress === 2}
         <Button on:click={() => dispatch('complete')}
-          >{$i18n.t('transformGems_complete_button')}</Button
+          >{$i18n.t('transformGems:complete-button')}</Button
         >
       {/if}
     </div>

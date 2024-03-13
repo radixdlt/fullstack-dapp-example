@@ -1,6 +1,6 @@
 <script lang="ts">
   import QuestOverviewText from '../quest-overview/quest-overview-text/QuestOverviewText.svelte'
-  import { i18n } from '$lib/i18n'
+  import { i18n } from '$lib/i18n/i18n'
   import type { QuestReward } from 'content'
   import QuestRewards from '../quest-rewards/QuestRewards.svelte'
   import Requirement from './Requirement.svelte'
@@ -22,14 +22,14 @@
 
   {#if rewards.length > 0}
     <div class="rewards">
-      <div class="title">{$i18n.t('quest_rewards')}:</div>
+      <div class="title">{$i18n.t('quests:rewards')}:</div>
       <QuestRewards {rewards} />
     </div>
   {/if}
 
   {#if requirements && requirements.length > 0}
     <div class="requirements">
-      <div class="requirements-title">{$i18n.t('quest_requirements')}:</div>
+      <div class="requirements-title">{$i18n.t('quests:requirements')}:</div>
       {#each requirements as { text, complete }}
         <Requirement {complete}>
           {text}

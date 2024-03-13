@@ -14,11 +14,7 @@
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
-  import { i18n } from '$lib/i18n'
-  import JettyDialog from '$lib/components/jetty-dialog/JettyDialog.svelte'
-  import GlossaryIcon from '@images/book-open.svg'
-  import Glossary from '$lib/components/glossary/Glossary.svelte'
-  import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
+  import { i18n } from '$lib/i18n/i18n'
   import { resolveRDT } from '$lib/rdt'
   import { WebSocketClient } from '$lib/websocket-client'
   import { notificationApi } from '$lib/api/notification-api'
@@ -130,8 +126,8 @@
   <Tabs
     slot="tabs"
     tabs={[
-      { name: $i18n.t('tabs_basics'), id: 'basics' },
-      { name: $i18n.t('tabs_advanced'), id: 'advanced' }
+      { name: $i18n.t('main:tabs-basics'), id: 'basics' },
+      { name: $i18n.t('main:tabs-advanced'), id: 'advanced' }
     ]}
     bind:activeTab
   />
@@ -142,8 +138,8 @@
         {#each basicQuests as quest}
           <Item>
             <QuestOverview
-              title={quest.title}
-              description={quest.description}
+                title={$i18n.t(`${id}.title`, { ns: 'quests' })}
+                description={$i18n.t(`${id}.description`, { ns: 'quests' })}
               minutesToComplete={quest.minutesToComplete}
               rewards={quest.rewards}
               backgroundImage={quest.splashImage}

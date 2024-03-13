@@ -1,7 +1,7 @@
 <script lang="ts">
   import { crossfade, fade } from 'svelte/transition'
   import CardHeader from '../card-header/CardHeader.svelte'
-  import { i18n } from '$lib/i18n'
+  import { i18n } from '$lib/i18n/i18n'
   import { createEventDispatcher } from 'svelte'
 
   export let glossary: {
@@ -33,7 +33,7 @@
         } else {
           dispatch('close')
         }
-      }}>{$i18n.t('glossary_back')}</CardHeader
+      }}>{$i18n.t('glossary:back')}</CardHeader
     >
   </div>
 

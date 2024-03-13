@@ -1,7 +1,7 @@
 <script lang="ts">
   import SelectedIcon from '@images/selected.svg'
   import Card from './Card.svelte'
-  import { i18n } from '$lib/i18n'
+  import { i18n } from '$lib/i18n/i18n'
 
   export let gemstone: string
   export let rarity: string
@@ -20,11 +20,11 @@
       {/if}
       <div class="description">
         <div class="text">
-          <div>{$i18n.t('transformGems_gemcard_gemstone')}:</div>
+          <div>{$i18n.t('transformGems:gemcard-gemstone')}:</div>
           <div class="bold">{gemstone}</div>
         </div>
         <div class="text">
-          <div>{$i18n.t('transformGems_gemcard_rarity')}:</div>
+          <div>{$i18n.t('transformGems:gemcard-rarity')}:</div>
           <div class="bold">{rarity}</div>
         </div>
       </div>

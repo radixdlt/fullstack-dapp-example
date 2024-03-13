@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { i18n } from '$lib/i18n'
+  import { i18n } from '$lib/i18n/i18n'
   import Requirement from './Requirement.svelte'
 
   export let requirements: {
@@ -10,7 +10,7 @@
 
 <div class="requirements-page">
   <div class="text">
-    {$i18n.t('quest_requirementsToComplete')}
+    {$i18n.t('quests:requirements')}
   </div>
   {#each requirements as { text, complete }}
     <Requirement {complete}>
