@@ -1,9 +1,10 @@
 import { UserModel } from './model'
-import type { User } from 'database'
-import { ResultAsync } from 'neverthrow'
+import type { User, UserPhoneNumber } from 'database'
+import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 import type { ApiError, ControllerMethodContext, ControllerMethodOutput } from '../_types'
-import z from 'zod'
-import { typedError } from '$lib/helpers/typed-error'
+import { importTypescriptWallet } from '../helpers/importTypescriptWallet'
+import { createApiError } from 'common'
+import { createDirectDepositManifest } from './helpers/createDirectDepositManifest'
 
 const UserController = (userModel = UserModel()) => {
   const getUser = (
@@ -11,18 +12,15 @@ const UserController = (userModel = UserModel()) => {
     userId: string
   ): ControllerMethodOutput<User | null> =>
     userModel(ctx.logger)
-      .getById(userId)
+      .getById(userId, {})
       .map((data) => ({ data, httpResponseCode: 200 }))
 
-  const validateAccountAddress = (
-    accountAddress: string | undefined | null
-  ): ResultAsync<string, ApiError> =>
-    ResultAsync.fromPromise(z.string().safeParseAsync(accountAddress), typedError)
-      .map(() => accountAddress as string)
-      .mapErr(() => ({
-        httpResponseCode: 400,
-        reason: 'invalidRequestBody'
-      }))
+  const phoneNumberExists = (
+    data: { phoneNumber: UserPhoneNumber | null } | null
+  ): ResultAsync<UserPhoneNumber, ApiError> =>
+    data?.phoneNumber
+      ? okAsync(data?.phoneNumber)
+      : errAsync(createApiError('missing phone number verification', 400)())
 
   const mintUserBadge = (
     ctx: ControllerMethodContext,
@@ -32,26 +30,38 @@ const UserController = (userModel = UserModel()) => {
       userId: string
     }
   ): ControllerMethodOutput<undefined> =>
-    ResultAsync.fromPromise(import('typescript-wallet'), typedError)
-      .mapErr((error) => {
-        ctx.logger.error({ error, method: 'mintUserBadge.importWallet', event: 'error' })
-        return { httpResponseCode: 500, reason: 'mintUserBadgeError' } satisfies ApiError
-      })
-      .andThen(({ mintUserBadge: mintUserBadgeFn }) =>
-        getUser(ctx, userId).andThen(({ data }) =>
-          validateAccountAddress(data?.accountAddress)
-            .andThen((accountAddress) =>
-              mintUserBadgeFn(userId, accountAddress).mapErr((error) => {
-                ctx.logger.error({ error, method: 'mintUserBadge', event: 'error' })
-                return { httpResponseCode: 500, reason: 'mintUserBadgeError' } satisfies ApiError
+    importTypescriptWallet().andThen(({ radixEngineClient }) =>
+      userModel(ctx.logger)
+        .getById(userId, { phoneNumber: true })
+        .andThen((data) =>
+          phoneNumberExists(data)
+            .andThen(() => radixEngineClient.getManifestBuilder())
+            .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
+              const transactionManifest = createDirectDepositManifest({
+                wellKnownAddresses,
+                userId,
+                accountAddress: data.accountAddress
               })
-            )
-            .map(() => ({
-              httpResponseCode: 201,
-              data: undefined
-            }))
+
+              return convertStringManifest(transactionManifest)
+                .andThen((transactionManifest) =>
+                  submitTransaction(transactionManifest, ['systemAccount'])
+                )
+                .andThen(({ txId }) =>
+                  radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
+                )
+            })
+
+            .mapErr((error) => {
+              ctx.logger.error({ error, method: 'mintUserBadge', event: 'error' })
+              return createApiError('mintUserBadgeError', 500)()
+            })
         )
-      )
+        .map(() => ({
+          httpResponseCode: 201,
+          data: undefined
+        }))
+    )
 
   return { getUser, mintUserBadge }
 }

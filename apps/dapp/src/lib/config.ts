@@ -39,6 +39,7 @@ export const config = {
     serviceSid: TWILIO_SERVICE_SID || ''
   },
   dapp: {
+    directXrdDepositAmount: 10,
     expectedOrigin: EXPECTED_ORIGIN,
     networkId: publicConfig.networkId,
     dAppDefinitionAddress: publicConfig.dAppDefinitionAddress ?? '',

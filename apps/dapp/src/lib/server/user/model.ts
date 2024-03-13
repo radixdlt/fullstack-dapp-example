@@ -1,6 +1,6 @@
 import { createApiError, type ApiError } from '../_types'
-import { ResultAsync } from 'neverthrow'
-import type { User, UserPhoneNumber } from 'database'
+import { ResultAsync, errAsync, okAsync } from 'neverthrow'
+import type { Prisma, User, UserPhoneNumber } from 'database'
 import type { AppLogger } from 'common'
 import { dbClient } from '$lib/db'
 
@@ -21,13 +21,18 @@ export const UserModel =
         }
       )
 
-    const getById = (id: string): ResultAsync<User | null, ApiError> =>
-      ResultAsync.fromPromise<User | null, ApiError>(
-        db.user.findUnique({ where: { id } }),
+    const getById = <T extends Prisma.UserInclude<any>>(id: string, include: T) =>
+      ResultAsync.fromPromise(
+        db.user.findUnique({
+          where: { id },
+          include
+        }),
         (error) => {
           logger?.error({ error, method: 'getById', model: 'UserModel' })
           return createApiError('failed to get user', 400)()
         }
+      ).andThen((data) =>
+        data ? okAsync(data) : errAsync(createApiError('user not found', 404)())
       )
 
     const getPhoneNumber = (phoneNumber: string): ResultAsync<UserPhoneNumber | null, ApiError> =>

@@ -30,6 +30,7 @@ describe('AuthController', () => {
         expectedOrigin: 'http://localhost:5173',
         dAppDefinitionAddress: publicConfig.dAppDefinitionAddress || '',
         networkId: 2,
+        directXrdDepositAmount: 10,
         ...Addresses(2)
       }
     })

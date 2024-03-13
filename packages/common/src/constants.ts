@@ -23,3 +23,13 @@ export const Addresses = (networkId: number) => {
     } as const
   )[networkConfig.networkName]!
 }
+
+export type WellKnownAddresses = {
+  resourceAddresses: {
+    xrd: string
+  }
+  accountAddress: {
+    payerAccount: string
+    systemAccount: string
+  }
+}

@@ -1,6 +1,5 @@
 import { config } from './config'
 import { ConnectionOptions } from 'bullmq'
-import { PrismaClient } from 'database'
 import { EventModel, NotificationApi, NotificationModel, UserQuestModel } from 'common'
 import { logger } from './helpers/logger'
 import { getQueues } from 'queues'
@@ -8,6 +7,7 @@ import { EventWorkerController } from './event/controller'
 import { TransactionWorker } from './transaction/worker'
 import { EventWorker } from './event/worker'
 import { DbClient } from './db-client'
+import { TransactionWorkerController } from './transaction/controller'
 
 const app = async () => {
   const dbClient = await DbClient()
@@ -32,9 +32,13 @@ const app = async () => {
     logger
   })
 
-  TransactionWorker(connection, {
-    notificationApi,
+  const transactionWorkerController = TransactionWorkerController({
     logger
+  })
+
+  TransactionWorker(connection, {
+    logger,
+    transactionWorkerController
   })
 
   EventWorker(connection, {

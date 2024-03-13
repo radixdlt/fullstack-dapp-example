@@ -17,11 +17,14 @@ export type EventJob = {
   transactionId?: string
 }
 
-export type TransactionJob = {
+export type DepositRewardTransactionJob = {
+  type: 'DepositReward'
   traceId: string
   userId: string
-  questId?: string
+  questId: string
 }
+
+export type TransactionJob = DepositRewardTransactionJob
 
 type TQueues = ReturnType<typeof getQueues>
 export type TransactionQueue = TQueues['transactionQueue']
@@ -44,11 +47,11 @@ export const getQueues = (connection: ConnectionOptions) => {
       typedError
     )
 
-  const addDepositRewardsJob = (item: TransactionJob) =>
+  const addTransactionJob = (item: TransactionJob) =>
     ResultAsync.fromPromise(transactionQueue.add(item.traceId, item), typedError)
 
   return {
     eventQueue: { addBulk, queue: eventQueue },
-    transactionQueue: { queue: transactionQueue, addDepositRewards: addDepositRewardsJob }
+    transactionQueue: { queue: transactionQueue, add: addTransactionJob }
   }
 }

@@ -88,7 +88,8 @@ export const EventWorkerController = ({
           ResultAsync.combineWithAllErrors([
             hasAllRequirements(childLogger, job.data.questId!, job.data.userId).andThen((hasAll) =>
               hasAll
-                ? transactionQueue.addDepositRewards({
+                ? transactionQueue.add({
+                    type: 'DepositReward',
                     userId: job.data.userId,
                     questId: job.data.questId!,
                     traceId: job.data.traceId
