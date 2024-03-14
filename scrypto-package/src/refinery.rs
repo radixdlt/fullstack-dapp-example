@@ -29,8 +29,9 @@ mod refinery {
     }
 
     struct Refinery {
+        refinery_badge: FungibleVault,
         radgem_records: KeyValueStore<UserId, Vec<NonFungibleLocalId>>,
-        radgem_vault: Vault,
+        radgem_vault: NonFungibleVault,
         element_address: ResourceAddress,
         morph_card_address: ResourceAddress,
         admin_badge_address: ResourceAddress,
@@ -43,19 +44,21 @@ mod refinery {
         // Instantiate the Refinery
         pub fn new(
             owner_role: OwnerRole,
+            refinery_badge: Bucket,
             element_address: ResourceAddress,
             morph_card_address: ResourceAddress,
             admin_badge_address: ResourceAddress,
             user_badge_address: ResourceAddress,
         ) -> Global<Refinery> {
             let radgem_factory =
-                RadgemFactory::new(owner_role.clone(), admin_badge_address.clone());
+                RadgemFactory::new(owner_role.clone(), refinery_badge.resource_address());
             let radmorph_factory =
-                RadmorphFactory::new(owner_role.clone(), admin_badge_address.clone());
+                RadmorphFactory::new(owner_role.clone(), refinery_badge.resource_address());
 
             Self {
+                refinery_badge: FungibleVault::with_bucket(refinery_badge.as_fungible()),
                 radgem_records: KeyValueStore::new(),
-                radgem_vault: Vault::new(radgem_factory.get_radgem_address()),
+                radgem_vault: NonFungibleVault::new(radgem_factory.get_radgem_address()),
                 element_address,
                 morph_card_address,
                 admin_badge_address,
@@ -65,6 +68,9 @@ mod refinery {
             }
             .instantiate()
             .prepare_to_globalize(owner_role)
+            .roles(roles!(
+                admin => rule!(require(admin_badge_address));
+            ))
             .globalize()
         }
 
@@ -91,7 +97,9 @@ mod refinery {
 
         // Mint a random RadGem
         pub fn combine_elements_process(&mut self, user_id: UserId, rand_num: Decimal) -> () {
-            let radgem_bucket = self.radgem_factory.mint_radgem(rand_num);
+            let radgem_bucket = self
+                .refinery_badge
+                .authorize_with_amount(1, || self.radgem_factory.mint_radgem(rand_num));
 
             // Update the user's RadGem record
             if self.radgem_records.get(&user_id).is_none() {
@@ -107,13 +115,13 @@ mod refinery {
             }
 
             // Deposit the RadGem into the vault for the user to claim later
-            self.radgem_vault.put(radgem_bucket);
+            self.radgem_vault.put(radgem_bucket.as_non_fungible());
 
             Runtime::emit_event(ElementsCombineProcessedEvent { user_id });
         }
 
         // User claims RadGem by presenting user badge
-        pub fn combine_elements_claim(&mut self, user_badge: Proof) -> NonFungibleBucket {
+        pub fn combine_elements_claim(&mut self, user_badge: Proof) -> Bucket {
             let user_id = UserId(
                 user_badge
                     .check(self.user_badge_address)
@@ -123,18 +131,21 @@ mod refinery {
             );
 
             // Get the user's RadGem IDs from the record
-            let radgem_ids = self.radgem_records.get(&user_id).unwrap();
+            let radgem_ids: IndexSet<NonFungibleLocalId> = self
+                .radgem_records
+                .get(&user_id)
+                .unwrap()
+                .iter()
+                .cloned()
+                .collect();
             // Take the RadGems from the vault using the IDs
-            let radgems = self
-                .radgem_vault
-                .as_non_fungible()
-                .take_non_fungibles(&radgem_ids.iter().cloned().collect());
+            let radgems = self.radgem_vault.take_non_fungibles(&radgem_ids);
             // Remove the RadGem IDs from the user's record
             self.radgem_records.remove(&user_id);
 
             Runtime::emit_event(ElementsCombineClaimedEvent { user_id });
 
-            radgems
+            radgems.into()
         }
 
         // transforms RadGems and RadCard into a RadMorph
@@ -161,15 +172,19 @@ mod refinery {
                 .data();
 
             // Burn resources
-            radgems.burn();
-            morph_card.burn();
+            self.refinery_badge.authorize_with_amount(1, || {
+                morph_card.burn();
+                self.radgem_factory.burn_radgem(radgems);
+            });
 
             // Mint a RadMorph
-            let radmorph = self.radmorph_factory.mint_radmorph(
-                radgems_data.pop().unwrap(),
-                radgems_data.pop().unwrap(),
-                morph_card_data,
-            );
+            let radmorph = self.refinery_badge.authorize_with_amount(1, || {
+                self.radmorph_factory.mint_radmorph(
+                    radgems_data.pop().unwrap(),
+                    radgems_data.pop().unwrap(),
+                    morph_card_data,
+                )
+            });
 
             // Emit the event
             Runtime::emit_event(RadgemsTransformedEvent {});

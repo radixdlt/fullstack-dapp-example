@@ -1,6 +1,6 @@
 use scrypto::prelude::*;
 
-#[derive(ScryptoSbor)]
+#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 pub enum Color {
     Forest,
     Send,
@@ -14,21 +14,21 @@ pub enum Color {
     Dusk,
 }
 
-#[derive(ScryptoSbor)]
+#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 pub enum Material {
     Crystalline,
     Metallic,
     Radiant,
 }
 
-#[derive(ScryptoSbor)]
+#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 pub enum Rarity {
     Common,
     Rare,
     UltraRare,
 }
 
-#[derive(ScryptoSbor, NonFungibleData)]
+#[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 pub struct Radgem {
     name: String,
     color: Color,
@@ -45,6 +45,7 @@ mod radgem_factory {
       methods {
         get_radgem_address => PUBLIC;
         mint_radgem => restrict_to: [admin];
+        burn_radgem => restrict_to: [admin];
       }
     }
 
@@ -57,17 +58,25 @@ mod radgem_factory {
             owner_role: OwnerRole,
             admin_badge_address: ResourceAddress,
         ) -> Global<RadgemFactory> {
+            let (address_reservation, component_address) =
+                Runtime::allocate_component_address(RadgemFactory::blueprint_id());
+
             let radgem_resource_manager =
                 ResourceBuilder::new_ruid_non_fungible::<Radgem>(OwnerRole::None)
-                    .mint_roles(mint_roles!(
-                        minter => rule!(require(admin_badge_address));
-                        minter_updater => rule!(deny_all);
-                    ))
                     .metadata(metadata!(
                         init {
                             "name" => "RadGem", locked;
                             "description" => "Two Radgems can be combined with a Morph Energy Card by RadQuest's Jetty to produce a beautiful Radmorph NFT.", locked;
                         }
+                    ))
+                    .mint_roles(mint_roles!(
+                        minter => rule!(require(global_caller(component_address)));
+                        minter_updater => rule!(deny_all);
+                    ))
+                    .burn_roles(burn_roles!(
+                        burner => rule!(require(
+                            global_caller(component_address)));
+                        burner_updater => rule!(deny_all);
                     ))
                     .create_with_no_initial_supply();
             Self {
@@ -75,6 +84,10 @@ mod radgem_factory {
             }
             .instantiate()
             .prepare_to_globalize(owner_role)
+            .roles(roles!(
+                admin => rule!(require(admin_badge_address));
+            ))
+            .with_address(address_reservation)
             .globalize()
         }
 
@@ -91,6 +104,10 @@ mod radgem_factory {
                 rarity: Rarity::Common,
             };
             self.radgem_resource_manager.mint_ruid_non_fungible(radgem)
+        }
+
+        pub fn burn_radgem(&mut self, radgems: Bucket) -> () {
+            radgems.burn();
         }
     }
 }

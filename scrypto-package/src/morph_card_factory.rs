@@ -1,6 +1,6 @@
 use scrypto::prelude::*;
 
-#[derive(ScryptoSbor)]
+#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 pub enum Energy {
     MoltenLava,
     PyroclasticFlow,
@@ -24,18 +24,18 @@ pub enum Energy {
     Whirlpool,
 }
 
-#[derive(ScryptoSbor)]
+#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 pub enum Rarity {
     Common,
     Rare,
     UltraRare,
 }
 
-#[derive(ScryptoSbor, NonFungibleData)]
+#[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 pub struct MorphCard {
-    name: String,
-    rarity: Rarity,
-    energy: Energy,
+    pub name: String,
+    pub rarity: Rarity,
+    pub energy: Energy,
 }
 
 #[blueprint]
@@ -57,18 +57,26 @@ mod morph_card_factory {
         pub fn new(
             owner_role: OwnerRole,
             admin_badge_address: ResourceAddress,
+            refinery_badge_address: ResourceAddress,
         ) -> Global<MorphCardFactory> {
+            let (address_reservation, component_address) =
+                Runtime::allocate_component_address(MorphCardFactory::blueprint_id());
+
             let morph_card_resource_manager =
                 ResourceBuilder::new_ruid_non_fungible::<MorphCard>(OwnerRole::None)
-                    .mint_roles(mint_roles!(
-                        minter => rule!(require(admin_badge_address));
-                        minter_updater => rule!(deny_all);
-                    ))
                     .metadata(metadata!(
                         init {
                             "name" => "MorphEnergyCard", locked;
                             "description" => "These cards allow RadQuest’s Jetty to harness the primordial energies of the RadQuest realm to fuse Radgems into intricate and beautiful collectible Radmorphs.", locked;
                         }
+                    ))
+                    .mint_roles(mint_roles!(
+                        minter => rule!(require(global_caller(component_address)));
+                        minter_updater => rule!(deny_all);
+                    ))
+                    .burn_roles(burn_roles!(
+                        burner => rule!(require(refinery_badge_address));
+                        burner_updater => rule!(deny_all);
                     ))
                     .create_with_no_initial_supply();
             Self {
@@ -76,6 +84,10 @@ mod morph_card_factory {
             }
             .instantiate()
             .prepare_to_globalize(owner_role)
+            .with_address(address_reservation)
+            .roles(roles!(
+                admin => rule!(require(admin_badge_address));
+            ))
             .globalize()
         }
 

@@ -15,6 +15,7 @@ echo "\nPublishing package..."
 export package=`resim publish . | sed "s/Success! New Package: //"`
 
 export owner_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
+export refinery_badge=`resim new-badge-fixed 1 | grep "Resource:" | grep -o "resource_.\S*" | sed -e "s/://"`
 export admin_badge=`resim new-badge-fixed 2 | grep "Resource:" | grep -o "resource_.\S*" | sed -e "s/://"`
 export user_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
 export kyc_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
@@ -34,6 +35,7 @@ echo "account_badge = $account_badge"
 echo "xrd = $xrd"
 echo "package = $package"
 echo "owner_badge = $owner_badge"
+echo "refinery_badge = $refinery_badge"
 echo "admin_badge = $admin_badge"
 echo "user_badge = $user_badge"
 echo "kyc_badge = $kyc_badge"

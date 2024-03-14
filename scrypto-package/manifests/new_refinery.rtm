@@ -3,6 +3,16 @@ CALL_METHOD
     "lock_fee"
     Decimal("5000")
 ;
+CALL_METHOD
+    Address("${account}")
+    "withdraw"
+    Address("${refinery_badge}")
+    Decimal("1")
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("${refinery_badge}")
+    Bucket("refinery_badge")
+;
 CALL_FUNCTION
     Address("${package}")
     "Refinery"
@@ -18,6 +28,7 @@ CALL_FUNCTION
             )
         )
     )
+    Bucket("refinery_badge")
     Address("${element}")
     Address("${morph_card}")
     Address("${admin_badge}")
