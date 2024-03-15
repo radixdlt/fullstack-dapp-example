@@ -1,6 +1,6 @@
 use radix_engine_interface::prelude::*;
 use radquest::{
-    morph_card_factory::{Energy, MorphCard, Rarity},
+    morph_card_forge::{Energy, MorphCard, Rarity},
     refinery::{test_bindings::*, UserId},
 };
 use scrypto::*;

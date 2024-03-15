@@ -37,7 +37,7 @@ pub struct Radgem {
 }
 
 #[blueprint]
-mod radgem_factory {
+mod radgem_forge {
     enable_method_auth! {
       roles {
         admin => updatable_by: [OWNER];
@@ -49,17 +49,17 @@ mod radgem_factory {
       }
     }
 
-    struct RadgemFactory {
+    struct RadgemForge {
         radgem_resource_manager: ResourceManager,
     }
 
-    impl RadgemFactory {
+    impl RadgemForge {
         pub fn new(
             owner_role: OwnerRole,
             admin_badge_address: ResourceAddress,
-        ) -> Global<RadgemFactory> {
+        ) -> Global<RadgemForge> {
             let (address_reservation, component_address) =
-                Runtime::allocate_component_address(RadgemFactory::blueprint_id());
+                Runtime::allocate_component_address(RadgemForge::blueprint_id());
 
             let radgem_resource_manager =
                 ResourceBuilder::new_ruid_non_fungible::<Radgem>(OwnerRole::None)

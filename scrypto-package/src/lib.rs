@@ -1,5 +1,5 @@
-pub mod morph_card_factory;
+pub mod morph_card_forge;
 pub mod quest_rewards;
-pub mod radgem_factory;
-pub mod radmorph_factory;
+pub mod radgem_forge;
+pub mod radmorph_forge;
 pub mod refinery;

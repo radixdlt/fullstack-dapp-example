@@ -1,6 +1,6 @@
 use scrypto::prelude::*;
 
-use crate::{morph_card_factory::Energy, radgem_factory::Material};
+use crate::{morph_card_forge::Energy, radgem_forge::Material};
 
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 pub enum Rarity {
@@ -19,8 +19,8 @@ pub struct Radmorph {
 }
 
 #[blueprint]
-mod radmorph_factory {
-    use crate::{morph_card_factory::MorphCard, radgem_factory::Radgem};
+mod radmorph_forge {
+    use crate::{morph_card_forge::MorphCard, radgem_forge::Radgem};
 
     enable_method_auth! {
       roles {
@@ -31,17 +31,17 @@ mod radmorph_factory {
       }
     }
 
-    struct RadmorphFactory {
+    struct RadmorphForge {
         radmorph_resource_manager: ResourceManager,
     }
 
-    impl RadmorphFactory {
+    impl RadmorphForge {
         pub fn new(
             owner_role: OwnerRole,
             admin_badge_address: ResourceAddress,
-        ) -> Global<RadmorphFactory> {
+        ) -> Global<RadmorphForge> {
             let (address_reservation, component_address) =
-                Runtime::allocate_component_address(RadmorphFactory::blueprint_id());
+                Runtime::allocate_component_address(RadmorphForge::blueprint_id());
 
             let radmorph_resource_manager =
                 ResourceBuilder::new_ruid_non_fungible::<Radmorph>(OwnerRole::None)

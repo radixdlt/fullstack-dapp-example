@@ -39,7 +39,7 @@ pub struct MorphCard {
 }
 
 #[blueprint]
-mod morph_card_factory {
+mod morph_card_forge {
     enable_method_auth! {
       roles {
         admin => updatable_by: [OWNER];
@@ -49,18 +49,18 @@ mod morph_card_factory {
       }
     }
 
-    struct MorphCardFactory {
+    struct MorphCardForge {
         morph_card_resource_manager: ResourceManager,
     }
 
-    impl MorphCardFactory {
+    impl MorphCardForge {
         pub fn new(
             owner_role: OwnerRole,
             admin_badge_address: ResourceAddress,
             refinery_badge_address: ResourceAddress,
-        ) -> Global<MorphCardFactory> {
+        ) -> Global<MorphCardForge> {
             let (address_reservation, component_address) =
-                Runtime::allocate_component_address(MorphCardFactory::blueprint_id());
+                Runtime::allocate_component_address(MorphCardForge::blueprint_id());
 
             let morph_card_resource_manager =
                 ResourceBuilder::new_ruid_non_fungible::<MorphCard>(OwnerRole::None)

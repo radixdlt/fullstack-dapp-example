@@ -1,6 +1,6 @@
 use crate::{
-    morph_card_factory::MorphCard, radgem_factory::radgem_factory::RadgemFactory,
-    radgem_factory::Radgem, radmorph_factory::radmorph_factory::RadmorphFactory,
+    morph_card_forge::MorphCard, radgem_forge::radgem_forge::RadgemForge, radgem_forge::Radgem,
+    radmorph_forge::radmorph_forge::RadmorphForge,
 };
 use scrypto::prelude::*;
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
@@ -36,8 +36,8 @@ mod refinery {
         morph_card_address: ResourceAddress,
         admin_badge_address: ResourceAddress,
         user_badge_address: ResourceAddress,
-        radgem_factory: Global<RadgemFactory>,
-        radmorph_factory: Global<RadmorphFactory>,
+        radgem_forge: Global<RadgemForge>,
+        radmorph_forge: Global<RadmorphForge>,
     }
 
     impl Refinery {
@@ -50,21 +50,21 @@ mod refinery {
             admin_badge_address: ResourceAddress,
             user_badge_address: ResourceAddress,
         ) -> Global<Refinery> {
-            let radgem_factory =
-                RadgemFactory::new(owner_role.clone(), refinery_badge.resource_address());
-            let radmorph_factory =
-                RadmorphFactory::new(owner_role.clone(), refinery_badge.resource_address());
+            let radgem_forge =
+                RadgemForge::new(owner_role.clone(), refinery_badge.resource_address());
+            let radmorph_forge =
+                RadmorphForge::new(owner_role.clone(), refinery_badge.resource_address());
 
             Self {
                 refinery_badge: FungibleVault::with_bucket(refinery_badge.as_fungible()),
                 radgem_records: KeyValueStore::new(),
-                radgem_vault: NonFungibleVault::new(radgem_factory.get_radgem_address()),
+                radgem_vault: NonFungibleVault::new(radgem_forge.get_radgem_address()),
                 element_address,
                 morph_card_address,
                 admin_badge_address,
                 user_badge_address,
-                radgem_factory,
-                radmorph_factory,
+                radgem_forge,
+                radmorph_forge,
             }
             .instantiate()
             .prepare_to_globalize(owner_role)
@@ -99,7 +99,7 @@ mod refinery {
         pub fn combine_elements_process(&mut self, user_id: UserId, rand_num: Decimal) -> () {
             let radgem_bucket = self
                 .refinery_badge
-                .authorize_with_amount(1, || self.radgem_factory.mint_radgem(rand_num));
+                .authorize_with_amount(1, || self.radgem_forge.mint_radgem(rand_num));
 
             // Update the user's RadGem record
             if self.radgem_records.get(&user_id).is_none() {
@@ -153,7 +153,7 @@ mod refinery {
             // Confirm the resources
             assert_eq!(
                 radgems.resource_address(),
-                self.radgem_factory.get_radgem_address()
+                self.radgem_forge.get_radgem_address()
             );
             assert_eq!(morph_card.resource_address(), self.morph_card_address);
             assert_eq!(radgems.amount(), dec!(2));
@@ -174,12 +174,12 @@ mod refinery {
             // Burn resources
             self.refinery_badge.authorize_with_amount(1, || {
                 morph_card.burn();
-                self.radgem_factory.burn_radgem(radgems);
+                self.radgem_forge.burn_radgem(radgems);
             });
 
             // Mint a RadMorph
             let radmorph = self.refinery_badge.authorize_with_amount(1, || {
-                self.radmorph_factory.mint_radmorph(
+                self.radmorph_forge.mint_radmorph(
                     radgems_data.pop().unwrap(),
                     radgems_data.pop().unwrap(),
                     morph_card_data,
