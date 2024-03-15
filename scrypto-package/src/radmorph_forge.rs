@@ -32,17 +32,15 @@ mod radmorph_forge {
     }
 
     struct RadmorphForge {
+        admin_badge: FungibleVault,
         radmorph_resource_manager: ResourceManager,
     }
 
     impl RadmorphForge {
-        pub fn new(
-            owner_role: OwnerRole,
-            admin_badge_address: ResourceAddress,
-        ) -> Global<RadmorphForge> {
-            let (address_reservation, component_address) =
-                Runtime::allocate_component_address(RadmorphForge::blueprint_id());
+        pub fn new(owner_role: OwnerRole, admin_badge: Bucket) -> Global<RadmorphForge> {
+            let admin_badge_address = admin_badge.resource_address();
 
+            // TODO: Make the radmorph resource manager an argument to new
             let radmorph_resource_manager =
                 ResourceBuilder::new_ruid_non_fungible::<Radmorph>(OwnerRole::None)
                     .metadata(metadata!(
@@ -52,11 +50,13 @@ mod radmorph_forge {
                         }
                     ))
                     .mint_roles(mint_roles!(
-                        minter => rule!(require(global_caller(component_address)));
+                        minter => rule!(require(admin_badge.resource_address()));
                         minter_updater => rule!(deny_all);
                     ))
                     .create_with_no_initial_supply();
+
             Self {
+                admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
                 radmorph_resource_manager,
             }
             .instantiate()
@@ -64,7 +64,6 @@ mod radmorph_forge {
             .roles(roles!(
                 admin => rule!(require(admin_badge_address));
             ))
-            .with_address(address_reservation)
             .globalize()
         }
 
@@ -80,8 +79,10 @@ mod radmorph_forge {
                 material: Material::Metallic,
                 energy: Energy::MoltenLava,
             };
-            self.radmorph_resource_manager
-                .mint_ruid_non_fungible(radmorph)
+            self.admin_badge.authorize_with_amount(1, || {
+                self.radmorph_resource_manager
+                    .mint_ruid_non_fungible(radmorph)
+            })
         }
     }
 }

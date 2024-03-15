@@ -50,17 +50,14 @@ mod radgem_forge {
     }
 
     struct RadgemForge {
+        admin_badge: FungibleVault,
         radgem_resource_manager: ResourceManager,
     }
 
     impl RadgemForge {
-        pub fn new(
-            owner_role: OwnerRole,
-            admin_badge_address: ResourceAddress,
-        ) -> Global<RadgemForge> {
-            let (address_reservation, component_address) =
-                Runtime::allocate_component_address(RadgemForge::blueprint_id());
-
+        pub fn new(owner_role: OwnerRole, admin_badge: Bucket) -> Global<RadgemForge> {
+            let admin_badge_address = admin_badge.resource_address();
+            // TODO: Make the radgem resource manager an argument to new
             let radgem_resource_manager =
                 ResourceBuilder::new_ruid_non_fungible::<Radgem>(OwnerRole::None)
                     .metadata(metadata!(
@@ -70,16 +67,16 @@ mod radgem_forge {
                         }
                     ))
                     .mint_roles(mint_roles!(
-                        minter => rule!(require(global_caller(component_address)));
+                        minter => rule!(require(admin_badge_address));
                         minter_updater => rule!(deny_all);
                     ))
                     .burn_roles(burn_roles!(
-                        burner => rule!(require(
-                            global_caller(component_address)));
+                        burner => rule!(require(admin_badge_address));
                         burner_updater => rule!(deny_all);
                     ))
                     .create_with_no_initial_supply();
             Self {
+                admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
                 radgem_resource_manager,
             }
             .instantiate()
@@ -87,7 +84,6 @@ mod radgem_forge {
             .roles(roles!(
                 admin => rule!(require(admin_badge_address));
             ))
-            .with_address(address_reservation)
             .globalize()
         }
 
@@ -103,11 +99,15 @@ mod radgem_forge {
                 material: Material::Metallic,
                 rarity: Rarity::Common,
             };
-            self.radgem_resource_manager.mint_ruid_non_fungible(radgem)
+            self.admin_badge.authorize_with_amount(1, || {
+                self.radgem_resource_manager.mint_ruid_non_fungible(radgem)
+            })
         }
 
         pub fn burn_radgem(&mut self, radgems: Bucket) -> () {
-            radgems.burn();
+            self.admin_badge.authorize_with_amount(1, || {
+                radgems.burn();
+            });
         }
     }
 }

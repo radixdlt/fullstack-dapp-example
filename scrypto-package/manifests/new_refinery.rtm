@@ -6,12 +6,12 @@ CALL_METHOD
 CALL_METHOD
     Address("${account}")
     "withdraw"
-    Address("${refinery_badge}")
-    Decimal("1")
+    Address("${admin_badge}")
+    Decimal("3")
 ;
 TAKE_ALL_FROM_WORKTOP
-    Address("${refinery_badge}")
-    Bucket("refinery_badge")
+    Address("${admin_badge}")
+    Bucket("admin_badge")
 ;
 CALL_FUNCTION
     Address("${package}")
@@ -28,10 +28,9 @@ CALL_FUNCTION
             )
         )
     )
-    Bucket("refinery_badge")
+    Bucket("admin_badge")
     Address("${element}")
     Address("${morph_card}")
-    Address("${admin_badge}")
     Address("${user_badge}")
 ;
 CALL_METHOD

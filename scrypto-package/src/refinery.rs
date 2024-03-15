@@ -29,12 +29,11 @@ mod refinery {
     }
 
     struct Refinery {
-        refinery_badge: FungibleVault,
+        admin_badge: FungibleVault,
         radgem_records: KeyValueStore<UserId, Vec<NonFungibleLocalId>>,
         radgem_vault: NonFungibleVault,
         element_address: ResourceAddress,
         morph_card_address: ResourceAddress,
-        admin_badge_address: ResourceAddress,
         user_badge_address: ResourceAddress,
         radgem_forge: Global<RadgemForge>,
         radmorph_forge: Global<RadmorphForge>,
@@ -44,24 +43,22 @@ mod refinery {
         // Instantiate the Refinery
         pub fn new(
             owner_role: OwnerRole,
-            refinery_badge: Bucket,
+            mut admin_badge: Bucket,
             element_address: ResourceAddress,
             morph_card_address: ResourceAddress,
-            admin_badge_address: ResourceAddress,
             user_badge_address: ResourceAddress,
         ) -> Global<Refinery> {
-            let radgem_forge =
-                RadgemForge::new(owner_role.clone(), refinery_badge.resource_address());
-            let radmorph_forge =
-                RadmorphForge::new(owner_role.clone(), refinery_badge.resource_address());
+            let radgem_forge = RadgemForge::new(owner_role.clone(), admin_badge.take(1));
+            let radmorph_forge = RadmorphForge::new(owner_role.clone(), admin_badge.take(1));
+
+            let admin_badge_address = admin_badge.resource_address();
 
             Self {
-                refinery_badge: FungibleVault::with_bucket(refinery_badge.as_fungible()),
+                admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
                 radgem_records: KeyValueStore::new(),
                 radgem_vault: NonFungibleVault::new(radgem_forge.get_radgem_address()),
                 element_address,
                 morph_card_address,
-                admin_badge_address,
                 user_badge_address,
                 radgem_forge,
                 radmorph_forge,
@@ -98,7 +95,7 @@ mod refinery {
         // Mint a random RadGem
         pub fn combine_elements_process(&mut self, user_id: UserId, rand_num: Decimal) -> () {
             let radgem_bucket = self
-                .refinery_badge
+                .admin_badge
                 .authorize_with_amount(1, || self.radgem_forge.mint_radgem(rand_num));
 
             // Update the user's RadGem record
@@ -172,13 +169,13 @@ mod refinery {
                 .data();
 
             // Burn resources
-            self.refinery_badge.authorize_with_amount(1, || {
+            self.admin_badge.authorize_with_amount(1, || {
                 morph_card.burn();
                 self.radgem_forge.burn_radgem(radgems);
             });
 
             // Mint a RadMorph
-            let radmorph = self.refinery_badge.authorize_with_amount(1, || {
+            let radmorph = self.admin_badge.authorize_with_amount(1, || {
                 self.radmorph_forge.mint_radmorph(
                     radgems_data.pop().unwrap(),
                     radgems_data.pop().unwrap(),

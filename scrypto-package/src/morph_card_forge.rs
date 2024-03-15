@@ -50,18 +50,14 @@ mod morph_card_forge {
     }
 
     struct MorphCardForge {
+        admin_badge: FungibleVault,
         morph_card_resource_manager: ResourceManager,
     }
 
     impl MorphCardForge {
-        pub fn new(
-            owner_role: OwnerRole,
-            admin_badge_address: ResourceAddress,
-            refinery_badge_address: ResourceAddress,
-        ) -> Global<MorphCardForge> {
-            let (address_reservation, component_address) =
-                Runtime::allocate_component_address(MorphCardForge::blueprint_id());
-
+        pub fn new(owner_role: OwnerRole, admin_badge: Bucket) -> Global<MorphCardForge> {
+            let admin_badge_address = admin_badge.resource_address();
+            // TODO: Make morph_card_resource_manager an argument to new
             let morph_card_resource_manager =
                 ResourceBuilder::new_ruid_non_fungible::<MorphCard>(OwnerRole::None)
                     .metadata(metadata!(
@@ -71,20 +67,20 @@ mod morph_card_forge {
                         }
                     ))
                     .mint_roles(mint_roles!(
-                        minter => rule!(require(global_caller(component_address)));
+                        minter => rule!(require(admin_badge_address));
                         minter_updater => rule!(deny_all);
                     ))
                     .burn_roles(burn_roles!(
-                        burner => rule!(require(refinery_badge_address));
+                        burner => rule!(require(admin_badge_address));
                         burner_updater => rule!(deny_all);
                     ))
                     .create_with_no_initial_supply();
             Self {
+                admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
                 morph_card_resource_manager,
             }
             .instantiate()
             .prepare_to_globalize(owner_role)
-            .with_address(address_reservation)
             .roles(roles!(
                 admin => rule!(require(admin_badge_address));
             ))
@@ -97,8 +93,11 @@ mod morph_card_forge {
                 rarity: Rarity::Rare,
                 energy: Energy::MoltenLava,
             };
-            self.morph_card_resource_manager
-                .mint_ruid_non_fungible(morph_card)
+
+            self.admin_badge.authorize_with_amount(1, || {
+                self.morph_card_resource_manager
+                    .mint_ruid_non_fungible(morph_card)
+            })
         }
     }
 }

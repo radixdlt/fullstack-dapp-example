@@ -27,10 +27,8 @@ fn arrange_test_environment() -> Result<
 
     let owner_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
         .mint_initial_supply([()], &mut env)?;
-    let refinery_badge =
-        ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(dec!(1), &mut env)?;
-    let admin_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
-        .mint_initial_supply([()], &mut env)?;
+    let admin_badge =
+        ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(4, &mut env)?;
     let user_badge = ResourceBuilder::new_integer_non_fungible(OwnerRole::None)
         .mint_initial_supply(
             [(
@@ -47,7 +45,7 @@ fn arrange_test_environment() -> Result<
         .mint_initial_supply(dec!(99), &mut env)?;
     let morph_card = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
         .burn_roles(burn_roles!(
-            burner => rule!(allow_all);
+            burner => rule!(require(admin_badge.resource_address(&mut env)?));
             burner_updater => rule!(deny_all);
         ))
         .mint_initial_supply(
@@ -61,10 +59,9 @@ fn arrange_test_environment() -> Result<
 
     let refinery = Refinery::new(
         OwnerRole::Fixed(rule!(require(owner_badge.resource_address(&mut env)?))),
-        refinery_badge,
+        admin_badge.take(dec!(3), &mut env)?,
         elements.resource_address(&mut env)?,
         morph_card.resource_address(&mut env)?,
-        admin_badge.resource_address(&mut env)?,
         user_badge.resource_address(&mut env)?,
         package_address,
         &mut env,
