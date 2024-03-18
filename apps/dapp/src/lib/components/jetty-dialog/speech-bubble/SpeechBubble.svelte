@@ -5,7 +5,9 @@
 </script>
 
 <div class="speech-bubble">
-  <slot {Menu} {Actions} {ClaimRewardsUI} />
+  <div style:overflow-y="auto">
+    <slot {Menu} {Actions} {ClaimRewardsUI} />
+  </div>
 </div>
 
 <style lang="scss">
@@ -16,6 +18,7 @@
     width: fit-content;
     min-width: 10rem;
     max-width: 25rem;
+    max-height: 78vh;
 
     @include mobile {
       max-width: 100%;
@@ -30,12 +33,13 @@
     gap: var(--spacing-2xl);
     color: var(--color-light);
     margin-left: 1rem;
+    margin-right: 0.5rem;
 
     &::after {
       content: '';
       position: absolute;
       bottom: 0;
-      right: 2rem;
+      right: 1rem;
       width: 0;
       height: 0;
       border: 2rem solid transparent;
