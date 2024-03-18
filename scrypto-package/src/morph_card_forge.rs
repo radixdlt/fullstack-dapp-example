@@ -26,9 +26,9 @@ pub enum Energy {
 
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 pub enum Rarity {
-    Common,
-    Rare,
-    UltraRare,
+    Common = 0,
+    Rare = 1,
+    UltraRare = 2,
 }
 
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]

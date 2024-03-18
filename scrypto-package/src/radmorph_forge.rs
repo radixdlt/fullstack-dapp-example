@@ -1,9 +1,12 @@
 use scrypto::prelude::*;
 
-use crate::{morph_card_forge::Energy, radgem_forge::Material};
+use crate::{
+    morph_card_forge::{Energy, MorphCard},
+    radgem_forge::{Color, Material, Radgem},
+};
 
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
-pub enum Rarity {
+pub enum RadmorphRarity {
     Fine,
     Precious,
     Superb,
@@ -13,15 +16,15 @@ pub enum Rarity {
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 pub struct Radmorph {
     name: String,
-    rarity: Rarity,
+    rarity: RadmorphRarity,
     material: Material,
     energy: Energy,
+    color_1: Color,
+    color_2: Color,
 }
 
 #[blueprint]
 mod radmorph_forge {
-    use crate::{morph_card_forge::MorphCard, radgem_forge::Radgem};
-
     enable_method_auth! {
       roles {
         admin => updatable_by: [OWNER];
@@ -73,16 +76,88 @@ mod radmorph_forge {
             radgem2_data: Radgem,
             morph_card_data: MorphCard,
         ) -> Bucket {
-            let radmorph = Radmorph {
-                name: "Fine Metallic MoltenLava RadMorph".to_string(),
-                rarity: Rarity::Fine,
-                material: Material::Metallic,
-                energy: Energy::MoltenLava,
+            let material = if &radgem1_data.rarity >= &radgem2_data.rarity {
+                radgem1_data.material
+            } else {
+                radgem2_data.material
             };
+
+            let total_rarity = radgem1_data.rarity as u8
+                + radgem2_data.rarity as u8
+                + morph_card_data.rarity as u8;
+            let rarity = if total_rarity >= 6 {
+                RadmorphRarity::Magnificent
+            } else if total_rarity >= 4 {
+                RadmorphRarity::Superb
+            } else if total_rarity >= 2 {
+                RadmorphRarity::Precious
+            } else {
+                RadmorphRarity::Fine
+            };
+
+            let radmorph = self.get_radmorph_data(
+                rarity,
+                material,
+                morph_card_data.energy,
+                radgem1_data.color,
+                radgem2_data.color,
+            );
             self.admin_badge.authorize_with_amount(1, || {
                 self.radmorph_resource_manager
                     .mint_ruid_non_fungible(radmorph)
             })
+        }
+
+        fn get_radmorph_data(
+            &self,
+            rarity: RadmorphRarity,
+            material: Material,
+            energy: Energy,
+            color_1: Color,
+            color_2: Color,
+        ) -> Radmorph {
+            let rarity_name = match rarity {
+                RadmorphRarity::Fine => "Fine",
+                RadmorphRarity::Precious => "Precious",
+                RadmorphRarity::Superb => "Superb",
+                RadmorphRarity::Magnificent => "Magnificent",
+            };
+            let material_name = match material {
+                Material::Crystalline => "Crystalline",
+                Material::Metallic => "Metallic",
+                Material::Radiant => "Radiant",
+            };
+            let energy_name = match energy {
+                Energy::MoltenLava => "MoltenLava",
+                Energy::PyroclasticFlow => "PyroclasticFlow",
+                Energy::VolcanicLightning => "VolcanicLightning",
+                Energy::TropicalCyclone => "TropicalCyclone",
+                Energy::PolarBlizzard => "PolarBlizzard",
+                Energy::Earthquake => "Earthquake",
+                Energy::FireTornado => "FireTornado",
+                Energy::TidalWave => "TidalWave",
+                Energy::HydrothermalVent => "HydrothermalVent",
+                Energy::RainbowPower => "RainbowPower",
+                Energy::StormCell => "StormCell",
+                Energy::SolarFlare => "SolarFlare",
+                Energy::NuclearFusion => "NuclearFusion",
+                Energy::AuroraBorealis => "AuroraBorealis",
+                Energy::GravityForce => "GravityForce",
+                Energy::MagneticField => "MagneticField",
+                Energy::GammaRays => "GammaRays",
+                Energy::BlackHole => "BlackHole",
+                Energy::Supernova => "Supernova",
+                Energy::Whirlpool => "Whirlpool",
+            };
+
+            Radmorph {
+                name: format!("{} {} {} RadMorph", rarity_name, material_name, energy_name),
+                rarity,
+                material,
+                energy,
+                color_1,
+                color_2,
+            }
         }
     }
 }

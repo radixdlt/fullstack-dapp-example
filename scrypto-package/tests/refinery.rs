@@ -122,7 +122,7 @@ fn can_combine_elements_process() -> Result<(), RuntimeError> {
     env.disable_auth_module();
 
     // Act
-    refinery.combine_elements_process(user_id, dec!(0.318), &mut env)?;
+    refinery.combine_elements_process(user_id, dec!(0.318), dec!(0.822), &mut env)?;
 
     // Assert
     Ok(())
@@ -143,7 +143,7 @@ fn can_combine_elements_claim() -> Result<(), RuntimeError> {
     ) = arrange_test_environment()?;
 
     env.disable_auth_module();
-    refinery.combine_elements_process(user_id.clone(), dec!(0.97), &mut env)?;
+    refinery.combine_elements_process(user_id.clone(), dec!(0.97), dec!(0.89), &mut env)?;
     env.enable_auth_module();
 
     // Act
@@ -170,7 +170,7 @@ fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
     ) = arrange_test_environment()?;
 
     env.disable_auth_module();
-    refinery.combine_elements_process(user_id.clone(), dec!(0.97), &mut env)?;
+    refinery.combine_elements_process(user_id.clone(), dec!(0.97), dec!(0.87), &mut env)?;
     env.enable_auth_module();
 
     // Act
@@ -178,7 +178,7 @@ fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
         refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
 
     env.disable_auth_module();
-    refinery.combine_elements_process(user_id.clone(), dec!(0.16), &mut env)?;
+    refinery.combine_elements_process(user_id.clone(), dec!(0.16), dec!(0.64), &mut env)?;
     env.enable_auth_module();
 
     let result_2 =
@@ -206,7 +206,7 @@ fn can_transform_radgems() -> Result<(), RuntimeError> {
 
     env.disable_auth_module();
     for n in [dec!(0.87), dec!(0.18)] {
-        refinery.combine_elements_process(user_id.clone(), n, &mut env)?;
+        refinery.combine_elements_process(user_id.clone(), n, n, &mut env)?;
     }
     env.enable_auth_module();
 

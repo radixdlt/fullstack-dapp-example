@@ -99,10 +99,15 @@ mod refinery {
         }
 
         // Mint a random RadGem
-        pub fn combine_elements_process(&mut self, user_id: UserId, rand_num: Decimal) -> () {
+        pub fn combine_elements_process(
+            &mut self,
+            user_id: UserId,
+            rand_num_1: Decimal,
+            rand_num_2: Decimal,
+        ) -> () {
             let radgem_bucket = self
                 .admin_badge
-                .authorize_with_amount(1, || self.radgem_forge.mint_radgem(rand_num));
+                .authorize_with_amount(1, || self.radgem_forge.mint_radgem(rand_num_1, rand_num_2));
 
             // Update the user's RadGem record
             if self.radgem_records.get(&user_id).is_none() {
