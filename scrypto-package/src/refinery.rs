@@ -7,6 +7,12 @@ use scrypto::prelude::*;
 #[sbor(transparent)]
 pub struct UserId(pub String);
 
+#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
+enum RadgemDeposit {
+    Unclaimed(Vec<NonFungibleLocalId>),
+    Claimed,
+}
+
 #[blueprint]
 #[events(
     ElementsCombineDepositedEvent,
@@ -30,7 +36,7 @@ mod refinery {
 
     struct Refinery {
         admin_badge: FungibleVault,
-        radgem_records: KeyValueStore<UserId, Vec<NonFungibleLocalId>>,
+        radgem_records: KeyValueStore<UserId, RadgemDeposit>,
         radgem_vault: NonFungibleVault,
         element_address: ResourceAddress,
         morph_card_address: ResourceAddress,
@@ -102,13 +108,20 @@ mod refinery {
             if self.radgem_records.get(&user_id).is_none() {
                 self.radgem_records.insert(
                     user_id.clone(),
-                    vec![radgem_bucket.as_non_fungible().non_fungible_local_id()],
+                    RadgemDeposit::Unclaimed(vec![radgem_bucket
+                        .as_non_fungible()
+                        .non_fungible_local_id()]),
                 );
             } else {
-                self.radgem_records
-                    .get_mut(&user_id)
-                    .unwrap()
-                    .push(radgem_bucket.as_non_fungible().non_fungible_local_id());
+                let radgem_id = radgem_bucket.as_non_fungible().non_fungible_local_id();
+                let mut radgem_record = self.radgem_records.get_mut(&user_id).unwrap();
+
+                match *radgem_record {
+                    RadgemDeposit::Unclaimed(ref mut radgem_ids) => radgem_ids.push(radgem_id),
+                    RadgemDeposit::Claimed => {
+                        *radgem_record = RadgemDeposit::Unclaimed(vec![radgem_id])
+                    }
+                }
             }
 
             // Deposit the RadGem into the vault for the user to claim later
@@ -128,17 +141,19 @@ mod refinery {
             );
 
             // Get the user's RadGem IDs from the record
-            let radgem_ids: IndexSet<NonFungibleLocalId> = self
-                .radgem_records
-                .get(&user_id)
-                .unwrap()
-                .iter()
-                .cloned()
-                .collect();
-            // Take the RadGems from the vault using the IDs
-            let radgems = self.radgem_vault.take_non_fungibles(&radgem_ids);
-            // Remove the RadGem IDs from the user's record
-            self.radgem_records.remove(&user_id);
+            let mut radgem_record = self.radgem_records.get_mut(&user_id).unwrap();
+
+            let radgems = match *radgem_record {
+                RadgemDeposit::Claimed => panic!("RadGems already claimed"),
+                RadgemDeposit::Unclaimed(ref mut radgem_ids) => {
+                    // Take the RadGems from the vault using the IDs
+                    let radgems = self
+                        .radgem_vault
+                        .take_non_fungibles(&radgem_ids.iter().cloned().collect());
+                    *radgem_record = RadgemDeposit::Claimed;
+                    radgems
+                }
+            };
 
             Runtime::emit_event(ElementsCombineClaimedEvent { user_id });
 

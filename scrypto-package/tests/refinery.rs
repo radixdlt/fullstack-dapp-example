@@ -156,6 +156,41 @@ fn can_combine_elements_claim() -> Result<(), RuntimeError> {
 }
 
 #[test]
+fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
+    // Arrange
+    let (
+        mut env,
+        mut refinery,
+        _owner_badge,
+        _elements,
+        _morph_card,
+        _admin_badge,
+        user_badge,
+        user_id,
+    ) = arrange_test_environment()?;
+
+    env.disable_auth_module();
+    refinery.combine_elements_process(user_id.clone(), dec!(0.97), &mut env)?;
+    env.enable_auth_module();
+
+    // Act
+    let result_1 =
+        refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
+
+    env.disable_auth_module();
+    refinery.combine_elements_process(user_id.clone(), dec!(0.16), &mut env)?;
+    env.enable_auth_module();
+
+    let result_2 =
+        refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
+
+    // Assert
+    assert_eq!(result_1.amount(&mut env)?, dec!(1));
+    assert_eq!(result_2.amount(&mut env)?, dec!(1));
+    Ok(())
+}
+
+#[test]
 fn can_transform_radgems() -> Result<(), RuntimeError> {
     // Arrange
     let (
