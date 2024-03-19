@@ -82,6 +82,10 @@
     }
 
     overflow-y: auto;
+
+    @include mobile {
+      padding: var(--spacing-xl);
+    }
   }
 
   .intro-footer {
