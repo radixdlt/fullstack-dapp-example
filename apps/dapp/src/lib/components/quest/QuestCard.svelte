@@ -18,6 +18,13 @@
     prev: undefined
     close: undefined
   }>()
+
+  let content: HTMLElement
+
+  $: {
+    progress
+    if (content) content.scrollTop = 0
+  }
 </script>
 
 <ProgressCard {steps} bind:progress disabled={cardDisabled}>
@@ -32,7 +39,7 @@
   </div>
 
   <svelte:fragment slot="content" let:animationDuration let:width>
-    <div class="content card">
+    <div bind:this={content} class="content card">
       {#key progress}
         <div transition:fly={{ x: -width * 2, opacity: 1, duration: animationDuration }}>
           <slot {progress} />
@@ -82,6 +89,10 @@
     }
 
     overflow-y: auto;
+
+    @include mobile {
+      padding: var(--spacing-xl);
+    }
   }
 
   .intro-footer {

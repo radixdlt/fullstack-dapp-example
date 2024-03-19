@@ -26,6 +26,8 @@
   .circle-with-border {
     width: 1.5rem;
     height: 1.5rem;
+    min-width: 1.5rem;
+    min-height: 1.5rem;
     border: var(--border) var(--color-dark);
     border-radius: 50%;
     display: flex;
