@@ -53,9 +53,13 @@ mod refinery {
             element_address: ResourceAddress,
             morph_card_address: ResourceAddress,
             user_badge_address: ResourceAddress,
+            radgem_address: ResourceAddress,
+            radmorph_address: ResourceAddress,
         ) -> Global<Refinery> {
-            let radgem_forge = RadgemForge::new(owner_role.clone(), admin_badge.take(1));
-            let radmorph_forge = RadmorphForge::new(owner_role.clone(), admin_badge.take(1));
+            let radgem_forge =
+                RadgemForge::new(owner_role.clone(), admin_badge.take(1), radgem_address);
+            let radmorph_forge =
+                RadmorphForge::new(owner_role.clone(), admin_badge.take(1), radmorph_address);
 
             let admin_badge_address = admin_badge.resource_address();
 
@@ -89,7 +93,8 @@ mod refinery {
                     .to_string(),
             );
 
-            elements.burn();
+            self.admin_badge
+                .authorize_with_amount(1, || elements.burn());
 
             Runtime::emit_event(ElementsCombineDepositedEvent {
                 user_id: user_id.clone(),
@@ -166,7 +171,12 @@ mod refinery {
         }
 
         // transforms RadGems and RadCard into a RadMorph
-        pub fn transform_radgems(&mut self, radgems: Bucket, morph_card: Bucket) -> Bucket {
+        pub fn transform_radgems(
+            &mut self,
+            radgems: Bucket,
+            morph_card: Bucket,
+            key_image_url: Url,
+        ) -> Bucket {
             // Confirm the resources
             assert_eq!(
                 radgems.resource_address(),
@@ -200,6 +210,7 @@ mod refinery {
                     radgems_data.pop().unwrap(),
                     radgems_data.pop().unwrap(),
                     morph_card_data,
+                    key_image_url,
                 )
             });
 

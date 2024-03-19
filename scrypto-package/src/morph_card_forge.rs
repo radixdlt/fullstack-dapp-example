@@ -55,29 +55,16 @@ mod morph_card_forge {
     }
 
     impl MorphCardForge {
-        pub fn new(owner_role: OwnerRole, admin_badge: Bucket) -> Global<MorphCardForge> {
+        pub fn new(
+            owner_role: OwnerRole,
+            admin_badge: Bucket,
+            morph_card_address: ResourceAddress,
+        ) -> Global<MorphCardForge> {
             let admin_badge_address = admin_badge.resource_address();
-            // TODO: Make morph_card_resource_manager an argument to new
-            let morph_card_resource_manager =
-                ResourceBuilder::new_ruid_non_fungible::<MorphCard>(OwnerRole::None)
-                    .metadata(metadata!(
-                        init {
-                            "name" => "MorphEnergyCard", locked;
-                            "description" => "These cards allow RadQuest’s Jetty to harness the primordial energies of the RadQuest realm to fuse Radgems into intricate and beautiful collectible Radmorphs.", locked;
-                        }
-                    ))
-                    .mint_roles(mint_roles!(
-                        minter => rule!(require(admin_badge_address));
-                        minter_updater => rule!(deny_all);
-                    ))
-                    .burn_roles(burn_roles!(
-                        burner => rule!(require(admin_badge_address));
-                        burner_updater => rule!(deny_all);
-                    ))
-                    .create_with_no_initial_supply();
+
             Self {
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
-                morph_card_resource_manager,
+                morph_card_resource_manager: ResourceManager::from(morph_card_address),
             }
             .instantiate()
             .prepare_to_globalize(owner_role)

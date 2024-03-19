@@ -28,9 +28,10 @@ pub enum Rarity {
     UltraRare = 2,
 }
 
-#[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
+#[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 pub struct Radgem {
     pub name: String,
+    pub key_image_url: Url,
     pub color: Color,
     pub material: Material,
     pub rarity: Rarity,
@@ -55,29 +56,15 @@ mod radgem_forge {
     }
 
     impl RadgemForge {
-        pub fn new(owner_role: OwnerRole, admin_badge: Bucket) -> Global<RadgemForge> {
+        pub fn new(
+            owner_role: OwnerRole,
+            admin_badge: Bucket,
+            radgem_address: ResourceAddress,
+        ) -> Global<RadgemForge> {
             let admin_badge_address = admin_badge.resource_address();
-            // TODO: Make the radgem resource manager an argument to new
-            let radgem_resource_manager =
-                ResourceBuilder::new_ruid_non_fungible::<Radgem>(OwnerRole::None)
-                    .metadata(metadata!(
-                        init {
-                            "name" => "RadGem", locked;
-                            "description" => "Two Radgems can be combined with a Morph Energy Card by RadQuest's Jetty to produce a beautiful Radmorph NFT.", locked;
-                        }
-                    ))
-                    .mint_roles(mint_roles!(
-                        minter => rule!(require(admin_badge_address));
-                        minter_updater => rule!(deny_all);
-                    ))
-                    .burn_roles(burn_roles!(
-                        burner => rule!(require(admin_badge_address));
-                        burner_updater => rule!(deny_all);
-                    ))
-                    .create_with_no_initial_supply();
             Self {
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
-                radgem_resource_manager,
+                radgem_resource_manager: ResourceManager::from(radgem_address),
             }
             .instantiate()
             .prepare_to_globalize(owner_role)
@@ -97,6 +84,8 @@ mod radgem_forge {
 
             let radgem = Radgem {
                 name: format!("{} {} RadGem", color_name, material_name),
+                // TODO: Replace with actual image URL
+                key_image_url: Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"),
                 color,
                 material,
                 // TODO: Make rarity derived from material and color

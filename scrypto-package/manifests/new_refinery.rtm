@@ -32,6 +32,8 @@ CALL_FUNCTION
     Address("${element}")
     Address("${morph_card}")
     Address("${user_badge}")
+    Address("${radgem}")
+    Address("${radmorph}")
 ;
 CALL_METHOD
     Address("${account}")

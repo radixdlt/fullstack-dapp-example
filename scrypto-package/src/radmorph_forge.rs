@@ -6,17 +6,18 @@ use crate::{
 };
 
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
-pub enum RadmorphRarity {
+pub enum Rarity {
     Fine,
     Precious,
     Superb,
     Magnificent,
 }
 
-#[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
+#[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 pub struct Radmorph {
     name: String,
-    rarity: RadmorphRarity,
+    key_image_url: Url,
+    rarity: Rarity,
     material: Material,
     energy: Energy,
     color_1: Color,
@@ -40,27 +41,16 @@ mod radmorph_forge {
     }
 
     impl RadmorphForge {
-        pub fn new(owner_role: OwnerRole, admin_badge: Bucket) -> Global<RadmorphForge> {
+        pub fn new(
+            owner_role: OwnerRole,
+            admin_badge: Bucket,
+            radmorph_address: ResourceAddress,
+        ) -> Global<RadmorphForge> {
             let admin_badge_address = admin_badge.resource_address();
-
-            // TODO: Make the radmorph resource manager an argument to new
-            let radmorph_resource_manager =
-                ResourceBuilder::new_ruid_non_fungible::<Radmorph>(OwnerRole::None)
-                    .metadata(metadata!(
-                        init {
-                            "name" => "RadMorphs", locked;
-                            "description" => "Fused in the boundless energies of the RadQuest realm, RadMorphs are treasured by the dedicated and true of Radix.", locked;
-                        }
-                    ))
-                    .mint_roles(mint_roles!(
-                        minter => rule!(require(admin_badge.resource_address()));
-                        minter_updater => rule!(deny_all);
-                    ))
-                    .create_with_no_initial_supply();
 
             Self {
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
-                radmorph_resource_manager,
+                radmorph_resource_manager: ResourceManager::from(radmorph_address),
             }
             .instantiate()
             .prepare_to_globalize(owner_role)
@@ -75,6 +65,7 @@ mod radmorph_forge {
             radgem1_data: Radgem,
             radgem2_data: Radgem,
             morph_card_data: MorphCard,
+            key_image_url: Url,
         ) -> Bucket {
             let material = if &radgem1_data.rarity >= &radgem2_data.rarity {
                 radgem1_data.material
@@ -86,16 +77,17 @@ mod radmorph_forge {
                 + radgem2_data.rarity as u8
                 + morph_card_data.rarity as u8;
             let rarity = if total_rarity >= 6 {
-                RadmorphRarity::Magnificent
+                Rarity::Magnificent
             } else if total_rarity >= 4 {
-                RadmorphRarity::Superb
+                Rarity::Superb
             } else if total_rarity >= 2 {
-                RadmorphRarity::Precious
+                Rarity::Precious
             } else {
-                RadmorphRarity::Fine
+                Rarity::Fine
             };
 
             let radmorph = self.get_radmorph_data(
+                key_image_url,
                 rarity,
                 material,
                 morph_card_data.energy,
@@ -110,17 +102,18 @@ mod radmorph_forge {
 
         fn get_radmorph_data(
             &self,
-            rarity: RadmorphRarity,
+            key_image_url: Url,
+            rarity: Rarity,
             material: Material,
             energy: Energy,
             color_1: Color,
             color_2: Color,
         ) -> Radmorph {
             let rarity_name = match rarity {
-                RadmorphRarity::Fine => "Fine",
-                RadmorphRarity::Precious => "Precious",
-                RadmorphRarity::Superb => "Superb",
-                RadmorphRarity::Magnificent => "Magnificent",
+                Rarity::Fine => "Fine",
+                Rarity::Precious => "Precious",
+                Rarity::Superb => "Superb",
+                Rarity::Magnificent => "Magnificent",
             };
             let material_name = match material {
                 Material::Crystalline => "Crystalline",
@@ -152,6 +145,7 @@ mod radmorph_forge {
 
             Radmorph {
                 name: format!("{} {} {} RadMorph", rarity_name, material_name, energy_name),
+                key_image_url,
                 rarity,
                 material,
                 energy,

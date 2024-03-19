@@ -1,9 +1,11 @@
 use radix_engine_interface::prelude::*;
 use radquest::{
-    morph_card_forge::{Energy, MorphCard, Rarity},
+    morph_card_forge::{Energy, MorphCard, Rarity as MorphCardRarity},
+    radgem_forge::{Color, Material, Radgem, Rarity as RadgemRarity},
+    radmorph_forge::Radmorph,
     refinery::{test_bindings::*, UserId},
 };
-use scrypto::*;
+use scrypto::this_package;
 use scrypto_test::prelude::*;
 use scrypto_unit::*;
 
@@ -11,6 +13,7 @@ fn arrange_test_environment() -> Result<
     (
         TestEnvironment,
         Refinery,
+        Bucket,
         Bucket,
         Bucket,
         Bucket,
@@ -39,10 +42,38 @@ fn arrange_test_environment() -> Result<
         )?;
     let elements = ResourceBuilder::new_fungible(OwnerRole::None)
         .burn_roles(burn_roles!(
-            burner => rule!(allow_all);
+            burner => rule!(require(admin_badge.resource_address(&mut env)?));
             burner_updater => rule!(deny_all);
         ))
         .mint_initial_supply(dec!(99), &mut env)?;
+    let radgems = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_roles(mint_roles!(
+            minter => rule!(require(admin_badge.resource_address(&mut env)?));
+            minter_updater => rule!(deny_all);
+        ))
+        .burn_roles(burn_roles!(
+            burner => rule!(require(admin_badge.resource_address(&mut env)?));
+            burner_updater => rule!(deny_all);
+        ))
+        .mint_initial_supply(
+            [
+                Radgem {
+                    name: "Crystalline Coral Radgem".to_owned(),
+                    key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
+                    color: Color::Coral,
+                    material: Material::Crystalline,
+                    rarity: RadgemRarity::Rare,
+                },
+                Radgem {
+                    name: "Metallic Forest Radgem".to_owned(),
+                    key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
+                    color: Color::Forest,
+                    material: Material::Metallic,
+                    rarity: RadgemRarity::Common,
+                },
+            ],
+            &mut env,
+        )?;
     let morph_card = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
         .burn_roles(burn_roles!(
             burner => rule!(require(admin_badge.resource_address(&mut env)?));
@@ -51,11 +82,17 @@ fn arrange_test_environment() -> Result<
         .mint_initial_supply(
             [MorphCard {
                 name: "MoltenLava Morph Card".to_string(),
-                rarity: Rarity::Rare,
+                rarity: MorphCardRarity::Rare,
                 energy: Energy::MoltenLava,
             }],
             &mut env,
         )?;
+    let radmorph = ResourceBuilder::new_ruid_non_fungible::<Radmorph>(OwnerRole::None)
+        .mint_roles(mint_roles!(
+            minter => rule!(require(admin_badge.resource_address(&mut env)?));
+            minter_updater => rule!(deny_all);
+        ))
+        .mint_initial_supply([], &mut env)?;
 
     let refinery = Refinery::new(
         OwnerRole::Fixed(rule!(require(owner_badge.resource_address(&mut env)?))),
@@ -63,6 +100,8 @@ fn arrange_test_environment() -> Result<
         elements.resource_address(&mut env)?,
         morph_card.resource_address(&mut env)?,
         user_badge.resource_address(&mut env)?,
+        radgems.resource_address(&mut env)?,
+        radmorph.resource_address(&mut env)?,
         package_address,
         &mut env,
     )?;
@@ -73,6 +112,7 @@ fn arrange_test_environment() -> Result<
         owner_badge,
         elements,
         morph_card,
+        radgems,
         admin_badge,
         user_badge,
         UserId(format!("#{user_int}#")),
@@ -90,8 +130,17 @@ fn can_instantiate_refinery() -> Result<(), RuntimeError> {
 #[test]
 fn can_combine_elements_deposit() -> Result<(), RuntimeError> {
     // Arrange
-    let (mut env, refinery, _owner_badge, elements, _morph_card, _admin_badge, user_badge, user_id) =
-        arrange_test_environment()?;
+    let (
+        mut env,
+        refinery,
+        _owner_badge,
+        elements,
+        _morph_card,
+        _radgems,
+        _admin_badge,
+        user_badge,
+        user_id,
+    ) = arrange_test_environment()?;
 
     // Act
     let result = refinery.combine_elements_deposit(
@@ -114,6 +163,7 @@ fn can_combine_elements_process() -> Result<(), RuntimeError> {
         _owner_badge,
         _elements,
         _morph_card,
+        _radgems,
         _admin_badge,
         _user_badge,
         user_id,
@@ -137,6 +187,7 @@ fn can_combine_elements_claim() -> Result<(), RuntimeError> {
         _owner_badge,
         _elements,
         _morph_card,
+        _radgems,
         _admin_badge,
         user_badge,
         user_id,
@@ -164,6 +215,7 @@ fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
         _owner_badge,
         _elements,
         _morph_card,
+        _radgems,
         _admin_badge,
         user_badge,
         user_id,
@@ -199,24 +251,22 @@ fn can_transform_radgems() -> Result<(), RuntimeError> {
         _owner_badge,
         _elements,
         morph_card,
+        radgems,
         _admin_badge,
-        user_badge,
-        user_id,
+        _user_badge,
+        _user_id,
     ) = arrange_test_environment()?;
 
-    env.disable_auth_module();
-    for n in [dec!(0.87), dec!(0.18)] {
-        refinery.combine_elements_process(user_id.clone(), n, n, &mut env)?;
-    }
-    env.enable_auth_module();
-
-    let radgems =
-        refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
-
     // Act
-    let result = refinery.transform_radgems(radgems, morph_card, &mut env)?;
+    let result = refinery.transform_radgems(
+        radgems,
+        morph_card,
+        UncheckedUrl("https://www.example.com".to_owned()),
+        &mut env,
+    )?;
 
     // Assert
     assert_eq!(result.amount(&mut env)?, dec!(1));
+    // TODO: Check the result's NF data, name is "Fine Crystalline MoltenLava RadMorph",
     Ok(())
 }
