@@ -56,12 +56,11 @@
   }
 
   onMount(() => {
-    $webSocketClient?.onMessage((event) => {
-      const body = JSON.parse(event as any)
+    const unsubscribeWebSocket = $webSocketClient?.onMessage((event) => {
       if (
-        body.questId === questId &&
-        body.type === 'QuestRequirementCompleted' &&
-        body.requirementId === 'DepositUserBadge'
+        event.questId === questId &&
+        event.type === 'QuestRequirementCompleted' &&
+        event.requirementId === 'DepositUserBadge'
       ) {
         dispatch('next')
       }
@@ -102,6 +101,10 @@
         }
       })
     })
+
+    return () => {
+      unsubscribeWebSocket?.()
+    }
   })
 </script>
 

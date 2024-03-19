@@ -1,26 +1,30 @@
 import { appLogger } from 'common'
 import { env } from '$env/dynamic/public'
+import type { Notification } from 'common'
 
 export type WebSocketClient = ReturnType<typeof WebSocketClient>
 export const WebSocketClient = ({
   authToken,
   restartTimeout = 1000,
-  maxRestartTimeout = 30_000
+  maxRestartTimeout = 30_000,
+  notificationUrl = env.PUBLIC_NOTIFICATION_URL
 }: {
   authToken: string
   restartTimeout?: number
   maxRestartTimeout?: number
+  notificationUrl?: string
 }) => {
   let currentRestartTimeout = restartTimeout
   let currentTimeout: ReturnType<typeof setTimeout> | undefined
-  let onMessageCallback: (data: Notification) => void
+  const onMessageCallbacks: ((data: Notification) => void)[] = []
 
   const createWebSocket = () => {
     appLogger.info('🛫 Starting WebSocket')
-    const ws = new WebSocket(env.PUBLIC_NOTIFICATION_URL, ['Authorization', authToken])
+    const ws = new WebSocket(notificationUrl, ['Authorization', authToken])
 
-    const onMessage = (event: MessageEvent<Notification>) => {
-      onMessageCallback?.(event.data)
+    const onMessage = (event: MessageEvent<string>) => {
+      const parsedData = JSON.parse(event.data)
+      onMessageCallbacks.forEach((cb) => cb(parsedData))
     }
 
     const onOpen = () => {
@@ -56,8 +60,12 @@ export const WebSocketClient = ({
   let webSocket = createWebSocket()
 
   return {
-    onMessage: (callback: (data: Notification) => void) => {
-      onMessageCallback = callback
+    onMessage: (callback: (data: Notification) => void): (() => void) => {
+      onMessageCallbacks.push(callback)
+      return () => {
+        const index = onMessageCallbacks.indexOf(callback)
+        onMessageCallbacks.splice(index, 1)
+      }
     },
     close: () => {
       clearTimeout(currentTimeout)
