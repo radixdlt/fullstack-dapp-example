@@ -49,7 +49,7 @@ export default [
               is_global: true,
               entity_type: 'GlobalGenericComponent',
               entity_address:
-                'component_tdx_2_1crs0mxn0fv0ml789q6thepetdcxg7gruurt07asddxrz4sv453fpvq'
+                'component_tdx_2_1cp2qf6rzzfhny0qdp40w9jz4m98g9hdtmzd4fdg6gc0epknezg0y65'
             },
             object_module_id: 'Main'
           },
@@ -334,7 +334,7 @@ export default [
               is_global: true,
               entity_type: 'GlobalGenericComponent',
               entity_address:
-                'component_tdx_2_1crs0mxn0fv0ml789q6thepetdcxg7gruurt07asddxrz4sv453fpvq'
+                'component_tdx_2_1cp2qf6rzzfhny0qdp40w9jz4m98g9hdtmzd4fdg6gc0epknezg0y65'
             },
             object_module_id: 'Main'
           },

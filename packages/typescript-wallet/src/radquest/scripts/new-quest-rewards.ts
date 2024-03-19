@@ -15,7 +15,17 @@ radixEngineClient
           Address("${config.radQuest.package}")
           "QuestRewards"
           "new"
-          Address("${config.radQuest.badges.superAdminBadgeAddress}")
+          Enum<OwnerRole::Fixed>(
+          Enum<AccessRule::Protected>(
+              Enum<AccessRuleNode::ProofRule>(
+                  Enum<ProofRule::Require>(
+                      Enum<ResourceOrNonFungible::Resource>(
+                          Address("${config.radQuest.badges.superAdminBadgeAddress}")
+                          )
+                      )
+                  )
+              )
+          )
           Address("${config.radQuest.badges.adminBadgeAddress}")
           Address("${config.radQuest.badges.userBadgeAddress}")
           Address("${config.radQuest.badges.userBadgeAddress}"); 

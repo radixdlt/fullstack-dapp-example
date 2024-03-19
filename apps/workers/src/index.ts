@@ -1,13 +1,22 @@
 import { config } from './config'
 import { ConnectionOptions } from 'bullmq'
-import { EventModel, NotificationApi, NotificationModel, UserQuestModel } from 'common'
+import {
+  EventModel,
+  NotificationApi,
+  NotificationModel,
+  UserQuestModel,
+  AuditModel,
+  UserModel,
+  TransactionModel
+} from 'common'
 import { logger } from './helpers/logger'
-import { getQueues } from 'queues'
+import { RedisConnection, getQueues } from 'queues'
 import { EventWorkerController } from './event/controller'
 import { TransactionWorker } from './transaction/worker'
 import { EventWorker } from './event/worker'
 import { DbClient } from './db-client'
 import { TransactionWorkerController } from './transaction/controller'
+import { TokenPriceClient } from './token-price-client'
 
 const app = async () => {
   const dbClient = await DbClient()
@@ -24,16 +33,25 @@ const app = async () => {
     logger
   })
 
+  const eventModel = EventModel(dbClient)
+  const transactionModel = TransactionModel(dbClient)
+
   const eventWorkerController = EventWorkerController({
+    dbClient,
     userQuestModel: UserQuestModel(dbClient),
-    notificationModel: NotificationModel(dbClient),
+    eventModel,
+    userModel: UserModel(dbClient),
+    transactionModel,
+    tokenPriceClient: TokenPriceClient({ logger, redisClient: new RedisConnection(config.redis) }),
     notificationApi,
     transactionQueue,
     logger
   })
 
   const transactionWorkerController = TransactionWorkerController({
-    logger
+    logger,
+    transactionModel,
+    auditModel: AuditModel(dbClient)
   })
 
   TransactionWorker(connection, {
@@ -43,7 +61,7 @@ const app = async () => {
 
   EventWorker(connection, {
     eventWorkerController,
-    eventModel: EventModel(dbClient),
+    eventModel,
     logger
   })
 }

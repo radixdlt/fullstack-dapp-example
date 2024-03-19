@@ -16,11 +16,12 @@ model User {
   identityAddress   String          @unique
   accountAddress    String          @unique
   
-  events            Event[]
-  notifications     Notification[]
-  phoneNumber       UserPhoneNumber?
+  events                     Event[]
+  notifications              Notification[]
+  phoneNumber                UserPhoneNumber?
   completedQuestRequirements CompletedQuestRequirement[]
-  savedProgress     SavedProgress?
+  savedProgress              SavedProgress?
+  auditLogs                  Audit[]
 }
 
 model UserPhoneNumber {
@@ -40,11 +41,20 @@ model Event {
   transactionId     String          @id
   id                String
   questId           String?
-  userId            String
+  userId            String?
   createdAt         DateTime        @default(now())
   processedAt       DateTime?
+  status            EventStatus     @default(PENDING)
 
-  user              User            @relation(fields: [userId], references: [id])
+  user              User?            @relation(fields: [userId], references: [id])
+}
+
+enum EventStatus {
+  PENDING
+  PROCESSED
+  ERROR_INVALID_DATA
+  ERROR_USER_NOT_FOUND
+  ERROR_UNHANDLED_EVENT
 }
 
 model Notification {
@@ -88,4 +98,46 @@ enum QuestStatus {
   REWARDS_DEPOSITED
   REWARDS_CLAIMED
   COMPLETED
+}
+
+model Audit {
+  transactionId    String          @id 
+  userId           String  
+
+  date             DateTime        @default(now())
+  type             AuditType
+  metadata         Json 
+  xrdUsdValue      Decimal
+
+  user             User            @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+enum AuditType {
+  DIRECT_DEPOSIT
+  CLAIMBOX_DEPOSIT
+}
+
+model Transaction {
+  attempt                   Int                   @default(0)
+  userId                    String    
+  transactionKey            String  
+  transactionId             String?
+  
+  status                    TransactionStatus     @default(PENDING)
+  createdAt                 DateTime              @default(now())
+  error                     String?
+
+  @@id([transactionKey, userId, attempt])
+}
+
+enum TransactionStatus {
+  PENDING
+  ERROR_KYC_REQUIRED
+  ERROR_FAILED_TO_SUBMIT
+  ERROR_TIMEOUT
+  ERROR_UNKNOWN
+  COMPLETED
+  IN_PROGRESS
 }

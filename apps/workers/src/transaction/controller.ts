@@ -1,37 +1,117 @@
-import { Job, TransactionJob, TransactionQueue } from 'queues'
-import type { AppLogger } from 'common'
+import { ResultAsync, okAsync } from 'neverthrow'
+import { Job, TransactionJob } from 'queues'
+import { TransactionStatus } from 'database'
+import type { AppLogger, AuditModel, TransactionModel, WellKnownAddresses } from 'common'
 import { radixEngineClient } from 'typescript-wallet'
 import { createRewardsDepositManifest } from '../helpers/createRewardsDepositManifest'
+import { QuestDefinitions, QuestId } from 'content'
+import { config } from '../config'
+import { createDirectDepositManifest } from './helpers/createDirectDepositManifest'
 
 export type TransactionWorkerController = ReturnType<typeof TransactionWorkerController>
-export const TransactionWorkerController = ({ logger }: { logger: AppLogger }) => {
+export const TransactionWorkerController = ({
+  logger,
+  auditModel,
+  transactionModel
+}: {
+  logger: AppLogger
+  auditModel: AuditModel
+  transactionModel: TransactionModel
+}) => {
   const handler = (job: Job<TransactionJob>) => {
-    const { type, traceId } = job.data
-
+    const { type, traceId, transactionKey, attempt, userId } = job.data
     const childLogger = logger.child({ traceId, type })
 
+    const handleSubmitTransaction = (
+      manifestFactory: (wellKnownAddresses: WellKnownAddresses) => string
+    ) => {
+      radixEngineClient
+        .getManifestBuilder()
+        .andThen(({ convertStringManifest, submitTransaction, wellKnownAddresses }) =>
+          convertStringManifest(manifestFactory(wellKnownAddresses))
+            .andThen((value) => {
+              childLogger.debug({
+                method: 'transactionWorker.submitTransaction',
+                id: job.id,
+                data: job.data
+              })
+              return submitTransaction(value, ['systemAccount']).mapErr((error) =>
+                transactionModel(childLogger).setStatus(
+                  { userId, transactionKey, attempt },
+                  TransactionStatus.ERROR_FAILED_TO_SUBMIT
+                )
+              )
+            })
+            .andThen(({ txId }) =>
+              ResultAsync.combine([
+                transactionModel(childLogger).setTransactionId(
+                  { userId, transactionKey, attempt },
+                  txId
+                ),
+                radixEngineClient.gatewayClient
+                  .pollTransactionStatus(txId)
+                  .map(() => txId)
+                  .mapErr((error) =>
+                    transactionModel(childLogger).setStatus(
+                      { userId, transactionKey, attempt },
+                      TransactionStatus.ERROR_TIMEOUT
+                    )
+                  )
+              ]).andThen(() =>
+                transactionModel(childLogger).setStatus(
+                  { userId, transactionKey, attempt },
+                  TransactionStatus.COMPLETED
+                )
+              )
+            )
+        )
+    }
+
     switch (type) {
+      case 'MintUserBadge':
+        const { accountAddress } = job.data
+
+        handleSubmitTransaction((wellKnownAddresses) =>
+          createDirectDepositManifest({
+            wellKnownAddresses,
+            userId: job.data.userId,
+            accountAddress: accountAddress
+          })
+        )
+
+        break
       case 'DepositReward':
         const { questId, userId } = job.data
+        const questDefinition = QuestDefinitions(config.networkId)[questId as QuestId]
+        const rewards = questDefinition.rewards
+        const xrdReward = rewards.find((reward) => reward.name === 'xrd')
+        const KYC_THRESHOLD = 5
 
-        radixEngineClient
-          .getManifestBuilder()
-          .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
-            const manifest = createRewardsDepositManifest({ wellKnownAddresses, questId, userId })
-
-            return convertStringManifest(manifest)
-              .andThen((value) => {
+        okAsync(xrdReward).andThen(() =>
+          auditModel(childLogger)
+            .getUsdAmount(userId)
+            .map((usdAmount) => {
+              if (usdAmount + Number(xrdReward) > KYC_THRESHOLD) {
                 childLogger.debug({
-                  method: 'transactionWorker.submitTransaction',
-                  id: job.id,
-                  data: job.data
+                  method: 'eventWorker.handler',
+                  message: 'User has exceeded KYC threshold'
                 })
-                return submitTransaction(value, ['systemAccount'])
-              })
-              .andThen(({ txId }) =>
-                radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
+                return transactionModel(childLogger).setStatus(
+                  transactionKey,
+                  TransactionStatus.ERROR_KYC_REQUIRED
+                )
+              }
+
+              return handleSubmitTransaction((wellKnownAddresses) =>
+                createRewardsDepositManifest({
+                  wellKnownAddresses,
+                  questId,
+                  userId,
+                  rewards
+                })
               )
-          })
+            })
+        )
         break
 
       default:

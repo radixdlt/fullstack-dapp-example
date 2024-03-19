@@ -1,4 +1,5 @@
 export * from './radquest/helpers/mintUserBadge'
+export * from './radquest/helpers/mintUserBadgeAndDepositXrd'
 export { radixEngineClient } from './config'
 export { RadixEngineClient } from './clients'
 export { generateMnemonic } from './helpers'

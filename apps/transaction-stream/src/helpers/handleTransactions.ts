@@ -1,9 +1,9 @@
 import { StreamTransactionsResponse } from '@radixdlt/babylon-gateway-api-sdk'
 import { FilterTransactions } from '../filter-transactions/filter-transactions'
 import { AppLogger, EventModelMethods } from 'common'
-import { randomUUID } from 'node:crypto'
-import { EventJob, getQueues } from 'queues'
+import { getQueues } from 'queues'
 import { StateVersionModel } from '../state-version/state-version.model'
+import crypto from 'node:crypto'
 
 export const HandleTransactions =
   ({
@@ -28,30 +28,32 @@ export const HandleTransactions =
     stateVersion: number
     continueStream: (delay: number) => void
   }) =>
-    filterTransactions(transactions)
-      .asyncAndThen((filteredTransactions) =>
-        eventModel.addMultiple(filteredTransactions).map((items) =>
-          items.map(
-            ({ transactionId, questId, id: eventId, userId }): EventJob => ({
-              userId,
-              transactionId,
-              questId: questId || undefined,
-              eventId,
-              traceId: randomUUID()
-            })
+    filterTransactions(transactions).asyncAndThen((filteredTransactions) =>
+      eventModel
+        .addMultiple(
+          filteredTransactions.map((tx) => ({
+            eventId: tx.type,
+            transactionId: tx.transactionId
+          }))
+        )
+        .andThen(() =>
+          eventQueue.addBulk(
+            filteredTransactions.map((tx) => ({
+              traceId: crypto.randomUUID(),
+              ...tx
+            }))
           )
         )
-      )
-      .andThen((items) => eventQueue.addBulk(items).map(() => items))
-      .andThen((items) => {
-        if (items.length) {
-          logger.debug({
-            method: 'HandleTransactions',
-            stateVersion,
-            transactions: items
-          })
-        }
+        .andThen(() => {
+          if (filteredTransactions.length) {
+            logger.debug({
+              method: 'HandleTransactions',
+              stateVersion,
+              transactions: transactions.map((tx) => tx.intent_hash!)
+            })
+          }
 
-        continueStream(items.length ? 0 : 1000)
-        return stateVersionModel.setLatestStateVersion(stateVersion)
-      })
+          continueStream(filteredTransactions.length ? 0 : 1000)
+          return stateVersionModel.setLatestStateVersion(stateVersion)
+        })
+    )

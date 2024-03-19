@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest'
-import { mintUserBadge, RadixEngineClient, generateMnemonic } from 'typescript-wallet'
+import { mintUserBadgeAndDepositXrd, RadixEngineClient, generateMnemonic } from 'typescript-wallet'
 import { GatewayApi } from 'common'
 import { PrismaClient } from 'database'
 import { ResultAsync } from 'neverthrow'
@@ -64,9 +64,9 @@ describe('Event flows', () => {
   it(
     'should mint user badge, create event, and send notification',
     async () => {
-      const [{ eventId }, mintUserBadgeResult] = await Promise.all([
+      const [jobData, mintUserBadgeResult] = await Promise.all([
         waitForQueueEvent('completed'),
-        mintUserBadge(user.id, accountAddress)
+        mintUserBadgeAndDepositXrd(user.id, accountAddress)
       ])
 
       if (mintUserBadgeResult.isErr()) throw mintUserBadgeResult.error
@@ -74,7 +74,7 @@ describe('Event flows', () => {
       const transactionId = mintUserBadgeResult.value
 
       const event = await db.event.findFirst({
-        where: { userId: user.id, id: eventId, transactionId }
+        where: { userId: user.id, id: jobData.type, transactionId }
       })
       const notification = await db.notification.findFirst({ where: { userId: user.id } })
       const completedRequirements = await db.completedQuestRequirement.findMany({
@@ -83,7 +83,7 @@ describe('Event flows', () => {
 
       expect(event?.questId).toBe('FirstTransactionQuest')
       expect(event?.userId).toBe(user.id)
-      expect(event?.id).toBe('DepositUserBadge')
+      expect(event?.id).toBe('UserBadge')
       expect(event?.transactionId).toBe(transactionId)
       expect(completedRequirements.length).toBe(2)
       expect(notification?.data).toEqual({

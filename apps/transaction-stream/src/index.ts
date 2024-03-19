@@ -1,6 +1,4 @@
-import { QuestDefinitions } from 'content'
 import { config } from './config'
-import { getTrackedEvents } from './filter-transactions/tracked-events'
 import { GatewayApiClient } from './gateway'
 import { logger } from './helpers/logger'
 import { TransactionStream } from './transaction-stream/transaction-stream'
@@ -14,6 +12,7 @@ import { HandleTransactions } from './helpers/handleTransactions'
 import { StateVersionModel } from './state-version/state-version.model'
 import { getLatestStateVersion } from './helpers/getLatestStateVersion'
 import { DbClient } from './db-client'
+import { getTrackedTransactionTypes } from './filter-transactions/tracked-transaction-types'
 
 type Dependencies = {
   gatewayApi: GatewayApi
@@ -69,9 +68,8 @@ const app = async (dependencies: Dependencies) => {
 
 const gatewayApi = GatewayApi(config.networkId)
 const { eventQueue } = getQueues(config.redis)
-const questDefinitions = QuestDefinitions(config.networkId)
-const trackedEvents = getTrackedEvents(questDefinitions)
-const filterTransactions = FilterTransactions(trackedEvents)
+const trackedTransactionTypes = getTrackedTransactionTypes()
+const filterTransactions = FilterTransactions(trackedTransactionTypes)
 const stateVersionModel = StateVersionModel(new RedisConnection(config.redis))
 
 app({

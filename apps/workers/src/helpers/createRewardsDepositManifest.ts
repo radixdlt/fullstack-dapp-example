@@ -1,12 +1,14 @@
 import { Addresses } from 'common'
-import { QuestDefinitions } from 'content'
+import { QuestReward } from 'content'
 import { config } from '../config'
 
 export const createRewardsDepositManifest = ({
   wellKnownAddresses,
   questId,
-  userId
+  userId,
+  rewards
 }: {
+  rewards: readonly QuestReward[]
   questId: string
   userId: string
   wellKnownAddresses: {
@@ -16,9 +18,6 @@ export const createRewardsDepositManifest = ({
     }
   }
 }) => {
-  const questDefinition = QuestDefinitions(config.networkId)[questId]
-  const rewards = questDefinition.rewards
-
   const addresses = Addresses(config.networkId)
   const buckets: string[] = []
   const manifest = [

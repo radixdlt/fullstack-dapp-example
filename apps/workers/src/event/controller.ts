@@ -1,119 +1,205 @@
-import { ResultAsync, okAsync } from 'neverthrow'
+import { TokenPriceClient } from './../token-price-client'
+import { ResultAsync, okAsync, errAsync } from 'neverthrow'
 import { EventJob, Job, TransactionQueue } from 'queues'
-import type { AppLogger, NotificationModel, UserQuestModel } from 'common'
+import { QuestDefinitions, Quests, EventId } from 'content'
+import type { AppLogger, EventModel, UserModel, UserQuestModel, TransactionModel } from 'common'
 import { NotificationApi, NotificationType } from 'common'
-import { QuestDefinitions, Quests } from 'content'
 import { config } from '../config'
+import { EventStatus, PrismaClient } from 'database'
+import { getUserIdFromDepositUserBadgeEvent } from './helpers/getUserIdFromDepositUserBadgeEvent'
+import { getDataFromQuestRewardsEvent } from './helpers/getDataFromQuestRewardsEvent'
+import { getXrdAmountFromDepositEvent } from './helpers/getXrdAmountFromDepositEvent'
+import BigNumber from 'bignumber.js'
+import { sumOfXrdRewards } from './helpers/sumOfXrdRewards'
+import { databaseTransactions } from './helpers/databaseTransactions'
+import { getFirstTransactionAuditResources } from './helpers/getFirstTransactionAuditResources'
 
 export type EventWorkerController = ReturnType<typeof EventWorkerController>
 export const EventWorkerController = ({
+  dbClient,
   notificationApi,
+  eventModel,
+  userModel,
   userQuestModel,
-  notificationModel,
+  tokenPriceClient,
+  transactionModel,
   logger,
   transactionQueue
 }: {
+  dbClient: PrismaClient
   notificationApi: NotificationApi
+  eventModel: EventModel
+  userModel: UserModel
+  transactionModel: TransactionModel
   userQuestModel: UserQuestModel
-  notificationModel: NotificationModel
+  tokenPriceClient: TokenPriceClient
   logger: AppLogger
   transactionQueue: TransactionQueue
 }) => {
-  const hasAllRequirements = (childLogger: AppLogger, questId: keyof Quests, userId: string) => {
-    const questDefinition = QuestDefinitions(config.networkId)[questId]
-    const requirements = Object.keys(questDefinition.requirements)
-    return userQuestModel(childLogger)
-      .findCompletedRequirements(userId, questId)
-      .map((completedRequirements) => completedRequirements.length === requirements.length)
-  }
-
   const handler = (job: Job<EventJob>) => {
-    const { eventId, transactionId, traceId } = job.data
+    const { traceId, type, transactionId } = job.data
 
-    const childLogger = logger.child({ traceId, transactionId, eventId })
+    const childLogger = logger.child({
+      traceId,
+      type,
+      transactionId,
+      method: 'eventWorker.handler'
+    })
 
-    switch (eventId) {
-      case 'RewardDepositedEvent':
-        ResultAsync.combine([
-          userQuestModel(childLogger).updateQuestStatus(
-            job.data.questId!,
-            job.data.userId,
-            'REWARDS_DEPOSITED'
-          ),
-          notificationModel(childLogger).add(job.data.userId, {
-            type: 'QuestRewardsDeposited',
-            questId: job.data.questId
-          })
-        ]).andThen(() =>
-          notificationApi.send(job.data.userId, {
-            type: 'QuestRewardsDeposited',
-            questId: job.data.questId!,
-            traceId: job.data.traceId
-          })
-        )
-        break
-      case 'RewardClaimedEvent':
-        ResultAsync.combine([
-          userQuestModel(childLogger).updateQuestStatus(
-            job.data.questId!,
-            job.data.userId,
-            'REWARDS_CLAIMED'
-          ),
-          notificationModel(childLogger).add(job.data.userId, {
-            type: 'QuestRewardsDeposited',
-            questId: job.data.questId
-          })
-        ]).andThen(() =>
-          notificationApi.send(job.data.userId, {
-            type: 'QuestRewardsClaimed',
-            questId: job.data.questId!,
-            traceId: job.data.traceId
+    const db = databaseTransactions({ dbClient, logger: childLogger, transactionId })
+
+    const ensureUserExists = (userId: string, transactionId: string) =>
+      userModel(childLogger)
+        .getById(userId, {})
+        .mapErr(() =>
+          eventModel(childLogger).update(transactionId, {
+            status: EventStatus.ERROR_USER_NOT_FOUND,
+            processedAt: new Date()
           })
         )
 
-        break
-      case 'DepositUserBadge':
-        ResultAsync.combine([
-          userQuestModel(childLogger).addCompletedRequirement(
-            job.data.questId!,
-            job.data.userId,
-            job.data.eventId
-          ),
-          notificationModel(childLogger).add(job.data.userId, {
-            type: 'QuestRequirementCompleted',
-            questId: job.data.questId,
-            requirementId: job.data.eventId
+    const ensureValidData = <T>(transactionId: string, data: Partial<T> | undefined) =>
+      okAsync(data && Object.values(data).every((d) => d !== undefined)).andThen((isValid) => {
+        if (isValid) {
+          return okAsync(data as T)
+        }
+
+        childLogger.error({
+          transactionId,
+          message: 'Failed to parse event data',
+          data
+        })
+
+        return eventModel(childLogger)
+          .update(transactionId, {
+            status: EventStatus.ERROR_INVALID_DATA,
+            processedAt: new Date()
           })
-        ]).andThen(() =>
-          ResultAsync.combineWithAllErrors([
-            hasAllRequirements(childLogger, job.data.questId!, job.data.userId).andThen((hasAll) =>
-              hasAll
-                ? transactionQueue.add({
-                    type: 'DepositReward',
-                    userId: job.data.userId,
-                    questId: job.data.questId!,
-                    traceId: job.data.traceId
-                  })
-                : okAsync('')
-            ),
-            notificationApi.send(job.data.userId, {
-              type: NotificationType.QuestRequirementCompleted,
-              questId: job.data.questId!,
-              requirementId: 'DepositUserBadge',
-              traceId: job.data.traceId
+          .andThen(() => errAsync(''))
+      })
+
+    const hasAllRequirements = (questId: keyof Quests, userId: string) => {
+      const questDefinition = QuestDefinitions(config.networkId)[questId]
+      const requirements = Object.keys(questDefinition.requirements)
+      return userQuestModel(childLogger)
+        .findCompletedRequirements(userId, questId)
+        .map((completedRequirements) => completedRequirements.length === requirements.length)
+    }
+
+    const handleRewardDeposited = () => {
+      ensureValidData(
+        transactionId,
+        getDataFromQuestRewardsEvent(job.data.relevantEvents.RewardDepositedEvent)
+      ).andThen(({ userId, questId, rewards: resources }) =>
+        ensureUserExists(userId, transactionId).andThen(() =>
+          tokenPriceClient
+            .getXrdPrice()
+            .andThen((xrdPrice) =>
+              db.rewardsDeposited({
+                userId,
+                questId,
+                xrdUsdValue: xrdPrice.multipliedBy(sumOfXrdRewards(resources)).toNumber(),
+                resources
+              })
+            )
+            .andThen(() =>
+              notificationApi.send(userId, {
+                type: 'QuestRewardsDeposited',
+                questId,
+                traceId
+              })
+            )
+        )
+      )
+    }
+
+    const handleRewardClaimed = () => {
+      ensureValidData(
+        transactionId,
+        getDataFromQuestRewardsEvent(job.data.relevantEvents.RewardDepositedEvent)
+      ).andThen(({ userId, questId }) =>
+        ensureUserExists(userId, transactionId).andThen(() =>
+          db.rewardsClaimed({ userId, questId }).andThen(() =>
+            notificationApi.send(userId, {
+              type: 'QuestRewardsClaimed',
+              questId,
+              traceId
             })
-          ])
+          )
         )
+      )
+    }
+
+    const handleUserBadgeDeposited = () => {
+      const questId = 'FirstTransactionQuest'
+      const userId = getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited)
+      const xrdAmount = getXrdAmountFromDepositEvent(job.data.relevantEvents.XrdDeposited)
+
+      ensureValidData(transactionId, { userId, xrdAmount })
+        .map(({ userId, xrdAmount }) => ({ userId, xrdAmount: BigNumber(xrdAmount) }))
+        .andThen(({ userId, xrdAmount }) =>
+          ensureUserExists(userId, transactionId)
+            .andThen(() => tokenPriceClient.getXrdPrice())
+            .andThen((xrdPrice) =>
+              db
+                .userBadgeDeposited({
+                  userId,
+                  questId,
+                  xrdUsdValue: xrdAmount.multipliedBy(xrdPrice).toNumber(),
+                  resources: getFirstTransactionAuditResources(xrdAmount, userId)
+                })
+                .andThen(() =>
+                  ResultAsync.combine([
+                    hasAllRequirements(questId, userId).andThen((hasAll) =>
+                      hasAll
+                        ? transactionModel(childLogger)
+                            .add({
+                              userId,
+                              transactionKey: `${questId}:DepositReward`
+                            })
+                            .andThen(() =>
+                              transactionQueue.add({
+                                type: 'DepositReward',
+                                userId,
+                                questId,
+                                transactionKey: `${questId}:DepositReward`,
+                                traceId
+                              })
+                            )
+                        : okAsync('')
+                    ),
+                    notificationApi.send(userId, {
+                      type: NotificationType.QuestRequirementCompleted,
+                      questId: questId,
+                      requirementId: 'DepositUserBadge',
+                      traceId
+                    })
+                  ])
+                )
+            )
+        )
+    }
+
+    switch (type) {
+      case 'QuestRewardDeposited':
+        handleRewardDeposited()
+        break
+      case 'QuestRewardClaimed':
+        handleRewardClaimed()
+        break
+      case 'UserBadge':
+        handleUserBadgeDeposited()
         break
 
       default:
-        logger.warn({
-          method: 'eventWorker.handler',
-          eventId,
-          transactionId,
-          traceId,
+        childLogger.error({
           message: 'Unhandled Event'
         })
+        eventModel(childLogger).update(transactionId, {
+          status: EventStatus.ERROR_UNHANDLED_EVENT,
+          processedAt: new Date()
+        })
+
         break
     }
   }

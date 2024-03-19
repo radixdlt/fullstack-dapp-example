@@ -3,30 +3,34 @@ import {
   ProgrammaticScryptoSborValueArray,
   ProgrammaticScryptoSborValueNonFungibleLocalId
 } from '@radixdlt/babylon-gateway-api-sdk'
-import { Result, err, ok } from 'neverthrow'
 import { stripNonFungibleLocalId } from './stripNonFungibleLocalId'
+import { EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
 
 const findNonFungibleIdField = (
   fields: ProgrammaticScryptoSborValue[]
-): Result<ProgrammaticScryptoSborValue[], string> => {
+): ProgrammaticScryptoSborValue[] | undefined => {
   const result = fields.find(
     (field): field is ProgrammaticScryptoSborValueArray =>
       field.kind === 'Array' && field.element_kind === 'NonFungibleLocalId'
   )
 
-  return result ? ok(result.elements) : err('NonFungibleLocalId field not found')
+  return result?.elements
 }
 
-const findNonFungibleLocalIdElement = (
-  elements: ProgrammaticScryptoSborValue[]
-): Result<string, string> => {
-  const result = elements.find(
+const findNonFungibleLocalIdElement = (elements?: ProgrammaticScryptoSborValue[]) => {
+  const result = (elements || []).find(
     (element): element is ProgrammaticScryptoSborValueNonFungibleLocalId =>
       element.kind === 'NonFungibleLocalId'
   )?.value
 
-  return result ? ok(result) : err('NonFungibleLocalId value not found')
+  return result
 }
 
-export const getUserIdFromDepositUserBadgeEvent = (fields: ProgrammaticScryptoSborValue[]) =>
-  findNonFungibleIdField(fields).andThen(findNonFungibleLocalIdElement).map(stripNonFungibleLocalId)
+export const getUserIdFromDepositUserBadgeEvent = (event: EventsItem) => {
+  if (event.data.kind === 'Enum') {
+    return stripNonFungibleLocalId(
+      findNonFungibleLocalIdElement(findNonFungibleIdField(event.data.fields))
+    )
+  }
+  return
+}

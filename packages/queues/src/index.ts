@@ -1,3 +1,4 @@
+import { EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
 import { ConnectionOptions, Queue } from 'bullmq'
 import { ResultAsync } from 'neverthrow'
 import { typedError } from 'common'
@@ -9,22 +10,37 @@ export const Queues = {
   TransactionQueue: 'TransactionQueue'
 } as const
 
+export const EventJobType = {
+  QuestRewardDeposited: 'QuestRewardDeposited',
+  QuestRewardClaimed: 'QuestRewardClaimed',
+  UserBadge: 'UserBadge'
+} as const
+
+export type EventJobType = keyof typeof EventJobType
+
 export type EventJob = {
-  questId?: string
-  userId: string
-  eventId: string
+  type: EventJobType
   traceId: string
-  transactionId?: string
+  transactionId: string
+  relevantEvents: Record<string, EventsItem>
 }
 
 export type DepositRewardTransactionJob = {
   type: 'DepositReward'
-  traceId: string
-  userId: string
   questId: string
 }
 
-export type TransactionJob = DepositRewardTransactionJob
+export type MintUserBadgeTransactionJob = {
+  type: 'MintUserBadge'
+  accountAddress: string
+}
+
+export type TransactionJob = {
+  attempt: number
+  transactionKey: string
+  userId: string
+  traceId: string
+} & (DepositRewardTransactionJob | MintUserBadgeTransactionJob)
 
 type TQueues = ReturnType<typeof getQueues>
 export type TransactionQueue = TQueues['transactionQueue']

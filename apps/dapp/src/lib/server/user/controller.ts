@@ -1,12 +1,22 @@
-import { UserModel } from './model'
+import { AuditModel, TransactionModel, UserModel } from 'common'
+import { getQueues } from 'queues'
 import type { User, UserPhoneNumber } from 'database'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 import type { ApiError, ControllerMethodContext, ControllerMethodOutput } from '../_types'
-import { importTypescriptWallet } from '../helpers/importTypescriptWallet'
 import { createApiError } from 'common'
-import { createDirectDepositManifest } from './helpers/createDirectDepositManifest'
+import { dbClient } from '$lib/db'
+import { config } from '$lib/config'
 
-const UserController = (userModel = UserModel()) => {
+const UserController = ({
+  userModel = UserModel(dbClient),
+  queues = getQueues(config.redis),
+  transactionModel = TransactionModel(dbClient)
+}: Partial<{
+  userModel: UserModel
+  auditModel: AuditModel
+  transactionModel: TransactionModel
+  queues: ReturnType<typeof getQueues>
+}>) => {
   const getUser = (
     ctx: ControllerMethodContext,
     userId: string
@@ -30,40 +40,35 @@ const UserController = (userModel = UserModel()) => {
       userId: string
     }
   ): ControllerMethodOutput<undefined> =>
-    importTypescriptWallet().andThen(({ radixEngineClient }) =>
-      userModel(ctx.logger)
-        .getById(userId, { phoneNumber: true })
-        .andThen((data) =>
-          phoneNumberExists(data)
-            .andThen(() => radixEngineClient.getManifestBuilder())
-            .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
-              const transactionManifest = createDirectDepositManifest({
-                wellKnownAddresses,
-                userId,
-                accountAddress: data.accountAddress
-              })
-
-              return convertStringManifest(transactionManifest)
-                .andThen((transactionManifest) =>
-                  submitTransaction(transactionManifest, ['systemAccount'])
-                )
-                .andThen(({ txId }) =>
-                  radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-                )
-            })
-
-            .mapErr((error) => {
-              ctx.logger.error({ error, method: 'mintUserBadge', event: 'error' })
-              return createApiError('mintUserBadgeError', 500)()
-            })
-        )
-        .map(() => ({
-          httpResponseCode: 201,
-          data: undefined
-        }))
-    )
+    userModel(ctx.logger)
+      .getById(userId, { phoneNumber: true })
+      .andThen((data) =>
+        phoneNumberExists(data)
+          .andThen(() =>
+            transactionModel(ctx.logger)
+              .add({ userId, transactionKey: 'mintUserBadge', attempt: 0 })
+              .andThen(() =>
+                queues.transactionQueue.add({
+                  traceId: ctx.traceId,
+                  type: 'MintUserBadge',
+                  userId,
+                  attempt: 0,
+                  transactionKey: `mintUserBadge`,
+                  accountAddress: data.accountAddress
+                })
+              )
+          )
+          .mapErr((error) => {
+            ctx.logger.error({ error, method: 'mintUserBadge', event: 'error' })
+            return createApiError('mintUserBadgeError', 500)()
+          })
+      )
+      .map(() => ({
+        httpResponseCode: 201,
+        data: undefined
+      }))
 
   return { getUser, mintUserBadge }
 }
 
-export const userController = UserController()
+export const userController = UserController({})

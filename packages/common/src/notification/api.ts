@@ -7,6 +7,8 @@ export const NotificationType = {
   QuestRewardsClaimed: 'QuestRewardsClaimed'
 } as const
 
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
 type Notifications = {
   [NotificationType.QuestRequirementCompleted]: {
     questId: string
