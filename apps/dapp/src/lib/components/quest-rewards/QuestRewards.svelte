@@ -3,7 +3,7 @@
   import Icon from '../icon/Icon.svelte'
   import type { QuestReward } from 'content'
 
-  export let rewards: QuestReward[] = []
+  export let rewards: Readonly<QuestReward[]> = []
 </script>
 
 <div class="rewards">

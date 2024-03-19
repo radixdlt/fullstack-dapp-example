@@ -4,3 +4,5 @@ Dockerfile
 docker-compose.yml
 deploy
 node_modules
+.env.production
+.env.development

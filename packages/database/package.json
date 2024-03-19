@@ -15,7 +15,8 @@
   "scripts": {
     "db:generate": "prisma generate",
     "db:push": "prisma db push --skip-generate",
-    "db:build": "npm run db:generate && rollup -c"
+    "db:build": "npm run db:generate && rollup -c",
+    "db:clear": "prisma migrate reset --force"
   },
   "dependencies": {
     "@prisma/client": "^5.7.1"

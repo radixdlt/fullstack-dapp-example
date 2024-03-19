@@ -1,8 +1,9 @@
 <script lang="ts">
   import ProgressBar from '$lib/components/progress-bar/ProgressBar.svelte'
 
-  export let steps: unknown[]
+  export let steps: number
   export let progress: number = 0
+  export let disabled = false
 
   let width: number
   let height: number
@@ -27,11 +28,12 @@
   bind:clientWidth={width}
   bind:clientHeight={height}
   class="card progress-card"
+  class:card-disabled={disabled}
   class:hide-scrollbar={animating}
 >
   <slot name="header" {progress} />
 
-  <ProgressBar totalSteps={steps.length} bind:progress />
+  <ProgressBar totalSteps={steps} bind:progress />
 
   <slot name="content" {animationDuration} {width} {height} {progress} />
 </div>

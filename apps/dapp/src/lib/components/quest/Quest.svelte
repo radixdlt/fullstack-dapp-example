@@ -1,28 +1,166 @@
-<script lang="ts">
-  import QuestCard from './QuestCard.svelte'
+<script lang="ts" context="module">
+  type Action = {
+    onClick: () => void
+    text: string
+  }
 
+  type _Step<T extends string> = {
+    id: string
+    type: T
+    skip?: boolean
+  }
+
+  type IntroStep = _Step<'intro'> & { id: 'intro' }
+
+  type RequirementStep = _Step<'requirements'> & { id: 'requirements' }
+
+  type ClaimRewardsStep = _Step<'claimRewards'> & { id: 'claimRewards' }
+
+  type RegularStep = _Step<'regular'> & {
+    footer?:
+      | {
+          type: 'navigation'
+          actions?: {
+            next: Action
+            back: Action
+          }
+        }
+      | {
+          type: 'action'
+          action: Action
+        }
+  }
+
+  type JettyStep = _Step<'jetty'> & { dialogs: number }
+</script>
+
+<script lang="ts">
+  import type { QuestReward, Quests } from 'content'
+  import QuestCard from './QuestCard.svelte'
+  import Intro from './Intro.svelte'
+  import NavigationFooter from './NavigationFooter.svelte'
+  import JettyDialog from '../jetty-dialog/JettyDialog.svelte'
+  import JettyActionButton from './JettyActionButton.svelte'
+  import ActionFooter from './ActionFooter.svelte'
+  import JettyActionButtons from './JettyActionButtons.svelte'
+
+  export let id: keyof Quests
   export let title: string
-  export let steps: {
-    buttonTexts: {
-      prev: string
-      next: string
+  export let description: string
+  export let minutesToComplete: number
+  export let rewards: Readonly<QuestReward[]>
+  export let steps: (
+    | RegularStep
+    | JettyStep
+    | Omit<RequirementStep, 'id'>
+    | Omit<ClaimRewardsStep, 'id'>
+  )[]
+  export let requirements: {
+    text: string
+    complete: boolean
+  }[] = []
+  export let nextDisabled = false
+
+  export const setProgress = (_progress: number) => {
+    if (_progress < 0 || _progress >= _steps.length) return
+
+    const step = _steps[_progress]
+
+    if (step.skip) {
+      setProgress(progress < _progress ? _progress + 1 : _progress - 1)
+    } else {
+      lastProgress = progress
+      progress = _progress
     }
-    useJetty?: boolean
-  }[]
-  export let progress: number
-  export let nextDisabled: boolean = false
+  }
+
+  export const next = () => setProgress(progress + 1)
+  export const back = () => setProgress(progress - 1)
+
+  let progress = 0
 
   let questCardProgress = 0
 
-  let nonJettySteps = steps.filter((step) => !step.useJetty)
+  const introStep: IntroStep = {
+    id: 'intro',
+    type: 'intro',
+    skip: false
+  }
+
+  let _steps: (IntroStep | RegularStep | JettyStep)[] = [introStep, ...steps].map((step) => {
+    if (step.type === 'requirements') {
+      return {
+        id: 'requirements',
+        type: 'regular'
+      }
+    }
+
+    if (step.type === 'claimRewards') {
+      return {
+        id: 'claimRewards',
+        type: 'jetty',
+        dialogs: 1
+      }
+    }
+
+    return step
+  })
+
+  const getJettyDialogs = (i: number) => {
+    const step = _steps[i]
+    if (step.type === 'jetty') return step.dialogs
+    return 0
+  }
+
+  const nextStepIsJetty = (i: number) => {
+    const nextStep = _steps[i + 1]
+    if (nextStep && nextStep.type === 'jetty') return true
+    return false
+  }
+
+  let nonJettySteps = _steps.filter((step) => step.type !== 'jetty').length
 
   $: {
-    let slice = steps.slice(0, progress + 1)
-    let recentNonJettyStep = slice.findLastIndex((step) => !step.useJetty)
+    let slice = _steps.slice(0, progress + 1)
+    let recentNonJettyStep = slice.findLastIndex((step) => step.type === 'regular')
 
     questCardProgress =
-      recentNonJettyStep === -1 ? 0 : slice.filter((step) => !step.useJetty).length - 1
+      recentNonJettyStep === -1 ? 0 : slice.filter((step) => step.type !== 'jetty').length - 1
   }
+
+  $: render = (id: string) => {
+    if (currentStep.type === 'intro') return false
+
+    const currentId = currentStep.id
+
+    const index = _steps.findIndex((step) => step.id === id)
+
+    if (index < 0) return
+
+    const thisStep = _steps[index]
+
+    if (currentId === id) return true
+
+    const stepsBetweenThisAndProgress = _steps.slice(index + 1, progress)
+
+    if (
+      (stepsBetweenThisAndProgress.length > 0 &&
+        stepsBetweenThisAndProgress.every((step) => step.type === 'jetty') &&
+        thisStep.type !== 'jetty' &&
+        currentStep.type === 'jetty') ||
+      (thisStep.type !== 'jetty' && nextStepIsJetty(index) && progress === index + 1)
+    ) {
+      return true
+    }
+
+    return false
+  }
+
+  let lastProgress: number
+
+  $: currentStep = _steps[progress]
+
+  $: currentStepIsJetty = currentStep.type === 'jetty'
 </script>
 
 <QuestCard
@@ -30,17 +168,66 @@
   {title}
   steps={nonJettySteps}
   {nextDisabled}
-  let:Intro
-  let:progress
+  cardDisabled={currentStepIsJetty}
   on:close
-  on:next
-  on:prev
+  on:next={next}
+  on:prev={back}
 >
-  <slot {Intro} questCardProgress={progress} />
+  {#if questCardProgress === 0}
+    <Intro {title} {description} {minutesToComplete} {rewards} {requirements} on:next={next} />
+  {/if}
+
+  <slot {render} {next} {back} />
+
+  {#if render('requirements')}
+    {#await import('./VerifyRequirements.svelte') then { default: VerifyRequirements }}
+      <VerifyRequirements
+        questId={id}
+        on:all-requirements-met={lastProgress < progress ? next : back}
+      />
+    {/await}
+  {/if}
+
+  <svelte:fragment slot="footer" let:width let:animationDuration>
+    {#if currentStep.type === 'regular' && currentStep.footer}
+      {#if currentStep.footer.type === 'navigation'}
+        <NavigationFooter
+          questId={id}
+          on:next={next}
+          on:back={back}
+          showComplete={questCardProgress === nonJettySteps - 1}
+          on:complete
+        />
+      {/if}
+
+      {#if currentStep.footer.type === 'action'}
+        <ActionFooter
+          on:click={currentStep.footer.action.onClick}
+          text={currentStep.footer.action.text}
+          cardWidth={width}
+          {animationDuration}
+        />
+      {/if}
+    {/if}
+  </svelte:fragment>
 </QuestCard>
 
-{#each steps as step, i}
-  {#if step.useJetty && progress === i}
-    <slot name="jetty" {i} {progress} />
-  {/if}
-{/each}
+{#if currentStepIsJetty}
+  <JettyDialog dialogs={getJettyDialogs(progress)} let:i>
+    <slot
+      name="jetty"
+      {render}
+      dialog={i}
+      Button={JettyActionButton}
+      Buttons={JettyActionButtons}
+      {next}
+      {back}
+    />
+
+    {#if render('claimRewards')}
+      {#await import('../claim-rewards/ClaimRewards.svelte') then { default: ClaimRewards }}
+        <ClaimRewards questId={id} on:next={next} />
+      {/await}
+    {/if}
+  </JettyDialog>
+{/if}

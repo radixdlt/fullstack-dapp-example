@@ -6,7 +6,6 @@
   import { userApi } from '$lib/api/user-api'
   import { ResultAsync } from 'neverthrow'
   import { publicConfig } from '$lib/public-config'
-  import { loadQuests } from 'content'
   import Carousel from '$lib/components/carousel/Carousel.svelte'
   import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
   import { goto } from '$app/navigation'
@@ -14,14 +13,9 @@
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
-  import { i18n } from '$lib/i18n'
-  import JettyDialog from '$lib/components/jetty-dialog/JettyDialog.svelte'
-  import GlossaryIcon from '@images/book-open.svg'
-  import Glossary from '$lib/components/glossary/Glossary.svelte'
-  import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
+  import { i18n } from '$lib/i18n/i18n'
   import { resolveRDT } from '$lib/rdt'
   import { WebSocketClient } from '$lib/websocket-client'
-  import { notificationApi } from '$lib/api/notification-api'
 
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
@@ -78,11 +72,8 @@
             if (authToken) {
               if (!$webSocketClient) {
                 const ws = WebSocketClient({ authToken })
-                webSocketClient.set(ws)
-                ws.onMessage(console.log)
+                $webSocketClient = ws
               }
-
-              notificationApi.getAll().map(console.log)
             }
           })
           .mapErr(({ status }) => {
@@ -95,34 +86,13 @@
     resolveRDT(radixDappToolkit)
   })
 
-  let loadedQuests = loadQuests('en', networkId)
-
-  quests.set(loadedQuests)
-
-  let basicQuests = loadedQuests.filter((quest) => quest.category === 'Basic')
-
-  let advancedQuests = loadedQuests.filter((quest) => quest.category === 'Advanced')
+  let _quests = Object.entries($quests) as [
+    keyof typeof $quests,
+    (typeof $quests)[keyof typeof $quests]
+  ][]
 
   let activeTab: string
-
-  let showJettyMenu = false
-
-  let showGlossary = false
-
-  $: if (showGlossary) showJettyMenu = false
-
-  const handleKeydown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      if (showGlossary) {
-        showGlossary = false
-      } else {
-        showJettyMenu = false
-      }
-    }
-  }
 </script>
-
-<svelte:window on:keydown={(e) => handleKeydown(e)} />
 
 <Layout>
   <Header slot="header" />
@@ -130,8 +100,8 @@
   <Tabs
     slot="tabs"
     tabs={[
-      { name: $i18n.t('tabs_basics'), id: 'basics' },
-      { name: $i18n.t('tabs_advanced'), id: 'advanced' }
+      { name: $i18n.t('main:tabs-basics'), id: 'basics' },
+      { name: $i18n.t('main:tabs-advanced'), id: 'advanced' }
     ]}
     bind:activeTab
   />
@@ -139,67 +109,24 @@
   <svelte:fragment slot="quests">
     {#if activeTab === 'basics'}
       <Carousel let:Item>
-        {#each basicQuests as quest}
-          <Item>
-            <QuestOverview
-              title={quest.title}
-              description={quest.description}
-              minutesToComplete={quest.minutesToComplete}
-              rewards={quest.rewards}
-              backgroundImage={quest.splashImage}
-              state="unlocked"
-              on:click={() => goto(`/quest/${quest.id}`)}
-            />
-          </Item>
-        {/each}
-      </Carousel>
-    {/if}
-
-    {#if activeTab === 'advanced'}
-      <Carousel let:Item>
-        {#each advancedQuests as quest}
-          <Item>
-            <QuestOverview
-              title={quest.title}
-              description={quest.description}
-              minutesToComplete={quest.minutesToComplete}
-              rewards={quest.rewards}
-              backgroundImage={quest.splashImage}
-              state="unlocked"
-              on:click={() => goto(`/quest/${quest.id}`)}
-            />
-          </Item>
+        {#each _quests as [id, quest]}
+          {#if quest.category === 'Basic'}
+            <Item>
+              <QuestOverview
+                title={$i18n.t(`${id}.title`, { ns: 'quests' })}
+                description={$i18n.t(`${id}.description`, { ns: 'quests' })}
+                minutesToComplete={quest.minutesToComplete}
+                rewards={quest.rewards}
+                backgroundImage={quest.splashImage}
+                state="unlocked"
+                on:click={() => goto(`/quest/${id}`)}
+              />
+            </Item>
+          {/if}
         {/each}
       </Carousel>
     {/if}
   </svelte:fragment>
 </Layout>
-
-<JettyDialog
-  dialogs={showJettyMenu ? 1 : 0}
-  let:Menu
-  on:click={() => {
-    if (showGlossary) showGlossary = false
-    else showJettyMenu = !showJettyMenu
-  }}
-  close={showGlossary}
->
-  {$i18n.t('jettyDialog_menu_text')}
-  <Menu
-    options={[
-      {
-        text: $i18n.t('jettyDialog_menu_glossary'),
-        iconUrl: GlossaryIcon,
-        onClick: () => (showGlossary = true)
-      }
-    ]}
-  />
-</JettyDialog>
-
-{#if showGlossary}
-  <Backdrop>
-    <Glossary on:close={() => (showGlossary = false)} />
-  </Backdrop>
-{/if}
 
 <slot />

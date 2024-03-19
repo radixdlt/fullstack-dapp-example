@@ -14,7 +14,8 @@
     "test:storybook": "test-storybook --stories-json",
     "storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
-    "chromatic": "npx chromatic --project-token=chpt_49e81d173e53f13 --build-script-name build:storybook"
+    "chromatic": "npx chromatic --project-token=chpt_49e81d173e53f13 --build-script-name build:storybook",
+    "generate:i18n": "i18next-resources-for-ts interface -i ./src/lib/i18n/locales/en -o ./src/lib/i18n/@types/resources.d.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
@@ -31,6 +32,7 @@
     "@sveltejs/adapter-node": "^2.0.0",
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "@types/intl-tel-input": "^18.1.4",
     "@types/markdown-it": "^13.0.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
@@ -39,6 +41,7 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-storybook": "^0.6.15",
     "eslint-plugin-svelte": "^2.30.0",
+    "i18next-resources-for-ts": "^1.5.0",
     "junk": "^4.0.1",
     "markdown-it": "^14.0.0",
     "prettier": "^3.0.0",
@@ -64,10 +67,12 @@
     "database": "*",
     "content": "*",
     "i18next": "^23.8.2",
+    "intl-tel-input": "^19.5.5",
     "jsonwebtoken": "^9.0.2",
     "neverthrow": "^6.1.0",
-    "twilio": "^4.22.0",
+    "pino": "^8.17.2",
     "svelte-i18next": "^2.2.2",
+    "twilio": "^4.22.0",
     "typescript-wallet": "*"
   }
 }

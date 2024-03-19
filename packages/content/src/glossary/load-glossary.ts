@@ -1,4 +1,4 @@
-import { Language } from '../quests/quest-definitions'
+import { Language } from '..'
 import { GlossaryDefinitions, glossaryKeys } from './glossary-definitions'
 import GlossaryIndex from './glossary-index.json'
 

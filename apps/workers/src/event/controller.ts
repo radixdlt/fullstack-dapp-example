@@ -2,7 +2,7 @@ import { ResultAsync, okAsync } from 'neverthrow'
 import { EventJob, Job, TransactionQueue } from 'queues'
 import type { AppLogger, NotificationModel, UserQuestModel } from 'common'
 import { NotificationApi, NotificationType } from 'common'
-import { QuestDefinitions } from 'content'
+import { QuestDefinitions, Quests } from 'content'
 import { config } from '../config'
 
 export type EventWorkerController = ReturnType<typeof EventWorkerController>
@@ -19,7 +19,7 @@ export const EventWorkerController = ({
   logger: AppLogger
   transactionQueue: TransactionQueue
 }) => {
-  const hasAllRequirements = (childLogger: AppLogger, questId: string, userId: string) => {
+  const hasAllRequirements = (childLogger: AppLogger, questId: keyof Quests, userId: string) => {
     const questDefinition = QuestDefinitions(config.networkId)[questId]
     const requirements = Object.keys(questDefinition.requirements)
     return userQuestModel(childLogger)

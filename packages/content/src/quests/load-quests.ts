@@ -1,39 +1,28 @@
-import { Language, QuestDefinitions } from './quest-definitions'
+import { Language, QuestDefinitions, QuestId } from '..'
 import QuestIndex from './quest-index.json'
 
-export type LoadedQuest = Awaited<ReturnType<typeof loadQuests>>[0]
+export type Quests = {
+  [key in QuestId]: {
+    text: (typeof QuestIndex)[key][Language]
+    id: key
+    splashImage: string
+  } & ReturnType<typeof QuestDefinitions>[key]
+}
+
 export const loadQuests = (language: Language, networkId: number) => {
-  return Object.entries(QuestDefinitions(networkId)).map(
-    ([id, { i18n, ...questDefinitionsRest }]) => {
-      const questId = id as keyof typeof QuestIndex
+  const quests: Quests = {} as Quests
+  const questDefinitions = QuestDefinitions(networkId)
 
-      if (!i18n[language])
-        throw new Error(`Language '${language}' is not supported for quest: '${questId}'`)
-
-      const { pages: unresolvedPages, title, description, requirements } = i18n[language]
-
-      type MarkdownFilePath = keyof (typeof QuestIndex)[typeof questId][typeof language]
-
-      const pages = QuestIndex[questId][language]
-
-      const resolvedPages = unresolvedPages.map((page) => {
-        const content = page.content.map((item) =>
-          item.type === 'markdown'
-            ? { type: 'html' as const, value: pages[item.path as MarkdownFilePath] }
-            : (item as { type: 'component'; name: string })
-        )
-        return { ...page, content }
-      })
-
-      return {
-        id: questId,
-        ...questDefinitionsRest,
-        title,
-        description,
-        pages: resolvedPages,
-        requirementTexts: requirements,
-        splashImage: questDefinitionsRest.splashImage || `/quests-images/splash/${questId}.webp`
-      }
+  Object.entries(questDefinitions).forEach(([id, quest]) => {
+    // @ts-ignore
+    quests[id] = {
+      // @ts-ignore
+      text: QuestIndex[id][language],
+      id,
+      splashImage: `/quests-images/splash/${id}.webp`,
+      ...quest
     }
-  )
+  })
+
+  return quests
 }

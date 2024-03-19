@@ -44,6 +44,9 @@ body {
   --color-background-dark: #192d3a;
   --color-background-light: #fffbf4;
 
+  /* Special */
+  --color-error: #ff2d2d;
+
   /* Gradients */
   --gradient-1: linear-gradient(180deg, #6260ff 0%, #a8a6ff 100%);
   --gradient-2: linear-gradient(67deg, #f9dfcf 0%, #e6b2bb 102.4%);
@@ -63,6 +66,7 @@ body {
   --font-main: 'DM Sans', sans-serif;
   --font-headers: 'PP Fragment';
 
+  --text-xxs: 12px;
   --text-xs: 14px;
   --text-sm: 15px;
   --text-md: 16px;
@@ -98,10 +102,12 @@ body {
   /* Borders */
   --border-radius-sm: 2px;
   --border-radius-md: 4px;
-  --border-radius-lg: 16px;
-  --border-radius-xl: 24px;
-  --border-radius-2xl: 40px;
+  --border-radius-lg: 8px;
+  --border-radius-xl: 16px;
+  --border-radius-2xl: 24px;
+  --border-radius-3xl: 40px;
   --border: 1.5px solid;
+  --border-lg: 2px solid;
 }
 
 /* ------------------ */
@@ -114,9 +120,16 @@ body {
 
 .card {
   background: var(--gradient-5);
-  border-radius: var(--border-radius-2xl);
+  border-radius: var(--border-radius-3xl);
   box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.2);
   padding: var(--spacing-2xl);
+
+  &.card-disabled {
+    filter: grayscale(100%) brightness(0.7);
+    pointer-events: none;
+  }
+
+  transition: all 0.5s ease;
 }
 
 .hide-scrollbar {
@@ -177,6 +190,10 @@ body {
   text-transform: uppercase;
 }
 
+.text-faded {
+  opacity: 0.6;
+}
+
 /* ------------------ */
 
 /* Style Reset */
@@ -198,6 +215,10 @@ div {
   box-sizing: border-box;
 }
 
+input {
+  all: unset;
+}
+
 /* ------------------ */
 
 /* Element Styles */
@@ -213,6 +234,7 @@ html {
   overflow: hidden;
   height: 100%;
 }
+
 body {
   height: 100%;
   overflow: auto;

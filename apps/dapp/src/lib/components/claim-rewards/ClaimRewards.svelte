@@ -1,15 +1,30 @@
 <script lang="ts">
   import ClaimRewardsUI from './ClaimRewardsUI.svelte'
   import { publicConfig } from '$lib/public-config'
-  import { QuestDefinitions } from 'content'
   import { rdt } from '$lib/rdt'
   import { user } from '../../../stores'
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher, onMount } from 'svelte'
+  import { QuestDefinitions, type Quests } from 'content'
+  import { questApi } from '$lib/api/quest-api'
 
-  export let questId: string
+  export let questId: keyof Quests
 
   const questDefinition = QuestDefinitions(publicConfig.networkId)[questId]
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher<{
+    next: undefined
+  }>()
+
+  onMount(async () => {
+    const result = await questApi.getQuestInformation(questId)
+
+    if (result.isOk()) {
+      const { status } = result.value
+
+      if (status === 'REWARDS_CLAIMED') {
+        dispatch('next')
+      }
+    }
+  })
 
   const handleClaimRewards = () => {
     rdt.then((rdt): void => {

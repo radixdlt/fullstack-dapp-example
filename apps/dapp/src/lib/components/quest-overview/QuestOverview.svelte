@@ -11,7 +11,7 @@
   export let minutesToComplete: number
   export let state: 'locked' | 'unlocked' | 'completed' = 'locked'
   export let backgroundImage: string | undefined = undefined
-  export let rewards: QuestReward[] = []
+  export let rewards: Readonly<QuestReward[]> = []
 </script>
 
 <div
