@@ -174,10 +174,19 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
+        with:
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-radquest-secrets-read-access'
+          app_name: 'radquest'
+          step_name: 'build'
+          secret_prefix: 'GH'
+          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/radixdlt/radquest/chromatic-mj1QEZ'
+          parse_json: true
+
       - name: Publish to Chromatic
         uses: chromaui/action@05a82adb1e6919df177f54777e81a2ef3e312323 # v10.6.1
         with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          projectToken: ${{ env.GH_CHROMATIC_PROJECT_TOKEN }}
           autoAcceptChanges: 'main'
           buildScriptName: 'build:storybook'
           workingDir: apps/dapp
@@ -376,6 +385,14 @@ jobs:
       - push-worker
       - setup-tags
     steps:
+      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
+        with:
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          app_name: 'radquest'
+          step_name: 'deploy-mnnet'
+          secret_prefix: 'GH'
+          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/jenkins-credentials-RTHKoO'
+          parse_json: true
       - name: Connect to tailnet
         uses: radixdlt/public-iac-resuable-artifacts/tailnet@main
         with:
@@ -385,9 +402,9 @@ jobs:
       - name: Trigger jenkins job to deploy PR
         uses: RDXWorks-actions/jenkins-job-trigger-action@master
         with:
-          jenkins_url: ${{ secrets.JENKINS_URL }}
-          jenkins_user: radixbot
-          jenkins_token: ${{ secrets.GH_JENKINS_API_TOKEN }}
+          jenkins_url: ${{ env.GH_JENKINS_URL }}
+          jenkins_user: ${{ env.GH_JENKINS_USER }}
+          jenkins_token: ${{ env.GH_JENKINS_API_TOKEN }}
           job_name: ${{ env.jenkins_job_name }}
           job_params: |
             {
@@ -401,7 +418,7 @@ jobs:
               "aws_iam_role": "arn:aws:iam::${{ secrets.AWS_DEV_ACCOUNT_ID }}:role/jenkins-radquest-pr-deployer",
               "aws_eks_cluster" : "${{ env.dev_eks_cluster }}",
               "helm_folder" : "${{ env.helm_dir }}",
-              "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }},ci.prNumber=${{ github.event.number }}"
+              "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }},ci.prNumber=${{ github.event.number }},ci.aws_account_number=${{ secrets.AWS_DEV_ACCOUNT_ID }}"
             }
           job_timeout: '3600'
           fetch_logs: 'false'
@@ -421,6 +438,14 @@ jobs:
       - push-worker
       - setup-tags
     steps:
+      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
+        with:
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          app_name: 'radquest'
+          step_name: 'deploy-mnnet'
+          secret_prefix: 'GH'
+          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/jenkins-credentials-RTHKoO'
+          parse_json: true
       - name: Connect to tailnet
         uses: radixdlt/public-iac-resuable-artifacts/tailnet@main
         with:
@@ -430,9 +455,9 @@ jobs:
       - name: Trigger jenkins job to deploy dev
         uses: RDXWorks-actions/jenkins-job-trigger-action@master
         with:
-          jenkins_url: ${{ secrets.JENKINS_URL }}
-          jenkins_user: radixbot
-          jenkins_token: ${{ secrets.GH_JENKINS_API_TOKEN }}
+          jenkins_url: ${{ env.GH_JENKINS_URL }}
+          jenkins_user: ${{ env.GH_JENKINS_USER }}
+          jenkins_token: ${{ env.GH_JENKINS_API_TOKEN }}
           job_name: ${{ env.jenkins_job_name }}
           job_params: |
             {
@@ -444,7 +469,7 @@ jobs:
               "aws_iam_role": "arn:aws:iam::${{ secrets.AWS_DEV_ACCOUNT_ID }}:role/jenkins-radquest-dev-deployer",
               "aws_eks_cluster" : "${{ env.dev_eks_cluster }}",
               "helm_folder" : "${{ env.helm_dir }}",
-              "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}"
+              "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }},ci.aws_account_number=${{ secrets.AWS_DEV_ACCOUNT_ID }}"
             }
           job_timeout: '3600'
           fetch_logs: 'false'
@@ -461,6 +486,14 @@ jobs:
       - push-worker
       - setup-tags
     steps:
+      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
+        with:
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          app_name: 'radquest'
+          step_name: 'deploy-mnnet'
+          secret_prefix: 'GH'
+          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/jenkins-credentials-RTHKoO'
+          parse_json: true
       - name: Connect to tailnet
         uses: radixdlt/public-iac-resuable-artifacts/tailnet@main
         with:
@@ -470,9 +503,9 @@ jobs:
       - name: Trigger jenkins job to deploy stokenet
         uses: RDXWorks-actions/jenkins-job-trigger-action@master
         with:
-          jenkins_url: ${{ secrets.JENKINS_URL }}
-          jenkins_user: radixbot
-          jenkins_token: ${{ secrets.GH_JENKINS_API_TOKEN }}
+          jenkins_url: ${{ env.GH_JENKINS_URL }}
+          jenkins_user: ${{ env.GH_JENKINS_USER }}
+          jenkins_token: ${{ env.GH_JENKINS_API_TOKEN }}
           job_name: ${{ env.jenkins_job_name }}
           job_params: |
             {
@@ -484,7 +517,7 @@ jobs:
               "aws_iam_role": "arn:aws:iam::${{ secrets.AWS_PROD_ACCOUNT_ID }}:role/jenkins-radquest-stokenet-deployer",
               "aws_eks_cluster" : "${{ env.prod_eks_cluster }}",
               "helm_folder" : "${{ env.helm_dir }}",
-              "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}"
+              "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }},ci.aws_account_number=${{ secrets.AWS_PROD_ACCOUNT_ID }}"
             }
           job_timeout: '3600'
           fetch_logs: 'false'
@@ -501,6 +534,14 @@ jobs:
       - push-worker
       - setup-tags
     steps:
+      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
+        with:
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          app_name: 'radquest'
+          step_name: 'deploy-mnnet'
+          secret_prefix: 'GH'
+          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/jenkins-credentials-RTHKoO'
+          parse_json: true
       - name: Connect to tailnet
         uses: radixdlt/public-iac-resuable-artifacts/tailnet@main
         with:
@@ -510,9 +551,9 @@ jobs:
       - name: Trigger jenkins job to deploy mainnet
         uses: RDXWorks-actions/jenkins-job-trigger-action@master
         with:
-          jenkins_url: ${{ secrets.JENKINS_URL }}
-          jenkins_user: radixbot
-          jenkins_token: ${{ secrets.GH_JENKINS_API_TOKEN }}
+          jenkins_url: ${{ env.GH_JENKINS_URL }}
+          jenkins_user: ${{ env.GH_JENKINS_USER }}
+          jenkins_token: ${{ env.GH_JENKINS_API_TOKEN }}
           job_name: ${{ env.jenkins_job_name }}
           job_params: |
             {
@@ -524,7 +565,7 @@ jobs:
               "aws_iam_role": "arn:aws:iam::${{ secrets.AWS_PROD_ACCOUNT_ID }}:role/jenkins-radquest-mainnet-deployer",
               "aws_eks_cluster" : "${{ env.prod_eks_cluster }}",
               "helm_folder" : "${{ env.helm_dir }}",
-              "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}"
+              "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }},ci.aws_account_number=${{ secrets.AWS_PROD_ACCOUNT_ID }}"
             }
           job_timeout: '3600'
           fetch_logs: 'false'
@@ -561,13 +602,21 @@ jobs:
       - push-dapp
       - setup-tags
     steps:
+      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
+        with:
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          app_name: 'radquest'
+          step_name: 'snyk-monitor'
+          secret_prefix: 'SNY'
+          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
+          parse_json: true
       - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
         with:
           role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
           app_name: 'rqst-dapp'
           dockerhub_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/dockerhub-credentials'
           snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          snyk_org_id: ${{ secrets.SNYK_ORG_ID }}
+          snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
           image: docker.io/radixdlt/radquest-dapp:${{ needs.setup-tags.outputs.tag-with-network }}
           target_ref: ${{ github.ref_name }}
 
@@ -578,13 +627,21 @@ jobs:
       - push-notification
       - setup-tags
     steps:
+      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
+        with:
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          app_name: 'radquest'
+          step_name: 'snyk-monitor'
+          secret_prefix: 'SNY'
+          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
+          parse_json: true
       - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
         with:
           role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
           app_name: 'rqst-ntfcn'
           dockerhub_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/dockerhub-credentials'
           snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          snyk_org_id: ${{ secrets.SNYK_ORG_ID }}
+          snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
           image: docker.io/radixdlt/radquest-notification:${{ needs.setup-tags.outputs.tag-with-network }}
           target_ref: ${{ github.ref_name }}
 
@@ -595,13 +652,21 @@ jobs:
       - push-transaction-stream
       - setup-tags
     steps:
+      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
+        with:
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          app_name: 'radquest'
+          step_name: 'snyk-monitor'
+          secret_prefix: 'SNY'
+          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
+          parse_json: true
       - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
         with:
           role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
           app_name: 'rqst-tr-str'
           dockerhub_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/dockerhub-credentials'
           snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          snyk_org_id: ${{ secrets.SNYK_ORG_ID }}
+          snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
           image: docker.io/radixdlt/radquest-transaction-stream:${{ needs.setup-tags.outputs.tag-with-network }}
           target_ref: ${{ github.ref_name }}
 
@@ -612,13 +677,21 @@ jobs:
       - push-worker
       - setup-tags
     steps:
+      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
+        with:
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          app_name: 'radquest'
+          step_name: 'snyk-monitor'
+          secret_prefix: 'SNY'
+          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
+          parse_json: true
       - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
         with:
           role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
           app_name: 'rqst-wrkr'
           dockerhub_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/dockerhub-credentials'
           snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          snyk_org_id: ${{ secrets.SNYK_ORG_ID }}
+          snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
           image: docker.io/radixdlt/radquest-worker:${{ needs.setup-tags.outputs.tag-with-network }}
           target_ref: ${{ github.ref_name }}
 

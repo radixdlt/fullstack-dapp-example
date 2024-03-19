@@ -17,6 +17,7 @@ params:
   REDIS_PASSWORD: ""
   LOG_LEVEL: debug
   NOTIFICATION_INTERNAL_API_URL: http://notification-http-internal:3001
+  AWS_SES_MAIL_FROM: no-reply-radquest-pr@rdx-works-main.extratools.works
 
 secrets:
   - external_secret_name: worker-mnemonic
@@ -35,3 +36,7 @@ resources:
   requests:
     cpu: 50m
     memory: 128Mi
+
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: 'arn:aws:iam::{{ .StateValues.ci.aws_account_number }}:role/radquest-prs-ses-sender'
