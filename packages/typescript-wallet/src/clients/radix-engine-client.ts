@@ -1,11 +1,13 @@
 import {
   ManifestBuilder,
   ManifestSborStringRepresentation,
+  Message,
   NotarizedTransaction,
   PrivateKey,
   PublicKey,
   RadixEngineToolkit,
   TransactionBuilder,
+  TransactionBuilderManifestStep,
   TransactionHeader,
   TransactionManifest,
   bucket,
@@ -171,10 +173,16 @@ export const RadixEngineClient = <
 
   const createSignedNotarizedTransaction = (
     transactionManifest: TransactionManifest,
-    signers: (keyof T)[]
+    signers: (keyof T)[],
+    message?: Message
   ) => {
     const signer = accountKeys[signers[0] ?? payerKeys.name]
-
+    const addMessage = (builder: TransactionBuilderManifestStep) => {
+      if (message) {
+        return builder.message(message)
+      }
+      return builder
+    }
     return ResultAsync.combine([getTransactionBuilder(), createTransactionHeader(signer.publicKey)])
       .map(([builder, transactionHeader]) => {
         return {
@@ -184,7 +192,7 @@ export const RadixEngineClient = <
       })
       .andThen(({ builder, transactionHeader }) => {
         try {
-          let signStep = builder.header(transactionHeader).manifest(transactionManifest)
+          let signStep = addMessage(builder.header(transactionHeader)).manifest(transactionManifest)
 
           for (const signer of signers) {
             signStep = signStep.sign(accountKeys[signer].privateKey)
@@ -206,25 +214,34 @@ export const RadixEngineClient = <
       }))
     )
 
-  const buildTransaction = (transactionManifest: TransactionManifest, signers: (keyof T)[]) =>
-    createSignedNotarizedTransaction(transactionManifest, signers).andThen((notarizedTransaction) =>
-      ResultAsync.combine([
-        compileNotarizedTransaction(notarizedTransaction),
-        getTransactionIntentHash(notarizedTransaction)
-      ]).map(([compiledTransactionHex, { id }]) => ({
-        notarizedTransaction,
-        txId: id,
-        compiledTransactionHex
-      }))
+  const buildTransaction = (
+    transactionManifest: TransactionManifest,
+    signers: (keyof T)[],
+    message?: Message
+  ) =>
+    createSignedNotarizedTransaction(transactionManifest, signers, message).andThen(
+      (notarizedTransaction) =>
+        ResultAsync.combine([
+          compileNotarizedTransaction(notarizedTransaction),
+          getTransactionIntentHash(notarizedTransaction)
+        ]).map(([compiledTransactionHex, { id }]) => ({
+          notarizedTransaction,
+          txId: id,
+          compiledTransactionHex
+        }))
     )
 
-  const submitTransaction = (transactionManifest: TransactionManifest, signers: (keyof T)[]) => {
+  const submitTransaction = (
+    transactionManifest: TransactionManifest,
+    signers: (keyof T)[],
+    message?: Message
+  ) => {
     convertParsedManifest(transactionManifest).map((data) => {
       logger.debug(`Submitting transaction`)
       logger.debug(data.instructions.value)
     })
 
-    return buildTransaction(transactionManifest, signers)
+    return buildTransaction(transactionManifest, signers, message)
       .andThen(({ compiledTransactionHex: notarized_transaction_hex, txId }) => {
         logger.debug(`${dashboardUrl}/transaction/${txId}`)
         return gatewayClient
