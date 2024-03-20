@@ -5,8 +5,7 @@ import { questApi } from '$lib/api/quest-api'
 import type { Quests } from 'content'
 
 export const load: LayoutLoad = async ({ url, fetch }) => {
-  const questPartIndex = url.href.split('/').findIndex((part) => part === 'quest')
-  const id = url.href.split('/')[questPartIndex + 1] as keyof Quests
+  const id = url.pathname.split('/')[2] as keyof Quests
 
   let resolveQuests: (quests: Quests) => void
   let resolveText: (

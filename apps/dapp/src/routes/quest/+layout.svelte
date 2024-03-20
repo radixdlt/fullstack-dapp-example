@@ -1,12 +1,27 @@
+<script lang="ts" context="module">
+  import { user } from '../../stores'
+
+  let loggedIn = false
+
+  user.subscribe((value) => {
+    loggedIn = !!value
+  })
+
+  export const closeQuest = () => {
+    if (loggedIn) questApi.deleteSavedProgress()
+    localStorage.removeItem('savedProgress')
+    goto('/')
+  }
+</script>
+
 <script lang="ts">
   import { goto } from '$app/navigation'
+  import { questApi } from '$lib/api/quest-api'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
 
   const handleKeydown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') close()
+    if (event.key === 'Escape') closeQuest()
   }
-
-  const close = () => goto('/')
 </script>
 
 <svelte:window on:keydown={(e) => handleKeydown(e)} />

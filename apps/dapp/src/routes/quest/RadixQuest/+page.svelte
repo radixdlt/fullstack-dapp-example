@@ -1,14 +1,11 @@
 <script lang="ts">
-  import { goto } from '$app/navigation'
-  import Quest from '$lib/components/quest/Quest.svelte'
+  import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
 
   export let data: PageData
 </script>
 
 <Quest
-  on:close={() => goto('/')}
-  on:complete={() => goto('/')}
   {...data.questProps}
   steps={[
     {

@@ -18,15 +18,14 @@ const UserQuestController = ({
   const getQuestsProgress = (
     ctx: ControllerMethodContext,
     userId: string
-  ): ControllerMethodOutput<Record<string, { progress: number; status: string }>> =>
+  ): ControllerMethodOutput<Record<string, { status: string }>> =>
     userQuestModel(ctx.logger)
       .getQuestsStatus(userId)
       .map((output) => ({
-        data: output.reduce<Record<string, { progress: number; status: QuestStatus }>>(
+        data: output.reduce<Record<string, { status: QuestStatus }>>(
           (acc, curr) => ({
             ...acc,
             [curr.questId]: {
-              progress: curr.progress,
               status: curr.status
             }
           }),
@@ -34,6 +33,29 @@ const UserQuestController = ({
         ),
         httpResponseCode: 200
       }))
+
+  const saveProgress = (
+    ctx: ControllerMethodContext,
+    userId: string,
+    questId: keyof Quests,
+    progress: number
+  ): ControllerMethodOutput<void> =>
+    userQuestModel(ctx.logger)
+      .saveProgress(questId, userId, progress)
+      .map(() => ({ httpResponseCode: 200, data: undefined }))
+
+  const getSavedProgress = (ctx: ControllerMethodContext, userId: string) =>
+    userQuestModel(ctx.logger)
+      .getSavedProgress(userId)
+      .map((output) => ({
+        data: output,
+        httpResponseCode: 200
+      }))
+
+  const deleteSavedProgress = (ctx: ControllerMethodContext, userId: string) =>
+    userQuestModel(ctx.logger)
+      .deleteSavedProgress(userId)
+      .map(() => ({ httpResponseCode: 200, data: undefined }))
 
   const completeQuest = (
     ctx: ControllerMethodContext,
@@ -68,7 +90,7 @@ const UserQuestController = ({
           return errAsync(createApiError('Pre-requisites not met', 400)())
         }
 
-        return userQuestModel(ctx.logger).updateQuestStatus(questId, userId, 'IN_PROGRESS', 0)
+        return userQuestModel(ctx.logger).updateQuestStatus(questId, userId, 'IN_PROGRESS')
       })
       .map(() => ({ httpResponseCode: 200, data: undefined }))
   }
@@ -106,7 +128,15 @@ const UserQuestController = ({
       }
     })
 
-  return { getQuestsProgress, completeQuest, setQuestProgress, getQuestProgress }
+  return {
+    getQuestsProgress,
+    completeQuest,
+    setQuestProgress,
+    getQuestProgress,
+    saveProgress,
+    getSavedProgress,
+    deleteSavedProgress
+  }
 }
 
 export const userQuestController = UserQuestController({})

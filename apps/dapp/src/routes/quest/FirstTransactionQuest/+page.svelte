@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
   import { otpApi } from '$lib/api/otp-api'
-  import Quest from '$lib/components/quest/Quest.svelte'
+  import Quest from '../Quest.svelte'
   import { OtpErrorCodes, type OtpError } from '$lib/errors'
   import { i18n } from '$lib/i18n/i18n'
   import type { PageData } from './$types'
@@ -39,16 +39,17 @@
     otpError = undefined
     await otpApi.sendOneTimePassword(phoneNumber).mapErr(handleApiError)
     if (otpError) return
-    quest.next()
+    quest.actions.next()
   }
 
   let verifyOTP: VerifyOtp
 </script>
 
 <Quest
-  on:close={() => goto('/')}
   bind:this={quest}
   {...data.questProps}
+  let:next
+  let:back
   steps={[
     { id: 'intro1', type: 'jetty', dialogs: 1 },
     { id: 'intro2', type: 'jetty', dialogs: 1 },
@@ -96,7 +97,7 @@
   let:render
 >
   {#if render('verifyPhoneNumber')}
-    <VerifyPhoneNumber bind:phoneNumber on:next={quest.next} error={phoneNumberError} />
+    <VerifyPhoneNumber bind:phoneNumber on:next={next} error={phoneNumberError} />
   {/if}
 
   {#if render('verifyOtp')}
@@ -104,24 +105,24 @@
       bind:this={verifyOTP}
       bind:phoneNumber
       bind:oneTimePassword
-      on:next={quest.next}
-      on:modify-phone-number={quest.back}
+      on:next={next}
+      on:modify-phone-number={back}
     />
   {/if}
 
   {#if render('depositUserBadge')}
-    <DepositUserBadge on:next={quest.next} questId={data.id} />
+    <DepositUserBadge on:next={next} questId={data.id} />
   {/if}
 
-  <svelte:fragment slot="jetty" let:render let:Button let:Buttons>
+  <svelte:fragment slot="jetty" let:render let:Button let:Buttons let:next let:back>
     {#if render('intro1')}
       {@html data.text['0.md']}
-      <Button on:click={quest.next}>OK</Button>
+      <Button on:click={next}>OK</Button>
     {/if}
 
     {#if render('intro2')}
       {@html data.text['1.md']}
-      <Buttons nextText="OK" on:back={quest.back} on:next={quest.next} />
+      <Buttons nextText="OK" on:back={back} on:next={next} />
     {/if}
 
     {#if render('greeting')}

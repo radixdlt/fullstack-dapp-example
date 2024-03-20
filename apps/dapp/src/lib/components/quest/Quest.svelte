@@ -43,6 +43,7 @@
   import JettyActionButton from './JettyActionButton.svelte'
   import ActionFooter from './ActionFooter.svelte'
   import JettyActionButtons from './JettyActionButtons.svelte'
+  import { createEventDispatcher } from 'svelte'
 
   export let id: keyof Quests
   export let title: string
@@ -60,6 +61,7 @@
     complete: boolean
   }[] = []
   export let nextDisabled = false
+  export let startAtProgress = 0
 
   export const setProgress = (_progress: number) => {
     if (_progress < 0 || _progress >= _steps.length) return
@@ -71,11 +73,16 @@
     } else {
       lastProgress = progress
       progress = _progress
+      dispatch('progressUpdated', progress)
     }
   }
 
   export const next = () => setProgress(progress + 1)
   export const back = () => setProgress(progress - 1)
+
+  const dispatch = createEventDispatcher<{
+    progressUpdated: number
+  }>()
 
   let progress = 0
 
@@ -157,6 +164,10 @@
   }
 
   let lastProgress: number
+
+  if (startAtProgress > 0) {
+    setProgress(startAtProgress)
+  }
 
   $: currentStep = _steps[progress]
 

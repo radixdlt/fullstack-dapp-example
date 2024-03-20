@@ -16,6 +16,7 @@
   import { i18n } from '$lib/i18n/i18n'
   import { resolveRDT } from '$lib/rdt'
   import { WebSocketClient } from '$lib/websocket-client'
+  import { questApi } from '$lib/api/quest-api'
 
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
@@ -84,6 +85,17 @@
     })
 
     resolveRDT(radixDappToolkit)
+
+    const savedProgress = localStorage.getItem('savedProgress')
+
+    if (savedProgress) {
+      const { questId, progress } = JSON.parse(savedProgress)
+      goto(`/quest/${questId}#${progress}`)
+    } else if ($user) {
+      questApi.getSavedProgress().map((savedProgress) => {
+        if (savedProgress.questId) goto(`/quest/${savedProgress.questId}#${savedProgress.progress}`)
+      })
+    }
   })
 
   let _quests = Object.entries($quests) as [

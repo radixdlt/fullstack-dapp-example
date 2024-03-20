@@ -20,6 +20,7 @@ model User {
   notifications     Notification[]
   phoneNumber       UserPhoneNumber?
   completedQuestRequirements CompletedQuestRequirement[]
+  savedProgress     SavedProgress?
 }
 
 model UserPhoneNumber {
@@ -69,11 +70,17 @@ model CompletedQuestRequirement {
 
 model QuestProgress {
   questId           String
-  userId            String  
-  progress          Int             @default(0)
+  userId            String         
   status            QuestStatus     @default(IN_PROGRESS)
 
   @@id([questId, userId])
+}
+
+model SavedProgress {
+  userId    String  @id
+  questId   String
+  progress  Int
+  user User @relation(fields: [userId], references: [id]) 
 }
 
 enum QuestStatus {
