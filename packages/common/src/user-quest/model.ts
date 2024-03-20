@@ -55,12 +55,54 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
       }
     )
 
-  const updateQuestStatus = (
-    questId: string,
-    userId: string,
-    status: QuestStatus,
-    progress?: number
-  ) =>
+  const saveProgress = (questId: string, userId: string, progress: number) =>
+    ResultAsync.fromPromise(
+      db.savedProgress.upsert({
+        where: {
+          userId
+        },
+        create: {
+          userId,
+          questId,
+          progress: 0
+        },
+        update: {
+          progress
+        }
+      }),
+      (error) => {
+        logger?.error({ error, method: 'saveProgress', model: 'UserQuestModel' })
+        return createApiError('failed to save quest progress', 400)()
+      }
+    )
+
+  const getSavedProgress = (userId: string) =>
+    ResultAsync.fromPromise(
+      db.savedProgress.findFirst({
+        where: {
+          userId
+        }
+      }),
+      (error) => {
+        logger?.error({ error, method: 'getSavedProgress', model: 'UserQuestModel' })
+        return createApiError('failed to get saved progress', 400)()
+      }
+    )
+
+  const deleteSavedProgress = (userId: string) =>
+    ResultAsync.fromPromise(
+      db.savedProgress.delete({
+        where: {
+          userId
+        }
+      }),
+      (error) => {
+        logger?.error({ error, method: 'deleteSavedProgress', model: 'UserQuestModel' })
+        return createApiError('failed to delete saved progress', 400)()
+      }
+    )
+
+  const updateQuestStatus = (questId: string, userId: string, status: QuestStatus) =>
     ResultAsync.fromPromise(
       db.questProgress.upsert({
         where: {
@@ -71,12 +113,10 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
         },
         create: {
           userId,
-          questId,
-          progress: 0
+          questId
         },
         update: {
-          status,
-          progress
+          status
         }
       }),
       (error) => {
@@ -148,6 +188,9 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
     findPrerequisites,
     addVerifiedPhoneNumber,
     addCompletedRequirement,
-    findCompletedRequirements
+    findCompletedRequirements,
+    saveProgress,
+    getSavedProgress,
+    deleteSavedProgress
   }
 }
