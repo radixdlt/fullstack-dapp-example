@@ -38,7 +38,8 @@ export const TransactionWorkerController = ({
               return submitTransaction(value, ['systemAccount']).mapErr((error) =>
                 transactionModel(childLogger).setStatus(
                   { userId, transactionKey, attempt },
-                  TransactionStatus.ERROR_FAILED_TO_SUBMIT
+                  TransactionStatus.ERROR_FAILED_TO_SUBMIT,
+                  JSON.stringify(error)
                 )
               )
             })
@@ -54,7 +55,8 @@ export const TransactionWorkerController = ({
                   .mapErr((error) =>
                     transactionModel(childLogger).setStatus(
                       { userId, transactionKey, attempt },
-                      TransactionStatus.ERROR_TIMEOUT
+                      TransactionStatus.ERROR_TIMEOUT,
+                      JSON.stringify(error)
                     )
                   )
               ]).andThen(() =>
@@ -97,7 +99,7 @@ export const TransactionWorkerController = ({
                   message: 'User has exceeded KYC threshold'
                 })
                 return transactionModel(childLogger).setStatus(
-                  transactionKey,
+                  { transactionKey, userId, attempt },
                   TransactionStatus.ERROR_KYC_REQUIRED
                 )
               }

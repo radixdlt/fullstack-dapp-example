@@ -2,7 +2,6 @@ import { PrismaClient, TransactionStatus } from 'database'
 import { ResultAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
 import { AppLogger } from '../helpers'
-import crypto from 'node:crypto'
 
 export type TransactionIdentifierData = {
   transactionKey: string
@@ -13,20 +12,12 @@ export type TransactionIdentifierData = {
 export type TransactionModel = ReturnType<typeof TransactionModel>
 
 export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
-  const hash = (transactionKey: string) => {
-    const shasum = crypto.createHash('sha1')
-    shasum.update(transactionKey)
-    return shasum.digest('hex')
-  }
-
   const add = ({ transactionKey, userId, attempt }: TransactionIdentifierData) => {
-    const finalTransactionKey = hash(transactionKey)
-
     return ResultAsync.fromPromise(
       db.transaction.create({
         data: {
           userId,
-          transactionKey: finalTransactionKey,
+          transactionKey,
           attempt
         }
       }),
@@ -47,7 +38,7 @@ export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
           transactionKey_userId_attempt: {
             userId,
             attempt,
-            transactionKey: hash(transactionKey)
+            transactionKey
           }
         },
         data: {
@@ -55,7 +46,12 @@ export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
         }
       }),
       (error) => {
-        logger?.error({ error, method: 'setTransactionId', model: 'TransactionModel' })
+        logger?.error({
+          error,
+          method: 'setTransactionId',
+          model: 'TransactionModel',
+          data: { transactionKey, userId, attempt, transactionId }
+        })
         return createApiError('failed to update transaction id', 400)()
       }
     )
@@ -72,7 +68,7 @@ export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
           transactionKey_userId_attempt: {
             userId,
             attempt: attempt,
-            transactionKey: hash(transactionKey)
+            transactionKey
           }
         },
         data: {

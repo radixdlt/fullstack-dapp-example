@@ -1,11 +1,11 @@
 import { TokenPriceClient } from './../token-price-client'
 import { ResultAsync, okAsync, errAsync } from 'neverthrow'
 import { EventJob, Job, TransactionQueue } from 'queues'
-import { QuestDefinitions, Quests, EventId } from 'content'
+import { QuestDefinitions, Quests } from 'content'
 import type { AppLogger, EventModel, UserModel, UserQuestModel, TransactionModel } from 'common'
 import { NotificationApi, NotificationType } from 'common'
 import { config } from '../config'
-import { EventStatus, PrismaClient } from 'database'
+import { EventError, PrismaClient } from 'database'
 import { getUserIdFromDepositUserBadgeEvent } from './helpers/getUserIdFromDepositUserBadgeEvent'
 import { getDataFromQuestRewardsEvent } from './helpers/getDataFromQuestRewardsEvent'
 import { getXrdAmountFromDepositEvent } from './helpers/getXrdAmountFromDepositEvent'
@@ -53,8 +53,7 @@ export const EventWorkerController = ({
         .getById(userId, {})
         .mapErr(() =>
           eventModel(childLogger).update(transactionId, {
-            status: EventStatus.ERROR_USER_NOT_FOUND,
-            processedAt: new Date()
+            error: EventError.ERROR_USER_NOT_FOUND
           })
         )
 
@@ -72,8 +71,7 @@ export const EventWorkerController = ({
 
         return eventModel(childLogger)
           .update(transactionId, {
-            status: EventStatus.ERROR_INVALID_DATA,
-            processedAt: new Date()
+            error: EventError.ERROR_INVALID_DATA
           })
           .andThen(() => errAsync(''))
       })
@@ -86,7 +84,7 @@ export const EventWorkerController = ({
         .map((completedRequirements) => completedRequirements.length === requirements.length)
     }
 
-    const handleRewardDeposited = () => {
+    const handleRewardDeposited = () =>
       ensureValidData(
         transactionId,
         getDataFromQuestRewardsEvent(job.data.relevantEvents.RewardDepositedEvent)
@@ -111,9 +109,8 @@ export const EventWorkerController = ({
             )
         )
       )
-    }
 
-    const handleRewardClaimed = () => {
+    const handleRewardClaimed = () =>
       ensureValidData(
         transactionId,
         getDataFromQuestRewardsEvent(job.data.relevantEvents.RewardDepositedEvent)
@@ -128,14 +125,13 @@ export const EventWorkerController = ({
           )
         )
       )
-    }
 
     const handleUserBadgeDeposited = () => {
       const questId = 'FirstTransactionQuest'
       const userId = getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited)
       const xrdAmount = getXrdAmountFromDepositEvent(job.data.relevantEvents.XrdDeposited)
 
-      ensureValidData(transactionId, { userId, xrdAmount })
+      return ensureValidData(transactionId, { userId, xrdAmount })
         .map(({ userId, xrdAmount }) => ({ userId, xrdAmount: BigNumber(xrdAmount) }))
         .andThen(({ userId, xrdAmount }) =>
           ensureUserExists(userId, transactionId)
@@ -155,13 +151,15 @@ export const EventWorkerController = ({
                         ? transactionModel(childLogger)
                             .add({
                               userId,
-                              transactionKey: `${questId}:DepositReward`
+                              transactionKey: `${questId}:DepositReward`,
+                              attempt: 0
                             })
                             .andThen(() =>
                               transactionQueue.add({
                                 type: 'DepositReward',
                                 userId,
                                 questId,
+                                attempt: 0,
                                 transactionKey: `${questId}:DepositReward`,
                                 traceId
                               })
@@ -182,25 +180,19 @@ export const EventWorkerController = ({
 
     switch (type) {
       case 'QuestRewardDeposited':
-        handleRewardDeposited()
-        break
+        return handleRewardDeposited()
       case 'QuestRewardClaimed':
-        handleRewardClaimed()
-        break
+        return handleRewardClaimed()
       case 'UserBadge':
-        handleUserBadgeDeposited()
-        break
+        return handleUserBadgeDeposited()
 
       default:
         childLogger.error({
           message: 'Unhandled Event'
         })
-        eventModel(childLogger).update(transactionId, {
-          status: EventStatus.ERROR_UNHANDLED_EVENT,
-          processedAt: new Date()
+        return eventModel(childLogger).update(transactionId, {
+          error: EventError.ERROR_UNHANDLED_EVENT
         })
-
-        break
     }
   }
 

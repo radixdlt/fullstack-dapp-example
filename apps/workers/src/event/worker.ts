@@ -23,7 +23,7 @@ export const EventWorker = (
         transactionId: job.data.transactionId
       })
 
-      eventWorkerController.handler(job)
+      await eventWorkerController.handler(job)
     },
     { connection }
   )

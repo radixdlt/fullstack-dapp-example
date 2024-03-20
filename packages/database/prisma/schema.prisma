@@ -44,14 +44,12 @@ model Event {
   userId            String?
   createdAt         DateTime        @default(now())
   processedAt       DateTime?
-  status            EventStatus     @default(PENDING)
+  error             EventError?
 
   user              User?            @relation(fields: [userId], references: [id])
 }
 
-enum EventStatus {
-  PENDING
-  PROCESSED
+enum EventError {
   ERROR_INVALID_DATA
   ERROR_USER_NOT_FOUND
   ERROR_UNHANDLED_EVENT
