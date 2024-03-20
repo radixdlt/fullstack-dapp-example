@@ -32,7 +32,7 @@ pub enum Rarity {
 }
 
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
-struct Radgem {
+struct RadgemData {
     name: String,
     key_image_url: Url,
     rarity: Rarity,
@@ -76,7 +76,7 @@ fn create_radgem() {
               "icon_url" => "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg", locked;
             }
         ),
-        None::<IndexMap<NonFungibleLocalId, Radgem>>,
+        None::<IndexMap<NonFungibleLocalId, RadgemData>>,
     );
 
     dump_manifest_to_file_system(
@@ -114,7 +114,7 @@ pub enum Energy {
 }
 
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
-struct MorphEnergyCard {
+struct MorphEnergyCardData {
     name: String,
     key_image_url: Url,
     rarity: Rarity,
@@ -157,7 +157,7 @@ fn create_morph_card() {
             "icon_url" => "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg", locked;
           }
         ),
-        None::<IndexMap<NonFungibleLocalId, MorphEnergyCard>>,
+        None::<IndexMap<NonFungibleLocalId, MorphEnergyCardData>>,
     );
 
     dump_manifest_to_file_system(
@@ -178,7 +178,7 @@ pub enum RadmorphRarity {
     Magnificent,
 }
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
-struct Radmorph {
+struct RadmorphData {
     name: String,
     key_image_url: Url,
     rarity: RadmorphRarity,
@@ -221,7 +221,7 @@ fn create_radmorph() {
             "icon_url" => "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg", locked;
           }
         ),
-        None::<IndexMap<NonFungibleLocalId, Radmorph>>,
+        None::<IndexMap<NonFungibleLocalId, RadmorphData>>,
     );
 
     dump_manifest_to_file_system(

@@ -1,8 +1,8 @@
 use scrypto::prelude::*;
 
 use crate::{
-    morph_card_forge::{Energy, MorphCard},
-    radgem_forge::{Color, Material, Radgem},
+    morph_card_forge::{Energy, MorphCardData},
+    radgem_forge::{Color, Material, RadgemData},
 };
 
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
@@ -14,7 +14,7 @@ pub enum Rarity {
 }
 
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
-pub struct Radmorph {
+pub struct RadmorphData {
     name: String,
     key_image_url: Url,
     rarity: Rarity,
@@ -62,9 +62,9 @@ mod radmorph_forge {
 
         pub fn mint_radmorph(
             &mut self,
-            radgem1_data: Radgem,
-            radgem2_data: Radgem,
-            morph_card_data: MorphCard,
+            radgem1_data: RadgemData,
+            radgem2_data: RadgemData,
+            morph_card_data: MorphCardData,
             key_image_url: Url,
         ) -> Bucket {
             let material = if &radgem1_data.rarity >= &radgem2_data.rarity {
@@ -108,7 +108,7 @@ mod radmorph_forge {
             energy: Energy,
             color_1: Color,
             color_2: Color,
-        ) -> Radmorph {
+        ) -> RadmorphData {
             let rarity_name = match rarity {
                 Rarity::Fine => "Fine",
                 Rarity::Precious => "Precious",
@@ -143,7 +143,7 @@ mod radmorph_forge {
                 Energy::Whirlpool => "Whirlpool",
             };
 
-            Radmorph {
+            RadmorphData {
                 name: format!("{} {} {} RadMorph", rarity_name, material_name, energy_name),
                 key_image_url,
                 rarity,

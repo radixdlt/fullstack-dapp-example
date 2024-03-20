@@ -1,6 +1,6 @@
 use crate::{
-    morph_card_forge::MorphCard, radgem_forge::radgem_forge::RadgemForge, radgem_forge::Radgem,
-    radmorph_forge::radmorph_forge::RadmorphForge,
+    morph_card_forge::MorphCardData, radgem_forge::radgem_forge::RadgemForge,
+    radgem_forge::RadgemData, radmorph_forge::radmorph_forge::RadmorphForge,
 };
 use scrypto::prelude::*;
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
@@ -187,15 +187,15 @@ mod refinery {
             assert_eq!(morph_card.amount(), dec!(1));
 
             // Get the RadGem and MorphCard data
-            let mut radgems_data: Vec<Radgem> = radgems
+            let mut radgems_data: Vec<RadgemData> = radgems
                 .as_non_fungible()
-                .non_fungibles::<Radgem>()
+                .non_fungibles::<RadgemData>()
                 .iter()
                 .map(|gem| gem.data())
                 .collect();
             let morph_card_data = morph_card
                 .as_non_fungible()
-                .non_fungible::<MorphCard>()
+                .non_fungible::<MorphCardData>()
                 .data();
 
             // Burn resources

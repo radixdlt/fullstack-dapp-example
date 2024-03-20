@@ -63,7 +63,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
                 Array<Tuple>(
                     Tuple(
                         Enum<1u8>(
-                            "Radgem"
+                            "RadgemData"
                         ),
                         Enum<1u8>(
                             Enum<0u8>(

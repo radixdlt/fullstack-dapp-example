@@ -29,7 +29,7 @@ pub enum Rarity {
 }
 
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
-pub struct Radgem {
+pub struct RadgemData {
     pub name: String,
     pub key_image_url: Url,
     pub color: Color,
@@ -82,7 +82,7 @@ mod radgem_forge {
             let (color, color_name) = self.assign_color(rand_num_1);
             let (material, material_name) = self.assign_material(rand_num_2);
 
-            let radgem = Radgem {
+            let radgem = RadgemData {
                 name: format!("{} {} RadGem", color_name, material_name),
                 // TODO: Replace with actual image URL
                 key_image_url: Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"),

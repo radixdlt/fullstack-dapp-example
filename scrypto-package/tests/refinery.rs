@@ -1,8 +1,8 @@
 use radix_engine_interface::prelude::*;
 use radquest::{
-    morph_card_forge::{Energy, MorphCard, Rarity as MorphCardRarity},
-    radgem_forge::{Color, Material, Radgem, Rarity as RadgemRarity},
-    radmorph_forge::Radmorph,
+    morph_card_forge::{Availability, Energy, MorphCardData, Rarity as MorphCardRarity},
+    radgem_forge::{Color, Material, RadgemData, Rarity as RadgemRarity},
+    radmorph_forge::RadmorphData,
     refinery::{test_bindings::*, UserId},
 };
 use scrypto::this_package;
@@ -57,14 +57,14 @@ fn arrange_test_environment() -> Result<
         ))
         .mint_initial_supply(
             [
-                Radgem {
+                RadgemData {
                     name: "Crystalline Coral Radgem".to_owned(),
                     key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
                     color: Color::Coral,
                     material: Material::Crystalline,
                     rarity: RadgemRarity::Rare,
                 },
-                Radgem {
+                RadgemData {
                     name: "Metallic Forest Radgem".to_owned(),
                     key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
                     color: Color::Forest,
@@ -80,14 +80,15 @@ fn arrange_test_environment() -> Result<
             burner_updater => rule!(deny_all);
         ))
         .mint_initial_supply(
-            [MorphCard {
+            [MorphCardData {
                 name: "MoltenLava Morph Card".to_string(),
                 rarity: MorphCardRarity::Rare,
                 energy: Energy::MoltenLava,
+                availability: Availability::Random,
             }],
             &mut env,
         )?;
-    let radmorph = ResourceBuilder::new_ruid_non_fungible::<Radmorph>(OwnerRole::None)
+    let radmorph = ResourceBuilder::new_ruid_non_fungible::<RadmorphData>(OwnerRole::None)
         .mint_roles(mint_roles!(
             minter => rule!(require(admin_badge.resource_address(&mut env)?));
             minter_updater => rule!(deny_all);
