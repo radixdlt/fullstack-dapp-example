@@ -1,6 +1,10 @@
 use scrypto::prelude::*;
 
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
+#[sbor(transparent)]
+pub struct UserId(pub String);
+
+#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 pub enum Energy {
     MoltenLava,
     PyroclasticFlow,
@@ -104,13 +108,29 @@ mod morph_card_forge {
             .globalize()
         }
 
-        pub fn mint_fixed_card(&mut self, card_id: String) -> Bucket {
-            let morph_card = self.fixed_cards.get(&card_id).unwrap().clone();
+        pub fn mint_fixed_card(&mut self, card_id: String, user_id: Option<UserId>) -> Bucket {
+            let morph_card_data = self.fixed_cards.get(&card_id).unwrap().clone();
 
-            self.admin_badge.authorize_with_amount(1, || {
+            let morph_card = self.admin_badge.authorize_with_amount(1, || {
                 self.morph_card_resource_manager
-                    .mint_ruid_non_fungible(morph_card)
-            })
+                    .mint_ruid_non_fungible(morph_card_data.clone())
+            });
+
+            let local_id = morph_card
+                .as_non_fungible()
+                .non_fungible::<MorphCardData>()
+                .local_id()
+                .clone();
+
+            Runtime::emit_event(MorphCardMintedEvent {
+                user_id,
+                local_id,
+                rarity: morph_card_data.rarity,
+                energy: morph_card_data.energy,
+                availability: Availability::Fixed,
+            });
+
+            morph_card
         }
 
         pub fn set_fixed_cards(&mut self, cards: Vec<MorphCardDataInput>) {
@@ -131,7 +151,7 @@ mod morph_card_forge {
             }
         }
 
-        pub fn mint_random_card(&mut self, rand_num: Decimal) -> Bucket {
+        pub fn mint_random_card(&mut self, rand_num: Decimal, user_id: Option<UserId>) -> Bucket {
             let i: usize = (rand_num * self.random_card_ids.len())
                 .checked_floor()
                 .unwrap()
@@ -139,12 +159,28 @@ mod morph_card_forge {
                 .unwrap();
 
             let card_id = self.random_card_ids[i].clone();
-            let morph_card = self.random_cards.get(&card_id).unwrap().clone();
+            let morph_card_data = self.random_cards.get(&card_id).unwrap().clone();
 
-            self.admin_badge.authorize_with_amount(1, || {
+            let morph_card = self.admin_badge.authorize_with_amount(1, || {
                 self.morph_card_resource_manager
-                    .mint_ruid_non_fungible(morph_card)
-            })
+                    .mint_ruid_non_fungible(morph_card_data.clone())
+            });
+
+            let local_id = morph_card
+                .as_non_fungible()
+                .non_fungible::<MorphCardData>()
+                .local_id()
+                .clone();
+
+            Runtime::emit_event(MorphCardMintedEvent {
+                user_id,
+                local_id,
+                rarity: morph_card_data.rarity,
+                energy: morph_card_data.energy,
+                availability: Availability::Random,
+            });
+
+            morph_card
         }
 
         pub fn set_random_cards(&mut self, cards: Vec<MorphCardDataInput>) {
@@ -166,4 +202,13 @@ mod morph_card_forge {
             }
         }
     }
+}
+
+#[derive(ScryptoSbor, ScryptoEvent)]
+pub struct MorphCardMintedEvent {
+    user_id: Option<UserId>,
+    local_id: NonFungibleLocalId,
+    rarity: Rarity,
+    energy: Energy,
+    availability: Availability,
 }

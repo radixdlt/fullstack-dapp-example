@@ -75,7 +75,7 @@ fn can_mint_morph_energy_card() -> Result<(), RuntimeError> {
 
     let card_id = "Molten Lava Morph Card".to_owned();
 
-    let morph_card = morph_card_forge.mint_fixed_card(card_id, &mut env)?;
+    let morph_card = morph_card_forge.mint_fixed_card(card_id, None, &mut env)?;
 
     assert_eq!(morph_card.amount(&mut env)?, dec!(1));
 
@@ -136,7 +136,7 @@ fn can_mint_random_morph_energy_card() -> Result<(), RuntimeError> {
 
     let rand_num = dec!(0.5);
 
-    let morph_card = morph_card_forge.mint_random_card(rand_num, &mut env)?;
+    let morph_card = morph_card_forge.mint_random_card(rand_num, None, &mut env)?;
 
     assert_eq!(morph_card.amount(&mut env)?, dec!(1));
 
