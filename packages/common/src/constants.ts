@@ -15,10 +15,11 @@ export const Addresses = (networkId: number) => {
         resources: {
           elementAddress: 'resource_tdx_2_1th5y72fe3afxhuh4nkdtvcqw6tvhvdfupl87ua7flynk97mqxlmgsh'
         },
-        package: 'package_tdx_2_1p4ad0gvtrrcndtlza7xd409x7qk7sqtz35qsjnaejrgxz6gdtjmghd',
+        package: 'package_tdx_2_1ph23256u3wd2lzv9gd07tdxmuz055fceqrj8v4fa4c65jx85256usx',
         components: {
-          questRewards: 'component_tdx_2_1crs0mxn0fv0ml789q6thepetdcxg7gruurt07asddxrz4sv453fpvq'
-        }
+          questRewards: 'component_tdx_2_1cp2qf6rzzfhny0qdp40w9jz4m98g9hdtmzd4fdg6gc0epknezg0y65'
+        },
+        xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc'
       }
     } as const
   )[networkConfig.networkName]!

@@ -21,5 +21,6 @@ export const radixEngineClient = RadixEngineClient({
 export const config = {
   networkName,
   network: radixEngineClient.gatewayClient.networkConfig,
-  radQuest: radQuestEntityAddresses
+  radQuest: radQuestEntityAddresses,
+  directXrdDepositAmount: 10
 }

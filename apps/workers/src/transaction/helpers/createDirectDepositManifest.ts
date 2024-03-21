@@ -1,5 +1,5 @@
-import { config } from '$lib/config'
-import type { WellKnownAddresses } from 'common'
+import { WellKnownAddresses } from 'common'
+import { config } from '../../config'
 
 export const createDirectDepositManifest = ({
   wellKnownAddresses,
@@ -10,8 +10,8 @@ export const createDirectDepositManifest = ({
   userId: string
   accountAddress: string
 }) => {
-  const { userBadgeAddress, adminBadgeAddress } = config.dapp.badges
-  const directXrdDepositAmount = config.dapp.directXrdDepositAmount
+  const { userBadgeAddress, adminBadgeAddress } = config.radQuest.badges
+  const directXrdDepositAmount = config.radQuest.directXrdDepositAmount
   return `
     CALL_METHOD 
       Address("${wellKnownAddresses.accountAddress.payerAccount}") 

@@ -1,79 +1,59 @@
-import { CommittedTransactionInfo } from '@radixdlt/babylon-gateway-api-sdk'
-import { TrackedEvents } from './tracked-events'
-import { isTrackedEvent } from './helpers/isTrackedEvent'
-import { getEventDataFields } from './helpers/getEventDataFields'
-import { findFieldMatch } from './helpers/findFieldMatch'
-import { getUserIdFromEventDataFields } from './helpers/getUserIdFromEventDataFields'
+import { CommittedTransactionInfo, EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
 import { Result, ok } from 'neverthrow'
-import { isGloballyTrackedEvent } from './helpers/isGloballyTrackedEvent'
-import { getDataFromGloballyTrackedEvent } from './helpers/getDataFromGloballyTrackedEvent'
+import { EventJobType } from 'queues'
+import { TrackedTransactions } from './tracked-transaction-types'
 
 export type FilteredTransaction = {
-  questId: string
+  type: EventJobType
   transactionId: string
-  userId: string
-  eventId: string
+  relevantEvents: Record<string, EventsItem>
 }
+
+const intersection = <T>(a: T[], b: T[]) => a.filter((value) => b.includes(value))
 
 export type FilterTransactions = ReturnType<typeof FilterTransactions>
 export const FilterTransactions =
-  (trackedEvents: TrackedEvents) =>
+  (trackedTransactions: TrackedTransactions) =>
   (transactions: CommittedTransactionInfo[]): Result<FilteredTransaction[], never> =>
     ok(
       transactions
         .map((transaction) => {
           const events = transaction.receipt?.events
 
-          if (transaction.transaction_status === 'CommittedSuccess' && events)
-            return events.map((event) => {
-              const trackedEvent = isTrackedEvent(event.name, trackedEvents)
-              const eventDataFields = getEventDataFields(event.data)
+          let transactionType: EventJobType | undefined
+          let relevantEvents: Record<string, EventsItem> = {}
 
-              if (trackedEvent && eventDataFields) {
-                const eventDataFieldMatch = trackedEvent.find(
-                  (item) => findFieldMatch(eventDataFields, item.matchField).length > 0
-                )
+          if (transaction.transaction_status === 'CommittedSuccess' && events) {
+            for (const event of events) {
+              for (const [transactionTypeName, trackedEventsFn] of Object.entries(
+                trackedTransactions
+              )) {
+                for (const [trackedEventName, trackedEventFn] of Object.entries(trackedEventsFn)) {
+                  if (trackedEventFn(event)) {
+                    relevantEvents[trackedEventName] = event
+                  }
 
-                if (eventDataFieldMatch) {
-                  const transactionId = transaction.intent_hash!
-                  const { eventId, questId } = eventDataFieldMatch
-                  const userId = getUserIdFromEventDataFields(
-                    transactionId,
-                    eventId,
-                    eventDataFields
-                  )
-
-                  return {
-                    questId,
-                    eventId,
-                    userId,
-                    transactionId
+                  const trackedEventKeys = Object.keys(trackedEventsFn)
+                  if (
+                    intersection(Object.keys(relevantEvents), trackedEventKeys).length ===
+                    trackedEventKeys.length
+                  ) {
+                    transactionType = transactionTypeName as EventJobType
+                    break
                   }
                 }
+
+                if (transactionType) break
               }
+              if (transactionType) break
+            }
 
-              if (isGloballyTrackedEvent(event)) {
-                const transactionId = transaction.intent_hash!
-                const eventId = event.name
-                const data = getDataFromGloballyTrackedEvent(event)
-
-                if (!data) return
-
-                const { questId, userId } = data
-
-                return {
-                  questId,
-                  eventId,
-                  userId,
-                  transactionId
-                }
-              }
-
-              return
-            })
+            return transactionType
+              ? { type: transactionType, relevantEvents, transactionId: transaction.intent_hash! }
+              : undefined
+          }
 
           return
         })
-        .flat()
         .filter((item): item is FilteredTransaction => !!item)
     )

@@ -72,6 +72,36 @@ export default [
           }
         },
         {
+          name: 'DepositEvent',
+          emitter: {
+            type: 'Method',
+            entity: {
+              is_global: true,
+              entity_type: 'GlobalVirtualEd25519Account',
+              entity_address:
+                'account_tdx_2_12y68e2fqlpdjztt96vk0np8lv5h4f5sanhx8jp0qwqm5gljep8zgeh'
+            },
+            object_module_id: 'Main'
+          },
+          data: {
+            kind: 'Enum',
+            type_name: 'DepositEvent',
+            variant_id: 0,
+            variant_name: 'Fungible',
+            fields: [
+              {
+                kind: 'Reference',
+                type_name: 'ResourceAddress',
+                value: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc'
+              },
+              {
+                kind: 'Decimal',
+                value: '10'
+              }
+            ]
+          }
+        },
+        {
           name: 'VaultCreationEvent',
           emitter: {
             type: 'Method',

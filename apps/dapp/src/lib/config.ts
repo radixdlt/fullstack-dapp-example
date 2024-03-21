@@ -11,6 +11,9 @@ const {
   POSTGRES_PASSWORD,
   POSTGRES_PORT,
   POSTGRES_USER,
+  REDIS_HOST,
+  REDIS_PORT,
+  REDIS_PASSWORD,
   TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN,
   TWILIO_SERVICE_SID
@@ -33,13 +36,17 @@ export const config = {
     password: POSTGRES_PASSWORD,
     port: parseInt(POSTGRES_PORT, 10)
   },
+  redis: {
+    host: REDIS_HOST,
+    port: parseInt(REDIS_PORT ?? '6379', 10),
+    password: REDIS_PASSWORD
+  },
   twilio: {
     accountSid: TWILIO_ACCOUNT_SID || 'AC',
     authToken: TWILIO_AUTH_TOKEN || '',
     serviceSid: TWILIO_SERVICE_SID || ''
   },
   dapp: {
-    directXrdDepositAmount: 10,
     expectedOrigin: EXPECTED_ORIGIN,
     networkId: publicConfig.networkId,
     dAppDefinitionAddress: publicConfig.dAppDefinitionAddress ?? '',

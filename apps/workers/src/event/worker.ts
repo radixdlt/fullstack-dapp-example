@@ -19,18 +19,24 @@ export const EventWorker = (
       logger.debug({
         method: 'eventWorker.process',
         id: job.id,
-        data: job.data
+        type: job.data.type,
+        transactionId: job.data.transactionId
       })
 
-      eventWorkerController.handler(job)
+      await eventWorkerController.handler(job)
     },
     { connection }
   )
 
   worker.on('completed', (job) => {
-    const childLogger = logger.child({ id: job.id, data: job.data, traceId: job.data.traceId })
+    const childLogger = logger.child({
+      id: job.id,
+      type: job.data.type,
+      traceId: job.data.traceId,
+      transactionId: job.data.transactionId
+    })
     eventModel(childLogger)
-      .markAsProcessed(job.data.transactionId!)
+      .markAsProcessed(job.data.transactionId)
       .map(() =>
         childLogger.debug({
           method: 'eventWorker.completed'

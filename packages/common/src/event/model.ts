@@ -1,5 +1,4 @@
-import { Prisma } from '@prisma/client'
-import type { PrismaClient } from 'database'
+import { EventError, type PrismaClient } from 'database'
 import { ResultAsync } from 'neverthrow'
 import { ApiError, createApiError } from '../helpers/create-api-error'
 import { AppLogger } from '../helpers'
@@ -23,36 +22,50 @@ export const EventModel = (db: PrismaClient) => (logger?: AppLogger) => {
   const addMultiple = (
     events: {
       eventId: string
-      questId: string
+      questId?: string
       transactionId: string
-      userId: string
+      userId?: string
     }[]
   ) =>
-    ResultAsync.fromPromise<Event[], ApiError>(
-      events.length
-        ? db.$queryRaw(
-            Prisma.raw(`
-                with data(id, "questId", "transactionId", "userId") AS (
-                  VALUES  
-                  ${events
-                    .map(
-                      (item) =>
-                        `('${item.eventId}', '${item.questId}', '${item.transactionId}', '${item.userId}')`
-                    )
-                    .join(', ')}
-                )
-                insert into "Event" (id, "questId", "transactionId", "userId")
-                select d.id, d."questId", d."transactionId", d."userId"
-                from data d
-                where exists (select 1 from "User" u where u."id" = d."userId") 
-                AND not exists (select 1 from "Event" u where u."transactionId" = d."transactionId")
-                Returning *;
-          `)
-          )
-        : Promise.resolve([]),
+    ResultAsync.fromPromise<{ count: number }, ApiError>(
+      db.event.createMany({
+        data: events.map((event) => ({
+          id: event.eventId,
+          questId: event.questId,
+          transactionId: event.transactionId,
+          userId: event.userId
+        }))
+      }),
       (error) => {
         logger?.error({ error, method: 'addMultiple', model: 'EventModel' })
         return createApiError('failed to add multiple events', 400)()
+      }
+    )
+
+  const update = (
+    transactionId: string,
+    {
+      questId,
+      userId,
+      error,
+      processedAt
+    }: Partial<{ questId: string; userId: string; error: EventError; processedAt: Date }>
+  ) =>
+    ResultAsync.fromPromise(
+      db.event.update({
+        where: {
+          transactionId
+        },
+        data: {
+          questId,
+          userId,
+          error,
+          processedAt
+        }
+      }),
+      (error) => {
+        logger?.error({ error, method: 'update', model: 'EventModel' })
+        return createApiError('failed to update event', 400)()
       }
     )
 
@@ -70,6 +83,7 @@ export const EventModel = (db: PrismaClient) => (logger?: AppLogger) => {
 
   return {
     addMultiple,
+    update,
     markAsProcessed,
     getLastAddedTransactionId
   }

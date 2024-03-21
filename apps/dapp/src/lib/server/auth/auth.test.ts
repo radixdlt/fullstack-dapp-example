@@ -5,8 +5,7 @@ import { AuthController } from './controller'
 import { AuthModel } from './model'
 import { type MockContext, type Context, createMockContext } from '$lib/db/context'
 import type { SignedChallenge } from '@radixdlt/radix-dapp-toolkit'
-import { UserModel } from '../user/model'
-import { appLogger } from 'common'
+import { appLogger, UserModel } from 'common'
 import { publicConfig } from '$lib/public-config'
 import { UserQuestModel } from 'common'
 
@@ -14,7 +13,7 @@ let mockCtx: MockContext
 let ctx: Context
 let controller: AuthController
 
-const methodCtx = { logger: appLogger }
+const methodCtx = { logger: appLogger, traceId: crypto.randomUUID() }
 
 describe('AuthController', () => {
   beforeEach(() => {
@@ -30,7 +29,6 @@ describe('AuthController', () => {
         expectedOrigin: 'http://localhost:5173',
         dAppDefinitionAddress: publicConfig.dAppDefinitionAddress || '',
         networkId: 2,
-        directXrdDepositAmount: 10,
         ...Addresses(2)
       }
     })

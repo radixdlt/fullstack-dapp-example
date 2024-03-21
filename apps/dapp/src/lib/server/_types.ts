@@ -21,4 +21,5 @@ export type ControllerMethodOutput<T = any> = ResultAsync<
 
 export type ControllerMethodContext = {
   logger: AppLogger
+  traceId: string
 }
