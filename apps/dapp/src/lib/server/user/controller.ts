@@ -1,21 +1,43 @@
 import { AuditModel, TransactionModel, UserModel } from 'common'
-import { getQueues } from 'queues'
 import type { User, UserPhoneNumber } from 'database'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 import type { ApiError, ControllerMethodContext, ControllerMethodOutput } from '../_types'
 import { createApiError } from 'common'
 import { dbClient } from '$lib/db'
+import { Queue } from 'bullmq'
 import { config } from '$lib/config'
+
+export const Queues = {
+  EventQueue: 'EventQueue',
+  TransactionQueue: 'TransactionQueue'
+} as const
+
+export type DepositRewardTransactionJob = {
+  type: 'DepositReward'
+  questId: string
+}
+
+export type MintUserBadgeTransactionJob = {
+  type: 'MintUserBadge'
+  accountAddress: string
+}
+
+export type TransactionJob = {
+  attempt: number
+  transactionKey: string
+  userId: string
+  traceId: string
+} & (DepositRewardTransactionJob | MintUserBadgeTransactionJob)
 
 const UserController = ({
   userModel = UserModel(dbClient),
-  queues = getQueues(config.redis),
+  transactionQueue = new Queue<TransactionJob>('TransactionQueue', { connection: config.redis }),
   transactionModel = TransactionModel(dbClient)
 }: Partial<{
   userModel: UserModel
   auditModel: AuditModel
   transactionModel: TransactionModel
-  queues: ReturnType<typeof getQueues>
+  transactionQueue: Queue<TransactionJob>
 }>) => {
   const getUser = (
     ctx: ControllerMethodContext,
@@ -48,14 +70,17 @@ const UserController = ({
             transactionModel(ctx.logger)
               .add({ userId, transactionKey: 'mintUserBadge', attempt: 0 })
               .andThen(() =>
-                queues.transactionQueue.add({
-                  traceId: ctx.traceId,
-                  type: 'MintUserBadge',
-                  userId,
-                  attempt: 0,
-                  transactionKey: `mintUserBadge`,
-                  accountAddress: data.accountAddress
-                })
+                ResultAsync.fromPromise(
+                  transactionQueue.add(ctx.traceId, {
+                    traceId: ctx.traceId,
+                    type: 'MintUserBadge',
+                    userId,
+                    attempt: 0,
+                    transactionKey: `mintUserBadge`,
+                    accountAddress: data.accountAddress
+                  }),
+                  (error) => error
+                )
               )
           )
           .mapErr((error) => {
