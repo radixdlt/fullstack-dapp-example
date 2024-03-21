@@ -1,0 +1,23 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("5000")
+;
+
+CALL_FUNCTION
+    Address("${package}")
+    "ImageOracle"
+    "new"
+    Enum<OwnerRole::Fixed>(
+        Enum<AccessRule::Protected>(
+            Enum<AccessRuleNode::ProofRule>(
+                Enum<ProofRule::Require>(
+                    Enum<ResourceOrNonFungible::Resource>(
+                        Address("${owner_badge}")
+                    )
+                )
+            )
+        )
+    )
+    Address("${admin_badge}")
+;

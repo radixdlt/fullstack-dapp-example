@@ -43,6 +43,13 @@ fn arrange_test_environment(
 }
 
 #[test]
+fn can_instantiate_morph_card_forge() -> Result<(), RuntimeError> {
+    let _ = arrange_test_environment()?;
+
+    Ok(())
+}
+
+#[test]
 fn can_set_morph_energy_cards() -> Result<(), RuntimeError> {
     let (mut env, mut morph_card_forge, _owner_badge, _super_admin_badge, _admin_badges) =
         arrange_test_environment()?;

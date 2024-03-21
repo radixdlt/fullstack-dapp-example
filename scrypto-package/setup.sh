@@ -30,6 +30,8 @@ export r_component=`resim run manifests/new_refinery.rtm | grep -m 1 "Component:
 
 export mcf_component=`resim run manifests/new_card_forge.rtm | grep "Component:" | grep -o "component_.*"`
 
+export io_component=`resim run manifests/new_image_oracle.rtm | grep "Component:" | grep -o "component_.*"`
+
 echo "\nSetup Complete"
 echo "--------------------------"
 echo "Environment variables set:"
@@ -49,3 +51,4 @@ echo "radmorph = $radmorph"
 echo "qr_component = $qr_component"
 echo "r_component = $r_component"
 echo "mcf_component = $mcf_component"
+echo "io_component = $io_component"
