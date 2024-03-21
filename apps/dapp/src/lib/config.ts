@@ -37,9 +37,9 @@ export const config = {
     port: parseInt(POSTGRES_PORT, 10)
   },
   redis: {
-    host: REDIS_HOST ?? 'localhost',
+    host: REDIS_HOST,
     port: parseInt(REDIS_PORT ?? '6379', 10),
-    password: REDIS_PASSWORD ?? 'password'
+    password: REDIS_PASSWORD
   },
   twilio: {
     accountSid: TWILIO_ACCOUNT_SID || 'AC',
