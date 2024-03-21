@@ -22,8 +22,7 @@ export const databaseTransactions = ({
       },
       create: {
         userId,
-        questId,
-        progress: 0
+        questId
       },
       update: {
         status
