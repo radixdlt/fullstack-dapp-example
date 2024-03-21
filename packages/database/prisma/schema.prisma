@@ -22,6 +22,8 @@ model User {
   completedQuestRequirements CompletedQuestRequirement[]
   savedProgress              SavedProgress?
   auditLogs                  Audit[]
+  transactions               Transaction[]
+  questProgress              QuestProgress[]
 }
 
 model UserPhoneNumber {
@@ -81,6 +83,8 @@ model QuestProgress {
   userId            String         
   status            QuestStatus     @default(IN_PROGRESS)
 
+  user              User      @relation(fields: [userId], references: [id])
+
   @@id([questId, userId])
 }
 
@@ -126,6 +130,8 @@ model Transaction {
   status                    TransactionStatus     @default(PENDING)
   createdAt                 DateTime              @default(now())
   error                     String?
+
+  user                      User      @relation(fields: [userId], references: [id])
 
   @@id([transactionKey, userId, attempt])
 }
