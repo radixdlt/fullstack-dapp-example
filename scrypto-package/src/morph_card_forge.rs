@@ -57,6 +57,7 @@ pub struct MorphCardData {
 }
 
 #[blueprint]
+#[events(MorphCardMintedEvent)]
 mod morph_card_forge {
     enable_method_auth! {
       roles {
@@ -79,7 +80,7 @@ mod morph_card_forge {
         morph_card_resource_manager: ResourceManager,
         fixed_cards: KeyValueStore<String, MorphCardData>,
         random_cards: KeyValueStore<String, MorphCardData>,
-        random_card_ids: Vec<String>,
+        random_card_names: Vec<String>,
     }
 
     impl MorphCardForge {
@@ -97,7 +98,7 @@ mod morph_card_forge {
                 morph_card_resource_manager: ResourceManager::from(morph_card_address),
                 fixed_cards: KeyValueStore::new(),
                 random_cards: KeyValueStore::new(),
-                random_card_ids: Vec::new(),
+                random_card_names: Vec::new(),
             }
             .instantiate()
             .prepare_to_globalize(owner_role)
@@ -108,26 +109,20 @@ mod morph_card_forge {
             .globalize()
         }
 
-        pub fn mint_fixed_card(&mut self, card_id: String, user_id: Option<UserId>) -> Bucket {
-            let morph_card_data = self.fixed_cards.get(&card_id).unwrap().clone();
+        pub fn mint_fixed_card(&mut self, card_name: String, user_id: UserId) -> Bucket {
+            let morph_card_data = self.fixed_cards.get(&card_name).unwrap().clone();
 
             let morph_card = self.admin_badge.authorize_with_amount(1, || {
                 self.morph_card_resource_manager
                     .mint_ruid_non_fungible(morph_card_data.clone())
             });
 
-            let local_id = morph_card
-                .as_non_fungible()
-                .non_fungible::<MorphCardData>()
-                .local_id()
-                .clone();
+            let local_id = morph_card.as_non_fungible().non_fungible_local_id();
 
             Runtime::emit_event(MorphCardMintedEvent {
                 user_id,
                 local_id,
-                rarity: morph_card_data.rarity,
-                energy: morph_card_data.energy,
-                availability: Availability::Fixed,
+                morph_card_data,
             });
 
             morph_card
@@ -145,39 +140,33 @@ mod morph_card_forge {
             }
         }
 
-        pub fn remove_fixed_cards(&mut self, card_ids: Vec<String>) {
-            for card_id in card_ids {
-                self.fixed_cards.remove(&card_id);
+        pub fn remove_fixed_cards(&mut self, card_names: Vec<String>) {
+            for card_name in card_names {
+                self.fixed_cards.remove(&card_name);
             }
         }
 
-        pub fn mint_random_card(&mut self, rand_num: Decimal, user_id: Option<UserId>) -> Bucket {
-            let i: usize = (rand_num * self.random_card_ids.len())
+        pub fn mint_random_card(&mut self, rand_num: Decimal, user_id: UserId) -> Bucket {
+            let i: usize = (rand_num * self.random_card_names.len())
                 .checked_floor()
                 .unwrap()
                 .try_into()
                 .unwrap();
 
-            let card_id = self.random_card_ids[i].clone();
-            let morph_card_data = self.random_cards.get(&card_id).unwrap().clone();
+            let card_name = self.random_card_names[i].clone();
+            let morph_card_data = self.random_cards.get(&card_name).unwrap().clone();
 
             let morph_card = self.admin_badge.authorize_with_amount(1, || {
                 self.morph_card_resource_manager
                     .mint_ruid_non_fungible(morph_card_data.clone())
             });
 
-            let local_id = morph_card
-                .as_non_fungible()
-                .non_fungible::<MorphCardData>()
-                .local_id()
-                .clone();
+            let local_id = morph_card.as_non_fungible().non_fungible_local_id();
 
             Runtime::emit_event(MorphCardMintedEvent {
                 user_id,
                 local_id,
-                rarity: morph_card_data.rarity,
-                energy: morph_card_data.energy,
-                availability: Availability::Random,
+                morph_card_data,
             });
 
             morph_card
@@ -191,14 +180,14 @@ mod morph_card_forge {
                     energy: card.energy,
                     availability: Availability::Random,
                 };
-                self.random_card_ids.push(full_card.name.clone());
+                self.random_card_names.push(full_card.name.clone());
                 self.random_cards.insert(full_card.name.clone(), full_card);
             }
         }
 
-        pub fn remove_random_cards(&mut self, card_ids: Vec<String>) {
-            for card_id in card_ids {
-                self.random_cards.remove(&card_id);
+        pub fn remove_random_cards(&mut self, card_names: Vec<String>) {
+            for card_name in card_names {
+                self.random_cards.remove(&card_name);
             }
         }
     }
@@ -206,9 +195,7 @@ mod morph_card_forge {
 
 #[derive(ScryptoSbor, ScryptoEvent)]
 pub struct MorphCardMintedEvent {
-    user_id: Option<UserId>,
+    user_id: UserId,
     local_id: NonFungibleLocalId,
-    rarity: Rarity,
-    energy: Energy,
-    availability: Availability,
+    morph_card_data: MorphCardData,
 }

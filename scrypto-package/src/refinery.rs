@@ -1,6 +1,7 @@
 use crate::{
-    morph_card_forge::MorphCardData, radgem_forge::radgem_forge::RadgemForge,
-    radgem_forge::RadgemData, radmorph_forge::radmorph_forge::RadmorphForge,
+    morph_card_forge::MorphCardData,
+    radgem_forge::{radgem_forge::RadgemForge, RadgemData},
+    radmorph_forge::{radmorph_forge::RadmorphForge, RadmorphData},
 };
 use scrypto::prelude::*;
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
@@ -18,7 +19,7 @@ enum RadgemDeposit {
     ElementsCombineDepositedEvent,
     ElementsCombineProcessedEvent,
     ElementsCombineClaimedEvent,
-    RadgemsTransformedEvent
+    RadmorphCreatedEvent
 )]
 mod refinery {
 
@@ -30,7 +31,7 @@ mod refinery {
             combine_elements_deposit => PUBLIC;
             combine_elements_process => restrict_to: [admin];
             combine_elements_claim => PUBLIC;
-            transform_radgems => PUBLIC;
+            create_radmorph => PUBLIC;
         }
     }
 
@@ -82,9 +83,9 @@ mod refinery {
         }
 
         // User deposits Elements to be turned into a RadGem
-        pub fn combine_elements_deposit(&self, user_badge: Proof, elements: Bucket) -> UserId {
+        pub fn combine_elements_deposit(&self, user_badge: Proof, elements: Bucket) -> () {
             assert_eq!(elements.resource_address(), self.element_address);
-            assert_eq!(elements.amount(), dec!(3));
+            assert_eq!(elements.amount(), dec!(10));
             let user_id = UserId(
                 user_badge
                     .check(self.user_badge_address)
@@ -96,11 +97,7 @@ mod refinery {
             self.admin_badge
                 .authorize_with_amount(1, || elements.burn());
 
-            Runtime::emit_event(ElementsCombineDepositedEvent {
-                user_id: user_id.clone(),
-            });
-
-            user_id
+            Runtime::emit_event(ElementsCombineDepositedEvent { user_id });
         }
 
         // Mint a random RadGem
@@ -171,11 +168,12 @@ mod refinery {
         }
 
         // transforms RadGems and RadCard into a RadMorph
-        pub fn transform_radgems(
+        pub fn create_radmorph(
             &mut self,
             radgems: Bucket,
             morph_card: Bucket,
             key_image_url: Url,
+            user_badge: Option<Proof>,
         ) -> Bucket {
             // Confirm the resources
             assert_eq!(
@@ -214,8 +212,27 @@ mod refinery {
                 )
             });
 
+            let user_id = match user_badge {
+                Some(badge_proof) => Some(UserId(
+                    badge_proof
+                        .check(self.user_badge_address)
+                        .as_non_fungible()
+                        .non_fungible_local_id()
+                        .to_string(),
+                )),
+                None => None,
+            };
+
             // Emit the event
-            Runtime::emit_event(RadgemsTransformedEvent {});
+            Runtime::emit_event(RadmorphCreatedEvent {
+                user_id,
+                radmorph_local_id: radmorph.as_non_fungible().non_fungible_local_id(),
+                radmorph_data: radmorph
+                    .as_non_fungible()
+                    .non_fungible::<RadmorphData>()
+                    .data()
+                    .clone(),
+            });
 
             radmorph
         }
@@ -238,4 +255,8 @@ pub struct ElementsCombineClaimedEvent {
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
-pub struct RadgemsTransformedEvent {}
+pub struct RadmorphCreatedEvent {
+    user_id: Option<UserId>,
+    radmorph_local_id: NonFungibleLocalId,
+    radmorph_data: RadmorphData,
+}

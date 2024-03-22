@@ -59,14 +59,12 @@ fn arrange_test_environment() -> Result<
             [
                 RadgemData {
                     name: "Crystalline Coral Radgem".to_owned(),
-                    key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
                     color: Color::Coral,
                     material: Material::Crystalline,
                     rarity: RadgemRarity::Rare,
                 },
                 RadgemData {
                     name: "Metallic Forest Radgem".to_owned(),
-                    key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
                     color: Color::Forest,
                     material: Material::Metallic,
                     rarity: RadgemRarity::Common,
@@ -140,18 +138,17 @@ fn can_combine_elements_deposit() -> Result<(), RuntimeError> {
         _radgems,
         _admin_badge,
         user_badge,
-        user_id,
+        _user_id,
     ) = arrange_test_environment()?;
 
     // Act
-    let result = refinery.combine_elements_deposit(
+    refinery.combine_elements_deposit(
         user_badge.create_proof_of_all(&mut env)?,
-        elements.take(dec!(3), &mut env)?,
+        elements.take(dec!(10), &mut env)?,
         &mut env,
     )?;
 
     // Assert
-    assert_eq!(result, user_id);
     Ok(())
 }
 
@@ -259,10 +256,11 @@ fn can_transform_radgems() -> Result<(), RuntimeError> {
     ) = arrange_test_environment()?;
 
     // Act
-    let result = refinery.transform_radgems(
+    let result = refinery.create_radmorph(
         radgems,
         morph_card,
         UncheckedUrl("https://www.example.com".to_owned()),
+        None,
         &mut env,
     )?;
 
