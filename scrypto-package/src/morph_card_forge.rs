@@ -188,6 +188,12 @@ mod morph_card_forge {
         pub fn remove_random_cards(&mut self, card_names: Vec<String>) {
             for card_name in card_names {
                 self.random_cards.remove(&card_name);
+                let i = self
+                    .random_card_names
+                    .iter()
+                    .position(|x| x == &card_name)
+                    .unwrap();
+                self.random_card_names.swap_remove(i);
             }
         }
     }

@@ -16,6 +16,7 @@ struct Test {
     morph_card: Bucket,
     radgems: Bucket,
     user_badge: Bucket,
+    radmorph_address: ResourceAddress,
     user_id: UserId,
     admin_badge_proof: Proof,
 }
@@ -103,6 +104,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         &mut env,
     )?;
 
+    let radmorph_address = radmorph.resource_address(&mut env)?;
     let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
 
     Ok(Test {
@@ -112,6 +114,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         morph_card,
         radgems,
         user_badge,
+        radmorph_address,
         user_id: UserId(format!("#{user_int}#")),
         admin_badge_proof,
     })
@@ -228,12 +231,14 @@ fn can_transform_radgems() -> Result<(), RuntimeError> {
         mut refinery,
         morph_card,
         radgems,
+        radmorph_address,
         ..
     } = arrange_test_environment()?;
 
     // Act
     let result = refinery.create_radmorph(
-        radgems,
+        radgems.take(dec!(1), &mut env)?,
+        radgems.take(dec!(1), &mut env)?,
         morph_card,
         UncheckedUrl("https://www.example.com".to_owned()),
         None,
@@ -242,6 +247,8 @@ fn can_transform_radgems() -> Result<(), RuntimeError> {
 
     // Assert
     assert_eq!(result.amount(&mut env)?, dec!(1));
+    assert_eq!(result.resource_address(&mut env)?, radmorph_address);
     // TODO: Check the result's NF data, name is "Fine Crystalline MoltenLava RadMorph",
+
     Ok(())
 }

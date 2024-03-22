@@ -182,6 +182,8 @@ fn can_set_random_cards() -> Result<(), RuntimeError> {
     LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
     morph_card_forge.set_random_cards(vec![morph_card_data], &mut env)?;
 
+    let card_forge_state: MorphCardForgeState = env.read_component_state(morph_card_forge)?;
+    assert_eq!(card_forge_state.random_card_names.len(), 1);
     Ok(())
 }
 
@@ -236,6 +238,9 @@ fn can_remove_random_cards() -> Result<(), RuntimeError> {
     morph_card_forge.set_random_cards(vec![morph_card_data], &mut env)?;
 
     morph_card_forge.remove_random_cards(vec![card_name], &mut env)?;
+
+    let card_forge_state: MorphCardForgeState = env.read_component_state(morph_card_forge)?;
+    assert_eq!(card_forge_state.random_card_names.len(), 0);
 
     Ok(())
 }

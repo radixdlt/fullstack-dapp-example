@@ -40,6 +40,7 @@ mod refinery {
         radgem_records: KeyValueStore<UserId, RadgemDeposit>,
         radgem_vault: NonFungibleVault,
         element_address: ResourceAddress,
+        radgem_address: ResourceAddress,
         morph_card_address: ResourceAddress,
         user_badge_address: ResourceAddress,
         radgem_forge: Global<RadgemForge>,
@@ -67,8 +68,9 @@ mod refinery {
             Self {
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
                 radgem_records: KeyValueStore::new(),
-                radgem_vault: NonFungibleVault::new(radgem_forge.get_radgem_address()),
+                radgem_vault: NonFungibleVault::new(radgem_address),
                 element_address,
+                radgem_address,
                 morph_card_address,
                 user_badge_address,
                 radgem_forge,
@@ -170,27 +172,30 @@ mod refinery {
         // transforms RadGems and RadCard into a RadMorph
         pub fn create_radmorph(
             &mut self,
-            radgems: Bucket,
+            radgem_1: Bucket,
+            radgem_2: Bucket,
             morph_card: Bucket,
             key_image_url: Url,
             user_badge: Option<Proof>,
         ) -> Bucket {
             // Confirm the resources
-            assert_eq!(
-                radgems.resource_address(),
-                self.radgem_forge.get_radgem_address()
-            );
+            assert_eq!(radgem_1.resource_address(), self.radgem_address);
+            assert_eq!(radgem_2.resource_address(), self.radgem_address);
             assert_eq!(morph_card.resource_address(), self.morph_card_address);
-            assert_eq!(radgems.amount(), dec!(2));
-            assert_eq!(morph_card.amount(), dec!(1));
+
+            for bucket in [&radgem_1, &radgem_2, &morph_card] {
+                assert_eq!(bucket.amount(), dec!(1));
+            }
 
             // Get the RadGem and MorphCard data
-            let mut radgems_data: Vec<RadgemData> = radgems
+            let radgem_1_data: RadgemData = radgem_1
                 .as_non_fungible()
-                .non_fungibles::<RadgemData>()
-                .iter()
-                .map(|gem| gem.data())
-                .collect();
+                .non_fungible::<RadgemData>()
+                .data();
+            let radgem_2_data: RadgemData = radgem_2
+                .as_non_fungible()
+                .non_fungible::<RadgemData>()
+                .data();
             let morph_card_data = morph_card
                 .as_non_fungible()
                 .non_fungible::<MorphCardData>()
@@ -198,15 +203,18 @@ mod refinery {
 
             // Burn resources
             self.admin_badge.authorize_with_amount(1, || {
+                radgem_1.burn();
+                radgem_2.burn();
                 morph_card.burn();
-                self.radgem_forge.burn_radgem(radgems);
             });
+
+            //TODO: check key_image_url with Image Oracle
 
             // Mint a RadMorph
             let radmorph = self.admin_badge.authorize_with_amount(1, || {
                 self.radmorph_forge.mint_radmorph(
-                    radgems_data.pop().unwrap(),
-                    radgems_data.pop().unwrap(),
+                    radgem_1_data,
+                    radgem_2_data,
                     morph_card_data,
                     key_image_url,
                 )

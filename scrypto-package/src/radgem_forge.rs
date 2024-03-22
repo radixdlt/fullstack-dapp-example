@@ -43,9 +43,7 @@ mod radgem_forge {
         admin => updatable_by: [OWNER];
       },
       methods {
-        get_radgem_address => PUBLIC;
         mint_radgem => restrict_to: [admin];
-        burn_radgem => restrict_to: [admin];
       }
     }
 
@@ -73,10 +71,6 @@ mod radgem_forge {
             .globalize()
         }
 
-        pub fn get_radgem_address(&self) -> ResourceAddress {
-            self.radgem_resource_manager.address()
-        }
-
         pub fn mint_radgem(&mut self, rand_num_1: Decimal, rand_num_2: Decimal) -> Bucket {
             let (color, color_name) = self.assign_color(rand_num_1);
             let (material, material_name) = self.assign_material(rand_num_2);
@@ -91,12 +85,6 @@ mod radgem_forge {
             self.admin_badge.authorize_with_amount(1, || {
                 self.radgem_resource_manager.mint_ruid_non_fungible(radgem)
             })
-        }
-
-        pub fn burn_radgem(&mut self, radgems: Bucket) -> () {
-            self.admin_badge.authorize_with_amount(1, || {
-                radgems.burn();
-            });
         }
 
         fn assign_color(&self, n: Decimal) -> (Color, &'static str) {
