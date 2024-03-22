@@ -3,8 +3,13 @@ use radquest::image_oracle::test_bindings::*;
 use scrypto::this_package;
 use scrypto_test::prelude::*;
 
-fn arrange_test_environment() -> Result<(TestEnvironment, ImageOracle, Bucket, Bucket), RuntimeError>
-{
+struct Test {
+    env: TestEnvironment,
+    image_oracle: ImageOracle,
+    admin_badge_proof: Proof,
+}
+
+fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let mut env = TestEnvironment::new();
     let package_address = Package::compile_and_publish(this_package!(), &mut env)?;
 
@@ -20,7 +25,13 @@ fn arrange_test_environment() -> Result<(TestEnvironment, ImageOracle, Bucket, B
         &mut env,
     )?;
 
-    Ok((env, image_oracle, owner_badge, admin_badge))
+    let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
+
+    Ok(Test {
+        env,
+        image_oracle,
+        admin_badge_proof,
+    })
 }
 
 #[test]
@@ -32,7 +43,12 @@ fn can_instantiate_image_oracle() -> Result<(), RuntimeError> {
 
 #[test]
 fn can_set_key_image_url_hashes() -> Result<(), RuntimeError> {
-    let (mut env, mut image_oracle, _owner_badge, _admin_badge) = arrange_test_environment()?;
+    let Test {
+        mut env,
+        mut image_oracle,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
     let key_image_url_hashes = vec![
         (
@@ -45,7 +61,7 @@ fn can_set_key_image_url_hashes() -> Result<(), RuntimeError> {
         ),
     ];
 
-    env.disable_auth_module();
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
     image_oracle.set_key_image_url_hashes(key_image_url_hashes, &mut env)?;
 
     Ok(())
@@ -53,7 +69,12 @@ fn can_set_key_image_url_hashes() -> Result<(), RuntimeError> {
 
 #[test]
 fn can_get_key_image_url_hash() -> Result<(), RuntimeError> {
-    let (mut env, mut image_oracle, _owner_badge, _admin_badge) = arrange_test_environment()?;
+    let Test {
+        mut env,
+        mut image_oracle,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
     let key_image_url_hashes = vec![
         (
@@ -66,7 +87,7 @@ fn can_get_key_image_url_hash() -> Result<(), RuntimeError> {
         ),
     ];
 
-    env.disable_auth_module();
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
     image_oracle.set_key_image_url_hashes(key_image_url_hashes, &mut env)?;
 
     let key_image_url_hash = image_oracle.get_key_image_url_hash(
@@ -83,8 +104,13 @@ fn can_get_key_image_url_hash() -> Result<(), RuntimeError> {
 }
 
 #[test]
-fn can_remove_key_image_url_hashes() -> Result<(), RuntimeError> {
-    let (mut env, mut image_oracle, _owner_badge, _admin_badge) = arrange_test_environment()?;
+fn cannot_get_incorrect_key_image_url_hash() -> Result<(), RuntimeError> {
+    let Test {
+        mut env,
+        mut image_oracle,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
     let key_image_url_hashes = vec![
         (
@@ -97,7 +123,40 @@ fn can_remove_key_image_url_hashes() -> Result<(), RuntimeError> {
         ),
     ];
 
-    env.disable_auth_module();
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    image_oracle.set_key_image_url_hashes(key_image_url_hashes, &mut env)?;
+
+    let key_image_url_hash = image_oracle.get_key_image_url_hash(
+        keccak256_hash("key3".bytes().collect::<Vec<u8>>()),
+        &mut env,
+    )?;
+
+    assert_eq!(key_image_url_hash, None);
+
+    Ok(())
+}
+
+#[test]
+fn can_remove_key_image_url_hashes() -> Result<(), RuntimeError> {
+    let Test {
+        mut env,
+        mut image_oracle,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    let key_image_url_hashes = vec![
+        (
+            keccak256_hash("key1".bytes().collect::<Vec<u8>>()),
+            keccak256_hash("image1url".bytes().collect::<Vec<u8>>()),
+        ),
+        (
+            keccak256_hash("key2".bytes().collect::<Vec<u8>>()),
+            keccak256_hash("image2url".bytes().collect::<Vec<u8>>()),
+        ),
+    ];
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
     image_oracle.set_key_image_url_hashes(key_image_url_hashes, &mut env)?;
 
     image_oracle.remove_key_image_url_hashes(

@@ -9,20 +9,18 @@ use scrypto::this_package;
 use scrypto_test::prelude::*;
 use scrypto_unit::*;
 
-fn arrange_test_environment() -> Result<
-    (
-        TestEnvironment,
-        Refinery,
-        Bucket,
-        Bucket,
-        Bucket,
-        Bucket,
-        Bucket,
-        Bucket,
-        UserId,
-    ),
-    RuntimeError,
-> {
+struct Test {
+    env: TestEnvironment,
+    refinery: Refinery,
+    elements: Bucket,
+    morph_card: Bucket,
+    radgems: Bucket,
+    user_badge: Bucket,
+    user_id: UserId,
+    admin_badge_proof: Proof,
+}
+
+fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let mut env = TestEnvironment::new();
     let package_address = Package::compile_and_publish(this_package!(), &mut env)?;
 
@@ -105,17 +103,18 @@ fn arrange_test_environment() -> Result<
         &mut env,
     )?;
 
-    Ok((
+    let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
+
+    Ok(Test {
         env,
         refinery,
-        owner_badge,
         elements,
         morph_card,
         radgems,
-        admin_badge,
         user_badge,
-        UserId(format!("#{user_int}#")),
-    ))
+        user_id: UserId(format!("#{user_int}#")),
+        admin_badge_proof,
+    })
 }
 
 #[test]
@@ -129,17 +128,13 @@ fn can_instantiate_refinery() -> Result<(), RuntimeError> {
 #[test]
 fn can_combine_elements_deposit() -> Result<(), RuntimeError> {
     // Arrange
-    let (
+    let Test {
         mut env,
-        refinery,
-        _owner_badge,
         elements,
-        _morph_card,
-        _radgems,
-        _admin_badge,
+        refinery,
         user_badge,
-        _user_id,
-    ) = arrange_test_environment()?;
+        ..
+    } = arrange_test_environment()?;
 
     // Act
     refinery.combine_elements_deposit(
@@ -155,21 +150,16 @@ fn can_combine_elements_deposit() -> Result<(), RuntimeError> {
 #[test]
 fn can_combine_elements_process() -> Result<(), RuntimeError> {
     // Arrange
-    let (
+    let Test {
         mut env,
         mut refinery,
-        _owner_badge,
-        _elements,
-        _morph_card,
-        _radgems,
-        _admin_badge,
-        _user_badge,
         user_id,
-    ) = arrange_test_environment()?;
-
-    env.disable_auth_module();
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
     // Act
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
     refinery.combine_elements_process(user_id, dec!(0.318), dec!(0.822), &mut env)?;
 
     // Assert
@@ -179,21 +169,17 @@ fn can_combine_elements_process() -> Result<(), RuntimeError> {
 #[test]
 fn can_combine_elements_claim() -> Result<(), RuntimeError> {
     // Arrange
-    let (
+    let Test {
         mut env,
         mut refinery,
-        _owner_badge,
-        _elements,
-        _morph_card,
-        _radgems,
-        _admin_badge,
         user_badge,
         user_id,
-    ) = arrange_test_environment()?;
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
-    env.disable_auth_module();
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
     refinery.combine_elements_process(user_id.clone(), dec!(0.97), dec!(0.89), &mut env)?;
-    env.enable_auth_module();
 
     // Act
     let result =
@@ -207,29 +193,23 @@ fn can_combine_elements_claim() -> Result<(), RuntimeError> {
 #[test]
 fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
     // Arrange
-    let (
+    let Test {
         mut env,
         mut refinery,
-        _owner_badge,
-        _elements,
-        _morph_card,
-        _radgems,
-        _admin_badge,
         user_badge,
         user_id,
-    ) = arrange_test_environment()?;
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
-    env.disable_auth_module();
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
     refinery.combine_elements_process(user_id.clone(), dec!(0.97), dec!(0.87), &mut env)?;
-    env.enable_auth_module();
 
     // Act
     let result_1 =
         refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
 
-    env.disable_auth_module();
     refinery.combine_elements_process(user_id.clone(), dec!(0.16), dec!(0.64), &mut env)?;
-    env.enable_auth_module();
 
     let result_2 =
         refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
@@ -243,17 +223,13 @@ fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
 #[test]
 fn can_transform_radgems() -> Result<(), RuntimeError> {
     // Arrange
-    let (
+    let Test {
         mut env,
         mut refinery,
-        _owner_badge,
-        _elements,
         morph_card,
         radgems,
-        _admin_badge,
-        _user_badge,
-        _user_id,
-    ) = arrange_test_environment()?;
+        ..
+    } = arrange_test_environment()?;
 
     // Act
     let result = refinery.create_radmorph(

@@ -5,8 +5,14 @@ use radquest::morph_card_forge::{
 use scrypto::this_package;
 use scrypto_test::prelude::*;
 
-fn arrange_test_environment(
-) -> Result<(TestEnvironment, MorphCardForge, Bucket, Bucket, Bucket), RuntimeError> {
+struct Test {
+    env: TestEnvironment,
+    morph_card_forge: MorphCardForge,
+    super_admin_badge_proof: Proof,
+    admin_badge_proof: Proof,
+}
+
+fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let mut env = TestEnvironment::new();
     let package_address = Package::compile_and_publish(this_package!(), &mut env)?;
 
@@ -33,13 +39,15 @@ fn arrange_test_environment(
         &mut env,
     )?;
 
-    Ok((
+    let super_admin_badge_proof = super_admin_badge.create_proof_of_all(&mut env)?;
+    let admin_badge_proof = admin_badges.create_proof_of_all(&mut env)?;
+
+    Ok(Test {
         env,
         morph_card_forge,
-        owner_badge,
-        super_admin_badge,
-        admin_badges,
-    ))
+        super_admin_badge_proof,
+        admin_badge_proof,
+    })
 }
 
 #[test]
@@ -51,8 +59,12 @@ fn can_instantiate_morph_card_forge() -> Result<(), RuntimeError> {
 
 #[test]
 fn can_set_fixed_cards() -> Result<(), RuntimeError> {
-    let (mut env, mut morph_card_forge, _owner_badge, _super_admin_badge, _admin_badges) =
-        arrange_test_environment()?;
+    let Test {
+        mut env,
+        mut morph_card_forge,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
     let morph_card_data = MorphCardDataInput {
         name: "Molten Lava Morph Card".to_owned(),
@@ -60,7 +72,7 @@ fn can_set_fixed_cards() -> Result<(), RuntimeError> {
         energy: Energy::MoltenLava,
     };
 
-    env.disable_auth_module();
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
     morph_card_forge.set_fixed_cards(vec![morph_card_data], &mut env)?;
 
     Ok(())
@@ -68,8 +80,13 @@ fn can_set_fixed_cards() -> Result<(), RuntimeError> {
 
 #[test]
 fn can_mint_fixed_card() -> Result<(), RuntimeError> {
-    let (mut env, mut morph_card_forge, _owner_badge, _super_admin_badge, _admin_badges) =
-        arrange_test_environment()?;
+    let Test {
+        mut env,
+        mut morph_card_forge,
+        super_admin_badge_proof,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
     let card_name = "Molten Lava Morph Card".to_owned();
 
@@ -79,9 +96,10 @@ fn can_mint_fixed_card() -> Result<(), RuntimeError> {
         energy: Energy::MoltenLava,
     };
 
-    env.disable_auth_module();
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
     morph_card_forge.set_fixed_cards(vec![morph_card_data], &mut env)?;
 
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
     let morph_card =
         morph_card_forge.mint_fixed_card(card_name, UserId("<test>".to_owned()), &mut env)?;
 
@@ -92,8 +110,13 @@ fn can_mint_fixed_card() -> Result<(), RuntimeError> {
 
 #[test]
 fn cannot_mint_fixed_card_with_wrong_name() -> Result<(), RuntimeError> {
-    let (mut env, mut morph_card_forge, _owner_badge, _super_admin_badge, _admin_badges) =
-        arrange_test_environment()?;
+    let Test {
+        mut env,
+        mut morph_card_forge,
+        super_admin_badge_proof,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
     let morph_card_data = MorphCardDataInput {
         name: "Molten Lava Morph Card".to_owned(),
@@ -101,9 +124,10 @@ fn cannot_mint_fixed_card_with_wrong_name() -> Result<(), RuntimeError> {
         energy: Energy::MoltenLava,
     };
 
-    env.disable_auth_module();
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
     morph_card_forge.set_fixed_cards(vec![morph_card_data], &mut env)?;
 
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
     let result = morph_card_forge.mint_fixed_card(
         "Wrong Name".to_owned(),
         UserId("<test>".to_owned()),
@@ -117,8 +141,12 @@ fn cannot_mint_fixed_card_with_wrong_name() -> Result<(), RuntimeError> {
 
 #[test]
 fn can_remove_fixed_cards() -> Result<(), RuntimeError> {
-    let (mut env, mut morph_card_forge, _owner_badge, _super_admin_badge, _admin_badges) =
-        arrange_test_environment()?;
+    let Test {
+        mut env,
+        mut morph_card_forge,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
     let morph_card_data = MorphCardDataInput {
         name: "Molten Lava Morph Card".to_owned(),
@@ -126,7 +154,7 @@ fn can_remove_fixed_cards() -> Result<(), RuntimeError> {
         energy: Energy::MoltenLava,
     };
 
-    env.disable_auth_module();
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
     morph_card_forge.set_fixed_cards(vec![morph_card_data], &mut env)?;
 
     let card_name = "Molten Lava Morph Card".to_owned();
@@ -138,8 +166,12 @@ fn can_remove_fixed_cards() -> Result<(), RuntimeError> {
 
 #[test]
 fn can_set_random_cards() -> Result<(), RuntimeError> {
-    let (mut env, mut morph_card_forge, _owner_badge, _super_admin_badge, _admin_badges) =
-        arrange_test_environment()?;
+    let Test {
+        mut env,
+        mut morph_card_forge,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
     let morph_card_data = MorphCardDataInput {
         name: "Molten Lava Morph Card".to_owned(),
@@ -147,7 +179,7 @@ fn can_set_random_cards() -> Result<(), RuntimeError> {
         energy: Energy::MoltenLava,
     };
 
-    env.disable_auth_module();
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
     morph_card_forge.set_random_cards(vec![morph_card_data], &mut env)?;
 
     Ok(())
@@ -155,8 +187,13 @@ fn can_set_random_cards() -> Result<(), RuntimeError> {
 
 #[test]
 fn can_mint_random_card() -> Result<(), RuntimeError> {
-    let (mut env, mut morph_card_forge, _owner_badge, _super_admin_badge, _admin_badges) =
-        arrange_test_environment()?;
+    let Test {
+        mut env,
+        mut morph_card_forge,
+        super_admin_badge_proof,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
     let morph_card_data = MorphCardDataInput {
         name: "Molten Lava Morph Card".to_owned(),
@@ -164,11 +201,12 @@ fn can_mint_random_card() -> Result<(), RuntimeError> {
         energy: Energy::MoltenLava,
     };
 
-    env.disable_auth_module();
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
     morph_card_forge.set_random_cards(vec![morph_card_data], &mut env)?;
 
     let rand_num = dec!(0.5);
 
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
     let morph_card =
         morph_card_forge.mint_random_card(rand_num, UserId("<test>".to_owned()), &mut env)?;
 
@@ -179,19 +217,23 @@ fn can_mint_random_card() -> Result<(), RuntimeError> {
 
 #[test]
 fn can_remove_random_cards() -> Result<(), RuntimeError> {
-    let (mut env, mut morph_card_forge, _owner_badge, _super_admin_badge, _admin_badges) =
-        arrange_test_environment()?;
+    let Test {
+        mut env,
+        mut morph_card_forge,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    let card_name = "Molten Lava Morph Card".to_owned();
 
     let morph_card_data = MorphCardDataInput {
-        name: "Molten Lava Morph Card".to_owned(),
+        name: card_name.clone(),
         rarity: Rarity::UltraRare,
         energy: Energy::MoltenLava,
     };
 
-    env.disable_auth_module();
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
     morph_card_forge.set_random_cards(vec![morph_card_data], &mut env)?;
-
-    let card_name = "Molten Lava Morph Card".to_owned();
 
     morph_card_forge.remove_random_cards(vec![card_name], &mut env)?;
 

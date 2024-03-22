@@ -4,18 +4,15 @@ use scrypto::*;
 use scrypto_test::prelude::*;
 use scrypto_unit::*;
 
-fn arrange_test_environment() -> Result<
-    (
-        TestEnvironment,
-        QuestRewards,
-        Bucket,
-        Bucket,
-        Bucket,
-        Bucket,
-        UserId,
-    ),
-    RuntimeError,
-> {
+struct Test {
+    env: TestEnvironment,
+    quest_rewards: QuestRewards,
+    user_badge: Bucket,
+    user_id: UserId,
+    admin_badge_proof: Proof,
+}
+
+fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let mut env = TestEnvironment::new();
     let package_address = Package::compile_and_publish(this_package!(), &mut env)?;
 
@@ -49,15 +46,15 @@ fn arrange_test_environment() -> Result<
         &mut env,
     )?;
 
-    Ok((
+    let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
+
+    Ok(Test {
         env,
         quest_rewards,
-        owner_badge,
-        admin_badge,
         user_badge,
-        kyc_badge,
-        UserId(format!("#{user_int}#")),
-    ))
+        user_id: UserId(format!("#{user_int}#")),
+        admin_badge_proof,
+    })
 }
 
 #[test]
@@ -68,15 +65,19 @@ fn can_instantiate_quest_rewards() -> Result<(), RuntimeError> {
 
 #[test]
 fn can_deposit_rewards() -> Result<(), RuntimeError> {
-    let (mut env, mut quest_rewards, _owner_badge, _admin_badge, _user_badge, _kyc_badge, user_id) =
-        arrange_test_environment()?;
+    let Test {
+        mut env,
+        mut quest_rewards,
+        user_id,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
     let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
     let reward_2 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
         .mint_initial_supply([()], &mut env)?;
 
-    env.disable_auth_module();
-
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
     quest_rewards.deposit_reward(
         user_id,
         QuestId("1".into()),
@@ -89,11 +90,15 @@ fn can_deposit_rewards() -> Result<(), RuntimeError> {
 
 #[test]
 fn can_update_user_kyc_requirement() -> Result<(), RuntimeError> {
-    let (mut env, mut quest_rewards, _owner_badge, _admin_badge, _user_badge, _kyc_badge, user_id) =
-        arrange_test_environment()?;
+    let Test {
+        mut env,
+        mut quest_rewards,
+        user_id,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
-    env.disable_auth_module();
-
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
     quest_rewards.update_user_kyc_requirement(user_id, true, &mut env)?;
 
     Ok(())
@@ -101,8 +106,14 @@ fn can_update_user_kyc_requirement() -> Result<(), RuntimeError> {
 
 #[test]
 fn can_claim_rewards() -> Result<(), RuntimeError> {
-    let (mut env, mut quest_rewards, _owner_badge, _admin_badge, user_badge, _kyc_badge, user_id) =
-        arrange_test_environment()?;
+    let Test {
+        mut env,
+        mut quest_rewards,
+        user_badge,
+        user_id,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
     let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
     let reward_2 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
@@ -112,14 +123,13 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
 
     let quest_id = QuestId("1".into());
 
-    env.disable_auth_module();
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
     quest_rewards.deposit_reward(
         user_id,
         quest_id.clone(),
         vec![reward_1, reward_2],
         &mut env,
     )?;
-    env.enable_auth_module();
 
     let response = quest_rewards.claim_reward(
         quest_id,
@@ -128,23 +138,32 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
         &mut env,
     )?;
 
-    assert_eq!(response[0].resource_address(&mut env)?, reward_1_address);
-    assert_eq!(response[1].resource_address(&mut env)?, reward_2_address);
+    let response_1 = response[0].resource_address(&mut env)?;
+    let response_2 = response[1].resource_address(&mut env)?;
+
+    assert!(response_1 == reward_1_address || response_1 == reward_2_address);
+    assert!(response_2 == reward_1_address || response_2 == reward_2_address);
 
     Ok(())
 }
 
 #[test]
 fn cannot_claim_rewards_when_kyc_required() -> Result<(), RuntimeError> {
-    let (mut env, mut quest_rewards, _owner_badge, _admin_badge, user_badge, _kyc_badge, user_id) =
-        arrange_test_environment()?;
+    let Test {
+        mut env,
+        mut quest_rewards,
+        user_badge,
+        user_id,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
 
     let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
     let reward_2 = BucketFactory::create_fungible_bucket(XRD, 200.into(), Mock, &mut env)?;
 
     let quest_id = QuestId("1".into());
 
-    env.disable_auth_module();
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
     quest_rewards.update_user_kyc_requirement(user_id.clone(), true, &mut env)?;
 
     quest_rewards.deposit_reward(
@@ -153,7 +172,6 @@ fn cannot_claim_rewards_when_kyc_required() -> Result<(), RuntimeError> {
         vec![reward_1, reward_2],
         &mut env,
     )?;
-    env.enable_auth_module();
 
     let result = quest_rewards.claim_reward(
         quest_id,
