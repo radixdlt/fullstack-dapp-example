@@ -133,10 +133,18 @@ mod refinery {
                 }
             }
 
+            let radgem_data = radgem_bucket
+                .as_non_fungible()
+                .non_fungible::<RadgemData>()
+                .data();
+
             // Deposit the RadGem into the vault for the user to claim later
             self.radgem_vault.put(radgem_bucket.as_non_fungible());
 
-            Runtime::emit_event(ElementsCombineProcessedEvent { user_id });
+            Runtime::emit_event(ElementsCombineProcessedEvent {
+                user_id,
+                radgem_data,
+            });
         }
 
         // User claims RadGem by presenting user badge
@@ -255,6 +263,7 @@ pub struct ElementsCombineDepositedEvent {
 #[derive(ScryptoSbor, ScryptoEvent)]
 pub struct ElementsCombineProcessedEvent {
     user_id: UserId,
+    radgem_data: RadgemData,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]

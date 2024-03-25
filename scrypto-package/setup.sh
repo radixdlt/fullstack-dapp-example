@@ -24,20 +24,23 @@ export radgem=`resim run manifests/create_radgem.rtm  | grep "Resource:" | grep 
 export morph_card=`resim run manifests/create_morph_card.rtm  | grep "Resource:" | grep -o "resource_.*"`
 export radmorph=`resim run manifests/create_radmorph.rtm  | grep "Resource:" | grep -o "resource_.*"`
 
-export qr_component=`resim run manifests/new_quest_rewards.rtm | grep "Component:" | grep -o "component_.*"`
+export quest_rewards=`resim run manifests/new_quest_rewards.rtm | grep "Component:" | grep -o "component_.*"`
 
-export r_component=`resim run manifests/new_refinery.rtm | grep -m 1 "Component:" | grep -o "component_.*"`
+export refinery=`resim run manifests/new_refinery.rtm | grep "Component:" | tail -n1 | grep -o "component_.*"`
 
-export mcf_component=`resim run manifests/new_card_forge.rtm | grep "Component:" | grep -o "component_.*"`
+export morph_card_forge=`resim run manifests/new_card_forge.rtm | grep "Component:" | grep -o "component_.*"`
 
-export io_component=`resim run manifests/new_image_oracle.rtm | grep "Component:" | grep -o "component_.*"`
+export image_oracle=`resim run manifests/new_image_oracle.rtm | grep "Component:" | grep -o "component_.*"`
 
-echo "\nSetup Complete"
-echo "--------------------------"
-echo "Environment variables set:"
+echo "\nSetup Complete & Environment Variables Set"
+echo "------------------------------------------"
+
+echo "\nAccount Addresses:"
 echo "account = $account"
 echo "privatekey = $privatekey"
 echo "account_badge = $account_badge"
+
+echo "\nResource Addresses:"
 echo "xrd = $xrd"
 echo "package = $package"
 echo "owner_badge = $owner_badge"
@@ -48,7 +51,9 @@ echo "element = $element"
 echo "radgem = $radgem"
 echo "morph_card = $morph_card"
 echo "radmorph = $radmorph"
-echo "qr_component = $qr_component"
-echo "r_component = $r_component"
-echo "mcf_component = $mcf_component"
-echo "io_component = $io_component"
+
+echo "\nComponent Addresses:"
+echo "quest_rewards = $quest_rewards"
+echo "refinery = $refinery"
+echo "morph_card_forge = $morph_card_forge"
+echo "image_oracle = $image_oracle"

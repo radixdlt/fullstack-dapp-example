@@ -8,7 +8,7 @@ CREATE_FUNGIBLE_RESOURCE_WITH_INITIAL_SUPPLY
   None
   true
   0u8
-  Decimal("4")
+  Decimal("5")
   Tuple(
       Some(         
         Tuple(

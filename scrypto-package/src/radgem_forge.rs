@@ -2,16 +2,16 @@ use scrypto::prelude::*;
 
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 pub enum Color {
+    Blood,
+    Coral,
+    Dusk,
+    Flame,
     Forest,
+    Glacier,
+    Ocean,
     Sand,
     Sky,
-    Coral,
-    Blood,
     Smoke,
-    Ocean,
-    Flame,
-    Glacier,
-    Dusk,
 }
 
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
@@ -30,9 +30,10 @@ pub enum Rarity {
 
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 pub struct RadgemData {
+    pub key_image_url: Url,
     pub name: String,
-    pub color: Color,
     pub material: Material,
+    pub color: Color,
     pub rarity: Rarity,
 }
 
@@ -72,55 +73,105 @@ mod radgem_forge {
         }
 
         pub fn mint_radgem(&mut self, rand_num_1: Decimal, rand_num_2: Decimal) -> Bucket {
-            let (color, color_name) = self.assign_color(rand_num_1);
             let (material, material_name) = self.assign_material(rand_num_2);
+            let (color, color_name) = self.assign_color(rand_num_1);
+            let rarity = self.assign_rarity(&material, &color);
 
             let radgem = RadgemData {
-                name: format!("{} {} RadGem", color_name, material_name),
-                color,
+                key_image_url: Url::of(""),
+                name: format!("{} {} RadGem", material_name, color_name),
                 material,
-                // TODO: Make rarity derived from material and color
-                rarity: Rarity::Rare,
+                color,
+                rarity,
             };
+
             self.admin_badge.authorize_with_amount(1, || {
                 self.radgem_resource_manager.mint_ruid_non_fungible(radgem)
             })
         }
 
-        fn assign_color(&self, n: Decimal) -> (Color, &'static str) {
-            let relative_n = n * dec!(10);
-            if relative_n < dec!(1) {
-                (Color::Forest, "Forest")
-            } else if relative_n < dec!(2) {
-                (Color::Sand, "Sand")
-            } else if relative_n < dec!(3) {
-                (Color::Sky, "Sky")
-            } else if relative_n < dec!(4) {
-                (Color::Coral, "Coral")
-            } else if relative_n < dec!(5) {
-                (Color::Blood, "Blood")
-            } else if relative_n < dec!(6) {
-                (Color::Smoke, "Smoke")
-            } else if relative_n < dec!(7) {
-                (Color::Ocean, "Ocean")
-            } else if relative_n < dec!(8) {
-                (Color::Flame, "Flame")
-            } else if relative_n < dec!(9) {
-                (Color::Glacier, "Glacier")
-            } else {
-                (Color::Dusk, "Dusk")
+        fn assign_material(&self, n: Decimal) -> (Material, &'static str) {
+            if n < 0.into() || n > 1.into() {
+                panic!("n must be between 0 and 1 inclusive")
+            }
+
+            let relative_n = n * 3;
+            match relative_n {
+                n if n < dec!(1) => (Material::Crystalline, "Crystalline"),
+                n if n < dec!(2) => (Material::Metallic, "Metallic"),
+                _ => (Material::Radiant, "Radiant"),
             }
         }
 
-        fn assign_material(&self, n: Decimal) -> (Material, &'static str) {
-            let relative_n = n * dec!(3);
-            if relative_n < dec!(1) {
-                (Material::Crystalline, "Crystalline")
-            } else if relative_n < dec!(2) {
-                (Material::Metallic, "Metallic")
-            } else {
-                (Material::Radiant, "Radiant")
+        fn assign_color(&self, n: Decimal) -> (Color, &'static str) {
+            if n < 0.into() || n > 1.into() {
+                panic!("n must be between 0 and 1 inclusive")
             }
+
+            let common_fraction = dec!(2) / 3;
+            let rare_fraction = 1 - common_fraction;
+
+            let color = if n <= common_fraction {
+                let relative_n = n * (1 / common_fraction) * 5;
+                match relative_n {
+                    rn if rn < dec!(1) => Color::Blood,
+                    rn if rn < dec!(2) => Color::Forest,
+                    rn if rn < dec!(3) => Color::Sand,
+                    rn if rn < dec!(4) => Color::Sky,
+                    _ => Color::Ocean,
+                }
+            } else {
+                let relative_n = (n - common_fraction) * (1 / rare_fraction) * 5;
+                match relative_n {
+                    rn if rn < dec!(1) => Color::Coral,
+                    rn if rn < dec!(2) => Color::Flame,
+                    rn if rn < dec!(3) => Color::Glacier,
+                    rn if rn < dec!(4) => Color::Smoke,
+                    _ => Color::Dusk,
+                }
+            };
+
+            match color {
+                Color::Blood => (Color::Blood, "Blood"),
+                Color::Coral => (Color::Coral, "Coral"),
+                Color::Dusk => (Color::Dusk, "Dusk"),
+                Color::Flame => (Color::Flame, "Flame"),
+                Color::Forest => (Color::Forest, "Forest"),
+                Color::Glacier => (Color::Glacier, "Glacier"),
+                Color::Ocean => (Color::Ocean, "Ocean"),
+                Color::Sand => (Color::Sand, "Sand"),
+                Color::Sky => (Color::Sky, "Sky"),
+                Color::Smoke => (Color::Smoke, "Smoke"),
+            }
+        }
+
+        fn assign_rarity(&self, material: &Material, color: &Color) -> Rarity {
+            let color_rarity = match *color {
+                Color::Blood => Rarity::Common,
+                Color::Coral => Rarity::Rare,
+                Color::Dusk => Rarity::Rare,
+                Color::Flame => Rarity::Rare,
+                Color::Forest => Rarity::Common,
+                Color::Glacier => Rarity::Rare,
+                Color::Ocean => Rarity::Common,
+                Color::Sand => Rarity::Common,
+                Color::Sky => Rarity::Common,
+                Color::Smoke => Rarity::Rare,
+            };
+
+            let material_rarity = match *material {
+                Material::Crystalline => Rarity::Common,
+                Material::Metallic => Rarity::Common,
+                Material::Radiant => Rarity::Rare,
+            };
+
+            return match (color_rarity, material_rarity) {
+                (Rarity::Common, Rarity::Common) => Rarity::Common,
+                (Rarity::Rare, Rarity::Common) => Rarity::Rare,
+                (Rarity::Common, Rarity::Rare) => Rarity::Rare,
+                (Rarity::Rare, Rarity::Rare) => Rarity::UltraRare,
+                _ => panic!("Invalid rarity combination"),
+            };
         }
     }
 }

@@ -15,8 +15,8 @@ pub enum Rarity {
 
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 pub struct RadmorphData {
-    name: String,
     key_image_url: Url,
+    name: String,
     rarity: Rarity,
     material: Material,
     energy: Energy,

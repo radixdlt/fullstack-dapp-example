@@ -15,10 +15,10 @@ CREATE_NON_FUNGIBLE_RESOURCE
                     Enum<14u8>(
                         Array<Enum>(
                             Enum<0u8>(
-                                12u8
+                                198u8
                             ),
                             Enum<0u8>(
-                                198u8
+                                12u8
                             ),
                             Enum<1u8>(
                                 1u64
@@ -68,111 +68,11 @@ CREATE_NON_FUNGIBLE_RESOURCE
                         Enum<1u8>(
                             Enum<0u8>(
                                 Array<String>(
-                                    "name",
                                     "key_image_url",
-                                    "rarity",
+                                    "name",
+                                    "material",
                                     "color",
-                                    "material"
-                                )
-                            )
-                        )
-                    ),
-                    Tuple(
-                        Enum<1u8>(
-                            "Rarity"
-                        ),
-                        Enum<1u8>(
-                            Enum<1u8>(
-                                Map<U8, Tuple>(
-                                    0u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Common"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    1u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Rare"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    2u8 => Tuple(
-                                        Enum<1u8>(
-                                            "UltraRare"
-                                        ),
-                                        Enum<0u8>()
-                                    )
-                                )
-                            )
-                        )
-                    ),
-                    Tuple(
-                        Enum<1u8>(
-                            "Color"
-                        ),
-                        Enum<1u8>(
-                            Enum<1u8>(
-                                Map<U8, Tuple>(
-                                    0u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Forest"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    1u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Sand"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    2u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Sky"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    3u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Coral"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    4u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Blood"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    5u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Smoke"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    6u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Ocean"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    7u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Flame"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    8u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Glacier"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    9u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Dusk"
-                                        ),
-                                        Enum<0u8>()
-                                    )
+                                    "rarity"
                                 )
                             )
                         )
@@ -199,6 +99,106 @@ CREATE_NON_FUNGIBLE_RESOURCE
                                     2u8 => Tuple(
                                         Enum<1u8>(
                                             "Radiant"
+                                        ),
+                                        Enum<0u8>()
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    Tuple(
+                        Enum<1u8>(
+                            "Color"
+                        ),
+                        Enum<1u8>(
+                            Enum<1u8>(
+                                Map<U8, Tuple>(
+                                    0u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Blood"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    1u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Coral"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    2u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Dusk"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    3u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Flame"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    4u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Forest"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    5u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Glacier"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    6u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Ocean"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    7u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Sand"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    8u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Sky"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    9u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Smoke"
+                                        ),
+                                        Enum<0u8>()
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    Tuple(
+                        Enum<1u8>(
+                            "Rarity"
+                        ),
+                        Enum<1u8>(
+                            Enum<1u8>(
+                                Map<U8, Tuple>(
+                                    0u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Common"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    1u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Rare"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    2u8 => Tuple(
+                                        Enum<1u8>(
+                                            "UltraRare"
                                         ),
                                         Enum<0u8>()
                                     )

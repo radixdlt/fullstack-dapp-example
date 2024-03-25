@@ -5,16 +5,16 @@ use scrypto_unit::*;
 
 #[derive(ScryptoSbor, ManifestSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 pub enum Color {
+    Blood,
+    Coral,
+    Dusk,
+    Flame,
     Forest,
+    Glacier,
+    Ocean,
     Sand,
     Sky,
-    Coral,
-    Blood,
     Smoke,
-    Ocean,
-    Flame,
-    Glacier,
-    Dusk,
 }
 
 #[derive(ScryptoSbor, ManifestSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
@@ -33,11 +33,11 @@ pub enum Rarity {
 
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
 struct RadgemData {
-    name: String,
     key_image_url: Url,
-    rarity: Rarity,
-    color: Color,
+    name: String,
     material: Material,
+    color: Color,
+    rarity: Rarity,
 }
 
 #[test]

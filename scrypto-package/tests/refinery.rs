@@ -57,15 +57,17 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         .mint_initial_supply(
             [
                 RadgemData {
+                    key_image_url: UncheckedUrl("".to_owned()),
                     name: "Crystalline Coral Radgem".to_owned(),
-                    color: Color::Coral,
                     material: Material::Crystalline,
+                    color: Color::Coral,
                     rarity: RadgemRarity::Rare,
                 },
                 RadgemData {
+                    key_image_url: UncheckedUrl("".to_owned()),
                     name: "Metallic Forest Radgem".to_owned(),
-                    color: Color::Forest,
                     material: Material::Metallic,
+                    color: Color::Forest,
                     rarity: RadgemRarity::Common,
                 },
             ],
@@ -224,7 +226,7 @@ fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
 }
 
 #[test]
-fn can_transform_radgems() -> Result<(), RuntimeError> {
+fn can_create_radmorph() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,
