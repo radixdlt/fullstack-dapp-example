@@ -33,6 +33,7 @@ pub enum Rarity {
 
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
 struct RadgemData {
+    #[mutable]
     key_image_url: Url,
     name: String,
     material: Material,
@@ -67,7 +68,10 @@ fn create_radgem() {
                 depositor => rule!(allow_all);
                 depositor_updater => rule!(deny_all);
             },
-            non_fungible_data_update_roles: None,
+            non_fungible_data_update_roles: non_fungible_data_update_roles! {
+                non_fungible_data_updater => rule!(require(XRD));
+                non_fungible_data_updater_updater => rule!(deny_all);
+            },
         },
         metadata!(
             init {

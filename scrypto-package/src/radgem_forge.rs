@@ -30,6 +30,7 @@ pub enum Rarity {
 
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 pub struct RadgemData {
+    #[mutable]
     pub key_image_url: Url,
     pub name: String,
     pub material: Material,
@@ -45,6 +46,7 @@ mod radgem_forge {
       },
       methods {
         mint_radgem => restrict_to: [admin];
+        update_key_image => restrict_to: [admin];
       }
     }
 
@@ -85,9 +87,21 @@ mod radgem_forge {
                 rarity,
             };
 
-            self.admin_badge.authorize_with_amount(1, || {
-                self.radgem_resource_manager.mint_ruid_non_fungible(radgem)
-            })
+            let admin_proof = self.admin_badge.create_proof_of_amount(1);
+            LocalAuthZone::push(admin_proof);
+
+            self.radgem_resource_manager.mint_ruid_non_fungible(radgem)
+        }
+
+        pub fn update_key_image(&mut self, radgem_id: NonFungibleLocalId, key_image_url: Url) {
+            let admin_proof = self.admin_badge.create_proof_of_amount(1);
+            LocalAuthZone::push(admin_proof);
+
+            self.radgem_resource_manager.update_non_fungible_data(
+                &radgem_id,
+                "key_image_url",
+                key_image_url,
+            )
         }
 
         fn assign_material(&self, n: Decimal) -> (Material, &'static str) {

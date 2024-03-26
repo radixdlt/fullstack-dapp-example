@@ -17,7 +17,7 @@ enum RadgemDeposit {
 #[blueprint]
 #[events(
     ElementsCombineDepositedEvent,
-    ElementsCombineProcessedEvent,
+    ElementsCombineProcessed1Event,
     ElementsCombineClaimedEvent,
     RadmorphCreatedEvent
 )]
@@ -29,7 +29,8 @@ mod refinery {
         },
         methods {
             combine_elements_deposit => PUBLIC;
-            combine_elements_process => restrict_to: [admin];
+            combine_elements_process_1 => restrict_to: [admin];
+            combine_elements_process_2 => restrict_to: [admin];
             combine_elements_claim => PUBLIC;
             create_radmorph => PUBLIC;
         }
@@ -96,22 +97,21 @@ mod refinery {
                     .to_string(),
             );
 
-            self.admin_badge
-                .authorize_with_amount(1, || elements.burn());
+            LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
+            elements.burn();
 
             Runtime::emit_event(ElementsCombineDepositedEvent { user_id });
         }
 
         // Mint a random RadGem
-        pub fn combine_elements_process(
+        pub fn combine_elements_process_1(
             &mut self,
             user_id: UserId,
             rand_num_1: Decimal,
             rand_num_2: Decimal,
         ) -> () {
-            let radgem_bucket = self
-                .admin_badge
-                .authorize_with_amount(1, || self.radgem_forge.mint_radgem(rand_num_1, rand_num_2));
+            LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
+            let radgem_bucket = self.radgem_forge.mint_radgem(rand_num_1, rand_num_2);
 
             // Update the user's RadGem record
             if self.radgem_records.get(&user_id).is_none() {
@@ -133,6 +133,7 @@ mod refinery {
                 }
             }
 
+            let radgem_local_id = radgem_bucket.as_non_fungible().non_fungible_local_id();
             let radgem_data = radgem_bucket
                 .as_non_fungible()
                 .non_fungible::<RadgemData>()
@@ -141,10 +142,21 @@ mod refinery {
             // Deposit the RadGem into the vault for the user to claim later
             self.radgem_vault.put(radgem_bucket.as_non_fungible());
 
-            Runtime::emit_event(ElementsCombineProcessedEvent {
+            Runtime::emit_event(ElementsCombineProcessed1Event {
                 user_id,
+                radgem_local_id,
                 radgem_data,
             });
+        }
+
+        pub fn combine_elements_process_2(
+            &mut self,
+            radgem_local_id: NonFungibleLocalId,
+            key_image_url: Url,
+        ) {
+            LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
+            self.radgem_forge
+                .update_key_image(radgem_local_id, key_image_url);
         }
 
         // User claims RadGem by presenting user badge
@@ -209,24 +221,22 @@ mod refinery {
                 .non_fungible::<MorphCardData>()
                 .data();
 
+            LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
+
             // Burn resources
-            self.admin_badge.authorize_with_amount(1, || {
-                radgem_1.burn();
-                radgem_2.burn();
-                morph_card.burn();
-            });
+            radgem_1.burn();
+            radgem_2.burn();
+            morph_card.burn();
 
             //TODO: check key_image_url with Image Oracle
 
             // Mint a RadMorph
-            let radmorph = self.admin_badge.authorize_with_amount(1, || {
-                self.radmorph_forge.mint_radmorph(
-                    radgem_1_data,
-                    radgem_2_data,
-                    morph_card_data,
-                    key_image_url,
-                )
-            });
+            let radmorph = self.radmorph_forge.mint_radmorph(
+                radgem_1_data,
+                radgem_2_data,
+                morph_card_data,
+                key_image_url,
+            );
 
             let user_id = match user_badge {
                 Some(badge_proof) => Some(UserId(
@@ -261,8 +271,9 @@ pub struct ElementsCombineDepositedEvent {
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
-pub struct ElementsCombineProcessedEvent {
+pub struct ElementsCombineProcessed1Event {
     user_id: UserId,
+    radgem_local_id: NonFungibleLocalId,
     radgem_data: RadgemData,
 }
 

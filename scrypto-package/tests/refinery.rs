@@ -165,7 +165,7 @@ fn can_combine_elements_process() -> Result<(), RuntimeError> {
 
     // Act
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_process(user_id, dec!(0.318), dec!(0.822), &mut env)?;
+    refinery.combine_elements_process_1(user_id, dec!(0.318), dec!(0.822), &mut env)?;
 
     // Assert
     Ok(())
@@ -184,7 +184,7 @@ fn can_combine_elements_claim() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_process(user_id.clone(), dec!(0.97), dec!(0.89), &mut env)?;
+    refinery.combine_elements_process_1(user_id.clone(), dec!(0.97), dec!(0.89), &mut env)?;
 
     // Act
     let result =
@@ -208,13 +208,13 @@ fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_process(user_id.clone(), dec!(0.97), dec!(0.87), &mut env)?;
+    refinery.combine_elements_process_1(user_id.clone(), dec!(0.97), dec!(0.87), &mut env)?;
 
     // Act
     let result_1 =
         refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
 
-    refinery.combine_elements_process(user_id.clone(), dec!(0.16), dec!(0.64), &mut env)?;
+    refinery.combine_elements_process_1(user_id.clone(), dec!(0.16), dec!(0.64), &mut env)?;
 
     let result_2 =
         refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
@@ -222,6 +222,40 @@ fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
     // Assert
     assert_eq!(result_1.amount(&mut env)?, dec!(1));
     assert_eq!(result_2.amount(&mut env)?, dec!(1));
+    Ok(())
+}
+
+#[test]
+fn can_combine_elements_process_2() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut refinery,
+        user_id,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    refinery.combine_elements_process_1(user_id.clone(), dec!(0.97), dec!(0.87), &mut env)?;
+
+    let refinery_state: RefineryState = env.read_component_state(refinery).unwrap();
+    let radgem_local_id = refinery_state
+        .radgem_vault
+        .0
+        .non_fungible_local_ids(1, &mut env)
+        .unwrap()
+        .pop()
+        .unwrap();
+
+    // Act
+    refinery.combine_elements_process_2(
+        radgem_local_id,
+        UncheckedUrl::of("www.new_url.test"),
+        &mut env,
+    )?;
+
+    // Assert
     Ok(())
 }
 
