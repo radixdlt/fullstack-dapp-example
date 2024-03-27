@@ -86,7 +86,7 @@ fn create_radgem() {
     dump_manifest_to_file_system(
         manifest_builder.object_names(),
         &manifest_builder.build(),
-        "./manifests/test-gened",
+        "./manifests/test-generated",
         Some("create_radgem"),
         &network,
     )
@@ -167,7 +167,7 @@ fn create_morph_card() {
     dump_manifest_to_file_system(
         manifest_builder.object_names(),
         &manifest_builder.build(),
-        "./manifests/test-gened",
+        "./manifests/test-generated",
         Some("create_morph_card"),
         &network,
     )
@@ -231,7 +231,7 @@ fn create_radmorph() {
     dump_manifest_to_file_system(
         manifest_builder.object_names(),
         &manifest_builder.build(),
-        "./manifests/test-gened",
+        "./manifests/test-generated",
         Some("create_radmorph"),
         &network,
     )
