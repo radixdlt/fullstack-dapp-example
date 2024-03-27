@@ -153,7 +153,7 @@ fn can_combine_elements_deposit() -> Result<(), RuntimeError> {
 }
 
 #[test]
-fn can_combine_elements_process() -> Result<(), RuntimeError> {
+fn can_combine_elements_process_1() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,
