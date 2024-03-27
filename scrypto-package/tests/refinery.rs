@@ -16,6 +16,7 @@ struct Test {
     morph_card: Bucket,
     radgems: Bucket,
     user_badge: Bucket,
+    user_badge_proof: Proof,
     radmorph_address: ResourceAddress,
     user_id: UserId,
     admin_badge_proof: Proof,
@@ -108,6 +109,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
 
     let radmorph_address = radmorph.resource_address(&mut env)?;
     let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
+    let user_badge_proof = user_badge.create_proof_of_all(&mut env)?;
 
     Ok(Test {
         env,
@@ -116,6 +118,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         morph_card,
         radgems,
         user_badge,
+        user_badge_proof,
         radmorph_address,
         user_id: UserId(format!("#{user_int}#")),
         admin_badge_proof,
@@ -137,13 +140,13 @@ fn can_combine_elements_deposit() -> Result<(), RuntimeError> {
         mut env,
         elements,
         refinery,
-        user_badge,
+        user_badge_proof,
         ..
     } = arrange_test_environment()?;
 
     // Act
     refinery.combine_elements_deposit(
-        user_badge.create_proof_of_all(&mut env)?,
+        user_badge_proof,
         elements.take(dec!(10), &mut env)?,
         &mut env,
     )?;
@@ -171,61 +174,7 @@ fn can_combine_elements_process_1() -> Result<(), RuntimeError> {
     Ok(())
 }
 
-#[test]
-fn can_combine_elements_claim() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        mut refinery,
-        user_badge,
-        user_id,
-        admin_badge_proof,
-        ..
-    } = arrange_test_environment()?;
-
-    LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_process_1(user_id.clone(), dec!(0.97), dec!(0.89), &mut env)?;
-
-    // Act
-    let result =
-        refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
-
-    // Assert
-    assert_eq!(result.amount(&mut env)?, dec!(1));
-    Ok(())
-}
-
-#[test]
-fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        mut refinery,
-        user_badge,
-        user_id,
-        admin_badge_proof,
-        ..
-    } = arrange_test_environment()?;
-
-    LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_process_1(user_id.clone(), dec!(0.97), dec!(0.87), &mut env)?;
-
-    // Act
-    let result_1 =
-        refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
-
-    refinery.combine_elements_process_1(user_id.clone(), dec!(0.16), dec!(0.64), &mut env)?;
-
-    let result_2 =
-        refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
-
-    // Assert
-    assert_eq!(result_1.amount(&mut env)?, dec!(1));
-    assert_eq!(result_2.amount(&mut env)?, dec!(1));
-    Ok(())
-}
-
-/*
+/* TODO: Implement - Awaiting Scrypto method `with_component_state` to be implemented
 #[test]
 fn can_combine_elements_process_2() -> Result<(), RuntimeError> {
     // Arrange
@@ -262,6 +211,59 @@ fn can_combine_elements_process_2() -> Result<(), RuntimeError> {
 */
 
 #[test]
+fn can_combine_elements_claim() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut refinery,
+        user_badge_proof,
+        user_id,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    refinery.combine_elements_process_1(user_id.clone(), dec!(0.97), dec!(0.89), &mut env)?;
+
+    // Act
+    let result = refinery.combine_elements_claim(user_badge_proof, &mut env)?;
+
+    // Assert
+    assert_eq!(result.amount(&mut env)?, dec!(1));
+    Ok(())
+}
+
+#[test]
+fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut refinery,
+        user_badge,
+        user_id,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    refinery.combine_elements_process_1(user_id.clone(), dec!(0.97), dec!(0.87), &mut env)?;
+
+    // Act
+    let result_1 =
+        refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
+
+    refinery.combine_elements_process_1(user_id.clone(), dec!(0.16), dec!(0.64), &mut env)?;
+
+    let result_2 =
+        refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
+
+    // Assert
+    assert_eq!(result_1.amount(&mut env)?, dec!(1));
+    assert_eq!(result_2.amount(&mut env)?, dec!(1));
+    Ok(())
+}
+
+#[test]
 fn can_create_radmorph() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
@@ -270,16 +272,42 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
         morph_card,
         radgems,
         radmorph_address,
+        user_badge_proof,
         ..
     } = arrange_test_environment()?;
+
+    let m = morph_card.non_fungible_local_ids(&mut env)?.pop().unwrap();
+    let morph_card_data: MorphCardData = ResourceManager(morph_card.resource_address(&mut env)?)
+        .get_non_fungible_data(m, &mut env)?;
+    let radgem_ids = radgems.non_fungible_local_ids(&mut env)?;
+    let radgem_1_data: RadgemData = ResourceManager(radgems.resource_address(&mut env)?)
+        .get_non_fungible_data(radgem_ids[0].clone(), &mut env)?;
+    let radgem_2_data: RadgemData = ResourceManager(radgems.resource_address(&mut env)?)
+        .get_non_fungible_data(radgem_ids[1].clone(), &mut env)?;
+    let key_image_url = UncheckedUrl("https://www.example.com".to_owned());
+
+    let data = format!(
+        "{}{}{}{}",
+        morph_card_data.name,
+        radgem_1_data.name,
+        radgem_2_data.name,
+        key_image_url.as_str(),
+    );
+
+    let key_hash = keccak256_hash(data.as_bytes());
+    let value_hash = keccak256_hash(key_image_url.as_str().as_bytes());
+
+    env.disable_auth_module();
+    refinery.set_key_image_url_hashes(vec![(key_hash, value_hash)], &mut env)?;
+    env.enable_auth_module();
 
     // Act
     let result = refinery.create_radmorph(
         radgems.take(dec!(1), &mut env)?,
         radgems.take(dec!(1), &mut env)?,
         morph_card,
-        UncheckedUrl("https://www.example.com".to_owned()),
-        None,
+        key_image_url,
+        Some(user_badge_proof),
         &mut env,
     )?;
 
@@ -294,6 +322,33 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
         radmorph_data.name,
         "Precious Crystalline MoltenLava RadMorph".to_owned(),
     );
+
+    Ok(())
+}
+
+#[test]
+fn cannot_create_radmorph_with_incorrect_image_url() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut refinery,
+        morph_card,
+        radgems,
+        ..
+    } = arrange_test_environment()?;
+
+    // Act
+    let result = refinery.create_radmorph(
+        radgems.take(dec!(1), &mut env)?,
+        radgems.take(dec!(1), &mut env)?,
+        morph_card,
+        UncheckedUrl("https://www.example.com".to_owned()),
+        None,
+        &mut env,
+    );
+
+    // Assert
+    assert!(result.is_err());
 
     Ok(())
 }

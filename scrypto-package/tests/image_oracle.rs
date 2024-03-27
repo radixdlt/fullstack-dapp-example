@@ -52,12 +52,12 @@ fn can_set_key_image_url_hashes() -> Result<(), RuntimeError> {
 
     let key_image_url_hashes = vec![
         (
-            keccak256_hash("key1".bytes().collect::<Vec<u8>>()),
-            keccak256_hash("image1url".bytes().collect::<Vec<u8>>()),
+            keccak256_hash("key1".as_bytes()),
+            keccak256_hash("image1url".as_bytes()),
         ),
         (
-            keccak256_hash("key2".bytes().collect::<Vec<u8>>()),
-            keccak256_hash("image2url".bytes().collect::<Vec<u8>>()),
+            keccak256_hash("key2".as_bytes()),
+            keccak256_hash("image2url".as_bytes()),
         ),
     ];
 
@@ -78,26 +78,24 @@ fn can_get_key_image_url_hash() -> Result<(), RuntimeError> {
 
     let key_image_url_hashes = vec![
         (
-            keccak256_hash("key1".bytes().collect::<Vec<u8>>()),
-            keccak256_hash("image1url".bytes().collect::<Vec<u8>>()),
+            keccak256_hash("key1".as_bytes()),
+            keccak256_hash("image1url".as_bytes()),
         ),
         (
-            keccak256_hash("key2".bytes().collect::<Vec<u8>>()),
-            keccak256_hash("image2url".bytes().collect::<Vec<u8>>()),
+            keccak256_hash("key2".as_bytes()),
+            keccak256_hash("image2url".as_bytes()),
         ),
     ];
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
     image_oracle.set_key_image_url_hashes(key_image_url_hashes, &mut env)?;
 
-    let key_image_url_hash = image_oracle.get_key_image_url_hash(
-        keccak256_hash("key1".bytes().collect::<Vec<u8>>()),
-        &mut env,
-    )?;
+    let key_image_url_hash =
+        image_oracle.get_key_image_url_hash(keccak256_hash("key1".as_bytes()), &mut env)?;
 
     assert_eq!(
         key_image_url_hash,
-        Some(keccak256_hash("image1url".bytes().collect::<Vec<u8>>()))
+        Some(keccak256_hash("image1url".as_bytes()))
     );
 
     Ok(())
@@ -114,22 +112,20 @@ fn cannot_get_incorrect_key_image_url_hash() -> Result<(), RuntimeError> {
 
     let key_image_url_hashes = vec![
         (
-            keccak256_hash("key1".bytes().collect::<Vec<u8>>()),
-            keccak256_hash("image1url".bytes().collect::<Vec<u8>>()),
+            keccak256_hash("key1".as_bytes()),
+            keccak256_hash("image1url".as_bytes()),
         ),
         (
-            keccak256_hash("key2".bytes().collect::<Vec<u8>>()),
-            keccak256_hash("image2url".bytes().collect::<Vec<u8>>()),
+            keccak256_hash("key2".as_bytes()),
+            keccak256_hash("image2url".as_bytes()),
         ),
     ];
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
     image_oracle.set_key_image_url_hashes(key_image_url_hashes, &mut env)?;
 
-    let key_image_url_hash = image_oracle.get_key_image_url_hash(
-        keccak256_hash("key3".bytes().collect::<Vec<u8>>()),
-        &mut env,
-    )?;
+    let key_image_url_hash =
+        image_oracle.get_key_image_url_hash(keccak256_hash("key3".as_bytes()), &mut env)?;
 
     assert_eq!(key_image_url_hash, None);
 
@@ -147,27 +143,22 @@ fn can_remove_key_image_url_hashes() -> Result<(), RuntimeError> {
 
     let key_image_url_hashes = vec![
         (
-            keccak256_hash("key1".bytes().collect::<Vec<u8>>()),
-            keccak256_hash("image1url".bytes().collect::<Vec<u8>>()),
+            keccak256_hash("key1".as_bytes()),
+            keccak256_hash("image1url".as_bytes()),
         ),
         (
-            keccak256_hash("key2".bytes().collect::<Vec<u8>>()),
-            keccak256_hash("image2url".bytes().collect::<Vec<u8>>()),
+            keccak256_hash("key2".as_bytes()),
+            keccak256_hash("image2url".as_bytes()),
         ),
     ];
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
     image_oracle.set_key_image_url_hashes(key_image_url_hashes, &mut env)?;
 
-    image_oracle.remove_key_image_url_hashes(
-        vec![keccak256_hash("key1".bytes().collect::<Vec<u8>>())],
-        &mut env,
-    )?;
+    image_oracle.remove_key_image_url_hashes(vec![keccak256_hash("key1".as_bytes())], &mut env)?;
 
-    let key_image_url_hash = image_oracle.get_key_image_url_hash(
-        keccak256_hash("key1".bytes().collect::<Vec<u8>>()),
-        &mut env,
-    )?;
+    let key_image_url_hash =
+        image_oracle.get_key_image_url_hash(keccak256_hash("key1".as_bytes()), &mut env)?;
 
     assert_eq!(key_image_url_hash, None);
 

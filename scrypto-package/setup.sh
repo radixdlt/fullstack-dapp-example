@@ -30,8 +30,6 @@ export refinery=`resim run manifests/new_refinery.rtm | grep "Component:" | tail
 
 export morph_card_forge=`resim run manifests/new_card_forge.rtm | grep "Component:" | grep -o "component_.*"`
 
-export image_oracle=`resim run manifests/new_image_oracle.rtm | grep "Component:" | grep -o "component_.*"`
-
 echo "\nSetup Complete & Environment Variables Set"
 echo "------------------------------------------"
 
@@ -56,4 +54,3 @@ echo "\nComponent Addresses:"
 echo "quest_rewards = $quest_rewards"
 echo "refinery = $refinery"
 echo "morph_card_forge = $morph_card_forge"
-echo "image_oracle = $image_oracle"

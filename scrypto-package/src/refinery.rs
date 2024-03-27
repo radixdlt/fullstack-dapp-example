@@ -1,4 +1,5 @@
 use crate::{
+    image_oracle::image_oracle::ImageOracle,
     morph_card_forge::MorphCardData,
     radgem_forge::{radgem_forge::RadgemForge, RadgemData},
     radmorph_forge::{radmorph_forge::RadmorphForge, RadmorphData},
@@ -22,7 +23,6 @@ enum RadgemDeposit {
     RadmorphCreatedEvent
 )]
 mod refinery {
-
     enable_method_auth! {
         roles {
             admin => updatable_by: [OWNER];
@@ -33,6 +33,7 @@ mod refinery {
             combine_elements_process_2 => restrict_to: [admin];
             combine_elements_claim => PUBLIC;
             create_radmorph => PUBLIC;
+            set_key_image_url_hashes => NOBODY;
         }
     }
 
@@ -46,6 +47,7 @@ mod refinery {
         user_badge_address: ResourceAddress,
         radgem_forge: Global<RadgemForge>,
         radmorph_forge: Global<RadmorphForge>,
+        image_oracle: Global<ImageOracle>,
     }
 
     impl Refinery {
@@ -66,6 +68,7 @@ mod refinery {
 
             let admin_badge_address = admin_badge.resource_address();
 
+            let image_oracle = ImageOracle::new(owner_role.clone(), admin_badge_address);
             Self {
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
                 radgem_records: KeyValueStore::new(),
@@ -76,6 +79,7 @@ mod refinery {
                 user_badge_address,
                 radgem_forge,
                 radmorph_forge,
+                image_oracle,
             }
             .instantiate()
             .prepare_to_globalize(owner_role)
@@ -228,7 +232,20 @@ mod refinery {
             radgem_2.burn();
             morph_card.burn();
 
-            //TODO: check key_image_url with Image Oracle
+            let pre_hash_string = format!(
+                "{}{}{}{}",
+                morph_card_data.name,
+                radgem_1_data.name,
+                radgem_2_data.name,
+                key_image_url.as_str(),
+            );
+
+            let result = self
+                .image_oracle
+                .get_key_image_url_hash(keccak256_hash(pre_hash_string.as_bytes()))
+                .unwrap();
+
+            assert_eq!(result, keccak256_hash(key_image_url.as_str().as_bytes()));
 
             // Mint a RadMorph
             let radmorph = self.radmorph_forge.mint_radmorph(
@@ -261,6 +278,12 @@ mod refinery {
             });
 
             radmorph
+        }
+
+        // Method used for testing only
+        pub fn set_key_image_url_hashes(&mut self, key_image_url_hashes: Vec<(Hash, Hash)>) {
+            self.image_oracle
+                .set_key_image_url_hashes(key_image_url_hashes);
         }
     }
 }
