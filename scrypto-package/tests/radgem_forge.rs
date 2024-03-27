@@ -6,6 +6,7 @@ use scrypto_test::prelude::*;
 struct Test {
     env: TestEnvironment,
     radgem_forge: RadgemForge,
+    radgem_address: ResourceAddress,
     _radgem: Bucket,
     radgem_local_id: NonFungibleLocalId,
     admin_badge_proof: Proof,
@@ -48,12 +49,14 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         &mut env,
     )?;
 
+    let radgem_address = _radgem.resource_address(&mut env)?;
     let radgem_local_id = _radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
     let admin_badge_proof = admin_badge.create_proof_of_amount(dec!(1), &mut env)?;
 
     Ok(Test {
         env,
         radgem_forge,
+        radgem_address,
         _radgem,
         radgem_local_id,
         admin_badge_proof,
@@ -111,10 +114,77 @@ fn cannot_mint_radgem_without_admin_badge() -> Result<(), RuntimeError> {
 }
 
 #[test]
+fn can_mint_common_radgem() -> Result<(), RuntimeError> {
+    let Test {
+        mut env,
+        mut radgem_forge,
+        radgem_address,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    // both seed numbers below 2/3 to ensure a common radgem
+    let radgem = radgem_forge.mint_radgem(dec!(0.65), dec!(0.59), &mut env)?;
+
+    let radgem_id = radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
+    let radgem_data: RadgemData =
+        ResourceManager(radgem_address).get_non_fungible_data(radgem_id, &mut env)?;
+    assert_eq!(radgem_data.rarity, Rarity::Common,);
+
+    Ok(())
+}
+
+#[test]
+fn can_mint_rare_radgem() -> Result<(), RuntimeError> {
+    let Test {
+        mut env,
+        mut radgem_forge,
+        radgem_address,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    // one seed numbers above and one bellow 2/3 to ensure a rare radgem
+    let radgem = radgem_forge.mint_radgem(dec!(0.65), dec!(0.75), &mut env)?;
+
+    let radgem_id = radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
+    let radgem_data: RadgemData =
+        ResourceManager(radgem_address).get_non_fungible_data(radgem_id, &mut env)?;
+    assert_eq!(radgem_data.rarity, Rarity::Rare,);
+
+    Ok(())
+}
+
+#[test]
+fn can_mint_ultra_rare_radgem() -> Result<(), RuntimeError> {
+    let Test {
+        mut env,
+        mut radgem_forge,
+        radgem_address,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    // both seed numbers above 2/3 to ensure an ultra rare radgem
+    let radgem = radgem_forge.mint_radgem(dec!(0.75), dec!(0.88), &mut env)?;
+
+    let radgem_id = radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
+    let radgem_data: RadgemData =
+        ResourceManager(radgem_address).get_non_fungible_data(radgem_id, &mut env)?;
+    assert_eq!(radgem_data.rarity, Rarity::UltraRare,);
+
+    Ok(())
+}
+
+#[test]
 fn can_update_key_image() -> Result<(), RuntimeError> {
     let Test {
         mut env,
         mut radgem_forge,
+        radgem_address,
         radgem_local_id,
         admin_badge_proof,
         ..
@@ -122,10 +192,17 @@ fn can_update_key_image() -> Result<(), RuntimeError> {
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
     radgem_forge.update_key_image(
-        radgem_local_id,
+        radgem_local_id.clone(),
         UncheckedUrl("https://example.com".to_owned()),
         &mut env,
     )?;
+
+    let radgem_data: RadgemData =
+        ResourceManager(radgem_address).get_non_fungible_data(radgem_local_id, &mut env)?;
+    assert_eq!(
+        radgem_data.key_image_url,
+        UncheckedUrl("https://example.com".to_owned()),
+    );
 
     Ok(())
 }

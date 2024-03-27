@@ -15,8 +15,8 @@ pub enum Rarity {
 
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 pub struct RadmorphData {
-    key_image_url: Url,
-    name: String,
+    pub key_image_url: Url,
+    pub name: String,
     rarity: Rarity,
     material: Material,
     energy: Energy,
@@ -76,6 +76,15 @@ mod radmorph_forge {
             let total_rarity = radgem1_data.rarity as u8
                 + radgem2_data.rarity as u8
                 + morph_card_data.rarity as u8;
+            // 3 Common                 = 0 (Fine)
+            // 2 Common + 1 Rare        = 1 (Fine)
+            // 1 Common + 2 Rare        = 2 (Precious)
+            // 2 Common + 1 UltraRare   = 2 (Precious)
+            // 3 Rare                   = 3 (Precious)
+            // 1 Common + 2 UltraRare   = 4 (Superb)
+            // 2 Rare + 1 UltraRare     = 4 (Superb)
+            // 1 Rare + 2 UltraRare     = 5 (Superb)
+            // 3 UltraRare              = 6 (Magnificent)
             let rarity = if total_rarity >= 6 {
                 Rarity::Magnificent
             } else if total_rarity >= 4 {
