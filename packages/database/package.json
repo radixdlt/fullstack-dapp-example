@@ -1,22 +1,22 @@
 {
   "name": "database",
   "version": "0.0.0",
-  "main": "./dist/index.mjs",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/index.mjs",
+        "default": "./dist/index.js",
         "types": "./dist/index.d.ts"
       }
     }
   },
   "scripts": {
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push --skip-generate",
-    "db:build": "npm run db:generate && rollup -c",
-    "db:clear": "prisma migrate reset --force"
+    "generate": "prisma generate",
+    "push": "prisma db push --skip-generate",
+    "build": "npm run generate && rollup -c",
+    "clear": "prisma migrate reset --force"
   },
   "dependencies": {
     "@prisma/client": "^5.7.1"
