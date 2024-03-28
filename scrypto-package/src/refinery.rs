@@ -200,7 +200,6 @@ mod refinery {
             radgem_2: Bucket,
             morph_card: Bucket,
             key_image_url: Url,
-            optional_badge_proof: Option<Proof>,
         ) -> Bucket {
             // Confirm the resources
             assert_eq!(radgem_1.resource_address(), self.radgem_address);
@@ -262,20 +261,8 @@ mod refinery {
                 key_image_url,
             );
 
-            let badge_id = match optional_badge_proof {
-                Some(badge_proof) => Some(NonFungibleGlobalId::new(
-                    badge_proof.resource_address(),
-                    badge_proof
-                        .skip_checking()
-                        .as_non_fungible()
-                        .non_fungible_local_id(),
-                )),
-                None => None,
-            };
-
             // Emit the event
             Runtime::emit_event(RadmorphCreatedEvent {
-                badge_id,
                 radmorph_local_id: radmorph.as_non_fungible().non_fungible_local_id(),
                 radmorph_data: radmorph
                     .as_non_fungible()
@@ -319,7 +306,6 @@ pub struct ElementsCombineClaimedEvent {
 
 #[derive(ScryptoSbor, ScryptoEvent)]
 pub struct RadmorphCreatedEvent {
-    badge_id: Option<NonFungibleGlobalId>,
     radmorph_local_id: NonFungibleLocalId,
     radmorph_data: RadmorphData,
 }
