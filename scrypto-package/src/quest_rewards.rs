@@ -9,12 +9,12 @@ pub struct UserId(pub String);
 pub struct QuestId(pub String);
 
 // TODO: Update with actual KycData struct when available
-#[derive(ScryptoSbor, NonFungibleData)]
+#[derive(ScryptoSbor, NonFungibleData, PartialEq, Eq, Debug, Clone)]
 pub struct KycData {
     pub expires: Instant,
 }
 
-#[derive(ScryptoSbor)]
+#[derive(ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 enum RewardState {
     Unclaimed {
         resources_record: HashMap<ResourceAddress, RewardAmount>,
@@ -22,13 +22,13 @@ enum RewardState {
     Claimed,
 }
 
-#[derive(ScryptoSbor, Clone)]
+#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 enum RewardAmount {
     FungibleAmount(Decimal),
     NonFungibleAmount(Vec<NonFungibleLocalId>),
 }
 
-#[derive(ScryptoSbor)]
+#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 struct RewardInfo {
     resource_address: ResourceAddress,
     reward_amount: RewardAmount,

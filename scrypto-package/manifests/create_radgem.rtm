@@ -1,0 +1,333 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("5000")
+;
+
+CREATE_NON_FUNGIBLE_RESOURCE
+    Enum<0u8>()
+    Enum<3u8>()
+    true
+    Enum<0u8>(
+        Enum<0u8>(
+            Tuple(
+                Array<Enum>(
+                    Enum<14u8>(
+                        Array<Enum>(
+                            Enum<0u8>(
+                                198u8
+                            ),
+                            Enum<0u8>(
+                                12u8
+                            ),
+                            Enum<1u8>(
+                                1u64
+                            ),
+                            Enum<1u8>(
+                                2u64
+                            ),
+                            Enum<1u8>(
+                                3u64
+                            )
+                        )
+                    ),
+                    Enum<15u8>(
+                        Map<U8, Array>(
+                            0u8 => Array<Enum>(),
+                            1u8 => Array<Enum>(),
+                            2u8 => Array<Enum>()
+                        )
+                    ),
+                    Enum<15u8>(
+                        Map<U8, Array>(
+                            0u8 => Array<Enum>(),
+                            1u8 => Array<Enum>(),
+                            2u8 => Array<Enum>(),
+                            3u8 => Array<Enum>(),
+                            4u8 => Array<Enum>(),
+                            5u8 => Array<Enum>(),
+                            6u8 => Array<Enum>(),
+                            7u8 => Array<Enum>(),
+                            8u8 => Array<Enum>(),
+                            9u8 => Array<Enum>()
+                        )
+                    ),
+                    Enum<15u8>(
+                        Map<U8, Array>(
+                            0u8 => Array<Enum>(),
+                            1u8 => Array<Enum>(),
+                            2u8 => Array<Enum>()
+                        )
+                    )
+                ),
+                Array<Tuple>(
+                    Tuple(
+                        Enum<1u8>(
+                            "RadgemData"
+                        ),
+                        Enum<1u8>(
+                            Enum<0u8>(
+                                Array<String>(
+                                    "key_image_url",
+                                    "name",
+                                    "material",
+                                    "color",
+                                    "rarity"
+                                )
+                            )
+                        )
+                    ),
+                    Tuple(
+                        Enum<1u8>(
+                            "Material"
+                        ),
+                        Enum<1u8>(
+                            Enum<1u8>(
+                                Map<U8, Tuple>(
+                                    0u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Crystalline"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    1u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Metallic"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    2u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Radiant"
+                                        ),
+                                        Enum<0u8>()
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    Tuple(
+                        Enum<1u8>(
+                            "Color"
+                        ),
+                        Enum<1u8>(
+                            Enum<1u8>(
+                                Map<U8, Tuple>(
+                                    0u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Blood"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    1u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Coral"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    2u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Dusk"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    3u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Flame"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    4u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Forest"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    5u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Glacier"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    6u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Ocean"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    7u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Sand"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    8u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Sky"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    9u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Smoke"
+                                        ),
+                                        Enum<0u8>()
+                                    )
+                                )
+                            )
+                        )
+                    ),
+                    Tuple(
+                        Enum<1u8>(
+                            "Rarity"
+                        ),
+                        Enum<1u8>(
+                            Enum<1u8>(
+                                Map<U8, Tuple>(
+                                    0u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Common"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    1u8 => Tuple(
+                                        Enum<1u8>(
+                                            "Rare"
+                                        ),
+                                        Enum<0u8>()
+                                    ),
+                                    2u8 => Tuple(
+                                        Enum<1u8>(
+                                            "UltraRare"
+                                        ),
+                                        Enum<0u8>()
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                Array<Enum>(
+                    Enum<0u8>(),
+                    Enum<0u8>(),
+                    Enum<0u8>(),
+                    Enum<0u8>()
+                )
+            )
+        ),
+        Enum<1u8>(
+            0u64
+        ),
+        Array<String>(
+            "key_image_url"
+        )
+    )
+    Tuple(
+        Enum<1u8>(
+            Tuple(
+                Enum<1u8>(
+                    Enum<2u8>(
+                        Enum<0u8>(
+                            Enum<0u8>(
+                                Enum<1u8>(
+                                    Address("${admin_badge}")
+                                )
+                            )
+                        )
+                    )
+                ),
+                Enum<1u8>(
+                    Enum<1u8>()
+                )
+            )
+        ),
+        Enum<1u8>(
+            Tuple(
+                Enum<1u8>(
+                    Enum<2u8>(
+                        Enum<0u8>(
+                            Enum<0u8>(
+                                Enum<1u8>(
+                                    Address("${admin_badge}")
+                                )
+                            )
+                        )
+                    )
+                ),
+                Enum<1u8>(
+                    Enum<1u8>()
+                )
+            )
+        ),
+        Enum<0u8>(),
+        Enum<0u8>(),
+        Enum<1u8>(
+            Tuple(
+                Enum<1u8>(
+                    Enum<0u8>()
+                ),
+                Enum<1u8>(
+                    Enum<1u8>()
+                )
+            )
+        ),
+        Enum<1u8>(
+            Tuple(
+                Enum<1u8>(
+                    Enum<0u8>()
+                ),
+                Enum<1u8>(
+                    Enum<1u8>()
+                )
+            )
+        ),
+        Enum<1u8>(
+            Tuple(
+                Enum<1u8>(
+                    Enum<2u8>(
+                        Enum<0u8>(
+                            Enum<0u8>(
+                                Enum<1u8>(
+                                    Address("${admin_badge}")
+                                )
+                            )
+                        )
+                    )
+                ),
+                Enum<1u8>(
+                    Enum<1u8>()
+                )
+            )
+        )
+    )
+    Tuple(
+        Map<String, Tuple>(
+            "name" => Tuple(
+                Enum<1u8>(
+                    Enum<0u8>(
+                        "RadGems"
+                    )
+                ),
+                true
+            ),
+            "description" => Tuple(
+                Enum<1u8>(
+                    Enum<0u8>(
+                        "Two Radgems can be combined with a Morph Energy Card by RadQuest's Jetty to produce a beautiful Radmorph."
+                    )
+                ),
+                true
+            ),
+            "icon_url" => Tuple(
+                Enum<1u8>(
+                    Enum<0u8>(
+                        "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"
+                    )
+                ),
+                true
+            )
+        ),
+        Map<String, Enum>()
+    )
+    Enum<0u8>()
+;

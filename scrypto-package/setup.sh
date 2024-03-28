@@ -15,22 +15,42 @@ echo "\nPublishing package..."
 export package=`resim publish . | sed "s/Success! New Package: //"`
 
 export owner_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
-export admin_badge=`resim new-badge-fixed 2 | grep "Resource:" | grep -o "resource_.\S*" | sed -e "s/://"`
 export user_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
 export kyc_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
 
-export component=`resim run manifests/new_quest_rewards.rtm | grep "Component" | grep -o "component_.*"`
+export admin_badge=`resim run manifests/mint_admin_badges.rtm | grep "Resource:" | grep -o "resource_.*"`
+export element=`resim new-token-mutable $admin_badge | grep "Resource" | grep -o "resource_.*"`
+export radgem=`resim run manifests/create_radgem.rtm  | grep "Resource:" | grep -o "resource_.*"`
+export morph_card=`resim run manifests/create_morph_card.rtm  | grep "Resource:" | grep -o "resource_.*"`
+export radmorph=`resim run manifests/create_radmorph.rtm  | grep "Resource:" | grep -o "resource_.*"`
 
-echo "\nSetup Complete"
-echo "--------------------------"
-echo "Environment variables set:"
+export quest_rewards=`resim run manifests/new_quest_rewards.rtm | grep "Component:" | grep -o "component_.*"`
+
+export refinery=`resim run manifests/new_refinery.rtm | grep "Component:" | tail -n1 | grep -o "component_.*"`
+
+export morph_card_forge=`resim run manifests/new_card_forge.rtm | grep "Component:" | grep -o "component_.*"`
+
+echo "\nSetup Complete & Environment Variables Set"
+echo "------------------------------------------"
+
+echo "\nAccount Addresses:"
 echo "account = $account"
 echo "privatekey = $privatekey"
 echo "account_badge = $account_badge"
+
+echo "\nResource Addresses:"
 echo "xrd = $xrd"
 echo "package = $package"
 echo "owner_badge = $owner_badge"
 echo "admin_badge = $admin_badge"
 echo "user_badge = $user_badge"
 echo "kyc_badge = $kyc_badge"
-echo "component = $component"
+echo "element = $element"
+echo "radgem = $radgem"
+echo "morph_card = $morph_card"
+echo "radmorph = $radmorph"
+
+echo "\nComponent Addresses:"
+echo "quest_rewards = $quest_rewards"
+echo "refinery = $refinery"
+echo "morph_card_forge = $morph_card_forge"

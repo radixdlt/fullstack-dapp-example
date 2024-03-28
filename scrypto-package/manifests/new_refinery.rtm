@@ -3,9 +3,19 @@ CALL_METHOD
     "lock_fee"
     Decimal("5000")
 ;
+CALL_METHOD
+    Address("${account}")
+    "withdraw"
+    Address("${admin_badge}")
+    Decimal("3")
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("${admin_badge}")
+    Bucket("admin_badge")
+;
 CALL_FUNCTION
     Address("${package}")
-    "QuestRewards"
+    "Refinery"
     "new"
     Enum<OwnerRole::Fixed>(
         Enum<AccessRule::Protected>(
@@ -18,9 +28,12 @@ CALL_FUNCTION
             )
         )
     )
-    Address("${admin_badge}")
+    Bucket("admin_badge")
+    Address("${element}")
+    Address("${morph_card}")
     Address("${user_badge}")
-    Address("${kyc_badge}")
+    Address("${radgem}")
+    Address("${radmorph}")
 ;
 CALL_METHOD
     Address("${account}")
