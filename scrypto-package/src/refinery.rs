@@ -225,6 +225,12 @@ mod refinery {
                 .non_fungible::<MorphCardData>()
                 .data();
 
+            let (radgem_a_data, radgem_b_data) = if &radgem_1_data.rarity >= &radgem_2_data.rarity {
+                (radgem_1_data, radgem_2_data)
+            } else {
+                (radgem_2_data, radgem_1_data)
+            };
+
             LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
 
             // Burn resources
@@ -233,10 +239,11 @@ mod refinery {
             morph_card.burn();
 
             let pre_hash_string = format!(
-                "{}{}{}{}",
-                morph_card_data.name,
-                radgem_1_data.name,
-                radgem_2_data.name,
+                "{}{}{}{}{}",
+                morph_card_data.energy.clone() as u64,
+                radgem_a_data.material.clone() as u64,
+                radgem_a_data.color.clone() as u64,
+                radgem_b_data.color.clone() as u64,
                 key_image_url.as_str(),
             );
 
@@ -249,9 +256,9 @@ mod refinery {
 
             // Mint a RadMorph
             let radmorph = self.radmorph_forge.mint_radmorph(
-                radgem_1_data,
-                radgem_2_data,
                 morph_card_data,
+                radgem_a_data,
+                radgem_b_data,
                 key_image_url,
             );
 

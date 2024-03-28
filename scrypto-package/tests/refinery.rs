@@ -310,11 +310,18 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
         .get_non_fungible_data(radgem_ids[1].clone(), &mut env)?;
     let key_image_url = UncheckedUrl("https://www.example.com".to_owned());
 
+    let (radgem_a_data, radgem_b_data) = if &radgem_1_data.rarity >= &radgem_2_data.rarity {
+        (radgem_1_data, radgem_2_data)
+    } else {
+        (radgem_2_data, radgem_1_data)
+    };
+
     let data = format!(
-        "{}{}{}{}",
-        morph_card_data.name,
-        radgem_1_data.name,
-        radgem_2_data.name,
+        "{}{}{}{}{}",
+        morph_card_data.energy.clone() as u64,
+        radgem_a_data.material.clone() as u64,
+        radgem_a_data.color.clone() as u64,
+        radgem_b_data.color.clone() as u64,
         key_image_url.as_str(),
     );
 

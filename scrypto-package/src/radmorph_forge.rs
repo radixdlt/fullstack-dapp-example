@@ -62,9 +62,9 @@ mod radmorph_forge {
 
         pub fn mint_radmorph(
             &mut self,
+            morph_card_data: MorphCardData,
             radgem1_data: RadgemData,
             radgem2_data: RadgemData,
-            morph_card_data: MorphCardData,
             key_image_url: Url,
         ) -> Bucket {
             let material = if &radgem1_data.rarity >= &radgem2_data.rarity {
@@ -73,9 +73,9 @@ mod radmorph_forge {
                 radgem2_data.material
             };
 
-            let total_rarity = radgem1_data.rarity as u8
-                + radgem2_data.rarity as u8
-                + morph_card_data.rarity as u8;
+            let total_rarity = morph_card_data.rarity as u8
+                + radgem1_data.rarity as u8
+                + radgem2_data.rarity as u8;
             // 3 Common                 = 0 (Fine)
             // 2 Common + 1 Rare        = 1 (Fine)
             // 1 Common + 2 Rare        = 2 (Precious)
