@@ -79,6 +79,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         ))
         .mint_initial_supply(
             [MorphCardData {
+                key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
                 name: "MoltenLava Morph Card".to_string(),
                 energy: Energy::MoltenLava,
                 rarity: MorphCardRarity::Rare,
@@ -296,7 +297,6 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
         morph_card,
         radgems,
         radmorph_address,
-        user_badge_proof,
         ..
     } = arrange_test_environment()?;
 
@@ -338,7 +338,6 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
         radgems.take(dec!(1), &mut env)?,
         morph_card,
         key_image_url,
-        Some(user_badge_proof),
         &mut env,
     )?;
 
@@ -374,7 +373,6 @@ fn cannot_create_radmorph_with_incorrect_image_url() -> Result<(), RuntimeError>
         radgems.take(dec!(1), &mut env)?,
         morph_card,
         UncheckedUrl("https://www.example.com".to_owned()),
-        None,
         &mut env,
     );
 

@@ -67,6 +67,7 @@ fn can_set_fixed_cards() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     let morph_card_data = MorphCardDataInput {
+        key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
         name: "Molten Lava Morph Card".to_owned(),
         rarity: Rarity::UltraRare,
         energy: Energy::MoltenLava,
@@ -91,6 +92,7 @@ fn can_mint_fixed_card() -> Result<(), RuntimeError> {
     let card_name = "Molten Lava Morph Card".to_owned();
 
     let morph_card_data = MorphCardDataInput {
+        key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
         name: card_name.clone(),
         rarity: Rarity::UltraRare,
         energy: Energy::MoltenLava,
@@ -119,6 +121,7 @@ fn cannot_mint_fixed_card_with_wrong_name() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     let morph_card_data = MorphCardDataInput {
+        key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
         name: "Molten Lava Morph Card".to_owned(),
         rarity: Rarity::UltraRare,
         energy: Energy::MoltenLava,
@@ -149,6 +152,7 @@ fn can_remove_fixed_cards() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     let morph_card_data = MorphCardDataInput {
+        key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
         name: "Molten Lava Morph Card".to_owned(),
         rarity: Rarity::UltraRare,
         energy: Energy::MoltenLava,
@@ -174,6 +178,7 @@ fn can_set_random_cards() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     let morph_card_data = MorphCardDataInput {
+        key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
         name: "Molten Lava Morph Card".to_owned(),
         rarity: Rarity::UltraRare,
         energy: Energy::MoltenLava,
@@ -198,6 +203,7 @@ fn can_mint_random_card() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     let morph_card_data = MorphCardDataInput {
+        key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
         name: "Molten Lava Morph Card".to_owned(),
         rarity: Rarity::UltraRare,
         energy: Energy::MoltenLava,
@@ -229,6 +235,7 @@ fn can_remove_random_cards() -> Result<(), RuntimeError> {
     let card_name = "Molten Lava Morph Card".to_owned();
 
     let morph_card_data = MorphCardDataInput {
+        key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
         name: card_name.clone(),
         rarity: Rarity::UltraRare,
         energy: Energy::MoltenLava,
