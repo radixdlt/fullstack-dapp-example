@@ -1,6 +1,6 @@
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 import type { PrismaClient, Prisma, User, UserPhoneNumber } from 'database'
-import type { AppLogger } from 'common'
+import type { AppLogger } from '../'
 import { ApiError, createApiError } from '../helpers'
 
 export type UserModel = ReturnType<typeof UserModel>

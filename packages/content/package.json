@@ -19,7 +19,7 @@
   "scripts": {
     "content:dev": "vite serve examples --config vite.config.ts",
     "build:types": "tsc --emitDeclarationOnly",
-    "content:build": "vite build --config vite.config.ts && npm run build:types",
+    "build": "vite build --config vite.config.ts && npm run build:types",
     "test": "vitest"
   },
   "license": "SEE LICENSE",

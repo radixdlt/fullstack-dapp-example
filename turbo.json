@@ -2,34 +2,32 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": ["db:generate"],
+      "dependsOn": ["^build"],
       "outputs": [".svelte-kit/**"],
       "cache": false
     },
-    "lint": {
-      "dependsOn": ["^lint", "^common:build"]
-    },
+    "lint": {},
     "format": {},
     "svelte:check": {},
-    "test": { "dependsOn": ["^db:build"], "cache": false },
-    "test:integration": { "dependsOn": ["^db:build", "^common:build", "^wallet:build", "^content:build", "^queues:build"], "cache": false },
+    "test": {},
+    "test:integration": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
     "dev": {
-      "dependsOn": ["^db:generate", "^common:build", "^content:build", "^queues:build"],
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     },
     "dev:inspect": {
-      "dependsOn": ["^db:generate"],
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     },
-    "db:generate": {
+    "generate": {
       "cache": false
     },
-    "db:push": {
-      "cache": false
-    },
-    "db:build": {
+    "push": {
       "cache": false
     },
     "wallet:create:mnemonic": {
@@ -51,19 +49,6 @@
       "cache": false
     },
     "wallet:mint-user-badge": {
-      "cache": false
-    },
-    "wallet:build": {
-      "cache": false
-    },
-    "common:build": {
-      "cache": false
-    },
-    "content:build": {
-      "dependsOn": ["^common:build"],
-      "cache": false
-    },
-    "queues:build": {
       "cache": false
     },
     "build:storybook": {

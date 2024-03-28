@@ -16,7 +16,8 @@
     "noImplicitReturns": true,
     "skipLibCheck": true,
     "declaration": true,
-    "declarationDir": "types"
+    "declarationDir": "types",
+    "rootDir": "src"
   },
-  "include": ["src", "examples"]
+  "include": ["src"]
 }

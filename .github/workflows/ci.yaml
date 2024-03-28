@@ -165,8 +165,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build dependencies
-        run: npm run build:dependencies
+      - name: Build
+        run: npm run build:ci
 
       - name: Unit tests
         run: npm run test
@@ -396,9 +396,9 @@ jobs:
       - name: Connect to tailnet
         uses: radixdlt/public-iac-resuable-artifacts/tailnet@main
         with:
-          role_name: "arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access"
-          region: "eu-west-2"
-          secret_name: "arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/tailscale-public-workflows-DpiE80"
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          region: 'eu-west-2'
+          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/tailscale-public-workflows-DpiE80'
       - name: Trigger jenkins job to deploy PR
         uses: RDXWorks-actions/jenkins-job-trigger-action@master
         with:
@@ -449,9 +449,9 @@ jobs:
       - name: Connect to tailnet
         uses: radixdlt/public-iac-resuable-artifacts/tailnet@main
         with:
-          role_name: "arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access"
-          region: "eu-west-2"
-          secret_name: "arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/tailscale-public-workflows-DpiE80"
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          region: 'eu-west-2'
+          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/tailscale-public-workflows-DpiE80'
       - name: Trigger jenkins job to deploy dev
         uses: RDXWorks-actions/jenkins-job-trigger-action@master
         with:
@@ -497,9 +497,9 @@ jobs:
       - name: Connect to tailnet
         uses: radixdlt/public-iac-resuable-artifacts/tailnet@main
         with:
-          role_name: "arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access"
-          region: "eu-west-2"
-          secret_name: "arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/tailscale-public-workflows-DpiE80"
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          region: 'eu-west-2'
+          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/tailscale-public-workflows-DpiE80'
       - name: Trigger jenkins job to deploy stokenet
         uses: RDXWorks-actions/jenkins-job-trigger-action@master
         with:
@@ -545,9 +545,9 @@ jobs:
       - name: Connect to tailnet
         uses: radixdlt/public-iac-resuable-artifacts/tailnet@main
         with:
-          role_name: "arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access"
-          region: "eu-west-2"
-          secret_name: "arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/tailscale-public-workflows-DpiE80"
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          region: 'eu-west-2'
+          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/tailscale-public-workflows-DpiE80'
       - name: Trigger jenkins job to deploy mainnet
         uses: RDXWorks-actions/jenkins-job-trigger-action@master
         with:
