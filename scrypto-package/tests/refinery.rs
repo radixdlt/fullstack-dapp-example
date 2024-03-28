@@ -3,7 +3,7 @@ use radquest::{
     morph_card_forge::{Availability, Energy, MorphCardData, Rarity as MorphCardRarity},
     radgem_forge::{Color, Material, RadgemData, Rarity as RadgemRarity},
     radmorph_forge::RadmorphData,
-    refinery::{test_bindings::*, UserId},
+    refinery::test_bindings::*,
 };
 use scrypto::this_package;
 use scrypto_test::prelude::*;
@@ -18,7 +18,7 @@ struct Test {
     user_badge: Bucket,
     user_badge_proof: Proof,
     radmorph_address: ResourceAddress,
-    user_id: UserId,
+    user_badge_id: NonFungibleGlobalId,
     admin_badge_proof: Proof,
 }
 
@@ -26,16 +26,14 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let mut env = TestEnvironment::new();
     let package_address = Package::compile_and_publish(this_package!(), &mut env)?;
 
-    let user_int = 5u64;
-
     let owner_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
         .mint_initial_supply([()], &mut env)?;
     let admin_badge =
         ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(4, &mut env)?;
-    let user_badge = ResourceBuilder::new_integer_non_fungible(OwnerRole::None)
+    let user_badge = ResourceBuilder::new_string_non_fungible(OwnerRole::None)
         .mint_initial_supply(
             [(
-                IntegerNonFungibleLocalId::new(user_int),
+                StringNonFungibleLocalId::new("user1234").unwrap(),
                 EmptyNonFungibleData {},
             )],
             &mut env,
@@ -100,7 +98,6 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         admin_badge.take(dec!(3), &mut env)?,
         elements.resource_address(&mut env)?,
         morph_card.resource_address(&mut env)?,
-        user_badge.resource_address(&mut env)?,
         radgems.resource_address(&mut env)?,
         radmorph.resource_address(&mut env)?,
         package_address,
@@ -110,6 +107,9 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let radmorph_address = radmorph.resource_address(&mut env)?;
     let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
     let user_badge_proof = user_badge.create_proof_of_all(&mut env)?;
+    let user_badge_local_id = user_badge.non_fungible_local_ids(&mut env)?.pop().unwrap();
+    let user_badge_id =
+        NonFungibleGlobalId::new(user_badge.resource_address(&mut env)?, user_badge_local_id);
 
     Ok(Test {
         env,
@@ -120,7 +120,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         user_badge,
         user_badge_proof,
         radmorph_address,
-        user_id: UserId(format!("#{user_int}#")),
+        user_badge_id,
         admin_badge_proof,
     })
 }
@@ -156,19 +156,43 @@ fn can_combine_elements_deposit() -> Result<(), RuntimeError> {
 }
 
 #[test]
+fn can_combine_elements_deposit_with_other_non_fungible() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        elements,
+        refinery,
+        ..
+    } = arrange_test_environment()?;
+
+    let nf_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([EmptyNonFungibleData {}], &mut env)?;
+
+    // Act
+    refinery.combine_elements_deposit(
+        nf_badge.create_proof_of_all(&mut env)?,
+        elements.take(dec!(10), &mut env)?,
+        &mut env,
+    )?;
+
+    // Assert
+    Ok(())
+}
+
+#[test]
 fn can_combine_elements_process_1() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,
         mut refinery,
-        user_id,
+        user_badge_id,
         admin_badge_proof,
         ..
     } = arrange_test_environment()?;
 
     // Act
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_process_1(user_id, dec!(0.318), dec!(0.822), &mut env)?;
+    refinery.combine_elements_process_1(user_badge_id, dec!(0.318), dec!(0.822), &mut env)?;
 
     // Assert
     Ok(())
@@ -217,7 +241,7 @@ fn can_combine_elements_claim() -> Result<(), RuntimeError> {
         mut env,
         mut refinery,
         user_badge_proof,
-        user_id,
+        user_badge_id: user_id,
         admin_badge_proof,
         ..
     } = arrange_test_environment()?;
@@ -240,7 +264,7 @@ fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
         mut env,
         mut refinery,
         user_badge,
-        user_id,
+        user_badge_id: user_id,
         admin_badge_proof,
         ..
     } = arrange_test_environment()?;

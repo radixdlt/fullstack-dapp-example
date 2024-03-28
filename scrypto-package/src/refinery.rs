@@ -39,12 +39,11 @@ mod refinery {
 
     struct Refinery {
         admin_badge: FungibleVault,
-        radgem_records: KeyValueStore<UserId, RadgemDeposit>,
+        radgem_records: KeyValueStore<NonFungibleGlobalId, RadgemDeposit>,
         radgem_vault: NonFungibleVault,
         element_address: ResourceAddress,
         radgem_address: ResourceAddress,
         morph_card_address: ResourceAddress,
-        user_badge_address: ResourceAddress,
         radgem_forge: Global<RadgemForge>,
         radmorph_forge: Global<RadmorphForge>,
         image_oracle: Global<ImageOracle>,
@@ -57,7 +56,6 @@ mod refinery {
             mut admin_badge: Bucket,
             element_address: ResourceAddress,
             morph_card_address: ResourceAddress,
-            user_badge_address: ResourceAddress,
             radgem_address: ResourceAddress,
             radmorph_address: ResourceAddress,
         ) -> Global<Refinery> {
@@ -76,7 +74,6 @@ mod refinery {
                 element_address,
                 radgem_address,
                 morph_card_address,
-                user_badge_address,
                 radgem_forge,
                 radmorph_forge,
                 image_oracle,
@@ -90,27 +87,27 @@ mod refinery {
         }
 
         // User deposits Elements to be turned into a RadGem
-        pub fn combine_elements_deposit(&self, user_badge: Proof, elements: Bucket) -> () {
+        pub fn combine_elements_deposit(&self, badge_proof: Proof, elements: Bucket) -> () {
             assert_eq!(elements.resource_address(), self.element_address);
             assert_eq!(elements.amount(), dec!(10));
-            let user_id = UserId(
-                user_badge
-                    .check(self.user_badge_address)
-                    .as_non_fungible()
-                    .non_fungible_local_id()
-                    .to_string(),
-            );
+            let badge_address = badge_proof.resource_address();
+            let badge_local_id = badge_proof
+                .skip_checking()
+                .as_non_fungible()
+                .non_fungible_local_id();
+
+            let badge_id = NonFungibleGlobalId::new(badge_address, badge_local_id);
 
             LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
             elements.burn();
 
-            Runtime::emit_event(ElementsCombineDepositedEvent { user_id });
+            Runtime::emit_event(ElementsCombineDepositedEvent { badge_id });
         }
 
         // Mint a random RadGem
         pub fn combine_elements_process_1(
             &mut self,
-            user_id: UserId,
+            badge_id: NonFungibleGlobalId,
             rand_num_1: Decimal,
             rand_num_2: Decimal,
         ) -> () {
@@ -118,16 +115,16 @@ mod refinery {
             let radgem_bucket = self.radgem_forge.mint_radgem(rand_num_1, rand_num_2);
 
             // Update the user's RadGem record
-            if self.radgem_records.get(&user_id).is_none() {
+            if self.radgem_records.get(&badge_id).is_none() {
                 self.radgem_records.insert(
-                    user_id.clone(),
+                    badge_id.clone(),
                     RadgemDeposit::Unclaimed(vec![radgem_bucket
                         .as_non_fungible()
                         .non_fungible_local_id()]),
                 );
             } else {
                 let radgem_id = radgem_bucket.as_non_fungible().non_fungible_local_id();
-                let mut radgem_record = self.radgem_records.get_mut(&user_id).unwrap();
+                let mut radgem_record = self.radgem_records.get_mut(&badge_id).unwrap();
 
                 match *radgem_record {
                     RadgemDeposit::Unclaimed(ref mut radgem_ids) => radgem_ids.push(radgem_id),
@@ -147,7 +144,7 @@ mod refinery {
             self.radgem_vault.put(radgem_bucket.as_non_fungible());
 
             Runtime::emit_event(ElementsCombineProcessed1Event {
-                user_id,
+                badge_id,
                 radgem_local_id,
                 radgem_data,
             });
@@ -155,26 +152,29 @@ mod refinery {
 
         pub fn combine_elements_process_2(
             &mut self,
+            badge_id: NonFungibleGlobalId,
             radgem_local_id: NonFungibleLocalId,
             key_image_url: Url,
         ) {
             LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
             self.radgem_forge
                 .update_key_image(radgem_local_id, key_image_url);
+
+            Runtime::emit_event(ElementsCombineProcessed2Event { badge_id });
         }
 
         // User claims RadGem by presenting user badge
-        pub fn combine_elements_claim(&mut self, user_badge: Proof) -> Bucket {
-            let user_id = UserId(
-                user_badge
-                    .check(self.user_badge_address)
-                    .as_non_fungible()
-                    .non_fungible_local_id()
-                    .to_string(),
-            );
+        pub fn combine_elements_claim(&mut self, badge_proof: Proof) -> Bucket {
+            let badge_address = badge_proof.resource_address();
+            let badge_local_id = badge_proof
+                .skip_checking()
+                .as_non_fungible()
+                .non_fungible_local_id();
+
+            let badge_id = NonFungibleGlobalId::new(badge_address, badge_local_id);
 
             // Get the user's RadGem IDs from the record
-            let mut radgem_record = self.radgem_records.get_mut(&user_id).unwrap();
+            let mut radgem_record = self.radgem_records.get_mut(&badge_id).unwrap();
 
             let radgems = match *radgem_record {
                 RadgemDeposit::Claimed => panic!("RadGems already claimed"),
@@ -188,7 +188,7 @@ mod refinery {
                 }
             };
 
-            Runtime::emit_event(ElementsCombineClaimedEvent { user_id });
+            Runtime::emit_event(ElementsCombineClaimedEvent { badge_id });
 
             radgems.into()
         }
@@ -200,7 +200,7 @@ mod refinery {
             radgem_2: Bucket,
             morph_card: Bucket,
             key_image_url: Url,
-            user_badge: Option<Proof>,
+            optional_badge_proof: Option<Proof>,
         ) -> Bucket {
             // Confirm the resources
             assert_eq!(radgem_1.resource_address(), self.radgem_address);
@@ -255,20 +255,20 @@ mod refinery {
                 key_image_url,
             );
 
-            let user_id = match user_badge {
-                Some(badge_proof) => Some(UserId(
+            let badge_id = match optional_badge_proof {
+                Some(badge_proof) => Some(NonFungibleGlobalId::new(
+                    badge_proof.resource_address(),
                     badge_proof
-                        .check(self.user_badge_address)
+                        .skip_checking()
                         .as_non_fungible()
-                        .non_fungible_local_id()
-                        .to_string(),
+                        .non_fungible_local_id(),
                 )),
                 None => None,
             };
 
             // Emit the event
             Runtime::emit_event(RadmorphCreatedEvent {
-                user_id,
+                badge_id,
                 radmorph_local_id: radmorph.as_non_fungible().non_fungible_local_id(),
                 radmorph_data: radmorph
                     .as_non_fungible()
@@ -290,24 +290,29 @@ mod refinery {
 
 #[derive(ScryptoSbor, ScryptoEvent)]
 pub struct ElementsCombineDepositedEvent {
-    user_id: UserId,
+    badge_id: NonFungibleGlobalId,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
 pub struct ElementsCombineProcessed1Event {
-    user_id: UserId,
+    badge_id: NonFungibleGlobalId,
     radgem_local_id: NonFungibleLocalId,
     radgem_data: RadgemData,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
+pub struct ElementsCombineProcessed2Event {
+    badge_id: NonFungibleGlobalId,
+}
+
+#[derive(ScryptoSbor, ScryptoEvent)]
 pub struct ElementsCombineClaimedEvent {
-    user_id: UserId,
+    badge_id: NonFungibleGlobalId,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
 pub struct RadmorphCreatedEvent {
-    user_id: Option<UserId>,
+    badge_id: Option<NonFungibleGlobalId>,
     radmorph_local_id: NonFungibleLocalId,
     radmorph_data: RadmorphData,
 }
