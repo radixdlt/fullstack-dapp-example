@@ -211,7 +211,7 @@
         <NavigationFooter
           on:next={next}
           on:back={back}
-          showComplete={questCardProgress === nonJettySteps - 1}
+          showComplete={questCardProgress === _steps.length - 1}
           on:complete
         />
       {/if}
