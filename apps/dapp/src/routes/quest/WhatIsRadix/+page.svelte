@@ -42,6 +42,47 @@
       footer: {
         type: 'navigation'
       }
+    },
+    {
+      id: 'text6',
+      type: 'regular',
+      footer: {
+        type: 'navigation'
+      }
+    },
+    {
+      id: 'text7',
+      type: 'regular',
+      footer: {
+        type: 'navigation'
+      }
+    },
+    {
+      id: 'text8',
+      type: 'regular',
+      footer: {
+        type: 'navigation'
+      }
+    },
+    {
+      id: 'text9',
+      type: 'regular',
+      footer: {
+        type: 'navigation'
+      }
+    },
+    {
+      id: 'text10',
+      type: 'regular',
+      footer: {
+        type: 'navigation'
+      }
+    },
+
+    {
+      id: 'complete',
+      type: 'jetty',
+      dialogs: 1
     }
   ]}
   let:render
@@ -65,4 +106,32 @@
   {#if render('text5')}
     {@html data.text['4.md']}
   {/if}
+
+  {#if render('text6')}
+    {@html data.text['5.md']}
+  {/if}
+
+  {#if render('text7')}
+    {@html data.text['6.md']}
+  {/if}
+
+  {#if render('text8')}
+    {@html data.text['7.md']}
+  {/if}
+
+  {#if render('text9')}
+    {@html data.text['8.md']}
+  {/if}
+
+  {#if render('text10')}
+    {@html data.text['9.md']}
+  {/if}
+
+  <svelte:fragment slot="jetty" let:render let:Button let:completeQuest>
+    {#if render('complete')}
+      {@html data.text['10.md']}
+
+      <Button on:click={completeQuest}>Complete</Button>
+    {/if}
+  </svelte:fragment>
 </Quest>
