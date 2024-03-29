@@ -41,15 +41,17 @@ pub enum Availability {
     Random,
 }
 
-#[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
+#[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 pub struct MorphCardDataInput {
+    pub key_image_url: Url,
     pub name: String,
     pub rarity: Rarity,
     pub energy: Energy,
 }
 
-#[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
+#[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 pub struct MorphCardData {
+    pub key_image_url: Url,
     pub name: String,
     pub rarity: Rarity,
     pub energy: Energy,
@@ -131,6 +133,7 @@ mod morph_card_forge {
         pub fn set_fixed_cards(&mut self, cards: Vec<MorphCardDataInput>) {
             for card in cards {
                 let full_card = MorphCardData {
+                    key_image_url: card.key_image_url,
                     name: card.name,
                     rarity: card.rarity,
                     energy: card.energy,
@@ -175,6 +178,7 @@ mod morph_card_forge {
         pub fn set_random_cards(&mut self, cards: Vec<MorphCardDataInput>) {
             for card in cards {
                 let full_card = MorphCardData {
+                    key_image_url: card.key_image_url,
                     name: card.name,
                     rarity: card.rarity,
                     energy: card.energy,
