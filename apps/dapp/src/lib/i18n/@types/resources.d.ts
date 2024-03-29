@@ -10,6 +10,11 @@ interface Resources {
   main: {
     'tabs-basics': 'Basics'
     'tabs-advanced': 'Advanced'
+    landingPagePopup: {
+      title: 'Welcome to RadQuest'
+      message: 'Ready to earn your rare NFT and up to $20 in XRD? Start your quest journey now.'
+      button: "Let's begin"
+    }
   }
   quests: {
     rewards: 'Rewards'

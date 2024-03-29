@@ -22,8 +22,11 @@
   import type { QuestStatus } from '../types'
   import {
     clearQuestStatusFromLocalStorage,
-    loadQuestStatusFromLocalStorage
+    loadQuestStatusFromLocalStorage,
+    useLocalStorage
   } from '$lib/utils/local-storage'
+  import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
+  import LandingPopup from './LandingPopup.svelte'
 
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
@@ -31,6 +34,7 @@
   const { dAppDefinitionAddress, networkId } = publicConfig
 
   onMount(() => {
+    showLandingPopup = !useLocalStorage('seen-landing-popup').get()
     $questStatus = loadQuestStatusFromLocalStorage()
 
     radixDappToolkit = RadixDappToolkit({
@@ -144,7 +148,20 @@
   ][]
 
   let activeTab: string
+
+  let showLandingPopup = false
 </script>
+
+{#if showLandingPopup}
+  <Backdrop>
+    <LandingPopup
+      on:click={() => {
+        showLandingPopup = false
+        useLocalStorage('seen-landing-popup').set(true)
+      }}
+    />
+  </Backdrop>
+{/if}
 
 <Layout>
   <Header slot="header" />
