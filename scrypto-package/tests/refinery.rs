@@ -1,9 +1,9 @@
 use radix_engine_interface::prelude::*;
 use radquest::{
-    morph_card_forge::{Availability, Energy, MorphCardData, Rarity as MorphCardRarity},
-    radgem_forge::{Color, Material, RadgemData, Rarity as RadgemRarity},
+    morph_card_forge::{MorphCardData, ENERGY},
+    radgem_forge::{RadgemData, COMMON_COLOR, MATERIAL, RARE_COLOR},
     radmorph_forge::RadmorphData,
-    refinery::test_bindings::*,
+    refinery::{test_bindings::*, RARITY},
 };
 use scrypto::this_package;
 use scrypto_test::prelude::*;
@@ -56,18 +56,18 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         .mint_initial_supply(
             [
                 RadgemData {
-                    key_image_url: UncheckedUrl("".to_owned()),
-                    name: "Crystalline Coral Radgem".to_owned(),
-                    material: Material::Crystalline,
-                    color: Color::Coral,
-                    rarity: RadgemRarity::Rare,
+                    key_image_url: UncheckedUrl("".to_string()),
+                    name: "Crystalline Coral Radgem".to_string(),
+                    material: MATERIAL[0].to_string(), // Crystalline,
+                    color: RARE_COLOR[0].to_string(),  // Coral,
+                    rarity: RARITY[1].to_string(),     // Uncommon
                 },
                 RadgemData {
-                    key_image_url: UncheckedUrl("".to_owned()),
-                    name: "Metallic Forest Radgem".to_owned(),
-                    material: Material::Metallic,
-                    color: Color::Forest,
-                    rarity: RadgemRarity::Common,
+                    key_image_url: UncheckedUrl("".to_string()),
+                    name: "Metallic Forest Radgem".to_string(),
+                    material: MATERIAL[1].to_string(),  // Metallic,
+                    color: COMMON_COLOR[1].to_string(), // Forest,
+                    rarity: RARITY[0].to_string(),      // Common,
                 },
             ],
             &mut env,
@@ -79,11 +79,11 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         ))
         .mint_initial_supply(
             [MorphCardData {
-                key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
+                key_image_url: UncheckedUrl("https://www.example.com".to_string()),
                 name: "MoltenLava Morph Card".to_string(),
-                energy: Energy::MoltenLava,
-                rarity: MorphCardRarity::Rare,
-                availability: Availability::Random,
+                energy: ENERGY[0].to_string(), // MoltenLava,
+                rarity: RARITY[1].to_string(), // Uncommon,
+                availability: "Random".to_string(),
             }],
             &mut env,
         )?;
@@ -308,7 +308,7 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
         .get_non_fungible_data(radgem_ids[0].clone(), &mut env)?;
     let radgem_2_data: RadgemData = ResourceManager(radgems.resource_address(&mut env)?)
         .get_non_fungible_data(radgem_ids[1].clone(), &mut env)?;
-    let key_image_url = UncheckedUrl("https://www.example.com".to_owned());
+    let key_image_url = UncheckedUrl("https://www.example.com".to_string());
 
     let (radgem_a_data, radgem_b_data) = if &radgem_1_data.rarity >= &radgem_2_data.rarity {
         (radgem_1_data, radgem_2_data)
@@ -318,10 +318,10 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
 
     let data = format!(
         "{}{}{}{}{}",
-        morph_card_data.energy.clone() as u64,
-        radgem_a_data.material.clone() as u64,
-        radgem_a_data.color.clone() as u64,
-        radgem_b_data.color.clone() as u64,
+        morph_card_data.energy,
+        radgem_a_data.material,
+        radgem_a_data.color,
+        radgem_b_data.color,
         key_image_url.as_str(),
     );
 
@@ -350,7 +350,7 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
         ResourceManager(radmorph_address).get_non_fungible_data(radmorph_id, &mut env)?;
     assert_eq!(
         radmorph_data.name,
-        "Precious Crystalline MoltenLava RadMorph".to_owned(),
+        "Precious Crystalline MoltenLava RadMorph".to_string(),
     );
 
     Ok(())
@@ -372,7 +372,7 @@ fn cannot_create_radmorph_with_incorrect_image_url() -> Result<(), RuntimeError>
         radgems.take(dec!(1), &mut env)?,
         radgems.take(dec!(1), &mut env)?,
         morph_card,
-        UncheckedUrl("https://www.example.com".to_owned()),
+        UncheckedUrl("https://www.example.com".to_string()),
         &mut env,
     );
 

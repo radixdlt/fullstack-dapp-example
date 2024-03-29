@@ -1,27 +1,15 @@
+use crate::{morph_card_forge::MorphCardData, radgem_forge::RadgemData, refinery::RARITY};
 use scrypto::prelude::*;
-
-use crate::{
-    morph_card_forge::{Energy, MorphCardData},
-    radgem_forge::{Color, Material, RadgemData},
-};
-
-#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
-pub enum Rarity {
-    Fine,
-    Precious,
-    Superb,
-    Magnificent,
-}
 
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 pub struct RadmorphData {
     pub key_image_url: Url,
     pub name: String,
-    rarity: Rarity,
-    material: Material,
-    energy: Energy,
-    color_1: Color,
-    color_2: Color,
+    rarity: String,
+    material: String,
+    energy: String,
+    color_1: String,
+    color_2: String,
 }
 
 #[blueprint]
@@ -67,32 +55,35 @@ mod radmorph_forge {
             radgem2_data: RadgemData,
             key_image_url: Url,
         ) -> Bucket {
-            let material = if &radgem1_data.rarity >= &radgem2_data.rarity {
+            let morph_card_rarity_weight = RARITY
+                .iter()
+                .position(|&r| r == &morph_card_data.rarity)
+                .unwrap();
+            let radgem1_rarity_weight = RARITY
+                .iter()
+                .position(|&r| r == &radgem1_data.rarity)
+                .unwrap();
+            let radgem2_rarity_weight = RARITY
+                .iter()
+                .position(|&r| r == &radgem2_data.rarity)
+                .unwrap();
+
+            let material = if &radgem1_rarity_weight >= &radgem2_rarity_weight {
                 radgem1_data.material
             } else {
                 radgem2_data.material
             };
 
-            let total_rarity = morph_card_data.rarity as u8
-                + radgem1_data.rarity as u8
-                + radgem2_data.rarity as u8;
-            // 3 Common                 = 0 (Fine)
-            // 2 Common + 1 Rare        = 1 (Fine)
-            // 1 Common + 2 Rare        = 2 (Precious)
-            // 2 Common + 1 UltraRare   = 2 (Precious)
-            // 3 Rare                   = 3 (Precious)
-            // 1 Common + 2 UltraRare   = 4 (Superb)
-            // 2 Rare + 1 UltraRare     = 4 (Superb)
-            // 1 Rare + 2 UltraRare     = 5 (Superb)
-            // 3 UltraRare              = 6 (Magnificent)
-            let rarity = if total_rarity >= 6 {
-                Rarity::Magnificent
-            } else if total_rarity >= 4 {
-                Rarity::Superb
-            } else if total_rarity >= 2 {
-                Rarity::Precious
+            let total_rarity =
+                morph_card_rarity_weight + radgem1_rarity_weight + radgem2_rarity_weight;
+            let rarity = if total_rarity < 2 {
+                RARITY[3].to_string() // Fine
+            } else if total_rarity < 4 {
+                RARITY[4].to_string() // Precious
+            } else if total_rarity < 6 {
+                RARITY[5].to_string() // Superb
             } else {
-                Rarity::Fine
+                RARITY[6].to_string() // Magnificent
             };
 
             let radmorph = self.get_radmorph_data(
@@ -112,48 +103,14 @@ mod radmorph_forge {
         fn get_radmorph_data(
             &self,
             key_image_url: Url,
-            rarity: Rarity,
-            material: Material,
-            energy: Energy,
-            color_1: Color,
-            color_2: Color,
+            rarity: String,
+            material: String,
+            energy: String,
+            color_1: String,
+            color_2: String,
         ) -> RadmorphData {
-            let rarity_name = match rarity {
-                Rarity::Fine => "Fine",
-                Rarity::Precious => "Precious",
-                Rarity::Superb => "Superb",
-                Rarity::Magnificent => "Magnificent",
-            };
-            let material_name = match material {
-                Material::Crystalline => "Crystalline",
-                Material::Metallic => "Metallic",
-                Material::Radiant => "Radiant",
-            };
-            let energy_name = match energy {
-                Energy::MoltenLava => "MoltenLava",
-                Energy::PyroclasticFlow => "PyroclasticFlow",
-                Energy::VolcanicLightning => "VolcanicLightning",
-                Energy::TropicalCyclone => "TropicalCyclone",
-                Energy::PolarBlizzard => "PolarBlizzard",
-                Energy::Earthquake => "Earthquake",
-                Energy::FireTornado => "FireTornado",
-                Energy::TidalWave => "TidalWave",
-                Energy::HydrothermalVent => "HydrothermalVent",
-                Energy::RainbowPower => "RainbowPower",
-                Energy::StormCell => "StormCell",
-                Energy::SolarFlare => "SolarFlare",
-                Energy::NuclearFusion => "NuclearFusion",
-                Energy::AuroraBorealis => "AuroraBorealis",
-                Energy::GravityForce => "GravityForce",
-                Energy::MagneticField => "MagneticField",
-                Energy::GammaRays => "GammaRays",
-                Energy::BlackHole => "BlackHole",
-                Energy::Supernova => "Supernova",
-                Energy::Whirlpool => "Whirlpool",
-            };
-
             RadmorphData {
-                name: format!("{} {} {} RadMorph", rarity_name, material_name, energy_name),
+                name: format!("{} {} {} RadMorph", rarity, material, energy),
                 key_image_url,
                 rarity,
                 material,
