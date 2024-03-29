@@ -10,7 +10,6 @@
     next: undefined
   }>()
 
-  export let questId: string
   export let showComplete = false
 </script>
 
@@ -18,7 +17,7 @@
   <div class="footer quest-footer">
     <Button on:click={() => dispatch('back')}>{$i18n.t('quests:previousButton')}</Button>
     {#if showComplete}
-      <CompleteQuest {questId} on:complete />
+      <CompleteQuest on:complete />
     {:else}
       <Button on:click={() => dispatch('next')}>{$i18n.t('quests:nextButton')}</Button>
     {/if}

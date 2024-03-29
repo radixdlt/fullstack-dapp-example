@@ -26,7 +26,7 @@
   <div class="container">
     <Quest
       bind:this={quest}
-      id="RadixQuest"
+      id="WhatIsRadix"
       title="First Quest"
       description="This is your introduction to Radix"
       minutesToComplete={3}

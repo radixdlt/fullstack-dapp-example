@@ -57,11 +57,13 @@
 
   <VirtualSimWarning />
 
-  {#if error}
-    <Error>
-      {$i18n.t('quests:FirstTransactionQuest.invalidOtp')}
-    </Error>
-  {/if}
+  <div style:height="2rem">
+    {#if error}
+      <Error>
+        {$i18n.t('quests:FirstTransactionQuest.invalidOtp')}
+      </Error>
+    {/if}
+  </div>
 
   <div class="bottom-text text-faded">
     {#if timeToResendSeconds > 0}

@@ -1,4 +1,5 @@
 import { fetchWrapper } from '$lib/helpers/fetch-wrapper'
+import type { QuestId } from 'content'
 import type { QuestStatus } from 'database'
 
 const updateQuestProgress = (questId: string, progress: number, serverFetch?: typeof fetch) =>
@@ -23,7 +24,7 @@ const getQuestInformation = (questId: string, serverFetch?: typeof fetch) =>
     })
   ).map(({ data }) => data)
 
-const completeQuest = (questId: string, serverFetch?: typeof fetch) =>
+const completeQuest = (questId: QuestId, serverFetch?: typeof fetch) =>
   fetchWrapper<void>(
     (serverFetch ?? fetch)(`/api/quest/${questId}/complete`, {
       method: 'GET'

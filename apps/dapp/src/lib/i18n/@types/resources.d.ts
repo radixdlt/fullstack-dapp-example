@@ -25,6 +25,26 @@ interface Resources {
     'radquest-logo-alt': 'RadQuest Logo'
     completeQuest: 'Complete Quest'
     'intro-begin-quest': 'Begin Quest'
+    WelcomeToRadQuest: {
+      requirements: {}
+      title: 'Welcome to RadQuest'
+      description: 'Your journey begins'
+    }
+    WhatIsRadix: {
+      requirements: {}
+      title: 'Introduction to Radix'
+      description: 'Become familiar with the Radix network'
+    }
+    GetRadixWallet: {
+      requirements: {}
+      title: 'The Radix Wallet'
+      description: 'Get set up with the Radix Wallet'
+    }
+    LoginWithWallet: {
+      requirements: {}
+      title: 'Login with Wallet'
+      description: 'Login with your Radix Wallet'
+    }
     FirstTransactionQuest: {
       requirements: {
         VerifyPhoneNumber: 'Verify your phone number'
@@ -42,11 +62,6 @@ interface Resources {
       sendSmsButton: 'Send SMS'
       verifyOtpButton: 'Verify'
       verifyOtpText: 'Enter the 6-digit code sent to'
-    }
-    RadixQuest: {
-      requirements: {}
-      title: 'Radix Quest'
-      description: 'Complete the Radix Quest'
     }
   }
   transformGems: {

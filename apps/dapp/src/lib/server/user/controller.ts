@@ -1,11 +1,11 @@
 import { AuditModel, TransactionModel, UserModel } from 'common'
 import type { User, UserPhoneNumber } from 'database'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
-import type { ApiError, ControllerMethodContext, ControllerMethodOutput } from '../_types'
-import { createApiError } from 'common'
+import type { ControllerMethodContext, ControllerMethodOutput } from '../_types'
 import { dbClient } from '$lib/db'
 import { Queue } from 'bullmq'
 import { config } from '$lib/config'
+import { createApiError, type ApiError } from 'common'
 
 export const Queues = {
   EventQueue: 'EventQueue',

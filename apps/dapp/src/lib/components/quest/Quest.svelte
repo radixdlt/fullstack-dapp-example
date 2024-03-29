@@ -77,6 +77,12 @@
     }
   }
 
+  export const goToStep = (id: string) => {
+    const index = _steps.findIndex((step) => step.id === id)
+    if (index < 0) return
+    setProgress(index)
+  }
+
   export const next = () => setProgress(progress + 1)
   export const back = () => setProgress(progress - 1)
 
@@ -203,7 +209,6 @@
     {#if currentStep.type === 'regular' && currentStep.footer}
       {#if currentStep.footer.type === 'navigation'}
         <NavigationFooter
-          questId={id}
           on:next={next}
           on:back={back}
           showComplete={questCardProgress === nonJettySteps - 1}

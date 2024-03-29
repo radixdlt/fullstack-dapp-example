@@ -2,7 +2,7 @@
   import { afterUpdate, onMount } from 'svelte'
   import Item from './Item.svelte'
   import NavigateButton from './NavigateButton.svelte'
-  import { isMobile } from '$lib/utils'
+  import { isMobile } from '$lib/utils/is-mobile'
 
   let carousel: HTMLElement
 

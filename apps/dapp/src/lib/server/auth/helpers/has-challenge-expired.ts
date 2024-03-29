@@ -1,7 +1,7 @@
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
-import { createApiError, type ApiError } from '../../_types'
 import type { Challenge } from '../types'
 import { config } from '$lib/config'
+import { createApiError, type ApiError } from 'common'
 
 export const hasChallengeExpired = (challenge: Challenge): ResultAsync<Challenge, ApiError> => {
   const createdAt = challenge.createdAt.getTime()

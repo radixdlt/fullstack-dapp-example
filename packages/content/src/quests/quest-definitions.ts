@@ -6,33 +6,6 @@ export type MatchField = {
   type_name: 'ResourceAddress'
 }
 
-export type QuestRequirements = {
-  DepositEvent: {
-    type: 'event'
-    matchField: MatchField
-  }
-  VerifyPhoneNumber: {
-    type: 'offLedger'
-  }
-  ConnectWallet: {
-    type: 'offLedger'
-  }
-}
-
-export type EventId = keyof typeof EventId
-export const EventId = {
-  DepositUserBadge: 'DepositUserBadge',
-  VerifyPhoneNumber: 'VerifyPhoneNumber',
-  ConnectWallet: 'ConnectWallet'
-} as const
-
-export type QuestRequirement = Record<
-  EventId,
-  {
-    [Key in keyof QuestRequirements]: QuestRequirements[Key] & { eventName: Key }
-  }[keyof QuestRequirements]
->
-
 export type QuestCategory = keyof typeof QuestCategory
 
 export const QuestCategory = {
@@ -86,7 +59,7 @@ export type Page = {
 export type QuestContentDefinition = {
   title: string
   description: string
-  requirements?: Partial<Record<EventId, string>>
+  requirements?: Requirements
   pages: Page[]
 }
 
@@ -94,26 +67,68 @@ export type Language = keyof typeof Language
 
 export const Language = { en: 'en' } as const
 
+type Requirements = { [key: string]: OnLedgerRequirement | OffLedgerRequirement }
+
+type OnLedgerRequirement = {
+  type: 'event'
+  eventName: string
+  matchField: MatchField
+}
+
+type OffLedgerRequirement = {
+  type: 'offLedger'
+}
+
 export type QuestDefinition = {
   category: QuestCategory
   rewards: Readonly<QuestReward[]>
   preRequisites: Readonly<QuestId[]>
-  requirements: Partial<QuestRequirement>
+  requirements: Requirements
   minutesToComplete: number
 }
 
-export type QuestId = 'RadixQuest' | 'FirstTransactionQuest'
+export type QuestId =
+  | 'WelcomeToRadQuest'
+  | 'WhatIsRadix'
+  | 'GetRadixWallet'
+  | 'LoginWithWallet'
+  | 'FirstTransactionQuest'
 
 export const QuestDefinitions = (networkId: number): { [key in QuestId]: QuestDefinition } => {
   const { badges } = getEntityAddresses(networkId)
 
   return {
-    RadixQuest: {
+    WelcomeToRadQuest: {
       category: 'Basic',
-      rewards: [{ name: 'element', amount: 10 }],
+      rewards: [{ name: 'element', amount: 5 }],
       preRequisites: [],
       minutesToComplete: 3,
       requirements: {}
+    },
+    WhatIsRadix: {
+      category: 'Basic',
+      rewards: [{ name: 'element', amount: 5 }],
+      preRequisites: ['WelcomeToRadQuest'],
+      minutesToComplete: 3,
+      requirements: {}
+    },
+    GetRadixWallet: {
+      category: 'Basic',
+      rewards: [{ name: 'element', amount: 5 }],
+      preRequisites: ['WhatIsRadix'],
+      minutesToComplete: 3,
+      requirements: {}
+    },
+    LoginWithWallet: {
+      category: 'Basic',
+      rewards: [{ name: 'element', amount: 5 }],
+      preRequisites: ['GetRadixWallet'],
+      minutesToComplete: 3,
+      requirements: {
+        ConnectWallet: {
+          type: 'offLedger'
+        }
+      }
     },
     FirstTransactionQuest: {
       category: 'Basic',
@@ -123,12 +138,11 @@ export const QuestDefinitions = (networkId: number): { [key in QuestId]: QuestDe
           amount: 20
         }
       ],
-      preRequisites: [],
+      preRequisites: ['LoginWithWallet'],
       minutesToComplete: 3,
       requirements: {
         VerifyPhoneNumber: {
-          type: 'offLedger',
-          eventName: 'VerifyPhoneNumber'
+          type: 'offLedger'
         },
         DepositUserBadge: {
           type: 'event',

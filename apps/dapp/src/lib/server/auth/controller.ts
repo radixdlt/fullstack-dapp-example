@@ -1,9 +1,9 @@
-import { type ApiError, type ControllerMethodContext, type ControllerMethodOutput } from '../_types'
+import { type ControllerMethodContext, type ControllerMethodOutput } from '../_types'
 
 import { hasChallengeExpired } from './helpers/has-challenge-expired'
 import { Rola } from '@radixdlt/rola'
 import { SignedChallenge } from '@radixdlt/radix-dapp-toolkit'
-import { GatewayApi } from 'common'
+import { GatewayApi, type ApiError } from 'common'
 
 import { err, errAsync, ok, ResultAsync } from 'neverthrow'
 import { JWT } from './jwt'
@@ -141,7 +141,7 @@ export const AuthController = ({
       .andThen(() => userModel(ctx.logger).create(personaProof.address, accountProof.address))
       .andThen(({ id }) =>
         userQuestModel(ctx.logger)
-          .addCompletedRequirement('ConnectQuest', id, 'ConnectWallet')
+          .addCompletedRequirement('LoginWithWallet', id, 'ConnectWallet')
           .map(() => ({ id }))
       )
       .andThen(({ id }) => jwt.createTokens(id))

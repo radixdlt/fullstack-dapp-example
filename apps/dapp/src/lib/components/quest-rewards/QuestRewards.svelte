@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { typeToIcon } from '$lib/utils'
+  import { typeToIcon } from '$lib/utils/type-to-icon'
   import Icon from '../icon/Icon.svelte'
   import type { QuestReward } from 'content'
 

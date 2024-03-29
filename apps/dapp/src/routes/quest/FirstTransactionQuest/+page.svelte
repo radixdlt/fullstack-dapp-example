@@ -1,13 +1,12 @@
 <script lang="ts">
-  import { goto } from '$app/navigation'
   import { otpApi } from '$lib/api/otp-api'
   import Quest from '../Quest.svelte'
-  import { OtpErrorCodes, type OtpError } from '$lib/errors'
   import { i18n } from '$lib/i18n/i18n'
-  import type { PageData } from './$types'
   import DepositUserBadge from './DepositUserBadge.svelte'
   import VerifyOtp from './VerifyOTP.svelte'
   import VerifyPhoneNumber from './VerifyPhoneNumber.svelte'
+  import { ErrorReason } from '$lib/errors'
+  import type { PageData } from './$types'
 
   export let data: PageData
 
@@ -16,22 +15,22 @@
   let phoneNumber: string
   let oneTimePassword: string[]
 
-  const errors: Record<OtpError, string> = {
-    [OtpErrorCodes.FailedToSendOtp]: $i18n.t('quests:FirstTransactionQuest.failedToSendOtp'),
-    [OtpErrorCodes.PhoneNumberExists]: $i18n.t('quests:FirstTransactionQuest.phoneNumberExists'),
-    [OtpErrorCodes.InvalidPhoneNumber]: $i18n.t('quests:FirstTransactionQuest.invalidPhoneNumber'),
-    [OtpErrorCodes.InvalidOtp]: $i18n.t('quests:FirstTransactionQuest.invalidOtp'),
-    [OtpErrorCodes.InvalidRequest]: $i18n.t('quests:FirstTransactionQuest.invalidRequest'),
-    [OtpErrorCodes.FailedToAddPhoneNumber]: $i18n.t(
+  const errors = {
+    [ErrorReason.failedToSendOTP]: $i18n.t('quests:FirstTransactionQuest.failedToSendOtp'),
+    [ErrorReason.phoneNumberExists]: $i18n.t('quests:FirstTransactionQuest.phoneNumberExists'),
+    [ErrorReason.invalidPhoneNumber]: $i18n.t('quests:FirstTransactionQuest.invalidPhoneNumber'),
+    [ErrorReason.invalidOTP]: $i18n.t('quests:FirstTransactionQuest.invalidOtp'),
+    [ErrorReason.otpInvalidRequest]: $i18n.t('quests:FirstTransactionQuest.invalidRequest'),
+    [ErrorReason.failedToAddPhoneNumber]: $i18n.t(
       'quests:FirstTransactionQuest.failedToAddPhoneNumber'
     )
   }
 
-  let otpError: OtpError | undefined
+  let otpError: keyof typeof errors | undefined
 
   $: phoneNumberError = otpError ? errors[otpError] : undefined
 
-  const handleApiError = ({ data }: { data?: { message: OtpError } }) => {
+  const handleApiError = ({ data }: { data?: { message: keyof typeof errors } }) => {
     otpError = data?.message
   }
 
@@ -46,8 +45,8 @@
 </script>
 
 <Quest
-  bind:this={quest}
   {...data.questProps}
+  bind:this={quest}
   let:next
   let:back
   steps={[
@@ -56,7 +55,7 @@
     {
       id: 'verifyPhoneNumber',
       type: 'regular',
-      skip: data.requirements.VerifyPhoneNumber,
+      skip: data.requirements?.VerifyPhoneNumber,
       footer: {
         type: 'action',
         action: {
@@ -68,7 +67,7 @@
     {
       id: 'verifyOtp',
       type: 'regular',
-      skip: data.requirements.VerifyPhoneNumber,
+      skip: data.requirements?.VerifyPhoneNumber,
       footer: {
         type: 'action',
         action: {
@@ -80,7 +79,7 @@
     {
       id: 'depositUserBadge',
       type: 'regular',
-      skip: data.requirements.DepositUserBadge
+      skip: data.requirements?.DepositUserBadge
     },
     {
       type: 'requirements'
@@ -114,7 +113,15 @@
     <DepositUserBadge on:next={next} questId={data.id} />
   {/if}
 
-  <svelte:fragment slot="jetty" let:render let:Button let:Buttons let:next let:back>
+  <svelte:fragment
+    slot="jetty"
+    let:render
+    let:Button
+    let:Buttons
+    let:next
+    let:back
+    let:completeQuest
+  >
     {#if render('intro1')}
       {@html data.text['0.md']}
       <Button on:click={next}>OK</Button>
@@ -127,7 +134,7 @@
 
     {#if render('greeting')}
       {@html data.text['greeting.md']}
-      <Button on:click={() => goto('/')}>Great!</Button>
+      <Button on:click={completeQuest}>Great!</Button>
     {/if}
   </svelte:fragment>
 </Quest>

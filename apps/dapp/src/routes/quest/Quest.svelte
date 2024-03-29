@@ -5,6 +5,7 @@
   import { onMount, type ComponentProps } from 'svelte'
   import { closeQuest } from './+layout.svelte'
   import { user } from '../../stores'
+  import { completeQuest, useLocalStorage } from '$lib/utils/local-storage'
 
   export let id: ComponentProps<Quest>['id']
   export let title: ComponentProps<Quest>['title']
@@ -17,11 +18,12 @@
 
   export const actions = {
     next: () => {},
-    back: () => {}
+    back: () => {},
+    goToStep: (_id: string) => {}
   }
 
   const saveProgress = (progress: number) => {
-    localStorage.setItem(`savedProgress`, JSON.stringify({ questId: id, progress }))
+    useLocalStorage('savedProgress').set({ questId: id, progress })
     if ($user) questApi.saveProgress(id, progress)
   }
 
@@ -30,13 +32,19 @@
   onMount(() => {
     actions.next = quest.next
     actions.back = quest.back
+    actions.goToStep = quest.goToStep
   })
+
+  const _completeQuest = () => {
+    completeQuest(id, !!$user)
+    closeQuest()
+  }
 </script>
 
 <Quest
   bind:this={quest}
   on:close={closeQuest}
-  on:complete={closeQuest}
+  on:complete={_completeQuest}
   on:progressUpdated={(e) => saveProgress(e.detail)}
   {id}
   {title}
@@ -51,7 +59,7 @@
   let:next
   let:render
 >
-  <slot {back} {next} {render} />
+  <slot {back} {next} {render} completeQuest={_completeQuest} />
 
   <slot
     name="jetty"
@@ -68,5 +76,6 @@
     {Buttons}
     {next}
     {back}
+    completeQuest={_completeQuest}
   />
 </Quest>

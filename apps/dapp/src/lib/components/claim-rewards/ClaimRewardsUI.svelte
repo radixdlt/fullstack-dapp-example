@@ -2,7 +2,7 @@
   import Button from '$lib/components/button/Button.svelte'
   import Icon from '$lib/components/icon/Icon.svelte'
   import { i18n } from '$lib/i18n/i18n'
-  import { typeToIcon } from '$lib/utils'
+  import { typeToIcon } from '$lib/utils/type-to-icon'
   import type { QuestReward } from 'content'
 
   export let rewards: Readonly<QuestReward[]>
@@ -33,6 +33,7 @@
   }
 
   .btn {
+    margin-top: var(--spacing-xl);
     display: flex;
     justify-content: center;
   }

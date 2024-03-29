@@ -9,7 +9,7 @@
   import Carousel from '$lib/components/carousel/Carousel.svelte'
   import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
   import { goto } from '$app/navigation'
-  import { quests, user, webSocketClient } from '../stores'
+  import { questStatus, quests, user, webSocketClient } from '../stores'
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
@@ -17,6 +17,13 @@
   import { resolveRDT } from '$lib/rdt'
   import { WebSocketClient } from '$lib/websocket-client'
   import { questApi } from '$lib/api/quest-api'
+  import { QuestDefinitions, type QuestId } from 'content'
+  import { PUBLIC_NETWORK_ID } from '$env/static/public'
+  import type { QuestStatus } from '../types'
+  import {
+    clearQuestStatusFromLocalStorage,
+    loadQuestStatusFromLocalStorage
+  } from '$lib/utils/local-storage'
 
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
@@ -24,6 +31,8 @@
   const { dAppDefinitionAddress, networkId } = publicConfig
 
   onMount(() => {
+    $questStatus = loadQuestStatusFromLocalStorage()
+
     radixDappToolkit = RadixDappToolkit({
       networkId,
       dAppDefinitionAddress: dAppDefinitionAddress ?? '',
@@ -32,6 +41,8 @@
         // TODO: handle application state cleanup
         authApi.logout()
         $webSocketClient?.close()
+        clearQuestStatusFromLocalStorage()
+        $questStatus = loadQuestStatusFromLocalStorage()
       }
     })
 
@@ -58,17 +69,46 @@
         const result = await authApi.login(personaProof, accountProof)
 
         // TODO: handle login failure and give user some feedback
-        if (result.isErr()) throw new Error('Failed to login')
+        if (result.isErr()) throw Error('Failed to login')
       }
     })
 
     radixDappToolkit.walletApi.walletData$.subscribe(({ persona }) => {
       if (persona?.identityAddress) {
         ResultAsync.combine([userApi.me(), authApi.authToken()])
-          .map(([me, authToken]) => {
-            user.set(me)
+          .map(async ([me, authToken]) => {
+            $user = me
             // TODO:
             // - bootstrap the application state (quest progress, user, notifications etc...) and connect to notifications websocket
+            const questInfoResult = await questApi.getQuestsInformation()
+
+            if (questInfoResult.isErr()) throw questInfoResult.error
+
+            const questInfo = questInfoResult.value
+
+            const questDefinitions = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))
+
+            $questStatus = Object.entries(questDefinitions).reduce(
+              (prev, cur) => {
+                const [id, quest] = cur
+
+                if (questInfo[id as QuestId]?.status === 'COMPLETED') {
+                  prev[id as QuestId] = 'completed'
+                  return prev
+                }
+
+                const preRequisites = quest.preRequisites
+
+                const isUnlocked = preRequisites.every(
+                  (preReq) => questInfo[preReq]?.status === 'COMPLETED'
+                )
+
+                prev[id as QuestId] = isUnlocked ? 'unlocked' : 'locked'
+
+                return prev
+              },
+              {} as { [key in QuestId]: QuestStatus }
+            )
 
             if (authToken) {
               if (!$webSocketClient) {
@@ -130,7 +170,7 @@
                 minutesToComplete={quest.minutesToComplete}
                 rewards={quest.rewards}
                 backgroundImage={quest.splashImage}
-                state="unlocked"
+                state={$questStatus?.[id]}
                 on:click={() => goto(`/quest/${id}`)}
               />
             </Item>
