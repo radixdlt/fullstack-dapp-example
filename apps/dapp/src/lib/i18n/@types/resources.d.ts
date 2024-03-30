@@ -67,6 +67,7 @@ interface Resources {
       sendSmsButton: 'Send SMS'
       verifyOtpButton: 'Verify'
       verifyOtpText: 'Enter the 6-digit code sent to'
+      allowMarketing: 'I allow RadQuest to add me to the marketing newsletter'
     }
   }
   transformGems: {
