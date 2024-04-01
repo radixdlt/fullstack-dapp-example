@@ -19,7 +19,10 @@ export const Addresses = (networkId: number) => {
         components: {
           questRewards: 'component_tdx_2_1cp2qf6rzzfhny0qdp40w9jz4m98g9hdtmzd4fdg6gc0epknezg0y65'
         },
-        xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc'
+        xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
+        accounts: {
+          jetty: 'account_tdx_2_1290rrczjj4gxh9k0w30ukywwhzm9ltrmkqk0jcfaj50t5f6n4xxezt'
+        }
       }
     } as const
   )[networkConfig.networkName]!
@@ -32,5 +35,6 @@ export type WellKnownAddresses = {
   accountAddress: {
     payerAccount: string
     systemAccount: string
+    jetty: string
   }
 }
