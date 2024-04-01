@@ -30,16 +30,20 @@ export const createRewardsDepositManifest = ({
 
             `,
     rewards.map((reward) => {
+      const bucketName = `bucket${buckets.length + 1}`
+      buckets.push(bucketName)
+
+      let createProof = `
+        CALL_METHOD
+          Address("${wellKnownAddresses.accountAddress.systemAccount}")
+          "create_proof_of_amount"
+          Address("${addresses.badges.adminBadgeAddress}") 
+          Decimal("1");  
+       `
       if (reward.name === 'element') {
-        const bucketName = `bucket${buckets.length + 1}`
-        buckets.push(bucketName)
-        return `
-                   CALL_METHOD
-                    Address("${wellKnownAddresses.accountAddress.systemAccount}")
-                    "create_proof_of_amount"
-                    Address("${addresses.badges.adminBadgeAddress}")
-                    Decimal("1");          
-                    
+        return (
+          createProof +
+          `
                   MINT_FUNGIBLE
                     Address("${addresses.resources.elementAddress}")
                     Decimal("${reward.amount}");
@@ -49,9 +53,24 @@ export const createRewardsDepositManifest = ({
                     Decimal("${reward.amount}")
                     Bucket("${bucketName}")
                   ;`
+        )
       }
 
-      // TODO: handle other type of rewards
+      if (reward.name === 'clam') {
+        return (
+          createProof +
+          `          
+                  MINT_FUNGIBLE
+                    Address("${addresses.resources.clamAddress}")
+                    Decimal("${reward.amount}");
+                    
+                  TAKE_FROM_WORKTOP
+                    Address("${addresses.resources.clamAddress}")
+                    Decimal("${reward.amount}")
+                    Bucket("${bucketName}")
+                  ;`
+        )
+      }
       return undefined
     }),
     `

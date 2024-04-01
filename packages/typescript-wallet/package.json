@@ -23,6 +23,7 @@
     "wallet:deploy:radquest": "npx tsx ./src/radquest/scripts/deploy-radquest.ts",
     "wallet:instantiate:quest-rewards": "npx tsx ./src/radquest/scripts/new-quest-rewards.ts",
     "wallet:create:element": "npx tsx ./src/radquest/scripts/create-element.ts",
+    "wallet:create:clam": "npx tsx ./src/radquest/scripts/create-clam.ts",
     "gw:well-known": "npx tsx ./src/scripts/gw/well-known.ts",
     "gw:tx:lookup": "npx tsx ./src/scripts/gw/lookup-tx.ts",
     "gw:status": "npx tsx ./src/scripts/gw/status.ts",
