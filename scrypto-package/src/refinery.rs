@@ -5,6 +5,17 @@ use crate::{
     radmorph_forge::{radmorph_forge::RadmorphForge, RadmorphData},
 };
 use scrypto::prelude::*;
+
+pub const RARITY: [&str; 7] = [
+    "Common",
+    "Uncommon",
+    "Rare",
+    "Fine",
+    "Precious",
+    "Superb",
+    "Magnificent",
+];
+
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 #[sbor(transparent)]
 pub struct UserId(pub String);
@@ -224,7 +235,17 @@ mod refinery {
                 .non_fungible::<MorphCardData>()
                 .data();
 
-            let (radgem_a_data, radgem_b_data) = if &radgem_1_data.rarity >= &radgem_2_data.rarity {
+            let radgem_1_rarity_weight = RARITY
+                .iter()
+                .position(|&r| r == &radgem_1_data.rarity)
+                .unwrap();
+            let radgem_2_rarity_weight = RARITY
+                .iter()
+                .position(|&r| r == &radgem_2_data.rarity)
+                .unwrap();
+
+            let (radgem_a_data, radgem_b_data) = if radgem_1_rarity_weight >= radgem_2_rarity_weight
+            {
                 (radgem_1_data, radgem_2_data)
             } else {
                 (radgem_2_data, radgem_1_data)
@@ -239,10 +260,10 @@ mod refinery {
 
             let pre_hash_string = format!(
                 "{}{}{}{}{}",
-                morph_card_data.energy.clone() as u64,
-                radgem_a_data.material.clone() as u64,
-                radgem_a_data.color.clone() as u64,
-                radgem_b_data.color.clone() as u64,
+                morph_card_data.energy,
+                radgem_a_data.material,
+                radgem_a_data.color,
+                radgem_b_data.color,
                 key_image_url.as_str(),
             );
 

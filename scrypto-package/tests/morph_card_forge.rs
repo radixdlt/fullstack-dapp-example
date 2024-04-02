@@ -1,6 +1,7 @@
 use radix_engine_interface::prelude::*;
-use radquest::morph_card_forge::{
-    test_bindings::*, Energy, MorphCardData, MorphCardDataInput, Rarity, UserId,
+use radquest::{
+    morph_card_forge::{test_bindings::*, MorphCardData, MorphCardDataInput, UserId, ENERGY},
+    refinery::RARITY,
 };
 use scrypto::this_package;
 use scrypto_test::prelude::*;
@@ -27,6 +28,10 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         .mint_roles(mint_roles! {
             minter => rule!(require(admin_badges.resource_address(&mut env)?));
             minter_updater => rule!(deny_all);
+        })
+        .non_fungible_data_update_roles(non_fungible_data_update_roles! {
+            non_fungible_data_updater => rule!(require(admin_badges.resource_address(&mut env)?));
+            non_fungible_data_updater_updater => rule!(deny_all);
         })
         .mint_initial_supply([], &mut env)?;
 
@@ -67,10 +72,10 @@ fn can_set_fixed_cards() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     let morph_card_data = MorphCardDataInput {
-        key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
-        name: "Molten Lava Morph Card".to_owned(),
-        rarity: Rarity::UltraRare,
-        energy: Energy::MoltenLava,
+        key_image_url: UncheckedUrl("https://www.example.com".to_string()),
+        name: "Molten Lava Morph Card".to_string(),
+        rarity: RARITY[2].to_string(), // Rare
+        energy: ENERGY[0].to_string(), // MoltenLava,
     };
 
     LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
@@ -89,13 +94,13 @@ fn can_mint_fixed_card() -> Result<(), RuntimeError> {
         ..
     } = arrange_test_environment()?;
 
-    let card_name = "Molten Lava Morph Card".to_owned();
+    let card_name = "Molten Lava Morph Card".to_string();
 
     let morph_card_data = MorphCardDataInput {
-        key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
+        key_image_url: UncheckedUrl("https://www.example.com".to_string()),
         name: card_name.clone(),
-        rarity: Rarity::UltraRare,
-        energy: Energy::MoltenLava,
+        rarity: RARITY[2].to_string(), // Rare
+        energy: ENERGY[0].to_string(), // MoltenLava
     };
 
     LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
@@ -103,7 +108,7 @@ fn can_mint_fixed_card() -> Result<(), RuntimeError> {
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
     let morph_card =
-        morph_card_forge.mint_fixed_card(card_name, UserId("<test>".to_owned()), &mut env)?;
+        morph_card_forge.mint_fixed_card(card_name, UserId("<test>".to_string()), &mut env)?;
 
     assert_eq!(morph_card.amount(&mut env)?, dec!(1));
 
@@ -121,10 +126,10 @@ fn cannot_mint_fixed_card_with_wrong_name() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     let morph_card_data = MorphCardDataInput {
-        key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
-        name: "Molten Lava Morph Card".to_owned(),
-        rarity: Rarity::UltraRare,
-        energy: Energy::MoltenLava,
+        key_image_url: UncheckedUrl("https://www.example.com".to_string()),
+        name: "Molten Lava Morph Card".to_string(),
+        rarity: RARITY[2].to_string(), // Rare
+        energy: ENERGY[0].to_string(), // MoltenLava
     };
 
     LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
@@ -132,8 +137,8 @@ fn cannot_mint_fixed_card_with_wrong_name() -> Result<(), RuntimeError> {
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
     let result = morph_card_forge.mint_fixed_card(
-        "Wrong Name".to_owned(),
-        UserId("<test>".to_owned()),
+        "Wrong Name".to_string(),
+        UserId("<test>".to_string()),
         &mut env,
     );
 
@@ -152,16 +157,16 @@ fn can_remove_fixed_cards() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     let morph_card_data = MorphCardDataInput {
-        key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
-        name: "Molten Lava Morph Card".to_owned(),
-        rarity: Rarity::UltraRare,
-        energy: Energy::MoltenLava,
+        key_image_url: UncheckedUrl("https://www.example.com".to_string()),
+        name: "Molten Lava Morph Card".to_string(),
+        rarity: RARITY[2].to_string(), // Rare
+        energy: ENERGY[0].to_string(), // MoltenLava
     };
 
     LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
     morph_card_forge.set_fixed_cards(vec![morph_card_data], &mut env)?;
 
-    let card_name = "Molten Lava Morph Card".to_owned();
+    let card_name = "Molten Lava Morph Card".to_string();
 
     morph_card_forge.remove_fixed_cards(vec![card_name], &mut env)?;
 
@@ -178,17 +183,43 @@ fn can_set_random_cards() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     let morph_card_data = MorphCardDataInput {
-        key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
-        name: "Molten Lava Morph Card".to_owned(),
-        rarity: Rarity::UltraRare,
-        energy: Energy::MoltenLava,
+        key_image_url: UncheckedUrl("https://www.example.com".to_string()),
+        name: "Molten Lava Morph Card".to_string(),
+        rarity: RARITY[2].to_string(), // Rare
+        energy: ENERGY[0].to_string(), // MoltenLava
     };
+
+    let rarity = morph_card_data.rarity.clone();
 
     LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
     morph_card_forge.set_random_cards(vec![morph_card_data], &mut env)?;
 
     let card_forge_state: MorphCardForgeState = env.read_component_state(morph_card_forge)?;
-    assert_eq!(card_forge_state.random_card_names.len(), 1);
+    assert_eq!(card_forge_state.random_card_names[&rarity].len(), 1);
+    Ok(())
+}
+#[test]
+
+fn cannot_set_random_cards_with_incorrect_fields() -> Result<(), RuntimeError> {
+    let Test {
+        mut env,
+        mut morph_card_forge,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    let morph_card_data = MorphCardDataInput {
+        key_image_url: UncheckedUrl("https://www.example.com".to_string()),
+        name: "Molten Lava Morph Card".to_string(),
+        rarity: RARITY[2].to_string(),        // Rare
+        energy: "Tropic Thunder".to_string(), // MoltenLava
+    };
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    let result = morph_card_forge.set_random_cards(vec![morph_card_data], &mut env);
+
+    assert!(result.is_err());
+
     Ok(())
 }
 
@@ -203,20 +234,20 @@ fn can_mint_random_card() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     let morph_card_data = MorphCardDataInput {
-        key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
-        name: "Molten Lava Morph Card".to_owned(),
-        rarity: Rarity::UltraRare,
-        energy: Energy::MoltenLava,
+        key_image_url: UncheckedUrl("https://www.example.com".to_string()),
+        name: "Molten Lava Morph Card".to_string(),
+        rarity: RARITY[2].to_string(), // Rare
+        energy: ENERGY[0].to_string(), // MoltenLava
     };
 
     LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
     morph_card_forge.set_random_cards(vec![morph_card_data], &mut env)?;
 
-    let rand_num = dec!(0.5);
+    let rand_num = dec!(0.9); // Random value must be in right range for rarity
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
     let morph_card =
-        morph_card_forge.mint_random_card(rand_num, UserId("<test>".to_owned()), &mut env)?;
+        morph_card_forge.mint_random_card(rand_num, UserId("<test>".to_string()), &mut env)?;
 
     assert_eq!(morph_card.amount(&mut env)?, dec!(1));
 
@@ -232,14 +263,16 @@ fn can_remove_random_cards() -> Result<(), RuntimeError> {
         ..
     } = arrange_test_environment()?;
 
-    let card_name = "Molten Lava Morph Card".to_owned();
+    let card_name = "Molten Lava Morph Card".to_string();
 
     let morph_card_data = MorphCardDataInput {
-        key_image_url: UncheckedUrl("https://www.example.com".to_owned()),
+        key_image_url: UncheckedUrl("https://www.example.com".to_string()),
         name: card_name.clone(),
-        rarity: Rarity::UltraRare,
-        energy: Energy::MoltenLava,
+        rarity: RARITY[2].to_string(), // Rare
+        energy: ENERGY[0].to_string(), // MoltenLava
     };
+
+    let rarity = morph_card_data.rarity.clone();
 
     LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
     morph_card_forge.set_random_cards(vec![morph_card_data], &mut env)?;
@@ -247,7 +280,50 @@ fn can_remove_random_cards() -> Result<(), RuntimeError> {
     morph_card_forge.remove_random_cards(vec![card_name], &mut env)?;
 
     let card_forge_state: MorphCardForgeState = env.read_component_state(morph_card_forge)?;
-    assert_eq!(card_forge_state.random_card_names.len(), 0);
+    assert_eq!(card_forge_state.random_card_names[&rarity].len(), 0);
+
+    Ok(())
+}
+
+#[test]
+fn can_update_card_key_image() -> Result<(), RuntimeError> {
+    let Test {
+        mut env,
+        mut morph_card_forge,
+        super_admin_badge_proof,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    let card_name = "Molten Lava Morph Card".to_string();
+
+    let morph_card_data = MorphCardDataInput {
+        key_image_url: UncheckedUrl("".to_string()),
+        name: card_name.clone(),
+        rarity: RARITY[0].to_string(), // Common
+        energy: ENERGY[0].to_string(), // MoltenLava
+    };
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    morph_card_forge.set_fixed_cards(vec![morph_card_data], &mut env)?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    let morph_card =
+        morph_card_forge.mint_fixed_card(card_name, UserId("<test>".to_string()), &mut env)?;
+
+    let key_image_url = UncheckedUrl("https://www.example.com".to_string());
+    let morph_card_id = morph_card.non_fungible_local_ids(&mut env)?.pop().unwrap();
+
+    // LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    morph_card_forge.update_key_image_url(
+        morph_card_id.clone(),
+        key_image_url.clone(),
+        &mut env,
+    )?;
+
+    let morph_card_data: MorphCardData = ResourceManager(morph_card.resource_address(&mut env)?)
+        .get_non_fungible_data(morph_card_id, &mut env)?;
+    assert_eq!(morph_card_data.key_image_url, key_image_url);
 
     Ok(())
 }

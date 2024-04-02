@@ -15,48 +15,20 @@ CREATE_NON_FUNGIBLE_RESOURCE
                     Enum<14u8>(
                         Array<Enum>(
                             Enum<0u8>(
+                                198u8
+                            ),
+                            Enum<0u8>(
                                 12u8
                             ),
                             Enum<0u8>(
-                                198u8
+                                12u8
                             ),
-                            Enum<1u8>(
-                                1u64
+                            Enum<0u8>(
+                                12u8
                             ),
-                            Enum<1u8>(
-                                2u64
+                            Enum<0u8>(
+                                12u8
                             )
-                        )
-                    ),
-                    Enum<15u8>(
-                        Map<U8, Array>(
-                            0u8 => Array<Enum>(),
-                            1u8 => Array<Enum>(),
-                            2u8 => Array<Enum>()
-                        )
-                    ),
-                    Enum<15u8>(
-                        Map<U8, Array>(
-                            0u8 => Array<Enum>(),
-                            1u8 => Array<Enum>(),
-                            2u8 => Array<Enum>(),
-                            3u8 => Array<Enum>(),
-                            4u8 => Array<Enum>(),
-                            5u8 => Array<Enum>(),
-                            6u8 => Array<Enum>(),
-                            7u8 => Array<Enum>(),
-                            8u8 => Array<Enum>(),
-                            9u8 => Array<Enum>(),
-                            10u8 => Array<Enum>(),
-                            11u8 => Array<Enum>(),
-                            12u8 => Array<Enum>(),
-                            13u8 => Array<Enum>(),
-                            14u8 => Array<Enum>(),
-                            15u8 => Array<Enum>(),
-                            16u8 => Array<Enum>(),
-                            17u8 => Array<Enum>(),
-                            18u8 => Array<Enum>(),
-                            19u8 => Array<Enum>()
                         )
                     )
                 ),
@@ -68,178 +40,17 @@ CREATE_NON_FUNGIBLE_RESOURCE
                         Enum<1u8>(
                             Enum<0u8>(
                                 Array<String>(
-                                    "name",
                                     "key_image_url",
+                                    "name",
                                     "rarity",
-                                    "energy"
-                                )
-                            )
-                        )
-                    ),
-                    Tuple(
-                        Enum<1u8>(
-                            "Rarity"
-                        ),
-                        Enum<1u8>(
-                            Enum<1u8>(
-                                Map<U8, Tuple>(
-                                    0u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Common"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    1u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Rare"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    2u8 => Tuple(
-                                        Enum<1u8>(
-                                            "UltraRare"
-                                        ),
-                                        Enum<0u8>()
-                                    )
-                                )
-                            )
-                        )
-                    ),
-                    Tuple(
-                        Enum<1u8>(
-                            "Energy"
-                        ),
-                        Enum<1u8>(
-                            Enum<1u8>(
-                                Map<U8, Tuple>(
-                                    0u8 => Tuple(
-                                        Enum<1u8>(
-                                            "MoltenLava"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    1u8 => Tuple(
-                                        Enum<1u8>(
-                                            "PyroclasticFlow"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    2u8 => Tuple(
-                                        Enum<1u8>(
-                                            "VolcanicLightning"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    3u8 => Tuple(
-                                        Enum<1u8>(
-                                            "TropicalCyclone"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    4u8 => Tuple(
-                                        Enum<1u8>(
-                                            "PolarBlizzard"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    5u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Earthquake"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    6u8 => Tuple(
-                                        Enum<1u8>(
-                                            "FireTornado"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    7u8 => Tuple(
-                                        Enum<1u8>(
-                                            "TidalWave"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    8u8 => Tuple(
-                                        Enum<1u8>(
-                                            "HydrothermalVent"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    9u8 => Tuple(
-                                        Enum<1u8>(
-                                            "RainbowPower"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    10u8 => Tuple(
-                                        Enum<1u8>(
-                                            "StormCell"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    11u8 => Tuple(
-                                        Enum<1u8>(
-                                            "SolarFlare"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    12u8 => Tuple(
-                                        Enum<1u8>(
-                                            "NuclearFusion"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    13u8 => Tuple(
-                                        Enum<1u8>(
-                                            "AuroraBorealis"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    14u8 => Tuple(
-                                        Enum<1u8>(
-                                            "GravityForce"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    15u8 => Tuple(
-                                        Enum<1u8>(
-                                            "MagneticField"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    16u8 => Tuple(
-                                        Enum<1u8>(
-                                            "GammaRays"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    17u8 => Tuple(
-                                        Enum<1u8>(
-                                            "BlackHole"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    18u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Supernova"
-                                        ),
-                                        Enum<0u8>()
-                                    ),
-                                    19u8 => Tuple(
-                                        Enum<1u8>(
-                                            "Whirlpool"
-                                        ),
-                                        Enum<0u8>()
-                                    )
+                                    "energy",
+                                    "availability"
                                 )
                             )
                         )
                     )
                 ),
                 Array<Enum>(
-                    Enum<0u8>(),
-                    Enum<0u8>(),
                     Enum<0u8>()
                 )
             )
@@ -247,7 +58,9 @@ CREATE_NON_FUNGIBLE_RESOURCE
         Enum<1u8>(
             0u64
         ),
-        Array<String>()
+        Array<String>(
+            "key_image_url"
+        )
     )
     Tuple(
         Enum<1u8>(
@@ -308,7 +121,24 @@ CREATE_NON_FUNGIBLE_RESOURCE
                 )
             )
         ),
-        Enum<0u8>()
+        Enum<1u8>(
+            Tuple(
+                Enum<1u8>(
+                    Enum<2u8>(
+                        Enum<0u8>(
+                            Enum<0u8>(
+                                Enum<1u8>(
+                                    Address("${admin_badge}")
+                                )
+                            )
+                        )
+                    )
+                ),
+                Enum<1u8>(
+                    Enum<1u8>()
+                )
+            )
+        )
     )
     Tuple(
         Map<String, Tuple>(

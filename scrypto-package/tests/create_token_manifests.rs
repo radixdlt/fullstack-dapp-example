@@ -3,42 +3,14 @@ use scrypto::prelude::*;
 use scrypto_test::prelude::*;
 use scrypto_unit::*;
 
-#[derive(ScryptoSbor, ManifestSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
-pub enum Color {
-    Blood,
-    Coral,
-    Dusk,
-    Flame,
-    Forest,
-    Glacier,
-    Ocean,
-    Sand,
-    Sky,
-    Smoke,
-}
-
-#[derive(ScryptoSbor, ManifestSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
-pub enum Material {
-    Crystalline,
-    Metallic,
-    Radiant,
-}
-
-#[derive(ScryptoSbor, ManifestSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
-pub enum Rarity {
-    Common = 0,
-    Rare = 1,
-    UltraRare = 2,
-}
-
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
 struct RadgemData {
     #[mutable]
     key_image_url: Url,
     name: String,
-    material: Material,
-    color: Color,
-    rarity: Rarity,
+    material: String,
+    color: String,
+    rarity: String,
 }
 
 #[test]
@@ -93,36 +65,14 @@ fn create_radgem() {
     .err();
 }
 
-#[derive(ScryptoSbor, ManifestSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
-pub enum Energy {
-    MoltenLava,
-    PyroclasticFlow,
-    VolcanicLightning,
-    TropicalCyclone,
-    PolarBlizzard,
-    Earthquake,
-    FireTornado,
-    TidalWave,
-    HydrothermalVent,
-    RainbowPower,
-    StormCell,
-    SolarFlare,
-    NuclearFusion,
-    AuroraBorealis,
-    GravityForce,
-    MagneticField,
-    GammaRays,
-    BlackHole,
-    Supernova,
-    Whirlpool,
-}
-
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
 struct MorphEnergyCardData {
-    name: String,
+    #[mutable]
     key_image_url: Url,
-    rarity: Rarity,
-    energy: Energy,
+    name: String,
+    rarity: String,
+    energy: String,
+    availability: String,
 }
 
 #[test]
@@ -152,7 +102,10 @@ fn create_morph_card() {
                 depositor => rule!(allow_all);
                 depositor_updater => rule!(deny_all);
             },
-            non_fungible_data_update_roles: None,
+            non_fungible_data_update_roles: non_fungible_data_update_roles! {
+                non_fungible_data_updater => rule!(require(XRD));
+                non_fungible_data_updater_updater => rule!(deny_all);
+            },
         },
         metadata!(
           init {
@@ -174,22 +127,15 @@ fn create_morph_card() {
     .err();
 }
 
-#[derive(ScryptoSbor, ManifestSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
-pub enum RadmorphRarity {
-    Fine,
-    Precious,
-    Superb,
-    Magnificent,
-}
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
 struct RadmorphData {
-    name: String,
     key_image_url: Url,
-    rarity: RadmorphRarity,
-    material: Material,
-    energy: Energy,
-    color_1: Color,
-    color_2: Color,
+    name: String,
+    rarity: String,
+    material: String,
+    energy: String,
+    color_1: String,
+    color_2: String,
 }
 
 #[test]
