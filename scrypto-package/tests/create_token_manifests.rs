@@ -67,10 +67,12 @@ fn create_radgem() {
 
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
 struct MorphEnergyCardData {
-    name: String,
+    #[mutable]
     key_image_url: Url,
+    name: String,
     rarity: String,
     energy: String,
+    availability: String,
 }
 
 #[test]
@@ -100,7 +102,10 @@ fn create_morph_card() {
                 depositor => rule!(allow_all);
                 depositor_updater => rule!(deny_all);
             },
-            non_fungible_data_update_roles: None,
+            non_fungible_data_update_roles: non_fungible_data_update_roles! {
+                non_fungible_data_updater => rule!(require(XRD));
+                non_fungible_data_updater_updater => rule!(deny_all);
+            },
         },
         metadata!(
           init {
@@ -124,8 +129,8 @@ fn create_morph_card() {
 
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
 struct RadmorphData {
-    name: String,
     key_image_url: Url,
+    name: String,
     rarity: String,
     material: String,
     energy: String,

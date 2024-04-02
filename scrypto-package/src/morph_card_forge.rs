@@ -38,6 +38,7 @@ pub struct MorphCardDataInput {
 
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 pub struct MorphCardData {
+    #[mutable]
     pub key_image_url: Url,
     pub name: String,
     pub rarity: String,
@@ -60,6 +61,7 @@ mod morph_card_forge {
         mint_random_card => restrict_to: [admin];
         set_random_cards => restrict_to: [super_admin];
         remove_random_cards => restrict_to: [super_admin];
+        update_key_image_url => restrict_to: [admin];
       }
     }
 
@@ -221,6 +223,20 @@ mod morph_card_forge {
                     .unwrap()
                     .swap_remove(i);
             }
+        }
+
+        pub fn update_key_image_url(
+            &mut self,
+            morph_card_id: NonFungibleLocalId,
+            key_image_url: Url,
+        ) {
+            LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
+
+            self.morph_card_resource_manager.update_non_fungible_data(
+                &morph_card_id,
+                "key_image_url",
+                key_image_url,
+            )
         }
     }
 }

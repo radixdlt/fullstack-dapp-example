@@ -15,10 +15,10 @@ CREATE_NON_FUNGIBLE_RESOURCE
                     Enum<14u8>(
                         Array<Enum>(
                             Enum<0u8>(
-                                12u8
+                                198u8
                             ),
                             Enum<0u8>(
-                                198u8
+                                12u8
                             ),
                             Enum<0u8>(
                                 12u8
@@ -46,8 +46,8 @@ CREATE_NON_FUNGIBLE_RESOURCE
                         Enum<1u8>(
                             Enum<0u8>(
                                 Array<String>(
-                                    "name",
                                     "key_image_url",
+                                    "name",
                                     "rarity",
                                     "material",
                                     "energy",

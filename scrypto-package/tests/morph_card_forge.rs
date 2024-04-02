@@ -29,6 +29,10 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
             minter => rule!(require(admin_badges.resource_address(&mut env)?));
             minter_updater => rule!(deny_all);
         })
+        .non_fungible_data_update_roles(non_fungible_data_update_roles! {
+            non_fungible_data_updater => rule!(require(admin_badges.resource_address(&mut env)?));
+            non_fungible_data_updater_updater => rule!(deny_all);
+        })
         .mint_initial_supply([], &mut env)?;
 
     let morph_card_forge = MorphCardForge::new(
@@ -277,6 +281,49 @@ fn can_remove_random_cards() -> Result<(), RuntimeError> {
 
     let card_forge_state: MorphCardForgeState = env.read_component_state(morph_card_forge)?;
     assert_eq!(card_forge_state.random_card_names[&rarity].len(), 0);
+
+    Ok(())
+}
+
+#[test]
+fn can_update_card_key_image() -> Result<(), RuntimeError> {
+    let Test {
+        mut env,
+        mut morph_card_forge,
+        super_admin_badge_proof,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    let card_name = "Molten Lava Morph Card".to_string();
+
+    let morph_card_data = MorphCardDataInput {
+        key_image_url: UncheckedUrl("".to_string()),
+        name: card_name.clone(),
+        rarity: RARITY[0].to_string(), // Common
+        energy: ENERGY[0].to_string(), // MoltenLava
+    };
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    morph_card_forge.set_fixed_cards(vec![morph_card_data], &mut env)?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    let morph_card =
+        morph_card_forge.mint_fixed_card(card_name, UserId("<test>".to_string()), &mut env)?;
+
+    let key_image_url = UncheckedUrl("https://www.example.com".to_string());
+    let morph_card_id = morph_card.non_fungible_local_ids(&mut env)?.pop().unwrap();
+
+    // LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    morph_card_forge.update_key_image_url(
+        morph_card_id.clone(),
+        key_image_url.clone(),
+        &mut env,
+    )?;
+
+    let morph_card_data: MorphCardData = ResourceManager(morph_card.resource_address(&mut env)?)
+        .get_non_fungible_data(morph_card_id, &mut env)?;
+    assert_eq!(morph_card_data.key_image_url, key_image_url);
 
     Ok(())
 }
