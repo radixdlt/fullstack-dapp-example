@@ -310,7 +310,16 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
         .get_non_fungible_data(radgem_ids[1].clone(), &mut env)?;
     let key_image_url = UncheckedUrl("https://www.example.com".to_string());
 
-    let (radgem_a_data, radgem_b_data) = if &radgem_1_data.rarity >= &radgem_2_data.rarity {
+    let radgem_1_rarity_weight = RARITY
+        .iter()
+        .position(|&r| r == &radgem_1_data.rarity)
+        .unwrap();
+    let radgem_2_rarity_weight = RARITY
+        .iter()
+        .position(|&r| r == &radgem_2_data.rarity)
+        .unwrap();
+
+    let (radgem_a_data, radgem_b_data) = if radgem_1_rarity_weight >= radgem_2_rarity_weight {
         (radgem_1_data, radgem_2_data)
     } else {
         (radgem_2_data, radgem_1_data)
@@ -350,7 +359,7 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
         ResourceManager(radmorph_address).get_non_fungible_data(radmorph_id, &mut env)?;
     assert_eq!(
         radmorph_data.name,
-        "Precious Crystalline MoltenLava RadMorph".to_string(),
+        "Precious Crystalline Molten Lava RadMorph".to_string(),
     );
 
     Ok(())

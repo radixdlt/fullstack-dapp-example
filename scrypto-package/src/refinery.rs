@@ -241,7 +241,7 @@ mod refinery {
                 .unwrap();
             let radgem_2_rarity_weight = RARITY
                 .iter()
-                .position(|&r| r == &radgem_1_data.rarity)
+                .position(|&r| r == &radgem_2_data.rarity)
                 .unwrap();
 
             let (radgem_a_data, radgem_b_data) = if radgem_1_rarity_weight >= radgem_2_rarity_weight
