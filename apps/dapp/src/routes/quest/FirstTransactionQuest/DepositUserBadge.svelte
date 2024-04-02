@@ -76,7 +76,6 @@
 
         if (hasUserBadge) {
           state = 'hasUserBadge'
-
           dispatch('next')
           return
         }

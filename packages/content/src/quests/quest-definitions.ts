@@ -25,6 +25,12 @@ export type QuestReward = {
   [Key in keyof QuestRewards]: QuestRewards[Key] & { name: Key }
 }[keyof QuestRewards]
 
+export type EventId = keyof typeof EventId
+
+export const EventId = {
+  DepositUserBadge: 'DepositUserBadge'
+} as const
+
 export type QuestPageContents = {
   markdown: { path: string }
   component: { name: string }
@@ -144,7 +150,7 @@ export const QuestDefinitions = (networkId: number): { [key in QuestId]: QuestDe
         VerifyPhoneNumber: {
           type: 'offLedger'
         },
-        DepositUserBadge: {
+        [EventId.DepositUserBadge]: {
           type: 'event',
           eventName: 'DepositEvent',
           matchField: {

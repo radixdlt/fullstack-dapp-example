@@ -7,6 +7,7 @@
   import VerifyPhoneNumber from './VerifyPhoneNumber.svelte'
   import { ErrorReason } from '$lib/errors'
   import type { PageData } from './$types'
+  import EnterEmail from './EnterEmail.svelte'
 
   export let data: PageData
 
@@ -42,6 +43,9 @@
   }
 
   let verifyOTP: VerifyOtp
+
+  let email: string
+  let sendNewsletter = false
 </script>
 
 <Quest
@@ -82,6 +86,17 @@
       skip: data.requirements?.DepositUserBadge
     },
     {
+      id: 'email',
+      type: 'regular',
+      footer: {
+        type: 'action',
+        action: {
+          text: $i18n.t('quests:nextButton'),
+          onClick: () => quest.actions.next()
+        }
+      }
+    },
+    {
       type: 'requirements'
     },
     {
@@ -111,6 +126,12 @@
 
   {#if render('depositUserBadge')}
     <DepositUserBadge on:next={next} questId={data.id} />
+  {/if}
+
+  {#if render('email')}
+    {@html data.text['email.md']}
+
+    <EnterEmail bind:email bind:checked={sendNewsletter} />
   {/if}
 
   <svelte:fragment
