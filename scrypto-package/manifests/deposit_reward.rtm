@@ -28,8 +28,3 @@ CALL_METHOD
     # Array of Buckets to deposit
     Array<Bucket>(Bucket("bucket1"),)
 ;
-# CALL_METHOD
-#     Address("${account}")
-#     "deposit_batch"
-#     Expression("ENTIRE_WORKTOP")
-# ;

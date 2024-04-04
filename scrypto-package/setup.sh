@@ -24,7 +24,7 @@ export radgem=`resim run manifests/create_radgem.rtm  | grep "Resource:" | grep 
 export morph_card=`resim run manifests/create_morph_card.rtm  | grep "Resource:" | grep -o "resource_.*"`
 export radmorph=`resim run manifests/create_radmorph.rtm  | grep "Resource:" | grep -o "resource_.*"`
 
-export quest_rewards=`resim run manifests/new_quest_rewards.rtm | grep "Component:" | grep -o "component_.*"`
+export quest_rewards=`resim run manifests/new_quest_rewards.rtm | grep "Component:" | tail -n1 | grep -o "component_.*"`
 
 export refinery=`resim run manifests/new_refinery.rtm | grep "Component:" | tail -n1 | grep -o "component_.*"`
 

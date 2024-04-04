@@ -31,7 +31,6 @@ CALL_FUNCTION
     Bucket("admin_badge")
     Address("${element}")
     Address("${morph_card}")
-    Address("${user_badge}")
     Address("${radgem}")
     Address("${radmorph}")
 ;

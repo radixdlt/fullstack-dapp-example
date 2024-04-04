@@ -1,3 +1,4 @@
+use crate::kyc_oracle::kyc_oracle::KycOracle;
 use scrypto::prelude::*;
 
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
@@ -10,8 +11,8 @@ pub struct QuestId(pub String);
 
 // TODO: Update with actual KycData struct when available
 #[derive(ScryptoSbor, NonFungibleData, PartialEq, Eq, Debug, Clone)]
-pub struct KycData {
-    pub expires: Instant,
+pub struct DidData {
+    pub radquest_kyc: bool,
 }
 
 #[derive(ScryptoSbor, PartialEq, Eq, Debug, Clone)]
@@ -44,32 +45,37 @@ mod quest_rewards {
         methods {
             claim_reward => PUBLIC;
             deposit_reward => restrict_to: [admin];
-            update_user_kyc_requirement => restrict_to: [admin];
+            update_user_kyc_requirement => NOBODY;
         }
     }
     struct QuestRewards {
+        admin_badge: FungibleVault,
         rewards: KeyValueStore<ResourceAddress, Vault>,
         rewards_record: KeyValueStore<(UserId, QuestId), RewardState>,
-        user_kyc: KeyValueStore<UserId, ()>,
         user_badge_address: ResourceAddress,
         kyc_badge_address: ResourceAddress,
         admin_badge_address: ResourceAddress,
+        kyc_oracle: Global<KycOracle>,
     }
 
     impl QuestRewards {
         pub fn new(
             owner_role: OwnerRole,
-            admin_badge_address: ResourceAddress,
+            admin_badge: Bucket,
             user_badge_address: ResourceAddress,
             kyc_badge_address: ResourceAddress,
         ) -> Global<QuestRewards> {
+            let admin_badge_address = admin_badge.resource_address();
+            let kyc_oracle = KycOracle::new(owner_role.clone(), admin_badge_address.clone());
+
             Self {
+                admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
                 rewards: KeyValueStore::new(),
                 rewards_record: KeyValueStore::new(),
-                user_kyc: KeyValueStore::new(),
                 user_badge_address,
                 kyc_badge_address,
                 admin_badge_address,
+                kyc_oracle,
             }
             .instantiate()
             .prepare_to_globalize(owner_role)
@@ -97,8 +103,6 @@ mod quest_rewards {
                 .get(&(user_id.clone(), quest_id.clone()))
                 .unwrap();
 
-            let kyc_required = self.user_kyc.get(&user_id);
-
             match *reward_state {
                 RewardState::Claimed => {
                     panic!("Reward already claimed")
@@ -106,19 +110,19 @@ mod quest_rewards {
                 RewardState::Unclaimed {
                     ref resources_record,
                 } => {
-                    if resources_record.contains_key(&XRD) && kyc_required.is_some() {
-                        // Check kyc_badge for expiration
-                        let non_fungible_data: KycData = kyc_badge
+                    LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
+                    let kyc_required = self.kyc_oracle.get_user_kyc_requirement(user_id.clone());
+
+                    if resources_record.contains_key(&XRD) && kyc_required {
+                        // Check kyc_badge for validity
+                        let non_fungible_data: DidData = kyc_badge
                             .unwrap()
                             .check(self.kyc_badge_address)
                             .as_non_fungible()
                             .non_fungible()
                             .data();
-                        if Clock::current_time_is_at_or_before(
-                            non_fungible_data.expires,
-                            TimePrecision::Second,
-                        ) {
-                            panic!("KYC expired!")
+                        if !non_fungible_data.radquest_kyc {
+                            panic!("KYC is not valid");
                         }
                     };
                 }
@@ -265,12 +269,10 @@ mod quest_rewards {
             });
         }
 
+        // For testing purposes only
         pub fn update_user_kyc_requirement(&mut self, user_id: UserId, require_kyc: bool) {
-            if require_kyc {
-                self.user_kyc.insert(user_id, ());
-            } else {
-                self.user_kyc.remove(&user_id);
-            }
+            self.kyc_oracle
+                .update_user_kyc_requirement(user_id, require_kyc);
         }
     }
 }
