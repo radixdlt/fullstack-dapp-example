@@ -18,6 +18,7 @@ export owner_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s
 export user_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
 export kyc_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
 
+export super_admin_badge=`resim new-badge-fixed 1 | grep "Resource:" | grep -o "resource_.*"`
 export admin_badge=`resim run manifests/mint_admin_badges.rtm | grep "Resource:" | grep -o "resource_.*"`
 export element=`resim new-token-mutable $admin_badge | grep "Resource" | grep -o "resource_.*"`
 export radgem=`resim run manifests/create_radgem.rtm  | grep "Resource:" | grep -o "resource_.*"`
@@ -42,6 +43,7 @@ echo "\nResource Addresses:"
 echo "xrd = $xrd"
 echo "package = $package"
 echo "owner_badge = $owner_badge"
+echo "super_admin_badge = $super_admin_badge"
 echo "admin_badge = $admin_badge"
 echo "user_badge = $user_badge"
 echo "kyc_badge = $kyc_badge"
