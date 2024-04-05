@@ -89,7 +89,7 @@ mod quest_rewards {
             &self,
             quest_id: &QuestId,
             user_badge: Proof,
-            kyc_badge: Option<Proof>,
+            did_badge: Option<Proof>,
         ) -> UserId {
             let user_badge = user_badge.check(self.user_badge_address);
             let user_id = UserId(
@@ -114,8 +114,8 @@ mod quest_rewards {
                     let kyc_required = self.kyc_oracle.get_user_kyc_requirement(user_id.clone());
 
                     if resources_record.contains_key(&XRD) && kyc_required {
-                        // Check kyc_badge for validity
-                        let non_fungible_data: DidData = kyc_badge
+                        // Check did_badge for KYC validity
+                        let non_fungible_data: DidData = did_badge
                             .unwrap()
                             .check(self.kyc_badge_address)
                             .as_non_fungible()
@@ -134,9 +134,9 @@ mod quest_rewards {
             &mut self,
             quest_id: QuestId,
             user_badge: Proof,
-            kyc_badge: Option<Proof>,
+            did_badge: Option<Proof>,
         ) -> Vec<Bucket> {
-            let user_id = self.authorize_claim(&quest_id, user_badge, kyc_badge);
+            let user_id = self.authorize_claim(&quest_id, user_badge, did_badge);
 
             let mut reward_state = self
                 .rewards_record
