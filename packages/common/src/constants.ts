@@ -14,11 +14,13 @@ export const Addresses = (networkId: number) => {
         },
         resources: {
           elementAddress: 'resource_tdx_2_1th5y72fe3afxhuh4nkdtvcqw6tvhvdfupl87ua7flynk97mqxlmgsh',
-          clamAddress: 'resource_tdx_2_1tkhmnxnw3hklh84kdzcz3plmevlnseyflzuvv7a0ldy6jq5m6skxza'
+          clamAddress: 'resource_tdx_2_1tkhmnxnw3hklh84kdzcz3plmevlnseyflzuvv7a0ldy6jq5m6skxza',
+          morphEnergyCards: 'resource_tdx_2_1ngvftz0x5kufj5tes0gx9qzgfpp0lkjccl5q72fhw4gssvnm3ak30k'
         },
-        package: 'package_tdx_2_1ph23256u3wd2lzv9gd07tdxmuz055fceqrj8v4fa4c65jx85256usx',
+        package: 'package_tdx_2_1p4jymnsl7qc35vfvwdqv8z5df2q64fvhhul2tnfz6vgh5vrru8px23',
         components: {
-          questRewards: 'component_tdx_2_1cp2qf6rzzfhny0qdp40w9jz4m98g9hdtmzd4fdg6gc0epknezg0y65'
+          questRewards: 'component_tdx_2_1cp2qf6rzzfhny0qdp40w9jz4m98g9hdtmzd4fdg6gc0epknezg0y65',
+          cardForge: 'component_tdx_2_1czsdnwqurcmdzhv3yj94lxhc92ayjlpguaz7nf30mry0s5avy7fk30'
         },
         xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
         accounts: {
