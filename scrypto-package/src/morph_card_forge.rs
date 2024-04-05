@@ -149,7 +149,7 @@ mod morph_card_forge {
 
         pub fn mint_random_card(&mut self, rand_num: Decimal, user_id: UserId) -> Bucket {
             assert!(
-                rand_num >= dec!(0) && rand_num < dec!(1),
+                rand_num >= dec!(0) && rand_num <= dec!(1),
                 "rand_num must be between 0 and 1 inclusive"
             );
 

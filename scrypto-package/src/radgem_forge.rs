@@ -84,7 +84,7 @@ mod radgem_forge {
 
         fn assign_material(&self, n: Decimal) -> String {
             assert!(
-                n >= dec!(0) && n < dec!(1),
+                n >= dec!(0) && n <= dec!(1),
                 "rand_num must be between 0 and 1 inclusive"
             );
 
@@ -98,7 +98,7 @@ mod radgem_forge {
 
         fn assign_color(&self, n: Decimal) -> String {
             assert!(
-                n >= dec!(0) && n < dec!(1),
+                n >= dec!(0) && n <= dec!(1),
                 "rand_num must be between 0 and 1 inclusive"
             );
 
