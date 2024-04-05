@@ -13,7 +13,8 @@ export const Queues = {
 export const EventJobType = {
   QuestRewardDeposited: 'QuestRewardDeposited',
   QuestRewardClaimed: 'QuestRewardClaimed',
-  UserBadge: 'UserBadge'
+  UserBadge: 'UserBadge',
+  JettyReceivedClams: 'JettyReceivedClams'
 } as const
 
 export type EventJobType = keyof typeof EventJobType

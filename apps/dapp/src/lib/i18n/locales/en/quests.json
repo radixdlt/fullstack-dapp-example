@@ -12,6 +12,7 @@
   "radquest-logo-alt": "RadQuest Logo",
   "completeQuest": "Complete Quest",
   "intro-begin-quest": "Begin Quest",
+  "okButton": "OK",
   "WelcomeToRadQuest": {
     "requirements": {},
     "title": "Welcome to RadQuest",
@@ -57,5 +58,15 @@
     "verifyOtpText": "Enter the 6-digit code sent to",
     "allowMarketing": "I allow RadQuest to add me to the marketing newsletter",
     "connectAccount": "Connect Account"
+  },
+  "TransferTokens": {
+    "requirements": {
+      "JettyReceivedClams": "Send Clams to Jetty"
+    },
+    "title": "Transfer Tokens",
+    "description": "Transfer tokens to another account",
+    "introDescription": "Transfer tokens to another account to earn your reward.",
+    "copyTextButton_copy": "Copy",
+    "copyTextButton_copied": "Copied!"
   }
 }

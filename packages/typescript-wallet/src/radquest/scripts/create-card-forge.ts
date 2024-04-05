@@ -1,10 +1,10 @@
-import { Addresses } from 'common'
 import { createCardForge } from '../helpers/createCardForge'
 import { mintAdminBadge } from '../helpers/mintAdminBadge'
+import { config } from '../../config'
 
 mintAdminBadge({
-  adminBadgeAddress: Addresses(2).badges.adminBadgeAddress,
-  superAdminBadgeAddress: Addresses(2).badges.superAdminBadgeAddress
+  adminBadgeAddress: config.radQuest.badges.adminBadgeAddress,
+  superAdminBadgeAddress: config.radQuest.badges.superAdminBadgeAddress
 }).then(() => {
   createCardForge()
 })

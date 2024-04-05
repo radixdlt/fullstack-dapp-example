@@ -8,11 +8,21 @@ export const createEnergyCard = () => {
             CALL_METHOD
             Address("${wellKnownAddresses.accountAddress.payerAccount}")
             "lock_fee"
-            Decimal("5000")
+            Decimal("500")
         ;
         
         CREATE_NON_FUNGIBLE_RESOURCE
-            Enum<0u8>()
+        Enum<1u8>(
+            Enum<2u8>(
+                Enum<0u8>(
+                    Enum<0u8>(
+                        Enum<1u8>(
+                            Address("${config.radQuest.badges.superAdminBadgeAddress}"),
+                        )
+                    )
+                )
+            )
+        )
             Enum<3u8>()
             true
             Enum<0u8>(

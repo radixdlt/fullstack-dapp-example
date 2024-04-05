@@ -17,7 +17,7 @@ export const createClamResource = () => {
                   Enum<0u8>(
                       Enum<0u8>(
                           Enum<1u8>(
-                              Address("${config.radQuest.badges.adminBadgeAddress}"),
+                              Address("${config.radQuest.badges.superAdminBadgeAddress}"),
                           )
                       )
                   )
@@ -27,19 +27,43 @@ export const createClamResource = () => {
           0u8
           Tuple(
             # Mint Roles (if None: defaults to DenyAll, DenyAll)
-            Some(         
+            Enum<1u8>(
               Tuple(
-                None, # Minter (if None: defaults to Owner)
-                Some(Enum<AccessRule::DenyAll>()) # Minter Updater (if None: defaults to Owner)
+                  Enum<1u8>(
+                      Enum<2u8>(
+                          Enum<0u8>(
+                              Enum<0u8>(
+                                  Enum<1u8>(
+                                      Address("${config.radQuest.badges.adminBadgeAddress}")
+                                  )
+                              )
+                          )
+                      )
+                  ),
+                  Enum<1u8>(
+                      Enum<1u8>()
+                  )
               )
-            ),
+          ),
             # Burn Roles (if None: defaults to DenyAll, DenyAll)
-            Some(         
+            Enum<1u8>(
               Tuple(
-                None,  
-                Some(Enum<AccessRule::DenyAll>())
+                  Enum<1u8>(
+                      Enum<2u8>(
+                          Enum<0u8>(
+                              Enum<0u8>(
+                                  Enum<1u8>(
+                                      Address("${config.radQuest.badges.adminBadgeAddress}")
+                                  )
+                              )
+                          )
+                      )
+                  ),
+                  Enum<1u8>(
+                      Enum<1u8>()
+                  )
               )
-            ),
+          ),
             # Freeze Roles (if None: defaults to DenyAll, DenyAll)
             None,
             # Recall Roles (if None: defaults to DenyAll, DenyAll)
@@ -62,7 +86,17 @@ export const createClamResource = () => {
               ),
               Map<String, Enum>(
                 # Metadata roles
-                "metadata_setter" => None,
+                "metadata_setter" => Enum<1u8>(
+                  Enum<2u8>(
+                      Enum<0u8>(
+                          Enum<0u8>(
+                              Enum<1u8>(
+                                  Address("${config.radQuest.badges.superAdminBadgeAddress}"),
+                              )
+                          )
+                      )
+                  )
+              ),
                 # Metadata setter role
                 "metadata_setter_updater" => None,
                 # Metadata locker role

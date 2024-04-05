@@ -14,60 +14,25 @@ export const QuestCategory = {
   dApp: 'dApp'
 } as const
 
+export type EventId = keyof typeof EventId
+
+export const EventId = {
+  DepositUserBadge: 'DepositUserBadge',
+  JettyReceivedClams: 'JettyReceivedClams'
+} as const
+
 export type FungibleToken = { amount: number }
 
 export type QuestRewards = {
   xrd: FungibleToken
   element: FungibleToken
+  clam: FungibleToken
+  energyCard: FungibleToken
 }
 
 export type QuestReward = {
   [Key in keyof QuestRewards]: QuestRewards[Key] & { name: Key }
 }[keyof QuestRewards]
-
-export type EventId = keyof typeof EventId
-
-export const EventId = {
-  DepositUserBadge: 'DepositUserBadge'
-} as const
-
-export type QuestPageContents = {
-  markdown: { path: string }
-  component: { name: string }
-}
-
-export type QuestPageContent = {
-  [Key in keyof QuestPageContents]: QuestPageContents[Key] & { type: Key }
-}[keyof QuestPageContents]
-
-export type Pages = {
-  QuestPage: {
-    content: QuestPageContent[]
-    actions?: Partial<{
-      next: string
-      previous: string
-    }>
-  }
-  JettyPage: {
-    jetty: { emotion: 'Happy' | 'Excited' | 'Thinking' | 'Sad' | 'Greeting' | 'Playful' }
-    content: QuestPageContent[]
-    actions?: Partial<{
-      next: string
-      previous: string
-    }>
-  }
-}
-
-export type Page = {
-  [Key in keyof Pages]: Pages[Key] & { type: Key }
-}[keyof Pages]
-
-export type QuestContentDefinition = {
-  title: string
-  description: string
-  requirements?: Requirements
-  pages: Page[]
-}
 
 export type Language = keyof typeof Language
 
@@ -99,8 +64,9 @@ export type QuestId =
   | 'GetRadixWallet'
   | 'LoginWithWallet'
   | 'FirstTransactionQuest'
+  | 'TransferTokens'
 
-export const QuestDefinitions = (networkId: number): { [key in QuestId]: QuestDefinition } => {
+export const QuestDefinitions = (networkId: number): { [key: string]: QuestDefinition } => {
   const { badges } = getEntityAddresses(networkId)
 
   return {
@@ -142,6 +108,10 @@ export const QuestDefinitions = (networkId: number): { [key in QuestId]: QuestDe
         {
           name: 'element',
           amount: 20
+        },
+        {
+          name: 'clam',
+          amount: 25
         }
       ],
       preRequisites: ['LoginWithWallet'],
@@ -154,6 +124,36 @@ export const QuestDefinitions = (networkId: number): { [key in QuestId]: QuestDe
           type: 'offLedger'
         },
         [EventId.DepositUserBadge]: {
+          type: 'event',
+          eventName: 'DepositEvent',
+          matchField: {
+            value: badges.userBadgeAddress,
+            kind: 'Reference',
+            type_name: 'ResourceAddress'
+          }
+        }
+      }
+    },
+    TransferTokens: {
+      category: 'Basic',
+      rewards: [
+        {
+          name: 'element',
+          amount: 10
+        },
+        {
+          name: 'clam',
+          amount: 25
+        },
+        {
+          name: 'energyCard',
+          amount: 1
+        }
+      ],
+      preRequisites: ['FirstTransactionQuest'],
+      minutesToComplete: 3,
+      requirements: {
+        [EventId.JettyReceivedClams]: {
           type: 'event',
           eventName: 'DepositEvent',
           matchField: {

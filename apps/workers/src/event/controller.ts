@@ -8,11 +8,13 @@ import { config } from '../config'
 import { EventError, PrismaClient } from 'database'
 import { getUserIdFromDepositUserBadgeEvent } from './helpers/getUserIdFromDepositUserBadgeEvent'
 import { getDataFromQuestRewardsEvent } from './helpers/getDataFromQuestRewardsEvent'
-import { getXrdAmountFromDepositEvent } from './helpers/getXrdAmountFromDepositEvent'
+import { getAmountFromDepositEvent } from './helpers/getAmountFromDepositEvent'
 import BigNumber from 'bignumber.js'
 import { sumOfXrdRewards } from './helpers/sumOfXrdRewards'
 import { databaseTransactions } from './helpers/databaseTransactions'
 import { getFirstTransactionAuditResources } from './helpers/getFirstTransactionAuditResources'
+import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent'
+import { getAmountFromWithdrawEvent } from './helpers/getAmountFromWithdrawEvent'
 
 export type EventWorkerController = ReturnType<typeof EventWorkerController>
 export const EventWorkerController = ({
@@ -129,7 +131,7 @@ export const EventWorkerController = ({
     const handleUserBadgeDeposited = () => {
       const questId = 'FirstTransactionQuest'
       const userId = getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited)
-      const xrdAmount = getXrdAmountFromDepositEvent(job.data.relevantEvents.XrdDeposited)
+      const xrdAmount = getAmountFromDepositEvent(job.data.relevantEvents.XrdDeposited)
 
       return ensureValidData(transactionId, { userId, xrdAmount })
         .map(({ userId, xrdAmount }) => ({ userId, xrdAmount: BigNumber(xrdAmount) }))
@@ -178,6 +180,61 @@ export const EventWorkerController = ({
         )
     }
 
+    const handleJettyReceivedClams = async () => {
+      const questId = 'TransferTokens'
+      const userId = await getUserIdFromWithdrawEvent(
+        job.data.relevantEvents.WithdrawEvent,
+        dbClient
+      )
+
+      const amount = getAmountFromWithdrawEvent(
+        job.data.relevantEvents.WithdrawEvent,
+        config.radQuest.resources.clamAddress
+      )
+
+      return ensureValidData(transactionId, { userId })
+        .map(({ userId }) => ({ userId }))
+        .andThen(({ userId }) =>
+          ensureUserExists(userId, transactionId).andThen(({ id }) =>
+            db
+              .jettyReceivedClams({
+                userId: id,
+                amount: parseInt(amount)
+              })
+              .andThen(() =>
+                ResultAsync.combine([
+                  hasAllRequirements(questId, userId).andThen((hasAll) =>
+                    hasAll
+                      ? transactionModel(childLogger)
+                          .add({
+                            userId,
+                            transactionKey: `${questId}:DepositReward`,
+                            attempt: 0
+                          })
+                          .andThen(() =>
+                            transactionQueue.add({
+                              type: 'DepositReward',
+                              userId,
+                              questId,
+                              attempt: 0,
+                              transactionKey: `${questId}:DepositReward`,
+                              traceId
+                            })
+                          )
+                      : okAsync('')
+                  ),
+                  notificationApi.send(userId, {
+                    type: NotificationType.QuestRequirementCompleted,
+                    questId: questId,
+                    requirementId: 'JettyReceivedClams',
+                    traceId
+                  })
+                ])
+              )
+          )
+        )
+    }
+
     switch (type) {
       case 'QuestRewardDeposited':
         return handleRewardDeposited()
@@ -185,6 +242,8 @@ export const EventWorkerController = ({
         return handleRewardClaimed()
       case 'UserBadge':
         return handleUserBadgeDeposited()
+      case 'JettyReceivedClams':
+        return handleJettyReceivedClams()
 
       default:
         childLogger.error({
