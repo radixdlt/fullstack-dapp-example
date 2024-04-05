@@ -3,6 +3,16 @@ CALL_METHOD
     "lock_fee"
     Decimal("5000")
 ;
+CALL_METHOD
+    Address("${account}")
+    "withdraw"
+    Address("${admin_badge}")
+    Decimal("1")
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("${admin_badge}")
+    Bucket("admin_badge")
+;
 CALL_FUNCTION
     Address("${package}")
     "QuestRewards"
@@ -18,7 +28,7 @@ CALL_FUNCTION
             )
         )
     )
-    Address("${admin_badge}")
+    Bucket("admin_badge")
     Address("${user_badge}")
     Address("${kyc_badge}")
 ;

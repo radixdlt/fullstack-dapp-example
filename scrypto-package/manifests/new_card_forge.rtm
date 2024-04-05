@@ -28,8 +28,7 @@ CALL_FUNCTION
             )
         )
     )
-    # admin_badge should be super_admin_badge
-    Address("${admin_badge}")
+    Address("${super_admin_badge}")
     Bucket("admin_badge")
     Address("${morph_card}")
 ;

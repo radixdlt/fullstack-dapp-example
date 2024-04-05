@@ -23,13 +23,10 @@ TAKE_FROM_WORKTOP
 CALL_METHOD
     Address("${quest_rewards}")
     "deposit_reward"
+    # User ID
     "#1#"
+    # Quest ID
     "1"
     # Array of Buckets to deposit
     Array<Bucket>(Bucket("bucket1"),)
 ;
-# CALL_METHOD
-#     Address("${account}")
-#     "deposit_batch"
-#     Expression("ENTIRE_WORKTOP")
-# ;
