@@ -150,6 +150,9 @@ export const QuestDefinitions = (networkId: number): { [key in QuestId]: QuestDe
         VerifyPhoneNumber: {
           type: 'offLedger'
         },
+        ConnectAccount: {
+          type: 'offLedger'
+        },
         [EventId.DepositUserBadge]: {
           type: 'event',
           eventName: 'DepositEvent',

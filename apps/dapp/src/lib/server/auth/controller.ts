@@ -5,7 +5,7 @@ import { Rola } from '@radixdlt/rola'
 import { SignedChallenge } from '@radixdlt/radix-dapp-toolkit'
 import { GatewayApi, type ApiError } from 'common'
 
-import { err, errAsync, ok, ResultAsync } from 'neverthrow'
+import { err, errAsync, ok } from 'neverthrow'
 import { JWT } from './jwt'
 import { AuthModel } from './model'
 import type { Cookies } from '@sveltejs/kit'
@@ -60,31 +60,21 @@ export const AuthController = ({
     ctx: ControllerMethodContext,
     proofs: {
       personaProof: SignedChallenge
-      accountProof: SignedChallenge
     },
     cookies: Cookies
   ): ControllerMethodOutput<{
     authToken: string
     headers: { ['Set-Cookie']: string }
   }> => {
-    const { personaProof, accountProof } = proofs
-    ctx.logger.debug({ personaProof, accountProof, method: 'login', event: 'start' })
+    const { personaProof } = proofs
+    ctx.logger.debug({ personaProof, method: 'login', event: 'start' })
     const parsedPersonaResult = SignedChallenge.safeParse(personaProof)
-    const parsedAccountResult = SignedChallenge.safeParse(accountProof)
-    if (!parsedPersonaResult.success || !parsedAccountResult.success) {
+    if (!parsedPersonaResult.success) {
       if (!parsedPersonaResult.success) {
         ctx.logger.error({
           method: 'login.parseSignedChallenge',
           event: 'error',
           error: parsedPersonaResult.error
-        })
-      }
-
-      if (!parsedAccountResult.success) {
-        ctx.logger.error({
-          method: 'login.parseSignedChallenge',
-          event: 'error',
-          error: parsedAccountResult.error
         })
       }
 
@@ -118,27 +108,23 @@ export const AuthController = ({
         })
       )
       .andThen(() =>
-        ResultAsync.combine([
-          verifySignedChallenge(personaProof).mapErr((error) => {
+        verifySignedChallenge(personaProof)
+          .mapErr((error) => {
             ctx.logger.error({ error, method: 'login.verifyPersonaProof', event: 'error' })
             return error
-          }),
-          verifySignedChallenge(accountProof).mapErr((error) => {
-            ctx.logger.error({ error, method: 'login.verifyAccountProof', event: 'error' })
-            return error
           })
-        ]).mapErr((error) => {
-          return {
-            httpResponseCode: 400,
-            reason: error.reason,
-            jsError: error.jsError
-          } satisfies ApiError
-        })
+          .mapErr((error) => {
+            return {
+              httpResponseCode: 400,
+              reason: error.reason,
+              jsError: error.jsError
+            } satisfies ApiError
+          })
       )
       .map(() => {
         ctx.logger.debug({ method: 'login.verifiedSignedChallenges', event: 'success' })
       })
-      .andThen(() => userModel(ctx.logger).create(personaProof.address, accountProof.address))
+      .andThen(() => userModel(ctx.logger).create(personaProof.address))
       .andThen(({ id }) =>
         userQuestModel(ctx.logger)
           .addCompletedRequirement('LoginWithWallet', id, 'ConnectWallet')

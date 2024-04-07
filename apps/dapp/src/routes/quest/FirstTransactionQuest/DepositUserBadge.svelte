@@ -74,7 +74,7 @@
     })
 
     rdt.then(() => {
-      const address = $user?.accountAddress || ''
+      const address = $user!.accountAddress!
       const gatewayApi = GatewayApi(publicConfig.networkId)
       gatewayApi.callApi('getEntityDetailsVaultAggregated', [address]).map(([entityDetails]) => {
         const hasUserBadge = entityDetails.non_fungible_resources.items

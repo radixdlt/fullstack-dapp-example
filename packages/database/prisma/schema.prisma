@@ -14,7 +14,7 @@ datasource db {
 model User {
   id                String          @id @default("")
   identityAddress   String          @unique
-  accountAddress    String          @unique
+  accountAddress    String?         
   
   events                     Event[]
   notifications              Notification[]

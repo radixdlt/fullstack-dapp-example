@@ -8,6 +8,10 @@
   import { ErrorReason } from '$lib/errors'
   import type { PageData } from './$types'
   import EnterEmail from './EnterEmail.svelte'
+  import { rdt } from '$lib/rdt'
+  import { OneTimeDataRequestBuilder, SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
+  import { userApi } from '$lib/api/user-api'
+  import { user } from '../../../stores'
 
   export let data: PageData
 
@@ -40,6 +44,25 @@
     await otpApi.sendOneTimePassword(phoneNumber).mapErr(handleApiError)
     if (otpError) return
     quest.actions.next()
+  }
+
+  const connectAccount = () => {
+    rdt.then((rdt) => {
+      rdt.walletApi
+        .sendOneTimeRequest(OneTimeDataRequestBuilder.accounts().exactly(1).withProof())
+        .map(async ({ accounts, proofs }) => {
+          const accountProof = proofs.find(
+            (proof) => proof.type === 'account'
+          )! as SignedChallengeAccount
+
+          const result = await userApi.setAccountAddress(accounts[0].address, accountProof)
+
+          if (result.isOk()) {
+            $user!.accountAddress = accounts[0].address
+            quest.actions.next()
+          }
+        })
+    })
   }
 
   let verifyOTP: VerifyOtp
@@ -77,6 +100,18 @@
         action: {
           text: `${$i18n.t('quests:FirstTransactionQuest.verifyOtpButton')}`,
           onClick: () => verifyOTP.verifyOneTimePassword()
+        }
+      }
+    },
+    {
+      id: 'connectAccount',
+      type: 'regular',
+      skip: data.requirements?.ConnectAccount,
+      footer: {
+        type: 'action',
+        action: {
+          text: $i18n.t('quests:FirstTransactionQuest.connectAccount'),
+          onClick: connectAccount
         }
       }
     },
@@ -122,7 +157,12 @@
     />
   {/if}
 
+  {#if render('connectAccount')}
+    {@html data.text['connectAccount.md']}
+  {/if}
+
   {#if render('depositUserBadge')}
+    {@html data.text['userBadge.md']}
     <DepositUserBadge on:next={next} questId={data.id} />
   {/if}
 
