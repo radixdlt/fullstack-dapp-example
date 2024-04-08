@@ -6,6 +6,7 @@
   import type { QuestReward } from 'content'
 
   export let rewards: Readonly<QuestReward[]>
+  export let loading = false
 </script>
 
 <slot />
@@ -21,7 +22,7 @@
 </div>
 
 <div class="btn">
-  <Button on:click>{$i18n.t('quests:claimButton')}</Button>
+  <Button on:click {loading}>{$i18n.t('quests:claimButton')}</Button>
 </div>
 
 <style lang="scss">

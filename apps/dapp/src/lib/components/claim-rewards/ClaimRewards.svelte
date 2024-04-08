@@ -27,6 +27,8 @@
   })
 
   const handleClaimRewards = () => {
+    loading = true
+
     rdt.then((rdt): void => {
       const accountAddress = rdt.walletApi.getWalletData().accounts[0].address
       rdt.walletApi
@@ -54,9 +56,17 @@
             Expression("ENTIRE_WORKTOP");
         `
         })
-        .map(() => dispatch('next'))
+        .map(() => {
+          loading = false
+          dispatch('next')
+        })
+        .mapErr(() => {
+          loading = false
+        })
     })
   }
+
+  let loading = false
 </script>
 
-<ClaimRewardsUI rewards={questDefinition.rewards} on:click={handleClaimRewards} />
+<ClaimRewardsUI {loading} rewards={questDefinition.rewards} on:click={handleClaimRewards} />
