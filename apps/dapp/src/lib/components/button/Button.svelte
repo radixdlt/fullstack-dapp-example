@@ -1,10 +1,13 @@
 <script lang="ts">
   export let disabled = false
   export let secondary = false
+  export let loading = false
 </script>
 
-<button on:click class:disabled class:primary={!secondary} class:secondary>
-  <slot />
+<button on:click class:disabled class:primary={!secondary} class:secondary class:loading>
+  {#if !loading}
+    <slot />
+  {/if}
 </button>
 
 <style lang="scss">
@@ -50,5 +53,29 @@
     transition:
       color 0.2s ease-in-out,
       background 0.2s ease-in-out;
+  }
+
+  .loading {
+    cursor: not-allowed;
+    pointer-events: none;
+
+    &::after {
+      content: '';
+      width: 1rem;
+      height: 1rem;
+      border: 0.2rem solid var(--color-light);
+      border-top-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 </style>

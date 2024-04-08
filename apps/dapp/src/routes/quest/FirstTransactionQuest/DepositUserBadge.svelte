@@ -50,9 +50,16 @@
 
   const handleMintUserBadge = () => {
     if (mintingInProgress) return
-    userApi.mintUserBadge().map(async () => {
-      state = 'minted'
-    })
+    mintingInProgress = true
+    userApi
+      .mintUserBadge()
+      .map(async () => {
+        mintingInProgress = false
+        state = 'minted'
+      })
+      .mapErr(() => {
+        mintingInProgress = false
+      })
   }
 
   onMount(() => {
@@ -111,7 +118,7 @@
   {#if state === 'loading'}
     <div>Checking third party deposits...</div>
   {:else if state === 'canAcceptUserBadge'}
-    <Button on:click={handleMintUserBadge} disabled={mintingInProgress}>Mint User Badge</Button>
+    <Button on:click={handleMintUserBadge} loading={mintingInProgress}>Mint User Badge</Button>
   {:else if state === 'minted'}
     Minted!
   {:else if state === 'updateDepositRules'}
