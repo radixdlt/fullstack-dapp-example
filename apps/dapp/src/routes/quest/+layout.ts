@@ -51,7 +51,7 @@ export const load: LayoutLoad = async ({ url, fetch }) => {
   const unsubText = i18n.subscribe((i18n) => {
     resolveText([
       i18n.t(`${id}.title`, { ns: 'quests' }),
-      i18n.t(`${id}.description`, { ns: 'quests' }),
+      i18n.t(`${id}.introDescription`, { ns: 'quests' }),
       i18n.t(`${id}.requirements`, { ns: 'quests', returnObjects: true })
     ])
   })
