@@ -8,8 +8,8 @@
   import { completeQuest, useLocalStorage } from '$lib/utils/local-storage'
   import ClaimRewards from './ClaimRewards.svelte'
   import VerifyRequirements from './VerifyRequirements.svelte'
-  import type { QuestId } from 'content'
   import { i18n } from '$lib/i18n/i18n'
+  import type { QuestId, Requirement } from 'content'
 
   export let id: QuestId
   export let title: ComponentProps<Quest>['title']
@@ -17,7 +17,12 @@
   export let minutesToComplete: ComponentProps<Quest>['minutesToComplete']
   export let rewards: ComponentProps<Quest>['rewards']
   export let steps: ComponentProps<Quest>['steps']
-  export let requirements: ComponentProps<Quest>['requirements'] = []
+  export let requirements: {
+    id: QuestId
+    text: string
+    complete: boolean
+    type: Requirement['type']
+  }[] = []
   export let nextDisabled: ComponentProps<Quest>['nextDisabled'] = false
   export let jettyClaimHtml: string
   export let jettyCompleteHtml: string
@@ -42,6 +47,11 @@
   })
 
   const _completeQuest = () => {
+    requirements.forEach(({ id: requirementId, type }) => {
+      if (type === 'content') {
+        questApi.completeContentRequirement(id, requirementId)
+      }
+    })
     completeQuest(id, !!$user)
     closeQuest()
   }

@@ -38,7 +38,9 @@ export type Language = keyof typeof Language
 
 export const Language = { en: 'en' } as const
 
-type Requirements = { [key: string]: OnLedgerRequirement | OffLedgerRequirement }
+type Requirements = { [key: string]: Requirement }
+
+export type Requirement = OnLedgerRequirement | OffLedgerRequirement | ContentRequirement
 
 type OnLedgerRequirement = {
   type: 'event'
@@ -48,6 +50,10 @@ type OnLedgerRequirement = {
 
 type OffLedgerRequirement = {
   type: 'offLedger'
+}
+
+type ContentRequirement = {
+  type: 'content'
 }
 
 export type QuestDefinition = {
@@ -75,14 +81,22 @@ export const QuestDefinitions = (networkId: number): { [key: string]: QuestDefin
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: [],
       minutesToComplete: 3,
-      requirements: {}
+      requirements: {
+        Introduction: {
+          type: 'content'
+        }
+      }
     },
     WhatIsRadix: {
       category: 'Basic',
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: ['WelcomeToRadQuest'],
       minutesToComplete: 3,
-      requirements: {}
+      requirements: {
+        LearnAboutRadix: {
+          type: 'content'
+        }
+      }
     },
     GetRadixWallet: {
       category: 'Basic',

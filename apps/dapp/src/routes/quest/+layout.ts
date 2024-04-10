@@ -118,8 +118,10 @@ export const load: LayoutLoad = async ({ url, fetch }) => {
     questProps: {
       ...data.questProps,
       requirements: Object.entries(requirements).map((value) => ({
+        id: value[0] as QuestId,
         text: requirementsText[value[0]],
-        complete: value[1]
+        complete: value[1],
+        type: quest.requirements[value[0]].type
       }))
     },
     requirements

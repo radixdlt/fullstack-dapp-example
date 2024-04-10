@@ -135,6 +135,34 @@ const UserQuestController = ({
       }
     })
 
+  const completeContentRequirement = (
+    ctx: ControllerMethodContext,
+    questId: QuestId,
+    userId: string,
+    requirementId: string
+  ) => {
+    const questDefinition = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId]
+
+    if (questDefinition.requirements[requirementId].type !== 'content') {
+      return errAsync(createApiError(ErrorReason.invalidRequirement, 400)())
+    }
+
+    const questStatus = userQuestModel(ctx.logger)
+      .getQuestStatus(userId, questId)
+      .andThen((questStatus) => {
+        if (!questStatus) {
+          return errAsync(createApiError(ErrorReason.questAlreadyCompleted, 400)())
+        }
+        return okAsync(questStatus)
+      })
+
+    return questStatus.andThen(() =>
+      userQuestModel(ctx.logger)
+        .addCompletedRequirement(questId, userId, requirementId)
+        .map(() => ({ httpResponseCode: 200, data: undefined }))
+    )
+  }
+
   return {
     getQuestsProgress,
     completeQuest,
@@ -142,7 +170,8 @@ const UserQuestController = ({
     getQuestProgress,
     saveProgress,
     getSavedProgress,
-    deleteSavedProgress
+    deleteSavedProgress,
+    completeContentRequirement
   }
 }
 
