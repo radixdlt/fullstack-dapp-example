@@ -6,8 +6,12 @@
   import { closeQuest } from './+layout.svelte'
   import { user } from '../../stores'
   import { completeQuest, useLocalStorage } from '$lib/utils/local-storage'
+  import ClaimRewards from './ClaimRewards.svelte'
+  import VerifyRequirements from './VerifyRequirements.svelte'
+  import type { QuestId } from 'content'
+  import { i18n } from '$lib/i18n/i18n'
 
-  export let id: ComponentProps<Quest>['id']
+  export let id: QuestId
   export let title: ComponentProps<Quest>['title']
   export let description: ComponentProps<Quest>['description']
   export let minutesToComplete: ComponentProps<Quest>['minutesToComplete']
@@ -15,6 +19,8 @@
   export let steps: ComponentProps<Quest>['steps']
   export let requirements: ComponentProps<Quest>['requirements'] = []
   export let nextDisabled: ComponentProps<Quest>['nextDisabled'] = false
+  export let jettyClaimHtml: string
+  export let jettyCompleteHtml: string
 
   export const actions = {
     next: () => {},
@@ -46,7 +52,6 @@
   on:close={closeQuest}
   on:complete={_completeQuest}
   on:progressUpdated={(e) => saveProgress(e.detail)}
-  {id}
   {title}
   {description}
   {minutesToComplete}
@@ -58,24 +63,39 @@
   let:back
   let:next
   let:render
+  let:lastProgress
+  let:progress
 >
   <slot {back} {next} {render} completeQuest={_completeQuest} />
 
-  <slot
-    name="jetty"
-    slot="jetty"
-    let:render
-    let:dialog
-    let:Button
-    let:Buttons
-    let:next
-    let:back
-    {render}
-    {dialog}
-    {Button}
-    {Buttons}
-    {next}
-    {back}
-    completeQuest={_completeQuest}
-  />
+  <svelte:fragment slot="jetty" let:render let:dialog let:Button let:Buttons let:next let:back>
+    <slot
+      name="jetty"
+      {render}
+      {dialog}
+      {Button}
+      {Buttons}
+      {next}
+      {back}
+      completeQuest={_completeQuest}
+    />
+    {#if render('claimRewards')}
+      <ClaimRewards questId={id} on:next={next}>
+        {@html jettyClaimHtml}
+      </ClaimRewards>
+    {/if}
+
+    {#if render('complete')}
+      {@html jettyCompleteHtml}
+
+      <Button on:click={_completeQuest}>{$i18n.t('quests:completeQuest')}</Button>
+    {/if}
+  </svelte:fragment>
+
+  {#if render('requirements')}
+    <VerifyRequirements
+      questId={id}
+      on:all-requirements-met={lastProgress < progress ? next : back}
+    />
+  {/if}
 </Quest>

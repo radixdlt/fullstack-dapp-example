@@ -86,11 +86,8 @@
         type: 'navigation'
       }
     },
-
     {
-      id: 'complete',
-      type: 'jetty',
-      dialogs: 1
+      type: 'complete'
     }
   ]}
   let:render
@@ -134,12 +131,4 @@
   {#if render('text10')}
     {@html data.text['9.md']}
   {/if}
-
-  <svelte:fragment slot="jetty" let:render let:Button let:completeQuest>
-    {#if render('complete')}
-      {@html data.text['10.md']}
-
-      <Button on:click={completeQuest}>Complete</Button>
-    {/if}
-  </svelte:fragment>
 </Quest>

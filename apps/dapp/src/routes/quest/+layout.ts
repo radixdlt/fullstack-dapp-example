@@ -81,18 +81,21 @@ export const load: LayoutLoad = async ({ url, fetch }) => {
 
   unsubUser()
 
-  if (!_user)
-    return {
-      questProps: {
-        id,
-        title,
-        description,
-        minutesToComplete: quest.minutesToComplete,
-        rewards: quest.rewards
-      },
+  const data = {
+    questProps: {
       id,
-      text: quest.text
-    }
+      title,
+      description,
+      minutesToComplete: quest.minutesToComplete,
+      rewards: quest.rewards,
+      jettyClaimHtml: (quest.text['claim.md'] as string) ?? '',
+      jettyCompleteHtml: (quest.text['complete.md'] as string) ?? ''
+    },
+    id,
+    text: quest.text
+  }
+
+  if (!_user) return data
 
   const updateResult = await questApi.updateQuestProgress(id, 0, fetch)
 
@@ -111,19 +114,14 @@ export const load: LayoutLoad = async ({ url, fetch }) => {
   }
 
   return {
+    ...data,
     questProps: {
-      id,
-      title,
-      description,
-      minutesToComplete: quest.minutesToComplete,
-      rewards: quest.rewards,
+      ...data.questProps,
       requirements: Object.entries(requirements).map((value) => ({
         text: requirementsText[value[0]],
         complete: value[1]
       }))
     },
-    text: quest.text,
-    requirements,
-    id
+    requirements
   }
 }
