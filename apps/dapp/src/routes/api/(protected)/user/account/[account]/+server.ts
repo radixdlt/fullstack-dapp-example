@@ -3,7 +3,7 @@ import type { RequestHandler } from './$types'
 import { routeHandler } from '$lib/server/route-handler'
 
 /** @type {import('./$types').RequestHandler} */
-export const POST: RequestHandler = async ({ locals, params, request }) => {
+export const PUT: RequestHandler = async ({ locals, params, request }) => {
   const requestBody = await request.json()
 
   return routeHandler(() =>
