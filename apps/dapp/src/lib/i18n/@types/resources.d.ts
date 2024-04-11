@@ -31,24 +31,32 @@ interface Resources {
     completeQuest: 'Complete Quest'
     'intro-begin-quest': 'Begin Quest'
     WelcomeToRadQuest: {
-      requirements: {}
+      requirements: {
+        Introduction: 'Get introduced to RadQuest'
+      }
       title: 'Welcome to RadQuest'
       description: 'Your journey begins'
+      introDescription: 'Welcome to RadQuest! This is your first step to becoming a Radix expert. Complete the quests to earn rewards and learn more about Radix.'
     }
     WhatIsRadix: {
-      requirements: {}
+      requirements: {
+        LearnAboutRadix: 'Learn about the Radix network'
+      }
       title: 'Introduction to Radix'
       description: 'Become familiar with the Radix network'
+      introDescription: 'Radix is a decentralized network that aims to solve the scalability problem of blockchain technology. Learn more about Radix and how it works.'
     }
     GetRadixWallet: {
       requirements: {}
       title: 'The Radix Wallet'
       description: 'Get set up with the Radix Wallet'
+      introDescription: 'The Radix Wallet is your gateway to the Radix network. Download the wallet and get started.'
     }
     LoginWithWallet: {
       requirements: {}
       title: 'Login with Wallet'
       description: 'Login with your Radix Wallet'
+      introDescription: 'Login with your Radix Wallet to start earning rewards.'
     }
     FirstTransactionQuest: {
       requirements: {
@@ -57,6 +65,7 @@ interface Resources {
       }
       title: 'First Transaction'
       description: 'Make your first transaction'
+      introDescription: 'Make your first transaction on the Radix network to earn your first reward.'
       failedToSendOtp: 'Failed to send OTP'
       phoneNumberExists: 'Phone number exists'
       invalidPhoneNumber: 'Invalid phone number'
