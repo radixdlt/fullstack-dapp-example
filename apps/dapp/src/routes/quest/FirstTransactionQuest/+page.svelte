@@ -103,9 +103,7 @@
       type: 'claimRewards'
     },
     {
-      id: 'greeting',
-      type: 'jetty',
-      dialogs: 1
+      type: 'complete'
     }
   ]}
   let:render
@@ -134,15 +132,7 @@
     <EnterEmail bind:email bind:checked={sendNewsletter} />
   {/if}
 
-  <svelte:fragment
-    slot="jetty"
-    let:render
-    let:Button
-    let:Buttons
-    let:next
-    let:back
-    let:completeQuest
-  >
+  <svelte:fragment slot="jetty" let:render let:Button let:Buttons let:next let:back>
     {#if render('intro1')}
       {@html data.text['0.md']}
       <Button on:click={next}>OK</Button>
@@ -151,11 +141,6 @@
     {#if render('intro2')}
       {@html data.text['1.md']}
       <Buttons nextText="OK" on:back={back} on:next={next} />
-    {/if}
-
-    {#if render('greeting')}
-      {@html data.text['greeting.md']}
-      <Button on:click={completeQuest}>Great!</Button>
     {/if}
   </svelte:fragment>
 </Quest>

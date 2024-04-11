@@ -1,72 +1,41 @@
 <script lang="ts">
-  import ClaimRewardsUI from './ClaimRewardsUI.svelte'
-  import { publicConfig } from '$lib/public-config'
-  import { rdt } from '$lib/rdt'
-  import { user } from '../../../stores'
-  import { createEventDispatcher, onMount } from 'svelte'
-  import { QuestDefinitions, type Quests } from 'content'
-  import { questApi } from '$lib/api/quest-api'
+  import Button from '$lib/components/button/Button.svelte'
+  import Icon from '$lib/components/icon/Icon.svelte'
+  import { i18n } from '$lib/i18n/i18n'
+  import { typeToIcon } from '$lib/utils/type-to-icon'
+  import type { QuestReward } from 'content'
 
-  export let questId: keyof Quests
-
-  const questDefinition = QuestDefinitions(publicConfig.networkId)[questId]
-  const dispatch = createEventDispatcher<{
-    next: undefined
-  }>()
-
-  onMount(async () => {
-    const result = await questApi.getQuestInformation(questId)
-
-    if (result.isOk()) {
-      const { status } = result.value
-
-      if (status === 'REWARDS_CLAIMED') {
-        dispatch('next')
-      }
-    }
-  })
-
-  const handleClaimRewards = () => {
-    loading = true
-
-    rdt.then((rdt): void => {
-      const accountAddress = rdt.walletApi.getWalletData().accounts[0].address
-      rdt.walletApi
-        .sendTransaction({
-          transactionManifest: `
-          CALL_METHOD
-            Address("${accountAddress}")
-            "create_proof_of_non_fungibles"
-            Address("${publicConfig.badges.userBadgeAddress}")
-            Array<NonFungibleLocalId>(NonFungibleLocalId("<${$user?.id}>"));
-
-          POP_FROM_AUTH_ZONE
-            Proof("user_badge_proof");
-
-          CALL_METHOD
-            Address("${publicConfig.components.questRewards}")
-            "claim_reward"
-            "${questId}"
-            Proof("user_badge_proof")
-            None;
-
-          CALL_METHOD
-            Address("${accountAddress}")
-            "deposit_batch"
-            Expression("ENTIRE_WORKTOP");
-        `
-        })
-        .map(() => {
-          loading = false
-          dispatch('next')
-        })
-        .mapErr(() => {
-          loading = false
-        })
-    })
-  }
-
-  let loading = false
+  export let rewards: Readonly<QuestReward[]>
+  export let loading = false
 </script>
 
-<ClaimRewardsUI {loading} rewards={questDefinition.rewards} on:click={handleClaimRewards} />
+<slot />
+<div class="rewards">
+  <div><slot /></div>
+  {#each rewards as { name, amount }}
+    <div>
+      <Icon url={typeToIcon[name]} size="medium">
+        {amount}
+      </Icon>
+    </div>
+  {/each}
+</div>
+
+<div class="btn">
+  <Button on:click {loading}>{$i18n.t('quests:claimButton')}</Button>
+</div>
+
+<style lang="scss">
+  .rewards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xl);
+  }
+
+  .btn {
+    margin-top: var(--spacing-xl);
+    display: flex;
+    justify-content: center;
+  }
+</style>

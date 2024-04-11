@@ -16,6 +16,8 @@
 
   type ClaimRewardsStep = _Step<'claimRewards'> & { id: 'claimRewards' }
 
+  type CompleteStep = _Step<'complete'> & { id: 'complete' }
+
   type RegularStep = _Step<'regular'> & {
     footer?:
       | {
@@ -35,7 +37,7 @@
 </script>
 
 <script lang="ts">
-  import type { QuestReward, Quests } from 'content'
+  import type { QuestReward } from 'content'
   import QuestCard from './QuestCard.svelte'
   import Intro from './Intro.svelte'
   import NavigationFooter from './NavigationFooter.svelte'
@@ -45,7 +47,6 @@
   import JettyActionButtons from './JettyActionButtons.svelte'
   import { createEventDispatcher } from 'svelte'
 
-  export let id: keyof Quests
   export let title: string
   export let description: string
   export let minutesToComplete: number
@@ -55,6 +56,7 @@
     | JettyStep
     | Omit<RequirementStep, 'id'>
     | Omit<ClaimRewardsStep, 'id'>
+    | Omit<CompleteStep, 'id'>
   )[]
   export let requirements: {
     text: string
@@ -111,6 +113,14 @@
     if (step.type === 'claimRewards') {
       return {
         id: 'claimRewards',
+        type: 'jetty',
+        dialogs: 1
+      }
+    }
+
+    if (step.type === 'complete') {
+      return {
+        id: 'complete',
         type: 'jetty',
         dialogs: 1
       }
@@ -194,16 +204,7 @@
     <Intro {title} {description} {minutesToComplete} {rewards} {requirements} on:next={next} />
   {/if}
 
-  <slot {render} {next} {back} />
-
-  {#if render('requirements')}
-    {#await import('./VerifyRequirements.svelte') then { default: VerifyRequirements }}
-      <VerifyRequirements
-        questId={id}
-        on:all-requirements-met={lastProgress < progress ? next : back}
-      />
-    {/await}
-  {/if}
+  <slot {render} {next} {back} {lastProgress} {progress} />
 
   <svelte:fragment slot="footer" let:width let:animationDuration>
     {#if currentStep.type === 'regular' && currentStep.footer}
@@ -239,11 +240,5 @@
       {next}
       {back}
     />
-
-    {#if render('claimRewards')}
-      {#await import('../claim-rewards/ClaimRewards.svelte') then { default: ClaimRewards }}
-        <ClaimRewards questId={id} on:next={next} />
-      {/await}
-    {/if}
   </JettyDialog>
 {/if}

@@ -5,9 +5,9 @@
 </script>
 
 <button on:click class:disabled class:primary={!secondary} class:secondary class:loading>
-  {#if !loading}
+  <div class:hide-content={loading}>
     <slot />
-  {/if}
+  </div>
 </button>
 
 <style lang="scss">
@@ -60,6 +60,7 @@
     pointer-events: none;
 
     &::after {
+      position: absolute;
       content: '';
       width: 1rem;
       height: 1rem;
@@ -77,5 +78,9 @@
     to {
       transform: rotate(360deg);
     }
+  }
+
+  .hide-content {
+    visibility: hidden;
   }
 </style>
