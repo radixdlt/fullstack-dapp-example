@@ -62,18 +62,6 @@ describe('AuthController', () => {
       type: 'persona'
     } satisfies SignedChallenge
 
-    const accountProof = {
-      proof: {
-        publicKey: '89119f24a5c2bfd59df5a5d07313aa881149b1e35985ca085297eec6f062a607',
-        signature:
-          '4d86d029cfa0d68b21640bbc003e40b7a31c7420319e467a791363f6f49feccde674a20034f0f3f6e701981ac5ae667895eb7c825de0d9ee39298627c1c7310c',
-        curve: 'curve25519'
-      },
-      address: 'account_tdx_2_129qrj4z3nzn864zclzv2l0sv0653e667nnmhkd52ww6590na35dckw',
-      challenge: '3e6a245dae8caac3e4e08439da4783521417cc4c5789dadaab62638fd91ecbb5',
-      type: 'account'
-    } satisfies SignedChallenge
-
     mockCtx.prisma.challenge.delete.mockResolvedValue(
       Promise.resolve({
         challenge: personaProof.challenge,
@@ -118,8 +106,7 @@ describe('AuthController', () => {
     const result = await controller.login(
       methodCtx,
       {
-        personaProof,
-        accountProof
+        personaProof
       },
       ctx.cookies
     )

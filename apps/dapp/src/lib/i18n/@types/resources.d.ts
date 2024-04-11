@@ -61,6 +61,7 @@ interface Resources {
     FirstTransactionQuest: {
       requirements: {
         VerifyPhoneNumber: 'Verify your phone number'
+        ConnectAccount: 'Connect your account'
         DepositUserBadge: 'Deposit a user badge'
       }
       title: 'First Transaction'
@@ -77,6 +78,7 @@ interface Resources {
       verifyOtpButton: 'Verify'
       verifyOtpText: 'Enter the 6-digit code sent to'
       allowMarketing: 'I allow RadQuest to add me to the marketing newsletter'
+      connectAccount: 'Connect Account'
     }
   }
   transformGems: {

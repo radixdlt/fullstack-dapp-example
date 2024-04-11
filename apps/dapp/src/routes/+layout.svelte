@@ -59,18 +59,14 @@
       return result.value
     })
 
-    radixDappToolkit.walletApi.setRequestData(
-      DataRequestBuilder.persona().withProof(),
-      DataRequestBuilder.accounts().exactly(1).withProof()
-    )
+    radixDappToolkit.walletApi.setRequestData(DataRequestBuilder.persona().withProof())
 
     radixDappToolkit.walletApi.dataRequestControl(async (data) => {
       const { proofs } = data
       const personaProof = proofs.find((proof) => proof.type === 'persona')
-      const accountProof = proofs.find((proof) => proof.type === 'account')
-      if (personaProof && accountProof) {
+      if (personaProof) {
         // TODO: set the current user in a store
-        const result = await authApi.login(personaProof, accountProof)
+        const result = await authApi.login(personaProof)
 
         // TODO: handle login failure and give user some feedback
         if (result.isErr()) throw Error('Failed to login')
