@@ -50,21 +50,28 @@ export const getDataFromQuestRewardsEvent = (event: EventsItem) => {
               (field) => field.field_name === 'reward_amount' && field.kind === 'Enum'
             ) as ProgrammaticScryptoSborValueEnum
 
-            const fungibleAmount =
-              isDecimalSborValue(rewardAmount.fields[0]) && rewardAmount.fields[0].value
+            if (!resourceAddress || !rewardAmount) return
 
-            if (!fungibleAmount || !resourceAddress) {
-              return undefined
-            }
+            if (rewardAmount.variant_name === 'FungibleAmount') {
+              const fungibleAmount =
+                isDecimalSborValue(rewardAmount.fields[0]) && rewardAmount.fields[0].value
 
-            return {
-              resourceAddress: resourceAddress.value,
-              ...(rewardAmount.variant_name === 'FungibleAmount'
-                ? {
-                    type: 'fungible',
-                    amount: Number(fungibleAmount)
-                  }
-                : { type: 'nonFungible', localId: 'TODO' }) // TODO: get data about local IDs from event when we start depositing NFTs as rewards
+              return {
+                resourceAddress: resourceAddress.value,
+                type: 'fungible',
+                amount: Number(fungibleAmount)
+              }
+            } else {
+              const element = rewardAmount.fields.find(
+                (field) => field.kind === 'Array' && field.elements[0]
+              )!
+              if (element.kind !== 'NonFungibleLocalId') return
+
+              return {
+                resourceAddress: resourceAddress.value,
+                type: 'nonFungible',
+                localId: element.value
+              }
             }
           }
 

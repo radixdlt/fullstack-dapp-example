@@ -30,18 +30,15 @@ interface Resources {
     'radquest-logo-alt': 'RadQuest Logo'
     completeQuest: 'Complete Quest'
     'intro-begin-quest': 'Begin Quest'
+    okButton: 'OK'
     WelcomeToRadQuest: {
-      requirements: {
-        Introduction: 'Get introduced to RadQuest'
-      }
+      requirements: {}
       title: 'Welcome to RadQuest'
       description: 'Your journey begins'
       introDescription: 'Welcome to RadQuest! This is your first step to becoming a Radix expert. Complete the quests to earn rewards and learn more about Radix.'
     }
     WhatIsRadix: {
-      requirements: {
-        LearnAboutRadix: 'Learn about the Radix network'
-      }
+      requirements: {}
       title: 'Introduction to Radix'
       description: 'Become familiar with the Radix network'
       introDescription: 'Radix is a decentralized network that aims to solve the scalability problem of blockchain technology. Learn more about Radix and how it works.'
@@ -79,6 +76,16 @@ interface Resources {
       verifyOtpText: 'Enter the 6-digit code sent to'
       allowMarketing: 'I allow RadQuest to add me to the marketing newsletter'
       connectAccount: 'Connect Account'
+    }
+    TransferTokens: {
+      requirements: {
+        JettyReceivedClams: 'Send Clams to Jetty'
+      }
+      title: 'Transfer Tokens'
+      description: 'Transfer tokens to another account'
+      introDescription: 'Transfer tokens to another account to earn your reward.'
+      copyTextButton_copy: 'Copy'
+      copyTextButton_copied: 'Copied!'
     }
   }
   transformGems: {

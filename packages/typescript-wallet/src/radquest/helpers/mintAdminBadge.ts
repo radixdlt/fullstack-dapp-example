@@ -6,7 +6,7 @@ export const mintAdminBadge = ({
   superAdminBadgeAddress
 }: {
   superAdminBadgeAddress: string
-  accountAddress: string
+  accountAddress?: string
   adminBadgeAddress: string
 }) =>
   radixEngineClient
@@ -32,7 +32,7 @@ export const mintAdminBadge = ({
         ;
 
         CALL_METHOD
-          Address("${accountAddress}")
+          Address("${accountAddress ?? wellKnownAddresses.accountAddress.systemAccount}")
           "try_deposit_batch_or_abort"
           Expression("ENTIRE_WORKTOP")
           Enum<0u8>()

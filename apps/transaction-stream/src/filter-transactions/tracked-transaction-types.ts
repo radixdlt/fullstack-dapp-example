@@ -23,8 +23,20 @@ export type TrackedTransactions = Record<
   Record<string, (event: EventsItem) => boolean>
 >
 
-const resourceDeposited = (resource: string) => (event: EventsItem) => {
+const resourceDeposited = (resource: string, toAccount?: string) => (event: EventsItem) => {
   if (event.name !== 'DepositEvent' || event.data.kind !== 'Enum') return false
+
+  if (toAccount && toAccount !== (event.emitter as EventEmitter).entity.entity_address) return false
+
+  const resourceField = event.data.fields.find(
+    (field): field is ProgrammaticScryptoSborValueReference => field.kind === 'Reference'
+  )
+
+  return resourceField?.value === resource
+}
+
+const resourceWithdrawn = (resource: string) => (event: EventsItem) => {
+  if (event.name !== 'WithdrawEvent' || event.data.kind !== 'Enum') return false
 
   const resourceField = event.data.fields.find(
     (field): field is ProgrammaticScryptoSborValueReference => field.kind === 'Reference'
@@ -46,5 +58,12 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
   UserBadge: {
     UserBadgeDeposited: resourceDeposited(config.radQuest.badges.userBadgeAddress),
     XrdDeposited: resourceDeposited(config.radQuest.xrd)
+  },
+  JettyReceivedClams: {
+    DepositEvent: resourceDeposited(
+      config.radQuest.resources.clamAddress,
+      config.radQuest.accounts.jetty
+    ),
+    WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress)
   }
 })

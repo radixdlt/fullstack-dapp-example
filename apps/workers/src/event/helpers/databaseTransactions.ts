@@ -2,6 +2,7 @@ import { ResultAsync } from 'neverthrow'
 import { AppLogger, AuditResource, NotificationType } from 'common'
 import { AuditType, PrismaClient, QuestStatus } from 'database'
 import { EventId } from 'content'
+import { config } from '../../config'
 
 export const databaseTransactions = ({
   dbClient,
@@ -160,5 +161,41 @@ export const databaseTransactions = ({
       }
     )
 
-  return { rewardsDeposited, rewardsClaimed, userBadgeDeposited }
+  const jettyReceivedClams = ({ userId, amount }: { userId: string; amount: number }) => {
+    return ResultAsync.fromPromise(
+      dbClient.$transaction([
+        dbClient.completedQuestRequirement.create({
+          data: {
+            userId,
+            questId: 'TransferTokens',
+            requirementId: EventId.JettyReceivedClams
+          }
+        }),
+        dbClient.notification.create({
+          data: {
+            userId,
+            data: {
+              type: 'QuestRequirementCompleted',
+              questId: 'TransferTokens',
+              requirementId: EventId.JettyReceivedClams
+            }
+          }
+        }),
+        updateEvent(transactionId, userId, 'TransferTokens')
+      ]),
+      (error) => {
+        logger.error({
+          error,
+          method: 'databaseTransactions.jettyReceivedClams',
+          data: { userId, questId: 'TransferTokens' }
+        })
+        return {
+          error,
+          message: 'failed to set deposit rewards database entries'
+        }
+      }
+    )
+  }
+
+  return { rewardsDeposited, rewardsClaimed, userBadgeDeposited, jettyReceivedClams }
 }

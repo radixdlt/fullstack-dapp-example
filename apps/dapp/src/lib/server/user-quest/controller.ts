@@ -86,7 +86,10 @@ const UserQuestController = ({
     const updateStatusResult = userQuestModel(ctx.logger)
       .findPrerequisites(userId, preRequisites)
       .andThen((completedPrerequisites) => {
-        if (completedPrerequisites.length !== preRequisites.length) {
+        if (
+          import.meta.env.MODE !== 'development' &&
+          completedPrerequisites.length !== preRequisites.length
+        ) {
           return errAsync(createApiError(ErrorReason.preRequisiteNotMet, 400)())
         }
 

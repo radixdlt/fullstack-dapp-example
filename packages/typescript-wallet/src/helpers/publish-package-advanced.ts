@@ -20,7 +20,7 @@ export const publishPackageAdvanced = ({
         CALL_METHOD
           Address("${wellKnownAddresses.accountAddress.payerAccount}")
           "lock_fee"
-          Decimal("100")
+          Decimal("500")
         ;
         PUBLISH_PACKAGE_ADVANCED
           Enum<1u8>(

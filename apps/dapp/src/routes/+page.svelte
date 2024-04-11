@@ -4,6 +4,7 @@
   import JettyDialog from '$lib/components/jetty-dialog/JettyDialog.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import GlossaryIcon from '@images/book-open.svg'
+  import DevMode from './DevMode.svelte'
 
   let showJettyMenu = false
 
@@ -49,4 +50,8 @@
   <Backdrop>
     <Glossary on:close={() => (showGlossary = false)} />
   </Backdrop>
+{/if}
+
+{#if import.meta.env.MODE === 'development'}
+  <DevMode />
 {/if}

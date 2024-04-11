@@ -1,0 +1,41 @@
+<script lang="ts">
+  import Button from '$lib/components/button/Button.svelte'
+  import { loadQuestStatusFromLocalStorage } from '$lib/utils/local-storage'
+  import { onMount } from 'svelte'
+  import { questStatus } from '../stores'
+
+  let mounted = false
+
+  let enabled = false
+
+  $: if (enabled) {
+    Object.keys($questStatus).forEach((quest) => {
+      // @ts-ignore
+      $questStatus[quest] = 'unlocked'
+    })
+  } else if (mounted) {
+    $questStatus = loadQuestStatusFromLocalStorage()
+  }
+
+  onMount(() => {
+    mounted = true
+  })
+</script>
+
+<div class="dev-mode">
+  <Button
+    on:click={() => {
+      enabled = !enabled
+    }}>{enabled ? 'Disable' : 'Enable'} Dev Mode</Button
+  >
+</div>
+
+<style lang="scss">
+  .dev-mode {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 4;
+    padding: var(--spacing-xl);
+  }
+</style>
