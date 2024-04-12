@@ -9,7 +9,14 @@
   import Carousel from '$lib/components/carousel/Carousel.svelte'
   import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
   import { goto } from '$app/navigation'
-  import { questStatus, quests, user, webSocketClient } from '../stores'
+  import {
+    questRequirements,
+    questStatus,
+    quests,
+    user,
+    webSocketClient,
+    type StoredRequirements
+  } from '../stores'
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
@@ -34,8 +41,65 @@
   const { dAppDefinitionAddress, networkId } = publicConfig
 
   onMount(() => {
+    const requirements: Record<QuestId, StoredRequirements[]> = {} as Record<
+      QuestId,
+      StoredRequirements[]
+    >
+
+    for (const questId in $quests) {
+      const quest = $quests[questId as QuestId]
+
+      requirements[questId as QuestId] = Object.entries(quest.requirements).map(
+        ([id, requirement]) => ({
+          id,
+          complete: false,
+          // @ts-ignore
+          text: $i18n.t(`${questId as QuestId}.requirements`, {
+            ns: 'quests',
+            returnObjects: true
+          })[id],
+          type: requirement.type
+        })
+      )
+    }
+
+    $questRequirements = requirements
+
+    Object.entries(useLocalStorage('requirements').get() ?? {}).forEach(
+      ([questId, requirements]) => {
+        $questRequirements[questId as QuestId] = $questRequirements[questId as QuestId].map(
+          (requirement) => ({
+            ...requirement,
+            complete: Object.entries(requirements).some(
+              ([id, complete]) => id === requirement.id && complete
+            )
+          })
+        )
+      }
+    )
+
     showLandingPopup = !useLocalStorage('seen-landing-popup').get()
     $questStatus = loadQuestStatusFromLocalStorage()
+
+    questRequirements.subscribe((value) => {
+      if (value) {
+        useLocalStorage('requirements').set(
+          Object.entries(value).reduce(
+            (prev, [questId, requirements]) => {
+              prev[questId as QuestId] = requirements.reduce(
+                (prev, cur) => {
+                  prev[cur.id] = cur.complete
+                  return prev
+                },
+                {} as { [key: string]: boolean }
+              )
+              return prev
+            },
+            {} as { [key in QuestId]: { [key: string]: boolean } }
+          )
+        )
+      }
+    })
 
     radixDappToolkit = RadixDappToolkit({
       networkId,
@@ -47,6 +111,7 @@
         $webSocketClient?.close()
         clearQuestStatusFromLocalStorage()
         $questStatus = loadQuestStatusFromLocalStorage()
+        useLocalStorage('requirements').clear()
       }
     })
 

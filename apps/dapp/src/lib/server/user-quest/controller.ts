@@ -83,22 +83,17 @@ const UserQuestController = ({
         return okAsync(questStatus)
       })
 
-    const updateStatusResult = userQuestModel(ctx.logger)
-      .findPrerequisites(userId, preRequisites)
-      .andThen((completedPrerequisites) => {
-        if (
-          import.meta.env.MODE !== 'development' &&
-          completedPrerequisites.length !== preRequisites.length
-        ) {
-          return errAsync(createApiError(ErrorReason.preRequisiteNotMet, 400)())
-        }
+    return questStatusResult.andThen(() =>
+      userQuestModel(ctx.logger)
+        .findPrerequisites(userId, preRequisites)
+        .andThen((completedPrerequisites) => {
+          if (completedPrerequisites.length !== preRequisites.length) {
+            return errAsync(createApiError(ErrorReason.preRequisiteNotMet, 400)())
+          }
 
-        return userQuestModel(ctx.logger).updateQuestStatus(questId, userId, 'IN_PROGRESS')
-      })
-      .map(() => ({ httpResponseCode: 200, data: undefined }))
-
-    return ResultAsync.combine([questStatusResult, updateStatusResult]).map(
-      ([_, updateResponse]) => updateResponse
+          return userQuestModel(ctx.logger).updateQuestStatus(questId, userId, 'IN_PROGRESS')
+        })
+        .map(() => ({ httpResponseCode: 200, data: undefined }))
     )
   }
 
@@ -135,6 +130,34 @@ const UserQuestController = ({
       }
     })
 
+  const completeContentRequirement = (
+    ctx: ControllerMethodContext,
+    questId: QuestId,
+    userId: string,
+    requirementId: string
+  ) => {
+    const questDefinition = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId]
+
+    if (questDefinition.requirements[requirementId].type !== 'content') {
+      return errAsync(createApiError(ErrorReason.invalidRequirement, 400)())
+    }
+
+    const questStatus = userQuestModel(ctx.logger)
+      .getQuestStatus(userId, questId)
+      .andThen((questStatus) => {
+        if (!questStatus) {
+          return errAsync(createApiError(ErrorReason.questAlreadyCompleted, 400)())
+        }
+        return okAsync(questStatus)
+      })
+
+    return questStatus.andThen(() =>
+      userQuestModel(ctx.logger)
+        .addCompletedRequirement(questId, userId, requirementId)
+        .map(() => ({ httpResponseCode: 200, data: undefined }))
+    )
+  }
+
   return {
     getQuestsProgress,
     completeQuest,
@@ -142,7 +165,8 @@ const UserQuestController = ({
     getQuestProgress,
     saveProgress,
     getSavedProgress,
-    deleteSavedProgress
+    deleteSavedProgress,
+    completeContentRequirement
   }
 }
 

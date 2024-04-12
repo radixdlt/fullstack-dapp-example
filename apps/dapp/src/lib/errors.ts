@@ -21,7 +21,8 @@ export const APIError = {
 export const DBError = {
   requirementsNotMet: 'requirementsNotMet',
   preRequisiteNotMet: 'preRequisiteNotMet',
-  questAlreadyCompleted: 'questAlreadyCompleted'
+  questAlreadyCompleted: 'questAlreadyCompleted',
+  invalidRequirement: 'invalidRequirement'
 } as const
 
 export const ErrorReason = {

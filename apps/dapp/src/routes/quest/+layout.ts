@@ -1,10 +1,10 @@
-import { questStatus, quests, user } from '../../stores'
+import { questRequirements, questStatus, quests, user } from '../../stores'
 import type { LayoutLoad } from './$types'
 import { i18n } from '$lib/i18n/i18n'
 import { questApi } from '$lib/api/quest-api'
 import { goto } from '$app/navigation'
 import type { QuestStatus } from '../../types'
-import type { QuestId, Quests } from 'content'
+import type { QuestId, Quests, Requirement } from 'content'
 import type { User } from 'database'
 
 export const load: LayoutLoad = async ({ url, fetch }) => {
@@ -72,6 +72,34 @@ export const load: LayoutLoad = async ({ url, fetch }) => {
     }
   })
 
+  let resolveRequirements: (
+    requirements: {
+      id: string
+      complete: boolean
+      text: string
+      type: Requirement['type']
+    }[]
+  ) => void
+
+  const requirementsPromise = new Promise<
+    {
+      id: string
+      complete: boolean
+      text: string
+      type: Requirement['type']
+    }[]
+  >((resolve) => {
+    resolveRequirements = resolve
+  })
+
+  const unsubRequirements = questRequirements.subscribe((requirements) => {
+    if (!requirements[id]) return
+    resolveRequirements(requirements[id])
+  })
+
+  const requirements = await requirementsPromise
+  unsubRequirements()
+
   const _quests = await questsPromise
   const quest = _quests[id]
 
@@ -81,7 +109,33 @@ export const load: LayoutLoad = async ({ url, fetch }) => {
 
   unsubUser()
 
-  const data = {
+  if (_user) {
+    const updateResult = await questApi.updateQuestProgress(id, 0, fetch)
+
+    if (updateResult.isErr() && updateResult.error.reason === 'preRequisiteNotMet') {
+      goto('/')
+    }
+
+    let requirements: Record<string, boolean> = {}
+
+    const result = await questApi
+      .getQuestInformation(quest.id, fetch)
+      .map((data) => data.requirements)
+
+    requirements = result._unsafeUnwrap()
+
+    questRequirements.update((prev) => ({
+      ...prev,
+      [id]: Object.entries(requirements).map((value) => ({
+        id: value[0] as QuestId,
+        text: requirementsText[value[0]],
+        complete: value[1],
+        type: quest.requirements[value[0]].type
+      }))
+    }))
+  }
+
+  return {
     questProps: {
       id,
       title,
@@ -92,36 +146,13 @@ export const load: LayoutLoad = async ({ url, fetch }) => {
       jettyCompleteHtml: (quest.text['complete.md'] as string) ?? ''
     },
     id,
-    text: quest.text
-  }
-
-  if (!_user) return data
-
-  const updateResult = await questApi.updateQuestProgress(id, 0, fetch)
-
-  if (updateResult.isErr() && updateResult.error.reason === 'preRequisiteNotMet') {
-    goto('/')
-  }
-
-  let requirements: Record<string, boolean> = {}
-
-  const result = await questApi
-    .getQuestInformation(quest.id, fetch)
-    .map((data) => data.requirements)
-
-  if (result.isOk()) {
-    requirements = result.value
-  }
-
-  return {
-    ...data,
-    questProps: {
-      ...data.questProps,
-      requirements: Object.entries(requirements).map((value) => ({
-        text: requirementsText[value[0]],
-        complete: value[1]
-      }))
-    },
-    requirements
+    text: quest.text,
+    requirements: requirements.reduce(
+      (acc, requirement) => {
+        acc[requirement.id] = requirement.complete
+        return acc
+      },
+      {} as Record<string, boolean>
+    )
   }
 }
