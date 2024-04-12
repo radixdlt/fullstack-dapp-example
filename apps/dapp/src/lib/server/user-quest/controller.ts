@@ -83,22 +83,17 @@ const UserQuestController = ({
         return okAsync(questStatus)
       })
 
-    const updateStatusResult = userQuestModel(ctx.logger)
-      .findPrerequisites(userId, preRequisites)
-      .andThen((completedPrerequisites) => {
-        if (
-          import.meta.env.MODE !== 'development' &&
-          completedPrerequisites.length !== preRequisites.length
-        ) {
-          return errAsync(createApiError(ErrorReason.preRequisiteNotMet, 400)())
-        }
+    return questStatusResult.andThen(() =>
+      userQuestModel(ctx.logger)
+        .findPrerequisites(userId, preRequisites)
+        .andThen((completedPrerequisites) => {
+          if (completedPrerequisites.length !== preRequisites.length) {
+            return errAsync(createApiError(ErrorReason.preRequisiteNotMet, 400)())
+          }
 
-        return userQuestModel(ctx.logger).updateQuestStatus(questId, userId, 'IN_PROGRESS')
-      })
-      .map(() => ({ httpResponseCode: 200, data: undefined }))
-
-    return ResultAsync.combine([questStatusResult, updateStatusResult]).map(
-      ([_, updateResponse]) => updateResponse
+          return userQuestModel(ctx.logger).updateQuestStatus(questId, userId, 'IN_PROGRESS')
+        })
+        .map(() => ({ httpResponseCode: 200, data: undefined }))
     )
   }
 
