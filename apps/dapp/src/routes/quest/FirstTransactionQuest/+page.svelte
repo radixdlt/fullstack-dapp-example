@@ -82,7 +82,7 @@
     {
       id: 'verifyPhoneNumber',
       type: 'regular',
-      skip: data.requirements?.VerifyPhoneNumber,
+      skip: data.requirements.VerifyPhoneNumber,
       footer: {
         type: 'action',
         action: {
@@ -94,7 +94,7 @@
     {
       id: 'verifyOtp',
       type: 'regular',
-      skip: data.requirements?.VerifyPhoneNumber,
+      skip: data.requirements.VerifyPhoneNumber,
       footer: {
         type: 'action',
         action: {
@@ -118,7 +118,7 @@
     {
       id: 'depositUserBadge',
       type: 'regular',
-      skip: data.requirements?.DepositUserBadge
+      skip: data.requirements.DepositUserBadge
     },
     {
       id: 'email',

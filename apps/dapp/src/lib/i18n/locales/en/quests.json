@@ -36,7 +36,9 @@
     "introDescription": "The Radix Wallet is your gateway to the Radix network. Download the wallet and get started."
   },
   "LoginWithWallet": {
-    "requirements": {},
+    "requirements": {
+      "ConnectWallet": "Connect your Radix Wallet"
+    },
     "title": "Login with Wallet",
     "description": "Login with your Radix Wallet",
     "introDescription": "Login with your Radix Wallet to start earning rewards."

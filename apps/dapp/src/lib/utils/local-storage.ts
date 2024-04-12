@@ -14,7 +14,8 @@ export const useLocalStorage = <
   T extends
     | LocalStorageEntry<`quest-status-${QuestId}`, 'completed'>
     | LocalStorageEntry<'savedProgress', { questId: QuestId; progress: number }>
-    | LocalStorageEntry<'seen-landing-popup', boolean>,
+    | LocalStorageEntry<'seen-landing-popup', boolean>
+    | LocalStorageEntry<'requirements', Record<QuestId, Record<string, boolean>>>,
   V extends T['key']
 >(
   item: V
@@ -22,7 +23,8 @@ export const useLocalStorage = <
   set: (value: Extract<T, { key: V }>['value']) =>
     localStorage.setItem(item, JSON.stringify(value)),
   get: () => {
-    const loadedValue = localStorage.getItem(item!)
+    if (!item) return undefined
+    const loadedValue = localStorage.getItem(item)
     return loadedValue ? (JSON.parse(loadedValue) as Extract<T, { key: V }>['value']) : undefined
   },
   clear: () => localStorage.removeItem(item)
