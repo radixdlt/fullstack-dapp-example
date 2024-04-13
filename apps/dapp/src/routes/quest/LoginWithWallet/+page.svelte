@@ -1,37 +1,44 @@
 <script lang="ts">
-  import { user } from '../../../stores'
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
+  import { user } from '../../../stores'
+  import { onMount } from 'svelte'
 
   export let data: PageData
 
-  let quest: Quest
+  let render = (id: string) => false
 
-  $: if (quest && $user) {
-    quest.actions.goToStep('complete')
+  $: if ((render('intro') || render('explain-wallet') || render('connect-wallet')) && $user) {
+    setTimeout(() => {
+      quest.actions.goToStep('wallet-connected')
+    }, 0)
   }
+
+  $: if (render('wallet-connected') && !$user) {
+    quest.actions.goToStep('connect-wallet')
+  }
+
+  let quest: Quest
 </script>
 
 <Quest
+  bind:render
   bind:this={quest}
   {...data.questProps}
   steps={[
     {
-      id: 'text1',
+      id: 'explain-wallet',
       type: 'regular',
       footer: {
         type: 'navigation'
       }
     },
     {
-      id: 'text2',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      id: 'connect-wallet',
+      type: 'regular'
     },
     {
-      id: 'text3',
+      id: 'wallet-connected',
       type: 'regular',
       footer: {
         type: 'navigation'
@@ -92,16 +99,18 @@
   ]}
   let:render
 >
-  {#if render('text1')}
+  {#if render('explain-wallet')}
     {@html data.text['0.md']}
   {/if}
 
-  {#if render('text2')}
+  {#if render('connect-wallet')}
     {@html data.text['1.md']}
   {/if}
 
-  {#if render('text3')}
-    {@html data.text['2.md']}
+  {#if render('wallet-connected')}
+    {@html data.text['connected.md']}
+
+    {$user?.label}
   {/if}
 
   {#if render('text4')}

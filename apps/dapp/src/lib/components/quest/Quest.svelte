@@ -63,7 +63,7 @@
     complete: boolean
   }[] = []
   export let nextDisabled = false
-  export let startAtProgress = 0
+  export let startAtProgress: number | string = 0
 
   export const setProgress = (_progress: number) => {
     if (_progress < 0 || _progress >= _steps.length) return
@@ -87,6 +87,8 @@
 
   export const next = () => setProgress(progress + 1)
   export const back = () => setProgress(progress - 1)
+
+  export let render: (id: string) => boolean = () => false
 
   const dispatch = createEventDispatcher<{
     progressUpdated: number
@@ -152,13 +154,11 @@
   }
 
   $: render = (id: string) => {
-    if (currentStep.type === 'intro') return false
-
     const currentId = currentStep.id
 
     const index = _steps.findIndex((step) => step.id === id)
 
-    if (index < 0) return
+    if (index < 0) return false
 
     const thisStep = _steps[index]
 
@@ -181,8 +181,10 @@
 
   let lastProgress: number
 
-  if (startAtProgress > 0) {
+  if (typeof startAtProgress === 'number' && startAtProgress > 0) {
     setProgress(startAtProgress)
+  } else if (typeof startAtProgress === 'string') {
+    goToStep(startAtProgress)
   }
 
   $: currentStep = _steps[progress]

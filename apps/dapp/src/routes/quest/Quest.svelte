@@ -20,6 +20,7 @@
   export let nextDisabled: ComponentProps<Quest>['nextDisabled'] = false
   export let jettyClaimHtml: string
   export let jettyCompleteHtml: string
+  export let render: (id: string) => boolean = () => false
 
   export const actions = {
     next: () => {},
@@ -67,12 +68,12 @@
         }
       })
     })
-    console.log($questRequirements)
   }
 </script>
 
 <Quest
   bind:this={quest}
+  bind:render
   on:close={closeQuest}
   on:complete={_completeQuest}
   on:progressUpdated={progressUpdated}

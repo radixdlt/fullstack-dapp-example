@@ -112,6 +112,7 @@
         clearQuestStatusFromLocalStorage()
         $questStatus = loadQuestStatusFromLocalStorage()
         useLocalStorage('requirements').clear()
+        $user = undefined
       }
     })
 
