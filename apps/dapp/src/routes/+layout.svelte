@@ -142,7 +142,10 @@
       if (persona?.identityAddress) {
         ResultAsync.combine([userApi.me(), authApi.authToken()])
           .map(async ([me, authToken]) => {
-            $user = me
+            $user = {
+              ...me,
+              label: persona.label
+            }
             // TODO:
             // - bootstrap the application state (quest progress, user, notifications etc...) and connect to notifications websocket
             const questInfoResult = await questApi.getQuestsInformation()
