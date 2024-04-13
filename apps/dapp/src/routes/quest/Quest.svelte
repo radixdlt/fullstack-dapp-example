@@ -51,14 +51,14 @@
 
     if (e.detail !== steps.length - 1) return
 
-    const contentRequirements = $questRequirements[id]
-      .filter((requirement) => requirement.type === 'content')
-      .map((req) => req.id)
+    const contentRequirement = $questRequirements[id].find(
+      (requirement) => requirement.type === 'content'
+    )?.id
 
-    contentRequirements.forEach((req) => {
-      if ($user) questApi.completeContentRequirement(id, req)
+    if (contentRequirement) {
+      if ($user) questApi.completeContentRequirement(id)
       $questRequirements[id] = $questRequirements[id].map((requirement) => {
-        if (requirement.id === req) {
+        if (requirement.id === contentRequirement) {
           return {
             ...requirement,
             complete: true
@@ -67,7 +67,7 @@
           return requirement
         }
       })
-    })
+    }
   }
 </script>
 

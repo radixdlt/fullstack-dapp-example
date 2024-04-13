@@ -12,7 +12,7 @@ type LocalStorageEntry<K, V> = {
 
 export const useLocalStorage = <
   T extends
-    | LocalStorageEntry<`quest-status-${QuestId}`, 'completed'>
+    | LocalStorageEntry<`quest-status-${QuestId}`, 'in-progress' | 'completed'>
     | LocalStorageEntry<'savedProgress', { questId: QuestId; progress: number }>
     | LocalStorageEntry<'seen-landing-popup', boolean>
     | LocalStorageEntry<'requirements', Record<QuestId, Record<string, boolean>>>,
@@ -33,7 +33,7 @@ export const useLocalStorage = <
 export const loadQuestStatusFromLocalStorage = () => {
   const questDefinitions = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))
 
-  const savedStatus: { [key in QuestId]?: 'completed' | undefined } = {}
+  const savedStatus: { [key in QuestId]?: 'completed' | 'in-progress' | undefined } = {}
 
   for (const questId of Object.keys(questDefinitions)) {
     savedStatus[questId as QuestId] = useLocalStorage(`quest-status-${questId as QuestId}`).get()
@@ -49,7 +49,9 @@ export const loadQuestStatusFromLocalStorage = () => {
       } else {
         status =
           curr[1].preRequisites.length === 0 ||
-          curr[1].preRequisites.every((pre) => savedStatus[pre] === 'completed')
+          curr[1].preRequisites.every(
+            (pre) => savedStatus[pre] === 'completed' || savedStatus[pre] === 'in-progress'
+          )
             ? 'unlocked'
             : 'locked'
       }

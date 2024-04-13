@@ -1,1 +1,1 @@
-export type QuestStatus = 'locked' | 'unlocked' | 'completed'
+export type QuestStatus = 'completed' | 'in-progress' | 'unlocked' | 'locked'

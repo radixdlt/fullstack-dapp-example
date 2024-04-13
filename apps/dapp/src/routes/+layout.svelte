@@ -149,11 +149,32 @@
             }
             // TODO:
             // - bootstrap the application state (quest progress, user, notifications etc...) and connect to notifications websocket
-            const questInfoResult = await questApi.getQuestsInformation()
+            const questInfo = (await questApi.getQuestsInformation())._unsafeUnwrap()
 
-            if (questInfoResult.isErr()) throw questInfoResult.error
-
-            const questInfo = questInfoResult.value
+            ;(['WelcomeToRadQuest', 'WhatIsRadix', 'GetRadixWallet'] as const).forEach(
+              async (questId) => {
+                if (
+                  useLocalStorage(`quest-status-${questId}`).get() === 'completed' &&
+                  questInfo[questId]?.status !== 'COMPLETED'
+            ) {
+                  await questApi.completeContentRequirement(questId).mapErr(() => {})
+                  await questApi.completeQuest(questId).mapErr(() => {})
+                  questInfo[questId] = {
+                    savedProgress: questInfo[questId].savedProgress,
+                    status: 'COMPLETED'
+                  }
+                } else if (
+                  useLocalStorage(`quest-status-${questId}`).get() === 'in_progress' &&
+                  !questInfo[questId]?.status
+                ) {
+                  await questApi.updateQuestProgress(questId, 0)
+                  questInfo[questId] = {
+                    savedProgress: 0,
+                    status: 'IN_PROGRESS'
+                  }
+                }
+            }
+            )
 
             const questDefinitions = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))
 
@@ -252,7 +273,11 @@
                 minutesToComplete={quest.minutesToComplete}
                 rewards={quest.rewards}
                 backgroundImage={quest.splashImage}
-                state={$questStatus?.[id]}
+                state={!$questStatus[id] || $questStatus[id] === 'locked'
+                  ? 'locked'
+                  : $questStatus[id] === 'in-progress' || $questStatus[id] === 'unlocked'
+                    ? 'unlocked'
+                    : 'completed'}
                 on:click={() => goto(`/quest/${id}`)}
               />
             </Item>
