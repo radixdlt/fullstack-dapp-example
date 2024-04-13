@@ -25,3 +25,7 @@ export type StoredRequirements = {
 export const questRequirements = writable<Record<QuestId, StoredRequirements[]>>(
   {} as Record<QuestId, StoredRequirements[]>
 )
+
+type JettyMessage = 'LoggedIn'
+
+export const jettyMessage = writable<JettyMessage | undefined>(undefined)

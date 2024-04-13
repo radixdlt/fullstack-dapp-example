@@ -15,7 +15,8 @@
     quests,
     user,
     webSocketClient,
-    type StoredRequirements
+    type StoredRequirements,
+    jettyMessage
   } from '../stores'
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
@@ -156,7 +157,7 @@
                 if (
                   useLocalStorage(`quest-status-${questId}`).get() === 'completed' &&
                   questInfo[questId]?.status !== 'COMPLETED'
-            ) {
+                ) {
                   await questApi.completeContentRequirement(questId).mapErr(() => {})
                   await questApi.completeQuest(questId).mapErr(() => {})
                   questInfo[questId] = {
@@ -173,7 +174,7 @@
                     status: 'IN_PROGRESS'
                   }
                 }
-            }
+              }
             )
 
             const questDefinitions = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))
@@ -199,6 +200,10 @@
               },
               {} as { [key in QuestId]: QuestStatus }
             )
+
+            if (questInfo['LoginWithWallet']?.status === 'IN_PROGRESS') {
+              $jettyMessage = 'LoggedIn'
+            }
 
             if (authToken) {
               if (!$webSocketClient) {

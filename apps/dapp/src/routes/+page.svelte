@@ -5,6 +5,9 @@
   import { i18n } from '$lib/i18n/i18n'
   import GlossaryIcon from '@images/book-open.svg'
   import DevMode from './DevMode.svelte'
+  import { jettyMessage, quests } from '../stores'
+  import Button from '$lib/components/button/Button.svelte'
+  import { goto } from '$app/navigation'
 
   let showJettyMenu = false
 
@@ -21,12 +24,18 @@
       }
     }
   }
+
+  let showJettyMessage = false
+
+  $: if ($jettyMessage) {
+    showJettyMessage = true
+  }
 </script>
 
 <svelte:window on:keydown={(e) => handleKeydown(e)} />
 
 <JettyDialog
-  dialogs={showJettyMenu ? 1 : 0}
+  dialogs={showJettyMenu || showJettyMessage ? 1 : 0}
   let:Menu
   on:click={() => {
     if (showGlossary) showGlossary = false
@@ -34,16 +43,30 @@
   }}
   close={showGlossary}
 >
-  {$i18n.t('jetty:menu-text')}
-  <Menu
-    options={[
-      {
-        text: $i18n.t('jetty:menu-glossary'),
-        iconUrl: GlossaryIcon,
-        onClick: () => (showGlossary = true)
-      }
-    ]}
-  />
+  {#if showJettyMessage}
+    {#if $jettyMessage === 'LoggedIn'}
+      I see you've logged in with your wallet!
+
+      <Button
+        on:click={() => {
+          showJettyMessage = false
+          $jettyMessage = undefined
+          goto(`/quest/${$quests.LoginWithWallet.id}#wallet-connected`)
+        }}>Go back to quest</Button
+      >
+    {/if}
+  {:else}
+    {$i18n.t('jetty:menu-text')}
+    <Menu
+      options={[
+        {
+          text: $i18n.t('jetty:menu-glossary'),
+          iconUrl: GlossaryIcon,
+          onClick: () => (showGlossary = true)
+        }
+      ]}
+    />
+  {/if}
 </JettyDialog>
 
 {#if showGlossary}
