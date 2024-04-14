@@ -2,11 +2,11 @@
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
   import { user } from '../../../stores'
-  import { onMount } from 'svelte'
+  import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
 
   export let data: PageData
 
-  let render = (id: string) => false
+  let render = (_: string) => false
 
   $: if ((render('intro') || render('explain-wallet') || render('connect-wallet')) && $user) {
     setTimeout(() => {
@@ -94,6 +94,11 @@
       }
     },
     {
+      id: 'unclaimable-requirements',
+      type: 'jetty',
+      dialogs: 1
+    },
+    {
       type: 'complete'
     }
   ]}
@@ -140,4 +145,12 @@
   {#if render('text10')}
     {@html data.text['9.md']}
   {/if}
+
+  <svelte:fragment slot="jetty" let:render let:next>
+    {#if render('unclaimable-requirements')}
+      <ClaimRewards on:click={next} rewards={data.questProps.rewards} noClaim>
+        {@html data.text['requirements.md']}
+      </ClaimRewards>
+    {/if}
+  </svelte:fragment>
 </Quest>

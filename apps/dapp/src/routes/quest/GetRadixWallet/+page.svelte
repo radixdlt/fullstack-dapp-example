@@ -2,8 +2,11 @@
   import { onMount } from 'svelte'
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
+  import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
 
   export let data: PageData
+
+  let render = (_: string) => false
 
   onMount(() => {
     const callback = ({ detail }: any) => {
@@ -18,14 +21,16 @@
     window.addEventListener('radix#chromeExtension#receive', callback)
 
     const timeout = setTimeout(() => {
-      window.dispatchEvent(
-        new CustomEvent('radix#chromeExtension#send', {
-          detail: {
-            interactionId: 'id',
-            discriminator: 'extensionStatus'
-          }
-        })
-      )
+      if (render('get-the-wallet')) {
+        window.dispatchEvent(
+          new CustomEvent('radix#chromeExtension#send', {
+            detail: {
+              interactionId: 'id',
+              discriminator: 'extensionStatus'
+            }
+          })
+        )
+      }
     }, 1000)
 
     return () => {
@@ -39,10 +44,11 @@
 
 <Quest
   bind:this={quest}
+  bind:render
   {...data.questProps}
   steps={[
     {
-      id: 'text1',
+      id: 'get-the-wallet',
       type: 'regular',
       footer: {
         type: 'navigation'
@@ -112,13 +118,22 @@
       }
     },
     {
+      id: 'unclaimable-requirements',
+      type: 'jetty',
+      dialogs: 1
+    },
+    {
       type: 'complete'
     }
   ]}
   let:render
 >
-  {#if render('text1')}
+  {#if render('get-the-wallet')}
     {@html data.text['0.md']}
+
+    <a href="wallet.radixdlt.com" target="_blank" rel="noopener noreferrer"
+      >Download the Radix Wallet</a
+    >
   {/if}
 
   {#if render('text2')}
@@ -156,4 +171,12 @@
   {#if render('text10')}
     {@html data.text['9.md']}
   {/if}
+
+  <svelte:fragment slot="jetty" let:render let:next>
+    {#if render('unclaimable-requirements')}
+      <ClaimRewards on:click={next} rewards={data.questProps.rewards} noClaim>
+        {@html data.text['requirements.md']}
+      </ClaimRewards>
+    {/if}
+  </svelte:fragment>
 </Quest>

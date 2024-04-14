@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
   import type { LayoutData } from '../$types'
   import Quest from '../Quest.svelte'
 
@@ -79,6 +80,11 @@
       }
     },
     {
+      id: 'unclaimable-requirements',
+      type: 'jetty',
+      dialogs: 1
+    },
+    {
       type: 'complete'
     }
   ]}
@@ -123,4 +129,12 @@
   {#if render('text10')}
     {@html data.text['9.md']}
   {/if}
+
+  <svelte:fragment slot="jetty" let:render let:next>
+    {#if render('unclaimable-requirements')}
+      <ClaimRewards on:click={next} rewards={data.questProps.rewards} noClaim>
+        {@html data.text['requirements.md']}
+      </ClaimRewards>
+    {/if}
+  </svelte:fragment>
 </Quest>
