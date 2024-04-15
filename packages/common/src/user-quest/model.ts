@@ -113,7 +113,8 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
         },
         create: {
           userId,
-          questId
+          questId,
+          status
         },
         update: {
           status
