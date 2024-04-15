@@ -156,13 +156,13 @@
   $: render = (id: string) => {
     const currentId = currentStep.id
 
+    if (currentId === id) return true
+
     const index = _steps.findIndex((step) => step.id === id)
 
     if (index < 0) return false
 
     const thisStep = _steps[index]
-
-    if (currentId === id) return true
 
     const stepsBetweenThisAndProgress = _steps.slice(index + 1, progress)
 

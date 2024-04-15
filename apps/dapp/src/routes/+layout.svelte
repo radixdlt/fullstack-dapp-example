@@ -35,6 +35,8 @@
   } from '$lib/utils/local-storage'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import LandingPopup from './LandingPopup.svelte'
+  import { page } from '$app/stores'
+  import { isMobile } from '$lib/utils/is-mobile'
 
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
@@ -101,6 +103,20 @@
         )
       }
     })
+
+    if (isMobile() && $page.url.searchParams.get('wallet') === 'true') {
+      $questRequirements['GetRadixWallet'] = $questRequirements['GetRadixWallet'].map(
+        (requirement) => {
+          if (requirement.id === 'GetTheWallet') {
+            return {
+              ...requirement,
+              complete: true
+            }
+          }
+          return requirement
+        }
+      )
+    }
 
     radixDappToolkit = RadixDappToolkit({
       networkId,

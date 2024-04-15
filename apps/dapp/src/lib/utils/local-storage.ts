@@ -15,7 +15,13 @@ export const useLocalStorage = <
     | LocalStorageEntry<`quest-status-${QuestId}`, 'in-progress' | 'completed'>
     | LocalStorageEntry<'savedProgress', { questId: QuestId; progress: number }>
     | LocalStorageEntry<'seen-landing-popup', boolean>
-    | LocalStorageEntry<'requirements', Record<QuestId, Record<string, boolean>>>,
+    | LocalStorageEntry<
+        'requirements',
+        Record<
+          Extract<QuestId, 'WelcomeToRadQuest' | 'WhatIsRadix' | 'GetRadixWallet'>,
+          Record<string, boolean>
+        >
+      >,
   V extends T['key']
 >(
   item: V

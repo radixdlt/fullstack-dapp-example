@@ -3,24 +3,27 @@
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
+  import { isMobile } from '$lib/utils/is-mobile'
 
   export let data: PageData
 
   let render = (_: string) => false
 
   onMount(() => {
+    if (isMobile()) return
+
     const callback = ({ detail }: any) => {
       if (detail.eventType !== 'extensionStatus') return
       const { isWalletLinked } = detail
 
       if (isWalletLinked) {
-        quest.actions.goToStep('complete')
+        quest.actions.goToStep('unclaimable-requirements')
       }
     }
 
     window.addEventListener('radix#chromeExtension#receive', callback)
 
-    const timeout = setTimeout(() => {
+    const interval = setInterval(() => {
       if (render('get-the-wallet')) {
         window.dispatchEvent(
           new CustomEvent('radix#chromeExtension#send', {
@@ -35,7 +38,7 @@
 
     return () => {
       window.removeEventListener('radix#chromeExtension#receive', callback)
-      clearTimeout(timeout)
+      clearInterval(interval)
     }
   })
 
@@ -49,6 +52,7 @@
   steps={[
     {
       id: 'get-the-wallet',
+      skip: data.requirements.GetTheWallet,
       type: 'regular',
       footer: {
         type: 'navigation'
@@ -130,10 +134,6 @@
 >
   {#if render('get-the-wallet')}
     {@html data.text['0.md']}
-
-    <a href="wallet.radixdlt.com" target="_blank" rel="noopener noreferrer"
-      >Download the Radix Wallet</a
-    >
   {/if}
 
   {#if render('text2')}
