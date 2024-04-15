@@ -53,17 +53,6 @@ jobs:
             type=sha,event=branch
             type=semver,pattern={{version}}
 
-      - name: Docker tags for dapp
-        id: dapp-storybook-tags
-        uses: RDXWorks-actions/metadata-action@master
-        with:
-          images: |
-            docker.io/radixdlt/radquest-dapp-storybook
-          tags: |
-            type=sha,event=pr
-            type=sha,event=branch
-            type=semver,pattern={{version}}
-
       - name: Docker tags for notification
         id: notification-tags
         uses: RDXWorks-actions/metadata-action@master
@@ -131,9 +120,6 @@ jobs:
       dapp-tags: ${{ steps.dapp-tags.outputs.tags }}
       dapp-labels: ${{ steps.dapp-tags.outputs.labels }}
       dapp-json: ${{ steps.dapp-tags.outputs.json }}
-      dapp-storybook-tags: ${{ steps.dapp-storybook-tags.outputs.tags }}
-      dapp-storybook-labels: ${{ steps.dapp-storybook-tags.outputs.labels }}
-      dapp-storybook-json: ${{ steps.dapp-storybook-tags.outputs.json }}
       notification-tags: ${{ steps.notification-tags.outputs.tags }}
       notification-labels: ${{ steps.notification-tags.outputs.labels }}
       notification-json: ${{ steps.notification-tags.outputs.json }}
@@ -282,32 +268,6 @@ jobs:
         PUBLIC_NETWORK_ID=${{ needs.setup-tags.outputs.public-network-id }}
         PUBLIC_LOG_LEVEL=${{ needs.setup-tags.outputs.public-log-level }}
 
-  push-dapp-storybook:
-    name: Docker dapp storybook
-    needs:
-      - setup-tags
-      - snyk-scan-deps-licences
-      - snyk-scan-code
-    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
-    with:
-      runs_on: ubuntu-latest
-      image_registry: 'docker.io'
-      image_organization: 'radixdlt'
-      target: 'storybook'
-      image_name: 'radquest-dapp-storybook'
-      tag: ${{ needs.setup-tags.outputs.tag-with-network }}
-      context: '.'
-      dockerfile: './dockerfiles/dapp.Dockerfile'
-      platforms: 'linux/amd64'
-      scan_image: true
-      provenance: false
-      snyk_target_ref: ${{ github.ref_name }}
-      with_sbom: false
-      build-args: |
-        NETWORK_NAME=${{ needs.setup-tags.outputs.network-name }}
-        PUBLIC_NETWORK_ID=${{ needs.setup-tags.outputs.public-network-id }}
-        PUBLIC_LOG_LEVEL=${{ needs.setup-tags.outputs.public-log-level }}
-
   push-notification:
     name: Docker notification
     needs:
@@ -379,7 +339,6 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - push-dapp
-      - push-dapp-storybook
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -432,7 +391,6 @@ jobs:
     environment: dev
     needs:
       - push-dapp
-      - push-dapp-storybook
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -480,7 +438,6 @@ jobs:
     environment: stokenet
     needs:
       - push-dapp
-      - push-dapp-storybook
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -528,7 +485,6 @@ jobs:
     environment: mainnet
     needs:
       - push-dapp
-      - push-dapp-storybook
       - push-notification
       - push-transaction-stream
       - push-worker

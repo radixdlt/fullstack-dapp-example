@@ -23,12 +23,6 @@ releases:
     values:
       - environments/{{ .Environment.Name }}/dapp.yaml.gotmpl
 
-  - name: dapp-storybook
-    installed: {{ and (ne .Environment.Name "mainnet") (ne .Environment.Name "stokenet") }}
-    chart: ./dapp-storybook
-    values:
-      - environments/{{ .Environment.Name }}/dapp-storybook.yaml.gotmpl
-
   - name: notification
     chart: ./notification
     values:

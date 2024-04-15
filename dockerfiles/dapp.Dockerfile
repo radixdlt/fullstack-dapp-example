@@ -41,13 +41,3 @@ RUN npm install pm2 -g && \
     pm2 install pm2-metrics
 
 CMD ["pm2-runtime","apps/dapp/build/index.js"]
-
-FROM nginx:alpine AS storybook
-
-WORKDIR /app
-
-COPY --from=build /app/apps/dapp/storybook-static /usr/share/nginx/html
-COPY --from=build /app/apps/dapp/nginx/mime.types /etc/nginx/mime.types
-COPY --from=build /app/apps/dapp/nginx/default.conf /etc/nginx/conf.d/default.conf
-
-CMD ["nginx", "-g", "daemon off;"]
