@@ -17,7 +17,7 @@
       const { isWalletLinked } = detail
 
       if (isWalletLinked) {
-        quest.actions.goToStep('unclaimable-requirements')
+        quest.actions.goToStep('text2')
       }
     }
 
