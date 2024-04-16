@@ -3,6 +3,7 @@
   import type { PageData } from './$types'
   import { user } from '../../../stores'
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
+  import Input from '$lib/components/input/Input.svelte'
 
   export let data: PageData
 
@@ -19,6 +20,8 @@
   }
 
   let quest: Quest
+
+  let nameInput = $user?.label ?? ''
 </script>
 
 <Quest
@@ -115,7 +118,7 @@
   {#if render('wallet-connected')}
     {@html data.text['connected.md']}
 
-    {$user?.label}
+    <Input bind:value={nameInput} />
   {/if}
 
   {#if render('text4')}
