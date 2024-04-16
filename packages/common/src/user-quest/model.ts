@@ -1,6 +1,6 @@
 import { QuestStatus } from 'database'
 import type { PrismaClient } from 'database'
-import { ResultAsync } from 'neverthrow'
+import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
 import { AppLogger } from '../helpers/logger'
 
@@ -102,29 +102,42 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
       }
     )
 
-  const updateQuestStatus = (questId: string, userId: string, status: QuestStatus) =>
-    ResultAsync.fromPromise(
-      db.questProgress.upsert({
-        where: {
-          questId_userId: {
-            userId,
-            questId
-          }
-        },
-        create: {
-          userId,
-          questId,
-          status
-        },
-        update: {
-          status
+  const updateQuestStatus = (questId: string, userId: string, status: QuestStatus) => {
+    const statuses = ['IN_PROGRESS', 'REWARDS_DEPOSITED', 'REWARDS_CLAIMED', 'COMPLETED']
+
+    return getQuestStatus(userId, questId)
+      .andThen((data) => {
+        const currentStatus = data?.status
+        if (currentStatus && statuses.indexOf(currentStatus) >= statuses.indexOf(status)) {
+          return errAsync(createApiError('cannot update to a previous status', 400)())
         }
-      }),
-      (error) => {
-        logger?.error({ error, method: 'updateQuestStatus', model: 'UserQuestModel' })
-        return createApiError('failed to update quest status', 400)()
-      }
-    )
+        return okAsync(undefined)
+      })
+      .andThen(() =>
+        ResultAsync.fromPromise(
+          db.questProgress.upsert({
+            where: {
+              questId_userId: {
+                userId,
+                questId
+              }
+            },
+            create: {
+              userId,
+              questId,
+              status
+            },
+            update: {
+              status
+            }
+          }),
+          (error) => {
+            logger?.error({ error, method: 'updateQuestStatus', model: 'UserQuestModel' })
+            return createApiError('failed to update quest status', 400)()
+          }
+        )
+      )
+  }
 
   const findCompletedRequirements = (userId: string, questId: string) =>
     ResultAsync.fromPromise(
