@@ -7,6 +7,7 @@
   import { questApi } from '$lib/api/quest-api'
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
   import { user } from '../../stores'
+  import { userApi } from '$lib/api/user-api'
 
   export let questId: keyof Quests
 
@@ -30,8 +31,9 @@
   const handleClaimRewards = () => {
     loading = true
 
-    rdt.then((rdt): void => {
-      const accountAddress = rdt.walletApi.getWalletData().accounts[0].address
+    rdt.then(async (rdt) => {
+      const accountAddress = (await userApi.me())._unsafeUnwrap().accountAddress!
+
       rdt.walletApi
         .sendTransaction({
           transactionManifest: `
