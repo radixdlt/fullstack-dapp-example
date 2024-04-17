@@ -97,6 +97,9 @@
       }
     },
     {
+      type: 'requirements'
+    },
+    {
       id: 'unclaimable-requirements',
       type: 'jetty',
       dialogs: 1
