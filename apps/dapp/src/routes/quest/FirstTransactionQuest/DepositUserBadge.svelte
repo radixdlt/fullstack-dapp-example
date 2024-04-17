@@ -75,11 +75,15 @@
 
     rdt.then(() => {
       const address = $user!.accountAddress!
+      const userId = $user!.id
+
       const gatewayApi = GatewayApi(publicConfig.networkId)
       gatewayApi.callApi('getEntityDetailsVaultAggregated', [address]).map(([entityDetails]) => {
         const hasUserBadge = entityDetails.non_fungible_resources.items
           .find((item) => item.resource_address === publicConfig.badges.userBadgeAddress)
-          ?.vaults.items.some((vault) => vault.total_count > 0)
+          ?.vaults.items.some(
+            (vault) => vault.total_count > 0 && vault.items?.some((item) => item === `<${userId}>`)
+          )
 
         if (hasUserBadge) {
           state = 'hasUserBadge'
