@@ -94,8 +94,7 @@ export const load: LayoutLoad = async ({ url, fetch }) => {
   })
 
   const unsubRequirements = questRequirements.subscribe((requirements) => {
-    if (!requirements[id]) return
-    resolveRequirements(requirements[id])
+    resolveRequirements(requirements[id] ?? [])
   })
 
   const requirements = await requirementsPromise

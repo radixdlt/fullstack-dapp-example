@@ -43,7 +43,7 @@
 
   const { dAppDefinitionAddress, networkId } = publicConfig
 
-  onMount(() => {
+  const initializeQuestRequirementsStore = () => {
     const requirements: Record<QuestId, StoredRequirements[]> = {} as Record<
       QuestId,
       StoredRequirements[]
@@ -67,7 +67,9 @@
     }
 
     $questRequirements = requirements
+  }
 
+  const loadRequirementsFromLocalStorage = () => {
     Object.entries(useLocalStorage('requirements').get() ?? {}).forEach(
       ([questId, requirements]) => {
         $questRequirements[questId as QuestId] = $questRequirements[questId as QuestId].map(
@@ -80,8 +82,28 @@
         )
       }
     )
+  }
+
+  const setGetWalletRequirementInStore = () => {
+    $questRequirements['GetRadixWallet'] = $questRequirements['GetRadixWallet'].map(
+      (requirement) => {
+        if (requirement.id === 'GetTheWallet') {
+          return {
+            ...requirement,
+            complete: true
+          }
+        }
+        return requirement
+      }
+    )
+  }
+
+  onMount(() => {
+    initializeQuestRequirementsStore()
+    loadRequirementsFromLocalStorage()
 
     showLandingPopup = !useLocalStorage('seen-landing-popup').get()
+
     $questStatus = loadQuestStatusFromLocalStorage()
 
     questRequirements.subscribe((value) => {
@@ -105,17 +127,7 @@
     })
 
     if (isMobile() && $page.url.searchParams.get('wallet') === 'true') {
-      $questRequirements['GetRadixWallet'] = $questRequirements['GetRadixWallet'].map(
-        (requirement) => {
-          if (requirement.id === 'GetTheWallet') {
-            return {
-              ...requirement,
-              complete: true
-            }
-          }
-          return requirement
-        }
-      )
+      setGetWalletRequirementInStore()
     }
 
     radixDappToolkit = RadixDappToolkit({
@@ -128,6 +140,7 @@
         $webSocketClient?.close()
         clearQuestStatusFromLocalStorage()
         $questStatus = loadQuestStatusFromLocalStorage()
+        initializeQuestRequirementsStore()
         useLocalStorage('requirements').clear()
         $user = undefined
       }
@@ -164,34 +177,40 @@
               ...me,
               label: persona.label
             }
+
+            if (authToken) {
+              if (!$webSocketClient) {
+                const ws = WebSocketClient({ authToken })
+                $webSocketClient = ws
+              }
+            }
+
             // TODO:
             // - bootstrap the application state (quest progress, user, notifications etc...) and connect to notifications websocket
             const questInfo = (await questApi.getQuestsInformation())._unsafeUnwrap()
 
-            ;(['WelcomeToRadQuest', 'WhatIsRadix', 'GetRadixWallet'] as const).forEach(
-              async (questId) => {
-                if (
-                  useLocalStorage(`quest-status-${questId}`).get() === 'completed' &&
-                  questInfo[questId]?.status !== 'COMPLETED'
-                ) {
-                  await questApi.completeContentRequirement(questId).mapErr(() => {})
-                  await questApi.completeQuest(questId).mapErr(() => {})
-                  questInfo[questId] = {
-                    savedProgress: questInfo[questId].savedProgress,
-                    status: 'COMPLETED'
-                  }
-                } else if (
-                  useLocalStorage(`quest-status-${questId}`).get() === 'in_progress' &&
-                  !questInfo[questId]?.status
-                ) {
-                  await questApi.updateQuestProgress(questId, 0)
-                  questInfo[questId] = {
-                    savedProgress: 0,
-                    status: 'IN_PROGRESS'
-                  }
+            for (let questId of ['WelcomeToRadQuest', 'WhatIsRadix', 'GetRadixWallet'] as const) {
+              if (
+                useLocalStorage(`quest-status-${questId}`).get() === 'completed' &&
+                questInfo[questId]?.status !== 'COMPLETED'
+              ) {
+                await questApi.completeContentRequirement(questId).mapErr(() => {})
+                await questApi.completeQuest(questId).mapErr(() => {})
+                questInfo[questId] = {
+                  savedProgress: questInfo[questId]?.savedProgress ?? 0,
+                  status: 'COMPLETED'
+                }
+              } else if (
+                useLocalStorage(`quest-status-${questId}`).get() === 'in_progress' &&
+                !questInfo[questId]?.status
+              ) {
+                await questApi.updateQuestProgress(questId, 0)
+                questInfo[questId] = {
+                  savedProgress: 0,
+                  status: 'IN_PROGRESS'
                 }
               }
-            )
+            }
 
             const questDefinitions = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))
 
@@ -219,13 +238,6 @@
 
             if (questInfo['LoginWithWallet']?.status === 'IN_PROGRESS') {
               $jettyMessage = 'LoggedIn'
-            }
-
-            if (authToken) {
-              if (!$webSocketClient) {
-                const ws = WebSocketClient({ authToken })
-                $webSocketClient = ws
-              }
             }
           })
           .mapErr(({ status }) => {
