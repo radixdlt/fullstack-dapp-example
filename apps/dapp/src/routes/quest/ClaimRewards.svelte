@@ -22,7 +22,7 @@
     if (result.isOk()) {
       const { status } = result.value
 
-      if (status === 'REWARDS_CLAIMED') {
+      if (status === 'REWARDS_CLAIMED' || status === 'COMPLETED') {
         dispatch('next')
       }
     }
