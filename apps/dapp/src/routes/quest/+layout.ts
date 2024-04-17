@@ -93,13 +93,6 @@ export const load: LayoutLoad = async ({ url, fetch }) => {
     resolveRequirements = resolve
   })
 
-  const unsubRequirements = questRequirements.subscribe((requirements) => {
-    resolveRequirements(requirements[id] ?? [])
-  })
-
-  const requirements = await requirementsPromise
-  unsubRequirements()
-
   const _quests = await questsPromise
   const quest = _quests[id]
 
@@ -137,6 +130,13 @@ export const load: LayoutLoad = async ({ url, fetch }) => {
       }))
     }))
   }
+
+  const unsubRequirements = questRequirements.subscribe((requirements) => {
+    resolveRequirements(requirements[id] ?? [])
+  })
+
+  const requirements = await requirementsPromise
+  unsubRequirements()
 
   return {
     questProps: {
