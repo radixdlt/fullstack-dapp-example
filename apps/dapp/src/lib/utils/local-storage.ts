@@ -55,9 +55,7 @@ export const loadQuestStatusFromLocalStorage = () => {
       } else {
         status =
           curr[1].preRequisites.length === 0 ||
-          curr[1].preRequisites.every(
-            (pre) => savedStatus[pre] === 'completed' || savedStatus[pre] === 'in-progress'
-          )
+          curr[1].preRequisites.every((pre) => savedStatus[pre] === 'completed')
             ? 'unlocked'
             : 'locked'
       }
