@@ -212,6 +212,14 @@
               }
             }
 
+            if (useLocalStorage('quest-status-LoginWithWallet').get() === 'in-progress') {
+              await questApi.updateQuestProgress('LoginWithWallet', 0)
+              questInfo['LoginWithWallet'] = {
+                savedProgress: 0,
+                status: 'IN_PROGRESS'
+              }
+            }
+
             const questDefinitions = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))
 
             $questStatus = Object.entries(questDefinitions).reduce(
