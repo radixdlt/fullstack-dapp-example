@@ -59,9 +59,7 @@
       type: 'claimRewards'
     },
     {
-      id: 'complete',
-      type: 'jetty',
-      dialogs: 1
+      type: 'complete'
     }
   ]}
   let:render
@@ -89,15 +87,10 @@
     {@html data.text['sendToJetty-2.md']}
   {/if}
 
-  <svelte:fragment slot="jetty" let:render let:Button let:next let:completeQuest>
+  <svelte:fragment slot="jetty" let:render let:Button let:next>
     {#if render('text2')}
       {@html data.text['1.md']}
       <Button on:click={next}>{$i18n.t('quests:okButton')}</Button>
-    {/if}
-
-    {#if render('complete')}
-      {@html data.text['success.md']}
-      <Button on:click={completeQuest}>{$i18n.t('quests:okButton')}</Button>
     {/if}
   </svelte:fragment>
 </Quest>

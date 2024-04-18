@@ -7,6 +7,7 @@
 
   export let rewards: Readonly<QuestReward[]>
   export let loading = false
+  export let noClaim = false
 </script>
 
 <slot />
@@ -22,7 +23,9 @@
 </div>
 
 <div class="btn">
-  <Button on:click {loading}>{$i18n.t('quests:claimButton')}</Button>
+  <Button on:click {loading}
+    >{noClaim ? $i18n.t('quests:okButton') : $i18n.t('quests:claimButton')}</Button
+  >
 </div>
 
 <style lang="scss">

@@ -1,37 +1,47 @@
 <script lang="ts">
-  import { user } from '../../../stores'
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
+  import { user } from '../../../stores'
+  import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
+  import Input from '$lib/components/input/Input.svelte'
 
   export let data: PageData
 
+  let render = (_: string) => false
+
+  $: if ((render('intro') || render('explain-wallet') || render('connect-wallet')) && $user) {
+    setTimeout(() => {
+      quest.actions.goToStep('wallet-connected')
+    }, 0)
+  }
+
+  $: if (render('wallet-connected') && !$user) {
+    quest.actions.goToStep('connect-wallet')
+  }
+
   let quest: Quest
 
-  $: if (quest && $user) {
-    quest.actions.goToStep('complete')
-  }
+  let nameInput = $user?.label ?? ''
 </script>
 
 <Quest
+  bind:render
   bind:this={quest}
   {...data.questProps}
   steps={[
     {
-      id: 'text1',
+      id: 'explain-wallet',
       type: 'regular',
       footer: {
         type: 'navigation'
       }
     },
     {
-      id: 'text2',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      id: 'connect-wallet',
+      type: 'regular'
     },
     {
-      id: 'text3',
+      id: 'wallet-connected',
       type: 'regular',
       footer: {
         type: 'navigation'
@@ -87,21 +97,31 @@
       }
     },
     {
+      type: 'requirements'
+    },
+    {
+      id: 'unclaimable-requirements',
+      type: 'jetty',
+      dialogs: 1
+    },
+    {
       type: 'complete'
     }
   ]}
   let:render
 >
-  {#if render('text1')}
+  {#if render('explain-wallet')}
     {@html data.text['0.md']}
   {/if}
 
-  {#if render('text2')}
+  {#if render('connect-wallet')}
     {@html data.text['1.md']}
   {/if}
 
-  {#if render('text3')}
-    {@html data.text['2.md']}
+  {#if render('wallet-connected')}
+    {@html data.text['connected.md']}
+
+    <Input bind:value={nameInput} />
   {/if}
 
   {#if render('text4')}
@@ -131,4 +151,12 @@
   {#if render('text10')}
     {@html data.text['9.md']}
   {/if}
+
+  <svelte:fragment slot="jetty" let:render let:next>
+    {#if render('unclaimable-requirements')}
+      <ClaimRewards on:click={next} rewards={data.questProps.rewards} noClaim>
+        {@html data.text['requirements.md']}
+      </ClaimRewards>
+    {/if}
+  </svelte:fragment>
 </Quest>

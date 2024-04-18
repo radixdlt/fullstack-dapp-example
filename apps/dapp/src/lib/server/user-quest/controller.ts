@@ -133,19 +133,22 @@ const UserQuestController = ({
   const completeContentRequirement = (
     ctx: ControllerMethodContext,
     questId: QuestId,
-    userId: string,
-    requirementId: string
+    userId: string
   ) => {
     const questDefinition = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId]
 
-    if (questDefinition.requirements[requirementId].type !== 'content') {
+    const requirementId = Object.keys(questDefinition.requirements).find(
+      (req) => questDefinition.requirements[req].type === 'content'
+    )
+
+    if (!requirementId) {
       return errAsync(createApiError(ErrorReason.invalidRequirement, 400)())
     }
 
     const questStatus = userQuestModel(ctx.logger)
       .getQuestStatus(userId, questId)
       .andThen((questStatus) => {
-        if (!questStatus) {
+        if (questStatus?.status === 'COMPLETED') {
           return errAsync(createApiError(ErrorReason.questAlreadyCompleted, 400)())
         }
         return okAsync(questStatus)

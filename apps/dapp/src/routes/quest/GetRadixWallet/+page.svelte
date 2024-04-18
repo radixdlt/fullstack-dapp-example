@@ -2,35 +2,43 @@
   import { onMount } from 'svelte'
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
+  import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
+  import { isMobile } from '$lib/utils/is-mobile'
 
   export let data: PageData
 
+  let render = (_: string) => false
+
   onMount(() => {
+    if (isMobile()) return
+
     const callback = ({ detail }: any) => {
       if (detail.eventType !== 'extensionStatus') return
       const { isWalletLinked } = detail
 
       if (isWalletLinked) {
-        quest.actions.goToStep('complete')
+        quest.actions.goToStep('text2')
       }
     }
 
     window.addEventListener('radix#chromeExtension#receive', callback)
 
-    const timeout = setTimeout(() => {
-      window.dispatchEvent(
-        new CustomEvent('radix#chromeExtension#send', {
-          detail: {
-            interactionId: 'id',
-            discriminator: 'extensionStatus'
-          }
-        })
-      )
+    const interval = setInterval(() => {
+      if (render('get-the-wallet')) {
+        window.dispatchEvent(
+          new CustomEvent('radix#chromeExtension#send', {
+            detail: {
+              interactionId: 'id',
+              discriminator: 'extensionStatus'
+            }
+          })
+        )
+      }
     }, 1000)
 
     return () => {
       window.removeEventListener('radix#chromeExtension#receive', callback)
-      clearTimeout(timeout)
+      clearInterval(interval)
     }
   })
 
@@ -39,10 +47,12 @@
 
 <Quest
   bind:this={quest}
+  bind:render
   {...data.questProps}
   steps={[
     {
-      id: 'text1',
+      id: 'get-the-wallet',
+      skip: data.requirements.GetTheWallet,
       type: 'regular',
       footer: {
         type: 'navigation'
@@ -112,12 +122,20 @@
       }
     },
     {
+      type: 'requirements'
+    },
+    {
+      id: 'unclaimable-requirements',
+      type: 'jetty',
+      dialogs: 1
+    },
+    {
       type: 'complete'
     }
   ]}
   let:render
 >
-  {#if render('text1')}
+  {#if render('get-the-wallet')}
     {@html data.text['0.md']}
   {/if}
 
@@ -156,4 +174,12 @@
   {#if render('text10')}
     {@html data.text['9.md']}
   {/if}
+
+  <svelte:fragment slot="jetty" let:render let:next>
+    {#if render('unclaimable-requirements')}
+      <ClaimRewards on:click={next} rewards={data.questProps.rewards} noClaim>
+        {@html data.text['requirements.md']}
+      </ClaimRewards>
+    {/if}
+  </svelte:fragment>
 </Quest>

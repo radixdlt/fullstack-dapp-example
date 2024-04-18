@@ -1,5 +1,6 @@
 <script lang="ts">
-  export let onInput: (value: string) => void
+  export let value: string = ''
+  export let onInput: (value: string) => void = () => {}
 
   function inputHandler(event: Event) {
     const input = event.target as HTMLInputElement
@@ -7,7 +8,7 @@
   }
 </script>
 
-<input on:input={inputHandler} />
+<input on:input={inputHandler} bind:value />
 
 <style lang="scss">
   input {

@@ -1,5 +1,7 @@
 <script lang="ts">
   import ProgressBar from '$lib/components/progress-bar/ProgressBar.svelte'
+  import { backOut } from 'svelte/easing'
+  import { scale } from 'svelte/transition'
 
   export let steps: number
   export let progress: number = 0
@@ -25,6 +27,7 @@
 </script>
 
 <div
+  transition:scale={{ easing: backOut }}
   bind:clientWidth={width}
   bind:clientHeight={height}
   class="card progress-card"

@@ -6,6 +6,7 @@ import { goto } from '$app/navigation'
 import type { QuestStatus } from '../../types'
 import type { QuestId, Quests, Requirement } from 'content'
 import type { User } from 'database'
+import { useLocalStorage } from '$lib/utils/local-storage'
 
 export const load: LayoutLoad = async ({ url, fetch }) => {
   const id = url.pathname.split('/')[2] as QuestId
@@ -36,7 +37,7 @@ export const load: LayoutLoad = async ({ url, fetch }) => {
 
   unsubQuestStatus()
 
-  if (status[id] === 'locked') {
+  if (!status[id] || status[id] === 'locked') {
     goto('/')
   }
 
@@ -92,14 +93,6 @@ export const load: LayoutLoad = async ({ url, fetch }) => {
     resolveRequirements = resolve
   })
 
-  const unsubRequirements = questRequirements.subscribe((requirements) => {
-    if (!requirements[id]) return
-    resolveRequirements(requirements[id])
-  })
-
-  const requirements = await requirementsPromise
-  unsubRequirements()
-
   const _quests = await questsPromise
   const quest = _quests[id]
 
@@ -108,6 +101,9 @@ export const load: LayoutLoad = async ({ url, fetch }) => {
   const _user = await userPromise
 
   unsubUser()
+
+  const cachedProgress = useLocalStorage(`quest-status-${id}`)
+  if (!cachedProgress.get()) cachedProgress.set('in-progress')
 
   if (_user) {
     const updateResult = await questApi.updateQuestProgress(id, 0, fetch)
@@ -134,6 +130,13 @@ export const load: LayoutLoad = async ({ url, fetch }) => {
       }))
     }))
   }
+
+  const unsubRequirements = questRequirements.subscribe((requirements) => {
+    resolveRequirements(requirements[id] ?? [])
+  })
+
+  const requirements = await requirementsPromise
+  unsubRequirements()
 
   return {
     questProps: {

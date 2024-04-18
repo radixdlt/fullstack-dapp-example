@@ -20,6 +20,7 @@
   export let nextDisabled: ComponentProps<Quest>['nextDisabled'] = false
   export let jettyClaimHtml: string
   export let jettyCompleteHtml: string
+  export let render: (id: string) => boolean = () => false
 
   export const actions = {
     next: () => {},
@@ -50,14 +51,14 @@
 
     if (e.detail !== steps.length - 1) return
 
-    const contentRequirements = $questRequirements[id]
-      .filter((requirement) => requirement.type === 'content')
-      .map((req) => req.id)
+    const contentRequirement = $questRequirements[id].find(
+      (requirement) => requirement.type === 'content'
+    )?.id
 
-    contentRequirements.forEach((req) => {
-      if ($user) questApi.completeContentRequirement(id, req)
+    if (contentRequirement) {
+      if ($user) questApi.completeContentRequirement(id)
       $questRequirements[id] = $questRequirements[id].map((requirement) => {
-        if (requirement.id === req) {
+        if (requirement.id === contentRequirement) {
           return {
             ...requirement,
             complete: true
@@ -66,13 +67,13 @@
           return requirement
         }
       })
-    })
-    console.log($questRequirements)
+    }
   }
 </script>
 
 <Quest
   bind:this={quest}
+  bind:render
   on:close={closeQuest}
   on:complete={_completeQuest}
   on:progressUpdated={progressUpdated}

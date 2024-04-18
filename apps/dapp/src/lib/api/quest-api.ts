@@ -52,13 +52,9 @@ const deleteSavedProgress = (serverFetch?: typeof fetch) =>
     })
   )
 
-const completeContentRequirement = (
-  questId: QuestId,
-  requirementId: string,
-  serverFetch?: typeof fetch
-) =>
+const completeContentRequirement = (questId: QuestId, serverFetch?: typeof fetch) =>
   fetchWrapper<void>(
-    (serverFetch ?? fetch)(`/api/quest/${questId}/complete-content-requirement/${requirementId}`, {
+    (serverFetch ?? fetch)(`/api/quest/${questId}/complete-content-requirement`, {
       method: 'PUT'
     })
   )

@@ -115,7 +115,7 @@ export const EventWorkerController = ({
     const handleRewardClaimed = () =>
       ensureValidData(
         transactionId,
-        getDataFromQuestRewardsEvent(job.data.relevantEvents.RewardDepositedEvent)
+        getDataFromQuestRewardsEvent(job.data.relevantEvents.RewardClaimedEvent)
       ).andThen(({ userId, questId }) =>
         ensureUserExists(userId, transactionId).andThen(() =>
           db.rewardsClaimed({ userId, questId }).andThen(() =>

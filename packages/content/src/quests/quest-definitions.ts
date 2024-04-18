@@ -103,7 +103,11 @@ export const QuestDefinitions = (networkId: number): { [key: string]: QuestDefin
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: ['WhatIsRadix'],
       minutesToComplete: 3,
-      requirements: {}
+      requirements: {
+        GetTheWallet: {
+          type: 'content'
+        }
+      }
     },
     LoginWithWallet: {
       category: 'Basic',

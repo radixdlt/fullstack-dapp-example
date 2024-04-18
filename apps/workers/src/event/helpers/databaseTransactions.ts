@@ -2,7 +2,6 @@ import { ResultAsync } from 'neverthrow'
 import { AppLogger, AuditResource, NotificationType } from 'common'
 import { AuditType, PrismaClient, QuestStatus } from 'database'
 import { EventId } from 'content'
-import { config } from '../../config'
 
 export const databaseTransactions = ({
   dbClient,
@@ -14,18 +13,14 @@ export const databaseTransactions = ({
   transactionId: string
 }) => {
   const setQuestProgressStatus = (status: QuestStatus, userId: string, questId: string) =>
-    dbClient.questProgress.upsert({
+    dbClient.questProgress.update({
       where: {
         questId_userId: {
           userId,
           questId
         }
       },
-      create: {
-        userId,
-        questId
-      },
-      update: {
+      data: {
         status
       }
     })

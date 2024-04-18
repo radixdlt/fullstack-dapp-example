@@ -1,10 +1,6 @@
 <script lang="ts">
   import Button from '$lib/components/button/Button.svelte'
-  import { loadQuestStatusFromLocalStorage } from '$lib/utils/local-storage'
-  import { onMount } from 'svelte'
   import { questStatus } from '../stores'
-
-  let mounted = false
 
   let enabled = false
 
@@ -13,13 +9,7 @@
       // @ts-ignore
       $questStatus[quest] = 'unlocked'
     })
-  } else if (mounted) {
-    $questStatus = loadQuestStatusFromLocalStorage()
   }
-
-  onMount(() => {
-    mounted = true
-  })
 </script>
 
 <div class="dev-mode">

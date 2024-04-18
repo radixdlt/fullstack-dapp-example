@@ -12,10 +12,16 @@ type LocalStorageEntry<K, V> = {
 
 export const useLocalStorage = <
   T extends
-    | LocalStorageEntry<`quest-status-${QuestId}`, 'completed'>
+    | LocalStorageEntry<`quest-status-${QuestId}`, 'in-progress' | 'completed'>
     | LocalStorageEntry<'savedProgress', { questId: QuestId; progress: number }>
     | LocalStorageEntry<'seen-landing-popup', boolean>
-    | LocalStorageEntry<'requirements', Record<QuestId, Record<string, boolean>>>,
+    | LocalStorageEntry<
+        'requirements',
+        Record<
+          Extract<QuestId, 'WelcomeToRadQuest' | 'WhatIsRadix' | 'GetRadixWallet'>,
+          Record<string, boolean>
+        >
+      >,
   V extends T['key']
 >(
   item: V
@@ -33,7 +39,7 @@ export const useLocalStorage = <
 export const loadQuestStatusFromLocalStorage = () => {
   const questDefinitions = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))
 
-  const savedStatus: { [key in QuestId]?: 'completed' | undefined } = {}
+  const savedStatus: { [key in QuestId]?: 'completed' | 'in-progress' | undefined } = {}
 
   for (const questId of Object.keys(questDefinitions)) {
     savedStatus[questId as QuestId] = useLocalStorage(`quest-status-${questId as QuestId}`).get()

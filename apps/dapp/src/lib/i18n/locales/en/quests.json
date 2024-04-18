@@ -30,7 +30,9 @@
     "introDescription": "Radix is a decentralized network that aims to solve the scalability problem of blockchain technology. Learn more about Radix and how it works."
   },
   "GetRadixWallet": {
-    "requirements": {},
+    "requirements": {
+      "GetTheWallet": "Download the Radix Wallet"
+    },
     "title": "The Radix Wallet",
     "description": "Get set up with the Radix Wallet",
     "introDescription": "The Radix Wallet is your gateway to the Radix network. Download the wallet and get started."
