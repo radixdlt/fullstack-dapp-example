@@ -1,63 +1,82 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte'
   import { questApi } from '$lib/api/quest-api'
-  import { questRequirements, quests, user } from '../../stores'
-  import type { QuestId, Quests } from 'content'
+  import { quests, user, webSocketClient } from '../../stores'
+  import type { Quests } from 'content'
   import RequirementsPage from '$lib/components/quest/RequirementsPage.svelte'
   import { i18n } from '$lib/i18n/i18n'
+  import { useCookies } from '$lib/utils/cookies'
 
   export let questId: keyof Quests
+  export let requirements: Record<string, boolean>
 
   const quest = $quests[questId]
 
-  let requirementsStatus: { text: string; complete: boolean }[] = $questRequirements[questId].map(
-    (requirement) => ({
-      text: requirement.text,
-      complete: requirement.type === 'content' ? true : false
-    })
-  )
+  let requirementsStatus: { id: string; text: string; complete: boolean }[] = Object.entries(
+    requirements
+  ).map(([key, value]) => {
+    // @ts-ignore
+    const type = quest.requirements[key].type
+
+    if (type === 'content' && !$user) {
+      // @ts-ignore
+      useCookies(`requirement-${questId}-${key}`).set(true)
+    }
+
+    return {
+      id: key,
+      //@ts-ignore
+      text: $i18n.t(`quests:${questId}.requirements.${key}`),
+      //@ts-ignore
+      complete: type === 'content' ? true : value
+    }
+  })
 
   const dispatch = createEventDispatcher<{
     'all-requirements-met': undefined
   }>()
 
+  let dispatched = false
+
   const checkRequirements = () => {
     if (requirementsStatus.every((requirement) => requirement.complete)) {
-      dispatch('all-requirements-met')
+      if (!dispatched) dispatch('all-requirements-met')
+      dispatched = true
     }
   }
 
-  $: {
-    requirementsStatus
+  const readRequirementsFromDb = () => {
+    questApi.getQuestInformation(questId).map((response) => {
+      requirementsStatus = requirementsStatus.map((requirement) => {
+        if (response.requirements[requirement.id]) {
+          return {
+            ...requirement,
+            complete: true
+          }
+        } else {
+          return requirement
+        }
+      })
+    })
     checkRequirements()
   }
 
   onMount(() => {
     checkRequirements()
-
     if ($user) {
-      questApi.getQuestInformation(questId).map((response) => {
-        requirementsStatus = Object.keys(quest.requirements).map((key) => {
-          const complete = response.requirements[key]
-          // @ts-ignore
-          return { text: $i18n.t(`quests:${quest.id}.requirements.${key}`), complete }
-        })
+      questApi.completeContentRequirement(questId)
 
-        questRequirements.update((prev) => ({
-          ...prev,
-          [questId]: Object.entries(response.requirements).map((value) => ({
-            id: value[0] as QuestId,
-            text: (
-              $i18n.t(`${questId}.requirements`, { ns: 'quests', returnObjects: true }) as Record<
-                string,
-                string
-              >
-            )[value[0]],
-            complete: value[1],
-            type: quest.requirements[value[0]].type
-          }))
-        }))
+      readRequirementsFromDb()
+
+      const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
+        if (message.type === 'QuestRewardsDeposited') {
+          readRequirementsFromDb()
+        }
       })
+
+      return () => {
+        unsubscribeWebSocket?.()
+      }
     }
   })
 </script>

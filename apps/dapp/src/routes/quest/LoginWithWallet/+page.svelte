@@ -27,7 +27,7 @@
 <Quest
   bind:render
   bind:this={quest}
-  {...data.questProps}
+  {...data}
   steps={[
     {
       id: 'explain-wallet',
@@ -154,7 +154,7 @@
 
   <svelte:fragment slot="jetty" let:render let:next>
     {#if render('unclaimable-requirements')}
-      <ClaimRewards on:click={next} rewards={data.questProps.rewards} noClaim>
+      <ClaimRewards on:click={next} rewards={data.rewards} noClaim>
         {@html data.text['requirements.md']}
       </ClaimRewards>
     {/if}

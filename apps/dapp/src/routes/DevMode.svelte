@@ -1,14 +1,15 @@
 <script lang="ts">
   import Button from '$lib/components/button/Button.svelte'
-  import { questStatus } from '../stores'
 
   let enabled = false
 
   $: if (enabled) {
+    /*
     Object.keys($questStatus).forEach((quest) => {
       // @ts-ignore
       $questStatus[quest] = 'unlocked'
     })
+    */
   }
 </script>
 

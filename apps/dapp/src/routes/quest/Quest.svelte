@@ -4,22 +4,18 @@
   import Quest from '$lib/components/quest/Quest.svelte'
   import { onMount, type ComponentProps } from 'svelte'
   import { closeQuest } from './+layout.svelte'
-  import { questRequirements, user } from '../../stores'
-  import { completeQuest, useLocalStorage } from '$lib/utils/local-storage'
+  import { quests, user } from '../../stores'
   import ClaimRewards from './ClaimRewards.svelte'
   import VerifyRequirements from './VerifyRequirements.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import type { QuestId } from 'content'
+  import { useCookies } from '$lib/utils/cookies'
+  import { completeQuest } from '$lib/utils/complete-quest'
 
   export let id: QuestId
-  export let title: ComponentProps<Quest>['title']
-  export let description: ComponentProps<Quest>['description']
-  export let minutesToComplete: ComponentProps<Quest>['minutesToComplete']
-  export let rewards: ComponentProps<Quest>['rewards']
   export let steps: ComponentProps<Quest>['steps']
+  export let requirements: Record<string, boolean>
   export let nextDisabled: ComponentProps<Quest>['nextDisabled'] = false
-  export let jettyClaimHtml: string
-  export let jettyCompleteHtml: string
   export let render: (id: string) => boolean = () => false
 
   export const actions = {
@@ -29,8 +25,16 @@
   }
 
   const saveProgress = (progress: number) => {
-    useLocalStorage('savedProgress').set({ questId: id, progress })
-    if ($user) questApi.saveProgress(id, progress)
+    if ($user) {
+      questApi.saveProgress(id, progress)
+    } else if (
+      ['WelcomeToRadQuest', 'WhatIsRadix', 'GetRadixWalelt', 'LoginWithWallet'].some(
+        (questId) => questId === id
+      )
+    ) {
+      // @ts-ignore
+      useCookies(`saved-progress-${id}`).set(progress)
+    }
   }
 
   let quest: Quest
@@ -41,9 +45,9 @@
     actions.goToStep = quest.goToStep
   })
 
-  const _completeQuest = () => {
-    completeQuest(id, !!$user)
-    closeQuest()
+  const _completeQuest = async () => {
+    await completeQuest(id, !!$user)
+    setTimeout(closeQuest, 0)
   }
 
   const progressUpdated = (e: CustomEvent<number>) => {
@@ -51,24 +55,34 @@
 
     if (e.detail !== steps.length - 1) return
 
-    const contentRequirement = $questRequirements[id].find(
+    const contentRequirement = Object.values($quests[id].requirements).find(
       (requirement) => requirement.type === 'content'
     )?.id
 
     if (contentRequirement) {
-      if ($user) questApi.completeContentRequirement(id)
-      $questRequirements[id] = $questRequirements[id].map((requirement) => {
-        if (requirement.id === contentRequirement) {
-          return {
-            ...requirement,
-            complete: true
-          }
-        } else {
-          return requirement
-        }
-      })
+      if ($user) {
+        questApi.completeContentRequirement(id)
+      } else {
+        // @ts-ignore
+        useCookies(`requirement-${id}-${contentRequirement}`).set(true)
+      }
     }
   }
+
+  const _requirements = Object.entries(requirements).reduce(
+    (prev, cur) => {
+      prev = [
+        ...prev,
+        {
+          // @ts-ignore
+          text: $i18n.t(`quests:${id}.requirements.${cur[0]}`),
+          complete: cur[1]
+        }
+      ]
+      return prev
+    },
+    [] as NonNullable<ComponentProps<Quest>['requirements']>
+  )
 </script>
 
 <Quest
@@ -77,12 +91,12 @@
   on:close={closeQuest}
   on:complete={_completeQuest}
   on:progressUpdated={progressUpdated}
-  {title}
-  {description}
-  {minutesToComplete}
-  {rewards}
+  title={$i18n.t(`${id}.title`, { ns: 'quests' })}
+  description={$i18n.t(`${id}.introDescription`, { ns: 'quests' })}
+  minutesToComplete={$quests[id].minutesToComplete}
+  rewards={$quests[id].rewards}
   {steps}
-  requirements={$questRequirements[id]}
+  requirements={_requirements}
   {nextDisabled}
   startAtProgress={$page.url.hash ? parseInt($page.url.hash.slice(1)) : 0}
   let:back
@@ -106,12 +120,12 @@
     />
     {#if render('claimRewards')}
       <ClaimRewards questId={id} on:next={next}>
-        {@html jettyClaimHtml}
+        {@html $quests[id].text['claim.md']}
       </ClaimRewards>
     {/if}
 
     {#if render('complete')}
-      {@html jettyCompleteHtml}
+      {@html $quests[id].text['complete.md']}
 
       <Button on:click={_completeQuest}>{$i18n.t('quests:completeQuest')}</Button>
     {/if}
@@ -120,6 +134,7 @@
   {#if render('requirements')}
     <VerifyRequirements
       questId={id}
+      {requirements}
       on:all-requirements-met={lastProgress < progress ? next : back}
     />
   {/if}

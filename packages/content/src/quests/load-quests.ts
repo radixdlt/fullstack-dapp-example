@@ -13,13 +13,12 @@ export const loadQuests = (language: Language, networkId: number) => {
   const quests: Quests = {} as Quests
   const questDefinitions = QuestDefinitions(networkId)
 
-  Object.entries(questDefinitions).forEach(([id, quest]) => {
-    // @ts-ignore
-    quests[id] = {
+  Object.values(questDefinitions).forEach((quest) => {
+    quests[quest.id] = {
       // @ts-ignore
-      text: QuestIndex[id]?.[language],
-      id,
-      splashImage: `/quests-images/splash/${id}.webp`,
+      text: QuestIndex[quest.id]?.[language],
+      // @ts-ignore
+      splashImage: `/quests-images/splash/${quest.id}.webp`,
       ...quest
     }
   })

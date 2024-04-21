@@ -57,26 +57,24 @@ type ContentRequirement = {
 }
 
 export type QuestDefinition = {
+  id: string
   category: QuestCategory
   rewards: Readonly<QuestReward[]>
-  preRequisites: Readonly<QuestId[]>
+  preRequisites: Readonly<string[]>
   requirements: Requirements
   minutesToComplete: number
 }
 
-export type QuestId =
-  | 'WelcomeToRadQuest'
-  | 'WhatIsRadix'
-  | 'GetRadixWallet'
-  | 'LoginWithWallet'
-  | 'FirstTransactionQuest'
-  | 'TransferTokens'
+export type QuestId = ReturnType<typeof QuestDefinitions>[keyof ReturnType<
+  typeof QuestDefinitions
+>]['id']
 
-export const QuestDefinitions = (networkId: number): { [key: string]: QuestDefinition } => {
+export const QuestDefinitions = (networkId: number) => {
   const { badges } = getEntityAddresses(networkId)
 
   return {
     WelcomeToRadQuest: {
+      id: 'WelcomeToRadQuest',
       category: 'Basic',
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: [],
@@ -88,6 +86,7 @@ export const QuestDefinitions = (networkId: number): { [key: string]: QuestDefin
       }
     },
     WhatIsRadix: {
+      id: 'WhatIsRadix',
       category: 'Basic',
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: ['WelcomeToRadQuest'],
@@ -99,6 +98,7 @@ export const QuestDefinitions = (networkId: number): { [key: string]: QuestDefin
       }
     },
     GetRadixWallet: {
+      id: 'GetRadixWallet',
       category: 'Basic',
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: ['WhatIsRadix'],
@@ -110,6 +110,7 @@ export const QuestDefinitions = (networkId: number): { [key: string]: QuestDefin
       }
     },
     LoginWithWallet: {
+      id: 'LoginWithWallet',
       category: 'Basic',
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: ['GetRadixWallet'],
@@ -121,6 +122,7 @@ export const QuestDefinitions = (networkId: number): { [key: string]: QuestDefin
       }
     },
     FirstTransactionQuest: {
+      id: 'FirstTransactionQuest',
       category: 'Basic',
       rewards: [
         {
@@ -153,6 +155,7 @@ export const QuestDefinitions = (networkId: number): { [key: string]: QuestDefin
       }
     },
     TransferTokens: {
+      id: 'TransferTokens',
       category: 'Basic',
       rewards: [
         {
@@ -182,5 +185,5 @@ export const QuestDefinitions = (networkId: number): { [key: string]: QuestDefin
         }
       }
     }
-  } as const
+  } as const satisfies { [key: string]: QuestDefinition }
 }

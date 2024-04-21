@@ -14,5 +14,8 @@ export default defineConfig({
         `
       }
     }
+  },
+  ssr: {
+    external: ['database', '@prisma/client']
   }
 })
