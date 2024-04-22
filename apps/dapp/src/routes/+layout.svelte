@@ -26,6 +26,7 @@
   import { isMobile } from '$lib/utils/is-mobile'
   import type { LayoutData } from './$types'
   import { useCookies } from '$lib/utils/cookies'
+  import Jetty from './Jetty.svelte'
 
   export let data: LayoutData
 
@@ -189,6 +190,8 @@
     />
   </Backdrop>
 {/if}
+
+<Jetty />
 
 <Layout>
   <Header slot="header" />

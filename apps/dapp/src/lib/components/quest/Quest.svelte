@@ -5,62 +5,53 @@
     enabled?: Writable<boolean> | Readable<boolean>
   }
 
-  type _Step<T extends string> = {
+  export type _Step<T extends string> = {
     id: string
     type: T
     skip?: Writable<boolean> | Readable<boolean>
   }
 
-  type IntroStep = _Step<'intro'> & { id: 'intro' }
+  export type IntroStep = _Step<'intro'> & { id: 'intro' }
 
-  type RequirementStep = _Step<'requirements'> & { id: 'requirements' }
-
-  type ClaimRewardsStep = _Step<'claimRewards'> & { id: 'claimRewards' }
-
-  type CompleteStep = _Step<'complete'> & { id: 'complete' }
-
-  type RegularStep = _Step<'regular'> & {
+  export type RegularStep = _Step<'regular'> & {
     footer?: {
       next?: Action
       back?: Omit<Action, 'enabled'>
     }
   }
 
-  type JettyStep = _Step<'jetty'> & {
-    dialogs: number
+  type JettyContentComponent<Props extends Record<string, any>> = {
     next?: Omit<Action, 'enabled'>
     back?: Omit<Action, 'enabled'>
+    component: typeof SvelteComponent<Props>
+    props: Props
   }
+
+  export type JettyStep<Props extends Record<string, any>> = _Step<'jetty'> &
+    JettyContentComponent<Props>
 </script>
 
 <script lang="ts">
   import type { QuestReward } from 'content'
   import QuestCard from './QuestCard.svelte'
   import Intro from './Intro.svelte'
-  import JettyDialog from '../jetty-dialog/JettyDialog.svelte'
-  import JettyActionButton from './JettyActionButton.svelte'
-  import JettyActionButtons from './JettyActionButtons.svelte'
-  import { createEventDispatcher } from 'svelte'
+  import { SvelteComponent, createEventDispatcher } from 'svelte'
   import type { Writable } from 'svelte/store'
   import type { Readable, Unsubscriber } from 'svelte/motion'
+  import type { jettyDialog } from '../../../stores'
 
   export let title: string
   export let description: string
   export let minutesToComplete: number
   export let rewards: Readonly<QuestReward[]>
-  export let steps: (
-    | RegularStep
-    | JettyStep
-    | Omit<RequirementStep, 'id'>
-    | Omit<ClaimRewardsStep, 'id'>
-    | Omit<CompleteStep, 'id'>
-  )[]
+  export let steps: (RegularStep | JettyStep<any>)[]
   export let requirements: {
     text: string
     complete: boolean
   }[] = []
   export let nextDisabled = false
   export let startAtProgress: number | string = 0
+  export let jettyRenderer: typeof jettyDialog
 
   export const setProgress = async (_progress: number) => {
     if (_progress < 0 || _progress >= _steps.length) return
@@ -116,38 +107,7 @@
     type: 'intro'
   }
 
-  let _steps: (IntroStep | RegularStep | JettyStep)[] = [introStep, ...steps].map((step) => {
-    if (step.type === 'requirements') {
-      return {
-        id: 'requirements',
-        type: 'regular'
-      }
-    }
-
-    if (step.type === 'claimRewards') {
-      return {
-        id: 'claimRewards',
-        type: 'jetty',
-        dialogs: 1
-      }
-    }
-
-    if (step.type === 'complete') {
-      return {
-        id: 'complete',
-        type: 'jetty',
-        dialogs: 1
-      }
-    }
-
-    return step
-  })
-
-  const getJettyDialogs = (i: number) => {
-    const step = _steps[i]
-    if (step.type === 'jetty') return step.dialogs
-    return 0
-  }
+  let _steps: (IntroStep | RegularStep | JettyStep<any>)[] = [introStep, ...steps]
 
   const nextStepIsJetty = (i: number) => {
     const nextStep = _steps[i + 1]
@@ -167,14 +127,11 @@
 
   $: render = (id: string) => {
     const currentId = currentStep.id
+    const index = _steps.findIndex((step) => step.id === id)
+    const thisStep = _steps[index]
 
     if (currentId === id) return true
-
-    const index = _steps.findIndex((step) => step.id === id)
-
     if (index < 0) return false
-
-    const thisStep = _steps[index]
 
     const stepsBetweenThisAndProgress = _steps.slice(index + 1, progress)
 
@@ -200,6 +157,17 @@
   }
 
   $: currentStep = _steps[progress]
+
+  $: {
+    if (currentStep.type === 'jetty') {
+      $jettyRenderer = {
+        component: currentStep.component,
+        props: currentStep.props
+      }
+    } else {
+      $jettyRenderer = undefined
+    }
+  }
 
   $: currentStepEnabledStore =
     currentStep.type === 'regular' ? currentStep.footer?.next?.enabled : undefined
@@ -227,17 +195,3 @@
 
   <slot {render} {next} {back} {lastProgress} {progress} />
 </QuestCard>
-
-{#if currentStep.type === 'jetty'}
-  <JettyDialog dialogs={getJettyDialogs(progress)} let:i>
-    <slot
-      name="jetty"
-      {render}
-      dialog={i}
-      Button={JettyActionButton}
-      Buttons={JettyActionButtons}
-      {next}
-      {back}
-    />
-  </JettyDialog>
-{/if}

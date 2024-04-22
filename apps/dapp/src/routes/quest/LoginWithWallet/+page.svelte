@@ -5,15 +5,19 @@
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
   import Input from '$lib/components/input/Input.svelte'
   import { derived } from 'svelte/store'
+  import { i18n } from '$lib/i18n/i18n'
 
   export let data: PageData
 
   let nameInput = $user?.label ?? ''
 
   const loggedIn = derived(user, ($user) => !!$user)
+
+  let quest: Quest
 </script>
 
 <Quest
+  bind:this={quest}
   id={data.id}
   requirements={data.requirements}
   steps={[
@@ -69,7 +73,14 @@
     {
       id: 'unclaimable-requirements',
       type: 'jetty',
-      dialogs: 1
+      component: ClaimRewards,
+      props: {
+        rewards: data.rewards,
+        text: data.text['requirements.md'],
+        nextButtonText: $i18n.t('quests:continueButton'),
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next()
+      }
     },
     {
       type: 'complete'
@@ -118,12 +129,4 @@
   {#if render('text10')}
     {@html data.text['9.md']}
   {/if}
-
-  <svelte:fragment slot="jetty" let:render let:next>
-    {#if render('unclaimable-requirements')}
-      <ClaimRewards on:click={next} rewards={data.rewards}>
-        {@html data.text['requirements.md']}
-      </ClaimRewards>
-    {/if}
-  </svelte:fragment>
 </Quest>

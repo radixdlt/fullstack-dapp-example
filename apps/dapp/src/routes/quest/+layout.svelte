@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  import { user } from '../../stores'
+  import { jettyDialog, user } from '../../stores'
 
   let loggedIn = false
 
@@ -13,6 +13,7 @@
     } else {
       localStorage.removeItem('savedProgress')
     }
+    jettyDialog.set(undefined)
     await invalidateAll()
     setTimeout(() => goto('/'), 0)
   }

@@ -14,6 +14,7 @@
   import { user } from '../../../stores'
   import { readable, writable } from 'svelte/store'
   import Button from '$lib/components/button/Button.svelte'
+  import TextJettyPage from '../TextJettyPage.svelte'
 
   export let data: PageData
 
@@ -104,8 +105,26 @@
   bind:this={quest}
   let:next
   steps={[
-    { id: 'intro1', type: 'jetty', dialogs: 1 },
-    { id: 'intro2', type: 'jetty', dialogs: 1 },
+    {
+      id: 'intro1',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['0.md']
+      }
+    },
+    {
+      id: 'intro2',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['1.md']
+      }
+    },
     {
       id: 'verifyPhoneNumber',
       type: 'regular',
@@ -206,14 +225,4 @@
 
     <EnterEmail bind:email bind:checked={sendNewsletter} />
   {/if}
-
-  <svelte:fragment slot="jetty" let:render>
-    {#if render('intro1')}
-      {@html data.text['0.md']}
-    {/if}
-
-    {#if render('intro2')}
-      {@html data.text['1.md']}
-    {/if}
-  </svelte:fragment>
 </Quest>

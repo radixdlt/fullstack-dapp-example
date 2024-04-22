@@ -1,21 +1,37 @@
 <script lang="ts">
   import { page } from '$app/stores'
   import { questApi } from '$lib/api/quest-api'
-  import Quest from '$lib/components/quest/Quest.svelte'
+  import Quest, {
+    type JettyStep,
+    type RegularStep,
+    type _Step
+  } from '$lib/components/quest/Quest.svelte'
   import { onMount, type ComponentProps } from 'svelte'
   import { closeQuest } from './+layout.svelte'
-  import { quests, user } from '../../stores'
+  import { jettyDialog, quests, user } from '../../stores'
   import ClaimRewards from './ClaimRewards.svelte'
   import VerifyRequirements from './VerifyRequirements.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import type { QuestId } from 'content'
   import { useCookies } from '$lib/utils/cookies'
   import { completeQuest } from '$lib/utils/complete-quest'
-  import JettyActionButtons from '$lib/components/quest/JettyActionButtons.svelte'
   import { useLocalStorage } from '$lib/utils/local-storage'
+  import CompleteQuest from './CompleteQuest.svelte'
+
+  type CompleteStep = _Step<'complete'> & { id: 'complete' }
+
+  type RequirementStep = _Step<'requirements'> & { id: 'requirements' }
+
+  type ClaimRewardsStep = _Step<'claimRewards'> & { id: 'claimRewards' }
 
   export let id: QuestId
-  export let steps: ComponentProps<Quest>['steps']
+  export let steps: (
+    | RegularStep
+    | JettyStep<any>
+    | Omit<RequirementStep, 'id'>
+    | Omit<ClaimRewardsStep, 'id'>
+    | Omit<CompleteStep, 'id'>
+  )[]
   export let requirements: Record<string, boolean>
   export let render: (id: string) => boolean = () => false
 
@@ -58,6 +74,7 @@
 
   const _completeQuest = async () => {
     await completeQuest(id, !!$user)
+    $jettyDialog = undefined
     setTimeout(closeQuest, 0)
   }
 
@@ -99,6 +116,44 @@
   }
 
   let nextDisabled = false
+
+  $: _steps = steps.map((step) => {
+    if (step.type === 'requirements') {
+      return {
+        type: 'regular',
+        id: 'requirements'
+      }
+    }
+
+    if (step.type === 'claimRewards') {
+      return {
+        type: 'jetty',
+        id: 'claimRewards',
+        component: ClaimRewards,
+        props: {
+          questId: id,
+          onNext: () => actions.next(),
+          onBack: () => actions.back(),
+          text: $quests[id].text['claim.md']
+        }
+      }
+    }
+
+    if (step.type === 'complete') {
+      return {
+        type: 'jetty',
+        id: 'complete',
+        component: CompleteQuest,
+        props: {
+          onBack: () => actions.back(),
+          completeQuest: _completeQuest,
+          text: $quests[id].text['complete.md']
+        }
+      }
+    }
+
+    return step
+  }) as (RegularStep | JettyStep<any>)[]
 </script>
 
 <Quest
@@ -111,10 +166,11 @@
   description={$i18n.t(`${id}.introDescription`, { ns: 'quests' })}
   minutesToComplete={$quests[id].minutesToComplete}
   rewards={$quests[id].rewards}
-  {steps}
+  steps={_steps}
   requirements={_requirements}
   {nextDisabled}
   {startAtProgress}
+  jettyRenderer={jettyDialog}
   let:back
   let:next
   let:render
@@ -122,43 +178,6 @@
   let:progress
 >
   <slot {back} {next} {render} completeQuest={_completeQuest} />
-
-  <svelte:fragment slot="jetty" let:render let:dialog let:Button let:Buttons let:next let:back>
-    <slot
-      name="jetty"
-      {render}
-      {dialog}
-      {Button}
-      {Buttons}
-      {next}
-      {back}
-      completeQuest={_completeQuest}
-    />
-    {#if render('claimRewards')}
-      <ClaimRewards questId={id} on:next={next}>
-        {@html $quests[id].text['claim.md']}
-
-        <svelte:fragment slot="buttons" let:loading let:handleClaimRewards>
-          <JettyActionButtons
-            nextText={$i18n.t('quests:claimButton')}
-            {loading}
-            on:back={back}
-            on:next={handleClaimRewards}
-          />
-        </svelte:fragment>
-      </ClaimRewards>
-    {:else if render('complete')}
-      {@html $quests[id].text['complete.md']}
-
-      <JettyActionButtons
-        nextText={$i18n.t('quests:completeQuest')}
-        on:back={back}
-        on:next={_completeQuest}
-      />
-    {:else}
-      <JettyActionButtons on:back={back} on:next={next} />
-    {/if}
-  </svelte:fragment>
 
   {#if render('requirements')}
     <VerifyRequirements

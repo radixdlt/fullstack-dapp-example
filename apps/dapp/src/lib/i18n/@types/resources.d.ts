@@ -6,6 +6,8 @@ interface Resources {
     'menu-glossary': 'Glossary'
     'menu-text': 'Hi friend, how can I help you?'
     'claim-rewards': "Wow speedy, you're a fast learner! Here are your rewards for this quest."
+    'logged-in-with-wallet': "I see you've logged in with your wallet!"
+    'go-back-to-quest': 'Go back to quest'
   }
   main: {
     'tabs-basics': 'Basics'

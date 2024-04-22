@@ -2,19 +2,20 @@
   import { publicConfig } from '$lib/public-config'
   import { rdt } from '$lib/rdt'
 
-  import { createEventDispatcher, onMount } from 'svelte'
+  import { onMount } from 'svelte'
   import { QuestDefinitions, type Quests } from 'content'
   import { questApi } from '$lib/api/quest-api'
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
   import { user } from '../../stores'
   import { userApi } from '$lib/api/user-api'
+  import { i18n } from '$lib/i18n/i18n'
 
   export let questId: keyof Quests
+  export let onNext: () => void
+  export let onBack: () => void
+  export let text: string
 
   const questDefinition = QuestDefinitions(publicConfig.networkId)[questId]
-  const dispatch = createEventDispatcher<{
-    next: undefined
-  }>()
 
   onMount(async () => {
     const result = await questApi.getQuestInformation(questId)
@@ -23,7 +24,7 @@
       const { status } = result.value
 
       if (status === 'REWARDS_CLAIMED' || status === 'COMPLETED') {
-        dispatch('next')
+        onNext()
       }
     }
   })
@@ -61,7 +62,7 @@
         })
         .map(() => {
           loading = false
-          dispatch('next')
+          onNext()
         })
         .mapErr(() => {
           loading = false
@@ -72,8 +73,11 @@
   let loading = false
 </script>
 
-<ClaimRewards rewards={questDefinition.rewards}>
-  <slot />
-</ClaimRewards>
-
-<slot name="buttons" {loading} {handleClaimRewards} />
+<ClaimRewards
+  rewards={questDefinition.rewards}
+  {text}
+  {loading}
+  nextButtonText={$i18n.t('quests:claimButton')}
+  {onBack}
+  onNext={handleClaimRewards}
+/>
