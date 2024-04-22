@@ -72,7 +72,7 @@ const UserQuestController = ({
   ) => {
     const questDefinition = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId]
 
-    const preRequisites = questDefinition.preRequisites as string[]
+    const preRequisites = questDefinition.preRequisites
 
     const questStatusResult = userQuestModel(ctx.logger)
       .getQuestStatus(userId, questId)
@@ -85,7 +85,7 @@ const UserQuestController = ({
 
     return questStatusResult.andThen(() =>
       userQuestModel(ctx.logger)
-        .findPrerequisites(userId, preRequisites)
+        .findPrerequisites(userId, preRequisites as unknown as string[])
         .andThen((completedPrerequisites) => {
           if (completedPrerequisites.length !== preRequisites.length) {
             return errAsync(createApiError(ErrorReason.preRequisiteNotMet, 400)())
@@ -138,6 +138,7 @@ const UserQuestController = ({
     const questDefinition = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId]
 
     const requirementId = Object.keys(questDefinition.requirements).find(
+      // @ts-ignore
       (req) => questDefinition.requirements[req].type === 'content'
     )
 

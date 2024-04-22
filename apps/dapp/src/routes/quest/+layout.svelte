@@ -8,8 +8,11 @@
   })
 
   export const closeQuest = () => {
-    if (loggedIn) questApi.deleteSavedProgress()
-    localStorage.removeItem('savedProgress')
+    if (loggedIn) {
+      questApi.deleteSavedProgress()
+    } else {
+      localStorage.removeItem('savedProgress')
+    }
     goto('/')
   }
 </script>

@@ -32,7 +32,7 @@
 </script>
 
 <Quest
-  {...data.questProps}
+  {...data}
   bind:this={quest}
   steps={[
     {

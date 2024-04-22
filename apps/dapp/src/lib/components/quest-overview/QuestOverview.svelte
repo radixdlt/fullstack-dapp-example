@@ -5,11 +5,12 @@
   import PadlockIcon from '@images/padlock.svg'
   import CheckmarkIcon from '@images/checkmark.svg'
   import type { QuestReward } from 'content'
+  import type { QuestStatus } from '../../../types'
 
   export let title: string
   export let description: string
   export let minutesToComplete: number
-  export let state: 'locked' | 'unlocked' | 'completed' = 'locked'
+  export let state: Omit<QuestStatus, 'in-progress'> = 'locked'
   export let backgroundImage: string | undefined = undefined
   export let rewards: Readonly<QuestReward[]> = []
 </script>

@@ -72,7 +72,7 @@
 </script>
 
 <Quest
-  {...data.questProps}
+  {...data}
   bind:this={quest}
   let:next
   let:back

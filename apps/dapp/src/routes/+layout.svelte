@@ -8,16 +8,8 @@
   import { publicConfig } from '$lib/public-config'
   import Carousel from '$lib/components/carousel/Carousel.svelte'
   import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
-  import { goto } from '$app/navigation'
-  import {
-    questRequirements,
-    questStatus,
-    quests,
-    user,
-    webSocketClient,
-    type StoredRequirements,
-    jettyMessage
-  } from '../stores'
+  import { goto, invalidateAll } from '$app/navigation'
+  import { quests, user, webSocketClient, jettyMessage } from '../stores'
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
@@ -25,106 +17,32 @@
   import { resolveRDT } from '$lib/rdt'
   import { WebSocketClient } from '$lib/websocket-client'
   import { questApi } from '$lib/api/quest-api'
-  import { QuestDefinitions, type QuestId } from 'content'
-  import { PUBLIC_NETWORK_ID } from '$env/static/public'
+  import { type QuestId } from 'content'
   import type { QuestStatus } from '../types'
-  import {
-    clearQuestStatusFromLocalStorage,
-    loadQuestStatusFromLocalStorage,
-    useLocalStorage
-  } from '$lib/utils/local-storage'
+  import { useLocalStorage } from '$lib/utils/local-storage'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import LandingPopup from './LandingPopup.svelte'
   import { page } from '$app/stores'
   import { isMobile } from '$lib/utils/is-mobile'
+  import type { LayoutData } from './$types'
+  import { useCookies } from '$lib/utils/cookies'
+
+  export let data: LayoutData
+
+  $quests = data.questDefinitions
 
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
 
   const { dAppDefinitionAddress, networkId } = publicConfig
 
-  const initializeQuestRequirementsStore = () => {
-    const requirements: Record<QuestId, StoredRequirements[]> = {} as Record<
-      QuestId,
-      StoredRequirements[]
-    >
-
-    for (const questId in $quests) {
-      const quest = $quests[questId as QuestId]
-
-      requirements[questId as QuestId] = Object.entries(quest.requirements).map(
-        ([id, requirement]) => ({
-          id,
-          complete: false,
-          // @ts-ignore
-          text: $i18n.t(`${questId as QuestId}.requirements`, {
-            ns: 'quests',
-            returnObjects: true
-          })[id],
-          type: requirement.type
-        })
-      )
-    }
-
-    $questRequirements = requirements
-  }
-
-  const loadRequirementsFromLocalStorage = () => {
-    Object.entries(useLocalStorage('requirements').get() ?? {}).forEach(
-      ([questId, requirements]) => {
-        $questRequirements[questId as QuestId] = $questRequirements[questId as QuestId].map(
-          (requirement) => ({
-            ...requirement,
-            complete: Object.entries(requirements).some(
-              ([id, complete]) => id === requirement.id && complete
-            )
-          })
-        )
-      }
-    )
-  }
-
   const setGetWalletRequirementInStore = () => {
-    $questRequirements['GetRadixWallet'] = $questRequirements['GetRadixWallet'].map(
-      (requirement) => {
-        if (requirement.id === 'GetTheWallet') {
-          return {
-            ...requirement,
-            complete: true
-          }
-        }
-        return requirement
-      }
-    )
+    // @ts-ignore
+    useCookies('requirement-GetRadixWallet-GetTheWallet').set(true)
   }
 
   onMount(() => {
-    initializeQuestRequirementsStore()
-    loadRequirementsFromLocalStorage()
-
     showLandingPopup = !useLocalStorage('seen-landing-popup').get()
-
-    $questStatus = loadQuestStatusFromLocalStorage()
-
-    questRequirements.subscribe((value) => {
-      if (value) {
-        useLocalStorage('requirements').set(
-          Object.entries(value).reduce(
-            (prev, [questId, requirements]) => {
-              prev[questId as QuestId] = requirements.reduce(
-                (prev, cur) => {
-                  prev[cur.id] = cur.complete
-                  return prev
-                },
-                {} as { [key: string]: boolean }
-              )
-              return prev
-            },
-            {} as { [key in QuestId]: { [key: string]: boolean } }
-          )
-        )
-      }
-    })
 
     if (isMobile() && $page.url.searchParams.get('wallet') === 'true') {
       setGetWalletRequirementInStore()
@@ -135,14 +53,27 @@
       dAppDefinitionAddress: dAppDefinitionAddress ?? '',
       logger: createLogger(1),
       onDisconnect: () => {
-        // TODO: handle application state cleanup
         authApi.logout()
         $webSocketClient?.close()
-        clearQuestStatusFromLocalStorage()
-        $questStatus = loadQuestStatusFromLocalStorage()
-        initializeQuestRequirementsStore()
-        useLocalStorage('requirements').clear()
+        ;(
+          [
+            'FirstTransactionQuest',
+            'GetRadixWallet',
+            'LoginWithWallet',
+            'WhatIsRadix',
+            'WelcomeToRadQuest'
+          ] as const
+        ).forEach((questId) => {
+          useCookies(`quest-status-${questId}`).clear()
+          Object.keys($quests[questId].requirements).forEach((id) => {
+            // @ts-ignore
+            useCookies(`requirement-${questId}-${id}`).clear()
+          })
+        })
+
         $user = undefined
+
+        invalidateAll()
       }
     })
 
@@ -185,66 +116,12 @@
               }
             }
 
+            await invalidateAll()
+
             // TODO:
             // - bootstrap the application state (quest progress, user, notifications etc...) and connect to notifications websocket
-            const questInfo = (await questApi.getQuestsInformation())._unsafeUnwrap()
 
-            for (let questId of ['WelcomeToRadQuest', 'WhatIsRadix', 'GetRadixWallet'] as const) {
-              if (
-                useLocalStorage(`quest-status-${questId}`).get() === 'completed' &&
-                questInfo[questId]?.status !== 'COMPLETED'
-              ) {
-                await questApi.completeContentRequirement(questId).mapErr(() => {})
-                await questApi.completeQuest(questId).mapErr(() => {})
-                questInfo[questId] = {
-                  savedProgress: questInfo[questId]?.savedProgress ?? 0,
-                  status: 'COMPLETED'
-                }
-              } else if (
-                useLocalStorage(`quest-status-${questId}`).get() === 'in_progress' &&
-                !questInfo[questId]?.status
-              ) {
-                await questApi.updateQuestProgress(questId, 0)
-                questInfo[questId] = {
-                  savedProgress: 0,
-                  status: 'IN_PROGRESS'
-                }
-              }
-            }
-
-            if (useLocalStorage('quest-status-LoginWithWallet').get() === 'in-progress') {
-              await questApi.updateQuestProgress('LoginWithWallet', 0)
-              questInfo['LoginWithWallet'] = {
-                savedProgress: 0,
-                status: 'IN_PROGRESS'
-              }
-            }
-
-            const questDefinitions = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))
-
-            $questStatus = Object.entries(questDefinitions).reduce(
-              (prev, cur) => {
-                const [id, quest] = cur
-
-                if (questInfo[id as QuestId]?.status === 'COMPLETED') {
-                  prev[id as QuestId] = 'completed'
-                  return prev
-                }
-
-                const preRequisites = quest.preRequisites
-
-                const isUnlocked = preRequisites.every(
-                  (preReq) => questInfo[preReq]?.status === 'COMPLETED'
-                )
-
-                prev[id as QuestId] = isUnlocked ? 'unlocked' : 'locked'
-
-                return prev
-              },
-              {} as { [key in QuestId]: QuestStatus }
-            )
-
-            if (questInfo['LoginWithWallet']?.status === 'IN_PROGRESS') {
+            if (data.questStatus['LoginWithWallet']?.status === 'IN_PROGRESS') {
               $jettyMessage = 'LoggedIn'
             }
           })
@@ -268,6 +145,28 @@
       })
     }
   })
+
+  $: questCardState = Object.entries(data.questDefinitions).reduce(
+    (prev, cur) => {
+      const [id, quest] = cur
+
+      if (data.questStatus[id as QuestId]?.status === 'COMPLETED') {
+        prev[id as QuestId] = 'completed'
+        return prev
+      }
+
+      const preRequisites = quest.preRequisites
+
+      const isUnlocked = preRequisites.every(
+        (preReq) => data.questStatus[preReq]?.status === 'COMPLETED'
+      )
+
+      prev[id as QuestId] = isUnlocked ? 'unlocked' : 'locked'
+
+      return prev
+    },
+    {} as { [key in QuestId]: Omit<QuestStatus, 'in-progress'> }
+  )
 
   let _quests = Object.entries($quests) as [
     keyof typeof $quests,
@@ -314,11 +213,7 @@
                 minutesToComplete={quest.minutesToComplete}
                 rewards={quest.rewards}
                 backgroundImage={quest.splashImage}
-                state={!$questStatus[id] || $questStatus[id] === 'locked'
-                  ? 'locked'
-                  : $questStatus[id] === 'in-progress' || $questStatus[id] === 'unlocked'
-                    ? 'unlocked'
-                    : 'completed'}
+                state={questCardState[id] ?? 'locked'}
                 on:click={() => goto(`/quest/${id}`)}
               />
             </Item>

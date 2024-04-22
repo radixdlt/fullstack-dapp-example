@@ -7,7 +7,7 @@
 </script>
 
 <Quest
-  {...data.questProps}
+  {...data}
   steps={[
     {
       id: 'text1',
@@ -135,7 +135,7 @@
 
   <svelte:fragment slot="jetty" let:render let:next>
     {#if render('unclaimable-requirements')}
-      <ClaimRewards on:click={next} rewards={data.questProps.rewards} noClaim>
+      <ClaimRewards on:click={next} rewards={data.rewards} noClaim>
         {@html data.text['requirements.md']}
       </ClaimRewards>
     {/if}
