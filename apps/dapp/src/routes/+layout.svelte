@@ -17,7 +17,7 @@
   import { resolveRDT } from '$lib/rdt'
   import { WebSocketClient } from '$lib/websocket-client'
   import { questApi } from '$lib/api/quest-api'
-  import { type QuestId } from 'content'
+  import { QuestCategory, type QuestId } from 'content'
   import type { QuestStatus } from '../types'
   import { useLocalStorage } from '$lib/utils/local-storage'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
@@ -31,7 +31,6 @@
   export let data: LayoutData
 
   $quests = data.questDefinitions
-
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
 
@@ -41,7 +40,6 @@
     // @ts-ignore
     useCookies('requirement-GetRadixWallet-GetTheWallet').set(true)
   }
-
   onMount(() => {
     showLandingPopup = !useLocalStorage('seen-landing-popup').get()
 
@@ -207,17 +205,16 @@
   <Tabs
     slot="tabs"
     tabs={[
-      { name: $i18n.t('main:tabs-basics'), id: 'basics' },
-      { name: $i18n.t('main:tabs-advanced'), id: 'advanced' }
+      { name: $i18n.t('main:tabs-basics'), id: QuestCategory.Basic },
+      { name: $i18n.t('main:tabs-advanced'), id: QuestCategory.Advanced }
     ]}
     bind:activeTab
   />
 
   <svelte:fragment slot="quests">
-    {#if activeTab === 'basics'}
       <Carousel let:Item>
         {#each _quests as [id, quest]}
-          {#if quest.category === 'Basic'}
+          {#if quest.category === activeTab}
             <Item>
               <QuestOverview
                 title={$i18n.t(`${id}.title`, { ns: 'quests' })}
@@ -232,7 +229,6 @@
           {/if}
         {/each}
       </Carousel>
-    {/if}
   </svelte:fragment>
 </Layout>
 
