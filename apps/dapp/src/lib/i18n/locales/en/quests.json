@@ -85,5 +85,14 @@
     "introDescription": "Transfer tokens to another account to earn your reward.",
     "copyTextButton_copy": "Copy",
     "copyTextButton_copied": "Copied!"
+  },
+  "StakingQuest": {
+    "title": "Doing first Radix Network stake",
+    "description": "Learn what staking is and what it brings you and the Radar network.",
+    "introDescription": "What is staking and what does it matter? Earn some APY with your staked tokens.",
+    "requirements": {
+      "LearnAboutStaking": "Learn about staking",
+      "StakeYourXRD": "Stake your XRD on dashboard"
+    }
   }
 }
