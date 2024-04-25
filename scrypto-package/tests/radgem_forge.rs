@@ -171,7 +171,7 @@ fn can_mint_rare_radgem() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    // both seed numbers above 2/3 to ensure an ultra rare radgem
+    // both seed numbers above 2/3 to ensure an rare radgem
     let radgem = radgem_forge.mint_radgem(dec!(0.75), dec!(0.88), &mut env)?;
 
     let radgem_id = radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();

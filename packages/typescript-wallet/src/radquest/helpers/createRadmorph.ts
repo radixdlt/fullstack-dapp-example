@@ -12,7 +12,17 @@ export const createRadmorph = () => {
         ;
 
         CREATE_NON_FUNGIBLE_RESOURCE
-            Enum<0u8>()
+            Enum<1u8>(
+                Enum<2u8>(
+                    Enum<0u8>(
+                        Enum<0u8>(
+                            Enum<1u8>(
+                                Address("${config.radQuest.badges.superAdminBadgeAddress}"),
+                            )
+                        )
+                    )
+                )
+            )
             Enum<3u8>()
             true
             Enum<0u8>(
@@ -76,8 +86,10 @@ export const createRadmorph = () => {
                 Array<String>()
             )
             Tuple(
+                # Mint Roles 
                 Enum<1u8>(
                     Tuple(
+                        # Minter
                         Enum<1u8>(
                             Enum<2u8>(
                                 Enum<0u8>(
@@ -89,34 +101,45 @@ export const createRadmorph = () => {
                                 )
                             )
                         ),
+                        # Minter Updater - DenyAll
                         Enum<1u8>(
                             Enum<1u8>()
                         )
                     )
                 ),
+                # Burn Roles - None (defaults to DenyAll, DenyAll if None)
                 Enum<0u8>(),
+                # Freeze Roles - None (defaults to DenyAll, DenyAll if None)
                 Enum<0u8>(),
+                # Recall Roles - None (defaults to DenyAll, DenyAll if None)
                 Enum<0u8>(),
+                # Withdraw Roles
                 Enum<1u8>(
                     Tuple(
+                        # Withdrawer - AllowAll
                         Enum<1u8>(
                             Enum<0u8>()
                         ),
+                        # Withdrawer Updater - DenyAll
                         Enum<1u8>(
                             Enum<1u8>()
                         )
                     )
                 ),
+                # Deposit Roles
                 Enum<1u8>(
                     Tuple(
+                        # Depositor - AllowAll
                         Enum<1u8>(
                             Enum<0u8>()
                         ),
+                        # Depositor Updater - DenyAll
                         Enum<1u8>(
                             Enum<1u8>()
                         )
                     )
                 ),
+                # Non Fungible Data Updater Roles - None (defaults to DenyAll, DenyAll if None)
                 Enum<0u8>()
             )
             Tuple(
@@ -148,6 +171,7 @@ export const createRadmorph = () => {
                 ),
                 Map<String, Enum>()
             )
+            # Metadata Setter and Locker Roles - None (defaults to OWNER when None)
             Enum<0u8>()
         ;
         `)

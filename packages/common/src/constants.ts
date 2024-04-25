@@ -17,17 +17,17 @@ export const Addresses = (networkId: number) => {
           clamAddress: 'resource_tdx_2_1tkhmnxnw3hklh84kdzcz3plmevlnseyflzuvv7a0ldy6jq5m6skxza',
           morphEnergyCards:
             'resource_tdx_2_1ngvftz0x5kufj5tes0gx9qzgfpp0lkjccl5q72fhw4gssvnm3ak30k',
-          radgemAddress: 'resource_tdx_2_1ng5gamrwkhwdc775tmdcemmfy29mghjs42p0flq8s3e7z7m5qlx7ye',
-          radmorphAddress: 'resource_tdx_2_1nf4u57pql2n6qr3zzuwsfja7ceyv0crve3euj00693rmecymp4jjth'
+          radgemAddress: 'resource_tdx_2_1ngjnrmx62r9xptepyf9ce2tk4tqrqdfapeqwk69s7ftjezw63yega3',
+          radmorphAddress: 'resource_tdx_2_1n2zj4333en9mfshg8c9kvaqx8qxzyjr7hhkt50jqu4epkxwq8wwv06'
         },
         package: 'package_tdx_2_1p4jymnsl7qc35vfvwdqv8z5df2q64fvhhul2tnfz6vgh5vrru8px23',
         components: {
           questRewards: 'component_tdx_2_1cp2qf6rzzfhny0qdp40w9jz4m98g9hdtmzd4fdg6gc0epknezg0y65',
           cardForge: 'component_tdx_2_1czsdnwqurcmdzhv3yj94lxhc92ayjlpguaz7nf30mry0s5avy7fk30',
-          radgemForge: 'component_tdx_2_1crchppy8gwzn6f6ae85ractz5m6pg0zdgskytuq5tt73gq9rn3ze87',
-          radmorphForge: 'component_tdx_2_1cp3fmcdr9tapu96nxu8wn3dgelz6jkpsuu5z857pklwp4pa6naelwh',
-          imageOracle: 'component_tdx_2_1cpmmtnj2v7ws69uy66lrdtpn93ydtzr59pjwnra6kzkjqvn3jm407p',
-          refinery: 'component_tdx_2_1cr8w8gqh04suvs8fuytjp0snm06j7c0fwt6exlfhwaemjrugqkttmt'
+          radgemForge: 'component_tdx_2_1cp7lsg052hcw55uwnl55wr9wc0ynqw2mhfymfadphze9w2eu72cfk5',
+          radmorphForge: 'component_tdx_2_1cp9ndqvnd6t38ssh56sn4h6g3g970t7760hlq76ra7ptst5cuyu86s',
+          imageOracle: 'component_tdx_2_1cr3ppkvc6e87ryzv67r33z2lrn0h3xfpxzxzu0mgyhumefvpzv6lg3',
+          refinery: 'component_tdx_2_1cqg5khdgj3hy8raczvsc89lf7mss07zespxk933vnjedef39dfekle'
         },
         xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
         accounts: {

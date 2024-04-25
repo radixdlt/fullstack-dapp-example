@@ -35,7 +35,7 @@ export const createRefinery = () => {
                     Enum<AccessRuleNode::ProofRule>(
                         Enum<ProofRule::Require>(
                             Enum<ResourceOrNonFungible::Resource>(
-                                Address("${config.radQuest.badges.adminBadgeAddress}")
+                                Address("${config.radQuest.badges.superAdminBadgeAddress}")
                             )
                         )
                     )

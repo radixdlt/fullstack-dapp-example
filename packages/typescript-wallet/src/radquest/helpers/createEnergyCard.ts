@@ -80,8 +80,10 @@ export const createEnergyCard = () => {
                 )
             )
             Tuple(
+                # Mint Roles 
                 Enum<1u8>(
                     Tuple(
+                        # Minter
                         Enum<1u8>(
                             Enum<2u8>(
                                 Enum<0u8>(
@@ -93,13 +95,16 @@ export const createEnergyCard = () => {
                                 )
                             )
                         ),
+                        # Minter Updater - DenyAll
                         Enum<1u8>(
                             Enum<1u8>()
                         )
                     )
                 ),
+                # Burn Roles
                 Enum<1u8>(
                     Tuple(
+                        # Burner
                         Enum<1u8>(
                             Enum<2u8>(
                                 Enum<0u8>(
@@ -111,35 +116,46 @@ export const createEnergyCard = () => {
                                 )
                             )
                         ),
+                        # Burner Updater - DenyAll
                         Enum<1u8>(
                             Enum<1u8>()
                         )
                     )
                 ),
+                # Freeze Roles - None (defaults to DenyAll, DenyAll if None)
                 Enum<0u8>(),
+                # Recall Roles - None (defaults to DenyAll, DenyAll if None)
                 Enum<0u8>(),
+                # Withdraw Roles
                 Enum<1u8>(
                     Tuple(
+                        # Withdrawer - AllowAll
                         Enum<1u8>(
                             Enum<0u8>()
                         ),
+                        # Withdrawer Updater - DenyAll
                         Enum<1u8>(
                             Enum<1u8>()
                         )
                     )
                 ),
+                # Deposit Roles
                 Enum<1u8>(
                     Tuple(
+                        # Depositor - AllowAll
                         Enum<1u8>(
                             Enum<0u8>()
                         ),
+                        # Depositor Updater - DenyAll
                         Enum<1u8>(
                             Enum<1u8>()
                         )
                     )
                 ),
+                # Non Fungible Data Update Roles 
                 Enum<1u8>(
                     Tuple(
+                        # Non-Fungible Data Updater
                         Enum<1u8>(
                             Enum<2u8>(
                                 Enum<0u8>(
@@ -151,6 +167,7 @@ export const createEnergyCard = () => {
                                 )
                             )
                         ),
+                        # Non-Fungible Data Updater Updater - DenyAll
                         Enum<1u8>(
                             Enum<1u8>()
                         )
@@ -186,6 +203,7 @@ export const createEnergyCard = () => {
                 ),
                 Map<String, Enum>()
             )
+            # Metadata Setter and Locker Roles - None (defaults to OWNER when None)
             Enum<0u8>()
         ;`)
         .andThen((value) => submitTransaction(value, ['systemAccount']))

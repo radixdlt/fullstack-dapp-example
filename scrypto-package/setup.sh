@@ -14,7 +14,6 @@ export xrd=`resim show $account | grep XRD | grep -o "resource_.\S*" | sed -e "s
 echo "\nPublishing package..."
 export package=`resim publish . | sed "s/Success! New Package: //"`
 
-export owner_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
 export user_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
 export kyc_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
 
@@ -42,7 +41,6 @@ echo "account_badge = $account_badge"
 echo "\nResource Addresses:"
 echo "xrd = $xrd"
 echo "package = $package"
-echo "owner_badge = $owner_badge"
 echo "super_admin_badge = $super_admin_badge"
 echo "admin_badge = $admin_badge"
 echo "user_badge = $user_badge"

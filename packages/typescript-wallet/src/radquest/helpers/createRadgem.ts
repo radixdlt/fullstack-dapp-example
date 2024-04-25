@@ -12,7 +12,17 @@ export const createRadgem = () => {
         ;
 
         CREATE_NON_FUNGIBLE_RESOURCE
-            Enum<0u8>()
+           Enum<1u8>(
+                Enum<2u8>(
+                    Enum<0u8>(
+                        Enum<0u8>(
+                            Enum<1u8>(
+                                Address("${config.radQuest.badges.superAdminBadgeAddress}"),
+                            )
+                        )
+                    )
+                )
+            )
             Enum<3u8>()
             true
             Enum<0u8>(
@@ -70,8 +80,10 @@ export const createRadgem = () => {
                 )
             )
             Tuple(
+                # Mint Roles 
                 Enum<1u8>(
                     Tuple(
+                        # Minter
                         Enum<1u8>(
                             Enum<2u8>(
                                 Enum<0u8>(
@@ -83,13 +95,16 @@ export const createRadgem = () => {
                                 )
                             )
                         ),
+                        # Minter Updater - DenyAll
                         Enum<1u8>(
                             Enum<1u8>()
                         )
                     )
                 ),
+                # Burn Roles
                 Enum<1u8>(
                     Tuple(
+                        # Burner
                         Enum<1u8>(
                             Enum<2u8>(
                                 Enum<0u8>(
@@ -101,35 +116,46 @@ export const createRadgem = () => {
                                 )
                             )
                         ),
+                        # Burner Updater - DenyAll
                         Enum<1u8>(
                             Enum<1u8>()
                         )
                     )
                 ),
+                # Freeze Roles - None (defaults to DenyAll, DenyAll when None)
                 Enum<0u8>(),
+                # Recall Roles - None (defaults to DenyAll, DenyAll when None)
                 Enum<0u8>(),
+                # Withdraw Roles
                 Enum<1u8>(
                     Tuple(
+                        # Withdrawer - AllowAll
                         Enum<1u8>(
                             Enum<0u8>()
                         ),
+                        # Withdrawer Updater - DenyAll
                         Enum<1u8>(
                             Enum<1u8>()
                         )
                     )
                 ),
+                # Deposit Roles
                 Enum<1u8>(
                     Tuple(
+                        # Depositor - AllowAll
                         Enum<1u8>(
                             Enum<0u8>()
                         ),
+                        # Depositor Updater - DenyAll
                         Enum<1u8>(
                             Enum<1u8>()
                         )
                     )
                 ),
+                # Non Fungible Data Updater Roles
                 Enum<1u8>(
                     Tuple(
+                        # Non-Fungible Data Updater
                         Enum<1u8>(
                             Enum<2u8>(
                                 Enum<0u8>(
@@ -141,6 +167,7 @@ export const createRadgem = () => {
                                 )
                             )
                         ),
+                        # Non-Fungible Data Updater Updater - DenyAll
                         Enum<1u8>(
                             Enum<1u8>()
                         )
@@ -174,6 +201,7 @@ export const createRadgem = () => {
                         true
                     )
                 ),
+                # Metadata Setter and Locker Roles - None (defaults to OWNER when None) 
                 Map<String, Enum>()
             )
             Enum<0u8>()

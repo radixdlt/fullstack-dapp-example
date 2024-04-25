@@ -154,8 +154,8 @@ mod morph_card_forge {
             );
 
             let rarity_1_prob = dec!(5) / 9; // Common
-            let rarity_2_prob = dec!(3) / 9; // Rare
-            let _rarity_3_prob = dec!(1) / 9; // UltraRare
+            let rarity_2_prob = dec!(3) / 9; // Uncommon
+            let _rarity_3_prob = dec!(1) / 9; // Rare
 
             let rarity = match rand_num {
                 n if n < rarity_1_prob => RARITY[0].to_string(),

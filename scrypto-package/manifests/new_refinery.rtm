@@ -22,7 +22,7 @@ CALL_FUNCTION
             Enum<AccessRuleNode::ProofRule>(
                 Enum<ProofRule::Require>(
                     Enum<ResourceOrNonFungible::Resource>(
-                        Address("${owner_badge}")
+                        Address("${super_admin_badge}")
                     )
                 )
             )
