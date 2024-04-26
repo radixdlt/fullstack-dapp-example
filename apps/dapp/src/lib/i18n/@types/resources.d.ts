@@ -7,6 +7,8 @@ interface Resources {
     'menu-glossary': 'Glossary'
     'menu-text': 'Hi friend, how can I help you?'
     'claim-rewards': "Wow speedy, you're a fast learner! Here are your rewards for this quest."
+    'logged-in-with-wallet': "I see you've logged in with your wallet!"
+    'go-back-to-quest': 'Go back to quest'
   }
   main: {
     'tabs-basics': 'Basics'
@@ -23,7 +25,8 @@ interface Resources {
     requirementsTitle: 'What You Need to Do'
     nextButton: 'Next'
     keyImageAlt: 'Quest Image'
-    previousButton: 'Back'
+    backButton: 'Back'
+    continueButton: 'Continue'
     placeholderNotFound: 'Placeholder {{id}} not found'
     claimButton: 'Claim Your Reward'
     minutesToComplete_one: '{{count}} minute'
@@ -101,8 +104,8 @@ interface Resources {
       description: 'Learn what staking is and what it brings you and the Radar network.'
       introDescription: 'What is staking and what does it matter? Earn some APY with your staked tokens.'
       requirements: {
-        LearnAboutStaking: 'Learn about staking'
-        StakeYourXRD: 'Stake your XRD on dashboard'
+        LearnStaking: 'Learn about staking'
+        StakedXRD: 'Stake your XRD on dashboard'
       }
     }
   }
