@@ -3,11 +3,13 @@ import { radixEngineClient } from '../../config'
 export const mintAdminBadge = ({
   adminBadgeAddress,
   accountAddress,
-  superAdminBadgeAddress
+  superAdminBadgeAddress,
+  amount = 1
 }: {
   superAdminBadgeAddress: string
   accountAddress?: string
   adminBadgeAddress: string
+  amount?: number
 }) =>
   radixEngineClient
     .getManifestBuilder()
@@ -28,7 +30,7 @@ export const mintAdminBadge = ({
 
         MINT_FUNGIBLE 
           Address("${adminBadgeAddress}")
-          Decimal("1")
+          Decimal("${amount}")
         ;
 
         CALL_METHOD

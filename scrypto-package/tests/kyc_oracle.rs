@@ -14,13 +14,15 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let mut env = TestEnvironment::new();
     let package_address = Package::compile_and_publish(this_package!(), &mut env)?;
 
-    let owner_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+    let super_admin_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
         .mint_initial_supply([()], &mut env)?;
     let admin_badge =
         ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(1, &mut env)?;
 
     let kyc_oracle = KycOracle::new(
-        OwnerRole::Fixed(rule!(require(owner_badge.resource_address(&mut env)?))),
+        OwnerRole::Fixed(rule!(require(
+            super_admin_badge.resource_address(&mut env)?
+        ))),
         admin_badge.resource_address(&mut env)?,
         package_address,
         &mut env,

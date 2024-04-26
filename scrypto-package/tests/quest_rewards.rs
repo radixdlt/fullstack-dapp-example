@@ -18,7 +18,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
 
     let user_id_string = "test_user_id".to_string();
 
-    let owner_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+    let super_admin_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
         .mint_initial_supply([()], &mut env)?;
     let admin_badge =
         ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(2, &mut env)?;
@@ -34,7 +34,9 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         .mint_initial_supply([DidData { radquest_kyc: true }], &mut env)?;
 
     let quest_rewards = QuestRewards::new(
-        OwnerRole::Fixed(rule!(require(owner_badge.resource_address(&mut env)?))),
+        OwnerRole::Fixed(rule!(require(
+            super_admin_badge.resource_address(&mut env)?
+        ))),
         admin_badge.take(dec!(1), &mut env)?,
         user_badge.resource_address(&mut env)?,
         kyc_badge.resource_address(&mut env)?,

@@ -1,28 +1,28 @@
 import { config, radixEngineClient } from '../../config'
 
-export const createEnergyCard = () => {
+export const createRadmorph = () => {
   return radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
       convertStringManifest(`
-            CALL_METHOD
+        CALL_METHOD
             Address("${wellKnownAddresses.accountAddress.payerAccount}")
             "lock_fee"
             Decimal("500")
         ;
-        
+
         CREATE_NON_FUNGIBLE_RESOURCE
-        Enum<1u8>(
-            Enum<2u8>(
-                Enum<0u8>(
+            Enum<1u8>(
+                Enum<2u8>(
                     Enum<0u8>(
-                        Enum<1u8>(
-                            Address("${config.radQuest.badges.superAdminBadgeAddress}"),
+                        Enum<0u8>(
+                            Enum<1u8>(
+                                Address("${config.radQuest.badges.superAdminBadgeAddress}"),
+                            )
                         )
                     )
                 )
             )
-        )
             Enum<3u8>()
             true
             Enum<0u8>(
@@ -45,6 +45,12 @@ export const createEnergyCard = () => {
                                     ),
                                     Enum<0u8>(
                                         12u8
+                                    ),
+                                    Enum<0u8>(
+                                        12u8
+                                    ),
+                                    Enum<0u8>(
+                                        12u8
                                     )
                                 )
                             )
@@ -52,7 +58,7 @@ export const createEnergyCard = () => {
                         Array<Tuple>(
                             Tuple(
                                 Enum<1u8>(
-                                    "MorphEnergyCardData"
+                                    "RadmorphData"
                                 ),
                                 Enum<1u8>(
                                     Enum<0u8>(
@@ -60,8 +66,10 @@ export const createEnergyCard = () => {
                                             "key_image_url",
                                             "name",
                                             "rarity",
+                                            "material",
                                             "energy",
-                                            "availability"
+                                            "color_1",
+                                            "color_2"
                                         )
                                     )
                                 )
@@ -75,9 +83,7 @@ export const createEnergyCard = () => {
                 Enum<1u8>(
                     0u64
                 ),
-                Array<String>(
-                    "key_image_url"
-                )
+                Array<String>()
             )
             Tuple(
                 # Mint Roles 
@@ -101,27 +107,8 @@ export const createEnergyCard = () => {
                         )
                     )
                 ),
-                # Burn Roles
-                Enum<1u8>(
-                    Tuple(
-                        # Burner
-                        Enum<1u8>(
-                            Enum<2u8>(
-                                Enum<0u8>(
-                                    Enum<0u8>(
-                                        Enum<1u8>(
-                                            Address("${config.radQuest.badges.adminBadgeAddress}")
-                                        )
-                                    )
-                                )
-                            )
-                        ),
-                        # Burner Updater - DenyAll
-                        Enum<1u8>(
-                            Enum<1u8>()
-                        )
-                    )
-                ),
+                # Burn Roles - None (defaults to DenyAll, DenyAll if None)
+                Enum<0u8>(),
                 # Freeze Roles - None (defaults to DenyAll, DenyAll if None)
                 Enum<0u8>(),
                 # Recall Roles - None (defaults to DenyAll, DenyAll if None)
@@ -152,34 +139,15 @@ export const createEnergyCard = () => {
                         )
                     )
                 ),
-                # Non Fungible Data Update Roles 
-                Enum<1u8>(
-                    Tuple(
-                        # Non-Fungible Data Updater
-                        Enum<1u8>(
-                            Enum<2u8>(
-                                Enum<0u8>(
-                                    Enum<0u8>(
-                                        Enum<1u8>(
-                                            Address("${config.radQuest.badges.adminBadgeAddress}")
-                                        )
-                                    )
-                                )
-                            )
-                        ),
-                        # Non-Fungible Data Updater Updater - DenyAll
-                        Enum<1u8>(
-                            Enum<1u8>()
-                        )
-                    )
-                )
+                # Non Fungible Data Updater Roles - None (defaults to DenyAll, DenyAll if None)
+                Enum<0u8>()
             )
             Tuple(
                 Map<String, Tuple>(
                     "name" => Tuple(
                         Enum<1u8>(
                             Enum<0u8>(
-                                "Morph Energy Cards"
+                                "RadMorphs"
                             )
                         ),
                         true
@@ -187,7 +155,7 @@ export const createEnergyCard = () => {
                     "description" => Tuple(
                         Enum<1u8>(
                             Enum<0u8>(
-                                "These cards allow RadQuest’s Jetty to harness the primordial energies of the RadQuest realm to fuse Radgems into intricate and beautiful collectible Radmorphs."
+                                "Fused in the boundless energies of the RadQuest realm, RadMorphs are treasured by the dedicated and true of Radix."
                             )
                         ),
                         true
@@ -205,7 +173,8 @@ export const createEnergyCard = () => {
             )
             # Metadata Setter and Locker Roles - None (defaults to OWNER when None)
             Enum<0u8>()
-        ;`)
+        ;
+        `)
         .andThen((value) => submitTransaction(value, ['systemAccount']))
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)

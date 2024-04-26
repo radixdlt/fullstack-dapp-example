@@ -18,7 +18,7 @@ fn create_radgem() {
     let network = NetworkDefinition::mainnet();
 
     let manifest_builder = ManifestBuilder::new().create_non_fungible_resource(
-        OwnerRole::None,
+        OwnerRole::Fixed(rule!(require(XRD))),
         NonFungibleIdType::RUID,
         true,
         NonFungibleResourceRoles {
@@ -80,7 +80,7 @@ fn create_morph_card() {
     let network = NetworkDefinition::mainnet();
 
     let manifest_builder = ManifestBuilder::new().create_non_fungible_resource(
-        OwnerRole::None,
+        OwnerRole::Fixed(rule!(require(XRD))),
         NonFungibleIdType::RUID,
         true,
         NonFungibleResourceRoles {
@@ -143,7 +143,7 @@ fn create_radmorph() {
     let network = NetworkDefinition::mainnet();
 
     let manifest_builder = ManifestBuilder::new().create_non_fungible_resource(
-        OwnerRole::None,
+        OwnerRole::Fixed(rule!(require(XRD))),
         NonFungibleIdType::RUID,
         true,
         NonFungibleResourceRoles {

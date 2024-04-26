@@ -17,8 +17,6 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let mut env = TestEnvironment::new();
     let package_address = Package::compile_and_publish(this_package!(), &mut env)?;
 
-    let owner_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
-        .mint_initial_supply([()], &mut env)?;
     let super_admin_badge =
         ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(1, &mut env)?;
     let admin_badges =
@@ -36,7 +34,9 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         .mint_initial_supply([], &mut env)?;
 
     let morph_card_forge = MorphCardForge::new(
-        OwnerRole::Fixed(rule!(require(owner_badge.resource_address(&mut env)?))),
+        OwnerRole::Fixed(rule!(require(
+            super_admin_badge.resource_address(&mut env)?
+        ))),
         super_admin_badge.resource_address(&mut env)?,
         admin_badges.take(1.into(), &mut env)?,
         morph_card.resource_address(&mut env)?,

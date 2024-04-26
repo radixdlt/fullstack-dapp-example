@@ -1,28 +1,28 @@
 import { config, radixEngineClient } from '../../config'
 
-export const createEnergyCard = () => {
+export const createRadgem = () => {
   return radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
       convertStringManifest(`
-            CALL_METHOD
+        CALL_METHOD
             Address("${wellKnownAddresses.accountAddress.payerAccount}")
             "lock_fee"
             Decimal("500")
         ;
-        
+
         CREATE_NON_FUNGIBLE_RESOURCE
-        Enum<1u8>(
-            Enum<2u8>(
-                Enum<0u8>(
+           Enum<1u8>(
+                Enum<2u8>(
                     Enum<0u8>(
-                        Enum<1u8>(
-                            Address("${config.radQuest.badges.superAdminBadgeAddress}"),
+                        Enum<0u8>(
+                            Enum<1u8>(
+                                Address("${config.radQuest.badges.superAdminBadgeAddress}"),
+                            )
                         )
                     )
                 )
             )
-        )
             Enum<3u8>()
             true
             Enum<0u8>(
@@ -52,16 +52,16 @@ export const createEnergyCard = () => {
                         Array<Tuple>(
                             Tuple(
                                 Enum<1u8>(
-                                    "MorphEnergyCardData"
+                                    "RadgemData"
                                 ),
                                 Enum<1u8>(
                                     Enum<0u8>(
                                         Array<String>(
                                             "key_image_url",
                                             "name",
-                                            "rarity",
-                                            "energy",
-                                            "availability"
+                                            "material",
+                                            "color",
+                                            "rarity"
                                         )
                                     )
                                 )
@@ -122,9 +122,9 @@ export const createEnergyCard = () => {
                         )
                     )
                 ),
-                # Freeze Roles - None (defaults to DenyAll, DenyAll if None)
+                # Freeze Roles - None (defaults to DenyAll, DenyAll when None)
                 Enum<0u8>(),
-                # Recall Roles - None (defaults to DenyAll, DenyAll if None)
+                # Recall Roles - None (defaults to DenyAll, DenyAll when None)
                 Enum<0u8>(),
                 # Withdraw Roles
                 Enum<1u8>(
@@ -152,7 +152,7 @@ export const createEnergyCard = () => {
                         )
                     )
                 ),
-                # Non Fungible Data Update Roles 
+                # Non Fungible Data Updater Roles
                 Enum<1u8>(
                     Tuple(
                         # Non-Fungible Data Updater
@@ -179,7 +179,7 @@ export const createEnergyCard = () => {
                     "name" => Tuple(
                         Enum<1u8>(
                             Enum<0u8>(
-                                "Morph Energy Cards"
+                                "RadGems"
                             )
                         ),
                         true
@@ -187,7 +187,7 @@ export const createEnergyCard = () => {
                     "description" => Tuple(
                         Enum<1u8>(
                             Enum<0u8>(
-                                "These cards allow RadQuest’s Jetty to harness the primordial energies of the RadQuest realm to fuse Radgems into intricate and beautiful collectible Radmorphs."
+                                "Two Radgems can be combined with a Morph Energy Card by RadQuest's Jetty to produce a beautiful Radmorph."
                             )
                         ),
                         true
@@ -201,9 +201,9 @@ export const createEnergyCard = () => {
                         true
                     )
                 ),
+                # Metadata Setter and Locker Roles - None (defaults to OWNER when None) 
                 Map<String, Enum>()
             )
-            # Metadata Setter and Locker Roles - None (defaults to OWNER when None)
             Enum<0u8>()
         ;`)
         .andThen((value) => submitTransaction(value, ['systemAccount']))

@@ -5,7 +5,17 @@ CALL_METHOD
 ;
 
 CREATE_NON_FUNGIBLE_RESOURCE
-    Enum<0u8>()
+    Enum<1u8>(
+        Enum<2u8>(
+            Enum<0u8>(
+                Enum<0u8>(
+                    Enum<1u8>(
+                        Address("${super_admin_badge}")
+                    )
+                )
+            )
+        )
+    )
     Enum<3u8>()
     true
     Enum<0u8>(
