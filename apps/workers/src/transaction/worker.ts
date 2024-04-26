@@ -15,7 +15,16 @@ export const TransactionWorker = (
     async (job) => {
       logger.debug({ method: 'transactionWorker.process', id: job.id, data: job.data })
 
-      transactionWorkerController.handler(job)
+      const result = await transactionWorkerController.handler(job)
+      if (result.isErr()) {
+        logger.debug({
+          method: 'eventWorker.process.error',
+          id: job.id,
+          data: job.data,
+          error: result.error
+        })
+        throw result.error
+      }
     },
     { connection }
   )

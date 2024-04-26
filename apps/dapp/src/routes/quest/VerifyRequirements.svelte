@@ -34,6 +34,7 @@
 
   const dispatch = createEventDispatcher<{
     'all-requirements-met': undefined
+    'requirements-not-met': undefined
   }>()
 
   let dispatched = false
@@ -42,6 +43,8 @@
     if (requirementsStatus.every((requirement) => requirement.complete)) {
       if (!dispatched) dispatch('all-requirements-met')
       dispatched = true
+    } else {
+      dispatch('requirements-not-met')
     }
   }
 

@@ -1,4 +1,4 @@
-import { ResultAsync, okAsync } from 'neverthrow'
+import { ResultAsync, okAsync, errAsync } from 'neverthrow'
 import { Job, TransactionJob } from 'queues'
 import { TransactionStatus } from 'database'
 import type { AppLogger, AuditModel, TransactionModel, WellKnownAddresses } from 'common'
@@ -25,7 +25,7 @@ export const TransactionWorkerController = ({
     const handleSubmitTransaction = (
       manifestFactory: (wellKnownAddresses: WellKnownAddresses) => string
     ) => {
-      radixEngineClient
+      return radixEngineClient
         .getManifestBuilder()
         .andThen(({ convertStringManifest, submitTransaction, wellKnownAddresses }) =>
           convertStringManifest(manifestFactory(wellKnownAddresses))
@@ -73,7 +73,7 @@ export const TransactionWorkerController = ({
       case 'MintUserBadge':
         const { accountAddress } = job.data
 
-        handleSubmitTransaction((wellKnownAddresses) =>
+        return handleSubmitTransaction((wellKnownAddresses) =>
           createDirectDepositManifest({
             wellKnownAddresses,
             userId: job.data.userId,
@@ -81,21 +81,21 @@ export const TransactionWorkerController = ({
           })
         )
 
-        break
       case 'DepositReward':
         const { questId, userId } = job.data
         const questDefinition = QuestDefinitions(config.networkId)[questId as QuestId]
         const rewards = questDefinition.rewards
+        // @ts-ignore
         const xrdReward = rewards.find((reward) => reward.name === 'xrd')
         const KYC_THRESHOLD = 5
 
-        okAsync(xrdReward).andThen(() =>
+        return okAsync(xrdReward).andThen(() =>
           auditModel(childLogger)
             .getUsdAmount(userId)
             .map((usdAmount) => {
               if (usdAmount + Number(xrdReward) > KYC_THRESHOLD) {
                 childLogger.debug({
-                  method: 'eventWorker.handler',
+                  method: 'transactionWorker.DepositReward',
                   message: 'User has exceeded KYC threshold'
                 })
                 return transactionModel(childLogger).setStatus(
@@ -114,14 +114,13 @@ export const TransactionWorkerController = ({
               )
             })
         )
-        break
 
       default:
-        childLogger.warn({
-          method: 'eventWorker.handler',
-          message: 'Unhandled Event'
+        childLogger.debug({
+          method: 'transactionWorker.handler.error',
+          job
         })
-        break
+        return errAsync('Unhandled job')
     }
   }
 

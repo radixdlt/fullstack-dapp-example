@@ -27,7 +27,7 @@
 </script>
 
 <div
-  transition:scale={{ easing: backOut }}
+  transition:scale|local={{ easing: backOut }}
   bind:clientWidth={width}
   bind:clientHeight={height}
   class="card progress-card"

@@ -5,7 +5,7 @@ import { error } from '@sveltejs/kit'
 import { $Enums } from 'database'
 
 export const load: LayoutServerLoad = ({ fetch, cookies, url, parent }) =>
-  parent().then(async ({ questDefinitions }) => {
+  parent().then(async ({ questDefinitions, questStatus }) => {
     const id = url.pathname.split('/')[2] as QuestId
 
     const requirementsResult = await questApi
@@ -44,6 +44,9 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent }) =>
           httpOnly: false
         })
     }
+
+    if (questStatus[id]?.status === 'COMPLETED')
+      cookies.delete(`saved-progress-${id}`, { path: '/' })
 
     return {
       id,

@@ -33,17 +33,11 @@
       steps={[
         {
           id: 'text1',
-          type: 'regular',
-          footer: {
-            type: 'navigation'
-          }
+          type: 'regular'
         },
         {
           id: 'text2',
-          type: 'regular',
-          footer: {
-            type: 'navigation'
-          }
+          type: 'regular'
         },
         {
           id: 'jetty',
@@ -54,8 +48,7 @@
           id: 'text3',
           type: 'regular',
           footer: {
-            type: 'action',
-            action: {
+            next: {
               text: 'Start Over',
               onClick: () => quest.setProgress(0)
             }

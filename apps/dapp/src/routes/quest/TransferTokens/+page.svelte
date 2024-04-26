@@ -5,15 +5,17 @@
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
   import { webSocketClient } from '../../../stores'
   import { onMount } from 'svelte'
-  import { i18n } from '$lib/i18n/i18n'
   import { isMobile } from '$lib/utils/is-mobile'
   import CopyTextBox from '$lib/components/copy-text-box/CopyTextBox.svelte'
   import QR from '@svelte-put/qr/svg/QR.svelte'
   import { shortenAddress } from '$lib/utils/shorten-address'
+  import { writable } from 'svelte/store'
 
   export let data: PageData
 
   let quest: Quest
+
+  let receivedClams = writable(data.requirements?.JettyReceivedClams)
 
   onMount(() => {
     const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
@@ -22,6 +24,7 @@
         message.requirementId === 'JettyReceivedClams'
       ) {
         quest.actions.next()
+        $receivedClams = true
       }
     })
 
@@ -32,15 +35,13 @@
 </script>
 
 <Quest
-  {...data}
+  id={data.id}
+  requirements={data.requirements}
   bind:this={quest}
   steps={[
     {
       id: 'text1',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text2',
@@ -50,7 +51,12 @@
     {
       id: 'text3',
       type: 'regular',
-      skip: data.requirements?.JettyReceivedClams
+      skip: receivedClams,
+      footer: {
+        next: {
+          enabled: receivedClams
+        }
+      }
     },
     {
       type: 'requirements'
@@ -87,10 +93,9 @@
     {@html data.text['sendToJetty-2.md']}
   {/if}
 
-  <svelte:fragment slot="jetty" let:render let:Button let:next>
+  <svelte:fragment slot="jetty" let:render>
     {#if render('text2')}
       {@html data.text['1.md']}
-      <Button on:click={next}>{$i18n.t('quests:okButton')}</Button>
     {/if}
   </svelte:fragment>
 </Quest>

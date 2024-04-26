@@ -133,6 +133,13 @@ export const EventWorkerController = ({
       const userId = getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited)
       const xrdAmount = getAmountFromDepositEvent(job.data.relevantEvents.XrdDeposited)
 
+      logger.debug({
+        method: 'EventWorkerController.handleUserBadgeDeposited',
+        questId,
+        userId,
+        xrdAmount
+      })
+
       return ensureValidData(transactionId, { userId, xrdAmount })
         .map(({ userId, xrdAmount }) => ({ userId, xrdAmount: BigNumber(xrdAmount) }))
         .andThen(({ userId, xrdAmount }) =>

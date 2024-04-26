@@ -8,7 +8,7 @@
 </script>
 
 <button
-  transition:scale={{ easing: backOut }}
+  transition:scale|local={{ easing: backOut }}
   class="jetty-icon"
   class:close
   style:--image={`url(${HappyJetty})`}

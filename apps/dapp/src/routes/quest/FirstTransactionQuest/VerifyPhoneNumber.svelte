@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Button from '$lib/components/button/Button.svelte'
   import PhoneNumberInput from '$lib/components/phone-number-input/PhoneNumberInput.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import Error from './Error.svelte'
@@ -6,6 +7,7 @@
 
   export let phoneNumber: string
   export let error: string | undefined
+  export let loading = false
 </script>
 
 <div class="container">
@@ -21,6 +23,8 @@
         {error}
       </Error>
     {/if}
+
+    <Button on:click {loading}>{$i18n.t('quests:FirstTransactionQuest.sendSmsButton')}</Button>
   </div>
 </div>
 
@@ -30,7 +34,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    height: 100%;
   }
 
   .phone-number {

@@ -6,12 +6,21 @@
   import { i18n } from '$lib/i18n/i18n'
   import ProgressCard from '../progress-card/ProgressCard.svelte'
   import { createEventDispatcher } from 'svelte'
+  import NavigationFooter from './NavigationFooter.svelte'
 
   export let title: string
   export let steps: number
   export let progress: number
   export let cardDisabled = false
-  export let nextDisabled: boolean
+  export let nextOnClick: () => void = () => {
+    dispatch('next')
+  }
+  export let backOnClick: () => void = () => {
+    dispatch('prev')
+  }
+  export let footerNextDisabled = false
+  export let nextButtonText: string | undefined
+  export let backButtonText: string | undefined
 
   const dispatch = createEventDispatcher<{
     next: undefined
@@ -41,7 +50,7 @@
   <svelte:fragment slot="content" let:animationDuration let:width>
     <div bind:this={content} class="content card">
       {#key progress}
-        <div transition:fly={{ x: -width * 2, opacity: 1, duration: animationDuration }}>
+        <div transition:fly|local={{ x: -width * 2, opacity: 1, duration: animationDuration }}>
           <slot {progress} />
         </div>
       {/key}
@@ -50,16 +59,21 @@
     {#if progress === 0}
       <div
         class="footer intro-footer"
-        transition:fly={{ x: -width * 2, opacity: 1, duration: animationDuration }}
+        transition:fly|local={{ x: -width * 2, opacity: 1, duration: animationDuration }}
       >
-        <Button on:click={() => dispatch('next')} disabled={nextDisabled}
-          >{$i18n.t('quests:intro-begin-quest')}</Button
-        >
+        <Button on:click={() => dispatch('next')}>{$i18n.t('quests:intro-begin-quest')}</Button>
       </div>
     {/if}
 
     {#if progress > 0}
-      <slot name="footer" {width} {animationDuration} />
+      <NavigationFooter
+        on:next={nextOnClick}
+        on:back={backOnClick}
+        nextDisabled={footerNextDisabled}
+        {nextButtonText}
+        {backButtonText}
+        on:complete
+      />
     {/if}
   </svelte:fragment>
 </ProgressCard>

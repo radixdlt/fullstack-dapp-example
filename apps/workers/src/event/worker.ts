@@ -1,4 +1,3 @@
-import { logger } from '../helpers/logger'
 import { Worker, ConnectionOptions, Queues, EventJob } from 'queues'
 import { AppLogger, EventModel } from 'common'
 import { EventWorkerController } from './controller'
@@ -23,7 +22,17 @@ export const EventWorker = (
         transactionId: job.data.transactionId
       })
 
-      await eventWorkerController.handler(job)
+      const result = await eventWorkerController.handler(job)
+      if (result.isErr()) {
+        logger.debug({
+          method: 'eventWorker.process.error',
+          id: job.id,
+          type: job.data.type,
+          transactionId: job.data.transactionId,
+          error: result.error
+        })
+        throw result.error
+      }
     },
     { connection }
   )

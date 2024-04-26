@@ -10,5 +10,7 @@ export const completeQuest = async (id: QuestId, updateDb: boolean) => {
     useCookies(`quest-status-${id}`).set('COMPLETED')
   }
 
+  useCookies(`saved-progress-${id}`).clear()
+
   await invalidateAll()
 }

@@ -12,6 +12,8 @@
   import { OneTimeDataRequestBuilder, SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
   import { userApi } from '$lib/api/user-api'
   import { user } from '../../../stores'
+  import { readable, writable } from 'svelte/store'
+  import Button from '$lib/components/button/Button.svelte'
 
   export let data: PageData
 
@@ -31,26 +33,39 @@
     )
   }
 
+  const verifyPhoneNumber = writable(data.requirements.VerifyPhoneNumber)
+  const connectAccountReq = writable(data.requirements.ConnectAccount)
+  const depositUserBadge = writable(data.requirements.DepositUserBadge)
+
   let otpError: keyof typeof errors | undefined
+  let verifyOtpError = false
 
   $: phoneNumberError = otpError ? errors[otpError] : undefined
+
+  let waitingOnAccount = false
+
+  let sendingOTP = false
 
   const handleApiError = ({ data }: { data?: { message: keyof typeof errors } }) => {
     otpError = data?.message
   }
 
   const sendOneTimePassword = async () => {
+    sendingOTP = true
     otpError = undefined
     await otpApi.sendOneTimePassword(phoneNumber).mapErr(handleApiError)
+    sendingOTP = false
     if (otpError) return
     quest.actions.next()
   }
 
   const connectAccount = () => {
+    waitingOnAccount = true
     rdt.then((rdt) => {
       rdt.walletApi
         .sendOneTimeRequest(OneTimeDataRequestBuilder.accounts().exactly(1).withProof())
         .map(async ({ accounts, proofs }) => {
+          waitingOnAccount = false
           const accountProof = proofs.find(
             (proof) => proof.type === 'account'
           )! as SignedChallengeAccount
@@ -59,77 +74,81 @@
 
           if (result.isOk()) {
             $user!.accountAddress = accounts[0].address
+            $connectAccountReq = true
             quest.actions.next()
           }
+        })
+        .mapErr(() => {
+          waitingOnAccount = false
         })
     })
   }
 
-  let verifyOTP: VerifyOtp
+  export const verifyOneTimePassword = () => {
+    otpApi
+      .verifyOneTimePassword(phoneNumber, oneTimePassword.join(''))
+      .map(() => {
+        $verifyPhoneNumber = true
+        quest.actions.next()
+      })
+      .mapErr(() => (verifyOtpError = true))
+  }
 
   let email: string
   let sendNewsletter = false
 </script>
 
 <Quest
-  {...data}
+  id={data.id}
+  requirements={data.requirements}
   bind:this={quest}
   let:next
-  let:back
   steps={[
     { id: 'intro1', type: 'jetty', dialogs: 1 },
     { id: 'intro2', type: 'jetty', dialogs: 1 },
     {
       id: 'verifyPhoneNumber',
       type: 'regular',
-      skip: data.requirements.VerifyPhoneNumber,
+      skip: verifyPhoneNumber,
       footer: {
-        type: 'action',
-        action: {
-          text: `${$i18n.t('quests:FirstTransactionQuest.sendSmsButton')}`,
-          onClick: sendOneTimePassword
+        next: {
+          enabled: readable(false)
         }
       }
     },
     {
       id: 'verifyOtp',
       type: 'regular',
-      skip: data.requirements.VerifyPhoneNumber,
+      skip: verifyPhoneNumber,
       footer: {
-        type: 'action',
-        action: {
-          text: `${$i18n.t('quests:FirstTransactionQuest.verifyOtpButton')}`,
-          onClick: () => verifyOTP.verifyOneTimePassword()
+        next: {
+          enabled: readable(false)
         }
       }
     },
     {
       id: 'connectAccount',
       type: 'regular',
-      skip: data.requirements?.ConnectAccount,
+      skip: connectAccountReq,
       footer: {
-        type: 'action',
-        action: {
-          text: $i18n.t('quests:FirstTransactionQuest.connectAccount'),
-          onClick: connectAccount
+        next: {
+          enabled: connectAccountReq
         }
       }
     },
     {
       id: 'depositUserBadge',
       type: 'regular',
-      skip: data.requirements.DepositUserBadge
+      skip: depositUserBadge,
+      footer: {
+        next: {
+          enabled: depositUserBadge
+        }
+      }
     },
     {
       id: 'email',
-      type: 'regular',
-      footer: {
-        type: 'action',
-        action: {
-          text: $i18n.t('quests:nextButton'),
-          onClick: () => quest.actions.next()
-        }
-      }
+      type: 'regular'
     },
     {
       type: 'requirements'
@@ -144,26 +163,42 @@
   let:render
 >
   {#if render('verifyPhoneNumber')}
-    <VerifyPhoneNumber bind:phoneNumber on:next={next} error={phoneNumberError} />
+    <VerifyPhoneNumber
+      bind:phoneNumber
+      on:next={next}
+      error={phoneNumberError}
+      on:click={sendOneTimePassword}
+      loading={sendingOTP}
+    />
   {/if}
 
   {#if render('verifyOtp')}
     <VerifyOtp
-      bind:this={verifyOTP}
       bind:phoneNumber
       bind:oneTimePassword
-      on:next={next}
-      on:modify-phone-number={back}
+      error={verifyOtpError}
+      on:filledInInput={verifyOneTimePassword}
+      on:verifyOtp={verifyOneTimePassword}
     />
   {/if}
 
   {#if render('connectAccount')}
     {@html data.text['connectAccount.md']}
+
+    <Button on:click={connectAccount} loading={waitingOnAccount}
+      >{$i18n.t('quests:FirstTransactionQuest.connectAccount')}
+    </Button>
   {/if}
 
   {#if render('depositUserBadge')}
     {@html data.text['userBadge.md']}
-    <DepositUserBadge on:next={next} questId={data.id} />
+    <DepositUserBadge
+      on:deposited={() => {
+        $depositUserBadge = true
+        next()
+      }}
+      questId={data.id}
+    />
   {/if}
 
   {#if render('email')}
@@ -172,15 +207,13 @@
     <EnterEmail bind:email bind:checked={sendNewsletter} />
   {/if}
 
-  <svelte:fragment slot="jetty" let:render let:Button let:Buttons let:next let:back>
+  <svelte:fragment slot="jetty" let:render>
     {#if render('intro1')}
       {@html data.text['0.md']}
-      <Button on:click={next}>OK</Button>
     {/if}
 
     {#if render('intro2')}
       {@html data.text['1.md']}
-      <Buttons nextText="OK" on:back={back} on:next={next} />
     {/if}
   </svelte:fragment>
 </Quest>

@@ -17,7 +17,7 @@ export const config = {
     baseUrl: process.env.NOTIFICATION_INTERNAL_API_URL!
   },
   priceService: {
-    baseUrl: process.env.PRICE_SERVICE_URL || 'https://dev-token-price.extratools.works'
+    baseUrl: process.env.PRICE_SERVICE_URL || 'https://token-price-service.radixdlt.com'
   },
   networkId: parseInt(process.env.PUBLIC_NETWORK_ID ?? '2', 10),
   radQuest: {

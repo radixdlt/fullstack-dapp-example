@@ -1,13 +1,9 @@
 <script lang="ts">
-  import Button from '$lib/components/button/Button.svelte'
   import Icon from '$lib/components/icon/Icon.svelte'
-  import { i18n } from '$lib/i18n/i18n'
   import { typeToIcon } from '$lib/utils/type-to-icon'
   import type { QuestReward } from 'content'
 
   export let rewards: Readonly<QuestReward[]>
-  export let loading = false
-  export let noClaim = false
 </script>
 
 <slot />
@@ -22,23 +18,11 @@
   {/each}
 </div>
 
-<div class="btn">
-  <Button on:click {loading}
-    >{noClaim ? $i18n.t('quests:okButton') : $i18n.t('quests:claimButton')}</Button
-  >
-</div>
-
 <style lang="scss">
   .rewards {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-xl);
-  }
-
-  .btn {
-    margin-top: var(--spacing-xl);
-    display: flex;
-    justify-content: center;
   }
 </style>

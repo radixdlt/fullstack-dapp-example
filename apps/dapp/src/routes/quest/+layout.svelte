@@ -7,18 +7,19 @@
     loggedIn = !!value
   })
 
-  export const closeQuest = () => {
+  export const closeQuest = async () => {
     if (loggedIn) {
       questApi.deleteSavedProgress()
     } else {
       localStorage.removeItem('savedProgress')
     }
-    goto('/')
+    await invalidateAll()
+    setTimeout(() => goto('/'), 0)
   }
 </script>
 
 <script lang="ts">
-  import { goto } from '$app/navigation'
+  import { goto, invalidateAll } from '$app/navigation'
   import { questApi } from '$lib/api/quest-api'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
 

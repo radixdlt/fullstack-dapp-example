@@ -7,7 +7,7 @@
   import DevMode from './DevMode.svelte'
   import { jettyMessage, quests } from '../stores'
   import { goto } from '$app/navigation'
-  import JettyActionButton from '$lib/components/quest/JettyActionButton.svelte'
+  import JettyActionButtons from '$lib/components/quest/JettyActionButtons.svelte'
 
   let showJettyMenu = false
 
@@ -21,6 +21,8 @@
         showGlossary = false
       } else {
         showJettyMenu = false
+        showJettyMessage = false
+        $jettyMessage = undefined
       }
     }
   }
@@ -47,13 +49,19 @@
     {#if $jettyMessage === 'LoggedIn'}
       I see you've logged in with your wallet!
 
-      <JettyActionButton
-        on:click={() => {
+      <JettyActionButtons
+        backText="Dismiss"
+        nextText="Go back to quest"
+        on:back={() => {
+          $jettyMessage = undefined
+          showJettyMessage = false
+        }}
+        on:next={() => {
           showJettyMessage = false
           $jettyMessage = undefined
-          goto(`/quest/${$quests.LoginWithWallet.id}#wallet-connected`)
-        }}>Go back to quest</JettyActionButton
-      >
+          goto(`/quest/${$quests.LoginWithWallet.id}`)
+        }}
+      />
     {/if}
   {:else}
     {$i18n.t('jetty:menu-text')}

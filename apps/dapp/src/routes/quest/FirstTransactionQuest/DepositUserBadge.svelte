@@ -22,7 +22,7 @@
   }
 
   const dispatch = createEventDispatcher<{
-    next: undefined
+    deposited: undefined
   }>()
 
   const getSetResourcePreferenceManifest = (accountAddress: string) => `CALL_METHOD
@@ -69,7 +69,7 @@
         event.type === 'QuestRequirementCompleted' &&
         event.requirementId === 'DepositUserBadge'
       ) {
-        dispatch('next')
+        dispatch('deposited')
       }
     })
 
@@ -87,7 +87,7 @@
 
         if (hasUserBadge) {
           state = 'hasUserBadge'
-          dispatch('next')
+          dispatch('deposited')
           return
         }
 

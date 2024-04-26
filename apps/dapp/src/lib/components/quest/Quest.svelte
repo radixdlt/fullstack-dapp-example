@@ -1,13 +1,14 @@
 <script lang="ts" context="module">
   type Action = {
-    onClick: () => void
-    text: string
+    text?: string
+    onClick?: () => void
+    enabled?: Writable<boolean> | Readable<boolean>
   }
 
   type _Step<T extends string> = {
     id: string
     type: T
-    skip?: boolean
+    skip?: Writable<boolean> | Readable<boolean>
   }
 
   type IntroStep = _Step<'intro'> & { id: 'intro' }
@@ -19,33 +20,29 @@
   type CompleteStep = _Step<'complete'> & { id: 'complete' }
 
   type RegularStep = _Step<'regular'> & {
-    footer?:
-      | {
-          type: 'navigation'
-          actions?: {
-            next: Action
-            back: Action
-          }
-        }
-      | {
-          type: 'action'
-          action: Action
-        }
+    footer?: {
+      next?: Action
+      back?: Omit<Action, 'enabled'>
+    }
   }
 
-  type JettyStep = _Step<'jetty'> & { dialogs: number }
+  type JettyStep = _Step<'jetty'> & {
+    dialogs: number
+    next?: Omit<Action, 'enabled'>
+    back?: Omit<Action, 'enabled'>
+  }
 </script>
 
 <script lang="ts">
   import type { QuestReward } from 'content'
   import QuestCard from './QuestCard.svelte'
   import Intro from './Intro.svelte'
-  import NavigationFooter from './NavigationFooter.svelte'
   import JettyDialog from '../jetty-dialog/JettyDialog.svelte'
   import JettyActionButton from './JettyActionButton.svelte'
-  import ActionFooter from './ActionFooter.svelte'
   import JettyActionButtons from './JettyActionButtons.svelte'
   import { createEventDispatcher } from 'svelte'
+  import type { Writable } from 'svelte/store'
+  import type { Readable, Unsubscriber } from 'svelte/motion'
 
   export let title: string
   export let description: string
@@ -65,12 +62,28 @@
   export let nextDisabled = false
   export let startAtProgress: number | string = 0
 
-  export const setProgress = (_progress: number) => {
+  export const setProgress = async (_progress: number) => {
     if (_progress < 0 || _progress >= _steps.length) return
 
     const step = _steps[_progress]
 
-    if (step.skip) {
+    let unsubscribe: Unsubscriber = () => {}
+
+    const skipPromise = new Promise<boolean>((resolve) => {
+      if (step.skip) {
+        unsubscribe = step.skip.subscribe((value) => {
+          resolve(value)
+        })
+      } else {
+        resolve(false)
+      }
+    })
+
+    const skip = await skipPromise
+
+    unsubscribe()
+
+    if (skip) {
       setProgress(progress < _progress ? _progress + 1 : _progress - 1)
     } else {
       lastProgress = progress
@@ -100,8 +113,7 @@
 
   const introStep: IntroStep = {
     id: 'intro',
-    type: 'intro',
-    skip: false
+    type: 'intro'
   }
 
   let _steps: (IntroStep | RegularStep | JettyStep)[] = [introStep, ...steps].map((step) => {
@@ -189,6 +201,9 @@
 
   $: currentStep = _steps[progress]
 
+  $: currentStepEnabledStore =
+    currentStep.type === 'regular' ? currentStep.footer?.next?.enabled : undefined
+
   $: currentStepIsJetty = currentStep.type === 'jetty'
 </script>
 
@@ -196,42 +211,24 @@
   bind:progress={questCardProgress}
   {title}
   steps={nonJettySteps}
-  {nextDisabled}
   cardDisabled={currentStepIsJetty}
   on:close
   on:next={next}
   on:prev={back}
+  nextOnClick={currentStep.type === 'regular' ? currentStep.footer?.next?.onClick ?? next : next}
+  backOnClick={currentStep.type === 'regular' ? currentStep.footer?.back?.onClick ?? back : back}
+  footerNextDisabled={nextDisabled || !($currentStepEnabledStore ?? true)}
+  nextButtonText={currentStep.type === 'regular' ? currentStep.footer?.next?.text : undefined}
+  backButtonText={currentStep.type === 'regular' ? currentStep.footer?.back?.text : undefined}
 >
   {#if questCardProgress === 0}
     <Intro {title} {description} {minutesToComplete} {rewards} {requirements} on:next={next} />
   {/if}
 
   <slot {render} {next} {back} {lastProgress} {progress} />
-
-  <svelte:fragment slot="footer" let:width let:animationDuration>
-    {#if currentStep.type === 'regular' && currentStep.footer}
-      {#if currentStep.footer.type === 'navigation'}
-        <NavigationFooter
-          on:next={next}
-          on:back={back}
-          showComplete={questCardProgress === _steps.length - 1}
-          on:complete
-        />
-      {/if}
-
-      {#if currentStep.footer.type === 'action'}
-        <ActionFooter
-          on:click={currentStep.footer.action.onClick}
-          text={currentStep.footer.action.text}
-          cardWidth={width}
-          {animationDuration}
-        />
-      {/if}
-    {/if}
-  </svelte:fragment>
 </QuestCard>
 
-{#if currentStepIsJetty}
+{#if currentStep.type === 'jetty'}
   <JettyDialog dialogs={getJettyDialogs(progress)} let:i>
     <slot
       name="jetty"

@@ -8,7 +8,8 @@ type LocalStorageEntry<K, V> = {
 export const useLocalStorage = <
   T extends
     | LocalStorageEntry<'savedProgress', { questId: QuestId; progress: number }>
-    | LocalStorageEntry<'seen-landing-popup', boolean>,
+    | LocalStorageEntry<'seen-landing-popup', boolean>
+    | LocalStorageEntry<'seen-jetty-get-wallet-notification', boolean>,
   V extends T['key']
 >(
   item: V

@@ -7,77 +7,48 @@
 </script>
 
 <Quest
-  {...data}
+  id={data.id}
+  requirements={data.requirements}
   steps={[
     {
       id: 'text1',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text2',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text3',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text4',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text5',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text6',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text7',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text8',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text9',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text10',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       type: 'requirements'
@@ -135,7 +106,7 @@
 
   <svelte:fragment slot="jetty" let:render let:next>
     {#if render('unclaimable-requirements')}
-      <ClaimRewards on:click={next} rewards={data.rewards} noClaim>
+      <ClaimRewards on:click={next} rewards={data.rewards}>
         {@html data.text['requirements.md']}
       </ClaimRewards>
     {/if}

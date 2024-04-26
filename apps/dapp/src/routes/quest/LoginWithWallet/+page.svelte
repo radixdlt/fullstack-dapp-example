@@ -4,97 +4,64 @@
   import { user } from '../../../stores'
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
   import Input from '$lib/components/input/Input.svelte'
+  import { derived } from 'svelte/store'
 
   export let data: PageData
 
-  let render = (_: string) => false
-
-  $: if ((render('intro') || render('explain-wallet') || render('connect-wallet')) && $user) {
-    setTimeout(() => {
-      quest.actions.goToStep('wallet-connected')
-    }, 0)
-  }
-
-  $: if (render('wallet-connected') && !$user) {
-    quest.actions.goToStep('connect-wallet')
-  }
-
-  let quest: Quest
-
   let nameInput = $user?.label ?? ''
+
+  const loggedIn = derived(user, ($user) => !!$user)
 </script>
 
 <Quest
-  bind:render
-  bind:this={quest}
-  {...data}
+  id={data.id}
+  requirements={data.requirements}
   steps={[
     {
       id: 'explain-wallet',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
-    },
-    {
-      id: 'connect-wallet',
       type: 'regular'
     },
     {
-      id: 'wallet-connected',
+      id: 'connect-wallet',
       type: 'regular',
       footer: {
-        type: 'navigation'
-      }
+        next: {
+          enabled: loggedIn
+        }
+      },
+      skip: loggedIn
+    },
+    {
+      id: 'wallet-connected',
+      type: 'regular'
     },
     {
       id: 'text4',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text5',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text6',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text7',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text8',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text9',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text10',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       type: 'requirements'
@@ -154,7 +121,7 @@
 
   <svelte:fragment slot="jetty" let:render let:next>
     {#if render('unclaimable-requirements')}
-      <ClaimRewards on:click={next} rewards={data.rewards} noClaim>
+      <ClaimRewards on:click={next} rewards={data.rewards}>
         {@html data.text['requirements.md']}
       </ClaimRewards>
     {/if}

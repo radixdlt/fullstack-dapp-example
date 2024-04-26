@@ -4,10 +4,14 @@
   import type { PageData } from './$types'
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
   import { isMobile } from '$lib/utils/is-mobile'
+  import { useCookies } from '$lib/utils/cookies'
+  import { writable } from 'svelte/store'
 
   export let data: PageData
 
   let render = (_: string) => false
+
+  let walletIsLinked = writable(data.requirements.GetTheWallet)
 
   onMount(() => {
     if (isMobile()) return
@@ -17,7 +21,10 @@
       const { isWalletLinked } = detail
 
       if (isWalletLinked) {
-        quest.actions.goToStep('text2')
+        // @ts-ignore
+        useCookies('requirement-GetRadixWallet-GetTheWallet').set(true)
+        $walletIsLinked = true
+        quest.actions.next()
       }
     }
 
@@ -48,78 +55,54 @@
 <Quest
   bind:this={quest}
   bind:render
-  {...data}
+  id={data.id}
+  requirements={data.requirements}
   steps={[
     {
-      id: 'get-the-wallet',
-      skip: data.requirements.GetTheWallet,
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      id: 'text2',
+      type: 'regular'
     },
     {
-      id: 'text2',
+      id: 'get-the-wallet',
       type: 'regular',
+      skip: walletIsLinked,
       footer: {
-        type: 'navigation'
+        next: {
+          enabled: walletIsLinked
+        }
       }
     },
     {
       id: 'text3',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text4',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text5',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text6',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text7',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text8',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text9',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       id: 'text10',
-      type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
+      type: 'regular'
     },
     {
       type: 'requirements'
@@ -135,12 +118,12 @@
   ]}
   let:render
 >
-  {#if render('get-the-wallet')}
-    {@html data.text['0.md']}
-  {/if}
-
   {#if render('text2')}
     {@html data.text['1.md']}
+  {/if}
+
+  {#if render('get-the-wallet')}
+    {@html data.text['0.md']}
   {/if}
 
   {#if render('text3')}
@@ -177,7 +160,7 @@
 
   <svelte:fragment slot="jetty" let:render let:next>
     {#if render('unclaimable-requirements')}
-      <ClaimRewards on:click={next} rewards={data.rewards} noClaim>
+      <ClaimRewards on:click={next} rewards={data.rewards}>
         {@html data.text['requirements.md']}
       </ClaimRewards>
     {/if}

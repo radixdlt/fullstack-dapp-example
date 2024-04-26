@@ -52,28 +52,23 @@
       networkId,
       dAppDefinitionAddress: dAppDefinitionAddress ?? '',
       logger: createLogger(1),
-      onDisconnect: () => {
+      onDisconnect: async () => {
         authApi.logout()
         $webSocketClient?.close()
-        ;(
-          [
-            'FirstTransactionQuest',
-            'GetRadixWallet',
-            'LoginWithWallet',
-            'WhatIsRadix',
-            'WelcomeToRadQuest'
-          ] as const
-        ).forEach((questId) => {
-          useCookies(`quest-status-${questId}`).clear()
-          Object.keys($quests[questId].requirements).forEach((id) => {
+        Object.entries($quests).forEach(([questId, quest]) => {
+          useCookies(`quest-status-${questId as QuestId}`).clear()
+          useCookies(`saved-progress-${questId as QuestId}`).clear()
+          Object.keys(quest.requirements).forEach((id) => {
             // @ts-ignore
             useCookies(`requirement-${questId}-${id}`).clear()
           })
         })
+        useLocalStorage('savedProgress').clear()
+        useLocalStorage('seen-jetty-get-wallet-notification').clear()
 
         $user = undefined
 
-        invalidateAll()
+        await invalidateAll()
       }
     })
 
@@ -121,7 +116,11 @@
             // TODO:
             // - bootstrap the application state (quest progress, user, notifications etc...) and connect to notifications websocket
 
-            if (data.questStatus['LoginWithWallet']?.status === 'IN_PROGRESS') {
+            if (
+              data.questStatus['LoginWithWallet']?.status === 'IN_PROGRESS' &&
+              !useLocalStorage('seen-jetty-get-wallet-notification').get()
+            ) {
+              useLocalStorage('seen-jetty-get-wallet-notification').set(true)
               $jettyMessage = 'LoggedIn'
             }
           })
@@ -161,11 +160,13 @@
         (preReq) => data.questStatus[preReq]?.status === 'COMPLETED'
       )
 
-      prev[id as QuestId] = isUnlocked ? 'unlocked' : 'locked'
+      const isInProgress = data.questStatus[id as QuestId]?.status === 'IN_PROGRESS'
+
+      prev[id as QuestId] = isInProgress ? 'in-progress' : isUnlocked ? 'unlocked' : 'locked'
 
       return prev
     },
-    {} as { [key in QuestId]: Omit<QuestStatus, 'in-progress'> }
+    {} as { [key in QuestId]: QuestStatus }
   )
 
   let _quests = Object.entries($quests) as [

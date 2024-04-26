@@ -7,7 +7,12 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="backdrop fixed" transition:fade={{ duration }} on:click|self style:z-index={zIndex} />
+<div
+  class="backdrop fixed"
+  transition:fade|local={{ duration }}
+  on:click|self
+  style:z-index={zIndex}
+/>
 
 <div class="content fixed" style:z-index={zIndex + 1}>
   <slot />

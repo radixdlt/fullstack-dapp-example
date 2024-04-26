@@ -72,6 +72,8 @@
   let loading = false
 </script>
 
-<ClaimRewards {loading} rewards={questDefinition.rewards} on:click={handleClaimRewards}>
+<ClaimRewards rewards={questDefinition.rewards}>
   <slot />
 </ClaimRewards>
+
+<slot name="buttons" {loading} {handleClaimRewards} />

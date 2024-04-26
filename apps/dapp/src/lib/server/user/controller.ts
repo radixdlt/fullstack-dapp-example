@@ -82,19 +82,23 @@ const UserController = ({
           .andThen((data) =>
             transactionModel(ctx.logger)
               .add({ userId, transactionKey: 'mintUserBadge', attempt: 0 })
-              .andThen(() =>
-                ResultAsync.fromPromise(
-                  transactionQueue.add(ctx.traceId, {
-                    traceId: ctx.traceId,
-                    type: 'MintUserBadge',
-                    userId,
-                    attempt: 0,
-                    transactionKey: `mintUserBadge`,
-                    accountAddress: data[1]
-                  }),
+              .andThen(() => {
+                const job = {
+                  traceId: ctx.traceId,
+                  type: 'MintUserBadge',
+                  userId,
+                  attempt: 0,
+                  transactionKey: `mintUserBadge`,
+                  accountAddress: data[1]
+                } satisfies TransactionJob
+
+                ctx.logger.debug({ method: 'userController.mintUserBadge.addJobToQueue', job })
+
+                return ResultAsync.fromPromise(
+                  transactionQueue.add(ctx.traceId, job, { jobId: ctx.traceId }),
                   (error) => error
                 )
-              )
+              })
           )
           .mapErr((error) => {
             ctx.logger.error({ error, method: 'mintUserBadge', event: 'error' })

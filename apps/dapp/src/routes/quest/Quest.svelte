@@ -11,11 +11,12 @@
   import type { QuestId } from 'content'
   import { useCookies } from '$lib/utils/cookies'
   import { completeQuest } from '$lib/utils/complete-quest'
+  import JettyActionButtons from '$lib/components/quest/JettyActionButtons.svelte'
+  import { useLocalStorage } from '$lib/utils/local-storage'
 
   export let id: QuestId
   export let steps: ComponentProps<Quest>['steps']
   export let requirements: Record<string, boolean>
-  export let nextDisabled: ComponentProps<Quest>['nextDisabled'] = false
   export let render: (id: string) => boolean = () => false
 
   export const actions = {
@@ -27,17 +28,27 @@
   const saveProgress = (progress: number) => {
     if ($user) {
       questApi.saveProgress(id, progress)
-    } else if (
-      ['WelcomeToRadQuest', 'WhatIsRadix', 'GetRadixWalelt', 'LoginWithWallet'].some(
-        (questId) => questId === id
-      )
-    ) {
-      // @ts-ignore
-      useCookies(`saved-progress-${id}`).set(progress)
     }
+    // @ts-ignore
+    useCookies(`saved-progress-${id}`).set(progress)
+    useLocalStorage('savedProgress').set({
+      questId: id,
+      progress
+    })
   }
 
   let quest: Quest
+
+  let startAtProgress = 0
+
+  if ($page.url.hash) {
+    startAtProgress = parseInt($page.url.hash.slice(1))
+  } else {
+    const savedProgress = useCookies(`saved-progress-${id}`).get()
+    if (savedProgress) {
+      startAtProgress = parseInt(savedProgress)
+    }
+  }
 
   onMount(() => {
     actions.next = quest.next
@@ -69,20 +80,25 @@
     }
   }
 
-  const _requirements = Object.entries(requirements).reduce(
-    (prev, cur) => {
-      prev = [
-        ...prev,
-        {
-          // @ts-ignore
-          text: $i18n.t(`quests:${id}.requirements.${cur[0]}`),
-          complete: cur[1]
-        }
-      ]
-      return prev
-    },
-    [] as NonNullable<ComponentProps<Quest>['requirements']>
-  )
+  let _requirements: NonNullable<ComponentProps<Quest>['requirements']> = []
+  if (requirements) {
+    _requirements = Object.entries(requirements).reduce(
+      (prev, cur) => {
+        prev = [
+          ...prev,
+          {
+            // @ts-ignore
+            text: $i18n.t(`quests:${id}.requirements.${cur[0]}`),
+            complete: cur[1]
+          }
+        ]
+        return prev
+      },
+      [] as NonNullable<ComponentProps<Quest>['requirements']>
+    )
+  }
+
+  let nextDisabled = false
 </script>
 
 <Quest
@@ -98,7 +114,7 @@
   {steps}
   requirements={_requirements}
   {nextDisabled}
-  startAtProgress={$page.url.hash ? parseInt($page.url.hash.slice(1)) : 0}
+  {startAtProgress}
   let:back
   let:next
   let:render
@@ -121,13 +137,26 @@
     {#if render('claimRewards')}
       <ClaimRewards questId={id} on:next={next}>
         {@html $quests[id].text['claim.md']}
-      </ClaimRewards>
-    {/if}
 
-    {#if render('complete')}
+        <svelte:fragment slot="buttons" let:loading let:handleClaimRewards>
+          <JettyActionButtons
+            nextText={$i18n.t('quests:claimButton')}
+            {loading}
+            on:back={back}
+            on:next={handleClaimRewards}
+          />
+        </svelte:fragment>
+      </ClaimRewards>
+    {:else if render('complete')}
       {@html $quests[id].text['complete.md']}
 
-      <Button on:click={_completeQuest}>{$i18n.t('quests:completeQuest')}</Button>
+      <JettyActionButtons
+        nextText={$i18n.t('quests:completeQuest')}
+        on:back={back}
+        on:next={_completeQuest}
+      />
+    {:else}
+      <JettyActionButtons on:back={back} on:next={next} />
     {/if}
   </svelte:fragment>
 
@@ -135,7 +164,13 @@
     <VerifyRequirements
       questId={id}
       {requirements}
-      on:all-requirements-met={lastProgress < progress ? next : back}
+      on:all-requirements-met={() => {
+        nextDisabled = false
+        if (lastProgress < progress) next()
+      }}
+      on:requirements-not-met={() => {
+        nextDisabled = true
+      }}
     />
   {/if}
 </Quest>

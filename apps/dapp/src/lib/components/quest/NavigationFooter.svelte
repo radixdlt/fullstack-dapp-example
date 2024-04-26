@@ -2,7 +2,6 @@
   import { i18n } from '$lib/i18n/i18n'
   import { createEventDispatcher } from 'svelte'
   import Button from '../button/Button.svelte'
-  import CompleteQuest from '../complete-quest/CompleteQuest.svelte'
   import { fly } from 'svelte/transition'
 
   const dispatch = createEventDispatcher<{
@@ -10,17 +9,18 @@
     next: undefined
   }>()
 
-  export let showComplete = false
+  export let nextDisabled = false
+  export let nextButtonText: string | undefined
+  export let backButtonText: string | undefined
+
+  $: if (!nextButtonText) nextButtonText = $i18n.t('quests:continueButton')
+  $: if (!backButtonText) backButtonText = $i18n.t('quests:backButton')
 </script>
 
-<div class="footer-container" transition:fly|global={{ y: 200, opacity: 1, duration: 800 }}>
+<div class="footer-container" transition:fly|local={{ y: 200, opacity: 1, duration: 800 }}>
   <div class="footer quest-footer">
-    <Button on:click={() => dispatch('back')}>{$i18n.t('quests:previousButton')}</Button>
-    {#if showComplete}
-      <CompleteQuest on:complete />
-    {:else}
-      <Button on:click={() => dispatch('next')}>{$i18n.t('quests:nextButton')}</Button>
-    {/if}
+    <Button on:click={() => dispatch('back')}>{backButtonText}</Button>
+    <Button disabled={nextDisabled} on:click={() => dispatch('next')}>{nextButtonText}</Button>
   </div>
 </div>
 

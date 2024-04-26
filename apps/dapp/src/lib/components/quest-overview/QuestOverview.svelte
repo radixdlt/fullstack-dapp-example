@@ -10,7 +10,7 @@
   export let title: string
   export let description: string
   export let minutesToComplete: number
-  export let state: Omit<QuestStatus, 'in-progress'> = 'locked'
+  export let state: QuestStatus = 'locked'
   export let backgroundImage: string | undefined = undefined
   export let rewards: Readonly<QuestReward[]> = []
 </script>
@@ -29,6 +29,8 @@
         <div class="button-content">
           {#if state === 'unlocked'}
             Start
+          {:else if state === 'in-progress'}
+            Continue
           {:else if state === 'locked'}
             <img src={PadlockIcon} alt="Padlock icon" />
           {:else}

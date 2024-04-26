@@ -7,25 +7,16 @@
   import Icon from '$lib/components/icon/Icon.svelte'
   import ArrowIcon from '@images/arrow-clockwise.svg'
   import VirtualSimWarning from './VirtualSIMWarning.svelte'
+  import Button from '$lib/components/button/Button.svelte'
 
   export let phoneNumber: string
   export let oneTimePassword: string[]
-
-  let error = false
+  export let error = false
 
   const dispatch = createEventDispatcher<{
-    next: undefined
-    'modify-phone-number': undefined
+    filledInInput: undefined
+    verifyOtp: undefined
   }>()
-
-  export const verifyOneTimePassword = () => {
-    otpApi
-      .verifyOneTimePassword(phoneNumber, oneTimePassword.join(''))
-      .map(() => {
-        dispatch('next')
-      })
-      .mapErr(() => (error = true))
-  }
 
   const resendCode = () => {
     otpApi.sendOneTimePassword(phoneNumber)
@@ -53,7 +44,12 @@
     {phoneNumber}
   </div>
 
-  <VerificationCodeInput bind:values={oneTimePassword} on:completed={verifyOneTimePassword} />
+  <VerificationCodeInput
+    bind:values={oneTimePassword}
+    on:completed={() => {
+      dispatch('filledInInput')
+    }}
+  />
 
   <VirtualSimWarning />
 
@@ -71,9 +67,14 @@
     {:else}
       <Icon --size="16px" url={ArrowIcon} on:click={resendCode} clickable>Send code again</Icon>
     {/if}
-
-    <button on:click={() => dispatch('modify-phone-number')}>Modify phone number</button>
   </div>
+
+  <Button
+    on:click={() => {
+      dispatch('verifyOtp')
+    }}
+    >{$i18n.t('quests:FirstTransactionQuest.verifyOtpButton')}
+  </Button>
 </div>
 
 <style>
