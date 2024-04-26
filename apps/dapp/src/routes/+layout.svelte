@@ -157,7 +157,6 @@
       }
 
       const preRequisites = quest.preRequisites
-
       const isUnlocked = preRequisites.every(
         (preReq) => data.questStatus[preReq]?.status === 'COMPLETED'
       )
@@ -170,7 +169,6 @@
     },
     {} as { [key in QuestId]: QuestStatus }
   )
-
   let _quests = Object.entries($quests) as [
     keyof typeof $quests,
     (typeof $quests)[keyof typeof $quests]
@@ -212,23 +210,23 @@
   />
 
   <svelte:fragment slot="quests">
-      <Carousel let:Item>
-        {#each _quests as [id, quest]}
-          {#if quest.category === activeTab}
-            <Item>
-              <QuestOverview
-                title={$i18n.t(`${id}.title`, { ns: 'quests' })}
-                description={$i18n.t(`${id}.description`, { ns: 'quests' })}
-                minutesToComplete={quest.minutesToComplete}
-                rewards={quest.rewards}
-                backgroundImage={quest.splashImage}
-                state={questCardState[id] ?? 'locked'}
-                on:click={() => goto(`/quest/${id}`)}
-              />
-            </Item>
-          {/if}
-        {/each}
-      </Carousel>
+    <Carousel let:Item>
+      {#each _quests as [id, quest]}
+        {#if quest.category === activeTab}
+          <Item>
+            <QuestOverview
+              title={$i18n.t(`${id}.title`, { ns: 'quests' })}
+              description={$i18n.t(`${id}.description`, { ns: 'quests' })}
+              minutesToComplete={quest.minutesToComplete}
+              rewards={quest.rewards}
+              backgroundImage={quest.splashImage}
+              state={questCardState[id] ?? 'locked'}
+              on:click={() => goto(`/quest/${id}`)}
+            />
+          </Item>
+        {/if}
+      {/each}
+    </Carousel>
   </svelte:fragment>
 </Layout>
 
