@@ -5,7 +5,7 @@
   import { sineInOut } from 'svelte/easing'
   import { scale } from 'svelte/transition'
 
-  export let dialogs: number
+  export let dialogs = 1
   export let currentDialog = 0
   export let close = false
 

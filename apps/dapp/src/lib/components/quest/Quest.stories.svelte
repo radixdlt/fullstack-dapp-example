@@ -7,6 +7,7 @@
 <script lang="ts">
   import { Story, Template } from '@storybook/addon-svelte-csf'
   import Quest from './Quest.svelte'
+  import { writable } from 'svelte/store'
 
   const rewards = [
     {
@@ -40,11 +41,6 @@
           type: 'regular'
         },
         {
-          id: 'jetty',
-          type: 'jetty',
-          dialogs: 2
-        },
-        {
           id: 'text3',
           type: 'regular',
           footer: {
@@ -55,6 +51,7 @@
           }
         }
       ]}
+      jettyRenderer={writable(undefined)}
       let:render
     >
       {#if render('text1')}
@@ -83,23 +80,6 @@
           est laborum."
         </p>
       {/if}
-
-      <svelte:fragment slot="jetty" let:render let:dialog let:Button let:next>
-        {#if render('jetty')}
-          {#if dialog === 0}
-            <p>
-              Welcome to the Radix Network! You're about to make your first transaction on the
-              network.
-            </p>
-          {/if}
-          {#if dialog === 1}
-            <p>
-              This is a big step! You're about to claim your first rewards on the Radix Network.
-            </p>
-            <Button on:click={next}>OK</Button>
-          {/if}
-        {/if}
-      </svelte:fragment>
 
       {#if render('text3')}
         <p>

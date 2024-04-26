@@ -10,6 +10,7 @@
   import QR from '@svelte-put/qr/svg/QR.svelte'
   import { shortenAddress } from '$lib/utils/shorten-address'
   import { writable } from 'svelte/store'
+  import TextJettyPage from '../TextJettyPage.svelte'
 
   export let data: PageData
 
@@ -46,7 +47,12 @@
     {
       id: 'text2',
       type: 'jetty',
-      dialogs: 1
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['1.md']
+      }
     },
     {
       id: 'text3',
@@ -92,12 +98,6 @@
 
     {@html data.text['sendToJetty-2.md']}
   {/if}
-
-  <svelte:fragment slot="jetty" let:render>
-    {#if render('text2')}
-      {@html data.text['1.md']}
-    {/if}
-  </svelte:fragment>
 </Quest>
 
 <style>

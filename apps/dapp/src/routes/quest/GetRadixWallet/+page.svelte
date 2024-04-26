@@ -6,6 +6,7 @@
   import { isMobile } from '$lib/utils/is-mobile'
   import { useCookies } from '$lib/utils/cookies'
   import { writable } from 'svelte/store'
+  import { i18n } from '$lib/i18n/i18n'
 
   export let data: PageData
 
@@ -110,7 +111,14 @@
     {
       id: 'unclaimable-requirements',
       type: 'jetty',
-      dialogs: 1
+      component: ClaimRewards,
+      props: {
+        rewards: data.rewards,
+        text: data.text['requirements.md'],
+        nextButtonText: $i18n.t('quests:continueButton'),
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next()
+      }
     },
     {
       type: 'complete'
@@ -157,12 +165,4 @@
   {#if render('text10')}
     {@html data.text['9.md']}
   {/if}
-
-  <svelte:fragment slot="jetty" let:render let:next>
-    {#if render('unclaimable-requirements')}
-      <ClaimRewards on:click={next} rewards={data.rewards}>
-        {@html data.text['requirements.md']}
-      </ClaimRewards>
-    {/if}
-  </svelte:fragment>
 </Quest>
