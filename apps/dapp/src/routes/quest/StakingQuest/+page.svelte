@@ -10,27 +10,27 @@
   steps={[
     {
       id: 'text1',
-      type: 'regular',
+      type: 'regular'
     },
     {
       id: 'text2',
-      type: 'regular',
+      type: 'regular'
     },
     {
       id: 'text3',
-      type: 'regular',
+      type: 'regular'
     },
     {
       id: 'text4',
-      type: 'regular',
+      type: 'regular'
     },
     {
       id: 'text5',
-      type: 'regular',
+      type: 'regular'
     },
     {
       id: 'text6',
-      type: 'regular',
+      type: 'regular'
     },
     {
       type: 'claimRewards'
