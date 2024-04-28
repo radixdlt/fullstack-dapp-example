@@ -11,44 +11,26 @@
     {
       id: 'text1',
       type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
     },
     {
       id: 'text2',
       type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
     },
     {
       id: 'text3',
       type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
     },
     {
       id: 'text4',
       type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
     },
     {
       id: 'text5',
       type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
     },
     {
       id: 'text6',
       type: 'regular',
-      footer: {
-        type: 'navigation'
-      }
     },
     {
       type: 'claimRewards'
