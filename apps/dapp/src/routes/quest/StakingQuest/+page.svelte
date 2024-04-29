@@ -1,6 +1,9 @@
 <script lang="ts">
   import Quest from '../Quest.svelte'
   import type { PageData } from '../StakingQuest/$types'
+  import { i18n } from '$lib/i18n/i18n'
+  import Button from '$lib/components/button/Button.svelte'
+  import { ExternalLinks } from 'common'
 
   export let data: PageData
 </script>
@@ -51,6 +54,10 @@
 
   {#if render('text3')}
     {@html data.text['2.md']}
+
+    <Button on:click={() => window.open(ExternalLinks.radixDashboardStaking, '_blank')}>
+      {$i18n.t('quests:StakingQuest.goToRadixDashboard')}
+    </Button>
   {/if}
 
   {#if render('text4')}
