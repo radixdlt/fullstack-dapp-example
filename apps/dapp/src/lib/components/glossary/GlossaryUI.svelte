@@ -9,11 +9,12 @@
     html: string
   }[]
 
-  let selectedTitle: string
+  // Glossary can have anchor to directly open glossary definition
+  export let anchor: string = ''
+  $: selectedTitle = anchor ?? ''
+  $: pageTitle = selectedTitle ? 'title' : 'glossary'
 
-  let page: 'glossary' | 'title' = 'glossary'
-
-  $: html = glossary.find((g) => g.title === selectedTitle)?.html
+  $: html = glossary.find((g) => g.title.toLowerCase() === selectedTitle.toLowerCase())?.html
 
   const crossfadeDuration = 500
 
@@ -24,31 +25,47 @@
   const dispatch = createEventDispatcher<{ close: undefined }>()
 </script>
 
-<div class="glossary card">
-  <div class="header">
-    <CardHeader
-      on:click={() => {
-        if (page === 'title') {
-          page = 'glossary'
-        } else {
-          dispatch('close')
-        }
-      }}>{$i18n.t('glossary:back')}</CardHeader
-    >
-  </div>
-
-  {#if page === 'title'}
-    <div class="grid-item">
-      <div class="title" out:send={{ key: selectedTitle }} in:receive={{ key: selectedTitle }}>
+<div class="glossary card glossary-card">
+  {#if !anchor}
+    <div class="header">
+      <CardHeader
+        on:click={() => {
+          if (pageTitle === 'title') {
+            pageTitle = 'glossary'
+          } else {
+            dispatch('close')
+          }
+        }}
+      >
+        {anchor ? selectedTitle : $i18n.t('glossary:back')}
+      </CardHeader>
+    </div>
+  {:else}
+    <div class="anchor-container">
+      <div
+        class="title-anchor"
+        out:send={{ key: selectedTitle }}
+        in:receive={{ key: selectedTitle }}
+      >
         {selectedTitle}
       </div>
-      <div in:fade={{ delay: crossfadeDuration }} out:fade class="text">
-        {@html html}
+      <div class="divider-anchor" />
+    </div>
+  {/if}
+
+  {#if pageTitle === 'title'}
+    <div class="grid-item grid-item-description">
+      <div class="text">
+        {#if html}
+          {@html html}
+        {:else}
+          {$i18n.t('glossary:definitionMissing')}
+        {/if}
       </div>
     </div>
   {/if}
 
-  {#if page === 'glossary'}
+  {#if pageTitle === 'glossary'}
     <div class="grid-item" out:fade>
       {#each glossary as { title }}
         <div
@@ -68,7 +85,7 @@
             class="title"
             on:click={() => {
               selectedTitle = title
-              page = 'title'
+              pageTitle = 'title'
             }}
             out:send|global={{ key: title }}
             in:receive|global={{ key: title }}
@@ -83,16 +100,30 @@
 
 <style lang="scss">
   .glossary {
+    bottom: 6rem;
+    position: fixed;
     display: grid;
     grid-template-rows: auto 1fr;
     height: 70vh;
     max-height: 40rem;
-    max-width: 50rem;
-    width: 100%;
+    min-width: 20rem;
+    width: 80vw;
+    background-color: transparent;
+    @include desktop {
+      right: 0.5rem;
+      max-width: 431px;
+    }
+    @include mobile {
+      max-width: 768px;
+    }
+  }
+
+  .glossary-card {
+    padding: 0px;
   }
 
   .header {
-    padding-bottom: var(--spacing-xl);
+    padding: var(--spacing-xl);
   }
 
   .grid-item {
@@ -102,13 +133,32 @@
 
   .title {
     font-weight: var(--font-weight-bold);
-    padding: var(--spacing-xl) var(--spacing-lg);
+    padding: var(--spacing-xl);
     width: fit-content;
   }
 
+  .title-anchor {
+    font-weight: var(--font-weight-bold);
+    width: fit-content;
+    padding: var(--spacing-xl) var(--spacing-2xl);
+  }
+
+  .divider-anchor {
+    height: 1px;
+    background: rgba($color: black, $alpha: 0.2);
+    width: 100%;
+  }
+
+  .anchor-container {
+    display: flex;
+  }
   .divider {
     height: 1px;
     background: rgba($color: black, $alpha: 0.2);
+  }
+
+  .grid-item-description {
+    padding: var(--spacing-xl);
   }
 
   .text {

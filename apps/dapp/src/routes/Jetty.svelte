@@ -9,10 +9,10 @@
   import { page } from '$app/stores'
   import JettyActionButtons from '$lib/components/quest/JettyActionButtons.svelte'
 
+  export let onGlossaryClose: undefined | (() => void) = undefined
   let showJettyMenu = false
-
-  let showGlossary = false
-
+  $: anchor = $page.url.searchParams.get('anchor')
+  $: showGlossary = !!anchor
   $: if (showGlossary) showJettyMenu = false
 
   const handleKeydown = (event: KeyboardEvent) => {
@@ -38,7 +38,10 @@
   dialogs={showJettyMenu || showJettyMessage || $jettyDialog ? 1 : 0}
   let:Menu
   on:click={() => {
-    if (showGlossary) showGlossary = false
+    if (showGlossary) {
+      if (onGlossaryClose) onGlossaryClose()
+      showGlossary = false
+    }
 
     if ($page.url.pathname === '/') {
       showJettyMenu = !showJettyMenu
@@ -81,7 +84,7 @@
 </JettyDialog>
 
 {#if showGlossary}
-  <Backdrop>
+  <Backdrop zIndex={4}>
     <Glossary on:close={() => (showGlossary = false)} />
   </Backdrop>
 {/if}
