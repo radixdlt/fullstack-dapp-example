@@ -54,3 +54,11 @@
 <Story name="Definition">
   <Glossary />
 </Story>
+
+<Story name="Anchor">
+  <Glossary glossaryAnchor="DEXes" />
+</Story>
+
+<Story name="Missing anchor definition">
+  <Glossary glossaryAnchor="Perp" />
+</Story>

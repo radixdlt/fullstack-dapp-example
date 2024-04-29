@@ -11,7 +11,7 @@
 
   export let onGlossaryClose: undefined | (() => void) = undefined
   let showJettyMenu = false
-  $: anchor = $page.url.searchParams.get('glossaryAnchor')
+  $: anchor = $page.url.searchParams.get('glossaryAnchor') ?? ''
   $: showGlossary = !!anchor
   $: if (showGlossary) showJettyMenu = false
 
@@ -85,6 +85,6 @@
 
 {#if showGlossary}
   <Backdrop zIndex={anchor ? 4 : 1}>
-    <Glossary on:close={() => (showGlossary = false)} />
+    <Glossary glossaryAnchor={anchor} on:close={() => (showGlossary = false)} />
   </Backdrop>
 {/if}
