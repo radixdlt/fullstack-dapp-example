@@ -39,11 +39,6 @@
     height: 4.5rem;
   }
 
-  .close-image {
-    width: 0.3rem;
-    height: 0.3rem;
-  }
-
   .close {
     background: var(--color-background-light);
     background-size: 30%;
