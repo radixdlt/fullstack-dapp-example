@@ -14,7 +14,9 @@
   $: selectedTitle = anchor ?? ''
   $: pageTitle = selectedTitle ? 'title' : 'glossary'
 
-  $: html = glossary.find((g) => g.title.toLowerCase() === selectedTitle.toLowerCase())?.html
+  $: html = glossary.find(
+    (g) => g.title.toLowerCase().trim() === selectedTitle.toLowerCase().trim()
+  )?.html
 
   const crossfadeDuration = 500
 

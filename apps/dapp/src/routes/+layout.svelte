@@ -193,7 +193,7 @@
 
 <Jetty
   onGlossaryClose={() => {
-    $page.url.searchParams.delete('anchor')
+    $page.url.searchParams.delete('glossaryAnchor')
     goto(`?${$page.url.searchParams.toString()}`)
   }}
 />

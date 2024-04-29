@@ -11,7 +11,7 @@
 
   export let onGlossaryClose: undefined | (() => void) = undefined
   let showJettyMenu = false
-  $: anchor = $page.url.searchParams.get('anchor')
+  $: anchor = $page.url.searchParams.get('glossaryAnchor')
   $: showGlossary = !!anchor
   $: if (showGlossary) showJettyMenu = false
 
@@ -84,7 +84,7 @@
 </JettyDialog>
 
 {#if showGlossary}
-  <Backdrop zIndex={4}>
+  <Backdrop zIndex={anchor ? 4 : 1}>
     <Glossary on:close={() => (showGlossary = false)} />
   </Backdrop>
 {/if}
