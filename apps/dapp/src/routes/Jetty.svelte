@@ -84,7 +84,7 @@
 </JettyDialog>
 
 {#if showGlossary}
-  <Backdrop zIndex={anchor ? 4 : 1}>
+  <Backdrop zIndex={4}>
     <Glossary glossaryAnchor={anchor} on:close={() => (showGlossary = false)} />
   </Backdrop>
 {/if}
