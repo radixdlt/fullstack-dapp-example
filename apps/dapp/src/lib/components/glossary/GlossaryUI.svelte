@@ -29,18 +29,24 @@
 
 <div class="glossary card glossary-card">
   {#if !anchor}
-    <div class="header">
-      <CardHeader
-        on:click={() => {
-          if (pageTitle === 'title') {
-            pageTitle = 'glossary'
-          } else {
-            dispatch('close')
-          }
-        }}
-      >
-        {anchor ? selectedTitle : $i18n.t('glossary:back')}
-      </CardHeader>
+    <div>
+      <div class="header">
+        <CardHeader
+          on:click={() => {
+            if (pageTitle === 'title') {
+              pageTitle = 'glossary'
+              selectedTitle = ''
+            } else {
+              dispatch('close')
+            }
+          }}
+        >
+          {selectedTitle ? selectedTitle : $i18n.t('glossary:back')}
+        </CardHeader>
+      </div>
+      {#if selectedTitle}
+        <div class="divider-anchor" />
+      {/if}
     </div>
   {:else}
     <div class="anchor-container">
@@ -69,20 +75,22 @@
 
   {#if pageTitle === 'glossary'}
     <div class="grid-item" out:fade>
-      {#each glossary as { title }}
+      {#each glossary as { title }, index}
         <div
           in:fade|global={{
             duration: selectedTitle === title ? 0 : crossfadeDuration * 0.4,
             delay: selectedTitle === title ? 0 : crossfadeDuration * 0.6
           }}
         >
-          <div
-            in:fade|global={{
-              duration: crossfadeDuration * 0.4,
-              delay: crossfadeDuration * 0.8
-            }}
-            class="divider"
-          />
+          {#if index !== 0 || !selectedTitle}
+            <div
+              in:fade|global={{
+                duration: crossfadeDuration * 0.4,
+                delay: crossfadeDuration * 0.8
+              }}
+              class="divider"
+            />
+          {/if}
           <button
             class="title"
             on:click={() => {
@@ -135,8 +143,9 @@
 
   .title {
     font-weight: var(--font-weight-bold);
-    padding: var(--spacing-xl);
     width: fit-content;
+    padding: var(--spacing-xl);
+    padding-left: var(--spacing-2xl);
   }
 
   .title-anchor {
