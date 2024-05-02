@@ -35,7 +35,7 @@ const resourceDeposited = (resource: string, toAccount?: string) => (event: Even
   return resourceField?.value === resource
 }
 
-const resourceWithdrawn = (resource: string) => (event: EventsItem) => {
+export const resourceWithdrawn = (resource: string) => (event: EventsItem) => {
   if (event.name !== 'WithdrawEvent' || event.data.kind !== 'Enum') return false
 
   const resourceField = event.data.fields.find(
@@ -43,6 +43,13 @@ const resourceWithdrawn = (resource: string) => (event: EventsItem) => {
   )
 
   return resourceField?.value === resource
+}
+
+export const resourceStaked = (event: EventsItem) => {
+  return (
+    event.name === 'StakeEvent' &&
+    (event.emitter as EventEmitter)?.entity.entity_type === 'GlobalValidator'
+  )
 }
 
 const questRewardsEmitted = (eventName: string) => (event: EventsItem) =>
@@ -65,5 +72,9 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
       config.radQuest.accounts.jetty
     ),
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress)
+  },
+  XrdStaked: {
+    XrdStake: resourceStaked,
+    WithdrawEvent: resourceWithdrawn(config.radQuest.xrd)
   }
 })

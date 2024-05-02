@@ -48,3 +48,7 @@ export type WellKnownAddresses = {
     jetty: string
   }
 }
+
+export const RedisKeys = {
+  ActiveQuests: 'active-quests'
+}

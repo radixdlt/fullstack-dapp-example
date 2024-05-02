@@ -28,7 +28,7 @@ export const HandleTransactions =
     stateVersion: number
     continueStream: (delay: number) => void
   }) =>
-    filterTransactions(transactions).asyncAndThen((filteredTransactions) =>
+    filterTransactions(transactions).andThen((filteredTransactions) =>
       eventModel
         .addMultiple(
           filteredTransactions.map((tx) => ({
