@@ -18,7 +18,8 @@ export type EventId = keyof typeof EventId
 
 export const EventId = {
   DepositUserBadge: 'DepositUserBadge',
-  JettyReceivedClams: 'JettyReceivedClams'
+  JettyReceivedClams: 'JettyReceivedClams',
+  StakedXrd: 'StakedXrd'
 } as const
 
 export type FungibleToken = { amount: number }
@@ -179,6 +180,33 @@ export const QuestDefinitions = (networkId: number) => {
           eventName: 'DepositEvent',
           matchField: {
             value: badges.userBadgeAddress,
+            kind: 'Reference',
+            type_name: 'ResourceAddress'
+          }
+        }
+      }
+    },
+    StakingQuest: {
+      id: 'StakingQuest',
+      category: 'Advanced',
+      rewards: [
+        {
+          name: 'element',
+          amount: 50
+        }
+      ],
+      minutesToComplete: 5,
+      preRequisites: ['LoginWithWallet', 'FirstTransactionQuest', 'TransferTokens'],
+      requirements: {
+        LearnStaking: {
+          type: 'content'
+        },
+        //todo MARCIN
+        [EventId.StakedXrd]: {
+          type: 'event',
+          eventName: 'StakeEvent',
+          matchField: {
+            value: '',
             kind: 'Reference',
             type_name: 'ResourceAddress'
           }

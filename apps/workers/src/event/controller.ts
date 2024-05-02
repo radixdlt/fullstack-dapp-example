@@ -242,6 +242,47 @@ export const EventWorkerController = ({
         )
     }
 
+    const handleXrdStaked = async () => {
+      const questId = 'StakingQuest'
+      const userId = await getUserIdFromWithdrawEvent(
+        job.data.relevantEvents['WithdrawEvent'],
+        dbClient
+      )
+
+      return ensureValidData(transactionId, { userId })
+        .map(({ userId }) => ({ userId }))
+        .andThen(({ userId }) =>
+          ResultAsync.combine([
+            hasAllRequirements(questId, userId).andThen((hasAll) =>
+              hasAll
+                ? transactionModel(childLogger)
+                    .add({
+                      userId,
+                      transactionKey: `${questId}:DepositReward`,
+                      attempt: 0
+                    })
+                    .andThen(() =>
+                      transactionQueue.add({
+                        type: 'DepositReward',
+                        userId,
+                        questId,
+                        attempt: 0,
+                        transactionKey: `${questId}:DepositReward`,
+                        traceId
+                      })
+                    )
+                : okAsync('')
+            ),
+            notificationApi.send(userId, {
+              type: NotificationType.QuestRequirementCompleted,
+              questId,
+              requirementId: 'StakedXRD',
+              traceId
+            })
+          ])
+        )
+    }
+
     switch (type) {
       case 'QuestRewardDeposited':
         return handleRewardDeposited()
@@ -251,7 +292,8 @@ export const EventWorkerController = ({
         return handleUserBadgeDeposited()
       case 'JettyReceivedClams':
         return handleJettyReceivedClams()
-
+      case 'XrdStaked':
+        return handleXrdStaked()
       default:
         childLogger.error({
           message: 'Unhandled Event'
