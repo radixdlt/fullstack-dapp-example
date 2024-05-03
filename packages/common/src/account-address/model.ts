@@ -1,7 +1,7 @@
 import { ResultAsync } from 'neverthrow'
-import { RedisConnection } from 'queues'
 import { typedError } from '../helpers'
 import { RedisKeys } from '../constants'
+import { RedisConnection } from 'bullmq'
 
 /* 
   Used to track account addresses that are waiting for transaction success
