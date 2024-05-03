@@ -1,4 +1,4 @@
-import { describe, it, expect, afterAll } from 'vitest'
+import { describe, it, expect, beforeAll } from 'vitest'
 import { FilterTransactions } from './filter-transactions'
 import DepositUserBadge from '../fixtures/transactions/deposit-user-badge'
 import QuestRewardsEvents from '../fixtures/transactions/quest-rewards-events'
@@ -6,17 +6,21 @@ import NotSupportedTx from '../fixtures/transactions/not-supported-tx'
 import StakedXrdTx from '../fixtures/transactions/staked-xrd'
 import { getTrackedTransactionTypes } from './tracked-transaction-types'
 import { RedisConnection } from 'queues'
-import { config } from '../config'
 import { AccountAddressModel } from 'common'
+import { RedisServer } from '../test-helpers/inMemoryRedisServer'
 
-const redisConnection = new RedisConnection(config.redis)
-const accountAddressModel = AccountAddressModel(redisConnection)
-const trackedTransactionTypes = getTrackedTransactionTypes()
-const filterTransactions = FilterTransactions(trackedTransactionTypes, accountAddressModel)
+let accountAddressModel: AccountAddressModel
+let filterTransactions: FilterTransactions
 const stakingAddress = 'account_tdx_2_12ys6rt7m4zsut5fpm77melt0wl3kj659vv59xzm4dduqtqse4fv7wa'
 const stakingUserId = '555'
 
 describe('filter transactions', () => {
+  beforeAll(async () => {
+    const inMemoryRedis = await RedisServer()
+    accountAddressModel = AccountAddressModel(new RedisConnection(inMemoryRedis))
+    filterTransactions = FilterTransactions(getTrackedTransactionTypes(), accountAddressModel)
+  })
+
   it('should find DepositUserBadge transaction', async () => {
     const result = await filterTransactions([...DepositUserBadge, ...NotSupportedTx])
 
