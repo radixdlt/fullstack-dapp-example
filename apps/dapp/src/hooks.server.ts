@@ -21,6 +21,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   if (event.url.pathname === '/.well-known/radix.json') {
     return new Response(
       JSON.stringify({
+        callbackPath: '/connect',
         dApps: [
           {
             dAppDefinitionAddress: config.dapp.dAppDefinitionAddress
