@@ -1,16 +1,20 @@
 import { describe, it, expect, beforeAll } from 'vitest'
-import { FilterTransactions } from './filter-transactions'
 import DepositUserBadge from '../fixtures/transactions/deposit-user-badge'
 import QuestRewardsEvents from '../fixtures/transactions/quest-rewards-events'
 import NotSupportedTx from '../fixtures/transactions/not-supported-tx'
 import StakedXrdTx from '../fixtures/transactions/staked-xrd'
+import StakedXrdTxCorrupted from '../fixtures/transactions/staked-xrd-corrupted'
 import { getTrackedTransactionTypes } from './tracked-transaction-types'
-import { RedisConnection } from 'queues'
 import { AccountAddressModel } from 'common'
+import { FilterTransactionsByType } from './filter-transactions-by-type'
+import { FilterTransactions } from './filter-transactions'
 import { RedisServer } from '../test-helpers/inMemoryRedisServer'
+import { RedisConnection } from 'queues'
 
 let accountAddressModel: AccountAddressModel
-let filterTransactions: FilterTransactions
+const trackedTransactionTypes = getTrackedTransactionTypes()
+let filterTransactionsByType = FilterTransactionsByType(trackedTransactionTypes)
+let filterTransaction: FilterTransactions
 const stakingAddress = 'account_tdx_2_12ys6rt7m4zsut5fpm77melt0wl3kj659vv59xzm4dduqtqse4fv7wa'
 const stakingUserId = '555'
 
@@ -18,11 +22,11 @@ describe('filter transactions', () => {
   beforeAll(async () => {
     const inMemoryRedis = await RedisServer()
     accountAddressModel = AccountAddressModel(new RedisConnection(inMemoryRedis))
-    filterTransactions = FilterTransactions(getTrackedTransactionTypes(), accountAddressModel)
+    filterTransaction = FilterTransactions(accountAddressModel)
   })
 
-  it('should find DepositUserBadge transaction', async () => {
-    const result = await filterTransactions([...DepositUserBadge, ...NotSupportedTx])
+  it('should find DepositUserBadge transaction', () => {
+    const result = filterTransactionsByType([...DepositUserBadge, ...NotSupportedTx])
 
     if (result.isErr()) throw result.error
 
@@ -38,8 +42,8 @@ describe('filter transactions', () => {
     expect(userBadge.relevantEvents.XrdDeposited).toBeDefined()
   })
 
-  it('should find QuestRewardClaimed & QuestRewardDeposited transaction', async () => {
-    const result = await filterTransactions([...QuestRewardsEvents, ...NotSupportedTx])
+  it('should find QuestRewardClaimed & QuestRewardDeposited transaction', () => {
+    const result = filterTransactionsByType([...QuestRewardsEvents, ...NotSupportedTx])
 
     if (result.isErr()) throw result.error
 
@@ -56,6 +60,22 @@ describe('filter transactions', () => {
     expect(claimedReward.transactionId).toBeDefined()
     expect(claimedReward.type).toEqual('QuestRewardClaimed')
     expect(claimedReward.relevantEvents.RewardClaimedEvent).toBeDefined()
+  })
+
+  it('should find XrdStaked transaction', () => {
+    const filterResult = filterTransactionsByType([...StakedXrdTx, ...NotSupportedTx])
+
+    if (filterResult.isErr()) throw filterResult.error
+
+    const filteredTransactions = filterResult.value
+    expect(filteredTransactions).lengthOf(1)
+
+    const relevantEvents = Object.values(filteredTransactions[0].relevantEvents)
+    expect(relevantEvents).lengthOf(2)
+
+    const [withdraw, xrdStaked] = relevantEvents
+    expect(withdraw.name).toBe('WithdrawEvent')
+    expect(xrdStaked.name).toBe('StakeEvent')
   })
 
   it('should add tracked address and validate that it exists in redis', async () => {
@@ -76,27 +96,13 @@ describe('filter transactions', () => {
     else expect(trackedAdress.value).toBe(stakingUserId)
   })
 
-  it('should find XrdStaked transaction', async () => {
-    const addActiveQuestResult = await accountAddressModel.addTrackedAddress(
-      stakingAddress,
-      'StakingQuest',
-      stakingUserId
-    )
+  it('should filter XrdStaked when user is in redis', async () => {
+    const result = filterTransactionsByType([...StakedXrdTx, ...StakedXrdTxCorrupted])
+    if (result.isErr()) throw result.error
 
-    if (addActiveQuestResult.isErr()) throw addActiveQuestResult.error
-
-    const filterResult = await filterTransactions([...StakedXrdTx, ...NotSupportedTx])
-
-    if (filterResult.isErr()) throw filterResult.error
-
-    const filteredTransactions = filterResult.value
-    expect(filteredTransactions).lengthOf(1)
-
-    const relevantEvents = Object.values(filteredTransactions[0].relevantEvents)
-    expect(relevantEvents).lengthOf(2)
-
-    const [withdraw, xrdStaked] = relevantEvents
-    expect(withdraw.name).toBe('WithdrawEvent')
-    expect(xrdStaked.name).toBe('StakeEvent')
+    const result2 = await Promise.all(result.value.map(filterTransaction))
+    const txs = result2.filter((r) => !!r)
+    expect(txs).lengthOf(1)
+    expect(txs[0]).toEqual(result.value[0])
   })
 })
