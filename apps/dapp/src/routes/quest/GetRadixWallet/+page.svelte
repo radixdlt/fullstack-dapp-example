@@ -15,7 +15,13 @@
   let walletIsLinked = writable(data.requirements.GetTheWallet)
 
   onMount(() => {
-    if (isMobile()) return
+    if (isMobile()) {
+      // @ts-ignore
+      useCookies('requirement-GetRadixWallet-GetTheWallet').set(true)
+      $walletIsLinked = true
+      quest.actions.next()
+      return
+    }
 
     const callback = ({ detail }: any) => {
       if (detail.eventType !== 'extensionStatus') return
