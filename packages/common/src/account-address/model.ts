@@ -12,24 +12,24 @@ export type AccountAddressModel = ReturnType<typeof AccountAddressModel>
 export const AccountAddressModel = (redisClient: RedisConnection) => {
   const getRedisClient = () => ResultAsync.fromPromise(redisClient.client, typedError)
 
-  const addActiveQuestAccount = (accountAddress: string, questId: string) =>
+  const addTrackedAddress = (accountAddress: string, questId: string, userId: string) =>
     getRedisClient().andThen((client) => {
       return ResultAsync.fromPromise(
-        client.sadd(RedisKeys.TrackedAccountAddresses, `${accountAddress}-${questId}`),
+        client.setnx(`${RedisKeys.TrackedAccountAddresses}:${accountAddress}:${questId}`, userId),
         typedError
       )
     })
 
-  const hasActiveQuest = (accountAddress: string, questId: string) =>
+  const getTrackedAddressUserId = (accountAddress: string, questId: string) =>
     getRedisClient().andThen((client) =>
       ResultAsync.fromPromise(
-        client.sismember(RedisKeys.TrackedAccountAddresses, `${accountAddress}-${questId}`),
+        client.get(`${RedisKeys.TrackedAccountAddresses}:${accountAddress}:${questId}`),
         typedError
       )
     )
 
   return {
-    addActiveQuestAccount,
-    hasActiveQuest
+    addTrackedAddress,
+    getTrackedAddressUserId
   }
 }

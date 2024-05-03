@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, afterAll } from 'vitest'
 import { FilterTransactions } from './filter-transactions'
 import DepositUserBadge from '../fixtures/transactions/deposit-user-badge'
 import QuestRewardsEvents from '../fixtures/transactions/quest-rewards-events'
@@ -13,6 +13,8 @@ const redisConnection = new RedisConnection(config.redis)
 const accountAddressModel = AccountAddressModel(redisConnection)
 const trackedTransactionTypes = getTrackedTransactionTypes()
 const filterTransactions = FilterTransactions(trackedTransactionTypes, accountAddressModel)
+const stakingAddress = 'account_tdx_2_12ys6rt7m4zsut5fpm77melt0wl3kj659vv59xzm4dduqtqse4fv7wa'
+const stakingUserId = '555'
 
 describe('filter transactions', () => {
   it('should find DepositUserBadge transaction', async () => {
@@ -52,12 +54,29 @@ describe('filter transactions', () => {
     expect(claimedReward.relevantEvents.RewardClaimedEvent).toBeDefined()
   })
 
-  it('should find XrdStaked transaction', async () => {
-    const stakingAccount = 'account_tdx_2_12ys6rt7m4zsut5fpm77melt0wl3kj659vv59xzm4dduqtqse4fv7wa'
+  it('should add tracked address and validate that it exists in redis', async () => {
+    const addActiveQuestResult = await accountAddressModel.addTrackedAddress(
+      stakingAddress,
+      'StakingQuest',
+      stakingUserId
+    )
 
-    const addActiveQuestResult = await accountAddressModel.addActiveQuestAccount(
-      stakingAccount,
+    if (addActiveQuestResult.isErr()) throw addActiveQuestResult.error
+
+    const trackedAdress = await accountAddressModel.getTrackedAddressUserId(
+      stakingAddress,
       'StakingQuest'
+    )
+
+    if (trackedAdress.isErr()) throw trackedAdress.error
+    else expect(trackedAdress.value).toBe(stakingUserId)
+  })
+
+  it('should find XrdStaked transaction', async () => {
+    const addActiveQuestResult = await accountAddressModel.addTrackedAddress(
+      stakingAddress,
+      'StakingQuest',
+      stakingUserId
     )
 
     if (addActiveQuestResult.isErr()) throw addActiveQuestResult.error
