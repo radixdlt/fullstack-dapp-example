@@ -8,14 +8,14 @@ import { RedisKeys } from '../constants'
   to complete active quest
 */
 
-export type ActiveQuestsModel = ReturnType<typeof ActiveQuestsModel>
-export const ActiveQuestsModel = (redisClient: RedisConnection) => {
+export type AccountAddressModel = ReturnType<typeof AccountAddressModel>
+export const AccountAddressModel = (redisClient: RedisConnection) => {
   const getRedisClient = () => ResultAsync.fromPromise(redisClient.client, typedError)
 
   const addActiveQuestAccount = (accountAddress: string, questId: string) =>
     getRedisClient().andThen((client) => {
       return ResultAsync.fromPromise(
-        client.sadd(RedisKeys.ActiveQuests, `${accountAddress}-${questId}`),
+        client.sadd(RedisKeys.TrackedAccountAddresses, `${accountAddress}-${questId}`),
         typedError
       )
     })
@@ -23,7 +23,7 @@ export const ActiveQuestsModel = (redisClient: RedisConnection) => {
   const hasActiveQuest = (accountAddress: string, questId: string) =>
     getRedisClient().andThen((client) =>
       ResultAsync.fromPromise(
-        client.sismember(RedisKeys.ActiveQuests, `${accountAddress}-${questId}`),
+        client.sismember(RedisKeys.TrackedAccountAddresses, `${accountAddress}-${questId}`),
         typedError
       )
     )

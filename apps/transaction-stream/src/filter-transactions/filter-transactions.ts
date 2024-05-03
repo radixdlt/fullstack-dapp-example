@@ -1,8 +1,8 @@
 import { CommittedTransactionInfo, EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
 import { ResultAsync } from 'neverthrow'
 import { EventJobType } from 'queues'
-import { resourceStaked, TrackedTransactions } from './tracked-transaction-types'
-import { ActiveQuestsModel, typedError } from 'common'
+import { xrdStaked, TrackedTransactions } from './tracked-transaction-types'
+import { AccountAddressModel, typedError } from 'common'
 import { getUserAddressFromStakingTransaction } from '../helpers/getUserAddressFromStakeTransaction'
 import { config } from '../config'
 
@@ -16,7 +16,7 @@ const intersection = <T>(a: T[], b: T[]) => a.filter((value) => b.includes(value
 
 export type FilterTransactions = ReturnType<typeof FilterTransactions>
 export const FilterTransactions =
-  (trackedTransactions: TrackedTransactions, activeQuestModel: ActiveQuestsModel) =>
+  (trackedTransactions: TrackedTransactions, accountAddressModel: AccountAddressModel) =>
   (transactions: CommittedTransactionInfo[]): ResultAsync<FilteredTransaction[], Error> => {
     const filterTxPromises = transactions.map(async (transaction) => {
       const events = transaction.receipt?.events
@@ -28,23 +28,20 @@ export const FilterTransactions =
       for (const event of events) {
         for (const [transactionTypeName, trackedEventsFn] of Object.entries(trackedTransactions)) {
           for (const [trackedEventName, trackedEventFn] of Object.entries(trackedEventsFn)) {
-            if (trackedEventFn(event)) {
-              if (resourceStaked(event)) {
-                const address = getUserAddressFromStakingTransaction(config.radQuest.xrd)(events)
-                //todo Marcin: Does this need better handling
-                if (!address) break
-                const count = await activeQuestModel
-                  .hasActiveQuest(address, 'StakingQuest')
-                  //todo marcin: What kind of handling should this have?
-                  .mapErr((e) => console.log(e))
+            if (xrdStaked(event)) {
+              const address = getUserAddressFromStakingTransaction(config.radQuest.xrd)(events)
+              if (!address) break
 
-                if (count.isOk()) {
-                  if (!count.value) break
-                  relevantEvents[trackedEventName] = event
-                }
-              } else {
+              const count = await accountAddressModel
+                .hasActiveQuest(address, 'StakingQuest')
+                .mapErr((e) => ({ reason: 'FailedToReadAccountAddresses', jsError: e }))
+
+              if (count.isOk()) {
+                if (!count.value) break
                 relevantEvents[trackedEventName] = event
               }
+            } else if (trackedEventFn(event)) {
+              relevantEvents[trackedEventName] = event
             }
 
             const trackedEventKeys = Object.keys(trackedEventsFn)

@@ -45,7 +45,7 @@ export const resourceWithdrawn = (resource: string) => (event: EventsItem) => {
   return resourceField?.value === resource
 }
 
-export const resourceStaked = (event: EventsItem) => {
+export const xrdStaked = (event: EventsItem) => {
   return (
     event.name === 'StakeEvent' &&
     (event.emitter as EventEmitter)?.entity.entity_type === 'GlobalValidator'
@@ -74,7 +74,7 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress)
   },
   XrdStaked: {
-    XrdStake: resourceStaked,
+    XrdStake: xrdStaked,
     WithdrawEvent: resourceWithdrawn(config.radQuest.xrd)
   }
 })

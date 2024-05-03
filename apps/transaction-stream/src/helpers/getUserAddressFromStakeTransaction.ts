@@ -1,6 +1,5 @@
-import { CommittedTransactionInfo, EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
+import { EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
 import { resourceWithdrawn } from '../filter-transactions/tracked-transaction-types'
-import { config } from '../config'
 
 export const getUserAddressFromStakingTransaction =
   (resource: string) =>

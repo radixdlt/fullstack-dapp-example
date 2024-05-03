@@ -50,5 +50,5 @@ export type WellKnownAddresses = {
 }
 
 export const RedisKeys = {
-  ActiveQuests: 'active-quests'
+  TrackedAccountAddresses: 'tracked-account-addresses'
 }

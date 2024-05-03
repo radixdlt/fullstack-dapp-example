@@ -2,7 +2,7 @@ import { config } from './config'
 import { GatewayApiClient } from './gateway'
 import { logger } from './helpers/logger'
 import { TransactionStream } from './transaction-stream/transaction-stream'
-import { ActiveQuestsModel, GatewayApi } from 'common'
+import { AccountAddressModel, GatewayApi } from 'common'
 import { FilterTransactions } from './filter-transactions/filter-transactions'
 import { PrismaClient } from 'database'
 import { getQueues, RedisConnection } from 'queues'
@@ -70,9 +70,9 @@ const gatewayApi = GatewayApi(config.networkId)
 const { eventQueue } = getQueues(config.redis)
 const redisConnection = new RedisConnection(config.redis)
 const stateVersionModel = StateVersionModel(redisConnection)
-const activeQuestAccountsModel = ActiveQuestsModel(redisConnection)
+const accountAddressModel = AccountAddressModel(redisConnection)
 const trackedTransactionTypes = getTrackedTransactionTypes()
-const filterTransactions = FilterTransactions(trackedTransactionTypes, activeQuestAccountsModel)
+const filterTransactions = FilterTransactions(trackedTransactionTypes, accountAddressModel)
 
 app({
   gatewayApi,

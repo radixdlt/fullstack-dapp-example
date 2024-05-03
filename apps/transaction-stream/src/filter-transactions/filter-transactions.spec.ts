@@ -4,19 +4,15 @@ import DepositUserBadge from '../fixtures/transactions/deposit-user-badge'
 import QuestRewardsEvents from '../fixtures/transactions/quest-rewards-events'
 import NotSupportedTx from '../fixtures/transactions/not-supported-tx'
 import StakedXrdTx from '../fixtures/transactions/staked-xrd'
-import {
-  getTrackedTransactionTypes,
-  resourceStaked,
-  resourceWithdrawn
-} from './tracked-transaction-types'
+import { getTrackedTransactionTypes } from './tracked-transaction-types'
 import { RedisConnection } from 'queues'
 import { config } from '../config'
-import { ActiveQuestsModel } from 'common'
+import { AccountAddressModel } from 'common'
 
 const redisConnection = new RedisConnection(config.redis)
-const activeQuestsModel = ActiveQuestsModel(redisConnection)
+const accountAddressModel = AccountAddressModel(redisConnection)
 const trackedTransactionTypes = getTrackedTransactionTypes()
-const filterTransactions = FilterTransactions(trackedTransactionTypes, activeQuestsModel)
+const filterTransactions = FilterTransactions(trackedTransactionTypes, accountAddressModel)
 
 describe('filter transactions', () => {
   it('should find DepositUserBadge transaction', async () => {
@@ -59,7 +55,7 @@ describe('filter transactions', () => {
   it('should find XrdStaked transaction', async () => {
     const stakingAccount = 'account_tdx_2_12ys6rt7m4zsut5fpm77melt0wl3kj659vv59xzm4dduqtqse4fv7wa'
 
-    const addActiveQuestResult = await activeQuestsModel.addActiveQuestAccount(
+    const addActiveQuestResult = await accountAddressModel.addActiveQuestAccount(
       stakingAccount,
       'StakingQuest'
     )
