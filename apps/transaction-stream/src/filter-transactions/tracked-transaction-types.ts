@@ -15,9 +15,9 @@ type EventEmitter = {
   object_module_id: string
 }
 
-export const isEmittedByRadQuestQuestRewards = (event: EventsItem) =>
+export const isEmittedByQuestRewards = (event: EventsItem) =>
   (event.emitter as EventEmitter).entity.entity_address === config.radQuest.components.questRewards
-export const isEmittedByRadQuestRefinery = (event: EventsItem) =>
+export const isEmittedByRefinery = (event: EventsItem) =>
   (event.emitter as EventEmitter).entity.entity_address === config.radQuest.components.refinery
 
 export type TrackedTransactions = Record<
@@ -55,9 +55,9 @@ export const xrdStaked = (event: EventsItem) => {
 }
 
 const questRewardsEmitted = (eventName: string) => (event: EventsItem) =>
-  event.name === eventName && isEmittedByRadQuestQuestRewards(event)
+  event.name === eventName && isEmittedByQuestRewards(event)
 const refineryEmitted = (eventName: string) => (event: EventsItem) =>
-  event.name === eventName && isEmittedByRadQuestRefinery(event)
+  event.name === eventName && isEmittedByRefinery(event)
 
 export const getTrackedTransactionTypes = (): TrackedTransactions => ({
   QuestRewardDeposited: {
