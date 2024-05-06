@@ -19,10 +19,10 @@
     "neverthrow": "^6.1.0",
     "queues": "*",
     "ramda": "^0.29.1",
-    "redis-memory-server": "^0.10.0",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
+    "redis-memory-server": "^0.10.0",
     "@rollup/plugin-typescript": "^11.1.5",
     "@types/node": "^20.10.7",
     "rollup": "^4.9.4",
