@@ -2,6 +2,8 @@ FROM node:21.4-bullseye-slim AS base
 
 ARG NPM_LOCAL_CACHE=.cache
 
+RUN apt update && apt install -y make && apt install -y gcc
+
 FROM base AS prepare-build
 
 WORKDIR /app
