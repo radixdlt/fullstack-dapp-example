@@ -45,7 +45,7 @@ export const HandleTransactions =
             const resu = await ResultAsync.fromPromise(Promise.all(filterPromises), typedError)
 
             if (resu.isOk())
-              results.concat(resu.value.filter((tx): tx is FilteredTransaction => !!tx))
+              results = results.concat(resu.value.filter((tx): tx is FilteredTransaction => !!tx))
           }
           return results
         }
