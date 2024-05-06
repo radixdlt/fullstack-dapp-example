@@ -1,8 +1,10 @@
 import { AccountAddressModel } from 'common'
 import { FilteredTransaction } from './filter-transactions-by-type'
 
-export type FilterTransactions = ReturnType<typeof FilterTransactions>
-export const FilterTransactions =
+export type FilterTransactionsByAccountAddress = ReturnType<
+  typeof FilterTransactionsByAccountAddress
+>
+export const FilterTransactionsByAccountAddress =
   (accountAddressModel: AccountAddressModel) => async (tx: FilteredTransaction) => {
     if (tx.type !== 'XrdStaked') return tx
 

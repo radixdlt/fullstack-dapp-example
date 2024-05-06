@@ -13,13 +13,13 @@ import { getLatestStateVersion } from './helpers/getLatestStateVersion'
 import { DbClient } from './db-client'
 import { getTrackedTransactionTypes } from './filter-transactions/tracked-transaction-types'
 import { FilterTransactionsByType } from './filter-transactions/filter-transactions-by-type'
-import { FilterTransactions } from './filter-transactions/filter-transactions'
+import { FilterTransactionsByAccountAddress } from './filter-transactions/filter-transactions-by-account-address'
 
 type Dependencies = {
   gatewayApi: GatewayApi
   eventQueue: ReturnType<typeof getQueues>['eventQueue']
   filterTransactionsByType: FilterTransactionsByType
-  filterTransactions: FilterTransactions
+  filterTransactionsByAccountAddress: FilterTransactionsByAccountAddress
   stateVersionModel: StateVersionModel
   getDbClient: () => Promise<PrismaClient>
 }
@@ -30,7 +30,7 @@ const app = async (dependencies: Dependencies) => {
   const {
     gatewayApi,
     eventQueue,
-    filterTransactions,
+    filterTransactionsByAccountAddress,
     stateVersionModel,
     filterTransactionsByType
   } = dependencies
@@ -51,7 +51,7 @@ const app = async (dependencies: Dependencies) => {
   })
 
   const handleTransactions = HandleTransactions({
-    filterTransactions,
+    filterTransactionsByAccountAddress,
     filterTransactionsByType,
     eventModel,
     eventQueue,
@@ -82,13 +82,13 @@ const stateVersionModel = StateVersionModel(redisConnection)
 const accountAddressModel = AccountAddressModel(redisConnection)
 const trackedTransactionTypes = getTrackedTransactionTypes()
 const filterTransactionsByType = FilterTransactionsByType(trackedTransactionTypes)
-const filterTransactions = FilterTransactions(accountAddressModel)
+const filterTransactionsByAccountAddress = FilterTransactionsByAccountAddress(accountAddressModel)
 
 app({
   gatewayApi,
   eventQueue,
   filterTransactionsByType,
-  filterTransactions,
+  filterTransactionsByAccountAddress,
   stateVersionModel,
   getDbClient: DbClient
 })

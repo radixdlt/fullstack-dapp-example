@@ -7,20 +7,20 @@ import { AppLogger, EventModelMethods, splitArrayIntoChunks, typedError } from '
 import { getQueues } from 'queues'
 import { StateVersionModel } from '../state-version/state-version.model'
 import crypto from 'node:crypto'
-import { FilterTransactions } from '../filter-transactions/filter-transactions'
+import { FilterTransactionsByAccountAddress } from '../filter-transactions/filter-transactions-by-account-address'
 import { ResultAsync } from 'neverthrow'
 
 export const HandleTransactions =
   ({
     filterTransactionsByType,
-    filterTransactions,
+    filterTransactionsByAccountAddress,
     eventModel,
     eventQueue,
     logger,
     stateVersionModel
   }: {
     filterTransactionsByType: FilterTransactionsByType
-    filterTransactions: FilterTransactions
+    filterTransactionsByAccountAddress: FilterTransactionsByAccountAddress
     eventModel: EventModelMethods
     eventQueue: ReturnType<typeof getQueues>['eventQueue']
     logger: AppLogger
@@ -41,7 +41,7 @@ export const HandleTransactions =
         const handleChunks = async () => {
           let results: FilteredTransaction[] = []
           for (const txChunk of txChunks) {
-            const filterPromises = txChunk.map(filterTransactions)
+            const filterPromises = txChunk.map(filterTransactionsByAccountAddress)
             const resu = await ResultAsync.fromPromise(Promise.all(filterPromises), typedError)
 
             if (resu.isOk())

@@ -6,7 +6,7 @@ import StakedXrdTx from '../fixtures/transactions/staked-xrd'
 import { getTrackedTransactionTypes, resourceWithdrawn } from './tracked-transaction-types'
 import { AccountAddressModel } from 'common'
 import { FilterTransactionsByType } from './filter-transactions-by-type'
-import { FilterTransactions } from './filter-transactions'
+import { FilterTransactionsByAccountAddress } from './filter-transactions-by-account-address'
 import { RedisServer } from '../test-helpers/inMemoryRedisServer'
 import { RedisConnection } from 'queues'
 import { config } from '../config'
@@ -14,7 +14,7 @@ import { config } from '../config'
 let accountAddressModel: AccountAddressModel
 const trackedTransactionTypes = getTrackedTransactionTypes()
 let filterTransactionsByType = FilterTransactionsByType(trackedTransactionTypes)
-let filterTransaction: FilterTransactions
+let filterTransactionByAccountAddress: FilterTransactionsByAccountAddress
 const stakingAddress = 'account_tdx_2_12ys6rt7m4zsut5fpm77melt0wl3kj659vv59xzm4dduqtqse4fv7wa'
 const stakingUserId = '555'
 
@@ -22,7 +22,7 @@ describe('filter transactions', () => {
   beforeAll(async () => {
     const inMemoryRedis = await RedisServer()
     accountAddressModel = AccountAddressModel(new RedisConnection(inMemoryRedis))
-    filterTransaction = FilterTransactions(accountAddressModel)
+    filterTransactionByAccountAddress = FilterTransactionsByAccountAddress(accountAddressModel)
   })
 
   it('should find DepositUserBadge transaction', () => {
@@ -119,7 +119,7 @@ describe('filter transactions', () => {
 
     const result = filterTransactionsByType([stakedXrd1, stakedXrd2])
     if (result.isErr()) throw result.error
-    const result2 = await Promise.all(result.value.map(filterTransaction))
+    const result2 = await Promise.all(result.value.map(filterTransactionByAccountAddress))
     const txs = result2.filter((r) => !!r)
     expect(txs).lengthOf(1)
     expect(txs[0]).toEqual(result.value[0])
