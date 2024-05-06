@@ -14,6 +14,7 @@ import { sumOfXrdRewards } from './helpers/sumOfXrdRewards'
 import { databaseTransactions } from './helpers/databaseTransactions'
 import { getFirstTransactionAuditResources } from './helpers/getFirstTransactionAuditResources'
 import { getAmountFromWithdrawEvent } from './helpers/getAmountFromWithdrawEvent'
+import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent'
 
 export type EventWorkerController = ReturnType<typeof EventWorkerController>
 export const EventWorkerController = ({

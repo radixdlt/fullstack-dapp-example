@@ -3,13 +3,13 @@ import DepositUserBadge from '../fixtures/transactions/deposit-user-badge'
 import QuestRewardsEvents from '../fixtures/transactions/quest-rewards-events'
 import NotSupportedTx from '../fixtures/transactions/not-supported-tx'
 import StakedXrdTx from '../fixtures/transactions/staked-xrd'
-import StakedXrdTxCorrupted from '../fixtures/transactions/staked-xrd-corrupted'
-import { getTrackedTransactionTypes } from './tracked-transaction-types'
+import { getTrackedTransactionTypes, resourceWithdrawn } from './tracked-transaction-types'
 import { AccountAddressModel } from 'common'
 import { FilterTransactionsByType } from './filter-transactions-by-type'
 import { FilterTransactions } from './filter-transactions'
 import { RedisServer } from '../test-helpers/inMemoryRedisServer'
 import { RedisConnection } from 'queues'
+import { config } from '../config'
 
 let accountAddressModel: AccountAddressModel
 const trackedTransactionTypes = getTrackedTransactionTypes()
@@ -97,9 +97,28 @@ describe('filter transactions', () => {
   })
 
   it('should filter XrdStaked when user is in redis', async () => {
-    const result = filterTransactionsByType([...StakedXrdTx, ...StakedXrdTxCorrupted])
-    if (result.isErr()) throw result.error
+    const stakedXrd1 = { ...StakedXrdTx[0] }
+    /* Override entity address to not match the one in redis */
+    const stakedXrd2 = {
+      ...StakedXrdTx[0],
+      receipt: {
+        ...StakedXrdTx[0].receipt,
+        events: StakedXrdTx[0].receipt?.events?.map((e) => {
+          if (!resourceWithdrawn(config.radQuest.xrd)(e)) return e
 
+          return {
+            ...e,
+            emitter: {
+              ...e.emitter,
+              entity: { ...(e.emitter as any).entity, entity_address: '123' }
+            }
+          }
+        })
+      }
+    }
+
+    const result = filterTransactionsByType([stakedXrd1, stakedXrd2])
+    if (result.isErr()) throw result.error
     const result2 = await Promise.all(result.value.map(filterTransaction))
     const txs = result2.filter((r) => !!r)
     expect(txs).lengthOf(1)
