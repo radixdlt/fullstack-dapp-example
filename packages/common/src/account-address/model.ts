@@ -28,8 +28,17 @@ export const AccountAddressModel = (redisClient: RedisConnection) => {
       )
     )
 
+  const deleteTrackedAddress = (accountAddress: string, questId: string) =>
+    getRedisClient().andThen((client) =>
+      ResultAsync.fromPromise(
+        client.get(`${RedisKeys.TrackedAccountAddresses}:${accountAddress}:${questId}`),
+        typedError
+      )
+    )
+
   return {
     addTrackedAddress,
-    getTrackedAddressUserId
+    getTrackedAddressUserId,
+    deleteTrackedAddress
   }
 }
