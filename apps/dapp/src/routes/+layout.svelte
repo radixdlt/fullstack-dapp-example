@@ -72,6 +72,7 @@
       enableMobile: true,
       providers: {
         requestItemClient,
+        storageClient,
         transports: [
           RadixConnectRelayClient({
             logger,
