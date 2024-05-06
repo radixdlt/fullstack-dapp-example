@@ -212,8 +212,8 @@
           {#if quest.category === 'Basic'}
             <Item>
               <QuestOverview
-                title={$i18n.t(`${id}.title`, { ns: 'quests' })}
-                description={$i18n.t(`${id}.description`, { ns: 'quests' })}
+                title={$i18n.t(`${id}.title`, 'quests')}
+                description={$i18n.t(`${id}.description`, 'quests')}
                 minutesToComplete={quest.minutesToComplete}
                 rewards={quest.rewards}
                 backgroundImage={quest.splashImage}
