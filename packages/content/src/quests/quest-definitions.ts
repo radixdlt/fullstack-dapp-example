@@ -18,8 +18,7 @@ export type EventId = keyof typeof EventId
 
 export const EventId = {
   DepositUserBadge: 'DepositUserBadge',
-  JettyReceivedClams: 'JettyReceivedClams',
-  StakedXrd: 'StakedXrd'
+  JettyReceivedClams: 'JettyReceivedClams'
 } as const
 
 export type FungibleToken = { amount: number }
@@ -71,7 +70,7 @@ export type QuestId = ReturnType<typeof QuestDefinitions>[keyof ReturnType<
 >]['id']
 
 export const QuestDefinitions = (networkId: number) => {
-  const { badges } = getEntityAddresses(networkId)
+  const { badges, xrd } = getEntityAddresses(networkId)
 
   return {
     WelcomeToRadQuest: {
@@ -201,12 +200,11 @@ export const QuestDefinitions = (networkId: number) => {
         LearnStaking: {
           type: 'content'
         },
-        //todo MARCIN
-        [EventId.StakedXrd]: {
+        StakedXrd: {
+          eventName: 'StakedXrd',
           type: 'event',
-          eventName: 'StakeEvent',
           matchField: {
-            value: '',
+            value: xrd,
             kind: 'Reference',
             type_name: 'ResourceAddress'
           }
