@@ -1,6 +1,6 @@
 import { mockDeep, type DeepMockProxy } from 'vitest-mock-extended'
 import type { Cookies } from '@sveltejs/kit'
-import type { GatewayApiClient } from '@radixdlt/radix-dapp-toolkit'
+import type { GatewayApiClient } from '@radixdlt/babylon-gateway-api-sdk'
 import type { DbClient } from './index'
 
 export type Context = {
