@@ -2,7 +2,7 @@ import { type ControllerMethodContext, type ControllerMethodOutput } from '../_t
 
 import { hasChallengeExpired } from './helpers/has-challenge-expired'
 import { Rola } from '@radixdlt/rola'
-import { SignedChallenge } from '@radixdlt/radix-dapp-toolkit'
+import { Proof, SignedChallenge } from '@radixdlt/radix-dapp-toolkit'
 import { GatewayApi, type ApiError } from 'common'
 import { safeParse } from 'valibot'
 
@@ -69,21 +69,21 @@ export const AuthController = ({
   }> => {
     const { personaProof } = proofs
     ctx.logger.debug({ personaProof, method: 'login', event: 'start' })
-    // const parsedPersonaResult = safeParse(personaProof)
-    // if (!parsedPersonaResult.success) {
-    //   if (!parsedPersonaResult.success) {
-    //     ctx.logger.error({
-    //       method: 'login.parseSignedChallenge',
-    //       event: 'error',
-    //       error: parsedPersonaResult.error
-    //     })
-    //   }
+    const parsedPersonaResult = safeParse(Proof, personaProof)
+    if (!parsedPersonaResult.success) {
+      if (!parsedPersonaResult.success) {
+        ctx.logger.error({
+          method: 'login.parseSignedChallenge',
+          event: 'error',
+          error: parsedPersonaResult.issues
+        })
+      }
 
-    //   return errAsync({
-    //     httpResponseCode: 400,
-    //     reason: 'invalidRequestBody'
-    //   })
-    // }
+      return errAsync({
+        httpResponseCode: 400,
+        reason: 'invalidRequestBody'
+      })
+    }
 
     return authModel(ctx.logger)
       .getAndDeleteChallenge(personaProof.challenge)
@@ -108,19 +108,19 @@ export const AuthController = ({
           return error
         })
       )
-      .andThen(
-        () => ok(undefined)
-        // .mapErr((error) => {
-        //   ctx.logger.error({ error, method: 'login.verifyPersonaProof', event: 'error' })
-        //   return error
-        // })
-        // .mapErr((error) => {
-        //   return {
-        //     httpResponseCode: 400,
-        //     reason: error.reason,
-        //     jsError: error.jsError
-        //   } satisfies ApiError
-        // })
+      .andThen(() =>
+        verifySignedChallenge(personaProof)
+          .mapErr((error) => {
+            ctx.logger.error({ error, method: 'login.verifyPersonaProof', event: 'error' })
+            return error
+          })
+          .mapErr((error) => {
+            return {
+              httpResponseCode: 400,
+              reason: error.reason,
+              jsError: error.jsError
+            } satisfies ApiError
+          })
       )
       .map(() => {
         ctx.logger.debug({ method: 'login.verifiedSignedChallenges', event: 'success' })
