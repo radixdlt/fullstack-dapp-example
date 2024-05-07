@@ -100,7 +100,6 @@
     })
 
     radixDappToolkit.walletApi.walletData$.subscribe(({ persona }) => {
-      console.count('walletData$ emits')
       if (persona?.identityAddress) {
         ResultAsync.combine([userApi.me(), authApi.authToken()])
           .map(async ([me, authToken]) => {
