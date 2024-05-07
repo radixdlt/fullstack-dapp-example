@@ -1,14 +1,17 @@
 import { dbClient } from '$lib/db'
-import { NotificationModel, createApiError, type Notification } from 'common'
+import { NotificationModel, createApiError, type ApiError, type Notification } from 'common'
 import type { ControllerMethodContext, ControllerMethodOutput } from '../_types'
-import { z } from 'zod'
-import { ResultAsync, errAsync } from 'neverthrow'
+import { safeParse, array, number } from 'valibot'
+import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 
 export const NotificationController = (notificationModel = NotificationModel(dbClient)) => {
-  const validateNotificationId = (notificationIds?: unknown[]) =>
-    ResultAsync.fromPromise(z.array(z.number()).parseAsync(notificationIds), () =>
-      createApiError('invalid notification ids', 400)()
-    ).map((data) => data)
+  const validateNotificationId = (notificationIds?: unknown[]): ResultAsync<number[], ApiError> => {
+    const result = safeParse(array(number()), notificationIds)
+
+    return result.success
+      ? okAsync(notificationIds as number[])
+      : errAsync(createApiError('invalid notification ids', 400)())
+  }
 
   const markAsSeen = (
     context: ControllerMethodContext,

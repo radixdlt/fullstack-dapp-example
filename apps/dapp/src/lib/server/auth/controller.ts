@@ -2,7 +2,7 @@ import { type ControllerMethodContext, type ControllerMethodOutput } from '../_t
 
 import { hasChallengeExpired } from './helpers/has-challenge-expired'
 import { Rola } from '@radixdlt/rola'
-import { SignedChallenge } from '@radixdlt/radix-dapp-toolkit'
+import { SignedChallenge, parseSignedChallenge } from '@radixdlt/radix-dapp-toolkit'
 import { GatewayApi, type ApiError } from 'common'
 
 import { err, errAsync, ok } from 'neverthrow'
@@ -68,13 +68,13 @@ export const AuthController = ({
   }> => {
     const { personaProof } = proofs
     ctx.logger.debug({ personaProof, method: 'login', event: 'start' })
-    const parsedPersonaResult = SignedChallenge.safeParse(personaProof)
+    const parsedPersonaResult = parseSignedChallenge(personaProof)
     if (!parsedPersonaResult.success) {
       if (!parsedPersonaResult.success) {
         ctx.logger.error({
           method: 'login.parseSignedChallenge',
           event: 'error',
-          error: parsedPersonaResult.error
+          error: parsedPersonaResult.issues
         })
       }
 

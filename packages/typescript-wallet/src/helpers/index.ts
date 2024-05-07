@@ -1,6 +1,5 @@
 export * from './blake2b'
 export * from './deploy-package'
-export * from './exponential-backoff'
 export * from './getOwnerBadge'
 export * from './hash'
 export * from './load-binary-from-url'

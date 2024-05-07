@@ -6,7 +6,7 @@ import { dbClient } from '$lib/db'
 import { Queue } from 'bullmq'
 import { config } from '$lib/config'
 import { createApiError, type ApiError } from 'common'
-import { SignedChallenge, type SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
+import { type SignedChallengeAccount, parseSignedChallenge } from '@radixdlt/radix-dapp-toolkit'
 import { Rola } from '@radixdlt/rola'
 import { publicConfig } from '$lib/public-config'
 import { type ErrorResponse } from '@radixdlt/babylon-gateway-api-sdk'
@@ -128,7 +128,7 @@ const UserController = ({
             ) ?? false
       )
 
-    const parsedAccountResult = SignedChallenge.safeParse(proof)
+    const parsedAccountResult = parseSignedChallenge(proof)
 
     if (!parsedAccountResult.success || proof.address !== accountAddress) {
       return errAsync(createApiError('invalid proof', 400)())

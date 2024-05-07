@@ -1,7 +1,7 @@
 <script lang="ts">
   import '../global.scss'
   import { onMount } from 'svelte'
-  import { DataRequestBuilder, RadixDappToolkit, createLogger } from '@radixdlt/radix-dapp-toolkit'
+  import { DataRequestBuilder, RadixDappToolkit, Logger } from '@radixdlt/radix-dapp-toolkit'
   import { authApi } from '$lib/api/auth-api'
   import { userApi } from '$lib/api/user-api'
   import { ResultAsync } from 'neverthrow'
@@ -49,10 +49,13 @@
       setGetWalletRequirementInStore()
     }
 
+    const logger = Logger(1)
+
     radixDappToolkit = RadixDappToolkit({
       networkId,
       dAppDefinitionAddress: dAppDefinitionAddress ?? '',
-      logger: createLogger(1),
+      logger,
+      featureFlags: ['ExperimentalMobileSupport'],
       onDisconnect: async () => {
         authApi.logout()
         $webSocketClient?.close()
