@@ -1,6 +1,6 @@
 import { type ControllerMethodContext } from '../_types'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
-import z from 'zod'
+import { safeParse, string } from 'valibot'
 import { twilioService } from './twilioClient'
 import { dbClient } from '$lib/db'
 import { UserModel, UserQuestModel } from 'common'
@@ -15,22 +15,23 @@ export const OneTimePasswordController = ({
   userQuestModel: UserQuestModel
   twilio: typeof twilioService
 }>) => {
-  const validatePhoneNumber = (phoneNumber?: string) => {
+  const validatePhoneNumber = (phoneNumber?: string): ResultAsync<string, ApiError> => {
     // TODO: Add phone number validation
     // https://github.com/jackocnr/intl-tel-input
     // https://www.twilio.com/en-us/blog/validate-phone-number-input
-    return ResultAsync.fromPromise(
-      z.string().safeParseAsync(phoneNumber),
-      createApiError(ErrorReason.invalidPhoneNumber, 400)
-    ).map(() => phoneNumber as string)
+    const result = safeParse(string(), phoneNumber)
+
+    return result.success
+      ? okAsync(phoneNumber as string)
+      : errAsync(createApiError(ErrorReason.invalidPhoneNumber, 400)())
   }
 
   const validateOtpInput = (oneTimePassword?: string, phoneNumber?: string) => {
     return ResultAsync.combine([
       validatePhoneNumber(phoneNumber),
-      ResultAsync.fromPromise(z.string().safeParseAsync(oneTimePassword), () =>
-        createApiError(ErrorReason.otpInvalidRequest, 400)()
-      )
+      safeParse(string(), oneTimePassword).success
+        ? okAsync(oneTimePassword)
+        : errAsync(createApiError(ErrorReason.otpInvalidRequest, 400)())
     ])
   }
 
