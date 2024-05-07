@@ -1,6 +1,6 @@
 import type { QuestStatus } from 'database'
 import { type ControllerMethodContext } from '../_types'
-import { UserQuestModel } from 'common'
+import { AccountAddressModel, UserQuestModel } from 'common'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions, type Quests } from 'content'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
@@ -8,10 +8,15 @@ import { dbClient } from '$lib/db'
 import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId } from 'content'
 import { config } from '$lib/config'
+import { RedisConnection } from 'bullmq'
+
+const redisClient = new RedisConnection()
 
 const UserQuestController = ({
-  userQuestModel = UserQuestModel(dbClient)
+  userQuestModel = UserQuestModel(dbClient),
+  accountAddressModel = AccountAddressModel(redisClient)
 }: Partial<{
+  accountAddressModel: AccountAddressModel
   userQuestModel: UserQuestModel
 }>) => {
   const getQuestsProgress = (ctx: ControllerMethodContext, userId: string) =>
@@ -166,6 +171,12 @@ const UserQuestController = ({
     )
   }
 
+  const addTrackedAccountAddress = (questId: string, userId: string, accountAddress: string) => {
+    return accountAddressModel
+      .addTrackedAddress(accountAddress, questId, userId)
+      .map(() => ({ httpResponseCode: 200, data: undefined }))
+  }
+
   return {
     getQuestsProgress,
     completeQuest,
@@ -174,7 +185,8 @@ const UserQuestController = ({
     saveProgress,
     getSavedProgress,
     deleteSavedProgress,
-    completeContentRequirement
+    completeContentRequirement,
+    addTrackedAccountAddress
   }
 }
 

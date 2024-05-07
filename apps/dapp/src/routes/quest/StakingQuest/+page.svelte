@@ -3,9 +3,27 @@
   import type { PageData } from '../StakingQuest/$types'
   import { i18n } from '$lib/i18n/i18n'
   import Button from '$lib/components/button/Button.svelte'
-  import { ExternalLinks } from 'common'
+  import { onMount } from 'svelte'
+  import { webSocketClient } from '../../../stores'
+  import { writable } from 'svelte/store'
 
   export let data: PageData
+  let quest: Quest
+
+  let stakedXrd = writable(data.requirements?.XrdStaked)
+  onMount(() => {
+    const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
+      console.log('sssssssssssssssss', message)
+      if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'XrdStaked') {
+        quest.actions.next()
+        $stakedXrd = true
+      }
+    })
+
+    return () => {
+      unsubscribeWebSocket?.()
+    }
+  })
 </script>
 
 <Quest
