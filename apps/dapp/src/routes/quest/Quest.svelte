@@ -158,7 +158,7 @@
   const trackingAccountAddressQuestIds: QuestId[] = ['StakingQuest']
   const beginQuest = () => {
     //todo marcin: handle this
-    if (!$user?.accountAddress || $user.id) return
+    if (!$user?.accountAddress || !$user.id) return
     if (trackingAccountAddressQuestIds.some((questId) => questId === id)) {
       questApi.addTrackedAccountAddress(id, $user.accountAddress, $user.id)
     }

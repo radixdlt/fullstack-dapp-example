@@ -10,11 +10,11 @@
   export let data: PageData
   let quest: Quest
 
-  let stakedXrd = writable(data.requirements?.XrdStaked)
+  let stakedXrd = writable(data.requirements?.StakedXrd)
   onMount(() => {
     const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
       console.log('sssssssssssssssss', message)
-      if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'XrdStaked') {
+      if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'StakedXRD') {
         quest.actions.next()
         $stakedXrd = true
       }
@@ -43,14 +43,16 @@
     },
     {
       id: 'text4',
-      type: 'regular'
+      type: 'regular',
+      skip: stakedXrd,
+      footer: {
+        next: {
+          enabled: stakedXrd
+        }
+      }
     },
     {
       id: 'text5',
-      type: 'regular'
-    },
-    {
-      id: 'text6',
       type: 'regular'
     },
     {
@@ -73,7 +75,7 @@
   {#if render('text3')}
     {@html data.text['2.md']}
 
-    <Button on:click={() => window.open(ExternalLinks.radixDashboardStaking, '_blank')}>
+    <Button on:click={() => window.open('https://stokenet-dashboard.radixdlt.com/', '_blank')}>
       {$i18n.t('quests:StakingQuest.goToRadixDashboard')}
     </Button>
   {/if}

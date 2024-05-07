@@ -9,8 +9,9 @@ import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId } from 'content'
 import { config } from '$lib/config'
 import { RedisConnection } from 'bullmq'
+import { config } from '$lib/config'
 
-const redisClient = new RedisConnection()
+const redisClient = new RedisConnection(config.redis)
 
 const UserQuestController = ({
   userQuestModel = UserQuestModel(dbClient),
