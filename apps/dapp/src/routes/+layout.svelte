@@ -1,14 +1,7 @@
 <script lang="ts">
   import '../global.scss'
   import { onMount } from 'svelte'
-  import {
-    DataRequestBuilder,
-    RadixDappToolkit,
-    Logger,
-    LocalStorageClient,
-    RequestItemClient,
-    RadixConnectRelayClient
-  } from '@radixdlt/radix-dapp-toolkit'
+  import { DataRequestBuilder, RadixDappToolkit, Logger } from '@radixdlt/radix-dapp-toolkit'
   import { authApi } from '$lib/api/auth-api'
   import { userApi } from '$lib/api/user-api'
   import { ResultAsync } from 'neverthrow'
@@ -58,33 +51,11 @@
 
     const logger = Logger(1)
 
-    const storageClient = LocalStorageClient(`rdt:${dAppDefinitionAddress}:${networkId}`)
-
-    const requestItemClient = RequestItemClient({
-      logger,
-      providers: { storageClient: storageClient.getPartition('requests') }
-    })
-
     radixDappToolkit = RadixDappToolkit({
       networkId,
       dAppDefinitionAddress: dAppDefinitionAddress ?? '',
       logger,
-      enableMobile: true,
-      providers: {
-        requestItemClient,
-        storageClient,
-        transports: [
-          RadixConnectRelayClient({
-            logger,
-            walletUrl: 'https://d1rxdfxrfmemlj.cloudfront.net',
-            baseUrl: 'https://radix-connect-relay-dev.rdx-works-main.extratools.works',
-            providers: {
-              requestItemClient,
-              storageClient
-            }
-          })
-        ]
-      },
+      featureFlags: ['ExperimentalMobileSupport'],
       onDisconnect: async () => {
         authApi.logout()
         $webSocketClient?.close()
