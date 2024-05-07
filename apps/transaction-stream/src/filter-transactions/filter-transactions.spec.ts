@@ -10,6 +10,7 @@ import { FilterTransactionsByAccountAddress } from './filter-transactions-by-acc
 import { RedisServer } from '../test-helpers/inMemoryRedisServer'
 import { RedisConnection } from 'queues'
 import { config } from '../config'
+import CombineElementsDeposit from '../fixtures/transactions/combine-elements-deposit-events'
 
 let accountAddressModel: AccountAddressModel
 const trackedTransactionTypes = getTrackedTransactionTypes()
@@ -123,5 +124,21 @@ describe('filter transactions', () => {
     const txs = result2.filter((r) => !!r)
     expect(txs).lengthOf(1)
     expect(txs[0]).toEqual(result.value[0])
+  })
+
+  it('should find CombineElementsDeposited', () => {
+    const result = filterTransactionsByType([...CombineElementsDeposit, ...NotSupportedTx])
+
+    if (result.isErr()) throw result.error
+
+    const filteredTransactions = result.value
+
+    expect(filteredTransactions.length).toEqual(1)
+
+    const [combineElementsDeposited] = filteredTransactions
+
+    expect(combineElementsDeposited.transactionId).toBeDefined()
+    expect(combineElementsDeposited.type).toEqual('CombineElementsDeposited')
+    expect(combineElementsDeposited.relevantEvents.DepositedEvent).toBeDefined()
   })
 })

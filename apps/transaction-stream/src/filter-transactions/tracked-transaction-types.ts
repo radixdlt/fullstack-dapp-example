@@ -15,8 +15,10 @@ type EventEmitter = {
   object_module_id: string
 }
 
-export const isEmittedByRadQuest = (event: EventsItem) =>
+export const isEmittedByQuestRewards = (event: EventsItem) =>
   (event.emitter as EventEmitter).entity.entity_address === config.radQuest.components.questRewards
+export const isEmittedByRefinery = (event: EventsItem) =>
+  (event.emitter as EventEmitter).entity.entity_address === config.radQuest.components.refinery
 
 export type TrackedTransactions = Record<
   EventJobType,
@@ -53,7 +55,9 @@ export const xrdStaked = (event: EventsItem) => {
 }
 
 const questRewardsEmitted = (eventName: string) => (event: EventsItem) =>
-  event.name === eventName && isEmittedByRadQuest(event)
+  event.name === eventName && isEmittedByQuestRewards(event)
+const refineryEmitted = (eventName: string) => (event: EventsItem) =>
+  event.name === eventName && isEmittedByRefinery(event)
 
 export const getTrackedTransactionTypes = (): TrackedTransactions => ({
   QuestRewardDeposited: {
@@ -76,5 +80,17 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
   XrdStaked: {
     XrdStake: xrdStaked,
     WithdrawEvent: resourceWithdrawn(config.radQuest.xrd)
+  },
+  CombineElementsDeposited: {
+    DepositedEvent: refineryEmitted('ElementsCombineDepositedEvent')
+  },
+  CombineElementsMintedRadgem: {
+    MintedRadgem: refineryEmitted('ElementsCombineProcessed1Event')
+  },
+  CombineElementsAddedRadgemImage: {
+    AddedRadgemImage: refineryEmitted('ElementsCombineProcessed2Event')
+  },
+  CombineElementsClaimed: {
+    ClaimedEvent: refineryEmitted('ElementsCombineClaimedEvent')
   }
 })

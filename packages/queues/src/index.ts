@@ -15,7 +15,11 @@ export const EventJobType = {
   QuestRewardClaimed: 'QuestRewardClaimed',
   UserBadge: 'UserBadge',
   JettyReceivedClams: 'JettyReceivedClams',
-  XrdStaked: 'XrdStaked'
+  XrdStaked: 'XrdStaked',
+  CombineElementsDeposited: 'CombineElementsDeposited',
+  CombineElementsMintedRadgem: 'CombineElementsMintedRadgem',
+  CombineElementsAddedRadgemImage: 'CombineElementsAddedRadgemImage',
+  CombineElementsClaimed: 'CombineElementsClaimed'
 } as const
 
 export type EventJobType = keyof typeof EventJobType
@@ -37,12 +41,26 @@ export type MintUserBadgeTransactionJob = {
   accountAddress: string
 }
 
+export type CombinedElementsMintRadgemTransactionJob = {
+  type: 'CombinedElementsMintRadgem'
+}
+
+export type CombinedElementsAddRadgemImageTransactionJob = {
+  type: 'CombinedElementsAddRadgemImage'
+  imageUrl: string
+}
+
 export type TransactionJob = {
   attempt: number
   transactionKey: string
   userId: string
   traceId: string
-} & (DepositRewardTransactionJob | MintUserBadgeTransactionJob)
+} & (
+  | DepositRewardTransactionJob
+  | MintUserBadgeTransactionJob
+  | CombinedElementsMintRadgemTransactionJob
+  | CombinedElementsAddRadgemImageTransactionJob
+)
 
 type TQueues = ReturnType<typeof getQueues>
 export type TransactionQueue = TQueues['transactionQueue']
