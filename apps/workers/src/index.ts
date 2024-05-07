@@ -7,7 +7,8 @@ import {
   UserQuestModel,
   AuditModel,
   UserModel,
-  TransactionModel
+  TransactionModel,
+  AccountAddressModel
 } from 'common'
 import { logger } from './helpers/logger'
 import { RedisConnection, getQueues } from 'queues'
@@ -35,14 +36,15 @@ const app = async () => {
 
   const eventModel = EventModel(dbClient)
   const transactionModel = TransactionModel(dbClient)
-
+  const redisClient = new RedisConnection(config.redis)
   const eventWorkerController = EventWorkerController({
     dbClient,
     userQuestModel: UserQuestModel(dbClient),
     eventModel,
     userModel: UserModel(dbClient),
     transactionModel,
-    tokenPriceClient: TokenPriceClient({ logger, redisClient: new RedisConnection(config.redis) }),
+    accountAddressModel: AccountAddressModel(redisClient),
+    tokenPriceClient: TokenPriceClient({ logger, redisClient }),
     notificationApi,
     transactionQueue,
     logger

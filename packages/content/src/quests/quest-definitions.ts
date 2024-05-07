@@ -70,7 +70,7 @@ export type QuestId = ReturnType<typeof QuestDefinitions>[keyof ReturnType<
 >]['id']
 
 export const QuestDefinitions = (networkId: number) => {
-  const { badges } = getEntityAddresses(networkId)
+  const { badges, xrd } = getEntityAddresses(networkId)
 
   return {
     WelcomeToRadQuest: {
@@ -179,6 +179,32 @@ export const QuestDefinitions = (networkId: number) => {
           eventName: 'DepositEvent',
           matchField: {
             value: badges.userBadgeAddress,
+            kind: 'Reference',
+            type_name: 'ResourceAddress'
+          }
+        }
+      }
+    },
+    StakingQuest: {
+      id: 'StakingQuest',
+      category: 'Advanced',
+      rewards: [
+        {
+          name: 'element',
+          amount: 50
+        }
+      ],
+      minutesToComplete: 5,
+      preRequisites: ['LoginWithWallet', 'FirstTransactionQuest', 'TransferTokens'],
+      requirements: {
+        LearnStaking: {
+          type: 'content'
+        },
+        StakedXrd: {
+          eventName: 'StakedXrd',
+          type: 'event',
+          matchField: {
+            value: xrd,
             kind: 'Reference',
             type_name: 'ResourceAddress'
           }

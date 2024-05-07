@@ -2,7 +2,14 @@ import { TokenPriceClient } from './../token-price-client'
 import { ResultAsync, okAsync, errAsync } from 'neverthrow'
 import { EventJob, Job, TransactionQueue } from 'queues'
 import { QuestDefinitions, Quests } from 'content'
-import type { AppLogger, EventModel, UserModel, UserQuestModel, TransactionModel } from 'common'
+import {
+  AppLogger,
+  EventModel,
+  UserModel,
+  UserQuestModel,
+  TransactionModel,
+  AccountAddressModel
+} from 'common'
 import { NotificationApi, NotificationType } from 'common'
 import { config } from '../config'
 import { EventError, PrismaClient } from 'database'
@@ -26,13 +33,15 @@ export const EventWorkerController = ({
   tokenPriceClient,
   transactionModel,
   logger,
-  transactionQueue
+  transactionQueue,
+  accountAddressModel
 }: {
   dbClient: PrismaClient
   notificationApi: NotificationApi
   eventModel: EventModel
   userModel: UserModel
   transactionModel: TransactionModel
+  accountAddressModel: AccountAddressModel
   userQuestModel: UserQuestModel
   tokenPriceClient: TokenPriceClient
   logger: AppLogger
@@ -59,10 +68,10 @@ export const EventWorkerController = ({
           })
         )
 
-    const ensureValidData = <T>(transactionId: string, data: Partial<T> | undefined) =>
+    const ensureValidData = <T, U = T>(transactionId: string, data: Partial<T> | undefined) =>
       okAsync(data && Object.values(data).every((d) => d !== undefined)).andThen((isValid) => {
         if (isValid) {
-          return okAsync(data as T)
+          return okAsync(data as U)
         }
 
         childLogger.error({
@@ -242,6 +251,65 @@ export const EventWorkerController = ({
         )
     }
 
+    const handleXrdStaked = async () => {
+      const questId = 'StakingQuest'
+      const accountAddress = (job.data.relevantEvents['WithdrawEvent'].emitter as any).entity
+        .entity_address
+      const result = await accountAddressModel.getTrackedAddressUserId(accountAddress, questId)
+
+      if (result.isErr()) {
+        childLogger.error({
+          transactionId,
+          message: 'Failed to get tracked address user id',
+          data: {
+            accountAddress,
+            questId,
+            error: result.error
+          }
+        })
+
+        return eventModel(childLogger)
+          .update(transactionId, {
+            error: EventError.ERROR_INVALID_DATA
+          })
+          .andThen(() => errAsync(''))
+      }
+
+      return ensureValidData<{ userId: string | null }, { userId: string }>(transactionId, {
+        userId: result.value
+      }).andThen(({ userId }) =>
+        ResultAsync.combine([
+          hasAllRequirements(questId, userId).andThen((hasAll) =>
+            hasAll
+              ? transactionModel(childLogger)
+                  .add({
+                    userId,
+                    transactionKey: `${questId}:DepositReward`,
+                    attempt: 0
+                  })
+                  .andThen(() =>
+                    transactionQueue.add({
+                      type: 'DepositReward',
+                      userId,
+                      questId,
+                      attempt: 0,
+                      transactionKey: `${questId}:DepositReward`,
+                      traceId
+                    })
+                  )
+              : okAsync('')
+          ),
+          notificationApi.send(userId, {
+            type: NotificationType.QuestRequirementCompleted,
+            questId,
+            requirementId: 'StakedXRD',
+            traceId
+          }),
+          accountAddressModel.deleteTrackedAddress(accountAddress, 'StakingQuest')
+        ])
+      )
+    }
+
     switch (type) {
       case 'QuestRewardDeposited':
         return handleRewardDeposited()
@@ -251,7 +319,8 @@ export const EventWorkerController = ({
         return handleUserBadgeDeposited()
       case 'JettyReceivedClams':
         return handleJettyReceivedClams()
-
+      case 'XrdStaked':
+        return handleXrdStaked()
       default:
         childLogger.error({
           message: 'Unhandled Event'

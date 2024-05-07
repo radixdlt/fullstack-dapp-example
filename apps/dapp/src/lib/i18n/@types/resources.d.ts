@@ -58,6 +58,14 @@ interface Resources {
       description: 'Get set up with the Radix Wallet'
       introDescription: 'The Radix Wallet is your gateway to the Radix network. Download the wallet and get started.'
     }
+    StakingQuest: {
+      requirements: {
+        ConnectWallet: 'Connect your Radix Wallet'
+      }
+      title: 'Placeholder'
+      description: 'Placeholder'
+      introDescription: 'Placeholder'
+    }
     LoginWithWallet: {
       requirements: {
         ConnectWallet: 'Connect your Radix Wallet'
