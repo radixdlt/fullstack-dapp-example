@@ -4,18 +4,25 @@
   import { i18n } from '$lib/i18n/i18n'
   import Button from '$lib/components/button/Button.svelte'
   import { onMount } from 'svelte'
-  import { webSocketClient } from '../../../stores'
+  import { user, webSocketClient } from '../../../stores'
   import { writable } from 'svelte/store'
+  import { questApi } from '$lib/api/quest-api'
+  import { RadixNetworkConfigById } from '@radixdlt/radix-dapp-toolkit'
+  import { publicConfig } from '$lib/public-config'
 
   export let data: PageData
   let quest: Quest
 
   let stakedXrd = writable(data.requirements?.StakedXrd)
+  let rewardsDeposited = writable(data.questStatus.StakingQuest.status === 'REWARDS_DEPOSITED')
   onMount(() => {
     const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'StakedXrd') {
-        quest.actions.next()
         $stakedXrd = true
+      }
+
+      if (message.type === 'QuestRewardsDeposited' && message.questId === 'StakingQuest') {
+        $rewardsDeposited = true
       }
     })
 
@@ -23,10 +30,15 @@
       unsubscribeWebSocket?.()
     }
   })
+
+  const stakingLearnt = () => {
+    questApi.completeContentRequirement(data.id)
+  }
 </script>
 
 <Quest
   {...data}
+  bind:this={quest}
   steps={[
     {
       id: 'text1',
@@ -34,7 +46,15 @@
     },
     {
       id: 'text2',
-      type: 'regular'
+      type: 'regular',
+      footer: {
+        next: {
+          onClick: () => {
+            stakingLearnt()
+            quest.actions.next()
+          }
+        }
+      }
     },
     {
       id: 'text3',
@@ -52,7 +72,12 @@
     },
     {
       id: 'text5',
-      type: 'regular'
+      type: 'regular',
+      footer: {
+        next: {
+          enabled: rewardsDeposited
+        }
+      }
     },
     {
       type: 'claimRewards'
@@ -74,7 +99,10 @@
   {#if render('text3')}
     {@html data.text['2.md']}
 
-    <Button on:click={() => window.open('https://stokenet-dashboard.radixdlt.com/', '_blank')}>
+    <Button
+      on:click={() =>
+        window.open(RadixNetworkConfigById[publicConfig.networkId]['dashboardUrl'], '_blank')}
+    >
       {$i18n.t('quests:StakingQuest.goToRadixDashboard')}
     </Button>
   {/if}
