@@ -87,12 +87,20 @@ export const EventWorkerController = ({
           .andThen(() => errAsync(''))
       })
 
-    const hasAllRequirements = (questId: keyof Quests, userId: string) => {
+    const hasRequirementsCompleted = (
+      questId: keyof Quests,
+      userId: string,
+      requirementsToCheck?: string[]
+    ) => {
       const questDefinition = QuestDefinitions(config.networkId)[questId]
-      const requirements = Object.keys(questDefinition.requirements)
+      const requirements = Object.keys(questDefinition.requirements).filter((r) =>
+        requirementsToCheck?.length ? requirementsToCheck.includes(r) : true
+      )
       return userQuestModel(childLogger)
         .findCompletedRequirements(userId, questId)
-        .map((completedRequirements) => completedRequirements.length === requirements.length)
+        .map((completedRequirements) =>
+          requirements.every((r) => completedRequirements.some((cr) => r === cr.requirementId))
+        )
     }
 
     const handleRewardDeposited = () =>
@@ -164,7 +172,7 @@ export const EventWorkerController = ({
                 })
                 .andThen(() =>
                   ResultAsync.combine([
-                    hasAllRequirements(questId, userId).andThen((hasAll) =>
+                    hasRequirementsCompleted(questId, userId).andThen((hasAll) =>
                       hasAll
                         ? transactionModel(childLogger)
                             .add({
@@ -219,7 +227,7 @@ export const EventWorkerController = ({
               })
               .andThen(() =>
                 ResultAsync.combine([
-                  hasAllRequirements(questId, userId).andThen((hasAll) =>
+                  hasRequirementsCompleted(questId, userId).andThen((hasAll) =>
                     hasAll
                       ? transactionModel(childLogger)
                           .add({
@@ -279,8 +287,8 @@ export const EventWorkerController = ({
         userId: result.value
       }).andThen(({ userId }) =>
         ResultAsync.combine([
-          hasAllRequirements(questId, userId).andThen((hasAll) =>
-            hasAll
+          hasRequirementsCompleted(questId, userId, ['LearnStaking']).andThen((has) =>
+            has
               ? transactionModel(childLogger)
                   .add({
                     userId,
@@ -303,7 +311,7 @@ export const EventWorkerController = ({
           notificationApi.send(userId, {
             type: NotificationType.QuestRequirementCompleted,
             questId,
-            requirementId: 'StakedXRD',
+            requirementId: 'StakedXrd',
             traceId
           }),
           accountAddressModel.deleteTrackedAddress(accountAddress, 'StakingQuest')
