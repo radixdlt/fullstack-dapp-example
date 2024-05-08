@@ -299,6 +299,7 @@ export const EventWorkerController = ({
                   )
               : okAsync('')
           ),
+          db.xrdStaked({ userId }),
           notificationApi.send(userId, {
             type: NotificationType.QuestRequirementCompleted,
             questId,

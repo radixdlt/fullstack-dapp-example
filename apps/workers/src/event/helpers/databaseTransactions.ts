@@ -192,5 +192,40 @@ export const databaseTransactions = ({
     )
   }
 
-  return { rewardsDeposited, rewardsClaimed, userBadgeDeposited, jettyReceivedClams }
+  const xrdStaked = ({ userId }: { userId: string }) => {
+    return ResultAsync.fromPromise(
+      dbClient.$transaction([
+        dbClient.completedQuestRequirement.create({
+          data: {
+            userId,
+            questId: 'StakingQuest',
+            requirementId: 'StakedXrd'
+          }
+        }),
+        dbClient.notification.create({
+          data: {
+            userId,
+            data: {
+              type: 'QuestRequirementCompleted',
+              questId: 'StakingQuest',
+              requirementId: 'StakeXrd'
+            }
+          }
+        })
+      ]),
+      (error) => {
+        logger.error({
+          error,
+          method: 'databaseTransactions.xrdStaked',
+          data: { userId, questId: 'StakingQuest' }
+        })
+        return {
+          error,
+          message: 'failed to set staking quest database entries'
+        }
+      }
+    )
+  }
+
+  return { rewardsDeposited, rewardsClaimed, userBadgeDeposited, jettyReceivedClams, xrdStaked }
 }
