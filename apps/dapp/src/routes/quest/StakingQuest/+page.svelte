@@ -13,8 +13,7 @@
   let stakedXrd = writable(data.requirements?.StakedXrd)
   onMount(() => {
     const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
-      console.log('sssssssssssssssss', message)
-      if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'StakedXRD') {
+      if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'StakedXrd') {
         quest.actions.next()
         $stakedXrd = true
       }
