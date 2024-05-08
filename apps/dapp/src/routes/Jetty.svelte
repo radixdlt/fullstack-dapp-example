@@ -1,6 +1,5 @@
 <script lang="ts">
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
-  import Glossary from '$lib/components/glossary/Glossary.svelte'
   import JettyDialog from '$lib/components/jetty-dialog/JettyDialog.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import GlossaryIcon from '@images/book-open.svg'
@@ -8,12 +7,17 @@
   import { goto } from '$app/navigation'
   import { page } from '$app/stores'
   import JettyActionButtons from '$lib/components/quest/JettyActionButtons.svelte'
+  import { loadGlossary } from 'content'
+  import Glossary from '$lib/components/glossary/Glossary.svelte'
 
+  export let onGlossaryClose: undefined | (() => void) = undefined
+  const definitionGlossary = loadGlossary('en')
   let showJettyMenu = false
-
-  let showGlossary = false
-
+  $: anchor = $page.url.searchParams.get('glossaryAnchor') ?? ''
+  $: showGlossary = !!anchor
   $: if (showGlossary) showJettyMenu = false
+
+  // Pass anchor to automatically select glossary definition
 
   const handleKeydown = (event: KeyboardEvent) => {
     if (event.key === 'Escape') {
@@ -38,7 +42,10 @@
   dialogs={showJettyMenu || showJettyMessage || $jettyDialog ? 1 : 0}
   let:Menu
   on:click={() => {
-    if (showGlossary) showGlossary = false
+    if (showGlossary) {
+      if (onGlossaryClose) onGlossaryClose()
+      showGlossary = false
+    }
 
     if ($page.url.pathname === '/') {
       showJettyMenu = !showJettyMenu
@@ -81,7 +88,7 @@
 </JettyDialog>
 
 {#if showGlossary}
-  <Backdrop>
-    <Glossary on:close={() => (showGlossary = false)} />
+  <Backdrop zIndex={4}>
+    <Glossary glossary={definitionGlossary} {anchor} on:close />
   </Backdrop>
 {/if}

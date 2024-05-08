@@ -194,7 +194,12 @@
   </Backdrop>
 {/if}
 
-<Jetty />
+<Jetty
+  onGlossaryClose={() => {
+    $page.url.searchParams.delete('glossaryAnchor')
+    goto(`?${$page.url.searchParams.toString()}`)
+  }}
+/>
 
 <Layout>
   <Header slot="header" />

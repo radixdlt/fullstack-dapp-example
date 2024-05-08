@@ -12,24 +12,35 @@
   class="jetty-icon"
   class:close
   style:--image={`url(${HappyJetty})`}
-  style:--cross-icon={`url(${CrossIcon})`}
+  style:--cross={`url(${CrossIcon})`}
   on:click
-></button>
+>
+  {#if close}
+    <img src={CrossIcon} class="close-img" alt="close icon" />
+  {:else}
+    <img src={HappyJetty} class="jetty-img" alt="jetty" />
+  {/if}
+</button>
 
 <style lang="scss">
   .jetty-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 4.5rem;
     height: 4.5rem;
-    background:
-      var(--image) center center / cover,
-      var(--color-background-dark);
+    background: var(--color-background-dark);
     border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .jetty-img {
+    width: 4.5rem;
+    height: 4.5rem;
   }
 
   .close {
-    background:
-      var(--cross-icon) center center / contain,
-      var(--color-background-light);
+    background: var(--color-background-light);
     background-size: 30%;
     background-repeat: no-repeat;
   }

@@ -42,7 +42,7 @@
     right: 0.5rem;
     display: flex;
     flex-direction: column;
-    z-index: 4;
+    z-index: 6;
 
     > * {
       align-self: flex-end;

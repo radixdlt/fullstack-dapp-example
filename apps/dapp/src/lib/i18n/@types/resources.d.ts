@@ -1,6 +1,7 @@
 interface Resources {
   glossary: {
     back: 'Back'
+    definitionMissing: "Definition doesn't exist"
   }
   jetty: {
     'menu-glossary': 'Glossary'
