@@ -13,14 +13,18 @@
 </script>
 
 <div class="rewards">
-  <div>{@html text}</div>
-  {#each rewards as { name, amount }}
-    <div>
-      <Icon url={typeToIcon[name]} size="medium">
-        {amount}
-      </Icon>
-    </div>
-  {/each}
+  <div class="description">{@html text}</div>
+  <div class="rewards-list">
+    {#each rewards as { name, amount }}
+      <div class="row">
+        <Icon url={typeToIcon[name]} size="xlarge" />
+        <div>
+          {amount}
+          {`${name.charAt(0).toUpperCase() + name.slice(1)}${amount > 1 ? 's' : ''}`}
+        </div>
+      </div>
+    {/each}
+  </div>
 </div>
 
 <JettyActionButtons nextText={nextButtonText} {loading} on:back={onBack} on:next={onNext} />
@@ -31,5 +35,24 @@
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-xl);
+  }
+
+  .rewards-list {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  .description {
+    width: 100%;
+    text-align: left;
   }
 </style>
