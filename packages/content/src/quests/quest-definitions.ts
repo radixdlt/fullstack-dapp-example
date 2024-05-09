@@ -18,8 +18,7 @@ export type EventId = keyof typeof EventId
 
 export const EventId = {
   DepositUserBadge: 'DepositUserBadge',
-  JettyReceivedClams: 'JettyReceivedClams',
-  StakedXrd: 'StakedXrd'
+  JettyReceivedClams: 'JettyReceivedClams'
 } as const
 
 export type FungibleToken = { amount: number }
