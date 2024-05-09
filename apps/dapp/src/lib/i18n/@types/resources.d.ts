@@ -59,16 +59,6 @@ interface Resources {
       description: 'Get set up with the Radix Wallet'
       introDescription: 'The Radix Wallet is your gateway to the Radix network. Download the wallet and get started.'
     }
-    StakingQuest: {
-      goToRadixDashboard: 'Go to Radix Dashboard'
-      title: 'Doing first Radix Network stake'
-      description: 'Learn what staking is and what it brings you and the Radar network.'
-      introDescription: 'What is staking and what does it matter? Earn some APY with your staked tokens.'
-      requirements: {
-        LearnStaking: 'Learn about staking'
-        StakedXrd: 'Stake your XRD on dashboard'
-      }
-    }
     LoginWithWallet: {
       requirements: {
         ConnectWallet: 'Connect your Radix Wallet'
@@ -108,6 +98,16 @@ interface Resources {
       introDescription: 'Transfer tokens to another account to earn your reward.'
       copyTextButton_copy: 'Copy'
       copyTextButton_copied: 'Copied!'
+    }
+    StakingQuest: {
+      goToRadixDashboard: 'Go to Radix Dashboard'
+      title: 'Doing first Radix Network stake'
+      description: 'Learn what staking is and what it brings you and the Radar network.'
+      introDescription: 'What is staking and what does it matter? Earn some APY with your staked tokens.'
+      requirements: {
+        LearnStaking: 'Learn about staking'
+        StakedXrd: 'Stake your XRD on dashboard'
+      }
     }
   }
   transformGems: {
