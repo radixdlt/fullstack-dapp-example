@@ -1,6 +1,6 @@
 <script lang="ts">
   export let url: string
-  export let size: 'small' | 'medium' | 'large' = 'small'
+  export let size: 'small' | 'medium' | 'large' | 'xlarge' = 'small'
   export let clickable = false
 </script>
 
@@ -37,6 +37,11 @@
   .large {
     width: 3rem;
     height: 3rem;
+  }
+
+  .xlarge {
+    width: 4rem;
+    height: 4rem;
   }
 
   .clickable {
