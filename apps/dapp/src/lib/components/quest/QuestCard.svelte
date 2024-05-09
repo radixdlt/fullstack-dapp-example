@@ -24,7 +24,6 @@
 
   const dispatch = createEventDispatcher<{
     next: undefined
-    begin: undefined
     prev: undefined
     close: undefined
   }>()
@@ -62,7 +61,7 @@
         class="footer intro-footer"
         transition:fly|local={{ x: -width * 2, opacity: 1, duration: animationDuration }}
       >
-        <Button on:click={() => dispatch('begin')}>{$i18n.t('quests:intro-begin-quest')}</Button>
+        <Button on:click={() => dispatch('next')}>{$i18n.t('quests:intro-begin-quest')}</Button>
       </div>
     {/if}
 

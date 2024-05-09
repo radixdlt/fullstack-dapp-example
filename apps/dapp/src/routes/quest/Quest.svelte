@@ -42,8 +42,8 @@
   }
 
   const saveProgress = (progress: number) => {
-    if ($user) {
-      questApi.saveProgress(id, progress)
+    if ($user && $user.accountAddress) {
+      questApi.saveProgress(id, progress, $user.accountAddress)
     }
     // @ts-ignore
     useCookies(`saved-progress-${id}`).set(progress)
@@ -154,15 +154,6 @@
 
     return step
   }) as (RegularStep | JettyStep<any>)[]
-
-  const trackingAccountAddressQuestIds: QuestId[] = ['StakingQuest']
-  const beginQuest = () => {
-    //User shouldn't be able to open the quest without those set.
-    if (!$user?.accountAddress || !$user.id) return
-    if (trackingAccountAddressQuestIds.some((questId) => questId === id)) {
-      questApi.addTrackedAccountAddress(id, $user.accountAddress, $user.id)
-    }
-  }
 </script>
 
 <Quest
@@ -171,7 +162,6 @@
   on:close={closeQuest}
   on:complete={_completeQuest}
   on:progressUpdated={progressUpdated}
-  on:begin={beginQuest}
   title={$i18n.t(`${id}.title`, { ns: 'quests' })}
   description={$i18n.t(`${id}.introDescription`, { ns: 'quests' })}
   minutesToComplete={$quests[id].minutesToComplete}

@@ -1,6 +1,6 @@
 import type { QuestStatus } from 'database'
 import { type ControllerMethodContext } from '../_types'
-import { AccountAddressModel, UserQuestModel } from 'common'
+import { AccountAddressModel, typedError, UserQuestModel } from 'common'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions, type Quests } from 'content'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
@@ -11,14 +11,12 @@ import { config } from '$lib/config'
 import { RedisConnection } from 'bullmq'
 import { config } from '$lib/config'
 
-const redisClient = new RedisConnection(config.redis)
-
 const UserQuestController = ({
   userQuestModel = UserQuestModel(dbClient),
-  accountAddressModel = AccountAddressModel(redisClient)
+  accountAddressModel = AccountAddressModel(new RedisConnection(config.redis))
 }: Partial<{
-  accountAddressModel: AccountAddressModel
   userQuestModel: UserQuestModel
+  accountAddressModel: AccountAddressModel
 }>) => {
   const getQuestsProgress = (ctx: ControllerMethodContext, userId: string) =>
     userQuestModel(ctx.logger)
@@ -40,11 +38,22 @@ const UserQuestController = ({
     ctx: ControllerMethodContext,
     userId: string,
     questId: QuestId,
-    progress: number
-  ) =>
-    userQuestModel(ctx.logger)
-      .saveProgress(questId, userId, progress)
-      .map(() => ({ httpResponseCode: 200, data: undefined }))
+    progress: number,
+    accountAddress: string
+  ) => {
+    const trackedQuestIds = ['StakingQuest']
+    return ResultAsync.combine([
+      userQuestModel(ctx.logger)
+        .saveProgress(questId, userId, progress)
+        .map(() => ({ httpResponseCode: 200, data: undefined })),
+      progress > 0 && trackedQuestIds.some((id) => id === questId)
+        ? accountAddressModel?.addTrackedAddress(accountAddress, questId, userId)
+        : okAsync('')
+    ]).map((output) => ({
+      data: output,
+      httpResponseCode: 200
+    }))
+  }
 
   const getSavedProgress = (ctx: ControllerMethodContext, userId: string) =>
     userQuestModel(ctx.logger)
@@ -172,12 +181,6 @@ const UserQuestController = ({
     )
   }
 
-  const addTrackedAccountAddress = (questId: string, userId: string, accountAddress: string) => {
-    return accountAddressModel
-      .addTrackedAddress(accountAddress, questId, userId)
-      .map(() => ({ httpResponseCode: 200, data: undefined }))
-  }
-
   return {
     getQuestsProgress,
     completeQuest,
@@ -186,8 +189,7 @@ const UserQuestController = ({
     saveProgress,
     getSavedProgress,
     deleteSavedProgress,
-    completeContentRequirement,
-    addTrackedAccountAddress
+    completeContentRequirement
   }
 }
 

@@ -184,10 +184,6 @@
   on:close
   on:next={next}
   on:prev={back}
-  on:begin={() => {
-    if (progress === 0) dispatch('begin')
-    next()
-  }}
   nextOnClick={currentStep.type === 'regular' ? currentStep.footer?.next?.onClick ?? next : next}
   backOnClick={currentStep.type === 'regular' ? currentStep.footer?.back?.onClick ?? back : back}
   footerNextDisabled={nextDisabled || !($currentStepEnabledStore ?? true)}

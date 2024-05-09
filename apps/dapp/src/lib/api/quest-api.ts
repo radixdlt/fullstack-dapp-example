@@ -31,10 +31,16 @@ const completeQuest = (questId: QuestId, serverFetch?: typeof fetch) =>
     })
   )
 
-const saveProgress = (questId: string, progress: number, serverFetch?: typeof fetch) =>
+const saveProgress = (
+  questId: string,
+  progress: number,
+  accountAddress: string,
+  serverFetch?: typeof fetch
+) =>
   fetchWrapper<void>(
     (serverFetch ?? fetch)(`/api/quest/${questId}/save-progress/${progress}`, {
-      method: 'POST'
+      method: 'POST',
+      body: JSON.stringify({ accountAddress })
     })
   )
 
@@ -59,22 +65,6 @@ const completeContentRequirement = (questId: QuestId, serverFetch?: typeof fetch
     })
   )
 
-const addTrackedAccountAddress = (
-  questId: QuestId,
-  accountAddress: string,
-  userId: string,
-  serverFetch?: typeof fetch
-) =>
-  fetchWrapper<void>(
-    (serverFetch ?? fetch)(`/api/quest/${questId}/track-account-address`, {
-      method: 'POST',
-      body: JSON.stringify({
-        accountAddress,
-        userId
-      })
-    })
-  )
-
 export const questApi = {
   getQuestsInformation,
   getQuestInformation,
@@ -83,6 +73,5 @@ export const questApi = {
   saveProgress,
   getSavedProgress,
   deleteSavedProgress,
-  completeContentRequirement,
-  addTrackedAccountAddress
+  completeContentRequirement
 } as const
