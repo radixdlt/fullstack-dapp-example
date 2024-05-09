@@ -1,6 +1,6 @@
 import type { QuestStatus } from 'database'
 import { type ControllerMethodContext } from '../_types'
-import { AccountAddressModel, typedError, UserModel, UserQuestModel } from 'common'
+import { AccountAddressModel, UserModel, UserQuestModel } from 'common'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions, type Quests } from 'content'
 import { Result, ResultAsync, errAsync, ok, okAsync } from 'neverthrow'
