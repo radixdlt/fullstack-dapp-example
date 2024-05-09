@@ -38,14 +38,6 @@
     "description": "Get set up with the Radix Wallet",
     "introDescription": "The Radix Wallet is your gateway to the Radix network. Download the wallet and get started."
   },
-  "StakingQuest": {
-    "requirements": {
-      "ConnectWallet": "Connect your Radix Wallet"
-    },
-    "title": "Placeholder",
-    "description": "Placeholder",
-    "introDescription": "Placeholder"
-  },
   "LoginWithWallet": {
     "requirements": {
       "ConnectWallet": "Connect your Radix Wallet"
@@ -93,7 +85,7 @@
     "introDescription": "What is staking and what does it matter? Earn some APY with your staked tokens.",
     "requirements": {
       "LearnStaking": "Learn about staking",
-      "StakedXRD": "Stake your XRD on dashboard"
+      "StakedXrd": "Stake your XRD on dashboard"
     }
   }
 }
