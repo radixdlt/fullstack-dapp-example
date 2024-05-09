@@ -87,7 +87,7 @@ export const EventWorkerController = ({
           .andThen(() => errAsync(''))
       })
 
-    const hasAllRequirements = (questId: keyof Quests, userId: string) => {
+    const hasAllRequirementsCompleted = (questId: keyof Quests, userId: string) => {
       const questDefinition = QuestDefinitions(config.networkId)[questId]
       const requirements = Object.keys(questDefinition.requirements)
       return userQuestModel(childLogger)
@@ -164,7 +164,7 @@ export const EventWorkerController = ({
                 })
                 .andThen(() =>
                   ResultAsync.combine([
-                    hasAllRequirements(questId, userId).andThen((hasAll) =>
+                    hasAllRequirementsCompleted(questId, userId).andThen((hasAll) =>
                       hasAll
                         ? transactionModel(childLogger)
                             .add({
@@ -219,7 +219,7 @@ export const EventWorkerController = ({
               })
               .andThen(() =>
                 ResultAsync.combine([
-                  hasAllRequirements(questId, userId).andThen((hasAll) =>
+                  hasAllRequirementsCompleted(questId, userId).andThen((hasAll) =>
                     hasAll
                       ? transactionModel(childLogger)
                           .add({
@@ -278,35 +278,37 @@ export const EventWorkerController = ({
       return ensureValidData<{ userId: string | null }, { userId: string }>(transactionId, {
         userId: result.value
       }).andThen(({ userId }) =>
-        ResultAsync.combine([
-          hasAllRequirements(questId, userId).andThen((hasAll) =>
-            hasAll
-              ? transactionModel(childLogger)
-                  .add({
-                    userId,
-                    transactionKey: `${questId}:DepositReward`,
-                    attempt: 0
-                  })
-                  .andThen(() =>
-                    transactionQueue.add({
-                      type: 'DepositReward',
+        db.xrdStaked({ userId }).andThen(() =>
+          hasAllRequirementsCompleted(questId, userId).andThen((has) =>
+            ResultAsync.combine([
+              has
+                ? transactionModel(childLogger)
+                    .add({
                       userId,
-                      questId,
-                      attempt: 0,
                       transactionKey: `${questId}:DepositReward`,
-                      traceId
+                      attempt: 0
                     })
-                  )
-              : okAsync('')
-          ),
-          notificationApi.send(userId, {
-            type: NotificationType.QuestRequirementCompleted,
-            questId,
-            requirementId: 'StakedXRD',
-            traceId
-          }),
-          accountAddressModel.deleteTrackedAddress(accountAddress, 'StakingQuest')
-        ])
+                    .andThen(() =>
+                      transactionQueue.add({
+                        type: 'DepositReward',
+                        userId,
+                        questId,
+                        attempt: 0,
+                        transactionKey: `${questId}:DepositReward`,
+                        traceId
+                      })
+                    )
+                : okAsync(''),
+              notificationApi.send(userId, {
+                type: NotificationType.QuestRequirementCompleted,
+                questId,
+                requirementId: 'StakedXrd',
+                traceId
+              }),
+              accountAddressModel.deleteTrackedAddress(accountAddress, 'StakingQuest')
+            ])
+          )
+        )
       )
     }
 
