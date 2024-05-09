@@ -3,13 +3,29 @@ import { type ControllerMethodContext } from '../_types'
 import { AccountAddressModel, typedError, UserModel, UserQuestModel } from 'common'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions, type Quests } from 'content'
-import { ResultAsync, errAsync, okAsync } from 'neverthrow'
+import { Result, ResultAsync, errAsync, ok, okAsync } from 'neverthrow'
 import { dbClient } from '$lib/db'
 import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId } from 'content'
 import { config } from '$lib/config'
 import { RedisConnection } from 'bullmq'
 import { config } from '$lib/config'
+
+let accountAddressModel: undefined | AccountAddressModel
+const getAccountAddressModel = (ctx: ControllerMethodContext) => {
+  if (accountAddressModel) return ok(accountAddressModel)
+
+  return Result.fromThrowable(
+    () => {
+      accountAddressModel = AccountAddressModel(new RedisConnection(config.redis))
+      return accountAddressModel
+    },
+    (error) => {
+      ctx.logger.error({ error, method: 'getAccountAddressModel', model: 'UserQuestController' })
+      return createApiError(ErrorReason.getAccountAddressModelFailure, 500)
+    }
+  )()
+}
 
 const UserQuestController = ({
   userQuestModel = UserQuestModel(dbClient),
@@ -18,8 +34,6 @@ const UserQuestController = ({
   userQuestModel: UserQuestModel
   userModel: UserModel
 }>) => {
-  const accountAddressModel = AccountAddressModel(new RedisConnection(config.redis))
-
   const getQuestsProgress = (ctx: ControllerMethodContext, userId: string) =>
     userQuestModel(ctx.logger)
       .getQuestsStatus(userId)
@@ -47,13 +61,16 @@ const UserQuestController = ({
       userQuestModel(ctx.logger)
         .saveProgress(questId, userId, progress)
         .map(() => ({ httpResponseCode: 200, data: undefined })),
-      progress > 0 && trackedAccountAddressQuestIds.some((id) => id === questId)
+      progress === 1 && trackedAccountAddressQuestIds.some((id) => id === questId)
         ? userModel(ctx.logger)
             .getById(userId, {})
             .andThen(({ accountAddress }) => {
               if (!accountAddress)
                 return errAsync(createApiError(ErrorReason.preRequisiteNotMet, 400))
-              return accountAddressModel?.addTrackedAddress(accountAddress, questId, userId)
+
+              return getAccountAddressModel(ctx).asyncAndThen((model) =>
+                model.addTrackedAddress(accountAddress, questId, userId)
+              )
             })
         : okAsync('')
     ]).map((output) => ({
