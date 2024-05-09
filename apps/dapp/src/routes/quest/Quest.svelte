@@ -157,7 +157,7 @@
 
   const trackingAccountAddressQuestIds: QuestId[] = ['StakingQuest']
   const beginQuest = () => {
-    //todo marcin: handle this
+    //User shouldn't be able to open the quest without those set.
     if (!$user?.accountAddress || !$user.id) return
     if (trackingAccountAddressQuestIds.some((questId) => questId === id)) {
       questApi.addTrackedAccountAddress(id, $user.accountAddress, $user.id)
