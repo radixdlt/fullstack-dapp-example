@@ -92,14 +92,12 @@ export const EventWorkerController = ({
           .andThen(() => errAsync(''))
       })
 
-    const hasAllRequirementsCompleted = (questId: keyof Quests, userId: string) => {
+    const hasAllRequirements = (questId: keyof Quests, userId: string) => {
       const questDefinition = QuestDefinitions(config.networkId)[questId]
       const requirements = Object.keys(questDefinition.requirements)
       return userQuestModel(childLogger)
         .findCompletedRequirements(userId, questId)
-        .map((completedRequirements) =>
-          requirements.every((r) => completedRequirements.some((cr) => r === cr.requirementId))
-        )
+        .map((completedRequirements) => completedRequirements.length === requirements.length)
     }
 
     const handleRewardDeposited = () =>
@@ -172,7 +170,7 @@ export const EventWorkerController = ({
                 })
                 .andThen(() =>
                   ResultAsync.combine([
-                    hasAllRequirementsCompleted(questId, userId).andThen((hasAll) =>
+                    hasAllRequirements(questId, userId).andThen((hasAll) =>
                       hasAll
                         ? transactionModel(childLogger)
                             .add({
@@ -230,7 +228,7 @@ export const EventWorkerController = ({
               })
               .andThen(() =>
                 ResultAsync.combine([
-                  hasAllRequirementsCompleted(questId, userId).andThen((hasAll) =>
+                  hasAllRequirements(questId, userId).andThen((hasAll) =>
                     hasAll
                       ? transactionModel(childLogger)
                           .add({
@@ -293,7 +291,7 @@ export const EventWorkerController = ({
       }).andThen(({ userId }) => {
         const { badgeId, badgeResourceAddress } = transformUserIdIntoBadgeId(userId)
         return db.xrdStaked({ userId }).andThen(() =>
-          hasAllRequirementsCompleted(questId, userId).andThen((has) =>
+          hasAllRequirements(questId, userId).andThen((has) =>
             ResultAsync.combine([
               has
                 ? transactionModel(childLogger)
