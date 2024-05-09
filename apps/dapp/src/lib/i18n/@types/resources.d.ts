@@ -66,7 +66,7 @@ interface Resources {
       introDescription: 'What is staking and what does it matter? Earn some APY with your staked tokens.'
       requirements: {
         LearnStaking: 'Learn about staking'
-        StakedXRD: 'Stake your XRD on dashboard'
+        StakedXrd: 'Stake your XRD on dashboard'
       }
     }
     LoginWithWallet: {
