@@ -94,9 +94,7 @@ export const EventWorkerController = ({
 
     const hasAllRequirementsCompleted = (questId: keyof Quests, userId: string) => {
       const questDefinition = QuestDefinitions(config.networkId)[questId]
-      const requirements = Object.keys(questDefinition.requirements).filter((r) =>
-        requirementsToCheck?.length ? requirementsToCheck.includes(r) : true
-      )
+      const requirements = Object.keys(questDefinition.requirements)
       return userQuestModel(childLogger)
         .findCompletedRequirements(userId, questId)
         .map((completedRequirements) =>
