@@ -31,16 +31,10 @@ const completeQuest = (questId: QuestId, serverFetch?: typeof fetch) =>
     })
   )
 
-const saveProgress = (
-  questId: string,
-  progress: number,
-  accountAddress: string,
-  serverFetch?: typeof fetch
-) =>
+const saveProgress = (questId: string, progress: number, serverFetch?: typeof fetch) =>
   fetchWrapper<void>(
     (serverFetch ?? fetch)(`/api/quest/${questId}/save-progress/${progress}`, {
-      method: 'POST',
-      body: JSON.stringify({ accountAddress })
+      method: 'POST'
     })
   )
 

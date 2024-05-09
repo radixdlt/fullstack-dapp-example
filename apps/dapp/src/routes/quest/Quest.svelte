@@ -42,8 +42,8 @@
   }
 
   const saveProgress = (progress: number) => {
-    if ($user && $user.accountAddress) {
-      questApi.saveProgress(id, progress, $user.accountAddress)
+    if ($user) {
+      questApi.saveProgress(id, progress)
     }
     // @ts-ignore
     useCookies(`saved-progress-${id}`).set(progress)

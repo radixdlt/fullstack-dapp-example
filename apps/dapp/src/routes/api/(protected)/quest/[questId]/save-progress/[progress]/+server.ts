@@ -4,14 +4,12 @@ import type { QuestId } from 'content'
 import type { RequestHandler } from './$types'
 
 export const POST: RequestHandler = async ({ locals, params, request }) => {
-  const requestBody = await request.json()
   return routeHandler(() =>
     userQuestController.saveProgress(
       locals.context,
       locals.userId,
       params.questId as QuestId,
-      parseInt(params.progress),
-      requestBody.accountAddress
+      parseInt(params.progress)
     )
   )
 }

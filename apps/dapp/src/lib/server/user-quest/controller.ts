@@ -1,6 +1,6 @@
 import type { QuestStatus } from 'database'
 import { type ControllerMethodContext } from '../_types'
-import { AccountAddressModel, typedError, UserQuestModel } from 'common'
+import { AccountAddressModel, typedError, UserModel, UserQuestModel } from 'common'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions, type Quests } from 'content'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
@@ -13,11 +13,13 @@ import { config } from '$lib/config'
 
 const UserQuestController = ({
   userQuestModel = UserQuestModel(dbClient),
-  accountAddressModel = AccountAddressModel(new RedisConnection(config.redis))
+  userModel = UserModel(dbClient)
 }: Partial<{
   userQuestModel: UserQuestModel
-  accountAddressModel: AccountAddressModel
+  userModel: UserModel
 }>) => {
+  const accountAddressModel = AccountAddressModel(new RedisConnection(config.redis))
+
   const getQuestsProgress = (ctx: ControllerMethodContext, userId: string) =>
     userQuestModel(ctx.logger)
       .getQuestsStatus(userId)
@@ -38,16 +40,21 @@ const UserQuestController = ({
     ctx: ControllerMethodContext,
     userId: string,
     questId: QuestId,
-    progress: number,
-    accountAddress: string
+    progress: number
   ) => {
-    const trackedQuestIds = ['StakingQuest']
+    const trackedAccountAddressQuestIds = ['StakingQuest']
     return ResultAsync.combine([
       userQuestModel(ctx.logger)
         .saveProgress(questId, userId, progress)
         .map(() => ({ httpResponseCode: 200, data: undefined })),
-      progress > 0 && trackedQuestIds.some((id) => id === questId)
-        ? accountAddressModel?.addTrackedAddress(accountAddress, questId, userId)
+      progress > 0 && trackedAccountAddressQuestIds.some((id) => id === questId)
+        ? userModel(ctx.logger)
+            .getById(userId, {})
+            .andThen(({ accountAddress }) => {
+              if (!accountAddress)
+                return errAsync(createApiError(ErrorReason.preRequisiteNotMet, 400))
+              return accountAddressModel?.addTrackedAddress(accountAddress, questId, userId)
+            })
         : okAsync('')
     ]).map((output) => ({
       data: output,
