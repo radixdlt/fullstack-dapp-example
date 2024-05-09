@@ -208,7 +208,7 @@ export const databaseTransactions = ({
             data: {
               type: 'QuestRequirementCompleted',
               questId: 'StakingQuest',
-              requirementId: 'StakeXrd'
+              requirementId: 'StakedXrd'
             }
           }
         })
