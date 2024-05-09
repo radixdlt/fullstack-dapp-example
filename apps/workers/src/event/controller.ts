@@ -141,6 +141,8 @@ export const EventWorkerController = ({
       const questId = 'FirstTransactionQuest'
       const userId = getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited)
       const xrdAmount = getAmountFromDepositEvent(job.data.relevantEvents.XrdDeposited)
+      const badgeId = `<${userId}>`
+      const badgeResourceAddress = config.radQuest.badges.userBadgeAddress
 
       logger.debug({
         method: 'EventWorkerController.handleUserBadgeDeposited',
@@ -168,14 +170,16 @@ export const EventWorkerController = ({
                       hasAll
                         ? transactionModel(childLogger)
                             .add({
-                              userId,
+                              badgeId: userId,
+                              badgeResourceAddress: config.radQuest.badges.userBadgeAddress,
                               transactionKey: `${questId}:DepositReward`,
                               attempt: 0
                             })
                             .andThen(() =>
                               transactionQueue.add({
                                 type: 'DepositReward',
-                                userId,
+                                badgeId,
+                                badgeResourceAddress,
                                 questId,
                                 attempt: 0,
                                 transactionKey: `${questId}:DepositReward`,
@@ -202,6 +206,8 @@ export const EventWorkerController = ({
         job.data.relevantEvents.WithdrawEvent,
         dbClient
       )
+      const badgeId = `<${userId}>`
+      const badgeResourceAddress = config.radQuest.badges.userBadgeAddress
 
       const amount = getAmountFromWithdrawEvent(
         job.data.relevantEvents.WithdrawEvent,
@@ -223,14 +229,16 @@ export const EventWorkerController = ({
                     hasAll
                       ? transactionModel(childLogger)
                           .add({
-                            userId,
+                            badgeId: userId,
+                            badgeResourceAddress: config.radQuest.badges.userBadgeAddress,
                             transactionKey: `${questId}:DepositReward`,
                             attempt: 0
                           })
                           .andThen(() =>
                             transactionQueue.add({
                               type: 'DepositReward',
-                              userId,
+                              badgeId,
+                              badgeResourceAddress,
                               questId,
                               attempt: 0,
                               transactionKey: `${questId}:DepositReward`,
@@ -284,20 +292,24 @@ export const EventWorkerController = ({
               has
                 ? transactionModel(childLogger)
                     .add({
-                      userId,
+                      badgeId: userId,
+                      badgeResourceAddress: config.radQuest.badges.userBadgeAddress,
                       transactionKey: `${questId}:DepositReward`,
                       attempt: 0
                     })
-                    .andThen(() =>
-                      transactionQueue.add({
+                    .andThen(() => {
+                      const badgeId = `<${userId}>`
+                      const badgeResourceAddress = config.radQuest.badges.userBadgeAddress
+                      return transactionQueue.add({
                         type: 'DepositReward',
-                        userId,
+                        badgeId,
+                        badgeResourceAddress,
                         questId,
                         attempt: 0,
                         transactionKey: `${questId}:DepositReward`,
                         traceId
                       })
-                    )
+                    })
                 : okAsync(''),
               notificationApi.send(userId, {
                 type: NotificationType.QuestRequirementCompleted,

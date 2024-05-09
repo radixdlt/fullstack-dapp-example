@@ -53,7 +53,8 @@ export type CombinedElementsAddRadgemImageTransactionJob = {
 export type TransactionJob = {
   attempt: number
   transactionKey: string
-  userId: string
+  badgeId: string
+  badgeResourceAddress: string
   traceId: string
 } & (
   | DepositRewardTransactionJob

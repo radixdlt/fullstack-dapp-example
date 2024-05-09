@@ -5,18 +5,25 @@ import { AppLogger } from '../helpers'
 
 export type TransactionIdentifierData = {
   transactionKey: string
-  userId: string
+  badgeId: string
+  badgeResourceAddress: string
   attempt: number
 }
 
 export type TransactionModel = ReturnType<typeof TransactionModel>
 
 export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
-  const add = ({ transactionKey, userId, attempt }: TransactionIdentifierData) => {
+  const add = ({
+    transactionKey,
+    badgeId,
+    badgeResourceAddress,
+    attempt
+  }: TransactionIdentifierData) => {
     return ResultAsync.fromPromise(
       db.transaction.create({
         data: {
-          userId,
+          badgeId,
+          badgeResourceAddress,
           transactionKey,
           attempt
         }
@@ -29,14 +36,15 @@ export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
   }
 
   const setTransactionId = (
-    { transactionKey, userId, attempt }: TransactionIdentifierData,
+    { transactionKey, badgeId, badgeResourceAddress, attempt }: TransactionIdentifierData,
     transactionId: string
   ) => {
     return ResultAsync.fromPromise(
       db.transaction.update({
         where: {
-          transactionKey_userId_attempt: {
-            userId,
+          transactionKey_badgeId_badgeResourceAddress_attempt: {
+            badgeId,
+            badgeResourceAddress,
             attempt,
             transactionKey
           }
@@ -50,7 +58,7 @@ export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
           error,
           method: 'setTransactionId',
           model: 'TransactionModel',
-          data: { transactionKey, userId, attempt, transactionId }
+          data: { transactionKey, badgeId, badgeResourceAddress, attempt, transactionId }
         })
         return createApiError('failed to update transaction id', 400)()
       }
@@ -58,15 +66,16 @@ export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
   }
 
   const setStatus = (
-    { transactionKey, userId, attempt }: TransactionIdentifierData,
+    { transactionKey, badgeId, badgeResourceAddress, attempt }: TransactionIdentifierData,
     status: TransactionStatus,
     error?: string
   ) => {
     return ResultAsync.fromPromise(
       db.transaction.update({
         where: {
-          transactionKey_userId_attempt: {
-            userId,
+          transactionKey_badgeId_badgeResourceAddress_attempt: {
+            badgeId,
+            badgeResourceAddress,
             attempt: attempt,
             transactionKey
           }
