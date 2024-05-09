@@ -92,7 +92,7 @@ export const EventWorkerController = ({
           .andThen(() => errAsync(''))
       })
 
-    const hasAllRequirements = (questId: keyof Quests, userId: string) => {
+    const hasAllRequirementsCompleted = (questId: keyof Quests, userId: string) => {
       const questDefinition = QuestDefinitions(config.networkId)[questId]
       const requirements = Object.keys(questDefinition.requirements)
       return userQuestModel(childLogger)
@@ -170,7 +170,7 @@ export const EventWorkerController = ({
                 })
                 .andThen(() =>
                   ResultAsync.combine([
-                    hasAllRequirements(questId, userId).andThen((hasAll) =>
+                    hasAllRequirementsCompleted(questId, userId).andThen((hasAll) =>
                       hasAll
                         ? transactionModel(childLogger)
                             .add({
@@ -228,7 +228,7 @@ export const EventWorkerController = ({
               })
               .andThen(() =>
                 ResultAsync.combine([
-                  hasAllRequirements(questId, userId).andThen((hasAll) =>
+                  hasAllRequirementsCompleted(questId, userId).andThen((hasAll) =>
                     hasAll
                       ? transactionModel(childLogger)
                           .add({
@@ -291,7 +291,7 @@ export const EventWorkerController = ({
       }).andThen(({ userId }) => {
         const { badgeId, badgeResourceAddress } = transformUserIdIntoBadgeId(userId)
         return db.xrdStaked({ userId }).andThen(() =>
-          hasAllRequirements(questId, userId).andThen((has) =>
+          hasAllRequirementsCompleted(questId, userId).andThen((has) =>
             ResultAsync.combine([
               has
                 ? transactionModel(childLogger)
