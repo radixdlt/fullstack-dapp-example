@@ -3,6 +3,7 @@
   import { typeToIcon } from '$lib/utils/type-to-icon'
   import type { QuestReward } from 'content'
   import JettyActionButtons from '../quest/JettyActionButtons.svelte'
+  import { i18n } from '$lib/i18n/i18n'
 
   export let rewards: Readonly<QuestReward[]>
   export let loading = false
@@ -18,9 +19,9 @@
     {#each rewards as { name, amount }}
       <div class="row">
         <Icon url={typeToIcon[name]} size="xlarge" />
-        <div>
+        <div class="reward-text">
           {amount}
-          {`${name.charAt(0).toUpperCase() + name.slice(1)}${amount > 1 ? 's' : ''}`}
+          {$i18n.t('jetty:reward-text', { count: 0, name })}
         </div>
       </div>
     {/each}
@@ -43,6 +44,10 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xl);
+  }
+
+  .reward-text {
+    text-transform: capitalize;
   }
 
   .row {

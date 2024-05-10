@@ -1,9 +1,9 @@
 import type { QuestStatus } from 'database'
 import { type ControllerMethodContext } from '../_types'
-import { AccountAddressModel, UserModel, UserQuestModel } from 'common'
+import { AccountAddressModel, appLogger, UserModel, UserQuestModel } from 'common'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions, type Quests } from 'content'
-import { Result, ResultAsync, errAsync, ok, okAsync } from 'neverthrow'
+import { ResultAsync, errAsync, ok, okAsync } from 'neverthrow'
 import { dbClient } from '$lib/db'
 import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId } from 'content'
@@ -11,28 +11,24 @@ import { config } from '$lib/config'
 import { RedisConnection } from 'bullmq'
 import { config } from '$lib/config'
 
-let accountAddressModel: undefined | AccountAddressModel
-const getAccountAddressModel = (ctx: ControllerMethodContext) => {
-  if (accountAddressModel) return ok(accountAddressModel)
+type GetAccountAddressModelFn = typeof getAccountAddressModelFn
+const getAccountAddressModelFn = () => {
+  let accountAddressModel: AccountAddressModel | undefined
+  if (accountAddressModel) return accountAddressModel
 
-  return Result.fromThrowable(
-    () => {
-      accountAddressModel = AccountAddressModel(new RedisConnection(config.redis))
-      return accountAddressModel
-    },
-    (error) => {
-      ctx.logger.error({ error, method: 'getAccountAddressModel', model: 'UserQuestController' })
-      return createApiError(ErrorReason.getAccountAddressModelFailure, 500)
-    }
-  )()
+  accountAddressModel = AccountAddressModel(new RedisConnection(config.redis), appLogger)
+
+  return accountAddressModel
 }
 
 const UserQuestController = ({
   userQuestModel = UserQuestModel(dbClient),
-  userModel = UserModel(dbClient)
+  userModel = UserModel(dbClient),
+  getAccountAddressModel = getAccountAddressModelFn
 }: Partial<{
   userQuestModel: UserQuestModel
   userModel: UserModel
+  getAccountAddressModel: GetAccountAddressModelFn
 }>) => {
   const getQuestsProgress = (ctx: ControllerMethodContext, userId: string) =>
     userQuestModel(ctx.logger)
@@ -68,9 +64,7 @@ const UserQuestController = ({
               if (!accountAddress)
                 return errAsync(createApiError(ErrorReason.preRequisiteNotMet, 400))
 
-              return getAccountAddressModel(ctx).asyncAndThen((model) =>
-                model.addTrackedAddress(accountAddress, questId, userId)
-              )
+              return getAccountAddressModel().addTrackedAddress(accountAddress, questId, userId)
             })
         : okAsync('')
     ]).map((output) => ({

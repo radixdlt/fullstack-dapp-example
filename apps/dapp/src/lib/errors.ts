@@ -15,8 +15,7 @@ export const APIError = {
   failedToGetUser: 'failedToGetUser',
   userNotFound: 'userNotFound',
   requestStatusNotOk: 'requestStatusNotOk',
-  failedToFetch: 'failedToFetch',
-  getAccountAddressModelFailure: 'getAccountAddressModelFailure'
+  failedToFetch: 'failedToFetch'
 } as const
 
 export const DBError = {

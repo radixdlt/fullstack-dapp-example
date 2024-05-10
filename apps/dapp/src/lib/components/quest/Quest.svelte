@@ -96,7 +96,6 @@
 
   const dispatch = createEventDispatcher<{
     progressUpdated: number
-    begin: undefined
   }>()
 
   let progress = 0

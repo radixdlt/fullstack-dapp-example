@@ -13,8 +13,11 @@
   export let data: PageData
   let quest: Quest
 
-  let stakedXrd = writable(data.requirements?.StakedXrd)
-  let rewardsDeposited = writable(data.questStatus.StakingQuest.status === 'REWARDS_DEPOSITED')
+  const stakedXrd = writable(data.requirements?.StakedXrd)
+  const rewardsDeposited = writable(
+    data.questStatus.StakingQuest.status === 'REWARDS_DEPOSITED' ||
+      data.questStatus.StakingQuest.status === 'COMPLETED'
+  )
   onMount(() => {
     const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'StakedXrd') {
