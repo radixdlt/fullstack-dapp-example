@@ -3,7 +3,7 @@ import { type ControllerMethodContext } from '../_types'
 import { AccountAddressModel, appLogger, UserModel, UserQuestModel } from 'common'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions, type Quests } from 'content'
-import { ResultAsync, errAsync, ok, okAsync } from 'neverthrow'
+import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 import { dbClient } from '$lib/db'
 import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId } from 'content'
@@ -12,8 +12,8 @@ import { RedisConnection } from 'bullmq'
 import { config } from '$lib/config'
 
 type GetAccountAddressModelFn = typeof getAccountAddressModelFn
+let accountAddressModel: AccountAddressModel | undefined
 const getAccountAddressModelFn = () => {
-  let accountAddressModel: AccountAddressModel | undefined
   if (accountAddressModel) return accountAddressModel
 
   accountAddressModel = AccountAddressModel(new RedisConnection(config.redis), appLogger)
