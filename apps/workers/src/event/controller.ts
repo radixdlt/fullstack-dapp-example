@@ -301,8 +301,8 @@ export const EventWorkerController = ({
                       transactionKey: `${questId}:DepositReward`,
                       attempt: 0
                     })
-                    .andThen(() => {
-                      return transactionQueue.add({
+                    .andThen(() =>
+                      transactionQueue.add({
                         type: 'DepositReward',
                         badgeId,
                         badgeResourceAddress,
@@ -311,7 +311,7 @@ export const EventWorkerController = ({
                         transactionKey: `${questId}:DepositReward`,
                         traceId
                       })
-                    })
+                    )
                 : okAsync(''),
               notificationApi.send(userId, {
                 type: NotificationType.QuestRequirementCompleted,
