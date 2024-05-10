@@ -22,7 +22,6 @@ model User {
   completedQuestRequirements CompletedQuestRequirement[]
   savedProgress              SavedProgress?
   auditLogs                  Audit[]
-  transactions               Transaction[]
   questProgress              QuestProgress[]
 }
 
@@ -123,17 +122,15 @@ enum AuditType {
 
 model Transaction {
   attempt                   Int                   @default(0)
-  userId                    String    
   transactionKey            String  
   transactionId             String?
-  
   status                    TransactionStatus     @default(PENDING)
   createdAt                 DateTime              @default(now())
   error                     String?
+  badgeId                   String
+  badgeResourceAddress      String
 
-  user                      User      @relation(fields: [userId], references: [id])
-
-  @@id([transactionKey, userId, attempt])
+  @@id([transactionKey, badgeId, badgeResourceAddress, attempt])
 }
 
 enum TransactionStatus {

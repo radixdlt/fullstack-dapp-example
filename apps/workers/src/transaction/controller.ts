@@ -1,4 +1,4 @@
-import { ResultAsync, okAsync, errAsync } from 'neverthrow'
+import { ResultAsync, okAsync, errAsync, err, ok, Result } from 'neverthrow'
 import { Job, TransactionJob } from 'queues'
 import { TransactionStatus } from 'database'
 import type { AppLogger, AuditModel, TransactionModel, WellKnownAddresses } from 'common'
@@ -7,6 +7,14 @@ import { createRewardsDepositManifest } from '../helpers/createRewardsDepositMan
 import { QuestDefinitions, QuestId } from 'content'
 import { config } from '../config'
 import { createDirectDepositManifest } from './helpers/createDirectDepositManifest'
+import { stripNonFungibleLocalId } from '../event/helpers/stripNonFungibleLocalId'
+
+const getUserIdFromBadgeId = (badgeId: string): Result<string, string> => {
+  const userId = stripNonFungibleLocalId(badgeId)
+
+  if (!userId) return err('InvalidBadgeId')
+  return ok(userId)
+}
 
 export type TransactionWorkerController = ReturnType<typeof TransactionWorkerController>
 export const TransactionWorkerController = ({
@@ -19,7 +27,7 @@ export const TransactionWorkerController = ({
   transactionModel: TransactionModel
 }) => {
   const handler = (job: Job<TransactionJob>) => {
-    const { type, traceId, transactionKey, attempt, userId } = job.data
+    const { type, traceId, transactionKey, attempt, badgeResourceAddress, badgeId } = job.data
     const childLogger = logger.child({ traceId, type })
 
     const handleSubmitTransaction = (
@@ -37,7 +45,7 @@ export const TransactionWorkerController = ({
               })
               return submitTransaction(value, ['systemAccount']).mapErr((error) =>
                 transactionModel(childLogger).setStatus(
-                  { userId, transactionKey, attempt },
+                  { badgeId, badgeResourceAddress, transactionKey, attempt },
                   TransactionStatus.ERROR_FAILED_TO_SUBMIT,
                   JSON.stringify(error)
                 )
@@ -46,7 +54,7 @@ export const TransactionWorkerController = ({
             .andThen(({ txId }) =>
               ResultAsync.combine([
                 transactionModel(childLogger).setTransactionId(
-                  { userId, transactionKey, attempt },
+                  { badgeId, badgeResourceAddress, transactionKey, attempt },
                   txId
                 ),
                 radixEngineClient.gatewayClient
@@ -54,14 +62,14 @@ export const TransactionWorkerController = ({
                   .map(() => txId)
                   .mapErr((error) =>
                     transactionModel(childLogger).setStatus(
-                      { userId, transactionKey, attempt },
+                      { badgeId, badgeResourceAddress, transactionKey, attempt },
                       TransactionStatus.ERROR_TIMEOUT,
                       JSON.stringify(error)
                     )
                   )
               ]).andThen(() =>
                 transactionModel(childLogger).setStatus(
-                  { userId, transactionKey, attempt },
+                  { badgeId, badgeResourceAddress, transactionKey, attempt },
                   TransactionStatus.COMPLETED
                 )
               )
@@ -70,26 +78,30 @@ export const TransactionWorkerController = ({
     }
 
     switch (type) {
-      case 'MintUserBadge':
-        const { accountAddress } = job.data
+      case 'MintUserBadge': {
+        const { accountAddress, badgeId } = job.data
 
-        return handleSubmitTransaction((wellKnownAddresses) =>
-          createDirectDepositManifest({
-            wellKnownAddresses,
-            userId: job.data.userId,
-            accountAddress: accountAddress
-          })
+        return getUserIdFromBadgeId(badgeId).asyncAndThen((userId) =>
+          handleSubmitTransaction((wellKnownAddresses) =>
+            createDirectDepositManifest({
+              wellKnownAddresses,
+              userId,
+              accountAddress: accountAddress
+            })
+          )
         )
+      }
 
       case 'DepositReward':
-        const { questId, userId } = job.data
+        const { questId, badgeId } = job.data
+
         const questDefinition = QuestDefinitions(config.networkId)[questId as QuestId]
         const rewards = questDefinition.rewards
         // @ts-ignore
         const xrdReward = rewards.find((reward) => reward.name === 'xrd')
         const KYC_THRESHOLD = 5
 
-        return okAsync(xrdReward).andThen(() =>
+        return getUserIdFromBadgeId(badgeId).asyncAndThen((userId) =>
           auditModel(childLogger)
             .getUsdAmount(userId)
             .map((usdAmount) => {
@@ -99,7 +111,7 @@ export const TransactionWorkerController = ({
                   message: 'User has exceeded KYC threshold'
                 })
                 return transactionModel(childLogger).setStatus(
-                  { transactionKey, userId, attempt },
+                  { transactionKey, badgeId, badgeResourceAddress, attempt },
                   TransactionStatus.ERROR_KYC_REQUIRED
                 )
               }

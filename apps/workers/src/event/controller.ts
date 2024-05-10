@@ -23,6 +23,11 @@ import { getFirstTransactionAuditResources } from './helpers/getFirstTransaction
 import { getAmountFromWithdrawEvent } from './helpers/getAmountFromWithdrawEvent'
 import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent'
 
+const transformUserIdIntoBadgeId = (userId: string) => ({
+  badgeId: `<${userId}>`,
+  badgeResourceAddress: config.radQuest.badges.userBadgeAddress
+})
+
 export type EventWorkerController = ReturnType<typeof EventWorkerController>
 export const EventWorkerController = ({
   dbClient,
@@ -151,8 +156,9 @@ export const EventWorkerController = ({
 
       return ensureValidData(transactionId, { userId, xrdAmount })
         .map(({ userId, xrdAmount }) => ({ userId, xrdAmount: BigNumber(xrdAmount) }))
-        .andThen(({ userId, xrdAmount }) =>
-          ensureUserExists(userId, transactionId)
+        .andThen(({ userId, xrdAmount }) => {
+          const { badgeId, badgeResourceAddress } = transformUserIdIntoBadgeId(userId)
+          return ensureUserExists(userId, transactionId)
             .andThen(() => tokenPriceClient.getXrdPrice())
             .andThen((xrdPrice) =>
               db
@@ -168,14 +174,16 @@ export const EventWorkerController = ({
                       hasAll
                         ? transactionModel(childLogger)
                             .add({
-                              userId,
+                              badgeId,
+                              badgeResourceAddress,
                               transactionKey: `${questId}:DepositReward`,
                               attempt: 0
                             })
                             .andThen(() =>
                               transactionQueue.add({
                                 type: 'DepositReward',
-                                userId,
+                                badgeId,
+                                badgeResourceAddress,
                                 questId,
                                 attempt: 0,
                                 transactionKey: `${questId}:DepositReward`,
@@ -193,7 +201,7 @@ export const EventWorkerController = ({
                   ])
                 )
             )
-        )
+        })
     }
 
     const handleJettyReceivedClams = async () => {
@@ -210,8 +218,9 @@ export const EventWorkerController = ({
 
       return ensureValidData(transactionId, { userId })
         .map(({ userId }) => ({ userId }))
-        .andThen(({ userId }) =>
-          ensureUserExists(userId, transactionId).andThen(({ id }) =>
+        .andThen(({ userId }) => {
+          const { badgeId, badgeResourceAddress } = transformUserIdIntoBadgeId(userId)
+          return ensureUserExists(userId, transactionId).andThen(({ id }) =>
             db
               .jettyReceivedClams({
                 userId: id,
@@ -223,14 +232,16 @@ export const EventWorkerController = ({
                     hasAll
                       ? transactionModel(childLogger)
                           .add({
-                            userId,
+                            badgeId: userId,
+                            badgeResourceAddress: config.radQuest.badges.userBadgeAddress,
                             transactionKey: `${questId}:DepositReward`,
                             attempt: 0
                           })
                           .andThen(() =>
                             transactionQueue.add({
                               type: 'DepositReward',
-                              userId,
+                              badgeId,
+                              badgeResourceAddress,
                               questId,
                               attempt: 0,
                               transactionKey: `${questId}:DepositReward`,
@@ -248,7 +259,7 @@ export const EventWorkerController = ({
                 ])
               )
           )
-        )
+        })
     }
 
     const handleXrdStaked = async () => {
@@ -277,21 +288,24 @@ export const EventWorkerController = ({
 
       return ensureValidData<{ userId: string | null }, { userId: string }>(transactionId, {
         userId: result.value
-      }).andThen(({ userId }) =>
-        db.xrdStaked({ userId }).andThen(() =>
+      }).andThen(({ userId }) => {
+        const { badgeId, badgeResourceAddress } = transformUserIdIntoBadgeId(userId)
+        return db.xrdStaked({ userId }).andThen(() =>
           hasAllRequirementsCompleted(questId, userId).andThen((has) =>
             ResultAsync.combine([
               has
                 ? transactionModel(childLogger)
                     .add({
-                      userId,
+                      badgeId,
+                      badgeResourceAddress,
                       transactionKey: `${questId}:DepositReward`,
                       attempt: 0
                     })
                     .andThen(() =>
                       transactionQueue.add({
                         type: 'DepositReward',
-                        userId,
+                        badgeId,
+                        badgeResourceAddress,
                         questId,
                         attempt: 0,
                         transactionKey: `${questId}:DepositReward`,
@@ -309,7 +323,7 @@ export const EventWorkerController = ({
             ])
           )
         )
-      )
+      })
     }
 
     switch (type) {

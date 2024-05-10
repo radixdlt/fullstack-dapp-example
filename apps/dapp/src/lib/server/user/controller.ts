@@ -29,7 +29,8 @@ export type MintUserBadgeTransactionJob = {
 export type TransactionJob = {
   attempt: number
   transactionKey: string
-  userId: string
+  badgeId: string
+  badgeResourceAddress: string
   traceId: string
 } & (DepositRewardTransactionJob | MintUserBadgeTransactionJob)
 
@@ -79,14 +80,22 @@ const UserController = ({
       .getById(userId, { phoneNumber: true })
       .andThen((data) =>
         ResultAsync.combine([phoneNumberExists(data), accountAddressExists(data)])
-          .andThen((data) =>
-            transactionModel(ctx.logger)
-              .add({ userId, transactionKey: 'mintUserBadge', attempt: 0 })
+          .andThen((data) => {
+            const badgeId = `<${userId}>`
+            const badgeResourceAddress = publicConfig.badges.userBadgeAddress
+            return transactionModel(ctx.logger)
+              .add({
+                badgeId,
+                badgeResourceAddress,
+                transactionKey: 'mintUserBadge',
+                attempt: 0
+              })
               .andThen(() => {
                 const job = {
                   traceId: ctx.traceId,
                   type: 'MintUserBadge',
-                  userId,
+                  badgeId,
+                  badgeResourceAddress,
                   attempt: 0,
                   transactionKey: `mintUserBadge`,
                   accountAddress: data[1]
@@ -99,7 +108,7 @@ const UserController = ({
                   (error) => error
                 )
               })
-          )
+          })
           .mapErr((error) => {
             ctx.logger.error({ error, method: 'mintUserBadge', event: 'error' })
             return createApiError('mintUserBadgeError', 500)()
