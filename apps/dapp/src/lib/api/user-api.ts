@@ -22,8 +22,19 @@ const setAccountAddress = (account: string, proof: SignedChallengeAccount) =>
     })
   ).map(({ data }) => data)
 
+const setUserName = (username: string) =>
+  fetchWrapper<void>(
+    fetch(`/api/user/${username}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        username
+      })
+    })
+  ).map(({ data }) => data)
+
 export const userApi = {
   me,
   mintUserBadge,
-  setAccountAddress
+  setAccountAddress,
+  setUserName
 } as const

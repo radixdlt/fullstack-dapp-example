@@ -6,6 +6,7 @@
   import Input from '$lib/components/input/Input.svelte'
   import { derived } from 'svelte/store'
   import { i18n } from '$lib/i18n/i18n'
+  import { userApi } from '$lib/api/user-api'
 
   export let data: PageData
 
@@ -14,6 +15,10 @@
   const loggedIn = derived(user, ($user) => !!$user)
 
   let quest: Quest
+
+  const setUserName = () => {
+    userApi.setUserName(nameInput)
+  }
 </script>
 
 <Quest
@@ -37,7 +42,15 @@
     },
     {
       id: 'wallet-connected',
-      type: 'regular'
+      type: 'regular',
+      footer: {
+        next: {
+          onClick: () => {
+            setUserName()
+            quest.actions.next()
+          }
+        }
+      }
     },
     {
       id: 'text4',

@@ -64,5 +64,17 @@ export const UserModel = (db: PrismaClient) => (logger: AppLogger) => {
       }
     )
 
-  return { create, getById, getPhoneNumber, addAccount }
+  const setUserName = (userId: string, name: string) =>
+    ResultAsync.fromPromise(
+      db.user.update({
+        where: { id: userId },
+        data: { name }
+      }),
+      (error) => {
+        logger?.error({ error, method: 'setUserName', model: 'UserModel' })
+        return createApiError('failed to set user name', 400)()
+      }
+    )
+
+  return { create, getById, getPhoneNumber, addAccount, setUserName }
 }
