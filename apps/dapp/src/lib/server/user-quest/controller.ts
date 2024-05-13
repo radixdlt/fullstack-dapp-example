@@ -1,13 +1,6 @@
 import type { QuestStatus } from 'database'
 import { type ControllerMethodContext } from '../_types'
-import {
-  AccountAddressModel,
-  appLogger,
-  typedError,
-  UserModel,
-  UserQuestModel,
-  type AppLogger
-} from 'common'
+import { AccountAddressModel, UserModel, UserQuestModel, type AppLogger } from 'common'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions, type Quests } from 'content'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
@@ -82,15 +75,20 @@ const UserQuestController = ({
       return userQuestModel(ctx.logger).saveProgress(questId, userId, progress)
     }
 
-    return ResultAsync.fromPromise(save(), typedError)
+    return ResultAsync.fromPromise(
+      save(),
+      createApiError(ErrorReason.failedToSaveProgress, 400)
+    ).map((data) => ({
+      data,
+      httpResponseCode: 200
+    }))
   }
 
   const getSavedProgress = (ctx: ControllerMethodContext, userId: string) =>
     userQuestModel(ctx.logger)
       .getSavedProgress(userId)
       .map((output) => ({
-        data: output,
-        httpResponseCode: 200
+        data: output
       }))
 
   const deleteSavedProgress = (ctx: ControllerMethodContext, userId: string) =>
