@@ -1,6 +1,6 @@
 import type { QuestStatus } from 'database'
 import { type ControllerMethodContext } from '../_types'
-import { AccountAddressModel, appLogger, UserModel, UserQuestModel } from 'common'
+import { AccountAddressModel, appLogger, UserModel, UserQuestModel, type AppLogger } from 'common'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions, type Quests } from 'content'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
@@ -13,10 +13,10 @@ import { config } from '$lib/config'
 
 type GetAccountAddressModelFn = typeof getAccountAddressModelFn
 let accountAddressModel: AccountAddressModel | undefined
-const getAccountAddressModelFn = () => {
+const getAccountAddressModelFn = (logger: AppLogger) => () => {
   if (accountAddressModel) return accountAddressModel
 
-  accountAddressModel = AccountAddressModel(new RedisConnection(config.redis), appLogger)
+  accountAddressModel = AccountAddressModel(new RedisConnection(config.redis), logger)
 
   return accountAddressModel
 }
@@ -24,11 +24,11 @@ const getAccountAddressModelFn = () => {
 const UserQuestController = ({
   userQuestModel = UserQuestModel(dbClient),
   userModel = UserModel(dbClient),
-  getAccountAddressModel = getAccountAddressModelFn
+  getAccountAddressModel = getAccountAddressModelFn(appLogger)
 }: Partial<{
   userQuestModel: UserQuestModel
   userModel: UserModel
-  getAccountAddressModel: GetAccountAddressModelFn
+  getAccountAddressModel: ReturnType<GetAccountAddressModelFn>
 }>) => {
   const getQuestsProgress = (ctx: ControllerMethodContext, userId: string) =>
     userQuestModel(ctx.logger)
