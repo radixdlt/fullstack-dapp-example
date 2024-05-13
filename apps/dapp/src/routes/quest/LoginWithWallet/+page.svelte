@@ -17,7 +17,7 @@
   let quest: Quest
 
   const setUserName = () => {
-    userApi.setUserName(nameInput)
+    userApi.setUserField({ name: nameInput, field: 'name' }).
   }
 </script>
 
