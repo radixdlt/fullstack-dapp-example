@@ -13,7 +13,7 @@ import { config } from '$lib/config'
 
 type GetAccountAddressModelFn = typeof getAccountAddressModelFn
 let accountAddressModel: AccountAddressModel | undefined
-const getAccountAddressModelFn = (logger: AppLogger) => () => {
+const getAccountAddressModelFn = (logger: AppLogger) => {
   if (accountAddressModel) return accountAddressModel
 
   accountAddressModel = AccountAddressModel(new RedisConnection(config.redis), logger)
@@ -24,11 +24,11 @@ const getAccountAddressModelFn = (logger: AppLogger) => () => {
 const UserQuestController = ({
   userQuestModel = UserQuestModel(dbClient),
   userModel = UserModel(dbClient),
-  getAccountAddressModel = getAccountAddressModelFn(appLogger)
+  getAccountAddressModel = getAccountAddressModelFn
 }: Partial<{
   userQuestModel: UserQuestModel
   userModel: UserModel
-  getAccountAddressModel: ReturnType<GetAccountAddressModelFn>
+  getAccountAddressModel: GetAccountAddressModelFn
 }>) => {
   const getQuestsProgress = (ctx: ControllerMethodContext, userId: string) =>
     userQuestModel(ctx.logger)
