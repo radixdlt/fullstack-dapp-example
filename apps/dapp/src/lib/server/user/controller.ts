@@ -157,6 +157,9 @@ const UserController = ({
       )
   }
   const setUserName = (ctx: ControllerMethodContext, userId: string, name: string) => {
+    if (!name) return createApiError('name not provided', 400)
+    if (name.length > 25) return createApiError('name cannot exceed 25 characters', 400)
+
     return userModel(ctx.logger)
       .setUserName(userId, name)
       .map((data) => ({ data, httpResponseCode: 200 }))
