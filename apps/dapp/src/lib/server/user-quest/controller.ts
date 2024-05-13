@@ -52,25 +52,33 @@ const UserQuestController = ({
     questId: QuestId,
     progress: number
   ) => {
-    const trackedAccountAddressQuestIds = ['StakingQuest']
-    return ResultAsync.combine([
-      userQuestModel(ctx.logger)
-        .saveProgress(questId, userId, progress)
-        .map(() => ({ httpResponseCode: 200, data: undefined })),
-      progress === 1 && trackedAccountAddressQuestIds.some((id) => id === questId)
-        ? userModel(ctx.logger)
+    return userQuestModel(ctx.logger)
+      .hasQuestProgress(userId, questId)
+      .andThen((hasQuestProgress) => {
+        const shouldTrackAccountAddress =
+          !hasQuestProgress &&
+          QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId].trackedAccountAddress
+
+        if (shouldTrackAccountAddress) {
+          userModel(ctx.logger)
             .getById(userId, {})
             .andThen(({ accountAddress }) => {
-              if (!accountAddress)
-                return errAsync(createApiError(ErrorReason.preRequisiteNotMet, 400))
-
-              return getAccountAddressModel().addTrackedAddress(accountAddress, questId, userId)
+              return getAccountAddressModel().addTrackedAddress(
+                accountAddress ?? '',
+                questId,
+                userId
+              )
             })
-        : okAsync('')
-    ]).map((output) => ({
-      data: output,
-      httpResponseCode: 200
-    }))
+        }
+
+        return userQuestModel(ctx.logger)
+          .saveProgress(questId, userId, progress)
+          .map(() => ({ httpResponseCode: 200, data: undefined }))
+      })
+      .map((output) => ({
+        data: output,
+        httpResponseCode: 200
+      }))
   }
 
   const getSavedProgress = (ctx: ControllerMethodContext, userId: string) =>

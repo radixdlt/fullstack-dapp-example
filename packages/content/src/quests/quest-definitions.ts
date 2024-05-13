@@ -59,6 +59,7 @@ type ContentRequirement = {
 export type QuestDefinition = {
   id: string
   category: QuestCategory
+  trackedAccountAddress?: boolean
   rewards: Readonly<QuestReward[]>
   preRequisites: Readonly<string[]>
   requirements: Requirements
@@ -188,6 +189,7 @@ export const QuestDefinitions = (networkId: number) => {
     StakingQuest: {
       id: 'StakingQuest',
       category: 'Advanced',
+      trackedAccountAddress: true,
       rewards: [
         {
           name: 'element',
@@ -195,7 +197,7 @@ export const QuestDefinitions = (networkId: number) => {
         }
       ],
       minutesToComplete: 5,
-      preRequisites: ['LoginWithWallet', 'FirstTransactionQuest', 'TransferTokens'],
+      preRequisites: ['TransferTokens'],
       requirements: {
         LearnStaking: {
           type: 'content'

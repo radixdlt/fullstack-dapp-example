@@ -39,8 +39,8 @@
   }
 
   .rewards-list {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-top: var(--spacing-2xl);
+    margin-bottom: var(--spacing-2xl);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xl);

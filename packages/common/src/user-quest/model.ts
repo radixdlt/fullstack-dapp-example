@@ -195,6 +195,20 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
       }
     )
 
+  const hasQuestProgress = (userId: string, questId: string) =>
+    ResultAsync.fromPromise(
+      db.questProgress.count({
+        where: {
+          userId,
+          questId
+        }
+      }),
+      (error) => {
+        logger?.error({ error, method: 'hasQuestProgress.error', model: 'UserQuestModel' })
+        return createApiError('failed to get quest progress', 400)()
+      }
+    ).map((count) => count === 1)
+
   return {
     getQuestStatus,
     getQuestsStatus,
@@ -205,6 +219,7 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
     findCompletedRequirements,
     saveProgress,
     getSavedProgress,
-    deleteSavedProgress
+    deleteSavedProgress,
+    hasQuestProgress
   }
 }
