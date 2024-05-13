@@ -51,38 +51,28 @@ const UserQuestController = ({
     userId: string,
     questId: QuestId,
     progress: number
-  ) => {
-    const save = async () => {
-      const hasQuestProgress = await userQuestModel(ctx.logger).hasQuestProgress(userId, questId)
+  ) =>
+    userQuestModel(ctx.logger)
+      .hasQuestProgress(userId, questId)
+      .andThen((hasQuestProgress) => {
+        const shouldTrackAccountAddress =
+          !hasQuestProgress &&
+          QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId].trackedAccountAddress
 
-      if (hasQuestProgress.isErr()) return hasQuestProgress.error
-      const shouldTrackAccountAddress =
-        !hasQuestProgress &&
-        QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId].trackedAccountAddress
-
-      if (shouldTrackAccountAddress) {
-        await userModel(ctx.logger)
-          .getById(userId, {})
-          .andThen(({ accountAddress }) => {
-            return getAccountAddressModel(ctx.logger).addTrackedAddress(
-              accountAddress as string,
-              questId,
-              userId
-            )
-          })
-      }
-
-      return userQuestModel(ctx.logger).saveProgress(questId, userId, progress)
-    }
-
-    return ResultAsync.fromPromise(
-      save(),
-      createApiError(ErrorReason.failedToSaveProgress, 400)
-    ).map((data) => ({
-      data,
-      httpResponseCode: 200
-    }))
-  }
+        return shouldTrackAccountAddress
+          ? userModel(ctx.logger)
+              .getById(userId, {})
+              .andThen(({ accountAddress }) => {
+                return getAccountAddressModel(ctx.logger).addTrackedAddress(
+                  accountAddress as string,
+                  questId,
+                  userId
+                )
+              })
+          : okAsync(undefined)
+      })
+      .andThen(() => userQuestModel(ctx.logger).saveProgress(questId, userId, progress))
+      .map((data) => ({ data, httpResponseCode: 200 }))
 
   const getSavedProgress = (ctx: ControllerMethodContext, userId: string) =>
     userQuestModel(ctx.logger)
