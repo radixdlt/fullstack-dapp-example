@@ -1,6 +1,13 @@
 import type { QuestStatus } from 'database'
 import { type ControllerMethodContext } from '../_types'
-import { AccountAddressModel, appLogger, UserModel, UserQuestModel, type AppLogger } from 'common'
+import {
+  AccountAddressModel,
+  appLogger,
+  typedError,
+  UserModel,
+  UserQuestModel,
+  type AppLogger
+} from 'common'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions, type Quests } from 'content'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
@@ -52,33 +59,30 @@ const UserQuestController = ({
     questId: QuestId,
     progress: number
   ) => {
-    return userQuestModel(ctx.logger)
-      .hasQuestProgress(userId, questId)
-      .andThen((hasQuestProgress) => {
-        const shouldTrackAccountAddress =
-          !hasQuestProgress &&
-          QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId].trackedAccountAddress
+    const save = async () => {
+      const hasQuestProgress = await userQuestModel(ctx.logger).hasQuestProgress(userId, questId)
 
-        if (shouldTrackAccountAddress) {
-          userModel(ctx.logger)
-            .getById(userId, {})
-            .andThen(({ accountAddress }) => {
-              return getAccountAddressModel().addTrackedAddress(
-                accountAddress as string,
-                questId,
-                userId
-              )
-            })
-        }
+      if (hasQuestProgress.isErr()) return hasQuestProgress.error
+      const shouldTrackAccountAddress =
+        !hasQuestProgress &&
+        QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId].trackedAccountAddress
 
-        return userQuestModel(ctx.logger)
-          .saveProgress(questId, userId, progress)
-          .map(() => ({ httpResponseCode: 200, data: undefined }))
-      })
-      .map((output) => ({
-        data: output,
-        httpResponseCode: 200
-      }))
+      if (shouldTrackAccountAddress) {
+        await userModel(ctx.logger)
+          .getById(userId, {})
+          .andThen(({ accountAddress }) => {
+            return getAccountAddressModel(ctx.logger).addTrackedAddress(
+              accountAddress as string,
+              questId,
+              userId
+            )
+          })
+      }
+
+      return userQuestModel(ctx.logger).saveProgress(questId, userId, progress)
+    }
+
+    return ResultAsync.fromPromise(save(), typedError)
   }
 
   const getSavedProgress = (ctx: ControllerMethodContext, userId: string) =>
