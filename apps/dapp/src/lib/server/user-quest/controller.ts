@@ -88,7 +88,8 @@ const UserQuestController = ({
     userQuestModel(ctx.logger)
       .getSavedProgress(userId)
       .map((output) => ({
-        data: output
+        data: output,
+        httpResponseCode: 200
       }))
 
   const deleteSavedProgress = (ctx: ControllerMethodContext, userId: string) =>
