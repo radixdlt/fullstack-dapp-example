@@ -64,7 +64,7 @@ const UserQuestController = ({
             .getById(userId, {})
             .andThen(({ accountAddress }) => {
               return getAccountAddressModel().addTrackedAddress(
-                accountAddress ?? '',
+                accountAddress as string,
                 questId,
                 userId
               )
