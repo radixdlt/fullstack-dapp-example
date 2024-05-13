@@ -50,6 +50,11 @@ export type CombinedElementsAddRadgemImageTransactionJob = {
   imageUrl: string
 }
 
+export type PopulateResourcesTransactionJob = {
+  type: 'PopulateResources'
+  accountAddress: string
+}
+
 export type TransactionJob = {
   attempt: number
   transactionKey: string
@@ -61,6 +66,7 @@ export type TransactionJob = {
   | MintUserBadgeTransactionJob
   | CombinedElementsMintRadgemTransactionJob
   | CombinedElementsAddRadgemImageTransactionJob
+  | PopulateResourcesTransactionJob
 )
 
 type TQueues = ReturnType<typeof getQueues>

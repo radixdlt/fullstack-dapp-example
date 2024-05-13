@@ -1,7 +1,13 @@
 import { ResultAsync, okAsync, errAsync, err, ok, Result } from 'neverthrow'
 import { Job, TransactionJob } from 'queues'
 import { TransactionStatus } from 'database'
-import type { AppLogger, AuditModel, TransactionModel, WellKnownAddresses } from 'common'
+import {
+  Addresses,
+  type AppLogger,
+  type AuditModel,
+  type TransactionModel,
+  type WellKnownAddresses
+} from 'common'
 import { radixEngineClient } from 'typescript-wallet'
 import { createRewardsDepositManifest } from '../helpers/createRewardsDepositManifest'
 import { QuestDefinitions, QuestId } from 'content'
@@ -125,6 +131,41 @@ export const TransactionWorkerController = ({
                 })
               )
             })
+        )
+
+      case 'PopulateResources':
+        const { accountAddress } = job.data
+        const addresses = Addresses(config.networkId)
+
+        return handleSubmitTransaction(
+          (wellKnownAddresses) =>
+            `
+            CALL_METHOD
+              Address("${wellKnownAddresses.accountAddress.payerAccount}")
+              "lock_fee"
+              Decimal("100");
+
+            CALL_METHOD
+              Address("${wellKnownAddresses.accountAddress.systemAccount}")
+              "create_proof_of_amount"
+              Address("${addresses.badges.adminBadgeAddress}") 
+              Decimal("1");  
+              
+            MINT_FUNGIBLE
+              Address("${addresses.resources.clamAddress}")
+              Decimal("100");
+                
+            TAKE_FROM_WORKTOP
+              Address("${addresses.resources.clamAddress}")
+              Decimal("100")
+              Bucket("clam_bucket");
+
+            CALL_METHOD
+              Address("${accountAddress}")
+              "try_deposit_or_abort"
+              Bucket("clam_bucket")
+              Enum<0u8>();
+          `
         )
 
       default:

@@ -17,7 +17,7 @@ export const TransactionStream = ({
   const subjects =
     dependencies.subjects ?? TransactionStreamSubjects({ fromStateVersion, status: initialStatus })
   const { getTransactions } = dependencies.gatewayApiClient
-  
+
   const fetchAndProcessTransactions = (stateVersion: number) =>
     from(getTransactions(stateVersion)).pipe(
       map((result) => handleTransactionResult(result, stateVersion!))
