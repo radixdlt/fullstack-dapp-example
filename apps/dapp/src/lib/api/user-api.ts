@@ -12,22 +12,22 @@ const mintUserBadge = () =>
     })
   ).map(({ data }) => data)
 
-type SetUserFieldProps = {
-  accountAddress?: string
-  name?: string
-  proof?: SignedChallengeAccount
-  field: 'accountAddress' | 'name'
-}
+type SetUserFieldProps =
+  | {
+      field: 'name'
+      name: string
+    }
+  | {
+      field: 'accountAddress'
+      accountAddress: string
+      proof: SignedChallengeAccount
+    }
 
-const setUserField = ({ name, accountAddress, proof, field }: SetUserFieldProps) =>
+const setUserField = ({ field, ...props }: SetUserFieldProps) =>
   fetchWrapper<void>(
     fetch(`/api/user?field=${field}`, {
       method: 'PUT',
-      body: JSON.stringify({
-        proof,
-        accountAddress,
-        name
-      })
+      body: JSON.stringify(props)
     })
   ).map(({ data }) => data)
 
