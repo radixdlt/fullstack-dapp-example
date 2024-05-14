@@ -2,6 +2,7 @@ import { userController } from '$lib/server/user/controller'
 import type { RequestHandler } from './$types'
 import { routeHandler } from '$lib/server/route-handler'
 import { createApiError } from 'common'
+import { errAsync } from 'neverthrow'
 
 /** @type {import('./$types').RequestHandler} */
 export const GET: RequestHandler = async ({ locals }) =>
@@ -23,6 +24,6 @@ export const PUT: RequestHandler = async ({ locals, request, url }) => {
     if (field === 'name')
       return userController.setUserName(locals.context, locals.userId, requestBody.name)
 
-    return createApiError(`invalid search param value: ${field}`, 400)
+    return errAsync(createApiError(`invalid search param value: ${field}`, 400)())
   })
 }
