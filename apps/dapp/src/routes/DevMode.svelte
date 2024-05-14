@@ -31,7 +31,11 @@
             (proof) => proof.type === 'account'
           )! as SignedChallengeAccount
 
-          userApi.setAccountAddress(accounts[0].address, accountProof)
+          userApi.setUserField({
+            accountAddress: accounts[0].address,
+            proof: accountProof,
+            field: 'accountAddress'
+          })
         })
     })
   }
