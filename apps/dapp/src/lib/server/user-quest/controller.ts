@@ -7,6 +7,7 @@ import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 import { dbClient } from '$lib/db'
 import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId } from 'content'
+import { config } from '$lib/config'
 
 const UserQuestController = ({
   userQuestModel = UserQuestModel(dbClient)
@@ -87,7 +88,10 @@ const UserQuestController = ({
       userQuestModel(ctx.logger)
         .findPrerequisites(userId, preRequisites as unknown as string[])
         .andThen((completedPrerequisites) => {
-          if (completedPrerequisites.length !== preRequisites.length) {
+          if (
+            completedPrerequisites.length !== preRequisites.length &&
+            config.dapp.networkId === 1
+          ) {
             return errAsync(createApiError(ErrorReason.preRequisiteNotMet, 400)())
           }
 

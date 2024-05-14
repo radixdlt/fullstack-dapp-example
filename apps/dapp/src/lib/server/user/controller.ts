@@ -10,29 +10,12 @@ import { type SignedChallengeAccount, parseSignedChallenge } from '@radixdlt/rad
 import { Rola } from '@radixdlt/rola'
 import { publicConfig } from '$lib/public-config'
 import { type ErrorResponse } from '@radixdlt/babylon-gateway-api-sdk'
+import type { TransactionJob } from 'queues'
 
 export const Queues = {
   EventQueue: 'EventQueue',
   TransactionQueue: 'TransactionQueue'
 } as const
-
-export type DepositRewardTransactionJob = {
-  type: 'DepositReward'
-  questId: string
-}
-
-export type MintUserBadgeTransactionJob = {
-  type: 'MintUserBadge'
-  accountAddress: string
-}
-
-export type TransactionJob = {
-  attempt: number
-  transactionKey: string
-  badgeId: string
-  badgeResourceAddress: string
-  traceId: string
-} & (DepositRewardTransactionJob | MintUserBadgeTransactionJob)
 
 const isGatewayError = (error: any): error is ErrorResponse => error.details !== undefined
 
@@ -174,7 +157,59 @@ const UserController = ({
       )
   }
 
-  return { getUser, mintUserBadge, setAccountAddress }
+  const populateResources = (ctx: ControllerMethodContext, userId: string) => {
+    if (config.dapp.networkId === 1)
+      return errAsync(createApiError('not allowed on mainnet', 400)())
+
+    const accountAddressResult = userModel(ctx.logger)
+      .getById(userId, {})
+      .map((data) => data.accountAddress)
+
+    const badgeId = `<${userId}>`
+    const badgeResourceAddress = publicConfig.badges.userBadgeAddress
+
+    return accountAddressResult
+      .andThen((address) => {
+        if (!address) return errAsync(createApiError('missing account address', 400)())
+        return okAsync(address)
+      })
+      .andThen((address) =>
+        transactionModel(ctx.logger)
+          .add({
+            badgeId,
+            badgeResourceAddress,
+            transactionKey: 'populateResources',
+            attempt: 0
+          })
+          .andThen(() => {
+            const job = {
+              traceId: ctx.traceId,
+              type: 'PopulateResources',
+              badgeId,
+              badgeResourceAddress,
+              attempt: 0,
+              transactionKey: `populateResources`,
+              accountAddress: address
+            } satisfies TransactionJob
+
+            ctx.logger.debug({ method: 'userController.populateResources.addJobToQueue', job })
+
+            return ResultAsync.fromPromise(
+              transactionQueue.add(ctx.traceId, job, { jobId: ctx.traceId }),
+              (error) => error
+            ).map((data) => ({
+              httpResponseCode: 201,
+              data
+            }))
+          })
+          .mapErr((error) => {
+            ctx.logger.error({ error, method: 'populateResources', event: 'error' })
+            return createApiError('populateResourcesError', 500)()
+          })
+      )
+  }
+
+  return { getUser, mintUserBadge, setAccountAddress, populateResources }
 }
 
 export const userController = UserController({})
