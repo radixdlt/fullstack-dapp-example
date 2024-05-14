@@ -13,6 +13,7 @@ import { createRewardsDepositManifest } from '../helpers/createRewardsDepositMan
 import { QuestDefinitions, QuestId } from 'content'
 import { config } from '../config'
 import { createDirectDepositManifest } from './helpers/createDirectDepositManifest'
+import { createCombinedElementsMintRadgemManifest } from './helpers/createCombinedElementsMintRadgemManifest'
 import { stripNonFungibleLocalId } from '../event/helpers/stripNonFungibleLocalId'
 
 const getUserIdFromBadgeId = (badgeId: string): Result<string, string> => {
@@ -166,6 +167,20 @@ export const TransactionWorkerController = ({
               Bucket("clam_bucket")
               Enum<0u8>();
           `
+        )
+
+      case 'CombinedElementsMintRadgem':
+        // TODO: replace with more random numbers
+        const colorSeedNum = Math.random()
+        const materialSeedNum = Math.random()
+        return handleSubmitTransaction((wellKnownAddresses) =>
+          createCombinedElementsMintRadgemManifest({
+            wellKnownAddresses,
+            badgeResourceAddress: job.data.badgeResourceAddress,
+            badgeId: job.data.badgeId,
+            colorSeedNum,
+            materialSeedNum
+          })
         )
 
       default:

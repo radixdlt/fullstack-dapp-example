@@ -30,6 +30,7 @@
     "wallet:create:radmorph": "npx tsx ./src/radquest/scripts/create-radmorph.ts",
     "wallet:instantiate:card-forge": "npx tsx ./src/radquest/scripts/new-card-forge.ts",
     "wallet:instantiate:refinery": "npx tsx ./src/radquest/scripts/new-refinery.ts",
+    "wallet:mint-then-combine-elements-deposit": "npx tsx ./src/radquest/scripts/mint-then-combine-elements-deposit.ts",
     "gw:well-known": "npx tsx ./src/scripts/gw/well-known.ts",
     "gw:tx:lookup": "npx tsx ./src/scripts/gw/lookup-tx.ts",
     "gw:status": "npx tsx ./src/scripts/gw/status.ts",

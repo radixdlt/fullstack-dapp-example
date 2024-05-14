@@ -4,7 +4,11 @@ import { AppLogger } from '../helpers/logger'
 export const NotificationType = {
   QuestRequirementCompleted: 'QuestRequirementCompleted',
   QuestRewardsDeposited: 'QuestRewardsDeposited',
-  QuestRewardsClaimed: 'QuestRewardsClaimed'
+  QuestRewardsClaimed: 'QuestRewardsClaimed',
+  CombineElementsDeposited: 'CombineElementsDeposited',
+  CombineElementsMintRadgem: 'CombineElementsMintRadgem',
+  CombineElementsAddRadgemImage: 'CombineElementsAddRadgemImage',
+  CombineElementsClaimed: 'CombineElementsClaimed'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
@@ -21,6 +25,18 @@ type Notifications = {
   }
   [NotificationType.QuestRewardsClaimed]: {
     questId: string
+    traceId: string
+  }
+  [NotificationType.CombineElementsDeposited]: {
+    traceId: string
+  }
+  [NotificationType.CombineElementsMintRadgem]: {
+    traceId: string
+  }
+  [NotificationType.CombineElementsAddRadgemImage]: {
+    traceId: string
+  }
+  [NotificationType.CombineElementsClaimed]: {
     traceId: string
   }
 }

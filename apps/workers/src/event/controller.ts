@@ -22,6 +22,8 @@ import { databaseTransactions } from './helpers/databaseTransactions'
 import { getFirstTransactionAuditResources } from './helpers/getFirstTransactionAuditResources'
 import { getAmountFromWithdrawEvent } from './helpers/getAmountFromWithdrawEvent'
 import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent'
+import { getBadgeAddressAndIdFromElementsCombineDepositedEvent } from './helpers/getBadgeAddressAndIdFromElementsCombineDepositedEvent'
+import { randomUUID } from 'crypto'
 
 const transformUserIdIntoBadgeId = (userId: string) => ({
   badgeId: `<${userId}>`,
@@ -326,6 +328,43 @@ export const EventWorkerController = ({
       })
     }
 
+    const handelCombineElementsDepositedEvent = async () => {
+      const {
+        badgeResourceAddress,
+        badgeId
+      }: {
+        badgeResourceAddress?: string
+        badgeId?: string
+      } = getBadgeAddressAndIdFromElementsCombineDepositedEvent(
+        job.data.relevantEvents.DepositedEvent
+      )
+
+      if (!badgeId || !badgeResourceAddress) {
+        return errAsync('Invalid badge data')
+      }
+
+      return ensureValidData(transactionId, { localId: badgeId }).andThen(() => {
+        const transactionKey = `CombinedElementsMintRadgem:${randomUUID()}`
+        return transactionModel(childLogger)
+          .add({
+            badgeResourceAddress,
+            badgeId,
+            transactionKey,
+            attempt: 0
+          })
+          .andThen(() => {
+            return transactionQueue.add({
+              type: 'CombinedElementsMintRadgem',
+              badgeResourceAddress,
+              badgeId,
+              attempt: 0,
+              transactionKey,
+              traceId
+            })
+          })
+      })
+    }
+
     switch (type) {
       case 'QuestRewardDeposited':
         return handleRewardDeposited()
@@ -337,6 +376,8 @@ export const EventWorkerController = ({
         return handleJettyReceivedClams()
       case 'XrdStaked':
         return handleXrdStaked()
+      case 'CombineElementsDeposited':
+        return handelCombineElementsDepositedEvent()
       default:
         childLogger.error({
           message: 'Unhandled Event'
