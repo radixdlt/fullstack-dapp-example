@@ -15,7 +15,7 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent }) =>
     let requirements: Record<string, boolean> = {}
 
     if (requirementsResult.isOk()) {
-      const updateResult = await questApi.updateQuestProgress(id, 0, fetch)
+      const updateResult = await questApi.startQuest(id, fetch)
 
       if (updateResult.isErr() && updateResult.error.reason === 'preRequisiteNotMet') {
         error(403, 'Pre-requisite not met')

@@ -3,11 +3,10 @@ import { type ControllerMethodContext } from '../_types'
 import { AccountAddressModel, UserModel, UserQuestModel, type AppLogger } from 'common'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions, type Quests } from 'content'
-import { ResultAsync, errAsync, okAsync } from 'neverthrow'
+import { ResultAsync, errAsync, ok, okAsync } from 'neverthrow'
 import { dbClient } from '$lib/db'
 import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId } from 'content'
-import { config } from '$lib/config'
 import { RedisConnection } from 'bullmq'
 import { config } from '$lib/config'
 
@@ -53,25 +52,7 @@ const UserQuestController = ({
     progress: number
   ) =>
     userQuestModel(ctx.logger)
-      .hasQuestProgress(userId, questId)
-      .andThen((hasQuestProgress) => {
-        const shouldTrackAccountAddress =
-          !hasQuestProgress &&
-          QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId].trackedAccountAddress
-
-        return shouldTrackAccountAddress
-          ? userModel(ctx.logger)
-              .getById(userId, {})
-              .andThen(({ accountAddress }) => {
-                return getAccountAddressModel(ctx.logger).addTrackedAddress(
-                  accountAddress as string,
-                  questId,
-                  userId
-                )
-              })
-          : okAsync(undefined)
-      })
-      .andThen(() => userQuestModel(ctx.logger).saveProgress(questId, userId, progress))
+      .saveProgress(questId, userId, progress)
       .map((data) => ({ data, httpResponseCode: 200 }))
 
   const getSavedProgress = (ctx: ControllerMethodContext, userId: string) =>
@@ -100,11 +81,7 @@ const UserQuestController = ({
       })
       .map(() => ({ httpResponseCode: 200, data: undefined }))
 
-  const setQuestProgress = (
-    ctx: ControllerMethodContext,
-    userId: string,
-    questId: keyof Quests
-  ) => {
+  const startQuest = (ctx: ControllerMethodContext, userId: string, questId: keyof Quests) => {
     const questDefinition = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId]
 
     const preRequisites = questDefinition.preRequisites
@@ -118,7 +95,7 @@ const UserQuestController = ({
         return okAsync(questStatus)
       })
 
-    return questStatusResult.andThen(() =>
+    return questStatusResult.andThen((statusResult) =>
       userQuestModel(ctx.logger)
         .findPrerequisites(userId, preRequisites as unknown as string[])
         .andThen((completedPrerequisites) => {
@@ -128,7 +105,26 @@ const UserQuestController = ({
           ) {
             return errAsync(createApiError(ErrorReason.preRequisiteNotMet, 400)())
           }
+          return okAsync(statusResult)
+        })
+        .andThen((statusResult) => {
+          const shouldTrackAccountAddress =
+            !statusResult &&
+            QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId].trackedAccountAddress
 
+          return shouldTrackAccountAddress
+            ? userModel(ctx.logger)
+                .getById(userId, {})
+                .andThen(({ accountAddress }) => {
+                  return getAccountAddressModel(ctx.logger).addTrackedAddress(
+                    accountAddress as string,
+                    questId,
+                    userId
+                  )
+                })
+            : okAsync(undefined)
+        })
+        .andThen(() => {
           return userQuestModel(ctx.logger).updateQuestStatus(questId, userId, 'IN_PROGRESS')
         })
         .map(() => ({ httpResponseCode: 200, data: undefined }))
@@ -203,7 +199,7 @@ const UserQuestController = ({
   return {
     getQuestsProgress,
     completeQuest,
-    setQuestProgress,
+    startQuest,
     getQuestProgress,
     saveProgress,
     getSavedProgress,
