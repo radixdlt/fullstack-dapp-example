@@ -21,7 +21,7 @@ type SetUserFieldProps = {
 
 const setUserField = ({ name, accountAddress, proof, field }: SetUserFieldProps) =>
   fetchWrapper<void>(
-    fetch(`/api/user?value=${field}`, {
+    fetch(`/api/user?field=${field}`, {
       method: 'PUT',
       body: JSON.stringify({
         proof,

@@ -10,7 +10,7 @@ export const GET: RequestHandler = async ({ locals }) =>
 
 /** @type {import('./$types').RequestHandler} */
 export const PUT: RequestHandler = async ({ locals, request, url }) => {
-  const field = url.searchParams.get('value')
+  const field = url.searchParams.get('field')
   const requestBody = await request.json()
 
   return routeHandler(() => {
