@@ -28,9 +28,9 @@ enum RadgemDeposit {
 
 #[blueprint]
 #[events(
-    ElementsCombineDepositedEvent,
-    ElementsCombineProcessed1Event,
-    ElementsCombineClaimedEvent,
+    CombineElementsDepositedEvent,
+    CombineElementsMintedRadgemEvent,
+    CombineElementsClaimedEvent,
     RadmorphCreatedEvent
 )]
 mod refinery {
@@ -40,8 +40,8 @@ mod refinery {
         },
         methods {
             combine_elements_deposit => PUBLIC;
-            combine_elements_process_1 => restrict_to: [admin];
-            combine_elements_process_2 => restrict_to: [admin];
+            combine_elements_mint_radgem => restrict_to: [admin];
+            combine_elements_add_radgem_image => restrict_to: [admin];
             combine_elements_claim => PUBLIC;
             create_radmorph => PUBLIC;
             set_key_image_url_hashes => NOBODY;
@@ -112,11 +112,11 @@ mod refinery {
             LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
             elements.burn();
 
-            Runtime::emit_event(ElementsCombineDepositedEvent { badge_id });
+            Runtime::emit_event(CombineElementsDepositedEvent { badge_id });
         }
 
         // Mint a random RadGem
-        pub fn combine_elements_process_1(
+        pub fn combine_elements_mint_radgem(
             &mut self,
             badge_id: NonFungibleGlobalId,
             rand_num_1: Decimal,
@@ -154,14 +154,14 @@ mod refinery {
             // Deposit the RadGem into the vault for the user to claim later
             self.radgem_vault.put(radgem_bucket.as_non_fungible());
 
-            Runtime::emit_event(ElementsCombineProcessed1Event {
+            Runtime::emit_event(CombineElementsMintedRadgemEvent {
                 badge_id,
                 radgem_local_id,
                 radgem_data,
             });
         }
 
-        pub fn combine_elements_process_2(
+        pub fn combine_elements_add_radgem_image(
             &mut self,
             badge_id: NonFungibleGlobalId,
             radgem_local_id: NonFungibleLocalId,
@@ -171,7 +171,7 @@ mod refinery {
             self.radgem_forge
                 .update_key_image(radgem_local_id, key_image_url);
 
-            Runtime::emit_event(ElementsCombineProcessed2Event { badge_id });
+            Runtime::emit_event(CombineElementsAddedRadgemImageEvent { badge_id });
         }
 
         // User claims RadGem by presenting user badge
@@ -199,7 +199,7 @@ mod refinery {
                 }
             };
 
-            Runtime::emit_event(ElementsCombineClaimedEvent { badge_id });
+            Runtime::emit_event(CombineElementsClaimedEvent { badge_id });
 
             radgems.into()
         }
@@ -304,24 +304,24 @@ mod refinery {
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
-pub struct ElementsCombineDepositedEvent {
+pub struct CombineElementsDepositedEvent {
     badge_id: NonFungibleGlobalId,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
-pub struct ElementsCombineProcessed1Event {
+pub struct CombineElementsMintedRadgemEvent {
     badge_id: NonFungibleGlobalId,
     radgem_local_id: NonFungibleLocalId,
     radgem_data: RadgemData,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
-pub struct ElementsCombineProcessed2Event {
+pub struct CombineElementsAddedRadgemImageEvent {
     badge_id: NonFungibleGlobalId,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
-pub struct ElementsCombineClaimedEvent {
+pub struct CombineElementsClaimedEvent {
     badge_id: NonFungibleGlobalId,
 }
 

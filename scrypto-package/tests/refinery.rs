@@ -195,7 +195,7 @@ fn can_combine_elements_process_1() -> Result<(), RuntimeError> {
 
     // Act
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_process_1(user_badge_id, dec!(0.318), dec!(0.822), &mut env)?;
+    refinery.combine_elements_mint_radgem(user_badge_id, dec!(0.318), dec!(0.822), &mut env)?;
 
     // Assert
     Ok(())
@@ -250,7 +250,7 @@ fn can_combine_elements_claim() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_process_1(user_id.clone(), dec!(0.97), dec!(0.89), &mut env)?;
+    refinery.combine_elements_mint_radgem(user_id.clone(), dec!(0.97), dec!(0.89), &mut env)?;
 
     // Act
     let result = refinery.combine_elements_claim(user_badge_proof, &mut env)?;
@@ -273,13 +273,13 @@ fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_process_1(user_id.clone(), dec!(0.97), dec!(0.87), &mut env)?;
+    refinery.combine_elements_mint_radgem(user_id.clone(), dec!(0.97), dec!(0.87), &mut env)?;
 
     // Act
     let result_1 =
         refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
 
-    refinery.combine_elements_process_1(user_id.clone(), dec!(0.16), dec!(0.64), &mut env)?;
+    refinery.combine_elements_mint_radgem(user_id.clone(), dec!(0.16), dec!(0.64), &mut env)?;
 
     let result_2 =
         refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
