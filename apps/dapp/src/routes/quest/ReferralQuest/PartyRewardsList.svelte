@@ -1,13 +1,31 @@
 <script lang="ts">
+  import { i18n } from '$lib/i18n/i18n'
   import type { Quests } from 'content'
 
   export let questId: keyof Quests
 
-  let tab: 'reward_tiers' | 'party_participants'
+  const tabs = ['rewardTiersTab', 'partyParticipantsTab'] as const
+  let selectedTab: (typeof tabs)[number] = 'rewardTiersTab'
+  const list = []
+  const setSelectedTab = (tab: (typeof tabs)[number]) => {
+    selectedTab = tab
+  }
 </script>
 
-<div class="text-content">
-  <h3 class="title">Party rewards Status</h3>
+<div class="quest-content">
+  <h3 class="rewards-list-title">{$i18n.t('quests:ReferralQuest.rewardsTitle')}</h3>
+  <div class="tabs">
+    {#each tabs as tab}
+      <button
+        on:click={() => setSelectedTab(tab)}
+        class="text-bold interactive"
+        class:inactive={tab !== selectedTab}
+      >
+        {$i18n.t(`quests:ReferralQuest.${tab}`)}
+      </button>
+    {/each}
+  </div>
+  <div class="rewards-list"></div>
 </div>
 
 <style lang="scss">
@@ -15,7 +33,26 @@
   p {
     margin: 0;
   }
-  .text-content {
+
+  .rewards-list-title {
+    font-weight: var(--font-weight-bold);
+  }
+  .tabs {
+    display: flex;
+    gap: var(--spacing-lg);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .inactive {
+    opacity: 40%;
+  }
+
+  .interactive {
+    cursor: pointer;
+  }
+
+  .quest-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
