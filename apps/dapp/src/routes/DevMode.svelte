@@ -43,7 +43,7 @@
   }
 
   const clearDb = async () => {
-    await fetch('/api/clear-db', {
+    await fetch('/api/user/clear-db', {
       method: 'POST'
     })
     invalidateAll()
