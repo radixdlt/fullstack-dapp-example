@@ -2,11 +2,8 @@
   import { i18n } from '$lib/i18n/i18n'
   import type { Quests } from 'content'
 
-  export let questId: keyof Quests
-
   const tabs = ['rewardTiersTab', 'partyParticipantsTab'] as const
   let selectedTab: (typeof tabs)[number] = 'rewardTiersTab'
-  const list = []
   const setSelectedTab = (tab: (typeof tabs)[number]) => {
     selectedTab = tab
   }
@@ -29,8 +26,7 @@
 </div>
 
 <style lang="scss">
-  h3,
-  p {
+  h3 {
     margin: 0;
   }
 

@@ -111,6 +111,18 @@ interface Resources {
         StakedXrd: 'Stake your XRD on dashboard'
       }
     }
+    ReferralQuest: {
+      title: 'Join Matt’s  Party Quest'
+      description: 'Invite your friends to give them 200 RDR and also get 200 RDR yourself!'
+      rewardsTitle: 'Party rewards Status'
+      rewardTiersTab: 'Reward Tiers'
+      partyParticipantsTab: 'Party participants'
+      introDescription: 'You came to RadQuest following Matt’s link, join his party'
+      requirements: {
+        LearnAboutParty: 'Learn about Party Quest'
+        ClaimReferralQuestRewards: 'Claim your rewards'
+      }
+    }
   }
   transformGems: {
     back: 'Back'
@@ -123,18 +135,6 @@ interface Resources {
     'gemcard-rarity': 'Rarity'
   }
   translation: {}
-  ReferralQuest: {
-    title: 'Join Matt’s  Party Quest'
-    description: 'Invite your friends to give them 200 RDR and also get 200 RDR yourself!'
-    rewardsTitle: 'Party rewards Status'
-    rewardTiersTab: 'Reward Tiers'
-    partyParticipantsTab: 'Party participants'
-    introDescription: 'You came to RadQuest following Matt’s link, join his party'
-    requirements: {
-      LearnAboutParty: 'Learn about Party Quest'
-      ClaimReferralQuestRewards: 'Claim your rewards'
-    }
-  }
 }
 
 export default Resources
