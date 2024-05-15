@@ -247,7 +247,7 @@ export const QuestDefinitions = (networkId: number) => {
           eventName: 'ClaimReferralQuestRewards',
           type: 'event',
           matchField: {
-            value: xrd,
+            value: 'ok',
             kind: 'Reference',
             type_name: 'ResourceAddress'
           }
