@@ -1,6 +1,5 @@
 <script lang="ts">
   import { i18n } from '$lib/i18n/i18n'
-  import type { Quests } from 'content'
 
   const tabs = ['rewardTiersTab', 'partyParticipantsTab'] as const
   let selectedTab: (typeof tabs)[number] = 'rewardTiersTab'
