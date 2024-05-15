@@ -230,6 +230,10 @@ export const QuestDefinitions = (networkId: number) => {
         {
           name: 'xrd',
           amount: 10
+        },
+        {
+          name: 'energyCard',
+          amount: 1
         }
       ],
       minutesToComplete: 5,
@@ -238,8 +242,17 @@ export const QuestDefinitions = (networkId: number) => {
         LearnAboutDexes: {
           type: 'content'
         },
-        SwapTokens: {
-          eventName: 'SwapTokens',
+        SwapTokensOnJettySwap: {
+          eventName: 'SwapTokensOnJettySwap',
+          type: 'event',
+          matchField: {
+            value: 'ok',
+            kind: 'Reference',
+            type_name: 'ResourceAddress'
+          }
+        },
+        SwapTokensOnLettySwap: {
+          eventName: 'SwapTokensOnLettySwap',
           type: 'event',
           matchField: {
             value: 'ok',
