@@ -1,6 +1,6 @@
 import { config, radixEngineClient } from '../../config'
 
-export const createCardForge = () => {
+export const newCardForge = () => {
   return radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
