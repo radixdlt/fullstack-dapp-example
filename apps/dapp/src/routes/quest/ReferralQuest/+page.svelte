@@ -11,9 +11,9 @@
   {...data}
   bind:this={quest}
   steps={[
-    // {
-    //   type: 'claimRewards'
-    // },
+    {
+      type: 'claimRewards'
+    },
     {
       id: 'text1',
       type: 'regular'
