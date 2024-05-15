@@ -71,7 +71,7 @@ export type QuestId = ReturnType<typeof QuestDefinitions>[keyof ReturnType<
 >]['id']
 
 export const QuestDefinitions = (networkId: number) => {
-  const { badges, xrd } = getEntityAddresses(networkId)
+  const { badges, xrd, components } = getEntityAddresses(networkId)
 
   return {
     WelcomeToRadQuest: {
@@ -246,7 +246,7 @@ export const QuestDefinitions = (networkId: number) => {
           eventName: 'SwapTokensOnJettySwap',
           type: 'event',
           matchField: {
-            value: 'ok',
+            value: components.jettySwap,
             kind: 'Reference',
             type_name: 'ResourceAddress'
           }
@@ -255,7 +255,7 @@ export const QuestDefinitions = (networkId: number) => {
           eventName: 'SwapTokensOnLettySwap',
           type: 'event',
           matchField: {
-            value: 'ok',
+            value: components.lettySwap,
             kind: 'Reference',
             type_name: 'ResourceAddress'
           }
