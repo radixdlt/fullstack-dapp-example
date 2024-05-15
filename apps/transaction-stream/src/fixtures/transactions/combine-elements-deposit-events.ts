@@ -85,7 +85,7 @@ export default [
               {
                 kind: 'Reference',
                 type_name: 'ResourceAddress',
-                value: 'resource_tdx_2_1th5y72fe3afxhuh4nkdtvcqw6tvhvdfupl87ua7flynk97mqxlmgsh'
+                value: 'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72'
               },
               {
                 kind: 'Decimal',
@@ -102,7 +102,7 @@ export default [
               is_global: true,
               entity_type: 'GlobalFungibleResource',
               entity_address:
-                'resource_tdx_2_1th5y72fe3afxhuh4nkdtvcqw6tvhvdfupl87ua7flynk97mqxlmgsh'
+                'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72'
             },
             object_module_id: 'Main'
           },
@@ -126,7 +126,7 @@ export default [
               is_global: true,
               entity_type: 'GlobalGenericComponent',
               entity_address:
-                'component_tdx_2_1cqg5khdgj3hy8raczvsc89lf7mss07zespxk933vnjedef39dfekle'
+                'component_tdx_2_1crth8cjpycqk8xhtcuzcjeh9eud2jdhx0khuh3aunhtxp4xluvnym5'
             },
             object_module_id: 'Main'
           },
@@ -143,7 +143,7 @@ export default [
                     kind: 'Reference',
                     type_name: 'ResourceAddress',
                     field_name: 'resource_address',
-                    value: 'resource_tdx_2_1nfusnklkkgt4yrj5gw3vkdqaqkjmm46nyslkqcqm3zwypds4xtjae9'
+                    value: 'resource_tdx_2_1nfqughuxfm6hetnkc7xg0qtnx8a7agl80pz9srxy4dvhz8ckvscs88'
                   },
                   {
                     kind: 'NonFungibleLocalId',
