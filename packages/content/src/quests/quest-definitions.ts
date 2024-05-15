@@ -218,6 +218,36 @@ export const QuestDefinitions = (networkId: number) => {
           }
         }
       }
+    },
+    SwapQuest: {
+      id: 'SwapQuest',
+      category: 'Advanced',
+      rewards: [
+        {
+          name: 'element',
+          amount: 10
+        },
+        {
+          name: 'xrd',
+          amount: 10
+        }
+      ],
+      minutesToComplete: 5,
+      preRequisites: ['TransferTokens'],
+      requirements: {
+        LearnAboutDexes: {
+          type: 'content'
+        },
+        SwapTokens: {
+          eventName: 'SwapTokens',
+          type: 'event',
+          matchField: {
+            value: 'ok',
+            kind: 'Reference',
+            type_name: 'ResourceAddress'
+          }
+        }
+      }
     }
   } as const satisfies { [key: string]: QuestDefinition }
 }
