@@ -30,6 +30,7 @@ enum RadgemDeposit {
 #[events(
     CombineElementsDepositedEvent,
     CombineElementsMintedRadgemEvent,
+    CombineElementsAddedRadgemImageEvent,
     CombineElementsClaimedEvent,
     RadmorphCreatedEvent
 )]
