@@ -1,11 +1,3 @@
-import { getEntityAddresses } from '../helpers/getEntityAddresses'
-
-export type MatchField = {
-  value: string
-  kind: 'Reference'
-  type_name: 'ResourceAddress'
-}
-
 export type QuestCategory = keyof typeof QuestCategory
 
 export const QuestCategory = {
@@ -45,7 +37,6 @@ export type Requirement = OnLedgerRequirement | OffLedgerRequirement | ContentRe
 type OnLedgerRequirement = {
   type: 'event'
   eventName: string
-  matchField: MatchField
 }
 
 type OffLedgerRequirement = {
@@ -70,9 +61,7 @@ export type QuestId = ReturnType<typeof QuestDefinitions>[keyof ReturnType<
   typeof QuestDefinitions
 >]['id']
 
-export const QuestDefinitions = (networkId: number) => {
-  const { badges, xrd, components } = getEntityAddresses(networkId)
-
+export const QuestDefinitions = () => {
   return {
     WelcomeToRadQuest: {
       id: 'WelcomeToRadQuest',
@@ -151,12 +140,7 @@ export const QuestDefinitions = (networkId: number) => {
         },
         [EventId.DepositUserBadge]: {
           type: 'event',
-          eventName: 'DepositEvent',
-          matchField: {
-            value: badges.userBadgeAddress,
-            kind: 'Reference',
-            type_name: 'ResourceAddress'
-          }
+          eventName: 'DepositEvent'
         }
       }
     },
@@ -183,12 +167,7 @@ export const QuestDefinitions = (networkId: number) => {
       requirements: {
         [EventId.JettyReceivedClams]: {
           type: 'event',
-          eventName: 'DepositEvent',
-          matchField: {
-            value: badges.userBadgeAddress,
-            kind: 'Reference',
-            type_name: 'ResourceAddress'
-          }
+          eventName: 'DepositEvent'
         }
       }
     },
@@ -210,12 +189,7 @@ export const QuestDefinitions = (networkId: number) => {
         },
         StakedXrd: {
           eventName: 'StakedXrd',
-          type: 'event',
-          matchField: {
-            value: xrd,
-            kind: 'Reference',
-            type_name: 'ResourceAddress'
-          }
+          type: 'event'
         }
       }
     },
@@ -244,21 +218,11 @@ export const QuestDefinitions = (networkId: number) => {
         },
         SwapTokensOnJettySwap: {
           eventName: 'SwapTokensOnJettySwap',
-          type: 'event',
-          matchField: {
-            value: components.jettySwap,
-            kind: 'Reference',
-            type_name: 'ResourceAddress'
-          }
+          type: 'event'
         },
         SwapTokensOnLettySwap: {
           eventName: 'SwapTokensOnLettySwap',
-          type: 'event',
-          matchField: {
-            value: components.lettySwap,
-            kind: 'Reference',
-            type_name: 'ResourceAddress'
-          }
+          type: 'event'
         }
       }
     }

@@ -13,9 +13,7 @@
   let open = false
 
   const unlockQuests = async () => {
-    for (let questId of Object.values(QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))).map(
-      (q) => q.id
-    )) {
+    for (let questId of Object.values(QuestDefinitions()).map((q) => q.id)) {
       useCookies(`quest-status-${questId}`).set('IN_PROGRESS')
       await questApi.startQuest(questId)
     }

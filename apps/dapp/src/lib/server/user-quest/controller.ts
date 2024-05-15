@@ -1,7 +1,6 @@
 import type { QuestStatus } from 'database'
 import { type ControllerMethodContext } from '../_types'
 import { AccountAddressModel, UserModel, UserQuestModel, type AppLogger } from 'common'
-import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions, type Quests } from 'content'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 import { dbClient } from '$lib/db'
@@ -72,7 +71,7 @@ const UserQuestController = ({
     userQuestModel(ctx.logger)
       .findCompletedRequirements(userId, questId)
       .andThen((completedRequirements) => {
-        const questDefinition = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId]
+        const questDefinition = QuestDefinitions()[questId]
         if (completedRequirements.length !== Object.keys(questDefinition.requirements).length) {
           return errAsync(createApiError(ErrorReason.requirementsNotMet, 400)())
         }
@@ -82,7 +81,7 @@ const UserQuestController = ({
       .map(() => ({ httpResponseCode: 200, data: undefined }))
 
   const startQuest = (ctx: ControllerMethodContext, userId: string, questId: keyof Quests) => {
-    const questDefinition = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId]
+    const questDefinition = QuestDefinitions()[questId]
 
     const preRequisites = questDefinition.preRequisites
 
@@ -109,8 +108,7 @@ const UserQuestController = ({
         })
         .andThen((statusResult) => {
           const shouldTrackAccountAddress =
-            !statusResult &&
-            QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId].trackedAccountAddress
+            !statusResult && QuestDefinitions()[questId].trackedAccountAddress
 
           return shouldTrackAccountAddress
             ? userModel(ctx.logger)
@@ -136,7 +134,7 @@ const UserQuestController = ({
       userQuestModel(ctx.logger).getQuestStatus(userId, questId),
       userQuestModel(ctx.logger).findCompletedRequirements(userId, questId)
     ]).map(([questStatus, completedRequirements]) => {
-      const questDefinition = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId]
+      const questDefinition = QuestDefinitions()[questId]
       const requirementsState = completedRequirements.reduce(
         (acc, requirement) => {
           acc[requirement.requirementId] = true
@@ -169,7 +167,7 @@ const UserQuestController = ({
     questId: QuestId,
     userId: string
   ) => {
-    const questDefinition = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId]
+    const questDefinition = QuestDefinitions()[questId]
 
     const requirementId = Object.keys(questDefinition.requirements).find(
       // @ts-ignore
