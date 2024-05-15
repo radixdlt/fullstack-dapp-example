@@ -1,6 +1,4 @@
-import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import type { QuestId } from 'content'
-import { QuestDefinitions } from 'content'
 import type { $Enums } from 'database'
 
 type CookieEntry<K, V> = {
@@ -31,11 +29,3 @@ export const useCookies = <
   },
   clear: () => (document.cookie = `${item}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`)
 })
-
-export const clearQuestStatusFromCookies = () => {
-  const questDefinitions = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))
-
-  for (const questId of Object.keys(questDefinitions)) {
-    useCookies(`quest-status-${questId as QuestId}`).clear()
-  }
-}

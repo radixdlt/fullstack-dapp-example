@@ -57,19 +57,19 @@
 
   let startAtProgress = 0
 
-  if ($page.url.hash) {
-    startAtProgress = parseInt($page.url.hash.slice(1))
-  } else {
-    const savedProgress = useCookies(`saved-progress-${id}`).get()
-    if (savedProgress) {
-      startAtProgress = parseInt(savedProgress)
-    }
-  }
-
   onMount(() => {
     actions.next = quest.next
     actions.back = quest.back
     actions.goToStep = quest.goToStep
+
+    if ($page.url.hash) {
+      startAtProgress = parseInt($page.url.hash.slice(1))
+    } else {
+      const savedProgress = useCookies(`saved-progress-${id}`).get()
+      if (savedProgress) {
+        startAtProgress = parseInt(savedProgress)
+      }
+    }
   })
 
   const _completeQuest = async () => {
