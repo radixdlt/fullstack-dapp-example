@@ -236,6 +236,7 @@ export const QuestDefinitions = (networkId: number) => {
           amount: 10
         }
       ],
+      trackedAccountAddress: false,
       minutesToComplete: 3,
       preRequisites: ['TransferTokens'],
       requirements: {
@@ -245,7 +246,6 @@ export const QuestDefinitions = (networkId: number) => {
         ClaimReferralQuestRewards: {
           eventName: 'ClaimReferralQuestRewards',
           type: 'event',
-          //todo marcin
           matchField: {
             value: xrd,
             kind: 'Reference',

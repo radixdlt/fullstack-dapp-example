@@ -10,7 +10,7 @@
 </script>
 
 <div class="quest-content">
-  <h3 class="rewards-list-title">{$i18n.t('quests:ReferralQuest.rewardsTitle')}</h3>
+  <h3>{$i18n.t('quests:ReferralQuest.rewardsTitle')}</h3>
   <div class="tabs">
     {#each tabs as tab}
       <button
@@ -30,9 +30,6 @@
     margin: 0;
   }
 
-  .rewards-list-title {
-    font-weight: var(--font-weight-bold);
-  }
   .tabs {
     display: flex;
     gap: var(--spacing-lg);

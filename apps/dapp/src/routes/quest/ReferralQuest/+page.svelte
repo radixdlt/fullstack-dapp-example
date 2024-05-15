@@ -1,7 +1,7 @@
 <script lang="ts">
   import Quest from '../Quest.svelte'
-  import type { PageData } from '../StakingQuest/$types'
-  import PartyRewardsList from './PartyRewardsList.svelte'
+  import type { PageData } from '../ReferralQuest/$types'
+  import PartyTabs from './PartyTabs.svelte'
 
   export let data: PageData
   let quest: Quest
@@ -42,7 +42,7 @@
   let:render
 >
   {#if render('text1')}
-    <PartyRewardsList />
+    <PartyTabs />
   {/if}
 
   {#if render('text2')}
