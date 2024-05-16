@@ -49,7 +49,7 @@ export default [
               is_global: true,
               entity_type: 'GlobalNonFungibleResource',
               entity_address:
-                'resource_tdx_2_1nfusnklkkgt4yrj5gw3vkdqaqkjmm46nyslkqcqm3zwypds4xtjae9'
+                'resource_tdx_2_1nfqughuxfm6hetnkc7xg0qtnx8a7agl80pz9srxy4dvhz8ckvscs88'
             },
             object_module_id: 'Main'
           },
@@ -109,7 +109,7 @@ export default [
               is_global: true,
               entity_type: 'GlobalNonFungibleResource',
               entity_address:
-                'resource_tdx_2_1nfusnklkkgt4yrj5gw3vkdqaqkjmm46nyslkqcqm3zwypds4xtjae9'
+                'resource_tdx_2_1nfqughuxfm6hetnkc7xg0qtnx8a7agl80pz9srxy4dvhz8ckvscs88'
             },
             object_module_id: 'Main'
           },
@@ -174,7 +174,7 @@ export default [
             variant_name: 'NonFungible',
             fields: [
               {
-                value: 'resource_tdx_2_1nfusnklkkgt4yrj5gw3vkdqaqkjmm46nyslkqcqm3zwypds4xtjae9',
+                value: 'resource_tdx_2_1nfqughuxfm6hetnkc7xg0qtnx8a7agl80pz9srxy4dvhz8ckvscs88',
                 kind: 'Reference',
                 type_name: 'ResourceAddress'
               },

@@ -49,7 +49,7 @@ export default [
               is_global: true,
               entity_type: 'GlobalGenericComponent',
               entity_address:
-                'component_tdx_2_1cp2qf6rzzfhny0qdp40w9jz4m98g9hdtmzd4fdg6gc0epknezg0y65'
+                'component_tdx_2_1crtfv9n6dqj5t65nj075lcj8ap9vegyh0jlfucckkfp9xzpzcllpwd'
             },
             object_module_id: 'Main'
           },
@@ -71,7 +71,7 @@ export default [
                 element_kind: 'Reference',
                 elements: [
                   {
-                    value: 'resource_tdx_2_1th5y72fe3afxhuh4nkdtvcqw6tvhvdfupl87ua7flynk97mqxlmgsh',
+                    value: 'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72',
                     kind: 'Reference',
                     type_name: 'ResourceAddress'
                   }
@@ -116,7 +116,7 @@ export default [
               is_global: true,
               entity_type: 'GlobalFungibleResource',
               entity_address:
-                'resource_tdx_2_1th5y72fe3afxhuh4nkdtvcqw6tvhvdfupl87ua7flynk97mqxlmgsh'
+                'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72'
             },
             object_module_id: 'Main'
           },
@@ -175,7 +175,7 @@ export default [
             variant_name: 'Fungible',
             fields: [
               {
-                value: 'resource_tdx_2_1th5y72fe3afxhuh4nkdtvcqw6tvhvdfupl87ua7flynk97mqxlmgsh',
+                value: 'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72',
                 kind: 'Reference',
                 type_name: 'ResourceAddress'
               },
@@ -310,7 +310,7 @@ export default [
               is_global: true,
               entity_type: 'GlobalFungibleResource',
               entity_address:
-                'resource_tdx_2_1th5y72fe3afxhuh4nkdtvcqw6tvhvdfupl87ua7flynk97mqxlmgsh'
+                'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72'
             },
             object_module_id: 'Main'
           },
@@ -334,7 +334,7 @@ export default [
               is_global: true,
               entity_type: 'GlobalGenericComponent',
               entity_address:
-                'component_tdx_2_1cp2qf6rzzfhny0qdp40w9jz4m98g9hdtmzd4fdg6gc0epknezg0y65'
+                'component_tdx_2_1crtfv9n6dqj5t65nj075lcj8ap9vegyh0jlfucckkfp9xzpzcllpwd'
             },
             object_module_id: 'Main'
           },
@@ -356,7 +356,7 @@ export default [
                 element_kind: 'Reference',
                 elements: [
                   {
-                    value: 'resource_tdx_2_1th5y72fe3afxhuh4nkdtvcqw6tvhvdfupl87ua7flynk97mqxlmgsh',
+                    value: 'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72',
                     kind: 'Reference',
                     type_name: 'ResourceAddress'
                   }
