@@ -15,8 +15,8 @@
 
   const stakedXrd = writable(data.requirements?.StakedXrd)
   const rewardsDeposited = writable(
-    data.questStatus.StakingQuest.status === 'REWARDS_DEPOSITED' ||
-      data.questStatus.StakingQuest.status === 'COMPLETED'
+    data.questStatus.StakingQuest?.status === 'REWARDS_DEPOSITED' ||
+      data.questStatus.StakingQuest?.status === 'COMPLETED'
   )
   onMount(() => {
     const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
