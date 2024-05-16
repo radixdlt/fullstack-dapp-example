@@ -1,6 +1,5 @@
 <script lang="ts">
   import { invalidateAll } from '$app/navigation'
-  import { PUBLIC_NETWORK_ID } from '$env/static/public'
   import { questApi } from '$lib/api/quest-api'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import Button from '$lib/components/button/Button.svelte'
@@ -13,9 +12,7 @@
   let open = false
 
   const unlockQuests = async () => {
-    for (let questId of Object.values(QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))).map(
-      (q) => q.id
-    )) {
+    for (let questId of Object.values(QuestDefinitions()).map((q) => q.id)) {
       useCookies(`quest-status-${questId}`).set('IN_PROGRESS')
       await questApi.startQuest(questId)
     }

@@ -9,9 +9,9 @@ export type Quests = {
   } & ReturnType<typeof QuestDefinitions>[key]
 }
 
-export const loadQuests = (language: Language, networkId: number) => {
+export const loadQuests = (language: Language) => {
   const quests: Quests = {} as Quests
-  const questDefinitions = QuestDefinitions(networkId)
+  const questDefinitions = QuestDefinitions()
 
   Object.values(questDefinitions).forEach((quest) => {
     quests[quest.id] = {

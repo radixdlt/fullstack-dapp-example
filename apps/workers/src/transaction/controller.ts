@@ -101,7 +101,7 @@ export const TransactionWorkerController = ({
       case 'DepositReward':
         const { questId, badgeId } = job.data
 
-        const questDefinition = QuestDefinitions(config.networkId)[questId as QuestId]
+        const questDefinition = QuestDefinitions()[questId as QuestId]
         const rewards = questDefinition.rewards
         // @ts-ignore
         const xrdReward = rewards.find((reward) => reward.name === 'xrd')

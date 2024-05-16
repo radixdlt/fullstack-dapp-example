@@ -28,7 +28,9 @@ export const Addresses = (networkId: number) => {
           radgemForge: 'component_tdx_2_1cp92vr8fpgmq3r5rvd4mqpns67z75ulq0h083makfz5tqhm5x34ukd',
           radmorphForge: 'component_tdx_2_1czv8hf2k4m5aka3ar847uqpyqy5w9q9kjnr354zphmzrrqps3lq30d',
           imageOracle: 'component_tdx_2_1cr43qevrkluk75gjcyglklcaek7uy0rp2ymqk0ufyrp6393c53wlfw',
-          refinery: 'component_tdx_2_1crth8cjpycqk8xhtcuzcjeh9eud2jdhx0khuh3aunhtxp4xluvnym5'
+          refinery: 'component_tdx_2_1crth8cjpycqk8xhtcuzcjeh9eud2jdhx0khuh3aunhtxp4xluvnym5',
+          jettySwap: '',
+          lettySwap: ''
         },
         xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
         accounts: {

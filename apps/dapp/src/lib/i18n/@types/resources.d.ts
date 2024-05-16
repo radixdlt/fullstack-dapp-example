@@ -111,6 +111,15 @@ interface Resources {
         StakedXrd: 'Stake your XRD on dashboard'
       }
     }
+    SwapQuest: {
+      requirements: {
+        LearnAboutDexes: 'Learn about DEXes'
+        SwapTokens: 'Swap tokens on DEXes'
+      }
+      title: 'Decentralized Exchange (DEX)'
+      description: 'Learn how to swap one token for another at a changing market rate.'
+      introDescription: 'Learn about DEXes\nSwap one token for another kind of token'
+    }
   }
   transformGems: {
     back: 'Back'
