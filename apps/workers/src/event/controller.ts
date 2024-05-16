@@ -232,8 +232,8 @@ export const EventWorkerController = ({
                     hasAll
                       ? transactionModel(childLogger)
                           .add({
-                            badgeId: userId,
-                            badgeResourceAddress: config.radQuest.badges.userBadgeAddress,
+                            badgeId,
+                            badgeResourceAddress,
                             transactionKey: `${questId}:DepositReward`,
                             attempt: 0
                           })

@@ -3,7 +3,6 @@ import { ConnectionOptions } from 'bullmq'
 import {
   EventModel,
   NotificationApi,
-  NotificationModel,
   UserQuestModel,
   AuditModel,
   UserModel,
@@ -43,7 +42,7 @@ const app = async () => {
     eventModel,
     userModel: UserModel(dbClient),
     transactionModel,
-    accountAddressModel: AccountAddressModel(redisClient),
+    accountAddressModel: AccountAddressModel(redisClient, logger),
     tokenPriceClient: TokenPriceClient({ logger, redisClient }),
     notificationApi,
     transactionQueue,

@@ -6,7 +6,7 @@ import type { QuestId } from 'content'
 /** @type {import('./$types').RequestHandler} */
 export const POST: RequestHandler = async ({ locals, params }) => {
   return routeHandler(() =>
-    userQuestController.setQuestProgress(locals.context, locals.userId, params.questId as QuestId)
+    userQuestController.startQuest(locals.context, locals.userId, params.questId as QuestId)
   )
 }
 

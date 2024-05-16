@@ -6,7 +6,6 @@ import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions } from 'content'
 
 const NetworkQuestDefinitions = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))
-
 export const handle: Handle = async ({ event, resolve }) => {
   const traceId = crypto.randomUUID()
   event.locals.context = {

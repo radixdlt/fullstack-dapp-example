@@ -17,7 +17,7 @@
       (q) => q.id
     )) {
       useCookies(`quest-status-${questId}`).set('IN_PROGRESS')
-      await questApi.updateQuestProgress(questId, 0)
+      await questApi.startQuest(questId)
     }
     invalidateAll()
   }

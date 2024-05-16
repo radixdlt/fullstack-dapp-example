@@ -34,7 +34,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies }) => {
         cookies.get(`quest-status-${questId}`) === 'COMPLETED' &&
         !questStatus[questId]?.status
       ) {
-        await questApi.updateQuestProgress(questId, 0, fetch)
+        await questApi.startQuest(questId, fetch)
         questStatus[questId] = {
           savedProgress: 0,
           status: 'IN_PROGRESS'
@@ -46,7 +46,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies }) => {
       cookies.get('quest-status-LoginWithWallet') === 'IN_PROGRESS' &&
       questStatus['LoginWithWallet']?.status !== 'COMPLETED'
     ) {
-      await questApi.updateQuestProgress('LoginWithWallet', 0, fetch)
+      await questApi.startQuest('LoginWithWallet', fetch)
       questStatus['LoginWithWallet'] = {
         savedProgress: 0,
         status: 'IN_PROGRESS'

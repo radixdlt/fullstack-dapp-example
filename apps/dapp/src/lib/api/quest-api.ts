@@ -2,11 +2,10 @@ import { fetchWrapper } from '$lib/helpers/fetch-wrapper'
 import type { QuestId } from 'content'
 import type { QuestStatus } from 'database'
 
-const updateQuestProgress = (questId: string, progress: number, serverFetch?: typeof fetch) =>
+const startQuest = (questId: string, serverFetch?: typeof fetch) =>
   fetchWrapper<void>(
     (serverFetch ?? fetch)(`/api/quest/${questId}`, {
-      method: 'POST',
-      body: JSON.stringify({ progress })
+      method: 'POST'
     })
   ).map(({ data }) => data)
 
@@ -62,7 +61,7 @@ const completeContentRequirement = (questId: QuestId, serverFetch?: typeof fetch
 export const questApi = {
   getQuestsInformation,
   getQuestInformation,
-  updateQuestProgress,
+  startQuest,
   completeQuest,
   saveProgress,
   getSavedProgress,

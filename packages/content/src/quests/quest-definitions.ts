@@ -59,6 +59,7 @@ type ContentRequirement = {
 export type QuestDefinition = {
   id: string
   category: QuestCategory
+  trackedAccountAddress: boolean
   rewards: Readonly<QuestReward[]>
   preRequisites: Readonly<string[]>
   requirements: Requirements
@@ -75,6 +76,7 @@ export const QuestDefinitions = (networkId: number) => {
   return {
     WelcomeToRadQuest: {
       id: 'WelcomeToRadQuest',
+      trackedAccountAddress: false,
       category: 'Basic',
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: [],
@@ -88,6 +90,7 @@ export const QuestDefinitions = (networkId: number) => {
     WhatIsRadix: {
       id: 'WhatIsRadix',
       category: 'Basic',
+      trackedAccountAddress: false,
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: ['WelcomeToRadQuest'],
       minutesToComplete: 3,
@@ -100,6 +103,7 @@ export const QuestDefinitions = (networkId: number) => {
     GetRadixWallet: {
       id: 'GetRadixWallet',
       category: 'Basic',
+      trackedAccountAddress: false,
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: ['WhatIsRadix'],
       minutesToComplete: 3,
@@ -112,6 +116,7 @@ export const QuestDefinitions = (networkId: number) => {
     LoginWithWallet: {
       id: 'LoginWithWallet',
       category: 'Basic',
+      trackedAccountAddress: false,
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: ['GetRadixWallet'],
       minutesToComplete: 3,
@@ -124,6 +129,7 @@ export const QuestDefinitions = (networkId: number) => {
     FirstTransactionQuest: {
       id: 'FirstTransactionQuest',
       category: 'Basic',
+      trackedAccountAddress: false,
       rewards: [
         {
           name: 'element',
@@ -156,6 +162,7 @@ export const QuestDefinitions = (networkId: number) => {
     },
     TransferTokens: {
       id: 'TransferTokens',
+      trackedAccountAddress: false,
       category: 'Basic',
       rewards: [
         {
@@ -188,6 +195,7 @@ export const QuestDefinitions = (networkId: number) => {
     StakingQuest: {
       id: 'StakingQuest',
       category: 'Advanced',
+      trackedAccountAddress: true,
       rewards: [
         {
           name: 'element',
@@ -195,7 +203,7 @@ export const QuestDefinitions = (networkId: number) => {
         }
       ],
       minutesToComplete: 5,
-      preRequisites: ['LoginWithWallet', 'FirstTransactionQuest', 'TransferTokens'],
+      preRequisites: ['TransferTokens'],
       requirements: {
         LearnStaking: {
           type: 'content'
