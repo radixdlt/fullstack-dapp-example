@@ -15,6 +15,7 @@ model User {
   id                String          @id @default("")
   identityAddress   String          @unique
   accountAddress    String?         
+  name              String?         
   
   events                     Event[]
   notifications              Notification[]

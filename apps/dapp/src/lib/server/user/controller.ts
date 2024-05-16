@@ -156,6 +156,14 @@ const UserController = ({
           .map((data) => ({ data, httpResponseCode: 200 }))
       )
   }
+  const setUserName = (ctx: ControllerMethodContext, userId: string, name: string) => {
+    if (!name) return errAsync(createApiError('name not provided', 400)())
+    if (name.length > 25) return errAsync(createApiError('name cannot exceed 25 characters', 400)())
+
+    return userModel(ctx.logger)
+      .setUserName(userId, name)
+      .map((data) => ({ data, httpResponseCode: 200 }))
+  }
 
   const populateResources = (ctx: ControllerMethodContext, userId: string) => {
     if (config.dapp.networkId === 1)
@@ -209,7 +217,7 @@ const UserController = ({
       )
   }
 
-  return { getUser, mintUserBadge, setAccountAddress, populateResources }
+  return { getUser, mintUserBadge, setAccountAddress, populateResources, setUserName }
 }
 
 export const userController = UserController({})

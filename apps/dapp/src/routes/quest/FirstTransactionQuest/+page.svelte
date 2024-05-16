@@ -71,7 +71,11 @@
             (proof) => proof.type === 'account'
           )! as SignedChallengeAccount
 
-          const result = await userApi.setAccountAddress(accounts[0].address, accountProof)
+          const result = await userApi.setUserField({
+            accountAddress: accounts[0].address,
+            proof: accountProof,
+            field: 'accountAddress'
+          })
 
           if (result.isOk()) {
             $user!.accountAddress = accounts[0].address

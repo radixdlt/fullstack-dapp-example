@@ -4,16 +4,31 @@
   import { user } from '../../../stores'
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
   import Input from '$lib/components/input/Input.svelte'
-  import { derived } from 'svelte/store'
+  import { derived, writable } from 'svelte/store'
   import { i18n } from '$lib/i18n/i18n'
+  import { userApi } from '$lib/api/user-api'
 
   export let data: PageData
 
   let nameInput = $user?.label ?? ''
+  let canSaveName = writable(true)
+  let error = ''
 
   const loggedIn = derived(user, ($user) => !!$user)
 
   let quest: Quest
+
+  const setUserName = async () => {
+    $canSaveName = false
+    const result = await userApi.setUserField({ name: nameInput, field: 'name' })
+    $canSaveName = true
+
+    if (result.isErr()) error = (result.error.data as any).message
+    else {
+      error = ''
+      quest.actions.next()
+    }
+  }
 </script>
 
 <Quest
@@ -37,7 +52,15 @@
     },
     {
       id: 'wallet-connected',
-      type: 'regular'
+      type: 'regular',
+      footer: {
+        next: {
+          enabled: canSaveName,
+          onClick: () => {
+            setUserName()
+          }
+        }
+      }
     },
     {
       id: 'text4',
@@ -100,6 +123,7 @@
     {@html data.text['connected.md']}
 
     <Input bind:value={nameInput} />
+    {error}
   {/if}
 
   {#if render('text4')}
