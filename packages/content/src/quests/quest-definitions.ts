@@ -210,6 +210,7 @@ export const QuestDefinitions = () => {
           amount: 1
         }
       ],
+      trackedAccountAddress: true,
       minutesToComplete: 5,
       preRequisites: ['TransferTokens'],
       requirements: {
