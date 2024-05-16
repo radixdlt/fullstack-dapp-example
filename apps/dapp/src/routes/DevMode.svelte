@@ -1,6 +1,5 @@
 <script lang="ts">
   import { invalidateAll } from '$app/navigation'
-  import { PUBLIC_NETWORK_ID } from '$env/static/public'
   import { questApi } from '$lib/api/quest-api'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import Button from '$lib/components/button/Button.svelte'

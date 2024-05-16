@@ -1,6 +1,5 @@
 import { questApi } from '$lib/api/quest-api'
 import type { LayoutServerLoad } from './$types'
-import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { loadQuests, type QuestId } from 'content'
 import type { $Enums } from 'database'
 
