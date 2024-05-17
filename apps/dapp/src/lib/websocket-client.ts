@@ -1,24 +1,33 @@
 import { appLogger } from 'common'
 import { env } from '$env/dynamic/public'
 import type { Notification } from 'common'
+import { authApi } from './api/auth-api'
+import type { RadixDappToolkit } from '@radixdlt/radix-dapp-toolkit'
 
 export type WebSocketClient = ReturnType<typeof WebSocketClient>
 export const WebSocketClient = ({
   authToken,
+  radixDappToolkit,
   restartTimeout = 1000,
   maxRestartTimeout = 30_000,
-  notificationUrl = env.PUBLIC_NOTIFICATION_URL
+  notificationUrl = env.PUBLIC_NOTIFICATION_URL,
+  auth = authApi
 }: {
   authToken: string
+  radixDappToolkit: RadixDappToolkit
+  auth?: typeof authApi
   restartTimeout?: number
   maxRestartTimeout?: number
   notificationUrl?: string
 }) => {
   let currentRestartTimeout = restartTimeout
   let currentTimeout: ReturnType<typeof setTimeout> | undefined
+
+  let shouldReconnect = true
+
   const onMessageCallbacks: ((data: Notification) => void)[] = []
 
-  const createWebSocket = () => {
+  const createWebSocket = (authToken: string) => {
     appLogger.info('🛫 Starting WebSocket')
     const ws = new WebSocket(notificationUrl, ['Authorization', authToken])
 
@@ -38,15 +47,24 @@ export const WebSocketClient = ({
       appLogger.error('🚩 WebSocket error', event)
     }
 
-    const onClose = () => {
+    const onClose = async () => {
       appLogger.debug('🔴 WebSocket closed')
       webSocket.removeEventListener('message', onMessage)
       webSocket.removeEventListener('close', onClose)
       webSocket.removeEventListener('error', onError)
       webSocket.removeEventListener('open', onOpen)
-      currentTimeout = setTimeout(() => {
-        webSocket = createWebSocket()
-      }, currentRestartTimeout)
+
+      if (!shouldReconnect) return
+
+      const result = await auth.authToken()
+
+      if (result.isOk()) {
+        currentTimeout = setTimeout(() => {
+          webSocket = createWebSocket(result.value)
+        }, currentRestartTimeout)
+      } else {
+        radixDappToolkit.disconnect()
+      }
     }
 
     ws.onmessage = onMessage
@@ -57,7 +75,7 @@ export const WebSocketClient = ({
     return ws
   }
 
-  let webSocket = createWebSocket()
+  let webSocket = createWebSocket(authToken)
 
   return {
     onMessage: (callback: (data: Notification) => void): (() => void) => {
@@ -69,6 +87,7 @@ export const WebSocketClient = ({
     },
     close: () => {
       clearTimeout(currentTimeout)
+      shouldReconnect = false
       webSocket.close()
     }
   }

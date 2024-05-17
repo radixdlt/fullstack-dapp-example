@@ -57,6 +57,8 @@
       onDisconnect: async () => {
         authApi.logout()
         $webSocketClient?.close()
+        $webSocketClient = undefined
+
         Object.entries($quests).forEach(([questId, quest]) => {
           useCookies(`quest-status-${questId as QuestId}`).clear()
           useCookies(`saved-progress-${questId as QuestId}`).clear()
@@ -107,10 +109,8 @@
             }
 
             if (authToken) {
-              if (!$webSocketClient) {
-                const ws = WebSocketClient({ authToken })
-                $webSocketClient = ws
-              }
+              const ws = WebSocketClient({ authToken, radixDappToolkit })
+              $webSocketClient = ws
             }
 
             await invalidateAll()
