@@ -4,8 +4,9 @@
   "scripts": {
     "build": "turbo build",
     "build:ci": "npx --node-options='-r dotenv/config' turbo build",
-    "dev": "npx --node-options='-r dotenv/config' turbo dev --concurrency 11",
+    "dev": "npx --node-options='-r dotenv/config' turbo dev --concurrency 12",
     "dev:dapp": "npx --node-options='-r dotenv/config' turbo dev --filter dapp",
+    "dev:swaps": "npx --node-options='-r dotenv/config' turbo dev --filter jetty-swap",
     "dev:notification": "npx --node-options='-r dotenv/config' turbo dev --filter notification",
     "dev:stream": "npx --node-options='-r dotenv/config' turbo dev --filter transaction-stream",
     "dev:stream:inspect": "npx --node-options='-r dotenv/config' turbo dev:inspect --filter transaction-stream",
