@@ -152,6 +152,7 @@
     {
       id: '11',
       type: 'regular',
+      skip: connectAccountReq,
       footer: {
         next: {
           enabled: connectAccountReq
