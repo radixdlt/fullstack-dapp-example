@@ -1,12 +1,10 @@
 <script>
-  import radixLogo from "$lib/assets/radix-logo-dark.png";
-  import developerImg from "$lib/assets/developer-img.png";
+  import { i18n } from '$lib/i18n/i18n'
 </script>
 
 <nav>
   <div class="navbar">
-    <img src={radixLogo} alt="scrypto logo" />
-    <img src={developerImg} alt="radix logo" />
+    <p class="text-bold">{$i18n.t('main:title')}</p>
   </div>
   <div class="connect-btn">
     <radix-connect-button />
@@ -19,8 +17,6 @@
     justify-content: space-between;
     align-items: center;
     gap: 24px;
-    border-bottom: 1px solid var(--grey-3);
-    background: var(--grey-2);
     padding: 1rem 4rem;
   }
   @media (max-width: 768px) {
@@ -33,14 +29,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    --radix-connect-button-width: 11.25rem;
-    --radix-connect-button-height: 2.875rem;
-    --radix-connect-button-border-radius: 0.5rem;
-  }
-  @media (max-width: 384px) {
-    .connect-btn {
-      --radix-connect-button-width: 100px;
-    }
+    --radix-connect-buttonx-width: 132px;
+    --radix-connect-button-height: 40px;
+    --radix-connect-button-border-radius: var(--border-radius-2xl);
+    --radix-connect-button-background: var(--color-radix-grey1);
   }
 
   .navbar {

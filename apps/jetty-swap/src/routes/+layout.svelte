@@ -1,40 +1,37 @@
 <script lang="ts">
-  import { GatewayApiClient } from "@radixdlt/babylon-gateway-api-sdk";
-  import {
-    DataRequestBuilder,
-    RadixDappToolkit,
-    RadixNetwork,
-  } from "@radixdlt/radix-dapp-toolkit";
-  import { onMount } from "svelte";
-  import { gatewayApi, rdt, walletData } from "$lib/stores";
-  import { dAppDefinitionAddress } from "$lib/constants";
-  import Nav from "./Nav.svelte";
+  import '../global.scss'
+  import { GatewayApiClient } from '@radixdlt/babylon-gateway-api-sdk'
+  import { DataRequestBuilder, RadixDappToolkit, RadixNetwork } from '@radixdlt/radix-dapp-toolkit'
+  import { onMount } from 'svelte'
+  import { gatewayApi, rdt, walletData } from '$lib/stores'
+  import { dAppDefinitionAddress } from '$lib/constants'
+  import Nav from './Nav.svelte'
 
   onMount(() => {
     // Initialize the Gateway API for network queries and the Radix Dapp Toolkit for connect button and wallet usage.
     const dappConfig = {
       // networkId is 2 for Stokenet, 1 for Mainnet
       networkId: RadixNetwork.Stokenet,
-      applicationVersion: "1.0.0",
-      applicationName: "Hello Token dApp",
-      applicationDappDefinitionAddress: dAppDefinitionAddress,
-    };
+      applicationVersion: '1.0.0',
+      applicationName: 'Hello Token dApp',
+      applicationDappDefinitionAddress: dAppDefinitionAddress
+    }
 
     // Instantiate Radix Dapp Toolkit
-    $rdt = RadixDappToolkit(dappConfig);
-    console.log("dApp Toolkit: ", $rdt);
+    $rdt = RadixDappToolkit(dappConfig)
+    console.log('dApp Toolkit: ', $rdt)
 
     // Instantiate Gateway API
-    $gatewayApi = GatewayApiClient.initialize(dappConfig);
-    console.log("gatewayApi: ", $gatewayApi);
+    $gatewayApi = GatewayApiClient.initialize(dappConfig)
+    console.log('gatewayApi: ', $gatewayApi)
     // Fetch the user's account address(es) from the wallet
-    $rdt?.walletApi.setRequestData(DataRequestBuilder.accounts().atLeast(1));
+    $rdt?.walletApi.setRequestData(DataRequestBuilder.accounts().atLeast(1))
 
     // Subscribe to updates to the user's shared wallet data and store it in the walletData store
     $rdt?.walletApi.walletData$.subscribe((data) => {
-      $walletData = data;
-    });
-  });
+      $walletData = data
+    })
+  })
 </script>
 
 <Nav />

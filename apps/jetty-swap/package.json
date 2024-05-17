@@ -7,12 +7,29 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "generate:i18n": "i18next-resources-for-ts interface -i ./src/lib/i18n/locales/en -o ./src/lib/i18n/@types/resources.d.ts",
+    "test:storybook": "test-storybook --stories-json",
+    "storybook": "storybook dev -p 6006",
+    "build:storybook": "storybook build"
   },
   "devDependencies": {
+    "@storybook/addon-essentials": "^8.1.1",
+    "@storybook/addon-interactions": "^8.1.1",
+    "@storybook/addon-links": "^8.1.1",
+    "@storybook/addon-svelte-csf": "^4.1.3",
+    "@storybook/blocks": "^8.1.1",
+    "@storybook/jest": "^0.2.3",
+    "@storybook/svelte": "^8.1.1",
+    "@storybook/sveltekit": "^8.1.1",
+    "@storybook/test": "^8.1.1",
+    "@storybook/testing-library": "^0.2.2",
     "@sveltejs/adapter-auto": "^3.0.0",
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "eslint-plugin-storybook": "^0.8.0",
+    "i18next-resources-for-ts": "^1.5.0",
+    "storybook": "^8.1.1",
     "svelte": "^4.2.7",
     "svelte-check": "^3.6.0",
     "tslib": "^2.4.1",
@@ -22,6 +39,8 @@
   "type": "module",
   "dependencies": {
     "@radixdlt/babylon-gateway-api-sdk": "^1.4.1",
-    "@radixdlt/radix-dapp-toolkit": "^1.5.0"
+    "@radixdlt/radix-dapp-toolkit": "^1.5.0",
+    "i18next": "^23.8.2",
+    "svelte-i18next": "^2.2.2"
   }
 }
