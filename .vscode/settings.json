@@ -1,5 +1,8 @@
 {
-  "rust-analyzer.linkedProjects": ["./scrypto-packages/radquest/Cargo.toml"],
+  "rust-analyzer.linkedProjects": [
+    "./scrypto-packages/radquest/Cargo.toml",
+    "./scrypto-packages/clam-dex/Cargo.toml"
+  ],
   "cSpell.words": ["radcard", "radgem", "radgems", "radmorph", "radquest", "ruid", "Sbor"],
   "typescript.tsdk": "node_modules/typescript/lib"
 }
