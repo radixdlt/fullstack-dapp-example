@@ -60,8 +60,7 @@
           return requirement
         }
       })
-    })
-    checkRequirements()
+    }).map(() => checkRequirements())
   }
 
   onMount(() => {
