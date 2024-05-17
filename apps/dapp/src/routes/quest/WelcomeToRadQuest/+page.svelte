@@ -3,6 +3,7 @@
   import { i18n } from '$lib/i18n/i18n'
   import type { LayoutData } from '../$types'
   import Quest from '../Quest.svelte'
+  import TextJettyPage from '../TextJettyPage.svelte'
 
   export let data: LayoutData
 
@@ -15,44 +16,76 @@
   requirements={data.requirements}
   steps={[
     {
-      id: 'text1',
+      id: '0',
+      type: 'regular',
+      footer: {
+        next: {
+          text: $i18n.t('quests:WelcomeToRadQuest.hi'),
+          onClick: () => quest.actions.next()
+        }
+      }
+    },
+    {
+      id: '1',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['1.md']
+      }
+    },
+    {
+      id: '2',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['2.md']
+      }
+    },
+    {
+      id: '3',
       type: 'regular'
     },
     {
-      id: 'text2',
+      id: '4',
       type: 'regular'
     },
     {
-      id: 'text3',
+      id: '5',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['5.md']
+      }
+    },
+    {
+      id: '6',
       type: 'regular'
     },
     {
-      id: 'text4',
-      type: 'regular'
+      id: '7',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['7.md']
+      }
     },
     {
-      id: 'text5',
-      type: 'regular'
-    },
-    {
-      id: 'text6',
-      type: 'regular'
-    },
-    {
-      id: 'text7',
-      type: 'regular'
-    },
-    {
-      id: 'text8',
-      type: 'regular'
-    },
-    {
-      id: 'text9',
-      type: 'regular'
-    },
-    {
-      id: 'text10',
-      type: 'regular'
+      id: '8',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['8.md']
+      }
     },
     {
       type: 'requirements'
@@ -63,8 +96,8 @@
       component: ClaimRewards,
       props: {
         rewards: data.rewards,
-        text: data.text['requirements.md'],
-        nextButtonText: $i18n.t('quests:continueButton'),
+        text: data.text['claim.md'],
+        nextButtonText: $i18n.t('quests:claimButton'),
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next()
       }
@@ -75,43 +108,19 @@
   ]}
   let:render
 >
-  {#if render('text1')}
+  {#if render('0')}
     {@html data.text['0.md']}
   {/if}
 
-  {#if render('text2')}
-    {@html data.text['1.md']}
-  {/if}
-
-  {#if render('text3')}
-    {@html data.text['2.md']}
-  {/if}
-
-  {#if render('text4')}
+  {#if render('3')}
     {@html data.text['3.md']}
   {/if}
 
-  {#if render('text5')}
+  {#if render('4')}
     {@html data.text['4.md']}
   {/if}
 
-  {#if render('text6')}
-    {@html data.text['5.md']}
-  {/if}
-
-  {#if render('text7')}
+  {#if render('6')}
     {@html data.text['6.md']}
-  {/if}
-
-  {#if render('text8')}
-    {@html data.text['7.md']}
-  {/if}
-
-  {#if render('text9')}
-    {@html data.text['8.md']}
-  {/if}
-
-  {#if render('text10')}
-    {@html data.text['9.md']}
   {/if}
 </Quest>

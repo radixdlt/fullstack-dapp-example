@@ -38,6 +38,8 @@ interface Resources {
     'intro-begin-quest': 'Begin Quest'
     okButton: 'OK'
     WelcomeToRadQuest: {
+      hi: 'Hi'
+      claim: 'Claim'
       requirements: {
         Introduction: 'Get introduced to RadQuest'
       }
@@ -64,15 +66,16 @@ interface Resources {
     LoginWithWallet: {
       requirements: {
         ConnectWallet: 'Connect your Radix Wallet'
+        ConnectAccount: 'Connect your account'
       }
       title: 'Login with Wallet'
       description: 'Login with your Radix Wallet'
       introDescription: 'Login with your Radix Wallet to start earning rewards.'
+      connectAccount: 'Connect Account'
     }
     FirstTransactionQuest: {
       requirements: {
         VerifyPhoneNumber: 'Verify your phone number'
-        ConnectAccount: 'Connect your account'
         DepositUserBadge: 'Deposit a user badge'
       }
       title: 'First Transaction'
@@ -89,7 +92,6 @@ interface Resources {
       verifyOtpButton: 'Verify'
       verifyOtpText: 'Enter the 6-digit code sent to'
       allowMarketing: 'I allow RadQuest to add me to the marketing newsletter'
-      connectAccount: 'Connect Account'
     }
     TransferTokens: {
       requirements: {
