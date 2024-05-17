@@ -30,7 +30,7 @@ export const UserModel = (db: PrismaClient) => (logger: AppLogger) => {
         db.completedQuestRequirement.create({
           data: {
             userId: userId,
-            questId: 'FirstTransactionQuest',
+            questId: 'LoginWithWallet',
             requirementId: 'ConnectAccount'
           }
         })
