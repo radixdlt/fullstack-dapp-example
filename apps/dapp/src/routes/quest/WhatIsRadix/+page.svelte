@@ -101,7 +101,7 @@
       props: {
         rewards: data.rewards,
         text: data.text['claim.md'],
-        nextButtonText: $i18n.t('quests:continueButton'),
+        nextButtonText: $i18n.t('quests:claimButton'),
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next()
       }
