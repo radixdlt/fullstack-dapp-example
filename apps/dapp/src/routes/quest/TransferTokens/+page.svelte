@@ -87,7 +87,7 @@
     {#if isMobile()}
       {@html data.text['sendToJetty-1-mobile.md']}
       <div class="copy-address">
-        <CopyTextBox text={shortenAddress(jettyAddress)} />
+        <CopyTextBox text={shortenAddress(jettyAddress)} value={jettyAddress} />
       </div>
     {:else}
       {@html data.text['sendToJetty-1-desktop.md']}
