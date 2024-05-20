@@ -1,7 +1,7 @@
 import { TokenPriceClient } from './../token-price-client'
-import { ResultAsync, okAsync, errAsync } from 'neverthrow'
+import { ResultAsync, okAsync, errAsync, err, ok } from 'neverthrow'
 import { EventJob, Job, TransactionQueue } from 'queues'
-import { QuestDefinitions, Quests } from 'content'
+import { EventId, QuestDefinitions, QuestId, Quests } from 'content'
 import {
   AppLogger,
   EventModel,
@@ -12,7 +12,7 @@ import {
 } from 'common'
 import { NotificationApi, NotificationType } from 'common'
 import { config } from '../config'
-import { EventError, PrismaClient } from 'database'
+import { AuditType, EventError, PrismaClient } from 'database'
 import { getUserIdFromDepositUserBadgeEvent } from './helpers/getUserIdFromDepositUserBadgeEvent'
 import { getDataFromQuestRewardsEvent } from './helpers/getDataFromQuestRewardsEvent'
 import { getAmountFromDepositEvent } from './helpers/getAmountFromDepositEvent'
@@ -20,10 +20,10 @@ import BigNumber from 'bignumber.js'
 import { sumOfXrdRewards } from './helpers/sumOfXrdRewards'
 import { databaseTransactions } from './helpers/databaseTransactions'
 import { getFirstTransactionAuditResources } from './helpers/getFirstTransactionAuditResources'
-import { getAmountFromWithdrawEvent } from './helpers/getAmountFromWithdrawEvent'
 import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent'
 import { getBadgeAddressAndIdFromCombineElementsDepositedEvent } from './helpers/getBadgeAddressAndIdFromCombineElementsDepositedEvent'
 import { randomUUID } from 'crypto'
+import { DbTransactionBuilder } from './helpers/dbTransactionBuilder'
 
 const transformUserIdIntoBadgeId = (userId: string) => ({
   badgeId: `<${userId}>`,
@@ -64,7 +64,7 @@ export const EventWorkerController = ({
       method: 'eventWorker.handler'
     })
 
-    const db = databaseTransactions({ dbClient, logger: childLogger, transactionId })
+    const dbTransactions = databaseTransactions({ dbClient, logger: childLogger, transactionId })
 
     const ensureUserExists = (userId: string, transactionId: string) =>
       userModel(childLogger)
@@ -111,7 +111,7 @@ export const EventWorkerController = ({
           tokenPriceClient
             .getXrdPrice()
             .andThen((xrdPrice) =>
-              db.rewardsDeposited({
+              dbTransactions.rewardsDeposited({
                 userId,
                 questId,
                 xrdUsdValue: xrdPrice.multipliedBy(sumOfXrdRewards(resources)).toNumber(),
@@ -134,7 +134,7 @@ export const EventWorkerController = ({
         getDataFromQuestRewardsEvent(job.data.relevantEvents.RewardClaimedEvent)
       ).andThen(({ userId, questId }) =>
         ensureUserExists(userId, transactionId).andThen(() =>
-          db.rewardsClaimed({ userId, questId }).andThen(() =>
+          dbTransactions.rewardsClaimed({ userId, questId }).andThen(() =>
             notificationApi.send(userId, {
               type: 'QuestRewardsClaimed',
               questId,
@@ -144,188 +144,155 @@ export const EventWorkerController = ({
         )
       )
 
-    const handleUserBadgeDeposited = () => {
-      const questId = 'FirstTransactionQuest'
-      const userId = getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited)
-      const xrdAmount = getAmountFromDepositEvent(job.data.relevantEvents.XrdDeposited)
-
-      logger.debug({
-        method: 'EventWorkerController.handleUserBadgeDeposited',
-        questId,
-        userId,
-        xrdAmount
-      })
-
-      return ensureValidData(transactionId, { userId, xrdAmount })
-        .map(({ userId, xrdAmount }) => ({ userId, xrdAmount: BigNumber(xrdAmount) }))
-        .andThen(({ userId, xrdAmount }) => {
-          const { badgeId, badgeResourceAddress } = transformUserIdIntoBadgeId(userId)
-          return ensureUserExists(userId, transactionId)
-            .andThen(() => tokenPriceClient.getXrdPrice())
-            .andThen((xrdPrice) =>
-              db
-                .userBadgeDeposited({
-                  userId,
-                  questId,
-                  xrdUsdValue: xrdAmount.multipliedBy(xrdPrice).toNumber(),
-                  resources: getFirstTransactionAuditResources(xrdAmount, userId)
-                })
-                .andThen(() =>
-                  ResultAsync.combine([
-                    hasAllRequirementsCompleted(questId, userId).andThen((hasAll) =>
-                      hasAll
-                        ? transactionModel(childLogger)
-                            .add({
-                              badgeId,
-                              badgeResourceAddress,
-                              transactionKey: `${questId}:DepositReward`,
-                              attempt: 0
-                            })
-                            .andThen(() =>
-                              transactionQueue.add({
-                                type: 'DepositReward',
-                                badgeId,
-                                badgeResourceAddress,
-                                questId,
-                                attempt: 0,
-                                transactionKey: `${questId}:DepositReward`,
-                                traceId
-                              })
-                            )
-                        : okAsync('')
-                    ),
-                    notificationApi.send(userId, {
-                      type: NotificationType.QuestRequirementCompleted,
-                      questId: questId,
-                      requirementId: 'DepositUserBadge',
-                      traceId
-                    })
-                  ])
-                )
-            )
-        })
-    }
-
-    const handleJettyReceivedClams = async () => {
-      const questId = 'TransferTokens'
-      const userId = await getUserIdFromWithdrawEvent(
-        job.data.relevantEvents.WithdrawEvent,
-        dbClient
-      )
-
-      const amount = getAmountFromWithdrawEvent(
-        job.data.relevantEvents.WithdrawEvent,
-        config.radQuest.resources.clamAddress
-      )
-
-      return ensureValidData(transactionId, { userId })
-        .map(({ userId }) => ({ userId }))
-        .andThen(({ userId }) => {
-          const { badgeId, badgeResourceAddress } = transformUserIdIntoBadgeId(userId)
-          return ensureUserExists(userId, transactionId).andThen(({ id }) =>
-            db
-              .jettyReceivedClams({
-                userId: id,
-                amount: parseInt(amount)
-              })
-              .andThen(() =>
-                ResultAsync.combine([
-                  hasAllRequirementsCompleted(questId, userId).andThen((hasAll) =>
-                    hasAll
-                      ? transactionModel(childLogger)
-                          .add({
-                            badgeId,
-                            badgeResourceAddress,
-                            transactionKey: `${questId}:DepositReward`,
-                            attempt: 0
-                          })
-                          .andThen(() =>
-                            transactionQueue.add({
-                              type: 'DepositReward',
-                              badgeId,
-                              badgeResourceAddress,
-                              questId,
-                              attempt: 0,
-                              transactionKey: `${questId}:DepositReward`,
-                              traceId
-                            })
-                          )
-                      : okAsync('')
-                  ),
-                  notificationApi.send(userId, {
-                    type: NotificationType.QuestRequirementCompleted,
-                    questId: questId,
-                    requirementId: 'JettyReceivedClams',
-                    traceId
-                  })
-                ])
-              )
-          )
-        })
-    }
-
-    const handleXrdStaked = async () => {
-      const questId = 'StakingQuest'
-      const accountAddress = (job.data.relevantEvents['WithdrawEvent'].emitter as any).entity
-        .entity_address
-      const result = await accountAddressModel.getTrackedAddressUserId(accountAddress, questId)
-
-      if (result.isErr()) {
-        childLogger.error({
-          transactionId,
-          message: 'Failed to get tracked address user id',
+    const questRequirementCompletedDbTransaction = ({
+      questId,
+      requirementId,
+      userId
+    }: {
+      userId: string
+      questId: QuestId
+      requirementId: EventId
+    }) =>
+      DbTransactionBuilder({ dbClient }).add(
+        dbClient.completedQuestRequirement.create({
           data: {
-            accountAddress,
+            userId,
             questId,
-            error: result.error
+            requirementId
+          }
+        }),
+        dbClient.notification.create({
+          data: {
+            userId,
+            data: {
+              type: 'QuestRequirementCompleted',
+              questId,
+              requirementId
+            }
+          }
+        }),
+        dbClient.event.update({
+          where: {
+            transactionId
+          },
+          data: {
+            questId,
+            userId
           }
         })
+      )
 
-        return eventModel(childLogger)
-          .update(transactionId, {
-            error: EventError.ERROR_INVALID_DATA
-          })
-          .andThen(() => errAsync(''))
-      }
-
-      return ensureValidData<{ userId: string | null }, { userId: string }>(transactionId, {
-        userId: result.value
-      }).andThen(({ userId }) => {
-        const { badgeId, badgeResourceAddress } = transformUserIdIntoBadgeId(userId)
-        return db.xrdStaked({ userId }).andThen(() =>
-          hasAllRequirementsCompleted(questId, userId).andThen((has) =>
-            ResultAsync.combine([
-              has
-                ? transactionModel(childLogger)
-                    .add({
-                      badgeId,
-                      badgeResourceAddress,
-                      transactionKey: `${questId}:DepositReward`,
-                      attempt: 0
-                    })
-                    .andThen(() =>
-                      transactionQueue.add({
-                        type: 'DepositReward',
-                        badgeId,
-                        badgeResourceAddress,
-                        questId,
-                        attempt: 0,
-                        transactionKey: `${questId}:DepositReward`,
-                        traceId
-                      })
-                    )
-                : okAsync(''),
-              notificationApi.send(userId, {
-                type: NotificationType.QuestRequirementCompleted,
-                questId,
-                requirementId: 'StakedXrd',
-                traceId
-              }),
-              accountAddressModel.deleteTrackedAddress(accountAddress, 'StakingQuest')
-            ])
-          )
-        )
+    const handleQuestRequirementCompleted = ({
+      questId,
+      requirementId,
+      userId
+    }: {
+      questId: QuestId
+      requirementId: EventId
+      userId: string | undefined
+    }) => {
+      childLogger.debug({
+        method: `EventWorkerController.handleQuestRequirementCompleted`,
+        questId,
+        userId
       })
+      return (userId ? ok(userId) : err({ reason: 'userIdNotFoundError' })).map((userId) => ({
+        builder: questRequirementCompletedDbTransaction({ questId, requirementId, userId }),
+        questId,
+        requirementId,
+        userId
+      }))
+    }
+
+    const addXrdToAuditTable = ({
+      builder,
+      userId
+    }: {
+      builder: DbTransactionBuilder
+      userId: string
+    }) =>
+      getXrdPrice(getAmountFromDepositEvent(job.data.relevantEvents.XrdDeposited)).andThen(
+        ({ xrdUsdValue, xrdAmount }) =>
+          builder
+            .add(
+              dbClient.audit.create({
+                data: {
+                  transactionId,
+                  userId,
+                  type: AuditType.DIRECT_DEPOSIT,
+                  xrdUsdValue,
+                  metadata: JSON.stringify({
+                    resources: getFirstTransactionAuditResources(xrdAmount, userId)
+                  })
+                }
+              })
+            )
+            .exec()
+      )
+
+    const handleAllQuestRequirementCompleted = ({
+      questId,
+      requirementId,
+      userId
+    }: {
+      questId: QuestId
+      requirementId: EventId
+      userId: string
+    }) => {
+      const { badgeId, badgeResourceAddress } = transformUserIdIntoBadgeId(userId)
+      return ResultAsync.combine([
+        hasAllRequirementsCompleted(questId, userId).andThen((hasAll) =>
+          hasAll
+            ? transactionModel(childLogger)
+                .add({
+                  badgeId,
+                  badgeResourceAddress,
+                  transactionKey: `${questId}:DepositReward`,
+                  attempt: 0
+                })
+                .andThen(() =>
+                  transactionQueue.add({
+                    type: 'DepositReward',
+                    badgeId,
+                    badgeResourceAddress,
+                    questId,
+                    attempt: 0,
+                    transactionKey: `${questId}:DepositReward`,
+                    traceId
+                  })
+                )
+            : okAsync('')
+        ),
+        notificationApi.send(userId, {
+          type: NotificationType.QuestRequirementCompleted,
+          questId,
+          requirementId,
+          traceId
+        })
+      ]).map(() => {
+        childLogger.debug({
+          method: `EventWorkerController.handleAllQuestRequirementCompleted.success`,
+          questId,
+          requirementId,
+          userId
+        })
+      })
+    }
+
+    const getXrdPrice = (
+      value: string | undefined
+    ): ResultAsync<{ xrdUsdValue: number; xrdAmount: BigNumber }, { reason: string }> => {
+      const result = value ? ok(BigNumber(value)) : err({ reason: 'xrdAmountNotFound' })
+
+      return result.asyncAndThen((xrdAmount) =>
+        tokenPriceClient
+          .getXrdPrice()
+          .mapErr(() => ({ reason: 'CouldNotGetXrdCurrentPriceError' }))
+          .map((xrdPrice) => ({
+            xrdUsdValue: xrdAmount.multipliedBy(xrdPrice).toNumber(),
+            xrdAmount
+          }))
+      )
     }
 
     const handelCombineElementsDepositedEvent = async () => {
@@ -370,14 +337,52 @@ export const EventWorkerController = ({
         return handleRewardDeposited()
       case 'QuestRewardClaimed':
         return handleRewardClaimed()
-      case 'UserBadge':
-        return handleUserBadgeDeposited()
-      case 'JettyReceivedClams':
-        return handleJettyReceivedClams()
-      case 'XrdStaked':
-        return handleXrdStaked()
       case 'CombineElementsDeposited':
         return handelCombineElementsDepositedEvent()
+      case 'UserBadge': {
+        return handleQuestRequirementCompleted({
+          questId: 'FirstTransactionQuest',
+          requirementId: 'DepositUserBadge',
+          userId: getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited)
+        }).asyncAndThen((dependencies) =>
+          ensureUserExists(dependencies.userId, transactionId)
+            .andThen(() => addXrdToAuditTable(dependencies))
+            .andThen(() => handleAllQuestRequirementCompleted(dependencies))
+        )
+      }
+      case 'JettyReceivedClams': {
+        return getUserIdFromWithdrawEvent(job.data.relevantEvents.WithdrawEvent, dbClient).andThen(
+          (userId) =>
+            handleQuestRequirementCompleted({
+              questId: 'TransferTokens',
+              requirementId: 'JettyReceivedClams',
+              userId
+            }).asyncAndThen((dependencies) => handleAllQuestRequirementCompleted(dependencies))
+        )
+      }
+      case 'XrdStaked': {
+        const maybeAccountAddress: string | undefined = (
+          job.data.relevantEvents['WithdrawEvent'].emitter as any
+        ).entity.entity_address
+
+        const accountAddressResult = maybeAccountAddress
+          ? ok(maybeAccountAddress)
+          : err({ reason: 'AccountAddressNotFound' })
+
+        return accountAddressResult.asyncAndThen((accountAddress) =>
+          accountAddressModel
+            .getTrackedAddressUserId(accountAddress, 'StakingQuest')
+            .andThen((userId) => (userId ? ok(userId) : err({ reason: 'UserIdNotFound' })))
+            .andThen((userId) =>
+              handleQuestRequirementCompleted({
+                questId: 'StakingQuest',
+                requirementId: 'JettyReceivedClams',
+                userId
+              }).asyncAndThen((dependencies) => handleAllQuestRequirementCompleted(dependencies))
+            )
+            .andThen(() => accountAddressModel.deleteTrackedAddress(accountAddress, 'StakingQuest'))
+        )
+      }
       default:
         childLogger.error({
           message: 'Unhandled Event'
