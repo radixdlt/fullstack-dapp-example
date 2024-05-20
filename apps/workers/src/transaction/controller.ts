@@ -170,16 +170,11 @@ export const TransactionWorkerController = ({
         )
 
       case 'CombinedElementsMintRadgem':
-        // TODO: replace with more random numbers
-        const colorSeedNum = Math.random()
-        const materialSeedNum = Math.random()
         return handleSubmitTransaction((wellKnownAddresses) =>
           createCombinedElementsMintRadgemManifest({
             wellKnownAddresses,
             badgeResourceAddress: job.data.badgeResourceAddress,
-            badgeId: job.data.badgeId,
-            colorSeedNum,
-            materialSeedNum
+            badgeId: job.data.badgeId
           })
         )
 
