@@ -22,7 +22,7 @@ import { databaseTransactions } from './helpers/databaseTransactions'
 import { getFirstTransactionAuditResources } from './helpers/getFirstTransactionAuditResources'
 import { getAmountFromWithdrawEvent } from './helpers/getAmountFromWithdrawEvent'
 import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent'
-import { getBadgeAddressAndIdFromElementsCombineDepositedEvent } from './helpers/getBadgeAddressAndIdFromElementsCombineDepositedEvent'
+import { getBadgeAddressAndIdFromCombineElementsDepositedEvent } from './helpers/getBadgeAddressAndIdFromCombineElementsDepositedEvent'
 import { randomUUID } from 'crypto'
 
 const transformUserIdIntoBadgeId = (userId: string) => ({
@@ -335,7 +335,7 @@ export const EventWorkerController = ({
       }: {
         badgeResourceAddress?: string
         badgeId?: string
-      } = getBadgeAddressAndIdFromElementsCombineDepositedEvent(
+      } = getBadgeAddressAndIdFromCombineElementsDepositedEvent(
         job.data.relevantEvents.DepositedEvent
       )
 

@@ -82,15 +82,15 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
     WithdrawEvent: resourceWithdrawn(config.radQuest.xrd)
   },
   CombineElementsDeposited: {
-    DepositedEvent: refineryEmitted('ElementsCombineDepositedEvent')
+    DepositedEvent: refineryEmitted('CombineElementsDepositedEvent')
   },
   CombineElementsMintedRadgem: {
-    MintedRadgem: refineryEmitted('ElementsCombineProcessed1Event')
+    MintedRadgem: refineryEmitted('CombineElementsMintedRadgemEvent')
   },
   CombineElementsAddedRadgemImage: {
-    AddedRadgemImage: refineryEmitted('ElementsCombineProcessed2Event')
+    AddedRadgemImage: refineryEmitted('CombineElementsAddedRadgemImageEvent')
   },
   CombineElementsClaimed: {
-    ClaimedEvent: refineryEmitted('ElementsCombineClaimedEvent')
+    ClaimedEvent: refineryEmitted('CombineElementsClaimedEvent')
   }
 })
