@@ -73,10 +73,11 @@ export const QuestDefinitions = () => {
       requirements: {
         Introduction: {
           type: 'content'
-        },
-        Glossary: {
-          type: 'content'
         }
+        // TODO: convert to offLedger requirement or support multiple content requirements
+        // Glossary: {
+        //   type: 'content'
+        // }
       }
     },
     WhatIsRadix: {
