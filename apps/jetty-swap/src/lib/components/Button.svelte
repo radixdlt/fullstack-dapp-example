@@ -1,22 +1,21 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher } from 'svelte'
 
-  export let href: string | undefined = undefined;
-  export let disabled = false;
-  export let loading = false;
+  export let href: string | undefined = undefined
+  export let disabled = false
+  export let loading = false
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher()
 
   const handelClick = (event: Event) => {
-    dispatch("click", event);
-  };
+    dispatch('click', event)
+  }
 </script>
 
 {#if href}
   <a class:loading class:disabled {href}><slot /></a>
 {:else}
-  <button class:loading class:disabled {disabled} on:click={handelClick}
-    ><slot /></button>
+  <button class:loading class:disabled {disabled} on:click={handelClick}><slot /></button>
 {/if}
 
 <style>
@@ -52,7 +51,7 @@
   }
   .loading::after {
     position: absolute;
-    content: "";
+    content: '';
     width: 1rem;
     height: 1rem;
     border: 0.2rem solid var(--grey-6);

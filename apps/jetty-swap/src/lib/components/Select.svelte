@@ -1,41 +1,41 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher } from 'svelte'
 
   interface Option {
-    label: string;
-    value: string;
-    style?: string;
+    label: string
+    value: string
+    style?: string
   }
 
-  export let label: string;
-  export let options: Option[] = [];
-  export let disabled = false;
+  export let label: string
+  export let options: Option[] = []
+  export let disabled = false
 
-  let active = false;
+  let active = false
   let selected: { value: string; label: string; style?: string } = {
     label,
-    value: "",
-  };
+    value: ''
+  }
   // if label changes or options changes to empty, reset selected
   $: if (label || !options[0]) {
     selected = {
       label: label,
-      value: "",
-      style: "",
-    };
+      value: '',
+      style: ''
+    }
   }
 
   const handleClick = () => {
-    active = !active;
-  };
+    active = !active
+  }
 
   // add a select event to select and options
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher()
   const handleOptionClick = (option: Option) => {
-    selected = option;
-    dispatch("select", selected.value);
-    active = false;
-  };
+    selected = option
+    dispatch('select', selected.value)
+    active = false
+  }
 </script>
 
 <div class="select">
@@ -48,9 +48,10 @@
     aria-expanded={active}
     aria-controls="dropdown"
     style={selected.style}
-    {disabled}>
+    {disabled}
+  >
     <span class="selected-value">{selected.label}</span>
-    <span class="arrow" style={active ? "transform: rotate(180deg)" : ""} />
+    <span class="arrow" style={active ? 'transform: rotate(180deg)' : ''} />
   </button>
   <ul class="dropdown {active ? 'active' : ''}" role="listbox">
     {#each options as option}
@@ -60,8 +61,9 @@
         style={option.style}
         on:click={() => handleOptionClick(option)}
         on:keypress={(e) => {
-          if (e.key === "Enter") handleOptionClick(option);
-        }}>
+          if (e.key === 'Enter') handleOptionClick(option)
+        }}
+      >
         <label for="${option.label}">
           {option.label}
         </label>
@@ -69,7 +71,8 @@
           type="radio"
           name={option.label}
           value="${option.value}"
-          checked={selected.value === option.value} />
+          checked={selected.value === option.value}
+        />
       </li>
     {/each}
   </ul>
@@ -179,7 +182,7 @@
     border-radius: 25px;
   }
 
-  .dropdown input[type="radio"] {
+  .dropdown input[type='radio'] {
     margin: 1rem;
     cursor: pointer;
   }
