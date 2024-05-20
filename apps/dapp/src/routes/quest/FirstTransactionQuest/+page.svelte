@@ -7,13 +7,7 @@
   import VerifyPhoneNumber from './VerifyPhoneNumber.svelte'
   import { ErrorReason } from '$lib/errors'
   import type { PageData } from './$types'
-  import EnterEmail from './EnterEmail.svelte'
-  import { rdt } from '$lib/rdt'
-  import { OneTimeDataRequestBuilder, SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
-  import { userApi } from '$lib/api/user-api'
-  import { user } from '../../../stores'
   import { readable, writable } from 'svelte/store'
-  import Button from '$lib/components/button/Button.svelte'
   import TextJettyPage from '../TextJettyPage.svelte'
 
   export let data: PageData
@@ -35,15 +29,13 @@
   }
 
   const verifyPhoneNumber = writable(data.requirements.VerifyPhoneNumber)
-  const connectAccountReq = writable(data.requirements.ConnectAccount)
+
   const depositUserBadge = writable(data.requirements.DepositUserBadge)
 
   let otpError: keyof typeof errors | undefined
   let verifyOtpError = false
 
   $: phoneNumberError = otpError ? errors[otpError] : undefined
-
-  let waitingOnAccount = false
 
   let sendingOTP = false
 
@@ -60,35 +52,6 @@
     quest.actions.next()
   }
 
-  const connectAccount = () => {
-    waitingOnAccount = true
-    rdt.then((rdt) => {
-      rdt.walletApi
-        .sendOneTimeRequest(OneTimeDataRequestBuilder.accounts().exactly(1).withProof())
-        .map(async ({ accounts, proofs }) => {
-          waitingOnAccount = false
-          const accountProof = proofs.find(
-            (proof) => proof.type === 'account'
-          )! as SignedChallengeAccount
-
-          const result = await userApi.setUserField({
-            accountAddress: accounts[0].address,
-            proof: accountProof,
-            field: 'accountAddress'
-          })
-
-          if (result.isOk()) {
-            $user!.accountAddress = accounts[0].address
-            $connectAccountReq = true
-            quest.actions.next()
-          }
-        })
-        .mapErr(() => {
-          waitingOnAccount = false
-        })
-    })
-  }
-
   export const verifyOneTimePassword = () => {
     otpApi
       .verifyOneTimePassword(phoneNumber, oneTimePassword.join(''))
@@ -98,9 +61,6 @@
       })
       .mapErr(() => (verifyOtpError = true))
   }
-
-  let email: string
-  let sendNewsletter = false
 </script>
 
 <Quest
@@ -110,23 +70,31 @@
   let:next
   steps={[
     {
-      id: 'intro1',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: data.text['0.md']
-      }
-    },
-    {
-      id: 'intro2',
+      id: '1',
       type: 'jetty',
       component: TextJettyPage,
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
         text: data.text['1.md']
+      }
+    },
+    {
+      id: '2',
+      type: 'regular'
+    },
+    {
+      id: '3',
+      type: 'regular'
+    },
+    {
+      id: '4',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['4.md']
       }
     },
     {
@@ -150,13 +118,27 @@
       }
     },
     {
-      id: 'connectAccount',
-      type: 'regular',
-      skip: connectAccountReq,
-      footer: {
-        next: {
-          enabled: connectAccountReq
-        }
+      id: '7a',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['7a.md']
+      }
+    },
+    {
+      id: '7b',
+      type: 'regular'
+    },
+    {
+      id: '7c',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['7c.md']
       }
     },
     {
@@ -169,9 +151,54 @@
         }
       }
     },
+
     {
-      id: 'email',
+      id: '9',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['9.md']
+      }
+    },
+    {
+      id: '10',
       type: 'regular'
+    },
+    {
+      id: '11',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['11.md']
+      }
+    },
+    {
+      id: '12',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['12.md']
+      }
+    },
+    {
+      id: '13',
+      type: 'regular'
+    },
+    {
+      id: '14',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['14.md']
+      }
     },
     {
       type: 'requirements'
@@ -185,7 +212,16 @@
   ]}
   let:render
 >
+  {#if render('2')}
+    {@html data.text['2.md']}
+  {/if}
+
+  {#if render('3')}
+    {@html data.text['3.md']}
+  {/if}
+
   {#if render('verifyPhoneNumber')}
+    {@html data.text['5.md']}
     <VerifyPhoneNumber
       bind:phoneNumber
       on:next={next}
@@ -196,6 +232,7 @@
   {/if}
 
   {#if render('verifyOtp')}
+    {@html data.text['6.md']}
     <VerifyOtp
       bind:phoneNumber
       bind:oneTimePassword
@@ -205,16 +242,13 @@
     />
   {/if}
 
-  {#if render('connectAccount')}
-    {@html data.text['connectAccount.md']}
-
-    <Button on:click={connectAccount} loading={waitingOnAccount}
-      >{$i18n.t('quests:FirstTransactionQuest.connectAccount')}
-    </Button>
+  {#if render('7b')}
+    {@html data.text['7b.md']}
   {/if}
 
   {#if render('depositUserBadge')}
-    {@html data.text['userBadge.md']}
+    {@html data.text['8a.md']}
+    <!-- TODO: use 8b.md conditionally -->
     <DepositUserBadge
       on:deposited={() => {
         $depositUserBadge = true
@@ -224,9 +258,11 @@
     />
   {/if}
 
-  {#if render('email')}
-    {@html data.text['email.md']}
+  {#if render('10')}
+    {@html data.text['10.md']}
+  {/if}
 
-    <EnterEmail bind:email bind:checked={sendNewsletter} />
+  {#if render('13')}
+    {@html data.text['13.md']}
   {/if}
 </Quest>

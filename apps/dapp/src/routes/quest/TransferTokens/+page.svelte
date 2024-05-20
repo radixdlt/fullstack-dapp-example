@@ -41,27 +41,65 @@
   bind:this={quest}
   steps={[
     {
-      id: 'text1',
-      type: 'regular'
-    },
-    {
-      id: 'text2',
+      id: '1a',
       type: 'jetty',
       component: TextJettyPage,
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['1.md']
+        text: data.text['1a.md']
       }
     },
     {
-      id: 'text3',
-      type: 'regular',
-      skip: receivedClams,
-      footer: {
-        next: {
-          enabled: receivedClams
-        }
+      id: '1b',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['1b.md']
+      }
+    },
+    {
+      id: '2',
+      type: 'regular'
+      // skip: receivedClams,
+      // footer: {
+      //   next: {
+      //     enabled: receivedClams
+      //   }
+      // }
+    },
+    {
+      id: '3',
+      type: 'regular'
+    },
+    {
+      id: '4',
+      type: 'regular'
+    },
+    {
+      id: '5',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['5.md']
+      }
+    },
+    {
+      id: '6',
+      type: 'regular'
+    },
+    {
+      id: '8',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: data.text['8.md']
       }
     },
     {
@@ -76,27 +114,32 @@
   ]}
   let:render
 >
-  {#if render('text1')}
-    {@html data.text['0.md']}
+  {#if render('2')}
+    {@html data.text['2.md']}
   {/if}
 
-  {#if render('text3')}
+  {#if render('3')}
+    {@html data.text['3.md']}
+  {/if}
+
+  {#if render('4')}
+    {@html data.text['4.md']}
+  {/if}
+
+  {#if render('6')}
     {@const jettyAddress = Addresses(parseInt(PUBLIC_NETWORK_ID)).accounts.jetty}
 
-    {@html data.text['sendToJetty-header.md']}
     {#if isMobile()}
-      {@html data.text['sendToJetty-1-mobile.md']}
+      {@html data.text['7.md']}
       <div class="copy-address">
         <CopyTextBox text={shortenAddress(jettyAddress)} value={jettyAddress} />
       </div>
     {:else}
-      {@html data.text['sendToJetty-1-desktop.md']}
+      {@html data.text['6.md']}
       <div class="qr-code">
         <QR data={jettyAddress} />
       </div>
     {/if}
-
-    {@html data.text['sendToJetty-2.md']}
   {/if}
 </Quest>
 

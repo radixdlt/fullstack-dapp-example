@@ -73,6 +73,9 @@ export const QuestDefinitions = () => {
       requirements: {
         Introduction: {
           type: 'content'
+        },
+        Glossary: {
+          type: 'content'
         }
       }
     },
@@ -112,6 +115,9 @@ export const QuestDefinitions = () => {
       requirements: {
         ConnectWallet: {
           type: 'offLedger'
+        },
+        ConnectAccount: {
+          type: 'offLedger'
         }
       }
     },
@@ -133,9 +139,6 @@ export const QuestDefinitions = () => {
       minutesToComplete: 3,
       requirements: {
         VerifyPhoneNumber: {
-          type: 'offLedger'
-        },
-        ConnectAccount: {
           type: 'offLedger'
         },
         [EventId.DepositUserBadge]: {

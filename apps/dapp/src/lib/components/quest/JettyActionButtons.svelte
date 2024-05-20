@@ -5,6 +5,7 @@
 
   export let backText: string = $i18n.t('quests:backButton')
   export let nextText: string = $i18n.t('quests:continueButton')
+  export let isNextDisabled: boolean = false
   export let loading = false
 
   const dispatch = createEventDispatcher<{ back: undefined; next: undefined }>()
@@ -12,7 +13,7 @@
 
 <div>
   <Button on:click={() => dispatch('back')}>{backText}</Button>
-  <Button {loading} on:click={() => dispatch('next')}>{nextText}</Button>
+  <Button disabled={isNextDisabled} {loading} on:click={() => dispatch('next')}>{nextText}</Button>
 </div>
 
 <style>

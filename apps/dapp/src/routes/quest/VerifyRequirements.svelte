@@ -49,19 +49,21 @@
   }
 
   const readRequirementsFromDb = () => {
-    questApi.getQuestInformation(questId).map((response) => {
-      requirementsStatus = requirementsStatus.map((requirement) => {
-        if (response.requirements[requirement.id]) {
-          return {
-            ...requirement,
-            complete: true
+    questApi
+      .getQuestInformation(questId)
+      .map((response) => {
+        requirementsStatus = requirementsStatus.map((requirement) => {
+          if (response.requirements[requirement.id]) {
+            return {
+              ...requirement,
+              complete: true
+            }
+          } else {
+            return requirement
           }
-        } else {
-          return requirement
-        }
+        })
       })
-    })
-    checkRequirements()
+      .map(() => checkRequirements())
   }
 
   onMount(() => {
