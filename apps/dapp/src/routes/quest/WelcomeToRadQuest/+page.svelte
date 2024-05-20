@@ -1,13 +1,54 @@
 <script lang="ts">
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
   import { i18n } from '$lib/i18n/i18n'
+  import { onMount } from 'svelte'
   import type { LayoutData } from '../$types'
   import Quest from '../Quest.svelte'
   import TextJettyPage from '../TextJettyPage.svelte'
+  import Error from '$lib/components/error/Error.svelte'
+  import { page } from '$app/stores'
+  import { writable } from 'svelte/store'
+  import { questApi } from '$lib/api/quest-api'
+  import { user } from '../../../stores'
+  import { useCookies, type RequirementCookieKey } from '$lib/utils/cookies'
 
   export let data: LayoutData
 
   let quest: Quest
+  let error: boolean
+
+  let radQuestGlossaryViewed = writable(data.requirements.Glossary)
+
+  const isRadQuestGlossary = (url: URL) =>
+    url.searchParams.has('glossaryAnchor') && url.searchParams.get('glossaryAnchor') === 'RadQuest'
+
+  const getGlossarySubscription = () => {
+    return !data.requirements.Glossary
+      ? page.subscribe(({ url }) => {
+          if (isRadQuestGlossary(url)) {
+            if ($user) {
+              questApi
+                .completeRequirement('WelcomeToRadQuest', 'Glossary')
+                .map(() => radQuestGlossaryViewed.set(true))
+                .mapErr(() => {
+                  error = true
+                })
+            } else {
+              useCookies('requirement-WelcomeToRadQuest-Glossary' as RequirementCookieKey).set(true)
+              radQuestGlossaryViewed.set(true)
+            }
+          }
+        })
+      : () => {}
+  }
+
+  onMount(() => {
+    const unsubscribe = getGlossarySubscription()
+
+    return () => {
+      unsubscribe()
+    }
+  })
 </script>
 
 <Quest
@@ -65,7 +106,12 @@
     },
     {
       id: '6',
-      type: 'regular'
+      type: 'regular',
+      footer: {
+        next: {
+          enabled: radQuestGlossaryViewed
+        }
+      }
     },
     {
       id: '7',
@@ -122,5 +168,10 @@
 
   {#if render('6')}
     {@html data.text['6.md']}
+  {/if}
+
+  {#if error}
+    <Error>{$i18n.t('quests:somethingWentWrong')}</Error>
+    <p>{error}</p>
   {/if}
 </Quest>

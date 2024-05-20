@@ -51,6 +51,12 @@ export const load: LayoutServerLoad = async ({ fetch, cookies }) => {
         status: 'IN_PROGRESS'
       }
     }
+
+    if (cookies.get('requirement-WelcomeToRadQuest-Glossary')) {
+      await questApi.completeRequirement('WelcomeToRadQuest', 'Glossary', fetch).map(() => {
+        cookies.delete('requirement-WelcomeToRadQuest-Glossary', { path: '/' })
+      })
+    }
   } else {
     for (const quest of Object.values(questDefinitions)) {
       const cachedStatus = cookies.get(`quest-status-${quest.id}`) as $Enums.QuestStatus | undefined

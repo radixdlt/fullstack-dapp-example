@@ -11,11 +11,17 @@ type PreLoggedInQuests = Extract<
   'WelcomeToRadQuest' | 'WhatIsRadix' | 'GetRadixWallet' | 'LoginWithWallet'
 >
 
+export type QuestStatusCookieKey = `quest-status-${QuestId}`
+
+export type RequirementCookieKey = `requirement-${PreLoggedInQuests}-${string}`
+
+export type SavedProgressCookieKey = `saved-progress-${QuestId}`
+
 export const useCookies = <
   T extends
-    | CookieEntry<`quest-status-${QuestId}`, $Enums.QuestStatus>
-    | CookieEntry<`requirement-${PreLoggedInQuests}-${string}`, boolean>
-    | CookieEntry<`saved-progress-${QuestId}`, number>,
+    | CookieEntry<QuestStatusCookieKey, $Enums.QuestStatus>
+    | CookieEntry<RequirementCookieKey, boolean>
+    | CookieEntry<SavedProgressCookieKey, number>,
   V extends T['key']
 >(
   item: V
