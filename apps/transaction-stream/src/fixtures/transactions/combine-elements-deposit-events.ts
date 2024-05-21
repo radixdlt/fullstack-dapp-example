@@ -119,7 +119,7 @@ export default [
           }
         },
         {
-          name: 'ElementsCombineDepositedEvent',
+          name: 'CombineElementsDepositedEvent',
           emitter: {
             type: 'Method',
             entity: {
@@ -132,7 +132,7 @@ export default [
           },
           data: {
             kind: 'Tuple',
-            type_name: 'ElementsCombineDepositedEvent',
+            type_name: 'CombineElementsDepositedEvent',
             fields: [
               {
                 kind: 'Tuple',

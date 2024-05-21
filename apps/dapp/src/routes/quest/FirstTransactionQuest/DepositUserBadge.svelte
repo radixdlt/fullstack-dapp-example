@@ -65,8 +65,8 @@
   onMount(() => {
     const unsubscribeWebSocket = $webSocketClient?.onMessage((event) => {
       if (
-        event.questId === questId &&
         event.type === 'QuestRequirementCompleted' &&
+        event.questId === questId &&
         event.requirementId === 'DepositUserBadge'
       ) {
         dispatch('deposited')
