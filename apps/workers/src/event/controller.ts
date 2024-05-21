@@ -275,7 +275,7 @@ export const EventWorkerController = ({
               .andThen(() => handleAllQuestRequirementCompleted(questValues))
           )
       }
-      case EventId.StakedXrd: {
+      case EventId.XrdStaked: {
         const maybeAccountAddress: string | undefined = (
           job.data.relevantEvents['WithdrawEvent'].emitter as any
         ).entity.entity_address
