@@ -196,7 +196,7 @@ export const EventWorkerController = ({
       })
     }
 
-    const handelCombineElementsDepositedEvent = async () => {
+    const handelCombineElementsDepositedEvent = () => {
       const {
         badgeResourceAddress,
         badgeId
