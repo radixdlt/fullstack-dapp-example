@@ -2,7 +2,7 @@ import type { QuestStatus } from 'database'
 import { type ControllerMethodContext } from '../_types'
 import { AccountAddressModel, UserModel, UserQuestModel, type AppLogger } from 'common'
 import { QuestDefinitions, type Quests } from 'content'
-import { ResultAsync, errAsync, okAsync } from 'neverthrow'
+import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import { dbClient } from '$lib/db'
 import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId, Requirement } from 'content'
@@ -113,6 +113,9 @@ const UserQuestController = ({
           return shouldTrackAccountAddress
             ? userModel(ctx.logger)
                 .getById(userId, {})
+                .andThen((user) =>
+                  user ? ok(user) : err(createApiError(ErrorReason.userNotFound, 404)())
+                )
                 .andThen(({ accountAddress }) => {
                   return getAccountAddressModel(ctx.logger).addTrackedAddress(
                     accountAddress as string,

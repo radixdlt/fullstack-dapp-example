@@ -1,4 +1,4 @@
-import { Language, QuestDefinitions, QuestId } from '..'
+import { Language, QuestDefinitions, type QuestId } from '..'
 import QuestIndex from './quest-index.json'
 
 export type Quests = {

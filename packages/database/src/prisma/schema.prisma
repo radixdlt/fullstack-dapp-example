@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-1.1.x", "debian-openssl-1.1.x"]
+  output   = "../src/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String          @id @default("")
+  identityAddress   String          @unique
+  accountAddress    String?         
+  name              String?         
+  
+  events                     Event[]
+  notifications              Notification[]
+  phoneNumber                UserPhoneNumber?
+  completedQuestRequirements CompletedQuestRequirement[]
+  savedProgress              SavedProgress?
+  auditLogs                  Audit[]
+  questProgress              QuestProgress[]
+}
+
+model UserPhoneNumber {
+  userId          String    @unique
+  phoneNumber     String    @id @unique
+  createdAt       DateTime  @default(now())
+
+  user            User      @relation(fields: [userId], references: [id])
+}
+
+model Challenge {
+  challenge         String          @id
+  createdAt         DateTime        @default(now())
+}
+
+model Event {
+  transactionId     String          @id
+  id                String
+  questId           String?
+  userId            String?
+  createdAt         DateTime        @default(now())
+  processedAt       DateTime?
+  error             EventError?
+
+  user              User?            @relation(fields: [userId], references: [id])
+}
+
+enum EventError {
+  ERROR_INVALID_DATA
+  ERROR_USER_NOT_FOUND
+  ERROR_UNHANDLED_EVENT
+}
+
+model Notification {
+  id                Int             @id @default(autoincrement()) 
+  userId            String
+  createdAt         DateTime        @default(now())
+  seenAt            DateTime?
+  data              Json
+
+  user              User            @relation(fields: [userId], references: [id])
+} 
+
+model CompletedQuestRequirement {
+  questId         String
+  userId          String
+  requirementId   String
+  createdAt       DateTime        @default(now())
+  
+  user            User            @relation(fields: [userId], references: [id])
+  
+  @@id([questId, userId, requirementId])
+}
+
+model QuestProgress {
+  questId           String
+  userId            String         
+  status            QuestStatus     @default(IN_PROGRESS)
+
+  user              User      @relation(fields: [userId], references: [id])
+
+  @@id([questId, userId])
+}
+
+model SavedProgress {
+  userId    String  @id
+  questId   String
+  progress  Int
+  user User @relation(fields: [userId], references: [id]) 
+}
+
+enum QuestStatus {
+  IN_PROGRESS
+  REWARDS_DEPOSITED
+  REWARDS_CLAIMED
+  COMPLETED
+}
+
+model Audit {
+  transactionId    String          @id 
+  userId           String  
+
+  date             DateTime        @default(now())
+  type             AuditType
+  metadata         Json 
+  xrdUsdValue      Decimal
+
+  user             User            @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+enum AuditType {
+  DIRECT_DEPOSIT
+  CLAIMBOX_DEPOSIT
+}
+
+model Transaction {
+  attempt                   Int                   @default(0)
+  transactionKey            String  
+  transactionId             String?
+  status                    TransactionStatus     @default(PENDING)
+  createdAt                 DateTime              @default(now())
+  error                     String?
+  badgeId                   String
+  badgeResourceAddress      String
+
+  @@id([transactionKey, badgeId, badgeResourceAddress, attempt])
+}
+
+enum TransactionStatus {
+  PENDING
+  ERROR_KYC_REQUIRED
+  ERROR_FAILED_TO_SUBMIT
+  ERROR_TIMEOUT
+  ERROR_UNKNOWN
+  COMPLETED
+  IN_PROGRESS
+}

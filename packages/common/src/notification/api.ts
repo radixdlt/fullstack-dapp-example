@@ -1,5 +1,5 @@
 import { fetchWrapper } from '../helpers/fetch-wrapper'
-import { AppLogger } from '../helpers/logger'
+import type { AppLogger } from '../helpers/logger'
 
 export const NotificationType = {
   QuestRequirementCompleted: 'QuestRequirementCompleted',

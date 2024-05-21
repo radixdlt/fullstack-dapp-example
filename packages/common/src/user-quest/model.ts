@@ -2,7 +2,7 @@ import { QuestStatus } from 'database'
 import type { PrismaClient } from 'database'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
-import { AppLogger } from '../helpers/logger'
+import type { AppLogger } from '../helpers/logger'
 
 export type UserQuestModel = ReturnType<typeof UserQuestModel>
 

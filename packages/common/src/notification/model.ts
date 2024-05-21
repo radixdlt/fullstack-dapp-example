@@ -1,7 +1,7 @@
 import { PrismaClient } from 'database'
 import { ResultAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
-import { AppLogger } from '../helpers'
+import type { AppLogger } from '../helpers'
 
 export type NotificationModel = ReturnType<typeof NotificationModel>
 

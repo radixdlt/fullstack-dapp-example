@@ -29,9 +29,10 @@ WORKDIR /app
 
 COPY --from=build /app/apps/ apps
 COPY --from=build /app/packages/ packages
+COPY --from=build /app/packages/database/src/ .
 COPY --from=build /app/node_modules node_modules
 
 RUN npm install pm2 -g && \
     pm2 install pm2-metrics
 
-CMD ["pm2-runtime","apps/workers/dist/index.mjs"]
+CMD ["pm2-runtime","apps/workers/dist/index.cjs"]

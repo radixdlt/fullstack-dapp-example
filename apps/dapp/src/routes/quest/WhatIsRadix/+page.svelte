@@ -5,8 +5,11 @@
   import type { PageData } from './$types'
   import TextJettyPage from '../TextJettyPage.svelte'
   import QuizJettyPage from '../QuizJettyPage.svelte'
+  import type { Quests } from 'content'
 
   export let data: PageData
+
+  const text = data.text as Quests['WhatIsRadix']['text']
 
   let quest: Quest
 </script>
@@ -23,7 +26,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['0.md']
+        text: text['0.md']
       }
     },
     {
@@ -33,7 +36,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['1.md']
+        text: text['1.md']
       }
     },
     {
@@ -51,7 +54,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['4.md']
+        text: text['4.md']
       }
     },
     {
@@ -69,7 +72,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['7.md']
+        text: text['7.md']
       }
     },
     {
@@ -79,21 +82,21 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['8.md'],
+        text: text['8.md'],
         quizRequirement: 'RadixQuiz',
         questId: 'WhatIsRadix',
         requirements: data.requirements,
         answers: [
           {
-            text: data.text['8a.md'],
+            text: text['8a.md'],
             correct: false
           },
           {
-            text: data.text['8b.md'],
+            text: text['8b.md'],
             correct: false
           },
           {
-            text: data.text['8c.md'],
+            text: text['8c.md'],
             correct: true
           }
         ]
@@ -106,21 +109,21 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['9.md'],
+        text: text['9.md'],
         quizRequirement: 'dAppQuiz',
         questId: 'WhatIsRadix',
         requirements: data.requirements,
         answers: [
           {
-            text: data.text['9a.md'],
+            text: text['9a.md'],
             correct: true
           },
           {
-            text: data.text['9b.md'],
+            text: text['9b.md'],
             correct: false
           },
           {
-            text: data.text['9c.md'],
+            text: text['9c.md'],
             correct: false
           }
         ]
@@ -135,7 +138,7 @@
       component: ClaimRewards,
       props: {
         rewards: data.rewards,
-        text: data.text['claim.md'],
+        text: text['claim.md'],
         nextButtonText: $i18n.t('quests:claimButton'),
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next()
@@ -148,18 +151,18 @@
   let:render
 >
   {#if render('2')}
-    {@html data.text['2.md']}
+    {@html text['2.md']}
   {/if}
 
   {#if render('3')}
-    {@html data.text['3.md']}
+    {@html text['3.md']}
   {/if}
 
   {#if render('5')}
-    {@html data.text['5.md']}
+    {@html text['5.md']}
   {/if}
 
   {#if render('6')}
-    {@html data.text['6.md']}
+    {@html text['6.md']}
   {/if}
 </Quest>
