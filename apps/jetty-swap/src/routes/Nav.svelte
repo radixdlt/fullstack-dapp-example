@@ -11,17 +11,19 @@
   </div>
 </nav>
 
-<style>
+<style lang="scss">
   nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 24px;
-    padding: 1rem 4rem;
+    width: 100vw;
+    padding: 1rem;
   }
-  @media (max-width: 768px) {
+  @include desktop {
     nav {
-      padding: 1rem;
+      position: absolute;
+      padding: 1rem 4rem;
     }
   }
 

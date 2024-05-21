@@ -32,7 +32,6 @@
   }
 
   .container {
-    width: 318px;
     height: 8.75rem;
     border-radius: var(--border-radius-xl);
     background: var(--color-white);
@@ -40,6 +39,12 @@
     flex-direction: column;
     gap: 0.4375rem;
     padding: var(--spacing-xl) 1.25rem;
+    max-width: 19.375rem;
+    min-width: 255px;
+
+    @include desktop {
+      width: 100%;
+    }
   }
 
   .card-title {

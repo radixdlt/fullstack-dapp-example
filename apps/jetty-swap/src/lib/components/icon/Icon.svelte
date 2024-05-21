@@ -4,9 +4,7 @@
   export let clickable = false
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<div class="icon" class:clickable on:click>
+<div class="icon" role="button" tabindex="0" on:keydown class:clickable on:click>
   <img class={size} src={url} alt="icon" />
   {#if $$slots['default']}
     <div class="text">

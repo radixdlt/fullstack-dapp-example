@@ -3,9 +3,10 @@
   export let loading = false
 
   export let variation: 'primary' | 'secondary' = 'primary'
+  export let width = 'fit-content'
 </script>
 
-<button on:click class:disabled class={variation} class:loading>
+<button style={`width: ${width}`} on:click class:disabled class={variation} class:loading>
   <div class:hide-content={loading}>
     <slot />
   </div>
@@ -25,8 +26,7 @@
     font-weight: var(--font-weight-bold);
     font-size: var(--text-xs);
     height: 2.5rem;
-    min-width: 7rem;
-    width: fit-content;
+    min-width: fit-content;
   }
 
   .primary {

@@ -10,59 +10,81 @@
   import ArrowIcon from '@images/arrow-down.svg'
   import Button from '$lib/components/button/Button.svelte'
   import { walletData } from '$lib/stores'
-  let amountFrom = 1
-  let amountTo = 2
-  let resourceFrom = 'Clam'
-  let resourceTo = 'Elements'
+  import { allowOnlyPositiveNumberInString } from '$lib/tools'
 
   const clamResource = { icon: Clam, name: 'Clam' }
   const elementResource = { icon: Element, name: 'Element' }
 
   let fromResource = clamResource
   let toResource = elementResource
+
+  let fromInput = ''
+  let toInput = ''
+  //todo placeholders for now
+  const conversionRateFrom = 1
+  const conversionRateTo = 2
+
+  $: fromInput = allowOnlyPositiveNumberInString(fromInput.toString())
+  $: toInput = allowOnlyPositiveNumberInString(toInput.toString())
+
+  const connected = !!$walletData?.accounts[0]
 </script>
 
-<section>
+<section class="swap-section">
   <div class="info-section">
-    <p class="radquest-info">{@html $i18n.t('main:radquest-info')}</p>
+    <div class="info-section-text">
+      <p class="radquest-info">{$i18n.t('main:radquest-info')}</p>
+      <p class="radquest-info">{$i18n.t('main:radquest-info-goods')}</p>
+    </div>
     <img src={Jetty} class="jetty-img" alt="jetty img" />
   </div>
   <div class="swap-card">
-    <div class="swap-card-header">
-      <h3 class="swap-card-title">{$i18n.t('main:swap-card-title')}</h3>
-      <div class="market-price">
-        <Icon --size="24px" url={MarketPrice} />
-        <div class="market-price-text">
-          {@html $i18n.t('main:marketplace-estimates', {
-            amountFrom,
-            amountTo,
-            resourceFrom,
-            resourceTo
-          })}
+    <div>
+      <div class="swap-card-header">
+        <h3 class="swap-card-title">{$i18n.t('main:swap-card-title')}</h3>
+        <div class="market-price">
+          <Icon --size="24px" url={MarketPrice} />
+          <div class="market-price-text">
+            <p class="market-price-estimate">
+              {@html $i18n.t('main:marketplace-estimates')}
+            </p>
+            <div>
+              {conversionRateFrom}
+              {fromResource.name} = {conversionRateTo}
+              {toResource.name}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="swap">
-      <TokenSwapInput cardTitle={$i18n.t('main:from')} resource={fromResource}></TokenSwapInput>
-      <div class="switch-button-wrapper">
-        <SwtichButton
-          onClick={() => {
-            fromResource = fromResource.name === clamResource.name ? elementResource : clamResource
-            toResource = toResource.name === clamResource.name ? elementResource : clamResource
-          }}
-        >
-          <Icon --size="20px" url={ArrowIcon} />
-        </SwtichButton>
+      <div class="swap">
+        <TokenSwapInput
+          bind:value={fromInput}
+          cardTitle={$i18n.t('main:from')}
+          resource={fromResource}
+        ></TokenSwapInput>
+        <div class="switch-button-wrapper">
+          <SwtichButton
+            onClick={() => {
+              fromResource =
+                fromResource.name === clamResource.name ? elementResource : clamResource
+              toResource = toResource.name === clamResource.name ? elementResource : clamResource
+            }}
+          >
+            <Icon --size="20px" url={ArrowIcon} />
+          </SwtichButton>
+        </div>
+        <TokenSwapInput bind:value={toInput} cardTitle={$i18n.t('main:to')} resource={toResource}
+        ></TokenSwapInput>
       </div>
-      <TokenSwapInput cardTitle={$i18n.t('main:to')} resource={toResource}></TokenSwapInput>
     </div>
-    <p class="guarantee-text">
-      {$i18n.t('main:guarantee-hint')}
-    </p>
+    <div class="guarantee-text">
+      <p>{$i18n.t('main:guarantee-hint')}</p>
+      <p>{$i18n.t('main:guarantee-hint-part-2')}</p>
+    </div>
     <div class="swap-button">
-      <Button>
+      <Button width="100%" disabled={!connected}>
         <p>
-          {$walletData?.accounts[0]
+          {connected
             ? $i18n.t('main:swap-button.swap')
             : $i18n.t('main:swap-button.connect-wallet')}
         </p>
@@ -71,7 +93,8 @@
   </div>
 </section>
 
-<style>
+<style lang="scss">
+  p,
   h3 {
     padding: 0;
     margin: 0;
@@ -79,7 +102,7 @@
 
   section {
     display: flex;
-    max-width: 768px;
+    max-width: 48rem;
     flex-direction: column;
     align-items: center;
     gap: 1.5rem;
@@ -88,14 +111,26 @@
   img {
     position: absolute;
     z-index: 0;
-    left: 0;
-    top: -30px;
+    left: -1.875rem;
+    top: -4.25rem;
+
+    @include mobile {
+      width: 12.5rem;
+      left: -1rem;
+      top: -3.2rem;
+    }
+  }
+
+  .swap-section {
+    @include desktop {
+      padding-top: 2rem;
+    }
   }
 
   .info-section {
     display: flex;
     color: black;
-    width: 324px;
+    width: 100%;
     position: relative;
     justify-content: end;
   }
@@ -104,17 +139,19 @@
     z-index: 1;
     background: var(--color-linen);
     border-radius: var(--border-radius-2xl);
-    height: 510px;
-    width: 342px;
-    padding: 18px 15px;
+    min-height: 33.125rem;
+    padding: 1.125rem 0.938rem;
     display: flex;
     flex-direction: column;
     flex: 1;
-  }
+    justify-content: space-between;
+    min-width: 17.625rem;
+    max-width: 21.375rem;
+    width: 80vw;
 
-  .swap-button {
-    & button {
-      width: 100%;
+    @include desktop {
+      margin-top: 1rem;
+      width: 21.375rem;
     }
   }
 
@@ -123,27 +160,35 @@
     flex-shrink: 1;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 15px;
+    padding-bottom: 1rem;
+
+    @include mobile {
+      flex-wrap: wrap;
+    }
   }
 
   .swap-card-title {
-    padding-left: 13px;
+    padding-left: 0.813rem;
   }
 
   .market-price {
-    gap: 6px;
+    gap: 0.375rem;
     display: flex;
     align-items: flex-start;
     justify-content: flex-end;
     font-weight: var(--font-weight-regular);
+
+    @media (max-width: 400px) {
+      text-align: right;
+      width: 100%;
+    }
   }
 
   .swap {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    width: 318px;
+    gap: 0.5rem;
   }
 
   .switch-button-wrapper {
@@ -153,8 +198,8 @@
     top: 0;
     bottom: 0;
     margin: auto;
-    width: 43px;
-    height: 43px;
+    width: 2.688rem;
+    height: 2.688rem;
   }
 
   .market-price-text {
@@ -163,6 +208,10 @@
     letter-spacing: 0.14px;
     color: var(--color-background-dark);
     text-align: right;
+  }
+
+  .market-price-estimate {
+    font-weight: var(--font-weight-bold);
   }
 
   .radquest-info {
@@ -175,12 +224,21 @@
     letter-spacing: 0.16px;
   }
 
+  .info-section-text {
+    margin-top: 1.25rem;
+  }
+
   .guarantee-text {
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     font-weight: var(--font-weight-regular);
     line-height: 18.23px;
     letter-spacing: 0.01em;
     text-align: center;
     color: var(--color-background-dark);
+    margin: 1.5rem 0rem;
+
+    @include desktop {
+      margin: 1.5rem 0.5rem;
+    }
   }
 </style>
