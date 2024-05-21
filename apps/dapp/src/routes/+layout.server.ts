@@ -52,11 +52,21 @@ export const load: LayoutServerLoad = async ({ fetch, cookies }) => {
       }
     }
 
-    if (cookies.get('requirement-WelcomeToRadQuest-Glossary')) {
-      await questApi.completeRequirement('WelcomeToRadQuest', 'Glossary', fetch).map(() => {
-        cookies.delete('requirement-WelcomeToRadQuest-Glossary', { path: '/' })
+    Promise.all(
+      [
+        'requirement-WelcomeToRadQuest-Glossary',
+        'requirement-WelcomeToRadQuest-RadQuestQuiz',
+        'requirement-WhatIsRadix-RadixQuiz',
+        'requirement-WhatIsRadix-dAppQuiz'
+      ].map((cookieName) => {
+        if (cookies.get(cookieName)) {
+          const [, questId, requirementId] = cookieName.split('-')
+          return questApi.completeRequirement(questId as QuestId, requirementId, fetch)
+        }
+
+        return Promise.resolve()
       })
-    }
+    )
   } else {
     for (const quest of Object.values(questDefinitions)) {
       const cachedStatus = cookies.get(`quest-status-${quest.id}`) as $Enums.QuestStatus | undefined

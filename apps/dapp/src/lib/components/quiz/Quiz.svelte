@@ -2,8 +2,7 @@
   import { createEventDispatcher } from 'svelte'
 
   export let answers: { text: string; correct: boolean }[] = []
-
-  let correctAnswerSelected = false
+  export let correctAnswerSelected = false
 
   const dispatch = createEventDispatcher<{ correctAnswer: boolean }>()
 
@@ -24,10 +23,11 @@
         type="checkbox"
         on:change={onChange}
         value={index}
+        checked={correctAnswerSelected && answer.correct}
         class:correct={answer.correct}
         class:incorrect={!answer.correct}
       />
-      <span>{answer.text}</span>
+      <span>{@html answer.text}</span>
     </label>
   {/each}
 </div>
@@ -51,6 +51,10 @@
     align-items: center;
     gap: var(--spacing-md);
     cursor: pointer;
+
+    :global(p) {
+      margin: 0;
+    }
   }
 
   input {
@@ -58,6 +62,7 @@
     display: grid;
     place-content: center;
     width: 1rem;
+    min-width: 1rem;
     height: 1rem;
     border: 0.15rem solid currentColor;
   }

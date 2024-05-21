@@ -4,13 +4,12 @@
   import { onMount } from 'svelte'
   import type { LayoutData } from '../$types'
   import Quest from '../Quest.svelte'
+  import QuizJettyPage from '../QuizJettyPage.svelte'
   import TextJettyPage from '../TextJettyPage.svelte'
   import Error from '$lib/components/error/Error.svelte'
   import { page } from '$app/stores'
   import { writable } from 'svelte/store'
-  import { questApi } from '$lib/api/quest-api'
-  import { user } from '../../../stores'
-  import { useCookies, type RequirementCookieKey } from '$lib/utils/cookies'
+  import { completeRequirement } from '$lib/helpers/complete-requirement.svelte'
 
   export let data: LayoutData
 
@@ -26,17 +25,11 @@
     return !data.requirements.Glossary
       ? page.subscribe(({ url }) => {
           if (isRadQuestGlossary(url)) {
-            if ($user) {
-              questApi
-                .completeRequirement('WelcomeToRadQuest', 'Glossary')
-                .map(() => radQuestGlossaryViewed.set(true))
-                .mapErr(() => {
-                  error = true
-                })
-            } else {
-              useCookies('requirement-WelcomeToRadQuest-Glossary' as RequirementCookieKey).set(true)
-              radQuestGlossaryViewed.set(true)
-            }
+            completeRequirement('WelcomeToRadQuest', 'Glossary')
+              .map(() => radQuestGlossaryViewed.set(true))
+              .mapErr(() => {
+                error = true
+              })
           }
         })
       : () => {}
@@ -126,11 +119,28 @@
     {
       id: '8',
       type: 'jetty',
-      component: TextJettyPage,
+      component: QuizJettyPage,
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['8.md']
+        text: data.text['8.md'],
+        quizRequirement: 'RadQuestQuiz',
+        questId: 'WelcomeToRadQuest',
+        requirements: data.requirements,
+        answers: [
+          {
+            text: data.text['8a.md'],
+            correct: false
+          },
+          {
+            text: data.text['8b.md'],
+            correct: true
+          },
+          {
+            text: data.text['8c.md'],
+            correct: false
+          }
+        ]
       }
     },
     {
@@ -172,6 +182,5 @@
 
   {#if error}
     <Error>{$i18n.t('quests:somethingWentWrong')}</Error>
-    <p>{error}</p>
   {/if}
 </Quest>
