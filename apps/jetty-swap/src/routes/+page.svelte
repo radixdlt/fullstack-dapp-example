@@ -126,9 +126,9 @@
     width: 20rem;
 
     @include mobile {
-      width: 18.1rem;
-      left: -2.5rem;
-      top: -3.5rem;
+      width: 13rem;
+      left: -1.5rem;
+      top: -1rem;
     }
   }
 

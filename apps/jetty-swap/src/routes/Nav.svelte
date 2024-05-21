@@ -4,7 +4,7 @@
 
 <nav>
   <div class="navbar">
-    <p class="text-bold">{$i18n.t('main:title')}</p>
+    <p class="text-bold title">{$i18n.t('main:title')}</p>
   </div>
   <div class="connect-btn">
     <radix-connect-button />
@@ -25,6 +25,10 @@
       position: absolute;
       padding: 1rem 4rem;
     }
+  }
+
+  p {
+    color: var(--color-dark);
   }
 
   .connect-btn {
