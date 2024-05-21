@@ -4,7 +4,7 @@ import QuestRewardsEvents from '../fixtures/transactions/quest-rewards-events'
 import NotSupportedTx from '../fixtures/transactions/not-supported-tx'
 import StakedXrdTx from '../fixtures/transactions/staked-xrd'
 import { getTrackedTransactionTypes, resourceWithdrawn } from './tracked-transaction-types'
-import { AccountAddressModel } from 'common'
+import { AccountAddressModel, EventId } from 'common'
 import { FilterTransactionsByType } from './filter-transactions-by-type'
 import { FilterTransactionsByAccountAddress } from './filter-transactions-by-account-address'
 import { RedisServer } from '../test-helpers/inMemoryRedisServer'
@@ -37,7 +37,7 @@ describe('filter transactions', () => {
 
     const [userBadge] = filteredTransactions
 
-    expect(userBadge.type).toEqual('UserBadge')
+    expect(userBadge.type).toEqual(EventId.DepositUserBadge)
     expect(userBadge.transactionId).toBeDefined()
     expect(userBadge.relevantEvents.UserBadgeDeposited).toBeDefined()
     expect(userBadge.relevantEvents.XrdDeposited).toBeDefined()
@@ -55,11 +55,11 @@ describe('filter transactions', () => {
     const [claimedReward, depositedReward] = filteredTransactions
 
     expect(depositedReward.transactionId).toBeDefined()
-    expect(depositedReward.type).toEqual('QuestRewardDeposited')
+    expect(depositedReward.type).toEqual(EventId.QuestRewardDeposited)
     expect(depositedReward.relevantEvents.RewardDepositedEvent).toBeDefined()
 
     expect(claimedReward.transactionId).toBeDefined()
-    expect(claimedReward.type).toEqual('QuestRewardClaimed')
+    expect(claimedReward.type).toEqual(EventId.QuestRewardClaimed)
     expect(claimedReward.relevantEvents.RewardClaimedEvent).toBeDefined()
   })
 

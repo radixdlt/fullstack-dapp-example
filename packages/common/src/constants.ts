@@ -55,3 +55,17 @@ export type WellKnownAddresses = {
 export const RedisKeys = {
   TrackedAccountAddresses: 'tracked-account-addresses'
 }
+
+export const EventId = {
+  DepositUserBadge: 'DepositUserBadge',
+  JettyReceivedClams: 'JettyReceivedClams',
+  XrdStaked: 'XrdStaked',
+  QuestRewardDeposited: 'QuestRewardDeposited',
+  QuestRewardClaimed: 'QuestRewardClaimed',
+  CombineElementsDeposited: 'CombineElementsDeposited',
+  CombineElementsMintedRadgem: 'CombineElementsMintedRadgem',
+  CombineElementsAddedRadgemImage: 'CombineElementsAddedRadgemImage',
+  CombineElementsClaimed: 'CombineElementsClaimed'
+} as const
+
+export type EventId = keyof typeof EventId

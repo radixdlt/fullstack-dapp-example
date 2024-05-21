@@ -1,16 +1,11 @@
+import { EventId } from 'common'
+
 export type QuestCategory = keyof typeof QuestCategory
 
 export const QuestCategory = {
   Basic: 'Basic',
   Advanced: 'Advanced',
   dApp: 'dApp'
-} as const
-
-export type EventId = keyof typeof EventId
-
-export const EventId = {
-  DepositUserBadge: 'DepositUserBadge',
-  JettyReceivedClams: 'JettyReceivedClams'
 } as const
 
 export type FungibleToken = { amount: number }
@@ -192,7 +187,7 @@ export const QuestDefinitions = () => {
         LearnStaking: {
           type: 'content'
         },
-        StakedXrd: {
+        [EventId.XrdStaked]: {
           eventName: 'StakedXrd',
           type: 'event'
         }
