@@ -10,7 +10,13 @@ import { EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
 export type DbOperation = () => Prisma.PrismaPromise<any>
 
 export type DbTransactionBuilder = ReturnType<typeof DbTransactionBuilder>
-export const DbTransactionBuilder = (dbClient: PrismaClient) => {
+export const DbTransactionBuilder = ({
+  dbClient,
+  tokenPriceClient
+}: {
+  dbClient: PrismaClient
+  tokenPriceClient: TokenPriceClient
+}) => {
   const operations: DbOperation[] = []
 
   const add = (...values: DbOperation[]) => {
@@ -67,8 +73,7 @@ export const DbTransactionBuilder = (dbClient: PrismaClient) => {
   }
 
   const getXrdPrice = (
-    value: string | undefined,
-    tokenPriceClient: TokenPriceClient
+    value: string | undefined
   ): ResultAsync<{ xrdUsdValue: number; xrdAmount: BigNumber }, { reason: string }> => {
     const result = value ? ok(BigNumber(value)) : err({ reason: 'xrdAmountNotFound' })
 
@@ -85,16 +90,14 @@ export const DbTransactionBuilder = (dbClient: PrismaClient) => {
 
   const addXrdDepositToAuditTable = ({
     userId,
-    tokenPriceClient,
     transactionId,
     relevantEvents
   }: {
     userId: string
-    tokenPriceClient: TokenPriceClient
     transactionId: string
     relevantEvents: Record<string, EventsItem>
   }) =>
-    getXrdPrice(getAmountFromDepositEvent(relevantEvents.XrdDeposited), tokenPriceClient)
+    getXrdPrice(getAmountFromDepositEvent(relevantEvents.XrdDeposited))
       .map(({ xrdUsdValue, xrdAmount }) =>
         operations.push(() =>
           dbClient.audit.create({

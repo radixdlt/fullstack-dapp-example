@@ -12,14 +12,11 @@ import {
 } from 'common'
 import { NotificationApi, NotificationType } from 'common'
 import { config } from '../config'
-import { AuditType, EventError, PrismaClient } from 'database'
+import { EventError, PrismaClient } from 'database'
 import { getUserIdFromDepositUserBadgeEvent } from './helpers/getUserIdFromDepositUserBadgeEvent'
 import { getDataFromQuestRewardsEvent } from './helpers/getDataFromQuestRewardsEvent'
-import { getAmountFromDepositEvent } from './helpers/getAmountFromDepositEvent'
-import BigNumber from 'bignumber.js'
 import { sumOfXrdRewards } from './helpers/sumOfXrdRewards'
 import { databaseTransactions } from './helpers/databaseTransactions'
-import { getFirstTransactionAuditResources } from './helpers/getFirstTransactionAuditResources'
 import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent'
 import { getBadgeAddressAndIdFromCombineElementsDepositedEvent } from './helpers/getBadgeAddressAndIdFromCombineElementsDepositedEvent'
 import { randomUUID } from 'crypto'
@@ -65,6 +62,7 @@ export const EventWorkerController = ({
     })
 
     const dbTransactions = databaseTransactions({ dbClient, logger: childLogger, transactionId })
+    const dbTransactionBuilder = DbTransactionBuilder({ dbClient, tokenPriceClient })
 
     const ensureUserExists = (
       userId: string,
@@ -252,11 +250,10 @@ export const EventWorkerController = ({
             transactionId
           }))
           .andThen((questValues) =>
-            DbTransactionBuilder(dbClient)
-              .helpers.questRequirementCompleted(questValues)
+            dbTransactionBuilder.helpers
+              .questRequirementCompleted(questValues)
               .helpers.addXrdDepositToAuditTable({
                 ...questValues,
-                tokenPriceClient,
                 relevantEvents: job.data.relevantEvents
               })
               .andThen((builder) => builder.exec())
@@ -272,8 +269,8 @@ export const EventWorkerController = ({
             transactionId
           }))
           .andThen((questValues) =>
-            DbTransactionBuilder(dbClient)
-              .helpers.questRequirementCompleted(questValues)
+            dbTransactionBuilder.helpers
+              .questRequirementCompleted(questValues)
               .exec()
               .andThen(() => handleAllQuestRequirementCompleted(questValues))
           )
@@ -298,8 +295,8 @@ export const EventWorkerController = ({
               transactionId
             }))
             .andThen((questValues) =>
-              DbTransactionBuilder(dbClient)
-                .helpers.questRequirementCompleted(questValues)
+              dbTransactionBuilder.helpers
+                .questRequirementCompleted(questValues)
                 .exec()
                 .andThen(() => handleAllQuestRequirementCompleted(questValues))
             )
