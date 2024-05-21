@@ -40,7 +40,9 @@
   {/if}
   {#if args.name === 'error'}
     <TokenSwapInput state="error" {value} {...args}>
-      <span>{@html $i18n.t('main:not-enough-resource', { resource: 'Clam' })}</span>
+      <span class="error-text"
+        >{@html $i18n.t('main:not-enough-resource', { resource: 'Clam' })}</span
+      >
     </TokenSwapInput>
   {/if}
 </Template>

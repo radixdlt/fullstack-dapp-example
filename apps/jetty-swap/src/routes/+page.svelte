@@ -12,8 +12,8 @@
   import { walletData } from '$lib/stores'
   import { allowOnlyPositiveNumberInString } from '$lib/tools'
 
-  const clamResource = { icon: Clam, name: 'Clam' }
-  const elementResource = { icon: Element, name: 'Element' }
+  const clamResource = { icon: Clam, name: 'Clam', id: '1' }
+  const elementResource = { icon: Element, name: 'Element', id: '2' }
   let conversionRateClams = 2
   let conversionRateElements = 1
 
@@ -72,17 +72,12 @@
         <div class="switch-button-wrapper">
           <SwtichButton
             onClick={() => {
-              fromResource =
-                fromResource.name === clamResource.name ? elementResource : clamResource
-              toResource = toResource.name === clamResource.name ? elementResource : clamResource
+              fromResource = fromResource.id === clamResource.id ? elementResource : clamResource
+              toResource = toResource.id === clamResource.id ? elementResource : clamResource
               conversionRateFrom =
-                conversionRateFrom === conversionRateClams
-                  ? conversionRateElements
-                  : conversionRateClams
+                fromResource.id === clamResource.id ? conversionRateElements : conversionRateClams
               conversionRateTo =
-                conversionRateTo === conversionRateClams
-                  ? conversionRateElements
-                  : conversionRateClams
+                toResource.id === clamResource.id ? conversionRateElements : conversionRateClams
             }}
           >
             <Icon --size="20px" url={ArrowIcon} />
