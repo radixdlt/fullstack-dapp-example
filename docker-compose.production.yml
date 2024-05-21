@@ -32,14 +32,6 @@ services:
       - TWILIO_SERVICE_SID=${TWILIO_SERVICE_SID}
     command: pm2-runtime apps/dapp/build/index.cjs
 
-  storybook:
-    build:
-      context: ./
-      dockerfile: ./dockerfiles/dapp.Dockerfile
-      target: storybook
-    ports:
-      - '3001:80'
-
   notification:
     build:
       context: ./
