@@ -1,7 +1,7 @@
 import { PrismaClient, TransactionStatus } from 'database'
 import { ResultAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
-import { AppLogger } from '../helpers'
+import type { AppLogger } from '../helpers'
 
 export type TransactionIdentifierData = {
   transactionKey: string

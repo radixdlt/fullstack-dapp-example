@@ -1,5 +1,5 @@
-import { EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
-import { ConnectionOptions, Queue } from 'bullmq'
+import type { EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
+import { type ConnectionOptions, Queue } from 'bullmq'
 import { ResultAsync } from 'neverthrow'
 import { EventId, typedError } from 'common'
 

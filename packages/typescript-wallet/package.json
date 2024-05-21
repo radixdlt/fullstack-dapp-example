@@ -1,20 +1,13 @@
 {
   "name": "typescript-wallet",
   "version": "0.1.0",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "exports": {
-    ".": {
-      "import": {
-        "default": "./dist/index.js",
-        "types": "./dist/index.d.ts"
-      }
-    }
+    ".": "./src/index.ts"
   },
   "type": "module",
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts",
-    "dev": "npm run build -- --watch",
     "wallet:list:accounts": "npx tsx ./src/scripts/account-address.ts",
     "wallet:create:mnemonic": "npx tsx ./src/scripts/generate-mnemonic.ts",
     "wallet:faucet": "npx tsx ./src/scripts/faucet.ts",

@@ -1,20 +1,11 @@
 {
   "name": "content",
   "version": "0.1.0",
-  "main": "./dist/content.js",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "type": "module",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/content.js"
-      },
-      "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/content.umd.cjs"
-      }
-    }
+    ".": "./src/index.ts"
   },
   "scripts": {
     "content:dev": "vite serve examples --config vite.config.ts",
