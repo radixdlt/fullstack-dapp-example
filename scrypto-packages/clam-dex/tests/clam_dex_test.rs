@@ -41,6 +41,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         admin_badge.take(dec!(1), &mut env)?,
         clams.resource_address(&mut env)?,
         elements_address,
+        Some(dec!(1)),
         package_address,
         &mut env,
     )?;
