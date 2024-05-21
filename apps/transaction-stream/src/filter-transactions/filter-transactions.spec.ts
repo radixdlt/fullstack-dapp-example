@@ -11,7 +11,8 @@ import { FilterTransactionsByAccountAddress } from './filter-transactions-by-acc
 import { RedisServer } from '../test-helpers/inMemoryRedisServer'
 import { RedisConnection } from 'queues'
 import { config } from '../config'
-import CombineElementsDeposit from '../fixtures/transactions/combine-elements-deposit-events'
+import CombineElementsDepositedEvents from '../fixtures/transactions/combine-elements-deposited-events'
+import CombineElementsMintedRadgemEvents from '../fixtures/transactions/combine-elements-minted-radgem-events'
 
 let accountAddressModel: AccountAddressModel
 const trackedTransactionTypes = getTrackedTransactionTypes()
@@ -145,7 +146,7 @@ describe('filter transactions', () => {
   })
 
   it('should find CombineElementsDeposited', () => {
-    const result = filterTransactionsByType([...CombineElementsDeposit, ...NotSupportedTx])
+    const result = filterTransactionsByType([...CombineElementsDepositedEvents, ...NotSupportedTx])
 
     if (result.isErr()) throw result.error
 
@@ -158,5 +159,24 @@ describe('filter transactions', () => {
     expect(combineElementsDeposited.transactionId).toBeDefined()
     expect(combineElementsDeposited.type).toEqual('CombineElementsDeposited')
     expect(combineElementsDeposited.relevantEvents.DepositedEvent).toBeDefined()
+  })
+
+  it('should find CombineElementsMintedRadgem', () => {
+    const result = filterTransactionsByType([
+      ...CombineElementsMintedRadgemEvents,
+      ...NotSupportedTx
+    ])
+
+    if (result.isErr()) throw result.error
+
+    const filteredTransactions = result.value
+
+    expect(filteredTransactions.length).toEqual(1)
+
+    const [CombineElementsMintedRadgem] = filteredTransactions
+
+    expect(CombineElementsMintedRadgem.transactionId).toBeDefined()
+    expect(CombineElementsMintedRadgem.type).toEqual('CombineElementsMintedRadgem')
+    expect(CombineElementsMintedRadgem.relevantEvents.MintedRadgemEvent).toBeDefined()
   })
 })
