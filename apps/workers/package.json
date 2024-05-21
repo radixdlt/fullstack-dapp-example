@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "npm run build -- --watch",
+    "dev": "tsx --watch src/index.ts | npx pino-pretty",
     "build": "tsup",
     "clean": "rm -rf dist"
   },
