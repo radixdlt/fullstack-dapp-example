@@ -4,6 +4,7 @@
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
   import TextJettyPage from '../TextJettyPage.svelte'
+  import QuizJettyPage from '../QuizJettyPage.svelte'
 
   export let data: PageData
 
@@ -74,21 +75,55 @@
     {
       id: '8',
       type: 'jetty',
-      component: TextJettyPage,
+      component: QuizJettyPage,
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['8.md']
+        text: data.text['8.md'],
+        quizRequirement: 'RadixQuiz',
+        questId: 'WhatIsRadix',
+        requirements: data.requirements,
+        answers: [
+          {
+            text: data.text['8a.md'],
+            correct: false
+          },
+          {
+            text: data.text['8b.md'],
+            correct: false
+          },
+          {
+            text: data.text['8c.md'],
+            correct: true
+          }
+        ]
       }
     },
     {
       id: '9',
       type: 'jetty',
-      component: TextJettyPage,
+      component: QuizJettyPage,
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['9.md']
+        text: data.text['9.md'],
+        quizRequirement: 'dAppQuiz',
+        questId: 'WhatIsRadix',
+        requirements: data.requirements,
+        answers: [
+          {
+            text: data.text['9a.md'],
+            correct: true
+          },
+          {
+            text: data.text['9b.md'],
+            correct: false
+          },
+          {
+            text: data.text['9c.md'],
+            correct: false
+          }
+        ]
       }
     },
     {
