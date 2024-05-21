@@ -240,12 +240,12 @@ export const EventWorkerController = ({
         return handleRewardClaimed()
       case 'CombineElementsDeposited':
         return handelCombineElementsDepositedEvent()
-      case 'UserBadge':
+      case EventId.DepositUserBadge:
         return getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited)
           .asyncAndThen((userId) => ensureUserExists(userId, transactionId))
           .map((userId) => ({
             questId: 'FirstTransactionQuest' as QuestId,
-            requirementId: 'DepositUserBadge' as EventId,
+            requirementId: type,
             userId,
             transactionId
           }))
@@ -260,11 +260,11 @@ export const EventWorkerController = ({
               .andThen(() => handleAllQuestRequirementCompleted(questValues))
           )
 
-      case 'JettyReceivedClams': {
+      case EventId.JettyReceivedClams: {
         return getUserIdFromWithdrawEvent(job.data.relevantEvents.WithdrawEvent, dbClient)
           .map((userId) => ({
             questId: 'TransferTokens' as QuestId,
-            requirementId: 'JettyReceivedClams' as EventId,
+            requirementId: type,
             userId,
             transactionId
           }))
@@ -275,7 +275,7 @@ export const EventWorkerController = ({
               .andThen(() => handleAllQuestRequirementCompleted(questValues))
           )
       }
-      case 'XrdStaked': {
+      case EventId.StakedXrd: {
         const maybeAccountAddress: string | undefined = (
           job.data.relevantEvents['WithdrawEvent'].emitter as any
         ).entity.entity_address
@@ -290,7 +290,7 @@ export const EventWorkerController = ({
             .andThen((userId) => (userId ? ok(userId) : err({ reason: 'UserIdNotFound' })))
             .map((userId) => ({
               questId: 'StakingQuest' as QuestId,
-              requirementId: 'XrdStaked' as EventId,
+              requirementId: type,
               userId,
               transactionId
             }))

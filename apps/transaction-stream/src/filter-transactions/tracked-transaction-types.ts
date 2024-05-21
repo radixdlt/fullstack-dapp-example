@@ -66,7 +66,7 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
   QuestRewardClaimed: {
     RewardClaimedEvent: questRewardsEmitted('RewardClaimedEvent')
   },
-  UserBadge: {
+  DepositUserBadge: {
     UserBadgeDeposited: resourceDeposited(config.radQuest.badges.userBadgeAddress),
     XrdDeposited: resourceDeposited(config.radQuest.xrd)
   },

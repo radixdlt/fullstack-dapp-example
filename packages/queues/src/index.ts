@@ -13,7 +13,7 @@ export const Queues = {
 export const EventJobType = {
   QuestRewardDeposited: 'QuestRewardDeposited',
   QuestRewardClaimed: 'QuestRewardClaimed',
-  UserBadge: 'UserBadge',
+  DepositUserBadge: 'DepositUserBadge',
   JettyReceivedClams: 'JettyReceivedClams',
   XrdStaked: 'XrdStaked',
   CombineElementsDeposited: 'CombineElementsDeposited',
