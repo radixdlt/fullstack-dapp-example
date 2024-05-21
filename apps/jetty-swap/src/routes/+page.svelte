@@ -14,15 +14,16 @@
 
   const clamResource = { icon: Clam, name: 'Clam' }
   const elementResource = { icon: Element, name: 'Element' }
+  let conversionRateClams = 2
+  let conversionRateElements = 1
 
   let fromResource = clamResource
   let toResource = elementResource
-
   let fromInput = ''
   let toInput = ''
   //todo placeholders for now
-  const conversionRateFrom = 1
-  const conversionRateTo = 2
+  let conversionRateFrom = conversionRateElements
+  let conversionRateTo = conversionRateClams
 
   $: fromInput = allowOnlyPositiveNumberInString(fromInput.toString())
   $: toInput = allowOnlyPositiveNumberInString(toInput.toString())
@@ -50,8 +51,14 @@
             </p>
             <div>
               {conversionRateFrom}
-              {fromResource.name} = {conversionRateTo}
-              {toResource.name}
+              {$i18n.t('main:marketplace_resource', {
+                count: conversionRateFrom,
+                resource: fromResource.name
+              })} = {conversionRateTo}
+              {$i18n.t('main:marketplace_resource', {
+                count: conversionRateTo,
+                resource: toResource.name
+              })}
             </div>
           </div>
         </div>
@@ -68,6 +75,14 @@
               fromResource =
                 fromResource.name === clamResource.name ? elementResource : clamResource
               toResource = toResource.name === clamResource.name ? elementResource : clamResource
+              conversionRateFrom =
+                conversionRateFrom === conversionRateClams
+                  ? conversionRateElements
+                  : conversionRateClams
+              conversionRateTo =
+                conversionRateTo === conversionRateClams
+                  ? conversionRateElements
+                  : conversionRateClams
             }}
           >
             <Icon --size="20px" url={ArrowIcon} />

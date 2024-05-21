@@ -3,6 +3,8 @@
   "radquest-info": "You can swap your",
   "radquest-info-goods": "RadQuest goods!",
   "marketplace-estimates": "Market price estimate:",
+  "marketplace_resource_one": "{{resource}}",
+  "marketplace_resource_other": "{{resource}}s",
   "guarantee-hint": "You can change minimum guarantee",
   "guarantee-hint-part-2": "settings in your Radix Wallet.",
   "estimated-amount": "Estimated at market price",
