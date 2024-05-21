@@ -61,9 +61,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies }) => {
       ].map((cookieName) => {
         if (cookies.get(cookieName)) {
           const [, questId, requirementId] = cookieName.split('-')
-          return questApi.completeRequirement(questId as QuestId, requirementId, fetch).map(() => {
-            cookies.delete(cookieName, { path: '/' })
-          })
+          return questApi.completeRequirement(questId as QuestId, requirementId, fetch)
         }
 
         return Promise.resolve()

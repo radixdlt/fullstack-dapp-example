@@ -13,7 +13,7 @@
   import VerifyRequirements from './VerifyRequirements.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import type { QuestId } from 'content'
-  import { useCookies } from '$lib/utils/cookies'
+  import { useCookies, type RequirementCookieKey } from '$lib/utils/cookies'
   import { completeQuest } from '$lib/utils/complete-quest'
   import { useLocalStorage } from '$lib/utils/local-storage'
   import CompleteQuest from './CompleteQuest.svelte'
@@ -91,8 +91,7 @@
       if ($user) {
         questApi.completeContentRequirement(id)
       } else {
-        // @ts-ignore
-        useCookies(`requirement-${id}-${contentRequirement}`).set(true)
+        useCookies(`requirement-${id}-${contentRequirement}` as RequirementCookieKey).set(true)
       }
     }
   }
