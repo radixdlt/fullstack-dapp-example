@@ -31,6 +31,7 @@ interface Resources {
     continueButton: 'Continue'
     placeholderNotFound: 'Placeholder {{id}} not found'
     claimButton: 'Claim Your Reward'
+    somethingWentWrong: 'Something went wrong, please try again.'
     minutesToComplete_one: '{{count}} minute'
     minutesToComplete_other: '{{count}} minutes'
     'radquest-logo-alt': 'RadQuest Logo'

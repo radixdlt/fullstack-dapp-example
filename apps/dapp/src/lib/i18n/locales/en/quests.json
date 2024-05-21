@@ -11,6 +11,7 @@
   "minutesToComplete_one": "{{count}} minute",
   "minutesToComplete_other": "{{count}} minutes",
   "radquest-logo-alt": "RadQuest Logo",
+  "somethingWentWrong": "Something went wrong, please try again.",
   "completeQuest": "Complete Quest",
   "intro-begin-quest": "Begin Quest",
   "okButton": "OK",

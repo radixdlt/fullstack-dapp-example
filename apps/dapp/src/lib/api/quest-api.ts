@@ -58,6 +58,13 @@ const completeContentRequirement = (questId: QuestId, serverFetch?: typeof fetch
     })
   )
 
+const completeRequirement = (questId: QuestId, requirementId: string, serverFetch?: typeof fetch) =>
+  fetchWrapper<void>(
+    (serverFetch ?? fetch)(`/api/quest/${questId}/complete-requirement/${requirementId}`, {
+      method: 'PUT'
+    })
+  )
+
 export const questApi = {
   getQuestsInformation,
   getQuestInformation,
@@ -66,5 +73,6 @@ export const questApi = {
   saveProgress,
   getSavedProgress,
   deleteSavedProgress,
+  completeRequirement,
   completeContentRequirement
 } as const

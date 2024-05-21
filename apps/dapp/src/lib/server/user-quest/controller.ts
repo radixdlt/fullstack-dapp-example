@@ -5,7 +5,7 @@ import { QuestDefinitions, type Quests } from 'content'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 import { dbClient } from '$lib/db'
 import { ErrorReason, createApiError } from '../../errors'
-import type { QuestId } from 'content'
+import type { QuestId, Requirement } from 'content'
 import { RedisConnection } from 'bullmq'
 import { config } from '$lib/config'
 
@@ -162,6 +162,29 @@ const UserQuestController = ({
       }
     })
 
+  const completeRequirement = (
+    ctx: ControllerMethodContext,
+    questId: QuestId,
+    requirementId: string,
+    userId: string
+  ) => {
+    const questDefinition = QuestDefinitions()[questId]
+    const [, requirement]: [any, Requirement | undefined] = Object.entries(
+      questDefinition.requirements
+    ).find(([key, value]) => key === requirementId && value.completedByUser) || [
+      undefined,
+      undefined
+    ]
+
+    if (!requirement) {
+      return errAsync(createApiError(ErrorReason.invalidRequirement, 400)())
+    }
+
+    return userQuestModel(ctx.logger)
+      .addCompletedRequirement(questId, userId, requirementId)
+      .map(() => ({ httpResponseCode: 200, data: undefined }))
+  }
+
   const completeContentRequirement = (
     ctx: ControllerMethodContext,
     questId: QuestId,
@@ -202,6 +225,7 @@ const UserQuestController = ({
     saveProgress,
     getSavedProgress,
     deleteSavedProgress,
+    completeRequirement,
     completeContentRequirement
   }
 }

@@ -41,6 +41,7 @@ type OnLedgerRequirement = {
 
 type OffLedgerRequirement = {
   type: 'offLedger'
+  completedByUser?: boolean
 }
 
 type ContentRequirement = {
@@ -73,11 +74,11 @@ export const QuestDefinitions = () => {
       requirements: {
         Introduction: {
           type: 'content'
+        },
+        Glossary: {
+          type: 'offLedger',
+          completedByUser: true
         }
-        // TODO: convert to offLedger requirement or support multiple content requirements
-        // Glossary: {
-        //   type: 'content'
-        // }
       }
     },
     WhatIsRadix: {

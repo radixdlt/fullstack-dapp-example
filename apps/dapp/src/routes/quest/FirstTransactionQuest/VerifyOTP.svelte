@@ -2,7 +2,7 @@
   import { createEventDispatcher } from 'svelte'
   import VerificationCodeInput from '$lib/components/verification-code-input/VerificationCodeInput.svelte'
   import { otpApi } from '$lib/api/otp-api'
-  import Error from './Error.svelte'
+  import Error from '$lib/components/error/Error.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import Icon from '$lib/components/icon/Icon.svelte'
   import ArrowIcon from '@images/arrow-clockwise.svg'
