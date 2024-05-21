@@ -9,8 +9,11 @@
   import type { PageData } from './$types'
   import { readable, writable } from 'svelte/store'
   import TextJettyPage from '../TextJettyPage.svelte'
+  import type { Quests } from 'content'
 
   export let data: PageData
+
+  const text = data.text as Quests['FirstTransactionQuest']['text']
 
   let quest: Quest
 
@@ -76,7 +79,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['1.md']
+        text: text['1.md']
       }
     },
     {
@@ -94,7 +97,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['4.md']
+        text: text['4.md']
       }
     },
     {
@@ -124,7 +127,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['7a.md']
+        text: text['7a.md']
       }
     },
     {
@@ -138,7 +141,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['7c.md']
+        text: text['7c.md']
       }
     },
     {
@@ -159,7 +162,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['9.md']
+        text: text['9.md']
       }
     },
     {
@@ -173,7 +176,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['11.md']
+        text: text['11.md']
       }
     },
     {
@@ -183,7 +186,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['12.md']
+        text: text['12.md']
       }
     },
     {
@@ -197,7 +200,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['14.md']
+        text: text['14.md']
       }
     },
     {
@@ -213,15 +216,15 @@
   let:render
 >
   {#if render('2')}
-    {@html data.text['2.md']}
+    {@html text['2.md']}
   {/if}
 
   {#if render('3')}
-    {@html data.text['3.md']}
+    {@html text['3.md']}
   {/if}
 
   {#if render('verifyPhoneNumber')}
-    {@html data.text['5.md']}
+    {@html text['5.md']}
     <VerifyPhoneNumber
       bind:phoneNumber
       on:next={next}
@@ -232,7 +235,7 @@
   {/if}
 
   {#if render('verifyOtp')}
-    {@html data.text['6.md']}
+    {@html text['6.md']}
     <VerifyOtp
       bind:phoneNumber
       bind:oneTimePassword
@@ -243,11 +246,11 @@
   {/if}
 
   {#if render('7b')}
-    {@html data.text['7b.md']}
+    {@html text['7b.md']}
   {/if}
 
   {#if render('depositUserBadge')}
-    {@html data.text['8a.md']}
+    {@html text['8a.md']}
     <!-- TODO: use 8b.md conditionally -->
     <DepositUserBadge
       on:deposited={() => {
@@ -259,10 +262,10 @@
   {/if}
 
   {#if render('10')}
-    {@html data.text['10.md']}
+    {@html text['10.md']}
   {/if}
 
   {#if render('13')}
-    {@html data.text['13.md']}
+    {@html text['13.md']}
   {/if}
 </Quest>

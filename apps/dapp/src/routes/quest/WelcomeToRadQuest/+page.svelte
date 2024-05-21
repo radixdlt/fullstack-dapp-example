@@ -10,11 +10,14 @@
   import { page } from '$app/stores'
   import { writable } from 'svelte/store'
   import { completeRequirement } from '$lib/helpers/complete-requirement.svelte'
+  import type { Quests } from 'content'
 
   export let data: LayoutData
 
   let quest: Quest
   let error: boolean
+
+  const text = data.text as Quests['WelcomeToRadQuest']['text']
 
   let radQuestGlossaryViewed = writable(data.requirements.Glossary)
 
@@ -66,7 +69,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['1.md']
+        text: text['1.md']
       }
     },
     {
@@ -76,7 +79,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['2.md']
+        text: text['2.md']
       }
     },
     {
@@ -94,7 +97,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['5.md']
+        text: text['5.md']
       }
     },
     {
@@ -113,7 +116,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['7.md']
+        text: text['7.md']
       }
     },
     {
@@ -123,21 +126,21 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['8.md'],
+        text: text['8.md'],
         quizRequirement: 'RadQuestQuiz',
         questId: 'WelcomeToRadQuest',
         requirements: data.requirements,
         answers: [
           {
-            text: data.text['8a.md'],
+            text: text['8a.md'],
             correct: false
           },
           {
-            text: data.text['8b.md'],
+            text: text['8b.md'],
             correct: true
           },
           {
-            text: data.text['8c.md'],
+            text: text['8c.md'],
             correct: false
           }
         ]
@@ -165,19 +168,19 @@
   let:render
 >
   {#if render('0')}
-    {@html data.text['0.md']}
+    {@html text['0.md']}
   {/if}
 
   {#if render('3')}
-    {@html data.text['3.md']}
+    {@html text['3.md']}
   {/if}
 
   {#if render('4')}
-    {@html data.text['4.md']}
+    {@html text['4.md']}
   {/if}
 
   {#if render('6')}
-    {@html data.text['6.md']}
+    {@html text['6.md']}
   {/if}
 
   {#if error}

@@ -8,8 +8,11 @@
   import { writable } from 'svelte/store'
   import { i18n } from '$lib/i18n/i18n'
   import TextJettyPage from '../TextJettyPage.svelte'
+  import type { Quests } from 'content'
 
   export let data: PageData
+
+  const text = data.text as Quests['GetRadixWallet']['text']
 
   let render = (_: string) => false
 
@@ -73,7 +76,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['0.md']
+        text: text['0.md']
       }
     },
     {
@@ -83,7 +86,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['1.md']
+        text: text['1.md']
       }
     },
     {
@@ -111,7 +114,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['5.md']
+        text: text['5.md']
       }
     },
     {
@@ -123,7 +126,7 @@
       component: ClaimRewards,
       props: {
         rewards: data.rewards,
-        text: data.text['claim.md'],
+        text: text['claim.md'],
         nextButtonText: $i18n.t('quests:claimButton'),
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next()
@@ -136,34 +139,14 @@
   let:render
 >
   {#if render('get-the-wallet')}
-    {@html data.text['2.md']}
+    {@html text['2.md']}
   {/if}
 
   {#if render('3')}
-    {@html data.text['3.md']}
+    {@html text['3.md']}
   {/if}
 
   {#if render('4')}
-    {@html data.text['4.md']}
-  {/if}
-
-  {#if render('6')}
-    {@html data.text['6.md']}
-  {/if}
-
-  {#if render('7')}
-    {@html data.text['7.md']}
-  {/if}
-
-  {#if render('8')}
-    {@html data.text['8.md']}
-  {/if}
-
-  {#if render('9')}
-    {@html data.text['9.md']}
-  {/if}
-
-  {#if render('10')}
-    {@html data.text['10.md']}
+    {@html text['4.md']}
   {/if}
 </Quest>

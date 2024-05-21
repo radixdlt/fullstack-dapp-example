@@ -12,6 +12,7 @@ type UserModelType = {
   getPhoneNumber: (phoneNumber: string) => ResultAsync<UserPhoneNumber | null, ApiError>
   addAccount: (userId: string, accountAddress: string) => ResultAsync<void, ApiError>
   setUserName: (userId: string, name: string) => ResultAsync<User, ApiError>
+  getPhoneNumberByUserId: (userId: string) => ResultAsync<string | undefined, ApiError>
 }
 export type UserModel = ReturnType<typeof UserModel>
 export const UserModel =
@@ -90,5 +91,11 @@ export const UserModel =
         }
       )
 
-    return { create, getById, getPhoneNumber, addAccount, setUserName }
+    const getPhoneNumberByUserId = (userId: string): ResultAsync<string | undefined, ApiError> =>
+      ResultAsync.fromPromise(db.userPhoneNumber.findFirst({ where: { userId } }), (error) => {
+        logger?.error({ error, method: 'getPhoneNumberByUserId', model: 'UserModel' })
+        return createApiError('failed to get phone number', 400)()
+      }).map((data) => data?.phoneNumber)
+
+    return { create, getById, getPhoneNumber, addAccount, setUserName, getPhoneNumberByUserId }
   }

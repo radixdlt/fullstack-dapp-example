@@ -12,8 +12,11 @@
   import { rdt } from '$lib/rdt'
   import { userApi } from '$lib/api/user-api'
   import Button from '$lib/components/button/Button.svelte'
+  import type { Quests } from 'content'
 
   export let data: PageData
+
+  const text = data.text as Quests['LoginWithWallet']['text']
 
   const connectAccountReq = writable(data.requirements.ConnectAccount)
   let waitingOnAccount = false
@@ -64,7 +67,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['0a.md']
+        text: text['0a.md']
       }
     },
     {
@@ -74,7 +77,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['0b.md']
+        text: text['0b.md']
       }
     },
     {
@@ -88,7 +91,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['3.md']
+        text: text['3.md']
       }
     },
     {
@@ -98,7 +101,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['4.md']
+        text: text['4.md']
       }
     },
     {
@@ -126,7 +129,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['8connected.md']
+        text: text['8connected.md']
       }
     },
     {
@@ -136,7 +139,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['9.md']
+        text: text['9.md']
       }
     },
     {
@@ -146,7 +149,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['10.md']
+        text: text['10.md']
       }
     },
     {
@@ -170,7 +173,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['13.md']
+        text: text['13.md']
       }
     },
     {
@@ -182,7 +185,7 @@
       component: ClaimRewards,
       props: {
         rewards: data.rewards,
-        text: data.text['claim.md'],
+        text: text['claim.md'],
         nextButtonText: $i18n.t('quests:claimButton'),
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next()
@@ -195,23 +198,23 @@
   let:render
 >
   {#if render('1')}
-    {@html data.text['1.md']}
+    {@html text['1.md']}
   {/if}
 
   {#if render('5')}
-    {@html data.text['5.md']}
+    {@html text['5.md']}
   {/if}
 
   {#if render('6')}
-    {@html data.text['6.md']}
+    {@html text['6.md']}
   {/if}
 
   {#if render('7')}
-    {@html data.text['7.md']}
+    {@html text['7.md']}
   {/if}
 
   {#if render('11')}
-    {@html data.text['11.md']}
+    {@html text['11.md']}
 
     <Button on:click={connectAccount} loading={waitingOnAccount}
       >{$i18n.t('quests:LoginWithWallet.connectAccount')}
@@ -219,6 +222,6 @@
   {/if}
 
   {#if render('12')}
-    {@html data.text['12.md']}
+    {@html text['12.md']}
   {/if}
 </Quest>

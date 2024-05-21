@@ -11,8 +11,11 @@
   import { shortenAddress } from '$lib/utils/shorten-address'
   import { writable } from 'svelte/store'
   import TextJettyPage from '../TextJettyPage.svelte'
+  import type { Quests } from 'content'
 
   export let data: PageData
+
+  const text = data.text as Quests['TransferTokens']['text']
 
   let quest: Quest
 
@@ -47,7 +50,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['1a.md']
+        text: text['1a.md']
       }
     },
     {
@@ -57,7 +60,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['1b.md']
+        text: text['1b.md']
       }
     },
     {
@@ -85,7 +88,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['5.md']
+        text: text['5.md']
       }
     },
     {
@@ -99,7 +102,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: data.text['8.md']
+        text: text['8.md']
       }
     },
     {
@@ -115,27 +118,27 @@
   let:render
 >
   {#if render('2')}
-    {@html data.text['2.md']}
+    {@html text['2.md']}
   {/if}
 
   {#if render('3')}
-    {@html data.text['3.md']}
+    {@html text['3.md']}
   {/if}
 
   {#if render('4')}
-    {@html data.text['4.md']}
+    {@html text['4.md']}
   {/if}
 
   {#if render('6')}
     {@const jettyAddress = Addresses(parseInt(PUBLIC_NETWORK_ID)).accounts.jetty}
 
     {#if isMobile()}
-      {@html data.text['7.md']}
+      {@html text['7.md']}
       <div class="copy-address">
         <CopyTextBox text={shortenAddress(jettyAddress)} value={jettyAddress} />
       </div>
     {:else}
-      {@html data.text['6.md']}
+      {@html text['6.md']}
       <div class="qr-code">
         <QR data={jettyAddress} />
       </div>

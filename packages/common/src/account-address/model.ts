@@ -1,5 +1,5 @@
 import { ResultAsync } from 'neverthrow'
-import { AppLogger, createApiError, typedError } from '../helpers'
+import { type AppLogger, createApiError, typedError } from '../helpers'
 import { RedisKeys } from '../constants'
 import { RedisConnection } from 'bullmq'
 
