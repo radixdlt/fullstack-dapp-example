@@ -5,6 +5,7 @@ import {
 } from '@radixdlt/babylon-gateway-api-sdk'
 import { stripNonFungibleLocalId } from './stripNonFungibleLocalId'
 import { EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
+import { err, ok } from 'neverthrow'
 
 const findNonFungibleIdField = (
   fields: ProgrammaticScryptoSborValue[]
@@ -27,10 +28,13 @@ const findNonFungibleLocalIdElement = (elements?: ProgrammaticScryptoSborValue[]
 }
 
 export const getUserIdFromDepositUserBadgeEvent = (event: EventsItem) => {
+  let maybeUserId: string | undefined
+
   if (event.data.kind === 'Enum') {
-    return stripNonFungibleLocalId(
+    maybeUserId = stripNonFungibleLocalId(
       findNonFungibleLocalIdElement(findNonFungibleIdField(event.data.fields))
     )
   }
-  return
+
+  return maybeUserId ? ok(maybeUserId) : err({ reason: 'UserIdNotFound' })
 }

@@ -66,14 +66,19 @@ export const EventWorkerController = ({
 
     const dbTransactions = databaseTransactions({ dbClient, logger: childLogger, transactionId })
 
-    const ensureUserExists = (userId: string, transactionId: string) =>
+    const ensureUserExists = (
+      userId: string,
+      transactionId: string
+    ): ResultAsync<string, { reason: string }> =>
       userModel(childLogger)
         .getById(userId, {})
-        .mapErr(() =>
+        .mapErr(() => {
           eventModel(childLogger).update(transactionId, {
             error: EventError.ERROR_USER_NOT_FOUND
           })
-        )
+          return { reason: EventError.ERROR_USER_NOT_FOUND }
+        })
+        .map((user) => user.id)
 
     const ensureValidData = <T, U = T>(transactionId: string, data: Partial<T> | undefined) =>
       okAsync(data && Object.values(data).every((d) => d !== undefined)).andThen((isValid) => {
@@ -144,92 +149,6 @@ export const EventWorkerController = ({
         )
       )
 
-    const questRequirementCompletedDbTransaction = ({
-      questId,
-      requirementId,
-      userId
-    }: {
-      userId: string
-      questId: QuestId
-      requirementId: EventId
-    }) =>
-      DbTransactionBuilder({ dbClient }).add(
-        dbClient.completedQuestRequirement.create({
-          data: {
-            userId,
-            questId,
-            requirementId
-          }
-        }),
-        dbClient.notification.create({
-          data: {
-            userId,
-            data: {
-              type: 'QuestRequirementCompleted',
-              questId,
-              requirementId
-            }
-          }
-        }),
-        dbClient.event.update({
-          where: {
-            transactionId
-          },
-          data: {
-            questId,
-            userId
-          }
-        })
-      )
-
-    const handleQuestRequirementCompleted = ({
-      questId,
-      requirementId,
-      userId
-    }: {
-      questId: QuestId
-      requirementId: EventId
-      userId: string | undefined
-    }) => {
-      childLogger.debug({
-        method: `EventWorkerController.handleQuestRequirementCompleted`,
-        questId,
-        userId
-      })
-      return (userId ? ok(userId) : err({ reason: 'userIdNotFoundError' })).map((userId) => ({
-        builder: questRequirementCompletedDbTransaction({ questId, requirementId, userId }),
-        questId,
-        requirementId,
-        userId
-      }))
-    }
-
-    const addXrdToAuditTable = ({
-      builder,
-      userId
-    }: {
-      builder: DbTransactionBuilder
-      userId: string
-    }) =>
-      getXrdPrice(getAmountFromDepositEvent(job.data.relevantEvents.XrdDeposited)).andThen(
-        ({ xrdUsdValue, xrdAmount }) =>
-          builder
-            .add(
-              dbClient.audit.create({
-                data: {
-                  transactionId,
-                  userId,
-                  type: AuditType.DIRECT_DEPOSIT,
-                  xrdUsdValue,
-                  metadata: JSON.stringify({
-                    resources: getFirstTransactionAuditResources(xrdAmount, userId)
-                  })
-                }
-              })
-            )
-            .exec()
-      )
-
     const handleAllQuestRequirementCompleted = ({
       questId,
       requirementId,
@@ -279,22 +198,6 @@ export const EventWorkerController = ({
       })
     }
 
-    const getXrdPrice = (
-      value: string | undefined
-    ): ResultAsync<{ xrdUsdValue: number; xrdAmount: BigNumber }, { reason: string }> => {
-      const result = value ? ok(BigNumber(value)) : err({ reason: 'xrdAmountNotFound' })
-
-      return result.asyncAndThen((xrdAmount) =>
-        tokenPriceClient
-          .getXrdPrice()
-          .mapErr(() => ({ reason: 'CouldNotGetXrdCurrentPriceError' }))
-          .map((xrdPrice) => ({
-            xrdUsdValue: xrdAmount.multipliedBy(xrdPrice).toNumber(),
-            xrdAmount
-          }))
-      )
-    }
-
     const handelCombineElementsDepositedEvent = async () => {
       const {
         badgeResourceAddress,
@@ -339,26 +242,41 @@ export const EventWorkerController = ({
         return handleRewardClaimed()
       case 'CombineElementsDeposited':
         return handelCombineElementsDepositedEvent()
-      case 'UserBadge': {
-        return handleQuestRequirementCompleted({
-          questId: 'FirstTransactionQuest',
-          requirementId: 'DepositUserBadge',
-          userId: getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited)
-        }).asyncAndThen((dependencies) =>
-          ensureUserExists(dependencies.userId, transactionId)
-            .andThen(() => addXrdToAuditTable(dependencies))
-            .andThen(() => handleAllQuestRequirementCompleted(dependencies))
-        )
-      }
+      case 'UserBadge':
+        return getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited)
+          .asyncAndThen((userId) => ensureUserExists(userId, transactionId))
+          .map((userId) => ({
+            questId: 'FirstTransactionQuest' as QuestId,
+            requirementId: 'DepositUserBadge' as EventId,
+            userId,
+            transactionId
+          }))
+          .andThen((questValues) =>
+            DbTransactionBuilder(dbClient)
+              .helpers.questRequirementCompleted(questValues)
+              .helpers.addXrdDepositToAuditTable({
+                ...questValues,
+                tokenPriceClient,
+                relevantEvents: job.data.relevantEvents
+              })
+              .andThen((builder) => builder.exec())
+              .andThen(() => handleAllQuestRequirementCompleted(questValues))
+          )
+
       case 'JettyReceivedClams': {
-        return getUserIdFromWithdrawEvent(job.data.relevantEvents.WithdrawEvent, dbClient).andThen(
-          (userId) =>
-            handleQuestRequirementCompleted({
-              questId: 'TransferTokens',
-              requirementId: 'JettyReceivedClams',
-              userId
-            }).asyncAndThen((dependencies) => handleAllQuestRequirementCompleted(dependencies))
-        )
+        return getUserIdFromWithdrawEvent(job.data.relevantEvents.WithdrawEvent, dbClient)
+          .map((userId) => ({
+            questId: 'TransferTokens' as QuestId,
+            requirementId: 'JettyReceivedClams' as EventId,
+            userId,
+            transactionId
+          }))
+          .andThen((questValues) =>
+            DbTransactionBuilder(dbClient)
+              .helpers.questRequirementCompleted(questValues)
+              .exec()
+              .andThen(() => handleAllQuestRequirementCompleted(questValues))
+          )
       }
       case 'XrdStaked': {
         const maybeAccountAddress: string | undefined = (
@@ -373,12 +291,17 @@ export const EventWorkerController = ({
           accountAddressModel
             .getTrackedAddressUserId(accountAddress, 'StakingQuest')
             .andThen((userId) => (userId ? ok(userId) : err({ reason: 'UserIdNotFound' })))
-            .andThen((userId) =>
-              handleQuestRequirementCompleted({
-                questId: 'StakingQuest',
-                requirementId: 'JettyReceivedClams',
-                userId
-              }).asyncAndThen((dependencies) => handleAllQuestRequirementCompleted(dependencies))
+            .map((userId) => ({
+              questId: 'StakingQuest' as QuestId,
+              requirementId: 'XrdStaked' as EventId,
+              userId,
+              transactionId
+            }))
+            .andThen((questValues) =>
+              DbTransactionBuilder(dbClient)
+                .helpers.questRequirementCompleted(questValues)
+                .exec()
+                .andThen(() => handleAllQuestRequirementCompleted(questValues))
             )
             .andThen(() => accountAddressModel.deleteTrackedAddress(accountAddress, 'StakingQuest'))
         )
