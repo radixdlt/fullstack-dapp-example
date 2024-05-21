@@ -3,7 +3,7 @@ import {
   ProgrammaticScryptoSborValueReference
 } from '@radixdlt/babylon-gateway-api-sdk'
 import { config } from '../config'
-import { EventJobType } from 'queues'
+import { EventId } from 'common'
 
 type EventEmitter = {
   entity: {
@@ -20,10 +20,7 @@ export const isEmittedByQuestRewards = (event: EventsItem) =>
 export const isEmittedByRefinery = (event: EventsItem) =>
   (event.emitter as EventEmitter).entity.entity_address === config.radQuest.components.refinery
 
-export type TrackedTransactions = Record<
-  EventJobType,
-  Record<string, (event: EventsItem) => boolean>
->
+export type TrackedTransactions = Record<EventId, Record<string, (event: EventsItem) => boolean>>
 
 const resourceDeposited = (resource: string, toAccount?: string) => (event: EventsItem) => {
   if (event.name !== 'DepositEvent' || event.data.kind !== 'Enum') return false
@@ -60,37 +57,37 @@ const refineryEmitted = (eventName: string) => (event: EventsItem) =>
   event.name === eventName && isEmittedByRefinery(event)
 
 export const getTrackedTransactionTypes = (): TrackedTransactions => ({
-  QuestRewardDeposited: {
+  [EventId.QuestRewardDeposited]: {
     RewardDepositedEvent: questRewardsEmitted('RewardDepositedEvent')
   },
-  QuestRewardClaimed: {
+  [EventId.QuestRewardClaimed]: {
     RewardClaimedEvent: questRewardsEmitted('RewardClaimedEvent')
   },
-  DepositUserBadge: {
+  [EventId.DepositUserBadge]: {
     UserBadgeDeposited: resourceDeposited(config.radQuest.badges.userBadgeAddress),
     XrdDeposited: resourceDeposited(config.radQuest.xrd)
   },
-  JettyReceivedClams: {
+  [EventId.JettyReceivedClams]: {
     DepositEvent: resourceDeposited(
       config.radQuest.resources.clamAddress,
       config.radQuest.accounts.jetty
     ),
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress)
   },
-  XrdStaked: {
+  [EventId.XrdStaked]: {
     XrdStake: xrdStaked,
     WithdrawEvent: resourceWithdrawn(config.radQuest.xrd)
   },
-  CombineElementsDeposited: {
+  [EventId.CombineElementsDeposited]: {
     DepositedEvent: refineryEmitted('CombineElementsDepositedEvent')
   },
-  CombineElementsMintedRadgem: {
+  [EventId.CombineElementsMintedRadgem]: {
     MintedRadgem: refineryEmitted('CombineElementsMintedRadgemEvent')
   },
-  CombineElementsAddedRadgemImage: {
+  [EventId.CombineElementsAddedRadgemImage]: {
     AddedRadgemImage: refineryEmitted('CombineElementsAddedRadgemImageEvent')
   },
-  CombineElementsClaimed: {
+  [EventId.CombineElementsClaimed]: {
     ClaimedEvent: refineryEmitted('CombineElementsClaimedEvent')
   }
 })

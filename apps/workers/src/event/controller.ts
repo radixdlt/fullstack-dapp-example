@@ -1,7 +1,8 @@
 import { TokenPriceClient } from './../token-price-client'
 import { ResultAsync, okAsync, errAsync, err, ok } from 'neverthrow'
 import { EventJob, Job, TransactionQueue } from 'queues'
-import { EventId, QuestDefinitions, QuestId, Quests } from 'content'
+import { QuestDefinitions, QuestId, Quests } from 'content'
+import { EventId } from 'common'
 import {
   AppLogger,
   EventModel,
@@ -234,11 +235,11 @@ export const EventWorkerController = ({
     }
 
     switch (type) {
-      case 'QuestRewardDeposited':
+      case EventId.QuestRewardDeposited:
         return handleRewardDeposited()
-      case 'QuestRewardClaimed':
+      case EventId.QuestRewardClaimed:
         return handleRewardClaimed()
-      case 'CombineElementsDeposited':
+      case EventId.CombineElementsDeposited:
         return handelCombineElementsDepositedEvent()
       case EventId.DepositUserBadge:
         return getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited)

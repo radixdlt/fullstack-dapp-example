@@ -1,17 +1,11 @@
+import { EventId } from 'common'
+
 export type QuestCategory = keyof typeof QuestCategory
 
 export const QuestCategory = {
   Basic: 'Basic',
   Advanced: 'Advanced',
   dApp: 'dApp'
-} as const
-
-export type EventId = keyof typeof EventId
-
-export const EventId = {
-  DepositUserBadge: 'DepositUserBadge',
-  JettyReceivedClams: 'JettyReceivedClams',
-  XrdStaked: 'XrdStaked'
 } as const
 
 export type FungibleToken = { amount: number }

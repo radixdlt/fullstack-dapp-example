@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
-import { EventId, QuestId } from 'content'
+import { QuestId } from 'content'
+import { EventId } from 'common'
 import { AuditType, Prisma, PrismaClient } from 'database'
 import { ResultAsync, ok, err } from 'neverthrow'
 import { TokenPriceClient } from './../../token-price-client'
