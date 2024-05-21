@@ -1,6 +1,6 @@
 <script lang="ts">
   import { i18n } from '$lib/i18n/i18n'
-  import Jetty from '../images/jetty.png'
+  import Jetty from '../images/jetty.webp'
   import Clam from '../images/clam.png'
   import Element from '../images/fragment.png'
   import Icon from '$lib/components/icon/Icon.svelte'
@@ -121,13 +121,14 @@
   img {
     position: absolute;
     z-index: 0;
-    left: -1.875rem;
-    top: -4.25rem;
+    left: -5.5rem;
+    top: -2.9rem;
+    width: 20rem;
 
     @include mobile {
-      width: 12.5rem;
-      left: -1rem;
-      top: -3.2rem;
+      width: 18.1rem;
+      left: -2.5rem;
+      top: -3.5rem;
     }
   }
 
