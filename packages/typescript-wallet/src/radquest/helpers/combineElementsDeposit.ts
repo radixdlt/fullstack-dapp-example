@@ -17,7 +17,7 @@ export const combineElementsDeposit = ({
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
       const transactionManifest = `
         CALL_METHOD 
-          Address("${wellKnownAddresses.accountAddress.testAccount}") 
+          Address("${wellKnownAddresses.accountAddress.payerAccount}") 
           "lock_fee"
           Decimal("10")
         ;
