@@ -78,6 +78,10 @@ export const QuestDefinitions = () => {
         Glossary: {
           type: 'offLedger',
           completedByUser: true
+        },
+        RadQuestQuiz: {
+          type: 'offLedger',
+          completedByUser: true
         }
       }
     },
@@ -91,6 +95,14 @@ export const QuestDefinitions = () => {
       requirements: {
         LearnAboutRadix: {
           type: 'content'
+        },
+        RadixQuiz: {
+          type: 'offLedger',
+          completedByUser: true
+        },
+        dAppQuiz: {
+          type: 'offLedger',
+          completedByUser: true
         }
       }
     },
