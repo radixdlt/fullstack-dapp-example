@@ -2,7 +2,7 @@
   "name": "notification",
   "version": "0.1.0",
   "scripts": {
-    "dev": "npm run build -- --watch",
+    "dev": "tsx --watch src/index.ts | npx pino-pretty",
     "build": "tsup",
     "clean": "rm -rf dist"
   },
