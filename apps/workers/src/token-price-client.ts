@@ -24,7 +24,7 @@ export const TokenPriceClient = ({
       redisClient.client.then((client) => client.get(redisKey)),
       (error) => {
         const jsError = error as Error
-        logger.error({ reason: 'CouldNotReadPriceFromRedis', jsError })
+        logger.error({ module: 'TokenPriceClient', method: 'getPriceFromRedis.error', jsError })
         return jsError
       }
     ).map((price) => (price ? BigNumber(price) : undefined))
@@ -36,7 +36,7 @@ export const TokenPriceClient = ({
       ),
       (error) => {
         const jsError = error as Error
-        logger.error({ reason: 'CouldNotWritePriceToRedis', jsError })
+        logger.error({ module: 'TokenPriceClient', method: 'setPriceInRedis.error', jsError })
         return jsError
       }
     )
@@ -55,7 +55,11 @@ export const TokenPriceClient = ({
       })
     )
       .mapErr((error) => {
-        logger.error({ reason: 'CouldNotFetchXrdPriceFromPricingService', error })
+        logger.error({
+          module: 'TokenPriceClient',
+          method: 'fetchXrdPriceFromPricingService.error',
+          error
+        })
         return { reason: 'CouldNotFetchXrdPriceFromPricingService' }
       })
       .andThen((response) => {
