@@ -3,7 +3,8 @@
   "marketplace-estimates": "Market price estimate:",
   "guarantee-hint": "You can change minimum guarantee",
   "guarantee-hint-part-2": "settings in your Radix Wallet.",
-  "estimated-amount": "Estimated at market price",
+  "estimated-amount-pt1": "Estimated",
+  "estimated-amount-pt2": "at market price",
   "balance-amount_one": "Balance: {{count}} {{resource}}",
   "balance-amount_other": "Balance: {{count}} {{resource}}s",
   "from": "from",
@@ -13,11 +14,11 @@
     "connect-wallet": "No Wallet Connected",
     "swap": "Swap"
   },
-  "swap-modal": {
+  "modal": {
     "success-title": "Swap Complete!",
-    "success-desc": "You received {{amount}} {{resource}}",
+    "success-desc": "You received {{count}} {{resource}}",
     "failure-title": "Swap Failed",
-    "failure-desc": "Your minimum guarantee amount",
+    "failure-desc": "Your minimum guarantee amount was not met",
     "failure-desc-not-met": "was not met.",
     "button": "close"
   }

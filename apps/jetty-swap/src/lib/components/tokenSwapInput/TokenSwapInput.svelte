@@ -9,7 +9,7 @@
 
   export let cardTitle: string
   export let value = ''
-  export let resource: Resource
+  export let resource: Resource | undefined = undefined
   export let state: 'default' | 'error' = 'default'
 </script>
 
@@ -18,8 +18,8 @@
   <div class="input-row">
     <Input style="width: 130px" {state} placeholder="0" bind:value />
     <div class="resource">
-      <Icon --size="20px" url={resource.icon} />
-      <p class="resource-name">{resource.name}</p>
+      <Icon --size="20px" url={resource?.icon} />
+      <p class="resource-name">{resource?.name}</p>
     </div>
   </div>
   <slot />
