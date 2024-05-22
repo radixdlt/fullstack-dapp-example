@@ -10836,6 +10836,7 @@ export namespace Prisma {
     error: number
     badgeId: number
     badgeResourceAddress: number
+    metadata: number
     _all: number
   }
 
@@ -10878,6 +10879,7 @@ export namespace Prisma {
     error?: true
     badgeId?: true
     badgeResourceAddress?: true
+    metadata?: true
     _all?: true
   }
 
@@ -10977,6 +10979,7 @@ export namespace Prisma {
     error: string | null
     badgeId: string
     badgeResourceAddress: string
+    metadata: JsonValue | null
     _count: TransactionCountAggregateOutputType | null
     _avg: TransactionAvgAggregateOutputType | null
     _sum: TransactionSumAggregateOutputType | null
@@ -11008,6 +11011,7 @@ export namespace Prisma {
       error?: boolean
       badgeId?: boolean
       badgeResourceAddress?: boolean
+      metadata?: boolean
     },
     ExtArgs['result']['transaction']
   >
@@ -11021,6 +11025,7 @@ export namespace Prisma {
     error?: boolean
     badgeId?: boolean
     badgeResourceAddress?: boolean
+    metadata?: boolean
   }
 
   export type $TransactionPayload<
@@ -11038,6 +11043,7 @@ export namespace Prisma {
         error: string | null
         badgeId: string
         badgeResourceAddress: string
+        metadata: Prisma.JsonValue | null
       },
       ExtArgs['result']['transaction']
     >
@@ -11481,6 +11487,7 @@ export namespace Prisma {
     readonly error: FieldRef<'Transaction', 'String'>
     readonly badgeId: FieldRef<'Transaction', 'String'>
     readonly badgeResourceAddress: FieldRef<'Transaction', 'String'>
+    readonly metadata: FieldRef<'Transaction', 'Json'>
   }
 
   // Custom InputTypes
@@ -11890,7 +11897,11 @@ export namespace Prisma {
     error: 'error'
     badgeId: 'badgeId'
     badgeResourceAddress: 'badgeResourceAddress'
+    metadata: 'metadata'
   }
+
+  export type TransactionScalarFieldEnum =
+    (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
 
   export type TransactionScalarFieldEnum =
     (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
@@ -11907,6 +11918,14 @@ export namespace Prisma {
   }
 
   export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull
+    JsonNull: typeof JsonNull
+  }
+
+  export type NullableJsonNullValueInput =
+    (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
   export const QueryMode: {
     default: 'default'
@@ -12588,6 +12607,7 @@ export namespace Prisma {
     error?: StringNullableFilter<'Transaction'> | string | null
     badgeId?: StringFilter<'Transaction'> | string
     badgeResourceAddress?: StringFilter<'Transaction'> | string
+    metadata?: JsonNullableFilter<'Transaction'>
   }
 
   export type TransactionOrderByWithRelationInput = {
@@ -12599,6 +12619,7 @@ export namespace Prisma {
     error?: SortOrderInput | SortOrder
     badgeId?: SortOrder
     badgeResourceAddress?: SortOrder
+    metadata?: SortOrderInput | SortOrder
   }
 
   export type TransactionWhereUniqueInput = Prisma.AtLeast<
@@ -12615,6 +12636,7 @@ export namespace Prisma {
       error?: StringNullableFilter<'Transaction'> | string | null
       badgeId?: StringFilter<'Transaction'> | string
       badgeResourceAddress?: StringFilter<'Transaction'> | string
+      metadata?: JsonNullableFilter<'Transaction'>
     },
     'transactionKey_badgeId_badgeResourceAddress_attempt'
   >
@@ -12628,6 +12650,7 @@ export namespace Prisma {
     error?: SortOrderInput | SortOrder
     badgeId?: SortOrder
     badgeResourceAddress?: SortOrder
+    metadata?: SortOrderInput | SortOrder
     _count?: TransactionCountOrderByAggregateInput
     _avg?: TransactionAvgOrderByAggregateInput
     _max?: TransactionMaxOrderByAggregateInput
@@ -12647,6 +12670,7 @@ export namespace Prisma {
     error?: StringNullableWithAggregatesFilter<'Transaction'> | string | null
     badgeId?: StringWithAggregatesFilter<'Transaction'> | string
     badgeResourceAddress?: StringWithAggregatesFilter<'Transaction'> | string
+    metadata?: JsonNullableWithAggregatesFilter<'Transaction'>
   }
 
   export type UserCreateInput = {
@@ -13117,6 +13141,7 @@ export namespace Prisma {
     error?: string | null
     badgeId: string
     badgeResourceAddress: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type TransactionUncheckedCreateInput = {
@@ -13128,6 +13153,7 @@ export namespace Prisma {
     error?: string | null
     badgeId: string
     badgeResourceAddress: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type TransactionUpdateInput = {
@@ -13139,6 +13165,7 @@ export namespace Prisma {
     error?: NullableStringFieldUpdateOperationsInput | string | null
     badgeId?: StringFieldUpdateOperationsInput | string
     badgeResourceAddress?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type TransactionUncheckedUpdateInput = {
@@ -13150,6 +13177,7 @@ export namespace Prisma {
     error?: NullableStringFieldUpdateOperationsInput | string | null
     badgeId?: StringFieldUpdateOperationsInput | string
     badgeResourceAddress?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type TransactionCreateManyInput = {
@@ -13161,6 +13189,7 @@ export namespace Prisma {
     error?: string | null
     badgeId: string
     badgeResourceAddress: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type TransactionUpdateManyMutationInput = {
@@ -13172,6 +13201,7 @@ export namespace Prisma {
     error?: NullableStringFieldUpdateOperationsInput | string | null
     badgeId?: StringFieldUpdateOperationsInput | string
     badgeResourceAddress?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type TransactionUncheckedUpdateManyInput = {
@@ -13183,6 +13213,7 @@ export namespace Prisma {
     error?: NullableStringFieldUpdateOperationsInput | string | null
     badgeId?: StringFieldUpdateOperationsInput | string
     badgeResourceAddress?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -13777,6 +13808,31 @@ export namespace Prisma {
     notIn?: $Enums.TransactionStatus[] | ListEnumTransactionStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumTransactionStatusFilter<$PrismaModel> | $Enums.TransactionStatus
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<
+          Required<JsonNullableFilterBase<$PrismaModel>>,
+          Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>
+        >,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type TransactionTransactionKeyBadgeIdBadgeResourceAddressAttemptCompoundUniqueInput = {
     transactionKey: string
@@ -13794,6 +13850,7 @@ export namespace Prisma {
     error?: SortOrder
     badgeId?: SortOrder
     badgeResourceAddress?: SortOrder
+    metadata?: SortOrder
   }
 
   export type TransactionAvgOrderByAggregateInput = {
@@ -13834,6 +13891,34 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTransactionStatusFilter<$PrismaModel>
     _max?: NestedEnumTransactionStatusFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<
+          Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>,
+          Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>
+        >,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type EventCreateNestedManyWithoutUserInput = {
@@ -14784,6 +14869,31 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTransactionStatusFilter<$PrismaModel>
     _max?: NestedEnumTransactionStatusFilter<$PrismaModel>
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<
+          Required<NestedJsonNullableFilterBase<$PrismaModel>>,
+          Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>
+        >,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type EventCreateWithoutUserInput = {

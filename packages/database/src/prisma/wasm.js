@@ -188,7 +188,8 @@ exports.Prisma.TransactionScalarFieldEnum = {
   createdAt: 'createdAt',
   error: 'error',
   badgeId: 'badgeId',
-  badgeResourceAddress: 'badgeResourceAddress'
+  badgeResourceAddress: 'badgeResourceAddress',
+  metadata: 'metadata'
 }
 
 exports.Prisma.SortOrder = {
@@ -197,6 +198,11 @@ exports.Prisma.SortOrder = {
 }
 
 exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+}
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 }
 
