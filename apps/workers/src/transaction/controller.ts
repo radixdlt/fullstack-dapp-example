@@ -23,6 +23,11 @@ const getUserIdFromBadgeId = (badgeId: string): Result<string, string> => {
   return ok(userId)
 }
 
+export const TransactionErrorReason = {
+  FailedToSubmitToRadixNetwork: 'FailedToSubmitToRadixNetwork',
+  FailedToPollTransactionStatus: 'FailedToPollTransactionStatus'
+} as const
+
 export type TransactionWorkerController = ReturnType<typeof TransactionWorkerController>
 export const TransactionWorkerController = ({
   logger,
@@ -104,24 +109,20 @@ export const TransactionWorkerController = ({
 
         const questDefinition = QuestDefinitions()[questId as QuestId]
         const rewards = questDefinition.rewards
-        // @ts-ignore
         const xrdReward = rewards.find((reward) => reward.name === 'xrd')
-        const KYC_THRESHOLD = 5
 
         return getUserIdFromBadgeId(badgeId).asyncAndThen((userId) =>
           auditModel(childLogger)
             .getUsdAmount(userId)
-            .map((usdAmount) => {
-              if (usdAmount + Number(xrdReward) > KYC_THRESHOLD) {
-                childLogger.debug({
-                  method: 'transactionWorker.DepositReward',
-                  message: 'User has exceeded KYC threshold'
-                })
-                return transactionModel(childLogger).setStatus(
-                  { transactionKey, badgeId, badgeResourceAddress, attempt },
-                  TransactionStatus.ERROR_KYC_REQUIRED
-                )
-              }
+            .andThen(() => {
+              /**
+               * TODO:
+               *  [] Is KYC threshold reached?
+               *  [] If yes, check the NF data is_valid
+               *  [] Does it match the user KYC record of the quest reward component state?
+               *  [] If no, include the KYC record change in the transaction
+               *  👉 Proceed with the transaction
+               */
 
               return handleSubmitTransaction((wellKnownAddresses) =>
                 createRewardsDepositManifest({
