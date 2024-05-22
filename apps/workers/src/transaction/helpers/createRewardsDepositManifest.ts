@@ -1,14 +1,7 @@
 import { Addresses } from 'common'
 import { QuestReward } from 'content'
-import { config } from '../config'
-import { getRandomValues } from 'node:crypto'
-
-const randomFloat = () => {
-  const typedArray = new Uint32Array(1)
-  const randomValue = getRandomValues(typedArray)[0]
-  const randomFloat = randomValue / Math.pow(2, 32)
-  return randomFloat
-}
+import { config } from '../../config'
+import { randomFloat } from '../../helpers/randomFloat'
 
 export const createRewardsDepositManifest = ({
   wellKnownAddresses,

@@ -4,11 +4,13 @@ use scrypto::prelude::*;
 mod element_price_oracle {
     struct ElementPriceOracle {
         starting_time: Instant,
+        price: Option<Decimal>,
     }
     impl ElementPriceOracle {
-        pub fn new() -> Global<ElementPriceOracle> {
+        pub fn new(price: Option<Decimal>) -> Global<ElementPriceOracle> {
             Self {
                 starting_time: Clock::current_time_rounded_to_minutes(),
+                price,
             }
             .instantiate()
             .prepare_to_globalize(OwnerRole::None)
@@ -23,6 +25,10 @@ mod element_price_oracle {
 
         // TODO: update function for with required logic
         pub fn get_price(&self) -> Decimal {
+            if self.price.is_some() {
+                return self.price.unwrap();
+            }
+
             let current_time_in_seconds =
                 Clock::current_time_rounded_to_seconds().seconds_since_unix_epoch;
 
@@ -32,8 +38,8 @@ mod element_price_oracle {
             let dec_normalized_time = Decimal::from(time % (2 * half_period));
             let dec_half_period = Decimal::from(half_period);
 
-            let max_value = dec!("10");
-            let epsilon = dec!("5");
+            let max_value = dec!("2");
+            let epsilon = dec!("1");
 
             if dec_normalized_time < dec_half_period {
                 // Linear rise for the first half (30 minutes)

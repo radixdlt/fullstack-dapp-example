@@ -34,6 +34,7 @@ CALL_FUNCTION
     Bucket("bucket1")
     Address("${clam}")
     Address("${element}")
+    Some(Decimal("1"))
 ;
 CALL_METHOD
     Address("${account}")

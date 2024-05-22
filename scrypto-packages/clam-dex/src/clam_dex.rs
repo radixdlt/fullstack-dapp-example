@@ -30,6 +30,7 @@ mod clam_dex {
             admin_badge_bucket: Bucket,
             clams_address: ResourceAddress,
             elements_address: ResourceAddress,
+            element_price_per_clam: Option<Decimal>,
         ) -> Global<ClamDex> {
             assert!(
                 admin_badge_bucket.amount() == dec!(1),
@@ -38,7 +39,7 @@ mod clam_dex {
 
             let elements_manager = ResourceManager::from_address(elements_address);
 
-            let element_price_oracle = ElementPriceOracle::new();
+            let element_price_oracle = ElementPriceOracle::new(element_price_per_clam);
 
             Self {
                 admin_badge: FungibleVault::with_bucket(admin_badge_bucket.as_fungible()),

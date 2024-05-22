@@ -9,7 +9,7 @@ import {
   type WellKnownAddresses
 } from 'common'
 import { radixEngineClient } from 'typescript-wallet'
-import { createRewardsDepositManifest } from '../helpers/createRewardsDepositManifest'
+import { createRewardsDepositManifest } from './helpers/createRewardsDepositManifest'
 import { QuestDefinitions, QuestId } from 'content'
 import { config } from '../config'
 import { createDirectDepositManifest } from './helpers/createDirectDepositManifest'
