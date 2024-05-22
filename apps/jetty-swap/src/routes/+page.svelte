@@ -92,9 +92,10 @@
   }
 
   onMount(async () => {
+    //todo update
     const jettySwapConfig = {
       // networkId is 2 for Stokenet, 1 for Mainnet
-      networkId: RadixNetwork.Stokenet,
+      networkId: +PUBLIC_NETWORK_ID,
       applicationVersion: '1.0.0',
       applicationName: 'Jetty Swap',
       applicationDappDefinitionAddress: dAppDefinitionAddress
