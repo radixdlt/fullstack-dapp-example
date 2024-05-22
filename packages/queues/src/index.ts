@@ -33,7 +33,7 @@ export type CombinedElementsMintRadgemTransactionJob = {
 
 export type CombinedElementsAddRadgemImageTransactionJob = {
   type: 'CombinedElementsAddRadgemImage'
-  imageUrl: string
+  radgemId: string
 }
 
 export type PopulateResourcesTransactionJob = {
@@ -47,6 +47,7 @@ export type TransactionJob = {
   badgeId: string
   badgeResourceAddress: string
   traceId: string
+  metadata?: string
 } & (
   | DepositRewardTransactionJob
   | MintUserBadgeTransactionJob

@@ -130,6 +130,7 @@ model Transaction {
   error                     String?
   badgeId                   String
   badgeResourceAddress      String
+  metadata                  Json?
 
   @@id([transactionKey, badgeId, badgeResourceAddress, attempt])
 }
