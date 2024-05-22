@@ -12,12 +12,14 @@ export const TokenPriceClient = ({
   logger,
   redisClient,
   xrdResourceAddress = 'resource_rdx1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxradxrd',
-  redisKey = 'xrdPrice'
+  redisKey = 'xrdPrice',
+  cacheTimeInSeconds = 60
 }: {
   logger: AppLogger
   redisClient: RedisConnection
   xrdResourceAddress?: string
   redisKey?: string
+  cacheTimeInSeconds?: number
 }) => {
   const getPriceFromRedis = () =>
     ResultAsync.fromPromise(
@@ -32,7 +34,7 @@ export const TokenPriceClient = ({
   const setPriceInRedis = (price: string) =>
     ResultAsync.fromPromise(
       redisClient.client.then((client) =>
-        client.set(redisKey, price).then(() => client.expire(redisKey, 60))
+        client.set(redisKey, price).then(() => client.expire(redisKey, cacheTimeInSeconds))
       ),
       (error) => {
         const jsError = error as Error
