@@ -130,4 +130,5 @@ The commit contains the following structural elements, to communicate intent to 
 - **stream**
 - **workers**
 - **db**
+- **jetty-swap**
 - **core** - changes that affect the whole project

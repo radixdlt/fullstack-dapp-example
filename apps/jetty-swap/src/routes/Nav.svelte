@@ -4,25 +4,31 @@
 
 <nav>
   <div class="navbar">
-    <p class="text-bold">{$i18n.t('main:title')}</p>
+    <p class="text-bold title">{$i18n.t('main:title')}</p>
   </div>
   <div class="connect-btn">
     <radix-connect-button />
   </div>
 </nav>
 
-<style>
+<style lang="scss">
   nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 24px;
-    padding: 1rem 4rem;
+    width: 100vw;
+    padding: 1rem;
   }
-  @media (max-width: 768px) {
+  @include desktop {
     nav {
-      padding: 1rem;
+      position: absolute;
+      padding: 1rem 4rem;
     }
+  }
+
+  p {
+    color: var(--color-dark);
   }
 
   .connect-btn {

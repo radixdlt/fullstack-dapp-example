@@ -19,7 +19,8 @@ module.exports = {
         'multiple',
         'scrypto',
         'queues',
-        'integration'
+        'integration',
+        'jetty-swap'
       ]
     ],
     'scope-empty': [2, 'never'],

@@ -43,9 +43,11 @@ body {
   --color-neutral: #dfdbd5;
   --color-background-dark: #192d3a;
   --color-background-light: #fffbf4;
+  --color-background-light: #fbece7;
+  --color-linen: #fbeee9;
   --color-radix-grey1: #003057;
   /* Special */
-  --color-error: #ff2d2d;
+  --color-error: #d92761;
 
   /* Gradients */
 
@@ -58,6 +60,7 @@ body {
   /* Light and Dark */
   --color-light: #fffbf4;
   --color-dark: #000000;
+  --color-white: #fffffff2;
 }
 
 /* ------------------ */
@@ -71,7 +74,7 @@ body {
   --text-xs: 14px;
   --text-sm: 16px;
   --text-md: 20px;
-  --text-lg: 24px;
+  --text-lg: 26px;
   --text-xl: 32px;
   --text-2xl: 36px;
 
@@ -86,14 +89,14 @@ body {
 /* Spacing */
 body {
   --spacing-unit: 0.6em;
-  --spacing-xs: calc(0.25 * var(--spacing-unit));
-  --spacing-sm: calc(0.5 * var(--spacing-unit));
-  --spacing-md: calc(0.75 * var(--spacing-unit));
-  --spacing-lg: calc(1.25 * var(--spacing-unit));
-  --spacing-xl: calc(2 * var(--spacing-unit));
-  --spacing-2xl: calc(3.25 * var(--spacing-unit));
-  --spacing-3xl: calc(5.25 * var(--spacing-unit));
-  --spacing-4xl: calc(8.5 * var(--spacing-unit));
+  --spacing-xs: 0.15rem;
+  --spacing-sm: 0.3rem;
+  --spacing-md: 0.45rem;
+  --spacing-lg: 0.625rem;
+  --spacing-xl: 1rem;
+  --spacing-2xl: 1.95rem;
+  --spacing-3xl: 3.15rem;
+  --spacing-4xl: 8.1rem;
 }
 
 /* ------------------ */
@@ -193,6 +196,10 @@ body {
 
 .text-faded {
   opacity: 0.6;
+}
+
+.error-text {
+  color: var(--color-error);
 }
 
 /* ------------------ */
