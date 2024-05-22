@@ -1,4 +1,4 @@
-import { ResultAsync, okAsync, errAsync } from 'neverthrow'
+import { ResultAsync, ok, err, okAsync } from 'neverthrow'
 import { config } from './config'
 import { AppLogger, fetchWrapper } from 'common'
 import BigNumber from 'bignumber.js'
@@ -10,34 +10,40 @@ export type TokensPriceResponse = { tokens: TokenPrice[] }
 export type TokenPriceClient = ReturnType<typeof TokenPriceClient>
 export const TokenPriceClient = ({
   logger,
-  redisClient
+  redisClient,
+  xrdResourceAddress = 'resource_rdx1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxradxrd',
+  redisKey = 'xrdPrice',
+  cacheTimeInSeconds = 60
 }: {
   logger: AppLogger
   redisClient: RedisConnection
+  xrdResourceAddress?: string
+  redisKey?: string
+  cacheTimeInSeconds?: number
 }) => {
-  const XRD_ADDRESS = 'resource_rdx1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxradxrd'
-
   const getPriceFromRedis = () =>
     ResultAsync.fromPromise(
-      redisClient.client.then((client) => client.get('xrdPrice')),
+      redisClient.client.then((client) => client.get(redisKey)),
       (error) => {
-        logger.error({ error, method: 'TokenPriceClient.getPriceFromRedis', event: 'error' })
+        const jsError = error as Error
+        logger.error({ module: 'TokenPriceClient', method: 'getPriceFromRedis.error', jsError })
+        return jsError
       }
-    ).andThen((price) =>
-      price
-        ? okAsync(price)
-        : errAsync({
-            reason: 'Price is `null` in Redis'
-          })
-    )
+    ).map((price) => (price ? BigNumber(price) : undefined))
 
   const setPriceInRedis = (price: string) =>
     ResultAsync.fromPromise(
-      redisClient.client.then((client) => client.set('xrdPrice', price)),
-      (error) => logger.error({ error, method: 'TokenPriceClient.setPriceInRedis', event: 'error' })
-    ).orElse(() => okAsync('OK' as const))
+      redisClient.client.then((client) =>
+        client.set(redisKey, price).then(() => client.expire(redisKey, cacheTimeInSeconds))
+      ),
+      (error) => {
+        const jsError = error as Error
+        logger.error({ module: 'TokenPriceClient', method: 'setPriceInRedis.error', jsError })
+        return jsError
+      }
+    )
 
-  const fetchXrdPrice = () =>
+  const fetchXrdPriceFromPricingService = () =>
     fetchWrapper<TokensPriceResponse>(
       fetch(`${config.priceService.baseUrl}/price/tokens`, {
         method: 'POST',
@@ -46,22 +52,39 @@ export const TokenPriceClient = ({
         },
         body: JSON.stringify({
           currency: 'USD',
-          tokens: [XRD_ADDRESS]
+          tokens: [xrdResourceAddress]
         })
       })
     )
-      .map(({ data }) => data)
-      .map(
-        ({ tokens }) => tokens.find((token) => token.resource_address === XRD_ADDRESS)?.usd_price
+      .mapErr((error) => {
+        logger.error({
+          module: 'TokenPriceClient',
+          method: 'fetchXrdPriceFromPricingService.error',
+          error
+        })
+        return { reason: 'CouldNotFetchXrdPriceFromPricingService' }
+      })
+      .andThen((response) => {
+        const isOkStatus = response.status === 200
+        const tokens = response.data?.tokens
+        if (isOkStatus && tokens) {
+          const usdPrice = tokens.find(
+            (token) => token.resource_address === xrdResourceAddress
+          )?.usd_price
+          return usdPrice ? ok(usdPrice) : err({ reason: 'PriceNotFound' })
+        }
+        return err({ reason: 'CouldNotGetXrdPrice' })
+      })
+      .andThen((price) =>
+        setPriceInRedis(price.toString())
+          .mapErr(() => ({ reason: 'FailedToSetPriceInRedis' }))
+          .map(() => BigNumber(price))
       )
-      .orElse(() => okAsync(undefined))
 
-  const getXrdPrice = () =>
-    fetchXrdPrice().andThen((price) =>
-      price
-        ? setPriceInRedis(price.toString()).map(() => BigNumber(price))
-        : getPriceFromRedis().map((price) => BigNumber(price))
-    )
+  const getXrdPrice = (): ResultAsync<BigNumber, { reason: string }> =>
+    getPriceFromRedis()
+      .mapErr(() => ({ reason: 'FailedToGetPriceFromRedis' }))
+      .andThen((price) => (price ? okAsync(price) : fetchXrdPriceFromPricingService()))
 
   return { getXrdPrice }
 }
