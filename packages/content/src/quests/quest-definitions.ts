@@ -238,6 +238,28 @@ export const QuestDefinitions = () => {
           type: 'event'
         }
       }
+    },
+    InstapassQuest: {
+      id: 'InstapassQuest',
+      category: 'Advanced',
+      rewards: [
+        {
+          name: 'element',
+          amount: 50
+        },
+        {
+          name: 'xrd',
+          amount: 120
+        }
+      ],
+      trackedAccountAddress: true,
+      minutesToComplete: 20,
+      preRequisites: ['TransferTokens'],
+      requirements: {
+        LearnAboutInstapass: {
+          type: 'content'
+        }
+      }
     }
   } as const satisfies { [key: string]: QuestDefinition }
 }

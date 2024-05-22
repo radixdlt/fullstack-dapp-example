@@ -123,6 +123,14 @@ interface Resources {
       description: 'Learn how to swap one token for another at a changing market rate.'
       introDescription: 'Learn about DEXes\nSwap one token for another kind of token'
     }
+    InstapassQuest: {
+      requirements: {
+        LearnAboutInstapass: 'Learn about Instapass'
+      }
+      title: 'Instapass'
+      description: 'Learn about Instapass'
+      introDescription: 'Instapass is a way to log in to websites without a password. Learn more about Instapass.'
+    }
   }
   transformGems: {
     back: 'Back'
