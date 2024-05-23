@@ -1,8 +1,9 @@
-import { ResultAsync, errAsync, err, ok, Result } from 'neverthrow'
+import { ResultAsync, errAsync, okAsync, err, ok, Result } from 'neverthrow'
 import { Job, TransactionJob } from 'queues'
 import { TransactionStatus } from 'database'
 import {
   Addresses,
+  GatewayApi,
   type AppLogger,
   type AuditModel,
   type TransactionModel,
@@ -15,6 +16,7 @@ import { config } from '../config'
 import { createDirectDepositManifest } from './helpers/createDirectDepositManifest'
 import { createCombinedElementsMintRadgemManifest } from './helpers/createCombinedElementsMintRadgemManifest'
 import { stripNonFungibleLocalId } from '../event/helpers/stripNonFungibleLocalId'
+import { TokenPriceClient } from '../token-price-client'
 
 export type TransactionWorkerError =
   (typeof TransactionWorkerError)[keyof typeof TransactionWorkerError]
@@ -25,6 +27,7 @@ export const TransactionWorkerError = {
   FailedToConvertStringManifest: 'FailedToConvertStringManifest',
   FailedToSetTransactionId: 'FailedToSetTransactionId',
   FailedToGetTotalRewardedUsdAmount: 'FailedToGetTotalRewardedUsdAmount',
+  FailedToQueryNetworkGateway: 'FailedToQueryNetworkGateway',
   FailedToSetCompletedStatus: 'FailedToSetCompletedStatus',
   FailedToGetUserIdFromBadgeId: 'FailedToGetUserIdFromBadgeId',
   FailedToGetTransactionFromDb: 'FailedToGetTransactionFromDb',
@@ -48,10 +51,14 @@ export type TransactionWorkerControllerError = { reason: TransactionWorkerError;
 export type TransactionWorkerController = ReturnType<typeof TransactionWorkerController>
 export const TransactionWorkerController = ({
   auditModel,
-  transactionModel
+  transactionModel,
+  gatewayApi,
+  tokenPriceClient
 }: {
   auditModel: AuditModel
+  gatewayApi: GatewayApi
   transactionModel: TransactionModel
+  tokenPriceClient: TokenPriceClient
 }) => {
   const handler = ({
     job,
@@ -172,37 +179,63 @@ export const TransactionWorkerController = ({
 
         const questDefinition = QuestDefinitions()[questId as QuestId]
         const rewards = questDefinition.rewards
+        const xrdReward = rewards.find((reward) => reward.name === 'xrd')?.amount ?? 0
+
+        const triggerDepositRewardsTransaction = (userId: string) => {
+          const hasXrdReward = xrdReward > 0
+          return (
+            hasXrdReward
+              ? checkIfUserHasExceededKycThreshold(userId).andThen((hasExceededKycThreshold) =>
+                  hasExceededKycThreshold
+                    ? checkIfKycOracleEntryExists(userId).map((hasEntry) => !hasEntry)
+                    : ok(false)
+                )
+              : okAsync(false)
+          ).andThen((includeKycOracleUpdate) =>
+            handleSubmitTransaction((wellKnownAddresses) =>
+              createRewardsDepositManifest({
+                wellKnownAddresses,
+                questId,
+                userId,
+                rewards,
+                includeKycOracleUpdate
+              })
+            )
+          )
+        }
+
+        const checkIfUserHasExceededKycThreshold = (
+          userId: string
+        ): ResultAsync<boolean, { reason: TransactionWorkerError; jsError: unknown }> =>
+          ResultAsync.combine([
+            auditModel(logger)
+              .getUsdAmount(userId)
+              .mapErr(({ jsError, reason }) => ({ jsError, reason })),
+            tokenPriceClient.getXrdPrice()
+          ])
+            .map(([distributedUsdAmount, xrdPrice]) =>
+              xrdPrice
+                .multipliedBy(xrdReward)
+                .plus(distributedUsdAmount)
+                .isGreaterThan(config.usdKYCThreshold)
+            )
+            .mapErr((error) => ({
+              reason: TransactionWorkerError.FailedToGetTotalRewardedUsdAmount,
+              jsError: error
+            }))
+
+        const checkIfKycOracleEntryExists = (userId: string) =>
+          gatewayApi.hasKycEntry(userId).mapErr(({ jsError }) => ({
+            reason: TransactionWorkerError.FailedToQueryNetworkGateway,
+            jsError
+          }))
 
         return getItemFromDb().andThen((item) =>
           item.transactionId
             ? handlePollTransactionStatus(item.transactionId)
-            : getUserIdFromBadgeId(badgeId).asyncAndThen((userId) =>
-                auditModel(logger)
-                  .getUsdAmount(userId)
-                  .mapErr(({ jsError }) => ({
-                    reason: TransactionWorkerError.FailedToGetTotalRewardedUsdAmount,
-                    jsError
-                  }))
-                  .andThen(() => {
-                    /**
-                     * TODO:
-                     *  [] Is KYC threshold reached?
-                     *  [] If yes, check the NF data is_valid
-                     *  [] Does it match the user KYC record of the quest reward component state?
-                     *  [] If no, include the KYC record change in the transaction
-                     *  👉 Proceed with the transaction
-                     */
-
-                    return handleSubmitTransaction((wellKnownAddresses) =>
-                      createRewardsDepositManifest({
-                        wellKnownAddresses,
-                        questId,
-                        userId,
-                        rewards
-                      })
-                    ).andThen(handlePollTransactionStatus)
-                  })
-              )
+            : getUserIdFromBadgeId(badgeId)
+                .asyncAndThen(triggerDepositRewardsTransaction)
+                .andThen(handlePollTransactionStatus)
         )
 
       case 'PopulateResources':
