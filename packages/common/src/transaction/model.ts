@@ -35,6 +35,13 @@ export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
     )
   }
 
+  const getItem = (input: TransactionIdentifierData) => {
+    return ResultAsync.fromPromise(db.transaction.findFirst({ where: input }), (error) => {
+      logger?.error({ error, method: 'add', model: 'TransactionModel' })
+      return createApiError('failed to get transaction', 400)()
+    })
+  }
+
   const setTransactionId = (
     { transactionKey, badgeId, badgeResourceAddress, attempt }: TransactionIdentifierData,
     transactionId: string
@@ -95,6 +102,7 @@ export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
   return {
     add,
     setStatus,
-    setTransactionId
+    setTransactionId,
+    getItem
   }
 }

@@ -50,7 +50,6 @@ const app = async () => {
   })
 
   const transactionWorkerController = TransactionWorkerController({
-    logger,
     transactionModel,
     auditModel: AuditModel(dbClient)
   })

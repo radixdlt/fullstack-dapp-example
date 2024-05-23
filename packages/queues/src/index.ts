@@ -77,7 +77,10 @@ export const getQueues = (connection: ConnectionOptions) => {
     )
 
   const addTransactionJob = (item: TransactionJob) =>
-    ResultAsync.fromPromise(transactionQueue.add(item.traceId, item), typedError)
+    ResultAsync.fromPromise(
+      transactionQueue.add(item.traceId, item, { jobId: `${item.traceId}:${item.attempt}` }),
+      typedError
+    )
 
   return {
     eventQueue: { addBulk, queue: eventQueue },
