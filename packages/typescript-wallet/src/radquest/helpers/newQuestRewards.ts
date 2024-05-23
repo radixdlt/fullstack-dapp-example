@@ -49,7 +49,12 @@ export const newQuestRewards = () =>
           Address("${config.radQuest.badges.userBadgeAddress}"); 
        `
       )
-        .andThen((value) => submitTransaction(value, ['systemAccount', 'dAppDefinitionAccount']))
+        .andThen((value) =>
+          submitTransaction({
+            transactionManifest: value,
+            signers: ['systemAccount', 'dAppDefinitionAccount']
+          })
+        )
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
         )
