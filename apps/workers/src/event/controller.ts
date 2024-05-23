@@ -81,6 +81,9 @@ export const EventWorkerController = ({
     ): ResultAsync<string, { reason: string }> =>
       userModel(childLogger)
         .getById(userId, {})
+        .andThen((user) =>
+          user ? okAsync(user) : errAsync({ reason: EventError.ERROR_USER_NOT_FOUND })
+        )
         .mapErr(() => {
           eventModel(childLogger).update(transactionId, {
             error: EventError.ERROR_USER_NOT_FOUND
