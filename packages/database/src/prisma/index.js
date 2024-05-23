@@ -236,7 +236,7 @@ const config = {
       value: 'prisma-client-js'
     },
     output: {
-      value: '/Users/azizi/Code/radquest/packages/database/src/prisma',
+      value: '/Users/alex/Projects/radquest/packages/database/src/prisma',
       fromEnvVar: null
     },
     config: {
