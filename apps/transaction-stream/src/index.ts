@@ -94,7 +94,8 @@ app({
   filterTransactionsByAccountAddress,
   stateVersionModel,
   dbClient
-}).catch(() => {
+}).catch((error) => {
+  logger.error({ reason: 'UnrecoverableError', error })
   // crash the process if an error is thrown within the app
   process.exit(1)
 })
