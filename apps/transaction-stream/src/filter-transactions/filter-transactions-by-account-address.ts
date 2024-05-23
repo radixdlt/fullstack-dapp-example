@@ -20,13 +20,13 @@ export const FilterTransactionsByAccountAddress =
 
     switch (tx.type) {
       case EventId.XrdStaked:
+      case EventId.JettySwap:
         userId = await accountAddressModel.getTrackedAddressUserId(
           (tx.relevantEvents['WithdrawEvent'].emitter as any).entity.entity_address,
-          'StakingQuest'
+          tx.type === EventId.XrdStaked ? 'StakingQuest' : 'SwapQuest'
         )
 
         return userId.isOk() && userId.value ? tx : undefined
-
       case EventId.InstapassBadgeDeposited:
         userId = await accountAddressModel.getTrackedAddressUserId(
           (tx.relevantEvents.DepositedEvent.emitter as EventEmitter).entity.entity_address,
