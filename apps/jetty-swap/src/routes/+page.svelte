@@ -6,7 +6,6 @@
   import Clam from '../images/clam.png'
   import Element from '../images/fragment.png'
   import Icon from '$lib/components/icon/Icon.svelte'
-  import SwtichButton from '$lib/components/switchButton/SwitchButton.svelte'
   import TokenSwapInput from '$lib/components/tokenSwapInput/TokenSwapInput.svelte'
   import ArrowIcon from '@images/arrow-down.svg'
   import Button from '$lib/components/button/Button.svelte'
