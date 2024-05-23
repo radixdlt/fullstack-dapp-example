@@ -74,7 +74,13 @@
     return balanceChange?.resource_changes[0]?.amount as string
   }
 
-  const updateBalances = async (walletAddress: string) => {
+  const updateBalances = async (walletAddress?: string) => {
+    /* Logged out, reset balances */
+    if (!walletAddress) {
+      balances = []
+      return
+    }
+
     if (!$gatewayApi) return
     const details = await ResultAsync.fromPromise(
       $gatewayApi.state.getEntityDetailsVaultAggregated(walletAddress),
@@ -101,8 +107,11 @@
 
     $rdt = RadixDappToolkit(jettySwapConfig)
     $gatewayApi = GatewayApiClient.initialize(jettySwapConfig)
-    $rdt?.walletApi.setRequestData(DataRequestBuilder.accounts().atLeast(1))
-    $rdt?.walletApi.walletData$.subscribe((data) => ($walletData = data))
+    $rdt?.walletApi.setRequestData(DataRequestBuilder.accounts().exactly(1))
+    $rdt?.walletApi.walletData$.subscribe((data) => {
+      $walletData = data
+      updateBalances(data?.accounts[0]?.address)
+    })
 
     const result = await ResultAsync.combine([
       ResultAsync.fromPromise(
@@ -121,7 +130,7 @@
     elementResource = result.value[0]
     clamResource = result.value[1]
 
-    if (!$walletData?.accounts[0].address) return
+    if (!$walletData?.accounts[0]?.address) return
     updateBalances($walletData?.accounts[0].address)
 
     if (!elementResource || !clamResource) return
@@ -170,7 +179,7 @@
           fromTokenAddress: clamResource.id,
           toTokenAddress: elementResource.id,
           swapComponent: addresses.components.jettySwap,
-          userAddress: $walletData.accounts[0].address
+          userAddress: $walletData.accounts[0]?.address
         })
       })
       .map(() => {
