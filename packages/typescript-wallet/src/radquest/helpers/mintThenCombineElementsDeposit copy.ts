@@ -55,7 +55,9 @@ export const mintThenCombineElementsDeposit = ({
         `
       console.log(transactionManifest)
       return convertStringManifest(transactionManifest)
-        .andThen((transactionManifest) => submitTransaction(transactionManifest, ['systemAccount']))
+        .andThen((transactionManifest) =>
+          submitTransaction({ transactionManifest, signers: ['systemAccount'] })
+        )
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
         )

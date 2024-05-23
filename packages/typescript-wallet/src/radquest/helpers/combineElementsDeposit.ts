@@ -54,7 +54,7 @@ export const combineElementsDeposit = ({
         `
       console.log(transactionManifest)
       return convertStringManifest(transactionManifest)
-        .andThen((transactionManifest) => submitTransaction(transactionManifest, []))
+        .andThen((transactionManifest) => submitTransaction({ transactionManifest, signers: [] }))
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
         )

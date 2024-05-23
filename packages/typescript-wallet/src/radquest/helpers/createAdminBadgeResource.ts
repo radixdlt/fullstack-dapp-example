@@ -88,7 +88,9 @@ export const createAdminBadgeResource = (superAdminBadgeAddress: string) => {
           )
           None
         ;`)
-        .andThen((value) => submitTransaction(value, ['dAppDefinitionAccount']))
+        .andThen((value) =>
+          submitTransaction({ transactionManifest: value, signers: ['dAppDefinitionAccount'] })
+        )
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
         )

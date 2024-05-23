@@ -175,7 +175,9 @@ export const createRadmorph = () => {
             Enum<0u8>()
         ;
         `)
-        .andThen((value) => submitTransaction(value, ['systemAccount']))
+        .andThen((value) =>
+          submitTransaction({ transactionManifest: value, signers: ['systemAccount'] })
+        )
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
         )
