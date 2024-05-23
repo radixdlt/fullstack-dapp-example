@@ -1,16 +1,14 @@
 <script lang="ts">
   import HappyJetty from '@images/jetty-happy.png'
   import CrossIcon from '@images/cross.svg'
-  import { backOut } from 'svelte/easing'
-  import { scale } from 'svelte/transition'
 
   export let close = false
   export let notification = false
+  export let disabled = false
 </script>
 
-<div style:position="relative">
+<div style:position="relative" class:non-interactable={disabled}>
   <button
-    transition:scale|local={{ easing: backOut }}
     class="jetty-icon"
     class:close
     style:--image={`url(${HappyJetty})`}
@@ -58,5 +56,10 @@
     height: 0.8rem;
     background-color: red;
     border-radius: 50%;
+  }
+
+  .non-interactable {
+    cursor: pointer;
+    pointer-events: none;
   }
 </style>

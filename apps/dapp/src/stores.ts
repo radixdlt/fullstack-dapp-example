@@ -34,3 +34,5 @@ type JettyComponentNotification = _JettyNotification<'component'> & {
 export type JettyNotification = JettyTextNotification | JettyComponentNotification
 
 export const jettyNotifications = writable<JettyNotification[]>([])
+
+export const showJetty = writable(true)

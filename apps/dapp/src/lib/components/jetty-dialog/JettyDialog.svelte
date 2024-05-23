@@ -6,6 +6,7 @@
   export let currentDialog = 0
   export let close = false
   export let notification = false
+  export let disabled = false
 
   export const setCurrentDialog = (index: number) => {
     currentDialog = index
@@ -21,7 +22,7 @@
     <slot {i} {SpeechBubble} />
   {/each}
   <div>
-    <JettyIcon on:click {close} {notification} />
+    <JettyIcon on:click {close} {notification} {disabled} />
   </div>
 </div>
 

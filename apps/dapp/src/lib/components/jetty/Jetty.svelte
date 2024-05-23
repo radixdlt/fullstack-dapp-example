@@ -18,6 +18,7 @@
   export let dialog: JettyDialogT | undefined = undefined
   export let glossary: ComponentProps<Glossary>['glossary']
   export let glossaryItem: string | undefined = undefined
+  export let disabled = false
 
   let showJettyMenu = false
   let showNotification = false
@@ -30,12 +31,14 @@
     'notification-opened': undefined
   }>()
 
+  export const close = () => {
+    showGlossary = false
+    showJettyMenu = false
+    showNotification = false
+  }
+
   const handleKeydown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      showGlossary = false
-      showJettyMenu = false
-      showNotification = false
-    }
+    if (event.key === 'Escape') close()
   }
 
   const popNotification = (showMenu = true) => {
@@ -76,6 +79,7 @@
   on:click={onClick}
   close={showGlossary}
   notification={hasNotifications}
+  {disabled}
   let:SpeechBubble
 >
   {#if showNotification}
