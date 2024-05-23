@@ -1,4 +1,4 @@
-import { ResultAsync, okAsync, errAsync, err, ok, Result } from 'neverthrow'
+import { ResultAsync, errAsync, err, ok, Result } from 'neverthrow'
 import { Job, TransactionJob } from 'queues'
 import { TransactionStatus } from 'database'
 import {
@@ -16,86 +16,154 @@ import { createDirectDepositManifest } from './helpers/createDirectDepositManife
 import { createCombinedElementsMintRadgemManifest } from './helpers/createCombinedElementsMintRadgemManifest'
 import { stripNonFungibleLocalId } from '../event/helpers/stripNonFungibleLocalId'
 
-const getUserIdFromBadgeId = (badgeId: string): Result<string, string> => {
+export type TransactionWorkerError =
+  (typeof TransactionWorkerError)[keyof typeof TransactionWorkerError]
+export const TransactionWorkerError = {
+  FailedToSubmitToRadixNetwork: 'FailedToSubmitToRadixNetwork',
+  FailedToPollTransactionStatus: 'FailedToPollTransactionStatus',
+  FailedToGetManifestBuilder: 'FailedToGetManifestBuilder',
+  FailedToConvertStringManifest: 'FailedToConvertStringManifest',
+  FailedToSetTransactionId: 'FailedToSetTransactionId',
+  FailedToGetTotalRewardedUsdAmount: 'FailedToGetTotalRewardedUsdAmount',
+  FailedToSetCompletedStatus: 'FailedToSetCompletedStatus',
+  FailedToGetUserIdFromBadgeId: 'FailedToGetUserIdFromBadgeId',
+  FailedToGetTransactionFromDb: 'FailedToGetTransactionFromDb',
+  MissingTransactionInDb: 'MissingTransactionInDb',
+  UnhandledJob: 'UnhandledJob'
+} as const
+
+const getUserIdFromBadgeId = (
+  badgeId: string
+): Result<string, { reason: TransactionWorkerError; jsError: Error }> => {
   const userId = stripNonFungibleLocalId(badgeId)
 
-  if (!userId) return err('InvalidBadgeId')
+  if (!userId)
+    return err({
+      reason: TransactionWorkerError.FailedToGetUserIdFromBadgeId,
+      jsError: new Error('Invalid badgeId')
+    })
   return ok(userId)
 }
-
+export type TransactionWorkerControllerError = { reason: TransactionWorkerError; jsError: unknown }
 export type TransactionWorkerController = ReturnType<typeof TransactionWorkerController>
 export const TransactionWorkerController = ({
-  logger,
   auditModel,
   transactionModel
 }: {
-  logger: AppLogger
   auditModel: AuditModel
   transactionModel: TransactionModel
 }) => {
-  const handler = (job: Job<TransactionJob>) => {
-    const { type, traceId, transactionKey, attempt, badgeResourceAddress, badgeId } = job.data
-    const childLogger = logger.child({ traceId, type })
+  const handler = ({
+    job,
+    logger
+  }: {
+    job: Job<TransactionJob>
+    logger: AppLogger
+  }): ResultAsync<void, TransactionWorkerControllerError> => {
+    const { type, transactionKey, attempt, badgeResourceAddress, badgeId } = job.data
+
+    const getItemFromDb = () => {
+      const latestAttempt = attempt - 1 === -1 ? 0 : attempt - 1
+
+      return transactionModel(logger)
+        .getItem({
+          badgeId,
+          badgeResourceAddress,
+          transactionKey,
+          attempt: latestAttempt
+        })
+        .mapErr(({ jsError }) => ({
+          reason: TransactionWorkerError.FailedToGetTransactionFromDb,
+          jsError
+        }))
+        .andThen((item) =>
+          item
+            ? ok(item)
+            : err({
+                reason: TransactionWorkerError.MissingTransactionInDb,
+                jsError: new Error('Missing transaction in db')
+              })
+        )
+    }
 
     const handleSubmitTransaction = (
       manifestFactory: (wellKnownAddresses: WellKnownAddresses) => string
-    ) => {
-      return radixEngineClient
+    ): ResultAsync<string, { reason: TransactionWorkerError; jsError: unknown }> =>
+      radixEngineClient
         .getManifestBuilder()
+        .mapErr((jsError) => ({
+          reason: TransactionWorkerError.FailedToGetManifestBuilder,
+          jsError
+        }))
         .andThen(({ convertStringManifest, submitTransaction, wellKnownAddresses }) =>
           convertStringManifest(manifestFactory(wellKnownAddresses))
-            .andThen((value) => {
-              childLogger.debug({
-                method: 'transactionWorker.submitTransaction',
-                id: job.id,
-                data: job.data
+            .mapErr((jsError) => ({
+              reason: TransactionWorkerError.FailedToConvertStringManifest,
+              jsError
+            }))
+            .andThen((transactionManifest) =>
+              submitTransaction({
+                transactionManifest,
+                signers: ['systemAccount'],
+                logger
               })
-              return submitTransaction(value, ['systemAccount']).mapErr((error) =>
-                transactionModel(childLogger).setStatus(
-                  { badgeId, badgeResourceAddress, transactionKey, attempt },
-                  TransactionStatus.ERROR_FAILED_TO_SUBMIT,
-                  JSON.stringify(error)
-                )
-              )
-            })
-            .andThen(({ txId }) =>
-              ResultAsync.combine([
-                transactionModel(childLogger).setTransactionId(
-                  { badgeId, badgeResourceAddress, transactionKey, attempt },
-                  txId
-                ),
-                radixEngineClient.gatewayClient
-                  .pollTransactionStatus(txId)
-                  .map(() => txId)
-                  .mapErr((error) =>
-                    transactionModel(childLogger).setStatus(
-                      { badgeId, badgeResourceAddress, transactionKey, attempt },
-                      TransactionStatus.ERROR_TIMEOUT,
-                      JSON.stringify(error)
+                .mapErr((jsError) => ({
+                  reason: TransactionWorkerError.FailedToSubmitToRadixNetwork,
+                  jsError
+                }))
+                .andThen(({ txId }) =>
+                  transactionModel(logger)
+                    .setTransactionId(
+                      { transactionKey, badgeId, badgeResourceAddress, attempt },
+                      txId
                     )
-                  )
-              ]).andThen(() =>
-                transactionModel(childLogger).setStatus(
-                  { badgeId, badgeResourceAddress, transactionKey, attempt },
-                  TransactionStatus.COMPLETED
+                    .mapErr(({ jsError }) => ({
+                      reason: TransactionWorkerError.FailedToSetTransactionId,
+                      jsError
+                    }))
+                    .map(() => txId)
                 )
-              )
             )
         )
-    }
+
+    const handlePollTransactionStatus = (txId: string) =>
+      radixEngineClient.gatewayClient
+        .pollTransactionStatus(txId)
+        .mapErr((jsError) => ({
+          reason: TransactionWorkerError.FailedToPollTransactionStatus,
+          jsError
+        }))
+        .andThen(() =>
+          transactionModel(logger)
+            .setStatus(
+              { badgeId, badgeResourceAddress, transactionKey, attempt },
+              TransactionStatus.COMPLETED
+            )
+            .mapErr(({ jsError }) => ({
+              jsError,
+              reason: TransactionWorkerError.FailedToSetCompletedStatus
+            }))
+        )
+        .map(() => undefined)
 
     switch (type) {
       case 'MintUserBadge': {
         const { accountAddress, badgeId } = job.data
 
-        return getUserIdFromBadgeId(badgeId).asyncAndThen((userId) =>
-          handleSubmitTransaction((wellKnownAddresses) =>
-            createDirectDepositManifest({
-              wellKnownAddresses,
-              userId,
-              accountAddress: accountAddress
-            })
-          )
+        return getItemFromDb().andThen((item) =>
+          item.transactionId
+            ? handlePollTransactionStatus(item.transactionId)
+            : getUserIdFromBadgeId(badgeId)
+                .asyncAndThen((userId) =>
+                  handleSubmitTransaction((wellKnownAddresses) =>
+                    createDirectDepositManifest({
+                      wellKnownAddresses,
+                      userId,
+                      accountAddress: accountAddress
+                    })
+                  )
+                )
+                .andThen(handlePollTransactionStatus)
         )
       }
 
@@ -104,34 +172,37 @@ export const TransactionWorkerController = ({
 
         const questDefinition = QuestDefinitions()[questId as QuestId]
         const rewards = questDefinition.rewards
-        // @ts-ignore
-        const xrdReward = rewards.find((reward) => reward.name === 'xrd')
-        const KYC_THRESHOLD = 5
 
-        return getUserIdFromBadgeId(badgeId).asyncAndThen((userId) =>
-          auditModel(childLogger)
-            .getUsdAmount(userId)
-            .map((usdAmount) => {
-              if (usdAmount + Number(xrdReward) > KYC_THRESHOLD) {
-                childLogger.debug({
-                  method: 'transactionWorker.DepositReward',
-                  message: 'User has exceeded KYC threshold'
-                })
-                return transactionModel(childLogger).setStatus(
-                  { transactionKey, badgeId, badgeResourceAddress, attempt },
-                  TransactionStatus.ERROR_KYC_REQUIRED
-                )
-              }
+        return getItemFromDb().andThen((item) =>
+          item.transactionId
+            ? handlePollTransactionStatus(item.transactionId)
+            : getUserIdFromBadgeId(badgeId).asyncAndThen((userId) =>
+                auditModel(logger)
+                  .getUsdAmount(userId)
+                  .mapErr(({ jsError }) => ({
+                    reason: TransactionWorkerError.FailedToGetTotalRewardedUsdAmount,
+                    jsError
+                  }))
+                  .andThen(() => {
+                    /**
+                     * TODO:
+                     *  [] Is KYC threshold reached?
+                     *  [] If yes, check the NF data is_valid
+                     *  [] Does it match the user KYC record of the quest reward component state?
+                     *  [] If no, include the KYC record change in the transaction
+                     *  👉 Proceed with the transaction
+                     */
 
-              return handleSubmitTransaction((wellKnownAddresses) =>
-                createRewardsDepositManifest({
-                  wellKnownAddresses,
-                  questId,
-                  userId,
-                  rewards
-                })
+                    return handleSubmitTransaction((wellKnownAddresses) =>
+                      createRewardsDepositManifest({
+                        wellKnownAddresses,
+                        questId,
+                        userId,
+                        rewards
+                      })
+                    ).andThen(handlePollTransactionStatus)
+                  })
               )
-            })
         )
 
       case 'PopulateResources':
@@ -167,23 +238,26 @@ export const TransactionWorkerController = ({
               Bucket("clam_bucket")
               Enum<0u8>();
           `
-        )
+        ).andThen(handlePollTransactionStatus)
 
       case 'CombinedElementsMintRadgem':
-        return handleSubmitTransaction((wellKnownAddresses) =>
-          createCombinedElementsMintRadgemManifest({
-            wellKnownAddresses,
-            badgeResourceAddress: job.data.badgeResourceAddress,
-            badgeId: job.data.badgeId
-          })
-        )
+        return getItemFromDb()
+          .andThen(() =>
+            handleSubmitTransaction((wellKnownAddresses) =>
+              createCombinedElementsMintRadgemManifest({
+                wellKnownAddresses,
+                badgeResourceAddress: job.data.badgeResourceAddress,
+                badgeId: job.data.badgeId
+              })
+            )
+          )
+          .andThen(handlePollTransactionStatus)
 
       default:
-        childLogger.debug({
-          method: 'transactionWorker.handler.error',
-          job
+        return errAsync({
+          reason: TransactionWorkerError.UnhandledJob,
+          jsError: new Error('Unhandled job')
         })
-        return errAsync('Unhandled job')
     }
   }
 

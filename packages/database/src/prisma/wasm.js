@@ -238,12 +238,8 @@ exports.AuditType = exports.$Enums.AuditType = {
 
 exports.TransactionStatus = exports.$Enums.TransactionStatus = {
   PENDING: 'PENDING',
-  ERROR_KYC_REQUIRED: 'ERROR_KYC_REQUIRED',
-  ERROR_FAILED_TO_SUBMIT: 'ERROR_FAILED_TO_SUBMIT',
-  ERROR_TIMEOUT: 'ERROR_TIMEOUT',
-  ERROR_UNKNOWN: 'ERROR_UNKNOWN',
-  COMPLETED: 'COMPLETED',
-  IN_PROGRESS: 'IN_PROGRESS'
+  ERROR: 'ERROR',
+  COMPLETED: 'COMPLETED'
 };
 
 exports.Prisma.ModelName = {

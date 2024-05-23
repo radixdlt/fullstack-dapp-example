@@ -18,8 +18,7 @@ import { Result, ResultAsync, err, ok } from 'neverthrow'
 import { typedError } from '../helpers/typed-error'
 import { mnemonicToKeyPair } from '../helpers/mnemonicToKeyPair'
 import { GatewayClient } from './gateway-client'
-import { logger } from '../helpers/logger'
-import { GatewayApi } from 'common'
+import { type AppLogger, GatewayApi, appLogger as logger } from 'common'
 
 const getSignerKeys = (mnemonic: string, derivationPath: string) => {
   const { privateKey } = mnemonicToKeyPair(mnemonic, derivationPath).unwrapOr({
@@ -231,11 +230,16 @@ export const RadixEngineClient = <
         }))
     )
 
-  const submitTransaction = (
-    transactionManifest: TransactionManifest,
-    signers: (keyof T)[],
+  const submitTransaction = ({
+    transactionManifest,
+    signers,
+    message
+  }: {
+    transactionManifest: TransactionManifest
+    signers: (keyof T)[]
     message?: Message
-  ) => {
+    logger?: AppLogger
+  }) => {
     convertParsedManifest(transactionManifest).map((data) => {
       logger.debug(`Submitting transaction`)
       logger.debug(data.instructions.value)
@@ -287,18 +291,13 @@ export const RadixEngineClient = <
         'Parsed'
       ),
       typedError
-    )
-      .map((instructions) => ({ instructions, blobs }))
-      .mapErr((err) => {
-        console.log(err)
-        return err
-      })
+    ).map((instructions) => ({ instructions, blobs }))
   }
 
   const getXrdFromFaucet = () => {
     return getManifestBuilder().andThen(({ builder, wellKnownAddresses, submitTransaction }) => {
-      return submitTransaction(
-        builder
+      return submitTransaction({
+        transactionManifest: builder
           .callMethod(wellKnownAddresses.componentAddresses.faucet, 'lock_fee', [decimal(10)])
           .callMethod(wellKnownAddresses.componentAddresses.faucet, 'free', [])
           .takeAllFromWorktop(wellKnownAddresses.resourceAddresses.xrd, (builder, bucketId) =>
@@ -308,8 +307,8 @@ export const RadixEngineClient = <
           )
 
           .build(),
-        []
-      ).andThen(({ txId }) => gatewayClient.pollTransactionStatus(txId).map(() => txId))
+        signers: []
+      }).andThen(({ txId }) => gatewayClient.pollTransactionStatus(txId).map(() => txId))
     })
   }
 
