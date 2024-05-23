@@ -11,7 +11,7 @@
   import { allowOnlyPositiveNumberInString } from '$lib/tools'
   import { EntityToResource } from '$lib/utils/entityToResource'
   import { onMount } from 'svelte'
-  import { DataRequestBuilder, RadixDappToolkit, RadixNetwork } from '@radixdlt/radix-dapp-toolkit'
+  import { DataRequestBuilder, RadixDappToolkit } from '@radixdlt/radix-dapp-toolkit'
   import { dAppDefinitionAddress } from '$lib/constants'
   import {
     GatewayApiClient,
@@ -33,8 +33,6 @@
   let swapResult: SwappedResource | undefined = undefined
   let modal: 'success' | 'failure' | undefined = undefined
 
-  $: fromResource = clamResource
-  $: toResource = elementResource
   let conversionRateFrom = '1'
   let conversionRateTo = '2'
 
@@ -47,19 +45,19 @@
 
   let balances: FungibleResourcesCollectionItemVaultAggregated[] = []
   $: currentBalance =
-    balances.find((b) => b.resource_address === fromResource?.id)?.vaults.items[0].amount ?? 0
+    balances.find((b) => b.resource_address === clamResource?.id)?.vaults.items[0].amount ?? 0
   $: enoughBalance = +currentBalance >= +fromInput
 
   const addresses = Addresses(parseInt(PUBLIC_NETWORK_ID, 0))
   const entityToResource = EntityToResource(addresses.resources.clamAddress)
 
   const preview = async (fromInput: string): Promise<string> => {
-    if (!toResource || !fromResource || !$walletData?.accounts[0]) return '0'
+    if (!elementResource || !clamResource || !$walletData?.accounts[0]) return '0'
     const tx = await ResultAsync.fromPromise(
       previewTransaction({
         amount: fromInput,
-        fromTokenAddress: fromResource.id,
-        toTokenAddress: toResource.id,
+        fromTokenAddress: clamResource.id,
+        toTokenAddress: elementResource.id,
         swapComponent: addresses.components.jettySwap,
         userAddress: $walletData.accounts[0].address
       }),
@@ -70,7 +68,7 @@
     if (tx.isErr()) return '0'
 
     const balanceChange: any = tx.value?.resource_changes.find(
-      (change: any) => change.resource_changes[0]?.resource_address === toResource?.id
+      (change: any) => change.resource_changes[0]?.resource_address === elementResource?.id
     )
 
     return balanceChange?.resource_changes[0]?.amount as string
@@ -87,7 +85,7 @@
     if (details.isErr()) return
 
     balances = details.value.fungible_resources.items.filter((i) =>
-      [fromResource, toResource].some((resource) => resource?.id === i.resource_address)
+      [elementResource, clamResource].some((resource) => resource?.id === i.resource_address)
     )
   }
 
@@ -126,12 +124,12 @@
     if (!$walletData?.accounts[0].address) return
     updateBalances($walletData?.accounts[0].address)
 
-    if (!toResource || !fromResource) return
+    if (!elementResource || !clamResource) return
     ResultAsync.fromSafePromise(
       getBalanceChange({
         amount: conversionRateFrom,
-        fromTokenAddress: fromResource.id,
-        toTokenAddress: toResource.id,
+        fromTokenAddress: clamResource.id,
+        toTokenAddress: elementResource.id,
         swapComponent: addresses.components.jettySwap,
         userAddress: $walletData?.accounts[0].address
       })
@@ -163,21 +161,21 @@
   $: debounce(fromInput)
 
   const onSwap = async () => {
-    if (!toResource || !fromResource || !$walletData?.accounts[0]) return
+    if (!elementResource || !clamResource || !$walletData?.accounts[0]) return
     swapButtonLoading = true
     $rdt?.walletApi
       .sendTransaction({
         transactionManifest: createSwapManifest({
           amount: fromInput,
-          fromTokenAddress: fromResource.id,
-          toTokenAddress: toResource.id,
+          fromTokenAddress: clamResource.id,
+          toTokenAddress: elementResource.id,
           swapComponent: addresses.components.jettySwap,
           userAddress: $walletData.accounts[0].address
         })
       })
       .map(() => {
         modal = 'success'
-        swapResult = { ...(toResource as Resource), count: toInput }
+        swapResult = { ...(elementResource as Resource), count: toInput }
         updateBalances($walletData?.accounts[0].address as string)
       })
       .mapErr(() => {
@@ -226,12 +224,12 @@
           <div class="row">
             <span class="row">
               {conversionRateFrom}
-              <Icon --size="18px" url={fromResource?.icon} />
+              <Icon --size="18px" url={clamResource?.icon} />
             </span>
             =
             <span class="row">
               {conversionRateTo}
-              <Icon --size="18px" url={toResource?.icon} />
+              <Icon --size="18px" url={elementResource?.icon} />
             </span>
           </div>
         </div>
@@ -240,21 +238,25 @@
         <TokenSwapInput
           bind:value={fromInput}
           cardTitle={$i18n.t('main:from')}
-          resource={fromResource}
+          resource={clamResource}
           state={enoughBalance ? 'default' : 'error'}
         >
           {#if !enoughBalance}
             <p class="error-text">
-              {$i18n.t('main:not-enough-resource', { resource: fromResource?.name })}
+              {$i18n.t('main:not-enough-resource', { resource: clamResource?.name })}
             </p>
           {/if}
         </TokenSwapInput>
         <div class="switch-button-wrapper">
-          <div class:disabled={false} class="switch">
+          <div class:disabled={!connected} class="switch">
             <ArrowDownIcon fill={arrowFill} />
           </div>
         </div>
-        <TokenSwapInput bind:value={toInput} cardTitle={$i18n.t('main:to')} resource={toResource}>
+        <TokenSwapInput
+          bind:value={toInput}
+          cardTitle={$i18n.t('main:to')}
+          resource={elementResource}
+        >
           <p class="estimated-amount">
             <span class="estimated-amount-bold">{$i18n.t('main:estimated-amount-pt1')}</span>
             {$i18n.t('main:estimated-amount-pt2')}
@@ -401,6 +403,26 @@
   .row {
     display: flex;
     gap: 0.25rem;
+  }
+
+  .switch {
+    display: flex;
+    white-space: nowrap;
+    padding: 0.8rem;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--border-radius-3xl);
+    height: 2.6875rem;
+    width: 2.6875rem;
+    background: var(--color-linen);
+  }
+
+  .market-price-text {
+    font-size: 15px;
+    font-style: normal;
+    letter-spacing: 0.14px;
+    color: var(--color-background-dark);
+    text-align: right;
   }
 
   .switch {
