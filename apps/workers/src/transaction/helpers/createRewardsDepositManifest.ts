@@ -81,6 +81,21 @@ export const createRewardsDepositManifest = ({
           ;
           `
         }
+
+        if (reward.name === 'xrd') {
+          return `
+            CALL_METHOD
+              Address("${wellKnownAddresses.accountAddress.payerAccount}")
+              "withdraw"
+              Address("${addresses.xrd}")
+              Decimal("${reward.amount}");
+
+            TAKE_ALL_FROM_WORKTOP
+              Address("${addresses.xrd}")
+              Bucket("${bucketName}");
+          `
+        }
+
         return undefined
       })
       .join('\n'),

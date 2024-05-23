@@ -3,6 +3,7 @@ import DepositUserBadge from '../fixtures/transactions/deposit-user-badge'
 import QuestRewardsEvents from '../fixtures/transactions/quest-rewards-events'
 import NotSupportedTx from '../fixtures/transactions/not-supported-tx'
 import StakedXrdTx from '../fixtures/transactions/staked-xrd'
+import MintInstapassBadge from '../fixtures/transactions/mint-instapass-badge'
 import { getTrackedTransactionTypes, resourceWithdrawn } from './tracked-transaction-types'
 import { AccountAddressModel, EventId } from 'common'
 import { FilterTransactionsByType } from './filter-transactions-by-type'
@@ -41,6 +42,23 @@ describe('filter transactions', () => {
     expect(userBadge.transactionId).toBeDefined()
     expect(userBadge.relevantEvents.UserBadgeDeposited).toBeDefined()
     expect(userBadge.relevantEvents.XrdDeposited).toBeDefined()
+  })
+
+  it('should find instapass badge deposited transaction', () => {
+    const result = filterTransactionsByType([...MintInstapassBadge])
+
+    if (result.isErr()) throw result.error
+
+    const filteredTransactions = result.value
+
+    expect(filteredTransactions.length).toEqual(1)
+
+    const [instapassBadge] = filteredTransactions
+
+    expect(instapassBadge.type).toEqual(EventId.InstapassBadgeDeposited)
+    expect(instapassBadge.transactionId).toBeDefined()
+    expect(instapassBadge.relevantEvents.MintedEvent).toBeDefined()
+    expect(instapassBadge.relevantEvents.DepositedEvent).toBeDefined()
   })
 
   it('should find QuestRewardClaimed & QuestRewardDeposited transaction', () => {

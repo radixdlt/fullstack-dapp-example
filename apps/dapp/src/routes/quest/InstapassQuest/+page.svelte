@@ -1,6 +1,4 @@
 <script lang="ts">
-  import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
-  import { i18n } from '$lib/i18n/i18n'
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
   import type { Quests } from 'content'
@@ -25,16 +23,7 @@
       type: 'requirements'
     },
     {
-      id: 'unclaimable-requirements',
-      type: 'jetty',
-      component: ClaimRewards,
-      props: {
-        rewards: data.rewards,
-        text: text['claim.md'],
-        nextButtonText: $i18n.t('quests:claimButton'),
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next()
-      }
+      type: 'claimRewards'
     },
     {
       type: 'complete'

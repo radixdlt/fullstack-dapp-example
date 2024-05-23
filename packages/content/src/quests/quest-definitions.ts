@@ -256,8 +256,9 @@ export const QuestDefinitions = () => {
       minutesToComplete: 20,
       preRequisites: ['TransferTokens'],
       requirements: {
-        LearnAboutInstapass: {
-          type: 'content'
+        [EventId.InstapassBadgeDeposited]: {
+          eventName: 'InstapassBadgeDeposited',
+          type: 'event'
         }
       }
     }

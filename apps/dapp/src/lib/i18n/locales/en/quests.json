@@ -106,7 +106,8 @@
   },
   "InstapassQuest": {
     "requirements": {
-      "LearnAboutInstapass": "Learn about Instapass"
+      "LearnAboutInstapass": "Learn about Instapass",
+      "InstapassBadgeDeposited": "Receive Instapass KYC badge"
     },
     "title": "Instapass",
     "description": "Learn about Instapass",

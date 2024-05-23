@@ -28,6 +28,16 @@ const transformUserIdIntoBadgeId = (userId: string) => ({
   badgeResourceAddress: config.radQuest.badges.userBadgeAddress
 })
 
+type EventEmitter = {
+  entity: {
+    entity_address: string
+    entity_type: string
+    is_global: boolean
+  }
+  type: string
+  object_module_id: string
+}
+
 export type EventWorkerController = ReturnType<typeof EventWorkerController>
 export const EventWorkerController = ({
   dbClient,
@@ -276,6 +286,37 @@ export const EventWorkerController = ({
               .andThen(() => handleAllQuestRequirementCompleted(questValues))
           )
       }
+      case EventId.InstapassBadgeDeposited: {
+        const maybeAccountAddress = (
+          job.data.relevantEvents['DepositedEvent'].emitter as EventEmitter
+        ).entity.entity_address
+
+        const accountAddressResult = maybeAccountAddress
+          ? ok(maybeAccountAddress)
+          : err({ reason: 'AccountAddressNotFound' })
+
+        return accountAddressResult.asyncAndThen((accountAddress) =>
+          accountAddressModel
+            .getTrackedAddressUserId(accountAddress, 'InstapassQuest')
+            .andThen((userId) => (userId ? ok(userId) : err({ reason: 'UserIdNotFound' })))
+            .map((userId) => ({
+              questId: 'InstapassQuest' as QuestId,
+              requirementId: type,
+              userId,
+              transactionId
+            }))
+            .andThen((questValues) =>
+              dbTransactionBuilder.helpers
+                .questRequirementCompleted(questValues)
+                .exec()
+                .andThen(() => handleAllQuestRequirementCompleted(questValues))
+            )
+            .andThen(() =>
+              accountAddressModel.deleteTrackedAddress(accountAddress, 'InstapassQuest')
+            )
+        )
+      }
+
       case EventId.XrdStaked: {
         const maybeAccountAddress: string | undefined = (
           job.data.relevantEvents['WithdrawEvent'].emitter as any

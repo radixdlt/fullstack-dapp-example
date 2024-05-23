@@ -17,6 +17,8 @@
     "wallet:deploy:radquest": "npx tsx ./src/radquest/scripts/deploy-radquest.ts",
     "wallet:instantiate:quest-rewards": "npx tsx ./src/radquest/scripts/new-quest-rewards.ts",
     "wallet:create:element": "npx tsx ./src/radquest/scripts/create-element.ts",
+    "wallet:create:instapass-badge": "npx tsx ./src/radquest/scripts/create-instapass-badge.ts",
+    "wallet:mint:instapass-badge": "npx tsx ./src/radquest/scripts/mint-instapass-badge.ts",
     "wallet:create:clam": "npx tsx ./src/radquest/scripts/create-clam.ts",
     "wallet:create:energy-card": "npx tsx ./src/radquest/scripts/create-energy-card.ts",
     "wallet:create:radgem": "npx tsx ./src/radquest/scripts/create-radgem.ts",
