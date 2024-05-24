@@ -9109,7 +9109,6 @@ export namespace Prisma {
     userId: number
     date: number
     type: number
-    metadata: number
     xrdUsdValue: number
     _all: number
   }
@@ -9144,7 +9143,6 @@ export namespace Prisma {
     userId?: true
     date?: true
     type?: true
-    metadata?: true
     xrdUsdValue?: true
     _all?: true
   }
@@ -9240,7 +9238,6 @@ export namespace Prisma {
     userId: string
     date: Date
     type: $Enums.AuditType
-    metadata: JsonValue
     xrdUsdValue: Decimal
     _count: AuditCountAggregateOutputType | null
     _avg: AuditAvgAggregateOutputType | null
@@ -9268,7 +9265,6 @@ export namespace Prisma {
     userId?: boolean
     date?: boolean
     type?: boolean
-    metadata?: boolean
     xrdUsdValue?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["audit"]>
@@ -9278,7 +9274,6 @@ export namespace Prisma {
     userId?: boolean
     date?: boolean
     type?: boolean
-    metadata?: boolean
     xrdUsdValue?: boolean
   }
 
@@ -9298,7 +9293,6 @@ export namespace Prisma {
       userId: string
       date: Date
       type: $Enums.AuditType
-      metadata: Prisma.JsonValue
       xrdUsdValue: Prisma.Decimal
     }, ExtArgs["result"]["audit"]>
     composites: {}
@@ -9699,7 +9693,6 @@ export namespace Prisma {
     readonly userId: FieldRef<"Audit", 'String'>
     readonly date: FieldRef<"Audit", 'DateTime'>
     readonly type: FieldRef<"Audit", 'AuditType'>
-    readonly metadata: FieldRef<"Audit", 'Json'>
     readonly xrdUsdValue: FieldRef<"Audit", 'Decimal'>
   }
     
@@ -11036,7 +11029,6 @@ export namespace Prisma {
     userId: 'userId',
     date: 'date',
     type: 'type',
-    metadata: 'metadata',
     xrdUsdValue: 'xrdUsdValue'
   };
 
@@ -11662,7 +11654,6 @@ export namespace Prisma {
     userId?: StringFilter<"Audit"> | string
     date?: DateTimeFilter<"Audit"> | Date | string
     type?: EnumAuditTypeFilter<"Audit"> | $Enums.AuditType
-    metadata?: JsonFilter<"Audit">
     xrdUsdValue?: DecimalFilter<"Audit"> | Decimal | DecimalJsLike | number | string
     user?: XOR<UserRelationFilter, UserWhereInput>
   }
@@ -11672,7 +11663,6 @@ export namespace Prisma {
     userId?: SortOrder
     date?: SortOrder
     type?: SortOrder
-    metadata?: SortOrder
     xrdUsdValue?: SortOrder
     user?: UserOrderByWithRelationInput
   }
@@ -11685,7 +11675,6 @@ export namespace Prisma {
     userId?: StringFilter<"Audit"> | string
     date?: DateTimeFilter<"Audit"> | Date | string
     type?: EnumAuditTypeFilter<"Audit"> | $Enums.AuditType
-    metadata?: JsonFilter<"Audit">
     xrdUsdValue?: DecimalFilter<"Audit"> | Decimal | DecimalJsLike | number | string
     user?: XOR<UserRelationFilter, UserWhereInput>
   }, "transactionId">
@@ -11695,7 +11684,6 @@ export namespace Prisma {
     userId?: SortOrder
     date?: SortOrder
     type?: SortOrder
-    metadata?: SortOrder
     xrdUsdValue?: SortOrder
     _count?: AuditCountOrderByAggregateInput
     _avg?: AuditAvgOrderByAggregateInput
@@ -11712,7 +11700,6 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"Audit"> | string
     date?: DateTimeWithAggregatesFilter<"Audit"> | Date | string
     type?: EnumAuditTypeWithAggregatesFilter<"Audit"> | $Enums.AuditType
-    metadata?: JsonWithAggregatesFilter<"Audit">
     xrdUsdValue?: DecimalWithAggregatesFilter<"Audit"> | Decimal | DecimalJsLike | number | string
   }
 
@@ -12194,7 +12181,6 @@ export namespace Prisma {
     transactionId: string
     date?: Date | string
     type: $Enums.AuditType
-    metadata: JsonNullValueInput | InputJsonValue
     xrdUsdValue: Decimal | DecimalJsLike | number | string
     user: UserCreateNestedOneWithoutAuditLogsInput
   }
@@ -12204,7 +12190,6 @@ export namespace Prisma {
     userId: string
     date?: Date | string
     type: $Enums.AuditType
-    metadata: JsonNullValueInput | InputJsonValue
     xrdUsdValue: Decimal | DecimalJsLike | number | string
   }
 
@@ -12212,7 +12197,6 @@ export namespace Prisma {
     transactionId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumAuditTypeFieldUpdateOperationsInput | $Enums.AuditType
-    metadata?: JsonNullValueInput | InputJsonValue
     xrdUsdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     user?: UserUpdateOneRequiredWithoutAuditLogsNestedInput
   }
@@ -12222,7 +12206,6 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumAuditTypeFieldUpdateOperationsInput | $Enums.AuditType
-    metadata?: JsonNullValueInput | InputJsonValue
     xrdUsdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
@@ -12231,7 +12214,6 @@ export namespace Prisma {
     userId: string
     date?: Date | string
     type: $Enums.AuditType
-    metadata: JsonNullValueInput | InputJsonValue
     xrdUsdValue: Decimal | DecimalJsLike | number | string
   }
 
@@ -12239,7 +12221,6 @@ export namespace Prisma {
     transactionId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumAuditTypeFieldUpdateOperationsInput | $Enums.AuditType
-    metadata?: JsonNullValueInput | InputJsonValue
     xrdUsdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
@@ -12248,7 +12229,6 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumAuditTypeFieldUpdateOperationsInput | $Enums.AuditType
-    metadata?: JsonNullValueInput | InputJsonValue
     xrdUsdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
@@ -12841,7 +12821,6 @@ export namespace Prisma {
     userId?: SortOrder
     date?: SortOrder
     type?: SortOrder
-    metadata?: SortOrder
     xrdUsdValue?: SortOrder
   }
 
@@ -13767,7 +13746,6 @@ export namespace Prisma {
     transactionId: string
     date?: Date | string
     type: $Enums.AuditType
-    metadata: JsonNullValueInput | InputJsonValue
     xrdUsdValue: Decimal | DecimalJsLike | number | string
   }
 
@@ -13775,7 +13753,6 @@ export namespace Prisma {
     transactionId: string
     date?: Date | string
     type: $Enums.AuditType
-    metadata: JsonNullValueInput | InputJsonValue
     xrdUsdValue: Decimal | DecimalJsLike | number | string
   }
 
@@ -13957,7 +13934,6 @@ export namespace Prisma {
     userId?: StringFilter<"Audit"> | string
     date?: DateTimeFilter<"Audit"> | Date | string
     type?: EnumAuditTypeFilter<"Audit"> | $Enums.AuditType
-    metadata?: JsonFilter<"Audit">
     xrdUsdValue?: DecimalFilter<"Audit"> | Decimal | DecimalJsLike | number | string
   }
 
@@ -14488,7 +14464,6 @@ export namespace Prisma {
     transactionId: string
     date?: Date | string
     type: $Enums.AuditType
-    metadata: JsonNullValueInput | InputJsonValue
     xrdUsdValue: Decimal | DecimalJsLike | number | string
   }
 
@@ -14566,7 +14541,6 @@ export namespace Prisma {
     transactionId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumAuditTypeFieldUpdateOperationsInput | $Enums.AuditType
-    metadata?: JsonNullValueInput | InputJsonValue
     xrdUsdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
@@ -14574,7 +14548,6 @@ export namespace Prisma {
     transactionId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumAuditTypeFieldUpdateOperationsInput | $Enums.AuditType
-    metadata?: JsonNullValueInput | InputJsonValue
     xrdUsdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
@@ -14582,7 +14555,6 @@ export namespace Prisma {
     transactionId?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumAuditTypeFieldUpdateOperationsInput | $Enums.AuditType
-    metadata?: JsonNullValueInput | InputJsonValue
     xrdUsdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 

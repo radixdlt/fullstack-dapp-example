@@ -3,55 +3,41 @@ import { ResultAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
 import type { ApiError, AppLogger } from '../helpers'
 
-export type AuditFungibleResource = { type: 'fungible'; amount: number; resourceAddress: string }
 
-export type AuditNonFungibleResource = {
-  type: 'nonFungible'
-  resourceAddress: string
-  localId: string
-}
-
-export type AuditResource = AuditFungibleResource | AuditNonFungibleResource
 
 export type AuditModel = ReturnType<typeof AuditModel>
 
 type AuditModelType = {
-  add: (
-    input: {
-      transactionId: string
-      userId: string
-      type: AuditType
-      xrdUsdValue: number
-    },
-    metadata: {
-      resources: AuditResource[]
-    }
-  ) => ResultAsync<void, ApiError>
+  add: (input: {
+    transactionId: string
+    userId: string
+    type: AuditType
+    xrdUsdValue: number
+  }) => ResultAsync<void, ApiError>
   getUsdAmount: (userId: string) => ResultAsync<number, ApiError>
 }
 
 export const AuditModel =
   (db: PrismaClient) =>
   (logger?: AppLogger): AuditModelType => {
-    const add = (
-      {
-        type,
-        userId,
-        xrdUsdValue,
-        transactionId
-      }: { transactionId: string; userId: string; type: AuditType; xrdUsdValue: number },
-      metadata: {
-        resources: AuditResource[]
-      }
-    ) =>
+    const add = ({
+      type,
+      userId,
+      xrdUsdValue,
+      transactionId
+    }: {
+      transactionId: string
+      userId: string
+      type: AuditType
+      xrdUsdValue: number
+    }) =>
       ResultAsync.fromPromise(
         db.audit.create({
           data: {
             transactionId,
             userId,
             type,
-            xrdUsdValue,
-            metadata: JSON.stringify(metadata)
+            xrdUsdValue
           }
         }),
         (error) => {

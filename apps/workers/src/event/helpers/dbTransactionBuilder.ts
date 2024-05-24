@@ -5,7 +5,6 @@ import { AuditType, Prisma, PrismaClient } from 'database'
 import { ResultAsync, ok, err } from 'neverthrow'
 import { TokenPriceClient } from './../../token-price-client'
 import { getAmountFromDepositEvent } from './getAmountFromDepositEvent'
-import { getFirstTransactionAuditResources } from './getFirstTransactionAuditResources'
 import { EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
 
 export type DbOperation = () => Prisma.PrismaPromise<any>
@@ -106,10 +105,7 @@ export const DbTransactionBuilder = ({
               transactionId,
               userId,
               type: AuditType.DIRECT_DEPOSIT,
-              xrdUsdValue,
-              metadata: JSON.stringify({
-                resources: getFirstTransactionAuditResources(xrdAmount, userId)
-              })
+              xrdUsdValue
             }
           })
         )
