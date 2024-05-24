@@ -47,7 +47,6 @@ export type TransactionJob = {
   badgeId: string
   badgeResourceAddress: string
   traceId: string
-  metadata?: string
 } & (
   | DepositRewardTransactionJob
   | MintUserBadgeTransactionJob
