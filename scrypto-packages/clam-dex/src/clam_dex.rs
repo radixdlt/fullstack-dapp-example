@@ -1,14 +1,6 @@
 use crate::element_price_oracle::element_price_oracle::ElementPriceOracle;
 use scrypto::prelude::*;
 
-#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
-#[sbor(transparent)]
-pub struct UserId(pub String);
-
-#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
-#[sbor(transparent)]
-pub struct QuestId(pub String);
-
 #[blueprint]
 #[events(JettySwapEvent)]
 mod clam_dex {
