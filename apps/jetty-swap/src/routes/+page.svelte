@@ -62,18 +62,9 @@
           resource={fromResource}
         ></TokenSwapInput>
         <div class="switch-button-wrapper">
-          <SwtichButton
-            onClick={() => {
-              fromResource = fromResource.id === clamResource.id ? elementResource : clamResource
-              toResource = toResource.id === clamResource.id ? elementResource : clamResource
-              conversionRateFrom =
-                fromResource.id === clamResource.id ? conversionRateElements : conversionRateClams
-              conversionRateTo =
-                toResource.id === clamResource.id ? conversionRateElements : conversionRateClams
-            }}
-          >
+          <div class:disabled={!connected} class="switch">
             <Icon --size="20px" url={ArrowIcon} />
-          </SwtichButton>
+          </div>
         </div>
         <TokenSwapInput bind:value={toInput} cardTitle={$i18n.t('main:to')} resource={toResource}
         ></TokenSwapInput>
