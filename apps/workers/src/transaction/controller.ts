@@ -1,6 +1,6 @@
 import { ResultAsync, errAsync, okAsync, err, ok, Result } from 'neverthrow'
 import { Job, TransactionJob } from 'queues'
-import { TransactionStatus } from 'database'
+import { AuditType, TransactionStatus } from 'database'
 import {
   Addresses,
   GatewayApi,
@@ -17,6 +17,7 @@ import { createDirectDepositManifest } from './helpers/createDirectDepositManife
 import { createCombinedElementsMintRadgemManifest } from './helpers/createCombinedElementsMintRadgemManifest'
 import { stripNonFungibleLocalId } from '../event/helpers/stripNonFungibleLocalId'
 import { TokenPriceClient } from '../token-price-client'
+import BigNumber from 'bignumber.js'
 
 export type TransactionWorkerError =
   (typeof TransactionWorkerError)[keyof typeof TransactionWorkerError]
@@ -30,6 +31,8 @@ export const TransactionWorkerError = {
   FailedToQueryNetworkGateway: 'FailedToQueryNetworkGateway',
   FailedToSetCompletedStatus: 'FailedToSetCompletedStatus',
   FailedToGetUserIdFromBadgeId: 'FailedToGetUserIdFromBadgeId',
+  FailedToGetXrdPrice: 'FailedToGetXrdPrice',
+  FailedToAddAuditEntry: 'FailedToAddAuditEntry',
   FailedToGetTransactionFromDb: 'FailedToGetTransactionFromDb',
   MissingTransactionInDb: 'MissingTransactionInDb',
   UnhandledJob: 'UnhandledJob'
@@ -185,39 +188,48 @@ export const TransactionWorkerController = ({
           const hasXrdReward = xrdReward > 0
           return (
             hasXrdReward
-              ? checkIfUserHasExceededKycThreshold(userId).andThen((hasExceededKycThreshold) =>
-                  hasExceededKycThreshold
-                    ? checkIfKycOracleEntryExists(userId).map((hasEntry) => !hasEntry)
-                    : ok(false)
-                )
-              : okAsync(false)
-          ).andThen((includeKycOracleUpdate) =>
-            handleSubmitTransaction((wellKnownAddresses) =>
-              createRewardsDepositManifest({
-                wellKnownAddresses,
-                questId,
-                userId,
-                rewards,
-                includeKycOracleUpdate
-              })
-            )
+              ? tokenPriceClient
+                  .getXrdPrice()
+                  .mapErr((jsError) => ({
+                    reason: TransactionWorkerError.FailedToGetXrdPrice,
+                    jsError
+                  }))
+                  .map((xrdPrice) => xrdPrice.multipliedBy(xrdReward))
+                  .andThen((xrdRewardInUsd) =>
+                    checkIfUserHasExceededKycThreshold(userId, xrdRewardInUsd).andThen(
+                      (hasExceededKycThreshold) =>
+                        hasExceededKycThreshold
+                          ? checkIfKycOracleEntryExists(userId).map((hasEntry) => ({
+                              includeKycOracleUpdate: !hasEntry,
+                              xrdRewardInUsd
+                            }))
+                          : ok({ includeKycOracleUpdate: false, xrdRewardInUsd })
+                    )
+                  )
+              : okAsync({ includeKycOracleUpdate: false, xrdRewardInUsd: new BigNumber(0) })
           )
+            .andThen(({ includeKycOracleUpdate, xrdRewardInUsd }) =>
+              handleSubmitTransaction((wellKnownAddresses) =>
+                createRewardsDepositManifest({
+                  wellKnownAddresses,
+                  questId,
+                  userId,
+                  rewards,
+                  includeKycOracleUpdate
+                })
+              ).map((transactionId) => ({ transactionId, xrdRewardInUsd }))
+            )
+            .map(({ transactionId, xrdRewardInUsd }) => ({ userId, transactionId, xrdRewardInUsd }))
         }
 
         const checkIfUserHasExceededKycThreshold = (
-          userId: string
+          userId: string,
+          xrdRewardInUsd: BigNumber
         ): ResultAsync<boolean, { reason: TransactionWorkerError; jsError: unknown }> =>
-          ResultAsync.combine([
-            auditModel(logger)
-              .getUsdAmount(userId)
-              .mapErr(({ jsError, reason }) => ({ jsError, reason })),
-            tokenPriceClient.getXrdPrice()
-          ])
-            .map(([distributedUsdAmount, xrdPrice]) =>
-              xrdPrice
-                .multipliedBy(xrdReward)
-                .plus(distributedUsdAmount)
-                .isGreaterThan(config.usdKYCThreshold)
+          auditModel(logger)
+            .getUsdAmount(userId)
+            .map((distributedUsdAmount) =>
+              xrdRewardInUsd.plus(distributedUsdAmount).isGreaterThan(config.usdKYCThreshold)
             )
             .mapErr((error) => ({
               reason: TransactionWorkerError.FailedToGetTotalRewardedUsdAmount,
@@ -235,7 +247,21 @@ export const TransactionWorkerController = ({
             ? handlePollTransactionStatus(item.transactionId)
             : getUserIdFromBadgeId(badgeId)
                 .asyncAndThen(triggerDepositRewardsTransaction)
-                .andThen(handlePollTransactionStatus)
+                .andThen(({ userId, transactionId, xrdRewardInUsd }) =>
+                  handlePollTransactionStatus(transactionId).andThen(() =>
+                    auditModel(logger)
+                      .add({
+                        transactionId,
+                        userId,
+                        type: AuditType.CLAIMBOX_DEPOSIT,
+                        xrdUsdValue: xrdRewardInUsd.toNumber()
+                      })
+                      .mapErr(({ jsError }) => ({
+                        reason: TransactionWorkerError.FailedToAddAuditEntry,
+                        jsError
+                      }))
+                  )
+                )
         )
 
       case 'PopulateResources':

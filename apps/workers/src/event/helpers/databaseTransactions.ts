@@ -1,6 +1,6 @@
 import { ResultAsync } from 'neverthrow'
-import { AppLogger, AuditResource, NotificationType } from 'common'
-import { AuditType, PrismaClient, QuestStatus } from 'database'
+import { AppLogger, NotificationType } from 'common'
+import { PrismaClient, QuestStatus } from 'database'
 
 export const databaseTransactions = ({
   dbClient,
@@ -46,31 +46,12 @@ export const databaseTransactions = ({
       }
     })
 
-  const rewardsDeposited = ({
-    userId,
-    questId,
-    xrdUsdValue,
-    resources
-  }: {
-    userId: string
-    questId: string
-    xrdUsdValue: number
-    resources: AuditResource[]
-  }) =>
+  const rewardsDeposited = ({ userId, questId }: { userId: string; questId: string }) =>
     ResultAsync.fromPromise(
       dbClient.$transaction([
         setQuestProgressStatus(QuestStatus.REWARDS_DEPOSITED, userId, questId),
         createNotification('QuestRewardsDeposited', userId, questId),
-        updateEvent(transactionId, userId, questId),
-        dbClient.audit.create({
-          data: {
-            transactionId,
-            userId,
-            type: AuditType.CLAIMBOX_DEPOSIT,
-            xrdUsdValue,
-            metadata: JSON.stringify({ resources })
-          }
-        })
+        updateEvent(transactionId, userId, questId)
       ]),
       (error) => {
         logger.error({

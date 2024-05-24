@@ -16,7 +16,6 @@ import { config } from '../config'
 import { EventError, PrismaClient } from 'database'
 import { getUserIdFromDepositUserBadgeEvent } from './helpers/getUserIdFromDepositUserBadgeEvent'
 import { getDataFromQuestRewardsEvent } from './helpers/getDataFromQuestRewardsEvent'
-import { sumOfXrdRewards } from './helpers/sumOfXrdRewards'
 import { databaseTransactions } from './helpers/databaseTransactions'
 import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent'
 import { getBadgeAddressAndIdFromCombineElementsDepositedEvent } from './helpers/getBadgeAddressAndIdFromCombineElementsDepositedEvent'
@@ -123,18 +122,13 @@ export const EventWorkerController = ({
       ensureValidData(
         transactionId,
         getDataFromQuestRewardsEvent(job.data.relevantEvents.RewardDepositedEvent)
-      ).andThen(({ userId, questId, rewards: resources }) =>
+      ).andThen(({ userId, questId }) =>
         ensureUserExists(userId, transactionId).andThen(() =>
-          tokenPriceClient
-            .getXrdPrice()
-            .andThen((xrdPrice) =>
-              dbTransactions.rewardsDeposited({
-                userId,
-                questId,
-                xrdUsdValue: xrdPrice.multipliedBy(sumOfXrdRewards(resources)).toNumber(),
-                resources
-              })
-            )
+          dbTransactions
+            .rewardsDeposited({
+              userId,
+              questId
+            })
             .andThen(() =>
               notificationApi.send(userId, {
                 type: 'QuestRewardsDeposited',
