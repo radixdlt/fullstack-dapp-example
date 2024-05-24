@@ -7,7 +7,7 @@
   import Element from '../images/fragment.png'
   import Icon from '$lib/components/icon/Icon.svelte'
   import TokenSwapInput from '$lib/components/tokenSwapInput/TokenSwapInput.svelte'
-  import ArrowIcon from '@images/arrow-down.svg'
+  import ArrowDownIcon from '../lib/components/icon/ArrowDown.svelte'
   import Button from '$lib/components/button/Button.svelte'
   import { walletData } from '$lib/stores'
   import { allowOnlyPositiveNumberInString } from '$lib/tools'
@@ -28,7 +28,8 @@
   $: fromInput = allowOnlyPositiveNumberInString(fromInput.toString())
   $: toInput = allowOnlyPositiveNumberInString(toInput.toString())
 
-  const connected = !!$walletData?.accounts[0]
+  $: connected = !!$walletData?.accounts[0]
+  $: arrowFill = connected ? 'var(--color-primary)' : 'var(--color-dark)'
 </script>
 
 <section>
@@ -62,8 +63,8 @@
           resource={fromResource}
         ></TokenSwapInput>
         <div class="switch-button-wrapper">
-          <div class:disabled={!connected} class="switch">
-            <Icon --size="20px" url={ArrowIcon} />
+          <div class:disabled={false} class="switch">
+            <ArrowDownIcon fill={arrowFill} />
           </div>
         </div>
         <TokenSwapInput bind:value={toInput} cardTitle={$i18n.t('main:to')} resource={toResource}
@@ -206,6 +207,23 @@
     gap: 0.25rem;
   }
 
+  .switch {
+    display: flex;
+    white-space: nowrap;
+    padding: 0.8rem;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--border-radius-3xl);
+    height: 2.6875rem;
+    width: 2.6875rem;
+    background: var(--color-linen);
+    &:not(.disabled) {
+    }
+  }
+
+  svg {
+    fill: red;
+  }
   .guarantee-text {
     font-size: var(--text-xs);
     font-weight: var(--font-weight-regular);
