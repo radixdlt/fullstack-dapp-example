@@ -7,11 +7,13 @@ export const createRewardsDepositManifest = ({
   wellKnownAddresses,
   questId,
   userId,
-  rewards
+  rewards,
+  includeKycOracleUpdate = false
 }: {
   rewards: readonly QuestReward[]
   questId: string
   userId: string
+  includeKycOracleUpdate?: boolean
   wellKnownAddresses: {
     accountAddress: {
       payerAccount: string
@@ -114,7 +116,23 @@ export const createRewardsDepositManifest = ({
                 # Array of Buckets to deposit
                 Array<Bucket>(${buckets.map((bucket) => `Bucket("${bucket}")`).join(',')})
             ;
-            `
+    `,
+    includeKycOracleUpdate
+      ? `
+      CALL_METHOD
+          Address("${wellKnownAddresses.accountAddress.systemAccount}")
+          "create_proof_of_amount"
+          Address("${addresses.badges.adminBadgeAddress}")
+          Decimal("1")
+        ;
+        
+      CALL_METHOD
+        Address("${addresses.components.kycOracle}")
+        "update_user_kyc_requirement"
+        "${userId}"
+        true
+      ;`
+      : undefined
   ]
     .filter(Boolean)
     .join('\n')

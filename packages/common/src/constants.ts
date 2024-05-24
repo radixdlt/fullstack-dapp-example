@@ -28,6 +28,8 @@ export const Addresses = (networkId: number) => {
         components: {
           questRewards: 'component_tdx_2_1crtfv9n6dqj5t65nj075lcj8ap9vegyh0jlfucckkfp9xzpzcllpwd',
           kycOracle: 'component_tdx_2_1cptt60g4zrw2hhmwmfllxzu26wlw366vtdu5rjslpaduqtlu3szunt',
+          kycOracleKeyValueStore:
+            'internal_keyvaluestore_tdx_2_1kp0he3csvzmanekja7z80rpu3axspl8qrdlf9tfz09w02uz8xgj2sf',
           cardForge: 'component_tdx_2_1cq69jlptu07nncvtryfw5jmzzeklmqkr5u3lx25d5nwry044m7hxrs',
           radgemForge: 'component_tdx_2_1cp92vr8fpgmq3r5rvd4mqpns67z75ulq0h083makfz5tqhm5x34ukd',
           radmorphForge: 'component_tdx_2_1czv8hf2k4m5aka3ar847uqpyqy5w9q9kjnr354zphmzrrqps3lq30d',

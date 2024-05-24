@@ -5,6 +5,7 @@ export const config = {
     port: parseInt(process.env.REDIS_PORT ?? '6379', 10),
     password: process.env.REDIS_PASSWORD ?? 'password'
   },
+  usdKYCThreshold: 5, // amount of dollars before system requires Instapass KYC
   postgres: {
     database: process.env.POSTGRES_DATABASE ?? 'radquest',
     host: process.env.POSTGRES_HOST ?? 'localhost',
