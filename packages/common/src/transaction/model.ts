@@ -17,15 +17,17 @@ export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
     transactionKey,
     badgeId,
     badgeResourceAddress,
-    attempt
-  }: TransactionIdentifierData) => {
+    attempt,
+    metadata
+  }: TransactionIdentifierData & { metadata?: string }) => {
     return ResultAsync.fromPromise(
       db.transaction.create({
         data: {
           badgeId,
           badgeResourceAddress,
           transactionKey,
-          attempt
+          attempt,
+          metadata
         }
       }),
       (error) => {

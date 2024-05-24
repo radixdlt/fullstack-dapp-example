@@ -86,10 +86,10 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
     DepositedEvent: refineryEmitted('CombineElementsDepositedEvent')
   },
   [EventId.CombineElementsMintedRadgem]: {
-    MintedRadgem: refineryEmitted('CombineElementsMintedRadgemEvent')
+    MintedRadgemEvent: refineryEmitted('CombineElementsMintedRadgemEvent')
   },
   [EventId.CombineElementsAddedRadgemImage]: {
-    AddedRadgemImage: refineryEmitted('CombineElementsAddedRadgemImageEvent')
+    AddedRadgemImageEvent: refineryEmitted('CombineElementsAddedRadgemImageEvent')
   },
   [EventId.CombineElementsClaimed]: {
     ClaimedEvent: refineryEmitted('CombineElementsClaimedEvent')

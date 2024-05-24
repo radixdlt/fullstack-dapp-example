@@ -33,7 +33,7 @@ export type CombinedElementsMintRadgemTransactionJob = {
 
 export type CombinedElementsAddRadgemImageTransactionJob = {
   type: 'CombinedElementsAddRadgemImage'
-  imageUrl: string
+  radgemId: string
 }
 
 export type PopulateResourcesTransactionJob = {

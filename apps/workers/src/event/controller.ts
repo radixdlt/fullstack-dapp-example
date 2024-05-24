@@ -21,6 +21,7 @@ import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent
 import { getBadgeAddressAndIdFromCombineElementsDepositedEvent } from './helpers/getBadgeAddressAndIdFromCombineElementsDepositedEvent'
 import { randomUUID } from 'crypto'
 import { DbTransactionBuilder } from './helpers/dbTransactionBuilder'
+import { getDetailsFromCombineElementsMintedRadgemEvent } from './helpers/getDetailsFromCombineElementsMintedRadgemEvent'
 
 const transformUserIdIntoBadgeId = (userId: string) => ({
   badgeId: `<${userId}>`,
@@ -241,6 +242,48 @@ export const EventWorkerController = ({
       })
     }
 
+    const handelCombineElementsMintedRadgemEvent = () => {
+      const {
+        badgeResourceAddress,
+        badgeId,
+        radgemId
+      }: {
+        badgeResourceAddress?: string
+        badgeId?: string
+        radgemId?: string
+      } = getDetailsFromCombineElementsMintedRadgemEvent(job.data.relevantEvents.MintedRadgemEvent)
+
+      if (!badgeId || !badgeResourceAddress) {
+        return errAsync('Invalid badge data')
+      }
+      if (!radgemId) {
+        return errAsync('Invalid radgem data')
+      }
+
+      return ensureValidData(transactionId, { localId: badgeId }).andThen(() => {
+        const transactionKey = `CombinedElementsAddRadgemImage:${randomUUID()}`
+        return transactionModel(childLogger)
+          .add({
+            badgeResourceAddress,
+            badgeId,
+            transactionKey,
+            attempt: 0,
+            metadata: JSON.stringify({ nonFungibleId: radgemId })
+          })
+          .andThen(() => {
+            return transactionQueue.add({
+              type: 'CombinedElementsAddRadgemImage',
+              badgeResourceAddress,
+              badgeId,
+              attempt: 0,
+              transactionKey,
+              traceId,
+              radgemId
+            })
+          })
+      })
+    }
+
     switch (type) {
       case EventId.QuestRewardDeposited:
         return handleRewardDeposited()
@@ -248,6 +291,8 @@ export const EventWorkerController = ({
         return handleRewardClaimed()
       case EventId.CombineElementsDeposited:
         return handelCombineElementsDepositedEvent()
+      case EventId.CombineElementsMintedRadgem:
+        return handelCombineElementsMintedRadgemEvent()
       case EventId.DepositUserBadge:
         return getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited)
           .asyncAndThen((userId) => ensureUserExists(userId, transactionId))
@@ -342,6 +387,7 @@ export const EventWorkerController = ({
             .andThen(() => accountAddressModel.deleteTrackedAddress(accountAddress, 'StakingQuest'))
         )
       }
+
       default:
         childLogger.error({
           message: 'Unhandled Event'

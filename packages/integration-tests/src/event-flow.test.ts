@@ -2,11 +2,11 @@ import { describe, it, expect, beforeAll } from 'vitest'
 import {
   RadixEngineClient,
   generateMnemonic,
-  radQuestEntityAddresses,
   mintUserBadgeAndDepositXrd,
   mintUserBadge,
   mintElements,
-  combineElementsDeposit
+  combineElementsDeposit,
+  radquestEntityAddresses
 } from 'typescript-wallet'
 import { GatewayApi } from 'common'
 import { PrismaClient } from 'database'
@@ -107,15 +107,22 @@ describe('Event flows', () => {
     await radixEngineClient.getXrdFromFaucet()
 
     await mintUserBadge(user.id, accountAddress, {
-      userBadgeAddress: radQuestEntityAddresses.badges.userBadgeAddress
+      userBadgeAddress: radquestEntityAddresses.badges.userBadgeAddress
     })
+
     await mintElements(10, accountAddress)
 
     await combineElementsDeposit({
       accountAddress,
-      badgeAddress: radQuestEntityAddresses.badges.userBadgeAddress,
+      badgeAddress: radquestEntityAddresses.badges.userBadgeAddress,
       badgeLocalId: `<${user.id}>`,
       radixEngineClient: radixEngineClient as RadixEngineClient
     })
+      .map((txId) => {
+        console.log({ txId })
+      })
+      .mapErr((error) => {
+        console.log({ error })
+      })
   })
 })

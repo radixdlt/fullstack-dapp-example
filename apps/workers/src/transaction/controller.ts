@@ -18,6 +18,7 @@ import { createCombinedElementsMintRadgemManifest } from './helpers/createCombin
 import { stripNonFungibleLocalId } from '../event/helpers/stripNonFungibleLocalId'
 import { TokenPriceClient } from '../token-price-client'
 import BigNumber from 'bignumber.js'
+import { createCombinedElementsAddRadgemImageManifest } from './helpers/createCombinedElementsAddRadgemImageManifest'
 
 export type TransactionWorkerError =
   (typeof TransactionWorkerError)[keyof typeof TransactionWorkerError]
@@ -311,6 +312,19 @@ export const TransactionWorkerController = ({
             )
           )
           .andThen(handlePollTransactionStatus)
+
+      case 'CombinedElementsAddRadgemImage':
+        const { radgemId } = job.data
+        return handleSubmitTransaction((wellKnownAddresses) =>
+          createCombinedElementsAddRadgemImageManifest({
+            wellKnownAddresses,
+            badgeResourceAddress: job.data.badgeResourceAddress,
+            badgeId: job.data.badgeId,
+            radgemId,
+            keyImageUrl:
+              'https://stokenet-dashboard.radixdlt.com/_app/immutable/assets/nft-placeholder.2eDdybqV.svg'
+          })
+        ).andThen(handlePollTransactionStatus)
 
       default:
         return errAsync({
