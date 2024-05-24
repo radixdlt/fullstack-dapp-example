@@ -3,8 +3,6 @@ import { ResultAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
 import type { ApiError, AppLogger } from '../helpers'
 
-
-
 export type AuditModel = ReturnType<typeof AuditModel>
 
 type AuditModelType = {
