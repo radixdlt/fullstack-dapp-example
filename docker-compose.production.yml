@@ -26,11 +26,10 @@ services:
       - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
       - PUBLIC_LOG_LEVEL=debug
       - PUBLIC_NOTIFICATION_URL=${PUBLIC_NOTIFICATION_URL}
-      - MNEMONIC=${MNEMONIC}
       - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
       - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
       - TWILIO_SERVICE_SID=${TWILIO_SERVICE_SID}
-    command: pm2-runtime apps/dapp/build/index.cjs
+    command: pm2-runtime apps/dapp/build/index.js
 
   notification:
     build:
@@ -87,3 +86,22 @@ services:
       - MNEMONIC=${MNEMONIC}
       - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
     command: pm2-runtime apps/workers/dist/index.cjs
+
+  jetty-swap:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/jetty-swap.Dockerfile
+      target: application
+      args:
+        - PUBLIC_NETWORK_ID=2
+        - PUBLIC_LOG_LEVEL=debug
+    expose:
+      - '3001'
+    ports:
+      - '3001:3001'
+    environment:
+      - PORT=${WEB_API_PORT}
+      - PUBLIC_DAPP_DEFINITION_ADDRESS=${PUBLIC_DAPP_DEFINITION_ADDRESS}
+      - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
+      - PUBLIC_LOG_LEVEL=debug
+    command: pm2-runtime apps/jetty-swap/build/index.js
