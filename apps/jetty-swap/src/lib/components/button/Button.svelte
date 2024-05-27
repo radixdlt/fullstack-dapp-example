@@ -3,16 +3,9 @@
   export let loading = false
 
   export let variation: 'primary' | 'secondary' = 'primary'
-  export let width = 'fit-content'
 </script>
 
-<button
-  style={`width: ${width}`}
-  on:click
-  class:disabled-test={disabled}
-  class={variation}
-  class:loading
->
+<button on:click class:disabled-button={disabled} class={variation} class:loading>
   <div class:hide-content={loading}>
     <slot />
   </div>
@@ -33,13 +26,14 @@
     font-size: var(--text-xs);
     height: 2.5rem;
     min-width: fit-content;
+    width: --width;
   }
 
   .primary {
     background: var(--color-background-dark);
     color: var(--color-light);
 
-    &:hover:not(.disabled) {
+    &:hover:not(.disabled-button) {
       filter: brightness(0.8);
     }
 
@@ -50,13 +44,13 @@
     background: transparent;
     color: var(--color-dark);
 
-    &:hover:not(.disabled-test) {
+    &:hover:not(.disabled-button) {
       filter: brightness(0.8);
     }
 
     transition: filter 0.2s ease-in-out;
   }
-  .disabled-test {
+  .disabled-button {
     background: var(--color-disabled);
     pointer-events: none;
   }
