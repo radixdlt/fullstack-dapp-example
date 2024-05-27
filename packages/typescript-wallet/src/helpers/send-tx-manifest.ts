@@ -16,7 +16,7 @@ export const sendTransactionManifest = (txManifest: string, lock_fee = 100) => {
           ${txManifest}
     `)
         .andThen((transactionManifest) =>
-          radixEngineClient.submitTransaction(transactionManifest, [])
+          radixEngineClient.submitTransaction({ transactionManifest, signers: [] })
         )
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)

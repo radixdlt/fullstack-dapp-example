@@ -52,13 +52,10 @@ export const deployPackage = ({
           ;
     `)
           .andThen(({ instructions }) =>
-            submitTransaction(
-              {
-                instructions,
-                blobs: [bufferToUint8Array(wasmBuffer)]
-              },
-              []
-            )
+            submitTransaction({
+              transactionManifest: { blobs: [bufferToUint8Array(wasmBuffer)], instructions },
+              signers: []
+            })
           )
           .andThen(({ txId }) =>
             radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
