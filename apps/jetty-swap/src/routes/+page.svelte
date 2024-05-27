@@ -233,12 +233,12 @@
           <div class="row">
             <span class="row">
               {conversionRateFrom}
-              <Icon --size="18px" url={clamResource?.icon} />
+              <Icon --size="18px" url={clamResource?.icon ?? ''} />
             </span>
             =
             <span class="row">
               {conversionRateTo}
-              <Icon --size="18px" url={elementResource?.icon} />
+              <Icon --size="18px" url={elementResource?.icon ?? ''} />
             </span>
           </div>
         </div>
