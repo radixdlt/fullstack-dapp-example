@@ -261,6 +261,41 @@ export const QuestDefinitions = () => {
           type: 'event'
         }
       }
+    },
+    ReferralQuest: {
+      id: 'ReferralQuest',
+      category: 'Advanced',
+      rewards: [
+        {
+          name: 'element',
+          amount: 20
+        },
+        {
+          name: 'energyCard',
+          amount: 1
+        },
+        {
+          name: 'xrd',
+          amount: 10
+        }
+      ],
+      trackedAccountAddress: false,
+      minutesToComplete: 3,
+      preRequisites: ['TransferTokens'],
+      requirements: {
+        LearnAboutParty: {
+          type: 'content'
+        },
+        ClaimReferralQuestRewards: {
+          eventName: 'ClaimReferralQuestRewards',
+          type: 'event',
+          matchField: {
+            value: 'ok',
+            kind: 'Reference',
+            type_name: 'ResourceAddress'
+          }
+        }
+      }
     }
   } as const satisfies { [key: string]: QuestDefinition }
 }
