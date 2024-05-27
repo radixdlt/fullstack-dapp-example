@@ -46,6 +46,6 @@
     flex-direction: column;
     align-items: center;
     gap: 5rem;
-    padding: 1.5rem var(--spacing-xl);
+    padding: 2rem;
   }
 </style>

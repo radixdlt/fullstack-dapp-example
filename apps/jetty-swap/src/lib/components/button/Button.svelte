@@ -6,7 +6,13 @@
   export let width = 'fit-content'
 </script>
 
-<button style={`width: ${width}`} on:click class:disabled class={variation} class:loading>
+<button
+  style={`width: ${width}`}
+  on:click
+  class:disabled-test={disabled}
+  class={variation}
+  class:loading
+>
   <div class:hide-content={loading}>
     <slot />
   </div>
@@ -30,9 +36,8 @@
   }
 
   .primary {
-    background: var(--color-primary);
+    background: var(--color-background-dark);
     color: var(--color-light);
-    border: var(--border) var(--color-primary);
 
     &:hover:not(.disabled) {
       filter: brightness(0.8);
@@ -44,15 +49,17 @@
   .secondary {
     background: transparent;
     color: var(--color-dark);
-    border: var(--border) var(--color-dark);
 
-    &:hover:not(.disabled) {
+    &:hover:not(.disabled-test) {
       filter: brightness(0.8);
     }
 
     transition: filter 0.2s ease-in-out;
   }
-
+  .disabled-test {
+    background: var(--color-disabled);
+    pointer-events: none;
+  }
   .loading {
     cursor: not-allowed;
     pointer-events: none;

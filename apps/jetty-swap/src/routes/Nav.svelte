@@ -3,9 +3,7 @@
 </script>
 
 <nav>
-  <div class="navbar">
-    <p class="text-bold title">{$i18n.t('main:title')}</p>
-  </div>
+  <div class="navbar"></div>
   <div class="connect-btn">
     <radix-connect-button />
   </div>
@@ -19,11 +17,10 @@
     gap: 24px;
     width: 100vw;
     padding: 1rem;
-  }
-  @include desktop {
-    nav {
-      position: absolute;
-      padding: 1rem 4rem;
+    position: absolute;
+
+    @include desktop {
+      padding: 2rem 4rem;
     }
   }
 
@@ -35,10 +32,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    --radix-connect-buttonx-width: 132px;
+    --radix-connect-button-width: 130px;
     --radix-connect-button-height: 40px;
-    --radix-connect-button-border-radius: var(--border-radius-2xl);
     --radix-connect-button-background: var(--color-radix-grey1);
+
+    @include desktop {
+      --radix-connect-button-border-radius: var(--border-radius-2xl);
+      --radix-connect-button-width: 140px;
+    }
   }
 
   .navbar {
