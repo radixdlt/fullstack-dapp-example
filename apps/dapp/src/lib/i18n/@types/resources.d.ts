@@ -30,27 +30,31 @@ interface Resources {
     backButton: 'Back'
     continueButton: 'Continue'
     placeholderNotFound: 'Placeholder {{id}} not found'
-    claimButton: 'Claim Your Reward'
-    somethingWentWrong: 'Something went wrong, please try again.'
+    claimButton: 'Claim'
     minutesToComplete_one: '{{count}} minute'
     minutesToComplete_other: '{{count}} minutes'
     'radquest-logo-alt': 'RadQuest Logo'
+    somethingWentWrong: 'Something went wrong, please try again.'
     completeQuest: 'Complete Quest'
     'intro-begin-quest': 'Begin Quest'
     okButton: 'OK'
     WelcomeToRadQuest: {
-      hi: 'Hi'
+      hi: 'Meet Jetty'
       claim: 'Claim'
       requirements: {
-        Introduction: 'Get introduced to RadQuest'
+        Introduction: 'Understand what RadQuest is'
+        Glossary: 'Use Jetty’s Glossary'
+        RadQuestQuiz: 'Complete the RadQuest Quiz'
       }
       title: 'Welcome to RadQuest'
-      description: 'Your journey begins'
-      introDescription: 'Welcome to RadQuest! This is your first step to becoming a Radix expert. Complete the quests to earn rewards and learn more about Radix.'
+      description: 'Begin your Radix journey'
+      introDescription: 'Journey with Jetty through RadQuest and uncover the hidden depths of the Radix ecosystem. Complete tasks and win tokens, NFTs and XRD.'
     }
     WhatIsRadix: {
       requirements: {
         LearnAboutRadix: 'Learn about the Radix network'
+        RadixQuiz: 'Complete the Radix Quiz'
+        dAppQuiz: 'Complete the dApp Quiz'
       }
       title: 'Introduction to Radix'
       description: 'Become familiar with the Radix network'
@@ -80,8 +84,8 @@ interface Resources {
         DepositUserBadge: 'Deposit a user badge'
       }
       title: 'First Transaction'
-      description: 'Make your first transaction'
-      introDescription: 'Make your first transaction on the Radix network to earn your first reward.'
+      description: 'Claim your first rewards'
+      introDescription: 'Get some XRD tokens, and use them to do your first transaction: claiming your quest rewards right to your Radix Wallet.'
       failedToSendOtp: 'Failed to send OTP'
       phoneNumberExists: 'Phone number exists'
       invalidPhoneNumber: 'Invalid phone number'
@@ -125,36 +129,37 @@ interface Resources {
         LearnAboutParty: 'Learn about Party Quest'
         ClaimReferralQuestRewards: 'Claim your rewards'
       }
-      SwapQuest: {
-        requirements: {
-          LearnAboutDexes: 'Learn about DEXes'
-          SwapTokens: 'Swap tokens on DEXes'
-        }
-        title: 'Decentralized Exchange (DEX)'
-        description: 'Learn how to swap one token for another at a changing market rate.'
-        introDescription: 'Learn about DEXes\nSwap one token for another kind of token'
-      }
-      InstapassQuest: {
-        requirements: {
-          LearnAboutInstapass: 'Learn about Instapass'
-        }
-        title: 'Instapass'
-        description: 'Learn about Instapass'
-        introDescription: 'Instapass is a way to log in to websites without a password. Learn more about Instapass.'
-      }
     }
-    transformGems: {
-      back: 'Back'
-      title0: 'Pick a Transform card'
-      title1: 'Pick two gems'
-      title2: 'Ready to transform?'
-      'next-button': 'Next'
-      'complete-button': 'Send to Jetty'
-      'gemcard-gemstone': 'Gemstone'
-      'gemcard-rarity': 'Rarity'
+    SwapQuest: {
+      requirements: {
+        LearnAboutDexes: 'Learn about DEXes'
+        SwapTokens: 'Swap tokens on DEXes'
+      }
+      title: 'Decentralized Exchange (DEX)'
+      description: 'Learn how to swap one token for another at a changing market rate.'
+      introDescription: 'Learn about DEXes\nSwap one token for another kind of token'
     }
-    translation: {}
+    InstapassQuest: {
+      requirements: {
+        LearnAboutInstapass: 'Learn about Instapass'
+        InstapassBadgeDeposited: 'Receive Instapass KYC badge'
+      }
+      title: 'Instapass'
+      description: 'Learn about Instapass'
+      introDescription: 'Instapass is a way to log in to websites without a password. Learn more about Instapass.'
+    }
   }
+  transformGems: {
+    back: 'Back'
+    title0: 'Pick a Transform card'
+    title1: 'Pick two gems'
+    title2: 'Ready to transform?'
+    'next-button': 'Next'
+    'complete-button': 'Send to Jetty'
+    'gemcard-gemstone': 'Gemstone'
+    'gemcard-rarity': 'Rarity'
+  }
+  translation: {}
 }
 
 export default Resources
