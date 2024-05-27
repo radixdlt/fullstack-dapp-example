@@ -106,22 +106,23 @@
       "LearnAboutParty": "Learn about Party Quest",
       "ClaimReferralQuestRewards": "Claim your rewards"
     },
-  "SwapQuest": {
-    "requirements": {
-      "LearnAboutDexes": "Learn about DEXes",
-      "SwapTokens": "Swap tokens on DEXes"
+    "SwapQuest": {
+      "requirements": {
+        "LearnAboutDexes": "Learn about DEXes",
+        "SwapTokens": "Swap tokens on DEXes"
+      },
+      "title": "Decentralized Exchange (DEX)",
+      "description": "Learn how to swap one token for another at a changing market rate.",
+      "introDescription": "Learn about DEXes\nSwap one token for another kind of token"
     },
-    "title": "Decentralized Exchange (DEX)",
-    "description": "Learn how to swap one token for another at a changing market rate.",
-    "introDescription": "Learn about DEXes\nSwap one token for another kind of token"
-  },
-  "InstapassQuest": {
-    "requirements": {
-      "LearnAboutInstapass": "Learn about Instapass",
-      "InstapassBadgeDeposited": "Receive Instapass KYC badge"
-    },
-    "title": "Instapass",
-    "description": "Learn about Instapass",
-    "introDescription": "Instapass is a way to log in to websites without a password. Learn more about Instapass."
+    "InstapassQuest": {
+      "requirements": {
+        "LearnAboutInstapass": "Learn about Instapass",
+        "InstapassBadgeDeposited": "Receive Instapass KYC badge"
+      },
+      "title": "Instapass",
+      "description": "Learn about Instapass",
+      "introDescription": "Instapass is a way to log in to websites without a password. Learn more about Instapass."
+    }
   }
 }

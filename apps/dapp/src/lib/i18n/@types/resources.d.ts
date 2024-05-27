@@ -125,35 +125,36 @@ interface Resources {
         LearnAboutParty: 'Learn about Party Quest'
         ClaimReferralQuestRewards: 'Claim your rewards'
       }
-    SwapQuest: {
-      requirements: {
-        LearnAboutDexes: 'Learn about DEXes'
-        SwapTokens: 'Swap tokens on DEXes'
+      SwapQuest: {
+        requirements: {
+          LearnAboutDexes: 'Learn about DEXes'
+          SwapTokens: 'Swap tokens on DEXes'
+        }
+        title: 'Decentralized Exchange (DEX)'
+        description: 'Learn how to swap one token for another at a changing market rate.'
+        introDescription: 'Learn about DEXes\nSwap one token for another kind of token'
       }
-      title: 'Decentralized Exchange (DEX)'
-      description: 'Learn how to swap one token for another at a changing market rate.'
-      introDescription: 'Learn about DEXes\nSwap one token for another kind of token'
-    }
-    InstapassQuest: {
-      requirements: {
-        LearnAboutInstapass: 'Learn about Instapass'
+      InstapassQuest: {
+        requirements: {
+          LearnAboutInstapass: 'Learn about Instapass'
+        }
+        title: 'Instapass'
+        description: 'Learn about Instapass'
+        introDescription: 'Instapass is a way to log in to websites without a password. Learn more about Instapass.'
       }
-      title: 'Instapass'
-      description: 'Learn about Instapass'
-      introDescription: 'Instapass is a way to log in to websites without a password. Learn more about Instapass.'
     }
+    transformGems: {
+      back: 'Back'
+      title0: 'Pick a Transform card'
+      title1: 'Pick two gems'
+      title2: 'Ready to transform?'
+      'next-button': 'Next'
+      'complete-button': 'Send to Jetty'
+      'gemcard-gemstone': 'Gemstone'
+      'gemcard-rarity': 'Rarity'
+    }
+    translation: {}
   }
-  transformGems: {
-    back: 'Back'
-    title0: 'Pick a Transform card'
-    title1: 'Pick two gems'
-    title2: 'Ready to transform?'
-    'next-button': 'Next'
-    'complete-button': 'Send to Jetty'
-    'gemcard-gemstone': 'Gemstone'
-    'gemcard-rarity': 'Rarity'
-  }
-  translation: {}
 }
 
 export default Resources
