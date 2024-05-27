@@ -1,67 +1,46 @@
 <script lang="ts">
   import Quest from '../Quest.svelte'
-  import type { PageData } from '../ReferralQuest/$types'
+  import type { PageData } from './$types'
+  import type { Quests } from 'content'
   import PartyTabs from './PartyTabs.svelte'
 
   export let data: PageData
+
+  const text = data.text as Quests['ReferralQuest']['text']
+
   let quest: Quest
 </script>
 
 <Quest
-  {...data}
   bind:this={quest}
+  id={data.id}
+  requirements={data.requirements}
   steps={[
+    {
+      id: '0',
+      type: 'regular'
+    },
+    {
+      id: '1',
+      type: 'regular'
+    },
+    {
+      type: 'requirements'
+    },
     {
       type: 'claimRewards'
     },
-    {
-      id: 'text1',
-      type: 'regular'
-    },
-    {
-      id: 'text2',
-      type: 'regular'
-    },
-    {
-      id: 'text3',
-      type: 'regular'
-    },
-    {
-      id: 'text4',
-      type: 'regular'
-    },
-    {
-      id: 'text5',
-      type: 'regular'
-    },
-
     {
       type: 'complete'
     }
   ]}
   let:render
 >
-  {#if render('text1')}
+  {#if render('0')}
     <PartyTabs />
   {/if}
 
-  {#if render('text2')}
-    {@html data.text['1.md']}
-  {/if}
-
-  {#if render('text3')}
-    {@html data.text['2.md']}
-  {/if}
-
-  {#if render('text4')}
-    {@html data.text['3.md']}
-  {/if}
-
-  {#if render('text5')}
-    {@html data.text['4.md']}
-  {/if}
-
-  {#if render('text6')}
-    {@html data.text['5.md']}
+  {#if render('1')}
+    {@html text['1.md']}
   {/if}
 </Quest>

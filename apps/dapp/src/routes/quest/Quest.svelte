@@ -161,8 +161,8 @@
   on:close={closeQuest}
   on:complete={_completeQuest}
   on:progressUpdated={progressUpdated}
-  title={$i18n.t(`${id}.title`, { ns: 'quests' })}
-  description={$i18n.t(`${id}.introDescription`, { ns: 'quests' })}
+  title={$i18n.t(`quests:${id}.title`)}
+  description={$i18n.t(`quests:${id}.introDescription`)}
   minutesToComplete={$quests[id].minutesToComplete}
   rewards={$quests[id].rewards}
   steps={_steps}
