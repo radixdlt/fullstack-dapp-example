@@ -288,12 +288,7 @@ export const QuestDefinitions = () => {
         },
         ClaimReferralQuestRewards: {
           eventName: 'ClaimReferralQuestRewards',
-          type: 'event',
-          matchField: {
-            value: 'ok',
-            kind: 'Reference',
-            type_name: 'ResourceAddress'
-          }
+          type: 'event'
         }
       }
     }
