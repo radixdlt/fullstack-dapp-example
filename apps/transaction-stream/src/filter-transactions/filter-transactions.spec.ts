@@ -3,14 +3,16 @@ import DepositUserBadge from '../fixtures/transactions/deposit-user-badge'
 import QuestRewardsEvents from '../fixtures/transactions/quest-rewards-events'
 import NotSupportedTx from '../fixtures/transactions/not-supported-tx'
 import StakedXrdTx from '../fixtures/transactions/staked-xrd'
+import MintInstapassBadge from '../fixtures/transactions/mint-instapass-badge'
 import { getTrackedTransactionTypes, resourceWithdrawn } from './tracked-transaction-types'
-import { AccountAddressModel } from 'common'
+import { AccountAddressModel, EventId } from 'common'
 import { FilterTransactionsByType } from './filter-transactions-by-type'
 import { FilterTransactionsByAccountAddress } from './filter-transactions-by-account-address'
 import { RedisServer } from '../test-helpers/inMemoryRedisServer'
 import { RedisConnection } from 'queues'
 import { config } from '../config'
-import CombineElementsDeposit from '../fixtures/transactions/combine-elements-deposit-events'
+import CombineElementsDepositedEvents from '../fixtures/transactions/combine-elements-deposited-events'
+import CombineElementsMintedRadgemEvents from '../fixtures/transactions/combine-elements-minted-radgem-events'
 
 let accountAddressModel: AccountAddressModel
 const trackedTransactionTypes = getTrackedTransactionTypes()
@@ -37,10 +39,27 @@ describe('filter transactions', () => {
 
     const [userBadge] = filteredTransactions
 
-    expect(userBadge.type).toEqual('UserBadge')
+    expect(userBadge.type).toEqual(EventId.DepositUserBadge)
     expect(userBadge.transactionId).toBeDefined()
     expect(userBadge.relevantEvents.UserBadgeDeposited).toBeDefined()
     expect(userBadge.relevantEvents.XrdDeposited).toBeDefined()
+  })
+
+  it('should find instapass badge deposited transaction', () => {
+    const result = filterTransactionsByType([...MintInstapassBadge])
+
+    if (result.isErr()) throw result.error
+
+    const filteredTransactions = result.value
+
+    expect(filteredTransactions.length).toEqual(1)
+
+    const [instapassBadge] = filteredTransactions
+
+    expect(instapassBadge.type).toEqual(EventId.InstapassBadgeDeposited)
+    expect(instapassBadge.transactionId).toBeDefined()
+    expect(instapassBadge.relevantEvents.MintedEvent).toBeDefined()
+    expect(instapassBadge.relevantEvents.DepositedEvent).toBeDefined()
   })
 
   it('should find QuestRewardClaimed & QuestRewardDeposited transaction', () => {
@@ -55,11 +74,11 @@ describe('filter transactions', () => {
     const [claimedReward, depositedReward] = filteredTransactions
 
     expect(depositedReward.transactionId).toBeDefined()
-    expect(depositedReward.type).toEqual('QuestRewardDeposited')
+    expect(depositedReward.type).toEqual(EventId.QuestRewardDeposited)
     expect(depositedReward.relevantEvents.RewardDepositedEvent).toBeDefined()
 
     expect(claimedReward.transactionId).toBeDefined()
-    expect(claimedReward.type).toEqual('QuestRewardClaimed')
+    expect(claimedReward.type).toEqual(EventId.QuestRewardClaimed)
     expect(claimedReward.relevantEvents.RewardClaimedEvent).toBeDefined()
   })
 
@@ -127,7 +146,7 @@ describe('filter transactions', () => {
   })
 
   it('should find CombineElementsDeposited', () => {
-    const result = filterTransactionsByType([...CombineElementsDeposit, ...NotSupportedTx])
+    const result = filterTransactionsByType([...CombineElementsDepositedEvents, ...NotSupportedTx])
 
     if (result.isErr()) throw result.error
 
@@ -140,5 +159,24 @@ describe('filter transactions', () => {
     expect(combineElementsDeposited.transactionId).toBeDefined()
     expect(combineElementsDeposited.type).toEqual('CombineElementsDeposited')
     expect(combineElementsDeposited.relevantEvents.DepositedEvent).toBeDefined()
+  })
+
+  it('should find CombineElementsMintedRadgem', () => {
+    const result = filterTransactionsByType([
+      ...CombineElementsMintedRadgemEvents,
+      ...NotSupportedTx
+    ])
+
+    if (result.isErr()) throw result.error
+
+    const filteredTransactions = result.value
+
+    expect(filteredTransactions.length).toEqual(1)
+
+    const [CombineElementsMintedRadgem] = filteredTransactions
+
+    expect(CombineElementsMintedRadgem.transactionId).toBeDefined()
+    expect(CombineElementsMintedRadgem.type).toEqual('CombineElementsMintedRadgem')
+    expect(CombineElementsMintedRadgem.relevantEvents.MintedRadgemEvent).toBeDefined()
   })
 })

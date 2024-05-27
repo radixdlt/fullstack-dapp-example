@@ -46,7 +46,12 @@ export const newCardForge = () => {
                 Bucket("admin_badge")
                 Address("${config.radQuest.resources.morphEnergyCards}");
             `)
-        .andThen((value) => submitTransaction(value, ['systemAccount', 'dAppDefinitionAccount']))
+        .andThen((value) =>
+          submitTransaction({
+            transactionManifest: value,
+            signers: ['systemAccount', 'dAppDefinitionAccount']
+          })
+        )
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
         )
@@ -93,7 +98,10 @@ export const newCardForge = () => {
                     ;
                     `)
             .andThen((value) =>
-              submitTransaction(value, ['systemAccount', 'dAppDefinitionAccount'])
+              submitTransaction({
+                transactionManifest: value,
+                signers: ['systemAccount', 'dAppDefinitionAccount']
+              })
             )
             .andThen(({ txId }) =>
               radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)

@@ -7,20 +7,19 @@ import {
   AuditModel,
   UserModel,
   TransactionModel,
-  AccountAddressModel
+  AccountAddressModel,
+  GatewayApi
 } from 'common'
 import { logger } from './helpers/logger'
 import { RedisConnection, getQueues } from 'queues'
 import { EventWorkerController } from './event/controller'
 import { TransactionWorker } from './transaction/worker'
 import { EventWorker } from './event/worker'
-import { DbClient } from './db-client'
+import { dbClient } from './db-client'
 import { TransactionWorkerController } from './transaction/controller'
 import { TokenPriceClient } from './token-price-client'
 
 const app = async () => {
-  const dbClient = await DbClient()
-
   // test db connection
   await dbClient.user.findFirst()
 
@@ -33,9 +32,11 @@ const app = async () => {
     logger
   })
 
+  const gatewayApi = GatewayApi(config.networkId)
   const eventModel = EventModel(dbClient)
   const transactionModel = TransactionModel(dbClient)
   const redisClient = new RedisConnection(config.redis)
+  const tokenPriceClient = TokenPriceClient({ logger, redisClient })
   const eventWorkerController = EventWorkerController({
     dbClient,
     userQuestModel: UserQuestModel(dbClient),
@@ -43,21 +44,23 @@ const app = async () => {
     userModel: UserModel(dbClient),
     transactionModel,
     accountAddressModel: AccountAddressModel(redisClient, logger),
-    tokenPriceClient: TokenPriceClient({ logger, redisClient }),
+    tokenPriceClient,
     notificationApi,
     transactionQueue,
     logger
   })
 
   const transactionWorkerController = TransactionWorkerController({
-    logger,
+    gatewayApi,
+    tokenPriceClient,
     transactionModel,
     auditModel: AuditModel(dbClient)
   })
 
   TransactionWorker(connection, {
     logger,
-    transactionWorkerController
+    transactionWorkerController,
+    transactionModel
   })
 
   EventWorker(connection, {
@@ -67,4 +70,8 @@ const app = async () => {
   })
 }
 
-app()
+app().catch((error) => {
+  logger.error({ reason: 'UnrecoverableError', error })
+  // crash the process if an error is thrown within the app
+  process.exit(1)
+})

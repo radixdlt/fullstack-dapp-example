@@ -3,8 +3,9 @@ import { existsSync, readFileSync } from 'fs'
 import { publishPackageAdvanced } from '../../helpers/publish-package-advanced'
 import { config } from '../../config'
 
-const rpdPath = '../../scrypto-package/target/wasm32-unknown-unknown/release/radquest.rpd'
-const wasmPath = '../../scrypto-package/target/wasm32-unknown-unknown/release/radquest.wasm'
+const rpdPath = '../../scrypto-packages/radquest/target/wasm32-unknown-unknown/release/radquest.rpd'
+const wasmPath =
+  '../../scrypto-packages/radquest/target/wasm32-unknown-unknown/release/radquest.wasm'
 
 if (!existsSync(resolve(rpdPath)) || !existsSync(resolve(wasmPath))) {
   throw new Error('rpd and wasm files not found')

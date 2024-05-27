@@ -1,12 +1,11 @@
 import { questApi } from '$lib/api/quest-api'
 import type { LayoutServerLoad } from './$types'
-import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { loadQuests, type QuestId } from 'content'
 import type { $Enums } from 'database'
 
 export const load: LayoutServerLoad = async ({ fetch, cookies }) => {
   const questStatusResult = await questApi.getQuestsInformation(fetch)
-  const questDefinitions = loadQuests('en', parseInt(PUBLIC_NETWORK_ID))
+  const questDefinitions = loadQuests('en')
 
   let questStatus = {} as Record<
     QuestId,
@@ -52,6 +51,22 @@ export const load: LayoutServerLoad = async ({ fetch, cookies }) => {
         status: 'IN_PROGRESS'
       }
     }
+
+    Promise.all(
+      [
+        'requirement-WelcomeToRadQuest-Glossary',
+        'requirement-WelcomeToRadQuest-RadQuestQuiz',
+        'requirement-WhatIsRadix-RadixQuiz',
+        'requirement-WhatIsRadix-dAppQuiz'
+      ].map((cookieName) => {
+        if (cookies.get(cookieName)) {
+          const [, questId, requirementId] = cookieName.split('-')
+          return questApi.completeRequirement(questId as QuestId, requirementId, fetch)
+        }
+
+        return Promise.resolve()
+      })
+    )
   } else {
     for (const quest of Object.values(questDefinitions)) {
       const cachedStatus = cookies.get(`quest-status-${quest.id}`) as $Enums.QuestStatus | undefined

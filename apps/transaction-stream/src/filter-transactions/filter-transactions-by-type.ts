@@ -1,10 +1,10 @@
 import { CommittedTransactionInfo, EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
 import { ok, Result } from 'neverthrow'
-import { EventJobType } from 'queues'
 import { TrackedTransactions } from './tracked-transaction-types'
+import { EventId } from 'common'
 
 export type FilteredTransaction = {
-  type: EventJobType
+  type: EventId
   transactionId: string
   relevantEvents: Record<string, EventsItem>
 }
@@ -18,7 +18,7 @@ export const FilterTransactionsByType =
     const result = transactions.map((tx) => {
       const events = tx.receipt?.events
 
-      let transactionType: EventJobType | undefined
+      let transactionType: EventId | undefined
       let relevantEvents: Record<string, EventsItem> = {}
 
       if (tx.transaction_status !== 'CommittedSuccess' || !events) return
@@ -35,7 +35,7 @@ export const FilterTransactionsByType =
               intersection(Object.keys(relevantEvents), trackedEventKeys).length ===
               trackedEventKeys.length
             ) {
-              transactionType = transactionTypeName as EventJobType
+              transactionType = transactionTypeName as EventId
               break
             }
           }

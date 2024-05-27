@@ -5,6 +5,7 @@
 
 <div class="text-faded">
   <Icon url={InfoIcon} --size="16px">
+    <!-- TODO: Use i18n string -->
     <div class="info-text">Virtual SIM card is not allowed</div>
   </Icon>
 </div>

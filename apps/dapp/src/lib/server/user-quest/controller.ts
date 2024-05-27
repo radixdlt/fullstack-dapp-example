@@ -1,12 +1,11 @@
 import type { QuestStatus } from 'database'
 import { type ControllerMethodContext } from '../_types'
 import { AccountAddressModel, UserModel, UserQuestModel, type AppLogger } from 'common'
-import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions, type Quests } from 'content'
-import { ResultAsync, errAsync, okAsync } from 'neverthrow'
+import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import { dbClient } from '$lib/db'
 import { ErrorReason, createApiError } from '../../errors'
-import type { QuestId } from 'content'
+import type { QuestId, Requirement } from 'content'
 import { RedisConnection } from 'bullmq'
 import { config } from '$lib/config'
 
@@ -72,7 +71,7 @@ const UserQuestController = ({
     userQuestModel(ctx.logger)
       .findCompletedRequirements(userId, questId)
       .andThen((completedRequirements) => {
-        const questDefinition = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId]
+        const questDefinition = QuestDefinitions()[questId]
         if (completedRequirements.length !== Object.keys(questDefinition.requirements).length) {
           return errAsync(createApiError(ErrorReason.requirementsNotMet, 400)())
         }
@@ -82,7 +81,7 @@ const UserQuestController = ({
       .map(() => ({ httpResponseCode: 200, data: undefined }))
 
   const startQuest = (ctx: ControllerMethodContext, userId: string, questId: keyof Quests) => {
-    const questDefinition = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId]
+    const questDefinition = QuestDefinitions()[questId]
 
     const preRequisites = questDefinition.preRequisites
 
@@ -109,12 +108,14 @@ const UserQuestController = ({
         })
         .andThen((statusResult) => {
           const shouldTrackAccountAddress =
-            !statusResult &&
-            QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId].trackedAccountAddress
+            !statusResult && QuestDefinitions()[questId].trackedAccountAddress
 
           return shouldTrackAccountAddress
             ? userModel(ctx.logger)
                 .getById(userId, {})
+                .andThen((user) =>
+                  user ? ok(user) : err(createApiError(ErrorReason.userNotFound, 404)())
+                )
                 .andThen(({ accountAddress }) => {
                   return getAccountAddressModel(ctx.logger).addTrackedAddress(
                     accountAddress as string,
@@ -136,7 +137,7 @@ const UserQuestController = ({
       userQuestModel(ctx.logger).getQuestStatus(userId, questId),
       userQuestModel(ctx.logger).findCompletedRequirements(userId, questId)
     ]).map(([questStatus, completedRequirements]) => {
-      const questDefinition = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId]
+      const questDefinition = QuestDefinitions()[questId]
       const requirementsState = completedRequirements.reduce(
         (acc, requirement) => {
           acc[requirement.requirementId] = true
@@ -164,12 +165,35 @@ const UserQuestController = ({
       }
     })
 
+  const completeRequirement = (
+    ctx: ControllerMethodContext,
+    questId: QuestId,
+    requirementId: string,
+    userId: string
+  ) => {
+    const questDefinition = QuestDefinitions()[questId]
+    const [, requirement]: [any, Requirement | undefined] = Object.entries(
+      questDefinition.requirements
+    ).find(([key, value]) => key === requirementId && value.completedByUser) || [
+      undefined,
+      undefined
+    ]
+
+    if (!requirement) {
+      return errAsync(createApiError(ErrorReason.invalidRequirement, 400)())
+    }
+
+    return userQuestModel(ctx.logger)
+      .addCompletedRequirement(questId, userId, requirementId)
+      .map(() => ({ httpResponseCode: 200, data: undefined }))
+  }
+
   const completeContentRequirement = (
     ctx: ControllerMethodContext,
     questId: QuestId,
     userId: string
   ) => {
-    const questDefinition = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))[questId]
+    const questDefinition = QuestDefinitions()[questId]
 
     const requirementId = Object.keys(questDefinition.requirements).find(
       // @ts-ignore
@@ -204,6 +228,7 @@ const UserQuestController = ({
     saveProgress,
     getSavedProgress,
     deleteSavedProgress,
+    completeRequirement,
     completeContentRequirement
   }
 }

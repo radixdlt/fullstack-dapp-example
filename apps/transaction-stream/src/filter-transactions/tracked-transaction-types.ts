@@ -3,7 +3,7 @@ import {
   ProgrammaticScryptoSborValueReference
 } from '@radixdlt/babylon-gateway-api-sdk'
 import { config } from '../config'
-import { EventJobType } from 'queues'
+import { EventId } from 'common'
 
 type EventEmitter = {
   entity: {
@@ -20,10 +20,7 @@ export const isEmittedByQuestRewards = (event: EventsItem) =>
 export const isEmittedByRefinery = (event: EventsItem) =>
   (event.emitter as EventEmitter).entity.entity_address === config.radQuest.components.refinery
 
-export type TrackedTransactions = Record<
-  EventJobType,
-  Record<string, (event: EventsItem) => boolean>
->
+export type TrackedTransactions = Record<EventId, Record<string, (event: EventsItem) => boolean>>
 
 const resourceDeposited = (resource: string, toAccount?: string) => (event: EventsItem) => {
   if (event.name !== 'DepositEvent' || event.data.kind !== 'Enum') return false
@@ -59,38 +56,46 @@ const questRewardsEmitted = (eventName: string) => (event: EventsItem) =>
 const refineryEmitted = (eventName: string) => (event: EventsItem) =>
   event.name === eventName && isEmittedByRefinery(event)
 
+const nonFungibleMinted = (resource: string) => (event: EventsItem) =>
+  event.name === 'MintNonFungibleResourceEvent' &&
+  (event.emitter as EventEmitter)?.entity?.entity_address === resource
+
 export const getTrackedTransactionTypes = (): TrackedTransactions => ({
-  QuestRewardDeposited: {
+  [EventId.QuestRewardDeposited]: {
     RewardDepositedEvent: questRewardsEmitted('RewardDepositedEvent')
   },
-  QuestRewardClaimed: {
+  [EventId.QuestRewardClaimed]: {
     RewardClaimedEvent: questRewardsEmitted('RewardClaimedEvent')
   },
-  UserBadge: {
+  [EventId.DepositUserBadge]: {
     UserBadgeDeposited: resourceDeposited(config.radQuest.badges.userBadgeAddress),
     XrdDeposited: resourceDeposited(config.radQuest.xrd)
   },
-  JettyReceivedClams: {
+  [EventId.JettyReceivedClams]: {
     DepositEvent: resourceDeposited(
       config.radQuest.resources.clamAddress,
       config.radQuest.accounts.jetty
     ),
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress)
   },
-  XrdStaked: {
+  [EventId.XrdStaked]: {
     XrdStake: xrdStaked,
     WithdrawEvent: resourceWithdrawn(config.radQuest.xrd)
   },
-  CombineElementsDeposited: {
-    DepositedEvent: refineryEmitted('ElementsCombineDepositedEvent')
+  [EventId.CombineElementsDeposited]: {
+    DepositedEvent: refineryEmitted('CombineElementsDepositedEvent')
   },
-  CombineElementsMintedRadgem: {
-    MintedRadgem: refineryEmitted('ElementsCombineProcessed1Event')
+  [EventId.CombineElementsMintedRadgem]: {
+    MintedRadgemEvent: refineryEmitted('CombineElementsMintedRadgemEvent')
   },
-  CombineElementsAddedRadgemImage: {
-    AddedRadgemImage: refineryEmitted('ElementsCombineProcessed2Event')
+  [EventId.CombineElementsAddedRadgemImage]: {
+    AddedRadgemImageEvent: refineryEmitted('CombineElementsAddedRadgemImageEvent')
   },
-  CombineElementsClaimed: {
-    ClaimedEvent: refineryEmitted('ElementsCombineClaimedEvent')
+  [EventId.CombineElementsClaimed]: {
+    ClaimedEvent: refineryEmitted('CombineElementsClaimedEvent')
+  },
+  [EventId.InstapassBadgeDeposited]: {
+    MintedEvent: nonFungibleMinted(config.radQuest.resources.instapassBadgeAddress),
+    DepositedEvent: resourceDeposited(config.radQuest.resources.instapassBadgeAddress)
   }
 })

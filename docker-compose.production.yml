@@ -26,19 +26,10 @@ services:
       - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
       - PUBLIC_LOG_LEVEL=debug
       - PUBLIC_NOTIFICATION_URL=${PUBLIC_NOTIFICATION_URL}
-      - MNEMONIC=${MNEMONIC}
       - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
       - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
       - TWILIO_SERVICE_SID=${TWILIO_SERVICE_SID}
     command: pm2-runtime apps/dapp/build/index.js
-
-  storybook:
-    build:
-      context: ./
-      dockerfile: ./dockerfiles/dapp.Dockerfile
-      target: storybook
-    ports:
-      - '3001:80'
 
   notification:
     build:
@@ -55,7 +46,7 @@ services:
       - WEBSOCKET_PORT=${NOTIFICATION_WEBSOCKET_PORT}
       - JWT_SECRET=${JWT_SECRET}
       - LOG_LEVEL=${PUBLIC_LOG_LEVEL}
-    command: pm2-runtime apps/notification/dist/index.mjs
+    command: pm2-runtime apps/notification/dist/index.cjs
 
   transaction-stream:
     build:
@@ -73,7 +64,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_PORT=5432
-    command: pm2-runtime apps/transaction-stream/dist/index.mjs
+    command: pm2-runtime apps/transaction-stream/dist/index.cjs
 
   workers:
     build:
@@ -92,4 +83,25 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_PORT=5432
       - LOG_LEVEL=${PUBLIC_LOG_LEVEL}
-    command: pm2-runtime apps/workers/dist/index.mjs
+      - MNEMONIC=${MNEMONIC}
+      - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
+    command: pm2-runtime apps/workers/dist/index.cjs
+
+  jetty-swap:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/jetty-swap.Dockerfile
+      target: application
+      args:
+        - PUBLIC_NETWORK_ID=2
+        - PUBLIC_LOG_LEVEL=debug
+    expose:
+      - '3001'
+    ports:
+      - '3001:3001'
+    environment:
+      - PORT=${WEB_API_PORT}
+      - PUBLIC_DAPP_DEFINITION_ADDRESS=${PUBLIC_DAPP_DEFINITION_ADDRESS}
+      - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
+      - PUBLIC_LOG_LEVEL=debug
+    command: pm2-runtime apps/jetty-swap/build/index.js

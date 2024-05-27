@@ -9,9 +9,12 @@
   import { questApi } from '$lib/api/quest-api'
   import { RadixNetworkConfigById } from '@radixdlt/radix-dapp-toolkit'
   import { publicConfig } from '$lib/public-config'
+  import type { Quests } from 'content'
 
   export let data: PageData
   let quest: Quest
+
+  const text = data.text as Quests['StakingQuest']['text']
 
   const stakedXrd = writable(data.requirements?.StakedXrd)
   const rewardsDeposited = writable(
@@ -92,15 +95,15 @@
   let:render
 >
   {#if render('text1')}
-    {@html data.text['0.md']}
+    {@html text['0.md']}
   {/if}
 
   {#if render('text2')}
-    {@html data.text['1.md']}
+    {@html text['1.md']}
   {/if}
 
   {#if render('text3')}
-    {@html data.text['2.md']}
+    {@html text['2.md']}
 
     <Button
       on:click={() =>
@@ -111,14 +114,14 @@
   {/if}
 
   {#if render('text4')}
-    {@html data.text['3.md']}
+    {@html text['3.md']}
   {/if}
 
   {#if render('text5')}
-    {@html data.text['4.md']}
+    {@html text['4.md']}
   {/if}
 
   {#if render('text6')}
-    {@html data.text['5.md']}
+    {@html text['5.md']}
   {/if}
 </Quest>

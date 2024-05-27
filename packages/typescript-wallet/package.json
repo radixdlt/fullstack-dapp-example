@@ -1,20 +1,13 @@
 {
   "name": "typescript-wallet",
   "version": "0.1.0",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "exports": {
-    ".": {
-      "import": {
-        "default": "./dist/index.js",
-        "types": "./dist/index.d.ts"
-      }
-    }
+    ".": "./src/index.ts"
   },
   "type": "module",
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts",
-    "dev": "npm run build -- --watch",
     "wallet:list:accounts": "npx tsx ./src/scripts/account-address.ts",
     "wallet:create:mnemonic": "npx tsx ./src/scripts/generate-mnemonic.ts",
     "wallet:faucet": "npx tsx ./src/scripts/faucet.ts",
@@ -24,12 +17,18 @@
     "wallet:deploy:radquest": "npx tsx ./src/radquest/scripts/deploy-radquest.ts",
     "wallet:instantiate:quest-rewards": "npx tsx ./src/radquest/scripts/new-quest-rewards.ts",
     "wallet:create:element": "npx tsx ./src/radquest/scripts/create-element.ts",
+    "wallet:create:instapass-badge": "npx tsx ./src/radquest/scripts/create-instapass-badge.ts",
+    "wallet:mint:instapass-badge": "npx tsx ./src/radquest/scripts/mint-instapass-badge.ts",
     "wallet:create:clam": "npx tsx ./src/radquest/scripts/create-clam.ts",
     "wallet:create:energy-card": "npx tsx ./src/radquest/scripts/create-energy-card.ts",
     "wallet:create:radgem": "npx tsx ./src/radquest/scripts/create-radgem.ts",
     "wallet:create:radmorph": "npx tsx ./src/radquest/scripts/create-radmorph.ts",
     "wallet:instantiate:card-forge": "npx tsx ./src/radquest/scripts/new-card-forge.ts",
     "wallet:instantiate:refinery": "npx tsx ./src/radquest/scripts/new-refinery.ts",
+    "wallet:mint-then-combine-elements-deposit": "npx tsx ./src/radquest/scripts/mint-then-combine-elements-deposit.ts",
+    "wallet:deploy:clam-dex": "npx tsx ./src/clam-dex/scripts/deploy-clam-dex.ts",
+    "wallet:instantiate:jetty-swap": "npx tsx ./src/clam-dex/scripts/new-jetty-swap.ts",
+    "wallet:instantiate:letty-swap": "npx tsx ./src/clam-dex/scripts/new-letty-swap.ts",
     "gw:well-known": "npx tsx ./src/scripts/gw/well-known.ts",
     "gw:tx:lookup": "npx tsx ./src/scripts/gw/lookup-tx.ts",
     "gw:status": "npx tsx ./src/scripts/gw/status.ts",
@@ -37,7 +36,7 @@
   },
   "license": "SEE LICENSE",
   "dependencies": {
-    "@radixdlt/radix-dapp-toolkit": "1.3.0",
+    "@radixdlt/radix-dapp-toolkit": "^2.0.0-v2.16",
     "@radixdlt/radix-engine-toolkit": "1.0.3",
     "bip39": "^3.1.0",
     "common": "*",

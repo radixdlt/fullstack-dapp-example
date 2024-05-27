@@ -1,6 +1,6 @@
 import { AuditModel, GatewayApi, TransactionModel, UserModel } from 'common'
-import type { User, UserPhoneNumber } from 'database'
-import { ResultAsync, errAsync, okAsync } from 'neverthrow'
+import type { User } from 'database'
+import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import type { ControllerMethodContext, ControllerMethodOutput } from '../_types'
 import { dbClient } from '$lib/db'
 import { Queue } from 'bullmq'
@@ -37,13 +37,6 @@ const UserController = ({
       .getById(userId, {})
       .map((data) => ({ data, httpResponseCode: 200 }))
 
-  const phoneNumberExists = (
-    data: { phoneNumber: UserPhoneNumber | null } | null
-  ): ResultAsync<UserPhoneNumber, ApiError> =>
-    data?.phoneNumber
-      ? okAsync(data?.phoneNumber)
-      : errAsync(createApiError('missing phone number verification', 400)())
-
   const accountAddressExists = (
     data: { accountAddress: string | null } | null
   ): ResultAsync<string, ApiError> =>
@@ -61,8 +54,12 @@ const UserController = ({
   ): ControllerMethodOutput<undefined> =>
     userModel(ctx.logger)
       .getById(userId, { phoneNumber: true })
+      .andThen((user) => (user ? ok(user) : err(createApiError('UserNotFound', 404)())))
       .andThen((data) =>
-        ResultAsync.combine([phoneNumberExists(data), accountAddressExists(data)])
+        ResultAsync.combine([
+          userModel(ctx.logger).getPhoneNumberByUserId(data.id),
+          accountAddressExists(data)
+        ])
           .andThen((data) => {
             const badgeId = `<${userId}>`
             const badgeResourceAddress = publicConfig.badges.userBadgeAddress
@@ -171,6 +168,7 @@ const UserController = ({
 
     const accountAddressResult = userModel(ctx.logger)
       .getById(userId, {})
+      .andThen((user) => (user ? ok(user) : err(createApiError('UserNotFound', 404)())))
       .map((data) => data.accountAddress)
 
     const badgeId = `<${userId}>`

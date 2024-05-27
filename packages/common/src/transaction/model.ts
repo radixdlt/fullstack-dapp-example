@@ -1,7 +1,7 @@
 import { PrismaClient, TransactionStatus } from 'database'
 import { ResultAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
-import { AppLogger } from '../helpers'
+import type { AppLogger } from '../helpers'
 
 export type TransactionIdentifierData = {
   transactionKey: string
@@ -17,15 +17,17 @@ export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
     transactionKey,
     badgeId,
     badgeResourceAddress,
-    attempt
-  }: TransactionIdentifierData) => {
+    attempt,
+    metadata
+  }: TransactionIdentifierData & { metadata?: string }) => {
     return ResultAsync.fromPromise(
       db.transaction.create({
         data: {
           badgeId,
           badgeResourceAddress,
           transactionKey,
-          attempt
+          attempt,
+          metadata
         }
       }),
       (error) => {
@@ -33,6 +35,13 @@ export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
         return createApiError('failed to add transaction entry', 400)()
       }
     )
+  }
+
+  const getItem = (input: TransactionIdentifierData) => {
+    return ResultAsync.fromPromise(db.transaction.findFirst({ where: input }), (error) => {
+      logger?.error({ error, method: 'add', model: 'TransactionModel' })
+      return createApiError('failed to get transaction', 400)()
+    })
   }
 
   const setTransactionId = (
@@ -95,6 +104,7 @@ export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
   return {
     add,
     setStatus,
-    setTransactionId
+    setTransactionId,
+    getItem
   }
 }

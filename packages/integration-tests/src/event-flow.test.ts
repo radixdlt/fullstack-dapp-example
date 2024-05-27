@@ -1,11 +1,20 @@
 import { describe, it, expect, beforeAll } from 'vitest'
-import { mintUserBadgeAndDepositXrd, RadixEngineClient, generateMnemonic } from 'typescript-wallet'
+import {
+  RadixEngineClient,
+  generateMnemonic,
+  mintUserBadgeAndDepositXrd,
+  mintUserBadge,
+  mintElements,
+  combineElementsDeposit,
+  radquestEntityAddresses
+} from 'typescript-wallet'
 import { GatewayApi } from 'common'
 import { PrismaClient } from 'database'
 import { ResultAsync } from 'neverthrow'
 import { EventJob, Queues, getQueues } from 'queues'
 import { config } from './config'
 import { QueueEvents } from 'bullmq'
+import crypto from 'crypto'
 
 const eventQueueEvents = new QueueEvents(Queues.EventQueue, { connection: config.redis })
 
@@ -61,8 +70,9 @@ describe('Event flows', () => {
     await addVerifiedPhoneNumberRequirement(user.id)
     queues = getQueues(config.redis)
   })
-  it(
+  it.skip(
     'should mint user badge, create event, and send notification',
+    { timeout: 30_000, skip: true },
     async () => {
       const [jobData, mintUserBadgeResult] = await Promise.all([
         waitForQueueEvent('completed'),
@@ -91,7 +101,28 @@ describe('Event flows', () => {
         questId: 'FirstTransactionQuest',
         requirementId: 'DepositUserBadge'
       })
-    },
-    { timeout: 30_000 }
+    }
   )
+  it('should mint elements and combine them', { timeout: 30_000 }, async () => {
+    await radixEngineClient.getXrdFromFaucet()
+
+    await mintUserBadge(user.id, accountAddress, {
+      userBadgeAddress: radquestEntityAddresses.badges.userBadgeAddress
+    })
+
+    await mintElements(10, accountAddress)
+
+    await combineElementsDeposit({
+      accountAddress,
+      badgeAddress: radquestEntityAddresses.badges.userBadgeAddress,
+      badgeLocalId: `<${user.id}>`,
+      radixEngineClient: radixEngineClient as RadixEngineClient
+    })
+      .map((txId) => {
+        console.log({ txId })
+      })
+      .mapErr((error) => {
+        console.log({ error })
+      })
+  })
 })

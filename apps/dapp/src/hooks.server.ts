@@ -2,10 +2,10 @@ import { authController } from '$lib/server/auth/controller'
 import type { Handle } from '@sveltejs/kit'
 import { config } from '$lib/config'
 import { appLogger } from 'common'
-import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { QuestDefinitions } from 'content'
 
-const NetworkQuestDefinitions = QuestDefinitions(parseInt(PUBLIC_NETWORK_ID))
+const NetworkQuestDefinitions = QuestDefinitions()
+
 export const handle: Handle = async ({ event, resolve }) => {
   const traceId = crypto.randomUUID()
   event.locals.context = {

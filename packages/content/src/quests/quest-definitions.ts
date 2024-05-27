@@ -1,10 +1,4 @@
-import { getEntityAddresses } from '../helpers/getEntityAddresses'
-
-export type MatchField = {
-  value: string
-  kind: 'Reference'
-  type_name: 'ResourceAddress'
-}
+import { EventId } from 'common'
 
 export type QuestCategory = keyof typeof QuestCategory
 
@@ -12,13 +6,6 @@ export const QuestCategory = {
   Basic: 'Basic',
   Advanced: 'Advanced',
   dApp: 'dApp'
-} as const
-
-export type EventId = keyof typeof EventId
-
-export const EventId = {
-  DepositUserBadge: 'DepositUserBadge',
-  JettyReceivedClams: 'JettyReceivedClams'
 } as const
 
 export type FungibleToken = { amount: number }
@@ -45,11 +32,11 @@ export type Requirement = OnLedgerRequirement | OffLedgerRequirement | ContentRe
 type OnLedgerRequirement = {
   type: 'event'
   eventName: string
-  matchField: MatchField
 }
 
 type OffLedgerRequirement = {
   type: 'offLedger'
+  completedByUser?: boolean
 }
 
 type ContentRequirement = {
@@ -70,9 +57,7 @@ export type QuestId = ReturnType<typeof QuestDefinitions>[keyof ReturnType<
   typeof QuestDefinitions
 >]['id']
 
-export const QuestDefinitions = (networkId: number) => {
-  const { badges, xrd } = getEntityAddresses(networkId)
-
+export const QuestDefinitions = () => {
   return {
     WelcomeToRadQuest: {
       id: 'WelcomeToRadQuest',
@@ -84,6 +69,14 @@ export const QuestDefinitions = (networkId: number) => {
       requirements: {
         Introduction: {
           type: 'content'
+        },
+        Glossary: {
+          type: 'offLedger',
+          completedByUser: true
+        },
+        RadQuestQuiz: {
+          type: 'offLedger',
+          completedByUser: true
         }
       }
     },
@@ -97,6 +90,14 @@ export const QuestDefinitions = (networkId: number) => {
       requirements: {
         LearnAboutRadix: {
           type: 'content'
+        },
+        RadixQuiz: {
+          type: 'offLedger',
+          completedByUser: true
+        },
+        dAppQuiz: {
+          type: 'offLedger',
+          completedByUser: true
         }
       }
     },
@@ -123,6 +124,9 @@ export const QuestDefinitions = (networkId: number) => {
       requirements: {
         ConnectWallet: {
           type: 'offLedger'
+        },
+        ConnectAccount: {
+          type: 'offLedger'
         }
       }
     },
@@ -146,17 +150,9 @@ export const QuestDefinitions = (networkId: number) => {
         VerifyPhoneNumber: {
           type: 'offLedger'
         },
-        ConnectAccount: {
-          type: 'offLedger'
-        },
         [EventId.DepositUserBadge]: {
           type: 'event',
-          eventName: 'DepositEvent',
-          matchField: {
-            value: badges.userBadgeAddress,
-            kind: 'Reference',
-            type_name: 'ResourceAddress'
-          }
+          eventName: 'DepositEvent'
         }
       }
     },
@@ -183,12 +179,7 @@ export const QuestDefinitions = (networkId: number) => {
       requirements: {
         [EventId.JettyReceivedClams]: {
           type: 'event',
-          eventName: 'DepositEvent',
-          matchField: {
-            value: badges.userBadgeAddress,
-            kind: 'Reference',
-            type_name: 'ResourceAddress'
-          }
+          eventName: 'DepositEvent'
         }
       }
     },
@@ -208,14 +199,66 @@ export const QuestDefinitions = (networkId: number) => {
         LearnStaking: {
           type: 'content'
         },
-        StakedXrd: {
+        [EventId.XrdStaked]: {
           eventName: 'StakedXrd',
-          type: 'event',
-          matchField: {
-            value: xrd,
-            kind: 'Reference',
-            type_name: 'ResourceAddress'
-          }
+          type: 'event'
+        }
+      }
+    },
+    SwapQuest: {
+      id: 'SwapQuest',
+      category: 'Advanced',
+      rewards: [
+        {
+          name: 'element',
+          amount: 10
+        },
+        {
+          name: 'xrd',
+          amount: 10
+        },
+        {
+          name: 'energyCard',
+          amount: 1
+        }
+      ],
+      trackedAccountAddress: true,
+      minutesToComplete: 5,
+      preRequisites: ['TransferTokens'],
+      requirements: {
+        LearnAboutDexes: {
+          type: 'content'
+        },
+        SwapTokensOnJettySwap: {
+          eventName: 'SwapTokensOnJettySwap',
+          type: 'event'
+        },
+        SwapTokensOnLettySwap: {
+          eventName: 'SwapTokensOnLettySwap',
+          type: 'event'
+        }
+      }
+    },
+    InstapassQuest: {
+      id: 'InstapassQuest',
+      category: 'Advanced',
+      rewards: [
+        {
+          name: 'element',
+          amount: 50
+        },
+        {
+          name: 'xrd',
+          amount: 120
+        }
+      ],
+      trackedAccountAddress: true,
+      minutesToComplete: 20,
+      preRequisites: ['TransferTokens'],
+      requirements: {
+        [EventId.InstapassBadgeDeposited]: {
+          eventName: 'InstapassBadgeDeposited',
+          type: 'event'
         }
       }
     },

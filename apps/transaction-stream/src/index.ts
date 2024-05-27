@@ -10,7 +10,7 @@ import { HandleStreamError } from './helpers/handleStreamError'
 import { HandleTransactions } from './helpers/handleTransactions'
 import { StateVersionModel } from './state-version/state-version.model'
 import { getLatestStateVersion } from './helpers/getLatestStateVersion'
-import { DbClient } from './db-client'
+import { dbClient } from './db-client'
 import { getTrackedTransactionTypes } from './filter-transactions/tracked-transaction-types'
 import { FilterTransactionsByType } from './filter-transactions/filter-transactions-by-type'
 import { FilterTransactionsByAccountAddress } from './filter-transactions/filter-transactions-by-account-address'
@@ -21,12 +21,15 @@ type Dependencies = {
   filterTransactionsByType: FilterTransactionsByType
   filterTransactionsByAccountAddress: FilterTransactionsByAccountAddress
   stateVersionModel: StateVersionModel
-  getDbClient: () => Promise<PrismaClient>
+  dbClient: PrismaClient
 }
 
 const app = async (dependencies: Dependencies) => {
-  const db = await dependencies.getDbClient()
-  const eventModel = EventModel(db)(logger)
+  const dbClient = dependencies.dbClient
+
+  await dbClient.event.findFirst()
+
+  const eventModel = EventModel(dbClient)(logger)
   const {
     gatewayApi,
     eventQueue,
@@ -90,5 +93,9 @@ app({
   filterTransactionsByType,
   filterTransactionsByAccountAddress,
   stateVersionModel,
-  getDbClient: DbClient
+  dbClient
+}).catch((error) => {
+  logger.error({ reason: 'UnrecoverableError', error })
+  // crash the process if an error is thrown within the app
+  process.exit(1)
 })

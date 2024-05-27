@@ -7,8 +7,12 @@
   import { useCookies } from '$lib/utils/cookies'
   import { writable } from 'svelte/store'
   import { i18n } from '$lib/i18n/i18n'
+  import TextJettyPage from '../TextJettyPage.svelte'
+  import type { Quests } from 'content'
 
   export let data: PageData
+
+  const text = data.text as Quests['GetRadixWallet']['text']
 
   let render = (_: string) => false
 
@@ -66,8 +70,24 @@
   requirements={data.requirements}
   steps={[
     {
-      id: 'text2',
-      type: 'regular'
+      id: '0',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['0.md']
+      }
+    },
+    {
+      id: '1',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['1.md']
+      }
     },
     {
       id: 'get-the-wallet',
@@ -80,36 +100,22 @@
       }
     },
     {
-      id: 'text3',
+      id: '3',
       type: 'regular'
     },
     {
-      id: 'text4',
+      id: '4',
       type: 'regular'
     },
     {
-      id: 'text5',
-      type: 'regular'
-    },
-    {
-      id: 'text6',
-      type: 'regular'
-    },
-    {
-      id: 'text7',
-      type: 'regular'
-    },
-    {
-      id: 'text8',
-      type: 'regular'
-    },
-    {
-      id: 'text9',
-      type: 'regular'
-    },
-    {
-      id: 'text10',
-      type: 'regular'
+      id: '5',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['5.md']
+      }
     },
     {
       type: 'requirements'
@@ -120,8 +126,8 @@
       component: ClaimRewards,
       props: {
         rewards: data.rewards,
-        text: data.text['requirements.md'],
-        nextButtonText: $i18n.t('quests:continueButton'),
+        text: text['claim.md'],
+        nextButtonText: $i18n.t('quests:claimButton'),
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next()
       }
@@ -132,43 +138,15 @@
   ]}
   let:render
 >
-  {#if render('text2')}
-    {@html data.text['1.md']}
-  {/if}
-
   {#if render('get-the-wallet')}
-    {@html data.text['0.md']}
+    {@html text['2.md']}
   {/if}
 
-  {#if render('text3')}
-    {@html data.text['2.md']}
+  {#if render('3')}
+    {@html text['3.md']}
   {/if}
 
-  {#if render('text4')}
-    {@html data.text['3.md']}
-  {/if}
-
-  {#if render('text5')}
-    {@html data.text['4.md']}
-  {/if}
-
-  {#if render('text6')}
-    {@html data.text['5.md']}
-  {/if}
-
-  {#if render('text7')}
-    {@html data.text['6.md']}
-  {/if}
-
-  {#if render('text8')}
-    {@html data.text['7.md']}
-  {/if}
-
-  {#if render('text9')}
-    {@html data.text['8.md']}
-  {/if}
-
-  {#if render('text10')}
-    {@html data.text['9.md']}
+  {#if render('4')}
+    {@html text['4.md']}
   {/if}
 </Quest>

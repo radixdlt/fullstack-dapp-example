@@ -1,4 +1,4 @@
-import { Language, QuestDefinitions, QuestId } from '..'
+import { Language, QuestDefinitions, type QuestId } from '..'
 import QuestIndex from './quest-index.json'
 
 export type Quests = {
@@ -9,9 +9,9 @@ export type Quests = {
   } & ReturnType<typeof QuestDefinitions>[key]
 }
 
-export const loadQuests = (language: Language, networkId: number) => {
+export const loadQuests = (language: Language) => {
   const quests: Quests = {} as Quests
-  const questDefinitions = QuestDefinitions(networkId)
+  const questDefinitions = QuestDefinitions()
 
   Object.values(questDefinitions).forEach((quest) => {
     quests[quest.id] = {

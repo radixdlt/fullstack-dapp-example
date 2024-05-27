@@ -3,31 +3,55 @@
   import type { PageData } from './$types'
   import { user } from '../../../stores'
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
-  import Input from '$lib/components/input/Input.svelte'
   import { derived, writable } from 'svelte/store'
   import { i18n } from '$lib/i18n/i18n'
+  import TextJettyPage from '../TextJettyPage.svelte'
+  import SetUsernamePage from './SetUsernamePage.svelte'
+  import SetEmailPage from './SetEmailPage.svelte'
+  import { OneTimeDataRequestBuilder, SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
+  import { rdt } from '$lib/rdt'
   import { userApi } from '$lib/api/user-api'
+  import Button from '$lib/components/button/Button.svelte'
+  import type { Quests } from 'content'
 
   export let data: PageData
 
-  let nameInput = $user?.label ?? ''
-  let canSaveName = writable(true)
-  let error = ''
+  const text = data.text as Quests['LoginWithWallet']['text']
+
+  const connectAccountReq = writable(data.requirements.ConnectAccount)
+  let waitingOnAccount = false
 
   const loggedIn = derived(user, ($user) => !!$user)
 
   let quest: Quest
 
-  const setUserName = async () => {
-    $canSaveName = false
-    const result = await userApi.setUserField({ name: nameInput, field: 'name' })
-    $canSaveName = true
+  const connectAccount = () => {
+    waitingOnAccount = true
+    rdt.then((rdt) => {
+      rdt.walletApi
+        .sendOneTimeRequest(OneTimeDataRequestBuilder.accounts().exactly(1).withProof())
+        .map(async ({ accounts, proofs }) => {
+          waitingOnAccount = false
+          const accountProof = proofs.find(
+            (proof) => proof.type === 'account'
+          )! as SignedChallengeAccount
 
-    if (result.isErr()) error = (result.error.data as any).message
-    else {
-      error = ''
-      quest.actions.next()
-    }
+          const result = await userApi.setUserField({
+            accountAddress: accounts[0].address,
+            proof: accountProof,
+            field: 'accountAddress'
+          })
+
+          if (result.isOk()) {
+            $user!.accountAddress = accounts[0].address
+            $connectAccountReq = true
+            quest.actions.next()
+          }
+        })
+        .mapErr(() => {
+          waitingOnAccount = false
+        })
+    })
   }
 </script>
 
@@ -37,11 +61,55 @@
   requirements={data.requirements}
   steps={[
     {
-      id: 'explain-wallet',
+      id: '0a',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['0a.md']
+      }
+    },
+    {
+      id: '0b',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['0b.md']
+      }
+    },
+    {
+      id: '1',
       type: 'regular'
     },
     {
-      id: 'connect-wallet',
+      id: '3',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['3.md']
+      }
+    },
+    {
+      id: '4',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['4.md']
+      }
+    },
+    {
+      id: '5',
+      type: 'regular'
+    },
+    {
+      id: '6',
       type: 'regular',
       footer: {
         next: {
@@ -51,44 +119,62 @@
       skip: loggedIn
     },
     {
-      id: 'wallet-connected',
+      id: '7',
+      type: 'regular'
+    },
+    {
+      id: '8',
+      type: 'jetty',
+      component: SetUsernamePage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['8connected.md']
+      }
+    },
+    {
+      id: '9',
+      type: 'jetty',
+      component: SetEmailPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['9.md']
+      }
+    },
+    {
+      id: '10',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['10.md']
+      }
+    },
+    {
+      id: '11',
       type: 'regular',
+      skip: connectAccountReq,
       footer: {
         next: {
-          enabled: canSaveName,
-          onClick: () => {
-            setUserName()
-          }
+          enabled: connectAccountReq
         }
       }
     },
     {
-      id: 'text4',
+      id: '12',
       type: 'regular'
     },
     {
-      id: 'text5',
-      type: 'regular'
-    },
-    {
-      id: 'text6',
-      type: 'regular'
-    },
-    {
-      id: 'text7',
-      type: 'regular'
-    },
-    {
-      id: 'text8',
-      type: 'regular'
-    },
-    {
-      id: 'text9',
-      type: 'regular'
-    },
-    {
-      id: 'text10',
-      type: 'regular'
+      id: '13',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['13.md']
+      }
     },
     {
       type: 'requirements'
@@ -99,8 +185,8 @@
       component: ClaimRewards,
       props: {
         rewards: data.rewards,
-        text: data.text['requirements.md'],
-        nextButtonText: $i18n.t('quests:continueButton'),
+        text: text['claim.md'],
+        nextButtonText: $i18n.t('quests:claimButton'),
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next()
       }
@@ -111,46 +197,31 @@
   ]}
   let:render
 >
-  {#if render('explain-wallet')}
-    {@html data.text['0.md']}
+  {#if render('1')}
+    {@html text['1.md']}
   {/if}
 
-  {#if render('connect-wallet')}
-    {@html data.text['1.md']}
+  {#if render('5')}
+    {@html text['5.md']}
   {/if}
 
-  {#if render('wallet-connected')}
-    {@html data.text['connected.md']}
-
-    <Input bind:value={nameInput} />
-    {error}
+  {#if render('6')}
+    {@html text['6.md']}
   {/if}
 
-  {#if render('text4')}
-    {@html data.text['3.md']}
+  {#if render('7')}
+    {@html text['7.md']}
   {/if}
 
-  {#if render('text5')}
-    {@html data.text['4.md']}
+  {#if render('11')}
+    {@html text['11.md']}
+
+    <Button on:click={connectAccount} loading={waitingOnAccount}
+      >{$i18n.t('quests:LoginWithWallet.connectAccount')}
+    </Button>
   {/if}
 
-  {#if render('text6')}
-    {@html data.text['5.md']}
-  {/if}
-
-  {#if render('text7')}
-    {@html data.text['6.md']}
-  {/if}
-
-  {#if render('text8')}
-    {@html data.text['7.md']}
-  {/if}
-
-  {#if render('text9')}
-    {@html data.text['8.md']}
-  {/if}
-
-  {#if render('text10')}
-    {@html data.text['9.md']}
+  {#if render('12')}
+    {@html text['12.md']}
   {/if}
 </Quest>

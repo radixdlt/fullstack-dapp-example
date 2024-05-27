@@ -65,8 +65,8 @@
   onMount(() => {
     const unsubscribeWebSocket = $webSocketClient?.onMessage((event) => {
       if (
-        event.questId === questId &&
         event.type === 'QuestRequirementCompleted' &&
+        event.questId === questId &&
         event.requirementId === 'DepositUserBadge'
       ) {
         dispatch('deposited')
@@ -120,9 +120,10 @@
 
 <div class="deposit-user-badge">
   {#if state === 'loading'}
+    <!-- TODO: use i18n strings here -->
     <div>Checking third party deposits...</div>
   {:else if state === 'canAcceptUserBadge'}
-    <Button on:click={handleMintUserBadge} loading={mintingInProgress}>Mint User Badge</Button>
+    <Button on:click={handleMintUserBadge} loading={mintingInProgress}>Get badge and XRD</Button>
   {:else if state === 'minted'}
     Minted!
   {:else if state === 'updateDepositRules'}

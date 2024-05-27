@@ -1,7 +1,7 @@
-import { EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
-import { ConnectionOptions, Queue } from 'bullmq'
+import type { EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
+import { type ConnectionOptions, Queue } from 'bullmq'
 import { ResultAsync } from 'neverthrow'
-import { typedError } from 'common'
+import { EventId, typedError } from 'common'
 
 export * from 'bullmq'
 
@@ -10,22 +10,8 @@ export const Queues = {
   TransactionQueue: 'TransactionQueue'
 } as const
 
-export const EventJobType = {
-  QuestRewardDeposited: 'QuestRewardDeposited',
-  QuestRewardClaimed: 'QuestRewardClaimed',
-  UserBadge: 'UserBadge',
-  JettyReceivedClams: 'JettyReceivedClams',
-  XrdStaked: 'XrdStaked',
-  CombineElementsDeposited: 'CombineElementsDeposited',
-  CombineElementsMintedRadgem: 'CombineElementsMintedRadgem',
-  CombineElementsAddedRadgemImage: 'CombineElementsAddedRadgemImage',
-  CombineElementsClaimed: 'CombineElementsClaimed'
-} as const
-
-export type EventJobType = keyof typeof EventJobType
-
 export type EventJob = {
-  type: EventJobType
+  type: EventId
   traceId: string
   transactionId: string
   relevantEvents: Record<string, EventsItem>
@@ -47,7 +33,7 @@ export type CombinedElementsMintRadgemTransactionJob = {
 
 export type CombinedElementsAddRadgemImageTransactionJob = {
   type: 'CombinedElementsAddRadgemImage'
-  imageUrl: string
+  radgemId: string
 }
 
 export type PopulateResourcesTransactionJob = {
@@ -91,7 +77,10 @@ export const getQueues = (connection: ConnectionOptions) => {
     )
 
   const addTransactionJob = (item: TransactionJob) =>
-    ResultAsync.fromPromise(transactionQueue.add(item.traceId, item), typedError)
+    ResultAsync.fromPromise(
+      transactionQueue.add(item.traceId, item, { jobId: `${item.traceId}:${item.attempt}` }),
+      typedError
+    )
 
   return {
     eventQueue: { addBulk, queue: eventQueue },

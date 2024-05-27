@@ -8,7 +8,7 @@
 </script>
 
 <Template>
-  <CopyTextBox text="Hello, World!" />
+  <CopyTextBox text="Hello, World!" value="Hello, this is the copied value" />
 </Template>
 
 <Story name="Primary" />

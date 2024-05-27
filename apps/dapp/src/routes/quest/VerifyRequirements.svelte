@@ -5,7 +5,7 @@
   import type { Quests } from 'content'
   import RequirementsPage from '$lib/components/quest/RequirementsPage.svelte'
   import { i18n } from '$lib/i18n/i18n'
-  import { useCookies } from '$lib/utils/cookies'
+  import { useCookies, type RequirementCookieKey } from '$lib/utils/cookies'
 
   export let questId: keyof Quests
   export let requirements: Record<string, boolean>
@@ -19,16 +19,19 @@
     const type = quest.requirements[key].type
 
     if (type === 'content' && !$user) {
-      // @ts-ignore
-      useCookies(`requirement-${questId}-${key}`).set(true)
+      useCookies(`requirement-${questId}-${key}` as RequirementCookieKey).set(true)
     }
+
+    const complete =
+      useCookies(`requirement-${questId}-${key}` as RequirementCookieKey).get() === 'true'
+        ? true
+        : false
 
     return {
       id: key,
       //@ts-ignore
       text: $i18n.t(`quests:${questId}.requirements.${key}`),
-      //@ts-ignore
-      complete: type === 'content' ? true : value
+      complete: type === 'content' ? true : complete || value
     }
   })
 
@@ -49,19 +52,21 @@
   }
 
   const readRequirementsFromDb = () => {
-    questApi.getQuestInformation(questId).map((response) => {
-      requirementsStatus = requirementsStatus.map((requirement) => {
-        if (response.requirements[requirement.id]) {
-          return {
-            ...requirement,
-            complete: true
+    questApi
+      .getQuestInformation(questId)
+      .map((response) => {
+        requirementsStatus = requirementsStatus.map((requirement) => {
+          if (response.requirements[requirement.id]) {
+            return {
+              ...requirement,
+              complete: true
+            }
+          } else {
+            return requirement
           }
-        } else {
-          return requirement
-        }
+        })
       })
-    })
-    checkRequirements()
+      .map(() => checkRequirements())
   }
 
   onMount(() => {

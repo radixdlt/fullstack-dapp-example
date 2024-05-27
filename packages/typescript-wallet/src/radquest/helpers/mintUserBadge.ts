@@ -41,9 +41,11 @@ export const mintUserBadge = (
           Expression("ENTIRE_WORKTOP")
           Enum<0u8>()
         ;`
-      console.log(transactionManifest)
+
       return convertStringManifest(transactionManifest)
-        .andThen((transactionManifest) => submitTransaction(transactionManifest, ['systemAccount']))
+        .andThen((transactionManifest) =>
+          submitTransaction({ transactionManifest, signers: ['systemAccount'] })
+        )
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
         )

@@ -42,7 +42,7 @@ export const mintAdminBadge = ({
         
         `)
         .andThen((transactionManifest) =>
-          submitTransaction(transactionManifest, ['dAppDefinitionAccount'])
+          submitTransaction({ transactionManifest, signers: ['dAppDefinitionAccount'] })
         )
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)

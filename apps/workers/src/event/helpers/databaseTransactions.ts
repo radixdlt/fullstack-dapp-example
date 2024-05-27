@@ -1,7 +1,6 @@
 import { ResultAsync } from 'neverthrow'
-import { AppLogger, AuditResource, NotificationType } from 'common'
-import { AuditType, PrismaClient, QuestStatus } from 'database'
-import { EventId } from 'content'
+import { AppLogger, NotificationType } from 'common'
+import { PrismaClient, QuestStatus } from 'database'
 
 export const databaseTransactions = ({
   dbClient,
@@ -47,31 +46,12 @@ export const databaseTransactions = ({
       }
     })
 
-  const rewardsDeposited = ({
-    userId,
-    questId,
-    xrdUsdValue,
-    resources
-  }: {
-    userId: string
-    questId: string
-    xrdUsdValue: number
-    resources: AuditResource[]
-  }) =>
+  const rewardsDeposited = ({ userId, questId }: { userId: string; questId: string }) =>
     ResultAsync.fromPromise(
       dbClient.$transaction([
         setQuestProgressStatus(QuestStatus.REWARDS_DEPOSITED, userId, questId),
         createNotification('QuestRewardsDeposited', userId, questId),
-        updateEvent(transactionId, userId, questId),
-        dbClient.audit.create({
-          data: {
-            transactionId,
-            userId,
-            type: AuditType.CLAIMBOX_DEPOSIT,
-            xrdUsdValue,
-            metadata: JSON.stringify({ resources })
-          }
-        })
+        updateEvent(transactionId, userId, questId)
       ]),
       (error) => {
         logger.error({
@@ -102,130 +82,5 @@ export const databaseTransactions = ({
       }
     )
 
-  const userBadgeDeposited = ({
-    userId,
-    questId,
-    xrdUsdValue,
-    resources
-  }: {
-    userId: string
-    questId: string
-    xrdUsdValue: number
-    resources: AuditResource[]
-  }) =>
-    ResultAsync.fromPromise(
-      dbClient.$transaction([
-        dbClient.completedQuestRequirement.create({
-          data: {
-            userId,
-            questId,
-            requirementId: EventId.DepositUserBadge
-          }
-        }),
-        dbClient.notification.create({
-          data: {
-            userId,
-            data: {
-              type: 'QuestRequirementCompleted',
-              questId,
-              requirementId: EventId.DepositUserBadge
-            }
-          }
-        }),
-        updateEvent(transactionId, userId, questId),
-        dbClient.audit.create({
-          data: {
-            transactionId,
-            userId,
-            type: AuditType.DIRECT_DEPOSIT,
-            xrdUsdValue,
-            metadata: JSON.stringify({ resources })
-          }
-        })
-      ]),
-      (error) => {
-        logger.error({
-          error,
-          method: 'databaseTransactions.userBadgeDeposited',
-          data: { userId, questId }
-        })
-        return {
-          error,
-          message: 'failed to set deposit rewards database entries'
-        }
-      }
-    )
-
-  const jettyReceivedClams = ({ userId, amount }: { userId: string; amount: number }) => {
-    return ResultAsync.fromPromise(
-      dbClient.$transaction([
-        dbClient.completedQuestRequirement.create({
-          data: {
-            userId,
-            questId: 'TransferTokens',
-            requirementId: EventId.JettyReceivedClams
-          }
-        }),
-        dbClient.notification.create({
-          data: {
-            userId,
-            data: {
-              type: 'QuestRequirementCompleted',
-              questId: 'TransferTokens',
-              requirementId: EventId.JettyReceivedClams
-            }
-          }
-        }),
-        updateEvent(transactionId, userId, 'TransferTokens')
-      ]),
-      (error) => {
-        logger.error({
-          error,
-          method: 'databaseTransactions.jettyReceivedClams',
-          data: { userId, questId: 'TransferTokens' }
-        })
-        return {
-          error,
-          message: 'failed to set deposit rewards database entries'
-        }
-      }
-    )
-  }
-
-  const xrdStaked = ({ userId }: { userId: string }) => {
-    return ResultAsync.fromPromise(
-      dbClient.$transaction([
-        dbClient.completedQuestRequirement.create({
-          data: {
-            userId,
-            questId: 'StakingQuest',
-            requirementId: 'StakedXrd'
-          }
-        }),
-        dbClient.notification.create({
-          data: {
-            userId,
-            data: {
-              type: 'QuestRequirementCompleted',
-              questId: 'StakingQuest',
-              requirementId: 'StakedXrd'
-            }
-          }
-        })
-      ]),
-      (error) => {
-        logger.error({
-          error,
-          method: 'databaseTransactions.xrdStaked',
-          data: { userId, questId: 'StakingQuest' }
-        })
-        return {
-          error,
-          message: 'failed to set staking quest database entries'
-        }
-      }
-    )
-  }
-
-  return { rewardsDeposited, rewardsClaimed, userBadgeDeposited, jettyReceivedClams, xrdStaked }
+  return { rewardsDeposited, rewardsClaimed }
 }

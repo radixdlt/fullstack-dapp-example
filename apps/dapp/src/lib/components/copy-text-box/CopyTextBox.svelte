@@ -4,11 +4,12 @@
   import { i18n } from '$lib/i18n/i18n'
 
   export let text: string
+  export let value: string
 
   let hasCopied = false
 
   const copy = () => {
-    navigator.clipboard.writeText(text)
+    navigator.clipboard.writeText(value)
     hasCopied = true
     setTimeout(() => {
       hasCopied = false

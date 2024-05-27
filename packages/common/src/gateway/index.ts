@@ -1,10 +1,11 @@
-import { fromPromise, okAsync, type ResultAsync } from 'neverthrow'
+import { ResultAsync, fromPromise, okAsync } from 'neverthrow'
 import {
   GatewayApiClient,
   type ErrorResponse,
   RadixNetworkConfigById
 } from '@radixdlt/babylon-gateway-api-sdk'
 import { cache } from './cache'
+import { Addresses } from '../constants'
 
 export type RawGatewayError = {
   errorResponse: ErrorResponse
@@ -18,6 +19,7 @@ export type GatewayApi = ReturnType<typeof GatewayApi>
 
 export const GatewayApi = (networkId: number) => {
   const networkConfig = RadixNetworkConfigById[networkId]
+  const addresses = Addresses(networkId)
 
   if (!networkConfig) throw new Error(`Network with id ${networkId} is not supported.`)
 
@@ -87,7 +89,27 @@ export const GatewayApi = (networkId: number) => {
       return res
     })
 
+  const hasKycEntry = (address: string) => {
+    return ResultAsync.fromPromise(
+      gatewayApiClient.state.innerClient.keyValueStoreData({
+        stateKeyValueStoreDataRequest: {
+          key_value_store_address: addresses.components.kycOracleKeyValueStore,
+          keys: [
+            {
+              key_json: {
+                kind: 'String',
+                value: address
+              }
+            }
+          ]
+        }
+      }),
+      (jsError) => ({ reason: 'CouldNotGetKeyValueStoreDataFromGateway', jsError })
+    ).map((response) => response.entries.length > 0)
+  }
+
   return {
+    hasKycEntry,
     networkConfig,
     gatewayApiClient,
     extractedMethods,

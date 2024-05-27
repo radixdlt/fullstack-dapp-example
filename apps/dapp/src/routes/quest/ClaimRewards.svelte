@@ -15,7 +15,7 @@
   export let onBack: () => void
   export let text: string
 
-  const questDefinition = QuestDefinitions(publicConfig.networkId)[questId]
+  const questDefinition = QuestDefinitions()[questId]
 
   onMount(async () => {
     const result = await questApi.getQuestInformation(questId)

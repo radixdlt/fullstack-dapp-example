@@ -5,5 +5,5 @@ import { loadGlossary, loadQuests } from '../src'
 })()
 ;(async () => {
   const el = document.getElementById('quests')!
-  el.innerHTML = `<pre>${JSON.stringify(loadQuests('en', 2), null, 2)}</pre>`
+  el.innerHTML = `<pre>${JSON.stringify(loadQuests('en'), null, 2)}</pre>`
 })()
