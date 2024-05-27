@@ -19,7 +19,7 @@
     <Input style="width: 130px" {state} placeholder="0" bind:value />
     <div class="resource">
       <Icon --size="20px" url={resource?.icon} />
-      <p class="resource-name">{resource?.name}</p>
+      <p class="resource-name">{resource?.name ?? ''}</p>
     </div>
   </div>
   <slot />
