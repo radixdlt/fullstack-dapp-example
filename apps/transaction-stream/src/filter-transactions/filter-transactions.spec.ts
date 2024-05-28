@@ -36,14 +36,13 @@ describe('filter transactions', () => {
 
     const filteredTransactions = result.value
 
-    // TODO: uncomment when fixture is ready
-    // expect(filteredTransactions.length).toEqual(1)
+    expect(filteredTransactions.length).toEqual(1)
 
     const [withdrawal] = filteredTransactions
 
-    // expect(withdrawal.type).toEqual(EventId.MayaRouterWithdrawEvent)
-    // expect(withdrawal.transactionId).toBeDefined()
-    // expect(withdrawal.relevantEvents.MayaRouterWithdrawEvent).toBeDefined()
+    expect(withdrawal.type).toEqual(EventId.MayaRouterWithdrawEvent)
+    expect(withdrawal.transactionId).toBeDefined()
+    expect(withdrawal.relevantEvents.MayaRouterWithdrawEvent).toBeDefined()
   })
 
   it('should find DepositUserBadge transaction', () => {

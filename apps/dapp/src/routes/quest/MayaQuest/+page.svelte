@@ -20,7 +20,7 @@
       type: 'requirements'
     },
     {
-     type: 'claimRewards'
+      type: 'claimRewards'
     },
     {
       type: 'complete'
