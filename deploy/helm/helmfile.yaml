@@ -1,15 +1,16 @@
-helmDefaults:
-  verify: false
-  wait: false
-  timeout: 600
-  recreatePods: false
-  force: false
-  createNamespace: false
 environments:
   dev: {}
   pr: {}
   stokenet: {}
   mainnet: {}
+---
+helmDefaults:
+  verify: false
+  wait: true
+  timeout: 300
+  recreatePods: false
+  force: false
+  createNamespace: false
 repositories:
   - name: bitnami
     url: https://charts.bitnami.com/bitnami
@@ -37,6 +38,16 @@ releases:
     chart: ./worker
     values:
       - environments/{{ .Environment.Name }}/worker.yaml.gotmpl
+
+  - name: jetty-swap
+    chart: ./jetty-swap
+    values:
+      - environments/{{ .Environment.Name }}/jetty-swap.yaml.gotmpl
+
+  - name: letty-swap
+    chart: ./letty-swap
+    values:
+      - environments/{{ .Environment.Name }}/letty-swap.yaml.gotmpl
 
   - name: postgres
     chart: bitnami/postgresql

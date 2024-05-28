@@ -53,6 +53,17 @@ jobs:
             type=sha,event=branch
             type=semver,pattern={{version}}
 
+      - name: Docker tags for swap
+        id: swap-tags
+        uses: RDXWorks-actions/metadata-action@master
+        with:
+          images: |
+            docker.io/radixdlt/radquest-swap
+          tags: |
+            type=sha,event=pr
+            type=sha,event=branch
+            type=semver,pattern={{version}}
+
       - name: Docker tags for notification
         id: notification-tags
         uses: RDXWorks-actions/metadata-action@master
@@ -120,6 +131,9 @@ jobs:
       dapp-tags: ${{ steps.dapp-tags.outputs.tags }}
       dapp-labels: ${{ steps.dapp-tags.outputs.labels }}
       dapp-json: ${{ steps.dapp-tags.outputs.json }}
+      swap-tags: ${{ steps.swap-tags.outputs.tags }}
+      swap-labels: ${{ steps.swap-tags.outputs.labels }}
+      swap-json: ${{ steps.swap-tags.outputs.json }}
       notification-tags: ${{ steps.notification-tags.outputs.tags }}
       notification-labels: ${{ steps.notification-tags.outputs.labels }}
       notification-json: ${{ steps.notification-tags.outputs.json }}
@@ -268,6 +282,31 @@ jobs:
         PUBLIC_NETWORK_ID=${{ needs.setup-tags.outputs.public-network-id }}
         PUBLIC_LOG_LEVEL=${{ needs.setup-tags.outputs.public-log-level }}
 
+  push-swap:
+    name: Docker swap
+    needs:
+      - setup-tags
+      - snyk-scan-deps-licences
+      - snyk-scan-code
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
+    with:
+      runs_on: ubuntu-latest
+      image_registry: 'docker.io'
+      image_organization: 'radixdlt'
+      target: 'application'
+      image_name: 'radquest-swap'
+      tag: ${{ needs.setup-tags.outputs.tag-with-network }}
+      context: '.'
+      dockerfile: './dockerfiles/jetty-swap.Dockerfile'
+      platforms: 'linux/amd64'
+      scan_image: true
+      provenance: false
+      snyk_target_ref: ${{ github.ref_name }}
+      with_sbom: false
+      build-args: |
+        PUBLIC_NETWORK_ID=${{ needs.setup-tags.outputs.public-network-id }}
+        PUBLIC_LOG_LEVEL=${{ needs.setup-tags.outputs.public-log-level }}
+
   push-notification:
     name: Docker notification
     needs:
@@ -339,6 +378,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - push-dapp
+      - push-swap
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -391,6 +431,7 @@ jobs:
     environment: dev
     needs:
       - push-dapp
+      - push-swap
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -438,6 +479,7 @@ jobs:
     environment: stokenet
     needs:
       - push-dapp
+      - push-swap
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -485,6 +527,7 @@ jobs:
     environment: mainnet
     needs:
       - push-dapp
+      - push-swap
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -574,6 +617,31 @@ jobs:
           snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
           snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
           image: docker.io/radixdlt/radquest-dapp:${{ needs.setup-tags.outputs.tag-with-network }}
+          target_ref: ${{ github.ref_name }}
+
+  snyk-container-monitor-swap:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs:
+      - push-swap
+      - setup-tags
+    steps:
+      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
+        with:
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          app_name: 'radquest'
+          step_name: 'snyk-monitor'
+          secret_prefix: 'SNY'
+          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
+          parse_json: true
+      - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
+        with:
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          app_name: 'rqst-swap'
+          dockerhub_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/dockerhub-credentials'
+          snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
+          snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
+          image: docker.io/radixdlt/radquest-swap:${{ needs.setup-tags.outputs.tag-with-network }}
           target_ref: ${{ github.ref_name }}
 
   snyk-container-monitor-notification:
