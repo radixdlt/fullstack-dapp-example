@@ -148,6 +148,7 @@ interface Resources {
       introDescription: 'Learn about DEXes\nSwap one token for another kind of token'
     }
     InstapassQuest: {
+      goToInstapass: 'Go to Instapass'
       requirements: {
         LearnAboutInstapass: 'Learn about Instapass'
         InstapassBadgeDeposited: 'Receive Instapass KYC badge'
