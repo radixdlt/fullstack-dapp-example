@@ -2,7 +2,7 @@ import { TokenPriceClient } from './../token-price-client'
 import { ResultAsync, okAsync, errAsync, err, ok } from 'neverthrow'
 import { EventJob, Job, TransactionQueue } from 'queues'
 import { QuestDefinitions, QuestId, Quests } from 'content'
-import { EventId } from 'common'
+import { EventId, getAccountFromMayaRouterWithdrawEvent } from 'common'
 import {
   AppLogger,
   EventModel,
@@ -284,6 +284,33 @@ export const EventWorkerController = ({
       })
     }
 
+    const handleQuestWithTrackedAccount = (maybeAccountAddress: string | undefined, questId: QuestId) => {
+      const accountAddressResult = maybeAccountAddress
+          ? ok(maybeAccountAddress)
+          : err({ reason: 'AccountAddressNotFound' })
+
+        return accountAddressResult.asyncAndThen((accountAddress) =>
+          accountAddressModel
+            .getTrackedAddressUserId(accountAddress, questId)
+            .andThen((userId) => (userId ? ok(userId) : err({ reason: 'UserIdNotFound' })))
+            .map((userId) => ({
+              questId,
+              requirementId: type,
+              userId,
+              transactionId
+            }))
+            .andThen((questValues) =>
+              dbTransactionBuilder.helpers
+                .questRequirementCompleted(questValues)
+                .exec()
+                .andThen(() => handleAllQuestRequirementCompleted(questValues))
+            )
+            .andThen(() =>
+              accountAddressModel.deleteTrackedAddress(accountAddress, questId)
+            )
+        )
+    }
+
     switch (type) {
       case EventId.QuestRewardDeposited:
         return handleRewardDeposited()
@@ -328,35 +355,17 @@ export const EventWorkerController = ({
               .andThen(() => handleAllQuestRequirementCompleted(questValues))
           )
       }
+      case EventId.MayaRouterWithdrawEvent: {
+        const maybeAccountAddress = getAccountFromMayaRouterWithdrawEvent(job.data.relevantEvents.MayaRouterWithdrawEvent)
+
+        return handleQuestWithTrackedAccount(maybeAccountAddress, 'MayaQuest')
+      }
       case EventId.InstapassBadgeDeposited: {
         const maybeAccountAddress = (
           job.data.relevantEvents['DepositedEvent'].emitter as EventEmitter
         ).entity.entity_address
 
-        const accountAddressResult = maybeAccountAddress
-          ? ok(maybeAccountAddress)
-          : err({ reason: 'AccountAddressNotFound' })
-
-        return accountAddressResult.asyncAndThen((accountAddress) =>
-          accountAddressModel
-            .getTrackedAddressUserId(accountAddress, 'InstapassQuest')
-            .andThen((userId) => (userId ? ok(userId) : err({ reason: 'UserIdNotFound' })))
-            .map((userId) => ({
-              questId: 'InstapassQuest' as QuestId,
-              requirementId: type,
-              userId,
-              transactionId
-            }))
-            .andThen((questValues) =>
-              dbTransactionBuilder.helpers
-                .questRequirementCompleted(questValues)
-                .exec()
-                .andThen(() => handleAllQuestRequirementCompleted(questValues))
-            )
-            .andThen(() =>
-              accountAddressModel.deleteTrackedAddress(accountAddress, 'InstapassQuest')
-            )
-        )
+        return handleQuestWithTrackedAccount(maybeAccountAddress, 'InstapassQuest')
       }
 
       case EventId.XrdStaked: {
@@ -364,28 +373,7 @@ export const EventWorkerController = ({
           job.data.relevantEvents['WithdrawEvent'].emitter as any
         ).entity.entity_address
 
-        const accountAddressResult = maybeAccountAddress
-          ? ok(maybeAccountAddress)
-          : err({ reason: 'AccountAddressNotFound' })
-
-        return accountAddressResult.asyncAndThen((accountAddress) =>
-          accountAddressModel
-            .getTrackedAddressUserId(accountAddress, 'StakingQuest')
-            .andThen((userId) => (userId ? ok(userId) : err({ reason: 'UserIdNotFound' })))
-            .map((userId) => ({
-              questId: 'StakingQuest' as QuestId,
-              requirementId: type,
-              userId,
-              transactionId
-            }))
-            .andThen((questValues) =>
-              dbTransactionBuilder.helpers
-                .questRequirementCompleted(questValues)
-                .exec()
-                .andThen(() => handleAllQuestRequirementCompleted(questValues))
-            )
-            .andThen(() => accountAddressModel.deleteTrackedAddress(accountAddress, 'StakingQuest'))
-        )
+        return handleQuestWithTrackedAccount(maybeAccountAddress, 'StakingQuest')
       }
 
       default:

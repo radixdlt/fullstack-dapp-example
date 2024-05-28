@@ -118,6 +118,14 @@ interface Resources {
         StakedXrd: 'Stake your XRD on dashboard'
       }
     }
+    MayaQuest: {
+      title: 'Thorswap Quest'
+      description: 'Learn about Thorswap and how to bridge tokens'
+      introDescription: 'Thorswap is a decentralized exchange that allows you to swap tokens across different blockchains. Learn more about Thorswap and how to bridge tokens.'
+      requirements: {
+        MayaRouterWithdrawEvent: 'Do at least one bridge/swap of >$50 value'
+      }
+    }
     ReferralQuest: {
       title: 'Join Matt’s  Party Quest'
       description: 'Invite your friends to give them 200 RDR and also get 200 RDR yourself!'

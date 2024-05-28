@@ -26,6 +26,7 @@ export const Addresses = (networkId: number) => {
         package: 'package_tdx_2_1p4h36jqvued4u0ll76pnpqw8f2hmvjllk408j64wpkl8cj6kr70xxc',
         clamDexPackage: 'package_tdx_2_1phe5l60hvy0raypraluxp622gn3y7dckftyhrjxl68g8hvzegdr7j8',
         components: {
+          mayaRouter: 'component_tdx_2_mock_maya_router_address',
           questRewards: 'component_tdx_2_1crtfv9n6dqj5t65nj075lcj8ap9vegyh0jlfucckkfp9xzpzcllpwd',
           kycOracle: 'component_tdx_2_1cptt60g4zrw2hhmwmfllxzu26wlw366vtdu5rjslpaduqtlu3szunt',
           kycOracleKeyValueStore:
@@ -66,6 +67,7 @@ export const EventId = {
   DepositUserBadge: 'DepositUserBadge',
   JettyReceivedClams: 'JettyReceivedClams',
   XrdStaked: 'XrdStaked',
+  MayaRouterWithdrawEvent: 'MayaRouterWithdrawEvent',
   QuestRewardDeposited: 'QuestRewardDeposited',
   QuestRewardClaimed: 'QuestRewardClaimed',
   InstapassBadgeDeposited: 'InstapassBadgeDeposited',
