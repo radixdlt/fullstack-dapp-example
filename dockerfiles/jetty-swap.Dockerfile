@@ -13,7 +13,7 @@ WORKDIR /app
 
 RUN npm install -g turbo
 COPY . .
-RUN turbo prune --scope=dapp --docker
+RUN turbo prune --scope=jetty-swap --docker
 
 FROM base AS build
 
@@ -39,4 +39,4 @@ COPY --from=build /app/node_modules node_modules
 RUN npm install pm2 -g && \
     pm2 install pm2-metrics
 
-CMD ["pm2-runtime","apps/dapp/build/index.js"]
+CMD ["pm2-runtime","apps/jetty-swap/build/index.js"]
