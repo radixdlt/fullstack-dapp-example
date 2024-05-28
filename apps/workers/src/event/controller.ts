@@ -284,31 +284,32 @@ export const EventWorkerController = ({
       })
     }
 
-    const handleQuestWithTrackedAccount = (maybeAccountAddress: string | undefined, questId: QuestId) => {
+    const handleQuestWithTrackedAccount = (
+      maybeAccountAddress: string | undefined,
+      questId: QuestId
+    ) => {
       const accountAddressResult = maybeAccountAddress
-          ? ok(maybeAccountAddress)
-          : err({ reason: 'AccountAddressNotFound' })
+        ? ok(maybeAccountAddress)
+        : err({ reason: 'AccountAddressNotFound' })
 
-        return accountAddressResult.asyncAndThen((accountAddress) =>
-          accountAddressModel
-            .getTrackedAddressUserId(accountAddress, questId)
-            .andThen((userId) => (userId ? ok(userId) : err({ reason: 'UserIdNotFound' })))
-            .map((userId) => ({
-              questId,
-              requirementId: type,
-              userId,
-              transactionId
-            }))
-            .andThen((questValues) =>
-              dbTransactionBuilder.helpers
-                .questRequirementCompleted(questValues)
-                .exec()
-                .andThen(() => handleAllQuestRequirementCompleted(questValues))
-            )
-            .andThen(() =>
-              accountAddressModel.deleteTrackedAddress(accountAddress, questId)
-            )
-        )
+      return accountAddressResult.asyncAndThen((accountAddress) =>
+        accountAddressModel
+          .getTrackedAddressUserId(accountAddress, questId)
+          .andThen((userId) => (userId ? ok(userId) : err({ reason: 'UserIdNotFound' })))
+          .map((userId) => ({
+            questId,
+            requirementId: type,
+            userId,
+            transactionId
+          }))
+          .andThen((questValues) =>
+            dbTransactionBuilder.helpers
+              .questRequirementCompleted(questValues)
+              .exec()
+              .andThen(() => handleAllQuestRequirementCompleted(questValues))
+          )
+          .andThen(() => accountAddressModel.deleteTrackedAddress(accountAddress, questId))
+      )
     }
 
     switch (type) {
@@ -356,7 +357,9 @@ export const EventWorkerController = ({
           )
       }
       case EventId.MayaRouterWithdrawEvent: {
-        const maybeAccountAddress = getAccountFromMayaRouterWithdrawEvent(job.data.relevantEvents.MayaRouterWithdrawEvent)
+        const maybeAccountAddress = getAccountFromMayaRouterWithdrawEvent(
+          job.data.relevantEvents.MayaRouterWithdrawEvent
+        )
 
         return handleQuestWithTrackedAccount(maybeAccountAddress, 'MayaQuest')
       }

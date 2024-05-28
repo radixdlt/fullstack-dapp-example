@@ -20,8 +20,7 @@ export const Addresses = (networkId: number) => {
           radgemAddress: 'resource_tdx_2_1ngsqqj66xx6u7athxynr0n95phj3ljuvje2hkzfvd90ua8569csaje',
           radmorphAddress: 'resource_tdx_2_1nghxdspyat6ef69w8rcg5xk0sjeluk664yf485g9csmqzufhkytxlx',
           instapassBadgeAddress:
-            // 'resource_tdx_2_1nffgrg4sxxswkc3vjydt57y6dcstrl8vp2z22al5h2thzzafk3ql8n' // Original instapass stokenet badge
-            'resource_tdx_2_1nf30chv943wtx3a7xusq2a2n5cpqxlgjvr3p89mqqat756nfkcluj6' // Mock badge controlled by us
+            'resource_tdx_2_1nffgrg4sxxswkc3vjydt57y6dcstrl8vp2z22al5h2thzzafk3ql8n'
         },
         package: 'package_tdx_2_1p4h36jqvued4u0ll76pnpqw8f2hmvjllk408j64wpkl8cj6kr70xxc',
         clamDexPackage: 'package_tdx_2_1phe5l60hvy0raypraluxp622gn3y7dckftyhrjxl68g8hvzegdr7j8',
@@ -42,6 +41,11 @@ export const Addresses = (networkId: number) => {
         xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
         accounts: {
           jetty: 'account_tdx_2_1290rrczjj4gxh9k0w30ukywwhzm9ltrmkqk0jcfaj50t5f6n4xxezt'
+        },
+        dapps: {
+          instapass: {
+            url: 'https://instapass-lite-dev.instapass.fi/RadQuest/'
+          }
         }
       }
     } as const
