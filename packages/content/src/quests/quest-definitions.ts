@@ -50,6 +50,7 @@ export type QuestDefinition = {
   rewards: Readonly<QuestReward[]>
   preRequisites: Readonly<string[]>
   requirements: Requirements
+  splashImage?: string
   minutesToComplete: number
 }
 
@@ -258,6 +259,30 @@ export const QuestDefinitions = () => {
       requirements: {
         [EventId.InstapassBadgeDeposited]: {
           eventName: 'InstapassBadgeDeposited',
+          type: 'event'
+        }
+      }
+    },
+    MayaQuest: {
+      id: 'MayaQuest',
+      category: 'Advanced',
+      rewards: [
+        {
+          name: 'element',
+          amount: 50
+        },
+        {
+          name: 'xrd',
+          amount: 50
+        }
+      ],
+      splashImage: '/quests-images/splash/InstabridgeQuest.webp',
+      trackedAccountAddress: true,
+      minutesToComplete: 10,
+      preRequisites: ['TransferTokens'],
+      requirements: {
+        [EventId.MayaRouterWithdrawEvent]: {
+          eventName: 'MayaRouterWithdrawEvent',
           type: 'event'
         }
       }

@@ -4,6 +4,7 @@ import QuestRewardsEvents from '../fixtures/transactions/quest-rewards-events'
 import NotSupportedTx from '../fixtures/transactions/not-supported-tx'
 import StakedXrdTx from '../fixtures/transactions/staked-xrd'
 import MintInstapassBadge from '../fixtures/transactions/mint-instapass-badge'
+import MayaRouterWithdraw from '../fixtures/transactions/maya-router-withdraw'
 import { getTrackedTransactionTypes, resourceWithdrawn } from './tracked-transaction-types'
 import { AccountAddressModel, EventId } from 'common'
 import { FilterTransactionsByType } from './filter-transactions-by-type'
@@ -26,6 +27,23 @@ describe('filter transactions', () => {
     const inMemoryRedis = await RedisServer()
     accountAddressModel = AccountAddressModel(new RedisConnection(inMemoryRedis))
     filterTransactionByAccountAddress = FilterTransactionsByAccountAddress(accountAddressModel)
+  })
+
+  it('should find maya withdraw transaction', () => {
+    const result = filterTransactionsByType([...MayaRouterWithdraw])
+
+    if (result.isErr()) throw result.error
+
+    const filteredTransactions = result.value
+
+    // TODO: uncomment when fixture is ready
+    // expect(filteredTransactions.length).toEqual(1)
+
+    const [withdrawal] = filteredTransactions
+
+    // expect(withdrawal.type).toEqual(EventId.MayaRouterWithdrawEvent)
+    // expect(withdrawal.transactionId).toBeDefined()
+    // expect(withdrawal.relevantEvents.MayaRouterWithdrawEvent).toBeDefined()
   })
 
   it('should find DepositUserBadge transaction', () => {

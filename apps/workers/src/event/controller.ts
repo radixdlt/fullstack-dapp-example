@@ -328,6 +328,9 @@ export const EventWorkerController = ({
               .andThen(() => handleAllQuestRequirementCompleted(questValues))
           )
       }
+      case EventId.MayaRouterWithdrawEvent: {
+        return errAsync('MayaRouterWithdrawEvent not implemented')
+      }
       case EventId.InstapassBadgeDeposited: {
         const maybeAccountAddress = (
           job.data.relevantEvents['DepositedEvent'].emitter as EventEmitter

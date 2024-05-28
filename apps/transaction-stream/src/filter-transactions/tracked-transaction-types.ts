@@ -94,6 +94,15 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
   [EventId.CombineElementsClaimed]: {
     ClaimedEvent: refineryEmitted('CombineElementsClaimedEvent')
   },
+  [EventId.MayaRouterWithdrawEvent]: {
+    MayaRouterWithdrawEvent: (event: EventsItem) => {
+      return (
+        event.name === 'MayaRouterWithdrawEvent' &&
+        (event.emitter as EventEmitter).entity.entity_address ===
+          config.radQuest.components.mayaRouter
+      )
+    }
+  },
   [EventId.InstapassBadgeDeposited]: {
     MintedEvent: nonFungibleMinted(config.radQuest.resources.instapassBadgeAddress),
     DepositedEvent: resourceDeposited(config.radQuest.resources.instapassBadgeAddress)
