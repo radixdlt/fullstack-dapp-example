@@ -147,12 +147,18 @@ exports.Prisma.EventScalarFieldEnum = {
   error: 'error'
 };
 
-exports.Prisma.NotificationScalarFieldEnum = {
+exports.Prisma.MessageScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   createdAt: 'createdAt',
   seenAt: 'seenAt',
   data: 'data'
+};
+
+exports.Prisma.NotificationScalarFieldEnum = {
+  notificationId: 'notificationId',
+  userId: 'userId',
+  seenAt: 'seenAt'
 };
 
 exports.Prisma.CompletedQuestRequirementScalarFieldEnum = {
@@ -252,6 +258,7 @@ exports.Prisma.ModelName = {
   UserPhoneNumber: 'UserPhoneNumber',
   Challenge: 'Challenge',
   Event: 'Event',
+  Message: 'Message',
   Notification: 'Notification',
   CompletedQuestRequirement: 'CompletedQuestRequirement',
   QuestProgress: 'QuestProgress',

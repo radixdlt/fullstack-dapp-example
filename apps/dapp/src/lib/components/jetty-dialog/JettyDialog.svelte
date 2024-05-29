@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { flip } from 'svelte/animate'
   import JettyIcon from './JettyIcon.svelte'
   import SpeechBubble from './speech-bubble/SpeechBubble.svelte'
-  import { sineInOut } from 'svelte/easing'
 
   export let dialogs = 1
   export let currentDialog = 0
   export let close = false
+  export let notification = false
+  export let disabled = false
 
   export const setCurrentDialog = (index: number) => {
     currentDialog = index
@@ -19,14 +19,10 @@
 
 <div class="jetty-dialog">
   {#each Array(dialogs) as _, i (i)}
-    <div animate:flip={{ delay: 250, duration: 250, easing: sineInOut }}>
-      <SpeechBubble let:Menu let:Actions let:ClaimRewards>
-        <slot {i} {Menu} {Actions} {ClaimRewards} />
-      </SpeechBubble>
-    </div>
+    <slot {i} {SpeechBubble} />
   {/each}
   <div>
-    <JettyIcon on:click {close} />
+    <JettyIcon on:click {close} {notification} {disabled} />
   </div>
 </div>
 

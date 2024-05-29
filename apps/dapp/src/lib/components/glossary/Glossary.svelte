@@ -11,6 +11,7 @@
 
   // Glossary can have anchor to directly open glossary definition
   export let anchor: string = ''
+
   $: selectedTitle = anchor ?? ''
   $: pageTitle = selectedTitle ? 'title' : 'glossary'
 
@@ -108,13 +109,12 @@
 
 <style lang="scss">
   .glossary {
-    bottom: 6rem;
-    position: fixed;
     display: grid;
     grid-template-rows: auto 1fr;
     height: 70vh;
     max-height: 40rem;
     min-width: 20rem;
+    margin-bottom: var(--spacing-lg);
     width: 80vw;
     background-color: transparent;
     @include desktop {

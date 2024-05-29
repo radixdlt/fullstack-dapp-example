@@ -10,14 +10,29 @@ export const user = writable<(User & { label: string }) | undefined>(undefined)
 
 export const webSocketClient = writable<WebSocketClient | undefined>(undefined)
 
-type JettyMessage = 'LoggedIn'
+export type JettyDialog = {
+  component: typeof SvelteComponent
+  props: Record<string, unknown>
+}
+export const jettyDialog = writable<JettyDialog | undefined>()
 
-export const jettyMessage = writable<JettyMessage | undefined>(undefined)
+type _JettyNotification<T extends string> = {
+  id: string
+  type: T
+  onGoToQuest: () => void
+}
 
-export const jettyDialog = writable<
-  | {
-      component: typeof SvelteComponent
-      props: Record<string, unknown>
-    }
-  | undefined
->()
+type JettyTextNotification = _JettyNotification<'text'> & {
+  text: string
+}
+
+type JettyComponentNotification = _JettyNotification<'component'> & {
+  component: typeof SvelteComponent
+  props: Record<string, unknown>
+}
+
+export type JettyNotification = JettyTextNotification | JettyComponentNotification
+
+export const jettyNotifications = writable<JettyNotification[]>([])
+
+export const showJetty = writable(true)
