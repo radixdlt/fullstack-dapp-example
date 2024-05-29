@@ -1,6 +1,6 @@
 import { appLogger } from 'common'
 import { env } from '$env/dynamic/public'
-import type { Notification } from 'common'
+import type { Message } from 'common'
 import { authApi } from './api/auth-api'
 import type { RadixDappToolkit } from '@radixdlt/radix-dapp-toolkit'
 
@@ -25,7 +25,7 @@ export const WebSocketClient = ({
 
   let shouldReconnect = true
 
-  const onMessageCallbacks: ((data: Notification) => void)[] = []
+  const onMessageCallbacks: ((data: Message) => void)[] = []
 
   const createWebSocket = (authToken: string) => {
     appLogger.info('🛫 Starting WebSocket')
@@ -78,7 +78,7 @@ export const WebSocketClient = ({
   let webSocket = createWebSocket(authToken)
 
   return {
-    onMessage: (callback: (data: Notification) => void): (() => void) => {
+    onMessage: (callback: (data: Message) => void): (() => void) => {
       onMessageCallbacks.push(callback)
       return () => {
         const index = onMessageCallbacks.indexOf(callback)

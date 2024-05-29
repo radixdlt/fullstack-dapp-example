@@ -11,7 +11,7 @@ import {
   TransactionModel,
   AccountAddressModel
 } from 'common'
-import { NotificationApi, NotificationType } from 'common'
+import { MessageApi, MessageType } from 'common'
 import { config } from '../config'
 import { EventError, PrismaClient } from 'database'
 import { getUserIdFromDepositUserBadgeEvent } from './helpers/getUserIdFromDepositUserBadgeEvent'
@@ -41,7 +41,7 @@ type EventEmitter = {
 export type EventWorkerController = ReturnType<typeof EventWorkerController>
 export const EventWorkerController = ({
   dbClient,
-  notificationApi,
+  messageApi,
   eventModel,
   userModel,
   userQuestModel,
@@ -52,7 +52,7 @@ export const EventWorkerController = ({
   accountAddressModel
 }: {
   dbClient: PrismaClient
-  notificationApi: NotificationApi
+  messageApi: MessageApi
   eventModel: EventModel
   userModel: UserModel
   transactionModel: TransactionModel
@@ -131,7 +131,7 @@ export const EventWorkerController = ({
               questId
             })
             .andThen(() =>
-              notificationApi.send(userId, {
+              messageApi.send(userId, {
                 type: 'QuestRewardsDeposited',
                 questId,
                 traceId
@@ -147,7 +147,7 @@ export const EventWorkerController = ({
       ).andThen(({ userId, questId }) =>
         ensureUserExists(userId, transactionId).andThen(() =>
           dbTransactions.rewardsClaimed({ userId, questId }).andThen(() =>
-            notificationApi.send(userId, {
+            messageApi.send(userId, {
               type: 'QuestRewardsClaimed',
               questId,
               traceId
@@ -189,8 +189,8 @@ export const EventWorkerController = ({
                 )
             : okAsync('')
         ),
-        notificationApi.send(userId, {
-          type: NotificationType.QuestRequirementCompleted,
+        messageApi.send(userId, {
+          type: MessageType.QuestRequirementCompleted,
           questId,
           requirementId,
           traceId

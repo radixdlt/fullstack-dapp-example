@@ -1,5 +1,5 @@
 import { ResultAsync } from 'neverthrow'
-import { AppLogger, NotificationType } from 'common'
+import { AppLogger, MessageType } from 'common'
 import { PrismaClient, QuestStatus } from 'database'
 
 export const databaseTransactions = ({
@@ -24,8 +24,8 @@ export const databaseTransactions = ({
       }
     })
 
-  const createNotification = (type: NotificationType, userId: string, questId: string) =>
-    dbClient.notification.create({
+  const createMessage = (type: MessageType, userId: string, questId: string) =>
+    dbClient.message.create({
       data: {
         userId,
         data: {
@@ -50,7 +50,7 @@ export const databaseTransactions = ({
     ResultAsync.fromPromise(
       dbClient.$transaction([
         setQuestProgressStatus(QuestStatus.REWARDS_DEPOSITED, userId, questId),
-        createNotification('QuestRewardsDeposited', userId, questId),
+        createMessage('QuestRewardsDeposited', userId, questId),
         updateEvent(transactionId, userId, questId)
       ]),
       (error) => {
@@ -71,7 +71,7 @@ export const databaseTransactions = ({
       dbClient.$transaction([
         setQuestProgressStatus(QuestStatus.REWARDS_CLAIMED, userId, questId),
         updateEvent(transactionId, userId, questId),
-        createNotification('QuestRewardsClaimed', userId, questId)
+        createMessage('QuestRewardsClaimed', userId, questId)
       ]),
       (error) => {
         logger.error({ error, method: 'databaseTransactions.rewardsClaimed' })

@@ -2,7 +2,7 @@ import { config } from './config'
 import { ConnectionOptions } from 'bullmq'
 import {
   EventModel,
-  NotificationApi,
+  MessageApi,
   UserQuestModel,
   AuditModel,
   UserModel,
@@ -27,7 +27,7 @@ const app = async () => {
 
   const { transactionQueue } = getQueues(config.redis)
 
-  const notificationApi = NotificationApi({
+  const messageApi = MessageApi({
     baseUrl: config.notification.baseUrl,
     logger
   })
@@ -45,7 +45,7 @@ const app = async () => {
     transactionModel,
     accountAddressModel: AccountAddressModel(redisClient, logger),
     tokenPriceClient,
-    notificationApi,
+    messageApi,
     transactionQueue,
     logger
   })

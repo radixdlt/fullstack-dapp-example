@@ -9,7 +9,7 @@
   import Carousel from '$lib/components/carousel/Carousel.svelte'
   import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
   import { goto, invalidateAll } from '$app/navigation'
-  import { quests, user, webSocketClient, jettyMessage } from '../stores'
+  import { quests, user, webSocketClient } from '../stores'
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
@@ -27,6 +27,7 @@
   import type { LayoutData } from './$types'
   import { useCookies } from '$lib/utils/cookies'
   import Jetty from './Jetty.svelte'
+  import { loadUnseenNotifications, pushNotification } from '$lib/notifications'
 
   export let data: LayoutData
 
@@ -113,6 +114,10 @@
               $webSocketClient = ws
             }
 
+            loadUnseenNotifications().mapErr((err) => {
+              logger.error('Failed to load notifications', { err })
+            })
+
             await invalidateAll()
 
             // TODO:
@@ -123,7 +128,7 @@
               !useLocalStorage('seen-jetty-get-wallet-notification').get()
             ) {
               useLocalStorage('seen-jetty-get-wallet-notification').set(true)
-              $jettyMessage = 'LoggedIn'
+              pushNotification('loggedIn')
             }
           })
           .mapErr(({ status }) => {
@@ -190,12 +195,7 @@
   </Backdrop>
 {/if}
 
-<Jetty
-  onGlossaryClose={() => {
-    $page.url.searchParams.delete('glossaryAnchor')
-    goto(`?${$page.url.searchParams.toString()}`)
-  }}
-/>
+<Jetty />
 
 <Layout>
   <Header slot="header" />

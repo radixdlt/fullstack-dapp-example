@@ -5,6 +5,6 @@ import type { RequestHandler } from './$types'
 export const POST: RequestHandler = async ({ locals, request }) => {
   const requestBody = await request.json()
   return routeHandler(() =>
-    notificationController.markAsSeen(locals.context, requestBody.notificationIds, locals.userId)
+    notificationController.markAsSeen(locals.context, requestBody.notificationId, locals.userId)
   )
 }

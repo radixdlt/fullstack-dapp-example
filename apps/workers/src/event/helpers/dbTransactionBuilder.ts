@@ -48,7 +48,7 @@ export const DbTransactionBuilder = ({
           }
         }),
       () =>
-        dbClient.notification.create({
+        dbClient.message.create({
           data: {
             userId,
             data: {

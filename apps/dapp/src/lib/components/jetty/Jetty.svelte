@@ -118,5 +118,5 @@
 </JettyDialog>
 
 {#if showGlossary}
-  <Backdrop />
+  <Backdrop zIndex={4} />
 {/if}

@@ -1,53 +1,33 @@
 import { dbClient } from '$lib/db'
-import { NotificationModel, createApiError, type ApiError, type Notification } from 'common'
-import type { ControllerMethodContext, ControllerMethodOutput } from '../_types'
-import { safeParse, array, number } from 'valibot'
-import { ResultAsync, errAsync, okAsync } from 'neverthrow'
+import { NotificationModel } from 'common'
+import type { ControllerMethodContext } from '../_types'
 
 export const NotificationController = (notificationModel = NotificationModel(dbClient)) => {
-  const validateNotificationId = (notificationIds?: unknown[]): ResultAsync<number[], ApiError> => {
-    const result = safeParse(array(number()), notificationIds)
-
-    return result.success
-      ? okAsync(notificationIds as number[])
-      : errAsync(createApiError('invalid notification ids', 400)())
-  }
-
-  const markAsSeen = (
-    context: ControllerMethodContext,
-    notificationIds: number[],
-    userId: string
-  ): ControllerMethodOutput<{ count: number }> =>
-    validateNotificationId(notificationIds).andThen((validatedNotificationIds) =>
-      notificationModel(context.logger)
-        .getByUserAndNotificationIds(userId, validatedNotificationIds)
-        .andThen((userNotifications) =>
-          userNotifications.length === validatedNotificationIds.length
-            ? notificationModel(context.logger)
-                .markAsSeen(validatedNotificationIds, userId)
-                .map((data) => ({
-                  data,
-                  httpResponseCode: 200
-                }))
-            : errAsync(createApiError('notification ids dont belong to user', 400)())
-        )
-    )
-
-  const getUnseen = (
-    context: ControllerMethodContext,
-    userId: string
-  ): ControllerMethodOutput<Omit<Notification, 'traceId'>[]> =>
+  const markAsSeen = (context: ControllerMethodContext, notificationId: string, userId: string) =>
     notificationModel(context.logger)
-      .getAllUnseen(userId)
-      .map((notificatons) => ({
-        data: notificatons.map(({ data, id }) => ({
-          ...(data as Omit<Notification, 'traceId'>),
-          notificationId: id
-        })),
+      .markAsSeen(notificationId, userId)
+      .map((data) => ({
+        data,
         httpResponseCode: 200
       }))
 
-  return { markAsSeen, getUnseen }
+  const getUnseen = (context: ControllerMethodContext, userId: string) =>
+    notificationModel(context.logger)
+      .getAllUnseen(userId)
+      .map((notificatons) => ({
+        data: notificatons,
+        httpResponseCode: 200
+      }))
+
+  const create = (context: ControllerMethodContext, userId: string, notificationId: string) =>
+    notificationModel(context.logger)
+      .add(userId, notificationId)
+      .map((data) => ({
+        data,
+        httpResponseCode: 200
+      }))
+
+  return { markAsSeen, getUnseen, create }
 }
 
 export const notificationController = NotificationController()

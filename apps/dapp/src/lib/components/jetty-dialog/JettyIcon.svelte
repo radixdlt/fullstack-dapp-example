@@ -5,22 +5,26 @@
   import { scale } from 'svelte/transition'
 
   export let close = false
+  export let notification = false
 </script>
 
-<button
-  transition:scale|local={{ easing: backOut }}
-  class="jetty-icon"
-  class:close
-  style:--image={`url(${HappyJetty})`}
-  style:--cross={`url(${CrossIcon})`}
-  on:click
->
-  {#if close}
-    <img src={CrossIcon} class="close-img" alt="close icon" />
-  {:else}
-    <img src={HappyJetty} class="jetty-img" alt="jetty" />
-  {/if}
-</button>
+<div style:position="relative">
+  <button
+    transition:scale|local={{ easing: backOut }}
+    class="jetty-icon"
+    class:close
+    style:--image={`url(${HappyJetty})`}
+    style:--cross={`url(${CrossIcon})`}
+    on:click
+  >
+    <div class:notification />
+    {#if close}
+      <img src={CrossIcon} class="close-img" alt="close icon" />
+    {:else}
+      <img src={HappyJetty} class="jetty-img" alt="jetty" />
+    {/if}
+  </button>
+</div>
 
 <style lang="scss">
   .jetty-icon {
@@ -43,5 +47,16 @@
     background: var(--color-background-light);
     background-size: 30%;
     background-repeat: no-repeat;
+  }
+
+  .notification {
+    content: '';
+    position: absolute;
+    top: 0.2rem;
+    left: 0.5rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    background-color: red;
+    border-radius: 50%;
   }
 </style>
