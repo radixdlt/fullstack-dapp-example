@@ -55,19 +55,17 @@
 
   let quest: Quest
 
-  let startAtProgress = 0
-
   onMount(() => {
     actions.next = quest.next
     actions.back = quest.back
     actions.goToStep = quest.goToStep
 
     if ($page.url.hash) {
-      startAtProgress = parseInt($page.url.hash.slice(1))
+      quest.setProgress(parseInt($page.url.hash.slice(1)))
     } else {
       const savedProgress = useCookies(`saved-progress-${id}`).get()
       if (savedProgress) {
-        startAtProgress = parseInt(savedProgress)
+        quest.setProgress(parseInt(savedProgress))
       }
     }
 
@@ -174,7 +172,6 @@
   steps={_steps}
   requirements={_requirements}
   {nextDisabled}
-  {startAtProgress}
   jettyRenderer={jettyDialog}
   let:back
   let:next
