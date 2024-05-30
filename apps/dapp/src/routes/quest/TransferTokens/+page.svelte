@@ -66,12 +66,6 @@
     {
       id: '2',
       type: 'regular'
-      // skip: receivedClams,
-      // footer: {
-      //   next: {
-      //     enabled: receivedClams
-      //   }
-      // }
     },
     {
       id: '3',
@@ -93,7 +87,13 @@
     },
     {
       id: '6',
-      type: 'regular'
+      type: 'regular',
+      skip: receivedClams,
+      footer: {
+        next: {
+          enabled: receivedClams
+        }
+      }
     },
     {
       id: '8',
