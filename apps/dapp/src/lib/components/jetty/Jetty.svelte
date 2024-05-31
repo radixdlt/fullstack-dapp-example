@@ -52,15 +52,19 @@
     dispatch('notification-opened')
   }
 
+  const closeGlossary = () => {
+    showGlossary = false
+    glossaryItem = undefined
+    dispatch('close-glossary')
+  }
+
   const onClick = () => {
     if (hasNotifications) {
       showNotification = true
       popNotification()
     } else {
       if (showGlossary) {
-        showGlossary = false
-        glossaryItem = undefined
-        dispatch('close-glossary')
+        closeGlossary()
       } else {
         showJettyMenu = !showJettyMenu
       }
@@ -100,7 +104,7 @@
       />
     </SpeechBubble>
   {:else if showGlossary}
-    <Glossary {glossary} anchor={glossaryItem} />
+    <Glossary {glossary} anchor={glossaryItem} on:close={closeGlossary} />
   {:else if showJettyMenu}
     <SpeechBubble>
       {$i18n.t('jetty:menu-text')}

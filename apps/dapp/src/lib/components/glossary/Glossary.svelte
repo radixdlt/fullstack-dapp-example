@@ -8,9 +8,7 @@
     title: string
     html: string
   }[]
-
-  // Glossary can have anchor to directly open glossary definition
-  export let anchor: string = ''
+  export let anchor = ''
 
   $: selectedTitle = anchor ?? ''
   $: pageTitle = selectedTitle ? 'title' : 'glossary'
