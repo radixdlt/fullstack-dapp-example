@@ -162,7 +162,7 @@ export const createRadmorph = () => {
                     ),
                     "icon_url" => Tuple(
                         Enum<1u8>(
-                            Enum<0u8>(
+                            Enum<13u8>(
                                 "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"
                             )
                         ),
