@@ -7,6 +7,9 @@
   export let progress: number = 0
   export let disabled = false
 
+  export const getWidth = () => width
+  export const getAnimationDuration = () => animationDuration
+
   let width: number
   let height: number
 
