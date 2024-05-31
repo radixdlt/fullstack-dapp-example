@@ -12,11 +12,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserType {
+  USER
+  ADMIN
+}
+
 model User {
   id                String          @id @default("")
   identityAddress   String          @unique
   accountAddress    String?         
   name              String?         
+  type              UserType        @default(USER)
   
   events                     Event[]
   messages                   Message[]
@@ -25,6 +31,11 @@ model User {
   savedProgress              SavedProgress?
   auditLogs                  Audit[]
   questProgress              QuestProgress[]
+}
+
+model RadMorphImage {
+  id  String  @id
+  url String  @unique
 }
 
 model UserPhoneNumber {
