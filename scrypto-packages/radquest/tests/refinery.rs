@@ -1,16 +1,13 @@
-use radix_engine_interface::prelude::*;
 use radquest::{
     morph_card_forge::{MorphCardData, ENERGY},
     radgem_forge::{RadgemData, COMMON_COLOR, MATERIAL, RARE_COLOR},
     radmorph_forge::RadmorphData,
-    refinery::{test_bindings::*, RARITY},
+    refinery::{refinery_test::*, RARITY},
 };
-use scrypto::this_package;
 use scrypto_test::prelude::*;
-use scrypto_unit::*;
 
 struct Test {
-    env: TestEnvironment,
+    env: TestEnvironment<InMemorySubstateDatabase>,
     refinery: Refinery,
     elements: Bucket,
     morph_card: Bucket,
@@ -24,7 +21,8 @@ struct Test {
 
 fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let mut env = TestEnvironment::new();
-    let package_address = Package::compile_and_publish(this_package!(), &mut env)?;
+    let package_address =
+        PackageFactory::compile_and_publish(this_package!(), &mut env, CompileProfile::Fast)?;
 
     let super_admin_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
         .mint_initial_supply([()], &mut env)?;
@@ -183,7 +181,7 @@ fn can_combine_elements_deposit_with_other_non_fungible() -> Result<(), RuntimeE
 }
 
 #[test]
-fn can_combine_elements_process_1() -> Result<(), RuntimeError> {
+fn can_combine_elements_mint_radgem() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,
@@ -201,41 +199,57 @@ fn can_combine_elements_process_1() -> Result<(), RuntimeError> {
     Ok(())
 }
 
-/* TODO: Implement - Awaiting Scrypto method `with_component_state` to be implemented
+// TODO: fix this test
 #[test]
-fn can_combine_elements_process_2() -> Result<(), RuntimeError> {
+fn can_combine_elements_add_radgem_image() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,
         mut refinery,
-        user_id,
+        user_badge_id,
         admin_badge_proof,
+        radgems,
         ..
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_process_1(user_id.clone(), dec!(0.97), dec!(0.87), &mut env)?;
-
-    let refinery_state: RefineryState = env.read_component_state(refinery).unwrap();
-    let radgem_local_id = refinery_state
-        .radgem_vault
-        .0
-        .non_fungible_local_ids(1, &mut env)
-        .unwrap()
-        .pop()
-        .unwrap();
-
-    // Act
-    refinery.combine_elements_process_2(
-        radgem_local_id,
-        UncheckedUrl::of("www.new_url.test"),
+    refinery.combine_elements_mint_radgem(
+        user_badge_id.clone(),
+        dec!(0.97),
+        dec!(0.87),
         &mut env,
     )?;
 
-    // Assert
+    env.with_component_state(refinery, |refinery_state: &mut RefineryState, env| {
+        let radgem_local_id = refinery_state
+            .radgem_vault
+            .0
+            .non_fungible_local_ids(1, env)
+            .unwrap()
+            .pop()
+            .unwrap();
+
+        // Act
+        refinery
+            .combine_elements_add_radgem_image(
+                user_badge_id.clone(),
+                radgem_local_id.clone(),
+                UncheckedUrl::of("www.new_url.test"),
+                env,
+            )
+            .unwrap();
+
+        // Assert
+        let data: RadgemData = ResourceManager(radgems.resource_address(env).unwrap())
+            .get_non_fungible_data(radgem_local_id, env)
+            .unwrap();
+
+        assert_eq!(data.name, "Precious Crystalline Molten Lava Radgem");
+        assert_eq!(data.key_image_url, UncheckedUrl::of("www.new_url.test"));
+    })?;
+
     Ok(())
 }
-*/
 
 #[test]
 fn can_combine_elements_claim() -> Result<(), RuntimeError> {

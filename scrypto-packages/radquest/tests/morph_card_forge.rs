@@ -1,13 +1,13 @@
-use radix_engine_interface::prelude::*;
 use radquest::{
-    morph_card_forge::{test_bindings::*, MorphCardData, MorphCardDataInput, UserId, ENERGY},
+    morph_card_forge::{
+        morph_card_forge_test::*, MorphCardData, MorphCardDataInput, UserId, ENERGY,
+    },
     refinery::RARITY,
 };
-use scrypto::this_package;
 use scrypto_test::prelude::*;
 
 struct Test {
-    env: TestEnvironment,
+    env: TestEnvironment<InMemorySubstateDatabase>,
     morph_card_forge: MorphCardForge,
     super_admin_badge_proof: Proof,
     admin_badge_proof: Proof,
@@ -15,7 +15,8 @@ struct Test {
 
 fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let mut env = TestEnvironment::new();
-    let package_address = Package::compile_and_publish(this_package!(), &mut env)?;
+    let package_address =
+        PackageFactory::compile_and_publish(this_package!(), &mut env, CompileProfile::Fast)?;
 
     let super_admin_badge =
         ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(1, &mut env)?;
@@ -194,8 +195,12 @@ fn can_set_random_cards() -> Result<(), RuntimeError> {
     LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
     morph_card_forge.set_random_cards(vec![morph_card_data], &mut env)?;
 
-    let card_forge_state: MorphCardForgeState = env.read_component_state(morph_card_forge)?;
-    assert_eq!(card_forge_state.random_card_names[&rarity].len(), 1);
+    env.with_component_state(
+        morph_card_forge,
+        |card_forge_state: &mut MorphCardForgeState, _| {
+            assert_eq!(card_forge_state.random_card_names[&rarity].len(), 1);
+        },
+    )?;
     Ok(())
 }
 #[test]
@@ -279,9 +284,12 @@ fn can_remove_random_cards() -> Result<(), RuntimeError> {
 
     morph_card_forge.remove_random_cards(vec![card_name], &mut env)?;
 
-    let card_forge_state: MorphCardForgeState = env.read_component_state(morph_card_forge)?;
-    assert_eq!(card_forge_state.random_card_names[&rarity].len(), 0);
-
+    env.with_component_state(
+        morph_card_forge,
+        |card_forge_state: &mut MorphCardForgeState, _| {
+            assert_eq!(card_forge_state.random_card_names[&rarity].len(), 0);
+        },
+    )?;
     Ok(())
 }
 

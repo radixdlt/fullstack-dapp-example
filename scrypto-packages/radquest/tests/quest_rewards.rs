@@ -1,11 +1,8 @@
-use radix_engine_interface::prelude::*;
-use radquest::quest_rewards::{test_bindings::*, DidData, QuestId, UserId};
-use scrypto::*;
+use radquest::quest_rewards::{quest_rewards_test::*, DidData, QuestId, UserId};
 use scrypto_test::prelude::*;
-use scrypto_unit::*;
 
 struct Test {
-    env: TestEnvironment,
+    env: TestEnvironment<InMemorySubstateDatabase>,
     quest_rewards: QuestRewards,
     user_badge: Bucket,
     user_id: UserId,
@@ -14,7 +11,8 @@ struct Test {
 
 fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let mut env = TestEnvironment::new();
-    let package_address = Package::compile_and_publish(this_package!(), &mut env)?;
+    let package_address =
+        PackageFactory::compile_and_publish(this_package!(), &mut env, CompileProfile::Fast)?;
 
     let user_id_string = "test_user_id".to_string();
 

@@ -1,7 +1,5 @@
-use radix_engine_interface::prelude::*;
 use scrypto::prelude::*;
-use scrypto_test::prelude::*;
-use scrypto_unit::*;
+use scrypto_test::{prelude::*, utils::dump_manifest_to_file_system};
 
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
 struct RadgemData {
@@ -168,7 +166,7 @@ fn create_radmorph() {
           init {
             "name" => "RadMorphs", locked;
             "description" => "Fused in the boundless energies of the RadQuest realm, RadMorphs are treasured by the dedicated and true of Radix.", locked;
-            "icon_url" => "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg", locked;
+            "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
           }
         ),
         None::<IndexMap<NonFungibleLocalId, RadmorphData>>,
