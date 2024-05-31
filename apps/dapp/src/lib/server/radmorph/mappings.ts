@@ -1,85 +1,46 @@
-type Shape = string
-type Shader = string
-type Color = string
+export const shaderCodeDescription = {
+  Crystalline: 'REF',
+  Metallic: 'MET',
+  Radiant: 'GLO'
+} as const
 
-export type ShaderCode = 'REF' | 'MET' | 'GLO'
-export type ShapeCode =
-  | 'S001'
-  | 'S002'
-  | 'S003'
-  | 'S004'
-  | 'S005'
-  | 'S006'
-  | 'S007'
-  | 'S008'
-  | 'S009'
-  | 'S010'
-  | 'S011'
-  | 'S012'
-  | 'S013'
-  | 'S014'
-  | 'S015'
-  | 'S016'
-  | 'S017'
-  | 'S018'
-  | 'S019'
-  | 'S020'
+export const colorCodeDescription = {
+  Forest: 'LGN',
+  Sand: 'YEL',
+  Sky: 'LBL',
+  Coral: 'PNK',
+  Blood: 'RED',
+  Smoke: 'GRY',
+  Ocean: 'BLU',
+  Flame: 'ORN',
+  Glacier: 'MGN',
+  Dusk: 'PRP'
+} as const
 
-export type ColorCode =
-  | 'LGN'
-  | 'YEL'
-  | 'LBL'
-  | 'PNK'
-  | 'RED'
-  | 'GRY'
-  | 'BLU'
-  | 'ORN'
-  | 'MGN'
-  | 'PRP'
+export const shapeCodeDescription = {
+  'Molten Lava': 'S001',
+  'Pyroclastic Flow': 'S002',
+  'Volcanic Lightning': 'S003',
+  'Tropical Cyclone': 'S004',
+  'Polar Blizzard': 'S005',
+  Earthquake: 'S006',
+  'Fire Tornado': 'S007',
+  'Tidal Wave': 'S008',
+  'Hydrothermal Vent': 'S009',
+  'Rainbow Power': 'S010',
+  'Storm Cell': 'S011',
+  'Solar Flare': 'S012',
+  'Nuclear Fusion': 'S013',
+  'Aurora Borealis': 'S014',
+  'Gravity Force': 'S015',
+  'Magnetic Field': 'S016',
+  'Gamma Rays': 'S017',
+  'Black Hole': 'S018',
+  Supernova: 'S019',
+  Whirlpool: 'S020'
+} as const
 
-export const shaderCodeDescription: Record<ShaderCode, Shader> = {
-  REF: 'Crystalline',
-  MET: 'Metallic',
-  GLO: 'Radiant'
-}
-
-export const colorCodeDescription: Record<ColorCode, Color> = {
-  LGN: 'Forest',
-  YEL: 'Sand',
-  LBL: 'Sky',
-  PNK: 'Coral',
-  RED: 'Blood',
-  GRY: 'Smoke',
-  BLU: 'Ocean',
-  ORN: 'Flame',
-  MGN: 'Glacier',
-  PRP: 'Dusk'
-}
-
-export const shapeCodeDescription: Record<ShapeCode, Shape> = {
-  S001: 'Molten Lava',
-  S002: 'Pyroclastic Flow',
-  S003: 'Volcanic Lightning',
-  S004: 'Tropical Cyclone',
-  S005: 'Polar Blizzard',
-  S006: 'Earthquake',
-  S007: 'Fire Tornado',
-  S008: 'Tidal Wave',
-  S009: 'Hydrothermal Vent',
-  S010: 'Rainbow Power',
-  S011: 'Storm Cell',
-  S012: 'Solar Flare',
-  S013: 'Nuclear Fusion',
-  S014: 'Aurora Borealis',
-  S015: 'Gravity Force',
-  S016: 'Magnetic Field',
-  S017: 'Gamma Rays',
-  S018: 'Black Hole',
-  S019: 'Supernova',
-  S020: 'Whirlpool'
-}
-
-export const rarityDescription: Record<number, string> = {
+export const rarityDescription = {
   1: 'Common',
   2: 'Uncommon',
   3: 'Rare',
@@ -87,16 +48,22 @@ export const rarityDescription: Record<number, string> = {
   5: 'Precious',
   6: 'Superb',
   7: 'Magnificent'
-}
+} as const
 
-export const colorToCode = (color: Color): ColorCode =>
-  Object.entries(colorCodeDescription).find(([_, value]) => value === color)?.[0] as ColorCode
+export type Color = keyof typeof colorCodeDescription
+export type ColorCode = (typeof colorCodeDescription)[Color]
 
-export const shapeToCode = (shape: Shape): ShapeCode =>
-  Object.entries(shapeCodeDescription).find(([_, value]) => value === shape)?.[0] as ShapeCode
+export type Shape = keyof typeof shapeCodeDescription
+export type ShapeCode = (typeof shapeCodeDescription)[Shape]
 
-export const shaderToCode = (shader: Shader): ShaderCode =>
-  Object.entries(shaderCodeDescription).find(([_, value]) => value === shader)?.[0] as ShaderCode
+export type Shader = keyof typeof shaderCodeDescription
+export type ShaderCode = (typeof shaderCodeDescription)[Shader]
+
+export const colorToCode = (color: Color): ColorCode => colorCodeDescription[color]
+
+export const shapeToCode = (shape: Shape): ShapeCode => shapeCodeDescription[shape]
+
+export const shaderToCode = (shader: Shader): ShaderCode => shaderCodeDescription[shader]
 
 export const rarityToNumber = (rarity: string): number =>
   Number(Object.entries(rarityDescription).find(([_, value]) => value === rarity)?.[0] || 1)

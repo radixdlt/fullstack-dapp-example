@@ -5,18 +5,21 @@ import { Result, ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import { dbClient } from '$lib/db'
 import {
   type StateEntityDetailsVaultResponseItem,
-  type ProgrammaticScryptoSborValue,
-  RadixNetwork
+  type ProgrammaticScryptoSborValue
 } from '@radixdlt/babylon-gateway-api-sdk'
 import {
   colorToCode,
   rarityToNumber,
   shaderToCode,
   shapeToCode,
+  type Color,
   type ColorCode,
+  type Shader,
   type ShaderCode,
+  type Shape,
   type ShapeCode
 } from './mappings'
+import { safeParse, type Output, string, object } from 'valibot'
 
 export const RadmorphController = ({
   gatewayApi = GatewayApi(config.dapp.networkId),
@@ -28,29 +31,26 @@ export const RadmorphController = ({
     color1: ColorCode,
     color2: ColorCode
   ) => {
-    const testUrl = `https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/?color1=${color1}&color2=${color2}&shape=${shape}&shader=${material}`
-
     // TODO: remove this and get image url from database
-    if (config.dapp.networkId === RadixNetwork.Mainnet) {
-      // TODO: Implement
-      return okAsync(testUrl)
-    }
-
+    const testUrl = `https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/?color1=${color1}&color2=${color2}&shape=${shape}&shader=${material}`
     return okAsync(testUrl)
   }
 
   const addresses = Addresses(config.dapp.networkId)
 
   const validateRequestBody = (requestBody: unknown) => {
-    if (requestBody === null || typeof requestBody !== 'object') {
-      return err(createApiError('Invalid request body', 400)())
-    }
+    const requestBodyType = object({
+      card: string(),
+      radgem1: string(),
+      radgem2: string()
+    })
 
-    const { card, radgem1, radgem2 } = requestBody as Record<string, string>
+    const parseResult = safeParse(requestBodyType, requestBody)
 
-    if (!card || !radgem1 || !radgem2) {
-      return err(createApiError('Missing data in request body', 400)())
+    if (!parseResult.success) {
+      return err(createApiError('Invalid request body', 400)(parseResult.issues))
     }
+    const { card, radgem1, radgem2 } = requestBody as Output<typeof requestBodyType>
 
     return ok({
       card,
@@ -146,11 +146,11 @@ export const RadmorphController = ({
       for (const field of radgemData.fields) {
         if (field.kind === 'String') {
           if (field.field_name === 'color') {
-            codes.color = colorToCode(field.value)
+            codes.color = colorToCode(field.value as Color)
           }
 
           if (field.field_name === 'material') {
-            codes.material = shaderToCode(field.value)
+            codes.material = shaderToCode(field.value as Shader)
           }
 
           if (field.field_name === 'rarity') {
@@ -182,7 +182,7 @@ export const RadmorphController = ({
       for (const field of cardData.fields) {
         if (field.kind === 'String') {
           if (field.field_name === 'energy') {
-            shapeCode = shapeToCode(field.value)
+            shapeCode = shapeToCode(field.value as Shape)
           }
         }
 
@@ -230,7 +230,7 @@ export const RadmorphController = ({
         .map((imageUrl) => ({ data: { imageUrl }, httpResponseCode: 200 }))
     )
 
-  const getRadmorphImageNoAuth = async () => {
+  const getRadmorphImageNoAuth = () => {
     // TODO: Implement
     return okAsync({ data: {}, httpResponseCode: 200 })
   }
