@@ -2,7 +2,6 @@ use radquest::{
     radgem_forge::{radgem_forge_test::*, RadgemData, MATERIAL, RARE_COLOR},
     refinery::RARITY,
 };
-use scrypto::resource::ScryptoVault;
 use scrypto_test::prelude::*;
 
 struct Test {
@@ -69,19 +68,18 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
 #[test]
 fn instantiate_radgem_forge() -> Result<(), RuntimeError> {
     let Test {
-        env: mut _env,
-        radgem_forge: _radgem_forge,
+        mut env,
+        radgem_forge,
         ..
     } = arrange_test_environment()?;
 
-    // TODO: fix this test
-    // env.with_component_state(
-    //     radgem_forge,
-    //     |radgem_forge_state: &mut RadgemForgeState, _| {
-    //         let amount = radgem_forge_state.admin_badge.amount();
-    //         assert_eq!(amount, dec!(0))
-    //     },
-    // )?;
+    env.with_component_state(
+        radgem_forge,
+        |radgem_forge_state: &mut RadgemForgeState, env| {
+            let amount = radgem_forge_state.admin_badge.0.amount(env).unwrap();
+            assert_eq!(amount, dec!(1));
+        },
+    )?;
 
     Ok(())
 }

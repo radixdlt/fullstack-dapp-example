@@ -51,6 +51,10 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
             burner => rule!(require(admin_badge.resource_address(&mut env)?));
             burner_updater => rule!(deny_all);
         ))
+        .non_fungible_data_update_roles(non_fungible_data_update_roles!(
+            non_fungible_data_updater => rule!(require(admin_badge.resource_address(&mut env)?));
+            non_fungible_data_updater_updater => rule!(deny_all);
+        ))
         .mint_initial_supply(
             [
                 RadgemData {
@@ -199,7 +203,6 @@ fn can_combine_elements_mint_radgem() -> Result<(), RuntimeError> {
     Ok(())
 }
 
-// TODO: fix this test
 #[test]
 fn can_combine_elements_add_radgem_image() -> Result<(), RuntimeError> {
     // Arrange
@@ -220,33 +223,33 @@ fn can_combine_elements_add_radgem_image() -> Result<(), RuntimeError> {
         &mut env,
     )?;
 
+    let mut radgem_local_id: Option<NonFungibleLocalId> = None;
     env.with_component_state(refinery, |refinery_state: &mut RefineryState, env| {
-        let radgem_local_id = refinery_state
+        radgem_local_id = refinery_state
             .radgem_vault
             .0
             .non_fungible_local_ids(1, env)
             .unwrap()
-            .pop()
-            .unwrap();
-
-        // Act
-        refinery
-            .combine_elements_add_radgem_image(
-                user_badge_id.clone(),
-                radgem_local_id.clone(),
-                UncheckedUrl::of("www.new_url.test"),
-                env,
-            )
-            .unwrap();
-
-        // Assert
-        let data: RadgemData = ResourceManager(radgems.resource_address(env).unwrap())
-            .get_non_fungible_data(radgem_local_id, env)
-            .unwrap();
-
-        assert_eq!(data.name, "Precious Crystalline Molten Lava Radgem");
-        assert_eq!(data.key_image_url, UncheckedUrl::of("www.new_url.test"));
+            .pop();
     })?;
+
+    // Act
+    refinery
+        .combine_elements_add_radgem_image(
+            user_badge_id.clone(),
+            radgem_local_id.clone().unwrap(),
+            UncheckedUrl::of("www.new_url.test"),
+            &mut env,
+        )
+        .unwrap();
+
+    // Assert
+    let data: RadgemData = ResourceManager(radgems.resource_address(&mut env).unwrap())
+        .get_non_fungible_data(radgem_local_id.unwrap(), &mut env)
+        .unwrap();
+
+    assert_eq!(data.name, "Radiant Smoke RadGem");
+    assert_eq!(data.key_image_url, UncheckedUrl::of("www.new_url.test"));
 
     Ok(())
 }
