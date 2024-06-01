@@ -14,6 +14,7 @@ module.exports = {
         'wallet',
         'core',
         'common',
+        'admin',
         'content',
         'markdown',
         'multiple',

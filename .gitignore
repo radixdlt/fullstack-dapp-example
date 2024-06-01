@@ -34,3 +34,11 @@ yarn-error.log*
 *.pem
 
 scrypto*/target/
+
+**/*/build
+**/*/.svelte-kit
+/package
+!.env.example
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+storybook-static
