@@ -1,7 +1,8 @@
-import jwt, { type JwtPayload } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import { Result, err, ok } from 'neverthrow'
 import type { Cookies } from '@sveltejs/kit'
 import { config } from '$lib/config'
+import type { UserType } from 'database'
 
 export type JWTInput = {
   refreshToken: { expiresIn: string; key: string }
@@ -13,22 +14,22 @@ export type JWT = ReturnType<typeof JWT>
 export const JWT = (input: JWTInput) => {
   const { secret, refreshToken, authToken } = input
 
-  const createAuthToken = (userId: string) =>
+  const createAuthToken = (userId: string, userType: UserType) =>
     ok(
-      jwt.sign({ userId }, secret, {
+      jwt.sign({ userId, userType }, secret, {
         expiresIn: authToken.expiresIn
       })
     )
 
-  const createRefreshToken = (userId: string) =>
+  const createRefreshToken = (userId: string, userType: UserType) =>
     ok(
-      jwt.sign({ userId }, secret, {
+      jwt.sign({ userId, userType }, secret, {
         expiresIn: refreshToken.expiresIn
       })
     )
 
-  const createTokens = (userId: string) =>
-    Result.combine([createAuthToken(userId), createRefreshToken(userId)]).map(
+  const createTokens = (userId: string, userType: UserType) =>
+    Result.combine([createAuthToken(userId, userType), createRefreshToken(userId, userType)]).map(
       ([authToken, refreshToken]) => ({ authToken, refreshToken })
     )
 
@@ -39,10 +40,12 @@ export const JWT = (input: JWTInput) => {
     return token ? ok(token) : err({ reason: 'invalidRefreshToken' })
   }
 
-  const verifyToken = (token: string): Result<string, { reason: string; jsError?: Error }> => {
+  const verifyToken = (
+    token: string
+  ): Result<{ userId: string; userType: UserType }, { reason: string; jsError?: Error }> => {
     try {
-      const decoded = jwt.verify(token, secret) as JwtPayload
-      return ok(typeof decoded === 'string' ? decoded : decoded.userId)
+      const decoded = jwt.verify(token, secret) as { userId: string; userType: UserType }
+      return ok({ userId: decoded.userId, userType: decoded.userType })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       return err({ jsError: error, reason: 'invalidToken' })
@@ -57,12 +60,13 @@ export const JWT = (input: JWTInput) => {
     cookies: Cookies
   ): Result<{ ['Set-Cookie']: string }, { jsError?: Error; reason: string }> =>
     getRefreshTokenFromCookies(cookies)
-      .andThen(verifyToken)
-      .andThen(createRefreshToken)
+      .andThen((token) => verifyToken(token).andThen(() => createRefreshToken(token)))
       .map((jwt) => createRefreshTokenCookie(jwt, cookies))
 
   const renewAuthToken = (cookies: Cookies): Result<string, { jsError?: Error; reason: string }> =>
-    getRefreshTokenFromCookies(cookies).andThen(verifyToken).andThen(createAuthToken)
+    getRefreshTokenFromCookies(cookies).andThen((token) =>
+      verifyToken(token).andThen(({ userId, userType }) => createAuthToken(userId, userType))
+    )
 
   const createRefreshTokenOptions = (
     expiresInMs = config.jwt.refreshToken.expiresInMs
