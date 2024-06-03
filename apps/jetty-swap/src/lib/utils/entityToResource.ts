@@ -5,12 +5,9 @@ import Element from '../../images/fragment.png'
 
 export const entityToResource =
   (clamAddress: string) => (entity: StateEntityMetadataPageResponse) => {
-    let resource: Resource = {
-      name: '',
-      icon: '',
-      id: entity.address
-    }
+    let resource: Resource = {} as Resource
 
+    resource.id = entity.address
     let nameItem = entity.items.find((item) => item.key === 'name')
     let iconItem = entity.items.find((item) => item.key === 'icon_url')
     //todo remove once CLAMS/ELEMENTS have urls
