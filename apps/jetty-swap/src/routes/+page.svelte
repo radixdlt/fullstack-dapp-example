@@ -132,7 +132,7 @@
     if (!$walletData?.accounts[0]?.address) return
     updateBalances($walletData?.accounts[0].address)
 
-    if (!elementResource || !clamResource) return
+    if (!elementResource || !clamResource || !currentBalance) return
     ResultAsync.fromPromise(
       getBalanceChange({
         amount: conversionRateFrom,
@@ -281,7 +281,7 @@
       <Button
         --width="100%"
         on:click={onSwap}
-        disabled={!connected || !fromInput}
+        disabled={!connected || !fromInput || !enoughBalance}
         loading={swapButtonLoading}
       >
         <p>
