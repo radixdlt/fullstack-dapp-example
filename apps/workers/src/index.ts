@@ -64,13 +64,15 @@ const app = async () => {
   const transactionWorker = TransactionWorker(connection, {
     logger,
     transactionWorkerController,
-    transactionModel
+    transactionModel,
+    transactionQueue
   })
 
   const eventWorker = EventWorker(connection, {
     eventWorkerController,
     eventModel,
-    logger
+    logger,
+    eventQueue
   })
 
   SystemWorker(connection, {
@@ -85,6 +87,8 @@ const app = async () => {
       await transactionQueue.queue.getJobCountByTypes('wait')
     )
   })
+
+  transactionQueue.queue.on('progress', () => {})
 
   eventQueue.queue.on('waiting', async () => {
     Metrics.eventQueue.waitingJobs.observe(await eventQueue.queue.getJobCountByTypes('wait'))

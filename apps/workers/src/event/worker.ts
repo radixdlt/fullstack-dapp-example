@@ -1,6 +1,7 @@
-import { Worker, ConnectionOptions, Queues, EventJob } from 'queues'
+import { Worker, ConnectionOptions, Queues, EventJob, getQueues } from 'queues'
 import { AppLogger, EventModel } from 'common'
 import { EventWorkerController } from './controller'
+import { Metrics } from '../metrics'
 
 export const EventWorker = (
   connection: ConnectionOptions,
@@ -8,13 +9,19 @@ export const EventWorker = (
     eventModel: EventModel
     eventWorkerController: EventWorkerController
     logger: AppLogger
+    eventQueue: ReturnType<typeof getQueues>['eventQueue']
   }
 ) => {
-  const { logger, eventWorkerController, eventModel } = dependencies
+  const { logger, eventWorkerController, eventModel, eventQueue } = dependencies
+
+  eventQueue.queue.getActiveCount().then((count) => {
+    Metrics.eventQueue.activeJobs.observe(count)
+  })
 
   const worker = new Worker<EventJob>(
     Queues.EventQueue,
     async (job) => {
+      const { eventQueue } = getQueues(connection)
       logger.debug({
         method: 'eventWorker.process',
         id: job.id,
