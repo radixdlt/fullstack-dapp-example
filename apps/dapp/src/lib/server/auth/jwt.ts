@@ -60,7 +60,9 @@ export const JWT = (input: JWTInput) => {
     cookies: Cookies
   ): Result<{ ['Set-Cookie']: string }, { jsError?: Error; reason: string }> =>
     getRefreshTokenFromCookies(cookies)
-      .andThen((token) => verifyToken(token).andThen(() => createRefreshToken(token)))
+      .andThen((token) =>
+        verifyToken(token).andThen(({ userId, userType }) => createRefreshToken(userId, userType))
+      )
       .map((jwt) => createRefreshTokenCookie(jwt, cookies))
 
   const renewAuthToken = (cookies: Cookies): Result<string, { jsError?: Error; reason: string }> =>
