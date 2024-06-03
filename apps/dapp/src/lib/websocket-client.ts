@@ -3,6 +3,7 @@ import { env } from '$env/dynamic/public'
 import type { Message } from 'common'
 import { authApi } from './api/auth-api'
 import type { RadixDappToolkit } from '@radixdlt/radix-dapp-toolkit'
+import { messageApi as messageApiFn, type MessageApi } from './api/message-api'
 
 export type WebSocketClient = ReturnType<typeof WebSocketClient>
 export const WebSocketClient = ({
@@ -11,7 +12,8 @@ export const WebSocketClient = ({
   restartTimeout = 1000,
   maxRestartTimeout = 30_000,
   notificationUrl = env.PUBLIC_NOTIFICATION_URL,
-  auth = authApi
+  auth = authApi,
+  messageApi = messageApiFn
 }: {
   authToken: string
   radixDappToolkit: RadixDappToolkit
@@ -19,6 +21,7 @@ export const WebSocketClient = ({
   restartTimeout?: number
   maxRestartTimeout?: number
   notificationUrl?: string
+  messageApi?: MessageApi
 }) => {
   let currentRestartTimeout = restartTimeout
   let currentTimeout: ReturnType<typeof setTimeout> | undefined
@@ -30,6 +33,10 @@ export const WebSocketClient = ({
   const createWebSocket = (authToken: string) => {
     appLogger.info('🛫 Starting WebSocket')
     const ws = new WebSocket(notificationUrl, ['Authorization', authToken])
+
+    messageApi.getAll().map((messages) => {
+      onMessageCallbacks.forEach((cb) => messages.forEach((message) => cb(message)))
+    })
 
     const onMessage = (event: MessageEvent<string>) => {
       const parsedData = JSON.parse(event.data)
