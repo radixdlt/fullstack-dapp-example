@@ -126,6 +126,7 @@ The commit contains the following structural elements, to communicate intent to 
 ## Scopes
 
 - **dapp**
+- **wallet**
 - **notification**
 - **stream**
 - **workers**

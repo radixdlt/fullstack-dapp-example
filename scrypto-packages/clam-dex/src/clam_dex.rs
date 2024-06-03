@@ -2,6 +2,7 @@ use crate::element_price_oracle::element_price_oracle::ElementPriceOracle;
 use scrypto::prelude::*;
 
 #[blueprint]
+#[events(JettySwapEvent)]
 mod clam_dex {
 
     enable_method_auth! {
@@ -21,6 +22,7 @@ mod clam_dex {
         collected_clams: FungibleVault,
         element_price_oracle: Global<ElementPriceOracle>,
     }
+                
 
     impl ClamDex {
         pub fn new(
@@ -81,7 +83,12 @@ mod clam_dex {
                 .admin_badge
                 .authorize_with_amount(1, || self.elements_manager.mint(element_amount));
 
+            Runtime::emit_event(JettySwapEvent {});
+
             (elements, clams)
         }
     }
 }
+
+#[derive(ScryptoSbor, ScryptoEvent)]
+pub struct JettySwapEvent {}
