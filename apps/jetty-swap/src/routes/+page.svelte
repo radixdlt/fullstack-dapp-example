@@ -7,7 +7,6 @@
   import TokenSwapInput from '$lib/components/tokenSwapInput/TokenSwapInput.svelte'
   import ArrowDownIcon from '../lib/components/icon/ArrowDown.svelte'
   import Button from '$lib/components/button/Button.svelte'
-  import { gatewayApi, rdt, walletData } from '$lib/stores'
   import { allowOnlyPositiveNumberInString } from '$lib/tools'
   import { entityToResource } from '$lib/utils/entityToResource'
   import { onMount } from 'svelte'
@@ -17,6 +16,7 @@
     GatewayApiClient,
     type FungibleResourcesCollectionItemVaultAggregated
   } from '@radixdlt/babylon-gateway-api-sdk'
+  import { gatewayApi, rdt, walletData } from '$lib/stores'
   import { Addresses, typedError } from 'common'
   import { ResultAsync, ok } from 'neverthrow'
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
@@ -81,9 +81,8 @@
       return
     }
 
-    if (!$gatewayApi) return
     const details = await ResultAsync.fromPromise(
-      $gatewayApi.state.getEntityDetailsVaultAggregated(walletAddress),
+      ($gatewayApi as GatewayApiClient).state.getEntityDetailsVaultAggregated(walletAddress),
       typedError
     )
 
