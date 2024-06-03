@@ -88,8 +88,6 @@ const app = async () => {
     )
   })
 
-  transactionQueue.queue.on('progress', () => {})
-
   eventQueue.queue.on('waiting', async () => {
     Metrics.eventQueue.waitingJobs.observe(await eventQueue.queue.getJobCountByTypes('wait'))
   })
