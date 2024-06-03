@@ -26,7 +26,7 @@
     "common:build": "turbo common:build --filter common",
     "db:build": "turbo build --filter database",
     "db:push": "turbo push --filter database",
-    "lint": "turbo lint",
+    "lint": "npx --node-options='-r dotenv/config' turbo lint",
     "format": "prettier --write apps/**/* packages/**/*",
     "content:build": "turbo content:build --filter content",
     "queues:build": "turbo queues:build --filter queues",
