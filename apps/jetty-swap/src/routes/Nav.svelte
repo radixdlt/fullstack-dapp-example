@@ -1,5 +1,4 @@
 <script>
-  import { i18n } from '$lib/i18n/i18n'
 </script>
 
 <nav>
@@ -22,10 +21,6 @@
     @include desktop {
       padding: 2rem 4rem;
     }
-  }
-
-  p {
-    color: var(--color-dark);
   }
 
   .connect-btn {

@@ -57,10 +57,6 @@
     margin-bottom: 0.375rem;
   }
 
-  .error input {
-    color: var(--color-error) !important;
-  }
-
   .resource {
     display: flex;
     gap: 0.5rem;

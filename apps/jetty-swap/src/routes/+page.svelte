@@ -222,13 +222,13 @@
 
 <section>
   <div class="jetty-img-section">
-    <img src={JettyGlow} class="jetty-img-glow" alt="jetty glow" />
-    <img src={Jetty} class="jetty-img" alt="jetty img" />
+    <img src={JettyGlow} class="jetty-img-glow" alt="jetty-glow" />
+    <img src={Jetty} class="jetty-img" alt="jetty-img" />
   </div>
   <div class="swap-card">
     <div>
       <div class="swap-card-header">
-        <img class="jetty-swap-img" src={JettySwap} />
+        <img class="jetty-swap-img" src={JettySwap} alt="jetty-swap-logo" />
         <div class="market-price">
           <div>{@html $i18n.t('main:marketplace-estimates')}</div>
           <div class="row">
@@ -271,7 +271,7 @@
             <span class="estimated-amount-bold">{$i18n.t('main:estimated-amount-pt1')}</span>
             {$i18n.t('main:estimated-amount-pt2')}
           </p>
-        </TokenSwapInput>
+        </TokenSwapInput>J
       </div>
     </div>
     <div class="guarantee-text">
@@ -296,8 +296,7 @@
 </section>
 
 <style lang="scss">
-  p,
-  h3 {
+  p {
     padding: 0;
     margin: 0;
   }
@@ -427,14 +426,6 @@
     background: var(--color-linen);
   }
 
-  .market-price-text {
-    font-size: 15px;
-    font-style: normal;
-    letter-spacing: 0.14px;
-    color: var(--color-background-dark);
-    text-align: right;
-  }
-
   .switch {
     display: flex;
     white-space: nowrap;
@@ -445,16 +436,6 @@
     height: 2.6875rem;
     width: 2.6875rem;
     background: var(--color-linen);
-    &:not(.disabled) {
-    }
-  }
-
-  svg {
-    fill: red;
-  }
-
-  .info-section-text {
-    margin-top: 1.25rem;
   }
 
   .estimated-amount {
