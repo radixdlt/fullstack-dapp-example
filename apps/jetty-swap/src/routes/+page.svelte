@@ -270,7 +270,7 @@
             <span class="estimated-amount-bold">{$i18n.t('main:estimated-amount-pt1')}</span>
             {$i18n.t('main:estimated-amount-pt2')}
           </p>
-        </TokenSwapInput>J
+        </TokenSwapInput>
       </div>
     </div>
     <div class="guarantee-text">
