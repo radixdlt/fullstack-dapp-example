@@ -3,9 +3,10 @@ import { Result, ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import { safeParse, string } from 'valibot'
 import { twilioService } from './twilioClient'
 import { dbClient } from '$lib/db'
-import { UserModel, UserQuestModel, sha256Hash } from 'common'
+import { UserModel, UserQuestModel } from 'common'
 import { ErrorReason, createApiError, type ApiError } from '../../errors'
 import parsePhoneNumber from 'libphonenumber-js'
+import { sha256Hash } from './helpers/sha256Hash'
 
 const deriveCountryFromPhoneNumber = (value: string) => {
   const result = parsePhoneNumber(value)
