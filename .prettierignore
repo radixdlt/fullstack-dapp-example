@@ -3,6 +3,7 @@
 node_modules
 **/build
 **/coverage
+**/.svelte-kit
 **/storybook-static
 **/.storybook
 **/dist
@@ -13,7 +14,6 @@ node_modules
 vite.config.js*
 docker-compose.yml
 .babelrc
-package.json
 README.md
 # Ignore files for PNPM, NPM and YARN
 pnpm-lock.yaml
