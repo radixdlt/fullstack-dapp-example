@@ -22,6 +22,7 @@ model User {
   identityAddress   String          @unique
   accountAddress    String?         
   name              String?         
+  country           String?
   type              UserType        @default(USER)
   
   events                     Event[]

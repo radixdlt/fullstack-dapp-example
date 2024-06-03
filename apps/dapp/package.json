@@ -72,6 +72,7 @@
     "i18next": "^23.8.2",
     "intl-tel-input": "^19.5.5",
     "jsonwebtoken": "^9.0.2",
+    "libphonenumber-js": "^1.11.2",
     "neverthrow": "^6.1.0",
     "pino": "^8.17.2",
     "ramda": "^0.30.0",

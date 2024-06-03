@@ -6,7 +6,8 @@ export const OTPError = {
   failedToSendOTP: 'failedToSendOTP',
   invalidOTP: 'invalidOTP',
   failedToAddPhoneNumber: 'failedToAddPhoneNumber',
-  otpInvalidRequest: 'otpInvalidRequest'
+  otpInvalidRequest: 'otpInvalidRequest',
+  failedToHashPhoneNumber: 'failedToHashPhoneNumber'
 } as const
 
 export const APIError = {
