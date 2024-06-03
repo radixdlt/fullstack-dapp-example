@@ -52,7 +52,7 @@ export const AuthController = ({
         return { data: { challenge }, httpResponseCode: 201 }
       })
       .mapErr((error) => {
-        ctx.logger.debug({ method: 'createChallenge', event: 'error', error })
+        ctx.logger.debug({ method: 'createChallenge.error', error })
         return error
       })
 
@@ -72,8 +72,7 @@ export const AuthController = ({
     if (!parsedPersonaResult.success) {
       if (!parsedPersonaResult.success) {
         ctx.logger.error({
-          method: 'login.parseSignedChallenge',
-          event: 'error',
+          method: 'login.parseSignedChallenge.error',
           error: parsedPersonaResult.issues
         })
       }
@@ -89,8 +88,7 @@ export const AuthController = ({
       .andThen((challenge) => {
         if (challenge) return ok(challenge)
         ctx.logger.error({
-          method: 'login.getAndDeleteChallenge',
-          event: 'error',
+          method: 'login.getAndDeleteChallenge.error',
           error: 'challengeNotFound'
         })
         return challenge
@@ -103,14 +101,14 @@ export const AuthController = ({
       })
       .andThen((challenge) =>
         hasChallengeExpired(challenge).mapErr((error): ApiError => {
-          ctx.logger.error({ error, method: 'login.hasChallengeExpired', event: 'error' })
+          ctx.logger.error({ error, method: 'login.hasChallengeExpired' })
           return error
         })
       )
       .andThen(() =>
         verifySignedChallenge(personaProof)
           .mapErr((error) => {
-            ctx.logger.error({ error, method: 'login.verifyPersonaProof', event: 'error' })
+            ctx.logger.error({ error, method: 'login.verifyPersonaProof' })
             return error
           })
           .mapErr((error) => {
@@ -122,15 +120,15 @@ export const AuthController = ({
           })
       )
       .map(() => {
-        ctx.logger.debug({ method: 'login.verifiedSignedChallenges', event: 'success' })
+        ctx.logger.debug({ method: 'login.verifiedSignedChallenges.success' })
       })
       .andThen(() => userModel(ctx.logger).create(personaProof.address))
-      .andThen(({ id }) =>
+      .andThen(({ id, type }) =>
         userQuestModel(ctx.logger)
           .addCompletedRequirement('LoginWithWallet', id, 'ConnectWallet')
-          .map(() => ({ id }))
+          .map(() => ({ id, type }))
       )
-      .andThen(({ id }) => jwt.createTokens(id))
+      .andThen(({ id, type }) => jwt.createTokens(id, type))
       .map(({ authToken, refreshToken }) => ({
         data: {
           authToken,
