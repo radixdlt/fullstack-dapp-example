@@ -1,0 +1,13 @@
+id: 44ea0438-4c65-465c-8f6c-9ecd56011ad3
+name: radquest
+created_at: 2024-06-03T13:06:05.511629+02:00
+group_name: dApp-engineering
+depfiles:
+- path: ./package-lock.json
+  type: npm
+- path: ./packages/typescript-wallet/package-lock.json
+  type: npm
+- path: ./scrypto-packages/clam-dex/Cargo.lock
+  type: cargo
+- path: ./scrypto-packages/radquest/Cargo.lock
+  type: cargo
