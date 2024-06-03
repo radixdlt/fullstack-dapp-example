@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "vite dev | npx pino-pretty",
+    "dev": "vite dev --port 5173 --strict-port | npx pino-pretty",
     "build": "vite build",
     "preview": "vite preview",
     "test": "npm run test:unit",
