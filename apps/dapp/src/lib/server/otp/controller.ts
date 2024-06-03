@@ -1,4 +1,4 @@
-import { type ControllerMethodContext } from '../_types'
+import { type ControllerMethodContext, type ControllerMethodOutput } from '../_types'
 import { Result, ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import { safeParse, string } from 'valibot'
 import { twilioService } from './twilioClient'
@@ -32,7 +32,7 @@ export const OneTimePasswordController = ({
 
     return result.success
       ? okAsync(phoneNumber as string)
-      : errAsync(createApiError(ErrorReason.invalidPhoneNumber, 400)())
+      : errAsync(createApiError(ErrorReason.failedToHashPhoneNumber, 500)())
   }
 
   const validateOtpInput = (oneTimePassword?: string, phoneNumber?: string) => {
@@ -47,9 +47,11 @@ export const OneTimePasswordController = ({
   const sendOneTimePassword = (ctx: ControllerMethodContext, phoneNumber: string) =>
     validatePhoneNumber(phoneNumber)
       .andThen((phoneNumber) =>
-        sha256Hash(phoneNumber).asyncAndThen((hashOfPhoneNumber) =>
-          userModel(ctx.logger).getPhoneNumber(hashOfPhoneNumber)
-        )
+        sha256Hash(phoneNumber)
+          .mapErr(() => createApiError(ErrorReason.failedToAddPhoneNumber, 400)())
+          .asyncAndThen((hashOfPhoneNumber) =>
+            userModel(ctx.logger).getPhoneNumber(hashOfPhoneNumber)
+          )
       )
       .andThen((phoneNumberExists) =>
         phoneNumberExists
@@ -68,7 +70,7 @@ export const OneTimePasswordController = ({
     userId: string,
     phoneNumber: string,
     oneTimePassword: string
-  ) =>
+  ): ControllerMethodOutput =>
     validateOtpInput(phoneNumber, oneTimePassword)
       .andThen(() =>
         ResultAsync.fromPromise<{ valid: boolean }, ApiError>(
@@ -85,6 +87,7 @@ export const OneTimePasswordController = ({
       .andThen(() =>
         Result.combine([deriveCountryFromPhoneNumber(phoneNumber), sha256Hash(phoneNumber)])
       )
+      .mapErr(() => createApiError(ErrorReason.failedToHashPhoneNumber, 400)())
       .andThen(([country, hashOfPhoneNumber]) =>
         userQuestModel(ctx.logger)
           .addVerifiedPhoneNumber(userId, country, hashOfPhoneNumber)

@@ -28,6 +28,9 @@
     [ErrorReason.otpInvalidRequest]: $i18n.t('quests:FirstTransactionQuest.invalidRequest'),
     [ErrorReason.failedToAddPhoneNumber]: $i18n.t(
       'quests:FirstTransactionQuest.failedToAddPhoneNumber'
+    ),
+    [ErrorReason.failedToHashPhoneNumber]: $i18n.t(
+      'quests:FirstTransactionQuest.failedToAddPhoneNumber'
     )
   }
 
