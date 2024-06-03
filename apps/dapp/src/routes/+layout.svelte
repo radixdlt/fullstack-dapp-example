@@ -96,7 +96,10 @@
         const result = await authApi.login(personaProof)
 
         // TODO: handle login failure and give user some feedback
-        if (result.isErr()) throw Error('Failed to login')
+        if (result.isErr()) {
+          radixDappToolkit.disconnect()
+          throw Error('Failed to login')
+        }
       }
     })
 
