@@ -1,26 +1,16 @@
-import { gatewayApi as GatewayAPI, rdt as RdtToolkit } from '$lib/stores'
+import { gatewayApi as GatewayAPI } from '$lib/stores'
 import { get } from 'svelte/store'
 import { createSwapManifest, type CreateSwapManifestProps } from './createSwapManifest'
 import { ResultAsync } from 'neverthrow'
 import { typedError } from 'common'
+import type { GatewayApiClient } from '@radixdlt/babylon-gateway-api-sdk'
 
 export const previewTransaction = async (props: CreateSwapManifestProps) => {
-  const rdt = get(RdtToolkit)
-  const gatewayApi = get(GatewayAPI)
-
-  //todo handle
-  if (!gatewayApi || !rdt) {
-    console.error('NO GATEWAY OR RDT')
-    return
-  }
-
+  const gatewayApi = get(GatewayAPI) as GatewayApiClient
   const manifest = createSwapManifest(props)
   const status = await ResultAsync.fromPromise(gatewayApi?.status.getCurrent(), (e) => e as Error)
-  //todo handle
-  if (status.isErr()) {
-    console.error('status.isErr()', status.error)
-    return
-  }
+
+  if (status.isErr()) throw status.error
 
   const currentEpoch = status.value.ledger_state.epoch
   return gatewayApi.transaction.innerClient.transactionPreview({
@@ -43,11 +33,7 @@ export const previewTransaction = async (props: CreateSwapManifestProps) => {
 export const getBalanceChange = async (props: CreateSwapManifestProps) => {
   const tx = await ResultAsync.fromPromise(previewTransaction(props), typedError)
 
-  //todo handle
-  if (tx.isErr()) {
-    console.error('Failed to get ', tx.error)
-    return '0'
-  }
+  if (tx.isErr()) throw tx.error
 
   const balanceChange: any = tx.value?.resource_changes.find(
     (change: any) => change.resource_changes[0]?.resource_address === props.toTokenAddress

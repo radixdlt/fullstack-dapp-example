@@ -3,7 +3,7 @@ import type { Resource } from '../../types'
 import Clam from '../../images/clam.png'
 import Element from '../../images/fragment.png'
 
-export const EntityToResource =
+export const entityToResource =
   (clamAddress: string) => (entity: StateEntityMetadataPageResponse) => {
     let resource: Resource = {
       name: '',

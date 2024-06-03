@@ -9,7 +9,7 @@
   import Button from '$lib/components/button/Button.svelte'
   import { gatewayApi, rdt, walletData } from '$lib/stores'
   import { allowOnlyPositiveNumberInString } from '$lib/tools'
-  import { EntityToResource } from '$lib/utils/entityToResource'
+  import { entityToResource } from '$lib/utils/entityToResource'
   import { onMount } from 'svelte'
   import { DataRequestBuilder, RadixDappToolkit } from '@radixdlt/radix-dapp-toolkit'
   import { dAppDefinitionAddress } from '$lib/constants'
@@ -49,7 +49,7 @@
   $: enoughBalance = +currentBalance >= +fromInput
 
   const addresses = Addresses(parseInt(PUBLIC_NETWORK_ID, 0))
-  const entityToResource = EntityToResource(addresses.resources.clamAddress)
+  const turnEntityIntoObject = entityToResource(addresses.resources.clamAddress)
 
   const preview = async (fromInput: string): Promise<string> => {
     if (!elementResource || !clamResource || !$walletData?.accounts[0]) return '0'
@@ -117,11 +117,11 @@
       ResultAsync.fromPromise(
         $gatewayApi.state.getEntityMetadata(addresses.resources.elementAddress),
         typedError
-      ).map(entityToResource),
+      ).map(turnEntityIntoObject),
       ResultAsync.fromPromise(
         $gatewayApi.state.getEntityMetadata(addresses.resources.clamAddress),
         typedError
-      ).map(entityToResource)
+      ).map(turnEntityIntoObject)
     ])
 
     //todo add handling
@@ -134,14 +134,15 @@
     updateBalances($walletData?.accounts[0].address)
 
     if (!elementResource || !clamResource) return
-    ResultAsync.fromSafePromise(
+    ResultAsync.fromPromise(
       getBalanceChange({
         amount: conversionRateFrom,
         fromTokenAddress: clamResource.id,
         toTokenAddress: elementResource.id,
         swapComponent: addresses.components.jettySwap,
         userAddress: $walletData?.accounts[0].address
-      })
+      }),
+      typedError
     ).map((receiveAmount) => {
       conversionRateTo = receiveAmount
     })
