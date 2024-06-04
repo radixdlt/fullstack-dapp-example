@@ -11,7 +11,7 @@
   import { entityToResource } from '$lib/utils/entityToResource'
   import { onMount } from 'svelte'
   import { DataRequestBuilder, RadixDappToolkit } from '@radixdlt/radix-dapp-toolkit'
-  import { dAppDefinitionAddress } from '$lib/constants'
+  import { jettySwapDefinitionAddress } from '$lib/constants'
   import { type FungibleResourcesCollectionItemVaultAggregated } from '@radixdlt/babylon-gateway-api-sdk'
   import { rdt, walletData, gatewayApi } from '$lib/stores'
   import { Addresses, GatewayApi } from 'common'
@@ -74,7 +74,7 @@
       networkId: +PUBLIC_NETWORK_ID,
       applicationVersion: '1.0.0',
       applicationName: 'Jetty Swap',
-      applicationDappDefinitionAddress: dAppDefinitionAddress
+      applicationDappDefinitionAddress: jettySwapDefinitionAddress
     }
 
     $rdt = RadixDappToolkit(jettySwapConfig)
