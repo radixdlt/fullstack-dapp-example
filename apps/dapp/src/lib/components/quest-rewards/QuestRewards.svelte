@@ -1,17 +1,21 @@
 <script lang="ts">
   import { typeToIcon } from '$lib/utils/type-to-icon'
   import Icon from '../icon/Icon.svelte'
-  import type { QuestReward } from 'content'
+  import { questRewardDisplayName, type QuestReward } from 'content'
 
   export let rewards: Readonly<QuestReward[]> = []
+  export let displayName = false
 </script>
 
 <div class="rewards">
   {#each rewards as { name, amount }}
-    <div>
+    <div class="reward">
       <Icon url={typeToIcon[name]} size="small">
         {amount}
       </Icon>
+      {#if displayName}
+        {questRewardDisplayName[name]}{amount > 1 ? 's' : ''}
+      {/if}
     </div>
   {/each}
 </div>
@@ -22,6 +26,12 @@
     flex-wrap: wrap;
     display: flex;
     align-items: center;
-    gap: var(--spacing-xl);
+    gap: var(--spacing-2xl);
+  }
+
+  .reward {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
   }
 </style>

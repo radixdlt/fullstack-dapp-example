@@ -23,7 +23,7 @@
   {#if rewards.length > 0}
     <div class="rewards">
       <div class="title">{$i18n.t('quests:rewards')}:</div>
-      <QuestRewards {rewards} />
+      <QuestRewards {rewards} displayName />
     </div>
   {/if}
 
