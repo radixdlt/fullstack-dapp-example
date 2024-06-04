@@ -1,15 +1,15 @@
 import { gatewayApi as GatewayAPI } from '$lib/stores'
 import { get } from 'svelte/store'
 import { createSwapManifest, type CreateSwapManifestProps } from './createSwapManifest'
-import type { GatewayApiClient } from '@radixdlt/babylon-gateway-api-sdk'
+import type { GatewayApi } from 'common'
 
 export const previewTransaction = async (props: CreateSwapManifestProps) => {
-  const gatewayApi = get(GatewayAPI) as GatewayApiClient
+  const gatewayApi = get(GatewayAPI) as GatewayApi
   const manifest = createSwapManifest(props)
-  const status = await gatewayApi?.status.getCurrent()
+  const status = await gatewayApi?.gatewayApiClient.status.getCurrent()
 
   const currentEpoch = status.ledger_state.epoch
-  return gatewayApi.transaction.innerClient.transactionPreview({
+  return gatewayApi.gatewayApiClient.transaction.innerClient.transactionPreview({
     transactionPreviewRequest: {
       manifest,
       start_epoch_inclusive: currentEpoch,

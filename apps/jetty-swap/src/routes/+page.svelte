@@ -114,14 +114,14 @@
   })
 
   let timer: NodeJS.Timeout
-  const debounce = (v: string) => {
+  const debounce = (amount: string) => {
     if (fromInput === '') return
 
     clearTimeout(timer)
     timer = setTimeout(() => {
       swapButtonLoading = true
       getBalanceChange({
-        amount: fromInput,
+        amount,
         fromTokenAddress: clamResource?.id as string,
         toTokenAddress: elementResource?.id as string,
         swapComponent: addresses.components.jettySwap,
@@ -155,9 +155,6 @@
         modal = 'success'
         swapResult = { ...(elementResource as Resource), count: toInput }
         updateBalances($walletData?.accounts[0].address as string)
-      })
-      .mapErr(() => {
-        //todo add handling
       })
       .andThen(() => {
         swapButtonLoading = false
