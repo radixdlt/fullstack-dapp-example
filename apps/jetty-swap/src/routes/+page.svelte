@@ -12,12 +12,9 @@
   import { onMount } from 'svelte'
   import { DataRequestBuilder, RadixDappToolkit } from '@radixdlt/radix-dapp-toolkit'
   import { dAppDefinitionAddress } from '$lib/constants'
-  import {
-    GatewayApiClient,
-    type FungibleResourcesCollectionItemVaultAggregated
-  } from '@radixdlt/babylon-gateway-api-sdk'
-  import { gatewayApi, rdt, walletData } from '$lib/stores'
-  import { Addresses } from 'common'
+  import { type FungibleResourcesCollectionItemVaultAggregated } from '@radixdlt/babylon-gateway-api-sdk'
+  import { rdt, walletData, gatewayApi } from '$lib/stores'
+  import { Addresses, GatewayApi } from 'common'
   import { ok } from 'neverthrow'
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
   import type { Resource, SwappedResource } from '../types'
@@ -59,9 +56,9 @@
     }
 
     try {
-      const details = await ($gatewayApi as GatewayApiClient).state.getEntityDetailsVaultAggregated(
-        walletAddress
-      )
+      const details = await (
+        $gatewayApi as GatewayApi
+      ).gatewayApiClient.state.getEntityDetailsVaultAggregated(walletAddress)
       balances = details.fungible_resources.items.filter((item) =>
         [elementResource, clamResource].some((resource) => resource?.id === item.resource_address)
       )
@@ -81,7 +78,7 @@
     }
 
     $rdt = RadixDappToolkit(jettySwapConfig)
-    $gatewayApi = GatewayApiClient.initialize(jettySwapConfig)
+    $gatewayApi = GatewayApi(parseInt(PUBLIC_NETWORK_ID, 0))
     $rdt?.walletApi.setRequestData(DataRequestBuilder.accounts().exactly(1))
     $rdt?.walletApi.walletData$.subscribe((data) => {
       $walletData = data
@@ -90,8 +87,8 @@
 
     try {
       const [elementMetadata, clamMetadata] = await Promise.all([
-        $gatewayApi.state.getEntityMetadata(addresses.resources.elementAddress),
-        $gatewayApi.state.getEntityMetadata(addresses.resources.clamAddress)
+        $gatewayApi.gatewayApiClient.state.getEntityMetadata(addresses.resources.elementAddress),
+        $gatewayApi.gatewayApiClient.state.getEntityMetadata(addresses.resources.clamAddress)
       ])
 
       elementResource = turnEntityIntoObject(elementMetadata)
