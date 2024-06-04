@@ -163,10 +163,6 @@
       }
     },
     {
-      id: '12',
-      type: 'regular'
-    },
-    {
       id: '13',
       type: 'jetty',
       component: TextJettyPage,
@@ -219,9 +215,5 @@
     <Button on:click={connectAccount} loading={waitingOnAccount}
       >{$i18n.t('quests:LoginWithWallet.connectAccount')}
     </Button>
-  {/if}
-
-  {#if render('12')}
-    {@html text['12.md']}
   {/if}
 </Quest>

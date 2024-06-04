@@ -169,42 +169,8 @@
       }
     },
     {
-      id: '10',
-      type: 'regular'
-    },
-    {
-      id: '11',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['11.md']
-      }
-    },
-    {
-      id: '12',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['12.md']
-      }
-    },
-    {
       id: '13',
       type: 'regular'
-    },
-    {
-      id: '14',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['14.md']
-      }
     },
     {
       type: 'requirements'
@@ -262,10 +228,6 @@
       }}
       questId={data.id}
     />
-  {/if}
-
-  {#if render('10')}
-    {@html text['10.md']}
   {/if}
 
   {#if render('13')}

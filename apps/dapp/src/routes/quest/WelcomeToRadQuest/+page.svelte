@@ -73,16 +73,6 @@
       }
     },
     {
-      id: '2',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['2.md']
-      }
-    },
-    {
       id: '3',
       type: 'regular'
     },

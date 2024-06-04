@@ -31,13 +31,7 @@
     },
     {
       id: '1',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['1.md']
-      }
+      type: 'regular'
     },
     {
       id: '2',
@@ -55,24 +49,6 @@
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
         text: text['4.md']
-      }
-    },
-    {
-      id: '5',
-      type: 'regular'
-    },
-    {
-      id: '6',
-      type: 'regular'
-    },
-    {
-      id: '7',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['7.md']
       }
     },
     {
@@ -150,19 +126,15 @@
   ]}
   let:render
 >
+  {#if render('1')}
+    {@html text['1.md']}
+  {/if}
+
   {#if render('2')}
     {@html text['2.md']}
   {/if}
 
   {#if render('3')}
     {@html text['3.md']}
-  {/if}
-
-  {#if render('5')}
-    {@html text['5.md']}
-  {/if}
-
-  {#if render('6')}
-    {@html text['6.md']}
   {/if}
 </Quest>

@@ -1,1 +1,3 @@
-Amazing! Now you know how to submit Radix transactions proposed by dApps. Next let’s see how you can create your own transactions in the Radix Wallet!
+You've showed impeccable form so far!
+
+Next quest, you'll have a crack at creating your own transactions from your Radix wallet!
