@@ -32,9 +32,8 @@
   }
 
   .content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: var(--spacing-xl);
+    height: fit-content;
+    width: fit-content;
+    margin: auto;
   }
 </style>

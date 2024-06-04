@@ -69,7 +69,6 @@
   <svelte:fragment slot="content" let:width let:animationDuration>
     <div bind:this={content} class="content card">
       {#key progress}
-        {@debug $direction}
         <div
           in:fly|local={{
             x: ($direction === 'right' ? width : -width) * 2,
