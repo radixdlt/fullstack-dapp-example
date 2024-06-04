@@ -1,1 +1,1 @@
-Allez! The next quest beckons!
+Allez mon ami! The next quest beckons!
