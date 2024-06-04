@@ -45,7 +45,6 @@ mod quest_rewards {
         methods {
             claim_reward => PUBLIC;
             deposit_reward => restrict_to: [admin];
-            update_user_kyc_requirement => NOBODY;
         }
     }
     struct QuestRewards {
@@ -267,12 +266,6 @@ mod quest_rewards {
                 quest_id: quest_id.clone(),
                 rewards: rewards_info,
             });
-        }
-
-        // For testing purposes only
-        pub fn update_user_kyc_requirement(&mut self, user_id: UserId, require_kyc: bool) {
-            self.kyc_oracle
-                .update_user_kyc_requirement(user_id, require_kyc);
         }
     }
 }

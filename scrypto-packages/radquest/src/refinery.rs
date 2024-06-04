@@ -45,7 +45,6 @@ mod refinery {
             combine_elements_add_radgem_image => restrict_to: [admin];
             combine_elements_claim => PUBLIC;
             create_radmorph => PUBLIC;
-            set_key_image_url_hashes => NOBODY;
         }
     }
 
@@ -294,12 +293,6 @@ mod refinery {
             });
 
             radmorph
-        }
-
-        // Method used for testing only
-        pub fn set_key_image_url_hashes(&mut self, key_image_url_hashes: Vec<(Hash, Hash)>) {
-            self.image_oracle
-                .set_key_image_url_hashes(key_image_url_hashes);
         }
     }
 }

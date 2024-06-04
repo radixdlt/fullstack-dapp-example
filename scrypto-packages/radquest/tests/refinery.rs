@@ -1,4 +1,5 @@
 use radquest::{
+    image_oracle::image_oracle_test::*,
     morph_card_forge::{MorphCardData, ENERGY},
     radgem_forge::{RadgemData, COMMON_COLOR, MATERIAL, RARE_COLOR},
     radmorph_forge::RadmorphData,
@@ -9,6 +10,7 @@ use scrypto_test::prelude::*;
 struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,
     refinery: Refinery,
+    image_oracle: ImageOracle,
     elements: Bucket,
     morph_card: Bucket,
     radgems: Bucket,
@@ -109,6 +111,13 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         &mut env,
     )?;
 
+    let mut image_oracle = Option::<ImageOracle>::None;
+    env.with_component_state(refinery, |refinery_state: &mut RefineryState, _| {
+        let image_oracle_node_id = refinery_state.image_oracle.as_node_id().to_owned();
+        image_oracle = Some(ImageOracle(image_oracle_node_id))
+    })?;
+    let image_oracle = image_oracle.unwrap();
+
     let radmorph_address = radmorph.resource_address(&mut env)?;
     let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
     let user_badge_proof = user_badge.create_proof_of_all(&mut env)?;
@@ -119,6 +128,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     Ok(Test {
         env,
         refinery,
+        image_oracle,
         elements,
         morph_card,
         radgems,
@@ -313,6 +323,7 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
     let Test {
         mut env,
         mut refinery,
+        mut image_oracle,
         morph_card,
         radgems,
         radmorph_address,
@@ -357,7 +368,7 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
     let value_hash = keccak256_hash(key_image_url.as_str().as_bytes());
 
     env.disable_auth_module();
-    refinery.set_key_image_url_hashes(vec![(key_hash, value_hash)], &mut env)?;
+    image_oracle.set_key_image_url_hashes(vec![(key_hash, value_hash)], &mut env)?;
     env.enable_auth_module();
 
     // Act
