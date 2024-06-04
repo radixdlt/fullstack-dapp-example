@@ -17,11 +17,11 @@
     type FungibleResourcesCollectionItemVaultAggregated
   } from '@radixdlt/babylon-gateway-api-sdk'
   import { gatewayApi, rdt, walletData } from '$lib/stores'
-  import { Addresses, typedError } from 'common'
-  import { ResultAsync, ok } from 'neverthrow'
+  import { Addresses } from 'common'
+  import { ok } from 'neverthrow'
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
   import type { Resource, SwappedResource } from '../types'
-  import { previewTransaction, getBalanceChange } from '$lib/utils/previewTranasction'
+  import { getBalanceChange } from '$lib/utils/previewTranasction'
   import { createSwapManifest } from '$lib/utils/createSwapManifest'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import SwapResult from '$lib/components/swapResult/SwapResult.svelte'
@@ -51,29 +51,6 @@
   const addresses = Addresses(parseInt(PUBLIC_NETWORK_ID, 0))
   const turnEntityIntoObject = entityToResource(addresses.resources.clamAddress)
 
-  const preview = async (fromInput: string): Promise<string> => {
-    if (!elementResource || !clamResource || !$walletData?.accounts[0]) return '0'
-    const tx = await ResultAsync.fromPromise(
-      previewTransaction({
-        amount: fromInput,
-        fromTokenAddress: clamResource.id,
-        toTokenAddress: elementResource.id,
-        swapComponent: addresses.components.jettySwap,
-        userAddress: $walletData.accounts[0].address
-      }),
-      typedError
-    )
-
-    //todo add error handling
-    if (tx.isErr()) return '0'
-
-    const balanceChange: any = tx.value?.resource_changes.find(
-      (change: any) => change.resource_changes[0]?.resource_address === elementResource?.id
-    )
-
-    return balanceChange?.resource_changes[0]?.amount as string
-  }
-
   const updateBalances = async (walletAddress?: string) => {
     /* Logged out, reset balances */
     if (!walletAddress) {
@@ -81,17 +58,16 @@
       return
     }
 
-    const details = await ResultAsync.fromPromise(
-      ($gatewayApi as GatewayApiClient).state.getEntityDetailsVaultAggregated(walletAddress),
-      typedError
-    )
-
-    //todo add error handling
-    if (details.isErr()) return
-
-    balances = details.value.fungible_resources.items.filter((i) =>
-      [elementResource, clamResource].some((resource) => resource?.id === i.resource_address)
-    )
+    try {
+      const details = await ($gatewayApi as GatewayApiClient).state.getEntityDetailsVaultAggregated(
+        walletAddress
+      )
+      balances = details.fungible_resources.items.filter((item) =>
+        [elementResource, clamResource].some((resource) => resource?.id === item.resource_address)
+      )
+    } catch (error) {
+      //todo error handling
+    }
   }
 
   onMount(async () => {
@@ -112,41 +88,32 @@
       updateBalances(data?.accounts[0]?.address)
     })
 
-    const result = await ResultAsync.combine([
-      ResultAsync.fromPromise(
+    try {
+      const [elementMetadata, clamMetadata] = await Promise.all([
         $gatewayApi.state.getEntityMetadata(addresses.resources.elementAddress),
-        typedError
-      ).map(turnEntityIntoObject),
-      ResultAsync.fromPromise(
-        $gatewayApi.state.getEntityMetadata(addresses.resources.clamAddress),
-        typedError
-      ).map(turnEntityIntoObject)
-    ])
+        $gatewayApi.state.getEntityMetadata(addresses.resources.clamAddress)
+      ])
 
-    //todo add handling
-    if (result.isErr()) return
+      elementResource = turnEntityIntoObject(elementMetadata)
+      clamResource = turnEntityIntoObject(clamMetadata)
 
-    elementResource = result.value[0]
-    clamResource = result.value[1]
+      if (!$walletData?.accounts[0]?.address) return
+      await updateBalances($walletData?.accounts[0].address)
 
-    if (!$walletData?.accounts[0]?.address) return
-    updateBalances($walletData?.accounts[0].address)
+      if (!elementResource || !clamResource || !currentBalance) return
 
-    if (!elementResource || !clamResource || !currentBalance) return
-
-    getBalanceChange({
-      amount: conversionRateFrom,
-      fromTokenAddress: clamResource.id,
-      toTokenAddress: elementResource.id,
-      swapComponent: addresses.components.jettySwap,
-      userAddress: $walletData?.accounts[0].address
-    })
-      .then((receiveAmount) => {
-        conversionRateTo = receiveAmount
+      const receiveAmount = await getBalanceChange({
+        amount: conversionRateFrom,
+        fromTokenAddress: clamResource.id,
+        toTokenAddress: elementResource.id,
+        swapComponent: addresses.components.jettySwap,
+        userAddress: $walletData?.accounts[0].address
       })
-      .catch(() => {
-        //todo
-      })
+
+      conversionRateTo = receiveAmount
+    } catch (error) {
+      //todo error handling
+    }
   })
 
   let timer: NodeJS.Timeout
@@ -156,12 +123,16 @@
     clearTimeout(timer)
     timer = setTimeout(() => {
       swapButtonLoading = true
-
-      preview(v)
+      getBalanceChange({
+        amount: fromInput,
+        fromTokenAddress: clamResource?.id as string,
+        toTokenAddress: elementResource?.id as string,
+        swapComponent: addresses.components.jettySwap,
+        userAddress: $walletData?.accounts[0].address as string
+      })
         .then((amount) => {
           toInput = amount
         })
-        .catch(() => {})
         .finally(() => {
           swapButtonLoading = false
         })
