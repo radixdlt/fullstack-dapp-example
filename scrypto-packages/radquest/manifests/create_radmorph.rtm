@@ -1,3 +1,9 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("5000")
+;
+
 CREATE_NON_FUNGIBLE_RESOURCE
     Enum<1u8>(
         Enum<2u8>(
