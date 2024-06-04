@@ -133,18 +133,20 @@
     updateBalances($walletData?.accounts[0].address)
 
     if (!elementResource || !clamResource || !currentBalance) return
-    ResultAsync.fromPromise(
-      getBalanceChange({
-        amount: conversionRateFrom,
-        fromTokenAddress: clamResource.id,
-        toTokenAddress: elementResource.id,
-        swapComponent: addresses.components.jettySwap,
-        userAddress: $walletData?.accounts[0].address
-      }),
-      typedError
-    ).map((receiveAmount) => {
-      conversionRateTo = receiveAmount
+
+    getBalanceChange({
+      amount: conversionRateFrom,
+      fromTokenAddress: clamResource.id,
+      toTokenAddress: elementResource.id,
+      swapComponent: addresses.components.jettySwap,
+      userAddress: $walletData?.accounts[0].address
     })
+      .then((receiveAmount) => {
+        conversionRateTo = receiveAmount
+      })
+      .catch(() => {
+        //todo
+      })
   })
 
   let timer: NodeJS.Timeout
@@ -155,14 +157,13 @@
     timer = setTimeout(() => {
       swapButtonLoading = true
 
-      ResultAsync.fromPromise(preview(v), typedError)
-        .map((v) => {
-          toInput = v
+      preview(v)
+        .then((amount) => {
+          toInput = amount
         })
-        .mapErr(typedError)
-        .andThen(() => {
+        .catch(() => {})
+        .finally(() => {
           swapButtonLoading = false
-          return ok('')
         })
     }, 750)
   }
