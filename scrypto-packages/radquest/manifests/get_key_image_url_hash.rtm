@@ -1,0 +1,18 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+
+CALL_METHOD
+    Address("${account}")
+    "create_proof_of_amount"
+    Address("${admin_badge}") 
+    Decimal("1")
+;
+
+CALL_METHOD
+    Address("${image_oracle}")
+    "get_key_image_url_hash"
+    Bytes("c12f7d993c3ace8a25f49731e4836acbf69be2b6a95670fc7c1d3d594b8b329c")
+;

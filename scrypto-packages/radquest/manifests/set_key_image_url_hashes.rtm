@@ -1,0 +1,31 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+
+CALL_METHOD
+    Address("${account}")
+    "create_proof_of_amount"
+    Address("${admin_badge}") 
+    Decimal("1")
+;
+
+CALL_METHOD
+    Address("${image_oracle}")
+    "set_key_image_url_hashes"
+    Array<Tuple>(
+      Tuple(
+        Bytes("c12f7d993c3ace8a25f49731e4836acbf69be2b6a95670fc7c1d3d594b8b329c"),
+        Bytes("648da20701f5eb52a4cfb304652c3984c589a766e4ed9d8de5b7b71bf8a6c21f"),
+      ),
+      Tuple(
+        Bytes("cb8af8debfb69c5a8f8302645b30c73b1e096be36b1e7f4b2f468a491a5fb941"),
+        Bytes("dd052a044d37f98bb5a3edf71f6fb08fd8787f42243d3fb6b54a0ca09b909643"),
+      ),
+      Tuple(
+        Bytes("4a962025cad241a583c4f2b25007a8f928963b8cc6adac6dcbeec1ff94077f85"),
+        Bytes("170b618e9981c567c0de560a5a2e62e470cf66847999a461d9f878d3583e080f"),
+      ),
+    )
+;
