@@ -198,7 +198,11 @@
   {/if}
 
   {#if render('5')}
-    {@html text['5.md']}
+    {@html text['5a.md']}
+
+    <img src={'/connect-button.png'} style:width="150px" alt="The Radix connect button" />
+
+    {@html text['5b.md']}
   {/if}
 
   {#if render('6')}
