@@ -1,7 +1,7 @@
 import { fetchWrapper } from 'common'
+import { PUBLIC_RADQUEST_API } from '$env/static/public'
 
-// TODO: set domain based on configuration
-const baseUrl = 'http://localhost:5173/'
+const baseUrl = PUBLIC_RADQUEST_API
 
 export const apiCall = (fetchImpl: typeof fetch = fetch) => ({
   get: <T>(url: string) =>
@@ -14,7 +14,9 @@ export const apiCall = (fetchImpl: typeof fetch = fetch) => ({
     fetchWrapper<T>(
       fetchImpl(`${baseUrl}${url}`, {
         credentials: 'include',
-        body: JSON.stringify(body)
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json' }
       })
     ).map(({ data }) => data)
 })

@@ -1,14 +1,14 @@
-import { apiCall } from '$lib/api/api-call'
 import { error } from '@sveltejs/kit'
-import { UserType, type User } from 'database'
+import { UserType } from 'database'
+import jwt from 'jsonwebtoken'
 
-export async function load({ fetch }) {
-  const response = await apiCall(fetch).get<User>('api/user')
-  if (response.isOk()) {
-    if (response.value.type === UserType.ADMIN) {
-      return {
-        user: response.value
-      }
+export async function load({ cookies }) {
+  const cookie = cookies.get('jwt')
+
+  if (cookie) {
+    const decoded = jwt.decode(cookie, { json: true })
+    if (decoded && decoded.userType === UserType.ADMIN) {
+      return
     }
   }
 

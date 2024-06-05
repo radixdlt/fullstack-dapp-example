@@ -7,7 +7,12 @@ export * from 'bullmq'
 
 export const Queues = {
   EventQueue: 'EventQueue',
+  SystemQueue: 'SystemQueue',
   TransactionQueue: 'TransactionQueue'
+} as const
+
+export const SystemJobType = {
+  PopulateRadmorphs: 'PopulateRadmorphs'
 } as const
 
 export type EventJob = {
@@ -55,9 +60,21 @@ export type TransactionJob = {
   | PopulateResourcesTransactionJob
 )
 
-type TQueues = ReturnType<typeof getQueues>
+export type RadmorphSystemJob = {
+  type: (typeof SystemJobType)['PopulateRadmorphs']
+  data: {
+    url: string
+    id: string
+  }[]
+  traceId: string
+}
+
+export type SystemJob = RadmorphSystemJob
+
+export type TQueues = ReturnType<typeof getQueues>
 export type TransactionQueue = TQueues['transactionQueue']
 export type EventQueue = TQueues['eventQueue']
+export type SystemQueue = TQueues['systemQueue']
 
 export const getQueues = (connection: ConnectionOptions) => {
   const eventQueue = new Queue<EventJob>(Queues.EventQueue, {
@@ -65,6 +82,10 @@ export const getQueues = (connection: ConnectionOptions) => {
   })
 
   const transactionQueue = new Queue<TransactionJob>(Queues.TransactionQueue, {
+    connection
+  })
+
+  const systemQueue = new Queue<SystemJob>(Queues.SystemQueue, {
     connection
   })
 
@@ -84,6 +105,16 @@ export const getQueues = (connection: ConnectionOptions) => {
 
   return {
     eventQueue: { addBulk, queue: eventQueue },
-    transactionQueue: { queue: transactionQueue, add: addTransactionJob }
+    transactionQueue: { queue: transactionQueue, add: addTransactionJob },
+    systemQueue: {
+      addBulk: (items: SystemJob[]) =>
+        ResultAsync.fromPromise(
+          systemQueue.addBulk(
+            items.map((item) => ({ name: item.traceId, data: item, opts: { jobId: item.traceId } }))
+          ),
+          typedError
+        ),
+      queue: systemQueue
+    }
   }
 }
