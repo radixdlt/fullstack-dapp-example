@@ -115,8 +115,21 @@ export const RadmorphController = ({
       (e) => createApiError('Failed to add chunks to queue', 400)(e)
     )
 
+  const duplicateConfigurationWithReversedColors = (configuration: Record<string, string>) =>
+    Object.entries(configuration).reduce(
+      (acc, [id, url]) => {
+        const [shape, shader, color1, color2] = id.split('_')
+        const reversedId = `${shape}_${shader}_${color2}_${color1}`
+        acc[id] = url
+        acc[reversedId] = url
+        return acc
+      },
+      {} as Record<string, string>
+    )
+
   const uploadRadmorphConfiguration = (ctx: ControllerMethodContext, requestBody: unknown) => {
     return validateRadmorphConfiguration(requestBody)
+      .map((configuration) => duplicateConfigurationWithReversedColors(configuration))
       .map((configuration) => chunk(Object.entries(configuration), RADMORPH_CHUNK_SIZE))
       .asyncAndThen((chunks) => addChunksToQueue(ctx, chunks))
       .map(() => ({ data: {}, httpResponseCode: 200 }))
