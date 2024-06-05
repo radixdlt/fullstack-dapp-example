@@ -21,6 +21,13 @@ export type QuestReward = {
   [Key in keyof QuestRewards]: QuestRewards[Key] & { name: Key }
 }[keyof QuestRewards]
 
+export const questRewardDisplayName = {
+  xrd: 'XRD',
+  element: 'Element',
+  clam: 'Clam',
+  energyCard: 'Energy Card'
+} as const satisfies { [key in QuestReward['name']]: string }
+
 export type Language = keyof typeof Language
 
 export const Language = { en: 'en' } as const

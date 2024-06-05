@@ -14,7 +14,21 @@
   onMount(async () => {
     iti = intlTelInput(input, {
       //@ts-ignore
-      utilsScript: await import('intl-tel-input/build/js/utils.js') // TODO show loading state when loading this
+      utilsScript: await import('intl-tel-input/build/js/utils.js'), // TODO show loading state when loading this
+      initialCountry: 'auto',
+      // @ts-ignore
+      geoIpLookup: function (success, failure) {
+        fetch('https://ipapi.co/json')
+          .then(function (res) {
+            return res.json()
+          })
+          .then(function (data) {
+            success(data.country_code)
+          })
+          .catch(function () {
+            failure()
+          })
+      }
     })
   })
 

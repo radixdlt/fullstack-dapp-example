@@ -1,5 +1,4 @@
-
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true })
 
 const {
   PrismaClientKnownRequestError,
@@ -24,7 +23,6 @@ const {
   getRuntime
 } = require('./runtime/library.js')
 
-
 const Prisma = {}
 
 exports.Prisma = Prisma
@@ -35,11 +33,11 @@ exports.$Enums = {}
  * Query Engine version: b9a39a7ee606c28e3455d0fd60e78c3ba82b1a2b
  */
 Prisma.prismaVersion = {
-  client: "5.13.0",
-  engine: "b9a39a7ee606c28e3455d0fd60e78c3ba82b1a2b"
+  client: '5.13.0',
+  engine: 'b9a39a7ee606c28e3455d0fd60e78c3ba82b1a2b'
 }
 
-Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
+Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError
 Prisma.PrismaClientUnknownRequestError = PrismaClientUnknownRequestError
 Prisma.PrismaClientRustPanicError = PrismaClientRustPanicError
 Prisma.PrismaClientInitializationError = PrismaClientInitializationError
@@ -57,8 +55,8 @@ Prisma.raw = raw
 Prisma.validator = Public.validator
 
 /**
-* Extensions
-*/
+ * Extensions
+ */
 Prisma.getExtensionContext = Extensions.getExtensionContext
 Prisma.defineExtension = Extensions.defineExtension
 
@@ -75,8 +73,7 @@ Prisma.NullTypes = {
   AnyNull: objectEnumValues.classes.AnyNull
 }
 
-
-  const path = require('path')
+const path = require('path')
 
 /**
  * Enums
@@ -86,7 +83,7 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   ReadCommitted: 'ReadCommitted',
   RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
-});
+})
 
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
@@ -106,12 +103,12 @@ exports.Prisma.UserPhoneNumberScalarFieldEnum = {
   userId: 'userId',
   phoneNumber: 'phoneNumber',
   createdAt: 'createdAt'
-};
+}
 
 exports.Prisma.ChallengeScalarFieldEnum = {
   challenge: 'challenge',
   createdAt: 'createdAt'
-};
+}
 
 exports.Prisma.EventScalarFieldEnum = {
   transactionId: 'transactionId',
@@ -121,7 +118,7 @@ exports.Prisma.EventScalarFieldEnum = {
   createdAt: 'createdAt',
   processedAt: 'processedAt',
   error: 'error'
-};
+}
 
 exports.Prisma.MessageScalarFieldEnum = {
   id: 'id',
@@ -129,32 +126,32 @@ exports.Prisma.MessageScalarFieldEnum = {
   createdAt: 'createdAt',
   seenAt: 'seenAt',
   data: 'data'
-};
+}
 
 exports.Prisma.NotificationScalarFieldEnum = {
   notificationId: 'notificationId',
   userId: 'userId',
   seenAt: 'seenAt'
-};
+}
 
 exports.Prisma.CompletedQuestRequirementScalarFieldEnum = {
   questId: 'questId',
   userId: 'userId',
   requirementId: 'requirementId',
   createdAt: 'createdAt'
-};
+}
 
 exports.Prisma.QuestProgressScalarFieldEnum = {
   questId: 'questId',
   userId: 'userId',
   status: 'status'
-};
+}
 
 exports.Prisma.SavedProgressScalarFieldEnum = {
   userId: 'userId',
   questId: 'questId',
   progress: 'progress'
-};
+}
 
 exports.Prisma.AuditScalarFieldEnum = {
   transactionId: 'transactionId',
@@ -162,7 +159,7 @@ exports.Prisma.AuditScalarFieldEnum = {
   date: 'date',
   type: 'type',
   xrdUsdValue: 'xrdUsdValue'
-};
+}
 
 exports.Prisma.TransactionScalarFieldEnum = {
   attempt: 'attempt',
@@ -174,31 +171,31 @@ exports.Prisma.TransactionScalarFieldEnum = {
   badgeId: 'badgeId',
   badgeResourceAddress: 'badgeResourceAddress',
   metadata: 'metadata'
-};
+}
 
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
-};
+}
 
 exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
-};
+}
 
 exports.Prisma.NullableJsonNullValueInput = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
-};
+}
 
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
-};
+}
 
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
-};
+}
 
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
@@ -214,25 +211,25 @@ exports.EventError = exports.$Enums.EventError = {
   ERROR_INVALID_DATA: 'ERROR_INVALID_DATA',
   ERROR_USER_NOT_FOUND: 'ERROR_USER_NOT_FOUND',
   ERROR_UNHANDLED_EVENT: 'ERROR_UNHANDLED_EVENT'
-};
+}
 
 exports.QuestStatus = exports.$Enums.QuestStatus = {
   IN_PROGRESS: 'IN_PROGRESS',
   REWARDS_DEPOSITED: 'REWARDS_DEPOSITED',
   REWARDS_CLAIMED: 'REWARDS_CLAIMED',
   COMPLETED: 'COMPLETED'
-};
+}
 
 exports.AuditType = exports.$Enums.AuditType = {
   DIRECT_DEPOSIT: 'DIRECT_DEPOSIT',
   CLAIMBOX_DEPOSIT: 'CLAIMBOX_DEPOSIT'
-};
+}
 
 exports.TransactionStatus = exports.$Enums.TransactionStatus = {
   PENDING: 'PENDING',
   ERROR: 'ERROR',
   COMPLETED: 'COMPLETED'
-};
+}
 
 exports.Prisma.ModelName = {
   User: 'User',
@@ -247,58 +244,56 @@ exports.Prisma.ModelName = {
   SavedProgress: 'SavedProgress',
   Audit: 'Audit',
   Transaction: 'Transaction'
-};
+}
 /**
  * Create the Client
  */
 const config = {
-  "generator": {
-    "name": "client",
-    "provider": {
-      "fromEnvVar": null,
-      "value": "prisma-client-js"
+  generator: {
+    name: 'client',
+    provider: {
+      fromEnvVar: null,
+      value: 'prisma-client-js'
     },
     "output": {
       "value": "/Users/alex/Projects/radquest/packages/database/src/prisma",
       "fromEnvVar": null
     },
-    "config": {
-      "engineType": "library"
+    config: {
+      engineType: 'library'
     },
-    "binaryTargets": [
+    binaryTargets: [
       {
         "fromEnvVar": null,
         "value": "darwin-arm64",
         "native": true
       },
       {
-        "fromEnvVar": null,
-        "value": "linux-arm64-openssl-1.1.x"
+        fromEnvVar: null,
+        value: 'linux-arm64-openssl-1.1.x'
       },
       {
-        "fromEnvVar": null,
-        "value": "debian-openssl-1.1.x"
+        fromEnvVar: null,
+        value: 'debian-openssl-1.1.x'
       }
     ],
-    "previewFeatures": [],
-    "isCustomOutput": true
+    previewFeatures: [],
+    isCustomOutput: true
   },
-  "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
+  relativeEnvPaths: {
+    rootEnvPath: null,
+    schemaEnvPath: '../../.env'
   },
-  "relativePath": "../../prisma",
-  "clientVersion": "5.13.0",
-  "engineVersion": "b9a39a7ee606c28e3455d0fd60e78c3ba82b1a2b",
-  "datasourceNames": [
-    "db"
-  ],
-  "activeProvider": "postgresql",
-  "inlineDatasources": {
-    "db": {
-      "url": {
-        "fromEnvVar": "DATABASE_URL",
-        "value": null
+  relativePath: '../../prisma',
+  clientVersion: '5.13.0',
+  engineVersion: 'b9a39a7ee606c28e3455d0fd60e78c3ba82b1a2b',
+  datasourceNames: ['db'],
+  activeProvider: 'postgresql',
+  inlineDatasources: {
+    db: {
+      url: {
+        fromEnvVar: 'DATABASE_URL',
+        value: null
       }
     }
   },
@@ -311,14 +306,12 @@ const fs = require('fs')
 
 config.dirname = __dirname
 if (!fs.existsSync(path.join(__dirname, 'schema.prisma'))) {
-  const alternativePaths = [
-    "src/prisma",
-    "prisma",
-  ]
-  
-  const alternativePath = alternativePaths.find((altPath) => {
-    return fs.existsSync(path.join(process.cwd(), altPath, 'schema.prisma'))
-  }) ?? alternativePaths[0]
+  const alternativePaths = ['src/prisma', 'prisma']
+
+  const alternativePath =
+    alternativePaths.find((altPath) => {
+      return fs.existsSync(path.join(process.cwd(), altPath, 'schema.prisma'))
+    }) ?? alternativePaths[0]
 
   config.dirname = path.join(process.cwd(), alternativePath)
   config.isBundled = true
@@ -328,12 +321,15 @@ config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"dbName\":null,\"f
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = undefined
 
-
 const { warnEnvConflicts } = require('./runtime/library.js')
 
 warnEnvConflicts({
-    rootEnvPath: config.relativeEnvPaths.rootEnvPath && path.resolve(config.dirname, config.relativeEnvPaths.rootEnvPath),
-    schemaEnvPath: config.relativeEnvPaths.schemaEnvPath && path.resolve(config.dirname, config.relativeEnvPaths.schemaEnvPath)
+  rootEnvPath:
+    config.relativeEnvPaths.rootEnvPath &&
+    path.resolve(config.dirname, config.relativeEnvPaths.rootEnvPath),
+  schemaEnvPath:
+    config.relativeEnvPaths.schemaEnvPath &&
+    path.resolve(config.dirname, config.relativeEnvPaths.schemaEnvPath)
 })
 
 const PrismaClient = getPrismaClient(config)
@@ -345,12 +341,12 @@ path.join(__dirname, "libquery_engine-darwin-arm64.dylib.node");
 path.join(process.cwd(), "src/prisma/libquery_engine-darwin-arm64.dylib.node")
 
 // file annotations for bundling tools to include these files
-path.join(__dirname, "libquery_engine-linux-arm64-openssl-1.1.x.so.node");
-path.join(process.cwd(), "src/prisma/libquery_engine-linux-arm64-openssl-1.1.x.so.node")
+path.join(__dirname, 'libquery_engine-linux-arm64-openssl-1.1.x.so.node')
+path.join(process.cwd(), 'src/prisma/libquery_engine-linux-arm64-openssl-1.1.x.so.node')
 
 // file annotations for bundling tools to include these files
-path.join(__dirname, "libquery_engine-debian-openssl-1.1.x.so.node");
-path.join(process.cwd(), "src/prisma/libquery_engine-debian-openssl-1.1.x.so.node")
+path.join(__dirname, 'libquery_engine-debian-openssl-1.1.x.so.node')
+path.join(process.cwd(), 'src/prisma/libquery_engine-debian-openssl-1.1.x.so.node')
 // file annotations for bundling tools to include these files
-path.join(__dirname, "schema.prisma");
-path.join(process.cwd(), "src/prisma/schema.prisma")
+path.join(__dirname, 'schema.prisma')
+path.join(process.cwd(), 'src/prisma/schema.prisma')

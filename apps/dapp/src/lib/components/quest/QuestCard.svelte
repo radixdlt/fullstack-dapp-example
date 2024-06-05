@@ -7,6 +7,7 @@
   import ProgressCard from '../progress-card/ProgressCard.svelte'
   import { createEventDispatcher } from 'svelte'
   import NavigationFooter from './NavigationFooter.svelte'
+  import { writable } from 'svelte/store'
 
   export let title: string
   export let steps: number
@@ -22,6 +23,13 @@
   export let nextButtonText: string | undefined
   export let backButtonText: string | undefined
 
+  const flyOut = (el: any) => {
+    const width = card ? card.getWidth() : 0
+    const duration = card ? card.getAnimationDuration() : 0
+
+    return fly(el, { x: ($direction === 'right' ? -width : width) * 2, duration, opacity: 1 })
+  }
+
   const dispatch = createEventDispatcher<{
     next: undefined
     prev: undefined
@@ -30,13 +38,24 @@
 
   let content: HTMLElement
 
+  let lastProgress = progress
+
+  $: {
+    $direction = progress > lastProgress ? 'right' : 'left'
+    lastProgress = progress
+  }
+
   $: {
     progress
     if (content) content.scrollTop = 0
   }
+
+  let card: ProgressCard
+
+  let direction = writable<'right' | 'left'>()
 </script>
 
-<ProgressCard {steps} bind:progress disabled={cardDisabled}>
+<ProgressCard bind:this={card} {steps} bind:progress disabled={cardDisabled}>
   <div slot="header" class="header">
     <button class="icon" on:click={() => dispatch('close')}>
       <Icon url={CrossIcon} />
@@ -47,10 +66,17 @@
     <div />
   </div>
 
-  <svelte:fragment slot="content" let:animationDuration let:width>
+  <svelte:fragment slot="content" let:width let:animationDuration>
     <div bind:this={content} class="content card">
       {#key progress}
-        <div transition:fly|local={{ x: -width * 2, opacity: 1, duration: animationDuration }}>
+        <div
+          in:fly|local={{
+            x: ($direction === 'right' ? width : -width) * 2,
+            opacity: 1,
+            duration: animationDuration
+          }}
+          out:flyOut|local
+        >
           <slot {progress} />
         </div>
       {/key}

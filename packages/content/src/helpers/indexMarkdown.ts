@@ -29,3 +29,24 @@ export const indexMarkdownFiles = (directoryPath: string) => {
 
   return index
 }
+
+var defaultRender =
+  md.renderer.rules.link_open ||
+  ((tokens, idx, options, _, self) => self.renderToken(tokens, idx, options))
+
+md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+  const href = tokens[idx].attrGet('href')
+  let url: URL
+
+  try {
+    url = new URL(href!)
+  } catch {
+    return defaultRender(tokens, idx, options, env, self)
+  }
+
+  if (!(url.hostname === 'localhost' || url.hostname.includes('radquest'))) {
+    tokens[idx].attrSet('target', '_blank')
+  }
+
+  return defaultRender(tokens, idx, options, env, self)
+}
