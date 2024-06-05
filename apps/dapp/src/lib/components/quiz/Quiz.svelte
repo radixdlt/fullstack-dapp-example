@@ -36,7 +36,7 @@
   div {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: var(--spacing-xl);
   }
 
   div.correct-answer {
@@ -48,8 +48,8 @@
 
   label {
     display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
+    align-items: flex-start;
+    gap: var(--spacing-lg);
     cursor: pointer;
 
     :global(p) {
@@ -65,6 +65,7 @@
     min-width: 1rem;
     height: 1rem;
     border: 0.15rem solid currentColor;
+    margin-top: 0.3rem;
   }
 
   input::before {
