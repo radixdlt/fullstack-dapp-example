@@ -41,5 +41,10 @@
       border-bottom: 0;
       margin-bottom: -1rem;
     }
+
+    :global(a) {
+      color: var(--color-light);
+      text-decoration: underline;
+    }
   }
 </style>

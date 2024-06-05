@@ -19,6 +19,7 @@
   export let glossary: ComponentProps<Glossary>['glossary']
   export let glossaryItem: string | undefined = undefined
   export let disabled = false
+  export let onCloseGlossary: () => Promise<undefined>
 
   let showJettyMenu = false
   let showNotification = false
@@ -27,7 +28,6 @@
   let latestNotification: JettyNotification
 
   const dispatch = createEventDispatcher<{
-    'close-glossary': undefined
     'notification-opened': undefined
   }>()
 
@@ -52,10 +52,10 @@
     dispatch('notification-opened')
   }
 
-  const closeGlossary = () => {
+  const closeGlossary = async () => {
+    await onCloseGlossary()
     showGlossary = false
     glossaryItem = undefined
-    dispatch('close-glossary')
   }
 
   const onClick = () => {
