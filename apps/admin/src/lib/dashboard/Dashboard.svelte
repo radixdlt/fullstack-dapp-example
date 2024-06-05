@@ -6,13 +6,23 @@
 </script>
 
 <div class="mt-px space-y-4">
-  <Card title="Populate RadMorph image URLs">
+  <Card title="Upload RadMorph configuration">
     <input type="text" bind:value />
     <Button
       on:click={async () => {
         const body = JSON.parse(value)
 
         console.log(await apiCall().post('api/radmorph/upload-json', body))
+      }}>Send</Button
+    >
+  </Card>
+  <Card title="Populate RadMorph image oracle">
+    <input type="text" bind:value />
+    <Button
+      on:click={async () => {
+        const body = JSON.parse(value)
+
+        console.log(await apiCall().post('api/radmorph/populate-image-oracle', body))
       }}>Send</Button
     >
   </Card>
