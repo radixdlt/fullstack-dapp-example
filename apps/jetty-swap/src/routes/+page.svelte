@@ -84,13 +84,17 @@
     })
 
     try {
-      const [elementMetadata, clamMetadata] = await Promise.all([
-        $gatewayApi.gatewayApiClient.state.getEntityMetadata(addresses.resources.elementAddress),
-        $gatewayApi.gatewayApiClient.state.getEntityMetadata(addresses.resources.clamAddress)
+      const [elementMetadataResult, clamMetadataResult] = await Promise.all([
+        $gatewayApi.callApiWithCache('getEntityMetadata', addresses.resources.elementAddress),
+        $gatewayApi.callApiWithCache('getEntityMetadata', addresses.resources.clamAddress)
       ])
 
-      elementResource = turnEntityIntoObject(elementMetadata)
-      clamResource = turnEntityIntoObject(clamMetadata)
+      if (elementMetadataResult.isOk()) {
+        elementResource = turnEntityIntoObject(elementMetadataResult.value)
+      }
+      if (clamMetadataResult.isOk()) {
+        clamResource = turnEntityIntoObject(clamMetadataResult.value)
+      }
 
       if (!$walletData?.accounts[0]?.address) return
       await updateBalances($walletData?.accounts[0].address)
