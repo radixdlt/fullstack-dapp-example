@@ -79,7 +79,8 @@ export const EventId = {
   CombineElementsDeposited: 'CombineElementsDeposited',
   CombineElementsMintedRadgem: 'CombineElementsMintedRadgem',
   CombineElementsAddedRadgemImage: 'CombineElementsAddedRadgemImage',
-  CombineElementsClaimed: 'CombineElementsClaimed'
+  CombineElementsClaimed: 'CombineElementsClaimed',
+  JettySwapEvent: 'JettySwapEvent'
 } as const
 
 export type EventId = keyof typeof EventId

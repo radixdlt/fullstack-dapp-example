@@ -399,6 +399,14 @@ export const EventWorkerController = ({
         return handleQuestWithTrackedAccount(maybeAccountAddress, 'StakingQuest')
       }
 
+      case EventId.JettySwapEvent: {
+        const maybeAccountAddress: string | undefined = (
+          job.data.relevantEvents['WithdrawEvent'].emitter as any
+        ).entity.entity_address
+
+        return handleQuestWithTrackedAccount(maybeAccountAddress, 'SwapQuest')
+      }
+
       default:
         childLogger.error({
           message: 'Unhandled Event'
