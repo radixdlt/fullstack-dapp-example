@@ -85,8 +85,8 @@
 
     try {
       const [elementMetadataResult, clamMetadataResult] = await Promise.all([
-        $gatewayApi.callApiWithCache('getEntityMetadata', addresses.resources.elementAddress),
-        $gatewayApi.callApiWithCache('getEntityMetadata', addresses.resources.clamAddress)
+        $gatewayApi.callApi('getEntityMetadata', addresses.resources.elementAddress),
+        $gatewayApi.callApi('getEntityMetadata', addresses.resources.clamAddress)
       ])
 
       if (elementMetadataResult.isOk()) {
