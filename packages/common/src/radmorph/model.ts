@@ -10,8 +10,13 @@ export type RadMorphModelMethods = ReturnType<RadMorphModel>
 export const RadMorphModel = (db: PrismaClient) => (logger?: AppLogger) => {
   const addMany = (data: { url: string; id: string }[]) =>
     ResultAsync.fromPromise(
-      db.radMorphImage.createMany({
-        data
+      db.$transaction(async (transaction) => {
+        await transaction.radMorphImage.deleteMany({
+          where: { id: { in: data.map((d) => d.id) } }
+        })
+        await transaction.radMorphImage.createMany({
+          data
+        })
       }),
       (error) => {
         logger?.error({ error, method: 'addMany', model: 'RadMorphModel' })
