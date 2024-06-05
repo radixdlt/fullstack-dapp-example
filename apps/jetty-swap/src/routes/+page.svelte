@@ -55,17 +55,13 @@
       return
     }
 
-    try {
-      const details = await ($gatewayApi as GatewayApi).callApi('getEntityDetailsVaultAggregated', [
-        walletAddress
-      ])
-      if (details.isOk()) {
-        balances = details.value[0].fungible_resources.items.filter((item) =>
-          [elementResource, clamResource].some((resource) => resource?.id === item.resource_address)
-        )
-      }
-    } catch (error) {
-      //todo error handling
+    const details = await ($gatewayApi as GatewayApi).callApi('getEntityDetailsVaultAggregated', [
+      walletAddress
+    ])
+    if (details.isOk()) {
+      balances = details.value[0].fungible_resources.items.filter((item) =>
+        [elementResource, clamResource].some((resource) => resource?.id === item.resource_address)
+      )
     }
   }
 
