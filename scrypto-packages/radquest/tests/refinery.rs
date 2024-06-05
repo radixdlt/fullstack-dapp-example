@@ -1,17 +1,16 @@
-use radix_engine_interface::prelude::*;
 use radquest::{
+    image_oracle::image_oracle_test::*,
     morph_card_forge::{MorphCardData, ENERGY},
     radgem_forge::{RadgemData, COMMON_COLOR, MATERIAL, RARE_COLOR},
     radmorph_forge::RadmorphData,
-    refinery::{test_bindings::*, RARITY},
+    refinery::{refinery_test::*, RARITY},
 };
-use scrypto::this_package;
 use scrypto_test::prelude::*;
-use scrypto_unit::*;
 
 struct Test {
-    env: TestEnvironment,
+    env: TestEnvironment<InMemorySubstateDatabase>,
     refinery: Refinery,
+    image_oracle: ImageOracle,
     elements: Bucket,
     morph_card: Bucket,
     radgems: Bucket,
@@ -24,7 +23,8 @@ struct Test {
 
 fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let mut env = TestEnvironment::new();
-    let package_address = Package::compile_and_publish(this_package!(), &mut env)?;
+    let package_address =
+        PackageFactory::compile_and_publish(this_package!(), &mut env, CompileProfile::Fast)?;
 
     let super_admin_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
         .mint_initial_supply([()], &mut env)?;
@@ -52,6 +52,10 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         .burn_roles(burn_roles!(
             burner => rule!(require(admin_badge.resource_address(&mut env)?));
             burner_updater => rule!(deny_all);
+        ))
+        .non_fungible_data_update_roles(non_fungible_data_update_roles!(
+            non_fungible_data_updater => rule!(require(admin_badge.resource_address(&mut env)?));
+            non_fungible_data_updater_updater => rule!(deny_all);
         ))
         .mint_initial_supply(
             [
@@ -107,6 +111,13 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         &mut env,
     )?;
 
+    let mut image_oracle = Option::<ImageOracle>::None;
+    env.with_component_state(refinery, |refinery_state: &mut RefineryState, _| {
+        let image_oracle_node_id = refinery_state.image_oracle.as_node_id().to_owned();
+        image_oracle = Some(ImageOracle(image_oracle_node_id))
+    })?;
+    let image_oracle = image_oracle.unwrap();
+
     let radmorph_address = radmorph.resource_address(&mut env)?;
     let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
     let user_badge_proof = user_badge.create_proof_of_all(&mut env)?;
@@ -117,6 +128,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     Ok(Test {
         env,
         refinery,
+        image_oracle,
         elements,
         morph_card,
         radgems,
@@ -183,7 +195,7 @@ fn can_combine_elements_deposit_with_other_non_fungible() -> Result<(), RuntimeE
 }
 
 #[test]
-fn can_combine_elements_process_1() -> Result<(), RuntimeError> {
+fn can_combine_elements_mint_radgem() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,
@@ -201,41 +213,56 @@ fn can_combine_elements_process_1() -> Result<(), RuntimeError> {
     Ok(())
 }
 
-/* TODO: Implement - Awaiting Scrypto method `with_component_state` to be implemented
 #[test]
-fn can_combine_elements_process_2() -> Result<(), RuntimeError> {
+fn can_combine_elements_add_radgem_image() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,
         mut refinery,
-        user_id,
+        user_badge_id,
         admin_badge_proof,
+        radgems,
         ..
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_process_1(user_id.clone(), dec!(0.97), dec!(0.87), &mut env)?;
-
-    let refinery_state: RefineryState = env.read_component_state(refinery).unwrap();
-    let radgem_local_id = refinery_state
-        .radgem_vault
-        .0
-        .non_fungible_local_ids(1, &mut env)
-        .unwrap()
-        .pop()
-        .unwrap();
-
-    // Act
-    refinery.combine_elements_process_2(
-        radgem_local_id,
-        UncheckedUrl::of("www.new_url.test"),
+    refinery.combine_elements_mint_radgem(
+        user_badge_id.clone(),
+        dec!(0.97),
+        dec!(0.87),
         &mut env,
     )?;
 
+    let mut radgem_local_id: Option<NonFungibleLocalId> = None;
+    env.with_component_state(refinery, |refinery_state: &mut RefineryState, env| {
+        radgem_local_id = refinery_state
+            .radgem_vault
+            .0
+            .non_fungible_local_ids(1, env)
+            .unwrap()
+            .pop();
+    })?;
+
+    // Act
+    refinery
+        .combine_elements_add_radgem_image(
+            user_badge_id.clone(),
+            radgem_local_id.clone().unwrap(),
+            UncheckedUrl::of("www.new_url.test"),
+            &mut env,
+        )
+        .unwrap();
+
     // Assert
+    let data: RadgemData = ResourceManager(radgems.resource_address(&mut env).unwrap())
+        .get_non_fungible_data(radgem_local_id.unwrap(), &mut env)
+        .unwrap();
+
+    assert_eq!(data.name, "Radiant Smoke RadGem");
+    assert_eq!(data.key_image_url, UncheckedUrl::of("www.new_url.test"));
+
     Ok(())
 }
-*/
 
 #[test]
 fn can_combine_elements_claim() -> Result<(), RuntimeError> {
@@ -296,6 +323,7 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
     let Test {
         mut env,
         mut refinery,
+        mut image_oracle,
         morph_card,
         radgems,
         radmorph_address,
@@ -340,7 +368,7 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
     let value_hash = keccak256_hash(key_image_url.as_str().as_bytes());
 
     env.disable_auth_module();
-    refinery.set_key_image_url_hashes(vec![(key_hash, value_hash)], &mut env)?;
+    image_oracle.set_key_image_url_hashes(vec![(key_hash, value_hash)], &mut env)?;
     env.enable_auth_module();
 
     // Act

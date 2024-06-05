@@ -1,10 +1,8 @@
-use radix_engine_interface::prelude::*;
-use radquest::{kyc_oracle::test_bindings::*, quest_rewards::UserId};
-use scrypto::this_package;
+use radquest::{kyc_oracle::kyc_oracle_test::*, quest_rewards::UserId};
 use scrypto_test::prelude::*;
 
 struct Test {
-    env: TestEnvironment,
+    env: TestEnvironment<InMemorySubstateDatabase>,
     kyc_oracle: KycOracle,
     admin_badge_proof: Proof,
     user_id: UserId,
@@ -12,7 +10,8 @@ struct Test {
 
 fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let mut env = TestEnvironment::new();
-    let package_address = Package::compile_and_publish(this_package!(), &mut env)?;
+    let package_address =
+        PackageFactory::compile_and_publish(this_package!(), &mut env, CompileProfile::Fast)?;
 
     let super_admin_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
         .mint_initial_supply([()], &mut env)?;

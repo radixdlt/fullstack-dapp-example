@@ -1,12 +1,13 @@
-use radix_engine_interface::prelude::*;
-use radquest::quest_rewards::{test_bindings::*, DidData, QuestId, UserId};
-use scrypto::*;
+use radquest::{
+    kyc_oracle::kyc_oracle_test::*,
+    quest_rewards::{quest_rewards_test::*, DidData, QuestId, UserId},
+};
 use scrypto_test::prelude::*;
-use scrypto_unit::*;
 
 struct Test {
-    env: TestEnvironment,
+    env: TestEnvironment<InMemorySubstateDatabase>,
     quest_rewards: QuestRewards,
+    kyc_oracle: KycOracle,
     user_badge: Bucket,
     user_id: UserId,
     admin_badge_proof: Proof,
@@ -14,7 +15,8 @@ struct Test {
 
 fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let mut env = TestEnvironment::new();
-    let package_address = Package::compile_and_publish(this_package!(), &mut env)?;
+    let package_address =
+        PackageFactory::compile_and_publish(this_package!(), &mut env, CompileProfile::Fast)?;
 
     let user_id_string = "test_user_id".to_string();
 
@@ -44,11 +46,22 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         &mut env,
     )?;
 
+    let mut kyc_oracle: Option<KycOracle> = None;
+    env.with_component_state(
+        quest_rewards,
+        |quest_rewards_state: &mut QuestRewardsState, _| {
+            let kyc_oracle_node_id = quest_rewards_state.kyc_oracle.as_node_id().to_owned();
+            kyc_oracle = Some(KycOracle(kyc_oracle_node_id));
+        },
+    )?;
+    let kyc_oracle = kyc_oracle.unwrap();
+
     let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
 
     Ok(Test {
         env,
         quest_rewards,
+        kyc_oracle,
         user_badge,
         user_id: UserId(format!("<{user_id_string}>")),
         admin_badge_proof,
@@ -131,9 +144,11 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
 
 #[test]
 fn cannot_claim_rewards_when_kyc_required() -> Result<(), RuntimeError> {
+    // Arrange
     let Test {
         mut env,
         mut quest_rewards,
+        mut kyc_oracle,
         user_badge,
         user_id,
         admin_badge_proof,
@@ -146,7 +161,8 @@ fn cannot_claim_rewards_when_kyc_required() -> Result<(), RuntimeError> {
     let quest_id = QuestId("1".into());
 
     env.disable_auth_module();
-    quest_rewards.update_user_kyc_requirement(user_id.clone(), true, &mut env)?;
+
+    kyc_oracle.update_user_kyc_requirement(user_id.clone(), true, &mut env)?;
     env.enable_auth_module();
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
@@ -157,6 +173,7 @@ fn cannot_claim_rewards_when_kyc_required() -> Result<(), RuntimeError> {
         &mut env,
     )?;
 
+    // Act
     let result = quest_rewards.claim_reward(
         quest_id,
         user_badge.create_proof_of_all(&mut env)?,
@@ -164,6 +181,7 @@ fn cannot_claim_rewards_when_kyc_required() -> Result<(), RuntimeError> {
         &mut env,
     );
 
+    // Assert
     assert!(result.is_err());
 
     Ok(())

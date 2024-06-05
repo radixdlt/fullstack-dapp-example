@@ -1,13 +1,11 @@
-use radix_engine_interface::prelude::*;
 use radquest::{
-    radgem_forge::{test_bindings::*, RadgemData, MATERIAL, RARE_COLOR},
+    radgem_forge::{radgem_forge_test::*, RadgemData, MATERIAL, RARE_COLOR},
     refinery::RARITY,
 };
-use scrypto::this_package;
 use scrypto_test::prelude::*;
 
 struct Test {
-    env: TestEnvironment,
+    env: TestEnvironment<InMemorySubstateDatabase>,
     radgem_forge: RadgemForge,
     radgem_address: ResourceAddress,
     _radgem: Bucket,
@@ -17,7 +15,8 @@ struct Test {
 
 fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let mut env = TestEnvironment::new();
-    let package_address = Package::compile_and_publish(this_package!(), &mut env)?;
+    let package_address =
+        PackageFactory::compile_and_publish(this_package!(), &mut env, CompileProfile::Fast)?;
 
     let admin_badge =
         ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(2, &mut env)?;
@@ -74,11 +73,13 @@ fn instantiate_radgem_forge() -> Result<(), RuntimeError> {
         ..
     } = arrange_test_environment()?;
 
-    let radgem_forge_state: RadgemForgeState = env.read_component_state(radgem_forge)?;
-    assert_eq!(
-        Vault::from(radgem_forge_state.admin_badge).amount(&mut env)?,
-        dec!(1)
-    );
+    env.with_component_state(
+        radgem_forge,
+        |radgem_forge_state: &mut RadgemForgeState, env| {
+            let amount = radgem_forge_state.admin_badge.0.amount(env).unwrap();
+            assert_eq!(amount, dec!(1));
+        },
+    )?;
 
     Ok(())
 }
