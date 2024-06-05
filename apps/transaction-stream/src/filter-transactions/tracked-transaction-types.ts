@@ -60,8 +60,11 @@ const nonFungibleMinted = (resource: string) => (event: EventsItem) =>
   event.name === 'MintNonFungibleResourceEvent' &&
   (event.emitter as EventEmitter)?.entity?.entity_address === resource
 
-const jettySwapEvent = (event: EventsItem) => {
-  return event.name === 'JettySwapEvent'
+export const jettySwapEvent = (event: EventsItem) => {
+  return (
+    event.name === 'JettySwapEvent' &&
+    (event.emitter as EventEmitter).entity.entity_address === config.radQuest.components.jettySwap
+  )
 }
 
 export const getTrackedTransactionTypes = (): TrackedTransactions => ({
