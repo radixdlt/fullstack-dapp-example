@@ -20,7 +20,6 @@ export const FilterTransactionsByAccountAddress =
 
     switch (tx.type) {
       case EventId.XrdStaked:
-      case EventId.JettySwap:
         userId = await accountAddressModel.getTrackedAddressUserId(
           (tx.relevantEvents['WithdrawEvent'].emitter as any).entity.entity_address,
           tx.type === EventId.XrdStaked ? 'StakingQuest' : 'SwapQuest'
@@ -44,7 +43,13 @@ export const FilterTransactionsByAccountAddress =
 
         userId = await accountAddressModel.getTrackedAddressUserId(maybeAccountAddress, 'MayaQuest')
         return userId.isOk() && userId.value ? tx : undefined
+      case EventId.JettySwap:
+        userId = await accountAddressModel.getTrackedAddressUserId(
+          (tx.relevantEvents['WithdrawEvent'].emitter as any).entity.entity_address,
+          'SwapQuest'
+        )
 
+        return userId.isOk() && userId.value ? tx : undefined
       default:
         return tx
     }
