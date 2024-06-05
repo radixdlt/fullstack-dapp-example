@@ -23,7 +23,7 @@ export const Addresses = (networkId: number) => {
             'resource_tdx_2_1nffgrg4sxxswkc3vjydt57y6dcstrl8vp2z22al5h2thzzafk3ql8n'
         },
         package: 'package_tdx_2_1p4h36jqvued4u0ll76pnpqw8f2hmvjllk408j64wpkl8cj6kr70xxc',
-        clamDexPackage: 'package_tdx_2_1phe5l60hvy0raypraluxp622gn3y7dckftyhrjxl68g8hvzegdr7j8',
+        clamDexPackage: 'package_tdx_2_1ph45qa6e797d86v34ktka40emzyd667vhzm2ek3xu9xu9aw45x2c22',
         components: {
           mayaRouter: 'component_tdx_2_mock_maya_router_address',
           questRewards: 'component_tdx_2_1crtfv9n6dqj5t65nj075lcj8ap9vegyh0jlfucckkfp9xzpzcllpwd',
@@ -35,7 +35,7 @@ export const Addresses = (networkId: number) => {
           radmorphForge: 'component_tdx_2_1czv8hf2k4m5aka3ar847uqpyqy5w9q9kjnr354zphmzrrqps3lq30d',
           imageOracle: 'component_tdx_2_1cr43qevrkluk75gjcyglklcaek7uy0rp2ymqk0ufyrp6393c53wlfw',
           refinery: 'component_tdx_2_1crth8cjpycqk8xhtcuzcjeh9eud2jdhx0khuh3aunhtxp4xluvnym5',
-          jettySwap: 'component_tdx_2_1cplanmrvumyt4gdmf2l8wcefgm6q2wqccrx3uwjxjxn0h7qkuesfe8',
+          jettySwap: 'component_tdx_2_1crf6zr9krdcr92u0nfwsdyxma9jl7g97sqpulhshm2l0rcyfpkmlzg',
           lettySwap: 'component_tdx_2_1cpy8z5jzy0a9ps39nxnctcfrgc3eurpyrl8w36ecyy4celc5a25ywm'
         },
         xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
