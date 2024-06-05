@@ -3,25 +3,26 @@
   import modeobserver from '$lib/modeobserver'
   import { onMount } from 'svelte'
   import { publicConfig } from '$lib/public-config'
-  import { resolveRDT } from '$lib/rdt'
+  import type { LayoutData } from './$types'
+  import { user, rdt } from '$lib/stores'
 
-  let radixDappToolkit: RadixDappToolkit
+  export let data: LayoutData
 
-  const { dAppDefinitionAddress, networkId } = publicConfig
+  user.set(data.user)
 
   onMount(modeobserver)
 
   onMount(() => {
-    const logger = Logger(1)
+    const { dAppDefinitionAddress, networkId } = publicConfig
 
-    radixDappToolkit = RadixDappToolkit({
-      networkId,
-      dAppDefinitionAddress: dAppDefinitionAddress ?? '',
-      logger,
-      featureFlags: ['ExperimentalMobileSupport']
-    })
-
-    resolveRDT(radixDappToolkit)
+    rdt.set(
+      RadixDappToolkit({
+        networkId,
+        dAppDefinitionAddress: dAppDefinitionAddress ?? '',
+        logger: Logger(1),
+        featureFlags: ['ExperimentalMobileSupport']
+      })
+    )
   })
 </script>
 
