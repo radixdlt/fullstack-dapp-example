@@ -1,17 +1,11 @@
 import { ok } from 'neverthrow'
 import { Job, SystemJob, SystemJobType, TransactionQueue } from 'queues'
-import { AppLogger, RadMorphModel } from 'common'
+import { AppLogger } from 'common'
 import { radixEngineClient } from 'typescript-wallet'
 import { getImageOracleManifest } from './helpers/getImageOracleManifest'
 
 export type SystemWorkerController = ReturnType<typeof SystemWorkerController>
-export const SystemWorkerController = ({
-  logger,
-  radMorphModel
-}: {
-  logger: AppLogger
-  radMorphModel: RadMorphModel
-}) => {
+export const SystemWorkerController = ({ logger }: { logger: AppLogger }) => {
   const handler = (job: Job<SystemJob>) => {
     const { traceId, type } = job.data
 
@@ -23,9 +17,8 @@ export const SystemWorkerController = ({
 
     switch (type) {
       case SystemJobType.PopulateRadmorphs:
-        return radMorphModel(logger)
-          .addMany(job.data.data)
-          .andThen(() => radixEngineClient.getManifestBuilder())
+        return radixEngineClient
+          .getManifestBuilder()
           .andThen(({ convertStringManifest, submitTransaction, wellKnownAddresses }) =>
             convertStringManifest(
               getImageOracleManifest(wellKnownAddresses, job.data.data)
@@ -34,7 +27,7 @@ export const SystemWorkerController = ({
                 transactionManifest,
                 signers: ['systemAccount'],
                 logger
-              })
+              }).andThen(({ txId }) => radixEngineClient.gatewayClient.pollTransactionStatus(txId))
             )
           )
 
