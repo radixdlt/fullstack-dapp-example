@@ -206,7 +206,15 @@
   {/if}
 
   {#if render('6')}
-    {@html text['6.md']}
+    {@html text['6a.md']}
+
+    <img
+      src={'/quests-images/key/ConnectQuest.webp'}
+      style:width="400px"
+      alt="The Radix Wallet app connecting to a browser"
+    />
+
+    {@html text['6b.md']}
   {/if}
 
   {#if render('7')}
