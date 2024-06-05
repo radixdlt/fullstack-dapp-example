@@ -11,14 +11,13 @@ const key = (params: Parameters<GetEntityMetadata>) => (address: string) =>
 export const entityMetadataCache: Cache<
   GetEntityMetadata,
   Parameters<GetEntityMetadata>,
-  Awaited<ReturnType<GetEntityMetadata>>,
-  Awaited<ReturnType<GetEntityMetadata>> | undefined
+  Awaited<ReturnType<GetEntityMetadata>>
 > = {
   set: (params, response) => {
     storage.set(key(params)(params[0]), response)
   },
 
-  get: (params) => storage.get(key(params)(params[0])),
+  get: (params) => storage.get(key(params)(params[0])) as StateEntityMetadataPageResponse,
 
   has: (params) => storage.has(key(params)(params[0])),
 
