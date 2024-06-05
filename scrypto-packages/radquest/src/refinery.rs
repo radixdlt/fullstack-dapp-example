@@ -260,12 +260,11 @@ mod refinery {
             morph_card.burn();
 
             let pre_hash_string = format!(
-                "{}{}{}{}{}",
+                "{}{}{}{}",
                 morph_card_data.energy,
                 radgem_a_data.material,
                 radgem_a_data.color,
                 radgem_b_data.color,
-                key_image_url.as_str(),
             );
 
             let result = self
