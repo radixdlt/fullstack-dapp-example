@@ -3,7 +3,7 @@
   import { i18n } from '$lib/i18n/i18n'
   import type { QuestReward } from 'content'
   import QuestRewards from '../quest-rewards/QuestRewards.svelte'
-  import Requirement from './Requirement.svelte'
+  import Requirements from './Requirements.svelte'
 
   export let title: string
   export let description: string
@@ -28,14 +28,7 @@
   {/if}
 
   {#if requirements && requirements.length > 0}
-    <div class="requirements">
-      <div class="requirements-title">{$i18n.t('quests:requirementsTitle')}:</div>
-      {#each requirements as { text, complete }}
-        <Requirement {complete}>
-          {text}
-        </Requirement>
-      {/each}
-    </div>
+    <Requirements {requirements} />
   {/if}
 </div>
 
@@ -44,6 +37,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-2xl);
+    align-items: center;
 
     @include desktop {
       padding: var(--spacing-2xl);
@@ -67,18 +61,6 @@
     overflow: hidden;
 
     .title {
-      font-weight: var(--font-weight-bold);
-    }
-  }
-
-  .requirements {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--spacing-lg);
-    overflow: hidden;
-
-    .requirements-title {
       font-weight: var(--font-weight-bold);
     }
   }
