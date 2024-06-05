@@ -70,7 +70,11 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.userType = result.value.userType
     event.locals.authToken = result.value.authToken
 
-    return await resolve(event)
+    const origin = event.request.headers.get('origin')
+    const response = await resolve(event)
+    response.headers.set('Access-Control-Allow-Origin', origin || '*')
+    response.headers.set('Access-Control-Allow-Credentials', 'true')
+    return response
   }
 
   const response = await resolve(event, {})
