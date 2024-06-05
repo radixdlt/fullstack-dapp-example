@@ -230,13 +230,13 @@ mod morph_card_forge {
             morph_card_id: NonFungibleLocalId,
             key_image_url: Url,
         ) {
-            LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
-
-            self.morph_card_resource_manager.update_non_fungible_data(
-                &morph_card_id,
-                "key_image_url",
-                key_image_url,
-            )
+            self.admin_badge.authorize_with_amount(1, || {
+                self.morph_card_resource_manager.update_non_fungible_data(
+                    &morph_card_id,
+                    "key_image_url",
+                    key_image_url,
+                )
+            });
         }
     }
 }

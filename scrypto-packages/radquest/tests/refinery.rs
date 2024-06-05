@@ -356,12 +356,8 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
     };
 
     let data = format!(
-        "{}{}{}{}{}",
-        morph_card_data.energy,
-        radgem_a_data.material,
-        radgem_a_data.color,
-        radgem_b_data.color,
-        key_image_url.as_str(),
+        "{}{}{}{}",
+        morph_card_data.energy, radgem_a_data.material, radgem_a_data.color, radgem_b_data.color,
     );
 
     let key_hash = keccak256_hash(data.as_bytes());

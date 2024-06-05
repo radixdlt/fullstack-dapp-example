@@ -318,11 +318,12 @@ fn can_update_card_key_image() -> Result<(), RuntimeError> {
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
     let morph_card =
         morph_card_forge.mint_fixed_card(card_name, UserId("<test>".to_string()), &mut env)?;
+    let admin_badge_proof = LocalAuthZone::pop(&mut env)?.unwrap();
 
     let key_image_url = UncheckedUrl("https://www.example.com".to_string());
     let morph_card_id = morph_card.non_fungible_local_ids(&mut env)?.pop().unwrap();
 
-    // LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
     morph_card_forge.update_key_image_url(
         morph_card_id.clone(),
         key_image_url.clone(),
