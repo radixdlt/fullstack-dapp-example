@@ -41,9 +41,9 @@
     glossaryItem={glossaryItem || undefined}
     dialog={$jettyDialog}
     {disabled}
-    on:close-glossary={() => {
+    onCloseGlossary={async () => {
       $page.url.searchParams.delete('glossaryAnchor')
-      goto(`?${$page.url.searchParams.toString()}`)
+      await goto(`?${$page.url.searchParams.toString()}`)
     }}
     on:notification-opened={markLatestNotificationAsSeen}
   />
