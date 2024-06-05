@@ -137,6 +137,10 @@
     :global(img) {
       max-width: 100%;
     }
+
+    :global(a) {
+      text-decoration: underline;
+    }
   }
 
   .intro-footer {
