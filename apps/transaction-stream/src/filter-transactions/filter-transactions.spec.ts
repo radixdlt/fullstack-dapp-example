@@ -209,9 +209,9 @@ describe('filter transactions', () => {
     const relevantEvents = Object.values(filteredTransactions[0].relevantEvents)
     expect(relevantEvents).lengthOf(2)
 
-    const [withdraw, mintElement] = relevantEvents
+    const [withdraw, jettySwap] = relevantEvents
     expect(withdraw.name).toBe('WithdrawEvent')
-    expect(mintElement.name).toBe('MintFungibleResourceEvent')
+    expect(jettySwap.name).toBe('JettySwapEvent')
   })
 
   it('should add tracked address and validate that it exists in redis', async () => {

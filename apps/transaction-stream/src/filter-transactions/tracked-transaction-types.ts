@@ -66,6 +66,9 @@ const fungibleMinted = (resource: string) => (event: EventsItem) => {
     (event.emitter as EventEmitter)?.entity?.entity_address === resource
   )
 }
+const jettySwapEvent = (event: EventsItem) => {
+  return event.name === 'JettySwapEvent'
+}
 
 export const getTrackedTransactionTypes = (): TrackedTransactions => ({
   [EventId.QuestRewardDeposited]: {
@@ -116,6 +119,6 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
   },
   [EventId.JettySwap]: {
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress),
-    MintFungibleResourceEvent: fungibleMinted(config.radQuest.resources.elementAddress)
+    JettySwapEvent: jettySwapEvent
   }
 })

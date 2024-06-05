@@ -25,14 +25,20 @@ export default [
               is_global: false,
               entity_type: 'InternalFungibleVault',
               entity_address:
-                'internal_vault_tdx_2_1tz9nfr6fh9c369sxsmh6ag5cdgvepzj8p4yxwfp7ffdh8h6l2h49k4'
+                'internal_vault_tdx_2_1tqqg6m7lvua8p9p9tfzdhag430k662a4n78pmvchqjchmrracp695r'
             },
             object_module_id: 'Main'
           },
           data: {
-            fields: [{ value: '0.7241561751275', kind: 'Decimal', field_name: 'amount' }],
             kind: 'Tuple',
-            type_name: 'LockFeeEvent'
+            type_name: 'LockFeeEvent',
+            fields: [
+              {
+                kind: 'Decimal',
+                field_name: 'amount',
+                value: '0.7341158149415'
+              }
+            ]
           }
         },
         {
@@ -43,14 +49,20 @@ export default [
               is_global: false,
               entity_type: 'InternalFungibleVault',
               entity_address:
-                'internal_vault_tdx_2_1tzsz2ksn28wvf0sz7nxs4jjrvhhsr52ehl90m0y5mxkhykuh30t4vt'
+                'internal_vault_tdx_2_1tzaz6k8d58fphgl3z29p23n7jf64q7wnzcev2rl3xhwltcj6e2rndq'
             },
             object_module_id: 'Main'
           },
           data: {
-            fields: [{ value: '1', kind: 'Decimal', field_name: 'amount' }],
             kind: 'Tuple',
-            type_name: 'WithdrawEvent'
+            type_name: 'WithdrawEvent',
+            fields: [
+              {
+                kind: 'Decimal',
+                field_name: 'amount',
+                value: '1'
+              }
+            ]
           }
         },
         {
@@ -66,18 +78,21 @@ export default [
             object_module_id: 'Main'
           },
           data: {
+            kind: 'Enum',
+            type_name: 'WithdrawEvent',
             variant_id: 0,
             variant_name: 'Fungible',
             fields: [
               {
-                value: 'resource_tdx_2_1thhecsamda2fsql9rqrth0rnlee8k6049n6dgswvj7g99rfe9u5nd5',
                 kind: 'Reference',
-                type_name: 'ResourceAddress'
+                type_name: 'ResourceAddress',
+                value: 'resource_tdx_2_1thhecsamda2fsql9rqrth0rnlee8k6049n6dgswvj7g99rfe9u5nd5'
               },
-              { value: '1', kind: 'Decimal' }
-            ],
-            kind: 'Enum',
-            type_name: 'WithdrawEvent'
+              {
+                kind: 'Decimal',
+                value: '1'
+              }
+            ]
           }
         },
         {
@@ -88,14 +103,20 @@ export default [
               is_global: false,
               entity_type: 'InternalFungibleVault',
               entity_address:
-                'internal_vault_tdx_2_1tpgqe8p85my5teky887vw2zk7mkd5x23nq8jjrwqd3n49j0svmn0ft'
+                'internal_vault_tdx_2_1tr78e9m7lqnd65jp30wcpzht7rhlqkexptx4c9z8w55qav6pkfcm7j'
             },
             object_module_id: 'Main'
           },
           data: {
-            fields: [{ value: '1', kind: 'Decimal', field_name: 'amount' }],
             kind: 'Tuple',
-            type_name: 'DepositEvent'
+            type_name: 'DepositEvent',
+            fields: [
+              {
+                kind: 'Decimal',
+                field_name: 'amount',
+                value: '1'
+              }
+            ]
           }
         },
         {
@@ -111,9 +132,33 @@ export default [
             object_module_id: 'Main'
           },
           data: {
-            fields: [{ value: '1', kind: 'Decimal', field_name: 'amount' }],
             kind: 'Tuple',
-            type_name: 'MintFungibleResourceEvent'
+            type_name: 'MintFungibleResourceEvent',
+            fields: [
+              {
+                kind: 'Decimal',
+                field_name: 'amount',
+                value: '1'
+              }
+            ]
+          }
+        },
+        {
+          name: 'JettySwapEvent',
+          emitter: {
+            type: 'Method',
+            entity: {
+              is_global: true,
+              entity_type: 'GlobalGenericComponent',
+              entity_address:
+                'component_tdx_2_1crf6zr9krdcr92u0nfwsdyxma9jl7g97sqpulhshm2l0rcyfpkmlzg'
+            },
+            object_module_id: 'Main'
+          },
+          data: {
+            kind: 'Tuple',
+            type_name: 'JettySwapEvent',
+            fields: []
           }
         },
         {
@@ -124,14 +169,20 @@ export default [
               is_global: false,
               entity_type: 'InternalFungibleVault',
               entity_address:
-                'internal_vault_tdx_2_1tpnt84q9vlmlvl69f7496uup2w9lp55acw7lms5auvu4jx7xr9tvvq'
+                'internal_vault_tdx_2_1tzyp8pjcszrc587fr53z50wgrct9l6fam6jmez73jdnwz2pa2jdd4g'
             },
             object_module_id: 'Main'
           },
           data: {
-            fields: [{ value: '1', kind: 'Decimal', field_name: 'amount' }],
             kind: 'Tuple',
-            type_name: 'DepositEvent'
+            type_name: 'DepositEvent',
+            fields: [
+              {
+                kind: 'Decimal',
+                field_name: 'amount',
+                value: '1'
+              }
+            ]
           }
         },
         {
@@ -142,23 +193,26 @@ export default [
               is_global: true,
               entity_type: 'GlobalVirtualEd25519Account',
               entity_address:
-                'account_tdx_2_129gm7z2uacm7y2cr3ank5npe842kkwyhe9j3wjs6h4rxrmq99d0u8n'
+                'account_tdx_2_12xurxxckyd7zqvwdvgqq53zvhzaezch7treukarxyywmqlqd76eh65'
             },
             object_module_id: 'Main'
           },
           data: {
+            kind: 'Enum',
+            type_name: 'DepositEvent',
             variant_id: 0,
             variant_name: 'Fungible',
             fields: [
               {
-                value: 'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72',
                 kind: 'Reference',
-                type_name: 'ResourceAddress'
+                type_name: 'ResourceAddress',
+                value: 'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72'
               },
-              { value: '1', kind: 'Decimal' }
-            ],
-            kind: 'Enum',
-            type_name: 'DepositEvent'
+              {
+                kind: 'Decimal',
+                value: '1'
+              }
+            ]
           }
         },
         {
@@ -169,14 +223,20 @@ export default [
               is_global: false,
               entity_type: 'InternalFungibleVault',
               entity_address:
-                'internal_vault_tdx_2_1tz9nfr6fh9c369sxsmh6ag5cdgvepzj8p4yxwfp7ffdh8h6l2h49k4'
+                'internal_vault_tdx_2_1tqqg6m7lvua8p9p9tfzdhag430k662a4n78pmvchqjchmrracp695r'
             },
             object_module_id: 'Main'
           },
           data: {
-            fields: [{ value: '0.58249652923', kind: 'Decimal', field_name: 'amount' }],
             kind: 'Tuple',
-            type_name: 'PayFeeEvent'
+            type_name: 'PayFeeEvent',
+            fields: [
+              {
+                kind: 'Decimal',
+                field_name: 'amount',
+                value: '0.59115708559'
+              }
+            ]
           }
         },
         {
@@ -192,9 +252,15 @@ export default [
             object_module_id: 'Main'
           },
           data: {
-            fields: [{ value: '0.291248264615', kind: 'Decimal', field_name: 'amount' }],
             kind: 'Tuple',
-            type_name: 'DepositEvent'
+            type_name: 'DepositEvent',
+            fields: [
+              {
+                kind: 'Decimal',
+                field_name: 'amount',
+                value: '0.295578542795'
+              }
+            ]
           }
         },
         {
@@ -210,9 +276,15 @@ export default [
             object_module_id: 'Main'
           },
           data: {
-            fields: [{ value: '0.291248264615', kind: 'Decimal', field_name: 'amount' }],
             kind: 'Tuple',
-            type_name: 'BurnFungibleResourceEvent'
+            type_name: 'BurnFungibleResourceEvent',
+            fields: [
+              {
+                kind: 'Decimal',
+                field_name: 'amount',
+                value: '0.295578542795'
+              }
+            ]
           }
         }
       ]
