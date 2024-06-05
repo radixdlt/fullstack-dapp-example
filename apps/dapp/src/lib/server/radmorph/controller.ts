@@ -100,7 +100,10 @@ export const RadmorphController = ({
         .map((imageUrl) => ({ data: { imageUrl }, httpResponseCode: 200 }))
     )
 
-  const addChunksToQueue = (ctx: ControllerMethodContext, chunks: [string, string][][]) =>
+  const addChunksToQueue = (
+    ctx: ControllerMethodContext,
+    chunks: { id: string; url: string }[][]
+  ) =>
     ResultAsync.fromPromise(
       systemQueue.addBulk(
         chunks.map((chunk) => ({
@@ -108,7 +111,7 @@ export const RadmorphController = ({
           data: {
             traceId: ctx.traceId,
             type: SystemJobType.PopulateRadmorphs,
-            data: chunk.map(([id, url]) => ({ url, id }))
+            data: chunk
           }
         }))
       ),
@@ -130,8 +133,16 @@ export const RadmorphController = ({
   const uploadRadmorphConfiguration = (ctx: ControllerMethodContext, requestBody: unknown) => {
     return validateRadmorphConfiguration(requestBody)
       .map((configuration) => duplicateConfigurationWithReversedColors(configuration))
-      .map((configuration) => chunk(Object.entries(configuration), RADMORPH_CHUNK_SIZE))
-      .asyncAndThen((chunks) => addChunksToQueue(ctx, chunks))
+      .map((items) => Object.entries(items).map(([id, url]) => ({ id, url })))
+      .asyncAndThen((chunks) => radMorphModel(ctx.logger).addMany(chunks))
+      .map(() => ({ data: {}, httpResponseCode: 200 }))
+  }
+
+  const populateImageOracle = (ctx: ControllerMethodContext) => {
+    return radMorphModel(ctx.logger)
+      .list()
+      .map((items) => chunk(items, RADMORPH_CHUNK_SIZE))
+      .andThen((chunks) => addChunksToQueue(ctx, chunks))
       .map(() => ({ data: {}, httpResponseCode: 200 }))
   }
 
@@ -143,7 +154,8 @@ export const RadmorphController = ({
   return {
     getRadmorphImage,
     getRadmorphImageNoAuth,
-    uploadRadmorphConfiguration
+    uploadRadmorphConfiguration,
+    populateImageOracle
   }
 }
 

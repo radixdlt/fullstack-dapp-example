@@ -24,6 +24,17 @@ export const RadMorphModel = (db: PrismaClient) => (logger?: AppLogger) => {
       }
     )
 
+  const list = () =>
+    ResultAsync.fromPromise(
+      db.radMorphImage.findMany({
+        where: {}
+      }),
+      (error) => {
+        logger?.error({ error, method: 'list', model: 'RadMorphModel' })
+        return createApiError('failed to get radmorphs', 400)()
+      }
+    )
+
   const getUrl = ({
     shape,
     material,
@@ -56,6 +67,7 @@ export const RadMorphModel = (db: PrismaClient) => (logger?: AppLogger) => {
 
   return {
     getUrl,
-    addMany
+    addMany,
+    list
   }
 }
