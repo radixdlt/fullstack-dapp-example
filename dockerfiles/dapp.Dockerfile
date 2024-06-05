@@ -26,6 +26,8 @@ RUN npm install
 
 COPY --from=prepare-build /app/out/full/ .
 
+COPY turbo.json turbo.json
+
 RUN npx turbo run build --filter=dapp
 RUN npx turbo run build:storybook --filter=dapp
 
