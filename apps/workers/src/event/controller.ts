@@ -407,7 +407,10 @@ export const EventWorkerController = ({
         return handleQuestWithTrackedAccount(
           maybeAccountAddress,
           'SwapQuest',
-          ({ isAllCompleted }) => isAllCompleted
+          ({ completedRequirements }) =>
+            !!completedRequirements.filter(
+              ({ requirementId }) => requirementId === EventId.JettySwap
+            ).length
         )
       }
 
