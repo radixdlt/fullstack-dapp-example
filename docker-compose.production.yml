@@ -105,3 +105,25 @@ services:
       - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
       - PUBLIC_LOG_LEVEL=debug
     command: pm2-runtime apps/jetty-swap/build/index.js
+
+  admin:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/admin.Dockerfile
+      target: application
+      args:
+        - PUBLIC_NETWORK_ID=2
+        - PUBLIC_LOG_LEVEL=debug
+    expose:
+      - '3002'
+    ports:
+      - '3002:3002'
+    environment:
+      - PORT=3002
+      - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
+      - PUBLIC_RADQUEST_API_URL=${PUBLIC_RADQUEST_API_URL}
+      - PUBLIC_LOG_LEVEL=debug
+      - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    command: pm2-runtime apps/admin/build/index.js
