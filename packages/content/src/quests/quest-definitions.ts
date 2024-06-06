@@ -237,12 +237,8 @@ export const QuestDefinitions = () => {
         LearnAboutDexes: {
           type: 'content'
         },
-        SwapTokensOnJettySwap: {
-          eventName: 'SwapTokensOnJettySwap',
-          type: 'event'
-        },
-        SwapTokensOnLettySwap: {
-          eventName: 'SwapTokensOnLettySwap',
+        [EventId.JettySwap]: {
+          eventName: 'JettySwapEvent',
           type: 'event'
         }
       }
