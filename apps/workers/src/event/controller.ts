@@ -399,7 +399,7 @@ export const EventWorkerController = ({
         return handleQuestWithTrackedAccount(maybeAccountAddress, 'StakingQuest')
       }
 
-      case EventId.JettySwapEvent: {
+      case EventId.JettySwap: {
         const maybeAccountAddress: string | undefined = (
           job.data.relevantEvents['WithdrawEvent'].emitter as any
         ).entity.entity_address
