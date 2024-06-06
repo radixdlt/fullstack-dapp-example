@@ -19,8 +19,8 @@
       {/each}
     </div>
     <div class="button">
-      <Button on:click={onClose} variation="secondary">
-        {$i18n.t('main:swap-modal.button')}
+      <Button --width="9rem" on:click={onClose} variation="secondary">
+        {$i18n.t('main:modal.button')}
       </Button>
     </div>
   </div>

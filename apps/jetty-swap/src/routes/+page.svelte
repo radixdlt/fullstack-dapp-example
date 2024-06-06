@@ -3,55 +3,210 @@
   import Jetty from '../images/jetty.webp'
   import JettySwap from '../images/jetty-swap.webp'
   import JettyGlow from '../images/jetty-glow.webp'
-  import Clam from '../images/clam.png'
-  import Element from '../images/fragment.png'
   import Icon from '$lib/components/icon/Icon.svelte'
   import TokenSwapInput from '$lib/components/tokenSwapInput/TokenSwapInput.svelte'
   import ArrowDownIcon from '../lib/components/icon/ArrowDown.svelte'
   import Button from '$lib/components/button/Button.svelte'
-  import { walletData } from '$lib/stores'
   import { allowOnlyPositiveNumberInString } from '$lib/tools'
+  import { entityToResource } from '$lib/utils/entityToResource'
+  import { onMount } from 'svelte'
+  import { DataRequestBuilder, RadixDappToolkit } from '@radixdlt/radix-dapp-toolkit'
+  import { jettySwapDefinitionAddress } from '$lib/constants'
+  import { type FungibleResourcesCollectionItemVaultAggregated } from '@radixdlt/babylon-gateway-api-sdk'
+  import { rdt, walletData, gatewayApi } from '$lib/stores'
+  import { Addresses, GatewayApi } from 'common'
+  import { ok } from 'neverthrow'
+  import { PUBLIC_NETWORK_ID } from '$env/static/public'
+  import type { Resource, SwappedResource } from '../types'
+  import { getBalanceChange } from '$lib/utils/previewTranasction'
+  import { createSwapManifest } from '$lib/utils/createSwapManifest'
+  import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
+  import SwapResult from '$lib/components/swapResult/SwapResult.svelte'
 
-  const clamResource = { icon: Clam, name: 'Clam', id: '1' }
-  const elementResource = { icon: Element, name: 'Element', id: '2' }
-  let conversionRateClams = 2
-  let conversionRateElements = 1
+  let clamResource: Resource | undefined
+  let elementResource: Resource | undefined
 
-  let fromResource = clamResource
-  let toResource = elementResource
+  $: swapButtonLoading = false
+  let swapResult: SwappedResource | undefined = undefined
+  let modal: 'success' | 'failure' | undefined = undefined
+
+  let conversionRateFrom = '1'
+  let conversionRateTo = '2'
+
   let fromInput = ''
   let toInput = ''
-  //todo placeholders for now
-  let conversionRateFrom = conversionRateElements
-  let conversionRateTo = conversionRateClams
 
   $: fromInput = allowOnlyPositiveNumberInString(fromInput.toString())
-  $: toInput = allowOnlyPositiveNumberInString(toInput.toString())
-
   $: connected = !!$walletData?.accounts[0]
   $: arrowFill = connected ? 'var(--color-primary)' : 'var(--color-dark)'
+
+  let balances: FungibleResourcesCollectionItemVaultAggregated[] = []
+  $: currentBalance =
+    balances.find((b) => b.resource_address === clamResource?.id)?.vaults.items[0].amount ?? 0
+  $: enoughBalance = +currentBalance >= +fromInput
+
+  const addresses = Addresses(parseInt(PUBLIC_NETWORK_ID, 0))
+  const turnEntityIntoObject = entityToResource(addresses.resources.clamAddress)
+
+  const updateBalances = async (walletAddress?: string) => {
+    /* Logged out, reset balances */
+    if (!walletAddress) {
+      balances = []
+      return
+    }
+
+    const details = await ($gatewayApi as GatewayApi).callApi('getEntityDetailsVaultAggregated', [
+      walletAddress
+    ])
+    if (details.isOk()) {
+      balances = details.value[0].fungible_resources.items.filter((item) =>
+        [elementResource, clamResource].some((resource) => resource?.id === item.resource_address)
+      )
+    }
+  }
+
+  onMount(async () => {
+    //todo update
+    const jettySwapConfig = {
+      // networkId is 2 for Stokenet, 1 for Mainnet
+      networkId: +PUBLIC_NETWORK_ID,
+      applicationVersion: '1.0.0',
+      applicationName: 'Jetty Swap',
+      applicationDappDefinitionAddress: jettySwapDefinitionAddress
+    }
+
+    $rdt = RadixDappToolkit(jettySwapConfig)
+    $gatewayApi = GatewayApi(parseInt(PUBLIC_NETWORK_ID, 0))
+    $rdt?.walletApi.setRequestData(DataRequestBuilder.accounts().exactly(1))
+    $rdt?.walletApi.walletData$.subscribe((data) => {
+      $walletData = data
+      updateBalances(data?.accounts[0]?.address)
+    })
+
+    try {
+      const [elementMetadataResult, clamMetadataResult] = await Promise.all([
+        $gatewayApi.callApi('getEntityMetadata', addresses.resources.elementAddress),
+        $gatewayApi.callApi('getEntityMetadata', addresses.resources.clamAddress)
+      ])
+
+      if (elementMetadataResult.isOk()) {
+        elementResource = turnEntityIntoObject(elementMetadataResult.value)
+      }
+      if (clamMetadataResult.isOk()) {
+        clamResource = turnEntityIntoObject(clamMetadataResult.value)
+      }
+
+      if (!$walletData?.accounts[0]?.address) return
+      await updateBalances($walletData?.accounts[0].address)
+
+      if (!elementResource || !clamResource || !currentBalance) return
+
+      const receiveAmount = await getBalanceChange({
+        amount: conversionRateFrom,
+        fromTokenAddress: clamResource.id,
+        toTokenAddress: elementResource.id,
+        swapComponent: addresses.components.jettySwap,
+        userAddress: $walletData?.accounts[0].address
+      })
+
+      conversionRateTo = receiveAmount
+    } catch (error) {
+      //todo error handling
+    }
+  })
+
+  let timer: NodeJS.Timeout
+  const debounce = (amount: string) => {
+    if (fromInput === '') return
+
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      swapButtonLoading = true
+      getBalanceChange({
+        amount,
+        fromTokenAddress: clamResource?.id as string,
+        toTokenAddress: elementResource?.id as string,
+        swapComponent: addresses.components.jettySwap,
+        userAddress: $walletData?.accounts[0].address as string
+      })
+        .then((amount) => {
+          toInput = amount
+        })
+        .finally(() => {
+          swapButtonLoading = false
+        })
+    }, 750)
+  }
+
+  $: debounce(fromInput)
+
+  const onSwap = async () => {
+    if (!elementResource || !clamResource || !$walletData?.accounts[0]) return
+    swapButtonLoading = true
+    $rdt?.walletApi
+      .sendTransaction({
+        transactionManifest: createSwapManifest({
+          amount: fromInput,
+          fromTokenAddress: clamResource.id,
+          toTokenAddress: elementResource.id,
+          swapComponent: addresses.components.jettySwap,
+          userAddress: $walletData.accounts[0]?.address
+        })
+      })
+      .map(() => {
+        modal = 'success'
+        swapResult = { ...(elementResource as Resource), count: toInput }
+        updateBalances($walletData?.accounts[0].address as string)
+      })
+      .andThen(() => {
+        swapButtonLoading = false
+        return ok('')
+      })
+  }
 </script>
+
+{#if modal === 'failure'}
+  <Backdrop>
+    <SwapResult
+      onClose={() => (modal = undefined)}
+      title={$i18n.t('main:modal.failure-title')}
+      subtitle={$i18n.t('main:modal.failure-desc')}
+    />
+  </Backdrop>
+{/if}
+{#if modal === 'success'}
+  <Backdrop>
+    <SwapResult
+      onClose={() => (modal = undefined)}
+      title={$i18n.t('main:modal.success-title')}
+      subtitle={$i18n.t('main:modal.success-desc', {
+        count: +(swapResult?.count ?? '0'),
+        resource: swapResult?.name
+      })}
+    />
+  </Backdrop>
+{/if}
 
 <section>
   <div class="jetty-img-section">
-    <img src={JettyGlow} class="jetty-img-glow" alt="jetty glow" />
-    <img src={Jetty} class="jetty-img" alt="jetty img" />
+    <img src={JettyGlow} class="jetty-img-glow" alt="jetty-glow" />
+    <img src={Jetty} class="jetty-img" alt="jetty-img" />
   </div>
   <div class="swap-card">
     <div>
       <div class="swap-card-header">
-        <img class="jetty-swap-img" src={JettySwap} />
+        <img class="jetty-swap-img" src={JettySwap} alt="jetty-swap-logo" />
         <div class="market-price">
           <div>{@html $i18n.t('main:marketplace-estimates')}</div>
           <div class="row">
             <span class="row">
               {conversionRateFrom}
-              <Icon --size="18px" url={fromResource.icon} />
+              <Icon --size="18px" url={clamResource?.icon ?? ''} />
             </span>
             =
             <span class="row">
               {conversionRateTo}
-              <Icon --size="18px" url={toResource.icon} />
+              <Icon --size="18px" url={elementResource?.icon ?? ''} />
             </span>
           </div>
         </div>
@@ -60,15 +215,30 @@
         <TokenSwapInput
           bind:value={fromInput}
           cardTitle={$i18n.t('main:from')}
-          resource={fromResource}
-        ></TokenSwapInput>
+          resource={clamResource}
+          state={enoughBalance ? 'default' : 'error'}
+        >
+          {#if !enoughBalance}
+            <p class="error-text">
+              {$i18n.t('main:not-enough-resource', { resource: clamResource?.name })}
+            </p>
+          {/if}
+        </TokenSwapInput>
         <div class="switch-button-wrapper">
-          <div class:disabled={false} class="switch">
+          <div class:disabled={!connected} class="switch">
             <ArrowDownIcon fill={arrowFill} />
           </div>
         </div>
-        <TokenSwapInput bind:value={toInput} cardTitle={$i18n.t('main:to')} resource={toResource}
-        ></TokenSwapInput>
+        <TokenSwapInput
+          bind:value={toInput}
+          cardTitle={$i18n.t('main:to')}
+          resource={elementResource}
+        >
+          <p class="estimated-amount">
+            <span class="estimated-amount-bold">{$i18n.t('main:estimated-amount-pt1')}</span>
+            {$i18n.t('main:estimated-amount-pt2')}
+          </p>
+        </TokenSwapInput>
       </div>
     </div>
     <div class="guarantee-text">
@@ -76,7 +246,12 @@
       <p>{$i18n.t('main:guarantee-hint-part-2')}</p>
     </div>
     <div class="swap-button">
-      <Button width="100%" disabled={!connected}>
+      <Button
+        --width="100%"
+        on:click={onSwap}
+        disabled={!connected || !fromInput || !enoughBalance}
+        loading={swapButtonLoading}
+      >
         <p>
           {connected
             ? $i18n.t('main:swap-button.swap')
@@ -88,8 +263,7 @@
 </section>
 
 <style lang="scss">
-  p,
-  h3 {
+  p {
     padding: 0;
     margin: 0;
   }
@@ -217,13 +391,32 @@
     height: 2.6875rem;
     width: 2.6875rem;
     background: var(--color-linen);
-    &:not(.disabled) {
-    }
   }
 
-  svg {
-    fill: red;
+  .switch {
+    display: flex;
+    white-space: nowrap;
+    padding: 0.8rem;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--border-radius-3xl);
+    height: 2.6875rem;
+    width: 2.6875rem;
+    background: var(--color-linen);
   }
+
+  .estimated-amount {
+    color: var(--color-background-dark);
+    font-family: var(--font-main);
+    font-size: var(--text-sm);
+    font-style: normal;
+    font-weight: var(--font-weight-regular);
+  }
+
+  .estimated-amount-bold {
+    font-weight: var(--font-weight-bold);
+  }
+
   .guarantee-text {
     font-size: var(--text-xs);
     font-weight: var(--font-weight-regular);

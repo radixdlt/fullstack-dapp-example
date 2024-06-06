@@ -35,13 +35,15 @@
     "svelte-check": "^3.6.0",
     "tslib": "^2.4.1",
     "typescript": "^5.0.0",
-    "vite": "^5.2.9"
+    "vite": "^5.2.9",
+    "common": "*"
   },
   "type": "module",
   "dependencies": {
     "@radixdlt/babylon-gateway-api-sdk": "^1.4.1",
     "@radixdlt/radix-dapp-toolkit": "^2.0.0-v2.21",
     "i18next": "^23.8.2",
+    "neverthrow": "^6.2.1",
     "svelte-i18next": "^2.2.2"
   }
 }
