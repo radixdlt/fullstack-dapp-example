@@ -11,9 +11,12 @@
   import type { Quests } from 'content'
 
   export let questId: keyof Quests
-
-  let state: 'loading' | 'hasUserBadge' | 'canAcceptUserBadge' | 'updateDepositRules' | 'minted' =
-    'loading'
+  export let state:
+    | 'loading'
+    | 'hasUserBadge'
+    | 'canAcceptUserBadge'
+    | 'updateDepositRules'
+    | 'minted' = 'loading'
 
   let mintingInProgress = false
 

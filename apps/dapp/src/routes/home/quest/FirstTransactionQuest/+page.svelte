@@ -10,6 +10,7 @@
   import { readable, writable } from 'svelte/store'
   import TextJettyPage from '../TextJettyPage.svelte'
   import type { Quests } from 'content'
+  import type { ComponentProps } from 'svelte'
 
   export let data: PageData
 
@@ -67,6 +68,8 @@
       })
       .mapErr(() => (verifyOtpError = true))
   }
+
+  let mintBadgeState: ComponentProps<DepositUserBadge>['state']
 </script>
 
 <Quest
@@ -219,7 +222,12 @@
   {/if}
 
   {#if render('depositUserBadge')}
-    {@html text['8a.md']}
+    {#if mintBadgeState === 'updateDepositRules'}
+      {@html text['8b.md']}
+    {:else}
+      {@html text['8a.md']}
+    {/if}
+
     <!-- TODO: use 8b.md conditionally -->
     <DepositUserBadge
       on:deposited={() => {
@@ -227,6 +235,7 @@
         next()
       }}
       questId={data.id}
+      bind:state={mintBadgeState}
     />
   {/if}
 
