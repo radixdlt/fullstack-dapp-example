@@ -62,7 +62,7 @@
     background-size: contain;
     background-image: linear-gradient(transparent 30%, var(--color-light) 50%),
       var(--background-image), var(--gradient-5);
-    background-position-y: 1.5rem;
+    background-position-y: 2.5rem;
 
     @media (max-width: 25rem) {
       width: 84vw;
