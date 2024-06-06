@@ -3,9 +3,14 @@ import DepositUserBadge from '../fixtures/transactions/deposit-user-badge'
 import QuestRewardsEvents from '../fixtures/transactions/quest-rewards-events'
 import NotSupportedTx from '../fixtures/transactions/not-supported-tx'
 import StakedXrdTx from '../fixtures/transactions/staked-xrd'
+import JettySwap from '../fixtures/transactions/jetty-swap'
 import MintInstapassBadge from '../fixtures/transactions/mint-instapass-badge'
 import MayaRouterWithdraw from '../fixtures/transactions/maya-router-withdraw'
-import { getTrackedTransactionTypes, resourceWithdrawn } from './tracked-transaction-types'
+import {
+  getTrackedTransactionTypes,
+  jettySwapEvent,
+  resourceWithdrawn
+} from './tracked-transaction-types'
 import { AccountAddressModel, EventId } from 'common'
 import { FilterTransactionsByType } from './filter-transactions-by-type'
 import { FilterTransactionsByAccountAddress } from './filter-transactions-by-account-address'
@@ -19,8 +24,9 @@ let accountAddressModel: AccountAddressModel
 const trackedTransactionTypes = getTrackedTransactionTypes()
 let filterTransactionsByType = FilterTransactionsByType(trackedTransactionTypes)
 let filterTransactionByAccountAddress: FilterTransactionsByAccountAddress
-const stakingAddress = 'account_tdx_2_12ys6rt7m4zsut5fpm77melt0wl3kj659vv59xzm4dduqtqse4fv7wa'
-const stakingUserId = '555'
+const stakingAndSwapAddress =
+  'account_tdx_2_12ys6rt7m4zsut5fpm77melt0wl3kj659vv59xzm4dduqtqse4fv7wa'
+const stakingAndSwapUserId = '555'
 
 describe('filter transactions', () => {
   beforeAll(async () => {
@@ -117,20 +123,20 @@ describe('filter transactions', () => {
 
   it('should add tracked address and validate that it exists in redis', async () => {
     const addActiveQuestResult = await accountAddressModel.addTrackedAddress(
-      stakingAddress,
+      stakingAndSwapAddress,
       'StakingQuest',
-      stakingUserId
+      stakingAndSwapUserId
     )
 
     if (addActiveQuestResult.isErr()) throw addActiveQuestResult.error
 
     const trackedAdress = await accountAddressModel.getTrackedAddressUserId(
-      stakingAddress,
+      stakingAndSwapAddress,
       'StakingQuest'
     )
 
     if (trackedAdress.isErr()) throw trackedAdress.error
-    else expect(trackedAdress.value).toBe(stakingUserId)
+    else expect(trackedAdress.value).toBe(stakingAndSwapUserId)
   })
 
   it('should filter XrdStaked when user is in redis', async () => {
@@ -195,5 +201,89 @@ describe('filter transactions', () => {
     expect(CombineElementsMintedRadgem.transactionId).toBeDefined()
     expect(CombineElementsMintedRadgem.type).toEqual('CombineElementsMintedRadgem')
     expect(CombineElementsMintedRadgem.relevantEvents.MintedRadgemEvent).toBeDefined()
+  })
+  it('should find JettySwap transaction', () => {
+    const filterResult = filterTransactionsByType([...JettySwap, ...NotSupportedTx])
+
+    if (filterResult.isErr()) throw filterResult.error
+
+    const filteredTransactions = filterResult.value
+    expect(filteredTransactions).lengthOf(1)
+
+    const relevantEvents = Object.values(filteredTransactions[0].relevantEvents)
+    expect(relevantEvents).lengthOf(2)
+
+    const [withdraw, jettySwap] = relevantEvents
+    expect(withdraw.name).toBe('WithdrawEvent')
+    expect(jettySwap.name).toBe('JettySwapEvent')
+  })
+
+  it('should add tracked address and validate that it exists in redis', async () => {
+    const addActiveQuestResult = await accountAddressModel.addTrackedAddress(
+      stakingAndSwapAddress,
+      'SwapQuest',
+      stakingAndSwapUserId
+    )
+
+    if (addActiveQuestResult.isErr()) throw addActiveQuestResult.error
+
+    const trackedAdress = await accountAddressModel.getTrackedAddressUserId(
+      stakingAndSwapAddress,
+      'SwapQuest'
+    )
+
+    if (trackedAdress.isErr()) throw trackedAdress.error
+    else expect(trackedAdress.value).toBe(stakingAndSwapUserId)
+  })
+
+  it('should filter JettySwap when user is in redis', async () => {
+    const swap1 = { ...JettySwap[0] }
+    /* Override entity address to not match the one in redis */
+    const swap2 = {
+      ...JettySwap[0],
+      receipt: {
+        ...JettySwap[0].receipt,
+        events: JettySwap[0].receipt?.events?.map((e) => {
+          if (!resourceWithdrawn(config.radQuest.resources.clamAddress)(e)) return e
+          return {
+            ...e,
+            emitter: {
+              ...e.emitter,
+              entity: { ...(e.emitter as any).entity, entity_address: '123' }
+            }
+          }
+        })
+      }
+    }
+
+    const result = filterTransactionsByType([swap1, swap2])
+    if (result.isErr()) throw result.error
+    const result2 = await Promise.all(result.value.map(filterTransactionByAccountAddress))
+    const txs = result2.filter((r) => !!r)
+    expect(txs).lengthOf(1)
+    expect(txs[0]).toEqual(result.value[0])
+  })
+
+  it('should filter JettySwap when user is in redis', async () => {
+    const swap2 = {
+      ...JettySwap[0],
+      receipt: {
+        ...JettySwap[0].receipt,
+        events: JettySwap[0].receipt?.events?.map((e) => {
+          if (!jettySwapEvent(e)) return e
+          return {
+            ...e,
+            emitter: {
+              ...e.emitter,
+              entity: { ...(e.emitter as any).entity, entity_address: '123' }
+            }
+          }
+        })
+      }
+    }
+
+    const result = filterTransactionsByType([swap2])
+    if (result.isErr()) throw result.error
+    expect(result.value).lengthOf(0)
   })
 })

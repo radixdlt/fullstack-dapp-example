@@ -26,7 +26,6 @@ export const FilterTransactionsByAccountAddress =
         )
 
         return userId.isOk() && userId.value ? tx : undefined
-
       case EventId.InstapassBadgeDeposited:
         userId = await accountAddressModel.getTrackedAddressUserId(
           (tx.relevantEvents.DepositedEvent.emitter as EventEmitter).entity.entity_address,
@@ -45,6 +44,13 @@ export const FilterTransactionsByAccountAddress =
         userId = await accountAddressModel.getTrackedAddressUserId(maybeAccountAddress, 'MayaQuest')
         return userId.isOk() && userId.value ? tx : undefined
 
+      case EventId.JettySwap:
+        userId = await accountAddressModel.getTrackedAddressUserId(
+          (tx.relevantEvents['WithdrawEvent'].emitter as any).entity.entity_address,
+          'SwapQuest'
+        )
+
+        return userId.isOk() && userId.value ? tx : undefined
       default:
         return tx
     }

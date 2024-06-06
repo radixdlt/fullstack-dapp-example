@@ -60,6 +60,13 @@ const nonFungibleMinted = (resource: string) => (event: EventsItem) =>
   event.name === 'MintNonFungibleResourceEvent' &&
   (event.emitter as EventEmitter)?.entity?.entity_address === resource
 
+export const jettySwapEvent = (event: EventsItem) => {
+  return (
+    event.name === 'JettySwapEvent' &&
+    (event.emitter as EventEmitter).entity.entity_address === config.radQuest.components.jettySwap
+  )
+}
+
 export const getTrackedTransactionTypes = (): TrackedTransactions => ({
   [EventId.QuestRewardDeposited]: {
     RewardDepositedEvent: questRewardsEmitted('RewardDepositedEvent')
@@ -106,5 +113,9 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
   [EventId.InstapassBadgeDeposited]: {
     MintedEvent: nonFungibleMinted(config.radQuest.resources.instapassBadgeAddress),
     DepositedEvent: resourceDeposited(config.radQuest.resources.instapassBadgeAddress)
+  },
+  [EventId.JettySwap]: {
+    WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress),
+    JettySwapEvent: jettySwapEvent
   }
 })

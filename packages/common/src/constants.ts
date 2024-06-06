@@ -74,6 +74,7 @@ export const EventId = {
   MayaRouterWithdrawEvent: 'MayaRouterWithdrawEvent',
   QuestRewardDeposited: 'QuestRewardDeposited',
   QuestRewardClaimed: 'QuestRewardClaimed',
+  JettySwap: 'JettySwap',
   InstapassBadgeDeposited: 'InstapassBadgeDeposited',
   CombineElementsDeposited: 'CombineElementsDeposited',
   CombineElementsMintedRadgem: 'CombineElementsMintedRadgem',
