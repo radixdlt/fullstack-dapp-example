@@ -116,7 +116,10 @@ export const EventWorkerController = ({
       const requirements = Object.keys(questDefinition.requirements)
       return userQuestModel(childLogger)
         .findCompletedRequirements(userId, questId)
-        .map((completedRequirements) => completedRequirements.length === requirements.length)
+        .map((completedRequirements) => ({
+          isAllCompleted: completedRequirements.length === requirements.length,
+          completedRequirements
+        }))
     }
 
     const handleRewardDeposited = () =>
@@ -167,8 +170,8 @@ export const EventWorkerController = ({
     }) => {
       const { badgeId, badgeResourceAddress } = transformUserIdIntoBadgeId(userId)
       return ResultAsync.combine([
-        hasAllRequirementsCompleted(questId, userId).andThen((hasAll) =>
-          hasAll
+        hasAllRequirementsCompleted(questId, userId).andThen((value) =>
+          value.isAllCompleted
             ? transactionModel(childLogger)
                 .add({
                   badgeId,
@@ -187,7 +190,8 @@ export const EventWorkerController = ({
                     traceId
                   })
                 )
-            : okAsync('')
+                .map(() => value)
+            : okAsync(value)
         ),
         messageApi.send(userId, {
           type: MessageType.QuestRequirementCompleted,
@@ -195,13 +199,16 @@ export const EventWorkerController = ({
           requirementId,
           traceId
         })
-      ]).map(() => {
+      ]).map(([hasCompletedAllQuestRequirements]) => {
         childLogger.debug({
           method: `EventWorkerController.handleAllQuestRequirementCompleted.success`,
           questId,
           requirementId,
-          userId
+          userId,
+          hasCompletedAllQuestRequirements
         })
+
+        return hasCompletedAllQuestRequirements
       })
     }
 
@@ -286,7 +293,16 @@ export const EventWorkerController = ({
 
     const handleQuestWithTrackedAccount = (
       maybeAccountAddress: string | undefined,
-      questId: QuestId
+      questId: QuestId,
+      shouldRemoveTrackedAccountAddressFn: (value: {
+        isAllCompleted: boolean
+        completedRequirements: {
+          questId: string
+          userId: string
+          requirementId: string
+          createdAt: Date
+        }[]
+      }) => boolean = () => true
     ) => {
       const accountAddressResult = maybeAccountAddress
         ? ok(maybeAccountAddress)
@@ -308,7 +324,11 @@ export const EventWorkerController = ({
               .exec()
               .andThen(() => handleAllQuestRequirementCompleted(questValues))
           )
-          .andThen(() => accountAddressModel.deleteTrackedAddress(accountAddress, questId))
+          .andThen((value) =>
+            shouldRemoveTrackedAccountAddressFn(value)
+              ? accountAddressModel.deleteTrackedAddress(accountAddress, questId)
+              : okAsync(undefined)
+          )
       )
     }
 
