@@ -23,13 +23,13 @@ enum RewardState {
     Claimed,
 }
 
-#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
+#[derive(ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 enum RewardAmount {
     FungibleAmount(Decimal),
-    NonFungibleAmount(Vec<NonFungibleLocalId>),
+    NonFungibleAmount(IndexSet<NonFungibleLocalId>),
 }
 
-#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
+#[derive(ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 struct RewardInfo {
     resource_address: ResourceAddress,
     reward_amount: RewardAmount,
@@ -109,8 +109,9 @@ mod quest_rewards {
                 RewardState::Unclaimed {
                     ref resources_record,
                 } => {
-                    LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
-                    let kyc_required = self.kyc_oracle.get_user_kyc_requirement(user_id.clone());
+                    let kyc_required = self.admin_badge.authorize_with_amount(1, || {
+                        self.kyc_oracle.get_user_kyc_requirement(user_id.clone())
+                    });
 
                     if resources_record.contains_key(&XRD) && kyc_required {
                         // Check did_badge for KYC validity

@@ -35,6 +35,7 @@ enum RadgemDeposit {
     RadmorphCreatedEvent
 )]
 mod refinery {
+
     enable_method_auth! {
         roles {
             admin => updatable_by: [OWNER];
@@ -259,20 +260,24 @@ mod refinery {
             morph_card.burn();
 
             let pre_hash_string = format!(
-                "{}{}{}{}{}",
+                "{}{}{}{}",
                 morph_card_data.energy,
                 radgem_a_data.material,
                 radgem_a_data.color,
                 radgem_b_data.color,
-                key_image_url.as_str(),
             );
 
             let result = self
                 .image_oracle
-                .get_key_image_url_hash(keccak256_hash(pre_hash_string.as_bytes()))
+                .get_key_image_url_hash(CryptoUtils::keccak256_hash(
+                    pre_hash_string.as_bytes().to_vec(),
+                ))
                 .unwrap();
 
-            assert_eq!(result, keccak256_hash(key_image_url.as_str().as_bytes()));
+            assert_eq!(
+                result,
+                CryptoUtils::keccak256_hash(key_image_url.as_str().as_bytes().to_vec())
+            );
 
             // Mint a RadMorph
             let radmorph = self.radmorph_forge.mint_radmorph(
