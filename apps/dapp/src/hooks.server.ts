@@ -3,11 +3,25 @@ import type { Handle } from '@sveltejs/kit'
 import { config } from '$lib/config'
 import { appLogger } from 'common'
 import { QuestDefinitions } from 'content'
+import { UserType } from 'database'
 
 const NetworkQuestDefinitions = QuestDefinitions()
 
 export const handle: Handle = async ({ event, resolve }) => {
+  const origin = event.request.headers.get('origin')
+
+  if (event.request.method === 'OPTIONS') {
+    return new Response('ok', {
+      headers: {
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Origin': origin || '*',
+        'Access-Control-Allow-Methods': 'OPTIONS,POST',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      }
+    })
+  }
   const traceId = crypto.randomUUID()
+
   event.locals.context = {
     traceId,
     logger: appLogger.child({
@@ -66,11 +80,25 @@ export const handle: Handle = async ({ event, resolve }) => {
       })
     }
 
+    if (event.route.id?.includes('(admin)')) {
+      if (result.value.userType !== UserType.ADMIN) {
+        return new Response(JSON.stringify({ error: 'Unauthorized', status: 403 }), {
+          headers: {
+            'content-type': 'application/json'
+          },
+          status: 403
+        })
+      }
+    }
+
     event.locals.userId = result.value.userId
     event.locals.userType = result.value.userType
     event.locals.authToken = result.value.authToken
 
-    return await resolve(event)
+    const response = await resolve(event)
+    response.headers.set('Access-Control-Allow-Origin', origin || '*')
+    response.headers.set('Access-Control-Allow-Credentials', 'true')
+    return response
   }
 
   const response = await resolve(event, {})

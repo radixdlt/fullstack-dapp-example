@@ -36,7 +36,7 @@ model User {
 
 model RadMorphImage {
   id  String  @id
-  url String  @unique
+  url String
 }
 
 model UserPhoneNumber {

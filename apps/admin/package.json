@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "private": true,
   "scripts": {
-    "dev": "vite dev | npx pino-pretty",
+    "dev": "vite dev --port 5175 | npx pino-pretty",
     "build": "vite build",
     "preview": "vite preview",
     "test": "npm run test:unit",
@@ -52,11 +52,10 @@
   },
   "dependencies": {
     "common": "*",
-    "content": "*",
     "database": "*",
     "flowbite-svelte": "^0.44.24",
     "flowbite-svelte-icons": "^1.6.1",
     "tailwind-merge": "^2.3.0",
-    "typescript-wallet": "*"
+    "queues": "*"
   }
 }

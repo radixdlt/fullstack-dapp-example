@@ -40,6 +40,19 @@ export const shapeCodeDescription = {
   Whirlpool: 'S020'
 } as const
 
+const reverse = <T extends Record<any, any>>(obj: T): ReverseMap<T> =>
+  Object.fromEntries(Object.entries(obj).map(([key, value]) => [value, key]))
+
+type ReverseMap<T extends Record<keyof T, keyof any>> = {
+  [P in T[keyof T]]: {
+    [K in keyof T]: T[K] extends P ? K : never
+  }[keyof T]
+}
+
+export const shaderDescription = reverse(shaderCodeDescription)
+export const shapeDescription = reverse(shapeCodeDescription)
+export const colorDescription = reverse(colorCodeDescription)
+
 export const rarityDescription = {
   1: 'Common',
   2: 'Uncommon',

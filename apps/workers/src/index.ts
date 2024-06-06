@@ -3,6 +3,7 @@ import { ConnectionOptions } from 'bullmq'
 import {
   EventModel,
   MessageApi,
+  RadMorphModel,
   UserQuestModel,
   AuditModel,
   UserModel,
@@ -18,6 +19,8 @@ import { EventWorker } from './event/worker'
 import { dbClient } from './db-client'
 import { TransactionWorkerController } from './transaction/controller'
 import { TokenPriceClient } from './token-price-client'
+import { SystemWorker } from './system/worker'
+import { SystemWorkerController } from './system/controller'
 
 const app = async () => {
   // test db connection
@@ -67,6 +70,14 @@ const app = async () => {
     eventWorkerController,
     eventModel,
     logger
+  })
+
+  SystemWorker(connection, {
+    logger,
+    systemWorkerController: SystemWorkerController({
+      logger,
+      radMorphModel: RadMorphModel(dbClient)
+    })
   })
 }
 
