@@ -13,6 +13,7 @@
   export let state: QuestStatus = 'locked'
   export let backgroundImage: string | undefined = undefined
   export let rewards: Readonly<QuestReward[]> = []
+  export let link: string | undefined = undefined
 </script>
 
 <div
@@ -25,7 +26,7 @@
     <QuestOverviewText {title} {description} {minutesToComplete} />
 
     <div class="start-button">
-      <Button on:click disabled={state === 'locked'}>
+      <Button {link} disabled={state === 'locked'}>
         <div class="button-content">
           {#if state === 'unlocked'}
             Start

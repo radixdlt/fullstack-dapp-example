@@ -2,16 +2,40 @@
   export let disabled = false
   export let secondary = false
   export let loading = false
+  export let link: string | undefined = undefined
 </script>
 
-<button on:click class:disabled class:primary={!secondary} class:secondary class:loading>
-  <div class:hide-content={loading}>
-    <slot />
-  </div>
-</button>
+{#if link}
+  <a
+    href={link}
+    class="button"
+    class:disabled
+    class:primary={!secondary}
+    class:secondary
+    class:loading
+    data-sveltekit-preload-data
+  >
+    <div class:hide-content={loading}>
+      <slot />
+    </div>
+  </a>
+{:else}
+  <button
+    on:click
+    class="button"
+    class:disabled
+    class:primary={!secondary}
+    class:secondary
+    class:loading
+  >
+    <div class:hide-content={loading}>
+      <slot />
+    </div>
+  </button>
+{/if}
 
 <style lang="scss">
-  button {
+  .button {
     cursor: pointer;
     display: flex;
     white-space: nowrap;

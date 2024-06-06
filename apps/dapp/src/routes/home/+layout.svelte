@@ -225,7 +225,7 @@
               rewards={quest.rewards}
               backgroundImage={quest.splashImage}
               state={questCardState[id] ?? 'locked'}
-              on:click={() => goto(`home/quest/${id}`)}
+              link={`/home/quest/${id}`}
             />
           </Item>
         {/if}
