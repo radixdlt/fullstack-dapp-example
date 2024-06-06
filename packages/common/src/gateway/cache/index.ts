@@ -1,14 +1,14 @@
 import type { GatewayApi } from '../index'
 import { entityDetailsCache } from './entity-details/entityDetails'
+import { entityMetadataCache } from './entity-metadata/entityMetadata'
 
 export type Cache<
   ApiCall extends GatewayApi['extractedMethods'][keyof GatewayApi['extractedMethods']],
   Params = Parameters<ApiCall>,
-  Response = Awaited<ReturnType<ApiCall>>,
-  GetResult = Response
+  Response = Awaited<ReturnType<ApiCall>>
 > = {
   set: (params: Params, response: Response) => void
-  get: (params: Params) => GetResult
+  get: (params: Params) => Response
   has: (params: Params) => boolean
   clear: () => void
 }
@@ -18,5 +18,6 @@ export type ApiCache = {
 }
 
 export const cache: ApiCache = {
-  getEntityDetailsVaultAggregated: entityDetailsCache
+  getEntityDetailsVaultAggregated: entityDetailsCache,
+  getEntityMetadata: entityMetadataCache
 }
