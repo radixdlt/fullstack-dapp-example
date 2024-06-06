@@ -6,7 +6,7 @@
   import { QuestDefinitions, type Quests } from 'content'
   import { questApi } from '$lib/api/quest-api'
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
-  import { user } from '../../stores'
+  import { user } from '../../../stores'
   import { userApi } from '$lib/api/user-api'
   import { i18n } from '$lib/i18n/i18n'
 

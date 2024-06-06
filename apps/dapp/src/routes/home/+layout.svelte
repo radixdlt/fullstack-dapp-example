@@ -1,5 +1,5 @@
 <script lang="ts">
-  import '../global.scss'
+  import '../../global.scss'
   import { onMount } from 'svelte'
   import { DataRequestBuilder, RadixDappToolkit, Logger } from '@radixdlt/radix-dapp-toolkit'
   import { authApi } from '$lib/api/auth-api'
@@ -9,7 +9,7 @@
   import Carousel from '$lib/components/carousel/Carousel.svelte'
   import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
   import { goto, invalidateAll } from '$app/navigation'
-  import { quests, user, webSocketClient } from '../stores'
+  import { quests, user, webSocketClient } from '../../stores'
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
@@ -18,7 +18,7 @@
   import { WebSocketClient } from '$lib/websocket-client'
   import { questApi } from '$lib/api/quest-api'
   import { QuestCategory, type QuestId } from 'content'
-  import type { QuestStatus } from '../types'
+  import type { QuestStatus } from '../../types'
   import { useLocalStorage } from '$lib/utils/local-storage'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import LandingPopup from './LandingPopup.svelte'
@@ -147,10 +147,11 @@
 
     if (savedProgress) {
       const { questId, progress } = JSON.parse(savedProgress)
-      goto(`/quest/${questId}#${progress}`)
+      goto(`/home/quest/${questId}#${progress}`)
     } else if ($user) {
       questApi.getSavedProgress().map((savedProgress) => {
-        if (savedProgress.questId) goto(`/quest/${savedProgress.questId}#${savedProgress.progress}`)
+        if (savedProgress.questId)
+          goto(`home/quest/${savedProgress.questId}#${savedProgress.progress}`)
       })
     }
   })
@@ -224,7 +225,7 @@
               rewards={quest.rewards}
               backgroundImage={quest.splashImage}
               state={questCardState[id] ?? 'locked'}
-              on:click={() => goto(`/quest/${id}`)}
+              on:click={() => goto(`home/quest/${id}`)}
             />
           </Item>
         {/if}
