@@ -404,7 +404,11 @@ export const EventWorkerController = ({
           job.data.relevantEvents['WithdrawEvent'].emitter as any
         ).entity.entity_address
 
-        return handleQuestWithTrackedAccount(maybeAccountAddress, 'SwapQuest')
+        return handleQuestWithTrackedAccount(
+          maybeAccountAddress,
+          'SwapQuest',
+          ({ isAllCompleted }) => isAllCompleted
+        )
       }
 
       default:
