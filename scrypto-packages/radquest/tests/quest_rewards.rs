@@ -46,15 +46,12 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         &mut env,
     )?;
 
-    let mut kyc_oracle: Option<KycOracle> = None;
-    env.with_component_state(
+    let kyc_oracle = env.with_component_state(
         quest_rewards,
         |quest_rewards_state: &mut QuestRewardsState, _| {
-            let kyc_oracle_node_id = quest_rewards_state.kyc_oracle.as_node_id().to_owned();
-            kyc_oracle = Some(KycOracle(kyc_oracle_node_id));
+            KycOracle(quest_rewards_state.kyc_oracle.as_node_id().to_owned())
         },
     )?;
-    let kyc_oracle = kyc_oracle.unwrap();
 
     let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
 

@@ -23,13 +23,13 @@ enum RewardState {
     Claimed,
 }
 
-#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
+#[derive(ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 enum RewardAmount {
     FungibleAmount(Decimal),
-    NonFungibleAmount(Vec<NonFungibleLocalId>),
+    NonFungibleAmount(IndexSet<NonFungibleLocalId>),
 }
 
-#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
+#[derive(ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 struct RewardInfo {
     resource_address: ResourceAddress,
     reward_amount: RewardAmount,

@@ -111,12 +111,10 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         &mut env,
     )?;
 
-    let mut image_oracle = Option::<ImageOracle>::None;
-    env.with_component_state(refinery, |refinery_state: &mut RefineryState, _| {
-        let image_oracle_node_id = refinery_state.image_oracle.as_node_id().to_owned();
-        image_oracle = Some(ImageOracle(image_oracle_node_id))
-    })?;
-    let image_oracle = image_oracle.unwrap();
+    let image_oracle =
+        env.with_component_state(refinery, |refinery_state: &mut RefineryState, _| {
+            ImageOracle(refinery_state.image_oracle.as_node_id().to_owned())
+        })?;
 
     let radmorph_address = radmorph.resource_address(&mut env)?;
     let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
