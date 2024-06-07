@@ -4,18 +4,13 @@
   import { RadixDappToolkit, Logger } from '@radixdlt/radix-dapp-toolkit'
   import { publicConfig } from '$lib/public-config'
 
-  let radixDappToolkit: RadixDappToolkit
-
   const { dAppDefinitionAddress, networkId } = publicConfig
 
   onMount(() => {
-    const logger = Logger(1)
-
-    radixDappToolkit = RadixDappToolkit({
+    RadixDappToolkit({
       networkId,
       dAppDefinitionAddress: dAppDefinitionAddress ?? '',
-      logger,
-      featureFlags: ['ExperimentalMobileSupport']
+      logger: Logger(1)
     })
   })
 </script>
