@@ -1,9 +1,11 @@
 <script lang="ts">
   import { i18n } from '$lib/i18n/i18n'
   import Jetty from '../images/jetty.webp'
-  import JettySwap from '../images/jetty-swap.webp'
+  import Letty from '../images/letty.webp'
+  import JettySwap from '../images/jetty-logo.webp'
+  import LettySwap from '../images/letty-logo.webp'
   import JettyGlow from '../images/jetty-glow.webp'
-  import Icon from '$lib/components/icon/Icon.svelte'
+  import LettyGlow from '../images/letty-glow.webp'
   import TokenSwapInput from '$lib/components/tokenSwapInput/TokenSwapInput.svelte'
   import ArrowDownIcon from '../lib/components/icon/ArrowDown.svelte'
   import Button from '$lib/components/button/Button.svelte'
@@ -16,12 +18,30 @@
   import { rdt, walletData, gatewayApi } from '$lib/stores'
   import { Addresses, GatewayApi } from 'common'
   import { ok } from 'neverthrow'
-  import { PUBLIC_NETWORK_ID } from '$env/static/public'
+  import { PUBLIC_NETWORK_ID, PUBLIC_SWAP_VARIATION } from '$env/static/public'
   import type { Resource, SwappedResource } from '../types'
   import { getBalanceChange } from '$lib/utils/previewTranasction'
   import { createSwapManifest } from '$lib/utils/createSwapManifest'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import SwapResult from '$lib/components/swapResult/SwapResult.svelte'
+  import SwapCardHeader from '$lib/components/swapCardHeader/SwapCardHeader.svelte'
+
+  const ThemedResources = {
+    JETTY: {
+      glow: JettyGlow,
+      mascot: Jetty,
+      logo: JettySwap,
+      applicationName: 'Jetty Swap'
+    },
+    LETTY: {
+      glow: LettyGlow,
+      mascot: Letty,
+      logo: LettySwap,
+      applicationName: 'Letty Swap'
+    }
+  }
+  const isJetty = PUBLIC_SWAP_VARIATION === 'JETTY'
+  const themedResources = ThemedResources[PUBLIC_SWAP_VARIATION as 'JETTY' | 'LETTY']
 
   let clamResource: Resource | undefined
   let elementResource: Resource | undefined
@@ -46,6 +66,7 @@
   $: enoughBalance = +currentBalance >= +fromInput
 
   const addresses = Addresses(parseInt(PUBLIC_NETWORK_ID, 0))
+  const swapComponent = isJetty ? addresses.components.jettySwap : addresses.components.lettySwap
   const turnEntityIntoObject = entityToResource(addresses.resources.clamAddress)
 
   const updateBalances = async (walletAddress?: string) => {
@@ -66,16 +87,15 @@
   }
 
   onMount(async () => {
-    //todo update
-    const jettySwapConfig = {
+    const swapConfig = {
       // networkId is 2 for Stokenet, 1 for Mainnet
       networkId: +PUBLIC_NETWORK_ID,
       applicationVersion: '1.0.0',
-      applicationName: 'Jetty Swap',
+      applicationName: themedResources.applicationName,
       applicationDappDefinitionAddress: jettySwapDefinitionAddress
     }
 
-    $rdt = RadixDappToolkit(jettySwapConfig)
+    $rdt = RadixDappToolkit(swapConfig)
     $gatewayApi = GatewayApi(parseInt(PUBLIC_NETWORK_ID, 0))
     $rdt?.walletApi.setRequestData(DataRequestBuilder.accounts().exactly(1))
     $rdt?.walletApi.walletData$.subscribe((data) => {
@@ -105,7 +125,7 @@
         amount: conversionRateFrom,
         fromTokenAddress: clamResource.id,
         toTokenAddress: elementResource.id,
-        swapComponent: addresses.components.jettySwap,
+        swapComponent,
         userAddress: $walletData?.accounts[0].address
       })
 
@@ -126,7 +146,7 @@
         amount,
         fromTokenAddress: clamResource?.id as string,
         toTokenAddress: elementResource?.id as string,
-        swapComponent: addresses.components.jettySwap,
+        swapComponent,
         userAddress: $walletData?.accounts[0].address as string
       })
         .then((amount) => {
@@ -149,7 +169,7 @@
           amount: fromInput,
           fromTokenAddress: clamResource.id,
           toTokenAddress: elementResource.id,
-          swapComponent: addresses.components.jettySwap,
+          swapComponent,
           userAddress: $walletData.accounts[0]?.address
         })
       })
@@ -163,6 +183,19 @@
         return ok('')
       })
   }
+
+  //todo to be replaced once we have oracle
+  $: isGoingUp = true
+  $: priceChange = '0'
+
+  const rotateMarketEstimate = () => {
+    setInterval(() => {
+      priceChange = parseFloat((Math.random() * 200 - 100).toFixed(1)).toString()
+      isGoingUp = Number(priceChange) > 0
+    }, 1000)
+  }
+
+  rotateMarketEstimate()
 </script>
 
 {#if modal === 'failure'}
@@ -188,29 +221,22 @@
 {/if}
 
 <section>
-  <div class="jetty-img-section">
-    <img src={JettyGlow} class="jetty-img-glow" alt="jetty-glow" />
-    <img src={Jetty} class="jetty-img" alt="jetty-img" />
+  <div class="mascot-img-section">
+    <img src={themedResources.glow} class="mascot-img-glow" alt="mascot-glow" />
+    <img src={themedResources.mascot} class="mascot-img" alt="mascot-img" />
   </div>
   <div class="swap-card">
+    <SwapCardHeader
+      clamResourceIcon={clamResource?.icon}
+      {conversionRateFrom}
+      {conversionRateTo}
+      elementResourceIcon={elementResource?.icon}
+      {isGoingUp}
+      {isJetty}
+      logo={themedResources.logo}
+      {priceChange}
+    />
     <div>
-      <div class="swap-card-header">
-        <img class="jetty-swap-img" src={JettySwap} alt="jetty-swap-logo" />
-        <div class="market-price">
-          <div>{@html $i18n.t('main:marketplace-estimates')}</div>
-          <div class="row">
-            <span class="row">
-              {conversionRateFrom}
-              <Icon --size="18px" url={clamResource?.icon ?? ''} />
-            </span>
-            =
-            <span class="row">
-              {conversionRateTo}
-              <Icon --size="18px" url={elementResource?.icon ?? ''} />
-            </span>
-          </div>
-        </div>
-      </div>
       <div class="swap">
         <TokenSwapInput
           bind:value={fromInput}
@@ -224,7 +250,7 @@
             </p>
           {/if}
         </TokenSwapInput>
-        <div class="switch-button-wrapper">
+        <div class="switch-wrapper">
           <div class:disabled={!connected} class="switch">
             <ArrowDownIcon fill={arrowFill} />
           </div>
@@ -249,10 +275,11 @@
       <Button
         --width="100%"
         on:click={onSwap}
+        variation={isJetty ? 'primary' : 'tertiary'}
         disabled={!connected || !fromInput || !enoughBalance}
         loading={swapButtonLoading}
       >
-        <p>
+        <p class={isJetty ? '' : 'uppercase'}>
           {connected
             ? $i18n.t('main:swap-button.swap')
             : $i18n.t('main:swap-button.connect-wallet')}
@@ -276,23 +303,22 @@
     position: relative;
   }
 
-  .jetty-img {
+  .mascot-img {
     position: absolute;
     z-index: 0;
-    top: -1.75rem;
+    top: 1rem;
     width: 20rem;
 
     @include mobile {
       position: absolute;
-      width: 244px;
-      top: -1.5rem;
+      width: 15.25rem;
       left: -1.5rem;
     }
   }
 
-  .jetty-img-glow {
-    height: 400px;
-    width: 500px;
+  .mascot-img-glow {
+    height: 25rem;
+    width: 31.25rem;
     position: absolute;
     top: -1.5rem;
 
@@ -301,16 +327,16 @@
     }
   }
 
-  .jetty-img-section {
+  .mascot-img-section {
     display: flex;
     color: black;
     width: 100%;
     justify-content: end;
     position: relative;
-    height: 109px;
+    height: 6.813rem;
 
     @include desktop {
-      height: 129px;
+      height: 8.063rem;
       justify-content: center;
     }
   }
@@ -335,29 +361,6 @@
     }
   }
 
-  .swap-card-header {
-    display: flex;
-    flex-shrink: 1;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 1rem;
-    gap: 1.375rem;
-  }
-
-  .market-price {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-weight: 500;
-    line-height: 20px;
-    font-size: var(--text-sm);
-    font-style: normal;
-    letter-spacing: 0.14px;
-    color: var(--color-background-dark);
-    text-align: center;
-  }
-
   .swap {
     position: relative;
     display: flex;
@@ -365,7 +368,7 @@
     gap: 0.5rem;
   }
 
-  .switch-button-wrapper {
+  .switch-wrapper {
     position: absolute;
     left: 0;
     right: 0;
@@ -379,18 +382,7 @@
   .row {
     display: flex;
     gap: 0.25rem;
-  }
-
-  .switch {
-    display: flex;
-    white-space: nowrap;
-    padding: 0.8rem;
-    justify-content: center;
     align-items: center;
-    border-radius: var(--border-radius-3xl);
-    height: 2.6875rem;
-    width: 2.6875rem;
-    background: var(--color-linen);
   }
 
   .switch {
@@ -420,7 +412,7 @@
   .guarantee-text {
     font-size: var(--text-xs);
     font-weight: var(--font-weight-regular);
-    line-height: 18.23px;
+    line-height: 1.125rem;
     letter-spacing: 0.01em;
     text-align: center;
     color: var(--color-background-dark);
@@ -429,5 +421,9 @@
     @include desktop {
       margin: 1.5rem 0.5rem;
     }
+  }
+
+  .uppercase {
+    text-transform: uppercase;
   }
 </style>

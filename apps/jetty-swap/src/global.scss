@@ -1,75 +1,5 @@
-/* Fonts */
-@font-face {
-  font-family: 'PP Fragment';
-  src: url('/fonts/PPFragment-SerifLight.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'DM Sans';
-  src: url('/fonts/DMSans_18pt-ExtraLight.ttf') format('truetype');
-  font-weight: 200;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'DM Sans';
-  src: url('/fonts/DMSans_18pt-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'DM Sans';
-  src: url('/fonts/DMSans_18pt-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'DM Sans';
-  src: url('/fonts/DMSans_24pt-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-}
-
-/* ------------------ */
-
-/* Colors */
-body {
-  /* Core colors */
-  --color-primary: #6260ff;
-  --color-secondary: #faeae1;
-  --color-tertiary: #faeae1;
-  --color-neutral: #dfdbd5;
-  --color-background-dark: #192d3a;
-  --color-background-light: #fffbf4;
-  --color-background-light: #fbece7;
-  --color-linen: #fbeee9;
-  --color-radix-grey1: #003057;
-  /* Special */
-  --color-error: #d92761;
-  --color-disabled: #dbd4d1;
-  /* Gradients */
-
-  --gradient-1: linear-gradient(180deg, #6260ff 0%, #a8a6ff 100%);
-  --gradient-2: linear-gradient(67deg, #f9dfcf 0%, #e6b2bb 102.4%);
-  --gradient-3: linear-gradient(67deg, #faeae1 0%, #a9adbc 102.4%);
-  --gradient-4: linear-gradient(270deg, #0f151a 0%, #192d3a 100%);
-  --gradient-5: linear-gradient(66.61deg, #f9dfcf 0%, #e6b2bb 102.4%);
-
-  /* Light and Dark */
-  --color-light: #fffbf4;
-  --color-dark: #000000;
-  --color-white: #fffffff2;
-}
-
-/* ------------------ */
-
 /* Typography */
 body {
-  --font-main: 'DM Sans', sans-serif;
-  --font-headers: 'PP Fragment';
-
   --text-xxs: 12px;
   --text-xs: 14px;
   --text-sm: 16px;
@@ -101,39 +31,10 @@ body {
 
 /* ------------------ */
 
-/* Common Utilities */
-body {
-  /* Borders */
-  --border-radius-sm: 2px;
-  --border-radius-md: 4px;
-  --border-radius-lg: 8px;
-  --border-radius-xl: 16px;
-  --border-radius-2xl: 20px;
-  --border-radius-3xl: 40px;
-  --border: 1.5px solid;
-  --border-lg: 2px solid;
-}
-
-/* ------------------ */
-
 /* Utility Classes */
 .disabled {
   opacity: 50%;
   pointer-events: none;
-}
-
-.card {
-  background: var(--gradient-5);
-  border-radius: var(--border-radius-3xl);
-  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.2);
-  padding: var(--spacing-2xl);
-
-  &.card-disabled {
-    filter: grayscale(100%) brightness(0.7);
-    pointer-events: none;
-  }
-
-  transition: all 0.5s ease;
 }
 
 .hide-scrollbar {
