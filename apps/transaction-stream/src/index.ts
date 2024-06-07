@@ -4,7 +4,7 @@ import { logger } from './helpers/logger'
 import { TransactionStream } from './transaction-stream/transaction-stream'
 import { AccountAddressModel, GatewayApi } from 'common'
 import { PrismaClient } from 'database'
-import { getQueues, RedisConnection } from 'queues'
+import { getQueues, RedisConnection, SetupQueueMetrics } from 'queues'
 import { EventModel } from 'common'
 import { HandleStreamError } from './helpers/handleStreamError'
 import { HandleTransactions } from './helpers/handleTransactions'
@@ -26,6 +26,8 @@ type Dependencies = {
 
 const app = async (dependencies: Dependencies) => {
   const dbClient = dependencies.dbClient
+
+  SetupQueueMetrics(config.redis)
 
   await dbClient.event.findFirst()
 

@@ -2,7 +2,6 @@ import { Worker, ConnectionOptions, Queues, TransactionJob, getQueues } from 'qu
 import { AppLogger, type TransactionModel } from 'common'
 import { TransactionWorkerController } from './controller'
 import { TransactionStatus } from 'database'
-import { Metrics } from '../metrics'
 
 export const TransactionWorker = (
   connection: ConnectionOptions,
@@ -17,11 +16,8 @@ export const TransactionWorker = (
   const worker = new Worker<TransactionJob>(
     Queues.TransactionQueue,
     async (job) => {
+      await job.updateProgress(1)
       logger.debug({ method: 'transactionWorker.process', id: job.id, data: job.data })
-
-      transactionQueue.queue.getActiveCount().then((count) => {
-        Metrics.eventQueue.activeJobs.observe(count)
-      })
 
       const { badgeId, badgeResourceAddress, transactionKey, attempt } = job.data
 

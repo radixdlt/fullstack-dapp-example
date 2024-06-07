@@ -3,7 +3,6 @@ import { ConnectionOptions } from 'bullmq'
 import {
   EventModel,
   MessageApi,
-  RadMorphModel,
   UserQuestModel,
   AuditModel,
   UserModel,
@@ -12,7 +11,7 @@ import {
   GatewayApi
 } from 'common'
 import { logger } from './helpers/logger'
-import { EventJob, Queue, RedisConnection, getQueues } from 'queues'
+import { RedisConnection, getQueues } from 'queues'
 import { EventWorkerController } from './event/controller'
 import { TransactionWorker } from './transaction/worker'
 import { EventWorker } from './event/worker'
@@ -21,7 +20,6 @@ import { TransactionWorkerController } from './transaction/controller'
 import { TokenPriceClient } from './token-price-client'
 import { SystemWorker } from './system/worker'
 import { SystemWorkerController } from './system/controller'
-import { Metrics } from './metrics'
 
 const app = async () => {
   // test db connection
@@ -29,7 +27,7 @@ const app = async () => {
 
   const connection: ConnectionOptions = config.redis
 
-  const { transactionQueue, eventQueue } = getQueues(config.redis)
+  const { transactionQueue } = getQueues(config.redis)
 
   const messageApi = MessageApi({
     baseUrl: config.notification.baseUrl,
@@ -61,55 +59,24 @@ const app = async () => {
     auditModel: AuditModel(dbClient)
   })
 
-  const transactionWorker = TransactionWorker(connection, {
+  TransactionWorker(connection, {
     logger,
     transactionWorkerController,
     transactionModel,
     transactionQueue
   })
 
-  const eventWorker = EventWorker(connection, {
+  EventWorker(connection, {
     eventWorkerController,
     eventModel,
-    logger,
-    eventQueue
+    logger
   })
 
   SystemWorker(connection, {
     logger,
     systemWorkerController: SystemWorkerController({
-      logger,
-      radMorphModel: RadMorphModel(dbClient)
+      logger
     })
-  })
-  transactionQueue.queue.on('waiting', async () => {
-    Metrics.transactionQueue.waitingJobs.observe(
-      await transactionQueue.queue.getJobCountByTypes('wait')
-    )
-  })
-
-  eventQueue.queue.on('waiting', async () => {
-    Metrics.eventQueue.waitingJobs.observe(await eventQueue.queue.getJobCountByTypes('wait'))
-  })
-
-  transactionWorker.on('failed', async () => {
-    Metrics.transactionQueue.failedJobs.observe(
-      await transactionQueue.queue.getJobCountByTypes('failed')
-    )
-  })
-
-  eventWorker.on('failed', async () => {
-    Metrics.eventQueue.failedJobs.observe(await eventQueue.queue.getJobCountByTypes('failed'))
-  })
-
-  transactionWorker.on('completed', async () => {
-    Metrics.transactionQueue.completedJobs.observe(
-      await transactionQueue.queue.getJobCountByTypes('completed')
-    )
-  })
-
-  eventWorker.on('completed', async () => {
-    Metrics.eventQueue.completedJobs.observe(await eventQueue.queue.getJobCountByTypes('completed'))
   })
 }
 
