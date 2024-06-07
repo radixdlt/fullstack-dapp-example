@@ -28,15 +28,11 @@ export const WebSocketClient = ({
 
   let shouldReconnect = true
 
-  const onMessageCallbacks: ((data: Message) => void)[] = []
+  const onMessageCallbacks: ((data: Message & { id: number }) => void)[] = []
 
   const createWebSocket = (authToken: string) => {
     appLogger.info('🛫 Starting WebSocket')
     const ws = new WebSocket(notificationUrl, ['Authorization', authToken])
-
-    messageApi.getAll().map((messages) => {
-      onMessageCallbacks.forEach((cb) => messages.forEach((message) => cb(message)))
-    })
 
     const onMessage = (event: MessageEvent<string>) => {
       const parsedData = JSON.parse(event.data)
@@ -85,8 +81,11 @@ export const WebSocketClient = ({
   let webSocket = createWebSocket(authToken)
 
   return {
-    onMessage: (callback: (data: Message) => void): (() => void) => {
+    onMessage: (callback: (data: Message & { id: number }) => void): (() => void) => {
       onMessageCallbacks.push(callback)
+      messageApi.getAll().map((messages) => {
+        messages.forEach(callback)
+      })
       return () => {
         const index = onMessageCallbacks.indexOf(callback)
         onMessageCallbacks.splice(index, 1)

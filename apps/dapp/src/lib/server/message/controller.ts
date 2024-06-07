@@ -36,13 +36,13 @@ export const MessageController = (messageModel = MessageModel(dbClient)) => {
   const getUnseen = (
     context: ControllerMethodContext,
     userId: string
-  ): ControllerMethodOutput<Omit<Message, 'traceId'>[]> =>
+  ): ControllerMethodOutput<Omit<Message & { id: number }, 'traceId'>[]> =>
     messageModel(context.logger)
       .getAllUnseen(userId)
-      .map((notificatons) => ({
-        data: notificatons.map(({ data, id }) => ({
+      .map((messages) => ({
+        data: messages.map(({ data, id }) => ({
           ...(data as Omit<Message, 'traceId'>),
-          notificationId: id
+          id
         })),
         httpResponseCode: 200
       }))

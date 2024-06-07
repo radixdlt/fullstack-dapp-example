@@ -6,6 +6,7 @@
   import RequirementsPage from '$lib/components/quest/RequirementsPage.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import { useCookies, type RequirementCookieKey } from '$lib/utils/cookies'
+  import { messageApi } from '$lib/api/message-api'
 
   export let questId: keyof Quests
   export let requirements: Record<string, boolean>
@@ -51,7 +52,7 @@
     }
   }
 
-  const readRequirementsFromDb = () => {
+  const readRequirementsFromDb = () =>
     questApi
       .getQuestInformation(questId)
       .map((response) => {
@@ -67,7 +68,6 @@
         })
       })
       .map(() => checkRequirements())
-  }
 
   onMount(() => {
     checkRequirements()
@@ -78,7 +78,9 @@
 
       const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
         if (message.type === 'QuestRewardsDeposited') {
-          readRequirementsFromDb()
+          readRequirementsFromDb().then(() => {
+            messageApi.markAsSeen(message.id)
+          })
         }
       })
 

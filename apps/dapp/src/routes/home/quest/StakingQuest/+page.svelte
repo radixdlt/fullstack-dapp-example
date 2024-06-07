@@ -10,6 +10,7 @@
   import { RadixNetworkConfigById } from '@radixdlt/radix-dapp-toolkit'
   import { publicConfig } from '$lib/public-config'
   import type { Quests } from 'content'
+  import { messageApi } from '$lib/api/message-api'
 
   export let data: PageData
   let quest: Quest
@@ -25,10 +26,12 @@
     const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'StakedXrd') {
         $stakedXrd = true
+        messageApi.markAsSeen(message.id)
       }
 
       if (message.type === 'QuestRewardsDeposited' && message.questId === 'StakingQuest') {
         $rewardsDeposited = true
+        messageApi.markAsSeen(message.id)
       }
     })
 
