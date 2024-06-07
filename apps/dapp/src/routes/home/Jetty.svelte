@@ -1,7 +1,7 @@
 <script lang="ts">
   import Jetty from '$lib/components/jetty/Jetty.svelte'
   import { loadGlossary } from 'content'
-  import { jettyDialog, jettyNotifications, showJetty } from '../stores'
+  import { jettyDialog, jettyNotifications, showJetty } from '../../stores'
   import { page } from '$app/stores'
   import { goto } from '$app/navigation'
   import { markLatestNotificationAsSeen } from '$lib/notifications'

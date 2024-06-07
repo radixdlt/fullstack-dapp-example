@@ -3,7 +3,7 @@
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
-  import { webSocketClient } from '../../../stores'
+  import { webSocketClient } from '../../../../stores'
   import { onMount } from 'svelte'
   import { isMobile } from '$lib/utils/is-mobile'
   import CopyTextBox from '$lib/components/copy-text-box/CopyTextBox.svelte'

@@ -66,6 +66,6 @@ const notifications = {
     id: 'loggedIn',
     type: 'text',
     text: i18next.t('jetty:logged-in-with-wallet'),
-    onGoToQuest: () => goto(`/quest/${QuestDefinitions().LoginWithWallet.id}#7`)
+    onGoToQuest: () => goto(`/home/quest/${QuestDefinitions().LoginWithWallet.id}#7`)
   }
 } as const satisfies { [key: string]: JettyNotification }

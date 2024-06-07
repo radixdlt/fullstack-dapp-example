@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte'
   import { crossfade } from 'svelte/transition'
 
   export let tabs: {
@@ -12,9 +13,13 @@
     activeTab = tab
   }
 
+  const dispatch = createEventDispatcher<{ 'tab-changed': string }>()
+
   const [send, receive] = crossfade({
     duration: 300
   })
+
+  $: dispatch('tab-changed', activeTab)
 </script>
 
 <div class="tabs">
@@ -66,7 +71,7 @@
 
   .underline {
     width: 100%;
-    height: 0.1rem;
+    height: 0.13rem;
     background: var(--color-dark);
     border-radius: var(--border-radius-md);
   }

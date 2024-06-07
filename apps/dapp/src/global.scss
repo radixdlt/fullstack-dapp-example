@@ -206,7 +206,8 @@ input:focus {
   text-decoration: none;
 }
 
-button {
+button,
+a {
   all: unset;
   box-sizing: border-box;
 }

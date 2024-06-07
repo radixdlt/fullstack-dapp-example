@@ -5,15 +5,18 @@
   import { err } from 'neverthrow'
   import { onMount } from 'svelte'
   import { createEventDispatcher } from 'svelte'
-  import { user, webSocketClient } from '../../../stores'
+  import { user, webSocketClient } from '../../../../stores'
   import Button from '$lib/components/button/Button.svelte'
   import { userApi } from '$lib/api/user-api'
   import type { Quests } from 'content'
 
   export let questId: keyof Quests
-
-  let state: 'loading' | 'hasUserBadge' | 'canAcceptUserBadge' | 'updateDepositRules' | 'minted' =
-    'loading'
+  export let state:
+    | 'loading'
+    | 'hasUserBadge'
+    | 'canAcceptUserBadge'
+    | 'updateDepositRules'
+    | 'minted' = 'loading'
 
   let mintingInProgress = false
 

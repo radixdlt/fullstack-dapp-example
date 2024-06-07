@@ -13,6 +13,7 @@
   export let state: QuestStatus = 'locked'
   export let backgroundImage: string | undefined = undefined
   export let rewards: Readonly<QuestReward[]> = []
+  export let link: string | undefined = undefined
 </script>
 
 <div
@@ -25,7 +26,7 @@
     <QuestOverviewText {title} {description} {minutesToComplete} />
 
     <div class="start-button">
-      <Button on:click disabled={state === 'locked'}>
+      <Button {link} disabled={state === 'locked'}>
         <div class="button-content">
           {#if state === 'unlocked'}
             Start
@@ -61,7 +62,7 @@
     background-size: contain;
     background-image: linear-gradient(transparent 30%, var(--color-light) 50%),
       var(--background-image), var(--gradient-5);
-    background-position-y: 1.5rem;
+    background-position-y: 2.5rem;
 
     @media (max-width: 25rem) {
       width: 84vw;
