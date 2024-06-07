@@ -71,7 +71,7 @@
 
   .underline {
     width: 100%;
-    height: 0.1rem;
+    height: 0.13rem;
     background: var(--color-dark);
     border-radius: var(--border-radius-md);
   }
