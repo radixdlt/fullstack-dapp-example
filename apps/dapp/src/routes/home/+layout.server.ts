@@ -83,6 +83,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies }) => {
 
   return {
     questStatus,
-    questDefinitions
+    questDefinitions,
+    questCategory: cookies.get('selected-quest-category') as 'basic' | 'advanced' | undefined
   }
 }

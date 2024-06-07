@@ -183,7 +183,7 @@
     (typeof $quests)[keyof typeof $quests]
   ][]
 
-  let activeTab: string
+  let activeTab = data.questCategory === 'basic' ? QuestCategory.Basic : QuestCategory.Advanced
 
   let showLandingPopup = false
 </script>
@@ -210,6 +210,11 @@
       { name: $i18n.t('main:tabs-basics'), id: QuestCategory.Basic },
       { name: $i18n.t('main:tabs-advanced'), id: QuestCategory.Advanced }
     ]}
+    on:tab-changed={(e) => {
+      useCookies('selected-quest-category').set(
+        e.detail === QuestCategory.Basic ? 'basic' : 'advanced'
+      )
+    }}
     bind:activeTab
   />
 
