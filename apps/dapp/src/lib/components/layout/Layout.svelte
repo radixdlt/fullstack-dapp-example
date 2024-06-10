@@ -26,6 +26,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: var(--spacing-lg) 0;
   }
 
   .quests {
