@@ -1,4 +1,4 @@
-import { ConnectionOptions, Queue, Worker } from 'bullmq'
+import { type ConnectionOptions, Queue, Worker } from 'bullmq'
 import client from 'prom-client'
 import { Queues, getQueues } from './queues'
 
