@@ -73,7 +73,7 @@ export const EventWorkerController = ({
     })
 
     const dbTransactions = databaseTransactions({ dbClient, logger: childLogger, transactionId })
-    const dbTransactionBuilder = DbTransactionBuilder({ dbClient, tokenPriceClient })
+    const dbTransactionBuilder = DbTransactionBuilder({ dbClient, tokenPriceClient, messageApi })
 
     const ensureUserExists = (
       userId: string,
@@ -133,12 +133,16 @@ export const EventWorkerController = ({
               userId,
               questId
             })
-            .andThen(() =>
-              messageApi.send(userId, {
-                type: 'QuestRewardsDeposited',
-                questId,
-                traceId
-              })
+            .andThen(([_, message]) =>
+              messageApi.send(
+                userId,
+                {
+                  type: 'QuestRewardsDeposited',
+                  questId,
+                  traceId
+                },
+                message.id
+              )
             )
         )
       )
@@ -149,28 +153,31 @@ export const EventWorkerController = ({
         getDataFromQuestRewardsEvent(job.data.relevantEvents.RewardClaimedEvent)
       ).andThen(({ userId, questId }) =>
         ensureUserExists(userId, transactionId).andThen(() =>
-          dbTransactions.rewardsClaimed({ userId, questId }).andThen(() =>
-            messageApi.send(userId, {
-              type: 'QuestRewardsClaimed',
-              questId,
-              traceId
-            })
+          dbTransactions.rewardsClaimed({ userId, questId }).andThen(([_, __, message]) =>
+            messageApi.send(
+              userId,
+              {
+                type: 'QuestRewardsClaimed',
+                questId,
+                traceId
+              },
+              message.id
+            )
           )
         )
       )
 
     const handleAllQuestRequirementCompleted = ({
       questId,
-      requirementId,
       userId
     }: {
       questId: QuestId
-      requirementId: EventId
       userId: string
     }) => {
       const { badgeId, badgeResourceAddress } = transformUserIdIntoBadgeId(userId)
-      return ResultAsync.combine([
-        hasAllRequirementsCompleted(questId, userId).andThen((value) =>
+
+      return hasAllRequirementsCompleted(questId, userId)
+        .andThen((value) =>
           value.isAllCompleted
             ? transactionModel(childLogger)
                 .add({
@@ -190,26 +197,52 @@ export const EventWorkerController = ({
                     traceId
                   })
                 )
-                .map(() => value)
+                .map(() => {
+                  ResultAsync.fromPromise(
+                    dbClient.message.create({
+                      data: {
+                        userId,
+                        data: {
+                          type: 'QuestRequirementsCompleted',
+                          questId
+                        }
+                      }
+                    }),
+                    (error) => {
+                      logger.error({
+                        error,
+                        method: 'databaseTransactions.questRequirementsCompleted.error'
+                      })
+                      return {
+                        error,
+                        message: 'failed to set quest requirements completed'
+                      }
+                    }
+                  ).andThen((message) =>
+                    messageApi.send(
+                      userId,
+                      {
+                        type: 'QuestRequirementsCompleted',
+                        questId,
+                        traceId
+                      },
+                      message.id
+                    )
+                  )
+                  return value
+                })
             : okAsync(value)
-        ),
-        messageApi.send(userId, {
-          type: MessageType.QuestRequirementCompleted,
-          questId,
-          requirementId,
-          traceId
-        })
-      ]).map(([hasCompletedAllQuestRequirements]) => {
-        childLogger.debug({
-          method: `EventWorkerController.handleAllQuestRequirementCompleted.success`,
-          questId,
-          requirementId,
-          userId,
-          hasCompletedAllQuestRequirements
-        })
+        )
+        .map((value) => {
+          childLogger.debug({
+            method: `EventWorkerController.handleAllQuestRequirementCompleted.success`,
+            questId,
+            userId,
+            hasCompletedAllQuestRequirements: value.isAllCompleted
+          })
 
-        return hasCompletedAllQuestRequirements
-      })
+          return value
+        })
     }
 
     const handelCombineElementsDepositedEvent = () => {

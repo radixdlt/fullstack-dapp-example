@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 import { QuestId } from 'content'
-import { EventId } from 'common'
+import { EventId, MessageApi } from 'common'
 import { AuditType, Prisma, PrismaClient } from 'database'
 import { ResultAsync, ok, err } from 'neverthrow'
 import { TokenPriceClient } from './../../token-price-client'
@@ -12,10 +12,12 @@ export type DbOperation = () => Prisma.PrismaPromise<any>
 export type DbTransactionBuilder = ReturnType<typeof DbTransactionBuilder>
 export const DbTransactionBuilder = ({
   dbClient,
-  tokenPriceClient
+  tokenPriceClient,
+  messageApi
 }: {
   dbClient: PrismaClient
   tokenPriceClient: TokenPriceClient
+  messageApi: MessageApi
 }) => {
   const operations: DbOperation[] = []
 
@@ -31,12 +33,14 @@ export const DbTransactionBuilder = ({
     questId,
     requirementId,
     userId,
-    transactionId
+    transactionId,
+    traceId
   }: {
     userId: string
     questId: QuestId
     requirementId: EventId
     transactionId: string
+    traceId: string
   }) => {
     operations.push(
       () =>
@@ -47,8 +51,8 @@ export const DbTransactionBuilder = ({
             requirementId
           }
         }),
-      () =>
-        dbClient.message.create({
+      () => {
+        const message = dbClient.message.create({
           data: {
             userId,
             data: {
@@ -57,7 +61,23 @@ export const DbTransactionBuilder = ({
               requirementId
             }
           }
-        }),
+        })
+
+        message.then((message) => {
+          messageApi.send(
+            userId,
+            {
+              type: 'QuestRequirementCompleted',
+              questId,
+              traceId,
+              requirementId
+            },
+            message.id
+          )
+        })
+
+        return message
+      },
       () =>
         dbClient.event.update({
           where: {
@@ -69,6 +89,7 @@ export const DbTransactionBuilder = ({
           }
         })
     )
+
     return api
   }
 

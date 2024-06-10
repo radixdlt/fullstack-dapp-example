@@ -9,6 +9,7 @@
   import Button from '$lib/components/button/Button.svelte'
   import { userApi } from '$lib/api/user-api'
   import type { Quests } from 'content'
+  import { messageApi } from '$lib/api/message-api'
 
   export let questId: keyof Quests
   export let state:
@@ -72,6 +73,7 @@
         event.questId === questId &&
         event.requirementId === 'DepositUserBadge'
       ) {
+        messageApi.markAsSeen(event.id)
         dispatch('deposited')
       }
     })

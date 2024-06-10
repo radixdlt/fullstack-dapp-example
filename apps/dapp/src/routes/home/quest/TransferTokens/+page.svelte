@@ -12,6 +12,7 @@
   import { writable } from 'svelte/store'
   import TextJettyPage from '../TextJettyPage.svelte'
   import type { Quests } from 'content'
+  import { messageApi } from '$lib/api/message-api'
 
   export let data: PageData
 
@@ -29,6 +30,7 @@
       ) {
         quest.actions.next()
         $receivedClams = true
+        messageApi.markAsSeen(message.id)
       }
     })
 

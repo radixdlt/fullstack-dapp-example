@@ -2,7 +2,9 @@ import { fetchWrapper } from '$lib/helpers/fetch-wrapper'
 import type { Message } from 'common'
 
 const getAll = () =>
-  fetchWrapper<Message[], { message: string }>(fetch('/api/message')).map(({ data }) => data)
+  fetchWrapper<(Message & { id: number })[], { message: string }>(fetch('/api/message')).map(
+    ({ data }) => data
+  )
 
 const markAsSeen = (ids: number | number[]) =>
   fetchWrapper<void, { message: string }>(

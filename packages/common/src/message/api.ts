@@ -3,6 +3,7 @@ import type { AppLogger } from '../helpers/logger'
 
 export const MessageType = {
   QuestRequirementCompleted: 'QuestRequirementCompleted',
+  QuestRequirementsCompleted: 'QuestRequirementsCompleted',
   QuestRewardsDeposited: 'QuestRewardsDeposited',
   QuestRewardsClaimed: 'QuestRewardsClaimed',
   CombineElementsDeposited: 'CombineElementsDeposited',
@@ -17,6 +18,10 @@ type Messages = {
   [MessageType.QuestRequirementCompleted]: {
     questId: string
     requirementId: string
+    traceId: string
+  }
+  [MessageType.QuestRequirementsCompleted]: {
+    questId: string
     traceId: string
   }
   [MessageType.QuestRewardsDeposited]: {
@@ -48,12 +53,12 @@ export type Message = {
 export type MessageApi = ReturnType<typeof MessageApi>
 export const MessageApi = ({ baseUrl, logger }: { baseUrl: string; logger?: AppLogger }) => {
   return {
-    send: (userId: string, data: Message) =>
+    send: (userId: string, data: Message, id: number) =>
       fetchWrapper<undefined>(
         fetch(`${baseUrl}/api/send`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId, data })
+          body: JSON.stringify({ userId, data: { ...data, id } })
         })
       )
         .map(({ status }) => {
