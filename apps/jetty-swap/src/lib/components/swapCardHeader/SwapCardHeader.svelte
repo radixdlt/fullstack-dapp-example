@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Chevron from '../../../images/chevron.svelte'
+  import Chevron from '../chevron/chevron.svelte'
   import Graph from '../../../images/graph.webp'
   import { PUBLIC_SWAP_VARIATION } from '$env/static/public'
   import { i18n } from '$lib/i18n/i18n'
@@ -43,7 +43,11 @@
               <div class:rotate-180={isGoingUp} class={'chevron'}>
                 <Chevron fill={isGoingUp ? 'var(--color-inchworm)' : 'var(--color-error)'} />
               </div>
-              <p class={`price-change price-change-${isGoingUp ? 'up' : 'down'}`}>
+              <p
+                class:price-change-up={isGoingUp}
+                class:price-change-down={!isGoingUp}
+                class={`price-change`}
+              >
                 {priceChange}%
               </p>
             </div>
@@ -61,7 +65,7 @@
   </div>
 {/if}
 
-<style>
+<style lang="scss">
   p {
     padding: 0;
     margin: 0;
@@ -81,13 +85,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-weight: 500;
     line-height: 1.25rem;
     font-size: var(--text-sm);
     font-style: normal;
     letter-spacing: 0.14px;
     color: var(--color-background-dark);
     text-align: center;
+    justify-content: center;
   }
 
   .market-price.letty {
@@ -103,10 +107,15 @@
   .graph {
     width: 7.313rem;
     height: 2.5rem;
+
+    @media (max-width: 420px) {
+      width: 5rem;
+    }
   }
 
   .price-change {
     width: 3.125rem;
+    font-size: var(--text-xs);
   }
 
   .price-change-up {
@@ -129,6 +138,9 @@
     width: 7.313rem;
     overflow: hidden;
     position: relative;
+    @media (max-width: 420px) {
+      width: 5rem;
+    }
   }
 
   .scrolling-image {
@@ -137,7 +149,6 @@
   }
 
   .scrolling-image img {
-    width: 7.313rem;
     flex-shrink: 0;
   }
 
@@ -181,16 +192,17 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
+    justify-content: space-between;
   }
 
   .market-price-col {
     display: flex;
     flex-direction: column;
-    width: 10rem;
+    width: 10.5rem;
   }
 
   .thin {
-    font-weight: var(--font-weight-extra-light);
+    font-weight: var(--font-weight-bold);
     font-size: var(--text-xs);
     text-align: left;
   }

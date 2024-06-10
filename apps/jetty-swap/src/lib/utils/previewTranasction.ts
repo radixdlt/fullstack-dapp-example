@@ -6,6 +6,7 @@ import type { GatewayApi } from 'common'
 export const previewTransaction = async (props: CreateSwapManifestProps) => {
   const gatewayApi = get(GatewayAPI) as GatewayApi
   const manifest = createSwapManifest(props)
+  console.log(manifest)
   const status = await gatewayApi?.gatewayApiClient.status.getCurrent()
 
   const currentEpoch = status.ledger_state.epoch
@@ -32,5 +33,6 @@ export const getBalanceChange = async (props: CreateSwapManifestProps) => {
   const balanceChange: any = tx.resource_changes.find(
     (change: any) => change.resource_changes[0]?.resource_address === props.toTokenAddress
   )
+  console.log(tx.resource_changes)
   return balanceChange?.resource_changes[0].amount as string
 }

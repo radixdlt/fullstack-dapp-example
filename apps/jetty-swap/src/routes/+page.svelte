@@ -13,7 +13,7 @@
   import { entityToResource } from '$lib/utils/entityToResource'
   import { onMount } from 'svelte'
   import { DataRequestBuilder, RadixDappToolkit } from '@radixdlt/radix-dapp-toolkit'
-  import { jettySwapDefinitionAddress } from '$lib/constants'
+  import { jettySwapDefinitionAddress, lettySwapDefinitionAddress } from '$lib/constants'
   import { type FungibleResourcesCollectionItemVaultAggregated } from '@radixdlt/babylon-gateway-api-sdk'
   import { rdt, walletData, gatewayApi } from '$lib/stores'
   import { Addresses, GatewayApi } from 'common'
@@ -58,12 +58,12 @@
 
   $: fromInput = allowOnlyPositiveNumberInString(fromInput.toString())
   $: connected = !!$walletData?.accounts[0]
-  $: arrowFill = connected ? 'var(--color-primary)' : 'var(--color-dark)'
 
   let balances: FungibleResourcesCollectionItemVaultAggregated[] = []
   $: currentBalance =
     balances.find((b) => b.resource_address === clamResource?.id)?.vaults.items[0].amount ?? 0
   $: enoughBalance = +currentBalance >= +fromInput
+  $: arrowFill = !enoughBalance || !connected ? 'var(--color-disabled)' : 'var(--color-primary)'
 
   const addresses = Addresses(parseInt(PUBLIC_NETWORK_ID, 0))
   const swapComponent = isJetty ? addresses.components.jettySwap : addresses.components.lettySwap
@@ -88,11 +88,12 @@
 
   onMount(async () => {
     const swapConfig = {
-      // networkId is 2 for Stokenet, 1 for Mainnet
       networkId: +PUBLIC_NETWORK_ID,
       applicationVersion: '1.0.0',
       applicationName: themedResources.applicationName,
-      applicationDappDefinitionAddress: jettySwapDefinitionAddress
+      applicationDappDefinitionAddress: isJetty
+        ? jettySwapDefinitionAddress
+        : lettySwapDefinitionAddress
     }
 
     $rdt = RadixDappToolkit(swapConfig)
@@ -245,13 +246,13 @@
           state={enoughBalance ? 'default' : 'error'}
         >
           {#if !enoughBalance}
-            <p class="error-text">
+            <p class="error-text not-enough-resource">
               {$i18n.t('main:not-enough-resource', { resource: clamResource?.name })}
             </p>
           {/if}
         </TokenSwapInput>
         <div class="switch-wrapper">
-          <div class:disabled={!connected} class="switch">
+          <div class:disabled-switch={!connected} class="switch">
             <ArrowDownIcon fill={arrowFill} />
           </div>
         </div>
@@ -267,7 +268,7 @@
         </TokenSwapInput>
       </div>
     </div>
-    <div class="guarantee-text">
+    <div class:guarantee-text-letty={!isJetty} class={`guarantee-text`}>
       <p>{$i18n.t('main:guarantee-hint')}</p>
       <p>{$i18n.t('main:guarantee-hint-part-2')}</p>
     </div>
@@ -279,7 +280,7 @@
         disabled={!connected || !fromInput || !enoughBalance}
         loading={swapButtonLoading}
       >
-        <p class={isJetty ? '' : 'uppercase'}>
+        <p class:uppercase={isJetty}>
           {connected
             ? $i18n.t('main:swap-button.swap')
             : $i18n.t('main:swap-button.connect-wallet')}
@@ -287,12 +288,21 @@
       </Button>
     </div>
   </div>
+  <div class="newbie-hint">
+    {$i18n.t(`main:newbie-hint-${isJetty ? 'jetty' : 'letty'}`)}
+    <a href="?">Radquest site</a>.
+  </div>
 </section>
 
 <style lang="scss">
   p {
     padding: 0;
     margin: 0;
+  }
+
+  a {
+    text-decoration: underline;
+    color: inherit;
   }
 
   section {
@@ -310,9 +320,12 @@
     width: 20rem;
 
     @include mobile {
-      position: absolute;
       width: 15.25rem;
-      left: -1.5rem;
+      left: 0rem;
+    }
+
+    @media (max-width: 400px) {
+      left: -3rem;
     }
   }
 
@@ -347,17 +360,18 @@
     border-radius: var(--border-radius-2xl);
     min-height: 33.125rem;
     padding: 1.125rem 0.938rem;
+    padding-top: 1.5rem;
     display: flex;
     flex-direction: column;
     flex: 1;
     justify-content: space-between;
     min-width: 17.625rem;
-    max-width: 21.375rem;
+    max-width: 25rem;
     width: 80vw;
 
     @include desktop {
       margin-top: 1rem;
-      width: 21.375rem;
+      width: 25rem;
     }
   }
 
@@ -377,12 +391,6 @@
     margin: auto;
     width: 2.688rem;
     height: 2.688rem;
-  }
-
-  .row {
-    display: flex;
-    gap: 0.25rem;
-    align-items: center;
   }
 
   .switch {
@@ -411,10 +419,10 @@
 
   .guarantee-text {
     font-size: var(--text-xs);
-    font-weight: var(--font-weight-regular);
     line-height: 1.125rem;
     letter-spacing: 0.01em;
     text-align: center;
+    font-weight: var(--font-weight-regular);
     color: var(--color-background-dark);
     margin: 1.5rem 0rem;
 
@@ -425,5 +433,28 @@
 
   .uppercase {
     text-transform: uppercase;
+  }
+
+  .newbie-hint {
+    font-size: var(--text-xs);
+    text-align: center;
+    word-break: break-word;
+    line-height: 21px;
+    letter-spacing: 0.001em;
+    text-align: center;
+    max-width: 400px;
+    width: 400px;
+    padding: 38px 31px;
+    color: var(--color-dark);
+
+    @include mobile {
+      padding: 38px 0px 0px 0px;
+      min-width: 260px;
+      width: 90%;
+    }
+  }
+
+  .not-enough-resource {
+    font-size: var(--text-xs);
   }
 </style>

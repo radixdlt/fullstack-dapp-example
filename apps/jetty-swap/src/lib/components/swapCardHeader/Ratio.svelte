@@ -7,7 +7,7 @@
   export let elementResourceIcon: string | undefined
 </script>
 
-<div class="row">
+<div class="ratio row">
   <span class="row">
     {conversionRateFrom}
     <Icon --size="18px" url={clamResourceIcon} />
@@ -24,5 +24,9 @@
     display: flex;
     gap: 0.25rem;
     align-items: center;
+  }
+
+  .ratio {
+    font-size: var(--text-xs);
   }
 </style>
