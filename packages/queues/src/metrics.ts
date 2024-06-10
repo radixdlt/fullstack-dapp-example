@@ -44,6 +44,7 @@ const setupQueueEvents = (input: {
   queueEvent.on('waiting', async () => {
     await setWaitingJobs()
   })
+  setWaitingJobs()
 
   const setProgressJobs = async () => {
     const value = await input.queue.getJobCountByTypes('active')
@@ -54,6 +55,7 @@ const setupQueueEvents = (input: {
   queueEvent.on('progress', async () => {
     await setProgressJobs()
   })
+  setProgressJobs()
 
   const setFailedJobs = async () => {
     const value = await input.queue.getJobCountByTypes('failed')
@@ -64,6 +66,7 @@ const setupQueueEvents = (input: {
   queueEvent.on('failed', async () => {
     await setFailedJobs()
   })
+  setFailedJobs()
 
   const setCompletedJobs = async () => {
     const value = await input.queue.getJobCountByTypes('completed')
@@ -74,6 +77,7 @@ const setupQueueEvents = (input: {
   queueEvent.on('completed', async () => {
     await setCompletedJobs()
   })
+  setCompletedJobs()
 }
 
 export const SetupQueueMetrics = ({
