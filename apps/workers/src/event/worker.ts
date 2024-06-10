@@ -36,10 +36,6 @@ export const EventWorker = (
     { connection }
   )
 
-  // worker.on('failed', (job, error) => {
-  //   logger.error({ method: 'eventWorker.failed', error, job })
-  // })
-
   worker.on('completed', (job) => {
     const childLogger = logger.child({
       id: job.id,
