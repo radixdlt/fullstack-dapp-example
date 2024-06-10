@@ -36,3 +36,5 @@ export type JettyNotification = JettyTextNotification | JettyComponentNotificati
 export const jettyNotifications = writable<JettyNotification[]>([])
 
 export const showJetty = writable(true)
+
+export const scrollToNextQuest = writable(false)

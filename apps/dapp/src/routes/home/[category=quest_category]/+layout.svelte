@@ -4,7 +4,7 @@
   import type { QuestId } from 'content'
   import type { LayoutData } from './$types'
   import type { QuestStatus } from '../../../types'
-  import { quests } from '../../../stores'
+  import { quests, scrollToNextQuest } from '../../../stores'
   import { page } from '$app/stores'
   import { i18n } from '$lib/i18n/i18n'
 
@@ -37,9 +37,16 @@
     keyof typeof $quests,
     (typeof $quests)[keyof typeof $quests]
   ][]
+
+  let carousel: Carousel
+
+  $: if ($scrollToNextQuest && carousel) {
+    carousel.scrollToNext()
+    $scrollToNextQuest = false
+  }
 </script>
 
-<Carousel let:Item>
+<Carousel bind:this={carousel} let:Item>
   {#each _quests as [id, quest]}
     {#if quest.category === $page.params.category}
       <Item>
