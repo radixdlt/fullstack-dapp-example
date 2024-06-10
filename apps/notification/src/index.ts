@@ -44,9 +44,8 @@ uWS
       verifyToken(jwt)
         .map((userId) => {
           childLogger.debug({
-            method: 'upgrade.verifyToken',
-            userId,
-            event: 'success'
+            method: 'upgrade.verifyToken.success',
+            userId
           })
           res.upgrade(
             {
@@ -98,9 +97,9 @@ uWS
   })
   .listen(websocketPort, (token) => {
     if (token) {
-      logger.debug({ method: 'listen', event: 'success', port: websocketPort })
+      logger.debug({ method: 'listen.success', port: websocketPort })
     } else {
-      logger.debug({ method: 'listen', event: 'error', port: websocketPort })
+      logger.debug({ method: 'listen.error', port: websocketPort })
     }
   })
 
@@ -127,11 +126,15 @@ http
             }
 
             activeSocket.send(JSON.stringify(body.data))
-            apiLogger.debug({ userId, data: body.data, event: 'success' })
+            apiLogger.debug({
+              userId,
+              data: body.data,
+              method: `${request.method} ${request.url}.success`
+            })
             respond.success(200, {})
           })
           .mapErr((error) => {
-            apiLogger.error({ error, event: 'error' })
+            apiLogger.error({ error, method: `${request.method} ${request.url}.error` })
             respond.error(400, 'invalid request')
           })
 
