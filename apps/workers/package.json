@@ -6,6 +6,7 @@
     "dev": "tsx --watch src/index.ts | npx pino-pretty",
     "build": "tsup",
     "test": "vitest",
+    "test:ci": "vitest run",
     "clean": "rm -rf dist"
   },
   "license": "SEE LICENSE",

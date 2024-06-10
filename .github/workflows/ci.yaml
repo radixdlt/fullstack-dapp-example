@@ -179,7 +179,7 @@ jobs:
         run: npm run build:ci
 
       - name: Unit tests
-        run: npm run test
+        run: npm run test:ci
 
       - name: Lint
         run: npm run lint

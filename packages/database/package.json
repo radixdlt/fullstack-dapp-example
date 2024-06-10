@@ -13,9 +13,9 @@
     "clear": "prisma migrate reset --force"
   },
   "dependencies": {
-    "@prisma/client": "^5.13.0"
+    "@prisma/client": "^5.15.0"
   },
   "devDependencies": {
-    "prisma": "^5.13.0"
+    "prisma": "^5.15.0"
   }
 }
