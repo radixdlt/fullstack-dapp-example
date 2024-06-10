@@ -18,9 +18,7 @@ export const EventWorker = (
       await job.updateProgress(1)
       logger.debug({
         method: 'eventWorker.process',
-        id: job.id,
-        type: job.data.type,
-        transactionId: job.data.transactionId
+        job: job.data
       })
 
       const result = await eventWorkerController.handler(job)
@@ -37,6 +35,10 @@ export const EventWorker = (
     },
     { connection }
   )
+
+  // worker.on('failed', (job, error) => {
+  //   logger.error({ method: 'eventWorker.failed', error, job })
+  // })
 
   worker.on('completed', (job) => {
     const childLogger = logger.child({
