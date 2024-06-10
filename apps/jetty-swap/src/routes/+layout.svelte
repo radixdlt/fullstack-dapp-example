@@ -13,6 +13,14 @@
   })
 </script>
 
+<svelte:head>
+  {#if PUBLIC_SWAP_VARIATION === 'JETTY'}
+    <title>Jetty Swap</title>
+  {:else}
+    <title>Letty Swap</title>
+  {/if}
+</svelte:head>
+
 <Nav />
 
 <main>
