@@ -2,7 +2,7 @@ import { type ConnectionOptions, Queue, Worker } from 'bullmq'
 import client from 'prom-client'
 import { Queues, getQueues } from './queues'
 import http from 'http'
-import { AppLogger } from 'common'
+import type { AppLogger } from 'common'
 
 export type QueueMetrics = ReturnType<typeof QueueMetrics>
 export const QueueMetrics = (name: string) => {
