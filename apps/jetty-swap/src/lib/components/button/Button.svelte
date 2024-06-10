@@ -41,6 +41,7 @@
   }
 
   .secondary {
+    border: 1px solid var(--color-dark);
     background: transparent;
     color: var(--color-dark);
 
