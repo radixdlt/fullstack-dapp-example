@@ -10,6 +10,8 @@
   "from": "from",
   "to": "to",
   "not-enough-resource": "Not enough {{resource}}s in your wallet",
+  "newbie-hint-letty": "LettySwap is a dummy DEX for the RadQuest game. If you’ve stumbled across LettySwap and want some Clams of your own, visit the",
+  "newbie-hint-jetty": "JettySwap is a dummy DEX for the RadQuest game. If you’ve stumbled across JettySwap and want some Clams of your own, visit the",
   "swap-button": {
     "connect-wallet": "No Wallet Connected",
     "swap": "Swap"

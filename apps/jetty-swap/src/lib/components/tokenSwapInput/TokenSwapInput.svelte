@@ -39,8 +39,7 @@
     flex-direction: column;
     gap: 0.4375rem;
     padding: var(--spacing-xl) 1.25rem;
-    max-width: 19.375rem;
-    min-width: 255px;
+    max-width: 25rem;
 
     @include desktop {
       width: 100%;

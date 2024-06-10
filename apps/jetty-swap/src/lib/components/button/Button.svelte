@@ -2,7 +2,7 @@
   export let disabled = false
   export let loading = false
 
-  export let variation: 'primary' | 'secondary' = 'primary'
+  export let variation: 'primary' | 'secondary' | 'tertiary' = 'primary'
 </script>
 
 <button on:click class:disabled-button={disabled} class={variation} class:loading>
@@ -41,6 +41,7 @@
   }
 
   .secondary {
+    border: 1px solid var(--color-dark);
     background: transparent;
     color: var(--color-dark);
 
@@ -50,6 +51,19 @@
 
     transition: filter 0.2s ease-in-out;
   }
+
+  .tertiary {
+    background: var(--color-inchworm);
+    color: black;
+
+    &:hover:not(.disabled-button) {
+      filter: brightness(0.8);
+      color: var(--color-linen);
+    }
+
+    transition: filter 0.2s ease-in-out;
+  }
+
   .disabled-button {
     background: var(--color-disabled);
     pointer-events: none;
@@ -67,6 +81,13 @@
       border-top-color: var(--color-primary);
       border-radius: 50%;
       animation: spin 1s linear infinite;
+    }
+  }
+
+  .tertiary.loading {
+    &::after {
+      border: 0.2rem solid var(--color-light);
+      border-top-color: black;
     }
   }
 

@@ -72,4 +72,11 @@
     justify-content: center;
     align-items: center;
   }
+
+  .card {
+    background-color: var(--color-linen);
+    padding: 36px 57px 40px 57px;
+    border-radius: var(--border-radius-2xl);
+    width: 400px;
+  }
 </style>
