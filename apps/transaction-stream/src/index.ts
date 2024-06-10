@@ -27,7 +27,7 @@ type Dependencies = {
 const app = async (dependencies: Dependencies) => {
   const dbClient = dependencies.dbClient
 
-  SetupQueueMetrics(config.redis)
+  const metricsClient = SetupQueueMetrics({ connection: config.redis, logger })
 
   await dbClient.event.findFirst()
 
@@ -65,8 +65,15 @@ const app = async (dependencies: Dependencies) => {
   })
   const handleStreamError = HandleStreamError(logger, stream)
 
+  const processedStateVersionMetric = new metricsClient.Gauge({
+    name: 'transaction_stream_processed_state_version',
+    help: 'Transaction stream processed state version'
+  })
+
   stream.transactions$.subscribe(async (transactions) => {
     const result = await handleTransactions(transactions)
+
+    processedStateVersionMetric.set(transactions.stateVersion)
 
     if (result.isErr()) {
       logger.error({

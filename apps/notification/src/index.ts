@@ -108,7 +108,7 @@ http
     const respond = respondFactory(response)
     const apiLogger = logger.child({ method: `${request.method} ${request.url}` })
     switch (`${request.method} ${request.url}`) {
-      case 'POST /api/send':
+      case 'POST /api/send': {
         readRequestBody(request)
           .map((body) => {
             const userId = body?.userId
@@ -139,6 +139,13 @@ http
           })
 
         break
+      }
+
+      case 'GET /metrics': {
+        response.writeHead(200)
+        response.end(client.register.metrics())
+        break
+      }
     }
   })
   .listen(internalApiPort, () => {

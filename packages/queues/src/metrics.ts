@@ -1,24 +1,26 @@
 import { type ConnectionOptions, Queue, Worker } from 'bullmq'
 import client from 'prom-client'
 import { Queues, getQueues } from './queues'
+import http from 'http'
+import { AppLogger } from 'common'
 
 export type QueueMetrics = ReturnType<typeof QueueMetrics>
 export const QueueMetrics = (name: string) => {
   return {
     waitingJobs: new client.Histogram({
-      name: `${name}_queue_waiting_queue_jobs`,
+      name: `${name}_queue_waiting_jobs`,
       help: `The number of waiting jobs in the ${name} queue`
     }),
     completedJobs: new client.Histogram({
-      name: `${name}_queue_completed_queue_jobs`,
+      name: `${name}_queue_completed_jobs`,
       help: `The number of completed jobs in the ${name} queue`
     }),
     failedJobs: new client.Histogram({
-      name: `${name}_queue_failed_queue_jobs`,
+      name: `${name}_queue_failed_jobs`,
       help: `The number of failed jobs in the ${name} queue`
     }),
     activeJobs: new client.Histogram({
-      name: `${name}_queue_active_queue_jobs`,
+      name: `${name}_queue_active_jobs`,
       help: `The number of active jobs in the ${name} queue`
     })
   }
@@ -44,7 +46,15 @@ const setupWorkerEvents = (worker: Worker, queue: Queue, trackMetricsFn: QueueMe
   })
 }
 
-export const SetupQueueMetrics = (connection: ConnectionOptions) => {
+export const SetupQueueMetrics = ({
+  connection,
+  port = 9210,
+  logger
+}: {
+  connection: ConnectionOptions
+  port?: number
+  logger?: AppLogger
+}) => {
   const { transactionQueue, eventQueue, systemQueue } = getQueues(connection)
 
   const queueMetrics = {
@@ -64,4 +74,19 @@ export const SetupQueueMetrics = (connection: ConnectionOptions) => {
   setupWorkerEvents(eventWorker, eventQueue.queue, queueMetrics.eventQueue)
   setupWorkerEvents(transactionWorker, transactionQueue.queue, queueMetrics.transactionQueue)
   setupWorkerEvents(systemWorker, systemQueue.queue, queueMetrics.systemQueue)
+
+  const metricsServer = http.createServer(async (req, res) => {
+    if (req.url === '/metrics') {
+      res.writeHead(200)
+      res.end(await client.register.metrics())
+    } else {
+      res.writeHead(404)
+      res.end()
+    }
+  })
+
+  metricsServer.listen(port)
+  logger?.debug({ method: 'SetupQueueMetrics', port })
+
+  return client
 }
