@@ -240,6 +240,10 @@ export const QuestDefinitions = () => {
         [EventId.JettySwap]: {
           eventName: 'JettySwapEvent',
           type: 'event'
+        },
+        [EventId.LettySwap]: {
+          eventName: 'JettySwapEvent',
+          type: 'event'
         }
       }
     },
