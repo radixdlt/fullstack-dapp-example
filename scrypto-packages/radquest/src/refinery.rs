@@ -110,8 +110,8 @@ mod refinery {
 
             let badge_id = NonFungibleGlobalId::new(badge_address, badge_local_id);
 
-            LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
-            elements.burn();
+            self.admin_badge
+                .authorize_with_amount(1, || elements.burn());
 
             Runtime::emit_event(CombineElementsDepositedEvent { badge_id });
         }
@@ -123,8 +123,10 @@ mod refinery {
             rand_num_1: Decimal,
             rand_num_2: Decimal,
         ) -> () {
-            LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
-            let radgem_bucket = self.radgem_forge.mint_radgem(rand_num_1, rand_num_2);
+
+            let radgem_bucket = self
+                .admin_badge
+                .authorize_with_amount(1, || self.radgem_forge.mint_radgem(rand_num_1, rand_num_2));
 
             // Update the user's RadGem record
             if self.radgem_records.get(&badge_id).is_none() {
@@ -168,9 +170,10 @@ mod refinery {
             radgem_local_id: NonFungibleLocalId,
             key_image_url: Url,
         ) {
-            LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
-            self.radgem_forge
-                .update_key_image(radgem_local_id, key_image_url);
+            self.admin_badge.authorize_with_amount(1, || {
+                self.radgem_forge
+                    .update_key_image(radgem_local_id, key_image_url)
+            });
 
             Runtime::emit_event(CombineElementsAddedRadgemImageEvent { badge_id });
         }
@@ -252,40 +255,40 @@ mod refinery {
                 (radgem_2_data, radgem_1_data)
             };
 
-            LocalAuthZone::push(self.admin_badge.create_proof_of_amount(1));
+            let radmorph = self.admin_badge.authorize_with_amount(1, || {
+                // Burn resources
+                radgem_1.burn();
+                radgem_2.burn();
+                morph_card.burn();
 
-            // Burn resources
-            radgem_1.burn();
-            radgem_2.burn();
-            morph_card.burn();
+                let pre_hash_string = format!(
+                    "{}{}{}{}",
+                    morph_card_data.energy,
+                    radgem_a_data.material,
+                    radgem_a_data.color,
+                    radgem_b_data.color,
+                );
 
-            let pre_hash_string = format!(
-                "{}{}{}{}",
-                morph_card_data.energy,
-                radgem_a_data.material,
-                radgem_a_data.color,
-                radgem_b_data.color,
-            );
+                let result = self
+                    .image_oracle
+                    .get_key_image_url_hash(CryptoUtils::keccak256_hash(
+                        pre_hash_string.as_bytes().to_vec(),
+                    ))
+                    .unwrap();
 
-            let result = self
-                .image_oracle
-                .get_key_image_url_hash(CryptoUtils::keccak256_hash(
-                    pre_hash_string.as_bytes().to_vec(),
-                ))
-                .unwrap();
+                assert_eq!(
+                    result,
+                    CryptoUtils::keccak256_hash(key_image_url.as_str().as_bytes().to_vec())
+                );
 
-            assert_eq!(
-                result,
-                CryptoUtils::keccak256_hash(key_image_url.as_str().as_bytes().to_vec())
-            );
-
-            // Mint a RadMorph
-            let radmorph = self.radmorph_forge.mint_radmorph(
-                morph_card_data,
-                radgem_a_data,
-                radgem_b_data,
-                key_image_url,
-            );
+                // Mint a RadMorph
+                self.radmorph_forge.mint_radmorph(
+                    morph_card_data,
+                    radgem_a_data,
+                    radgem_b_data,
+                    key_image_url,
+                )
+            });
 
             // Emit the event
             Runtime::emit_event(RadmorphCreatedEvent {
