@@ -41,6 +41,7 @@
     "format": {},
     "svelte:check": {},
     "test": {},
+    "test:ci": {},
     "test:integration": {
       "dependsOn": ["^build"],
       "cache": false

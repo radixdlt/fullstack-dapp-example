@@ -13,6 +13,7 @@
     "dev:stream:inspect": "npx --node-options='-r dotenv/config' turbo dev:inspect --filter transaction-stream",
     "dev:workers": "npx --node-options='-r dotenv/config' turbo dev --filter workers",
     "test": "npx --node-options='-r dotenv/config' turbo test",
+    "test:ci": "npx --node-options='-r dotenv/config' turbo test:ci",
     "test:integration": "npx --node-options='-r dotenv/config' turbo test:integration",
     "test:stream": "npx --node-options='-r dotenv/config' turbo test --filter transaction-stream",
     "wallet:create:badges": "npx --node-options='-r dotenv/config' turbo wallet:create:badges --filter typescript-wallet",

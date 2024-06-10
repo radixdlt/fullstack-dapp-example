@@ -11,6 +11,7 @@
     "lint": "prettier --check . && eslint . && npm run svelte:check",
     "format": "prettier --write --no-cache .",
     "test:unit": "vitest",
+    "test:ci": "vitest run",
     "test:storybook": "test-storybook --stories-json",
     "storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
