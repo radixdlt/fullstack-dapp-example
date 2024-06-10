@@ -41,32 +41,16 @@ const setupQueueEvents = (input: {
     childLogger?.debug({ status: `waiting`, value })
     input.trackMetricsFn.waitingJobs.set(value)
   }
-  queueEvent.on('waiting', async () => {
-    await setWaitingJobs()
-  })
-  setWaitingJobs()
-
   const setProgressJobs = async () => {
     const value = await input.queue.getJobCountByTypes('active')
-    childLogger?.debug({ status: `inProgress`, value })
+    childLogger?.debug({ status: `active`, value })
     input.trackMetricsFn.activeJobs.set(value)
   }
-
-  queueEvent.on('progress', async () => {
-    await setProgressJobs()
-  })
-  setProgressJobs()
-
   const setFailedJobs = async () => {
     const value = await input.queue.getJobCountByTypes('failed')
     childLogger?.debug({ status: 'failed', value })
     input.trackMetricsFn.failedJobs.set(value)
   }
-
-  queueEvent.on('failed', async () => {
-    await setFailedJobs()
-  })
-  setFailedJobs()
 
   const setCompletedJobs = async () => {
     const value = await input.queue.getJobCountByTypes('completed')
@@ -74,9 +58,25 @@ const setupQueueEvents = (input: {
     input.trackMetricsFn.completedJobs.set(value)
   }
 
-  queueEvent.on('completed', async () => {
-    await setCompletedJobs()
+  queueEvent.on('waiting', async () => {
+    await setWaitingJobs()
   })
+
+  queueEvent.on('progress', async () => {
+    await Promise.all([setWaitingJobs(), setProgressJobs()])
+  })
+
+  queueEvent.on('failed', async () => {
+    await Promise.all([setWaitingJobs(), setProgressJobs(), setFailedJobs()])
+  })
+
+  queueEvent.on('completed', async () => {
+    await Promise.all([setWaitingJobs(), setProgressJobs(), setCompletedJobs()])
+  })
+
+  setWaitingJobs()
+  setProgressJobs()
+  setFailedJobs()
   setCompletedJobs()
 }
 
