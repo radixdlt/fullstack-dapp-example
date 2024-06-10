@@ -4,6 +4,7 @@ import QuestRewardsEvents from '../fixtures/transactions/quest-rewards-events'
 import NotSupportedTx from '../fixtures/transactions/not-supported-tx'
 import StakedXrdTx from '../fixtures/transactions/staked-xrd'
 import JettySwap from '../fixtures/transactions/jetty-swap'
+import LettySwap from '../fixtures/transactions/letty-swap'
 import MintInstapassBadge from '../fixtures/transactions/mint-instapass-badge'
 import MayaRouterWithdraw from '../fixtures/transactions/maya-router-withdraw'
 import {
@@ -285,5 +286,21 @@ describe('filter transactions', () => {
     const result = filterTransactionsByType([swap2])
     if (result.isErr()) throw result.error
     expect(result.value).lengthOf(0)
+  })
+
+  it('should find LettySwap transaction', () => {
+    const filterResult = filterTransactionsByType([...NotSupportedTx, ...LettySwap])
+
+    if (filterResult.isErr()) throw filterResult.error
+
+    const filteredTransactions = filterResult.value
+    expect(filteredTransactions).lengthOf(1)
+
+    const relevantEvents = Object.values(filteredTransactions[0].relevantEvents)
+    expect(relevantEvents).lengthOf(2)
+
+    const [withdraw, jettySwap] = relevantEvents
+    expect(withdraw.name).toBe('WithdrawEvent')
+    expect(jettySwap.name).toBe('JettySwapEvent')
   })
 })
