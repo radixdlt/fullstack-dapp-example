@@ -447,6 +447,22 @@ export const EventWorkerController = ({
         )
       }
 
+      case EventId.LettySwap: {
+        const maybeAccountAddress: string | undefined = (
+          job.data.relevantEvents['WithdrawEvent'].emitter as any
+        ).entity.entity_address
+
+        return handleQuestWithTrackedAccount(
+          maybeAccountAddress,
+          'SwapQuest',
+          ({ completedRequirements }) =>
+            completedRequirements.filter(
+              ({ requirementId }) =>
+                requirementId === EventId.JettySwap || requirementId === EventId.LettySwap
+            ).length === 2
+        )
+      }
+
       default:
         childLogger.error({
           message: 'Unhandled Event'
