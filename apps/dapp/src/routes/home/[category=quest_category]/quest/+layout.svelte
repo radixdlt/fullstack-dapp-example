@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  import { jettyDialog, user } from '../../../stores'
+  import { jettyDialog, user } from '../../../../stores'
 
   let loggedIn = false
 

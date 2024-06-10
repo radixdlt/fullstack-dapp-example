@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte'
   import { questApi } from '$lib/api/quest-api'
-  import { quests, user, webSocketClient } from '../../../stores'
+  import { quests, user, webSocketClient } from '../../../../stores'
   import type { Quests } from 'content'
   import RequirementsPage from '$lib/components/quest/RequirementsPage.svelte'
   import { i18n } from '$lib/i18n/i18n'

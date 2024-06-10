@@ -1,7 +1,7 @@
 <script lang="ts">
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
-  import { user } from '../../../../stores'
+  import { user } from '../../../../../stores'
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
   import { derived, writable } from 'svelte/store'
   import { i18n } from '$lib/i18n/i18n'

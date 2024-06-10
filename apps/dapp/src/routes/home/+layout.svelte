@@ -6,8 +6,6 @@
   import { userApi } from '$lib/api/user-api'
   import { ResultAsync } from 'neverthrow'
   import { publicConfig } from '$lib/public-config'
-  import Carousel from '$lib/components/carousel/Carousel.svelte'
-  import QuestOverview from '$lib/components/quest-overview/QuestOverview.svelte'
   import { goto, invalidateAll } from '$app/navigation'
   import { quests, user, webSocketClient } from '../../stores'
   import Header from '$lib/components/header/Header.svelte'
@@ -18,7 +16,6 @@
   import { WebSocketClient } from '$lib/websocket-client'
   import { questApi } from '$lib/api/quest-api'
   import { QuestCategory, type QuestId } from 'content'
-  import type { QuestStatus } from '../../types'
   import { useLocalStorage } from '$lib/utils/local-storage'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import LandingPopup from './LandingPopup.svelte'
@@ -147,43 +144,18 @@
 
     if (savedProgress) {
       const { questId, progress } = JSON.parse(savedProgress)
-      goto(`/home/quest/${questId}#${progress}`)
+      goto(
+        `/home/${data.questDefinitions[questId as QuestId].category}/quest/${questId}#${progress}`
+      )
     } else if ($user) {
       questApi.getSavedProgress().map((savedProgress) => {
         if (savedProgress.questId)
-          goto(`home/quest/${savedProgress.questId}#${savedProgress.progress}`)
+          goto(
+            `home/${data.questDefinitions[savedProgress.questId as QuestId].category}/quest/${savedProgress.questId}#${savedProgress.progress}`
+          )
       })
     }
   })
-
-  $: questCardState = Object.entries(data.questDefinitions).reduce(
-    (prev, cur) => {
-      const [id, quest] = cur
-
-      if (data.questStatus[id as QuestId]?.status === 'COMPLETED') {
-        prev[id as QuestId] = 'completed'
-        return prev
-      }
-
-      const preRequisites = quest.preRequisites
-      const isUnlocked = preRequisites.every(
-        (preReq) => data.questStatus[preReq]?.status === 'COMPLETED'
-      )
-
-      const isInProgress = data.questStatus[id as QuestId]?.status === 'IN_PROGRESS'
-
-      prev[id as QuestId] = isInProgress ? 'in-progress' : isUnlocked ? 'unlocked' : 'locked'
-
-      return prev
-    },
-    {} as { [key in QuestId]: QuestStatus }
-  )
-  let _quests = Object.entries($quests) as [
-    keyof typeof $quests,
-    (typeof $quests)[keyof typeof $quests]
-  ][]
-
-  let activeTab = data.questCategory === 'basic' ? QuestCategory.Basic : QuestCategory.Advanced
 
   let showLandingPopup = false
 </script>
@@ -210,33 +182,13 @@
       { name: $i18n.t('main:tabs-basics'), id: QuestCategory.Basic },
       { name: $i18n.t('main:tabs-advanced'), id: QuestCategory.Advanced }
     ]}
+    activeTab={$page.params.category}
     on:tab-changed={(e) => {
-      useCookies('selected-quest-category').set(
-        e.detail === QuestCategory.Basic ? 'basic' : 'advanced'
-      )
+      goto(`/home/${e.detail.toLowerCase()}`)
     }}
-    bind:activeTab
   />
 
   <svelte:fragment slot="quests">
-    <Carousel let:Item>
-      {#each _quests as [id, quest]}
-        {#if quest.category === activeTab}
-          <Item>
-            <QuestOverview
-              title={$i18n.t(`quests:${id}.title`)}
-              description={$i18n.t(`quests:${id}.description`)}
-              minutesToComplete={quest.minutesToComplete}
-              rewards={quest.rewards}
-              backgroundImage={quest.splashImage}
-              state={questCardState[id] ?? 'locked'}
-              link={`/home/quest/${id}`}
-            />
-          </Item>
-        {/if}
-      {/each}
-    </Carousel>
+    <slot />
   </svelte:fragment>
 </Layout>
-
-<slot />

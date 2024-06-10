@@ -6,7 +6,7 @@ import { $Enums } from 'database'
 
 export const load: LayoutServerLoad = ({ fetch, cookies, url, parent }) =>
   parent().then(async ({ questDefinitions, questStatus }) => {
-    const id = url.pathname.split('/')[3] as QuestId
+    const id = url.pathname.split('/')[4] as QuestId
 
     const requirementsResult = await questApi
       .getQuestInformation(id, fetch)

@@ -8,7 +8,7 @@
   } from '$lib/components/quest/Quest.svelte'
   import { onMount, type ComponentProps } from 'svelte'
   import { closeQuest } from './+layout.svelte'
-  import { jettyDialog, quests, showJetty, user } from '../../../stores'
+  import { jettyDialog, quests, showJetty, user } from '../../../../stores'
   import ClaimRewards from './ClaimRewards.svelte'
   import VerifyRequirements from './VerifyRequirements.svelte'
   import { i18n } from '$lib/i18n/i18n'
