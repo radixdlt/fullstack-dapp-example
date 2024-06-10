@@ -7,6 +7,7 @@ import http from 'http'
 import { verifyToken } from './helpers/verifyAuthToken'
 import { readRequestBody } from './helpers/readRequestBody'
 import { respondFactory } from './helpers/respondFactory'
+import client from 'prom-client'
 
 const websocketPort = config.websocket.port
 const internalApiPort = config.api.port
@@ -16,6 +17,11 @@ type WebSocket = uWS.WebSocket<{ userId: string; traceId: string }>
 const activeSockets = new Map<string, WebSocket>()
 
 const getLogger = (ctx: Partial<{ traceId: string; userId: string }>) => logger.child(ctx)
+
+const wsClientsMetric = new client.Histogram({
+  name: `connected_websocket_clients`,
+  help: `The number of connected websocket clients`
+})
 
 uWS
   .App()
@@ -67,6 +73,7 @@ uWS
       const childLogger = getLogger({ traceId, userId })
       childLogger.debug({ method: 'open' })
       activeSockets.set(userId, ws)
+      wsClientsMetric.observe(activeSockets.size)
     },
     message: (ws: WebSocket, message) => {
       const { userId, traceId } = ws.getUserData()
@@ -86,6 +93,7 @@ uWS
       const childLogger = getLogger({ traceId, userId })
       childLogger.debug({ method: 'close' })
       activeSockets.delete(userId)
+      wsClientsMetric.observe(activeSockets.size)
     }
   })
   .listen(websocketPort, (token) => {
