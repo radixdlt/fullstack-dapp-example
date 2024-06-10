@@ -7,6 +7,7 @@ import http from 'http'
 import { verifyToken } from './helpers/verifyAuthToken'
 import { readRequestBody } from './helpers/readRequestBody'
 import { respondFactory } from './helpers/respondFactory'
+import client from 'prom-client'
 
 const websocketPort = config.websocket.port
 const internalApiPort = config.api.port
@@ -16,6 +17,11 @@ type WebSocket = uWS.WebSocket<{ userId: string; traceId: string }>
 const activeSockets = new Map<string, WebSocket>()
 
 const getLogger = (ctx: Partial<{ traceId: string; userId: string }>) => logger.child(ctx)
+
+const wsClientsMetric = new client.Histogram({
+  name: `connected_websocket_clients`,
+  help: `The number of connected websocket clients`
+})
 
 uWS
   .App()
@@ -38,9 +44,8 @@ uWS
       verifyToken(jwt)
         .map((userId) => {
           childLogger.debug({
-            method: 'upgrade.verifyToken',
-            userId,
-            event: 'success'
+            method: 'upgrade.verifyToken.success',
+            userId
           })
           res.upgrade(
             {
@@ -67,6 +72,7 @@ uWS
       const childLogger = getLogger({ traceId, userId })
       childLogger.debug({ method: 'open' })
       activeSockets.set(userId, ws)
+      wsClientsMetric.observe(activeSockets.size)
     },
     message: (ws: WebSocket, message) => {
       const { userId, traceId } = ws.getUserData()
@@ -86,13 +92,14 @@ uWS
       const childLogger = getLogger({ traceId, userId })
       childLogger.debug({ method: 'close' })
       activeSockets.delete(userId)
+      wsClientsMetric.observe(activeSockets.size)
     }
   })
   .listen(websocketPort, (token) => {
     if (token) {
-      logger.debug({ method: 'listen', event: 'success', port: websocketPort })
+      logger.debug({ method: 'listen.success', port: websocketPort })
     } else {
-      logger.debug({ method: 'listen', event: 'error', port: websocketPort })
+      logger.debug({ method: 'listen.error', port: websocketPort })
     }
   })
 
@@ -101,7 +108,7 @@ http
     const respond = respondFactory(response)
     const apiLogger = logger.child({ method: `${request.method} ${request.url}` })
     switch (`${request.method} ${request.url}`) {
-      case 'POST /api/send':
+      case 'POST /api/send': {
         readRequestBody(request)
           .map((body) => {
             const userId = body?.userId
@@ -119,15 +126,26 @@ http
             }
 
             activeSocket.send(JSON.stringify(body.data))
-            apiLogger.debug({ userId, data: body.data, event: 'success' })
+            apiLogger.debug({
+              userId,
+              data: body.data,
+              method: `${request.method} ${request.url}.success`
+            })
             respond.success(200, {})
           })
           .mapErr((error) => {
-            apiLogger.error({ error, event: 'error' })
+            apiLogger.error({ error, method: `${request.method} ${request.url}.error` })
             respond.error(400, 'invalid request')
           })
 
         break
+      }
+
+      case 'GET /metrics': {
+        response.writeHead(200)
+        response.end(client.register.metrics())
+        break
+      }
     }
   })
   .listen(internalApiPort, () => {

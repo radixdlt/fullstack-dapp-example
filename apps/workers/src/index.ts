@@ -3,7 +3,6 @@ import { ConnectionOptions } from 'bullmq'
 import {
   EventModel,
   MessageApi,
-  RadMorphModel,
   UserQuestModel,
   AuditModel,
   UserModel,
@@ -63,7 +62,8 @@ const app = async () => {
   TransactionWorker(connection, {
     logger,
     transactionWorkerController,
-    transactionModel
+    transactionModel,
+    transactionQueue
   })
 
   EventWorker(connection, {
@@ -75,8 +75,7 @@ const app = async () => {
   SystemWorker(connection, {
     logger,
     systemWorkerController: SystemWorkerController({
-      logger,
-      radMorphModel: RadMorphModel(dbClient)
+      logger
     })
   })
 }

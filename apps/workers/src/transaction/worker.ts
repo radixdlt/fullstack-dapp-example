@@ -9,12 +9,14 @@ export const TransactionWorker = (
     logger: AppLogger
     transactionWorkerController: TransactionWorkerController
     transactionModel: TransactionModel
+    transactionQueue: ReturnType<typeof getQueues>['transactionQueue']
   }
 ) => {
-  const { logger, transactionWorkerController, transactionModel } = dependencies
+  const { logger, transactionWorkerController, transactionModel, transactionQueue } = dependencies
   const worker = new Worker<TransactionJob>(
     Queues.TransactionQueue,
     async (job) => {
+      await job.updateProgress(1)
       logger.debug({ method: 'transactionWorker.process', id: job.id, data: job.data })
 
       const { badgeId, badgeResourceAddress, transactionKey, attempt } = job.data
@@ -22,8 +24,6 @@ export const TransactionWorker = (
       const childLogger = logger.child({ traceId: job.data.traceId, type: job.data.type })
 
       const result = await transactionWorkerController.handler({ job, logger: childLogger })
-
-      const { transactionQueue } = getQueues(connection)
 
       if (result.isErr()) {
         logger.debug({

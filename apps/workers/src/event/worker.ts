@@ -15,6 +15,7 @@ export const EventWorker = (
   const worker = new Worker<EventJob>(
     Queues.EventQueue,
     async (job) => {
+      await job.updateProgress(1)
       logger.debug({
         method: 'eventWorker.process',
         id: job.id,

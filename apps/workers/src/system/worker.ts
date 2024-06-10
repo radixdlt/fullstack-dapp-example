@@ -14,6 +14,7 @@ export const SystemWorker = (
   const worker = new Worker<SystemJob>(
     Queues.SystemQueue,
     async (job) => {
+      await job.updateProgress(1)
       logger.debug({
         method: 'systemWorker.process',
         id: job.id,
