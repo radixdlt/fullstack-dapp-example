@@ -39,8 +39,10 @@ mod refinery {
     enable_method_auth! {
         roles {
             admin => updatable_by: [OWNER];
+            super_admin => updatable_by: [OWNER];
         },
         methods {
+            disable => restrict_to: [super_admin];
             combine_elements_deposit => PUBLIC;
             combine_elements_mint_radgem => restrict_to: [admin];
             combine_elements_add_radgem_image => restrict_to: [admin];
@@ -50,6 +52,7 @@ mod refinery {
     }
 
     struct Refinery {
+        enabled: bool,
         admin_badge: FungibleVault,
         radgem_records: KeyValueStore<NonFungibleGlobalId, RadgemDeposit>,
         radgem_vault: NonFungibleVault,
@@ -64,6 +67,7 @@ mod refinery {
     impl Refinery {
         // Instantiate the Refinery
         pub fn new(
+            super_admin_badge_address: ResourceAddress,
             owner_role: OwnerRole,
             mut admin_badge: Bucket,
             element_address: ResourceAddress,
@@ -71,15 +75,24 @@ mod refinery {
             radgem_address: ResourceAddress,
             radmorph_address: ResourceAddress,
         ) -> Global<Refinery> {
-            let radgem_forge =
-                RadgemForge::new(owner_role.clone(), admin_badge.take(1), radgem_address);
-            let radmorph_forge =
-                RadmorphForge::new(owner_role.clone(), admin_badge.take(1), radmorph_address);
+            let radgem_forge = RadgemForge::new(
+                super_admin_badge_address,
+                owner_role.clone(),
+                admin_badge.take(1),
+                radgem_address,
+            );
+            let radmorph_forge = RadmorphForge::new(
+                super_admin_badge_address,
+                owner_role.clone(),
+                admin_badge.take(1),
+                radmorph_address,
+            );
 
             let admin_badge_address = admin_badge.resource_address();
 
             let image_oracle = ImageOracle::new(owner_role.clone(), admin_badge_address);
             Self {
+                enabled: true,
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
                 radgem_records: KeyValueStore::new(),
                 radgem_vault: NonFungibleVault::new(radgem_address),
@@ -94,12 +107,19 @@ mod refinery {
             .prepare_to_globalize(owner_role)
             .roles(roles!(
                 admin => rule!(require(admin_badge_address));
+                super_admin => rule!(require(super_admin_badge_address));
             ))
             .globalize()
         }
 
+        pub fn disable(&mut self) {
+            assert!(self.enabled, "Refinery component already disabled");
+            self.enabled = false;
+        }
+
         // User deposits Elements to be turned into a RadGem
         pub fn combine_elements_deposit(&self, badge_proof: Proof, elements: Bucket) -> () {
+            assert!(self.enabled, "Refinery component disabled");
             assert_eq!(elements.resource_address(), self.element_address);
             assert_eq!(elements.amount(), dec!(10));
             let badge_address = badge_proof.resource_address();
@@ -123,6 +143,7 @@ mod refinery {
             rand_num_1: Decimal,
             rand_num_2: Decimal,
         ) -> () {
+            assert!(self.enabled, "Refinery component disabled");
 
             let radgem_bucket = self
                 .admin_badge
@@ -170,6 +191,8 @@ mod refinery {
             radgem_local_id: NonFungibleLocalId,
             key_image_url: Url,
         ) {
+            assert!(self.enabled, "Refinery component disabled");
+
             self.admin_badge.authorize_with_amount(1, || {
                 self.radgem_forge
                     .update_key_image(radgem_local_id, key_image_url)
@@ -216,6 +239,7 @@ mod refinery {
             morph_card: Bucket,
             key_image_url: Url,
         ) -> Bucket {
+            assert!(self.enabled, "Refinery component disabled");
             // Confirm the resources
             assert_eq!(radgem_1.resource_address(), self.radgem_address);
             assert_eq!(radgem_2.resource_address(), self.radgem_address);

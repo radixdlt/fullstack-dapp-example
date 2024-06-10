@@ -23,7 +23,7 @@ mod element_price_oracle {
             .globalize()
         }
 
-        // TODO: update function for with required logic
+        // TODO: update function for with required logic. Make sure price cannot have greater divisibility than tokens
         pub fn get_price(&self) -> Decimal {
             if self.price.is_some() {
                 return self.price.unwrap();
