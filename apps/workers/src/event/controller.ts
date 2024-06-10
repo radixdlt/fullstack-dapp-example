@@ -442,9 +442,8 @@ export const EventWorkerController = ({
           maybeAccountAddress,
           'SwapQuest',
           ({ completedRequirements }) =>
-            completedRequirements.filter(
-              ({ requirementId }) =>
-                requirementId === EventId.JettySwap || requirementId === EventId.LettySwap
+            completedRequirements.filter(({ requirementId }) =>
+              ([EventId.JettySwap, EventId.LettySwap] as string[]).includes(requirementId)
             ).length === 2
         )
       }
