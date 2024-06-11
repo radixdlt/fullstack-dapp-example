@@ -1,2 +1,2 @@
-pub mod element_price_oracle;
 pub mod clam_dex;
+pub mod clam_oracle;

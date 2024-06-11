@@ -1,7 +1,7 @@
 CALL_METHOD
     Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
     "lock_fee"
-    Decimal("5000")
+    Decimal("500")
 ;
 CALL_METHOD
     Address("${account}")
@@ -18,8 +18,8 @@ CALL_FUNCTION
     Address("${package}")
     "ClamDex"
     "new"
-    "Letty Swap Component"
-    "Use this component to try to swap Clams for Elements"
+    "Jetty Swap Component"
+    "Use this component to swap Clams for Elements"
     Enum<OwnerRole::Fixed>(
         Enum<AccessRule::Protected>(
             Enum<AccessRuleNode::ProofRule>(
@@ -33,8 +33,8 @@ CALL_FUNCTION
     )
     Bucket("bucket1")
     Address("${clam}")
-    Address("${element}")
-    Some(Decimal("1"))
+    Address("${otter_coin}")
+    Some(Decimal("5"))
 ;
 CALL_METHOD
     Address("${account}")

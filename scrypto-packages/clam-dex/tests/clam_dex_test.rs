@@ -5,8 +5,7 @@ struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,
     clam_dex: ClamDex,
     clams: Bucket,
-    clams_address: ResourceAddress,
-    elements_address: ResourceAddress,
+    otter_coin_address: ResourceAddress,
 }
 
 fn arrange_test_environment() -> Result<Test, RuntimeError> {
@@ -20,10 +19,11 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let admin_badge =
         ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(1, &mut env)?;
 
-    let clams =
-        ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(100, &mut env)?;
+    let clams = ResourceBuilder::new_fungible(OwnerRole::None)
+        .divisibility(DIVISIBILITY_NONE)
+        .mint_initial_supply(100, &mut env)?;
 
-    let elements_address = ResourceBuilder::new_fungible(OwnerRole::None)
+    let otter_coin_address = ResourceBuilder::new_fungible(OwnerRole::None)
         .mint_roles(mint_roles! {
             minter => rule!(require(admin_badge.resource_address(&mut env)?));
             minter_updater => rule!(deny_all);
@@ -39,7 +39,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         ))),
         admin_badge.take(dec!(1), &mut env)?,
         clams.resource_address(&mut env)?,
-        elements_address,
+        otter_coin_address,
         Some(dec!(1)),
         package_address,
         &mut env,
@@ -51,8 +51,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         env,
         clam_dex,
         clams,
-        clams_address,
-        elements_address,
+        otter_coin_address,
     })
 }
 
@@ -69,25 +68,21 @@ fn can_swap_clams() -> Result<(), RuntimeError> {
         mut env,
         mut clam_dex,
         clams,
-        clams_address,
-        elements_address,
+        otter_coin_address,
+        ..
     } = arrange_test_environment()?;
 
     // Act
     let result = clam_dex.swap(clams, &mut env)?;
 
     // Assert
-    let elements = result.0;
-    let remaining_clams = result.1;
-
-    assert_eq!(elements.resource_address(&mut env)?, elements_address);
-    assert_eq!(remaining_clams.resource_address(&mut env)?, clams_address);
+    assert_eq!(result.resource_address(&mut env)?, otter_coin_address);
 
     Ok(())
 }
 
 #[test]
-fn can_get_element_price() -> Result<(), RuntimeError> {
+fn can_get_clam_price() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env, clam_dex, ..
