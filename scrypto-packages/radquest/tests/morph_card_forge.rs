@@ -35,10 +35,10 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         .mint_initial_supply([], &mut env)?;
 
     let morph_card_forge = MorphCardForge::new(
+        super_admin_badge.resource_address(&mut env)?,
         OwnerRole::Fixed(rule!(require(
             super_admin_badge.resource_address(&mut env)?
         ))),
-        super_admin_badge.resource_address(&mut env)?,
         admin_badges.take(1.into(), &mut env)?,
         morph_card.resource_address(&mut env)?,
         package_address,
@@ -117,7 +117,7 @@ fn can_mint_fixed_card() -> Result<(), RuntimeError> {
 }
 
 #[test]
-fn cannot_mint_fixed_card_with_wrong_name() -> Result<(), RuntimeError> {
+fn cant_mint_fixed_card_with_wrong_name() -> Result<(), RuntimeError> {
     let Test {
         mut env,
         mut morph_card_forge,
@@ -205,7 +205,7 @@ fn can_set_random_cards() -> Result<(), RuntimeError> {
 }
 #[test]
 
-fn cannot_set_random_cards_with_incorrect_fields() -> Result<(), RuntimeError> {
+fn cant_set_random_cards_with_incorrect_fields() -> Result<(), RuntimeError> {
     let Test {
         mut env,
         mut morph_card_forge,
@@ -333,6 +333,94 @@ fn can_update_card_key_image() -> Result<(), RuntimeError> {
     let morph_card_data: MorphCardData = ResourceManager(morph_card.resource_address(&mut env)?)
         .get_non_fungible_data(morph_card_id, &mut env)?;
     assert_eq!(morph_card_data.key_image_url, key_image_url);
+
+    Ok(())
+}
+
+#[test]
+pub fn can_disable_morph_card_forge() -> Result<(), RuntimeError> {
+    //Arrange
+    let Test {
+        mut env,
+        mut morph_card_forge,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    //Act
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    morph_card_forge.disable(&mut env)?;
+
+    //Assert
+    env.with_component_state(
+        morph_card_forge,
+        |card_forge_state: &mut MorphCardForgeState, _| {
+            assert!(!card_forge_state.enabled);
+        },
+    )?;
+
+    Ok(())
+}
+
+#[test]
+pub fn cannot_mint_random_card_when_disabled() -> Result<(), RuntimeError> {
+    //Arrange
+    let Test {
+        mut env,
+        mut morph_card_forge,
+        super_admin_badge_proof,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    morph_card_forge.disable(&mut env)?;
+
+    //Act
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    let rand_num = dec!(0.9);
+    let result =
+        morph_card_forge.mint_random_card(rand_num, UserId("<test>".to_string()), &mut env);
+
+    //Assert
+    println!("{:?}", result);
+    assert!(result.is_err());
+
+    Ok(())
+}
+
+#[test]
+pub fn cannot_mint_fixed_card_when_disabled() -> Result<(), RuntimeError> {
+    //Arrange
+    let Test {
+        mut env,
+        mut morph_card_forge,
+        super_admin_badge_proof,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    let morph_card_data = MorphCardDataInput {
+        key_image_url: UncheckedUrl("https://www.example.com".to_string()),
+        name: "Molten Lava Morph Card".to_string(),
+        rarity: RARITY[2].to_string(), // Rare
+        energy: ENERGY[0].to_string(), // MoltenLava,
+    };
+    morph_card_forge.set_fixed_cards(vec![morph_card_data], &mut env)?;
+    morph_card_forge.disable(&mut env)?;
+
+    //Act
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    let result = morph_card_forge.mint_fixed_card(
+        "Molten Lava Morph Card".to_string(),
+        UserId("<test>".to_string()),
+        &mut env,
+    );
+
+    //Assert
+    println!("{:?}", result);
+    assert!(result.is_err());
 
     Ok(())
 }

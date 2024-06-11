@@ -11,6 +11,7 @@ struct Test {
     user_badge: Bucket,
     user_id: UserId,
     admin_badge_proof: Proof,
+    super_admin_badge_proof: Proof,
 }
 
 fn arrange_test_environment() -> Result<Test, RuntimeError> {
@@ -36,6 +37,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         .mint_initial_supply([DidData { radquest_kyc: true }], &mut env)?;
 
     let quest_rewards = QuestRewards::new(
+        super_admin_badge.resource_address(&mut env)?,
         OwnerRole::Fixed(rule!(require(
             super_admin_badge.resource_address(&mut env)?
         ))),
@@ -54,6 +56,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     )?;
 
     let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
+    let super_admin_badge_proof = super_admin_badge.create_proof_of_all(&mut env)?;
 
     Ok(Test {
         env,
@@ -62,6 +65,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         user_badge,
         user_id: UserId(format!("<{user_id_string}>")),
         admin_badge_proof,
+        super_admin_badge_proof,
     })
 }
 
@@ -179,6 +183,52 @@ fn cannot_claim_rewards_when_kyc_required() -> Result<(), RuntimeError> {
     );
 
     // Assert
+    assert!(result.is_err());
+
+    Ok(())
+}
+
+#[test]
+pub fn can_disable_quest_rewards() -> Result<(), RuntimeError> {
+    let Test {
+        mut env,
+        mut quest_rewards,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    quest_rewards.disable(&mut env)?;
+
+    Ok(())
+}
+
+#[test]
+pub fn cannot_deposit_rewards_when_disabled() -> Result<(), RuntimeError> {
+    let Test {
+        mut env,
+        mut quest_rewards,
+        user_id,
+        admin_badge_proof,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
+    let reward_2 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    quest_rewards.disable(&mut env)?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    let result = quest_rewards.deposit_reward(
+        user_id,
+        QuestId("1".into()),
+        vec![reward_1, reward_2],
+        &mut env,
+    );
+
     assert!(result.is_err());
 
     Ok(())

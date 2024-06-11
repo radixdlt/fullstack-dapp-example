@@ -17,6 +17,7 @@ CALL_FUNCTION
     Address("${package}")
     "MorphCardForge"
     "new"
+    Address("${super_admin_badge}")
     Enum<OwnerRole::Fixed>(
         Enum<AccessRule::Protected>(
             Enum<AccessRuleNode::ProofRule>(
@@ -28,7 +29,6 @@ CALL_FUNCTION
             )
         )
     )
-    Address("${super_admin_badge}")
     Bucket("admin_badge")
     Address("${morph_card}")
 ;

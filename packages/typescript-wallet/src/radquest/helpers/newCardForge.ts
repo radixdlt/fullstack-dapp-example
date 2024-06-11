@@ -30,6 +30,7 @@ export const newCardForge = () => {
                 Address("${config.radQuest.package}")
                 "MorphCardForge"
                 "new"
+                Address("${config.radQuest.badges.superAdminBadgeAddress}")
                 Enum<OwnerRole::Fixed>(
                     Enum<AccessRule::Protected>(
                         Enum<AccessRuleNode::ProofRule>(
@@ -42,7 +43,6 @@ export const newCardForge = () => {
                     )
                 )
                 # admin_badge should be super_admin_badge
-                Address("${config.radQuest.badges.superAdminBadgeAddress}")
                 Bucket("admin_badge")
                 Address("${config.radQuest.resources.morphEnergyCards}");
             `)

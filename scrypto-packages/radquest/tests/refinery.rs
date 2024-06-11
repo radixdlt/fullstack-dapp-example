@@ -2,7 +2,7 @@ use radquest::{
     image_oracle::image_oracle_test::*,
     morph_card_forge::{MorphCardData, ENERGY},
     radgem_forge::{RadgemData, COMMON_COLOR, MATERIAL, RARE_COLOR},
-    radmorph_forge::RadmorphData,
+    radmorph_forge::{radmorph_forge_test::*, RadmorphData},
     refinery::{refinery_test::*, RARITY},
 };
 use scrypto_test::prelude::*;
@@ -11,6 +11,7 @@ struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,
     refinery: Refinery,
     image_oracle: ImageOracle,
+    radmorph_forge: RadmorphForge,
     elements: Bucket,
     morph_card: Bucket,
     radgems: Bucket,
@@ -19,6 +20,7 @@ struct Test {
     radmorph_address: ResourceAddress,
     user_badge_id: NonFungibleGlobalId,
     admin_badge_proof: Proof,
+    super_admin_badge_proof: Proof,
 }
 
 fn arrange_test_environment() -> Result<Test, RuntimeError> {
@@ -99,6 +101,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         .mint_initial_supply([], &mut env)?;
 
     let refinery = Refinery::new(
+        super_admin_badge.resource_address(&mut env)?,
         OwnerRole::Fixed(rule!(require(
             super_admin_badge.resource_address(&mut env)?
         ))),
@@ -116,8 +119,14 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
             ImageOracle(refinery_state.image_oracle.as_node_id().to_owned())
         })?;
 
+    let radmorph_forge =
+        env.with_component_state(refinery, |refinery_state: &mut RefineryState, _| {
+            RadmorphForge(refinery_state.radmorph_forge.as_node_id().to_owned())
+        })?;
+
     let radmorph_address = radmorph.resource_address(&mut env)?;
     let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
+    let super_admin_badge_proof = super_admin_badge.create_proof_of_all(&mut env)?;
     let user_badge_proof = user_badge.create_proof_of_all(&mut env)?;
     let user_badge_local_id = user_badge.non_fungible_local_ids(&mut env)?.pop().unwrap();
     let user_badge_id =
@@ -127,6 +136,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         env,
         refinery,
         image_oracle,
+        radmorph_forge,
         elements,
         morph_card,
         radgems,
@@ -135,6 +145,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         radmorph_address,
         user_badge_id,
         admin_badge_proof,
+        super_admin_badge_proof,
     })
 }
 
@@ -411,6 +422,106 @@ fn cannot_create_radmorph_with_incorrect_image_url() -> Result<(), RuntimeError>
 
     // Assert
     assert!(result.is_err());
+
+    Ok(())
+}
+
+#[test]
+pub fn can_disable_refinery() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut refinery,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    // Act
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    refinery.disable(&mut env)?;
+
+    // Assert
+    Ok(())
+}
+
+#[test]
+pub fn cannot_combine_elements_deposit_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut refinery,
+        user_badge_proof,
+        super_admin_badge_proof,
+        elements,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    refinery.disable(&mut env)?;
+
+    // Act
+    let result = refinery.combine_elements_deposit(
+        user_badge_proof,
+        elements.take(dec!(10), &mut env)?,
+        &mut env,
+    );
+
+    // Assert
+    println!("{:?}", result);
+    assert!(result.is_err());
+    Ok(())
+}
+
+#[test]
+pub fn cannot_create_radmorph_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut refinery,
+        morph_card,
+        radgems,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    // Act
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    refinery.disable(&mut env)?;
+    let result = refinery.create_radmorph(
+        radgems.take(dec!(1), &mut env)?,
+        radgems.take(dec!(1), &mut env)?,
+        morph_card,
+        UncheckedUrl("https://www.example.com".to_string()),
+        &mut env,
+    );
+
+    // Assert
+    println!("{:?}", result);
+    assert!(result.is_err());
+    Ok(())
+}
+
+#[test]
+pub fn can_disable_morph_card_forge() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut radmorph_forge,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    // Act
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    radmorph_forge.disable(&mut env)?;
+
+    // Assert
+    env.with_component_state(
+        radmorph_forge,
+        |radmorph_forge_state: &mut RadmorphForgeState, _| {
+            assert!(!radmorph_forge_state.enabled);
+        },
+    )?;
 
     Ok(())
 }

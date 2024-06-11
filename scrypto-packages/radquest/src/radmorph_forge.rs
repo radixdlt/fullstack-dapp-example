@@ -17,19 +17,23 @@ mod radmorph_forge {
     enable_method_auth! {
       roles {
         admin => updatable_by: [OWNER];
+        super_admin => updatable_by: [OWNER];
       },
       methods {
+        disable => restrict_to: [super_admin];
         mint_radmorph => restrict_to: [admin];
       }
     }
 
     struct RadmorphForge {
+        enabled: bool,
         admin_badge: FungibleVault,
         radmorph_resource_manager: ResourceManager,
     }
 
     impl RadmorphForge {
         pub fn new(
+            super_admin_badge_address: ResourceAddress,
             owner_role: OwnerRole,
             admin_badge: Bucket,
             radmorph_address: ResourceAddress,
@@ -37,6 +41,7 @@ mod radmorph_forge {
             let admin_badge_address = admin_badge.resource_address();
 
             Self {
+                enabled: true,
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
                 radmorph_resource_manager: ResourceManager::from(radmorph_address),
             }
@@ -44,8 +49,14 @@ mod radmorph_forge {
             .prepare_to_globalize(owner_role)
             .roles(roles!(
                 admin => rule!(require(admin_badge_address));
+                super_admin => rule!(require(super_admin_badge_address));
             ))
             .globalize()
+        }
+
+        pub fn disable(&mut self) {
+            assert!(self.enabled, "RadmorphForge component already disabled");
+            self.enabled = false;
         }
 
         pub fn mint_radmorph(
@@ -55,6 +66,7 @@ mod radmorph_forge {
             radgem2_data: RadgemData,
             key_image_url: Url,
         ) -> Bucket {
+            assert!(self.enabled, "RadmorphForge component disabled");
             let morph_card_rarity_weight = RARITY
                 .iter()
                 .position(|&r| r == &morph_card_data.rarity)

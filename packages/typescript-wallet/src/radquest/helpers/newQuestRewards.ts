@@ -32,6 +32,7 @@ export const newQuestRewards = () =>
           Address("${config.radQuest.package}")
           "QuestRewards"
           "new"
+          Address("${config.radQuest.badges.superAdminBadgeAddress}")
           Enum<OwnerRole::Fixed>(
           Enum<AccessRule::Protected>(
               Enum<AccessRuleNode::ProofRule>(
