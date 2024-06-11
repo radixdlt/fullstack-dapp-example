@@ -96,14 +96,33 @@ services:
         - PUBLIC_NETWORK_ID=2
         - PUBLIC_LOG_LEVEL=debug
     expose:
-      - '3001'
+      - '3003'
     ports:
-      - '3001:3001'
+      - '3003:3003'
     environment:
-      - PORT=${WEB_API_PORT}
-      - PUBLIC_DAPP_DEFINITION_ADDRESS=${PUBLIC_DAPP_DEFINITION_ADDRESS}
+      - PORT=3003
       - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
       - PUBLIC_LOG_LEVEL=debug
+      - PUBLIC_SWAP_VARIATION=JETTY
+    command: pm2-runtime apps/jetty-swap/build/index.js
+
+  letty-swap:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/jetty-swap.Dockerfile
+      target: application
+      args:
+        - PUBLIC_NETWORK_ID=2
+        - PUBLIC_LOG_LEVEL=debug
+    expose:
+      - '3004'
+    ports:
+      - '3004:3004'
+    environment:
+      - PORT=3004
+      - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
+      - PUBLIC_LOG_LEVEL=debug
+      - PUBLIC_SWAP_VARIATION=LETTY
     command: pm2-runtime apps/jetty-swap/build/index.js
 
   admin:
