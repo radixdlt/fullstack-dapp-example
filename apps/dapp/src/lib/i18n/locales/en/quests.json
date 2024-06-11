@@ -117,6 +117,7 @@
   },
   "SwapQuest": {
     "requirements": {
+      "LearnAboutDexes": "Learn about DEXes",
       "JettySwap": "Swap tokens on Jetty Swap",
       "LettySwap": "Swap tokens on Letty Swap"
     },
