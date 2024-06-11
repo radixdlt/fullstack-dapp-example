@@ -2,9 +2,21 @@
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import JettyImage from '@images/landing-popup-jetty.webp'
+  import { onMount } from 'svelte'
+  import { showJetty } from '../../stores'
+  import { backOut } from 'svelte/easing'
+  import { scale } from 'svelte/transition'
+
+  onMount(() => {
+    $showJetty = false
+
+    return () => {
+      $showJetty = true
+    }
+  })
 </script>
 
-<div class="landing-popup card">
+<div class="landing-popup card" transition:scale|local={{ easing: backOut }}>
   <div class="image only-desktop">
     <img src={JettyImage} alt="Jetty" />
   </div>
