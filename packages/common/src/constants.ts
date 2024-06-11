@@ -46,6 +46,12 @@ export const Addresses = (networkId: number) => {
         dapps: {
           instapass: {
             url: 'https://instapass-lite-dev.instapass.fi/RadQuest/'
+          },
+          jettySwap: {
+            url: 'https://jettyswap-dev.rdx-works-main.extratools.works'
+          },
+          lettySwap: {
+            url: 'https://lettyswap-dev.rdx-works-main.extratools.works'
           }
         }
       }
