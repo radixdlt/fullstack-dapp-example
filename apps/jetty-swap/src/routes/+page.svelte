@@ -25,6 +25,15 @@
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import SwapResult from '$lib/components/swapResult/SwapResult.svelte'
   import SwapCardHeader from '$lib/components/swapCardHeader/SwapCardHeader.svelte'
+  import { PUBLIC_SWAP_VARIATION } from '$env/static/public'
+
+  onMount(async () => {
+    if (PUBLIC_SWAP_VARIATION === 'JETTY') {
+      await import('../jetty.scss')
+    } else {
+      await import('../letty.scss')
+    }
+  })
 
   const ThemedResources = {
     JETTY: {
@@ -198,6 +207,14 @@
 
   rotateMarketEstimate()
 </script>
+
+<svelte:head>
+  {#if env.PUBLIC_SWAP_VARIATION === 'JETTY'}
+    <title>Jetty Swap</title>
+  {:else}
+    <title>Letty Swap</title>
+  {/if}
+</svelte:head>
 
 {#if modal === 'failure'}
   <Backdrop>
