@@ -52,6 +52,9 @@ export const Addresses = (networkId: number) => {
           },
           lettySwap: {
             url: 'https://lettyswap-dev.rdx-works-main.extratools.works'
+          },
+          radquest: {
+            url: 'https://radquest-dev.rdx-works-main.extratools.works'
           }
         }
       }

@@ -97,6 +97,7 @@
     }
 
     $rdt = RadixDappToolkit(swapConfig)
+    $rdt.buttonApi.setTheme(isJetty ? 'radix-blue' : 'black')
     $gatewayApi = GatewayApi(parseInt(env.PUBLIC_NETWORK_ID, 0))
     $rdt?.walletApi.setRequestData(DataRequestBuilder.accounts().exactly(1))
     $rdt?.walletApi.walletData$.subscribe((data) => {
@@ -290,7 +291,7 @@
   </div>
   <div class="newbie-hint">
     {$i18n.t(`main:newbie-hint-${isJetty ? 'jetty' : 'letty'}`)}
-    <a href="?">Radquest site</a>.
+    <a href={addresses.dapps.radquest.url}>Radquest site</a>.
   </div>
 </section>
 
