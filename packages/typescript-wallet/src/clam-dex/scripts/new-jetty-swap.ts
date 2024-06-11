@@ -6,4 +6,4 @@ mintAdminBadge({
   adminBadgeAddress: Addresses(2).badges.adminBadgeAddress,
   superAdminBadgeAddress: Addresses(2).badges.superAdminBadgeAddress,
   amount: 1
-}).then(() => newClamDex('JettySwap Component', 'Use this component to swap Clams for Elements', 1))
+}).then(() => newClamDex('JettySwap Component', 'Use this component to swap Clams for Elements', 5))
