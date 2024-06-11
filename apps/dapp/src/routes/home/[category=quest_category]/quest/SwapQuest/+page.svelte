@@ -19,10 +19,6 @@
   const addresses = Addresses(publicConfig.networkId)
   const jettySwap = writable(data.requirements?.JettySwap)
   const lettySwap = writable(data.requirements?.LettySwap)
-  const rewardsDeposited = writable(
-    data.questStatus.SwapQuest?.status === 'REWARDS_DEPOSITED' ||
-      data.questStatus.SwapQuest?.status === 'COMPLETED'
-  )
   onMount(() => {
     const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'JettySwap') {
@@ -32,11 +28,6 @@
 
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'LettySwap') {
         $lettySwap = true
-        messageApi.markAsSeen(message.id)
-      }
-
-      if (message.type === 'QuestRewardsDeposited' && message.questId === 'SwapQuest') {
-        $rewardsDeposited = true
         messageApi.markAsSeen(message.id)
       }
     })
