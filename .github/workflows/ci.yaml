@@ -383,9 +383,9 @@ jobs:
       snyk_target_ref: ${{ github.ref_name }}
       with_sbom: false
 
-  deploy_pull_request:
+  deploy_pull_request: 
     if: ${{ github.event.pull_request }}
-    runs-on: ubuntu-latest
+    name: Deploy PR
     needs:
       - push-dapp
       - push-swap
@@ -393,52 +393,24 @@ jobs:
       - push-transaction-stream
       - push-worker
       - setup-tags
-    steps:
-      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'radquest'
-          step_name: 'deploy-mnnet'
-          secret_prefix: 'GH'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/jenkins-credentials-RTHKoO'
-          parse_json: true
-      - name: Connect to tailnet
-        uses: radixdlt/public-iac-resuable-artifacts/tailnet@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          region: 'eu-west-2'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/tailscale-public-workflows-DpiE80'
-      - name: Trigger jenkins job to deploy PR
-        uses: RDXWorks-actions/jenkins-job-trigger-action@master
-        with:
-          jenkins_url: ${{ env.GH_JENKINS_URL }}
-          jenkins_user: ${{ env.GH_JENKINS_USER }}
-          jenkins_token: ${{ env.GH_JENKINS_API_TOKEN }}
-          job_name: ${{ env.jenkins_job_name }}
-          job_params: |
-            {
-              "git_repo" : "${{ github.repository }}",
-              "git_branch" : "${{ github.head_ref }}",
-              "helmfile_environment": "pr",
-              "hierarchical_namespace": "radquest-ci-pr",
-              "namespace" : "radquest-pr-${{ github.event.number }}",
-              "create_subnamespace" : "true",
-              "aws_region" : "eu-west-2",
-              "aws_iam_role": "arn:aws:iam::${{ secrets.AWS_DEV_ACCOUNT_ID }}:role/jenkins-radquest-pr-deployer",
-              "aws_eks_cluster" : "${{ env.dev_eks_cluster }}",
-              "helm_folder" : "${{ env.helm_dir }}",
-              "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }},ci.prNumber=${{ github.event.number }}"
-            }
-          job_timeout: '3600'
-          fetch_logs: 'false'
-      - name: Write URL to GH summary
-        run: |
-          echo "PR URL is: https://radquest-pr-${{ github.event.number }}.rdx-works-main.extratools.works" >> $GITHUB_STEP_SUMMARY
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
+    with:
+      jenkins_job_name: "kubernetes-deployments/job/radquest"
+      application_name: "radquest"
+      hierarchical_namespace: "radquest-ci-pr"
+      create_subnamespace: "true"
+      kubernetes_namespace: "radquest-pr-${{ github.event.number }}"
+      aws_eks_cluster: "rdx-works-main-dev"
+      aws_iam_role_name: "jenkins-radquest-pr-deployer"
+      helmfile_environment: "pr"
+      helmfile_extra_vars: "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }},ci.prNumber=${{ github.event.number }}"
+    secrets:
+      aws_deployment_account_id: ${{ secrets.AWS_DEV_ACCOUNT_ID }}
+      secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
 
   deploy_dev:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    environment: dev
+    name: Deploy DEV
     needs:
       - push-dapp
       - push-swap
@@ -446,47 +418,23 @@ jobs:
       - push-transaction-stream
       - push-worker
       - setup-tags
-    steps:
-      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'radquest'
-          step_name: 'deploy-mnnet'
-          secret_prefix: 'GH'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/jenkins-credentials-RTHKoO'
-          parse_json: true
-      - name: Connect to tailnet
-        uses: radixdlt/public-iac-resuable-artifacts/tailnet@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          region: 'eu-west-2'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/tailscale-public-workflows-DpiE80'
-      - name: Trigger jenkins job to deploy dev
-        uses: RDXWorks-actions/jenkins-job-trigger-action@master
-        with:
-          jenkins_url: ${{ env.GH_JENKINS_URL }}
-          jenkins_user: ${{ env.GH_JENKINS_USER }}
-          jenkins_token: ${{ env.GH_JENKINS_API_TOKEN }}
-          job_name: ${{ env.jenkins_job_name }}
-          job_params: |
-            {
-              "git_repo" : "${{ github.repository }}",
-              "git_branch" : "${{ github.ref }}",
-              "helmfile_environment": "dev",
-              "namespace" : "radquest-dev",
-              "aws_region" : "eu-west-2",
-              "aws_iam_role": "arn:aws:iam::${{ secrets.AWS_DEV_ACCOUNT_ID }}:role/jenkins-radquest-dev-deployer",
-              "aws_eks_cluster" : "${{ env.dev_eks_cluster }}",
-              "helm_folder" : "${{ env.helm_dir }}",
-              "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}"
-            }
-          job_timeout: '3600'
-          fetch_logs: 'false'
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
+    with:
+      github_environment: "dev"
+      jenkins_job_name: "kubernetes-deployments/job/radquest"
+      application_name: "radquest"
+      kubernetes_namespace: "radquest-dev"
+      aws_eks_cluster: "rdx-works-main-dev"
+      aws_iam_role_name: "jenkins-radquest-dev-deployer"
+      helmfile_environment: "dev"
+      helmfile_extra_vars: "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}"
+    secrets:
+      aws_deployment_account_id: ${{ secrets.AWS_DEV_ACCOUNT_ID }}
+      secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
 
   deploy_stokenet:
     if: github.event_name == 'release' && github.event.action == 'prereleased'
-    runs-on: ubuntu-latest
-    environment: stokenet
+    name: Deploy STOKENET
     needs:
       - push-dapp
       - push-swap
@@ -494,47 +442,23 @@ jobs:
       - push-transaction-stream
       - push-worker
       - setup-tags
-    steps:
-      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'radquest'
-          step_name: 'deploy-mnnet'
-          secret_prefix: 'GH'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/jenkins-credentials-RTHKoO'
-          parse_json: true
-      - name: Connect to tailnet
-        uses: radixdlt/public-iac-resuable-artifacts/tailnet@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          region: 'eu-west-2'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/tailscale-public-workflows-DpiE80'
-      - name: Trigger jenkins job to deploy stokenet
-        uses: RDXWorks-actions/jenkins-job-trigger-action@master
-        with:
-          jenkins_url: ${{ env.GH_JENKINS_URL }}
-          jenkins_user: ${{ env.GH_JENKINS_USER }}
-          jenkins_token: ${{ env.GH_JENKINS_API_TOKEN }}
-          job_name: ${{ env.jenkins_job_name }}
-          job_params: |
-            {
-              "git_repo" : "${{ github.repository }}",
-              "git_branch" : "${{ github.ref }}",
-              "helmfile_environment": "stokenet",
-              "namespace" : "radquest-stokenet",
-              "aws_region" : "eu-west-2",
-              "aws_iam_role": "arn:aws:iam::${{ secrets.AWS_PROD_ACCOUNT_ID }}:role/jenkins-radquest-stokenet-deployer",
-              "aws_eks_cluster" : "${{ env.prod_eks_cluster }}",
-              "helm_folder" : "${{ env.helm_dir }}",
-              "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}"
-            }
-          job_timeout: '3600'
-          fetch_logs: 'false'
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
+    with:
+      github_environment: "stokenet"
+      jenkins_job_name: "kubernetes-deployments/job/radquest"
+      application_name: "radquest"
+      kubernetes_namespace: "radquest-stokenet"
+      aws_eks_cluster: "rtlj-prod"
+      aws_iam_role_name: "jenkins-radquest-stokenet-deployer"
+      helmfile_environment: "stokenet"
+      helmfile_extra_vars: "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}"
+    secrets:
+      secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
+      aws_deployment_account_id: ${{ secrets.AWS_PROD_ACCOUNT_ID }}
 
   deploy_mainnet:
     if: github.event_name == 'release' && github.event.action == 'released'
-    runs-on: ubuntu-latest
-    environment: mainnet
+    name: Deploy MAINNET
     needs:
       - push-dapp
       - push-swap
@@ -542,42 +466,19 @@ jobs:
       - push-transaction-stream
       - push-worker
       - setup-tags
-    steps:
-      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'radquest'
-          step_name: 'deploy-mnnet'
-          secret_prefix: 'GH'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/jenkins-credentials-RTHKoO'
-          parse_json: true
-      - name: Connect to tailnet
-        uses: radixdlt/public-iac-resuable-artifacts/tailnet@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          region: 'eu-west-2'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/tailscale-jl5Bqe'
-      - name: Trigger jenkins job to deploy mainnet
-        uses: RDXWorks-actions/jenkins-job-trigger-action@master
-        with:
-          jenkins_url: ${{ env.GH_JENKINS_URL }}
-          jenkins_user: ${{ env.GH_JENKINS_USER }}
-          jenkins_token: ${{ env.GH_JENKINS_API_TOKEN }}
-          job_name: ${{ env.jenkins_job_name }}
-          job_params: |
-            {
-              "git_repo" : "${{ github.repository }}",
-              "git_branch" : "${{ github.ref }}",
-              "helmfile_environment": "mainnet",
-              "namespace" : "radquest-mainnet",
-              "aws_region" : "eu-west-2",
-              "aws_iam_role": "arn:aws:iam::${{ secrets.AWS_PROD_ACCOUNT_ID }}:role/jenkins-radquest-mainnet-deployer",
-              "aws_eks_cluster" : "${{ env.prod_eks_cluster }}",
-              "helm_folder" : "${{ env.helm_dir }}",
-              "helmfile_extra_vars" : "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}"
-            }
-          job_timeout: '3600'
-          fetch_logs: 'false'
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
+    with:
+      github_environment: "mainnet"
+      jenkins_job_name: "kubernetes-deployments/job/radquest"
+      application_name: "radquest"
+      kubernetes_namespace: "radquest-mainnet"
+      aws_eks_cluster: "rtlj-prod"
+      aws_iam_role_name: "jenkins-radquest-mainnet-deployer"
+      helmfile_environment: "mainnet"
+      helmfile_extra_vars: "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}"
+    secrets:
+      secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
+      aws_deployment_account_id: ${{ secrets.AWS_PROD_ACCOUNT_ID }}
 
   snyk-monitor:
     runs-on: ubuntu-latest
@@ -703,7 +604,7 @@ jobs:
           snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
           image: docker.io/radixdlt/radquest-transaction-stream:${{ needs.setup-tags.outputs.tag-with-network }}
           target_ref: ${{ github.ref_name }}
-
+ 
   snyk-container-monitor-worker:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -737,7 +638,7 @@ jobs:
           fetch-depth: 0
       - name: Install dependencies
         run: npm install
-
+ 
       - name: Validate PR commits with commitlint
         if: github.event_name == 'pull_request'
         run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
