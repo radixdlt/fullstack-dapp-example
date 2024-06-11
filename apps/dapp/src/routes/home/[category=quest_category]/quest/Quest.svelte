@@ -196,6 +196,9 @@
       on:requirements-not-met={() => {
         nextDisabled = true
       }}
+      on:loading={(e) => {
+        e.detail ? (nextDisabled = true) : (nextDisabled = false)
+      }}
     />
   {/if}
 </Quest>
