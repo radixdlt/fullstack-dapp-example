@@ -4,24 +4,24 @@ import { describe, it, expect } from 'vitest'
 describe('hash creation', () => {
   const testCases = [
     [
-      'Molten LavaMetallicDuskForesthttps://www.test.com/image1url',
-      'c12f7d993c3ace8a25f49731e4836acbf69be2b6a95670fc7c1d3d594b8b329c'
+      'Molten LavaCrystallineDuskForest',
+      '197ca17fff60c13f83525d72b00df0dd635761efde784fced57c6a312adfb501'
     ],
     [
       'https://www.test.com/image1url',
       '648da20701f5eb52a4cfb304652c3984c589a766e4ed9d8de5b7b71bf8a6c21f'
     ],
     [
-      'Molten LavaMetallicDuskForesthttps://www.test.com/image2url',
-      'cb8af8debfb69c5a8f8302645b30c73b1e096be36b1e7f4b2f468a491a5fb941'
+      'Molten LavaMetallicDuskForest',
+      'd1889d1a7275e49c18c7c07d24063af49651adbeda382b637d72b2a127f868be'
     ],
     [
       'https://www.test.com/image2url',
       'dd052a044d37f98bb5a3edf71f6fb08fd8787f42243d3fb6b54a0ca09b909643'
     ],
     [
-      'Molten LavaMetallicDuskForesthttps://www.test.com/image3url',
-      '4a962025cad241a583c4f2b25007a8f928963b8cc6adac6dcbeec1ff94077f85'
+      'Molten LavaRadiantDuskForest',
+      '0695c5bbf6ddaa6e6066aa405df712f7dfda99262fcd107482f3ceb89375a09f'
     ],
     [
       'https://www.test.com/image3url',
@@ -40,13 +40,13 @@ describe('hash creation', () => {
       radmorphUrlsToTuples([
         {
           id: 'S001_MET_PRP_LGN',
-          url: 'https://www.test.com/image3url'
+          url: 'https://www.test.com/image2url'
         }
       ])
     ).toBe(
       `Tuple(
-        Bytes("4a962025cad241a583c4f2b25007a8f928963b8cc6adac6dcbeec1ff94077f85"),
-        Bytes("170b618e9981c567c0de560a5a2e62e470cf66847999a461d9f878d3583e080f"),
+        Bytes("d1889d1a7275e49c18c7c07d24063af49651adbeda382b637d72b2a127f868be"),
+        Bytes("dd052a044d37f98bb5a3edf71f6fb08fd8787f42243d3fb6b54a0ca09b909643"),
       )`
     )
   })
