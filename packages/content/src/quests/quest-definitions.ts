@@ -1,11 +1,10 @@
 import { EventId } from 'common'
 
-export type QuestCategory = keyof typeof QuestCategory
+export type QuestCategory = (typeof QuestCategory)[keyof typeof QuestCategory]
 
 export const QuestCategory = {
-  Basic: 'Basic',
-  Advanced: 'Advanced',
-  dApp: 'dApp'
+  Basic: 'basic',
+  Advanced: 'advanced'
 } as const
 
 export type FungibleToken = { amount: number }
@@ -70,7 +69,7 @@ export const QuestDefinitions = () => {
     WelcomeToRadQuest: {
       id: 'WelcomeToRadQuest',
       trackedAccountAddress: false,
-      category: 'Basic',
+      category: 'basic',
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: [],
       minutesToComplete: 3,
@@ -90,7 +89,7 @@ export const QuestDefinitions = () => {
     },
     WhatIsRadix: {
       id: 'WhatIsRadix',
-      category: 'Basic',
+      category: 'basic',
       trackedAccountAddress: false,
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: ['WelcomeToRadQuest'],
@@ -111,7 +110,7 @@ export const QuestDefinitions = () => {
     },
     GetRadixWallet: {
       id: 'GetRadixWallet',
-      category: 'Basic',
+      category: 'basic',
       trackedAccountAddress: false,
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: ['WhatIsRadix'],
@@ -124,7 +123,7 @@ export const QuestDefinitions = () => {
     },
     LoginWithWallet: {
       id: 'LoginWithWallet',
-      category: 'Basic',
+      category: 'basic',
       trackedAccountAddress: false,
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: ['GetRadixWallet'],
@@ -140,7 +139,7 @@ export const QuestDefinitions = () => {
     },
     FirstTransactionQuest: {
       id: 'FirstTransactionQuest',
-      category: 'Basic',
+      category: 'basic',
       trackedAccountAddress: false,
       rewards: [
         {
@@ -167,7 +166,7 @@ export const QuestDefinitions = () => {
     TransferTokens: {
       id: 'TransferTokens',
       trackedAccountAddress: false,
-      category: 'Basic',
+      category: 'basic',
       rewards: [
         {
           name: 'element',
@@ -193,7 +192,7 @@ export const QuestDefinitions = () => {
     },
     StakingQuest: {
       id: 'StakingQuest',
-      category: 'Advanced',
+      category: 'advanced',
       trackedAccountAddress: true,
       rewards: [
         {
@@ -215,7 +214,7 @@ export const QuestDefinitions = () => {
     },
     SwapQuest: {
       id: 'SwapQuest',
-      category: 'Advanced',
+      category: 'advanced',
       rewards: [
         {
           name: 'element',
@@ -249,7 +248,7 @@ export const QuestDefinitions = () => {
     },
     InstapassQuest: {
       id: 'InstapassQuest',
-      category: 'Advanced',
+      category: 'advanced',
       rewards: [
         {
           name: 'element',
@@ -272,7 +271,7 @@ export const QuestDefinitions = () => {
     },
     MayaQuest: {
       id: 'MayaQuest',
-      category: 'Advanced',
+      category: 'advanced',
       rewards: [
         {
           name: 'element',
@@ -296,7 +295,7 @@ export const QuestDefinitions = () => {
     },
     ReferralQuest: {
       id: 'ReferralQuest',
-      category: 'Advanced',
+      category: 'advanced',
       rewards: [
         {
           name: 'element',

@@ -21,8 +21,7 @@ export const useCookies = <
   T extends
     | CookieEntry<QuestStatusCookieKey, $Enums.QuestStatus>
     | CookieEntry<RequirementCookieKey, boolean>
-    | CookieEntry<SavedProgressCookieKey, number>
-    | CookieEntry<'selected-quest-category', 'basic' | 'advanced'>,
+    | CookieEntry<SavedProgressCookieKey, number>,
   V extends T['key']
 >(
   item: V

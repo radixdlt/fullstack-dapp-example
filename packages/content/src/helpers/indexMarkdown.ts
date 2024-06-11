@@ -2,7 +2,8 @@ import fs from 'fs'
 import path from 'path'
 import { produce } from 'immer'
 import markdown from 'markdown-it'
-const md = markdown()
+
+const md = markdown({ html: true })
 
 export const indexMarkdownFiles = (directoryPath: string) => {
   const itemIds = fs.readdirSync(directoryPath)

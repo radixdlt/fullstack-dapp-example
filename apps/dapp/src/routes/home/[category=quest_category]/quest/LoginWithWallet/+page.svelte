@@ -1,7 +1,7 @@
 <script lang="ts">
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
-  import { user } from '../../../../stores'
+  import { user } from '../../../../../stores'
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
   import { derived, writable } from 'svelte/store'
   import { i18n } from '$lib/i18n/i18n'
@@ -198,23 +198,11 @@
   {/if}
 
   {#if render('5')}
-    {@html text['5a.md']}
-
-    <img src={'/connect-button.png'} style:width="150px" alt="The Radix connect button" />
-
-    {@html text['5b.md']}
+    {@html text['5.md']}
   {/if}
 
   {#if render('6')}
-    {@html text['6a.md']}
-
-    <img
-      src={'/quests-images/key/ConnectQuest.webp'}
-      style:width="400px"
-      alt="The Radix Wallet app connecting to a browser"
-    />
-
-    {@html text['6b.md']}
+    {@html text['6.md']}
   {/if}
 
   {#if render('7')}

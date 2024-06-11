@@ -162,13 +162,7 @@
   {/if}
 
   {#if render('3')}
-    {@html text['3a.md']}
-
-    <div class="image">
-      <img src="/quests-images/key/RadixQuest.webp" width="300" alt="Network of quest icons" />
-    </div>
-
-    {@html text['3b.md']}
+    {@html text['3.md']}
   {/if}
 
   {#if render('4')}
@@ -183,10 +177,3 @@
     <Error>{$i18n.t('quests:somethingWentWrong')}</Error>
   {/if}
 </Quest>
-
-<style>
-  .image {
-    display: flex;
-    justify-content: center;
-  }
-</style>

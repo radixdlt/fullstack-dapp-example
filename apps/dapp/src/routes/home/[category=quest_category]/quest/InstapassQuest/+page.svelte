@@ -4,7 +4,7 @@
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
   import type { Quests } from 'content'
-  import { user } from '../../../../stores'
+  import { user } from '../../../../../stores'
   import { Addresses } from 'common'
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
 
