@@ -55,7 +55,8 @@
     "database": "*",
     "flowbite-svelte": "^0.44.24",
     "flowbite-svelte-icons": "^1.6.1",
-    "tailwind-merge": "^2.3.0",
-    "queues": "*"
+    "jsonwebtoken": "^9.0.2",
+    "queues": "*",
+    "tailwind-merge": "^2.3.0"
   }
 }
