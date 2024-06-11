@@ -25,7 +25,6 @@
   )
   onMount(() => {
     const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
-      console.log(message)
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'JettySwap') {
         $jettySwap = true
         messageApi.markAsSeen(message.id)

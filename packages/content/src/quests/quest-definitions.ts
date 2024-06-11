@@ -233,6 +233,9 @@ export const QuestDefinitions = () => {
       minutesToComplete: 5,
       preRequisites: ['TransferTokens'],
       requirements: {
+        LearnAboutDexes: {
+          type: 'content'
+        },
         [EventId.JettySwap]: {
           eventName: 'JettySwapEvent',
           type: 'event'
