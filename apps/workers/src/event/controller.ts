@@ -432,7 +432,8 @@ export const EventWorkerController = ({
         return handleQuestWithTrackedAccount(maybeAccountAddress, 'StakingQuest')
       }
 
-      case EventId.JettySwap: {
+      case EventId.JettySwap:
+      case EventId.LettySwap: {
         const maybeAccountAddress: string | undefined = (
           job.data.relevantEvents['WithdrawEvent'].emitter as any
         ).entity.entity_address
@@ -441,9 +442,9 @@ export const EventWorkerController = ({
           maybeAccountAddress,
           'SwapQuest',
           ({ completedRequirements }) =>
-            !!completedRequirements.filter(
-              ({ requirementId }) => requirementId === EventId.JettySwap
-            ).length
+            completedRequirements.filter(({ requirementId }) =>
+              ([EventId.JettySwap, EventId.LettySwap] as string[]).includes(requirementId)
+            ).length === 2
         )
       }
 
