@@ -53,6 +53,16 @@
   const handleKeydown = (event: KeyboardEvent) => {
     if (event.key === 'Escape') open = false
   }
+
+  const clearLocalStorageAndCookies = () => {
+    localStorage.clear()
+    document.cookie.split(';').forEach(function (c) {
+      document.cookie = c
+        .replace(/^ +/, '')
+        .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/')
+    })
+    invalidateAll()
+  }
 </script>
 
 <svelte:window on:keydown={(e) => handleKeydown(e)} />
@@ -70,8 +80,9 @@
     <div class="card buttons">
       <Button on:click={unlockQuests}>Unlock All Quests</Button>
       <Button on:click={registerAccount}>Register Account</Button>
-      <Button on:click={populate}>Populate With Resources</Button>
-      <Button on:click={clearDb}>Clear Database</Button>
+      <Button on:click={populate}>Populate With Resources (requires log in + account)</Button>
+      <Button on:click={clearDb}>Clear Database (requires log in)</Button>
+      <Button on:click={clearLocalStorageAndCookies}>Clear Local Storage</Button>
     </div>
   </Backdrop>
 {/if}
