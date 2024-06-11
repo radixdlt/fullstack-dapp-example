@@ -1,4 +1,4 @@
-import { type ConnectionOptions, Queue, Worker } from 'bullmq'
+import { type ConnectionOptions, Queue, QueueEvents } from 'bullmq'
 import client from 'prom-client'
 import { Queues, getQueues } from './queues'
 import http from 'http'
@@ -7,43 +7,77 @@ import type { AppLogger } from 'common'
 export type QueueMetrics = ReturnType<typeof QueueMetrics>
 export const QueueMetrics = (name: string) => {
   return {
-    waitingJobs: new client.Histogram({
+    waitingJobs: new client.Gauge({
       name: `${name}_queue_waiting_jobs`,
       help: `The number of waiting jobs in the ${name} queue`
     }),
-    completedJobs: new client.Histogram({
+    completedJobs: new client.Gauge({
       name: `${name}_queue_completed_jobs`,
       help: `The number of completed jobs in the ${name} queue`
     }),
-    failedJobs: new client.Histogram({
+    failedJobs: new client.Gauge({
       name: `${name}_queue_failed_jobs`,
       help: `The number of failed jobs in the ${name} queue`
     }),
-    activeJobs: new client.Histogram({
+    activeJobs: new client.Gauge({
       name: `${name}_queue_active_jobs`,
       help: `The number of active jobs in the ${name} queue`
     })
   }
 }
 
-const setupQueueEvents = (queue: Queue, trackMetricsFn: QueueMetrics) => {
-  queue.on('waiting', async () => {
-    trackMetricsFn.waitingJobs.observe(await queue.getJobCountByTypes('wait'))
+const setupQueueEvents = (input: {
+  queue: Queue
+  queueName: keyof typeof Queues
+  connection: ConnectionOptions
+  trackMetricsFn: QueueMetrics
+  logger?: AppLogger
+}) => {
+  const queueEvent = new QueueEvents(input.queueName, { connection: input.connection })
+  const childLogger = input.logger?.child({ queue: input.queueName, method: 'queueMetrics' })
+
+  const setWaitingJobs = async () => {
+    const value = await input.queue.getJobCountByTypes('wait')
+    childLogger?.debug({ status: `waiting`, value })
+    input.trackMetricsFn.waitingJobs.set(value)
+  }
+  const setProgressJobs = async () => {
+    const value = await input.queue.getJobCountByTypes('active')
+    childLogger?.debug({ status: `active`, value })
+    input.trackMetricsFn.activeJobs.set(value)
+  }
+  const setFailedJobs = async () => {
+    const value = await input.queue.getJobCountByTypes('failed')
+    childLogger?.debug({ status: 'failed', value })
+    input.trackMetricsFn.failedJobs.set(value)
+  }
+
+  const setCompletedJobs = async () => {
+    const value = await input.queue.getJobCountByTypes('completed')
+    childLogger?.debug({ status: 'completed', value })
+    input.trackMetricsFn.completedJobs.set(value)
+  }
+
+  queueEvent.on('waiting', async () => {
+    await setWaitingJobs()
   })
 
-  queue.on('progress', async () => {
-    trackMetricsFn.activeJobs.observe(await queue.getJobCountByTypes('active'))
-  })
-}
-
-const setupWorkerEvents = (worker: Worker, queue: Queue, trackMetricsFn: QueueMetrics) => {
-  worker.on('failed', async () => {
-    trackMetricsFn.failedJobs.observe(await queue.getJobCountByTypes('failed'))
+  queueEvent.on('progress', async () => {
+    await Promise.all([setWaitingJobs(), setProgressJobs()])
   })
 
-  worker.on('completed', async () => {
-    trackMetricsFn.completedJobs.observe(await queue.getJobCountByTypes('completed'))
+  queueEvent.on('failed', async () => {
+    await Promise.all([setWaitingJobs(), setProgressJobs(), setFailedJobs()])
   })
+
+  queueEvent.on('completed', async () => {
+    await Promise.all([setWaitingJobs(), setProgressJobs(), setCompletedJobs()])
+  })
+
+  setWaitingJobs()
+  setProgressJobs()
+  setFailedJobs()
+  setCompletedJobs()
 }
 
 export const SetupQueueMetrics = ({
@@ -63,17 +97,27 @@ export const SetupQueueMetrics = ({
     systemQueue: QueueMetrics('system')
   } as const
 
-  const eventWorker = new Worker(Queues.EventQueue, null, { connection })
-  const transactionWorker = new Worker(Queues.TransactionQueue, null, { connection })
-  const systemWorker = new Worker(Queues.SystemQueue, null, { connection })
-
-  setupQueueEvents(transactionQueue.queue, queueMetrics.transactionQueue)
-  setupQueueEvents(eventQueue.queue, queueMetrics.eventQueue)
-  setupQueueEvents(systemQueue.queue, queueMetrics.systemQueue)
-
-  setupWorkerEvents(eventWorker, eventQueue.queue, queueMetrics.eventQueue)
-  setupWorkerEvents(transactionWorker, transactionQueue.queue, queueMetrics.transactionQueue)
-  setupWorkerEvents(systemWorker, systemQueue.queue, queueMetrics.systemQueue)
+  setupQueueEvents({
+    queueName: Queues.TransactionQueue,
+    connection,
+    queue: transactionQueue.queue,
+    trackMetricsFn: queueMetrics.transactionQueue,
+    logger
+  })
+  setupQueueEvents({
+    queueName: Queues.EventQueue,
+    connection,
+    queue: eventQueue.queue,
+    trackMetricsFn: queueMetrics.eventQueue,
+    logger
+  })
+  setupQueueEvents({
+    queueName: Queues.SystemQueue,
+    connection,
+    queue: systemQueue.queue,
+    trackMetricsFn: queueMetrics.systemQueue,
+    logger
+  })
 
   const metricsServer = http.createServer(async (req, res) => {
     if (req.url === '/metrics') {
@@ -86,7 +130,7 @@ export const SetupQueueMetrics = ({
   })
 
   metricsServer.listen(port)
-  logger?.debug({ method: 'SetupQueueMetrics', port })
+  logger?.debug({ method: 'SetupQueueMetrics', port, url: `http://localhost:${port}/metrics` })
 
   return client
 }
