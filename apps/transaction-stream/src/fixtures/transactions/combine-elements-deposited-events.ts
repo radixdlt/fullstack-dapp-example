@@ -126,7 +126,7 @@ export default [
               is_global: true,
               entity_type: 'GlobalGenericComponent',
               entity_address:
-                'component_tdx_2_1crth8cjpycqk8xhtcuzcjeh9eud2jdhx0khuh3aunhtxp4xluvnym5'
+                'component_tdx_2_1crwfzvesznfmqdz5fudw8gaqzaq5uq5uyfgl5pffggghuz3ngp2lp6'
             },
             object_module_id: 'Main'
           },

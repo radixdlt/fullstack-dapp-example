@@ -22,19 +22,19 @@ export const Addresses = (networkId: number) => {
           instapassBadgeAddress:
             'resource_tdx_2_1nffgrg4sxxswkc3vjydt57y6dcstrl8vp2z22al5h2thzzafk3ql8n'
         },
-        package: 'package_tdx_2_1p4h36jqvued4u0ll76pnpqw8f2hmvjllk408j64wpkl8cj6kr70xxc',
+        package: 'package_tdx_2_1p4r8n4jse52z0hsccgdrns44n7mr7a5hkvfypxfru9uj407etlq0xf',
         clamDexPackage: 'package_tdx_2_1ph45qa6e797d86v34ktka40emzyd667vhzm2ek3xu9xu9aw45x2c22',
         components: {
           mayaRouter: 'component_tdx_2_mock_maya_router_address',
-          questRewards: 'component_tdx_2_1crtfv9n6dqj5t65nj075lcj8ap9vegyh0jlfucckkfp9xzpzcllpwd',
-          kycOracle: 'component_tdx_2_1cptt60g4zrw2hhmwmfllxzu26wlw366vtdu5rjslpaduqtlu3szunt',
+          questRewards: 'component_tdx_2_1cq02l5g0w2rd3rgm6vwg2496pntgdjvrk40ej0jv4hd37dthr3qxxs',
+          kycOracle: 'component_tdx_2_1cqndnna99wffypyp3s6js7t3lpsje06qt7s0p7xg2pj5g9ae59fp7p',
           kycOracleKeyValueStore:
             'internal_keyvaluestore_tdx_2_1kp0he3csvzmanekja7z80rpu3axspl8qrdlf9tfz09w02uz8xgj2sf',
-          cardForge: 'component_tdx_2_1cq69jlptu07nncvtryfw5jmzzeklmqkr5u3lx25d5nwry044m7hxrs',
-          radgemForge: 'component_tdx_2_1cp92vr8fpgmq3r5rvd4mqpns67z75ulq0h083makfz5tqhm5x34ukd',
-          radmorphForge: 'component_tdx_2_1czv8hf2k4m5aka3ar847uqpyqy5w9q9kjnr354zphmzrrqps3lq30d',
-          imageOracle: 'component_tdx_2_1cr43qevrkluk75gjcyglklcaek7uy0rp2ymqk0ufyrp6393c53wlfw',
-          refinery: 'component_tdx_2_1crth8cjpycqk8xhtcuzcjeh9eud2jdhx0khuh3aunhtxp4xluvnym5',
+          cardForge: 'component_tdx_2_1cznyvhmeujc5pft22a2jzt0yc5h9uqv0x0k0xtpsfsj2aflvuxlt3z',
+          radgemForge: 'component_tdx_2_1crfa45q2s35mzehduz5pq0hwmyqwlvkpxpp4c2hsfweq7l7rjd6qd7',
+          radmorphForge: 'component_tdx_2_1cz4zqrrjyjey3xuesxnh7x790q37duw9x59y8u88uk42hy9md06wq0',
+          imageOracle: 'component_tdx_2_1cz679zju0d9pv2hxc24u8x7m65z8lcy3du0l60463pqzy0jw38vtuw',
+          refinery: 'component_tdx_2_1crwfzvesznfmqdz5fudw8gaqzaq5uq5uyfgl5pffggghuz3ngp2lp6',
           jettySwap: 'component_tdx_2_1crf6zr9krdcr92u0nfwsdyxma9jl7g97sqpulhshm2l0rcyfpkmlzg',
           lettySwap: 'component_tdx_2_1cpy8z5jzy0a9ps39nxnctcfrgc3eurpyrl8w36ecyy4celc5a25ywm'
         },
