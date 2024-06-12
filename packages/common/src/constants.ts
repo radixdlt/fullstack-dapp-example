@@ -20,10 +20,11 @@ export const Addresses = (networkId: number) => {
           radgemAddress: 'resource_tdx_2_1ngsqqj66xx6u7athxynr0n95phj3ljuvje2hkzfvd90ua8569csaje',
           radmorphAddress: 'resource_tdx_2_1nghxdspyat6ef69w8rcg5xk0sjeluk664yf485g9csmqzufhkytxlx',
           instapassBadgeAddress:
-            'resource_tdx_2_1nffgrg4sxxswkc3vjydt57y6dcstrl8vp2z22al5h2thzzafk3ql8n'
+            'resource_tdx_2_1nffgrg4sxxswkc3vjydt57y6dcstrl8vp2z22al5h2thzzafk3ql8n',
+          otterCoinAddress: 'resource_tdx_2_1t5pvx3yuwa7rxpa8h8uxnx068ruap9k7nqd7k5qxgay4yjalp9seng'
         },
         package: 'package_tdx_2_1p4r8n4jse52z0hsccgdrns44n7mr7a5hkvfypxfru9uj407etlq0xf',
-        clamDexPackage: 'package_tdx_2_1ph45qa6e797d86v34ktka40emzyd667vhzm2ek3xu9xu9aw45x2c22',
+        clamDexPackage: 'package_tdx_2_1ph96rek5yr7jh79pw5aqst6e6lm5k62l5pv6j9dxve6scyr3eel3mh',
         components: {
           mayaRouter: 'component_tdx_2_mock_maya_router_address',
           questRewards: 'component_tdx_2_1cq02l5g0w2rd3rgm6vwg2496pntgdjvrk40ej0jv4hd37dthr3qxxs',
@@ -35,8 +36,8 @@ export const Addresses = (networkId: number) => {
           radmorphForge: 'component_tdx_2_1cz4zqrrjyjey3xuesxnh7x790q37duw9x59y8u88uk42hy9md06wq0',
           imageOracle: 'component_tdx_2_1cz679zju0d9pv2hxc24u8x7m65z8lcy3du0l60463pqzy0jw38vtuw',
           refinery: 'component_tdx_2_1crwfzvesznfmqdz5fudw8gaqzaq5uq5uyfgl5pffggghuz3ngp2lp6',
-          jettySwap: 'component_tdx_2_1crf6zr9krdcr92u0nfwsdyxma9jl7g97sqpulhshm2l0rcyfpkmlzg',
-          lettySwap: 'component_tdx_2_1cpy8z5jzy0a9ps39nxnctcfrgc3eurpyrl8w36ecyy4celc5a25ywm'
+          jettySwap: 'component_tdx_2_1czsvrwv0gmdf9fkffv0a0n0mx86r0jw9agz0knxde36yeur83ne0sg',
+          lettySwap: 'component_tdx_2_1crcfm8dw90rxgva0ph8fwl356jntmc3dpnra9y2kn9eecc2e5cy0v9'
         },
         xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
         accounts: {

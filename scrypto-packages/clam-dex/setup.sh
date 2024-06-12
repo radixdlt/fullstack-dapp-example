@@ -16,8 +16,10 @@ export package=`resim publish . | sed "s/Success! New Package: //"`
 
 export super_admin_badge=`resim new-badge-fixed 1 | grep "Resource:" | grep -o "resource_.*"`
 export admin_badge=`resim run manifests/mint_admin_badges.rtm | grep "Resource:" | grep -o "resource_.*"`
-export clam=`resim new-token-mutable $admin_badge | grep "Resource" | grep -o "resource_.*"`
-export element=`resim new-token-mutable $admin_badge | grep "Resource" | grep -o "resource_.*"`
+export clam=`resim new-token-mutable $admin_badge | grep "Resource:" | grep -o "resource_.*"`
+export otter_coin=`resim run manifests/create_otter_coin.rtm | grep "Resource:" | grep -o "resource_.*"`
+
+resim mint 100 $clam --proofs $admin_badge:1
 
 export jetty_swap=`resim run manifests/new_jetty_swap.rtm | grep "Component:" | tail -n1 | grep -o "component_.*"`
 export letty_swap=`resim run manifests/new_letty_swap.rtm | grep "Component:" | tail -n1 | grep -o "component_.*"`
@@ -36,7 +38,7 @@ echo "package = $package"
 echo "super_admin_badge = $super_admin_badge"
 echo "admin_badge = $admin_badge"
 echo "clam = $clam"
-echo "element = $element"
+echo "otter_coin = $otter_coin"
 
 echo "\nComponent Addresses:"
 echo "jetty_swap = $jetty_swap"

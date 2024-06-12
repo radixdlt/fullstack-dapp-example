@@ -1,6 +1,9 @@
 //@ts-nocheck
 
 import { CommittedTransactionInfo } from '@radixdlt/babylon-gateway-api-sdk'
+import { Addresses } from 'common'
+
+const addresses = Addresses(2)
 
 export default [
   {
@@ -150,8 +153,7 @@ export default [
             entity: {
               is_global: true,
               entity_type: 'GlobalGenericComponent',
-              entity_address:
-                'component_tdx_2_1cpy8z5jzy0a9ps39nxnctcfrgc3eurpyrl8w36ecyy4celc5a25ywm'
+              entity_address: addresses.components.lettySwap
             },
             object_module_id: 'Main'
           },

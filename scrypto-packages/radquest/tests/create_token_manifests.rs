@@ -181,3 +181,52 @@ fn create_radmorph() {
     )
     .err();
 }
+
+#[test]
+pub fn create_otter_coin() {
+    let network = NetworkDefinition::mainnet();
+
+    let manifest_builder = ManifestBuilder::new().create_fungible_resource(
+        OwnerRole::Fixed(rule!(require(XRD))),
+        true,
+        scrypto::prelude::DIVISIBILITY_MAXIMUM,
+        FungibleResourceRoles {
+            mint_roles: mint_roles! {
+                minter => rule!(require(XRD));
+                minter_updater => rule!(deny_all);
+            },
+            burn_roles: burn_roles! {
+                burner => rule!(require(XRD));
+                burner_updater => rule!(deny_all);
+            },
+            freeze_roles: None,
+            recall_roles: None,
+            withdraw_roles: withdraw_roles! {
+                withdrawer => rule!(allow_all);
+                withdrawer_updater => rule!(deny_all);
+            },
+            deposit_roles: deposit_roles! {
+                depositor => rule!(allow_all);
+                depositor_updater => rule!(deny_all);
+            },
+        },
+        metadata!(
+          init {
+            "name" => "Otter Coin", locked;
+            "symbol" => "OTT", locked;
+            "description" => "The official currency of RadQuest otters, Otter Coins are used to purchase delicious clams, and may one day have other value besides.", locked;
+            "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
+          }
+        ),
+        None
+    );
+
+    dump_manifest_to_file_system(
+        manifest_builder.object_names(),
+        &manifest_builder.build(),
+        "./manifests/test-generated",
+        Some("create_otter_coin"),
+        &network,
+    )
+    .err();
+}

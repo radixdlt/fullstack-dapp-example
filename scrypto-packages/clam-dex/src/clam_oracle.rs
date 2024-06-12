@@ -1,13 +1,13 @@
 use scrypto::prelude::*;
 
 #[blueprint]
-mod element_price_oracle {
-    struct ElementPriceOracle {
+mod clam_oracle {
+    struct ClamOracle {
         starting_time: Instant,
         price: Option<Decimal>,
     }
-    impl ElementPriceOracle {
-        pub fn new(price: Option<Decimal>) -> Global<ElementPriceOracle> {
+    impl ClamOracle {
+        pub fn new(price: Option<Decimal>) -> Global<ClamOracle> {
             Self {
                 starting_time: Clock::current_time_rounded_to_minutes(),
                 price,
@@ -16,8 +16,8 @@ mod element_price_oracle {
             .prepare_to_globalize(OwnerRole::None)
             .metadata(metadata!(
                 init {
-                    "name" => "ElementPriceOracle Component", locked;
-                    "description" => "Pseudo oracle that provides price of Elements in Clams.", locked;
+                    "name" => "Clam Oracle Component", locked;
+                    "description" => "Pseudo oracle that provides price of Clams in Otter Coin.", locked;
                 }
             ))
             .globalize()
@@ -33,16 +33,16 @@ mod element_price_oracle {
                 Clock::current_time_rounded_to_seconds().seconds_since_unix_epoch;
 
             let time = current_time_in_seconds - self.starting_time.seconds_since_unix_epoch;
-            let half_period = 1800;
+            let half_period = 180;
 
             let dec_normalized_time = Decimal::from(time % (2 * half_period));
             let dec_half_period = Decimal::from(half_period);
 
-            let max_value = dec!("2");
-            let epsilon = dec!("1");
+            let max_value = dec!(11);
+            let epsilon = max_value / 2;
 
             if dec_normalized_time < dec_half_period {
-                // Linear rise for the first half (30 minutes)
+                // Linear rise for the first half (3 minutes)
 
                 let proportion_of_time_passed =
                     dec_normalized_time.checked_div(dec_half_period).unwrap();
@@ -59,7 +59,7 @@ mod element_price_oracle {
                     .checked_round(2, RoundingMode::ToZero)
                     .unwrap();
             } else {
-                // Linear fall for the second half (30 minutes)
+                // Linear fall for the second half (3 minutes)
 
                 // This calculation represents the time that has elapsed within the second
                 // half of the total time period, which is used to determine the proportion
