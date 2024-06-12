@@ -1,7 +1,7 @@
 import { fetchWrapper } from 'common'
-import { PUBLIC_RADQUEST_API } from '$env/static/public'
+import { PUBLIC_RADQUEST_API_URL } from '$env/static/public'
 
-const baseUrl = PUBLIC_RADQUEST_API
+const baseUrl = PUBLIC_RADQUEST_API_URL
 
 export const apiCall = (fetchImpl: typeof fetch = fetch) => ({
   get: <T>(url: string) =>
