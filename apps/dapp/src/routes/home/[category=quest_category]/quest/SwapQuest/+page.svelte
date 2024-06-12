@@ -10,6 +10,7 @@
   import { publicConfig } from '$lib/public-config'
   import { i18n } from '$lib/i18n/i18n'
   import { Addresses } from 'common'
+  import { questApi } from '$lib/api/quest-api'
 
   export let data: PageData
 
@@ -36,6 +37,10 @@
       unsubscribeWebSocket?.()
     }
   })
+
+  const swappingLearnt = () => {
+    questApi.completeContentRequirement(data.id)
+  }
 </script>
 
 <Quest
@@ -51,7 +56,15 @@
     {
       id: 'text2',
       type: 'regular',
-      skip: jettySwap
+      skip: jettySwap,
+      footer: {
+        next: {
+          onClick: () => {
+            swappingLearnt()
+            quest.actions.next()
+          }
+        }
+      }
     },
     {
       id: 'text3',
