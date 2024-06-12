@@ -2,7 +2,7 @@
   import type { Quests } from 'content'
   import Quest from '../Quest.svelte'
   import { writable } from 'svelte/store'
-  import { onDestroy, onMount } from 'svelte'
+  import { onDestroy } from 'svelte'
   import { webSocketClient } from '../../../../../stores'
   import { messageApi } from '$lib/api/message-api'
   import Button from '$lib/components/button/Button.svelte'
