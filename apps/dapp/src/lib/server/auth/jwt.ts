@@ -1,18 +1,18 @@
 import jwt from 'jsonwebtoken'
 import { Result, err, ok } from 'neverthrow'
 import type { Cookies } from '@sveltejs/kit'
-import { config } from '$lib/config'
 import type { UserType } from 'database'
 
 export type JWTInput = {
-  refreshToken: { expiresIn: string; key: string }
+  refreshToken: { expiresIn: string; key: string; expiresInMs: number }
   authToken: { expiresIn: string }
   secret: string
+  domain?: string
 }
 
 export type JWT = ReturnType<typeof JWT>
 export const JWT = (input: JWTInput) => {
-  const { secret, refreshToken, authToken } = input
+  const { secret, refreshToken, authToken, domain } = input
 
   const createAuthToken = (userId: string, userType: UserType) =>
     ok(
@@ -71,14 +71,14 @@ export const JWT = (input: JWTInput) => {
     )
 
   const createRefreshTokenOptions = (
-    expiresInMs = config.jwt.refreshToken.expiresInMs
+    expiresInMs = refreshToken.expiresInMs
   ): Parameters<Cookies['serialize']>[2] => {
     return {
       httpOnly: true,
       expires: new Date(Date.now() + expiresInMs),
       sameSite: 'lax',
       path: '/',
-      domain: config.dapp.domain
+      domain
     }
   }
 

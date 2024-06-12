@@ -31,7 +31,8 @@ export const config = {
   jwt: {
     secret: JWT_SECRET!,
     refreshToken: { expiresIn: '30d', expiresInMs: 1000 * 60 * 60 * 24 * 30, key: 'jwt' },
-    authToken: { expiresIn: '10m' }
+    authToken: { expiresIn: '10m' },
+    domain: getDomain()
   },
   challenge: { expiresInMs: 600_000, byteLength: 32 },
   postgres: {
@@ -53,7 +54,7 @@ export const config = {
   },
   dapp: {
     expectedOrigin: EXPECTED_ORIGIN,
-    domain: getDomain(),
+
     networkId: publicConfig.networkId,
     dAppDefinitionAddress: publicConfig.dAppDefinitionAddress ?? '',
     ...Addresses(publicConfig.networkId)
