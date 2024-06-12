@@ -28,7 +28,7 @@
   }
   .backdrop {
     backdrop-filter: blur(1px);
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--backdrop);
   }
 
   .content {

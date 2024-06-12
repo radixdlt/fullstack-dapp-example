@@ -2,7 +2,7 @@
   import type { Quests } from 'content'
   import Quest from '../Quest.svelte'
   import { writable } from 'svelte/store'
-  import { onMount } from 'svelte'
+  import { onDestroy, onMount } from 'svelte'
   import { webSocketClient } from '../../../../../stores'
   import { messageApi } from '$lib/api/message-api'
   import Button from '$lib/components/button/Button.svelte'
@@ -20,8 +20,8 @@
   const addresses = Addresses(publicConfig.networkId)
   const jettySwap = writable(data.requirements?.JettySwap)
   const lettySwap = writable(data.requirements?.LettySwap)
-  onMount(() => {
-    const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
+  $: if ($webSocketClient) {
+    const unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'JettySwap') {
         $jettySwap = true
         messageApi.markAsSeen(message.id)
@@ -33,10 +33,10 @@
       }
     })
 
-    return () => {
-      unsubscribeWebSocket?.()
-    }
-  })
+    onDestroy(() => {
+      unsubscribeWebSocket()
+    })
+  }
 
   const swappingLearnt = () => {
     questApi.completeContentRequirement(data.id)

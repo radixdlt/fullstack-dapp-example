@@ -28,16 +28,19 @@
   }
 
   .small {
+    min-width: var(--size, 1.5rem);
     width: var(--size, 1.5rem);
     height: var(--size, 1.5rem);
   }
 
   .medium {
+    min-width: var(--size, 2rem);
     width: 2rem;
     height: 2rem;
   }
 
   .large {
+    min-width: var(--size, 3rem);
     width: 3rem;
     height: 3rem;
   }

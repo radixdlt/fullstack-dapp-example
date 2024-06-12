@@ -11,12 +11,13 @@
   export let value = ''
   export let resource: Resource | undefined = undefined
   export let state: 'default' | 'error' = 'default'
+  export let disabled = false
 </script>
 
 <div class="container">
   <p class="text-label card-title">{cardTitle}</p>
   <div class="input-row">
-    <Input style="width: 130px" {state} placeholder="0" bind:value />
+    <Input {disabled} --width="90%" {state} placeholder="0" bind:value />
     <div class="resource">
       <Icon --size="20px" url={resource?.icon} />
       <p class="resource-name">{resource?.name ?? ''}</p>

@@ -241,6 +241,7 @@
     <div>
       <div class="swap">
         <TokenSwapInput
+          disabled={!connected}
           bind:value={fromInput}
           cardTitle={$i18n.t('main:from')}
           resource={clamResource}
@@ -258,6 +259,7 @@
           </div>
         </div>
         <TokenSwapInput
+          disabled
           bind:value={toInput}
           cardTitle={$i18n.t('main:to')}
           resource={elementResource}
