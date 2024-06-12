@@ -26,9 +26,9 @@
   style:--background-image={backgroundImage ? `url(${backgroundImage})` : ''}
 >
   {#if state === 'completed' || state === 'locked'}
-    <div class="status-icon">
+    <div class="status-icon" class:disabled={state === 'locked'}>
       {#if state === 'locked'}
-        <img src={LockIcon} class="icon" alt="Padlock" />
+        <img src={LockIcon} class="icon disabled" alt="Padlock" />
       {/if}
 
       {#if state === 'completed'}
@@ -70,7 +70,7 @@
     display: flex;
     flex-direction: column;
     width: 21.5rem;
-    height: 90%;
+    height: 92%;
     max-height: 35.3rem;
     justify-content: flex-end;
     background: var(--color-light);
@@ -83,7 +83,7 @@
       width: 84vw;
     }
 
-    margin: 0.5rem;
+    margin: 0 0.5rem;
   }
 
   .border {
@@ -112,8 +112,8 @@
     top: 1.5rem;
     left: 1.5rem;
     border-radius: 50%;
-    width: 1.7rem;
-    height: 1.7rem;
+    width: 2rem;
+    height: 2rem;
     background: var(--gradient-6);
     display: flex;
     justify-content: center;
