@@ -3,7 +3,7 @@
   import { rdt, sendTransaction } from '$lib/rdt'
   import { GatewayApi } from 'common'
   import { err } from 'neverthrow'
-  import { onMount } from 'svelte'
+  import { onDestroy, onMount } from 'svelte'
   import { createEventDispatcher } from 'svelte'
   import { user, webSocketClient } from '../../../../../stores'
   import Button from '$lib/components/button/Button.svelte'
@@ -66,8 +66,8 @@
       })
   }
 
-  onMount(() => {
-    const unsubscribeWebSocket = $webSocketClient?.onMessage((event) => {
+  $: if ($webSocketClient) {
+    const unsubscribeWebSocket = $webSocketClient.onMessage((event) => {
       if (
         event.type === 'QuestRequirementCompleted' &&
         event.questId === questId &&
@@ -78,6 +78,10 @@
       }
     })
 
+    onDestroy(() => unsubscribeWebSocket())
+  }
+
+  onMount(() => {
     rdt.then(() => {
       const address = $user!.accountAddress!
       const userId = $user!.id
@@ -116,10 +120,6 @@
         }
       })
     })
-
-    return () => {
-      unsubscribeWebSocket?.()
-    }
   })
 </script>
 

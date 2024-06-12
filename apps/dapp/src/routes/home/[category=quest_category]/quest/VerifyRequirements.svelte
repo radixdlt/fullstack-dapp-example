@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
+  import { createEventDispatcher, onDestroy, onMount } from 'svelte'
   import { questApi } from '$lib/api/quest-api'
   import { quests, user, webSocketClient } from '../../../../stores'
   import type { Quests } from 'content'
@@ -76,6 +76,21 @@
       return response
     })
 
+  $: if ($webSocketClient) {
+    const unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
+      if (message.type === 'QuestRewardsDeposited') {
+        readRequirementsFromDb().then(() => {
+          messageApi.markAsSeen(message.id)
+          checkRequirements()
+        })
+      }
+    })
+
+    onDestroy(() => {
+      unsubscribeWebSocket()
+    })
+  }
+
   onMount(() => {
     if ($user) {
       setLoading(true)
@@ -105,19 +120,6 @@
             })
           )
       )()
-
-      const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
-        if (message.type === 'QuestRewardsDeposited') {
-          readRequirementsFromDb().then(() => {
-            messageApi.markAsSeen(message.id)
-            checkRequirements()
-          })
-        }
-      })
-
-      return () => {
-        unsubscribeWebSocket?.()
-      }
     } else {
       checkRequirements()
     }

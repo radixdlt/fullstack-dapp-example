@@ -3,7 +3,7 @@
   import type { PageData } from '../StakingQuest/$types'
   import { i18n } from '$lib/i18n/i18n'
   import Button from '$lib/components/button/Button.svelte'
-  import { onMount } from 'svelte'
+  import { onDestroy } from 'svelte'
   import { webSocketClient } from '../../../../../stores'
   import { writable } from 'svelte/store'
   import { questApi } from '$lib/api/quest-api'
@@ -22,8 +22,9 @@
     data.questStatus.StakingQuest?.status === 'REWARDS_DEPOSITED' ||
       data.questStatus.StakingQuest?.status === 'COMPLETED'
   )
-  onMount(() => {
-    const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
+
+  $: if ($webSocketClient) {
+    const unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'StakedXrd') {
         $stakedXrd = true
         messageApi.markAsSeen(message.id)
@@ -35,10 +36,8 @@
       }
     })
 
-    return () => {
-      unsubscribeWebSocket?.()
-    }
-  })
+    onDestroy(() => unsubscribeWebSocket())
+  }
 
   const stakingLearnt = () => {
     questApi.completeContentRequirement(data.id)
