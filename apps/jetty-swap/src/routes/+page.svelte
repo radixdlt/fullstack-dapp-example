@@ -97,7 +97,7 @@
     }
 
     $rdt = RadixDappToolkit(swapConfig)
-    $rdt.buttonApi.setTheme(isJetty ? 'radix-blue' : 'black')
+    $rdt.buttonApi.setTheme(isJetty ? 'radix-blue' : 'white')
     $gatewayApi = GatewayApi(parseInt(env.PUBLIC_NETWORK_ID, 0))
     $rdt?.walletApi.setRequestData(DataRequestBuilder.accounts().exactly(1))
     $rdt?.walletApi.walletData$.subscribe((data) => {
@@ -132,9 +132,7 @@
       })
 
       conversionRateTo = receiveAmount
-    } catch (error) {
-      //todo error handling
-    }
+    } catch (error) {}
   })
 
   let timer: NodeJS.Timeout
