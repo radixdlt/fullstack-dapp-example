@@ -12,5 +12,5 @@ export async function load({ cookies }) {
     }
   }
 
-  error(400)
+  error(401)
 }
