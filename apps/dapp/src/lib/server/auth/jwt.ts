@@ -77,7 +77,8 @@ export const JWT = (input: JWTInput) => {
       httpOnly: true,
       expires: new Date(Date.now() + expiresInMs),
       sameSite: 'lax',
-      path: '/'
+      path: '/',
+      domain: config.dapp.domain
     }
   }
 

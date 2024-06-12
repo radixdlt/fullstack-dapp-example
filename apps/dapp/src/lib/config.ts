@@ -22,6 +22,14 @@ const {
 // $env/dynamic/public does not work in CI build
 const { PUBLIC_LOG_LEVEL = 'debug' } = process.env
 
+const getDomain = () => {
+  try {
+    if (EXPECTED_ORIGIN) return new URL(EXPECTED_ORIGIN)?.hostname
+  } catch (error) {
+    return
+  }
+}
+
 export const config = {
   jwt: {
     secret: JWT_SECRET!,
@@ -48,6 +56,7 @@ export const config = {
   },
   dapp: {
     expectedOrigin: EXPECTED_ORIGIN,
+    domain: getDomain(),
     networkId: publicConfig.networkId,
     dAppDefinitionAddress: publicConfig.dAppDefinitionAddress ?? '',
     ...Addresses(publicConfig.networkId)
