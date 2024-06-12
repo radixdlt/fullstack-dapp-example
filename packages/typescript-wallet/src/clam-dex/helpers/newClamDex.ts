@@ -48,7 +48,7 @@ CALL_FUNCTION
     )
     Bucket("bucket1")
     Address("${config.radQuest.resources.clamAddress}")
-    Address("${config.radQuest.resources.elementAddress}")
+    Address("${config.radQuest.resources.otterCoinAddress}")
     ${optionalPrice}
 ;
 CALL_METHOD

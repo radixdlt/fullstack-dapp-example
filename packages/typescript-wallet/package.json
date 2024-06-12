@@ -23,6 +23,7 @@
     "wallet:create:energy-card": "npx tsx ./src/radquest/scripts/create-energy-card.ts",
     "wallet:create:radgem": "npx tsx ./src/radquest/scripts/create-radgem.ts",
     "wallet:create:radmorph": "npx tsx ./src/radquest/scripts/create-radmorph.ts",
+    "wallet:create:otter-coin": "npx tsx ./src/clam-dex/scripts/create-otter-coin.ts",
     "wallet:instantiate:card-forge": "npx tsx ./src/radquest/scripts/new-card-forge.ts",
     "wallet:instantiate:refinery": "npx tsx ./src/radquest/scripts/new-refinery.ts",
     "wallet:mint-then-combine-elements-deposit": "npx tsx ./src/radquest/scripts/mint-then-combine-elements-deposit.ts",
