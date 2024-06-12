@@ -71,6 +71,7 @@
   {#each values as _, i}
     <div class="digit-box" class:error>
       <input
+        inputmode="numeric"
         bind:this={inputs[i]}
         maxlength="1"
         bind:value={values[i]}
