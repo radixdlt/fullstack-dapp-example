@@ -95,7 +95,11 @@
                 dispatch('all-requirements-met')
               }
 
-              if (questId === 'LoginWithWallet') {
+              if (
+                ['WelcomeToRadQuest', 'WhatIsRadix', 'GetRadixWallet', 'LoginWithWallet'].includes(
+                  questId
+                )
+              ) {
                 checkRequirements()
               }
             })
