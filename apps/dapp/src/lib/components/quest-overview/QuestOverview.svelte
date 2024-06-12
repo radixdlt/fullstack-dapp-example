@@ -28,11 +28,11 @@
   {#if state === 'completed' || state === 'locked'}
     <div class="status-icon">
       {#if state === 'locked'}
-        <div class="icon lock" style:--lock-icon={`url(${LockIcon})`} />
+        <img src={LockIcon} class="icon" alt="Padlock" />
       {/if}
 
       {#if state === 'completed'}
-        <div class="icon checkmark" style:--checkmark-icon={`url(${CheckmarkIcon})`} />
+        <img src={CheckmarkIcon} class="icon" alt="Checkmark" />
       {/if}
     </div>
   {/if}
@@ -105,14 +105,6 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-  }
-
-  .checkmark {
-    background-image: var(--checkmark-icon);
-  }
-
-  .lock {
-    background-image: var(--lock-icon);
   }
 
   .status-icon {
