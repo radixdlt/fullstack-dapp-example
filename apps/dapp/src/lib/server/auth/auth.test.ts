@@ -27,6 +27,7 @@ describe('AuthController', () => {
       gatewayApiClient: ctx.gatewayApi,
       dAppConfig: {
         expectedOrigin: 'http://localhost:5173',
+        domain: '',
         dAppDefinitionAddress: publicConfig.dAppDefinitionAddress || '',
         networkId: 2,
         ...Addresses(2)
