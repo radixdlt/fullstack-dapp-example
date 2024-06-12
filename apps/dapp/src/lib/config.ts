@@ -23,11 +23,8 @@ const {
 const { PUBLIC_LOG_LEVEL = 'debug' } = process.env
 
 const getDomain = () => {
-  try {
-    if (EXPECTED_ORIGIN) return new URL(EXPECTED_ORIGIN)?.hostname
-  } catch (error) {
-    return
-  }
+  const value = /(?<=\.).+/.exec(EXPECTED_ORIGIN ?? '')
+  return value ? value[0] : undefined
 }
 
 export const config = {
