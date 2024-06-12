@@ -12,7 +12,7 @@
 </script>
 
 <div>
-  <Button on:click={() => dispatch('back')}>{backText}</Button>
+  <Button secondary on:click={() => dispatch('back')}>{backText}</Button>
   <Button disabled={isNextDisabled} {loading} on:click={() => dispatch('next')}>{nextText}</Button>
 </div>
 
