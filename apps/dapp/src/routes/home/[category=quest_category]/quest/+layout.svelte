@@ -1,4 +1,5 @@
 <script lang="ts" context="module">
+  import { get } from 'svelte/store'
   import { jettyDialog, user } from '../../../../stores'
 
   let loggedIn = false
@@ -15,7 +16,7 @@
     }
     jettyDialog.set(undefined)
     await invalidateAll()
-    setTimeout(() => goto('/'), 0)
+    setTimeout(() => goto(`/home/${get(page).params.category}`), 0)
   }
 </script>
 
@@ -23,6 +24,7 @@
   import { goto, invalidateAll } from '$app/navigation'
   import { questApi } from '$lib/api/quest-api'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
+  import { page } from '$app/stores'
 
   const handleKeydown = (event: KeyboardEvent) => {
     if (event.key === 'Escape') closeQuest()
