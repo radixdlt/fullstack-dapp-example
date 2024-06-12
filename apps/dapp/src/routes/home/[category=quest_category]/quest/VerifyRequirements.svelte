@@ -76,7 +76,7 @@
       return response
     })
 
-  $: if ($webSocketClient) {
+  $: if ($webSocketClient && $user) {
     const unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
       if (message.type === 'QuestRewardsDeposited') {
         readRequirementsFromDb().then(() => {
