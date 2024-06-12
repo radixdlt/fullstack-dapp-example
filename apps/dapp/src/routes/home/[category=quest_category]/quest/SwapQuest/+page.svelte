@@ -1,16 +1,16 @@
 <script lang="ts">
   import type { Quests } from 'content'
   import Quest from '../Quest.svelte'
-  import type { PageData } from './$types'
   import { writable } from 'svelte/store'
   import { onMount } from 'svelte'
-  import { webSocketClient } from '../../../../stores'
+  import { webSocketClient } from '../../../../../stores'
   import { messageApi } from '$lib/api/message-api'
   import Button from '$lib/components/button/Button.svelte'
   import { publicConfig } from '$lib/public-config'
   import { i18n } from '$lib/i18n/i18n'
   import { Addresses } from 'common'
   import { questApi } from '$lib/api/quest-api'
+  import type { PageData } from './$types'
 
   export let data: PageData
 
