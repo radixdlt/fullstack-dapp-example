@@ -5,3 +5,4 @@ pub mod quest_rewards;
 pub mod radgem_forge;
 pub mod radmorph_forge;
 pub mod refinery;
+pub mod user_badge_claim;
