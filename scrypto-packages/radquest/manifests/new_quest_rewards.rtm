@@ -17,6 +17,7 @@ CALL_FUNCTION
     Address("${package}")
     "QuestRewards"
     "new"
+    Address("${super_admin_badge}")
     Enum<OwnerRole::Fixed>(
         Enum<AccessRule::Protected>(
             Enum<AccessRuleNode::ProofRule>(

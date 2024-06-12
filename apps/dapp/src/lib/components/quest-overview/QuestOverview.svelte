@@ -4,6 +4,7 @@
   import Button from '../button/Button.svelte'
   import PadlockIcon from '@images/padlock.svg'
   import CheckmarkIcon from '@images/checkmark.svg'
+  import LockIcon from '@images/padlock.svg'
   import type { QuestReward } from 'content'
   import type { QuestStatus } from '../../../types'
 
@@ -20,8 +21,22 @@
   role="button"
   tabindex="0"
   class="card quest-card"
+  class:border={state === 'in-progress' || state === 'unlocked'}
+  class:hover-shadow={state !== 'locked'}
   style:--background-image={backgroundImage ? `url(${backgroundImage})` : ''}
 >
+  {#if state === 'completed' || state === 'locked'}
+    <div class="status-icon">
+      {#if state === 'locked'}
+        <div class="icon lock" style:--lock-icon={`url(${LockIcon})`} />
+      {/if}
+
+      {#if state === 'completed'}
+        <div class="icon checkmark" style:--checkmark-icon={`url(${CheckmarkIcon})`} />
+      {/if}
+    </div>
+  {/if}
+
   <div class="content">
     <QuestOverviewText {title} {description} {minutesToComplete} />
 
@@ -35,7 +50,7 @@
           {:else if state === 'locked'}
             <img src={PadlockIcon} alt="Padlock icon" />
           {:else}
-            <img src={CheckmarkIcon} alt="Checkmark icon" />
+            View Again
           {/if}
         </div>
       </Button>
@@ -55,7 +70,7 @@
     display: flex;
     flex-direction: column;
     width: 21.5rem;
-    height: 100%;
+    height: 90%;
     max-height: 35.3rem;
     justify-content: flex-end;
     background: var(--color-light);
@@ -68,7 +83,49 @@
       width: 84vw;
     }
 
-    margin: 0 0.5rem;
+    margin: 0.5rem;
+  }
+
+  .border {
+    border: var(--border-xl) var(--color-primary);
+    border-radius: var(--border-radius-3xl);
+  }
+
+  .hover-shadow {
+    transition: box-shadow 0.2s ease-in-out;
+
+    &:hover {
+      box-shadow: 0px 4px 30px 0px rgba(0, 0, 0, 0.36);
+    }
+  }
+
+  .icon {
+    width: 1rem;
+    height: 1rem;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .checkmark {
+    background-image: var(--checkmark-icon);
+  }
+
+  .lock {
+    background-image: var(--lock-icon);
+  }
+
+  .status-icon {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    border-radius: 50%;
+    width: 1.7rem;
+    height: 1.7rem;
+    background: var(--gradient-6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .content {

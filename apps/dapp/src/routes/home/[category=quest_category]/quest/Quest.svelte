@@ -8,7 +8,7 @@
   } from '$lib/components/quest/Quest.svelte'
   import { onMount, type ComponentProps } from 'svelte'
   import { closeQuest } from './+layout.svelte'
-  import { jettyDialog, quests, showJetty, user } from '../../../stores'
+  import { jettyDialog, quests, scrollToNextQuest, showJetty, user } from '../../../../stores'
   import ClaimRewards from './ClaimRewards.svelte'
   import VerifyRequirements from './VerifyRequirements.svelte'
   import { i18n } from '$lib/i18n/i18n'
@@ -17,6 +17,7 @@
   import { completeQuest } from '$lib/utils/complete-quest'
   import { useLocalStorage } from '$lib/utils/local-storage'
   import CompleteQuest from './CompleteQuest.svelte'
+  import { isMobile } from '$lib/utils/is-mobile'
 
   type CompleteStep = _Step<'complete'> & { id: 'complete' }
 
@@ -80,6 +81,9 @@
     await completeQuest(id, !!$user)
     $jettyDialog = undefined
     setTimeout(closeQuest, 0)
+    if (isMobile()) {
+      $scrollToNextQuest = true
+    }
   }
 
   const progressUpdated = (e: CustomEvent<number>) => {
@@ -191,6 +195,9 @@
       }}
       on:requirements-not-met={() => {
         nextDisabled = true
+      }}
+      on:loading={(e) => {
+        e.detail ? (nextDisabled = true) : (nextDisabled = false)
       }}
     />
   {/if}

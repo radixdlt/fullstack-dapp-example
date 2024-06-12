@@ -24,10 +24,6 @@
 
   img {
     content: var(--big-logo);
-
-    @include mobile {
-      content: var(--small-logo);
-    }
   }
 
   .radix-btn {

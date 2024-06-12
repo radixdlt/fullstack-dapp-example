@@ -18,7 +18,7 @@ const activeSockets = new Map<string, WebSocket>()
 
 const getLogger = (ctx: Partial<{ traceId: string; userId: string }>) => logger.child(ctx)
 
-const wsClientsMetric = new client.Histogram({
+const wsClientsMetric = new client.Gauge({
   name: `connected_websocket_clients`,
   help: `The number of connected websocket clients`
 })
@@ -70,9 +70,10 @@ uWS
     open: (ws: WebSocket) => {
       const { userId, traceId } = ws.getUserData()
       const childLogger = getLogger({ traceId, userId })
-      childLogger.debug({ method: 'open' })
+
       activeSockets.set(userId, ws)
-      wsClientsMetric.observe(activeSockets.size)
+      wsClientsMetric.set(activeSockets.size)
+      childLogger.debug({ method: 'open', activeSockets: activeSockets.size })
     },
     message: (ws: WebSocket, message) => {
       const { userId, traceId } = ws.getUserData()
@@ -90,9 +91,10 @@ uWS
     close: (ws) => {
       const { userId, traceId } = ws.getUserData()
       const childLogger = getLogger({ traceId, userId })
-      childLogger.debug({ method: 'close' })
+
       activeSockets.delete(userId)
-      wsClientsMetric.observe(activeSockets.size)
+      wsClientsMetric.set(activeSockets.size)
+      childLogger.debug({ method: 'close', activeSockets: activeSockets.size })
     }
   })
   .listen(websocketPort, (token) => {
@@ -104,7 +106,7 @@ uWS
   })
 
 http
-  .createServer((request: http.IncomingMessage, response: http.ServerResponse) => {
+  .createServer(async (request: http.IncomingMessage, response: http.ServerResponse) => {
     const respond = respondFactory(response)
     const apiLogger = logger.child({ method: `${request.method} ${request.url}` })
     switch (`${request.method} ${request.url}`) {
@@ -143,7 +145,7 @@ http
 
       case 'GET /metrics': {
         response.writeHead(200)
-        response.end(client.register.metrics())
+        response.end(await client.register.metrics())
         break
       }
     }

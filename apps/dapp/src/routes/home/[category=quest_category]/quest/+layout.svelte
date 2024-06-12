@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  import { jettyDialog, user } from '../../../stores'
+  import { jettyDialog, user } from '../../../../stores'
 
   let loggedIn = false
 
@@ -51,9 +51,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 90vh;
-    max-height: 50rem;
-    width: 80vw;
+    height: 90dvh;
+    width: 90vw;
     max-width: 50rem;
+    max-height: 50rem;
   }
 </style>

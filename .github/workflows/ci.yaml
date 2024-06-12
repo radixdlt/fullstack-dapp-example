@@ -436,6 +436,7 @@ jobs:
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
     with:
       jenkins_job_name: "kubernetes-deployments/job/radquest"
+      github_branch: "${{ github.head_ref }}"
       application_name: "radquest"
       hierarchical_namespace: "radquest-ci-pr"
       create_subnamespace: "true"
@@ -462,6 +463,7 @@ jobs:
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
     with:
       github_environment: "dev"
+      github_branch: "${{ github.ref }}"
       jenkins_job_name: "kubernetes-deployments/job/radquest"
       application_name: "radquest"
       kubernetes_namespace: "radquest-dev"
@@ -487,6 +489,7 @@ jobs:
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
     with:
       github_environment: "stokenet"
+      github_branch: "${{ github.ref }}"
       jenkins_job_name: "kubernetes-deployments/job/radquest"
       application_name: "radquest"
       kubernetes_namespace: "radquest-stokenet"
@@ -512,6 +515,7 @@ jobs:
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
     with:
       github_environment: "mainnet"
+      github_branch: "${{ github.ref }}"
       jenkins_job_name: "kubernetes-deployments/job/radquest"
       application_name: "radquest"
       kubernetes_namespace: "radquest-mainnet"

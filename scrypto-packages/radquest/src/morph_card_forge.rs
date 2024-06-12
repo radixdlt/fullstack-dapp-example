@@ -55,6 +55,7 @@ mod morph_card_forge {
         super_admin => updatable_by: [OWNER];
       },
       methods {
+        disable => restrict_to: [super_admin];
         mint_fixed_card => restrict_to: [admin];
         set_fixed_cards => restrict_to: [super_admin];
         remove_fixed_cards => restrict_to: [super_admin];
@@ -66,6 +67,7 @@ mod morph_card_forge {
     }
 
     struct MorphCardForge {
+        enabled: bool,
         super_admin_badge_address: ResourceAddress,
         admin_badge: FungibleVault,
         morph_card_resource_manager: ResourceManager,
@@ -76,8 +78,8 @@ mod morph_card_forge {
 
     impl MorphCardForge {
         pub fn new(
-            owner_role: OwnerRole,
             super_admin_badge_address: ResourceAddress,
+            owner_role: OwnerRole,
             admin_badge: Bucket,
             morph_card_address: ResourceAddress,
         ) -> Global<MorphCardForge> {
@@ -90,6 +92,7 @@ mod morph_card_forge {
             ]);
 
             Self {
+                enabled: true,
                 super_admin_badge_address,
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
                 morph_card_resource_manager: ResourceManager::from(morph_card_address),
@@ -100,13 +103,19 @@ mod morph_card_forge {
             .instantiate()
             .prepare_to_globalize(owner_role)
             .roles(roles!(
-                super_admin => rule!(require(super_admin_badge_address));
                 admin => rule!(require(admin_badge_address));
+                super_admin => rule!(require(super_admin_badge_address));
             ))
             .globalize()
         }
 
+        pub fn disable(&mut self) {
+            assert!(self.enabled, "MorphCardForge component already disabled");
+            self.enabled = false;
+        }
+
         pub fn mint_fixed_card(&mut self, card_name: String, user_id: UserId) -> Bucket {
+            assert!(self.enabled, "MorphCard component disabled");
             let morph_card_data = self.fixed_cards.get(&card_name).unwrap().clone();
 
             let morph_card = self.admin_badge.authorize_with_amount(1, || {
@@ -126,6 +135,7 @@ mod morph_card_forge {
         }
 
         pub fn set_fixed_cards(&mut self, cards: Vec<MorphCardDataInput>) {
+            assert!(self.enabled, "MorphCard component disabled");
             for card in cards {
                 assert!(RARITY.contains(&(&card.rarity as &str)));
                 assert!(ENERGY.contains(&(&card.energy as &str)));
@@ -142,12 +152,14 @@ mod morph_card_forge {
         }
 
         pub fn remove_fixed_cards(&mut self, card_names: Vec<String>) {
+            assert!(self.enabled, "MorphCard component disabled");
             for card_name in card_names {
                 self.fixed_cards.remove(&card_name);
             }
         }
 
         pub fn mint_random_card(&mut self, rand_num: Decimal, user_id: UserId) -> Bucket {
+            assert!(self.enabled, "MorphCard component  disabled");
             assert!(
                 rand_num >= dec!(0) && rand_num <= dec!(1),
                 "rand_num must be between 0 and 1 inclusive"
@@ -189,6 +201,7 @@ mod morph_card_forge {
         }
 
         pub fn set_random_cards(&mut self, cards: Vec<MorphCardDataInput>) {
+            assert!(self.enabled, "MorphCard component disabled");
             for card in cards {
                 assert!(RARITY.contains(&(&card.rarity as &str)));
                 assert!(ENERGY.contains(&(&card.energy as &str)));
@@ -209,6 +222,7 @@ mod morph_card_forge {
         }
 
         pub fn remove_random_cards(&mut self, card_names: Vec<String>) {
+            assert!(self.enabled, "MorphCard component disabled");
             for card_name in card_names {
                 let rarity = self.random_cards.remove(&card_name).unwrap().rarity;
                 let i = self
@@ -230,6 +244,7 @@ mod morph_card_forge {
             morph_card_id: NonFungibleLocalId,
             key_image_url: Url,
         ) {
+            assert!(self.enabled, "MorphCard component disabled");
             self.admin_badge.authorize_with_amount(1, || {
                 self.morph_card_resource_manager.update_non_fungible_data(
                     &morph_card_id,

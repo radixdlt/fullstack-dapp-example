@@ -18,7 +18,7 @@
   import { rdt, walletData, gatewayApi } from '$lib/stores'
   import { Addresses, GatewayApi } from 'common'
   import { ok } from 'neverthrow'
-  import { PUBLIC_NETWORK_ID, PUBLIC_SWAP_VARIATION } from '$env/static/public'
+  import { env } from '$env/dynamic/public'
   import type { Resource, SwappedResource } from '../types'
   import { getBalanceChange } from '$lib/utils/previewTranasction'
   import { createSwapManifest } from '$lib/utils/createSwapManifest'
@@ -40,8 +40,8 @@
       applicationName: 'Letty Swap'
     }
   }
-  const isJetty = PUBLIC_SWAP_VARIATION === 'JETTY'
-  const themedResources = ThemedResources[PUBLIC_SWAP_VARIATION as 'JETTY' | 'LETTY']
+  const isJetty = env.PUBLIC_SWAP_VARIATION === 'JETTY'
+  const themedResources = ThemedResources[env.PUBLIC_SWAP_VARIATION as 'JETTY' | 'LETTY']
 
   let clamResource: Resource | undefined
   let elementResource: Resource | undefined
@@ -65,7 +65,7 @@
   $: enoughBalance = +currentBalance >= +fromInput
   $: arrowFill = !enoughBalance || !connected ? 'var(--color-disabled)' : 'var(--color-primary)'
 
-  const addresses = Addresses(parseInt(PUBLIC_NETWORK_ID, 0))
+  const addresses = Addresses(parseInt(env.PUBLIC_NETWORK_ID, 0))
   const swapComponent = isJetty ? addresses.components.jettySwap : addresses.components.lettySwap
   const turnEntityIntoObject = entityToResource(addresses.resources.clamAddress)
 
@@ -88,7 +88,7 @@
 
   onMount(async () => {
     const swapConfig = {
-      networkId: +PUBLIC_NETWORK_ID,
+      networkId: +env.PUBLIC_NETWORK_ID,
       applicationVersion: '1.0.0',
       applicationName: themedResources.applicationName,
       applicationDappDefinitionAddress: isJetty
@@ -97,7 +97,7 @@
     }
 
     $rdt = RadixDappToolkit(swapConfig)
-    $gatewayApi = GatewayApi(parseInt(PUBLIC_NETWORK_ID, 0))
+    $gatewayApi = GatewayApi(parseInt(env.PUBLIC_NETWORK_ID, 0))
     $rdt?.walletApi.setRequestData(DataRequestBuilder.accounts().exactly(1))
     $rdt?.walletApi.walletData$.subscribe((data) => {
       $walletData = data

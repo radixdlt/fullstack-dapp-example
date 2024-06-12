@@ -11,6 +11,7 @@ struct Test {
     _radgem: Bucket,
     radgem_local_id: NonFungibleLocalId,
     admin_badge_proof: Proof,
+    super_admin_badge_proof: Proof,
 }
 
 fn arrange_test_environment() -> Result<Test, RuntimeError> {
@@ -20,6 +21,8 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
 
     let admin_badge =
         ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(2, &mut env)?;
+    let super_admin_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
     let _radgem = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
         .mint_roles(mint_roles!(
             minter => rule!(require(admin_badge.resource_address(&mut env)?));
@@ -44,6 +47,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
             &mut env,
         )?;
     let radgem_forge = RadgemForge::new(
+        super_admin_badge.resource_address(&mut env)?,
         OwnerRole::None,
         admin_badge.take(dec!(1), &mut env)?,
         _radgem.resource_address(&mut env)?,
@@ -54,6 +58,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let radgem_address = _radgem.resource_address(&mut env)?;
     let radgem_local_id = _radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
     let admin_badge_proof = admin_badge.create_proof_of_amount(dec!(1), &mut env)?;
+    let super_admin_badge_proof = super_admin_badge.create_proof_of_all(&mut env)?;
 
     Ok(Test {
         env,
@@ -62,6 +67,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         _radgem,
         radgem_local_id,
         admin_badge_proof,
+        super_admin_badge_proof,
     })
 }
 
@@ -207,6 +213,56 @@ fn can_update_key_image() -> Result<(), RuntimeError> {
         radgem_data.key_image_url,
         UncheckedUrl("https://example.com".to_string()),
     );
+
+    Ok(())
+}
+
+#[test]
+pub fn can_disable_radgem_forge() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut radgem_forge,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    // Act
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    radgem_forge.disable(&mut env)?;
+
+    // Assert
+    env.with_component_state(
+        radgem_forge,
+        |radgem_forge_state: &mut RadgemForgeState, _| {
+            assert!(!radgem_forge_state.enabled);
+        },
+    )?;
+
+    Ok(())
+}
+
+#[test]
+pub fn can_not_mint_radgems_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut radgem_forge,
+        admin_badge_proof,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    radgem_forge.disable(&mut env)?;
+
+    // Act
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    let result = radgem_forge.mint_radgem(dec!(0.5), dec!(0.5), &mut env);
+
+    // Assert
+    println!("{:?}", result);
+    assert!(result.is_err());
 
     Ok(())
 }

@@ -22,7 +22,7 @@ export const radmorphUrlsToTuples = (radmorphs: { id: string; url: string }[]) =
       const color1 = colorDescription[color1Code as ColorCode]
       const color2 = colorDescription[color2Code as ColorCode]
       const urlHash = createRadmorphHash(url)
-      const attributesHash = createRadmorphHash(`${shape}${shader}${color1}${color2}${url}`)
+      const attributesHash = createRadmorphHash(`${shape}${shader}${color1}${color2}`)
       return `Tuple(
         Bytes("${attributesHash}"),
         Bytes("${urlHash}"),

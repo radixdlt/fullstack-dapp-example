@@ -30,6 +30,7 @@ export const newRefinery = () => {
             Address("${config.radQuest.package}")
             "Refinery"
             "new"
+            Address("${config.radQuest.badges.superAdminBadgeAddress}")
             Enum<OwnerRole::Fixed>(
                 Enum<AccessRule::Protected>(
                     Enum<AccessRuleNode::ProofRule>(

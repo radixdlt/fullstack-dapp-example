@@ -130,10 +130,6 @@
 
     overflow-y: auto;
 
-    @include mobile {
-      padding: var(--spacing-xl);
-    }
-
     :global(img) {
       max-width: 100%;
     }

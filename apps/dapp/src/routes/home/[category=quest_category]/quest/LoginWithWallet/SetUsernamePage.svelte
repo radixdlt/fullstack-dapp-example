@@ -1,7 +1,7 @@
 <script lang="ts">
   import JettyActionButtons from '$lib/components/quest/JettyActionButtons.svelte'
   import Input from '$lib/components/input/Input.svelte'
-  import { user } from '../../../../stores'
+  import { user } from '../../../../../stores'
   import { writable } from 'svelte/store'
   import { userApi } from '$lib/api/user-api'
 

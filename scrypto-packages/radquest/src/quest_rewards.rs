@@ -41,13 +41,16 @@ mod quest_rewards {
     enable_method_auth! {
         roles {
             admin => updatable_by: [OWNER];
+            super_admin => updatable_by: [OWNER];
         },
         methods {
+            disable => restrict_to: [super_admin];
             claim_reward => PUBLIC;
             deposit_reward => restrict_to: [admin];
         }
     }
     struct QuestRewards {
+        enabled: bool,
         admin_badge: FungibleVault,
         rewards: KeyValueStore<ResourceAddress, Vault>,
         rewards_record: KeyValueStore<(UserId, QuestId), RewardState>,
@@ -59,6 +62,7 @@ mod quest_rewards {
 
     impl QuestRewards {
         pub fn new(
+            super_admin_badge_address: ResourceAddress,
             owner_role: OwnerRole,
             admin_badge: Bucket,
             user_badge_address: ResourceAddress,
@@ -68,6 +72,7 @@ mod quest_rewards {
             let kyc_oracle = KycOracle::new(owner_role.clone(), admin_badge_address.clone());
 
             Self {
+                enabled: true,
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
                 rewards: KeyValueStore::new(),
                 rewards_record: KeyValueStore::new(),
@@ -80,8 +85,14 @@ mod quest_rewards {
             .prepare_to_globalize(owner_role)
             .roles(roles!(
                 admin => rule!(require(admin_badge_address));
+                super_admin => rule!(require(super_admin_badge_address));
             ))
             .globalize()
+        }
+
+        pub fn disable(&mut self) {
+            assert!(self.enabled, "QuestRewards component already disabled");
+            self.enabled = false;
         }
 
         fn authorize_claim(
@@ -194,6 +205,7 @@ mod quest_rewards {
         }
 
         pub fn deposit_reward(&mut self, user_id: UserId, quest_id: QuestId, rewards: Vec<Bucket>) {
+            assert!(self.enabled, "Component disabled");
             // If missing, add the reward to the rewards record
             if self
                 .rewards_record

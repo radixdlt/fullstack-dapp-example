@@ -21,26 +21,31 @@ mod radgem_forge {
     enable_method_auth! {
       roles {
         admin => updatable_by: [OWNER];
+        super_admin => updatable_by: [OWNER];
       },
       methods {
+        disable => restrict_to: [super_admin];
         mint_radgem => restrict_to: [admin];
         update_key_image => restrict_to: [admin];
       }
     }
 
     struct RadgemForge {
+        enabled: bool,
         admin_badge: FungibleVault,
         radgem_resource_manager: ResourceManager,
     }
 
     impl RadgemForge {
         pub fn new(
+            super_admin_badge_address: ResourceAddress,
             owner_role: OwnerRole,
             admin_badge: Bucket,
             radgem_address: ResourceAddress,
         ) -> Global<RadgemForge> {
             let admin_badge_address = admin_badge.resource_address();
             Self {
+                enabled: true,
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
                 radgem_resource_manager: ResourceManager::from(radgem_address),
             }
@@ -48,11 +53,18 @@ mod radgem_forge {
             .prepare_to_globalize(owner_role)
             .roles(roles!(
                 admin => rule!(require(admin_badge_address));
+                super_admin => rule!(require(super_admin_badge_address));
             ))
             .globalize()
         }
 
+        pub fn disable(&mut self) {
+            assert!(self.enabled, "RadgemForge component already disabled");
+            self.enabled = false;
+        }
+
         pub fn mint_radgem(&mut self, rand_num_1: Decimal, rand_num_2: Decimal) -> Bucket {
+            assert!(self.enabled, "RadgemForge component disabled");
             let material = self.assign_material(rand_num_2);
             let color = self.assign_color(rand_num_1);
             let rarity = self.assign_rarity(&material, &color);
@@ -71,6 +83,7 @@ mod radgem_forge {
         }
 
         pub fn update_key_image(&mut self, radgem_id: NonFungibleLocalId, key_image_url: Url) {
+            assert!(self.enabled, "RadgemForge component disabled");
             self.admin_badge.authorize_with_amount(1, || {
                 self.radgem_resource_manager.update_non_fungible_data(
                     &radgem_id,

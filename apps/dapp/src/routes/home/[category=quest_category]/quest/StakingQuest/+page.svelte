@@ -4,7 +4,7 @@
   import { i18n } from '$lib/i18n/i18n'
   import Button from '$lib/components/button/Button.svelte'
   import { onMount } from 'svelte'
-  import { webSocketClient } from '../../../../stores'
+  import { webSocketClient } from '../../../../../stores'
   import { writable } from 'svelte/store'
   import { questApi } from '$lib/api/quest-api'
   import { RadixNetworkConfigById } from '@radixdlt/radix-dapp-toolkit'

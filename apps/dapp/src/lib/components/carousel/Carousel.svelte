@@ -11,6 +11,16 @@
 
   let observer: MutationObserver
 
+  let items: HTMLElement[]
+
+  export const scrollToNext = () => {
+    if (!carousel) return
+    carousel.scrollBy({
+      left: items[0].offsetWidth,
+      behavior: 'smooth'
+    })
+  }
+
   const updateButtonPosition = () => {
     if (!carousel) return
     let rect = carousel.getBoundingClientRect()
@@ -41,7 +51,7 @@
       carousel.scrollTo({ left: 0, behavior: 'instant' })
     }, 0)
 
-    let items = Array.from(carousel.querySelectorAll('.item')) as HTMLElement[]
+    items = Array.from(carousel.querySelectorAll('.item')) as HTMLElement[]
 
     if (items.length === 0) return
 

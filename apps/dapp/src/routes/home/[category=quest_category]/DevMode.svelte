@@ -1,3 +1,9 @@
+<script lang="ts" context="module">
+  import { writable } from 'svelte/store'
+
+  let hide = writable(false)
+</script>
+
 <script lang="ts">
   import { invalidateAll } from '$app/navigation'
   import { questApi } from '$lib/api/quest-api'
@@ -67,13 +73,15 @@
 
 <svelte:window on:keydown={(e) => handleKeydown(e)} />
 
-<div class="dev-mode">
-  <Button
-    on:click={() => {
-      open = !open
-    }}>Dev Config</Button
-  >
-</div>
+{#if !$hide}
+  <div class="dev-mode">
+    <Button
+      on:click={() => {
+        open = !open
+      }}>Dev Config</Button
+    >
+  </div>
+{/if}
 
 {#if open}
   <Backdrop>
@@ -83,6 +91,12 @@
       <Button on:click={populate}>Populate With Resources (requires log in + account)</Button>
       <Button on:click={clearDb}>Clear Database (requires log in)</Button>
       <Button on:click={clearLocalStorageAndCookies}>Clear Local Storage</Button>
+      <Button
+        on:click={() => {
+          $hide = true
+          open = false
+        }}>Hide Dev Config</Button
+      >
     </div>
   </Backdrop>
 {/if}
