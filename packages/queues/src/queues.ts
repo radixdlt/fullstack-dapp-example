@@ -44,6 +44,11 @@ export type PopulateResourcesTransactionJob = {
   accountAddress: string
 }
 
+export type AddAccountAddressToUserBadgeOracleJob = {
+  type: 'AddAccountAddressToUserBadgeOracle'
+  accountAddress: string
+}
+
 export type TransactionJob = {
   attempt: number
   transactionKey: string
@@ -56,6 +61,7 @@ export type TransactionJob = {
   | CombinedElementsMintRadgemTransactionJob
   | CombinedElementsAddRadgemImageTransactionJob
   | PopulateResourcesTransactionJob
+  | AddAccountAddressToUserBadgeOracleJob
 )
 
 export type RadmorphSystemJob = {
