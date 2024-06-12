@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { afterUpdate, onMount } from 'svelte'
+  import { onMount } from 'svelte'
   import Item from './Item.svelte'
   import NavigateButton from './NavigateButton.svelte'
   import { isMobile } from '$lib/utils/is-mobile'
@@ -21,32 +21,7 @@
     })
   }
 
-  const updateButtonPosition = () => {
-    if (!carousel) return
-    let rect = carousel.getBoundingClientRect()
-    let navigateButtons = carousel.getElementsByClassName(
-      'navigate-button'
-    ) as HTMLCollectionOf<HTMLElement>
-
-    const left = navigateButtons[0]
-    const right = isScrolledToStart ? navigateButtons[0] : navigateButtons[1]
-
-    if (left) {
-      left.style.top = `${rect.top + rect.height / 2}px`
-      left.style.left = `${rect.left + 10}px`
-    }
-    if (right) {
-      right.style.top = `${rect.top + rect.height / 2}px`
-      right.style.left = `${rect.right - right.offsetWidth - 10}px`
-    }
-  }
-
   onMount(() => {
-    if (!isMobile()) {
-      window.addEventListener('scroll', updateButtonPosition)
-      window.addEventListener('resize', updateButtonPosition)
-    }
-
     setTimeout(() => {
       carousel.scrollTo({ left: 0, behavior: 'instant' })
     }, 0)
@@ -64,13 +39,9 @@
     observer.observe(items[items.length - 1], { attributes: true })
 
     return () => {
-      window.removeEventListener('scroll', updateButtonPosition)
-      window.removeEventListener('resize', updateButtonPosition)
       observer.disconnect()
     }
   })
-
-  if (!isMobile()) afterUpdate(updateButtonPosition)
 
   let canScroll = true
 </script>
@@ -93,26 +64,30 @@
   <slot {Item} />
   {#if !isMobile()}
     {#if !isScrolledToStart}
-      <NavigateButton
-        direction="left"
-        on:click={() => {
-          carousel.scrollBy({
-            left: -400,
-            behavior: 'smooth'
-          })
-        }}
-      />
+      <div class="navigate-button left">
+        <NavigateButton
+          direction="left"
+          on:click={() => {
+            carousel.scrollBy({
+              left: -400,
+              behavior: 'smooth'
+            })
+          }}
+        />
+      </div>
     {/if}
     {#if !isScrolledToEnd}
-      <NavigateButton
-        direction="right"
-        on:click={() => {
-          carousel.scrollBy({
-            left: 400,
-            behavior: 'smooth'
-          })
-        }}
-      />
+      <div class="navigate-button right">
+        <NavigateButton
+          direction="right"
+          on:click={() => {
+            carousel.scrollBy({
+              left: 400,
+              behavior: 'smooth'
+            })
+          }}
+        />
+      </div>
     {/if}
   {/if}
 </div>
@@ -131,6 +106,19 @@
     scrollbar-width: none;
     padding: 0 1rem;
   }
+
+  .navigate-button {
+    position: fixed;
+  }
+
+  .left {
+    left: 1rem;
+  }
+
+  .right {
+    right: 1rem;
+  }
+
   ::-webkit-scrollbar {
     display: none;
   }
