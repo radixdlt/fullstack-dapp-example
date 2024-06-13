@@ -25,5 +25,15 @@ export default defineConfig({
   },
   ssr: {
     external: ['database', '@prisma/client']
+  },
+  build: {
+    rollupOptions: {
+      onLog(level, log, handler) {
+        if (level === 'warn' && log.code === 'INVALID_ANNOTATION' && log.id?.includes('ramda')) {
+          return
+        }
+        handler(level, log)
+      }
+    }
   }
 })
