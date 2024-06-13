@@ -3,10 +3,10 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "radquest-worker.serviceAccountName" . }}-metrics
+  name: {{ include "radquest-admin.serviceAccountName" . }}-metrics
   labels:
     release: prometheus-operator
-    {{- include "radquest-worker.labels" . | nindent 4 }}
+    {{- include "radquest-admin.labels" . | nindent 4 }}
 spec:
   endpoints:
   - port: metrics
@@ -15,17 +15,17 @@ spec:
     - {{ .Release.Namespace | quote }}
   selector:
     matchLabels:
-      {{- include "radquest-worker.selectorLabels" . | nindent 6 }}
+      {{- include "radquest-admin.selectorLabels" . | nindent 6 }}
 {{- end }}
 {{- if .Values.pm2_metrics.enabled }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "radquest-worker.serviceAccountName" . }}-pm2-metrics
+  name: {{ include "radquest-admin.serviceAccountName" . }}-pm2-metrics
   labels:
     release: prometheus-operator
-    {{- include "radquest-worker.labels" . | nindent 4 }}
+    {{- include "radquest-admin.labels" . | nindent 4 }}
 spec:
   endpoints:
   - port: pm2-metrics
@@ -34,5 +34,5 @@ spec:
     - {{ .Release.Namespace | quote }}
   selector:
     matchLabels:
-      {{- include "radquest-worker.selectorLabels" . | nindent 6 }}
+      {{- include "radquest-admin.selectorLabels" . | nindent 6 }}
 {{- end }}

@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "radquest-dapp.fullname" . }}
+  name: {{ include "radquest-admin.fullname" . }}
   labels:
-    {{- include "radquest-dapp.labels" . | nindent 4 }}
+    {{- include "radquest-admin.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "radquest-dapp.selectorLabels" . | nindent 6 }}
+      {{- include "radquest-admin.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -18,38 +18,15 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "radquest-dapp.selectorLabels" . | nindent 8 }}
+        {{- include "radquest-admin.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "radquest-dapp.serviceAccountName" . }}
+      serviceAccountName: {{ include "radquest-admin.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      {{- if .Values.enable_db_migrations }}
-      initContainers:
-        - name: db-migrations
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["/bin/sh", "-c", "-e"]
-          args:
-            - npx prisma migrate deploy --schema packages/database/prisma/schema.prisma
-          env:
-          {{- range $key, $value := .Values.params }}
-          - name: {{ $key }}
-            value: {{ $value | quote }}
-          {{- end }}
-          {{- range $secret := .Values.secrets }}
-          - name: {{ $secret.env_variable }}
-            valueFrom:
-              secretKeyRef:
-                name: {{ $secret.external_secret_name }}
-                key: {{ $secret.secret_key }}
-          {{- end }}
-      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -84,11 +61,11 @@ spec:
           {{- end }}
           livenessProbe:
             httpGet:
-              path: /
+              path: /health
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /health
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

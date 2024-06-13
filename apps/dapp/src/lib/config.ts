@@ -22,11 +22,17 @@ const {
 // $env/dynamic/public does not work in CI build
 const { PUBLIC_LOG_LEVEL = 'debug' } = process.env
 
+const getDomain = () => {
+  const value = /(?<=\.).+/.exec(EXPECTED_ORIGIN ?? '')
+  return value ? value[0] : undefined
+}
+
 export const config = {
   jwt: {
     secret: JWT_SECRET!,
     refreshToken: { expiresIn: '30d', expiresInMs: 1000 * 60 * 60 * 24 * 30, key: 'jwt' },
-    authToken: { expiresIn: '10m' }
+    authToken: { expiresIn: '10m' },
+    domain: getDomain()
   },
   challenge: { expiresInMs: 600_000, byteLength: 32 },
   postgres: {
@@ -48,6 +54,7 @@ export const config = {
   },
   dapp: {
     expectedOrigin: EXPECTED_ORIGIN,
+
     networkId: publicConfig.networkId,
     dAppDefinitionAddress: publicConfig.dAppDefinitionAddress ?? '',
     ...Addresses(publicConfig.networkId)

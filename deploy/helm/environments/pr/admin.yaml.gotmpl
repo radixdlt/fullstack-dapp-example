@@ -1,0 +1,40 @@
+image: 
+    tag: {{ .StateValues.ci.tag }}
+
+params:
+  PORT: 3000
+  PUBLIC_NETWORK_ID: 2
+  PUBLIC_RADQUEST_API_URL: https://radquest-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
+  PUBLIC_LOG_LEVEL: debug
+  REDIS_HOST: "redis-master"
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: ""
+  POSTGRES_DATABASE: radquest
+  POSTGRES_HOST: postgres-postgresql
+  POSTGRES_PORT: 5432
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: secretString123
+  DATABASE_URL: "postgresql://postgres:secretString123@postgres-postgresql:5432/radquest?schema=public"
+  JWT_SECRET: FkaGHXoq32rYBcEHwAn2rkhawtUCe4sE
+
+secrets:
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.rdx-works-main.extratools.works/oauth2/start
+    nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.rdx-works-main.extratools.works/oauth2/auth
+  hosts:
+    - host: radquest-admin-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+autoscaling:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi

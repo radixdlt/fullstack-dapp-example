@@ -74,6 +74,17 @@ jobs:
             type=sha,event=branch
             type=semver,pattern={{version}}
 
+      - name: Docker tags for admin
+        id: admin-tags
+        uses: RDXWorks-actions/metadata-action@master
+        with:
+          images: |
+            docker.io/radixdlt/radquest-admin
+          tags: |
+            type=sha,event=pr
+            type=sha,event=branch
+            type=semver,pattern={{version}}
+
       - name: Docker tags for notification
         id: notification-tags
         uses: RDXWorks-actions/metadata-action@master
@@ -144,6 +155,9 @@ jobs:
       swap-tags: ${{ steps.swap-tags.outputs.tags }}
       swap-labels: ${{ steps.swap-tags.outputs.labels }}
       swap-json: ${{ steps.swap-tags.outputs.json }}
+      admin-tags: ${{ steps.admin-tags.outputs.tags }}
+      admin-labels: ${{ steps.admin-tags.outputs.labels }}
+      admin-json: ${{ steps.admin-tags.outputs.json }}
       notification-tags: ${{ steps.notification-tags.outputs.tags }}
       notification-labels: ${{ steps.notification-tags.outputs.labels }}
       notification-json: ${{ steps.notification-tags.outputs.json }}
@@ -317,6 +331,31 @@ jobs:
         PUBLIC_NETWORK_ID=${{ needs.setup-tags.outputs.public-network-id }}
         PUBLIC_LOG_LEVEL=${{ needs.setup-tags.outputs.public-log-level }}
 
+  push-admin:
+    name: Docker admin
+    needs:
+      - setup-tags
+      - snyk-scan-deps-licences
+      - snyk-scan-code
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
+    with:
+      runs_on: ubuntu-latest
+      image_registry: 'docker.io'
+      image_organization: 'radixdlt'
+      target: 'application'
+      image_name: 'radquest-admin'
+      tag: ${{ needs.setup-tags.outputs.tag-with-network }}
+      context: '.'
+      dockerfile: './dockerfiles/admin.Dockerfile'
+      platforms: 'linux/amd64'
+      scan_image: true
+      provenance: false
+      snyk_target_ref: ${{ github.ref_name }}
+      with_sbom: false
+      build-args: |
+        PUBLIC_NETWORK_ID=${{ needs.setup-tags.outputs.public-network-id }}
+        PUBLIC_LOG_LEVEL=${{ needs.setup-tags.outputs.public-log-level }}
+
   push-notification:
     name: Docker notification
     needs:
@@ -389,6 +428,7 @@ jobs:
     needs:
       - push-dapp
       - push-swap
+      - push-admin
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -415,6 +455,7 @@ jobs:
     needs:
       - push-dapp
       - push-swap
+      - push-admin
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -440,6 +481,7 @@ jobs:
     needs:
       - push-dapp
       - push-swap
+      - push-admin
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -465,6 +507,7 @@ jobs:
     needs:
       - push-dapp
       - push-swap
+      - push-admin
       - push-notification
       - push-transaction-stream
       - push-worker
@@ -557,6 +600,31 @@ jobs:
           snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
           snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
           image: docker.io/radixdlt/radquest-swap:${{ needs.setup-tags.outputs.tag-with-network }}
+          target_ref: ${{ github.ref_name }}
+
+  snyk-container-monitor-admin:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs:
+      - push-admin
+      - setup-tags
+    steps:
+      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
+        with:
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          app_name: 'radquest'
+          step_name: 'snyk-monitor'
+          secret_prefix: 'SNY'
+          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
+          parse_json: true
+      - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
+        with:
+          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
+          app_name: 'rqst-admin'
+          dockerhub_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/dockerhub-credentials'
+          snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
+          snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
+          image: docker.io/radixdlt/radquest-admin:${{ needs.setup-tags.outputs.tag-with-network }}
           target_ref: ${{ github.ref_name }}
 
   snyk-container-monitor-notification:

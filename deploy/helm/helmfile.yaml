@@ -49,6 +49,11 @@ releases:
     values:
       - environments/{{ .Environment.Name }}/letty-swap.yaml.gotmpl
 
+  - name: admin
+    chart: ./admin
+    values:
+      - environments/{{ .Environment.Name }}/admin.yaml.gotmpl
+
   - name: postgres
     chart: bitnami/postgresql
     version:  12.12.10
