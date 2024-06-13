@@ -13,6 +13,7 @@
   import TextJettyPage from '../TextJettyPage.svelte'
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
+  import type { WebSocketClient } from '$lib/websocket-client'
 
   export let data: PageData
 
@@ -22,8 +23,9 @@
 
   let receivedClams = writable(data.requirements?.JettyReceivedClams)
 
+  let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
-    const unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
+    unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
       if (
         message.type === 'QuestRequirementCompleted' &&
         message.requirementId === 'JettyReceivedClams'
@@ -33,11 +35,9 @@
         messageApi.markAsSeen(message.id)
       }
     })
-
-    onDestroy(() => {
-      unsubscribeWebSocket()
-    })
   }
+
+  onDestroy(() => unsubscribeWebSocket?.())
 </script>
 
 <Quest

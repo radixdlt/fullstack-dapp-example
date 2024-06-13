@@ -8,6 +8,7 @@
   import { useCookies, type RequirementCookieKey } from '$lib/utils/cookies'
   import { messageApi } from '$lib/api/message-api'
   import pipe from 'ramda/src/pipe'
+  import type { WebSocketClient } from '$lib/websocket-client'
 
   export let questId: keyof Quests
   export let requirements: Record<string, boolean>
@@ -76,8 +77,9 @@
       return response
     })
 
+  let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient && $user) {
-    const unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
+    unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
       if (message.type === 'QuestRewardsDeposited') {
         readRequirementsFromDb().then(() => {
           messageApi.markAsSeen(message.id)
@@ -85,11 +87,11 @@
         })
       }
     })
-
-    onDestroy(() => {
-      unsubscribeWebSocket()
-    })
   }
+
+  onDestroy(() => {
+    unsubscribeWebSocket?.()
+  })
 
   onMount(() => {
     if ($user) {

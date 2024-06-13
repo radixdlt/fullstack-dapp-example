@@ -10,6 +10,7 @@
   import { userApi } from '$lib/api/user-api'
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
+  import type { WebSocketClient } from '$lib/websocket-client'
 
   export let questId: keyof Quests
   export let state:
@@ -66,8 +67,9 @@
       })
   }
 
+  let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
-    const unsubscribeWebSocket = $webSocketClient.onMessage((event) => {
+    unsubscribeWebSocket = $webSocketClient.onMessage((event) => {
       if (
         event.type === 'QuestRequirementCompleted' &&
         event.questId === questId &&
@@ -77,9 +79,9 @@
         dispatch('deposited')
       }
     })
-
-    onDestroy(() => unsubscribeWebSocket())
   }
+
+  onDestroy(() => unsubscribeWebSocket?.())
 
   onMount(() => {
     rdt.then(() => {

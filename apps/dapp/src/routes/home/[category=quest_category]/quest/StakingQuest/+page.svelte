@@ -11,6 +11,7 @@
   import { publicConfig } from '$lib/public-config'
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
+  import type { WebSocketClient } from '$lib/websocket-client'
 
   export let data: PageData
   let quest: Quest
@@ -23,8 +24,9 @@
       data.questStatus.StakingQuest?.status === 'COMPLETED'
   )
 
+  let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
-    const unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
+    unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'StakedXrd') {
         $stakedXrd = true
         messageApi.markAsSeen(message.id)
@@ -35,9 +37,9 @@
         messageApi.markAsSeen(message.id)
       }
     })
-
-    onDestroy(() => unsubscribeWebSocket())
   }
+
+  onDestroy(() => unsubscribeWebSocket?.())
 
   const stakingLearnt = () => {
     questApi.completeContentRequirement(data.id)
