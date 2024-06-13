@@ -11,6 +11,7 @@
   import { Addresses } from 'common'
   import { questApi } from '$lib/api/quest-api'
   import type { PageData } from './$types'
+  import type { WebSocketClient } from '$lib/websocket-client'
 
   export let data: PageData
 
@@ -20,8 +21,9 @@
   const addresses = Addresses(publicConfig.networkId)
   const jettySwap = writable(data.requirements?.JettySwap)
   const lettySwap = writable(data.requirements?.LettySwap)
+  let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
-    const unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
+    unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'JettySwap') {
         $jettySwap = true
         messageApi.markAsSeen(message.id)
@@ -32,11 +34,10 @@
         messageApi.markAsSeen(message.id)
       }
     })
-
-    onDestroy(() => {
-      unsubscribeWebSocket()
-    })
   }
+  onDestroy(() => {
+    unsubscribeWebSocket?.()
+  })
 
   const swappingLearnt = () => {
     questApi.completeContentRequirement(data.id)
