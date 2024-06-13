@@ -5,7 +5,8 @@
   import PadlockIcon from '@images/padlock.svg'
   import CheckmarkIcon from '@images/checkmark.svg'
   import LockIcon from '@images/padlock.svg'
-  import type { QuestReward } from 'content'
+  import Hourglass from '@images/hourglass.svg'
+  import type { QuestId, QuestReward } from 'content'
   import type { QuestStatus } from '../../../types'
 
   export let title: string
@@ -15,6 +16,7 @@
   export let backgroundImage: string | undefined = undefined
   export let rewards: Readonly<QuestReward[]> = []
   export let link: string | undefined = undefined
+  export let questId: QuestId
 </script>
 
 <div
@@ -25,10 +27,19 @@
   class:hover-shadow={state !== 'locked'}
   style:--background-image={backgroundImage ? `url(${backgroundImage})` : ''}
 >
-  {#if state === 'completed' || state === 'locked'}
-    <div class="status-icon" class:disabled={state === 'locked'}>
+  {#if state === 'completed' || state === 'locked' || state === 'in-progress'}
+    <div
+      class="status-icon"
+      class:status-icon-with-background={state !== 'in-progress'}
+      class:disabled={state === 'locked'}
+      class:status-icon-in-progress={state === 'in-progress'}
+    >
       {#if state === 'locked'}
         <img src={LockIcon} class="icon disabled" alt="Padlock" />
+      {/if}
+
+      {#if state === 'in-progress'}
+        <img src={Hourglass} class="icon in-progress-icon" alt="Hourglass" />
       {/if}
 
       {#if state === 'completed'}
@@ -45,12 +56,16 @@
         <div class="button-content">
           {#if state === 'unlocked'}
             Start
+          {:else if state === 'in-progress' && questId === 'ReferralQuest'}
+            Check Status
           {:else if state === 'in-progress'}
             Continue
           {:else if state === 'locked'}
             <img src={PadlockIcon} alt="Padlock icon" />
+          {:else if state === 'claim-rewards'}
+            Claim Rewards
           {:else}
-            View Again
+            Recap
           {/if}
         </div>
       </Button>
@@ -100,8 +115,8 @@
   }
 
   .icon {
-    width: 1rem;
-    height: 1rem;
+    width: 0.8rem;
+    height: 0.8rem;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -112,12 +127,19 @@
     top: 1.5rem;
     left: 1.5rem;
     border-radius: 50%;
-    width: 2rem;
-    height: 2rem;
-    background: var(--gradient-6);
+    width: 1.563rem;
+    height: 1.563rem;
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .status-icon-with-background {
+    background: var(--gradient-6);
+  }
+
+  .status-icon-in-progress {
+    top: 1.3rem;
   }
 
   .content {
@@ -128,6 +150,11 @@
 
   .start-button {
     margin-top: var(--spacing-lg);
+  }
+
+  .in-progress-icon {
+    width: 1.5rem;
+    height: 1.5rem;
   }
 
   .rewards {
@@ -139,7 +166,6 @@
   .button-content {
     display: flex;
     justify-content: center;
-    width: 2.3rem;
   }
 
   .content {
@@ -150,11 +176,5 @@
 
   .start-button {
     margin-top: var(--spacing-lg);
-  }
-
-  .button-content {
-    display: flex;
-    justify-content: center;
-    width: 2.3rem;
   }
 </style>

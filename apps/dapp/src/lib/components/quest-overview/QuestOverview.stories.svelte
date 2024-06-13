@@ -26,6 +26,10 @@
       rewards: {
         control: 'number',
         description: 'Amount of rewards to be displayed'
+      },
+      questId: {
+        control: 'text',
+        description: 'Quest id, relevant for referall quest in progress state'
       }
     }
   }
@@ -35,6 +39,7 @@
   import { Story, Template } from '@storybook/addon-svelte-csf'
   import QuestOverview from './QuestOverview.svelte'
   import JettyPlatform from '@images/jetty-platform.png'
+  import ReferralQuest from '../../../../static/quests-images/splash/ReferralQuest.webp'
 
   const rewards = [
     {
@@ -58,6 +63,7 @@
 <Template let:args>
   <div style:height="40rem">
     <QuestOverview
+      questId={'FirstTransactionQuest'}
       title={args.title}
       description={args.description}
       minutesToComplete={args.minutesToComplete}
@@ -83,11 +89,26 @@
 <Story name="Small">
   <div style:height="30rem">
     <QuestOverview
+      questId={'FirstTransactionQuest'}
       title="Introduction to Radar"
       description="Get familiar with Radar, the radically better Web3 network."
       minutesToComplete={1}
       state="unlocked"
       backgroundImage={JettyPlatform}
+      rewards={getRewardData(3)}
+    />
+  </div>
+</Story>
+
+<Story name="Referral">
+  <div style:height="40rem">
+    <QuestOverview
+      questId={'ReferralQuest'}
+      title="Referral Quest"
+      description="Referral Quest."
+      minutesToComplete={3}
+      state="in-progress"
+      backgroundImage={ReferralQuest}
       rewards={getRewardData(3)}
     />
   </div>

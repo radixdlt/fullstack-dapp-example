@@ -64,6 +64,10 @@
     width: fit-content;
   }
 
+  .button > div {
+    width: fit-content;
+  }
+
   .primary {
     background: var(--color-primary);
     color: var(--color-light);
