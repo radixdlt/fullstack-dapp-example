@@ -111,7 +111,10 @@
 
     <Button
       on:click={() =>
-        window.open(RadixNetworkConfigById[publicConfig.networkId]['dashboardUrl'], '_blank')}
+        window.open(
+          `${RadixNetworkConfigById[publicConfig.networkId]['dashboardUrl']}/network-staking`,
+          '_blank'
+        )}
     >
       {$i18n.t('quests:StakingQuest.goToRadixDashboard')}
     </Button>
