@@ -14,6 +14,23 @@ spec:
       name: http
   selector:
     {{- include "radquest-admin.selectorLabels" . | nindent 4 }}
+{{- if .Values.pm2_metrics.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "radquest-admin.fullname" . }}-pm2-metrics
+  labels:
+    {{- include "radquest-admin.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+  - port: {{ .Values.metrics.port }}
+    name: pm2-metrics
+    targetPort: {{ .Values.metrics.port }}
+  selector:
+    {{- include "radquest-admin.selectorLabels" . | nindent 4 }}
+{{- end }}
 {{- if .Values.metrics.enabled }}
 ---
 apiVersion: v1

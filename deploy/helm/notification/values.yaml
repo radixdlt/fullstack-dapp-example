@@ -9,9 +9,13 @@ imagePullSecrets:
 
 replicaCount: 1
 
-metrics:
+pm2_metrics:
   enabled: false
   port: 9209
+
+metrics:
+  enabled: false
+  port: 4000
 
 nameOverride: "notification"
 
