@@ -47,7 +47,7 @@
     <Button on:click={goToInstapass}>
       <div class="center">
         <span>{$i18n.t('quests:InstapassQuest.goToInstapass')}</span>
-        <img src={ExternalLink} class="external-link-icon" alt="External link icon" />
+        <img src={ExternalLink} alt="External link icon" />
       </div>
     </Button>
     {@html text['0.md']}

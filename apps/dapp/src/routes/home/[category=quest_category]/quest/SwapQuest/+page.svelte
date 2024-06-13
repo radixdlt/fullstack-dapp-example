@@ -117,7 +117,7 @@
       <Button on:click={() => window.open(addresses.dapps.jettySwap.url, '_blank')}>
         <div class="center">
           <span>{$i18n.t('quests:SwapQuest.goToJettySwap')}</span>
-          <img src={ExternalLink} class="external-link-icon" alt="External link icon" />
+          <img src={ExternalLink} alt="External link icon" />
         </div>
       </Button>
     </div>
@@ -134,7 +134,7 @@
       <Button on:click={() => window.open(addresses.dapps.lettySwap.url, '_blank')}>
         <div class="center">
           <span>{$i18n.t('quests:SwapQuest.goToLettySwap')}</span>
-          <img src={ExternalLink} class="external-link-icon" alt="External link icon" />
+          <img src={ExternalLink} alt="External link icon" />
         </div>
       </Button>
     </div>
