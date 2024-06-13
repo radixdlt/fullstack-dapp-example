@@ -8,6 +8,7 @@
   import Hourglass from '@images/hourglass.svg'
   import type { QuestId, QuestReward } from 'content'
   import type { QuestStatus } from '../../../types'
+  import { i18n } from '$lib/i18n/i18n'
 
   export let title: string
   export let description: string
@@ -55,17 +56,17 @@
       <Button {link} disabled={state === 'locked'}>
         <div class="button-content">
           {#if state === 'unlocked'}
-            Start
+            {$i18n.t('quests:QuestOverviewButton.unlocked')}
           {:else if state === 'in-progress' && questId === 'ReferralQuest'}
-            Check Status
+            {$i18n.t('quests:QuestOverviewButton.referralInProgress')}
           {:else if state === 'in-progress'}
-            Continue
+            {$i18n.t('quests:QuestOverviewButton.inProgress')}
           {:else if state === 'locked'}
             <img src={PadlockIcon} alt="Padlock icon" />
           {:else if state === 'claim-rewards'}
-            Claim Rewards
+            {$i18n.t('quests:QuestOverviewButton.claimRewards')}
           {:else}
-            Recap
+            {$i18n.t('quests:QuestOverviewButton.complete')}
           {/if}
         </div>
       </Button>
