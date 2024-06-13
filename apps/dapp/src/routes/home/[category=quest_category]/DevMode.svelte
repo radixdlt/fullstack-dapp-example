@@ -29,16 +29,19 @@
     rdt.then((rdt) => {
       rdt.walletApi
         .sendOneTimeRequest(OneTimeDataRequestBuilder.accounts().exactly(1).withProof())
-        .map(({ accounts, proofs }) => {
+        .andThen(({ accounts, proofs }) => {
           const accountProof = proofs.find(
             (proof) => proof.type === 'account'
           )! as SignedChallengeAccount
 
-          userApi.setUserField({
+          return userApi.setUserField({
             accountAddress: accounts[0].address,
             proof: accountProof,
             field: 'accountAddress'
           })
+        })
+        .map(() => {
+          userApi.mintUserBadge()
         })
     })
   }
@@ -87,7 +90,7 @@
   <Backdrop>
     <div class="card buttons">
       <Button on:click={unlockQuests}>Unlock All Quests</Button>
-      <Button on:click={registerAccount}>Register Account</Button>
+      <Button on:click={registerAccount}>Register Account + badge</Button>
       <Button on:click={populate}>Populate With Resources (requires log in + account)</Button>
       <Button on:click={clearDb}>Clear Database (requires log in)</Button>
       <Button on:click={clearLocalStorageAndCookies}>Clear Local Storage</Button>
