@@ -12,6 +12,7 @@
   import { questApi } from '$lib/api/quest-api'
   import type { PageData } from './$types'
   import type { WebSocketClient } from '$lib/websocket-client'
+  import ExternalLink from '@images/external-link.svg'
 
   export let data: PageData
 
@@ -114,7 +115,10 @@
 
     <div class="go-to-swap">
       <Button on:click={() => window.open(addresses.dapps.jettySwap.url, '_blank')}>
-        {$i18n.t('quests:SwapQuest.goToJettySwap')}
+        <div class="center">
+          <span>{$i18n.t('quests:SwapQuest.goToJettySwap')}</span>
+          <img src={ExternalLink} class="external-link-icon" alt="External link icon" />
+        </div>
       </Button>
     </div>
   {/if}
@@ -128,13 +132,22 @@
 
     <div class="go-to-swap">
       <Button on:click={() => window.open(addresses.dapps.lettySwap.url, '_blank')}>
-        {$i18n.t('quests:SwapQuest.goToLettySwap')}
+        <div class="center">
+          <span>{$i18n.t('quests:SwapQuest.goToLettySwap')}</span>
+          <img src={ExternalLink} class="external-link-icon" alt="External link icon" />
+        </div>
       </Button>
     </div>
   {/if}
 </Quest>
 
 <style lang="scss">
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
   .go-to-swap {
     width: 100%;
     display: flex;

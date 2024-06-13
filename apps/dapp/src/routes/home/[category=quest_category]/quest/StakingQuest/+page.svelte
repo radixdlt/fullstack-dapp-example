@@ -3,6 +3,7 @@
   import type { PageData } from '../StakingQuest/$types'
   import { i18n } from '$lib/i18n/i18n'
   import Button from '$lib/components/button/Button.svelte'
+  import ExternalLink from '@images/external-link.svg'
   import { onDestroy } from 'svelte'
   import { webSocketClient } from '../../../../../stores'
   import { writable } from 'svelte/store'
@@ -116,7 +117,10 @@
           '_blank'
         )}
     >
-      {$i18n.t('quests:StakingQuest.goToRadixDashboard')}
+      <div class="center">
+        <span>{$i18n.t('quests:StakingQuest.goToRadixDashboard')}</span>
+        <img src={ExternalLink} alt="External link icon" />
+      </div>
     </Button>
   {/if}
 
@@ -132,3 +136,12 @@
     {@html text['5.md']}
   {/if}
 </Quest>
+
+<style>
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+</style>

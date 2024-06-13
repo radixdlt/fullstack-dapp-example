@@ -7,6 +7,7 @@
   import { user } from '../../../../../stores'
   import { Addresses } from 'common'
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
+  import ExternalLink from '@images/external-link.svg'
 
   export let data: PageData
 
@@ -43,7 +44,21 @@
   let:render
 >
   {#if render('0')}
-    <Button on:click={goToInstapass}>{$i18n.t('quests:InstapassQuest.goToInstapass')}</Button>
+    <Button on:click={goToInstapass}>
+      <div class="center">
+        <span>{$i18n.t('quests:InstapassQuest.goToInstapass')}</span>
+        <img src={ExternalLink} class="external-link-icon" alt="External link icon" />
+      </div>
+    </Button>
     {@html text['0.md']}
   {/if}
 </Quest>
+
+<style lang="scss">
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+</style>
