@@ -2,18 +2,19 @@
   export let value: string = ''
   export let onInput: (value: string) => void = () => {}
   export let placeholder = ''
-  export let style = ''
   export let state: 'default' | 'error' = 'default'
+  export let disabled = false
   function inputHandler(event: Event) {
     const input = event.target as HTMLInputElement
     onInput(input.value)
   }
 </script>
 
-<input {style} class={`text-title ${state}`} {placeholder} on:input={inputHandler} bind:value />
+<input {disabled} class={`text-title ${state}`} {placeholder} on:input={inputHandler} bind:value />
 
 <style>
   input {
+    width: var(--width, 100%);
     height: 40px;
     color: var(--color-dark);
   }

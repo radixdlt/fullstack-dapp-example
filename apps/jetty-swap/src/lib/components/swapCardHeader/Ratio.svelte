@@ -9,12 +9,12 @@
 
 <div class="ratio row">
   <span class="row">
-    {conversionRateFrom}
+    {conversionRateFrom ?? 'N/A'}
     <Icon --size="18px" url={clamResourceIcon} />
   </span>
   =
   <span class="row">
-    {conversionRateTo}
+    {conversionRateTo ?? 'N/A'}
     <Icon --size="18px" url={elementResourceIcon} />
   </span>
 </div>

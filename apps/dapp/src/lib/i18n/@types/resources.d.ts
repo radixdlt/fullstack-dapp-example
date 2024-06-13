@@ -141,8 +141,11 @@ interface Resources {
     SwapQuest: {
       requirements: {
         LearnAboutDexes: 'Learn about DEXes'
-        SwapTokens: 'Swap tokens on DEXes'
+        JettySwap: 'Swap tokens on Jetty Swap'
+        LettySwap: 'Swap tokens on Letty Swap'
       }
+      goToJettySwap: 'Go to Jetty Swap'
+      goToLettySwap: 'Go to Letty Swap'
       title: 'Decentralized Exchange (DEX)'
       description: 'Learn how to swap one token for another at a changing market rate.'
       introDescription: 'Learn about DEXes\nSwap one token for another kind of token'

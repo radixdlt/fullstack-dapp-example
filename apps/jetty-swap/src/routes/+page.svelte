@@ -97,6 +97,7 @@
     }
 
     $rdt = RadixDappToolkit(swapConfig)
+    $rdt.buttonApi.setTheme(isJetty ? 'radix-blue' : 'white')
     $gatewayApi = GatewayApi(parseInt(env.PUBLIC_NETWORK_ID, 0))
     $rdt?.walletApi.setRequestData(DataRequestBuilder.accounts().exactly(1))
     $rdt?.walletApi.walletData$.subscribe((data) => {
@@ -131,9 +132,7 @@
       })
 
       conversionRateTo = receiveAmount
-    } catch (error) {
-      //todo error handling
-    }
+    } catch (error) {}
   })
 
   let timer: NodeJS.Timeout
@@ -240,6 +239,7 @@
     <div>
       <div class="swap">
         <TokenSwapInput
+          disabled={!connected}
           bind:value={fromInput}
           cardTitle={$i18n.t('main:from')}
           resource={clamResource}
@@ -257,6 +257,7 @@
           </div>
         </div>
         <TokenSwapInput
+          disabled
           bind:value={toInput}
           cardTitle={$i18n.t('main:to')}
           resource={elementResource}
@@ -290,7 +291,7 @@
   </div>
   <div class="newbie-hint">
     {$i18n.t(`main:newbie-hint-${isJetty ? 'jetty' : 'letty'}`)}
-    <a href="?">Radquest site</a>.
+    <a href={addresses.dapps.radquest.url}>Radquest site</a>.
   </div>
 </section>
 

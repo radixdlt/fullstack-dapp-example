@@ -34,7 +34,6 @@
   }
 
   .result-content {
-    width: 20rem;
     display: flex;
     flex-direction: column;
   }
@@ -75,7 +74,7 @@
 
   .card {
     background-color: var(--color-linen);
-    padding: 36px 57px 40px 57px;
+    padding: 40px 57px;
     border-radius: var(--border-radius-2xl);
     width: 400px;
   }
