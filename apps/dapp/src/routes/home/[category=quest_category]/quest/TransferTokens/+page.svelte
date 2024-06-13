@@ -4,7 +4,7 @@
   import type { PageData } from './$types'
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
   import { webSocketClient } from '../../../../../stores'
-  import { onMount } from 'svelte'
+  import { onDestroy } from 'svelte'
   import { isMobile } from '$lib/utils/is-mobile'
   import CopyTextBox from '$lib/components/copy-text-box/CopyTextBox.svelte'
   import QR from '@svelte-put/qr/svg/QR.svelte'
@@ -13,6 +13,7 @@
   import TextJettyPage from '../TextJettyPage.svelte'
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
+  import type { WebSocketClient } from '$lib/websocket-client'
 
   export let data: PageData
 
@@ -22,8 +23,9 @@
 
   let receivedClams = writable(data.requirements?.JettyReceivedClams)
 
-  onMount(() => {
-    const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
+  let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
+  $: if ($webSocketClient) {
+    unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
       if (
         message.type === 'QuestRequirementCompleted' &&
         message.requirementId === 'JettyReceivedClams'
@@ -33,11 +35,9 @@
         messageApi.markAsSeen(message.id)
       }
     })
+  }
 
-    return () => {
-      unsubscribeWebSocket?.()
-    }
-  })
+  onDestroy(() => unsubscribeWebSocket?.())
 </script>
 
 <Quest

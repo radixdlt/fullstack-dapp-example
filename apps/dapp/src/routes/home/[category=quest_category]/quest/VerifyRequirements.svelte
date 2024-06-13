@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
+  import { createEventDispatcher, onDestroy, onMount } from 'svelte'
   import { questApi } from '$lib/api/quest-api'
   import { quests, user, webSocketClient } from '../../../../stores'
   import type { Quests } from 'content'
@@ -8,6 +8,7 @@
   import { useCookies, type RequirementCookieKey } from '$lib/utils/cookies'
   import { messageApi } from '$lib/api/message-api'
   import pipe from 'ramda/src/pipe'
+  import type { WebSocketClient } from '$lib/websocket-client'
 
   export let questId: keyof Quests
   export let requirements: Record<string, boolean>
@@ -76,6 +77,22 @@
       return response
     })
 
+  let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
+  $: if ($webSocketClient && $user) {
+    unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
+      if (message.type === 'QuestRewardsDeposited') {
+        readRequirementsFromDb().then(() => {
+          messageApi.markAsSeen(message.id)
+          checkRequirements()
+        })
+      }
+    })
+  }
+
+  onDestroy(() => {
+    unsubscribeWebSocket?.()
+  })
+
   onMount(() => {
     if ($user) {
       setLoading(true)
@@ -105,19 +122,6 @@
             })
           )
       )()
-
-      const unsubscribeWebSocket = $webSocketClient?.onMessage((message) => {
-        if (message.type === 'QuestRewardsDeposited') {
-          readRequirementsFromDb().then(() => {
-            messageApi.markAsSeen(message.id)
-            checkRequirements()
-          })
-        }
-      })
-
-      return () => {
-        unsubscribeWebSocket?.()
-      }
     } else {
       checkRequirements()
     }

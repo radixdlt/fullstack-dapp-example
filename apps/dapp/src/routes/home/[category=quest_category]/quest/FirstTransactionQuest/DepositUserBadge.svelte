@@ -3,13 +3,14 @@
   import { rdt, sendTransaction } from '$lib/rdt'
   import { GatewayApi } from 'common'
   import { err } from 'neverthrow'
-  import { onMount } from 'svelte'
+  import { onDestroy, onMount } from 'svelte'
   import { createEventDispatcher } from 'svelte'
   import { user, webSocketClient } from '../../../../../stores'
   import Button from '$lib/components/button/Button.svelte'
   import { userApi } from '$lib/api/user-api'
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
+  import type { WebSocketClient } from '$lib/websocket-client'
 
   export let questId: keyof Quests
   export let state:
@@ -66,8 +67,9 @@
       })
   }
 
-  onMount(() => {
-    const unsubscribeWebSocket = $webSocketClient?.onMessage((event) => {
+  let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
+  $: if ($webSocketClient) {
+    unsubscribeWebSocket = $webSocketClient.onMessage((event) => {
       if (
         event.type === 'QuestRequirementCompleted' &&
         event.questId === questId &&
@@ -77,7 +79,11 @@
         dispatch('deposited')
       }
     })
+  }
 
+  onDestroy(() => unsubscribeWebSocket?.())
+
+  onMount(() => {
     rdt.then(() => {
       const address = $user!.accountAddress!
       const userId = $user!.id
@@ -116,10 +122,6 @@
         }
       })
     })
-
-    return () => {
-      unsubscribeWebSocket?.()
-    }
   })
 </script>
 
