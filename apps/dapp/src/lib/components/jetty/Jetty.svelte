@@ -79,7 +79,7 @@
 <svelte:window on:keydown={(e) => handleKeydown(e)} />
 
 <JettyDialog
-  dialogs={showJettyMenu || showNotification || glossaryItem || dialog ? 1 : 0}
+  dialogs={1}
   on:click={onClick}
   close={showGlossary}
   notification={hasNotifications}

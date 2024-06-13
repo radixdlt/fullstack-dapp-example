@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { crossfade, fade } from 'svelte/transition'
   import CardHeader from '../card-header/CardHeader.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import { createEventDispatcher } from 'svelte'
@@ -16,12 +15,6 @@
   $: html = glossary.find(
     (g) => g.title.toLowerCase().trim() === selectedTitle.toLowerCase().trim()
   )?.html
-
-  const crossfadeDuration = 100
-
-  const [send, receive] = crossfade({
-    duration: crossfadeDuration
-  })
 
   const dispatch = createEventDispatcher<{ close: undefined }>()
 </script>
@@ -49,11 +42,7 @@
     </div>
   {:else}
     <div class="anchor-container">
-      <div
-        class="title-anchor"
-        out:send={{ key: selectedTitle }}
-        in:receive={{ key: selectedTitle }}
-      >
+      <div class="title-anchor">
         {selectedTitle}
       </div>
       <div class="divider-anchor" />
@@ -73,20 +62,11 @@
   {/if}
 
   {#if pageTitle === 'glossary'}
-    <div class="grid-item" out:fade={{ duration: crossfadeDuration }}>
+    <div class="grid-item">
       {#each glossary as { title }, index}
-        <div
-          in:fade|global={{
-            duration: selectedTitle === title ? 0 : crossfadeDuration
-          }}
-        >
+        <div>
           {#if index !== 0 || !selectedTitle}
-            <div
-              in:fade|global={{
-                duration: crossfadeDuration
-              }}
-              class="divider"
-            />
+            <div class="divider" />
           {/if}
           <button
             class="title"
@@ -94,8 +74,6 @@
               selectedTitle = title
               pageTitle = 'title'
             }}
-            out:send|global={{ key: title }}
-            in:receive|global={{ key: title }}
           >
             {title}
           </button>
