@@ -15,6 +15,11 @@ interface Resources {
   main: {
     'tabs-basics': 'Basics'
     'tabs-advanced': 'Advanced'
+    'error-page': {
+      'page-not-found': 'I couldn’t find that page.'
+      'something-went-wrong': 'Oops! Something went wrong'
+      'go-home-button': 'Go to RadQuest Home'
+    }
     landingPagePopup: {
       title: 'Welcome to RadQuest'
       message: 'Ready to earn your rare NFT and up to $20 in XRD? Start your quest journey now.'
