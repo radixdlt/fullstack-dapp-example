@@ -14,7 +14,7 @@ secrets:
     secret_key: "notification_jwt_secret"
 
 ingress:
-  enabled: false
+  enabled: true
   basic_auth:
     enabled: true
     secret_name: rtlj-prod/eks/radquest/temp-basic-auth
@@ -23,7 +23,7 @@ ingress:
     nginx.ingress.kubernetes.io/auth-type: basic
     nginx.ingress.kubernetes.io/auth-secret: notification-basic-auth
   hosts:
-    - host: radquest-notification.radixdlt.com
+    - host: notification.radquest.io
       paths:
         - path: /
           pathType: ImplementationSpecific
