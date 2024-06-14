@@ -26,6 +26,7 @@
   class="card quest-card"
   class:border={state === 'in-progress' || state === 'unlocked'}
   class:hover-shadow={state !== 'locked'}
+  class:greyed-out={state === 'completed'}
   style:--background-image={backgroundImage ? `url(${backgroundImage})` : ''}
 >
   {#if state === 'completed' || state === 'locked' || state === 'in-progress'}
@@ -177,5 +178,9 @@
 
   .start-button {
     margin-top: var(--spacing-lg);
+  }
+
+  .greyed-out {
+    opacity: 0.5;
   }
 </style>
