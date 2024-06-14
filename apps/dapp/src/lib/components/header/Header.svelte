@@ -15,6 +15,8 @@
     align-items: center;
     padding: var(--spacing-lg);
     height: 4rem;
+    padding-left: 1.4rem;
+    padding-right: 1.4rem;
   }
 
   img {
