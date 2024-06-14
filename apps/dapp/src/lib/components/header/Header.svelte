@@ -1,15 +1,10 @@
 <script lang="ts">
   import { i18n } from '$lib/i18n/i18n'
-  import RadquestLogoBig from '@images/radquest-logo-big.svg'
-  import RadquestLogoSmall from '@images/radquest-logo-small.svg'
+  import RadquestLogo from '@images/radquest-logo.png'
 </script>
 
 <div class="header">
-  <img
-    style:--big-logo={`url(${RadquestLogoBig})`}
-    style:--small-logo={`url(${RadquestLogoSmall})`}
-    alt={$i18n.t('quests:radquest-logo-alt')}
-  />
+  <img style:--logo={`url(${RadquestLogo})`} alt={$i18n.t('quests:radquest-logo-alt')} />
   <radix-connect-button class="radix-btn" />
 </div>
 
@@ -23,7 +18,7 @@
   }
 
   img {
-    content: var(--big-logo);
+    content: var(--logo);
   }
 
   .radix-btn {
