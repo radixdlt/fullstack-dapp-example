@@ -6,7 +6,6 @@ import type { $Enums } from 'database'
 export const load: LayoutServerLoad = async ({ fetch, cookies }) => {
   const questStatusResult = await questApi.getQuestsInformation(fetch)
   const questDefinitions = loadQuests('en')
-  throw new Error('test')
 
   let questStatus = {} as Record<
     QuestId,
