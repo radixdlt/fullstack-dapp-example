@@ -111,11 +111,7 @@
     {@html text['2.md']}
 
     <Button
-      on:click={() =>
-        window.open(
-          `${RadixNetworkConfigById[publicConfig.networkId]['dashboardUrl']}/network-staking`,
-          '_blank'
-        )}
+      link={`${RadixNetworkConfigById[publicConfig.networkId]['dashboardUrl']}/network-staking`}
     >
       <div class="center">
         <span>{$i18n.t('quests:StakingQuest.goToRadixDashboard')}</span>

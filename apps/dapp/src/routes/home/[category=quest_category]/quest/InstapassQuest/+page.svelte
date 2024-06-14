@@ -14,12 +14,7 @@
   const text = data.text as Quests['InstapassQuest']['text']
 
   let quest: Quest
-
-  const goToInstapass = () => {
-    const { dapps } = Addresses(parseInt(PUBLIC_NETWORK_ID))
-
-    window.open(`${dapps.instapass.url}${$user?.accountAddress}`, '_blank')
-  }
+  const { dapps } = Addresses(parseInt(PUBLIC_NETWORK_ID))
 </script>
 
 <Quest
@@ -44,7 +39,7 @@
   let:render
 >
   {#if render('0')}
-    <Button on:click={goToInstapass}>
+    <Button link={`${dapps.instapass.url}${$user?.accountAddress}`}>
       <div class="center">
         <span>{$i18n.t('quests:InstapassQuest.goToInstapass')}</span>
         <img src={ExternalLink} alt="External link icon" />
