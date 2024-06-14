@@ -16,7 +16,7 @@
     "storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
     "chromatic": "npx chromatic --project-token=chpt_49e81d173e53f13 --build-script-name build:storybook",
-    "generate:i18n": "i18next-resources-for-ts interface -i ./src/lib/i18n/locales/en -o ./src/lib/i18n/@types/resources.d.ts && prettier --write ./src/lib/i18n/@types/resources.d.ts"
+    "generate:i18n": "i18next-resources-for-ts interface -i ./src/lib/i18n/locales/en -o ./src/lib/i18n/@types/resources.d.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.28.1",
