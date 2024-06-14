@@ -25,9 +25,9 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: {{ .Values.metrics.port }}
+  - port: {{ .Values.pm2_metrics.port }}
     name: pm2-metrics
-    targetPort: {{ .Values.metrics.port }}
+    targetPort: {{ .Values.pm2_metrics.port }}
   selector:
     {{- include "radquest-admin.selectorLabels" . | nindent 4 }}
 {{- end }}
