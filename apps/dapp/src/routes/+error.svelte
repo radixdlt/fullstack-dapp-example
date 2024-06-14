@@ -38,9 +38,9 @@
 
   .centered {
     position: fixed;
-    top: 50%;
+    top: 7.125rem;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%);
     display: flex;
     flex-direction: column;
     justify-content: center;
