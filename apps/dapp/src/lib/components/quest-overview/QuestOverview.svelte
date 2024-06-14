@@ -17,7 +17,7 @@
   export let backgroundImage: string | undefined = undefined
   export let rewards: Readonly<QuestReward[]> = []
   export let link: string | undefined = undefined
-  export let questId: QuestId
+  export let isReferralQuest = false
 </script>
 
 <div
@@ -57,7 +57,7 @@
         <div class="button-content">
           {#if state === 'unlocked'}
             {$i18n.t('quests:QuestOverviewButton.unlocked')}
-          {:else if state === 'in-progress' && questId === 'ReferralQuest'}
+          {:else if state === 'in-progress' && isReferralQuest}
             {$i18n.t('quests:QuestOverviewButton.referralInProgress')}
           {:else if state === 'in-progress'}
             {$i18n.t('quests:QuestOverviewButton.inProgress')}

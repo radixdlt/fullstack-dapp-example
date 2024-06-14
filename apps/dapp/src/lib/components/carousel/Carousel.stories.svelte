@@ -36,7 +36,6 @@
       {#each Array(10) as _}
         <Item>
           <QuestOverviewCard
-            questId="WhatIsRadix"
             title="Introduction to Radar"
             description="Get familiar with Radar, the radically better Web3 network."
             minutesToComplete={1}

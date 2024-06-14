@@ -63,7 +63,6 @@
 <Template let:args>
   <div style:height="40rem">
     <QuestOverview
-      questId={'FirstTransactionQuest'}
       title={args.title}
       description={args.description}
       minutesToComplete={args.minutesToComplete}
@@ -89,7 +88,6 @@
 <Story name="Small">
   <div style:height="30rem">
     <QuestOverview
-      questId={'FirstTransactionQuest'}
       title="Introduction to Radar"
       description="Get familiar with Radar, the radically better Web3 network."
       minutesToComplete={1}
@@ -103,7 +101,7 @@
 <Story name="Referral">
   <div style:height="40rem">
     <QuestOverview
-      questId={'ReferralQuest'}
+      isReferralQuest
       title="Referral Quest"
       description="Referral Quest."
       minutesToComplete={3}
