@@ -6,7 +6,7 @@
   import CheckmarkIcon from '@images/checkmark.svg'
   import LockIcon from '@images/padlock.svg'
   import Hourglass from '@images/hourglass.svg'
-  import type { QuestId, QuestReward } from 'content'
+  import type { QuestReward } from 'content'
   import type { QuestStatus } from '../../../types'
   import { i18n } from '$lib/i18n/i18n'
 
