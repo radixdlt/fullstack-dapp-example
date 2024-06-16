@@ -122,7 +122,11 @@ export const AuthController = ({
       .map(() => {
         ctx.logger.debug({ method: 'login.verifiedSignedChallenges.success' })
       })
-      .andThen(() => userModel(ctx.logger).create(personaProof.address))
+      .andThen(() => {
+        const referredBy = cookies.get('referredBy')
+        return referredBy ? userModel(ctx.logger).confirmReferralCode(referredBy) : ok(undefined)
+      })
+      .andThen((referredBy) => userModel(ctx.logger).create(personaProof.address, referredBy))
       .andThen(({ id, type }) =>
         userQuestModel(ctx.logger)
           .addCompletedRequirement('LoginWithWallet', id, 'ConnectWallet')

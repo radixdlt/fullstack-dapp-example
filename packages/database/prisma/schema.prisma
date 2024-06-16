@@ -24,6 +24,8 @@ model User {
   name              String?         
   country           String?
   type              UserType        @default(USER)
+  referredBy        String?
+  referralCode      String          @unique
   
   events                     Event[]
   messages                   Message[]

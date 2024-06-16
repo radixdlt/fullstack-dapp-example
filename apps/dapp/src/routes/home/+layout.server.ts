@@ -3,9 +3,17 @@ import type { LayoutServerLoad } from './$types'
 import { loadQuests, type QuestId } from 'content'
 import type { $Enums } from 'database'
 
-export const load: LayoutServerLoad = async ({ fetch, cookies }) => {
+export const load: LayoutServerLoad = async ({ fetch, cookies, url }) => {
   const questStatusResult = await questApi.getQuestsInformation(fetch)
   const questDefinitions = loadQuests('en')
+  const referredBy = url.searchParams.get('ref')
+  if (referredBy) {
+    cookies.set('referredBy', referredBy, {
+      path: '/',
+      expires: new Date('9999-12-31'),
+      httpOnly: false
+    })
+  }
 
   let questStatus = {} as Record<
     QuestId,

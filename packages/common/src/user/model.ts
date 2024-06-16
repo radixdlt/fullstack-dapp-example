@@ -1,10 +1,11 @@
-import { ResultAsync, errAsync, okAsync } from 'neverthrow'
+import { ResultAsync, err, errAsync, okAsync } from 'neverthrow'
 import type { PrismaClient, Prisma, User, UserPhoneNumber } from 'database'
 import type { AppLogger } from '../'
 import { type ApiError, createApiError } from '../helpers'
+import { getRandomReferralCode } from './get-random-referral-code'
 
 type UserModelType = {
-  create: (identityAddress: string) => ResultAsync<User, ApiError>
+  create: (identityAddress: string, referredBy?: string) => ResultAsync<User, ApiError>
   getById: <T extends Prisma.UserInclude<any>>(
     id: string,
     include: T
@@ -13,23 +14,39 @@ type UserModelType = {
   addAccount: (userId: string, accountAddress: string) => ResultAsync<void, ApiError>
   setUserName: (userId: string, name: string) => ResultAsync<User, ApiError>
   getPhoneNumberByUserId: (userId: string) => ResultAsync<string | undefined, ApiError>
+  confirmReferralCode: (referralCode: string) => ResultAsync<string | undefined, ApiError>
 }
+
 export type UserModel = ReturnType<typeof UserModel>
 export const UserModel =
   (db: PrismaClient) =>
   (logger: AppLogger): UserModelType => {
-    const create = (identityAddress: string): ResultAsync<User, ApiError> =>
+    const create = (identityAddress: string, referredBy?: string): ResultAsync<User, ApiError> =>
       ResultAsync.fromPromise<User, ApiError>(
         db.user.upsert({
-          create: { identityAddress },
+          create: { identityAddress, referredBy, referralCode: getRandomReferralCode() },
           update: {},
           where: { identityAddress }
         }),
         (error) => {
           logger?.error({ error, method: 'createUser', model: 'UserModel' })
-          return createApiError('failed to create user', 400)()
+          return createApiError('failed to create user', 400)(error)
         }
-      )
+      ).orElse((data) => {
+        const prismaError = data?.jsError as Prisma.PrismaClientKnownRequestError
+        const prismaErrorMetaTarget = Array.isArray(prismaError?.meta?.target)
+          ? prismaError?.meta?.target
+          : []
+        if (
+          prismaError &&
+          prismaError.code === 'P2002' &&
+          prismaErrorMetaTarget.includes('referralCode')
+        ) {
+          return create(identityAddress, referredBy)
+        }
+
+        return err(data)
+      })
 
     const addAccount = (userId: string, accountAddress: string) =>
       ResultAsync.fromPromise(
@@ -97,5 +114,26 @@ export const UserModel =
         return createApiError('failed to get phone number', 400)()
       }).map((data) => data?.phoneNumber)
 
-    return { create, getById, getPhoneNumber, addAccount, setUserName, getPhoneNumberByUserId }
+    const confirmReferralCode = (referralCode: string) =>
+      ResultAsync.fromPromise(
+        db.user.count({
+          where: {
+            referralCode
+          }
+        }),
+        (error) => {
+          logger?.error({ error, method: 'confirmReferralCode', model: 'UserModel' })
+          return createApiError('failed to find user by referral code', 400)()
+        }
+      ).map((data) => (data ? referralCode : undefined))
+
+    return {
+      create,
+      getById,
+      getPhoneNumber,
+      addAccount,
+      setUserName,
+      getPhoneNumberByUserId,
+      confirmReferralCode
+    }
   }

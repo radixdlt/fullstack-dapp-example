@@ -2,9 +2,9 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-arm64-openssl-1.1.x", "debian-openssl-1.1.x"]
-  output   = "../src/prisma"
+  output        = "../src/prisma"
 }
 
 datasource db {
@@ -18,13 +18,15 @@ enum UserType {
 }
 
 model User {
-  id                String          @id @default("")
-  identityAddress   String          @unique
-  accountAddress    String?         
-  name              String?         
-  country           String?
-  type              UserType        @default(USER)
-  
+  id              String   @id @default("")
+  identityAddress String   @unique
+  accountAddress  String?
+  name            String?
+  country         String?
+  type            UserType @default(USER)
+  referredBy      String?
+  referralCode    String   @unique
+
   events                     Event[]
   messages                   Message[]
   phoneNumber                UserPhoneNumber?
@@ -35,33 +37,33 @@ model User {
 }
 
 model RadMorphImage {
-  id  String  @id
+  id  String @id
   url String
 }
 
 model UserPhoneNumber {
-  userId          String    @unique
-  phoneNumber     String    @id @unique
-  createdAt       DateTime  @default(now())
+  userId      String   @unique
+  phoneNumber String   @id @unique
+  createdAt   DateTime @default(now())
 
-  user            User      @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Challenge {
-  challenge         String          @id
-  createdAt         DateTime        @default(now())
+  challenge String   @id
+  createdAt DateTime @default(now())
 }
 
 model Event {
-  transactionId     String          @id
-  id                String
-  questId           String?
-  userId            String?
-  createdAt         DateTime        @default(now())
-  processedAt       DateTime?
-  error             EventError?
+  transactionId String      @id
+  id            String
+  questId       String?
+  userId        String?
+  createdAt     DateTime    @default(now())
+  processedAt   DateTime?
+  error         EventError?
 
-  user              User?            @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id])
 }
 
 enum EventError {
@@ -71,49 +73,49 @@ enum EventError {
 }
 
 model Message {
-  id                Int             @id @default(autoincrement()) 
-  userId            String
-  createdAt         DateTime        @default(now())
-  seenAt            DateTime?
-  data              Json
+  id        Int       @id @default(autoincrement())
+  userId    String
+  createdAt DateTime  @default(now())
+  seenAt    DateTime?
+  data      Json
 
-  user              User            @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Notification {
-  notificationId      String
-  userId              String
-  seenAt              DateTime?
+  notificationId String
+  userId         String
+  seenAt         DateTime?
 
   @@id([notificationId, userId])
 }
 
 model CompletedQuestRequirement {
-  questId         String
-  userId          String
-  requirementId   String
-  createdAt       DateTime        @default(now())
-  
-  user            User            @relation(fields: [userId], references: [id])
-  
+  questId       String
+  userId        String
+  requirementId String
+  createdAt     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
   @@id([questId, userId, requirementId])
 }
 
 model QuestProgress {
-  questId           String
-  userId            String         
-  status            QuestStatus     @default(IN_PROGRESS)
+  questId String
+  userId  String
+  status  QuestStatus @default(IN_PROGRESS)
 
-  user              User      @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 
   @@id([questId, userId])
 }
 
 model SavedProgress {
-  userId    String  @id
-  questId   String
-  progress  Int
-  user User @relation(fields: [userId], references: [id]) 
+  userId   String @id
+  questId  String
+  progress Int
+  user     User   @relation(fields: [userId], references: [id])
 }
 
 enum QuestStatus {
@@ -124,14 +126,14 @@ enum QuestStatus {
 }
 
 model Audit {
-  transactionId    String          @id 
-  userId           String  
+  transactionId String @id
+  userId        String
 
-  date             DateTime        @default(now())
-  type             AuditType
-  xrdUsdValue      Decimal
+  date        DateTime  @default(now())
+  type        AuditType
+  xrdUsdValue Decimal
 
-  user             User            @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 
   @@index([userId])
 }
@@ -142,15 +144,15 @@ enum AuditType {
 }
 
 model Transaction {
-  attempt                   Int                   @default(0)
-  transactionKey            String  
-  transactionId             String?
-  status                    TransactionStatus     @default(PENDING)
-  createdAt                 DateTime              @default(now())
-  error                     String?
-  badgeId                   String
-  badgeResourceAddress      String
-  metadata                  Json?
+  attempt              Int               @default(0)
+  transactionKey       String
+  transactionId        String?
+  status               TransactionStatus @default(PENDING)
+  createdAt            DateTime          @default(now())
+  error                String?
+  badgeId              String
+  badgeResourceAddress String
+  metadata             Json?
 
   @@id([transactionKey, badgeId, badgeResourceAddress, attempt])
 }

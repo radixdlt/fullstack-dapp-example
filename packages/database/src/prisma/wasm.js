@@ -16,12 +16,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 5.13.0
- * Query Engine version: b9a39a7ee606c28e3455d0fd60e78c3ba82b1a2b
+ * Prisma Client JS version: 5.15.0
+ * Query Engine version: 12e25d8d06f6ea5a0252864dd9a03b1bb51f3022
  */
 Prisma.prismaVersion = {
-  client: "5.13.0",
-  engine: "b9a39a7ee606c28e3455d0fd60e78c3ba82b1a2b"
+  client: "5.15.0",
+  engine: "12e25d8d06f6ea5a0252864dd9a03b1bb51f3022"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -125,7 +125,9 @@ exports.Prisma.UserScalarFieldEnum = {
   accountAddress: 'accountAddress',
   name: 'name',
   country: 'country',
-  type: 'type'
+  type: 'type',
+  referredBy: 'referredBy',
+  referralCode: 'referralCode'
 };
 
 exports.Prisma.RadMorphImageScalarFieldEnum = {

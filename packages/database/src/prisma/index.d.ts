@@ -441,8 +441,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 5.13.0
-   * Query Engine version: b9a39a7ee606c28e3455d0fd60e78c3ba82b1a2b
+   * Prisma Client JS version: 5.15.0
+   * Query Engine version: 12e25d8d06f6ea5a0252864dd9a03b1bb51f3022
    */
   export type PrismaVersion = {
     client: string
@@ -925,6 +925,10 @@ export namespace Prisma {
             args: Prisma.UserCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
+          createManyAndReturn: {
+            args: Prisma.UserCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$UserPayload>[]
+          }
           delete: {
             args: Prisma.UserDeleteArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$UserPayload>
@@ -990,6 +994,10 @@ export namespace Prisma {
           createMany: {
             args: Prisma.RadMorphImageCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RadMorphImageCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$RadMorphImagePayload>[]
           }
           delete: {
             args: Prisma.RadMorphImageDeleteArgs<ExtArgs>,
@@ -1057,6 +1065,10 @@ export namespace Prisma {
             args: Prisma.UserPhoneNumberCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
+          createManyAndReturn: {
+            args: Prisma.UserPhoneNumberCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$UserPhoneNumberPayload>[]
+          }
           delete: {
             args: Prisma.UserPhoneNumberDeleteArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$UserPhoneNumberPayload>
@@ -1122,6 +1134,10 @@ export namespace Prisma {
           createMany: {
             args: Prisma.ChallengeCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ChallengeCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ChallengePayload>[]
           }
           delete: {
             args: Prisma.ChallengeDeleteArgs<ExtArgs>,
@@ -1189,6 +1205,10 @@ export namespace Prisma {
             args: Prisma.EventCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
+          createManyAndReturn: {
+            args: Prisma.EventCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$EventPayload>[]
+          }
           delete: {
             args: Prisma.EventDeleteArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$EventPayload>
@@ -1254,6 +1274,10 @@ export namespace Prisma {
           createMany: {
             args: Prisma.MessageCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MessageCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>[]
           }
           delete: {
             args: Prisma.MessageDeleteArgs<ExtArgs>,
@@ -1321,6 +1345,10 @@ export namespace Prisma {
             args: Prisma.NotificationCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
+          createManyAndReturn: {
+            args: Prisma.NotificationCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>[]
+          }
           delete: {
             args: Prisma.NotificationDeleteArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
@@ -1386,6 +1414,10 @@ export namespace Prisma {
           createMany: {
             args: Prisma.CompletedQuestRequirementCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CompletedQuestRequirementCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$CompletedQuestRequirementPayload>[]
           }
           delete: {
             args: Prisma.CompletedQuestRequirementDeleteArgs<ExtArgs>,
@@ -1453,6 +1485,10 @@ export namespace Prisma {
             args: Prisma.QuestProgressCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
+          createManyAndReturn: {
+            args: Prisma.QuestProgressCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$QuestProgressPayload>[]
+          }
           delete: {
             args: Prisma.QuestProgressDeleteArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$QuestProgressPayload>
@@ -1518,6 +1554,10 @@ export namespace Prisma {
           createMany: {
             args: Prisma.SavedProgressCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SavedProgressCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$SavedProgressPayload>[]
           }
           delete: {
             args: Prisma.SavedProgressDeleteArgs<ExtArgs>,
@@ -1585,6 +1625,10 @@ export namespace Prisma {
             args: Prisma.AuditCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
+          createManyAndReturn: {
+            args: Prisma.AuditCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$AuditPayload>[]
+          }
           delete: {
             args: Prisma.AuditDeleteArgs<ExtArgs>,
             result: $Utils.PayloadToResult<Prisma.$AuditPayload>
@@ -1650,6 +1694,10 @@ export namespace Prisma {
           createMany: {
             args: Prisma.TransactionCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TransactionCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$TransactionPayload>[]
           }
           delete: {
             args: Prisma.TransactionDeleteArgs<ExtArgs>,
@@ -1790,6 +1838,7 @@ export namespace Prisma {
     | 'findFirstOrThrow'
     | 'create'
     | 'createMany'
+    | 'createManyAndReturn'
     | 'update'
     | 'updateMany'
     | 'upsert'
@@ -1927,6 +1976,8 @@ export namespace Prisma {
     name: string | null
     country: string | null
     type: $Enums.UserType | null
+    referredBy: string | null
+    referralCode: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1936,6 +1987,8 @@ export namespace Prisma {
     name: string | null
     country: string | null
     type: $Enums.UserType | null
+    referredBy: string | null
+    referralCode: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1945,6 +1998,8 @@ export namespace Prisma {
     name: number
     country: number
     type: number
+    referredBy: number
+    referralCode: number
     _all: number
   }
 
@@ -1956,6 +2011,8 @@ export namespace Prisma {
     name?: true
     country?: true
     type?: true
+    referredBy?: true
+    referralCode?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1965,6 +2022,8 @@ export namespace Prisma {
     name?: true
     country?: true
     type?: true
+    referredBy?: true
+    referralCode?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1974,6 +2033,8 @@ export namespace Prisma {
     name?: true
     country?: true
     type?: true
+    referredBy?: true
+    referralCode?: true
     _all?: true
   }
 
@@ -2056,6 +2117,8 @@ export namespace Prisma {
     name: string | null
     country: string | null
     type: $Enums.UserType
+    referredBy: string | null
+    referralCode: string
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -2082,6 +2145,8 @@ export namespace Prisma {
     name?: boolean
     country?: boolean
     type?: boolean
+    referredBy?: boolean
+    referralCode?: boolean
     events?: boolean | User$eventsArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
     phoneNumber?: boolean | User$phoneNumberArgs<ExtArgs>
@@ -2092,6 +2157,17 @@ export namespace Prisma {
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
+  export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    identityAddress?: boolean
+    accountAddress?: boolean
+    name?: boolean
+    country?: boolean
+    type?: boolean
+    referredBy?: boolean
+    referralCode?: boolean
+  }, ExtArgs["result"]["user"]>
+
   export type UserSelectScalar = {
     id?: boolean
     identityAddress?: boolean
@@ -2099,8 +2175,9 @@ export namespace Prisma {
     name?: boolean
     country?: boolean
     type?: boolean
+    referredBy?: boolean
+    referralCode?: boolean
   }
-
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     events?: boolean | User$eventsArgs<ExtArgs>
@@ -2112,7 +2189,7 @@ export namespace Prisma {
     questProgress?: boolean | User$questProgressArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
@@ -2132,10 +2209,11 @@ export namespace Prisma {
       name: string | null
       country: string | null
       type: $Enums.UserType
+      referredBy: string | null
+      referralCode: string
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
-
 
   type UserGetPayload<S extends boolean | null | undefined | UserDefaultArgs> = $Result.GetResult<Prisma.$UserPayload, S>
 
@@ -2162,8 +2240,8 @@ export namespace Prisma {
     ): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one User that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one User that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {UserFindUniqueOrThrowArgs} args - Arguments to find a User
      * @example
      * // Get one User
@@ -2216,7 +2294,7 @@ export namespace Prisma {
      * Find zero or more Users that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {UserFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Users
      * const users = await prisma.user.findMany()
@@ -2250,19 +2328,45 @@ export namespace Prisma {
 
     /**
      * Create many Users.
-     *     @param {UserCreateManyArgs} args - Arguments to create many Users.
-     *     @example
-     *     // Create many Users
-     *     const user = await prisma.user.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {UserCreateManyArgs} args - Arguments to create many Users.
+     * @example
+     * // Create many Users
+     * const user = await prisma.user.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends UserCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, UserCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Users and returns the data saved in the database.
+     * @param {UserCreateManyAndReturnArgs} args - Arguments to create many Users.
+     * @example
+     * // Create many Users
+     * const user = await prisma.user.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Users and only return the `id`
+     * const userWithIdOnly = await prisma.user.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends UserCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a User.
@@ -2545,6 +2649,8 @@ export namespace Prisma {
     readonly name: FieldRef<"User", 'String'>
     readonly country: FieldRef<"User", 'String'>
     readonly type: FieldRef<"User", 'UserType'>
+    readonly referredBy: FieldRef<"User", 'String'>
+    readonly referralCode: FieldRef<"User", 'String'>
   }
     
 
@@ -2746,6 +2852,21 @@ export namespace Prisma {
    * User createMany
    */
   export type UserCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Users.
+     */
+    data: UserCreateManyInput | UserCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * User createManyAndReturn
+   */
+  export type UserCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelectCreateManyAndReturn<ExtArgs> | null
     /**
      * The data used to create many Users.
      */
@@ -3130,11 +3251,15 @@ export namespace Prisma {
     url?: boolean
   }, ExtArgs["result"]["radMorphImage"]>
 
+  export type RadMorphImageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    url?: boolean
+  }, ExtArgs["result"]["radMorphImage"]>
+
   export type RadMorphImageSelectScalar = {
     id?: boolean
     url?: boolean
   }
-
 
 
   export type $RadMorphImagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3146,7 +3271,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["radMorphImage"]>
     composites: {}
   }
-
 
   type RadMorphImageGetPayload<S extends boolean | null | undefined | RadMorphImageDefaultArgs> = $Result.GetResult<Prisma.$RadMorphImagePayload, S>
 
@@ -3173,8 +3297,8 @@ export namespace Prisma {
     ): Prisma__RadMorphImageClient<$Result.GetResult<Prisma.$RadMorphImagePayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one RadMorphImage that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one RadMorphImage that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {RadMorphImageFindUniqueOrThrowArgs} args - Arguments to find a RadMorphImage
      * @example
      * // Get one RadMorphImage
@@ -3227,7 +3351,7 @@ export namespace Prisma {
      * Find zero or more RadMorphImages that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RadMorphImageFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {RadMorphImageFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all RadMorphImages
      * const radMorphImages = await prisma.radMorphImage.findMany()
@@ -3261,19 +3385,45 @@ export namespace Prisma {
 
     /**
      * Create many RadMorphImages.
-     *     @param {RadMorphImageCreateManyArgs} args - Arguments to create many RadMorphImages.
-     *     @example
-     *     // Create many RadMorphImages
-     *     const radMorphImage = await prisma.radMorphImage.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {RadMorphImageCreateManyArgs} args - Arguments to create many RadMorphImages.
+     * @example
+     * // Create many RadMorphImages
+     * const radMorphImage = await prisma.radMorphImage.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends RadMorphImageCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, RadMorphImageCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RadMorphImages and returns the data saved in the database.
+     * @param {RadMorphImageCreateManyAndReturnArgs} args - Arguments to create many RadMorphImages.
+     * @example
+     * // Create many RadMorphImages
+     * const radMorphImage = await prisma.radMorphImage.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RadMorphImages and only return the `id`
+     * const radMorphImageWithIdOnly = await prisma.radMorphImage.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends RadMorphImageCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, RadMorphImageCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RadMorphImagePayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a RadMorphImage.
@@ -3724,6 +3874,21 @@ export namespace Prisma {
   }
 
   /**
+   * RadMorphImage createManyAndReturn
+   */
+  export type RadMorphImageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RadMorphImage
+     */
+    select?: RadMorphImageSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many RadMorphImages.
+     */
+    data: RadMorphImageCreateManyInput | RadMorphImageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
    * RadMorphImage update
    */
   export type RadMorphImageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3963,17 +4128,25 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userPhoneNumber"]>
 
+  export type UserPhoneNumberSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    phoneNumber?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userPhoneNumber"]>
+
   export type UserPhoneNumberSelectScalar = {
     userId?: boolean
     phoneNumber?: boolean
     createdAt?: boolean
   }
 
-
   export type UserPhoneNumberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
-
+  export type UserPhoneNumberIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $UserPhoneNumberPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "UserPhoneNumber"
@@ -3987,7 +4160,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["userPhoneNumber"]>
     composites: {}
   }
-
 
   type UserPhoneNumberGetPayload<S extends boolean | null | undefined | UserPhoneNumberDefaultArgs> = $Result.GetResult<Prisma.$UserPhoneNumberPayload, S>
 
@@ -4014,8 +4186,8 @@ export namespace Prisma {
     ): Prisma__UserPhoneNumberClient<$Result.GetResult<Prisma.$UserPhoneNumberPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one UserPhoneNumber that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one UserPhoneNumber that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {UserPhoneNumberFindUniqueOrThrowArgs} args - Arguments to find a UserPhoneNumber
      * @example
      * // Get one UserPhoneNumber
@@ -4068,7 +4240,7 @@ export namespace Prisma {
      * Find zero or more UserPhoneNumbers that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPhoneNumberFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {UserPhoneNumberFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all UserPhoneNumbers
      * const userPhoneNumbers = await prisma.userPhoneNumber.findMany()
@@ -4102,19 +4274,45 @@ export namespace Prisma {
 
     /**
      * Create many UserPhoneNumbers.
-     *     @param {UserPhoneNumberCreateManyArgs} args - Arguments to create many UserPhoneNumbers.
-     *     @example
-     *     // Create many UserPhoneNumbers
-     *     const userPhoneNumber = await prisma.userPhoneNumber.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {UserPhoneNumberCreateManyArgs} args - Arguments to create many UserPhoneNumbers.
+     * @example
+     * // Create many UserPhoneNumbers
+     * const userPhoneNumber = await prisma.userPhoneNumber.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends UserPhoneNumberCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, UserPhoneNumberCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserPhoneNumbers and returns the data saved in the database.
+     * @param {UserPhoneNumberCreateManyAndReturnArgs} args - Arguments to create many UserPhoneNumbers.
+     * @example
+     * // Create many UserPhoneNumbers
+     * const userPhoneNumber = await prisma.userPhoneNumber.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserPhoneNumbers and only return the `userId`
+     * const userPhoneNumberWithUserIdOnly = await prisma.userPhoneNumber.createManyAndReturn({ 
+     *   select: { userId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends UserPhoneNumberCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserPhoneNumberCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPhoneNumberPayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a UserPhoneNumber.
@@ -4591,6 +4789,25 @@ export namespace Prisma {
   }
 
   /**
+   * UserPhoneNumber createManyAndReturn
+   */
+  export type UserPhoneNumberCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserPhoneNumber
+     */
+    select?: UserPhoneNumberSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many UserPhoneNumbers.
+     */
+    data: UserPhoneNumberCreateManyInput | UserPhoneNumberCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserPhoneNumberIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
    * UserPhoneNumber update
    */
   export type UserPhoneNumberUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4837,11 +5054,15 @@ export namespace Prisma {
     createdAt?: boolean
   }, ExtArgs["result"]["challenge"]>
 
+  export type ChallengeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    challenge?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["challenge"]>
+
   export type ChallengeSelectScalar = {
     challenge?: boolean
     createdAt?: boolean
   }
-
 
 
   export type $ChallengePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4853,7 +5074,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["challenge"]>
     composites: {}
   }
-
 
   type ChallengeGetPayload<S extends boolean | null | undefined | ChallengeDefaultArgs> = $Result.GetResult<Prisma.$ChallengePayload, S>
 
@@ -4880,8 +5100,8 @@ export namespace Prisma {
     ): Prisma__ChallengeClient<$Result.GetResult<Prisma.$ChallengePayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one Challenge that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one Challenge that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {ChallengeFindUniqueOrThrowArgs} args - Arguments to find a Challenge
      * @example
      * // Get one Challenge
@@ -4934,7 +5154,7 @@ export namespace Prisma {
      * Find zero or more Challenges that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {ChallengeFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {ChallengeFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Challenges
      * const challenges = await prisma.challenge.findMany()
@@ -4968,19 +5188,45 @@ export namespace Prisma {
 
     /**
      * Create many Challenges.
-     *     @param {ChallengeCreateManyArgs} args - Arguments to create many Challenges.
-     *     @example
-     *     // Create many Challenges
-     *     const challenge = await prisma.challenge.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {ChallengeCreateManyArgs} args - Arguments to create many Challenges.
+     * @example
+     * // Create many Challenges
+     * const challenge = await prisma.challenge.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends ChallengeCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, ChallengeCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Challenges and returns the data saved in the database.
+     * @param {ChallengeCreateManyAndReturnArgs} args - Arguments to create many Challenges.
+     * @example
+     * // Create many Challenges
+     * const challenge = await prisma.challenge.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Challenges and only return the `challenge`
+     * const challengeWithChallengeOnly = await prisma.challenge.createManyAndReturn({ 
+     *   select: { challenge: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends ChallengeCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, ChallengeCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChallengePayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a Challenge.
@@ -5431,6 +5677,21 @@ export namespace Prisma {
   }
 
   /**
+   * Challenge createManyAndReturn
+   */
+  export type ChallengeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Challenge
+     */
+    select?: ChallengeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Challenges.
+     */
+    data: ChallengeCreateManyInput | ChallengeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
    * Challenge update
    */
   export type ChallengeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5702,6 +5963,17 @@ export namespace Prisma {
     user?: boolean | Event$userArgs<ExtArgs>
   }, ExtArgs["result"]["event"]>
 
+  export type EventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    transactionId?: boolean
+    id?: boolean
+    questId?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    processedAt?: boolean
+    error?: boolean
+    user?: boolean | Event$userArgs<ExtArgs>
+  }, ExtArgs["result"]["event"]>
+
   export type EventSelectScalar = {
     transactionId?: boolean
     id?: boolean
@@ -5712,11 +5984,12 @@ export namespace Prisma {
     error?: boolean
   }
 
-
   export type EventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | Event$userArgs<ExtArgs>
   }
-
+  export type EventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | Event$userArgs<ExtArgs>
+  }
 
   export type $EventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Event"
@@ -5734,7 +6007,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["event"]>
     composites: {}
   }
-
 
   type EventGetPayload<S extends boolean | null | undefined | EventDefaultArgs> = $Result.GetResult<Prisma.$EventPayload, S>
 
@@ -5761,8 +6033,8 @@ export namespace Prisma {
     ): Prisma__EventClient<$Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one Event that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one Event that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {EventFindUniqueOrThrowArgs} args - Arguments to find a Event
      * @example
      * // Get one Event
@@ -5815,7 +6087,7 @@ export namespace Prisma {
      * Find zero or more Events that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {EventFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {EventFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Events
      * const events = await prisma.event.findMany()
@@ -5849,19 +6121,45 @@ export namespace Prisma {
 
     /**
      * Create many Events.
-     *     @param {EventCreateManyArgs} args - Arguments to create many Events.
-     *     @example
-     *     // Create many Events
-     *     const event = await prisma.event.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {EventCreateManyArgs} args - Arguments to create many Events.
+     * @example
+     * // Create many Events
+     * const event = await prisma.event.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends EventCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, EventCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Events and returns the data saved in the database.
+     * @param {EventCreateManyAndReturnArgs} args - Arguments to create many Events.
+     * @example
+     * // Create many Events
+     * const event = await prisma.event.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Events and only return the `transactionId`
+     * const eventWithTransactionIdOnly = await prisma.event.createManyAndReturn({ 
+     *   select: { transactionId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends EventCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, EventCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a Event.
@@ -6342,6 +6640,25 @@ export namespace Prisma {
   }
 
   /**
+   * Event createManyAndReturn
+   */
+  export type EventCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Event
+     */
+    select?: EventSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Events.
+     */
+    data: EventCreateManyInput | EventCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EventIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
    * Event update
    */
   export type EventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6658,6 +6975,15 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
 
+  export type MessageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    seenAt?: boolean
+    data?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["message"]>
+
   export type MessageSelectScalar = {
     id?: boolean
     userId?: boolean
@@ -6666,11 +6992,12 @@ export namespace Prisma {
     data?: boolean
   }
 
-
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
-
+  export type MessageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $MessagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Message"
@@ -6686,7 +7013,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["message"]>
     composites: {}
   }
-
 
   type MessageGetPayload<S extends boolean | null | undefined | MessageDefaultArgs> = $Result.GetResult<Prisma.$MessagePayload, S>
 
@@ -6713,8 +7039,8 @@ export namespace Prisma {
     ): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one Message that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one Message that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {MessageFindUniqueOrThrowArgs} args - Arguments to find a Message
      * @example
      * // Get one Message
@@ -6767,7 +7093,7 @@ export namespace Prisma {
      * Find zero or more Messages that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {MessageFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {MessageFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Messages
      * const messages = await prisma.message.findMany()
@@ -6801,19 +7127,45 @@ export namespace Prisma {
 
     /**
      * Create many Messages.
-     *     @param {MessageCreateManyArgs} args - Arguments to create many Messages.
-     *     @example
-     *     // Create many Messages
-     *     const message = await prisma.message.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {MessageCreateManyArgs} args - Arguments to create many Messages.
+     * @example
+     * // Create many Messages
+     * const message = await prisma.message.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends MessageCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, MessageCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Messages and returns the data saved in the database.
+     * @param {MessageCreateManyAndReturnArgs} args - Arguments to create many Messages.
+     * @example
+     * // Create many Messages
+     * const message = await prisma.message.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Messages and only return the `id`
+     * const messageWithIdOnly = await prisma.message.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends MessageCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, MessageCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a Message.
@@ -7292,6 +7644,25 @@ export namespace Prisma {
   }
 
   /**
+   * Message createManyAndReturn
+   */
+  export type MessageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Messages.
+     */
+    data: MessageCreateManyInput | MessageCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
    * Message update
    */
   export type MessageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7546,12 +7917,17 @@ export namespace Prisma {
     seenAt?: boolean
   }, ExtArgs["result"]["notification"]>
 
+  export type NotificationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    notificationId?: boolean
+    userId?: boolean
+    seenAt?: boolean
+  }, ExtArgs["result"]["notification"]>
+
   export type NotificationSelectScalar = {
     notificationId?: boolean
     userId?: boolean
     seenAt?: boolean
   }
-
 
 
   export type $NotificationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7564,7 +7940,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["notification"]>
     composites: {}
   }
-
 
   type NotificationGetPayload<S extends boolean | null | undefined | NotificationDefaultArgs> = $Result.GetResult<Prisma.$NotificationPayload, S>
 
@@ -7591,8 +7966,8 @@ export namespace Prisma {
     ): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one Notification that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one Notification that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {NotificationFindUniqueOrThrowArgs} args - Arguments to find a Notification
      * @example
      * // Get one Notification
@@ -7645,7 +8020,7 @@ export namespace Prisma {
      * Find zero or more Notifications that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {NotificationFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {NotificationFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Notifications
      * const notifications = await prisma.notification.findMany()
@@ -7679,19 +8054,45 @@ export namespace Prisma {
 
     /**
      * Create many Notifications.
-     *     @param {NotificationCreateManyArgs} args - Arguments to create many Notifications.
-     *     @example
-     *     // Create many Notifications
-     *     const notification = await prisma.notification.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {NotificationCreateManyArgs} args - Arguments to create many Notifications.
+     * @example
+     * // Create many Notifications
+     * const notification = await prisma.notification.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends NotificationCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, NotificationCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Notifications and returns the data saved in the database.
+     * @param {NotificationCreateManyAndReturnArgs} args - Arguments to create many Notifications.
+     * @example
+     * // Create many Notifications
+     * const notification = await prisma.notification.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Notifications and only return the `notificationId`
+     * const notificationWithNotificationIdOnly = await prisma.notification.createManyAndReturn({ 
+     *   select: { notificationId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends NotificationCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, NotificationCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a Notification.
@@ -8143,6 +8544,21 @@ export namespace Prisma {
   }
 
   /**
+   * Notification createManyAndReturn
+   */
+  export type NotificationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Notifications.
+     */
+    data: NotificationCreateManyInput | NotificationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
    * Notification update
    */
   export type NotificationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8390,6 +8806,14 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["completedQuestRequirement"]>
 
+  export type CompletedQuestRequirementSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    questId?: boolean
+    userId?: boolean
+    requirementId?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["completedQuestRequirement"]>
+
   export type CompletedQuestRequirementSelectScalar = {
     questId?: boolean
     userId?: boolean
@@ -8397,11 +8821,12 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-
   export type CompletedQuestRequirementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
-
+  export type CompletedQuestRequirementIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $CompletedQuestRequirementPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CompletedQuestRequirement"
@@ -8416,7 +8841,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["completedQuestRequirement"]>
     composites: {}
   }
-
 
   type CompletedQuestRequirementGetPayload<S extends boolean | null | undefined | CompletedQuestRequirementDefaultArgs> = $Result.GetResult<Prisma.$CompletedQuestRequirementPayload, S>
 
@@ -8443,8 +8867,8 @@ export namespace Prisma {
     ): Prisma__CompletedQuestRequirementClient<$Result.GetResult<Prisma.$CompletedQuestRequirementPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one CompletedQuestRequirement that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one CompletedQuestRequirement that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {CompletedQuestRequirementFindUniqueOrThrowArgs} args - Arguments to find a CompletedQuestRequirement
      * @example
      * // Get one CompletedQuestRequirement
@@ -8497,7 +8921,7 @@ export namespace Prisma {
      * Find zero or more CompletedQuestRequirements that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompletedQuestRequirementFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {CompletedQuestRequirementFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all CompletedQuestRequirements
      * const completedQuestRequirements = await prisma.completedQuestRequirement.findMany()
@@ -8531,19 +8955,45 @@ export namespace Prisma {
 
     /**
      * Create many CompletedQuestRequirements.
-     *     @param {CompletedQuestRequirementCreateManyArgs} args - Arguments to create many CompletedQuestRequirements.
-     *     @example
-     *     // Create many CompletedQuestRequirements
-     *     const completedQuestRequirement = await prisma.completedQuestRequirement.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {CompletedQuestRequirementCreateManyArgs} args - Arguments to create many CompletedQuestRequirements.
+     * @example
+     * // Create many CompletedQuestRequirements
+     * const completedQuestRequirement = await prisma.completedQuestRequirement.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends CompletedQuestRequirementCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, CompletedQuestRequirementCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CompletedQuestRequirements and returns the data saved in the database.
+     * @param {CompletedQuestRequirementCreateManyAndReturnArgs} args - Arguments to create many CompletedQuestRequirements.
+     * @example
+     * // Create many CompletedQuestRequirements
+     * const completedQuestRequirement = await prisma.completedQuestRequirement.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CompletedQuestRequirements and only return the `questId`
+     * const completedQuestRequirementWithQuestIdOnly = await prisma.completedQuestRequirement.createManyAndReturn({ 
+     *   select: { questId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends CompletedQuestRequirementCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, CompletedQuestRequirementCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompletedQuestRequirementPayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a CompletedQuestRequirement.
@@ -9021,6 +9471,25 @@ export namespace Prisma {
   }
 
   /**
+   * CompletedQuestRequirement createManyAndReturn
+   */
+  export type CompletedQuestRequirementCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompletedQuestRequirement
+     */
+    select?: CompletedQuestRequirementSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many CompletedQuestRequirements.
+     */
+    data: CompletedQuestRequirementCreateManyInput | CompletedQuestRequirementCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompletedQuestRequirementIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
    * CompletedQuestRequirement update
    */
   export type CompletedQuestRequirementUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9276,17 +9745,25 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["questProgress"]>
 
+  export type QuestProgressSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    questId?: boolean
+    userId?: boolean
+    status?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["questProgress"]>
+
   export type QuestProgressSelectScalar = {
     questId?: boolean
     userId?: boolean
     status?: boolean
   }
 
-
   export type QuestProgressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
-
+  export type QuestProgressIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $QuestProgressPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "QuestProgress"
@@ -9300,7 +9777,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["questProgress"]>
     composites: {}
   }
-
 
   type QuestProgressGetPayload<S extends boolean | null | undefined | QuestProgressDefaultArgs> = $Result.GetResult<Prisma.$QuestProgressPayload, S>
 
@@ -9327,8 +9803,8 @@ export namespace Prisma {
     ): Prisma__QuestProgressClient<$Result.GetResult<Prisma.$QuestProgressPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one QuestProgress that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one QuestProgress that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {QuestProgressFindUniqueOrThrowArgs} args - Arguments to find a QuestProgress
      * @example
      * // Get one QuestProgress
@@ -9381,7 +9857,7 @@ export namespace Prisma {
      * Find zero or more QuestProgresses that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {QuestProgressFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {QuestProgressFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all QuestProgresses
      * const questProgresses = await prisma.questProgress.findMany()
@@ -9415,19 +9891,45 @@ export namespace Prisma {
 
     /**
      * Create many QuestProgresses.
-     *     @param {QuestProgressCreateManyArgs} args - Arguments to create many QuestProgresses.
-     *     @example
-     *     // Create many QuestProgresses
-     *     const questProgress = await prisma.questProgress.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {QuestProgressCreateManyArgs} args - Arguments to create many QuestProgresses.
+     * @example
+     * // Create many QuestProgresses
+     * const questProgress = await prisma.questProgress.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends QuestProgressCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, QuestProgressCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many QuestProgresses and returns the data saved in the database.
+     * @param {QuestProgressCreateManyAndReturnArgs} args - Arguments to create many QuestProgresses.
+     * @example
+     * // Create many QuestProgresses
+     * const questProgress = await prisma.questProgress.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many QuestProgresses and only return the `questId`
+     * const questProgressWithQuestIdOnly = await prisma.questProgress.createManyAndReturn({ 
+     *   select: { questId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends QuestProgressCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, QuestProgressCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestProgressPayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a QuestProgress.
@@ -9904,6 +10406,25 @@ export namespace Prisma {
   }
 
   /**
+   * QuestProgress createManyAndReturn
+   */
+  export type QuestProgressCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestProgress
+     */
+    select?: QuestProgressSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many QuestProgresses.
+     */
+    data: QuestProgressCreateManyInput | QuestProgressCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestProgressIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
    * QuestProgress update
    */
   export type QuestProgressUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10193,17 +10714,25 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["savedProgress"]>
 
+  export type SavedProgressSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    questId?: boolean
+    progress?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["savedProgress"]>
+
   export type SavedProgressSelectScalar = {
     userId?: boolean
     questId?: boolean
     progress?: boolean
   }
 
-
   export type SavedProgressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
-
+  export type SavedProgressIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $SavedProgressPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SavedProgress"
@@ -10217,7 +10746,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["savedProgress"]>
     composites: {}
   }
-
 
   type SavedProgressGetPayload<S extends boolean | null | undefined | SavedProgressDefaultArgs> = $Result.GetResult<Prisma.$SavedProgressPayload, S>
 
@@ -10244,8 +10772,8 @@ export namespace Prisma {
     ): Prisma__SavedProgressClient<$Result.GetResult<Prisma.$SavedProgressPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one SavedProgress that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one SavedProgress that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {SavedProgressFindUniqueOrThrowArgs} args - Arguments to find a SavedProgress
      * @example
      * // Get one SavedProgress
@@ -10298,7 +10826,7 @@ export namespace Prisma {
      * Find zero or more SavedProgresses that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {SavedProgressFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {SavedProgressFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all SavedProgresses
      * const savedProgresses = await prisma.savedProgress.findMany()
@@ -10332,19 +10860,45 @@ export namespace Prisma {
 
     /**
      * Create many SavedProgresses.
-     *     @param {SavedProgressCreateManyArgs} args - Arguments to create many SavedProgresses.
-     *     @example
-     *     // Create many SavedProgresses
-     *     const savedProgress = await prisma.savedProgress.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {SavedProgressCreateManyArgs} args - Arguments to create many SavedProgresses.
+     * @example
+     * // Create many SavedProgresses
+     * const savedProgress = await prisma.savedProgress.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends SavedProgressCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, SavedProgressCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SavedProgresses and returns the data saved in the database.
+     * @param {SavedProgressCreateManyAndReturnArgs} args - Arguments to create many SavedProgresses.
+     * @example
+     * // Create many SavedProgresses
+     * const savedProgress = await prisma.savedProgress.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SavedProgresses and only return the `userId`
+     * const savedProgressWithUserIdOnly = await prisma.savedProgress.createManyAndReturn({ 
+     *   select: { userId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends SavedProgressCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, SavedProgressCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedProgressPayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a SavedProgress.
@@ -10821,6 +11375,25 @@ export namespace Prisma {
   }
 
   /**
+   * SavedProgress createManyAndReturn
+   */
+  export type SavedProgressCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedProgress
+     */
+    select?: SavedProgressSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many SavedProgresses.
+     */
+    data: SavedProgressCreateManyInput | SavedProgressCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedProgressIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
    * SavedProgress update
    */
   export type SavedProgressUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11126,6 +11699,15 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["audit"]>
 
+  export type AuditSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    transactionId?: boolean
+    userId?: boolean
+    date?: boolean
+    type?: boolean
+    xrdUsdValue?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["audit"]>
+
   export type AuditSelectScalar = {
     transactionId?: boolean
     userId?: boolean
@@ -11134,11 +11716,12 @@ export namespace Prisma {
     xrdUsdValue?: boolean
   }
 
-
   export type AuditInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
-
+  export type AuditIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $AuditPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Audit"
@@ -11154,7 +11737,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["audit"]>
     composites: {}
   }
-
 
   type AuditGetPayload<S extends boolean | null | undefined | AuditDefaultArgs> = $Result.GetResult<Prisma.$AuditPayload, S>
 
@@ -11181,8 +11763,8 @@ export namespace Prisma {
     ): Prisma__AuditClient<$Result.GetResult<Prisma.$AuditPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one Audit that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one Audit that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {AuditFindUniqueOrThrowArgs} args - Arguments to find a Audit
      * @example
      * // Get one Audit
@@ -11235,7 +11817,7 @@ export namespace Prisma {
      * Find zero or more Audits that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {AuditFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {AuditFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Audits
      * const audits = await prisma.audit.findMany()
@@ -11269,19 +11851,45 @@ export namespace Prisma {
 
     /**
      * Create many Audits.
-     *     @param {AuditCreateManyArgs} args - Arguments to create many Audits.
-     *     @example
-     *     // Create many Audits
-     *     const audit = await prisma.audit.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {AuditCreateManyArgs} args - Arguments to create many Audits.
+     * @example
+     * // Create many Audits
+     * const audit = await prisma.audit.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends AuditCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, AuditCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Audits and returns the data saved in the database.
+     * @param {AuditCreateManyAndReturnArgs} args - Arguments to create many Audits.
+     * @example
+     * // Create many Audits
+     * const audit = await prisma.audit.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Audits and only return the `transactionId`
+     * const auditWithTransactionIdOnly = await prisma.audit.createManyAndReturn({ 
+     *   select: { transactionId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends AuditCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, AuditCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditPayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a Audit.
@@ -11760,6 +12368,25 @@ export namespace Prisma {
   }
 
   /**
+   * Audit createManyAndReturn
+   */
+  export type AuditCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Audit
+     */
+    select?: AuditSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Audits.
+     */
+    data: AuditCreateManyInput | AuditCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AuditIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
    * Audit update
    */
   export type AuditUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12092,6 +12719,18 @@ export namespace Prisma {
     metadata?: boolean
   }, ExtArgs["result"]["transaction"]>
 
+  export type TransactionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    attempt?: boolean
+    transactionKey?: boolean
+    transactionId?: boolean
+    status?: boolean
+    createdAt?: boolean
+    error?: boolean
+    badgeId?: boolean
+    badgeResourceAddress?: boolean
+    metadata?: boolean
+  }, ExtArgs["result"]["transaction"]>
+
   export type TransactionSelectScalar = {
     attempt?: boolean
     transactionKey?: boolean
@@ -12103,7 +12742,6 @@ export namespace Prisma {
     badgeResourceAddress?: boolean
     metadata?: boolean
   }
-
 
 
   export type $TransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12122,7 +12760,6 @@ export namespace Prisma {
     }, ExtArgs["result"]["transaction"]>
     composites: {}
   }
-
 
   type TransactionGetPayload<S extends boolean | null | undefined | TransactionDefaultArgs> = $Result.GetResult<Prisma.$TransactionPayload, S>
 
@@ -12149,8 +12786,8 @@ export namespace Prisma {
     ): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one Transaction that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
+     * Find one Transaction that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
      * @param {TransactionFindUniqueOrThrowArgs} args - Arguments to find a Transaction
      * @example
      * // Get one Transaction
@@ -12203,7 +12840,7 @@ export namespace Prisma {
      * Find zero or more Transactions that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {TransactionFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {TransactionFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
      * // Get all Transactions
      * const transactions = await prisma.transaction.findMany()
@@ -12237,19 +12874,45 @@ export namespace Prisma {
 
     /**
      * Create many Transactions.
-     *     @param {TransactionCreateManyArgs} args - Arguments to create many Transactions.
-     *     @example
-     *     // Create many Transactions
-     *     const transaction = await prisma.transaction.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
+     * @param {TransactionCreateManyArgs} args - Arguments to create many Transactions.
+     * @example
+     * // Create many Transactions
+     * const transaction = await prisma.transaction.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
      *     
     **/
     createMany<T extends TransactionCreateManyArgs<ExtArgs>>(
       args?: SelectSubset<T, TransactionCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Transactions and returns the data saved in the database.
+     * @param {TransactionCreateManyAndReturnArgs} args - Arguments to create many Transactions.
+     * @example
+     * // Create many Transactions
+     * const transaction = await prisma.transaction.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Transactions and only return the `attempt`
+     * const transactionWithAttemptOnly = await prisma.transaction.createManyAndReturn({ 
+     *   select: { attempt: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends TransactionCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, TransactionCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
      * Delete a Transaction.
@@ -12707,6 +13370,21 @@ export namespace Prisma {
   }
 
   /**
+   * Transaction createManyAndReturn
+   */
+  export type TransactionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Transaction
+     */
+    select?: TransactionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Transactions.
+     */
+    data: TransactionCreateManyInput | TransactionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
    * Transaction update
    */
   export type TransactionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12815,7 +13493,9 @@ export namespace Prisma {
     accountAddress: 'accountAddress',
     name: 'name',
     country: 'country',
-    type: 'type'
+    type: 'type',
+    referredBy: 'referredBy',
+    referralCode: 'referralCode'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -13146,6 +13826,8 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     country?: StringNullableFilter<"User"> | string | null
     type?: EnumUserTypeFilter<"User"> | $Enums.UserType
+    referredBy?: StringNullableFilter<"User"> | string | null
+    referralCode?: StringFilter<"User"> | string
     events?: EventListRelationFilter
     messages?: MessageListRelationFilter
     phoneNumber?: XOR<UserPhoneNumberNullableRelationFilter, UserPhoneNumberWhereInput> | null
@@ -13162,6 +13844,8 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     type?: SortOrder
+    referredBy?: SortOrderInput | SortOrder
+    referralCode?: SortOrder
     events?: EventOrderByRelationAggregateInput
     messages?: MessageOrderByRelationAggregateInput
     phoneNumber?: UserPhoneNumberOrderByWithRelationInput
@@ -13174,6 +13858,7 @@ export namespace Prisma {
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     identityAddress?: string
+    referralCode?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -13181,6 +13866,7 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     country?: StringNullableFilter<"User"> | string | null
     type?: EnumUserTypeFilter<"User"> | $Enums.UserType
+    referredBy?: StringNullableFilter<"User"> | string | null
     events?: EventListRelationFilter
     messages?: MessageListRelationFilter
     phoneNumber?: XOR<UserPhoneNumberNullableRelationFilter, UserPhoneNumberWhereInput> | null
@@ -13188,7 +13874,7 @@ export namespace Prisma {
     savedProgress?: XOR<SavedProgressNullableRelationFilter, SavedProgressWhereInput> | null
     auditLogs?: AuditListRelationFilter
     questProgress?: QuestProgressListRelationFilter
-  }, "id" | "identityAddress">
+  }, "id" | "identityAddress" | "referralCode">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -13197,6 +13883,8 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     type?: SortOrder
+    referredBy?: SortOrderInput | SortOrder
+    referralCode?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -13212,6 +13900,8 @@ export namespace Prisma {
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
     country?: StringNullableWithAggregatesFilter<"User"> | string | null
     type?: EnumUserTypeWithAggregatesFilter<"User"> | $Enums.UserType
+    referredBy?: StringNullableWithAggregatesFilter<"User"> | string | null
+    referralCode?: StringWithAggregatesFilter<"User"> | string
   }
 
   export type RadMorphImageWhereInput = {
@@ -13781,6 +14471,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
@@ -13797,6 +14489,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
@@ -13813,6 +14507,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
@@ -13829,6 +14525,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
@@ -13845,6 +14543,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
   }
 
   export type UserUpdateManyMutationInput = {
@@ -13854,6 +14554,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -13863,6 +14565,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
   }
 
   export type RadMorphImageCreateInput = {
@@ -14517,6 +15221,8 @@ export namespace Prisma {
     name?: SortOrder
     country?: SortOrder
     type?: SortOrder
+    referredBy?: SortOrder
+    referralCode?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -14526,6 +15232,8 @@ export namespace Prisma {
     name?: SortOrder
     country?: SortOrder
     type?: SortOrder
+    referredBy?: SortOrder
+    referralCode?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -14535,6 +15243,8 @@ export namespace Prisma {
     name?: SortOrder
     country?: SortOrder
     type?: SortOrder
+    referredBy?: SortOrder
+    referralCode?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -16220,6 +16930,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
@@ -16235,6 +16947,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
@@ -16266,6 +16980,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
@@ -16281,6 +16997,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
@@ -16296,6 +17014,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     messages?: MessageCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
@@ -16311,6 +17031,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
@@ -16342,6 +17064,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     messages?: MessageUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
@@ -16357,6 +17081,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
@@ -16372,6 +17098,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     events?: EventCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
@@ -16387,6 +17115,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
@@ -16418,6 +17148,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
@@ -16433,6 +17165,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
@@ -16448,6 +17182,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
@@ -16463,6 +17199,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
@@ -16494,6 +17232,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
@@ -16509,6 +17249,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
@@ -16524,6 +17266,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
@@ -16539,6 +17283,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
@@ -16570,6 +17316,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
@@ -16585,6 +17333,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
@@ -16600,6 +17350,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
@@ -16615,6 +17367,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
@@ -16646,6 +17400,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
@@ -16661,6 +17417,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
@@ -16676,6 +17434,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
@@ -16691,6 +17451,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
+    referredBy?: string | null
+    referralCode: string
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
@@ -16722,6 +17484,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
@@ -16737,6 +17501,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
