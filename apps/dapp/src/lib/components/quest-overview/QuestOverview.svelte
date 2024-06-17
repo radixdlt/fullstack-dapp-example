@@ -22,10 +22,10 @@
 
 <div role="button" tabindex="0" class="quest-card" class:hover-shadow={state !== 'locked'}>
   <div
-    class="test"
+    class="card-background"
     class:border={state === 'in-progress' || state === 'unlocked'}
     style:--background-image={backgroundImage ? `url(${backgroundImage})` : ''}
-    class:faded-out={state === 'completed'}
+    class:grey-out={state === 'completed'}
   >
     {#if rewards}
       <div class="rewards">
@@ -86,10 +86,10 @@
 </div>
 
 <style lang="scss">
-  .faded-out {
+  .grey-out {
     opacity: 0.3;
   }
-  .test {
+  .card-background {
     background: var(--gradient-5);
     background-size: contain;
     background-image: linear-gradient(transparent 30%, var(--color-light) 50%),
