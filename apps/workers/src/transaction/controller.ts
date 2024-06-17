@@ -308,16 +308,31 @@ export const TransactionWorkerController = ({
             MINT_FUNGIBLE
               Address("${addresses.resources.clamAddress}")
               Decimal("100");
+
+            MINT_FUNGIBLE
+              Address("${addresses.resources.elementAddress}")
+              Decimal("100");
                 
             TAKE_FROM_WORKTOP
               Address("${addresses.resources.clamAddress}")
               Decimal("100")
               Bucket("clam_bucket");
 
+            TAKE_FROM_WORKTOP
+              Address("${addresses.resources.elementAddress}")
+              Decimal("100")
+              Bucket("element_bucket");
+
             CALL_METHOD
               Address("${accountAddress}")
               "try_deposit_or_abort"
               Bucket("clam_bucket")
+              Enum<0u8>();
+
+            CALL_METHOD
+              Address("${accountAddress}")
+              "try_deposit_or_abort"
+              Bucket("element_bucket")
               Enum<0u8>();
           `
         ).andThen(handlePollTransactionStatus)
