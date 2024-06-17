@@ -4,6 +4,14 @@ use scrypto::prelude::*;
 #[sbor(transparent)]
 pub struct UserId(pub String);
 
+// TODO: Update once defined
+#[derive(ScryptoSbor, NonFungibleData, ManifestSbor, PartialEq, Eq, Debug, Clone)]
+struct HeroBadgeData {
+    key_image_url: Url,
+    #[mutable]
+    quests_completed: Vec<u32>,
+}
+
 #[blueprint]
 #[events(AccountAddedEvent, BadgeClaimedEvent)]
 mod hero_badge_forge {
@@ -83,7 +91,10 @@ mod hero_badge_forge {
 
             self.admin_badge.as_fungible().authorize_with_amount(1, || {
                 self.hero_badge_manager
-                    .mint_non_fungible(&NonFungibleLocalId::string(user_id.0).unwrap(), ())
+                    .mint_non_fungible(&NonFungibleLocalId::string(user_id.0).unwrap(), HeroBadgeData {
+                        key_image_url: Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"),
+                        quests_completed: vec![],
+                    })
             })
         }
     }
