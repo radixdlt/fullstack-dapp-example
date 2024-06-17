@@ -11,7 +11,7 @@ fn dump_manifest_to_file(
         manifest,
         "manifests/test-generated/",
         Some(file_name),
-        &NetworkDefinition::stokenet(),
+        &NetworkDefinition::simulator(),
     )
     .err();
 }
@@ -19,9 +19,9 @@ fn dump_manifest_to_file(
 struct LedgerTestEnvironment {
     ledger: DefaultLedgerSimulator,
     public_key: Secp256k1PublicKey,
-    disable_user_badge_claim_manifest: TransactionManifestV1,
+    disable_hero_badge_forge_manifest: TransactionManifestV1,
     add_user_account_manifest: TransactionManifestV1,
-    claim_user_badge_manifest: TransactionManifestV1,
+    claim_hero_badge_manifest: TransactionManifestV1,
 }
 
 impl LedgerTestEnvironment {
@@ -42,7 +42,7 @@ impl LedgerTestEnvironment {
             1,
         );
         let admin_badge = ledger.create_fungible_resource(dec!(3), 0, account);
-        let user_badge = {
+        let hero_badge = {
             let resource_roles = NonFungibleResourceRoles {
                 mint_roles: mint_roles!(
                     minter => rule!(require(admin_badge));
@@ -69,21 +69,21 @@ impl LedgerTestEnvironment {
         };
 
         // Create component
-        let user_badge_claim = {
+        let hero_badge_forge = {
             let manifest = ManifestBuilder::new()
                 .lock_fee_from_faucet()
                 .withdraw_from_account(account, admin_badge, 1)
                 .take_all_from_worktop(admin_badge, "admin_badge")
                 .call_function_with_name_lookup(
                     package_address,
-                    "UserBadgeClaim",
+                    "HeroBadgeForge",
                     "new",
                     |lookup| {
                         (
                             super_admin_badge,
                             OwnerRole::Fixed(rule!(require(super_admin_badge))),
                             lookup.bucket("admin_badge"),
-                            user_badge,
+                            hero_badge,
                         )
                     },
                 );
@@ -91,7 +91,7 @@ impl LedgerTestEnvironment {
             let names = manifest.object_names();
             let manifest = manifest.build();
 
-            dump_manifest_to_file("new_user_badge_claim", &manifest, names);
+            dump_manifest_to_file("new_hero_badge_forge", &manifest, names);
 
             let receipt = ledger.execute_manifest(
                 manifest,
@@ -101,20 +101,20 @@ impl LedgerTestEnvironment {
             receipt.expect_commit(true).new_component_addresses()[0]
         };
 
-        let disable_user_badge_claim_manifest = ManifestBuilder::new()
+        let disable_hero_badge_forge_manifest = ManifestBuilder::new()
             .lock_fee_from_faucet()
             .create_proof_from_account_of_non_fungible(
                 account,
                 NonFungibleGlobalId::new(super_admin_badge, NonFungibleLocalId::integer(1)),
             )
-            .call_method(user_badge_claim, "disable", ());
+            .call_method(hero_badge_forge, "disable", ());
 
-        let names = disable_user_badge_claim_manifest.object_names();
-        let disable_user_badge_claim_manifest = disable_user_badge_claim_manifest.build();
+        let names = disable_hero_badge_forge_manifest.object_names();
+        let disable_hero_badge_forge_manifest = disable_hero_badge_forge_manifest.build();
 
         dump_manifest_to_file(
-            "disable_user_badge_claim",
-            &disable_user_badge_claim_manifest,
+            "disable_hero_badge_forge",
+            &disable_hero_badge_forge_manifest,
             names,
         );
 
@@ -122,7 +122,7 @@ impl LedgerTestEnvironment {
             .lock_fee_from_faucet()
             .create_proof_from_account_of_amount(account, admin_badge, 1)
             .call_method(
-                user_badge_claim,
+                hero_badge_forge,
                 "add_user_account",
                 manifest_args!(account),
             );
@@ -133,10 +133,10 @@ impl LedgerTestEnvironment {
         dump_manifest_to_file("add_user_account", &add_user_account_manifest, names);
 
         let user_id = "test_id_12345".to_string();
-        let claim_user_badge_manifest = ManifestBuilder::new()
+        let claim_hero_badge_manifest = ManifestBuilder::new()
             .lock_fee_from_faucet()
             .call_method(
-                user_badge_claim,
+                hero_badge_forge,
                 "claim_badge",
                 manifest_args!(account, user_id.clone()),
             )
@@ -146,23 +146,23 @@ impl LedgerTestEnvironment {
                 (ManifestExpression::EntireWorktop,),
             );
 
-        let names = claim_user_badge_manifest.object_names();
-        let claim_user_badge_manifest = claim_user_badge_manifest.build();
+        let names = claim_hero_badge_manifest.object_names();
+        let claim_hero_badge_manifest = claim_hero_badge_manifest.build();
 
-        dump_manifest_to_file("claim_user_badge", &claim_user_badge_manifest, names);
+        dump_manifest_to_file("claim_hero_badge", &claim_hero_badge_manifest, names);
 
         Ok(Self {
             ledger,
             public_key,
-            disable_user_badge_claim_manifest,
+            disable_hero_badge_forge_manifest,
             add_user_account_manifest,
-            claim_user_badge_manifest,
+            claim_hero_badge_manifest,
         })
     }
 }
 
 #[test]
-fn can_instantiate_user_badge_claim() -> Result<(), RuntimeError> {
+fn can_instantiate_hero_badge_forge() -> Result<(), RuntimeError> {
     let _ = LedgerTestEnvironment::new()?;
 
     Ok(())
@@ -196,7 +196,7 @@ fn user_can_claim_own_badge() -> Result<(), RuntimeError> {
 
     // Act
     let receipt = lte.ledger.execute_manifest(
-        lte.claim_user_badge_manifest,
+        lte.claim_hero_badge_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
 
@@ -212,7 +212,7 @@ fn non_user_cannot_claim_badge() -> Result<(), RuntimeError> {
 
     // Act
     let receipt = lte.ledger.execute_manifest(
-        lte.claim_user_badge_manifest,
+        lte.claim_hero_badge_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
 
@@ -222,13 +222,13 @@ fn non_user_cannot_claim_badge() -> Result<(), RuntimeError> {
 }
 
 #[test]
-fn can_disable_user_badge_claim() -> Result<(), RuntimeError> {
+fn can_disable_hero_badge_forge() -> Result<(), RuntimeError> {
     // Arrange
     let mut lte = LedgerTestEnvironment::new()?;
 
     // Act
     let receipt = lte.ledger.execute_manifest(
-        lte.disable_user_badge_claim_manifest,
+        lte.disable_hero_badge_forge_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
 
@@ -242,7 +242,7 @@ fn cannot_add_user_account_when_disabled() -> Result<(), RuntimeError> {
     // Arrange
     let mut lte = LedgerTestEnvironment::new()?;
     lte.ledger.execute_manifest(
-        lte.disable_user_badge_claim_manifest,
+        lte.disable_hero_badge_forge_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
 
@@ -262,7 +262,7 @@ fn cannot_claim_badge_when_disabled() -> Result<(), RuntimeError> {
     // Arrange
     let mut lte = LedgerTestEnvironment::new()?;
     lte.ledger.execute_manifest(
-        lte.disable_user_badge_claim_manifest,
+        lte.disable_hero_badge_forge_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
     lte.ledger.execute_manifest(
@@ -272,7 +272,7 @@ fn cannot_claim_badge_when_disabled() -> Result<(), RuntimeError> {
 
     // Act
     let receipt = lte.ledger.execute_manifest(
-        lte.claim_user_badge_manifest,
+        lte.claim_hero_badge_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
 

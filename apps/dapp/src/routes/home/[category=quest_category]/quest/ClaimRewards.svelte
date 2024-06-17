@@ -45,13 +45,13 @@
             Array<NonFungibleLocalId>(NonFungibleLocalId("<${$user?.id}>"));
 
           POP_FROM_AUTH_ZONE
-            Proof("user_badge_proof");
+            Proof("hero_badge_proof");
 
           CALL_METHOD
             Address("${publicConfig.components.questRewards}")
             "claim_reward"
             "${questId}"
-            Proof("user_badge_proof")
+            Proof("hero_badge_proof")
             None;
 
           CALL_METHOD

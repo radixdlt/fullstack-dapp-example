@@ -6,7 +6,7 @@ pub struct UserId(pub String);
 
 #[blueprint]
 #[events(AccountAddedEvent, BadgeClaimedEvent)]
-mod user_badge_claim {
+mod hero_badge_forge {
     enable_method_auth! {
       roles {
         admin => updatable_by: [OWNER];
@@ -19,27 +19,27 @@ mod user_badge_claim {
       }
     }
 
-    struct UserBadgeClaim {
+    struct HeroBadgeForge {
         enabled: bool,
         admin_badge: Vault,
-        user_badge_manager: ResourceManager,
+        hero_badge_manager: ResourceManager,
         user_accounts: KeyValueStore<Global<Account>, ()>,
     }
 
-    impl UserBadgeClaim {
+    impl HeroBadgeForge {
         pub fn new(
             super_admin_badge_address: ResourceAddress,
             owner_role: OwnerRole,
             admin_badge: Bucket,
-            user_badge_address: ResourceAddress,
-        ) -> Global<UserBadgeClaim> {
+            hero_badge_address: ResourceAddress,
+        ) -> Global<HeroBadgeForge> {
             let admin_badge_address = admin_badge.resource_address();
-            let user_badge_manager = ResourceManager::from_address(user_badge_address);
+            let hero_badge_manager = ResourceManager::from_address(hero_badge_address);
 
             Self {
                 enabled: true,
                 admin_badge: Vault::with_bucket(admin_badge),
-                user_badge_manager,
+                hero_badge_manager,
                 user_accounts: KeyValueStore::new(),
             }
             .instantiate()
@@ -52,13 +52,13 @@ mod user_badge_claim {
         }
 
         pub fn disable(&mut self) {
-            assert!(self.enabled, "UserBadgeClaim already disabled");
+            assert!(self.enabled, "HeroBadgeForge already disabled");
 
             self.enabled = false;
         }
 
         pub fn add_user_account(&mut self, account: Global<Account>) {
-            assert!(self.enabled, "UserBadgeClaim disabled");
+            assert!(self.enabled, "HeroBadgeForge disabled");
 
             self.user_accounts.insert(account, ());
 
@@ -66,7 +66,7 @@ mod user_badge_claim {
         }
 
         pub fn claim_badge(&mut self, claimant: Global<Account>, user_id: UserId) -> Bucket {
-            assert!(self.enabled, "UserBadgeClaim disabled");
+            assert!(self.enabled, "HeroBadgeForge disabled");
 
             // Getting the owner role of the account.
             let owner_role = claimant.get_owner_role();
@@ -82,7 +82,7 @@ mod user_badge_claim {
             });
 
             self.admin_badge.as_fungible().authorize_with_amount(1, || {
-                self.user_badge_manager
+                self.hero_badge_manager
                     .mint_non_fungible(&NonFungibleLocalId::string(user_id.0).unwrap(), ())
             })
         }

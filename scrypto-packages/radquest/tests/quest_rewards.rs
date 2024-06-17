@@ -8,7 +8,7 @@ struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,
     quest_rewards: QuestRewards,
     kyc_oracle: KycOracle,
-    user_badge: Bucket,
+    hero_badge: Bucket,
     user_id: UserId,
     admin_badge_proof: Proof,
     super_admin_badge_proof: Proof,
@@ -25,7 +25,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         .mint_initial_supply([()], &mut env)?;
     let admin_badge =
         ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(2, &mut env)?;
-    let user_badge = ResourceBuilder::new_string_non_fungible(OwnerRole::None)
+    let hero_badge = ResourceBuilder::new_string_non_fungible(OwnerRole::None)
         .mint_initial_supply(
             [(
                 StringNonFungibleLocalId::new(user_id_string.clone()).unwrap(),
@@ -42,7 +42,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
             super_admin_badge.resource_address(&mut env)?
         ))),
         admin_badge.take(dec!(1), &mut env)?,
-        user_badge.resource_address(&mut env)?,
+        hero_badge.resource_address(&mut env)?,
         kyc_badge.resource_address(&mut env)?,
         package_address,
         &mut env,
@@ -62,7 +62,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         env,
         quest_rewards,
         kyc_oracle,
-        user_badge,
+        hero_badge,
         user_id: UserId(format!("<{user_id_string}>")),
         admin_badge_proof,
         super_admin_badge_proof,
@@ -105,7 +105,7 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
     let Test {
         mut env,
         mut quest_rewards,
-        user_badge,
+        hero_badge,
         user_id,
         admin_badge_proof,
         ..
@@ -129,7 +129,7 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
 
     let response = quest_rewards.claim_reward(
         quest_id,
-        user_badge.create_proof_of_all(&mut env)?,
+        hero_badge.create_proof_of_all(&mut env)?,
         None,
         &mut env,
     )?;
@@ -150,7 +150,7 @@ fn cannot_claim_rewards_when_kyc_required() -> Result<(), RuntimeError> {
         mut env,
         mut quest_rewards,
         mut kyc_oracle,
-        user_badge,
+        hero_badge,
         user_id,
         admin_badge_proof,
         ..
@@ -177,7 +177,7 @@ fn cannot_claim_rewards_when_kyc_required() -> Result<(), RuntimeError> {
     // Act
     let result = quest_rewards.claim_reward(
         quest_id,
-        user_badge.create_proof_of_all(&mut env)?,
+        hero_badge.create_proof_of_all(&mut env)?,
         None,
         &mut env,
     );

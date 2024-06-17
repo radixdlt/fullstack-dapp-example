@@ -6,16 +6,16 @@ CALL_METHOD
 CALL_METHOD
     Address("${account}")
     "create_proof_of_non_fungibles"
-    Address("${user_badge}")
-    Array<NonFungibleLocalId>(NonFungibleLocalId("<${user_badge_id}>"))
+    Address("${hero_badge}")
+    Array<NonFungibleLocalId>(NonFungibleLocalId("<${hero_badge_id}>"))
 ;
 POP_FROM_AUTH_ZONE
-    Proof("user_badge_proof")
+    Proof("hero_badge_proof")
 ;
 CALL_METHOD
     Address("${refinery}")
     "combine_elements_claim"
-    Proof("user_badge_proof")
+    Proof("hero_badge_proof")
 ;
 CALL_METHOD
     Address("${account}")

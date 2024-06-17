@@ -1,5 +1,5 @@
 CALL_METHOD
-    Address("component_tdx_2_1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxyulkzl")
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
     "lock_fee"
     Decimal("50")
 ;
@@ -11,11 +11,11 @@ CALL_METHOD
 ;
 TAKE_ALL_FROM_WORKTOP
     Address("${admin_badge}")
-    Bucket("bucket1")
+    Bucket("admin_badge")
 ;
 CALL_FUNCTION
     Address("${package}")
-    "UserBadgeClaim"
+    "HeroBadgeForge"
     "new"
     Address("${super_admin_badge}")
     Enum<1u8>(
@@ -29,6 +29,6 @@ CALL_FUNCTION
             )
         )
     )
-    Bucket("bucket1")
-    Address("${user_badge}")
+    Bucket("admin_badge")
+    Address("${hero_badge}")
 ;

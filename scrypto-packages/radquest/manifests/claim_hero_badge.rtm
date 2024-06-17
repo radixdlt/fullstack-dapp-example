@@ -1,10 +1,10 @@
 CALL_METHOD
-    Address("component_tdx_2_1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxyulkzl")
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
     "lock_fee"
     Decimal("50")
 ;
 CALL_METHOD
-    Address("${user_badge_claim}")
+    Address("${hero_badge_forge}")
     "claim_badge"
     Address("${user_account}")
     "${user_id}"
