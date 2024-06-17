@@ -18,14 +18,24 @@
   export let rewards: Readonly<QuestReward[]> = []
   export let link: string | undefined = undefined
   export let isReferralQuest = false
+
+  $: hovering = false
+  $: greyOut = !hovering && state === 'completed'
 </script>
 
-<div role="button" tabindex="0" class="quest-card" class:hover-shadow={state !== 'locked'}>
+<div
+  role="button"
+  tabindex="0"
+  class="quest-card"
+  class:hover-shadow={state !== 'locked'}
+  on:mouseenter={() => (hovering = true)}
+  on:mouseleave={() => (hovering = false)}
+>
   <div
     class="card-background"
     class:border={state === 'in-progress' || state === 'unlocked'}
     style:--background-image={backgroundImage ? `url(${backgroundImage})` : ''}
-    class:grey-out={state === 'completed'}
+    class:grey-out={greyOut}
   >
     {#if rewards}
       <div class="rewards">
@@ -55,13 +65,7 @@
   {/if}
 
   <div class="content">
-    <QuestOverviewText
-      greyOut={state === 'completed'}
-      reduceDescriptionOpacity
-      {title}
-      {description}
-      {minutesToComplete}
-    />
+    <QuestOverviewText {greyOut} {title} {description} {minutesToComplete} />
 
     <div class="start-button">
       <Button {link} disabled={state === 'locked'}>
@@ -88,6 +92,8 @@
 <style lang="scss">
   .grey-out {
     opacity: 0.3;
+
+    transition: opacity 0.15s ease-in-out;
   }
   .card-background {
     background: var(--gradient-5);
