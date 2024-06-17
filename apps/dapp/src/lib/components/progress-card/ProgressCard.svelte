@@ -6,6 +6,7 @@
   export let steps: number
   export let progress: number = 0
   export let disabled = false
+  export let useAnimation = true
 
   export const getWidth = () => width
   export const getAnimationDuration = () => animationDuration
@@ -30,7 +31,7 @@
 </script>
 
 <div
-  transition:scale|local={{ easing: backOut }}
+  transition:scale|local={{ duration: useAnimation ? 300 : 0, easing: backOut }}
   bind:clientWidth={width}
   bind:clientHeight={height}
   class="card progress-card"

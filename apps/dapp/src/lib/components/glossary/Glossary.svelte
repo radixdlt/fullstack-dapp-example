@@ -90,7 +90,6 @@
     height: 70vh;
     max-height: 40rem;
     min-width: 20rem;
-    margin-bottom: var(--spacing-lg);
     width: 80vw;
     background-color: transparent;
     @include desktop {

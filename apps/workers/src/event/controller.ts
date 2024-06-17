@@ -316,6 +316,38 @@ export const EventWorkerController = ({
               radgemId
             })
           })
+          .andThen(() => {
+            return ResultAsync.fromPromise(
+              dbClient.message.create({
+                data: {
+                  userId: badgeId,
+                  data: {
+                    type: 'CombineElementsMintRadgem',
+                    traceId
+                  }
+                }
+              }),
+              (error) => {
+                logger.error({
+                  error,
+                  method: 'databaseTransactions.CombineElementsMintRadgem.error'
+                })
+                return {
+                  error,
+                  message: 'failed to set combined elements minted'
+                }
+              }
+            ).andThen((message) =>
+              messageApi.send(
+                badgeId,
+                {
+                  type: 'CombineElementsMintRadgem',
+                  traceId
+                },
+                message.id
+              )
+            )
+          })
       })
     }
 
