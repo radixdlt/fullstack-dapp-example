@@ -7,7 +7,6 @@
   import { user } from '../../../../../stores'
   import { Addresses } from 'common'
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
-  import ExternalLink from '@images/external-link.svg'
 
   export let data: PageData
 
@@ -39,11 +38,8 @@
   let:render
 >
   {#if render('0')}
-    <Button link={`${dapps.instapass.url}${$user?.accountAddress}`}>
-      <div class="center">
-        <span>{$i18n.t('quests:InstapassQuest.goToInstapass')}</span>
-        <img src={ExternalLink} alt="External link icon" />
-      </div>
+    <Button isExternal link={`${dapps.instapass.url}${$user?.accountAddress}`}>
+      <span>{$i18n.t('quests:InstapassQuest.goToInstapass')}</span>
     </Button>
     {@html text['0.md']}
   {/if}

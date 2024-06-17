@@ -1,8 +1,11 @@
 <script lang="ts">
+  import ExternalLink from '@images/external-link.svg'
+
   export let disabled = false
   export let secondary = false
   export let loading = false
   export let link: string | undefined = undefined
+  export let isExternal: boolean = false
 </script>
 
 {#if link}
@@ -15,8 +18,11 @@
     class:loading
     data-sveltekit-preload-data
   >
-    <div class:hide-content={loading}>
+    <div class="center" class:hide-content={loading}>
       <slot />
+      {#if isExternal}
+        <img src={ExternalLink} alt="External link icon" />
+      {/if}
     </div>
   </a>
 {:else}
@@ -106,5 +112,12 @@
 
   .hide-content {
     visibility: hidden;
+  }
+
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md);
   }
 </style>

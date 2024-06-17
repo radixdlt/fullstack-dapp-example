@@ -3,7 +3,6 @@
   import type { PageData } from '../StakingQuest/$types'
   import { i18n } from '$lib/i18n/i18n'
   import Button from '$lib/components/button/Button.svelte'
-  import ExternalLink from '@images/external-link.svg'
   import { onDestroy } from 'svelte'
   import { webSocketClient } from '../../../../../stores'
   import { writable } from 'svelte/store'
@@ -111,12 +110,10 @@
     {@html text['2.md']}
 
     <Button
+      isExternal
       link={`${RadixNetworkConfigById[publicConfig.networkId]['dashboardUrl']}/network-staking`}
     >
-      <div class="center">
-        <span>{$i18n.t('quests:StakingQuest.goToRadixDashboard')}</span>
-        <img src={ExternalLink} alt="External link icon" />
-      </div>
+      <span>{$i18n.t('quests:StakingQuest.goToRadixDashboard')}</span>
     </Button>
   {/if}
 
