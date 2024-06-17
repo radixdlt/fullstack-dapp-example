@@ -1,0 +1,14 @@
+CALL_METHOD
+    Address("component_tdx_2_1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxyulkzl")
+    "lock_fee"
+    Decimal("50")
+;
+CALL_METHOD
+    Address("${account}")
+    Address("${admin_badge}")
+    Decimal("1")
+;
+CALL_METHOD
+    Address("${user_claim}")
+    Address("${new_user_account}")
+;

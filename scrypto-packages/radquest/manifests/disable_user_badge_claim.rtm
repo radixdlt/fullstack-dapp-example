@@ -1,0 +1,17 @@
+CALL_METHOD
+    Address("component_tdx_2_1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxyulkzl")
+    "lock_fee"
+    Decimal("50")
+;
+CALL_METHOD
+    Address("${account}")
+    "create_proof_of_non_fungibles"
+    Address("${super_admin_badge}")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("${super_admin_badge_id}")
+    )
+;
+CALL_METHOD
+    Address("${user_badge_claim}")
+    "disable"
+;

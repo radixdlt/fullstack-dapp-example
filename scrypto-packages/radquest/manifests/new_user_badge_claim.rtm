@@ -1,0 +1,34 @@
+CALL_METHOD
+    Address("component_tdx_2_1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxyulkzl")
+    "lock_fee"
+    Decimal("50")
+;
+CALL_METHOD
+    Address("${account}")
+    "withdraw"
+    Address("${admin_badge}")
+    Decimal("1")
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("${admin_badge}")
+    Bucket("bucket1")
+;
+CALL_FUNCTION
+    Address("${package}")
+    "UserBadgeClaim"
+    "new"
+    Address("${super_admin_badge}")
+    Enum<1u8>(
+        Enum<2u8>(
+            Enum<0u8>(
+                Enum<0u8>(
+                    Enum<1u8>(
+                        Address("${super_admin_badge}")
+                    )
+                )
+            )
+        )
+    )
+    Bucket("bucket1")
+    Address("${user_badge}")
+;
