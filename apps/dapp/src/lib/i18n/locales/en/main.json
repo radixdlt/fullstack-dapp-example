@@ -1,7 +1,7 @@
 {
   "tabs-basics": "Basics",
   "tabs-advanced": "Advanced",
-
+  "external-link-icon": "External link icon",
   "error-page": {
     "page-not-found": "I couldn’t find that page.",
     "something-went-wrong": "Oops! Something went wrong",

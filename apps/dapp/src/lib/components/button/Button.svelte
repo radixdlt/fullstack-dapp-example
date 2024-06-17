@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { i18n } from '$lib/i18n/i18n'
   import ExternalLink from '@images/external-link.svg'
 
   export let disabled = false
@@ -21,7 +22,7 @@
     <div class="center" class:hide-content={loading}>
       <slot />
       {#if isExternal}
-        <img src={ExternalLink} alt="External link icon" />
+        <img src={ExternalLink} alt={$i18n.t('main:external-link-icon')} />
       {/if}
     </div>
   </a>
