@@ -5,10 +5,12 @@ CALL_METHOD
 ;
 CALL_METHOD
     Address("${account}")
+    "create_proof_of_amount"
     Address("${admin_badge}")
     Decimal("1")
 ;
 CALL_METHOD
-    Address("${user_claim}")
-    Address("${new_user_account}")
+    Address("${hero_badge_forge}")
+    "add_user_account"
+    Address("${user_account}")
 ;

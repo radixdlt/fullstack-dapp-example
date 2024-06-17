@@ -24,7 +24,7 @@ CALL_METHOD
     Address("${quest_rewards}")
     "deposit_reward"
     # User ID
-    "#1#"
+    "<${user_id}>"
     # Quest ID
     "1"
     # Array of Buckets to deposit
