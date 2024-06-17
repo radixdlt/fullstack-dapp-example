@@ -113,8 +113,8 @@
     {@html text['2.md']}
 
     <div class="go-to-swap">
-      <Button on:click={() => window.open(addresses.dapps.jettySwap.url, '_blank')}>
-        {$i18n.t('quests:SwapQuest.goToJettySwap')}
+      <Button isExternal link={addresses.dapps.jettySwap.url}>
+        <span>{$i18n.t('quests:SwapQuest.goToJettySwap')}</span>
       </Button>
     </div>
   {/if}
@@ -127,8 +127,8 @@
     {@html text['4.md']}
 
     <div class="go-to-swap">
-      <Button on:click={() => window.open(addresses.dapps.lettySwap.url, '_blank')}>
-        {$i18n.t('quests:SwapQuest.goToLettySwap')}
+      <Button isExternal link={addresses.dapps.lettySwap.url}>
+        <span>{$i18n.t('quests:SwapQuest.goToLettySwap')}</span>
       </Button>
     </div>
   {/if}

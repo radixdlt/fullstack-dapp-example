@@ -13,12 +13,7 @@
   const text = data.text as Quests['InstapassQuest']['text']
 
   let quest: Quest
-
-  const goToInstapass = () => {
-    const { dapps } = Addresses(parseInt(PUBLIC_NETWORK_ID))
-
-    window.open(`${dapps.instapass.url}${$user?.accountAddress}`, '_blank')
-  }
+  const { dapps } = Addresses(parseInt(PUBLIC_NETWORK_ID))
 </script>
 
 <Quest
@@ -43,7 +38,12 @@
   let:render
 >
   {#if render('0')}
-    <Button on:click={goToInstapass}>{$i18n.t('quests:InstapassQuest.goToInstapass')}</Button>
+    <Button isExternal link={`${dapps.instapass.url}${$user?.accountAddress}`}>
+      <span>{$i18n.t('quests:InstapassQuest.goToInstapass')}</span>
+    </Button>
     {@html text['0.md']}
   {/if}
 </Quest>
+
+<style lang="scss">
+</style>

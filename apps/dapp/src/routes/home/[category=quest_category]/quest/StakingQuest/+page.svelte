@@ -110,13 +110,10 @@
     {@html text['2.md']}
 
     <Button
-      on:click={() =>
-        window.open(
-          `${RadixNetworkConfigById[publicConfig.networkId]['dashboardUrl']}/network-staking`,
-          '_blank'
-        )}
+      isExternal
+      link={`${RadixNetworkConfigById[publicConfig.networkId]['dashboardUrl']}/network-staking`}
     >
-      {$i18n.t('quests:StakingQuest.goToRadixDashboard')}
+      <span>{$i18n.t('quests:StakingQuest.goToRadixDashboard')}</span>
     </Button>
   {/if}
 
@@ -132,3 +129,6 @@
     {@html text['5.md']}
   {/if}
 </Quest>
+
+<style>
+</style>
