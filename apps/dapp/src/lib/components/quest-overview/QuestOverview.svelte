@@ -20,15 +20,19 @@
   export let isReferralQuest = false
 </script>
 
-<div
-  role="button"
-  tabindex="0"
-  class="card quest-card"
-  class:border={state === 'in-progress' || state === 'unlocked'}
-  class:hover-shadow={state !== 'locked'}
-  class:greyed-out={state === 'completed'}
-  style:--background-image={backgroundImage ? `url(${backgroundImage})` : ''}
->
+<div role="button" tabindex="0" class="quest-card" class:hover-shadow={state !== 'locked'}>
+  <div
+    class="test"
+    class:border={state === 'in-progress' || state === 'unlocked'}
+    style:--background-image={backgroundImage ? `url(${backgroundImage})` : ''}
+    class:faded-out={state === 'completed'}
+  >
+    {#if rewards}
+      <div class="rewards">
+        <QuestRewards {rewards} />
+      </div>
+    {/if}
+  </div>
   {#if state === 'completed' || state === 'locked' || state === 'in-progress'}
     <div
       class="status-icon"
@@ -51,7 +55,13 @@
   {/if}
 
   <div class="content">
-    <QuestOverviewText reduceDescriptionOpacity {title} {description} {minutesToComplete} />
+    <QuestOverviewText
+      greyOut={state === 'completed'}
+      reduceDescriptionOpacity
+      {title}
+      {description}
+      {minutesToComplete}
+    />
 
     <div class="start-button">
       <Button {link} disabled={state === 'locked'}>
@@ -73,34 +83,45 @@
       </Button>
     </div>
   </div>
-
-  {#if rewards}
-    <div class="rewards">
-      <QuestRewards {rewards} />
-    </div>
-  {/if}
 </div>
 
 <style lang="scss">
-  .quest-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 21.5rem;
-    height: 92%;
-    max-height: 35.3rem;
-    justify-content: flex-end;
-    background: var(--color-light);
+  .faded-out {
+    opacity: 0.3;
+  }
+  .test {
+    background: var(--gradient-5);
     background-size: contain;
     background-image: linear-gradient(transparent 30%, var(--color-light) 50%),
       var(--background-image), var(--gradient-5);
     background-position-y: 2.5rem;
+    height: 100%;
+    width: 343px;
+    max-height: 35.3rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: var(--border-radius-3xl);
 
     @media (max-width: 25rem) {
       width: 84vw;
     }
-
+  }
+  .quest-card {
+    z-index: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 21.5rem;
+    height: 100%;
+    justify-content: flex-end;
     margin: 0 0.5rem;
+    max-height: 35.3rem;
+
+    border-radius: var(--border-radius-3xl);
+    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.2);
+    transition: all 0.5s ease;
+    padding: var(--spacing-2xl);
   }
 
   .border {
@@ -148,6 +169,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
   }
 
   .start-button {
@@ -160,6 +182,7 @@
   }
 
   .rewards {
+    z-index: 0;
     position: absolute;
     top: 1.5rem;
     right: 1.5rem;
@@ -178,9 +201,5 @@
 
   .start-button {
     margin-top: var(--spacing-lg);
-  }
-
-  .greyed-out {
-    opacity: 0.5;
   }
 </style>
