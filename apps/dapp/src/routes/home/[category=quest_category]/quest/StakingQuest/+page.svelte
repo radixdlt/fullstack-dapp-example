@@ -131,10 +131,4 @@
 </Quest>
 
 <style>
-  .center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: var(--spacing-md);
-  }
 </style>

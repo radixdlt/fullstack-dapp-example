@@ -12,7 +12,6 @@
   import { questApi } from '$lib/api/quest-api'
   import type { PageData } from './$types'
   import type { WebSocketClient } from '$lib/websocket-client'
-  import ExternalLink from '@images/external-link.svg'
 
   export let data: PageData
 
@@ -136,12 +135,6 @@
 </Quest>
 
 <style lang="scss">
-  .center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: var(--spacing-md);
-  }
   .go-to-swap {
     width: 100%;
     display: flex;
