@@ -209,6 +209,11 @@ exports.Prisma.TransactionScalarFieldEnum = {
   metadata: 'metadata'
 };
 
+exports.Prisma.ConfigScalarFieldEnum = {
+  key: 'key',
+  value: 'value'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -279,7 +284,8 @@ exports.Prisma.ModelName = {
   QuestProgress: 'QuestProgress',
   SavedProgress: 'SavedProgress',
   Audit: 'Audit',
-  Transaction: 'Transaction'
+  Transaction: 'Transaction',
+  Config: 'Config'
 };
 
 /**

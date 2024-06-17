@@ -162,3 +162,8 @@ enum TransactionStatus {
   ERROR
   COMPLETED
 }
+
+model Config {
+  key           String  @id
+  value         String
+}

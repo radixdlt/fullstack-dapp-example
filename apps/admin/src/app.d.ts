@@ -1,4 +1,4 @@
-import type { UserType } from 'database'
+import type { UserType, PrismaClient } from 'database'
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 declare global {
@@ -10,6 +10,7 @@ declare global {
     interface Locals {
       userId: string
       userType: UserType
+      dbClient: PrismaClient
     }
   }
 }

@@ -2,11 +2,19 @@
   import CardList from '$lib/settings/CardList.svelte'
   import { Heading, Toggle } from 'flowbite-svelte'
 
-  const items = [
+  import type { PageData } from './$types'
+
+  export let data: PageData
+
+  let values: Record<string, boolean> = {
+    radMorphMintingEnabled: data.configMap.get('radMorphMintingEnabled') || false
+  }
+
+  let items = [
     {
-      title: 'Allow Withdrawalas',
-      subtitle: 'Allow Withdrawalas',
-      active: false
+      title: 'RadMorph minting',
+      subtitle: 'Allow minting of RadMorphs',
+      key: 'radMorphMintingEnabled'
     }
   ]
 </script>
@@ -27,7 +35,17 @@
               {item.subtitle}
             </div>
           </div>
-          <Toggle checked={true} classDiv="peer-focus:ring-0 me-0" />
+          <Toggle
+            checked={values.radMorphMintingEnabled}
+            on:change={async () => {
+              values[item.key] = !values[item.key]
+              await fetch('/settings', {
+                method: 'PUT',
+                body: JSON.stringify({ [item.key]: values[item.key] === true ? 'true' : 'false' })
+              })
+            }}
+            classDiv="peer-focus:ring-0 me-0"
+          />
         </div>
       </CardList>
     </div>
