@@ -91,15 +91,6 @@ export namespace $Enums {
 export type UserType = (typeof UserType)[keyof typeof UserType]
 
 
-export const EventError: {
-  ERROR_INVALID_DATA: 'ERROR_INVALID_DATA',
-  ERROR_USER_NOT_FOUND: 'ERROR_USER_NOT_FOUND',
-  ERROR_UNHANDLED_EVENT: 'ERROR_UNHANDLED_EVENT'
-};
-
-export type EventError = (typeof EventError)[keyof typeof EventError]
-
-
 export const QuestStatus: {
   IN_PROGRESS: 'IN_PROGRESS',
   REWARDS_DEPOSITED: 'REWARDS_DEPOSITED',
@@ -131,10 +122,6 @@ export type TransactionStatus = (typeof TransactionStatus)[keyof typeof Transact
 export type UserType = $Enums.UserType
 
 export const UserType: typeof $Enums.UserType
-
-export type EventError = $Enums.EventError
-
-export const EventError: typeof $Enums.EventError
 
 export type QuestStatus = $Enums.QuestStatus
 
@@ -5883,7 +5870,7 @@ export namespace Prisma {
     userId: string | null
     createdAt: Date | null
     processedAt: Date | null
-    error: $Enums.EventError | null
+    error: string | null
   }
 
   export type EventMaxAggregateOutputType = {
@@ -5893,7 +5880,7 @@ export namespace Prisma {
     userId: string | null
     createdAt: Date | null
     processedAt: Date | null
-    error: $Enums.EventError | null
+    error: string | null
   }
 
   export type EventCountAggregateOutputType = {
@@ -6018,7 +6005,7 @@ export namespace Prisma {
     userId: string | null
     createdAt: Date
     processedAt: Date | null
-    error: $Enums.EventError | null
+    error: string | null
     _count: EventCountAggregateOutputType | null
     _min: EventMinAggregateOutputType | null
     _max: EventMaxAggregateOutputType | null
@@ -6089,7 +6076,7 @@ export namespace Prisma {
       userId: string | null
       createdAt: Date
       processedAt: Date | null
-      error: $Enums.EventError | null
+      error: string | null
     }, ExtArgs["result"]["event"]>
     composites: {}
   }
@@ -6516,7 +6503,7 @@ export namespace Prisma {
     readonly userId: FieldRef<"Event", 'String'>
     readonly createdAt: FieldRef<"Event", 'DateTime'>
     readonly processedAt: FieldRef<"Event", 'DateTime'>
-    readonly error: FieldRef<"Event", 'EventError'>
+    readonly error: FieldRef<"Event", 'String'>
   }
     
 
@@ -14671,20 +14658,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'EventError'
-   */
-  export type EnumEventErrorFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventError'>
-    
-
-
-  /**
-   * Reference to a field of type 'EventError[]'
-   */
-  export type ListEnumEventErrorFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventError[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -14995,7 +14968,7 @@ export namespace Prisma {
     userId?: StringNullableFilter<"Event"> | string | null
     createdAt?: DateTimeFilter<"Event"> | Date | string
     processedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
-    error?: EnumEventErrorNullableFilter<"Event"> | $Enums.EventError | null
+    error?: StringNullableFilter<"Event"> | string | null
     user?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }
 
@@ -15020,7 +14993,7 @@ export namespace Prisma {
     userId?: StringNullableFilter<"Event"> | string | null
     createdAt?: DateTimeFilter<"Event"> | Date | string
     processedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
-    error?: EnumEventErrorNullableFilter<"Event"> | $Enums.EventError | null
+    error?: StringNullableFilter<"Event"> | string | null
     user?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }, "transactionId">
 
@@ -15047,7 +15020,7 @@ export namespace Prisma {
     userId?: StringNullableWithAggregatesFilter<"Event"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Event"> | Date | string
     processedAt?: DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
-    error?: EnumEventErrorNullableWithAggregatesFilter<"Event"> | $Enums.EventError | null
+    error?: StringNullableWithAggregatesFilter<"Event"> | string | null
   }
 
   export type MessageWhereInput = {
@@ -15685,7 +15658,7 @@ export namespace Prisma {
     questId?: string | null
     createdAt?: Date | string
     processedAt?: Date | string | null
-    error?: $Enums.EventError | null
+    error?: string | null
     user?: UserCreateNestedOneWithoutEventsInput
   }
 
@@ -15696,7 +15669,7 @@ export namespace Prisma {
     userId?: string | null
     createdAt?: Date | string
     processedAt?: Date | string | null
-    error?: $Enums.EventError | null
+    error?: string | null
   }
 
   export type EventUpdateInput = {
@@ -15705,7 +15678,7 @@ export namespace Prisma {
     questId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableEnumEventErrorFieldUpdateOperationsInput | $Enums.EventError | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
     user?: UserUpdateOneWithoutEventsNestedInput
   }
 
@@ -15716,7 +15689,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableEnumEventErrorFieldUpdateOperationsInput | $Enums.EventError | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EventCreateManyInput = {
@@ -15726,7 +15699,7 @@ export namespace Prisma {
     userId?: string | null
     createdAt?: Date | string
     processedAt?: Date | string | null
-    error?: $Enums.EventError | null
+    error?: string | null
   }
 
   export type EventUpdateManyMutationInput = {
@@ -15735,7 +15708,7 @@ export namespace Prisma {
     questId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableEnumEventErrorFieldUpdateOperationsInput | $Enums.EventError | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EventUncheckedUpdateManyInput = {
@@ -15745,7 +15718,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableEnumEventErrorFieldUpdateOperationsInput | $Enums.EventError | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageCreateInput = {
@@ -16416,13 +16389,6 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type EnumEventErrorNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.EventError | EnumEventErrorFieldRefInput<$PrismaModel> | null
-    in?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumEventErrorNullableFilter<$PrismaModel> | $Enums.EventError | null
-  }
-
   export type UserNullableRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -16470,16 +16436,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type EnumEventErrorNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.EventError | EnumEventErrorFieldRefInput<$PrismaModel> | null
-    in?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumEventErrorNullableWithAggregatesFilter<$PrismaModel> | $Enums.EventError | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumEventErrorNullableFilter<$PrismaModel>
-    _max?: NestedEnumEventErrorNullableFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -17220,10 +17176,6 @@ export namespace Prisma {
     set?: Date | string | null
   }
 
-  export type NullableEnumEventErrorFieldUpdateOperationsInput = {
-    set?: $Enums.EventError | null
-  }
-
   export type UserUpdateOneWithoutEventsNestedInput = {
     create?: XOR<UserCreateWithoutEventsInput, UserUncheckedCreateWithoutEventsInput>
     connectOrCreate?: UserCreateOrConnectWithoutEventsInput
@@ -17469,13 +17421,6 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type NestedEnumEventErrorNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.EventError | EnumEventErrorFieldRefInput<$PrismaModel> | null
-    in?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumEventErrorNullableFilter<$PrismaModel> | $Enums.EventError | null
-  }
-
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -17488,16 +17433,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type NestedEnumEventErrorNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.EventError | EnumEventErrorFieldRefInput<$PrismaModel> | null
-    in?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumEventErrorNullableWithAggregatesFilter<$PrismaModel> | $Enums.EventError | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumEventErrorNullableFilter<$PrismaModel>
-    _max?: NestedEnumEventErrorNullableFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -17655,7 +17590,7 @@ export namespace Prisma {
     questId?: string | null
     createdAt?: Date | string
     processedAt?: Date | string | null
-    error?: $Enums.EventError | null
+    error?: string | null
   }
 
   export type EventUncheckedCreateWithoutUserInput = {
@@ -17664,7 +17599,7 @@ export namespace Prisma {
     questId?: string | null
     createdAt?: Date | string
     processedAt?: Date | string | null
-    error?: $Enums.EventError | null
+    error?: string | null
   }
 
   export type EventCreateOrConnectWithoutUserInput = {
@@ -17822,7 +17757,7 @@ export namespace Prisma {
     userId?: StringNullableFilter<"Event"> | string | null
     createdAt?: DateTimeFilter<"Event"> | Date | string
     processedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
-    error?: EnumEventErrorNullableFilter<"Event"> | $Enums.EventError | null
+    error?: StringNullableFilter<"Event"> | string | null
   }
 
   export type MessageUpsertWithWhereUniqueWithoutUserInput = {
@@ -18566,7 +18501,7 @@ export namespace Prisma {
     questId?: string | null
     createdAt?: Date | string
     processedAt?: Date | string | null
-    error?: $Enums.EventError | null
+    error?: string | null
   }
 
   export type MessageCreateManyUserInput = {
@@ -18600,7 +18535,7 @@ export namespace Prisma {
     questId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableEnumEventErrorFieldUpdateOperationsInput | $Enums.EventError | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EventUncheckedUpdateWithoutUserInput = {
@@ -18609,7 +18544,7 @@ export namespace Prisma {
     questId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableEnumEventErrorFieldUpdateOperationsInput | $Enums.EventError | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EventUncheckedUpdateManyWithoutUserInput = {
@@ -18618,7 +18553,7 @@ export namespace Prisma {
     questId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableEnumEventErrorFieldUpdateOperationsInput | $Enums.EventError | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageUpdateWithoutUserInput = {

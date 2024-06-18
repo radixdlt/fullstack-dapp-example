@@ -12,6 +12,18 @@ export const EventWorker = (
 ) => {
   const { logger, eventWorkerController, eventModel } = dependencies
 
+  const getReason = (error: unknown): string | undefined => {
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'reason' in error &&
+      typeof error['reason'] === 'string'
+    ) {
+      return error['reason']
+    }
+    return undefined
+  }
+
   const worker = new Worker<EventJob>(
     Queues.EventQueue,
     async (job) => {
@@ -30,6 +42,10 @@ export const EventWorker = (
           transactionId: job.data.transactionId,
           error: result.error
         })
+        await eventModel(logger).update(job.data.transactionId, {
+          error: getReason(result.error) ?? 'UnknownError'
+        })
+
         throw result.error
       }
     },

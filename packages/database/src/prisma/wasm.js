@@ -248,12 +248,6 @@ exports.UserType = exports.$Enums.UserType = {
   ADMIN: 'ADMIN'
 };
 
-exports.EventError = exports.$Enums.EventError = {
-  ERROR_INVALID_DATA: 'ERROR_INVALID_DATA',
-  ERROR_USER_NOT_FOUND: 'ERROR_USER_NOT_FOUND',
-  ERROR_UNHANDLED_EVENT: 'ERROR_UNHANDLED_EVENT'
-};
-
 exports.QuestStatus = exports.$Enums.QuestStatus = {
   IN_PROGRESS: 'IN_PROGRESS',
   REWARDS_DEPOSITED: 'REWARDS_DEPOSITED',

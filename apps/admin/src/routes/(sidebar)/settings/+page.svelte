@@ -7,14 +7,14 @@
   export let data: PageData
 
   let values: Record<string, boolean> = {
-    radMorphMintingEnabled: data.configMap.get('radMorphMintingEnabled') || false
+    radGemMintingEnabled: data.configMap.get('radGemMintingEnabled') || false
   }
 
   let items = [
     {
-      title: 'RadMorph minting',
-      subtitle: 'Allow minting of RadMorphs',
-      key: 'radMorphMintingEnabled'
+      title: 'RadGem minting',
+      subtitle: 'Allow minting of RadGems',
+      key: 'radGemMintingEnabled'
     }
   ]
 </script>
@@ -36,7 +36,7 @@
             </div>
           </div>
           <Toggle
-            checked={values.radMorphMintingEnabled}
+            checked={values.radGemMintingEnabled}
             on:change={async () => {
               values[item.key] = !values[item.key]
               await fetch('/settings', {
