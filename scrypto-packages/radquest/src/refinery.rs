@@ -1,10 +1,11 @@
+use scrypto::prelude::*;
+
 use crate::{
     image_oracle::image_oracle::ImageOracle,
     morph_card_forge::MorphCardData,
     radgem_forge::{radgem_forge::RadgemForge, RadgemData},
     radmorph_forge::{radmorph_forge::RadmorphForge, RadmorphData},
 };
-use scrypto::prelude::*;
 
 pub const RARITY: [&str; 7] = [
     "Common",
@@ -15,10 +16,6 @@ pub const RARITY: [&str; 7] = [
     "Superb",
     "Magnificent",
 ];
-
-#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
-#[sbor(transparent)]
-pub struct UserId(pub String);
 
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 enum RadgemDeposit {

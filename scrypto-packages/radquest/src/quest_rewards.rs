@@ -1,5 +1,6 @@
-use crate::kyc_oracle::kyc_oracle::KycOracle;
 use scrypto::prelude::*;
+
+use crate::kyc_oracle::kyc_oracle::KycOracle;
 
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 #[sbor(transparent)]

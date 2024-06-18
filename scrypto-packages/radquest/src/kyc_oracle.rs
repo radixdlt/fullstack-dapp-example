@@ -1,5 +1,6 @@
-use crate::quest_rewards::UserId;
 use scrypto::prelude::*;
+
+use crate::quest_rewards::UserId;
 
 #[blueprint]
 mod kyc_oracle {

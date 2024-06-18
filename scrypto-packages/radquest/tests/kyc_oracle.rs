@@ -1,5 +1,6 @@
-use radquest::{kyc_oracle::kyc_oracle_test::*, quest_rewards::UserId};
 use scrypto_test::prelude::*;
+
+use radquest::{kyc_oracle::kyc_oracle_test::*, quest_rewards::UserId};
 
 struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,
