@@ -62,7 +62,7 @@ const UserController = ({
         ])
           .andThen((data) => {
             const badgeId = `<${userId}>`
-            const badgeResourceAddress = publicConfig.badges.userBadgeAddress
+            const badgeResourceAddress = publicConfig.badges.heroBadgeAddress
             return transactionModel(ctx.logger)
               .add({
                 badgeId,
@@ -110,7 +110,7 @@ const UserController = ({
       .map(
         ([entityDetails]) =>
           entityDetails.non_fungible_resources.items
-            .find((item) => item.resource_address === publicConfig.badges.userBadgeAddress)
+            .find((item) => item.resource_address === publicConfig.badges.heroBadgeAddress)
             ?.vaults.items.some(
               (vault) =>
                 vault.total_count > 0 && vault.items?.some((item) => item === `<${userId}>`)
@@ -172,7 +172,7 @@ const UserController = ({
       .map((data) => data.accountAddress)
 
     const badgeId = `<${userId}>`
-    const badgeResourceAddress = publicConfig.badges.userBadgeAddress
+    const badgeResourceAddress = publicConfig.badges.heroBadgeAddress
 
     return accountAddressResult
       .andThen((address) => {

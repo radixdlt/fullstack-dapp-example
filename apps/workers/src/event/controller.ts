@@ -25,7 +25,7 @@ import { getDetailsFromCombineElementsMintedRadgemEvent } from './helpers/getDet
 
 const transformUserIdIntoBadgeId = (userId: string) => ({
   badgeId: `<${userId}>`,
-  badgeResourceAddress: config.radQuest.badges.userBadgeAddress
+  badgeResourceAddress: config.radQuest.badges.heroBadgeAddress
 })
 
 type EventEmitter = {

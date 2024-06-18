@@ -10,7 +10,7 @@ export const Addresses = (networkId: number) => {
             'resource_tdx_2_1tkqxhltmrtxy6tjnp2p4dpt9vfxymv0mrqvlemtq39uva5lv5dlj85',
           superAdminBadgeAddress:
             'resource_tdx_2_1thul90pjpsjxnfk6qxavtq5qf35sca9nhs2lgw7r9f27pznjnkj07s',
-          userBadgeAddress: 'resource_tdx_2_1nfqughuxfm6hetnkc7xg0qtnx8a7agl80pz9srxy4dvhz8ckvscs88'
+          heroBadgeAddress: 'resource_tdx_2_1nfqughuxfm6hetnkc7xg0qtnx8a7agl80pz9srxy4dvhz8ckvscs88'
         },
         resources: {
           elementAddress: 'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72',
@@ -27,6 +27,7 @@ export const Addresses = (networkId: number) => {
         clamDexPackage: 'package_tdx_2_1ph96rek5yr7jh79pw5aqst6e6lm5k62l5pv6j9dxve6scyr3eel3mh',
         components: {
           mayaRouter: 'component_tdx_2_mock_maya_router_address',
+          heroBadgeForge: '',
           questRewards: 'component_tdx_2_1cq02l5g0w2rd3rgm6vwg2496pntgdjvrk40ej0jv4hd37dthr3qxxs',
           kycOracle: 'component_tdx_2_1cqndnna99wffypyp3s6js7t3lpsje06qt7s0p7xg2pj5g9ae59fp7p',
           kycOracleKeyValueStore:

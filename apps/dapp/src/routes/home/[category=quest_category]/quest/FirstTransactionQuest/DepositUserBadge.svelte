@@ -33,7 +33,7 @@
   const getSetResourcePreferenceManifest = (accountAddress: string) => `CALL_METHOD
     Address("${accountAddress}")
     "set_resource_preference"
-    Address("${publicConfig.badges.userBadgeAddress}")
+    Address("${publicConfig.badges.heroBadgeAddress}")
     Enum<0u8>()
 ;`
 
@@ -91,7 +91,7 @@
       const gatewayApi = GatewayApi(publicConfig.networkId)
       gatewayApi.callApi('getEntityDetailsVaultAggregated', [address]).map(([entityDetails]) => {
         const hasUserBadge = entityDetails.non_fungible_resources.items
-          .find((item) => item.resource_address === publicConfig.badges.userBadgeAddress)
+          .find((item) => item.resource_address === publicConfig.badges.heroBadgeAddress)
           ?.vaults.items.some(
             (vault) => vault.total_count > 0 && vault.items?.some((item) => item === `<${userId}>`)
           )
@@ -110,7 +110,7 @@
             return
           } else {
             if (depositRule === 'EXCEPTIONS') {
-              // TODO: check if config.dapp.badges.userBadgeAddress is added to exceptions
+              // TODO: check if config.dapp.badges.heroBadgeAddress is added to exceptions
               state = 'canAcceptUserBadge'
               return
             } else {

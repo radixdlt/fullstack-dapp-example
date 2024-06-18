@@ -110,14 +110,14 @@ describe('Event flows', () => {
     await radixEngineClient.getXrdFromFaucet()
 
     await mintUserBadge(user.id, accountAddress, {
-      userBadgeAddress: radquestEntityAddresses.badges.userBadgeAddress
+      heroBadgeAddress: radquestEntityAddresses.badges.heroBadgeAddress
     })
 
     await mintElements(10, accountAddress)
 
     await combineElementsDeposit({
       accountAddress,
-      badgeAddress: radquestEntityAddresses.badges.userBadgeAddress,
+      badgeAddress: radquestEntityAddresses.badges.heroBadgeAddress,
       badgeLocalId: `<${user.id}>`,
       radixEngineClient: radixEngineClient as RadixEngineClient
     })

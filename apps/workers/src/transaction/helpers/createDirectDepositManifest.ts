@@ -10,7 +10,7 @@ export const createDirectDepositManifest = ({
   userId: string
   accountAddress: string
 }) => {
-  const { userBadgeAddress, adminBadgeAddress } = config.radQuest.badges
+  const { heroBadgeAddress, adminBadgeAddress } = config.radQuest.badges
   const directXrdDepositAmount = config.radQuest.directXrdDepositAmount
   return `
     CALL_METHOD 
@@ -25,7 +25,7 @@ export const createDirectDepositManifest = ({
       Decimal("1");
 
     MINT_NON_FUNGIBLE
-      Address("${userBadgeAddress}")
+      Address("${heroBadgeAddress}")
       Map<NonFungibleLocalId, Tuple>(NonFungibleLocalId("<${userId}>") => Tuple(Tuple()));
 
     CALL_METHOD

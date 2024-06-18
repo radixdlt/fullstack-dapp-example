@@ -5,12 +5,12 @@ export const mintUserBadgeAndDepositXrd = (
   userId: string,
   accountAddress: string,
   badgeAddresses?: Partial<{
-    userBadgeAddress: string
+    heroBadgeAddress: string
     adminBadgeAddress: string
   }>
 ) => {
   const {
-    userBadgeAddress = config.radQuest.badges.userBadgeAddress,
+    heroBadgeAddress = config.radQuest.badges.heroBadgeAddress,
     adminBadgeAddress = config.radQuest.badges.adminBadgeAddress
   } = badgeAddresses ?? {}
   return radixEngineClient
@@ -31,7 +31,7 @@ export const mintUserBadgeAndDepositXrd = (
         ;
           
         MINT_NON_FUNGIBLE
-          Address("${userBadgeAddress}")
+          Address("${heroBadgeAddress}")
           Map<NonFungibleLocalId, Tuple>(NonFungibleLocalId("<${userId}>") => Tuple(Tuple()))
         ;
 
