@@ -4,6 +4,8 @@ import { AuditType, TransactionStatus } from 'database'
 import {
   Addresses,
   GatewayApi,
+  MessageApi,
+  MessageModel,
   type AppLogger,
   type AuditModel,
   type ConfigModel,
@@ -38,7 +40,9 @@ export const TransactionWorkerError = {
   FailedToGetTransactionFromDb: 'FailedToGetTransactionFromDb',
   MissingTransactionInDb: 'MissingTransactionInDb',
   UnhandledJob: 'UnhandledJob',
-  FeatureDisabled: 'FeatureDisabled'
+  FeatureDisabled: 'FeatureDisabled',
+  FailedToSendMessage: 'FailedToSendMessage',
+  GatewayError: 'GatewayError'
 } as const
 
 const getUserIdFromBadgeId = (
@@ -60,13 +64,17 @@ export const TransactionWorkerController = ({
   transactionModel,
   gatewayApi,
   tokenPriceClient,
-  configModel
+  configModel,
+  messageApi,
+  messageModel
 }: {
   auditModel: AuditModel
   gatewayApi: GatewayApi
   transactionModel: TransactionModel
   tokenPriceClient: TokenPriceClient
   configModel: ConfigModel
+  messageModel: MessageModel
+  messageApi: MessageApi
 }) => {
   const handler = ({
     job,
@@ -349,6 +357,80 @@ export const TransactionWorkerController = ({
                   jsError: new Error('Disabled feature')
                 })
           )
+
+      case 'AddAccountAddressToUserBadgeOracle': {
+        const { accountAddress, badgeId } = job.data
+        return gatewayApi
+          .isThirdPartyDepositRuleDisabled(accountAddress)
+          .mapErr((error) => ({
+            reason: TransactionWorkerError.GatewayError,
+            jsError: error
+          }))
+          .andThen((isThirdPartyDepositRuleDisabled) =>
+            getUserIdFromBadgeId(badgeId).asyncAndThen((userId) =>
+              handleSubmitTransaction((wellKnownAddresses) => {
+                const allowAccountAddress = [
+                  `CALL_METHOD
+                    Address("${wellKnownAddresses.accountAddress.payerAccount}")
+                    "lock_fee"
+                    Decimal("50")
+                ;`,
+
+                  `CALL_METHOD
+                    Address("${wellKnownAddresses.accountAddress.systemAccount}")
+                    "create_proof_of_amount"
+                    Address("${addresses.badges.adminBadgeAddress}")
+                    Decimal("1")
+                ;`,
+
+                  `CALL_METHOD
+                    Address("${addresses.components.heroBadgeForge}")
+                    "add_user_account"
+                    Address("${accountAddress}")
+                ;`
+                ]
+
+                const depositXrd = [
+                  `CALL_METHOD
+                  Address("${wellKnownAddresses.accountAddress.payerAccount}")
+                  "withdraw"
+                  Address("${wellKnownAddresses.resourceAddresses.xrd}")
+                  Decimal("${config.radQuest.directXrdDepositAmount}")
+                ;`,
+
+                  `CALL_METHOD
+                  Address("${accountAddress}")
+                  "try_deposit_batch_or_abort"
+                  Expression("ENTIRE_WORKTOP")
+                  Enum<0u8>()
+                ;`
+                ]
+
+                const transactionManifestParts: string[] = [...allowAccountAddress]
+
+                if (!isThirdPartyDepositRuleDisabled) transactionManifestParts.push(...depositXrd)
+
+                return transactionManifestParts.join('\n')
+              })
+                .andThen(handlePollTransactionStatus)
+                .andThen(() =>
+                  messageModel(logger)
+                    .add(userId, { type: 'HeroBadgeReadyToBeClaimed' })
+                    .andThen(({ id }) =>
+                      messageApi.send(
+                        userId,
+                        { type: 'HeroBadgeReadyToBeClaimed', traceId: job.data.traceId },
+                        id
+                      )
+                    )
+                    .mapErr(() => ({
+                      reason: TransactionWorkerError.FailedToSendMessage,
+                      jsError: new Error('failed to send message to client')
+                    }))
+                )
+            )
+          )
+      }
 
       default:
         return errAsync({
