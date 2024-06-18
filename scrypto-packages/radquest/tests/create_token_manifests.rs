@@ -3,9 +3,12 @@ use scrypto_test::{prelude::*, utils::dump_manifest_to_file_system};
 
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
 struct HeroBadgeData {
+    #[mutable]
     key_image_url: Url,
     #[mutable]
-    quests_completed: Vec<u32>,
+    quests_completed: Vec<String>,
+    #[mutable]
+    quest_counter: u32,
 }
 
 #[test]
@@ -27,7 +30,7 @@ fn create_hero_badge() {
             init {
               "name" => "Hero Badges", locked;
               "description" => "Hero Badges are handed to each nobel RadQuest champion as they set forth.", locked;
-              "icon_url" => "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg", locked;
+              "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
             }
         ),
         None::<IndexMap<NonFungibleLocalId, HeroBadgeData>>,
@@ -76,7 +79,7 @@ fn create_radgem() {
             init {
               "name" => "RadGems", locked;
               "description" => "Two Radgems can be combined with a Morph Energy Card by RadQuest's Jetty to produce a beautiful Radmorph.", locked;
-              "icon_url" => "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg", locked;
+              "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
             }
         ),
         None::<IndexMap<NonFungibleLocalId, RadgemData>>,
@@ -125,7 +128,7 @@ fn create_morph_card() {
           init {
             "name" => "Morph Energy Cards", locked;
             "description" => "These cards allow RadQuest’s Jetty to harness the primordial energies of the RadQuest realm to fuse Radgems into intricate and beautiful collectible Radmorphs.", locked;
-            "icon_url" => "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg", locked;
+            "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
           }
         ),
         None::<IndexMap<NonFungibleLocalId, MorphEnergyCardData>>,

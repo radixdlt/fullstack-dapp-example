@@ -4,12 +4,19 @@ use scrypto::prelude::*;
 #[sbor(transparent)]
 pub struct UserId(pub String);
 
+#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
+#[sbor(transparent)]
+pub struct QuestId(pub String);
+
 // TODO: Update once defined
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor, PartialEq, Eq, Debug, Clone)]
-struct HeroBadgeData {
+pub struct HeroBadgeData {
+    #[mutable]
     key_image_url: Url,
     #[mutable]
-    quests_completed: Vec<u32>,
+    quests_completed: Vec<String>,
+    #[mutable]
+    quest_counter: u32,
 }
 
 #[blueprint]
@@ -24,6 +31,8 @@ mod hero_badge_forge {
         disable => restrict_to: [super_admin];
         add_user_account => restrict_to: [admin];
         claim_badge=> PUBLIC;
+        hero_completed_quest => restrict_to: [admin];
+        update_key_image_url => restrict_to: [admin];
       }
     }
 
@@ -94,7 +103,44 @@ mod hero_badge_forge {
                     .mint_non_fungible(&NonFungibleLocalId::string(user_id.0).unwrap(), HeroBadgeData {
                         key_image_url: Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"),
                         quests_completed: vec![],
+                        quest_counter: 0,
                     })
+            })
+        }
+
+        pub fn hero_completed_quest(&mut self, user_id: UserId, quest_id: QuestId) {
+            assert!(self.enabled, "HeroBadgeForge disabled");
+
+            self.admin_badge.as_fungible().authorize_with_amount(1, || {
+                let badge_id = NonFungibleLocalId::string(user_id.0).unwrap();
+                let mut non_fungible_data = self
+                    .hero_badge_manager
+                    .get_non_fungible_data::<HeroBadgeData>(&badge_id);
+
+                self.hero_badge_manager.update_non_fungible_data(
+                    &badge_id,
+                    "quest_counter",
+                    non_fungible_data.quest_counter + 1,
+                );
+
+                non_fungible_data.quests_completed.push(quest_id.0);
+                self.hero_badge_manager.update_non_fungible_data(
+                    &badge_id,
+                    "quests_completed",
+                    non_fungible_data.quests_completed,
+                );
+            })
+        }
+
+        pub fn update_key_image_url(&mut self, user_id: UserId, new_image_url: Url) {
+            assert!(self.enabled, "HeroBadgeForge disabled");
+
+            self.admin_badge.as_fungible().authorize_with_amount(1, || {
+                self.hero_badge_manager.update_non_fungible_data(
+                    &NonFungibleLocalId::string(user_id.0).unwrap(),
+                    "key_image_url",
+                    new_image_url,
+                );
             })
         }
     }

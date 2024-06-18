@@ -1,4 +1,5 @@
 use radix_transactions::manifest::decompiler::ManifestObjectNames;
+use radquest::hero_badge_forge::HeroBadgeData;
 use scrypto_test::{prelude::*, utils::dump_manifest_to_file_system};
 
 fn dump_manifest_to_file(
@@ -22,6 +23,8 @@ struct LedgerTestEnvironment {
     disable_hero_badge_forge_manifest: TransactionManifestV1,
     add_user_account_manifest: TransactionManifestV1,
     claim_hero_badge_manifest: TransactionManifestV1,
+    hero_completed_quest_manifest: TransactionManifestV1,
+    update_key_image_url_manifest: TransactionManifestV1,
 }
 
 impl LedgerTestEnvironment {
@@ -48,6 +51,10 @@ impl LedgerTestEnvironment {
                     minter => rule!(require(admin_badge));
                     minter_updater => OWNER;
                 ),
+                non_fungible_data_update_roles: non_fungible_data_update_roles!(
+                    non_fungible_data_updater => rule!(require(admin_badge));
+                    non_fungible_data_updater_updater => OWNER;
+                ),
                 ..Default::default()
             };
 
@@ -59,7 +66,7 @@ impl LedgerTestEnvironment {
                     true,
                     resource_roles,
                     metadata!(),
-                    None::<Vec<(NonFungibleLocalId, EmptyNonFungibleData)>>,
+                    None::<Vec<(NonFungibleLocalId, HeroBadgeData)>>,
                 )
                 .try_deposit_entire_worktop_or_abort(account, None)
                 .build();
@@ -118,7 +125,7 @@ impl LedgerTestEnvironment {
             names,
         );
 
-        let add_user_account_manifest = ManifestBuilder::new()
+        let manifest = ManifestBuilder::new()
             .lock_fee_from_faucet()
             .create_proof_from_account_of_amount(account, admin_badge, 1)
             .call_method(
@@ -127,13 +134,12 @@ impl LedgerTestEnvironment {
                 manifest_args!(account),
             );
 
-        let names = add_user_account_manifest.object_names();
-        let add_user_account_manifest = add_user_account_manifest.build();
-
+        let names = manifest.object_names();
+        let add_user_account_manifest = manifest.build();
         dump_manifest_to_file("add_user_account", &add_user_account_manifest, names);
 
         let user_id = "test_id_12345".to_string();
-        let claim_hero_badge_manifest = ManifestBuilder::new()
+        let manifest = ManifestBuilder::new()
             .lock_fee_from_faucet()
             .call_method(
                 hero_badge_forge,
@@ -146,10 +152,43 @@ impl LedgerTestEnvironment {
                 (ManifestExpression::EntireWorktop,),
             );
 
-        let names = claim_hero_badge_manifest.object_names();
-        let claim_hero_badge_manifest = claim_hero_badge_manifest.build();
-
+        let names = manifest.object_names();
+        let claim_hero_badge_manifest = manifest.build();
         dump_manifest_to_file("claim_hero_badge", &claim_hero_badge_manifest, names);
+
+        let manifest = ManifestBuilder::new()
+            .lock_fee_from_faucet()
+            .create_proof_from_account_of_amount(account, admin_badge, 1)
+            .call_method(
+                hero_badge_forge,
+                "hero_completed_quest",
+                manifest_args!(user_id.clone(), "Quest_Name".to_string()),
+            );
+
+        let names = manifest.object_names();
+        let hero_completed_quest_manifest = manifest.build();
+        dump_manifest_to_file(
+            "hero_completed_quest",
+            &hero_completed_quest_manifest,
+            names,
+        );
+
+        let manifest = ManifestBuilder::new()
+            .lock_fee_from_faucet()
+            .create_proof_from_account_of_amount(account, admin_badge, 1)
+            .call_method(
+                hero_badge_forge,
+                "update_key_image_url",
+                manifest_args!(user_id.clone(), "https://example.com/image.png"),
+            );
+
+        let names = manifest.object_names();
+        let update_key_image_url_manifest = manifest.build();
+        dump_manifest_to_file(
+            "update_hero_badge_key_image_url",
+            &update_key_image_url_manifest,
+            names,
+        );
 
         Ok(Self {
             ledger,
@@ -157,6 +196,8 @@ impl LedgerTestEnvironment {
             disable_hero_badge_forge_manifest,
             add_user_account_manifest,
             claim_hero_badge_manifest,
+            hero_completed_quest_manifest,
+            update_key_image_url_manifest,
         })
     }
 }
@@ -222,6 +263,55 @@ fn non_user_cannot_claim_badge() -> Result<(), RuntimeError> {
 }
 
 #[test]
+fn can_hero_complete_quest() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+    lte.ledger.execute_manifest(
+        lte.add_user_account_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    lte.ledger.execute_manifest(
+        lte.claim_hero_badge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.hero_completed_quest_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    dbg!(receipt.clone());
+    // Assert
+    receipt.expect_commit_success();
+    Ok(())
+}
+
+#[test]
+fn can_update_key_image_url() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+    lte.ledger.execute_manifest(
+        lte.add_user_account_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    lte.ledger.execute_manifest(
+        lte.claim_hero_badge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.update_key_image_url_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_success();
+    Ok(())
+}
+
+#[test]
 fn can_disable_hero_badge_forge() -> Result<(), RuntimeError> {
     // Arrange
     let mut lte = LedgerTestEnvironment::new()?;
@@ -273,6 +363,62 @@ fn cannot_claim_badge_when_disabled() -> Result<(), RuntimeError> {
     // Act
     let receipt = lte.ledger.execute_manifest(
         lte.claim_hero_badge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_failure();
+    Ok(())
+}
+
+#[test]
+fn cannot_complete_quest_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+    lte.ledger.execute_manifest(
+        lte.add_user_account_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    lte.ledger.execute_manifest(
+        lte.claim_hero_badge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    lte.ledger.execute_manifest(
+        lte.disable_hero_badge_forge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.hero_completed_quest_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_failure();
+    Ok(())
+}
+
+#[test]
+fn cannot_update_key_image_url_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+    lte.ledger.execute_manifest(
+        lte.add_user_account_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    lte.ledger.execute_manifest(
+        lte.claim_hero_badge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    lte.ledger.execute_manifest(
+        lte.disable_hero_badge_forge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.update_key_image_url_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
 

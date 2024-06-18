@@ -64,10 +64,12 @@ echo "image_oracle = $image_oracle"
 echo "morph_card_forge = $morph_card_forge"
 
 export super_admin_badge_id="1"
-export user_account=$account
 export user_id="test_user_id_12345"
+export quest_id="RadixIntro"
+export user_account=$account
 
 echo "\nAdditional Environment Variables Set:"
 echo "super_admin_badge_id = $super_admin_badge_id"
 echo "user_id = $user_id"
+echo "quest_id = $quest_id"
 echo "user_account (set to match \$account variable) = $user_account"
