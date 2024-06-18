@@ -185,7 +185,7 @@ jobs:
         id: changed-svelte-files
         uses: RDXWorks-actions/changed-files@main
         with:
-          files: "/apps/dapp/src/lib/components/**/*.svelte"
+          files: "./apps/dapp/src/lib/components/**/*.svelte"
 
       - name: Use Node.js
         uses: RDXWorks-actions/setup-node@main
