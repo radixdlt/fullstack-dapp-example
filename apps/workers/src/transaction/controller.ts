@@ -1,6 +1,6 @@
 import { ResultAsync, errAsync, okAsync, err, ok, Result } from 'neverthrow'
 import { Job, TransactionJob } from 'queues'
-import { AuditType, TransactionStatus } from 'database'
+import { AuditType, PrismaClient, TransactionStatus } from 'database'
 import {
   Addresses,
   GatewayApi,
@@ -22,6 +22,7 @@ import { stripNonFungibleLocalId } from '../event/helpers/stripNonFungibleLocalI
 import { TokenPriceClient } from '../token-price-client'
 import BigNumber from 'bignumber.js'
 import { createCombinedElementsAddRadgemImageManifest } from './helpers/createCombinedElementsAddRadgemImageManifest'
+import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 
 export type TransactionWorkerError =
   (typeof TransactionWorkerError)[keyof typeof TransactionWorkerError]
@@ -43,7 +44,8 @@ export const TransactionWorkerError = {
   FeatureDisabled: 'FeatureDisabled',
   FailedToSendMessage: 'FailedToSendMessage',
   GatewayError: 'GatewayError',
-  HeroBadgeAlreadyClaimed: 'HeroBadgeAlreadyClaimed'
+  HeroBadgeAlreadyClaimed: 'HeroBadgeAlreadyClaimed',
+  FailedToExecuteDbTransaction: 'FailedToExecuteDbTransaction'
 } as const
 
 const getUserIdFromBadgeId = (
@@ -67,7 +69,8 @@ export const TransactionWorkerController = ({
   tokenPriceClient,
   configModel,
   messageApi,
-  messageModel
+  messageModel,
+  dbClient
 }: {
   auditModel: AuditModel
   gatewayApi: GatewayApi
@@ -76,6 +79,7 @@ export const TransactionWorkerController = ({
   configModel: ConfigModel
   messageModel: MessageModel
   messageApi: MessageApi
+  dbClient: PrismaClient
 }) => {
   const handler = ({
     job,
@@ -85,6 +89,8 @@ export const TransactionWorkerController = ({
     logger: AppLogger
   }): ResultAsync<void, TransactionWorkerControllerError> => {
     const { type, transactionKey, attempt, badgeResourceAddress, badgeId } = job.data
+
+    const dbTransactionBuilder = DbTransactionBuilder({ messageApi, tokenPriceClient, dbClient })
 
     const getItemFromDb = () => {
       const latestAttempt = attempt - 1 === -1 ? 0 : attempt - 1
@@ -421,22 +427,41 @@ export const TransactionWorkerController = ({
                 if (!isThirdPartyDepositRuleDisabled) transactionManifestParts.push(...depositXrd)
 
                 return transactionManifestParts.join('\n')
-              })
-                .andThen(handlePollTransactionStatus)
-                .andThen(() =>
-                  messageModel(logger)
-                    .add(userId, { type: 'HeroBadgeReadyToBeClaimed' })
-                    .andThen(({ id }) =>
-                      messageApi.send(
+              }).andThen((txId) =>
+                handlePollTransactionStatus(txId).andThen(() => {
+                  dbTransactionBuilder.add(() =>
+                    dbClient.message.create({
+                      data: {
                         userId,
-                        { type: 'HeroBadgeReadyToBeClaimed', traceId: job.data.traceId },
-                        id
-                      )
-                    )
-                    .mapErr(() => ({
-                      reason: TransactionWorkerError.FailedToSendMessage
+                        data: JSON.stringify({ type: 'HeroBadgeReadyToBeClaimed' })
+                      }
+                    })
+                  )
+
+                  return dbTransactionBuilder.helpers
+                    .addXrdDepositToAuditTable({
+                      transactionId: txId,
+                      userId: userId,
+                      xrdAmount: `${config.radQuest.directXrdDepositAmount}`
+                    })
+                    .andThen((api) => api.exec())
+                    .mapErr((error) => ({
+                      reason: TransactionWorkerError.FailedToExecuteDbTransaction,
+                      jsError: error
                     }))
-                )
+                    .map(([{ id }]) => {
+                      messageApi
+                        .send(
+                          userId,
+                          { type: 'HeroBadgeReadyToBeClaimed', traceId: job.data.traceId },
+                          id
+                        )
+                        .mapErr(() => ({
+                          reason: TransactionWorkerError.FailedToSendMessage
+                        }))
+                    })
+                })
+              )
             )
           )
       }

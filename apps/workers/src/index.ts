@@ -22,6 +22,7 @@ import { TransactionWorkerController } from './transaction/controller'
 import { TokenPriceClient } from './token-price-client'
 import { SystemWorker } from './system/worker'
 import { SystemWorkerController } from './system/controller'
+import { DbTransactionBuilder } from './helpers/dbTransactionBuilder'
 
 const app = async () => {
   // test db connection
@@ -44,6 +45,7 @@ const app = async () => {
   const transactionModel = TransactionModel(dbClient)
   const redisClient = new RedisConnection(config.redis)
   const tokenPriceClient = TokenPriceClient({ logger, redisClient })
+
   const eventWorkerController = EventWorkerController({
     dbClient,
     userQuestModel: UserQuestModel(dbClient),
@@ -65,7 +67,8 @@ const app = async () => {
     auditModel: AuditModel(dbClient),
     configModel,
     messageApi,
-    messageModel
+    messageModel,
+    dbClient
   })
 
   TransactionWorker(connection, {
