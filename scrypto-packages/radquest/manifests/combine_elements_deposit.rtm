@@ -1,4 +1,10 @@
 CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+
+CALL_METHOD
   Address("${account}")
   "create_proof_of_non_fungibles"
   Address("${userBadge}")
@@ -11,7 +17,7 @@ POP_FROM_AUTH_ZONE
 
 CALL_METHOD
   Address("${account}")
-  "withdraw_by_amount" 
+  "withdraw" 
   Address("${elements}")
   Decimal("10") 
 ;

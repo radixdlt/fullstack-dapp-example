@@ -15,10 +15,10 @@ struct Test {
     elements: Bucket,
     morph_card: Bucket,
     radgems: Bucket,
-    user_badge: Bucket,
-    user_badge_proof: Proof,
+    hero_badge: Bucket,
+    hero_badge_proof: Proof,
     radmorph_address: ResourceAddress,
-    user_badge_id: NonFungibleGlobalId,
+    hero_badge_id: NonFungibleGlobalId,
     admin_badge_proof: Proof,
     super_admin_badge_proof: Proof,
 }
@@ -32,7 +32,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         .mint_initial_supply([()], &mut env)?;
     let admin_badge =
         ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(4, &mut env)?;
-    let user_badge = ResourceBuilder::new_string_non_fungible(OwnerRole::None)
+    let hero_badge = ResourceBuilder::new_string_non_fungible(OwnerRole::None)
         .mint_initial_supply(
             [(
                 StringNonFungibleLocalId::new("user1234").unwrap(),
@@ -127,10 +127,10 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let radmorph_address = radmorph.resource_address(&mut env)?;
     let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
     let super_admin_badge_proof = super_admin_badge.create_proof_of_all(&mut env)?;
-    let user_badge_proof = user_badge.create_proof_of_all(&mut env)?;
-    let user_badge_local_id = user_badge.non_fungible_local_ids(&mut env)?.pop().unwrap();
-    let user_badge_id =
-        NonFungibleGlobalId::new(user_badge.resource_address(&mut env)?, user_badge_local_id);
+    let hero_badge_proof = hero_badge.create_proof_of_all(&mut env)?;
+    let hero_badge_local_id = hero_badge.non_fungible_local_ids(&mut env)?.pop().unwrap();
+    let hero_badge_id =
+        NonFungibleGlobalId::new(hero_badge.resource_address(&mut env)?, hero_badge_local_id);
 
     Ok(Test {
         env,
@@ -140,10 +140,10 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         elements,
         morph_card,
         radgems,
-        user_badge,
-        user_badge_proof,
+        hero_badge,
+        hero_badge_proof,
         radmorph_address,
-        user_badge_id,
+        hero_badge_id,
         admin_badge_proof,
         super_admin_badge_proof,
     })
@@ -164,13 +164,13 @@ fn can_combine_elements_deposit() -> Result<(), RuntimeError> {
         mut env,
         elements,
         refinery,
-        user_badge_proof,
+        hero_badge_proof,
         ..
     } = arrange_test_environment()?;
 
     // Act
     refinery.combine_elements_deposit(
-        user_badge_proof,
+        hero_badge_proof,
         elements.take(dec!(10), &mut env)?,
         &mut env,
     )?;
@@ -209,14 +209,14 @@ fn can_combine_elements_mint_radgem() -> Result<(), RuntimeError> {
     let Test {
         mut env,
         mut refinery,
-        user_badge_id,
+        hero_badge_id,
         admin_badge_proof,
         ..
     } = arrange_test_environment()?;
 
     // Act
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_mint_radgem(user_badge_id, dec!(0.318), dec!(0.822), &mut env)?;
+    refinery.combine_elements_mint_radgem(hero_badge_id, dec!(0.318), dec!(0.822), &mut env)?;
 
     // Assert
     Ok(())
@@ -228,7 +228,7 @@ fn can_combine_elements_add_radgem_image() -> Result<(), RuntimeError> {
     let Test {
         mut env,
         mut refinery,
-        user_badge_id,
+        hero_badge_id,
         admin_badge_proof,
         radgems,
         ..
@@ -236,7 +236,7 @@ fn can_combine_elements_add_radgem_image() -> Result<(), RuntimeError> {
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
     refinery.combine_elements_mint_radgem(
-        user_badge_id.clone(),
+        hero_badge_id.clone(),
         dec!(0.97),
         dec!(0.87),
         &mut env,
@@ -255,7 +255,7 @@ fn can_combine_elements_add_radgem_image() -> Result<(), RuntimeError> {
     // Act
     refinery
         .combine_elements_add_radgem_image(
-            user_badge_id.clone(),
+            hero_badge_id.clone(),
             radgem_local_id.clone().unwrap(),
             UncheckedUrl::of("www.new_url.test"),
             &mut env,
@@ -279,8 +279,8 @@ fn can_combine_elements_claim() -> Result<(), RuntimeError> {
     let Test {
         mut env,
         mut refinery,
-        user_badge_proof,
-        user_badge_id: user_id,
+        hero_badge_proof,
+        hero_badge_id: user_id,
         admin_badge_proof,
         ..
     } = arrange_test_environment()?;
@@ -289,7 +289,7 @@ fn can_combine_elements_claim() -> Result<(), RuntimeError> {
     refinery.combine_elements_mint_radgem(user_id.clone(), dec!(0.97), dec!(0.89), &mut env)?;
 
     // Act
-    let result = refinery.combine_elements_claim(user_badge_proof, &mut env)?;
+    let result = refinery.combine_elements_claim(hero_badge_proof, &mut env)?;
 
     // Assert
     assert_eq!(result.amount(&mut env)?, dec!(1));
@@ -302,8 +302,8 @@ fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
     let Test {
         mut env,
         mut refinery,
-        user_badge,
-        user_badge_id: user_id,
+        hero_badge,
+        hero_badge_id: user_id,
         admin_badge_proof,
         ..
     } = arrange_test_environment()?;
@@ -313,12 +313,12 @@ fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
 
     // Act
     let result_1 =
-        refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
+        refinery.combine_elements_claim(hero_badge.create_proof_of_all(&mut env)?, &mut env)?;
 
     refinery.combine_elements_mint_radgem(user_id.clone(), dec!(0.16), dec!(0.64), &mut env)?;
 
     let result_2 =
-        refinery.combine_elements_claim(user_badge.create_proof_of_all(&mut env)?, &mut env)?;
+        refinery.combine_elements_claim(hero_badge.create_proof_of_all(&mut env)?, &mut env)?;
 
     // Assert
     assert_eq!(result_1.amount(&mut env)?, dec!(1));
@@ -450,7 +450,7 @@ pub fn cannot_combine_elements_deposit_when_disabled() -> Result<(), RuntimeErro
     let Test {
         mut env,
         mut refinery,
-        user_badge_proof,
+        hero_badge_proof,
         super_admin_badge_proof,
         elements,
         ..
@@ -461,7 +461,7 @@ pub fn cannot_combine_elements_deposit_when_disabled() -> Result<(), RuntimeErro
 
     // Act
     let result = refinery.combine_elements_deposit(
-        user_badge_proof,
+        hero_badge_proof,
         elements.take(dec!(10), &mut env)?,
         &mut env,
     );

@@ -2,6 +2,51 @@ use scrypto::prelude::*;
 use scrypto_test::{prelude::*, utils::dump_manifest_to_file_system};
 
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
+struct HeroBadgeData {
+    #[mutable]
+    key_image_url: Url,
+    #[mutable]
+    quests_completed: Vec<String>,
+    #[mutable]
+    quest_counter: u32,
+}
+
+#[test]
+fn create_hero_badge() {
+    let network = NetworkDefinition::mainnet();
+
+    let manifest_builder = ManifestBuilder::new().create_non_fungible_resource(
+        OwnerRole::Fixed(rule!(require(XRD))),
+        NonFungibleIdType::String,
+        true,
+        NonFungibleResourceRoles {
+            mint_roles: mint_roles! {
+                minter => rule!(require(XRD));
+                minter_updater => rule!(deny_all);
+            },
+            ..Default::default()
+        },
+        metadata!(
+            init {
+              "name" => "Hero Badges", locked;
+              "description" => "Hero Badges are handed to each nobel RadQuest champion as they set forth.", locked;
+              "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
+            }
+        ),
+        None::<IndexMap<NonFungibleLocalId, HeroBadgeData>>,
+    );
+
+    dump_manifest_to_file_system(
+        manifest_builder.object_names(),
+        &manifest_builder.build(),
+        "./manifests/test-generated",
+        Some("create_hero_badge"),
+        &network,
+    )
+    .err();
+}
+
+#[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
 struct RadgemData {
     #[mutable]
     key_image_url: Url,
@@ -28,26 +73,13 @@ fn create_radgem() {
                 burner => rule!(require(XRD));
                 burner_updater => rule!(deny_all);
             },
-            freeze_roles: None,
-            recall_roles: None,
-            withdraw_roles: withdraw_roles! {
-                withdrawer => rule!(allow_all);
-                withdrawer_updater => rule!(deny_all);
-            },
-            deposit_roles: deposit_roles! {
-                depositor => rule!(allow_all);
-                depositor_updater => rule!(deny_all);
-            },
-            non_fungible_data_update_roles: non_fungible_data_update_roles! {
-                non_fungible_data_updater => rule!(require(XRD));
-                non_fungible_data_updater_updater => rule!(deny_all);
-            },
+            ..Default::default()
         },
         metadata!(
             init {
               "name" => "RadGems", locked;
               "description" => "Two Radgems can be combined with a Morph Energy Card by RadQuest's Jetty to produce a beautiful Radmorph.", locked;
-              "icon_url" => "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg", locked;
+              "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
             }
         ),
         None::<IndexMap<NonFungibleLocalId, RadgemData>>,
@@ -90,26 +122,13 @@ fn create_morph_card() {
                 burner => rule!(require(XRD));
                 burner_updater => rule!(deny_all);
             },
-            freeze_roles: None,
-            recall_roles: None,
-            withdraw_roles: withdraw_roles! {
-                withdrawer => rule!(allow_all);
-                withdrawer_updater => rule!(deny_all);
-            },
-            deposit_roles: deposit_roles! {
-                depositor => rule!(allow_all);
-                depositor_updater => rule!(deny_all);
-            },
-            non_fungible_data_update_roles: non_fungible_data_update_roles! {
-                non_fungible_data_updater => rule!(require(XRD));
-                non_fungible_data_updater_updater => rule!(deny_all);
-            },
+            ..Default::default()
         },
         metadata!(
           init {
             "name" => "Morph Energy Cards", locked;
             "description" => "These cards allow RadQuest’s Jetty to harness the primordial energies of the RadQuest realm to fuse Radgems into intricate and beautiful collectible Radmorphs.", locked;
-            "icon_url" => "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg", locked;
+            "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
           }
         ),
         None::<IndexMap<NonFungibleLocalId, MorphEnergyCardData>>,
@@ -149,18 +168,7 @@ fn create_radmorph() {
                 minter => rule!(require(XRD));
                 minter_updater => rule!(deny_all);
             },
-            burn_roles: None,
-            freeze_roles: None,
-            recall_roles: None,
-            withdraw_roles: withdraw_roles! {
-                withdrawer => rule!(allow_all);
-                withdrawer_updater => rule!(deny_all);
-            },
-            deposit_roles: deposit_roles! {
-                depositor => rule!(allow_all);
-                depositor_updater => rule!(deny_all);
-            },
-            non_fungible_data_update_roles: None,
+            ..Default::default()
         },
         metadata!(
           init {
@@ -199,16 +207,7 @@ pub fn create_otter_coin() {
                 burner => rule!(require(XRD));
                 burner_updater => rule!(deny_all);
             },
-            freeze_roles: None,
-            recall_roles: None,
-            withdraw_roles: withdraw_roles! {
-                withdrawer => rule!(allow_all);
-                withdrawer_updater => rule!(deny_all);
-            },
-            deposit_roles: deposit_roles! {
-                depositor => rule!(allow_all);
-                depositor_updater => rule!(deny_all);
-            },
+            ..Default::default()
         },
         metadata!(
           init {

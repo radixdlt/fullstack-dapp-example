@@ -1,24 +1,22 @@
 CALL_METHOD
     Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
     "lock_fee"
-    Decimal("5000")
+    Decimal("50")
 ;
-
 CALL_METHOD
     Address("${account}")
-    "create_proof_of_amount"
-    Address("${admin_badge}")
-    Decimal("1")
+    "create_proof_of_non_fungibles"
+    Address("${hero_badge}")
+    Array<NonFungibleLocalId>(NonFungibleLocalId("<${hero_badge_id}>"))
 ;
-
+POP_FROM_AUTH_ZONE
+    Proof("hero_badge_proof")
+;
 CALL_METHOD
     Address("${refinery}")
-    "combine_elements_process_1"
-    "<${user_id}>"
-    Decimal("0.99")
-    Decimal("0.68")
+    "combine_elements_claim"
+    Proof("hero_badge_proof")
 ;
-
 CALL_METHOD
     Address("${account}")
     "deposit_batch"

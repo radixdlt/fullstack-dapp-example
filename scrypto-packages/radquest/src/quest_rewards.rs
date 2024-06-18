@@ -54,7 +54,7 @@ mod quest_rewards {
         admin_badge: FungibleVault,
         rewards: KeyValueStore<ResourceAddress, Vault>,
         rewards_record: KeyValueStore<(UserId, QuestId), RewardState>,
-        user_badge_address: ResourceAddress,
+        hero_badge_address: ResourceAddress,
         kyc_badge_address: ResourceAddress,
         admin_badge_address: ResourceAddress,
         kyc_oracle: Global<KycOracle>,
@@ -65,7 +65,7 @@ mod quest_rewards {
             super_admin_badge_address: ResourceAddress,
             owner_role: OwnerRole,
             admin_badge: Bucket,
-            user_badge_address: ResourceAddress,
+            hero_badge_address: ResourceAddress,
             kyc_badge_address: ResourceAddress,
         ) -> Global<QuestRewards> {
             let admin_badge_address = admin_badge.resource_address();
@@ -76,7 +76,7 @@ mod quest_rewards {
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
                 rewards: KeyValueStore::new(),
                 rewards_record: KeyValueStore::new(),
-                user_badge_address,
+                hero_badge_address,
                 kyc_badge_address,
                 admin_badge_address,
                 kyc_oracle,
@@ -98,12 +98,12 @@ mod quest_rewards {
         fn authorize_claim(
             &self,
             quest_id: &QuestId,
-            user_badge: Proof,
+            hero_badge: Proof,
             did_badge: Option<Proof>,
         ) -> UserId {
-            let user_badge = user_badge.check(self.user_badge_address);
+            let hero_badge = hero_badge.check(self.hero_badge_address);
             let user_id = UserId(
-                user_badge
+                hero_badge
                     .as_non_fungible()
                     .non_fungible_local_id()
                     .to_string(),
@@ -144,10 +144,10 @@ mod quest_rewards {
         pub fn claim_reward(
             &mut self,
             quest_id: QuestId,
-            user_badge: Proof,
+            hero_badge: Proof,
             did_badge: Option<Proof>,
         ) -> Vec<Bucket> {
-            let user_id = self.authorize_claim(&quest_id, user_badge, did_badge);
+            let user_id = self.authorize_claim(&quest_id, hero_badge, did_badge);
 
             let mut reward_state = self
                 .rewards_record

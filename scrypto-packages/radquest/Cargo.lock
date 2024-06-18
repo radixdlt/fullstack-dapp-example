@@ -1034,6 +1034,7 @@ checksum = "1a03d7e7816ade40c6ecedff7515198906d644527771bd8fb5a335094353a15a"
 name = "radquest"
 version = "1.0.0"
 dependencies = [
+ "radix-transactions",
  "scrypto",
  "scrypto-test",
 ]

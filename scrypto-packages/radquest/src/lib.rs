@@ -1,3 +1,4 @@
+pub mod hero_badge_forge;
 pub mod image_oracle;
 pub mod kyc_oracle;
 pub mod morph_card_forge;

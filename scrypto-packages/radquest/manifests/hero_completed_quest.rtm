@@ -1,26 +1,17 @@
 CALL_METHOD
     Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
     "lock_fee"
-    Decimal("5000")
+    Decimal("50")
 ;
-
 CALL_METHOD
     Address("${account}")
     "create_proof_of_amount"
     Address("${admin_badge}")
     Decimal("1")
 ;
-
 CALL_METHOD
-    Address("${refinery}")
-    "combine_elements_process_1"
-    "<${user_id}>"
-    Decimal("0.99")
-    Decimal("0.68")
-;
-
-CALL_METHOD
-    Address("${account}")
-    "deposit_batch"
-    Expression("ENTIRE_WORKTOP")
+    Address("${hero_badge_forge}")
+    "hero_completed_quest"
+    "${user_id}"
+    "${quest_id}"
 ;
