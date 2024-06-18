@@ -20,4 +20,4 @@
   <Button on:click {...args}>{args.text || 'Test'}</Button>
 </Template>
 
-<Story name="Primar" />
+<Story name="Primary" />
