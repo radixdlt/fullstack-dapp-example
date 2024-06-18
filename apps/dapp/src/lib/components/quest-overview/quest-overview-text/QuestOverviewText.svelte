@@ -4,6 +4,7 @@
   export let title: string
   export let description: string
   export let minutesToComplete: number
+  export let reduceDescriptionOpacity = false
 </script>
 
 <div class="text-content">
@@ -16,7 +17,7 @@
       {$i18n.t('quests:minutesToComplete', { count: minutesToComplete })}
     </p>
   </div>
-  <p class="text-extra-light description">
+  <p class:reduce-opacity={reduceDescriptionOpacity} class="text-extra-light description">
     {description}
   </p>
 </div>
@@ -43,7 +44,6 @@
   }
 
   .description {
-    opacity: 0.5;
     overflow: hidden;
     max-height: 5rem;
   }
@@ -52,5 +52,9 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
+  }
+
+  .reduce-opacity {
+    opacity: 0.5;
   }
 </style>
