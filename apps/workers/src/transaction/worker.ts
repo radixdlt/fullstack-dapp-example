@@ -27,7 +27,7 @@ export const TransactionWorker = (
 
       if (result.isErr()) {
         logger.debug({
-          method: 'eventWorker.process.error',
+          method: 'transactionWorkerWorker.process.error',
           id: job.id,
           data: job.data,
           error: result.error

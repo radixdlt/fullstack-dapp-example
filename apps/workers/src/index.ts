@@ -22,7 +22,6 @@ import { TransactionWorkerController } from './transaction/controller'
 import { TokenPriceClient } from './token-price-client'
 import { SystemWorker } from './system/worker'
 import { SystemWorkerController } from './system/controller'
-import { DbTransactionBuilder } from './helpers/dbTransactionBuilder'
 
 const app = async () => {
   // test db connection
@@ -90,6 +89,8 @@ const app = async () => {
       logger
     })
   })
+
+  logger.debug({ message: 'workers running' })
 }
 
 app().catch((error) => {

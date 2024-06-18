@@ -2,27 +2,34 @@ import { describe, it, expect, beforeAll } from 'vitest'
 import {
   RadixEngineClient,
   generateMnemonic,
-  mintUserBadgeAndDepositXrd,
   mintUserBadge,
   mintElements,
   combineElementsDeposit,
   radquestEntityAddresses
 } from 'typescript-wallet'
-import { GatewayApi } from 'common'
+import { Addresses, GatewayApi, TransactionModel, appLogger } from 'common'
 import { PrismaClient } from 'database'
 import { ResultAsync } from 'neverthrow'
-import { EventJob, Queues, getQueues } from 'queues'
+import { Queues, getQueues } from 'queues'
 import { config } from './config'
 import { QueueEvents } from 'bullmq'
 import crypto from 'crypto'
 
 const eventQueueEvents = new QueueEvents(Queues.EventQueue, { connection: config.redis })
+const transactionQueueEvents = new QueueEvents(Queues.TransactionQueue, {
+  connection: config.redis
+})
 
-const waitForQueueEvent = async (status: Parameters<(typeof eventQueueEvents)['on']>[0]) =>
-  new Promise<EventJob>((resolve) => {
-    eventQueueEvents.on(status, async ({ jobId }: { jobId: string }) => {
-      const jobData = (await queues.eventQueue.queue.getJob(jobId))?.data
-      return resolve(jobData!)
+const { transactionQueue } = getQueues(config.redis)
+
+const waitForQueueEvent = async (
+  status: Parameters<(typeof eventQueueEvents)['on']>[0],
+  queueEvents: QueueEvents,
+  jobId: string
+) =>
+  new Promise<void>((resolve) => {
+    queueEvents.on(status, async (data: any) => {
+      if (jobId === data.jobId) return resolve(undefined)
     })
   })
 
@@ -31,6 +38,8 @@ const gatewayApi = GatewayApi(2)
 const db = new PrismaClient()
 
 const networkName = gatewayApi.networkConfig.networkName
+
+const logger = appLogger
 
 if (!networkName) throw new Error('PUBLIC_NETWORK_ID env var not set to a valid network')
 
@@ -44,6 +53,10 @@ let accountAddress: string
 let identityAddress: string
 let user: Awaited<ReturnType<typeof createUser>>
 let queues: ReturnType<typeof getQueues>
+
+const transactionModel = TransactionModel(db)
+
+const addresses = Addresses(2)
 
 const createUser = async (
   identityAddress: string,
@@ -73,37 +86,81 @@ describe('Event flows', () => {
     await addVerifiedPhoneNumberRequirement(user.id)
     queues = getQueues(config.redis)
   })
-  it.skip(
+  it(
     'should mint user badge, create event, and send notification',
-    { timeout: 30_000, skip: true },
+    { timeout: 30_000 },
     async () => {
-      const [jobData, mintUserBadgeResult] = await Promise.all([
-        waitForQueueEvent('completed'),
-        mintUserBadgeAndDepositXrd(user.id, accountAddress)
-      ])
+      const transactionKey = `AddAccountAddressToUserBadgeOracle:${crypto.randomUUID()}`
+      const badgeId = `<${user.id}>`
 
-      if (mintUserBadgeResult.isErr()) throw mintUserBadgeResult.error
+      const badgeResourceAddress = addresses.badges.heroBadgeAddress
+      const attempt = 0
 
-      const transactionId = mintUserBadgeResult.value
-
-      const event = await db.event.findFirst({
-        where: { userId: user.id, id: jobData.type, transactionId }
-      })
-      const notification = await db.notification.findFirst({ where: { userId: user.id } })
-      const completedRequirements = await db.completedQuestRequirement.findMany({
-        where: { userId: user.id, questId: 'FirstTransactionQuest' }
+      await transactionModel(logger).add({
+        transactionKey,
+        badgeId,
+        badgeResourceAddress,
+        attempt
       })
 
-      expect(event?.questId).toBe('FirstTransactionQuest')
-      expect(event?.userId).toBe(user.id)
-      expect(event?.id).toBe('UserBadge')
-      expect(event?.transactionId).toBe(transactionId)
-      expect(completedRequirements.length).toBe(2)
-      expect(notification?.data).toEqual({
-        type: 'QuestRequirementCompleted',
-        questId: 'FirstTransactionQuest',
-        requirementId: 'DepositUserBadge'
+      const traceId = crypto.randomUUID()
+      const jobId = `${traceId}:${attempt}`
+
+      await transactionQueue.add({
+        traceId,
+        type: 'AddAccountAddressToUserBadgeOracle',
+        attempt,
+        badgeId,
+        badgeResourceAddress,
+        transactionKey,
+        accountAddress: user.accountAddress!
       })
+
+      await waitForQueueEvent('completed', transactionQueueEvents, jobId)
+
+      const item = await db.transaction.findFirst({
+        where: { attempt, transactionKey, badgeId, badgeResourceAddress }
+      })
+
+      expect(item?.status).toBe('COMPLETED')
+
+      await radixEngineClient.getXrdFromFaucet()
+
+      await radixEngineClient
+        .getManifestBuilder()
+        .andThen(({ convertStringManifest, submitTransaction }) => {
+          const transactionManifest = `
+          CALL_METHOD
+              Address("${accountAddress}")
+              "lock_fee"
+              Decimal("50")
+          ;
+          CALL_METHOD
+              Address("${addresses.components.heroBadgeForge}")
+              "claim_badge"
+              Address("${accountAddress}")
+              "${user.id}"
+          ;
+          CALL_METHOD
+              Address("${accountAddress}")
+              "deposit_batch"
+              Expression("ENTIRE_WORKTOP")
+          ;
+        `
+          return convertStringManifest(transactionManifest)
+            .andThen((transactionManifest) =>
+              submitTransaction({ transactionManifest, signers: [] })
+            )
+            .andThen(({ txId }) =>
+              radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
+            )
+        })
+
+      const result = await gatewayApi.hasHeroBadge(accountAddress)
+
+      if (result.isErr()) throw result.error
+
+      expect(result.value).toBe(true)
     }
   )
   it('should mint elements and combine them', { timeout: 30_000 }, async () => {

@@ -91,6 +91,7 @@ export const TransactionWorkerController = ({
     const { type, transactionKey, attempt, badgeResourceAddress, badgeId } = job.data
 
     const dbTransactionBuilder = DbTransactionBuilder({ messageApi, tokenPriceClient, dbClient })
+    const addresses = Addresses(config.networkId)
 
     const getItemFromDb = () => {
       const latestAttempt = attempt - 1 === -1 ? 0 : attempt - 1
@@ -141,8 +142,8 @@ export const TransactionWorkerController = ({
                   reason: TransactionWorkerError.FailedToSubmitToRadixNetwork,
                   jsError
                 }))
-                .andThen(({ txId }) =>
-                  transactionModel(logger)
+                .andThen(({ txId }) => {
+                  return transactionModel(logger)
                     .setTransactionId(
                       { transactionKey, badgeId, badgeResourceAddress, attempt },
                       txId
@@ -152,7 +153,7 @@ export const TransactionWorkerController = ({
                       jsError
                     }))
                     .map(() => txId)
-                )
+                })
             )
         )
 
@@ -163,8 +164,13 @@ export const TransactionWorkerController = ({
           reason: TransactionWorkerError.FailedToPollTransactionStatus,
           jsError
         }))
-        .andThen(() =>
-          transactionModel(logger)
+        .andThen((response) => {
+          logger.debug({
+            method: 'AddAccountAddressToUserBadgeOracle.pollTransactionStatus',
+            txId,
+            status: response?.status
+          })
+          return transactionModel(logger)
             .setStatus(
               { badgeId, badgeResourceAddress, transactionKey, attempt },
               TransactionStatus.COMPLETED
@@ -173,7 +179,7 @@ export const TransactionWorkerController = ({
               jsError,
               reason: TransactionWorkerError.FailedToSetCompletedStatus
             }))
-        )
+        })
         .map(() => undefined)
 
     switch (type) {
@@ -286,7 +292,6 @@ export const TransactionWorkerController = ({
 
       case 'PopulateResources':
         const { accountAddress } = job.data
-        const addresses = Addresses(config.networkId)
 
         return handleSubmitTransaction(
           (wellKnownAddresses) =>
@@ -367,9 +372,8 @@ export const TransactionWorkerController = ({
 
       case 'AddAccountAddressToUserBadgeOracle': {
         const { accountAddress, badgeId } = job.data
-
         return ResultAsync.combine([
-          gatewayApi.isThirdPartyDepositRuleDisabled(badgeId),
+          gatewayApi.isThirdPartyDepositRuleDisabled(accountAddress),
           gatewayApi.hasHeroBadge(accountAddress).andThen((hasHeroBadge) =>
             hasHeroBadge
               ? err({
