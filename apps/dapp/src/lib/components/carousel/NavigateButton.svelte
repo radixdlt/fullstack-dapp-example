@@ -27,10 +27,10 @@
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
     background-color: var(--color-dark);
-    opacity: 0.4;
+    opacity: 0.5;
 
     &:hover {
-      opacity: 0.7;
+      opacity: 0.8;
     }
 
     transition: opacity 0.2s ease-in-out;
@@ -40,7 +40,7 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) rotate(45deg);
+      transform: translate(-70%, -50%) rotate(45deg);
       width: 0.6rem;
       height: 0.6rem;
       border-top: 0.2rem solid var(--color-light);
