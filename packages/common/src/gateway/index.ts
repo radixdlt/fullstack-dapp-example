@@ -117,12 +117,20 @@ export const GatewayApi = (networkId: number) => {
         : err({ reason: 'MissingDepositRuleValue' })
     )
 
+  const hasHeroBadge = (accountAddress: string) =>
+    callApi('getEntityDetailsVaultAggregated', [accountAddress]).map(([response]) =>
+      response.non_fungible_resources.items.some(
+        (item) => item.resource_address === addresses.badges.heroBadgeAddress
+      )
+    )
+
   return {
     hasKycEntry,
     isThirdPartyDepositRuleDisabled,
     networkConfig,
     gatewayApiClient,
     extractedMethods,
+    hasHeroBadge,
     callApi,
     callApiWithCache
   }

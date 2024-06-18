@@ -42,7 +42,8 @@ export const TransactionWorkerError = {
   UnhandledJob: 'UnhandledJob',
   FeatureDisabled: 'FeatureDisabled',
   FailedToSendMessage: 'FailedToSendMessage',
-  GatewayError: 'GatewayError'
+  GatewayError: 'GatewayError',
+  HeroBadgeAlreadyClaimed: 'HeroBadgeAlreadyClaimed'
 } as const
 
 const getUserIdFromBadgeId = (
@@ -360,13 +361,25 @@ export const TransactionWorkerController = ({
 
       case 'AddAccountAddressToUserBadgeOracle': {
         const { accountAddress, badgeId } = job.data
-        return gatewayApi
-          .isThirdPartyDepositRuleDisabled(accountAddress)
+
+        return ResultAsync.combine([
+          gatewayApi.isThirdPartyDepositRuleDisabled(badgeId),
+          gatewayApi
+            .hasHeroBadge(accountAddress)
+            .andThen((hasHeroBadge) =>
+              hasHeroBadge
+                ? err({
+                    reason: TransactionWorkerError.HeroBadgeAlreadyClaimed,
+                    jsError: new Error('Hero badge already claimed')
+                  })
+                : ok(undefined)
+            )
+        ])
           .mapErr((error) => ({
             reason: TransactionWorkerError.GatewayError,
             jsError: error
           }))
-          .andThen((isThirdPartyDepositRuleDisabled) =>
+          .andThen(([isThirdPartyDepositRuleDisabled]) =>
             getUserIdFromBadgeId(badgeId).asyncAndThen((userId) =>
               handleSubmitTransaction((wellKnownAddresses) => {
                 const allowAccountAddress = [
