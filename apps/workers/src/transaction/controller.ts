@@ -392,18 +392,18 @@ export const TransactionWorkerController = ({
 
                 const depositXrd = [
                   `CALL_METHOD
-                  Address("${wellKnownAddresses.accountAddress.payerAccount}")
-                  "withdraw"
-                  Address("${wellKnownAddresses.resourceAddresses.xrd}")
-                  Decimal("${config.radQuest.directXrdDepositAmount}")
-                ;`,
+                    Address("${wellKnownAddresses.accountAddress.payerAccount}")
+                    "withdraw"
+                    Address("${wellKnownAddresses.resourceAddresses.xrd}")
+                    Decimal("${config.radQuest.directXrdDepositAmount}")
+                  ;`,
 
                   `CALL_METHOD
-                  Address("${accountAddress}")
-                  "try_deposit_batch_or_abort"
-                  Expression("ENTIRE_WORKTOP")
-                  Enum<0u8>()
-                ;`
+                    Address("${accountAddress}")
+                    "try_deposit_batch_or_abort"
+                    Expression("ENTIRE_WORKTOP")
+                    Enum<0u8>()
+                  ;`
                 ]
 
                 const transactionManifestParts: string[] = [...allowAccountAddress]
