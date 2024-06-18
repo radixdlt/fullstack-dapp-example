@@ -7,12 +7,12 @@ CALL_METHOD
 CALL_METHOD
   Address("${account}")
   "create_proof_of_non_fungibles"
-  Address("${userBadge}")
-  Array<NonFungibleLocalId>(NonFungibleLocalId("${userBadgeId}"))
+  Address("${hero_badge}")
+  Array<NonFungibleLocalId>(NonFungibleLocalId("${hero_badge_id}"))
 ;
 
 POP_FROM_AUTH_ZONE
-  Proof("userBadge")
+  Proof("hero_badge")
 ;
 
 CALL_METHOD
@@ -30,7 +30,7 @@ TAKE_ALL_FROM_WORKTOP
 CALL_METHOD
   Address("${refinery}")
   "combine_elements_deposit"
-  Proof("userBadge")
+  Proof("hero_badge")
   Bucket("elements")
 ;
 

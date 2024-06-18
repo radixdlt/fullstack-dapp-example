@@ -1,5 +1,6 @@
-use crate::kyc_oracle::kyc_oracle::KycOracle;
 use scrypto::prelude::*;
+
+use crate::kyc_oracle::kyc_oracle::KycOracle;
 
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 #[sbor(transparent)]
@@ -247,7 +248,9 @@ mod quest_rewards {
                     RewardState::Unclaimed {
                         ref mut resources_record,
                     } => {
-                        resources_record.insert(reward.resource_address(), reward_amount.clone());
+                        let result = resources_record
+                            .insert(reward.resource_address(), reward_amount.clone());
+                        assert!(result.is_none(), "Duplicate reward resource");
                     }
                     RewardState::Claimed => {
                         let mut resources_record = HashMap::new();

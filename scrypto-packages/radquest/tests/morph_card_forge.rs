@@ -1,10 +1,9 @@
-use radquest::{
-    morph_card_forge::{
-        morph_card_forge_test::*, MorphCardData, MorphCardDataInput, UserId, ENERGY,
-    },
-    refinery::RARITY,
-};
 use scrypto_test::prelude::*;
+
+use radquest::morph_card_forge::morph_card_forge_test::*;
+use radquest::morph_card_forge::{MorphCardData, MorphCardDataInput, ENERGY};
+use radquest::quest_rewards::UserId;
+use radquest::refinery::RARITY;
 
 struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,

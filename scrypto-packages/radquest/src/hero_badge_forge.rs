@@ -1,14 +1,7 @@
 use scrypto::prelude::*;
 
-#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
-#[sbor(transparent)]
-pub struct UserId(pub String);
+use crate::quest_rewards::{QuestId, UserId};
 
-#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
-#[sbor(transparent)]
-pub struct QuestId(pub String);
-
-// TODO: Update once defined
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor, PartialEq, Eq, Debug, Clone)]
 pub struct HeroBadgeData {
     #[mutable]

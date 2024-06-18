@@ -61,12 +61,12 @@ describe('filter transactions', () => {
 
     expect(filteredTransactions.length).toEqual(1)
 
-    const [userBadge] = filteredTransactions
+    const [heroBadge] = filteredTransactions
 
-    expect(userBadge.type).toEqual(EventId.DepositUserBadge)
-    expect(userBadge.transactionId).toBeDefined()
-    expect(userBadge.relevantEvents.UserBadgeDeposited).toBeDefined()
-    expect(userBadge.relevantEvents.XrdDeposited).toBeDefined()
+    expect(heroBadge.type).toEqual(EventId.DepositUserBadge)
+    expect(heroBadge.transactionId).toBeDefined()
+    expect(heroBadge.relevantEvents.UserBadgeDeposited).toBeDefined()
+    expect(heroBadge.relevantEvents.XrdDeposited).toBeDefined()
   })
 
   it('should find instapass badge deposited transaction', () => {

@@ -281,7 +281,6 @@ fn can_hero_complete_quest() -> Result<(), RuntimeError> {
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
 
-    dbg!(receipt.clone());
     // Assert
     receipt.expect_commit_success();
     Ok(())

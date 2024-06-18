@@ -1,16 +1,14 @@
-import { radixEngineClient } from '../..'
-import { config } from '../../config'
+import { config, radixEngineClient } from '../../config'
 
-export const newQuestRewards = () =>
-  radixEngineClient
+export const newHeroBadgeForge = () => {
+  return radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
-      convertStringManifest(
-        `     
+      convertStringManifest(`
         CALL_METHOD
             Address("${wellKnownAddresses.accountAddress.payerAccount}")
             "lock_fee"
-            Decimal("100")
+            Decimal("50")
         ;
         CALL_METHOD
             Address("${wellKnownAddresses.accountAddress.dAppDefinitionAccount}")
@@ -26,30 +24,28 @@ export const newQuestRewards = () =>
         ;
         TAKE_ALL_FROM_WORKTOP
             Address("${config.radQuest.badges.adminBadgeAddress}")
-            Bucket("admin_badges")
+            Bucket("admin_badge")
         ;
         CALL_FUNCTION
-          Address("${config.radQuest.package}")
-          "QuestRewards"
-          "new"
-          Address("${config.radQuest.badges.superAdminBadgeAddress}")
-          Enum<OwnerRole::Fixed>(
-          Enum<AccessRule::Protected>(
-              Enum<AccessRuleNode::ProofRule>(
-                  Enum<ProofRule::Require>(
-                      Enum<ResourceOrNonFungible::Resource>(
-                          Address("${config.radQuest.badges.superAdminBadgeAddress}")
-                          )
-                      )
-                  )
-              )
-          )
-          Bucket("admin_badges")
-          Address("${config.radQuest.badges.heroBadgeAddress}")
-          # TODO: change to KYC badge resource address
-          Address("${config.radQuest.badges.heroBadgeAddress}"); 
-       `
-      )
+            Address("${config.radQuest.package}")
+            "HeroBadgeForge"
+            "new"
+            Address("${config.radQuest.badges.superAdminBadgeAddress}")
+            Enum<1u8>(
+                Enum<2u8>(
+                    Enum<0u8>(
+                        Enum<0u8>(
+                            Enum<1u8>(
+                                Address("${config.radQuest.badges.adminBadgeAddress}")
+                            )
+                        )
+                    )
+                )
+            )
+            Bucket("admin_badge")
+            Address("${config.radQuest.badges.heroBadgeAddress}")
+        ;
+        `)
         .andThen((value) =>
           submitTransaction({
             transactionManifest: value,
@@ -60,5 +56,5 @@ export const newQuestRewards = () =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
         )
         .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
-        .map((details): string => details.createdEntities[0].entity_address!)
     )
+}

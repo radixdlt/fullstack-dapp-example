@@ -1,5 +1,7 @@
-use crate::refinery::RARITY;
 use scrypto::prelude::*;
+
+use crate::quest_rewards::UserId;
+use crate::refinery::RARITY;
 
 pub const ENERGY: [&str; 20] = [
     "Molten Lava",
@@ -23,10 +25,6 @@ pub const ENERGY: [&str; 20] = [
     "Supernova",
     "Whirlpool",
 ];
-
-#[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
-#[sbor(transparent)]
-pub struct UserId(pub String);
 
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 pub struct MorphCardDataInput {

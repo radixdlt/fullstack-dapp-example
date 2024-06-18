@@ -8,7 +8,7 @@ export const newCardForge = () => {
             CALL_METHOD
                 Address("${wellKnownAddresses.accountAddress.payerAccount}")
                 "lock_fee"
-                Decimal("5000")
+                Decimal("50")
             ;
             CALL_METHOD
                 Address("${wellKnownAddresses.accountAddress.dAppDefinitionAccount}")
@@ -62,7 +62,7 @@ export const newCardForge = () => {
                     CALL_METHOD
                         Address("${wellKnownAddresses.accountAddress.payerAccount}")
                         "lock_fee"
-                        Decimal("5000")
+                        Decimal("50")
                     ;
                     
                     CALL_METHOD
