@@ -31,8 +31,16 @@ const setUserField = ({ field, ...props }: SetUserFieldProps) =>
     })
   ).map(({ data }) => data)
 
+const getReferrals = () =>
+  fetchWrapper<void>(
+    fetch(`/api/user/referrals`, {
+      method: 'GET'
+    })
+  ).map(({ data }) => data)
+
 export const userApi = {
   me,
+  getReferrals,
   mintUserBadge,
   setUserField
 } as const

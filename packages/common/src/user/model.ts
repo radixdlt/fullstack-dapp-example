@@ -4,12 +4,16 @@ import type { AppLogger } from '../'
 import { type ApiError, createApiError } from '../helpers'
 import { getRandomReferralCode } from './get-random-referral-code'
 
+type GetByIdReturnType<T> = User & T extends { referredUsers: true }
+  ? { referredUsers: User[] }
+  : User
+
 type UserModelType = {
   create: (identityAddress: string, referredBy?: string) => ResultAsync<User, ApiError>
   getById: <T extends Prisma.UserInclude<any>>(
     id: string,
     include: T
-  ) => ResultAsync<User | null, ApiError>
+  ) => ResultAsync<GetByIdReturnType<T>, ApiError>
   getPhoneNumber: (phoneNumber: string) => ResultAsync<UserPhoneNumber | null, ApiError>
   addAccount: (userId: string, accountAddress: string) => ResultAsync<void, ApiError>
   setUserName: (userId: string, name: string) => ResultAsync<User, ApiError>
@@ -24,7 +28,11 @@ export const UserModel =
     const create = (identityAddress: string, referredBy?: string): ResultAsync<User, ApiError> =>
       ResultAsync.fromPromise<User, ApiError>(
         db.user.upsert({
-          create: { identityAddress, referredBy, referralCode: getRandomReferralCode() },
+          create: {
+            identityAddress,
+            referredBy,
+            referralCode: getRandomReferralCode()
+          },
           update: {},
           where: { identityAddress }
         }),
@@ -82,7 +90,9 @@ export const UserModel =
           return createApiError('failed to get user', 400)()
         }
       ).andThen((data) =>
-        data ? okAsync(data) : errAsync(createApiError('user not found', 404)())
+        data
+          ? okAsync(data as unknown as GetByIdReturnType<T>)
+          : errAsync(createApiError('user not found', 404)())
       )
 
     const getPhoneNumber = (phoneNumber: string): ResultAsync<UserPhoneNumber | null, ApiError> =>

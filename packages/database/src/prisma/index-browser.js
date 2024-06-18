@@ -126,8 +126,8 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   country: 'country',
   type: 'type',
-  referredBy: 'referredBy',
-  referralCode: 'referralCode'
+  referralCode: 'referralCode',
+  referredBy: 'referredBy'
 };
 
 exports.Prisma.RadMorphImageScalarFieldEnum = {

@@ -44,6 +44,17 @@ const UserController = ({
       ? okAsync(data.accountAddress)
       : errAsync(createApiError('missing account address', 400)())
 
+  const getReferrals = (ctx: ControllerMethodContext, userId: string) => {
+    return userModel(ctx.logger)
+      .getById(userId, { referredUsers: true })
+      .map((data) => {
+        return {
+          data: data.referredUsers.map((user) => user.name),
+          httpResponseCode: 200
+        }
+      })
+  }
+
   const mintUserBadge = (
     ctx: ControllerMethodContext,
     {
@@ -215,7 +226,7 @@ const UserController = ({
       )
   }
 
-  return { getUser, mintUserBadge, setAccountAddress, populateResources, setUserName }
+  return { getUser, mintUserBadge, setAccountAddress, populateResources, setUserName, getReferrals }
 }
 
 export const userController = UserController({})

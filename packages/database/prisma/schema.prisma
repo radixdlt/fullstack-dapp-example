@@ -24,8 +24,9 @@ model User {
   name              String?         
   country           String?
   type              UserType        @default(USER)
-  referredBy        String?
   referralCode      String          @unique
+  referredBy        String?
+  referredByUser    User?           @relation("Referrer", fields: [referredBy], references: [referralCode])
   
   events                     Event[]
   messages                   Message[]
@@ -34,6 +35,7 @@ model User {
   savedProgress              SavedProgress?
   auditLogs                  Audit[]
   questProgress              QuestProgress[]
+  referredUsers              User[] @relation("Referrer")
 }
 
 model RadMorphImage {

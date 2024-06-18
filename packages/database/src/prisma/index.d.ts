@@ -1971,6 +1971,7 @@ export namespace Prisma {
     completedQuestRequirements: number
     auditLogs: number
     questProgress: number
+    referredUsers: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1979,6 +1980,7 @@ export namespace Prisma {
     completedQuestRequirements?: boolean | UserCountOutputTypeCountCompletedQuestRequirementsArgs
     auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
     questProgress?: boolean | UserCountOutputTypeCountQuestProgressArgs
+    referredUsers?: boolean | UserCountOutputTypeCountReferredUsersArgs
   }
 
   // Custom InputTypes
@@ -2027,6 +2029,13 @@ export namespace Prisma {
     where?: QuestProgressWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountReferredUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+  }
+
 
   /**
    * Models
@@ -2049,8 +2058,8 @@ export namespace Prisma {
     name: string | null
     country: string | null
     type: $Enums.UserType | null
-    referredBy: string | null
     referralCode: string | null
+    referredBy: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -2060,8 +2069,8 @@ export namespace Prisma {
     name: string | null
     country: string | null
     type: $Enums.UserType | null
-    referredBy: string | null
     referralCode: string | null
+    referredBy: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -2071,8 +2080,8 @@ export namespace Prisma {
     name: number
     country: number
     type: number
-    referredBy: number
     referralCode: number
+    referredBy: number
     _all: number
   }
 
@@ -2084,8 +2093,8 @@ export namespace Prisma {
     name?: true
     country?: true
     type?: true
-    referredBy?: true
     referralCode?: true
+    referredBy?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -2095,8 +2104,8 @@ export namespace Prisma {
     name?: true
     country?: true
     type?: true
-    referredBy?: true
     referralCode?: true
+    referredBy?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -2106,8 +2115,8 @@ export namespace Prisma {
     name?: true
     country?: true
     type?: true
-    referredBy?: true
     referralCode?: true
+    referredBy?: true
     _all?: true
   }
 
@@ -2190,8 +2199,8 @@ export namespace Prisma {
     name: string | null
     country: string | null
     type: $Enums.UserType
-    referredBy: string | null
     referralCode: string
+    referredBy: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -2218,8 +2227,9 @@ export namespace Prisma {
     name?: boolean
     country?: boolean
     type?: boolean
-    referredBy?: boolean
     referralCode?: boolean
+    referredBy?: boolean
+    referredByUser?: boolean | User$referredByUserArgs<ExtArgs>
     events?: boolean | User$eventsArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
     phoneNumber?: boolean | User$phoneNumberArgs<ExtArgs>
@@ -2227,6 +2237,7 @@ export namespace Prisma {
     savedProgress?: boolean | User$savedProgressArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
     questProgress?: boolean | User$questProgressArgs<ExtArgs>
+    referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2237,8 +2248,9 @@ export namespace Prisma {
     name?: boolean
     country?: boolean
     type?: boolean
-    referredBy?: boolean
     referralCode?: boolean
+    referredBy?: boolean
+    referredByUser?: boolean | User$referredByUserArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -2248,11 +2260,12 @@ export namespace Prisma {
     name?: boolean
     country?: boolean
     type?: boolean
-    referredBy?: boolean
     referralCode?: boolean
+    referredBy?: boolean
   }
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    referredByUser?: boolean | User$referredByUserArgs<ExtArgs>
     events?: boolean | User$eventsArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
     phoneNumber?: boolean | User$phoneNumberArgs<ExtArgs>
@@ -2260,13 +2273,17 @@ export namespace Prisma {
     savedProgress?: boolean | User$savedProgressArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
     questProgress?: boolean | User$questProgressArgs<ExtArgs>
+    referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    referredByUser?: boolean | User$referredByUserArgs<ExtArgs>
+  }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
+      referredByUser: Prisma.$UserPayload<ExtArgs> | null
       events: Prisma.$EventPayload<ExtArgs>[]
       messages: Prisma.$MessagePayload<ExtArgs>[]
       phoneNumber: Prisma.$UserPhoneNumberPayload<ExtArgs> | null
@@ -2274,6 +2291,7 @@ export namespace Prisma {
       savedProgress: Prisma.$SavedProgressPayload<ExtArgs> | null
       auditLogs: Prisma.$AuditPayload<ExtArgs>[]
       questProgress: Prisma.$QuestProgressPayload<ExtArgs>[]
+      referredUsers: Prisma.$UserPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2282,8 +2300,8 @@ export namespace Prisma {
       name: string | null
       country: string | null
       type: $Enums.UserType
-      referredBy: string | null
       referralCode: string
+      referredBy: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2674,6 +2692,8 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
 
+    referredByUser<T extends User$referredByUserArgs<ExtArgs> = {}>(args?: Subset<T, User$referredByUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
+
     events<T extends User$eventsArgs<ExtArgs> = {}>(args?: Subset<T, User$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, 'findMany'> | Null>;
 
     messages<T extends User$messagesArgs<ExtArgs> = {}>(args?: Subset<T, User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, 'findMany'> | Null>;
@@ -2687,6 +2707,8 @@ export namespace Prisma {
     auditLogs<T extends User$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditPayload<ExtArgs>, T, 'findMany'> | Null>;
 
     questProgress<T extends User$questProgressArgs<ExtArgs> = {}>(args?: Subset<T, User$questProgressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestProgressPayload<ExtArgs>, T, 'findMany'> | Null>;
+
+    referredUsers<T extends User$referredUsersArgs<ExtArgs> = {}>(args?: Subset<T, User$referredUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findMany'> | Null>;
 
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2722,8 +2744,8 @@ export namespace Prisma {
     readonly name: FieldRef<"User", 'String'>
     readonly country: FieldRef<"User", 'String'>
     readonly type: FieldRef<"User", 'UserType'>
-    readonly referredBy: FieldRef<"User", 'String'>
     readonly referralCode: FieldRef<"User", 'String'>
+    readonly referredBy: FieldRef<"User", 'String'>
   }
     
 
@@ -2945,6 +2967,10 @@ export namespace Prisma {
      */
     data: UserCreateManyInput | UserCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -3034,6 +3060,21 @@ export namespace Prisma {
     /**
      * Filter which Users to delete
      */
+    where?: UserWhereInput
+  }
+
+  /**
+   * User.referredByUser
+   */
+  export type User$referredByUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     where?: UserWhereInput
   }
 
@@ -3165,6 +3206,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: QuestProgressScalarFieldEnum | QuestProgressScalarFieldEnum[]
+  }
+
+  /**
+   * User.referredUsers
+   */
+  export type User$referredUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
   /**
@@ -14435,8 +14496,8 @@ export namespace Prisma {
     name: 'name',
     country: 'country',
     type: 'type',
-    referredBy: 'referredBy',
-    referralCode: 'referralCode'
+    referralCode: 'referralCode',
+    referredBy: 'referredBy'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -14761,8 +14822,9 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     country?: StringNullableFilter<"User"> | string | null
     type?: EnumUserTypeFilter<"User"> | $Enums.UserType
-    referredBy?: StringNullableFilter<"User"> | string | null
     referralCode?: StringFilter<"User"> | string
+    referredBy?: StringNullableFilter<"User"> | string | null
+    referredByUser?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     events?: EventListRelationFilter
     messages?: MessageListRelationFilter
     phoneNumber?: XOR<UserPhoneNumberNullableRelationFilter, UserPhoneNumberWhereInput> | null
@@ -14770,6 +14832,7 @@ export namespace Prisma {
     savedProgress?: XOR<SavedProgressNullableRelationFilter, SavedProgressWhereInput> | null
     auditLogs?: AuditListRelationFilter
     questProgress?: QuestProgressListRelationFilter
+    referredUsers?: UserListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -14779,8 +14842,9 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     type?: SortOrder
-    referredBy?: SortOrderInput | SortOrder
     referralCode?: SortOrder
+    referredBy?: SortOrderInput | SortOrder
+    referredByUser?: UserOrderByWithRelationInput
     events?: EventOrderByRelationAggregateInput
     messages?: MessageOrderByRelationAggregateInput
     phoneNumber?: UserPhoneNumberOrderByWithRelationInput
@@ -14788,6 +14852,7 @@ export namespace Prisma {
     savedProgress?: SavedProgressOrderByWithRelationInput
     auditLogs?: AuditOrderByRelationAggregateInput
     questProgress?: QuestProgressOrderByRelationAggregateInput
+    referredUsers?: UserOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -14802,6 +14867,7 @@ export namespace Prisma {
     country?: StringNullableFilter<"User"> | string | null
     type?: EnumUserTypeFilter<"User"> | $Enums.UserType
     referredBy?: StringNullableFilter<"User"> | string | null
+    referredByUser?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     events?: EventListRelationFilter
     messages?: MessageListRelationFilter
     phoneNumber?: XOR<UserPhoneNumberNullableRelationFilter, UserPhoneNumberWhereInput> | null
@@ -14809,6 +14875,7 @@ export namespace Prisma {
     savedProgress?: XOR<SavedProgressNullableRelationFilter, SavedProgressWhereInput> | null
     auditLogs?: AuditListRelationFilter
     questProgress?: QuestProgressListRelationFilter
+    referredUsers?: UserListRelationFilter
   }, "id" | "identityAddress" | "referralCode">
 
   export type UserOrderByWithAggregationInput = {
@@ -14818,8 +14885,8 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
     type?: SortOrder
-    referredBy?: SortOrderInput | SortOrder
     referralCode?: SortOrder
+    referredBy?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -14835,8 +14902,8 @@ export namespace Prisma {
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
     country?: StringNullableWithAggregatesFilter<"User"> | string | null
     type?: EnumUserTypeWithAggregatesFilter<"User"> | $Enums.UserType
-    referredBy?: StringNullableWithAggregatesFilter<"User"> | string | null
     referralCode?: StringWithAggregatesFilter<"User"> | string
+    referredBy?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type RadMorphImageWhereInput = {
@@ -15443,8 +15510,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
@@ -15452,6 +15519,7 @@ export namespace Prisma {
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
+    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -15461,8 +15529,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
@@ -15470,6 +15538,7 @@ export namespace Prisma {
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
+    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserUpdateInput = {
@@ -15479,8 +15548,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
@@ -15488,6 +15557,7 @@ export namespace Prisma {
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -15497,8 +15567,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
@@ -15506,6 +15576,7 @@ export namespace Prisma {
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -15515,8 +15586,8 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredBy?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -15526,7 +15597,6 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
   }
 
@@ -15537,8 +15607,8 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type RadMorphImageCreateInput = {
@@ -16156,6 +16226,11 @@ export namespace Prisma {
     not?: NestedEnumUserTypeFilter<$PrismaModel> | $Enums.UserType
   }
 
+  export type UserNullableRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type EventListRelationFilter = {
     every?: EventWhereInput
     some?: EventWhereInput
@@ -16196,6 +16271,12 @@ export namespace Prisma {
     none?: QuestProgressWhereInput
   }
 
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -16221,6 +16302,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     identityAddress?: SortOrder
@@ -16228,8 +16313,8 @@ export namespace Prisma {
     name?: SortOrder
     country?: SortOrder
     type?: SortOrder
-    referredBy?: SortOrder
     referralCode?: SortOrder
+    referredBy?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -16239,8 +16324,8 @@ export namespace Prisma {
     name?: SortOrder
     country?: SortOrder
     type?: SortOrder
-    referredBy?: SortOrder
     referralCode?: SortOrder
+    referredBy?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -16250,8 +16335,8 @@ export namespace Prisma {
     name?: SortOrder
     country?: SortOrder
     type?: SortOrder
-    referredBy?: SortOrder
     referralCode?: SortOrder
+    referredBy?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -16387,11 +16472,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type UserNullableRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
   }
 
   export type EventCountOrderByAggregateInput = {
@@ -16862,6 +16942,12 @@ export namespace Prisma {
     value?: SortOrder
   }
 
+  export type UserCreateNestedOneWithoutReferredUsersInput = {
+    create?: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferredUsersInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type EventCreateNestedManyWithoutUserInput = {
     create?: XOR<EventCreateWithoutUserInput, EventUncheckedCreateWithoutUserInput> | EventCreateWithoutUserInput[] | EventUncheckedCreateWithoutUserInput[]
     connectOrCreate?: EventCreateOrConnectWithoutUserInput | EventCreateOrConnectWithoutUserInput[]
@@ -16907,6 +16993,13 @@ export namespace Prisma {
     connectOrCreate?: QuestProgressCreateOrConnectWithoutUserInput | QuestProgressCreateOrConnectWithoutUserInput[]
     createMany?: QuestProgressCreateManyUserInputEnvelope
     connect?: QuestProgressWhereUniqueInput | QuestProgressWhereUniqueInput[]
+  }
+
+  export type UserCreateNestedManyWithoutReferredByUserInput = {
+    create?: XOR<UserCreateWithoutReferredByUserInput, UserUncheckedCreateWithoutReferredByUserInput> | UserCreateWithoutReferredByUserInput[] | UserUncheckedCreateWithoutReferredByUserInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutReferredByUserInput | UserCreateOrConnectWithoutReferredByUserInput[]
+    createMany?: UserCreateManyReferredByUserInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
   export type EventUncheckedCreateNestedManyWithoutUserInput = {
@@ -16956,6 +17049,13 @@ export namespace Prisma {
     connect?: QuestProgressWhereUniqueInput | QuestProgressWhereUniqueInput[]
   }
 
+  export type UserUncheckedCreateNestedManyWithoutReferredByUserInput = {
+    create?: XOR<UserCreateWithoutReferredByUserInput, UserUncheckedCreateWithoutReferredByUserInput> | UserCreateWithoutReferredByUserInput[] | UserUncheckedCreateWithoutReferredByUserInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutReferredByUserInput | UserCreateOrConnectWithoutReferredByUserInput[]
+    createMany?: UserCreateManyReferredByUserInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -16966,6 +17066,16 @@ export namespace Prisma {
 
   export type EnumUserTypeFieldUpdateOperationsInput = {
     set?: $Enums.UserType
+  }
+
+  export type UserUpdateOneWithoutReferredUsersNestedInput = {
+    create?: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferredUsersInput
+    upsert?: UserUpsertWithoutReferredUsersInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReferredUsersInput, UserUpdateWithoutReferredUsersInput>, UserUncheckedUpdateWithoutReferredUsersInput>
   }
 
   export type EventUpdateManyWithoutUserNestedInput = {
@@ -17058,6 +17168,20 @@ export namespace Prisma {
     deleteMany?: QuestProgressScalarWhereInput | QuestProgressScalarWhereInput[]
   }
 
+  export type UserUpdateManyWithoutReferredByUserNestedInput = {
+    create?: XOR<UserCreateWithoutReferredByUserInput, UserUncheckedCreateWithoutReferredByUserInput> | UserCreateWithoutReferredByUserInput[] | UserUncheckedCreateWithoutReferredByUserInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutReferredByUserInput | UserCreateOrConnectWithoutReferredByUserInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutReferredByUserInput | UserUpsertWithWhereUniqueWithoutReferredByUserInput[]
+    createMany?: UserCreateManyReferredByUserInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutReferredByUserInput | UserUpdateWithWhereUniqueWithoutReferredByUserInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutReferredByUserInput | UserUpdateManyWithWhereWithoutReferredByUserInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
   export type EventUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<EventCreateWithoutUserInput, EventUncheckedCreateWithoutUserInput> | EventCreateWithoutUserInput[] | EventUncheckedCreateWithoutUserInput[]
     connectOrCreate?: EventCreateOrConnectWithoutUserInput | EventCreateOrConnectWithoutUserInput[]
@@ -17146,6 +17270,20 @@ export namespace Prisma {
     update?: QuestProgressUpdateWithWhereUniqueWithoutUserInput | QuestProgressUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: QuestProgressUpdateManyWithWhereWithoutUserInput | QuestProgressUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: QuestProgressScalarWhereInput | QuestProgressScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutReferredByUserNestedInput = {
+    create?: XOR<UserCreateWithoutReferredByUserInput, UserUncheckedCreateWithoutReferredByUserInput> | UserCreateWithoutReferredByUserInput[] | UserUncheckedCreateWithoutReferredByUserInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutReferredByUserInput | UserCreateOrConnectWithoutReferredByUserInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutReferredByUserInput | UserUpsertWithWhereUniqueWithoutReferredByUserInput[]
+    createMany?: UserCreateManyReferredByUserInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutReferredByUserInput | UserUpdateWithWhereUniqueWithoutReferredByUserInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutReferredByUserInput | UserUpdateManyWithWhereWithoutReferredByUserInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutPhoneNumberInput = {
@@ -17584,6 +17722,47 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type UserCreateWithoutReferredUsersInput = {
+    id?: string
+    identityAddress: string
+    accountAddress?: string | null
+    name?: string | null
+    country?: string | null
+    type?: $Enums.UserType
+    referralCode: string
+    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
+    events?: EventCreateNestedManyWithoutUserInput
+    messages?: MessageCreateNestedManyWithoutUserInput
+    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
+    completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
+    savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
+    auditLogs?: AuditCreateNestedManyWithoutUserInput
+    questProgress?: QuestProgressCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutReferredUsersInput = {
+    id?: string
+    identityAddress: string
+    accountAddress?: string | null
+    name?: string | null
+    country?: string | null
+    type?: $Enums.UserType
+    referralCode: string
+    referredBy?: string | null
+    events?: EventUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
+    completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
+    savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
+    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
+    questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutReferredUsersInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
+  }
+
   export type EventCreateWithoutUserInput = {
     transactionId: string
     id: string
@@ -17729,6 +17908,99 @@ export namespace Prisma {
   export type QuestProgressCreateManyUserInputEnvelope = {
     data: QuestProgressCreateManyUserInput | QuestProgressCreateManyUserInput[]
     skipDuplicates?: boolean
+  }
+
+  export type UserCreateWithoutReferredByUserInput = {
+    id?: string
+    identityAddress: string
+    accountAddress?: string | null
+    name?: string | null
+    country?: string | null
+    type?: $Enums.UserType
+    referralCode: string
+    events?: EventCreateNestedManyWithoutUserInput
+    messages?: MessageCreateNestedManyWithoutUserInput
+    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
+    completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
+    savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
+    auditLogs?: AuditCreateNestedManyWithoutUserInput
+    questProgress?: QuestProgressCreateNestedManyWithoutUserInput
+    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
+  }
+
+  export type UserUncheckedCreateWithoutReferredByUserInput = {
+    id?: string
+    identityAddress: string
+    accountAddress?: string | null
+    name?: string | null
+    country?: string | null
+    type?: $Enums.UserType
+    referralCode: string
+    events?: EventUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
+    completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
+    savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
+    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
+    questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
+    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
+  }
+
+  export type UserCreateOrConnectWithoutReferredByUserInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReferredByUserInput, UserUncheckedCreateWithoutReferredByUserInput>
+  }
+
+  export type UserCreateManyReferredByUserInputEnvelope = {
+    data: UserCreateManyReferredByUserInput | UserCreateManyReferredByUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutReferredUsersInput = {
+    update: XOR<UserUpdateWithoutReferredUsersInput, UserUncheckedUpdateWithoutReferredUsersInput>
+    create: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReferredUsersInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReferredUsersInput, UserUncheckedUpdateWithoutReferredUsersInput>
+  }
+
+  export type UserUpdateWithoutReferredUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identityAddress?: StringFieldUpdateOperationsInput | string
+    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
+    events?: EventUpdateManyWithoutUserNestedInput
+    messages?: MessageUpdateManyWithoutUserNestedInput
+    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
+    completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
+    savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
+    auditLogs?: AuditUpdateManyWithoutUserNestedInput
+    questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReferredUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identityAddress?: StringFieldUpdateOperationsInput | string
+    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    events?: EventUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
+    completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
+    savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
+    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
+    questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type EventUpsertWithWhereUniqueWithoutUserInput = {
@@ -17907,6 +18179,36 @@ export namespace Prisma {
     status?: EnumQuestStatusFilter<"QuestProgress"> | $Enums.QuestStatus
   }
 
+  export type UserUpsertWithWhereUniqueWithoutReferredByUserInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutReferredByUserInput, UserUncheckedUpdateWithoutReferredByUserInput>
+    create: XOR<UserCreateWithoutReferredByUserInput, UserUncheckedCreateWithoutReferredByUserInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutReferredByUserInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutReferredByUserInput, UserUncheckedUpdateWithoutReferredByUserInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutReferredByUserInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutReferredByUserInput>
+  }
+
+  export type UserScalarWhereInput = {
+    AND?: UserScalarWhereInput | UserScalarWhereInput[]
+    OR?: UserScalarWhereInput[]
+    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
+    id?: StringFilter<"User"> | string
+    identityAddress?: StringFilter<"User"> | string
+    accountAddress?: StringNullableFilter<"User"> | string | null
+    name?: StringNullableFilter<"User"> | string | null
+    country?: StringNullableFilter<"User"> | string | null
+    type?: EnumUserTypeFilter<"User"> | $Enums.UserType
+    referralCode?: StringFilter<"User"> | string
+    referredBy?: StringNullableFilter<"User"> | string | null
+  }
+
   export type UserCreateWithoutPhoneNumberInput = {
     id?: string
     identityAddress: string
@@ -17914,14 +18216,15 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
+    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserUncheckedCreateWithoutPhoneNumberInput = {
@@ -17931,14 +18234,15 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
+    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserCreateOrConnectWithoutPhoneNumberInput = {
@@ -17964,14 +18268,15 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPhoneNumberInput = {
@@ -17981,14 +18286,15 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type UserCreateWithoutEventsInput = {
@@ -17998,14 +18304,15 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
+    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserUncheckedCreateWithoutEventsInput = {
@@ -18015,14 +18322,15 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredBy?: string | null
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
+    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserCreateOrConnectWithoutEventsInput = {
@@ -18048,14 +18356,15 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEventsInput = {
@@ -18065,14 +18374,15 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type UserCreateWithoutMessagesInput = {
@@ -18082,14 +18392,15 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
+    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserUncheckedCreateWithoutMessagesInput = {
@@ -18099,14 +18410,15 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
+    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserCreateOrConnectWithoutMessagesInput = {
@@ -18132,14 +18444,15 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -18149,14 +18462,15 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type UserCreateWithoutCompletedQuestRequirementsInput = {
@@ -18166,14 +18480,15 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
+    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserUncheckedCreateWithoutCompletedQuestRequirementsInput = {
@@ -18183,14 +18498,15 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
+    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserCreateOrConnectWithoutCompletedQuestRequirementsInput = {
@@ -18216,14 +18532,15 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompletedQuestRequirementsInput = {
@@ -18233,14 +18550,15 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type UserCreateWithoutQuestProgressInput = {
@@ -18250,14 +18568,15 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
+    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserUncheckedCreateWithoutQuestProgressInput = {
@@ -18267,14 +18586,15 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
+    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserCreateOrConnectWithoutQuestProgressInput = {
@@ -18300,14 +18620,15 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutQuestProgressInput = {
@@ -18317,14 +18638,15 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type UserCreateWithoutSavedProgressInput = {
@@ -18334,14 +18656,15 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
+    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserUncheckedCreateWithoutSavedProgressInput = {
@@ -18351,14 +18674,15 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
+    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserCreateOrConnectWithoutSavedProgressInput = {
@@ -18384,14 +18708,15 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSavedProgressInput = {
@@ -18401,14 +18726,15 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -18418,14 +18744,15 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
+    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -18435,14 +18762,15 @@ export namespace Prisma {
     name?: string | null
     country?: string | null
     type?: $Enums.UserType
-    referredBy?: string | null
     referralCode: string
+    referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
+    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -18468,14 +18796,15 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -18485,14 +18814,15 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     referralCode?: StringFieldUpdateOperationsInput | string
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
   }
 
   export type EventCreateManyUserInput = {
@@ -18527,6 +18857,16 @@ export namespace Prisma {
   export type QuestProgressCreateManyUserInput = {
     questId: string
     status?: $Enums.QuestStatus
+  }
+
+  export type UserCreateManyReferredByUserInput = {
+    id?: string
+    identityAddress: string
+    accountAddress?: string | null
+    name?: string | null
+    country?: string | null
+    type?: $Enums.UserType
+    referralCode: string
   }
 
   export type EventUpdateWithoutUserInput = {
@@ -18628,6 +18968,52 @@ export namespace Prisma {
   export type QuestProgressUncheckedUpdateManyWithoutUserInput = {
     questId?: StringFieldUpdateOperationsInput | string
     status?: EnumQuestStatusFieldUpdateOperationsInput | $Enums.QuestStatus
+  }
+
+  export type UserUpdateWithoutReferredByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identityAddress?: StringFieldUpdateOperationsInput | string
+    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referralCode?: StringFieldUpdateOperationsInput | string
+    events?: EventUpdateManyWithoutUserNestedInput
+    messages?: MessageUpdateManyWithoutUserNestedInput
+    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
+    completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
+    savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
+    auditLogs?: AuditUpdateManyWithoutUserNestedInput
+    questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReferredByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identityAddress?: StringFieldUpdateOperationsInput | string
+    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referralCode?: StringFieldUpdateOperationsInput | string
+    events?: EventUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
+    completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
+    savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
+    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
+    questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutReferredByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identityAddress?: StringFieldUpdateOperationsInput | string
+    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referralCode?: StringFieldUpdateOperationsInput | string
   }
 
 
