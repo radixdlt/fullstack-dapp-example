@@ -58,7 +58,7 @@ const getUserIdFromBadgeId = (
     })
   return ok(userId)
 }
-export type TransactionWorkerControllerError = { reason: TransactionWorkerError; jsError: unknown }
+export type TransactionWorkerControllerError = { reason: TransactionWorkerError; jsError?: unknown }
 export type TransactionWorkerController = ReturnType<typeof TransactionWorkerController>
 export const TransactionWorkerController = ({
   auditModel,
@@ -364,16 +364,13 @@ export const TransactionWorkerController = ({
 
         return ResultAsync.combine([
           gatewayApi.isThirdPartyDepositRuleDisabled(badgeId),
-          gatewayApi
-            .hasHeroBadge(accountAddress)
-            .andThen((hasHeroBadge) =>
-              hasHeroBadge
-                ? err({
-                    reason: TransactionWorkerError.HeroBadgeAlreadyClaimed,
-                    jsError: new Error('Hero badge already claimed')
-                  })
-                : ok(undefined)
-            )
+          gatewayApi.hasHeroBadge(accountAddress).andThen((hasHeroBadge) =>
+            hasHeroBadge
+              ? err({
+                  reason: TransactionWorkerError.HeroBadgeAlreadyClaimed
+                })
+              : ok(undefined)
+          )
         ])
           .mapErr((error) => ({
             reason: TransactionWorkerError.GatewayError,
@@ -437,8 +434,7 @@ export const TransactionWorkerController = ({
                       )
                     )
                     .mapErr(() => ({
-                      reason: TransactionWorkerError.FailedToSendMessage,
-                      jsError: new Error('failed to send message to client')
+                      reason: TransactionWorkerError.FailedToSendMessage
                     }))
                 )
             )
