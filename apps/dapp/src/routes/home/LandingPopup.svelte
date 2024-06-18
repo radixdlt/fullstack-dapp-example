@@ -18,14 +18,14 @@
 
 <div class="landing-popup card" transition:scale|local={{ easing: backOut }}>
   <div class="image only-desktop">
-    <img src={JettyImage} alt="Jetty" />
+    <img src={JettyImage} alt={$i18n.t('main:landingPagePopup.jetty-img-alt')} />
   </div>
 
   <div class="content">
     <h1 class="title">{$i18n.t('main:landingPagePopup.title')}</h1>
 
     <div class="image only-mobile">
-      <img src={JettyImage} alt="Jetty" />
+      <img src={JettyImage} alt={$i18n.t('main:landingPagePopup.jetty-img-alt')} />
     </div>
 
     <p class="text-faded">

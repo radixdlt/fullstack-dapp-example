@@ -8,6 +8,7 @@
     "go-home-button": "Go to RadQuest Home"
   },
   "landingPagePopup": {
+    "jetty-img-alt": "Jetty",
     "title": "Welcome to RadQuest",
     "message": "Ready to earn your rare NFT and up to $20 in XRD? Start your quest journey now.",
     "button": "Let's begin"
