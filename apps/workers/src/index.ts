@@ -8,7 +8,8 @@ import {
   UserModel,
   TransactionModel,
   AccountAddressModel,
-  GatewayApi
+  GatewayApi,
+  ConfigModel
 } from 'common'
 import { logger } from './helpers/logger'
 import { RedisConnection, getQueues } from 'queues'
@@ -36,6 +37,7 @@ const app = async () => {
 
   const gatewayApi = GatewayApi(config.networkId)
   const eventModel = EventModel(dbClient)
+  const configModel = ConfigModel(dbClient)
   const transactionModel = TransactionModel(dbClient)
   const redisClient = new RedisConnection(config.redis)
   const tokenPriceClient = TokenPriceClient({ logger, redisClient })
@@ -46,6 +48,7 @@ const app = async () => {
     userModel: UserModel(dbClient),
     transactionModel,
     accountAddressModel: AccountAddressModel(redisClient, logger),
+    configModel,
     tokenPriceClient,
     messageApi,
     transactionQueue,
@@ -56,7 +59,8 @@ const app = async () => {
     gatewayApi,
     tokenPriceClient,
     transactionModel,
-    auditModel: AuditModel(dbClient)
+    auditModel: AuditModel(dbClient),
+    configModel
   })
 
   TransactionWorker(connection, {

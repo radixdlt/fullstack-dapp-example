@@ -1,10 +1,8 @@
 <script lang="ts">
-  import { Button } from 'flowbite-svelte'
   import Card from '../widgets/Card.svelte'
 
   export let title: string
   export let subtitle: string = ''
-  export let buttonLabel: string = 'Save all'
 
   // eslint-disable-next-line
   export let items: any[] = []
@@ -22,5 +20,4 @@
       </li>
     {/each}
   </ul>
-  <Button class="mt-2 w-fit">{buttonLabel}</Button>
 </Card>

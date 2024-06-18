@@ -2,7 +2,7 @@ import { TokenPriceClient } from './../token-price-client'
 import { ResultAsync, okAsync, errAsync, err, ok } from 'neverthrow'
 import { EventJob, Job, TransactionQueue } from 'queues'
 import { QuestDefinitions, QuestId, Quests } from 'content'
-import { EventId, getAccountFromMayaRouterWithdrawEvent } from 'common'
+import { ConfigModel, EventId, getAccountFromMayaRouterWithdrawEvent } from 'common'
 import {
   AppLogger,
   EventModel,
@@ -11,9 +11,9 @@ import {
   TransactionModel,
   AccountAddressModel
 } from 'common'
-import { MessageApi, MessageType } from 'common'
+import { MessageApi } from 'common'
 import { config } from '../config'
-import { EventError, PrismaClient } from 'database'
+import { PrismaClient } from 'database'
 import { getUserIdFromDepositUserBadgeEvent } from './helpers/getUserIdFromDepositUserBadgeEvent'
 import { getDataFromQuestRewardsEvent } from './helpers/getDataFromQuestRewardsEvent'
 import { databaseTransactions } from './helpers/databaseTransactions'
@@ -49,7 +49,8 @@ export const EventWorkerController = ({
   transactionModel,
   logger,
   transactionQueue,
-  accountAddressModel
+  accountAddressModel,
+  configModel
 }: {
   dbClient: PrismaClient
   messageApi: MessageApi
@@ -61,6 +62,7 @@ export const EventWorkerController = ({
   tokenPriceClient: TokenPriceClient
   logger: AppLogger
   transactionQueue: TransactionQueue
+  configModel: ConfigModel
 }) => {
   const handler = (job: Job<EventJob>) => {
     const { traceId, type, transactionId } = job.data
@@ -81,15 +83,8 @@ export const EventWorkerController = ({
     ): ResultAsync<string, { reason: string }> =>
       userModel(childLogger)
         .getById(userId, {})
-        .andThen((user) =>
-          user ? okAsync(user) : errAsync({ reason: EventError.ERROR_USER_NOT_FOUND })
-        )
-        .mapErr(() => {
-          eventModel(childLogger).update(transactionId, {
-            error: EventError.ERROR_USER_NOT_FOUND
-          })
-          return { reason: EventError.ERROR_USER_NOT_FOUND }
-        })
+        .andThen((user) => (user ? okAsync(user) : errAsync({ reason: 'UserNotFound' })))
+        .mapErr(() => ({ reason: 'UserNotFound' }))
         .map((user) => user.id)
 
     const ensureValidData = <T, U = T>(transactionId: string, data: Partial<T> | undefined) =>
@@ -104,11 +99,7 @@ export const EventWorkerController = ({
           data
         })
 
-        return eventModel(childLogger)
-          .update(transactionId, {
-            error: EventError.ERROR_INVALID_DATA
-          })
-          .andThen(() => errAsync(''))
+        return errAsync({ reason: 'InvalidData' })
       })
 
     const hasAllRequirementsCompleted = (questId: keyof Quests, userId: string) => {
@@ -349,7 +340,8 @@ export const EventWorkerController = ({
             questId,
             requirementId: type,
             userId,
-            transactionId
+            transactionId,
+            traceId
           }))
           .andThen((questValues) =>
             dbTransactionBuilder.helpers
@@ -371,9 +363,28 @@ export const EventWorkerController = ({
       case EventId.QuestRewardClaimed:
         return handleRewardClaimed()
       case EventId.CombineElementsDeposited:
-        return handelCombineElementsDepositedEvent()
+        return configModel(logger)
+          .isRadGemMintingEnabled()
+          .andThen((isEnabled) =>
+            isEnabled
+              ? handelCombineElementsDepositedEvent()
+              : errAsync({ reason: 'RadGemMintingDisabled' })
+          )
       case EventId.CombineElementsMintedRadgem:
-        return handelCombineElementsMintedRadgemEvent()
+        return configModel(logger)
+          .isRadGemMintingEnabled()
+          .andThen((isEnabled) =>
+            isEnabled
+              ? handelCombineElementsMintedRadgemEvent()
+              : errAsync({ reason: 'RadGemMintingDisabled' })
+          )
+
+      case EventId.CombineElementsAddedRadgemImage:
+        return configModel(logger)
+          .isRadGemMintingEnabled()
+          .andThen((isEnabled) =>
+            isEnabled ? okAsync(undefined) : errAsync({ reason: 'RadGemMintingDisabled' })
+          )
       case EventId.DepositUserBadge:
         return getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited)
           .asyncAndThen((userId) => ensureUserExists(userId, transactionId))
@@ -381,7 +392,8 @@ export const EventWorkerController = ({
             questId: 'FirstTransactionQuest' as QuestId,
             requirementId: type,
             userId,
-            transactionId
+            transactionId,
+            traceId
           }))
           .andThen((questValues) =>
             dbTransactionBuilder.helpers
@@ -400,7 +412,8 @@ export const EventWorkerController = ({
             questId: 'TransferTokens' as QuestId,
             requirementId: type,
             userId,
-            transactionId
+            transactionId,
+            traceId
           }))
           .andThen((questValues) =>
             dbTransactionBuilder.helpers
@@ -452,9 +465,7 @@ export const EventWorkerController = ({
         childLogger.error({
           message: 'Unhandled Event'
         })
-        return eventModel(childLogger).update(transactionId, {
-          error: EventError.ERROR_UNHANDLED_EVENT
-        })
+        return errAsync({ reason: 'UnhandledEvent' })
     }
   }
 

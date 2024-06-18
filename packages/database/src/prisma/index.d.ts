@@ -73,6 +73,11 @@ export type Audit = $Result.DefaultSelection<Prisma.$AuditPayload>
  * 
  */
 export type Transaction = $Result.DefaultSelection<Prisma.$TransactionPayload>
+/**
+ * Model Config
+ * 
+ */
+export type Config = $Result.DefaultSelection<Prisma.$ConfigPayload>
 
 /**
  * Enums
@@ -84,15 +89,6 @@ export namespace $Enums {
 };
 
 export type UserType = (typeof UserType)[keyof typeof UserType]
-
-
-export const EventError: {
-  ERROR_INVALID_DATA: 'ERROR_INVALID_DATA',
-  ERROR_USER_NOT_FOUND: 'ERROR_USER_NOT_FOUND',
-  ERROR_UNHANDLED_EVENT: 'ERROR_UNHANDLED_EVENT'
-};
-
-export type EventError = (typeof EventError)[keyof typeof EventError]
 
 
 export const QuestStatus: {
@@ -126,10 +122,6 @@ export type TransactionStatus = (typeof TransactionStatus)[keyof typeof Transact
 export type UserType = $Enums.UserType
 
 export const UserType: typeof $Enums.UserType
-
-export type EventError = $Enums.EventError
-
-export const EventError: typeof $Enums.EventError
 
 export type QuestStatus = $Enums.QuestStatus
 
@@ -384,6 +376,16 @@ export class PrismaClient<
     * ```
     */
   get transaction(): Prisma.TransactionDelegate<ExtArgs>;
+
+  /**
+   * `prisma.config`: Exposes CRUD operations for the **Config** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Configs
+    * const configs = await prisma.config.findMany()
+    * ```
+    */
+  get config(): Prisma.ConfigDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -872,7 +874,8 @@ export namespace Prisma {
     QuestProgress: 'QuestProgress',
     SavedProgress: 'SavedProgress',
     Audit: 'Audit',
-    Transaction: 'Transaction'
+    Transaction: 'Transaction',
+    Config: 'Config'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -889,7 +892,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'user' | 'radMorphImage' | 'userPhoneNumber' | 'challenge' | 'event' | 'message' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'transaction'
+      modelProps: 'user' | 'radMorphImage' | 'userPhoneNumber' | 'challenge' | 'event' | 'message' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'transaction' | 'config'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1730,6 +1733,76 @@ export namespace Prisma {
           count: {
             args: Prisma.TransactionCountArgs<ExtArgs>,
             result: $Utils.Optional<TransactionCountAggregateOutputType> | number
+          }
+        }
+      }
+      Config: {
+        payload: Prisma.$ConfigPayload<ExtArgs>
+        fields: Prisma.ConfigFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ConfigFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ConfigPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ConfigFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ConfigPayload>
+          }
+          findFirst: {
+            args: Prisma.ConfigFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ConfigPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ConfigFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ConfigPayload>
+          }
+          findMany: {
+            args: Prisma.ConfigFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ConfigPayload>[]
+          }
+          create: {
+            args: Prisma.ConfigCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ConfigPayload>
+          }
+          createMany: {
+            args: Prisma.ConfigCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ConfigCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ConfigPayload>[]
+          }
+          delete: {
+            args: Prisma.ConfigDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ConfigPayload>
+          }
+          update: {
+            args: Prisma.ConfigUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ConfigPayload>
+          }
+          deleteMany: {
+            args: Prisma.ConfigDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ConfigUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.ConfigUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ConfigPayload>
+          }
+          aggregate: {
+            args: Prisma.ConfigAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateConfig>
+          }
+          groupBy: {
+            args: Prisma.ConfigGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<ConfigGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ConfigCountArgs<ExtArgs>,
+            result: $Utils.Optional<ConfigCountAggregateOutputType> | number
           }
         }
       }
@@ -5797,7 +5870,7 @@ export namespace Prisma {
     userId: string | null
     createdAt: Date | null
     processedAt: Date | null
-    error: $Enums.EventError | null
+    error: string | null
   }
 
   export type EventMaxAggregateOutputType = {
@@ -5807,7 +5880,7 @@ export namespace Prisma {
     userId: string | null
     createdAt: Date | null
     processedAt: Date | null
-    error: $Enums.EventError | null
+    error: string | null
   }
 
   export type EventCountAggregateOutputType = {
@@ -5932,7 +6005,7 @@ export namespace Prisma {
     userId: string | null
     createdAt: Date
     processedAt: Date | null
-    error: $Enums.EventError | null
+    error: string | null
     _count: EventCountAggregateOutputType | null
     _min: EventMinAggregateOutputType | null
     _max: EventMaxAggregateOutputType | null
@@ -6003,7 +6076,7 @@ export namespace Prisma {
       userId: string | null
       createdAt: Date
       processedAt: Date | null
-      error: $Enums.EventError | null
+      error: string | null
     }, ExtArgs["result"]["event"]>
     composites: {}
   }
@@ -6430,7 +6503,7 @@ export namespace Prisma {
     readonly userId: FieldRef<"Event", 'String'>
     readonly createdAt: FieldRef<"Event", 'DateTime'>
     readonly processedAt: FieldRef<"Event", 'DateTime'>
-    readonly error: FieldRef<"Event", 'EventError'>
+    readonly error: FieldRef<"Event", 'String'>
   }
     
 
@@ -13474,6 +13547,874 @@ export namespace Prisma {
 
 
   /**
+   * Model Config
+   */
+
+  export type AggregateConfig = {
+    _count: ConfigCountAggregateOutputType | null
+    _min: ConfigMinAggregateOutputType | null
+    _max: ConfigMaxAggregateOutputType | null
+  }
+
+  export type ConfigMinAggregateOutputType = {
+    key: string | null
+    value: string | null
+  }
+
+  export type ConfigMaxAggregateOutputType = {
+    key: string | null
+    value: string | null
+  }
+
+  export type ConfigCountAggregateOutputType = {
+    key: number
+    value: number
+    _all: number
+  }
+
+
+  export type ConfigMinAggregateInputType = {
+    key?: true
+    value?: true
+  }
+
+  export type ConfigMaxAggregateInputType = {
+    key?: true
+    value?: true
+  }
+
+  export type ConfigCountAggregateInputType = {
+    key?: true
+    value?: true
+    _all?: true
+  }
+
+  export type ConfigAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Config to aggregate.
+     */
+    where?: ConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Configs to fetch.
+     */
+    orderBy?: ConfigOrderByWithRelationInput | ConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Configs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Configs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Configs
+    **/
+    _count?: true | ConfigCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ConfigMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ConfigMaxAggregateInputType
+  }
+
+  export type GetConfigAggregateType<T extends ConfigAggregateArgs> = {
+        [P in keyof T & keyof AggregateConfig]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateConfig[P]>
+      : GetScalarType<T[P], AggregateConfig[P]>
+  }
+
+
+
+
+  export type ConfigGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConfigWhereInput
+    orderBy?: ConfigOrderByWithAggregationInput | ConfigOrderByWithAggregationInput[]
+    by: ConfigScalarFieldEnum[] | ConfigScalarFieldEnum
+    having?: ConfigScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ConfigCountAggregateInputType | true
+    _min?: ConfigMinAggregateInputType
+    _max?: ConfigMaxAggregateInputType
+  }
+
+  export type ConfigGroupByOutputType = {
+    key: string
+    value: string
+    _count: ConfigCountAggregateOutputType | null
+    _min: ConfigMinAggregateOutputType | null
+    _max: ConfigMaxAggregateOutputType | null
+  }
+
+  type GetConfigGroupByPayload<T extends ConfigGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ConfigGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ConfigGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ConfigGroupByOutputType[P]>
+            : GetScalarType<T[P], ConfigGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ConfigSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    key?: boolean
+    value?: boolean
+  }, ExtArgs["result"]["config"]>
+
+  export type ConfigSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    key?: boolean
+    value?: boolean
+  }, ExtArgs["result"]["config"]>
+
+  export type ConfigSelectScalar = {
+    key?: boolean
+    value?: boolean
+  }
+
+
+  export type $ConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Config"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      key: string
+      value: string
+    }, ExtArgs["result"]["config"]>
+    composites: {}
+  }
+
+  type ConfigGetPayload<S extends boolean | null | undefined | ConfigDefaultArgs> = $Result.GetResult<Prisma.$ConfigPayload, S>
+
+  type ConfigCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ConfigFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ConfigCountAggregateInputType | true
+    }
+
+  export interface ConfigDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Config'], meta: { name: 'Config' } }
+    /**
+     * Find zero or one Config that matches the filter.
+     * @param {ConfigFindUniqueArgs} args - Arguments to find a Config
+     * @example
+     * // Get one Config
+     * const config = await prisma.config.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends ConfigFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, ConfigFindUniqueArgs<ExtArgs>>
+    ): Prisma__ConfigClient<$Result.GetResult<Prisma.$ConfigPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one Config that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ConfigFindUniqueOrThrowArgs} args - Arguments to find a Config
+     * @example
+     * // Get one Config
+     * const config = await prisma.config.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ConfigFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, ConfigFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__ConfigClient<$Result.GetResult<Prisma.$ConfigPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first Config that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConfigFindFirstArgs} args - Arguments to find a Config
+     * @example
+     * // Get one Config
+     * const config = await prisma.config.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends ConfigFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, ConfigFindFirstArgs<ExtArgs>>
+    ): Prisma__ConfigClient<$Result.GetResult<Prisma.$ConfigPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first Config that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConfigFindFirstOrThrowArgs} args - Arguments to find a Config
+     * @example
+     * // Get one Config
+     * const config = await prisma.config.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ConfigFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, ConfigFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__ConfigClient<$Result.GetResult<Prisma.$ConfigPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more Configs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConfigFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Configs
+     * const configs = await prisma.config.findMany()
+     * 
+     * // Get first 10 Configs
+     * const configs = await prisma.config.findMany({ take: 10 })
+     * 
+     * // Only select the `key`
+     * const configWithKeyOnly = await prisma.config.findMany({ select: { key: true } })
+     * 
+    **/
+    findMany<T extends ConfigFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ConfigFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConfigPayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a Config.
+     * @param {ConfigCreateArgs} args - Arguments to create a Config.
+     * @example
+     * // Create one Config
+     * const Config = await prisma.config.create({
+     *   data: {
+     *     // ... data to create a Config
+     *   }
+     * })
+     * 
+    **/
+    create<T extends ConfigCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, ConfigCreateArgs<ExtArgs>>
+    ): Prisma__ConfigClient<$Result.GetResult<Prisma.$ConfigPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many Configs.
+     * @param {ConfigCreateManyArgs} args - Arguments to create many Configs.
+     * @example
+     * // Create many Configs
+     * const config = await prisma.config.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+    **/
+    createMany<T extends ConfigCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ConfigCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Configs and returns the data saved in the database.
+     * @param {ConfigCreateManyAndReturnArgs} args - Arguments to create many Configs.
+     * @example
+     * // Create many Configs
+     * const config = await prisma.config.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Configs and only return the `key`
+     * const configWithKeyOnly = await prisma.config.createManyAndReturn({ 
+     *   select: { key: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends ConfigCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, ConfigCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConfigPayload<ExtArgs>, T, 'createManyAndReturn'>>
+
+    /**
+     * Delete a Config.
+     * @param {ConfigDeleteArgs} args - Arguments to delete one Config.
+     * @example
+     * // Delete one Config
+     * const Config = await prisma.config.delete({
+     *   where: {
+     *     // ... filter to delete one Config
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends ConfigDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, ConfigDeleteArgs<ExtArgs>>
+    ): Prisma__ConfigClient<$Result.GetResult<Prisma.$ConfigPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one Config.
+     * @param {ConfigUpdateArgs} args - Arguments to update one Config.
+     * @example
+     * // Update one Config
+     * const config = await prisma.config.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends ConfigUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, ConfigUpdateArgs<ExtArgs>>
+    ): Prisma__ConfigClient<$Result.GetResult<Prisma.$ConfigPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Configs.
+     * @param {ConfigDeleteManyArgs} args - Arguments to filter Configs to delete.
+     * @example
+     * // Delete a few Configs
+     * const { count } = await prisma.config.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends ConfigDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ConfigDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Configs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConfigUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Configs
+     * const config = await prisma.config.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends ConfigUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, ConfigUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Config.
+     * @param {ConfigUpsertArgs} args - Arguments to update or create a Config.
+     * @example
+     * // Update or create a Config
+     * const config = await prisma.config.upsert({
+     *   create: {
+     *     // ... data to create a Config
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Config we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends ConfigUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, ConfigUpsertArgs<ExtArgs>>
+    ): Prisma__ConfigClient<$Result.GetResult<Prisma.$ConfigPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of Configs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConfigCountArgs} args - Arguments to filter Configs to count.
+     * @example
+     * // Count the number of Configs
+     * const count = await prisma.config.count({
+     *   where: {
+     *     // ... the filter for the Configs we want to count
+     *   }
+     * })
+    **/
+    count<T extends ConfigCountArgs>(
+      args?: Subset<T, ConfigCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ConfigCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Config.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConfigAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ConfigAggregateArgs>(args: Subset<T, ConfigAggregateArgs>): Prisma.PrismaPromise<GetConfigAggregateType<T>>
+
+    /**
+     * Group by Config.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConfigGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ConfigGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ConfigGroupByArgs['orderBy'] }
+        : { orderBy?: ConfigGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ConfigGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetConfigGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Config model
+   */
+  readonly fields: ConfigFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Config.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ConfigClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the Config model
+   */ 
+  interface ConfigFieldRefs {
+    readonly key: FieldRef<"Config", 'String'>
+    readonly value: FieldRef<"Config", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Config findUnique
+   */
+  export type ConfigFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Config
+     */
+    select?: ConfigSelect<ExtArgs> | null
+    /**
+     * Filter, which Config to fetch.
+     */
+    where: ConfigWhereUniqueInput
+  }
+
+  /**
+   * Config findUniqueOrThrow
+   */
+  export type ConfigFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Config
+     */
+    select?: ConfigSelect<ExtArgs> | null
+    /**
+     * Filter, which Config to fetch.
+     */
+    where: ConfigWhereUniqueInput
+  }
+
+  /**
+   * Config findFirst
+   */
+  export type ConfigFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Config
+     */
+    select?: ConfigSelect<ExtArgs> | null
+    /**
+     * Filter, which Config to fetch.
+     */
+    where?: ConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Configs to fetch.
+     */
+    orderBy?: ConfigOrderByWithRelationInput | ConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Configs.
+     */
+    cursor?: ConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Configs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Configs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Configs.
+     */
+    distinct?: ConfigScalarFieldEnum | ConfigScalarFieldEnum[]
+  }
+
+  /**
+   * Config findFirstOrThrow
+   */
+  export type ConfigFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Config
+     */
+    select?: ConfigSelect<ExtArgs> | null
+    /**
+     * Filter, which Config to fetch.
+     */
+    where?: ConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Configs to fetch.
+     */
+    orderBy?: ConfigOrderByWithRelationInput | ConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Configs.
+     */
+    cursor?: ConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Configs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Configs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Configs.
+     */
+    distinct?: ConfigScalarFieldEnum | ConfigScalarFieldEnum[]
+  }
+
+  /**
+   * Config findMany
+   */
+  export type ConfigFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Config
+     */
+    select?: ConfigSelect<ExtArgs> | null
+    /**
+     * Filter, which Configs to fetch.
+     */
+    where?: ConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Configs to fetch.
+     */
+    orderBy?: ConfigOrderByWithRelationInput | ConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Configs.
+     */
+    cursor?: ConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Configs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Configs.
+     */
+    skip?: number
+    distinct?: ConfigScalarFieldEnum | ConfigScalarFieldEnum[]
+  }
+
+  /**
+   * Config create
+   */
+  export type ConfigCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Config
+     */
+    select?: ConfigSelect<ExtArgs> | null
+    /**
+     * The data needed to create a Config.
+     */
+    data: XOR<ConfigCreateInput, ConfigUncheckedCreateInput>
+  }
+
+  /**
+   * Config createMany
+   */
+  export type ConfigCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Configs.
+     */
+    data: ConfigCreateManyInput | ConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Config createManyAndReturn
+   */
+  export type ConfigCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Config
+     */
+    select?: ConfigSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Configs.
+     */
+    data: ConfigCreateManyInput | ConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Config update
+   */
+  export type ConfigUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Config
+     */
+    select?: ConfigSelect<ExtArgs> | null
+    /**
+     * The data needed to update a Config.
+     */
+    data: XOR<ConfigUpdateInput, ConfigUncheckedUpdateInput>
+    /**
+     * Choose, which Config to update.
+     */
+    where: ConfigWhereUniqueInput
+  }
+
+  /**
+   * Config updateMany
+   */
+  export type ConfigUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Configs.
+     */
+    data: XOR<ConfigUpdateManyMutationInput, ConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which Configs to update
+     */
+    where?: ConfigWhereInput
+  }
+
+  /**
+   * Config upsert
+   */
+  export type ConfigUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Config
+     */
+    select?: ConfigSelect<ExtArgs> | null
+    /**
+     * The filter to search for the Config to update in case it exists.
+     */
+    where: ConfigWhereUniqueInput
+    /**
+     * In case the Config found by the `where` argument doesn't exist, create a new Config with this data.
+     */
+    create: XOR<ConfigCreateInput, ConfigUncheckedCreateInput>
+    /**
+     * In case the Config was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ConfigUpdateInput, ConfigUncheckedUpdateInput>
+  }
+
+  /**
+   * Config delete
+   */
+  export type ConfigDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Config
+     */
+    select?: ConfigSelect<ExtArgs> | null
+    /**
+     * Filter which Config to delete.
+     */
+    where: ConfigWhereUniqueInput
+  }
+
+  /**
+   * Config deleteMany
+   */
+  export type ConfigDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Configs to delete
+     */
+    where?: ConfigWhereInput
+  }
+
+  /**
+   * Config without action
+   */
+  export type ConfigDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Config
+     */
+    select?: ConfigSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -13613,6 +14554,14 @@ export namespace Prisma {
   export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
 
 
+  export const ConfigScalarFieldEnum: {
+    key: 'key',
+    value: 'value'
+  };
+
+  export type ConfigScalarFieldEnum = (typeof ConfigScalarFieldEnum)[keyof typeof ConfigScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -13705,20 +14654,6 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'EventError'
-   */
-  export type EnumEventErrorFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventError'>
-    
-
-
-  /**
-   * Reference to a field of type 'EventError[]'
-   */
-  export type ListEnumEventErrorFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventError[]'>
     
 
 
@@ -14033,7 +14968,7 @@ export namespace Prisma {
     userId?: StringNullableFilter<"Event"> | string | null
     createdAt?: DateTimeFilter<"Event"> | Date | string
     processedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
-    error?: EnumEventErrorNullableFilter<"Event"> | $Enums.EventError | null
+    error?: StringNullableFilter<"Event"> | string | null
     user?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }
 
@@ -14058,7 +14993,7 @@ export namespace Prisma {
     userId?: StringNullableFilter<"Event"> | string | null
     createdAt?: DateTimeFilter<"Event"> | Date | string
     processedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
-    error?: EnumEventErrorNullableFilter<"Event"> | $Enums.EventError | null
+    error?: StringNullableFilter<"Event"> | string | null
     user?: XOR<UserNullableRelationFilter, UserWhereInput> | null
   }, "transactionId">
 
@@ -14085,7 +15020,7 @@ export namespace Prisma {
     userId?: StringNullableWithAggregatesFilter<"Event"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Event"> | Date | string
     processedAt?: DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
-    error?: EnumEventErrorNullableWithAggregatesFilter<"Event"> | $Enums.EventError | null
+    error?: StringNullableWithAggregatesFilter<"Event"> | string | null
   }
 
   export type MessageWhereInput = {
@@ -14464,6 +15399,43 @@ export namespace Prisma {
     metadata?: JsonNullableWithAggregatesFilter<"Transaction">
   }
 
+  export type ConfigWhereInput = {
+    AND?: ConfigWhereInput | ConfigWhereInput[]
+    OR?: ConfigWhereInput[]
+    NOT?: ConfigWhereInput | ConfigWhereInput[]
+    key?: StringFilter<"Config"> | string
+    value?: StringFilter<"Config"> | string
+  }
+
+  export type ConfigOrderByWithRelationInput = {
+    key?: SortOrder
+    value?: SortOrder
+  }
+
+  export type ConfigWhereUniqueInput = Prisma.AtLeast<{
+    key?: string
+    AND?: ConfigWhereInput | ConfigWhereInput[]
+    OR?: ConfigWhereInput[]
+    NOT?: ConfigWhereInput | ConfigWhereInput[]
+    value?: StringFilter<"Config"> | string
+  }, "key">
+
+  export type ConfigOrderByWithAggregationInput = {
+    key?: SortOrder
+    value?: SortOrder
+    _count?: ConfigCountOrderByAggregateInput
+    _max?: ConfigMaxOrderByAggregateInput
+    _min?: ConfigMinOrderByAggregateInput
+  }
+
+  export type ConfigScalarWhereWithAggregatesInput = {
+    AND?: ConfigScalarWhereWithAggregatesInput | ConfigScalarWhereWithAggregatesInput[]
+    OR?: ConfigScalarWhereWithAggregatesInput[]
+    NOT?: ConfigScalarWhereWithAggregatesInput | ConfigScalarWhereWithAggregatesInput[]
+    key?: StringWithAggregatesFilter<"Config"> | string
+    value?: StringWithAggregatesFilter<"Config"> | string
+  }
+
   export type UserCreateInput = {
     id?: string
     identityAddress: string
@@ -14686,7 +15658,7 @@ export namespace Prisma {
     questId?: string | null
     createdAt?: Date | string
     processedAt?: Date | string | null
-    error?: $Enums.EventError | null
+    error?: string | null
     user?: UserCreateNestedOneWithoutEventsInput
   }
 
@@ -14697,7 +15669,7 @@ export namespace Prisma {
     userId?: string | null
     createdAt?: Date | string
     processedAt?: Date | string | null
-    error?: $Enums.EventError | null
+    error?: string | null
   }
 
   export type EventUpdateInput = {
@@ -14706,7 +15678,7 @@ export namespace Prisma {
     questId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableEnumEventErrorFieldUpdateOperationsInput | $Enums.EventError | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
     user?: UserUpdateOneWithoutEventsNestedInput
   }
 
@@ -14717,7 +15689,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableEnumEventErrorFieldUpdateOperationsInput | $Enums.EventError | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EventCreateManyInput = {
@@ -14727,7 +15699,7 @@ export namespace Prisma {
     userId?: string | null
     createdAt?: Date | string
     processedAt?: Date | string | null
-    error?: $Enums.EventError | null
+    error?: string | null
   }
 
   export type EventUpdateManyMutationInput = {
@@ -14736,7 +15708,7 @@ export namespace Prisma {
     questId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableEnumEventErrorFieldUpdateOperationsInput | $Enums.EventError | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EventUncheckedUpdateManyInput = {
@@ -14746,7 +15718,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableEnumEventErrorFieldUpdateOperationsInput | $Enums.EventError | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageCreateInput = {
@@ -15112,6 +16084,41 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type ConfigCreateInput = {
+    key: string
+    value: string
+  }
+
+  export type ConfigUncheckedCreateInput = {
+    key: string
+    value: string
+  }
+
+  export type ConfigUpdateInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ConfigUncheckedUpdateInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ConfigCreateManyInput = {
+    key: string
+    value: string
+  }
+
+  export type ConfigUpdateManyMutationInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ConfigUncheckedUpdateManyInput = {
+    key?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -15382,13 +16389,6 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type EnumEventErrorNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.EventError | EnumEventErrorFieldRefInput<$PrismaModel> | null
-    in?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumEventErrorNullableFilter<$PrismaModel> | $Enums.EventError | null
-  }
-
   export type UserNullableRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -15436,16 +16436,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type EnumEventErrorNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.EventError | EnumEventErrorFieldRefInput<$PrismaModel> | null
-    in?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumEventErrorNullableWithAggregatesFilter<$PrismaModel> | $Enums.EventError | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumEventErrorNullableFilter<$PrismaModel>
-    _max?: NestedEnumEventErrorNullableFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -15857,6 +16847,21 @@ export namespace Prisma {
     _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
+  export type ConfigCountOrderByAggregateInput = {
+    key?: SortOrder
+    value?: SortOrder
+  }
+
+  export type ConfigMaxOrderByAggregateInput = {
+    key?: SortOrder
+    value?: SortOrder
+  }
+
+  export type ConfigMinOrderByAggregateInput = {
+    key?: SortOrder
+    value?: SortOrder
+  }
+
   export type EventCreateNestedManyWithoutUserInput = {
     create?: XOR<EventCreateWithoutUserInput, EventUncheckedCreateWithoutUserInput> | EventCreateWithoutUserInput[] | EventUncheckedCreateWithoutUserInput[]
     connectOrCreate?: EventCreateOrConnectWithoutUserInput | EventCreateOrConnectWithoutUserInput[]
@@ -16171,10 +17176,6 @@ export namespace Prisma {
     set?: Date | string | null
   }
 
-  export type NullableEnumEventErrorFieldUpdateOperationsInput = {
-    set?: $Enums.EventError | null
-  }
-
   export type UserUpdateOneWithoutEventsNestedInput = {
     create?: XOR<UserCreateWithoutEventsInput, UserUncheckedCreateWithoutEventsInput>
     connectOrCreate?: UserCreateOrConnectWithoutEventsInput
@@ -16420,13 +17421,6 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
-  export type NestedEnumEventErrorNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.EventError | EnumEventErrorFieldRefInput<$PrismaModel> | null
-    in?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumEventErrorNullableFilter<$PrismaModel> | $Enums.EventError | null
-  }
-
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -16439,16 +17433,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type NestedEnumEventErrorNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.EventError | EnumEventErrorFieldRefInput<$PrismaModel> | null
-    in?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.EventError[] | ListEnumEventErrorFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumEventErrorNullableWithAggregatesFilter<$PrismaModel> | $Enums.EventError | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumEventErrorNullableFilter<$PrismaModel>
-    _max?: NestedEnumEventErrorNullableFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -16606,7 +17590,7 @@ export namespace Prisma {
     questId?: string | null
     createdAt?: Date | string
     processedAt?: Date | string | null
-    error?: $Enums.EventError | null
+    error?: string | null
   }
 
   export type EventUncheckedCreateWithoutUserInput = {
@@ -16615,7 +17599,7 @@ export namespace Prisma {
     questId?: string | null
     createdAt?: Date | string
     processedAt?: Date | string | null
-    error?: $Enums.EventError | null
+    error?: string | null
   }
 
   export type EventCreateOrConnectWithoutUserInput = {
@@ -16773,7 +17757,7 @@ export namespace Prisma {
     userId?: StringNullableFilter<"Event"> | string | null
     createdAt?: DateTimeFilter<"Event"> | Date | string
     processedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
-    error?: EnumEventErrorNullableFilter<"Event"> | $Enums.EventError | null
+    error?: StringNullableFilter<"Event"> | string | null
   }
 
   export type MessageUpsertWithWhereUniqueWithoutUserInput = {
@@ -17517,7 +18501,7 @@ export namespace Prisma {
     questId?: string | null
     createdAt?: Date | string
     processedAt?: Date | string | null
-    error?: $Enums.EventError | null
+    error?: string | null
   }
 
   export type MessageCreateManyUserInput = {
@@ -17551,7 +18535,7 @@ export namespace Prisma {
     questId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableEnumEventErrorFieldUpdateOperationsInput | $Enums.EventError | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EventUncheckedUpdateWithoutUserInput = {
@@ -17560,7 +18544,7 @@ export namespace Prisma {
     questId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableEnumEventErrorFieldUpdateOperationsInput | $Enums.EventError | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EventUncheckedUpdateManyWithoutUserInput = {
@@ -17569,7 +18553,7 @@ export namespace Prisma {
     questId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableEnumEventErrorFieldUpdateOperationsInput | $Enums.EventError | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageUpdateWithoutUserInput = {
@@ -17703,6 +18687,10 @@ export namespace Prisma {
      * @deprecated Use TransactionDefaultArgs instead
      */
     export type TransactionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TransactionDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ConfigDefaultArgs instead
+     */
+    export type ConfigArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ConfigDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

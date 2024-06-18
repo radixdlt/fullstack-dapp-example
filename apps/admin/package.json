@@ -51,6 +51,7 @@
     "svelte": "^4.0.0"
   },
   "dependencies": {
+    "@radixdlt/radix-dapp-toolkit": "^2.0.0-v2.29",
     "common": "*",
     "database": "*",
     "flowbite-svelte": "^0.44.24",

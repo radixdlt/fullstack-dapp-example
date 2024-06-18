@@ -6,6 +6,7 @@ import {
   GatewayApi,
   type AppLogger,
   type AuditModel,
+  type ConfigModel,
   type TransactionModel,
   type WellKnownAddresses
 } from 'common'
@@ -36,7 +37,8 @@ export const TransactionWorkerError = {
   FailedToAddAuditEntry: 'FailedToAddAuditEntry',
   FailedToGetTransactionFromDb: 'FailedToGetTransactionFromDb',
   MissingTransactionInDb: 'MissingTransactionInDb',
-  UnhandledJob: 'UnhandledJob'
+  UnhandledJob: 'UnhandledJob',
+  FeatureDisabled: 'FeatureDisabled'
 } as const
 
 const getUserIdFromBadgeId = (
@@ -57,12 +59,14 @@ export const TransactionWorkerController = ({
   auditModel,
   transactionModel,
   gatewayApi,
-  tokenPriceClient
+  tokenPriceClient,
+  configModel
 }: {
   auditModel: AuditModel
   gatewayApi: GatewayApi
   transactionModel: TransactionModel
   tokenPriceClient: TokenPriceClient
+  configModel: ConfigModel
 }) => {
   const handler = ({
     job,
@@ -301,30 +305,50 @@ export const TransactionWorkerController = ({
         ).andThen(handlePollTransactionStatus)
 
       case 'CombinedElementsMintRadgem':
-        return getItemFromDb()
-          .andThen(() =>
-            handleSubmitTransaction((wellKnownAddresses) =>
-              createCombinedElementsMintRadgemManifest({
-                wellKnownAddresses,
-                badgeResourceAddress: job.data.badgeResourceAddress,
-                badgeId: job.data.badgeId
-              })
-            )
+        return configModel(logger)
+          .isRadGemMintingEnabled()
+          .mapErr(({ jsError }) => ({ reason: TransactionWorkerError.FeatureDisabled, jsError }))
+          .andThen((isEnabled) =>
+            isEnabled
+              ? getItemFromDb()
+                  .andThen(() =>
+                    handleSubmitTransaction((wellKnownAddresses) =>
+                      createCombinedElementsMintRadgemManifest({
+                        wellKnownAddresses,
+                        badgeResourceAddress: job.data.badgeResourceAddress,
+                        badgeId: job.data.badgeId
+                      })
+                    )
+                  )
+                  .andThen(handlePollTransactionStatus)
+              : errAsync({
+                  reason: TransactionWorkerError.FeatureDisabled,
+                  jsError: new Error('Disabled feature')
+                })
           )
-          .andThen(handlePollTransactionStatus)
 
       case 'CombinedElementsAddRadgemImage':
         const { radgemId } = job.data
-        return handleSubmitTransaction((wellKnownAddresses) =>
-          createCombinedElementsAddRadgemImageManifest({
-            wellKnownAddresses,
-            badgeResourceAddress: job.data.badgeResourceAddress,
-            badgeId: job.data.badgeId,
-            radgemId,
-            keyImageUrl:
-              'https://stokenet-dashboard.radixdlt.com/_app/immutable/assets/nft-placeholder.2eDdybqV.svg'
-          })
-        ).andThen(handlePollTransactionStatus)
+        return configModel(logger)
+          .isRadGemMintingEnabled()
+          .mapErr(({ jsError }) => ({ reason: TransactionWorkerError.FeatureDisabled, jsError }))
+          .andThen((isEnabled) =>
+            isEnabled
+              ? handleSubmitTransaction((wellKnownAddresses) =>
+                  createCombinedElementsAddRadgemImageManifest({
+                    wellKnownAddresses,
+                    badgeResourceAddress: job.data.badgeResourceAddress,
+                    badgeId: job.data.badgeId,
+                    radgemId,
+                    keyImageUrl:
+                      'https://stokenet-dashboard.radixdlt.com/_app/immutable/assets/nft-placeholder.2eDdybqV.svg'
+                  })
+                ).andThen(handlePollTransactionStatus)
+              : errAsync({
+                  reason: TransactionWorkerError.FeatureDisabled,
+                  jsError: new Error('Disabled feature')
+                })
+          )
 
       default:
         return errAsync({

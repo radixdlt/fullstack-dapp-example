@@ -1,7 +1,9 @@
 <script lang="ts">
   import { Button, Modal } from 'flowbite-svelte'
   import { ExclamationCircleOutline } from 'flowbite-svelte-icons'
+  import { createEventDispatcher } from 'svelte'
   export let open: boolean = false // modal control
+  const onDelete = createEventDispatcher()
 </script>
 
 <Modal bind:open size="sm">
@@ -12,7 +14,14 @@
   </h3>
 
   <div class="flex items-center justify-center">
-    <Button href="/" color="red" class="mr-2">Yes, I'm sure</Button>
+    <Button
+      href="/"
+      color="red"
+      class="mr-2"
+      on:click={() => {
+        onDelete('delete')
+      }}>Yes, I'm sure</Button
+    >
     <Button color="alternative" on:click={() => (open = false)}>No, cancel</Button>
   </div>
 </Modal>

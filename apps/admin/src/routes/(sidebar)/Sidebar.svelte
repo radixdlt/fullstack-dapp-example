@@ -36,9 +36,9 @@
   let posts = [
     { name: 'Dashboard', icon: ChartPieOutline, href: '/dashboard' },
     {
-      name: 'Transactions',
+      name: 'Users',
       icon: RectangleListSolid,
-      href: '/transactions'
+      href: '/users'
     },
     { name: 'Settings', icon: CogOutline, href: '/settings' }
   ]

@@ -49,7 +49,10 @@ const createUser = async (
   identityAddress: string,
   accountAddress: string,
   id = crypto.randomUUID().replace(/-/g, '')
-) => db.user.create({ data: { identityAddress, accountAddress, id } })
+) =>
+  db.user.create({
+    data: { identityAddress, accountAddress, id, referralCode: crypto.randomUUID() }
+  })
 
 const addVerifiedPhoneNumberRequirement = async (userId: string) =>
   db.completedQuestRequirement.create({
