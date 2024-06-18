@@ -1,8 +1,7 @@
-use radquest::{
-    kyc_oracle::kyc_oracle_test::*,
-    quest_rewards::{quest_rewards_test::*, DidData, QuestId, UserId},
-};
 use scrypto_test::prelude::*;
+
+use radquest::kyc_oracle::kyc_oracle_test::*;
+use radquest::quest_rewards::{quest_rewards_test::*, DidData, QuestId, UserId};
 
 struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,
@@ -190,7 +189,8 @@ fn cannot_claim_rewards_when_kyc_required() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
-    let reward_2 = BucketFactory::create_fungible_bucket(XRD, 200.into(), Mock, &mut env)?;
+    let reward_2 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
 
     let quest_id = QuestId("1".into());
 
