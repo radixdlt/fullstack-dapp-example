@@ -2,7 +2,7 @@ import { TokenPriceClient } from './../token-price-client'
 import { ResultAsync, okAsync, errAsync, err, ok, Result } from 'neverthrow'
 import { EventJob, Job, TransactionQueue } from 'queues'
 import { QuestDefinitions, QuestId, Quests } from 'content'
-import { ConfigModel, EventId, getAccountFromMayaRouterWithdrawEvent } from 'common'
+import { ConfigModel, EventId, Message, getAccountFromMayaRouterWithdrawEvent } from 'common'
 import {
   AppLogger,
   EventModel,
@@ -14,7 +14,10 @@ import {
 import { MessageApi } from 'common'
 import { config } from '../config'
 import { PrismaClient } from 'database'
-import { getUserIdFromDepositUserBadgeEvent } from './helpers/getUserIdFromDepositUserBadgeEvent'
+import {
+  getAccountAddressFromAccountAddedEvent,
+  getUserIdFromDepositUserBadgeEvent
+} from './helpers/getUserIdFromDepositUserBadgeEvent'
 import { getDataFromQuestRewardsEvent } from './helpers/getDataFromQuestRewardsEvent'
 import { databaseTransactions } from './helpers/databaseTransactions'
 import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent'
@@ -316,6 +319,17 @@ export const EventWorkerController = ({
       })
     }
 
+    const sendMessage = (userId: string, message: Message) =>
+      ResultAsync.fromPromise(
+        dbClient.message.create({
+          data: {
+            userId,
+            data: JSON.stringify(message)
+          }
+        }),
+        (error) => ({ reason: 'FailedToCreateMessageInDb', jsError: error as Error })
+      ).andThen(({ id }) => messageApi.send(userId, message, id).orElse(() => ok(undefined)))
+
     const handleQuestWithTrackedAccount = (
       maybeAccountAddress: string | undefined,
       questId: QuestId,
@@ -411,6 +425,21 @@ export const EventWorkerController = ({
                 })
                 .andThen((builder) => builder.exec())
                 .andThen(() => handleAllQuestRequirementCompleted(questValues))
+            )
+        )
+
+      case EventId.AccountAllowedToForgeHeroBadge:
+        return getAccountAddressFromAccountAddedEvent(
+          job.data.relevantEvents.AccountAddedEvent
+        ).asyncAndThen((accountAddress) =>
+          userModel(childLogger)
+            .getByAccountAddress(accountAddress, {})
+            .andThen((user) => (user ? ok(user) : err({ reason: 'UserNotFound' })))
+            .andThen((user) =>
+              sendMessage(user.id, {
+                type: 'HeroBadgeReadyToBeClaimed',
+                traceId: job.data.traceId
+              })
             )
         )
 

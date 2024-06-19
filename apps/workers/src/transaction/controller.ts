@@ -69,7 +69,6 @@ export const TransactionWorkerController = ({
   tokenPriceClient,
   configModel,
   messageApi,
-  messageModel,
   dbClient
 }: {
   auditModel: AuditModel
@@ -77,7 +76,6 @@ export const TransactionWorkerController = ({
   transactionModel: TransactionModel
   tokenPriceClient: TokenPriceClient
   configModel: ConfigModel
-  messageModel: MessageModel
   messageApi: MessageApi
   dbClient: PrismaClient
 }) => {
@@ -432,17 +430,8 @@ export const TransactionWorkerController = ({
 
                 return transactionManifestParts.join('\n')
               }).andThen((txId) =>
-                handlePollTransactionStatus(txId).andThen(() => {
-                  dbTransactionBuilder.add(() =>
-                    dbClient.message.create({
-                      data: {
-                        userId,
-                        data: JSON.stringify({ type: 'HeroBadgeReadyToBeClaimed' })
-                      }
-                    })
-                  )
-
-                  return dbTransactionBuilder.helpers
+                handlePollTransactionStatus(txId).andThen(() =>
+                  dbTransactionBuilder.helpers
                     .addXrdDepositToAuditTable({
                       transactionId: txId,
                       userId: userId,
@@ -453,21 +442,12 @@ export const TransactionWorkerController = ({
                       reason: TransactionWorkerError.FailedToExecuteDbTransaction,
                       jsError: error
                     }))
-                    .map(([{ id }]) => {
-                      messageApi
-                        .send(
-                          userId,
-                          { type: 'HeroBadgeReadyToBeClaimed', traceId: job.data.traceId },
-                          id
-                        )
-                        .mapErr(() => ({
-                          reason: TransactionWorkerError.FailedToSendMessage
-                        }))
-                    })
-                })
+                )
               )
             )
           )
+
+          .map(() => {})
       }
 
       default:

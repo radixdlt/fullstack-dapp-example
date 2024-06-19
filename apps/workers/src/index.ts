@@ -9,8 +9,7 @@ import {
   TransactionModel,
   AccountAddressModel,
   GatewayApi,
-  ConfigModel,
-  MessageModel
+  ConfigModel
 } from 'common'
 import { logger } from './helpers/logger'
 import { RedisConnection, getQueues } from 'queues'
@@ -35,8 +34,6 @@ const app = async () => {
     baseUrl: config.notification.baseUrl,
     logger
   })
-
-  const messageModel = MessageModel(dbClient)
 
   const gatewayApi = GatewayApi(config.networkId)
   const eventModel = EventModel(dbClient)
@@ -66,7 +63,6 @@ const app = async () => {
     auditModel: AuditModel(dbClient),
     configModel,
     messageApi,
-    messageModel,
     dbClient
   })
 

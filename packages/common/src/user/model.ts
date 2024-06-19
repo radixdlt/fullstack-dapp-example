@@ -14,6 +14,10 @@ type UserModelType = {
     id: string,
     include: T
   ) => ResultAsync<GetByIdReturnType<T>, ApiError>
+  getByAccountAddress: <T extends Prisma.UserInclude<any>>(
+    accountAddress: string,
+    include: T
+  ) => ResultAsync<User | null, ApiError>
   getPhoneNumber: (phoneNumber: string) => ResultAsync<UserPhoneNumber | null, ApiError>
   addAccount: (userId: string, accountAddress: string) => ResultAsync<void, ApiError>
   setUserName: (userId: string, name: string) => ResultAsync<User, ApiError>
@@ -95,6 +99,28 @@ export const UserModel =
           : errAsync(createApiError('user not found', 404)())
       )
 
+    const getByAccountAddress = <T extends Prisma.UserInclude<any>>(
+      accountAddress: string,
+      include: T
+    ) =>
+      ResultAsync.fromPromise(
+        db.user.findFirst({
+          where: { accountAddress },
+          include
+        }),
+        (error) => {
+          logger?.error({
+            error,
+            method: 'getByAccountAddress',
+            where: { accountAddress },
+            model: 'UserModel'
+          })
+          return createApiError('failed to get user', 400)()
+        }
+      ).andThen((data) =>
+        data ? okAsync(data) : errAsync(createApiError('user not found', 404)())
+      )
+
     const getPhoneNumber = (phoneNumber: string): ResultAsync<UserPhoneNumber | null, ApiError> =>
       ResultAsync.fromPromise<UserPhoneNumber | null, ApiError>(
         db.userPhoneNumber.findFirst({
@@ -140,6 +166,7 @@ export const UserModel =
     return {
       create,
       getById,
+      getByAccountAddress,
       getPhoneNumber,
       addAccount,
       setUserName,
