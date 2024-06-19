@@ -91,8 +91,7 @@
 
 <style lang="scss">
   .grey-out {
-    opacity: 0.3;
-
+    opacity: 0.5;
     transition: opacity 0.15s ease-in-out;
   }
   .card-background {
