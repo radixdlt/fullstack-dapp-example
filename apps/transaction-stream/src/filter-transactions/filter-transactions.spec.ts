@@ -7,6 +7,7 @@ import JettySwap from '../fixtures/transactions/jetty-swap'
 import LettySwap from '../fixtures/transactions/letty-swap'
 import MintInstapassBadge from '../fixtures/transactions/mint-instapass-badge'
 import MayaRouterWithdraw from '../fixtures/transactions/maya-router-withdraw'
+import AccountAddedTransaction from '../fixtures/transactions/allow-user-to-forge-hero-badge'
 import {
   getTrackedTransactionTypes,
   jettySwapEvent,
@@ -302,5 +303,20 @@ describe('filter transactions', () => {
     const [withdraw, jettySwap] = relevantEvents
     expect(withdraw.name).toBe('WithdrawEvent')
     expect(jettySwap.name).toBe('JettySwapEvent')
+  })
+
+  it('should contain AccountAddedEvent', () => {
+    const result = filterTransactionsByType(AccountAddedTransaction)
+
+    if (result.isErr()) throw result.error
+
+    const filteredTransactions = result.value
+
+    expect(filteredTransactions.length).toEqual(1)
+
+    const [tx] = filteredTransactions
+
+    expect(tx.transactionId).toBeDefined()
+    expect(tx.relevantEvents.AccountAddedEvent).toBeDefined()
   })
 })

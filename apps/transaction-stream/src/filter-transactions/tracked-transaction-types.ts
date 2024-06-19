@@ -15,6 +15,11 @@ type EventEmitter = {
   object_module_id: string
 }
 
+export const eventEmittedByComponent =
+  (eventName: string, componentAddress: string) => (event: EventsItem) =>
+    event.name === eventName &&
+    (event.emitter as EventEmitter).entity.entity_address === componentAddress
+
 export const isEmittedByQuestRewards = (event: EventsItem) =>
   (event.emitter as EventEmitter).entity.entity_address === config.radQuest.components.questRewards
 export const isEmittedByRefinery = (event: EventsItem) =>
@@ -121,5 +126,11 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
   [EventId.LettySwap]: {
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress),
     JettySwapEvent: jettySwapEvent(config.radQuest.components.lettySwap)
+  },
+  [EventId.AccountAllowedToForgeHeroBadge]: {
+    AccountAddedEvent: eventEmittedByComponent(
+      'AccountAddedEvent',
+      config.radQuest.components.heroBadgeForge
+    )
   }
 })
