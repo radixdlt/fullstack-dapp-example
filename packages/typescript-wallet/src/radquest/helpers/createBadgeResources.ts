@@ -1,11 +1,11 @@
 import { createAdminBadgeResource } from './createAdminBadgeResource'
 import { createSuperAdminBadge } from './createSuperAdminBadge'
-import { createUserBadgeResource } from './createUserBadgeResource'
+import { createHeroBadgeResource } from './createHeroBadgeResource'
 
 export const createBadgeResources = () =>
   createSuperAdminBadge().andThen((superAdminBadgeAddress) =>
     createAdminBadgeResource(superAdminBadgeAddress).andThen((adminBadgeAddress) =>
-      createUserBadgeResource(adminBadgeAddress).map((heroBadgeAddress) => ({
+      createHeroBadgeResource(adminBadgeAddress).map((heroBadgeAddress) => ({
         superAdminBadgeAddress,
         adminBadgeAddress,
         heroBadgeAddress

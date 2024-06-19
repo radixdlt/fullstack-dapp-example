@@ -1,9 +1,12 @@
 import { config } from '../../config'
 import { radixEngineClient } from '../../config'
 
-export const mintUserBadgeAndDepositXrd = (
+export const mintHeroBadge = (
   userId: string,
   accountAddress: string,
+  keyImageUrl = '',
+  questsCompleted: string[] = [],
+  questCounter = 0,
   badgeAddresses?: Partial<{
     heroBadgeAddress: string
     adminBadgeAddress: string
@@ -15,8 +18,8 @@ export const mintUserBadgeAndDepositXrd = (
   } = badgeAddresses ?? {}
   return radixEngineClient
     .getManifestBuilder()
-    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
-      const transactionManifest = `
+    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
+      convertStringManifest(`
         CALL_METHOD 
           Address("${wellKnownAddresses.accountAddress.payerAccount}") 
           "lock_fee"
@@ -32,28 +35,26 @@ export const mintUserBadgeAndDepositXrd = (
           
         MINT_NON_FUNGIBLE
           Address("${heroBadgeAddress}")
-          Map<NonFungibleLocalId, Tuple>(NonFungibleLocalId("<${userId}>") => Tuple(Tuple()))
+          Map<NonFungibleLocalId, Tuple>(NonFungibleLocalId("<${userId}>") => Tuple(Tuple(
+            ${keyImageUrl},
+            ${questsCompleted},
+            ${questCounter},
+          )))
         ;
-
-        CALL_METHOD
-          Address("${wellKnownAddresses.accountAddress.payerAccount}")
-          "withdraw"
-          Address("${wellKnownAddresses.resourceAddresses.xrd}")
-          Decimal("${config.directXrdDepositAmount}");
 
         CALL_METHOD
           Address("${accountAddress}")
           "try_deposit_batch_or_abort"
           Expression("ENTIRE_WORKTOP")
           Enum<0u8>()
-        ;`
-      console.log(transactionManifest)
-      return convertStringManifest(transactionManifest)
+        ;`)
         .andThen((transactionManifest) =>
           submitTransaction({ transactionManifest, signers: ['systemAccount'] })
         )
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
         )
-    })
+        .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
+        .map((details): string => details.createdEntities[0].entity_address!)
+    )
 }

@@ -1,9 +1,12 @@
 import { config } from '../../config'
 import { radixEngineClient } from '../../config'
 
-export const mintUserBadge = (
+export const mintHeroBadgeAndDepositXrd = (
   userId: string,
   accountAddress: string,
+  keyImageUrl = '',
+  questsCompleted: string[] = [],
+  questCounter = 0,
   badgeAddresses?: Partial<{
     heroBadgeAddress: string
     adminBadgeAddress: string
@@ -32,8 +35,18 @@ export const mintUserBadge = (
           
         MINT_NON_FUNGIBLE
           Address("${heroBadgeAddress}")
-          Map<NonFungibleLocalId, Tuple>(NonFungibleLocalId("<${userId}>") => Tuple(Tuple()))
+          Map<NonFungibleLocalId, Tuple>(NonFungibleLocalId("<${userId}>") => Tuple(Tuple(
+            ${keyImageUrl},
+            ${questsCompleted},
+            ${questCounter},
+          )))
         ;
+
+        CALL_METHOD
+          Address("${wellKnownAddresses.accountAddress.payerAccount}")
+          "withdraw"
+          Address("${wellKnownAddresses.resourceAddresses.xrd}")
+          Decimal("${config.directXrdDepositAmount}");
 
         CALL_METHOD
           Address("${accountAddress}")
@@ -41,7 +54,7 @@ export const mintUserBadge = (
           Expression("ENTIRE_WORKTOP")
           Enum<0u8>()
         ;`
-
+      console.log(transactionManifest)
       return convertStringManifest(transactionManifest)
         .andThen((transactionManifest) =>
           submitTransaction({ transactionManifest, signers: ['systemAccount'] })

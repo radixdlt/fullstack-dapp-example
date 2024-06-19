@@ -1,5 +1,5 @@
-export * from './radquest/helpers/mintUserBadge'
-export * from './radquest/helpers/mintUserBadgeAndDepositXrd'
+export * from './radquest/helpers/mintHeroBadge'
+export * from './radquest/helpers/mintHeroBadgeAndDepositXrd'
 export * from './radquest/helpers/mintElements'
 export * from './radquest/helpers/combineElementsDeposit'
 export { radixEngineClient } from './config'
