@@ -260,7 +260,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/dawidsowa/work/radquest/packages/database/src/prisma",
+      "value": "/Users/alex/Projects/radquest/packages/database/src/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -295,7 +295,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
