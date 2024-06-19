@@ -86,17 +86,7 @@ export const createHeroBadgeResource = (adminBadge: string) => {
             Tuple(
                 Enum<1u8>(
                     Tuple(
-                        Enum<1u8>(
-                            Enum<2u8>(
-                                Enum<0u8>(
-                                    Enum<0u8>(
-                                        Enum<1u8>(
-                                            Address("${adminBadge}")
-                                        )
-                                    )
-                                )
-                            )
-                        ),
+                        Enum<0u8>(),
                         Enum<1u8>(
                             Enum<1u8>()
                         )
