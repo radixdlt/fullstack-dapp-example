@@ -15,8 +15,8 @@
   export let questId: keyof Quests
   export let state:
     | 'loading'
-    | 'hasUserBadge'
-    | 'canAcceptUserBadge'
+    | 'hasHeroBadge'
+    | 'canAcceptHeroBadge'
     | 'updateDepositRules'
     | 'minted' = 'loading'
 
@@ -44,7 +44,7 @@
       }).then((result) => {
         result.map(({ status }) => {
           if (status === 'CommittedSuccess') {
-            state = 'canAcceptUserBadge'
+            state = 'canAcceptHeroBadge'
           } else {
             state = 'updateDepositRules'
           }
@@ -53,11 +53,11 @@
     )
   }
 
-  const handleMintUserBadge = () => {
+  const handleMintHeroBadge = () => {
     if (mintingInProgress) return
     mintingInProgress = true
     userApi
-      .mintUserBadge()
+      .mintHeroBadge()
       .map(async () => {
         mintingInProgress = false
         state = 'minted'
@@ -73,7 +73,7 @@
       if (
         event.type === 'QuestRequirementCompleted' &&
         event.questId === questId &&
-        event.requirementId === 'DepositUserBadge'
+        event.requirementId === 'DepositHeroBadge'
       ) {
         messageApi.markAsSeen(event.id)
         dispatch('deposited')
@@ -90,14 +90,14 @@
 
       const gatewayApi = GatewayApi(publicConfig.networkId)
       gatewayApi.callApi('getEntityDetailsVaultAggregated', [address]).map(([entityDetails]) => {
-        const hasUserBadge = entityDetails.non_fungible_resources.items
+        const hasHeroBadge = entityDetails.non_fungible_resources.items
           .find((item) => item.resource_address === publicConfig.badges.heroBadgeAddress)
           ?.vaults.items.some(
             (vault) => vault.total_count > 0 && vault.items?.some((item) => item === `<${userId}>`)
           )
 
-        if (hasUserBadge) {
-          state = 'hasUserBadge'
+        if (hasHeroBadge) {
+          state = 'hasHeroBadge'
           dispatch('deposited')
           return
         }
@@ -106,12 +106,12 @@
           const depositRule = (entityDetails.details.state as ComponentStateDetails)
             .default_deposit_rule
           if (depositRule === 'Accept') {
-            state = 'canAcceptUserBadge'
+            state = 'canAcceptHeroBadge'
             return
           } else {
             if (depositRule === 'EXCEPTIONS') {
               // TODO: check if config.dapp.badges.heroBadgeAddress is added to exceptions
-              state = 'canAcceptUserBadge'
+              state = 'canAcceptHeroBadge'
               return
             } else {
               state = 'updateDepositRules'
@@ -125,12 +125,12 @@
   })
 </script>
 
-<div class="deposit-user-badge">
+<div class="deposit-hero-badge">
   {#if state === 'loading'}
     <!-- TODO: use i18n strings here -->
     <div>Checking third party deposits...</div>
-  {:else if state === 'canAcceptUserBadge'}
-    <Button on:click={handleMintUserBadge} loading={mintingInProgress}>Get badge and XRD</Button>
+  {:else if state === 'canAcceptHeroBadge'}
+    <Button on:click={handleMintHeroBadge} loading={mintingInProgress}>Get badge and XRD</Button>
   {:else if state === 'minted'}
     Minted!
   {:else if state === 'updateDepositRules'}
@@ -139,7 +139,7 @@
 </div>
 
 <style>
-  .deposit-user-badge {
+  .deposit-hero-badge {
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll } from 'vitest'
 import {
   RadixEngineClient,
   generateMnemonic,
-  mintUserBadge,
+  mintHeroBadge,
   mintElements,
   combineElementsDeposit,
   radquestEntityAddresses
@@ -90,7 +90,7 @@ describe('Event flows', () => {
     'should add account address, track event, and send notification to user',
     { timeout: 30_000 },
     async () => {
-      const transactionKey = `AddAccountAddressToUserBadgeOracle:${crypto.randomUUID()}`
+      const transactionKey = `AddAccountAddressToHeroBadgeOracle:${crypto.randomUUID()}`
       const badgeId = `<${user.id}>`
 
       const badgeResourceAddress = addresses.badges.heroBadgeAddress
@@ -108,7 +108,7 @@ describe('Event flows', () => {
 
       await transactionQueue.add({
         traceId,
-        type: 'AddAccountAddressToUserBadgeOracle',
+        type: 'AddAccountAddressToHeroBadgeOracle',
         attempt,
         badgeId,
         badgeResourceAddress,
@@ -124,7 +124,7 @@ describe('Event flows', () => {
 
       expect(item?.status).toBe('COMPLETED')
 
-      // TODO: Mint user badge
+      // TODO: Mint hero badge
 
       // await radixEngineClient.getXrdFromFaucet()
 
@@ -165,10 +165,10 @@ describe('Event flows', () => {
       // expect(result.value).toBe(true)
     }
   )
-  it('should mint elements and combine them', { timeout: 30_000 }, async () => {
+  it('should mint elements and combine them', { timeout: 30_000, skip: false }, async () => {
     await radixEngineClient.getXrdFromFaucet()
 
-    await mintUserBadge(user.id, accountAddress, {
+    await mintHeroBadge(user.id, accountAddress, undefined, [], 0, {
       heroBadgeAddress: radquestEntityAddresses.badges.heroBadgeAddress
     })
 

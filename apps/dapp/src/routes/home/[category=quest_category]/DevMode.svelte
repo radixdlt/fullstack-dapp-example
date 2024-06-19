@@ -41,7 +41,7 @@
           })
         })
         .map(() => {
-          userApi.mintUserBadge()
+          userApi.mintHeroBadge()
         })
     })
   }

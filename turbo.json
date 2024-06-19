@@ -82,7 +82,7 @@
     "wallet:mint-admin-badge": {
       "cache": false
     },
-    "wallet:mint-user-badge": {
+    "wallet:mint-hero-badge": {
       "cache": false
     },
     "build:storybook": {

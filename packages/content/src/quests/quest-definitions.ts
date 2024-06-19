@@ -157,7 +157,7 @@ export const QuestDefinitions = () => {
         VerifyPhoneNumber: {
           type: 'offLedger'
         },
-        [EventId.DepositUserBadge]: {
+        [EventId.DepositHeroBadge]: {
           type: 'event',
           eventName: 'DepositEvent'
         }

@@ -16,8 +16,8 @@ import { config } from '../config'
 import { PrismaClient } from 'database'
 import {
   getAccountAddressFromAccountAddedEvent,
-  getUserIdFromDepositUserBadgeEvent
-} from './helpers/getUserIdFromDepositUserBadgeEvent'
+  getUserIdFromDepositHeroBadgeEvent
+} from './helpers/getUserIdFromDepositHeroBadgeEvent'
 import { getDataFromQuestRewardsEvent } from './helpers/getDataFromQuestRewardsEvent'
 import { databaseTransactions } from './helpers/databaseTransactions'
 import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent'
@@ -401,9 +401,9 @@ export const EventWorkerController = ({
             isEnabled ? okAsync(undefined) : errAsync({ reason: 'RadGemMintingDisabled' })
           )
 
-      case EventId.DepositUserBadge:
+      case EventId.DepositHeroBadge:
         return Result.combine([
-          getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited),
+          getUserIdFromDepositHeroBadgeEvent(job.data.relevantEvents.HeroBadgeDeposited),
           ok(getAmountFromDepositEvent(job.data.relevantEvents.XrdDeposited)).andThen(
             (xrdAmount) => (xrdAmount ? ok(xrdAmount) : err('XrdAmountNotFound'))
           )

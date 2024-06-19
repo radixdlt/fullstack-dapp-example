@@ -164,7 +164,7 @@ export const TransactionWorkerController = ({
         }))
         .andThen((response) => {
           logger.debug({
-            method: 'AddAccountAddressToUserBadgeOracle.pollTransactionStatus',
+            method: 'AddAccountAddressToHeroBadgeOracle.pollTransactionStatus',
             txId,
             status: response?.status
           })
@@ -181,7 +181,7 @@ export const TransactionWorkerController = ({
         .map(() => undefined)
 
     switch (type) {
-      case 'MintUserBadge': {
+      case 'MintHeroBadge': {
         const { accountAddress, badgeId } = job.data
 
         return getItemFromDb().andThen((item) =>
@@ -368,7 +368,7 @@ export const TransactionWorkerController = ({
                 })
           )
 
-      case 'AddAccountAddressToUserBadgeOracle': {
+      case 'AddAccountAddressToHeroBadgeOracle': {
         const { accountAddress, badgeId } = job.data
         return ResultAsync.combine([
           gatewayApi.isThirdPartyDepositRuleDisabled(accountAddress),

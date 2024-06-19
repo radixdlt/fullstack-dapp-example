@@ -55,7 +55,7 @@ const UserController = ({
       })
   }
 
-  const mintUserBadge = (
+  const mintHeroBadge = (
     ctx: ControllerMethodContext,
     {
       userId
@@ -78,21 +78,21 @@ const UserController = ({
               .add({
                 badgeId,
                 badgeResourceAddress,
-                transactionKey: 'mintUserBadge',
+                transactionKey: 'mintHeroBadge',
                 attempt: 0
               })
               .andThen(() => {
                 const job = {
                   traceId: ctx.traceId,
-                  type: 'MintUserBadge',
+                  type: 'MintHeroBadge',
                   badgeId,
                   badgeResourceAddress,
                   attempt: 0,
-                  transactionKey: `mintUserBadge`,
+                  transactionKey: `mintHeroBadge`,
                   accountAddress: data[1]
                 } satisfies TransactionJob
 
-                ctx.logger.debug({ method: 'userController.mintUserBadge.addJobToQueue', job })
+                ctx.logger.debug({ method: 'userController.mintHeroBadge.addJobToQueue', job })
 
                 return ResultAsync.fromPromise(
                   transactionQueue.add(ctx.traceId, job, { jobId: ctx.traceId }),
@@ -101,8 +101,8 @@ const UserController = ({
               })
           })
           .mapErr((error) => {
-            ctx.logger.error({ error, method: 'mintUserBadge', event: 'error' })
-            return createApiError('mintUserBadgeError', 500)()
+            ctx.logger.error({ error, method: 'mintHeroBadge', event: 'error' })
+            return createApiError('mintHeroBadgeError', 500)()
           })
       )
       .map(() => ({
@@ -116,7 +116,7 @@ const UserController = ({
     accountAddress: string,
     proof: SignedChallengeAccount
   ) => {
-    const hasUserBadge = GatewayApi(publicConfig.networkId)
+    const hasHeroBadge = GatewayApi(publicConfig.networkId)
       .callApi('getEntityDetailsVaultAggregated', [accountAddress])
       .map(
         ([entityDetails]) =>
@@ -142,12 +142,12 @@ const UserController = ({
       expectedOrigin: config.dapp.expectedOrigin
     })
 
-    return hasUserBadge
+    return hasHeroBadge
       .andThen((hasBadge) =>
         hasBadge
           ? errAsync({
               httpResponseCode: 400,
-              reason: 'account already has user badge'
+              reason: 'account already has hero badge'
             } satisfies ApiError)
           : okAsync(undefined)
       )
@@ -226,7 +226,7 @@ const UserController = ({
       )
   }
 
-  return { getUser, mintUserBadge, setAccountAddress, populateResources, setUserName, getReferrals }
+  return { getUser, mintHeroBadge, setAccountAddress, populateResources, setUserName, getReferrals }
 }
 
 export const userController = UserController({})

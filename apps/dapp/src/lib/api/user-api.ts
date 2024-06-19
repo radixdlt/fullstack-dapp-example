@@ -4,7 +4,7 @@ import type { User } from 'database'
 
 const me = () => fetchWrapper<User>(fetch('/api/user')).map(({ data }) => data)
 
-const mintUserBadge = () =>
+const mintHeroBadge = () =>
   fetchWrapper<void>(
     fetch('/api/user/badge', {
       method: 'POST',
@@ -41,6 +41,6 @@ const getReferrals = () =>
 export const userApi = {
   me,
   getReferrals,
-  mintUserBadge,
+  mintHeroBadge,
   setUserField
 } as const

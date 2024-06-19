@@ -79,7 +79,7 @@ export const RedisKeys = {
 }
 
 export const EventId = {
-  DepositUserBadge: 'DepositUserBadge',
+  DepositHeroBadge: 'DepositHeroBadge',
   JettyReceivedClams: 'JettyReceivedClams',
   XrdStaked: 'XrdStaked',
   MayaRouterWithdrawEvent: 'MayaRouterWithdrawEvent',

@@ -198,7 +198,7 @@ mod refinery {
             Runtime::emit_event(CombineElementsAddedRadgemImageEvent { badge_id });
         }
 
-        // User claims RadGem by presenting user badge
+        // User claims RadGem by presenting hero badge
         pub fn combine_elements_claim(&mut self, badge_proof: Proof) -> Bucket {
             let badge_address = badge_proof.resource_address();
             let badge_local_id = badge_proof
