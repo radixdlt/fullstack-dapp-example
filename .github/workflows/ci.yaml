@@ -41,7 +41,7 @@ jobs:
       id-token: write
       pull-requests: write
       contents: read
-    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/phylum-analyze.yml@DO-2526
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/phylum-analyze.yml@main
     secrets:
       phylum_api_key: ${{ secrets.PHYLUM_API_KEY }}
     with:
