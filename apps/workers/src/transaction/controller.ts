@@ -1,9 +1,11 @@
 import { ResultAsync, errAsync, okAsync, err, ok, Result } from 'neverthrow'
 import { Job, TransactionJob } from 'queues'
-import { AuditType, TransactionStatus } from 'database'
+import { AuditType, PrismaClient, TransactionStatus } from 'database'
 import {
   Addresses,
   GatewayApi,
+  MessageApi,
+  MessageModel,
   type AppLogger,
   type AuditModel,
   type ConfigModel,
@@ -20,6 +22,7 @@ import { stripNonFungibleLocalId } from '../event/helpers/stripNonFungibleLocalI
 import { TokenPriceClient } from '../token-price-client'
 import BigNumber from 'bignumber.js'
 import { createCombinedElementsAddRadgemImageManifest } from './helpers/createCombinedElementsAddRadgemImageManifest'
+import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 
 export type TransactionWorkerError =
   (typeof TransactionWorkerError)[keyof typeof TransactionWorkerError]
@@ -38,7 +41,11 @@ export const TransactionWorkerError = {
   FailedToGetTransactionFromDb: 'FailedToGetTransactionFromDb',
   MissingTransactionInDb: 'MissingTransactionInDb',
   UnhandledJob: 'UnhandledJob',
-  FeatureDisabled: 'FeatureDisabled'
+  FeatureDisabled: 'FeatureDisabled',
+  FailedToSendMessage: 'FailedToSendMessage',
+  GatewayError: 'GatewayError',
+  HeroBadgeAlreadyClaimed: 'HeroBadgeAlreadyClaimed',
+  FailedToExecuteDbTransaction: 'FailedToExecuteDbTransaction'
 } as const
 
 const getUserIdFromBadgeId = (
@@ -53,20 +60,24 @@ const getUserIdFromBadgeId = (
     })
   return ok(userId)
 }
-export type TransactionWorkerControllerError = { reason: TransactionWorkerError; jsError: unknown }
+export type TransactionWorkerControllerError = { reason: TransactionWorkerError; jsError?: unknown }
 export type TransactionWorkerController = ReturnType<typeof TransactionWorkerController>
 export const TransactionWorkerController = ({
   auditModel,
   transactionModel,
   gatewayApi,
   tokenPriceClient,
-  configModel
+  configModel,
+  messageApi,
+  dbClient
 }: {
   auditModel: AuditModel
   gatewayApi: GatewayApi
   transactionModel: TransactionModel
   tokenPriceClient: TokenPriceClient
   configModel: ConfigModel
+  messageApi: MessageApi
+  dbClient: PrismaClient
 }) => {
   const handler = ({
     job,
@@ -76,6 +87,9 @@ export const TransactionWorkerController = ({
     logger: AppLogger
   }): ResultAsync<void, TransactionWorkerControllerError> => {
     const { type, transactionKey, attempt, badgeResourceAddress, badgeId } = job.data
+
+    const dbTransactionBuilder = DbTransactionBuilder({ messageApi, tokenPriceClient, dbClient })
+    const addresses = Addresses(config.networkId)
 
     const getItemFromDb = () => {
       const latestAttempt = attempt - 1 === -1 ? 0 : attempt - 1
@@ -126,8 +140,8 @@ export const TransactionWorkerController = ({
                   reason: TransactionWorkerError.FailedToSubmitToRadixNetwork,
                   jsError
                 }))
-                .andThen(({ txId }) =>
-                  transactionModel(logger)
+                .andThen(({ txId }) => {
+                  return transactionModel(logger)
                     .setTransactionId(
                       { transactionKey, badgeId, badgeResourceAddress, attempt },
                       txId
@@ -137,7 +151,7 @@ export const TransactionWorkerController = ({
                       jsError
                     }))
                     .map(() => txId)
-                )
+                })
             )
         )
 
@@ -148,8 +162,13 @@ export const TransactionWorkerController = ({
           reason: TransactionWorkerError.FailedToPollTransactionStatus,
           jsError
         }))
-        .andThen(() =>
-          transactionModel(logger)
+        .andThen((response) => {
+          logger.debug({
+            method: 'AddAccountAddressToUserBadgeOracle.pollTransactionStatus',
+            txId,
+            status: response?.status
+          })
+          return transactionModel(logger)
             .setStatus(
               { badgeId, badgeResourceAddress, transactionKey, attempt },
               TransactionStatus.COMPLETED
@@ -158,7 +177,7 @@ export const TransactionWorkerController = ({
               jsError,
               reason: TransactionWorkerError.FailedToSetCompletedStatus
             }))
-        )
+        })
         .map(() => undefined)
 
     switch (type) {
@@ -271,7 +290,6 @@ export const TransactionWorkerController = ({
 
       case 'PopulateResources':
         const { accountAddress } = job.data
-        const addresses = Addresses(config.networkId)
 
         return handleSubmitTransaction(
           (wellKnownAddresses) =>
@@ -349,6 +367,88 @@ export const TransactionWorkerController = ({
                   jsError: new Error('Disabled feature')
                 })
           )
+
+      case 'AddAccountAddressToUserBadgeOracle': {
+        const { accountAddress, badgeId } = job.data
+        return ResultAsync.combine([
+          gatewayApi.isThirdPartyDepositRuleDisabled(accountAddress),
+          gatewayApi.hasHeroBadge(accountAddress).andThen((hasHeroBadge) =>
+            hasHeroBadge
+              ? err({
+                  reason: TransactionWorkerError.HeroBadgeAlreadyClaimed
+                })
+              : ok(undefined)
+          )
+        ])
+          .mapErr((error) => ({
+            reason: TransactionWorkerError.GatewayError,
+            jsError: error
+          }))
+          .andThen(([isThirdPartyDepositRuleDisabled]) =>
+            getUserIdFromBadgeId(badgeId).asyncAndThen((userId) =>
+              handleSubmitTransaction((wellKnownAddresses) => {
+                const allowAccountAddress = [
+                  `CALL_METHOD
+                    Address("${wellKnownAddresses.accountAddress.payerAccount}")
+                    "lock_fee"
+                    Decimal("50")
+                ;`,
+
+                  `CALL_METHOD
+                    Address("${wellKnownAddresses.accountAddress.systemAccount}")
+                    "create_proof_of_amount"
+                    Address("${addresses.badges.adminBadgeAddress}")
+                    Decimal("1")
+                ;`,
+
+                  `CALL_METHOD
+                    Address("${addresses.components.heroBadgeForge}")
+                    "add_user_account"
+                    Address("${accountAddress}")
+                ;`
+                ]
+
+                const depositXrd = [
+                  `CALL_METHOD
+                    Address("${wellKnownAddresses.accountAddress.payerAccount}")
+                    "withdraw"
+                    Address("${wellKnownAddresses.resourceAddresses.xrd}")
+                    Decimal("${config.radQuest.directXrdDepositAmount}")
+                  ;`,
+
+                  `CALL_METHOD
+                    Address("${accountAddress}")
+                    "try_deposit_batch_or_abort"
+                    Expression("ENTIRE_WORKTOP")
+                    Enum<0u8>()
+                  ;`
+                ]
+
+                const transactionManifestParts: string[] = [...allowAccountAddress]
+
+                if (!isThirdPartyDepositRuleDisabled) transactionManifestParts.push(...depositXrd)
+
+                return transactionManifestParts.join('\n')
+              }).andThen((txId) =>
+                handlePollTransactionStatus(txId).andThen(() =>
+                  dbTransactionBuilder.helpers
+                    .addXrdDepositToAuditTable({
+                      transactionId: txId,
+                      userId: userId,
+                      xrdAmount: `${config.radQuest.directXrdDepositAmount}`
+                    })
+                    .andThen((api) => api.exec())
+                    .mapErr((error) => ({
+                      reason: TransactionWorkerError.FailedToExecuteDbTransaction,
+                      jsError: error
+                    }))
+                )
+              )
+            )
+          )
+
+          .map(() => {})
+      }
 
       default:
         return errAsync({

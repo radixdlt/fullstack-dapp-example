@@ -34,7 +34,7 @@ export const createDirectDepositManifest = ({
       Address("${wellKnownAddresses.resourceAddresses.xrd}")
       Decimal("${directXrdDepositAmount}");
 
-      CALL_METHOD
+    CALL_METHOD
       Address("${accountAddress}")
       "try_deposit_batch_or_abort"
       Expression("ENTIRE_WORKTOP")

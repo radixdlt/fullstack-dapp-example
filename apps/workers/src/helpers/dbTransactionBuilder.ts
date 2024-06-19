@@ -1,11 +1,9 @@
 import BigNumber from 'bignumber.js'
 import { QuestId } from 'content'
-import { EventId, MessageApi } from 'common'
+import { EventId, Message, MessageApi, MessageType } from 'common'
 import { AuditType, Prisma, PrismaClient } from 'database'
 import { ResultAsync, ok, err } from 'neverthrow'
-import { TokenPriceClient } from './../../token-price-client'
-import { getAmountFromDepositEvent } from './getAmountFromDepositEvent'
-import { EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
+import { TokenPriceClient } from '../token-price-client'
 
 export type DbOperation = () => Prisma.PrismaPromise<any>
 
@@ -112,14 +110,14 @@ export const DbTransactionBuilder = ({
   const addXrdDepositToAuditTable = ({
     userId,
     transactionId,
-    relevantEvents
+    xrdAmount
   }: {
     userId: string
     transactionId: string
-    relevantEvents: Record<string, EventsItem>
+    xrdAmount: string
   }) =>
-    getXrdPrice(getAmountFromDepositEvent(relevantEvents.XrdDeposited))
-      .map(({ xrdUsdValue, xrdAmount }) =>
+    getXrdPrice(xrdAmount)
+      .map(({ xrdUsdValue }) =>
         operations.push(() =>
           dbClient.audit.create({
             data: {
@@ -138,9 +136,11 @@ export const DbTransactionBuilder = ({
   const exec = () =>
     ResultAsync.fromPromise(
       dbClient.$transaction(async () => {
+        const results = []
         for (const operation of operations) {
-          await operation()
+          results.push(await operation())
         }
+        return results
       }),
       (error) => error as Error
     )

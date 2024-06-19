@@ -38,3 +38,20 @@ export const getUserIdFromDepositUserBadgeEvent = (event: EventsItem) => {
 
   return maybeUserId ? ok(maybeUserId) : err({ reason: 'UserIdNotFound' })
 }
+
+export const getAccountAddressFromAccountAddedEvent = (event: EventsItem) => {
+  const getValue = (event: any) => {
+    if (
+      event.data.type_name === 'AccountAddedEvent' &&
+      'value' in event.data.fields[0] &&
+      typeof event.data.fields[0].value === 'string'
+    ) {
+      return event.data.fields[0].value
+    }
+    return undefined
+  }
+
+  const maybeValue = getValue(event)
+
+  return maybeValue ? ok(maybeValue) : err({ reason: 'AccountAddressNotFound' })
+}

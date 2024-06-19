@@ -9,7 +9,8 @@ export const MessageType = {
   CombineElementsDeposited: 'CombineElementsDeposited',
   CombineElementsMintRadgem: 'CombineElementsMintRadgem',
   CombineElementsAddRadgemImage: 'CombineElementsAddRadgemImage',
-  CombineElementsClaimed: 'CombineElementsClaimed'
+  CombineElementsClaimed: 'CombineElementsClaimed',
+  HeroBadgeReadyToBeClaimed: 'HeroBadgeReadyToBeClaimed'
 } as const
 
 export type MessageType = (typeof MessageType)[keyof typeof MessageType]
@@ -42,6 +43,9 @@ type Messages = {
     traceId: string
   }
   [MessageType.CombineElementsClaimed]: {
+    traceId: string
+  }
+  [MessageType.HeroBadgeReadyToBeClaimed]: {
     traceId: string
   }
 }

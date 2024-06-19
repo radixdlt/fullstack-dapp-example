@@ -41,6 +41,7 @@ const app = async () => {
   const transactionModel = TransactionModel(dbClient)
   const redisClient = new RedisConnection(config.redis)
   const tokenPriceClient = TokenPriceClient({ logger, redisClient })
+
   const eventWorkerController = EventWorkerController({
     dbClient,
     userQuestModel: UserQuestModel(dbClient),
@@ -60,7 +61,9 @@ const app = async () => {
     tokenPriceClient,
     transactionModel,
     auditModel: AuditModel(dbClient),
-    configModel
+    configModel,
+    messageApi,
+    dbClient
   })
 
   TransactionWorker(connection, {
@@ -82,6 +85,8 @@ const app = async () => {
       logger
     })
   })
+
+  logger.debug({ message: 'workers running' })
 }
 
 app().catch((error) => {

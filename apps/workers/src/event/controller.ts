@@ -1,8 +1,8 @@
 import { TokenPriceClient } from './../token-price-client'
-import { ResultAsync, okAsync, errAsync, err, ok } from 'neverthrow'
+import { ResultAsync, okAsync, errAsync, err, ok, Result } from 'neverthrow'
 import { EventJob, Job, TransactionQueue } from 'queues'
 import { QuestDefinitions, QuestId, Quests } from 'content'
-import { ConfigModel, EventId, getAccountFromMayaRouterWithdrawEvent } from 'common'
+import { ConfigModel, EventId, Message, getAccountFromMayaRouterWithdrawEvent } from 'common'
 import {
   AppLogger,
   EventModel,
@@ -14,14 +14,18 @@ import {
 import { MessageApi } from 'common'
 import { config } from '../config'
 import { PrismaClient } from 'database'
-import { getUserIdFromDepositUserBadgeEvent } from './helpers/getUserIdFromDepositUserBadgeEvent'
+import {
+  getAccountAddressFromAccountAddedEvent,
+  getUserIdFromDepositUserBadgeEvent
+} from './helpers/getUserIdFromDepositUserBadgeEvent'
 import { getDataFromQuestRewardsEvent } from './helpers/getDataFromQuestRewardsEvent'
 import { databaseTransactions } from './helpers/databaseTransactions'
 import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent'
 import { getBadgeAddressAndIdFromCombineElementsDepositedEvent } from './helpers/getBadgeAddressAndIdFromCombineElementsDepositedEvent'
 import { randomUUID } from 'crypto'
-import { DbTransactionBuilder } from './helpers/dbTransactionBuilder'
+import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 import { getDetailsFromCombineElementsMintedRadgemEvent } from './helpers/getDetailsFromCombineElementsMintedRadgemEvent'
+import { getAmountFromDepositEvent } from './helpers/getAmountFromDepositEvent'
 
 const transformUserIdIntoBadgeId = (userId: string) => ({
   badgeId: `<${userId}>`,
@@ -315,6 +319,17 @@ export const EventWorkerController = ({
       })
     }
 
+    const sendMessage = (userId: string, message: Message) =>
+      ResultAsync.fromPromise(
+        dbClient.message.create({
+          data: {
+            userId,
+            data: JSON.stringify(message)
+          }
+        }),
+        (error) => ({ reason: 'FailedToCreateMessageInDb', jsError: error as Error })
+      ).andThen(({ id }) => messageApi.send(userId, message, id).orElse(() => ok(undefined)))
+
     const handleQuestWithTrackedAccount = (
       maybeAccountAddress: string | undefined,
       questId: QuestId,
@@ -385,26 +400,48 @@ export const EventWorkerController = ({
           .andThen((isEnabled) =>
             isEnabled ? okAsync(undefined) : errAsync({ reason: 'RadGemMintingDisabled' })
           )
+
       case EventId.DepositUserBadge:
-        return getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited)
-          .asyncAndThen((userId) => ensureUserExists(userId, transactionId))
-          .map((userId) => ({
-            questId: 'FirstTransactionQuest' as QuestId,
-            requirementId: type,
-            userId,
-            transactionId,
-            traceId
-          }))
-          .andThen((questValues) =>
-            dbTransactionBuilder.helpers
-              .questRequirementCompleted(questValues)
-              .helpers.addXrdDepositToAuditTable({
-                ...questValues,
-                relevantEvents: job.data.relevantEvents
-              })
-              .andThen((builder) => builder.exec())
-              .andThen(() => handleAllQuestRequirementCompleted(questValues))
+        return Result.combine([
+          getUserIdFromDepositUserBadgeEvent(job.data.relevantEvents.UserBadgeDeposited),
+          ok(getAmountFromDepositEvent(job.data.relevantEvents.XrdDeposited)).andThen(
+            (xrdAmount) => (xrdAmount ? ok(xrdAmount) : err('XrdAmountNotFound'))
           )
+        ]).asyncAndThen(([userId, xrdAmount]) =>
+          ensureUserExists(userId, transactionId)
+            .map((userId) => ({
+              questId: 'FirstTransactionQuest' as QuestId,
+              requirementId: type,
+              userId,
+              transactionId,
+              traceId
+            }))
+            .andThen((questValues) =>
+              dbTransactionBuilder.helpers
+                .questRequirementCompleted(questValues)
+                .helpers.addXrdDepositToAuditTable({
+                  ...questValues,
+                  xrdAmount
+                })
+                .andThen((builder) => builder.exec())
+                .andThen(() => handleAllQuestRequirementCompleted(questValues))
+            )
+        )
+
+      case EventId.AccountAllowedToForgeHeroBadge:
+        return getAccountAddressFromAccountAddedEvent(
+          job.data.relevantEvents.AccountAddedEvent
+        ).asyncAndThen((accountAddress) =>
+          userModel(childLogger)
+            .getByAccountAddress(accountAddress, {})
+            .andThen((user) => (user ? ok(user) : err({ reason: 'UserNotFound' })))
+            .andThen((user) =>
+              sendMessage(user.id, {
+                type: 'HeroBadgeReadyToBeClaimed',
+                traceId: job.data.traceId
+              })
+            )
+        )
 
       case EventId.JettyReceivedClams: {
         return getUserIdFromWithdrawEvent(job.data.relevantEvents.WithdrawEvent, dbClient)

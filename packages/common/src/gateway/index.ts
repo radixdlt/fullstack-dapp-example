@@ -1,4 +1,4 @@
-import { ResultAsync, fromPromise, okAsync } from 'neverthrow'
+import { ResultAsync, err, fromPromise, ok, okAsync } from 'neverthrow'
 import {
   GatewayApiClient,
   type ErrorResponse,
@@ -108,11 +108,29 @@ export const GatewayApi = (networkId: number) => {
     ).map((response) => response.entries.length > 0)
   }
 
+  const isThirdPartyDepositRuleDisabled = (accountAddress: string) =>
+    callApi('getEntityDetailsVaultAggregated', [accountAddress]).andThen(([response]) =>
+      response.details?.type === 'Component' &&
+      response.details.state &&
+      'default_deposit_rule' in response.details.state
+        ? ok(response.details.state.default_deposit_rule === 'Reject')
+        : err({ reason: 'MissingDepositRuleValue' })
+    )
+
+  const hasHeroBadge = (accountAddress: string) =>
+    callApi('getEntityDetailsVaultAggregated', [accountAddress]).map(([response]) =>
+      response.non_fungible_resources.items.some(
+        (item) => item.resource_address === addresses.badges.heroBadgeAddress
+      )
+    )
+
   return {
     hasKycEntry,
+    isThirdPartyDepositRuleDisabled,
     networkConfig,
     gatewayApiClient,
     extractedMethods,
+    hasHeroBadge,
     callApi,
     callApiWithCache
   }
