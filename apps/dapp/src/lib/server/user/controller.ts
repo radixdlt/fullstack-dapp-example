@@ -12,11 +12,6 @@ import { publicConfig } from '$lib/public-config'
 import { type ErrorResponse } from '@radixdlt/babylon-gateway-api-sdk'
 import type { TransactionJob } from 'queues'
 
-export const Queues = {
-  EventQueue: 'EventQueue',
-  TransactionQueue: 'TransactionQueue'
-} as const
-
 const isGatewayError = (error: any): error is ErrorResponse => error.details !== undefined
 
 const UserController = ({
@@ -44,6 +39,9 @@ const UserController = ({
       ? okAsync(data.accountAddress)
       : errAsync(createApiError('missing account address', 400)())
 
+  const valueExists = (input: unknown, errorMessage: string): ResultAsync<boolean, ApiError> =>
+    input ? okAsync(true) : errAsync(createApiError(errorMessage, 400)())
+
   const getReferrals = (ctx: ControllerMethodContext, userId: string) => {
     return userModel(ctx.logger)
       .getById(userId, { referredUsers: true })
@@ -55,7 +53,7 @@ const UserController = ({
       })
   }
 
-  const mintHeroBadge = (
+  const allowAccountAddressToMintHeroBadge = (
     ctx: ControllerMethodContext,
     {
       userId
@@ -68,41 +66,50 @@ const UserController = ({
       .andThen((user) => (user ? ok(user) : err(createApiError('UserNotFound', 404)())))
       .andThen((data) =>
         ResultAsync.combine([
-          userModel(ctx.logger).getPhoneNumberByUserId(data.id),
+          valueExists((data as any).phoneNumber, 'missing phone number'),
           accountAddressExists(data)
         ])
-          .andThen((data) => {
+          .andThen(([, accountAddress]) => {
             const badgeId = `<${userId}>`
             const badgeResourceAddress = publicConfig.badges.heroBadgeAddress
+
+            const job = {
+              traceId: ctx.traceId,
+              type: 'AddAccountAddressToHeroBadgeForge',
+              badgeId,
+              badgeResourceAddress,
+              attempt: 0,
+              transactionKey: 'AddAccountAddressToHeroBadgeForge',
+              accountAddress
+            } satisfies TransactionJob
+
             return transactionModel(ctx.logger)
-              .add({
-                badgeId,
-                badgeResourceAddress,
-                transactionKey: 'mintHeroBadge',
-                attempt: 0
-              })
-              .andThen(() => {
-                const job = {
-                  traceId: ctx.traceId,
-                  type: 'MintHeroBadge',
-                  badgeId,
-                  badgeResourceAddress,
-                  attempt: 0,
-                  transactionKey: `mintHeroBadge`,
-                  accountAddress: data[1]
-                } satisfies TransactionJob
+              .doesTransactionExist(job)
+              .andThen((exists) =>
+                exists
+                  ? okAsync({ httpResponseCode: 201, data: undefined })
+                  : transactionModel(ctx.logger)
+                      .add(job)
+                      .andThen(() => {
+                        ctx.logger.debug({
+                          method: 'userController.allowAccountAddressToMintHeroBadge.addJobToQueue',
+                          job
+                        })
 
-                ctx.logger.debug({ method: 'userController.mintHeroBadge.addJobToQueue', job })
-
-                return ResultAsync.fromPromise(
-                  transactionQueue.add(ctx.traceId, job, { jobId: ctx.traceId }),
-                  (error) => error
-                )
-              })
+                        return ResultAsync.fromPromise(
+                          transactionQueue.add(ctx.traceId, job, { jobId: ctx.traceId }),
+                          (error) => error
+                        )
+                      })
+              )
           })
           .mapErr((error) => {
-            ctx.logger.error({ error, method: 'mintHeroBadge', event: 'error' })
-            return createApiError('mintHeroBadgeError', 500)()
+            ctx.logger.error({
+              error,
+              method: 'allowAccountAddressToMintHeroBadge',
+              event: 'error'
+            })
+            return createApiError('allowAccountAddressToMintHeroBadgeError', 500)()
           })
       )
       .map(() => ({
@@ -226,7 +233,14 @@ const UserController = ({
       )
   }
 
-  return { getUser, mintHeroBadge, setAccountAddress, populateResources, setUserName, getReferrals }
+  return {
+    getUser,
+    allowAccountAddressToMintHeroBadge,
+    setAccountAddress,
+    populateResources,
+    setUserName,
+    getReferrals
+  }
 }
 
 export const userController = UserController({})

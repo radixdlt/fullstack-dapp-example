@@ -164,7 +164,7 @@ export const TransactionWorkerController = ({
         }))
         .andThen((response) => {
           logger.debug({
-            method: 'AddAccountAddressToHeroBadgeForge.pollTransactionStatus',
+            method: 'pollTransactionStatus',
             txId,
             status: response?.status
           })

@@ -57,10 +57,19 @@
     if (mintingInProgress) return
     mintingInProgress = true
     userApi
-      .mintHeroBadge()
-      .map(async () => {
-        mintingInProgress = false
-        state = 'minted'
+      .allowAccountAddressToMintHeroBadge()
+      .map(() => {
+        /**
+         * TODO: implement flow for handling hero badge minting
+         *  if status is 200.
+         * - The allowAccountAddressToMintHeroBadge transaction is either in-flight or completed
+         * - find message with type 'HeroBadgeReadyToBeClaimed' and send tx to wallet to mint badge
+         *
+         * if status is 201
+         * - The allowAccountAddressToMintHeroBadge transaction is in-flight
+         * - listen for 'HeroBadgeReadyToBeClaimed' message and and send tx to wallet to mint badge
+         *
+         */
       })
       .mapErr(() => {
         mintingInProgress = false

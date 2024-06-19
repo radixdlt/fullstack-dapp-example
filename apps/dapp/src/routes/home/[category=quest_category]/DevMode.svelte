@@ -41,7 +41,7 @@
           })
         })
         .map(() => {
-          userApi.mintHeroBadge()
+          userApi.allowAccountAddressToMintHeroBadge()
         })
     })
   }
