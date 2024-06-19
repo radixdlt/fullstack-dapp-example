@@ -4,7 +4,7 @@ import { radixEngineClient } from '../../config'
 export const mintHeroBadge = (
   userId: string,
   accountAddress: string,
-  keyImageUrl = '',
+  keyImageUrl = '""',
   questsCompleted: string[] = [],
   questCounter = 0,
   badgeAddresses?: Partial<{
@@ -37,8 +37,8 @@ export const mintHeroBadge = (
           Address("${heroBadgeAddress}")
           Map<NonFungibleLocalId, Tuple>(NonFungibleLocalId("<${userId}>") => Tuple(Tuple(
             ${keyImageUrl},
-            ${questsCompleted},
-            ${questCounter},
+            Array<String>(${questsCompleted.join(', ')}),
+            ${questCounter}u32,
           )))
         ;
 

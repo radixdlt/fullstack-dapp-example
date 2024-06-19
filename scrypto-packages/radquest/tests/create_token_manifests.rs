@@ -21,7 +21,7 @@ fn create_hero_badge() {
         true,
         NonFungibleResourceRoles {
             mint_roles: mint_roles! {
-                minter => rule!(require(XRD));
+                minter => OWNER;
                 minter_updater => rule!(deny_all);
             },
             ..Default::default()
