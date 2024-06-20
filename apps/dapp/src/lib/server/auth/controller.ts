@@ -13,6 +13,7 @@ import type { Cookies } from '@sveltejs/kit'
 import { config, type Config } from '$lib/config'
 import { UserQuestModel, UserModel } from 'common'
 import { dbClient } from '$lib/db'
+import type { UserType } from 'database'
 
 export type AuthControllerInput = Partial<{
   authModel: AuthModel
@@ -142,6 +143,11 @@ export const AuthController = ({
       }))
   }
 
+  const createRefreshTokenCookie = (userId: string, userType: UserType, cookies: Cookies) =>
+    jwt
+      .createTokens(userId, userType)
+      .map(({ refreshToken }) => jwt.createRefreshTokenCookie(refreshToken, cookies))
+
   const renewAuthToken = (cookies: Cookies) => jwt.renewAuthToken(cookies)
 
   const verifyAuthHeader = (authorizationHeaderValue: string | null) => {
@@ -154,6 +160,7 @@ export const AuthController = ({
 
   return {
     createChallenge,
+    createRefreshTokenCookie,
     login,
     renewAuthToken,
     verifyAuthToken,
