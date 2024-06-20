@@ -101,10 +101,27 @@ export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
     )
   }
 
+  const doesTransactionExist = ({
+    badgeId,
+    badgeResourceAddress,
+    attempt,
+    transactionKey
+  }: TransactionIdentifierData) =>
+    ResultAsync.fromPromise(
+      db.transaction.count({
+        where: { badgeId, badgeResourceAddress, attempt, transactionKey }
+      }),
+      (error) => {
+        logger?.error({ error, method: 'doesTransactionExist', model: 'TransactionModel' })
+        return createApiError('failed to check if transaction exists', 400)()
+      }
+    ).map((count) => count > 0)
+
   return {
     add,
     setStatus,
     setTransactionId,
-    getItem
+    getItem,
+    doesTransactionExist
   }
 }

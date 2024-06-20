@@ -11,7 +11,9 @@
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
   import type { WebSocketClient } from '$lib/websocket-client'
+  import { ResultAsync } from 'neverthrow'
 
+  const rdtInstance = ResultAsync.fromSafePromise(rdt)
   export let questId: keyof Quests
   export let state:
     | 'loading'
@@ -57,10 +59,19 @@
     if (mintingInProgress) return
     mintingInProgress = true
     userApi
-      .mintHeroBadge()
-      .map(async () => {
-        mintingInProgress = false
-        state = 'minted'
+      .allowAccountAddressToMintHeroBadge()
+      .map(() => {
+        /**
+         * TODO: implement flow for handling hero badge minting
+         *  if status is 200.
+         * - The allowAccountAddressToMintHeroBadge transaction is either in-flight or completed
+         * - find message with type 'HeroBadgeReadyToBeClaimed' and send tx to wallet to mint badge
+         *
+         * if status is 201
+         * - The allowAccountAddressToMintHeroBadge transaction is in-flight
+         * - listen for 'HeroBadgeReadyToBeClaimed' message and and send tx to wallet to mint badge
+         *
+         */
       })
       .mapErr(() => {
         mintingInProgress = false
@@ -69,7 +80,7 @@
 
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
-    unsubscribeWebSocket = $webSocketClient.onMessage((event) => {
+    unsubscribeWebSocket = $webSocketClient.onMessage(async (event) => {
       if (
         event.type === 'QuestRequirementCompleted' &&
         event.questId === questId &&
@@ -77,6 +88,27 @@
       ) {
         messageApi.markAsSeen(event.id)
         dispatch('deposited')
+      }
+
+      if (event.type === 'HeroBadgeReadyToBeClaimed') {
+        await rdtInstance
+          .andThen((rdt) => {
+            const claimHeroBadgeManifest = `
+              CALL_METHOD
+                  Address("${publicConfig.components.heroBadgeForge}")
+                  "claim_badge"
+                  Address("${$user?.accountAddress || ''}")
+                  "${$user?.id}"
+              ;
+              CALL_METHOD
+                  Address("${$user?.accountAddress}")
+                  "deposit_batch"
+                  Expression("ENTIRE_WORKTOP")
+              ;
+            `
+            return rdt.walletApi.sendTransaction({ transactionManifest: claimHeroBadgeManifest })
+          })
+          .andThen(() => messageApi.markAsSeen(event.id))
       }
     })
   }
