@@ -1,6 +1,6 @@
 use radquest::{
     image_oracle::image_oracle_test::*,
-    morph_card_forge::{MorphCardData, ENERGY},
+    morph_card_forge::MorphCardData,
     radgem_forge::{RadgemData, COMMON_COLOR, MATERIAL, RARE_COLOR},
     radmorph_forge::{radmorph_forge_test::*, RadmorphData},
     refinery::{refinery_test::*, RARITY},
@@ -86,8 +86,8 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         .mint_initial_supply(
             [MorphCardData {
                 key_image_url: UncheckedUrl("https://www.example.com".to_string()),
-                name: "MoltenLava Morph Card".to_string(),
-                energy: ENERGY[0].to_string(), // MoltenLava,
+                name: "Molten Lava Morph Card".to_string(),
+                energy: "Molten Lava".to_string(),
                 rarity: RARITY[1].to_string(), // Uncommon,
                 availability: "Random".to_string(),
             }],

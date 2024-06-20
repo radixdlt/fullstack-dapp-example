@@ -3,29 +3,6 @@ use scrypto::prelude::*;
 use crate::quest_rewards::UserId;
 use crate::refinery::RARITY;
 
-pub const ENERGY: [&str; 20] = [
-    "Molten Lava",
-    "Pyroclastic Flow",
-    "Volcanic Lightning",
-    "Tropical Cyclone",
-    "Polar Blizzard",
-    "Earthquake",
-    "Fire Tornado",
-    "Tidal Wave",
-    "Hydrothermal Vent",
-    "Rainbow Power",
-    "Storm Cell",
-    "Solar Flare",
-    "Nuclear Fusion",
-    "Aurora Borealis",
-    "Gravity Force",
-    "Magnetic Field",
-    "Gamma Rays",
-    "Black Hole",
-    "Supernova",
-    "Whirlpool",
-];
-
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 pub struct MorphCardDataInput {
     pub key_image_url: Url,
@@ -136,7 +113,6 @@ mod morph_card_forge {
             assert!(self.enabled, "MorphCard component disabled");
             for card in cards {
                 assert!(RARITY.contains(&(&card.rarity as &str)));
-                assert!(ENERGY.contains(&(&card.energy as &str)));
 
                 let full_card = MorphCardData {
                     key_image_url: card.key_image_url,
@@ -202,7 +178,6 @@ mod morph_card_forge {
             assert!(self.enabled, "MorphCard component disabled");
             for card in cards {
                 assert!(RARITY.contains(&(&card.rarity as &str)));
-                assert!(ENERGY.contains(&(&card.energy as &str)));
 
                 let full_card = MorphCardData {
                     key_image_url: card.key_image_url,
