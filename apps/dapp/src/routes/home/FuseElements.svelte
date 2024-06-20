@@ -38,7 +38,7 @@
         CALL_METHOD
             Address("${$user?.accountAddress}")
             "create_proof_of_non_fungibles"
-            Address("${publicConfig.badges.userBadgeAddress}")
+            Address("${publicConfig.badges.heroBadgeAddress}")
             Array<NonFungibleLocalId>(NonFungibleLocalId("<${$user?.id}>"))
         ;
 
