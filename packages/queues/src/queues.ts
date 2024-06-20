@@ -44,8 +44,8 @@ export type PopulateResourcesTransactionJob = {
   accountAddress: string
 }
 
-export type AddAccountAddressToHeroBadgeOracleJob = {
-  type: 'AddAccountAddressToHeroBadgeOracle'
+export type AddAccountAddressToHeroBadgeForgeJob = {
+  type: 'AddAccountAddressToHeroBadgeForge'
   accountAddress: string
 }
 
@@ -61,7 +61,7 @@ export type TransactionJob = {
   | CombinedElementsMintRadgemTransactionJob
   | CombinedElementsAddRadgemImageTransactionJob
   | PopulateResourcesTransactionJob
-  | AddAccountAddressToHeroBadgeOracleJob
+  | AddAccountAddressToHeroBadgeForgeJob
 )
 
 export type RadmorphSystemJob = {

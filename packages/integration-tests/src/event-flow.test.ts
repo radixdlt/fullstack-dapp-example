@@ -88,9 +88,9 @@ describe('Event flows', () => {
   })
   it(
     'should add account address, track event, and send notification to user',
-    { timeout: 30_000 },
+    { timeout: 30_000, skip: false },
     async () => {
-      const transactionKey = `AddAccountAddressToHeroBadgeOracle:${crypto.randomUUID()}`
+      const transactionKey = `AddAccountAddressToHeroBadgeForge:${crypto.randomUUID()}`
       const badgeId = `<${user.id}>`
 
       const badgeResourceAddress = addresses.badges.heroBadgeAddress
@@ -108,7 +108,7 @@ describe('Event flows', () => {
 
       await transactionQueue.add({
         traceId,
-        type: 'AddAccountAddressToHeroBadgeOracle',
+        type: 'AddAccountAddressToHeroBadgeForge',
         attempt,
         badgeId,
         badgeResourceAddress,
@@ -124,45 +124,43 @@ describe('Event flows', () => {
 
       expect(item?.status).toBe('COMPLETED')
 
-      // TODO: Mint hero badge
+      await radixEngineClient.getXrdFromFaucet()
 
-      // await radixEngineClient.getXrdFromFaucet()
+      await radixEngineClient
+        .getManifestBuilder()
+        .andThen(({ convertStringManifest, submitTransaction }) => {
+          const transactionManifest = `
+          CALL_METHOD
+              Address("${accountAddress}")
+              "lock_fee"
+              Decimal("50")
+          ;
+          CALL_METHOD
+              Address("${addresses.components.heroBadgeForge}")
+              "claim_badge"
+              Address("${accountAddress}")
+              "${user.id}"
+          ;
+          CALL_METHOD
+              Address("${accountAddress}")
+              "deposit_batch"
+              Expression("ENTIRE_WORKTOP")
+          ;
+        `
+          return convertStringManifest(transactionManifest)
+            .andThen((transactionManifest) =>
+              submitTransaction({ transactionManifest, signers: [] })
+            )
+            .andThen(({ txId }) =>
+              radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
+            )
+        })
 
-      // await radixEngineClient
-      //   .getManifestBuilder()
-      //   .andThen(({ convertStringManifest, submitTransaction }) => {
-      //     const transactionManifest = `
-      //     CALL_METHOD
-      //         Address("${accountAddress}")
-      //         "lock_fee"
-      //         Decimal("50")
-      //     ;
-      //     CALL_METHOD
-      //         Address("${addresses.components.heroBadgeForge}")
-      //         "claim_badge"
-      //         Address("${accountAddress}")
-      //         "${user.id}"
-      //     ;
-      //     CALL_METHOD
-      //         Address("${accountAddress}")
-      //         "deposit_batch"
-      //         Expression("ENTIRE_WORKTOP")
-      //     ;
-      //   `
-      //     return convertStringManifest(transactionManifest)
-      //       .andThen((transactionManifest) =>
-      //         submitTransaction({ transactionManifest, signers: [] })
-      //       )
-      //       .andThen(({ txId }) =>
-      //         radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-      //       )
-      //   })
+      const result = await gatewayApi.hasHeroBadge(accountAddress)
 
-      // const result = await gatewayApi.hasHeroBadge(accountAddress)
+      if (result.isErr()) throw result.error
 
-      // if (result.isErr()) throw result.error
-
-      // expect(result.value).toBe(true)
+      expect(result.value).toBe(true)
     }
   )
   it('should mint elements and combine them', { timeout: 30_000, skip: false }, async () => {

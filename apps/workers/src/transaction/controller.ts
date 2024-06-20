@@ -164,7 +164,7 @@ export const TransactionWorkerController = ({
         }))
         .andThen((response) => {
           logger.debug({
-            method: 'AddAccountAddressToHeroBadgeOracle.pollTransactionStatus',
+            method: 'AddAccountAddressToHeroBadgeForge.pollTransactionStatus',
             txId,
             status: response?.status
           })
@@ -368,7 +368,7 @@ export const TransactionWorkerController = ({
                 })
           )
 
-      case 'AddAccountAddressToHeroBadgeOracle': {
+      case 'AddAccountAddressToHeroBadgeForge': {
         const { accountAddress, badgeId } = job.data
         return ResultAsync.combine([
           gatewayApi.isThirdPartyDepositRuleDisabled(accountAddress),
