@@ -434,12 +434,9 @@ export const EventWorkerController = ({
           )
 
       case EventId.DepositHeroBadge:
-        return Result.combine([
-          getUserIdFromDepositHeroBadgeEvent(job.data.relevantEvents.HeroBadgeDeposited),
-          ok(getAmountFromDepositEvent(job.data.relevantEvents.XrdDeposited)).andThen(
-            (xrdAmount) => (xrdAmount ? ok(xrdAmount) : err('XrdAmountNotFound'))
-          )
-        ]).asyncAndThen(([userId, xrdAmount]) =>
+        return getUserIdFromDepositHeroBadgeEvent(
+          job.data.relevantEvents.HeroBadgeDeposited
+        ).asyncAndThen((userId) =>
           ensureUserExists(userId, transactionId)
             .map((userId) => ({
               questId: 'FirstTransactionQuest' as QuestId,
@@ -451,11 +448,7 @@ export const EventWorkerController = ({
             .andThen((questValues) =>
               dbTransactionBuilder.helpers
                 .questRequirementCompleted(questValues)
-                .helpers.addXrdDepositToAuditTable({
-                  ...questValues,
-                  xrdAmount
-                })
-                .andThen((builder) => builder.exec())
+                .exec()
                 .andThen(() => handleAllQuestRequirementCompleted(questValues))
             )
         )

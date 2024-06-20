@@ -11,7 +11,9 @@
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
   import type { WebSocketClient } from '$lib/websocket-client'
+  import { ResultAsync } from 'neverthrow'
 
+  const rdtInstance = ResultAsync.fromSafePromise(rdt)
   export let questId: keyof Quests
   export let state:
     | 'loading'
@@ -78,7 +80,7 @@
 
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
-    unsubscribeWebSocket = $webSocketClient.onMessage((event) => {
+    unsubscribeWebSocket = $webSocketClient.onMessage(async (event) => {
       if (
         event.type === 'QuestRequirementCompleted' &&
         event.questId === questId &&
@@ -86,6 +88,27 @@
       ) {
         messageApi.markAsSeen(event.id)
         dispatch('deposited')
+      }
+
+      if (event.type === 'HeroBadgeReadyToBeClaimed') {
+        await rdtInstance
+          .andThen((rdt) => {
+            const claimHeroBadgeManifest = `
+              CALL_METHOD
+                  Address("${publicConfig.components.heroBadgeForge}")
+                  "claim_badge"
+                  Address("${$user?.accountAddress || ''}")
+                  "${$user?.id}"
+              ;
+              CALL_METHOD
+                  Address("${$user?.accountAddress}")
+                  "deposit_batch"
+                  Expression("ENTIRE_WORKTOP")
+              ;
+            `
+            return rdt.walletApi.sendTransaction({ transactionManifest: claimHeroBadgeManifest })
+          })
+          .andThen(() => messageApi.markAsSeen(event.id))
       }
     })
   }

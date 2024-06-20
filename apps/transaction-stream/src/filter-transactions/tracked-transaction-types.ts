@@ -80,8 +80,7 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
     RewardClaimedEvent: questRewardsEmitted('RewardClaimedEvent')
   },
   [EventId.DepositHeroBadge]: {
-    HeroBadgeDeposited: resourceDeposited(config.radQuest.badges.heroBadgeAddress),
-    XrdDeposited: resourceDeposited(config.radQuest.xrd)
+    HeroBadgeDeposited: resourceDeposited(config.radQuest.badges.heroBadgeAddress)
   },
   [EventId.JettyReceivedClams]: {
     DepositEvent: resourceDeposited(

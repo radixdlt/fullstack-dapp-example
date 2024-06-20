@@ -67,7 +67,6 @@ describe('filter transactions', () => {
     expect(heroBadge.type).toEqual(EventId.DepositHeroBadge)
     expect(heroBadge.transactionId).toBeDefined()
     expect(heroBadge.relevantEvents.HeroBadgeDeposited).toBeDefined()
-    expect(heroBadge.relevantEvents.XrdDeposited).toBeDefined()
   })
 
   it('should find instapass badge deposited transaction', () => {

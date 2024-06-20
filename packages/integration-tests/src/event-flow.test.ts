@@ -88,7 +88,7 @@ describe('Event flows', () => {
   })
   it(
     'should add account address, track event, and send notification to user',
-    { timeout: 30_000, skip: false },
+    { timeout: 60_000, skip: false },
     async () => {
       const transactionKey = `AddAccountAddressToHeroBadgeForge:${crypto.randomUUID()}`
       const badgeId = `<${user.id}>`
@@ -151,9 +151,7 @@ describe('Event flows', () => {
             .andThen((transactionManifest) =>
               submitTransaction({ transactionManifest, signers: [] })
             )
-            .andThen(({ txId }) =>
-              radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-            )
+            .andThen(({ txId }) => radixEngineClient.gatewayClient.pollTransactionStatus(txId))
         })
 
       const result = await gatewayApi.hasHeroBadge(accountAddress)
