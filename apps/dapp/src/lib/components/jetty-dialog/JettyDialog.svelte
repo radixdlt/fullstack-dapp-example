@@ -33,6 +33,7 @@
     right: 0.5rem;
     display: flex;
     flex-direction: column;
+    gap: var(--spacing-lg);
     z-index: 6;
 
     > * {

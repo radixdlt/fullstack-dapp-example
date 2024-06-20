@@ -19,7 +19,7 @@
 
 <div class="footer-container" transition:fly|local={{ y: 200, opacity: 1, duration: 800 }}>
   <div class="footer quest-footer">
-    <Button on:click={() => dispatch('back')}>{backButtonText}</Button>
+    <Button secondary on:click={() => dispatch('back')}>{backButtonText}</Button>
     <Button disabled={nextDisabled} on:click={() => dispatch('next')}>{nextButtonText}</Button>
   </div>
 </div>

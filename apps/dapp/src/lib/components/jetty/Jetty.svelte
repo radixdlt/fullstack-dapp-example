@@ -13,6 +13,10 @@
   import Menu from '../jetty-dialog/speech-bubble/Menu.svelte'
   import { writable } from 'svelte/store'
   import JettyActionButtons from '../quest/JettyActionButtons.svelte'
+  import TransformGemstonesIcon from '@images/minimize.svg'
+  import TransformGems from '../transform-gems/TransformGems.svelte'
+  import FuseElementsIcon from '@images/lightning-icon.svg'
+  import FuseElements from '../../../routes/home/FuseElements.svelte'
 
   export let notifications: typeof jettyNotifications = writable([])
   export let dialog: JettyDialogT | undefined = undefined
@@ -24,6 +28,8 @@
   let showJettyMenu = false
   let showNotification = false
   let showGlossary = false
+  let showTransformGemstones = false
+  let showFuseElements = false
 
   let latestNotification: JettyNotification
 
@@ -35,6 +41,7 @@
     showGlossary = false
     showJettyMenu = false
     showNotification = false
+    showFuseElements = false
   }
 
   const handleKeydown = (event: KeyboardEvent) => {
@@ -65,6 +72,8 @@
     } else {
       if (showGlossary) {
         closeGlossary()
+      } else if (showTransformGemstones) {
+        showTransformGemstones = false
       } else {
         showJettyMenu = !showJettyMenu
       }
@@ -79,9 +88,9 @@
 <svelte:window on:keydown={(e) => handleKeydown(e)} />
 
 <JettyDialog
-  dialogs={showJettyMenu || showNotification || glossaryItem || dialog ? 1 : 0}
+  dialogs={1}
   on:click={onClick}
-  close={showGlossary}
+  close={showGlossary || showTransformGemstones}
   notification={hasNotifications}
   {disabled}
   let:SpeechBubble
@@ -105,6 +114,13 @@
     </SpeechBubble>
   {:else if showGlossary}
     <Glossary {glossary} anchor={glossaryItem} on:close={closeGlossary} />
+  {:else if showTransformGemstones}
+    <TransformGems />
+  {:else if showFuseElements}
+    <FuseElements
+      on:cancel={() => (showFuseElements = false)}
+      on:claimed={() => (showFuseElements = false)}
+    />
   {:else if showJettyMenu}
     <SpeechBubble>
       {$i18n.t('jetty:menu-text')}
@@ -114,6 +130,16 @@
             text: $i18n.t('jetty:menu-glossary'),
             iconUrl: GlossaryIcon,
             onClick: () => (showGlossary = true)
+          },
+          {
+            text: $i18n.t('jetty:menu-fuseElements'),
+            iconUrl: FuseElementsIcon,
+            onClick: () => (showFuseElements = true)
+          },
+          {
+            text: $i18n.t('jetty:menu-transformGems'),
+            iconUrl: TransformGemstonesIcon,
+            onClick: () => (showTransformGemstones = true)
           }
         ]}
       />

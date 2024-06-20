@@ -1,6 +1,7 @@
 <script lang="ts">
   import { i18n } from '$lib/i18n/i18n'
   import ExternalLink from '@images/external-link.svg'
+  import LoadingSpinner from '../loading-spinner/LoadingSpinner.svelte'
 
   export let disabled = false
   export let secondary = false
@@ -19,12 +20,14 @@
     class:loading
     data-sveltekit-preload-data
   >
-    <div class="center" class:hide-content={loading}>
+    {#if loading}
+      <LoadingSpinner />
+    {:else}
       <slot />
       {#if isExternal}
         <img src={ExternalLink} alt={$i18n.t('main:external-link-icon')} />
       {/if}
-    </div>
+    {/if}
   </a>
 {:else}
   <button
@@ -35,9 +38,11 @@
     class:secondary
     class:loading
   >
-    <div class:hide-content={loading}>
+    {#if loading}
+      <LoadingSpinner />
+    {:else}
       <slot />
-    </div>
+    {/if}
   </button>
 {/if}
 
@@ -71,6 +76,11 @@
     transition: filter 0.2s ease-in-out;
   }
 
+  .loading {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
   .secondary {
     background: var(--color-light);
     color: var(--color-dark);
@@ -84,41 +94,5 @@
     transition:
       color 0.2s ease-in-out,
       background 0.2s ease-in-out;
-  }
-
-  .loading {
-    cursor: not-allowed;
-    pointer-events: none;
-
-    &::after {
-      position: absolute;
-      content: '';
-      width: 1rem;
-      height: 1rem;
-      border: 0.2rem solid var(--color-light);
-      border-top-color: var(--color-primary);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-  }
-
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  .hide-content {
-    visibility: hidden;
-  }
-
-  .center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: var(--spacing-md);
   }
 </style>

@@ -1,6 +1,9 @@
 // @ts-nocheck
 
 import { CommittedTransactionInfo } from '@radixdlt/babylon-gateway-api-sdk'
+import { Addresses } from 'common'
+
+const addresses = Addresses(2)
 
 export default [
   {
@@ -174,7 +177,7 @@ export default [
             variant_name: 'NonFungible',
             fields: [
               {
-                value: 'resource_tdx_2_1nfqughuxfm6hetnkc7xg0qtnx8a7agl80pz9srxy4dvhz8ckvscs88',
+                value: addresses.badges.heroBadgeAddress,
                 kind: 'Reference',
                 type_name: 'ResourceAddress'
               },
