@@ -1,5 +1,7 @@
 use scrypto::prelude::*;
-use scrypto_test::{prelude::*, utils::dump_manifest_to_file_system};
+use scrypto_test::prelude::*;
+use scrypto_test::sdk::DIVISIBILITY_NONE;
+use scrypto_test::utils::dump_manifest_to_file_system;
 
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
 struct HeroBadgeData {
@@ -46,6 +48,46 @@ fn create_hero_badge() {
     .err();
 }
 
+#[test]
+fn create_gift_box() {
+    let network = NetworkDefinition::mainnet();
+
+    let manifest_builder = ManifestBuilder::new().create_fungible_resource(
+        OwnerRole::Fixed(rule!(require(XRD))),
+        true,
+        DIVISIBILITY_NONE,
+        FungibleResourceRoles {
+            mint_roles: mint_roles! {
+                minter => OWNER;
+                minter_updater => rule!(deny_all);
+            },
+            burn_roles: burn_roles! {
+                burner => OWNER;
+                burner_updater => rule!(deny_all);
+            },
+            ..Default::default()
+        },
+        metadata!(
+            init {
+              "name" => "Gift Box", locked;
+              "symbol" => "GBX", locked;
+              "description" => "Gift Boxes are filled with treasures and surprises, waiting to be opened.", locked;
+              "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
+            }
+        ),
+        None,
+    );
+
+    dump_manifest_to_file_system(
+        manifest_builder.object_names(),
+        &manifest_builder.build(),
+        "./manifests/test-generated",
+        Some("create_gift_box"),
+        &network,
+    )
+    .err();
+}
+
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
 struct RadgemData {
     #[mutable]
@@ -66,11 +108,11 @@ fn create_radgem() {
         true,
         NonFungibleResourceRoles {
             mint_roles: mint_roles! {
-                minter => rule!(require(XRD));
+                minter => OWNER;
                 minter_updater => rule!(deny_all);
             },
             burn_roles: burn_roles! {
-                burner => rule!(require(XRD));
+                burner => OWNER;
                 burner_updater => rule!(deny_all);
             },
             ..Default::default()
@@ -115,11 +157,11 @@ fn create_morph_card() {
         true,
         NonFungibleResourceRoles {
             mint_roles: mint_roles! {
-                minter => rule!(require(XRD));
+                minter => OWNER;
                 minter_updater => rule!(deny_all);
             },
             burn_roles: burn_roles! {
-                burner => rule!(require(XRD));
+                burner => OWNER;
                 burner_updater => rule!(deny_all);
             },
             ..Default::default()
@@ -165,7 +207,7 @@ fn create_radmorph() {
         true,
         NonFungibleResourceRoles {
             mint_roles: mint_roles! {
-                minter => rule!(require(XRD));
+                minter => OWNER;
                 minter_updater => rule!(deny_all);
             },
             ..Default::default()
@@ -200,11 +242,11 @@ pub fn create_otter_coin() {
         scrypto::prelude::DIVISIBILITY_MAXIMUM,
         FungibleResourceRoles {
             mint_roles: mint_roles! {
-                minter => rule!(require(XRD));
+                minter => OWNER;
                 minter_updater => rule!(deny_all);
             },
             burn_roles: burn_roles! {
-                burner => rule!(require(XRD));
+                burner => OWNER;
                 burner_updater => rule!(deny_all);
             },
             ..Default::default()
