@@ -1,8 +1,8 @@
 import type { RequestHandler } from './$types'
 import { dbClient } from '$lib/db'
 import { error, json } from '@sveltejs/kit'
-import { isDevEnvironment } from '$lib/helpers/is-dev-environment'
 import { authController } from '$lib/server/auth/controller'
+import { isDevEnvironment } from '$lib/server/helpers/is-dev-environment'
 
 export const POST: RequestHandler = async ({ locals, cookies }) => {
   if (!isDevEnvironment()) return json({}, { status: 403 })
