@@ -5,7 +5,7 @@ import { routeHandler } from '$lib/server/route-handler'
 /** @type {import('./$types').RequestHandler} */
 export const POST: RequestHandler = async ({ locals }) =>
   routeHandler(() =>
-    userController.mintUserBadge(locals.context, {
+    userController.mintHeroBadge(locals.context, {
       userId: locals.userId
     })
   )

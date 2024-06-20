@@ -27,7 +27,7 @@ const findNonFungibleLocalIdElement = (elements?: ProgrammaticScryptoSborValue[]
   return result
 }
 
-export const getUserIdFromDepositUserBadgeEvent = (event: EventsItem) => {
+export const getUserIdFromDepositHeroBadgeEvent = (event: EventsItem) => {
   let maybeUserId: string | undefined
 
   if (event.data.kind === 'Enum') {

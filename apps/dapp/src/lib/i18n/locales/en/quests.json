@@ -58,7 +58,7 @@
   "FirstTransactionQuest": {
     "requirements": {
       "VerifyPhoneNumber": "Verify your phone number",
-      "DepositUserBadge": "Deposit a user badge"
+      "DepositHeroBadge": "Deposit a hero badge"
     },
     "title": "First Transaction",
     "description": "Claim your first rewards",

@@ -1,9 +1,12 @@
 import { config } from '../../config'
 import { radixEngineClient } from '../../config'
 
-export const mintUserBadge = (
+export const mintHeroBadge = (
   userId: string,
   accountAddress: string,
+  keyImageUrl = '""',
+  questsCompleted: string[] = [],
+  questCounter = 0,
   badgeAddresses?: Partial<{
     heroBadgeAddress: string
     adminBadgeAddress: string
@@ -15,8 +18,8 @@ export const mintUserBadge = (
   } = badgeAddresses ?? {}
   return radixEngineClient
     .getManifestBuilder()
-    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
-      const transactionManifest = `
+    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
+      convertStringManifest(`
         CALL_METHOD 
           Address("${wellKnownAddresses.accountAddress.payerAccount}") 
           "lock_fee"
@@ -32,7 +35,11 @@ export const mintUserBadge = (
           
         MINT_NON_FUNGIBLE
           Address("${heroBadgeAddress}")
-          Map<NonFungibleLocalId, Tuple>(NonFungibleLocalId("<${userId}>") => Tuple(Tuple()))
+          Map<NonFungibleLocalId, Tuple>(NonFungibleLocalId("<${userId}>") => Tuple(Tuple(
+            ${keyImageUrl},
+            Array<String>(${questsCompleted.join(', ')}),
+            ${questCounter}u32,
+          )))
         ;
 
         CALL_METHOD
@@ -40,14 +47,13 @@ export const mintUserBadge = (
           "try_deposit_batch_or_abort"
           Expression("ENTIRE_WORKTOP")
           Enum<0u8>()
-        ;`
-
-      return convertStringManifest(transactionManifest)
+        ;`)
         .andThen((transactionManifest) =>
           submitTransaction({ transactionManifest, signers: ['systemAccount'] })
         )
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
         )
-    })
+        .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
+    )
 }

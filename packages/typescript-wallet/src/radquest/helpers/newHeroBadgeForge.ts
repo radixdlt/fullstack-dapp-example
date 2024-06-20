@@ -56,5 +56,11 @@ export const newHeroBadgeForge = () => {
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
         )
         .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
+        .map(
+          (details): Record<string, string> =>
+            ({
+              heroBadgeForgeAddress: details.createdEntities[0].entity_address
+            })!
+        )
     )
 }

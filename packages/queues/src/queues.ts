@@ -25,8 +25,8 @@ export type DepositRewardTransactionJob = {
   questId: string
 }
 
-export type MintUserBadgeTransactionJob = {
-  type: 'MintUserBadge'
+export type MintHeroBadgeTransactionJob = {
+  type: 'MintHeroBadge'
   accountAddress: string
 }
 
@@ -44,8 +44,8 @@ export type PopulateResourcesTransactionJob = {
   accountAddress: string
 }
 
-export type AddAccountAddressToHeroBadgeOracleJob = {
-  type: 'AddAccountAddressToUserBadgeOracle'
+export type AddAccountAddressToHeroBadgeForgeJob = {
+  type: 'AddAccountAddressToHeroBadgeForge'
   accountAddress: string
 }
 
@@ -57,11 +57,11 @@ export type TransactionJob = {
   traceId: string
 } & (
   | DepositRewardTransactionJob
-  | MintUserBadgeTransactionJob
+  | MintHeroBadgeTransactionJob
   | CombinedElementsMintRadgemTransactionJob
   | CombinedElementsAddRadgemImageTransactionJob
   | PopulateResourcesTransactionJob
-  | AddAccountAddressToHeroBadgeOracleJob
+  | AddAccountAddressToHeroBadgeForgeJob
 )
 
 export type RadmorphSystemJob = {

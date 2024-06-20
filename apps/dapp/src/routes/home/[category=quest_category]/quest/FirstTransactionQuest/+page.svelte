@@ -2,7 +2,7 @@
   import { otpApi } from '$lib/api/otp-api'
   import Quest from '../Quest.svelte'
   import { i18n } from '$lib/i18n/i18n'
-  import DepositUserBadge from './DepositUserBadge.svelte'
+  import DepositHeroBadge from './DepositHeroBadge.svelte'
   import VerifyOtp from './VerifyOTP.svelte'
   import VerifyPhoneNumber from './VerifyPhoneNumber.svelte'
   import { ErrorReason } from '$lib/errors'
@@ -37,7 +37,7 @@
 
   const verifyPhoneNumber = writable(data.requirements.VerifyPhoneNumber)
 
-  const depositUserBadge = writable(data.requirements.DepositUserBadge)
+  const depositHeroBadge = writable(data.requirements.DepositHeroBadge)
 
   let otpError: keyof typeof errors | undefined
   let verifyOtpError = false
@@ -69,7 +69,7 @@
       .mapErr(() => (verifyOtpError = true))
   }
 
-  let mintBadgeState: ComponentProps<DepositUserBadge>['state']
+  let mintBadgeState: ComponentProps<DepositHeroBadge>['state']
 </script>
 
 <Quest
@@ -151,12 +151,12 @@
       }
     },
     {
-      id: 'depositUserBadge',
+      id: 'depositHeroBadge',
       type: 'regular',
-      skip: depositUserBadge,
+      skip: depositHeroBadge,
       footer: {
         next: {
-          enabled: depositUserBadge
+          enabled: depositHeroBadge
         }
       }
     },
@@ -221,7 +221,7 @@
     {@html text['7b.md']}
   {/if}
 
-  {#if render('depositUserBadge')}
+  {#if render('depositHeroBadge')}
     {#if mintBadgeState === 'updateDepositRules'}
       {@html text['8b.md']}
     {:else}
@@ -229,9 +229,9 @@
     {/if}
 
     <!-- TODO: use 8b.md conditionally -->
-    <DepositUserBadge
+    <DepositHeroBadge
       on:deposited={() => {
-        $depositUserBadge = true
+        $depositHeroBadge = true
         next()
       }}
       questId={data.id}

@@ -59,6 +59,13 @@ export const newRefinery = () => {
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
         )
         .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
-        .map((details): string => details.createdEntities[0].entity_address!)
+        .map(
+          (details): Record<string, string> => ({
+            radgemForgeAddress: details.createdEntities[0].entity_address,
+            radmorphForgeAddress: details.createdEntities[1].entity_address,
+            imageOracleAddress: details.createdEntities[2].entity_address,
+            refineryAddress: details.createdEntities[3].entity_address
+          })
+        )
     )
 }

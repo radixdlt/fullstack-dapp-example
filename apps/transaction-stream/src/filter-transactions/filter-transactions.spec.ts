@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest'
-import DepositUserBadge from '../fixtures/transactions/deposit-user-badge'
+import DepositHeroBadge from '../fixtures/transactions/deposit-hero-badge'
 import QuestRewardsEvents from '../fixtures/transactions/quest-rewards-events'
 import NotSupportedTx from '../fixtures/transactions/not-supported-tx'
 import StakedXrdTx from '../fixtures/transactions/staked-xrd'
@@ -53,8 +53,8 @@ describe('filter transactions', () => {
     expect(withdrawal.relevantEvents.MayaRouterWithdrawEvent).toBeDefined()
   })
 
-  it('should find DepositUserBadge transaction', () => {
-    const result = filterTransactionsByType([...DepositUserBadge, ...NotSupportedTx])
+  it('should find DepositHeroBadge transaction', () => {
+    const result = filterTransactionsByType([...DepositHeroBadge, ...NotSupportedTx])
 
     if (result.isErr()) throw result.error
 
@@ -64,9 +64,9 @@ describe('filter transactions', () => {
 
     const [heroBadge] = filteredTransactions
 
-    expect(heroBadge.type).toEqual(EventId.DepositUserBadge)
+    expect(heroBadge.type).toEqual(EventId.DepositHeroBadge)
     expect(heroBadge.transactionId).toBeDefined()
-    expect(heroBadge.relevantEvents.UserBadgeDeposited).toBeDefined()
+    expect(heroBadge.relevantEvents.HeroBadgeDeposited).toBeDefined()
     expect(heroBadge.relevantEvents.XrdDeposited).toBeDefined()
   })
 

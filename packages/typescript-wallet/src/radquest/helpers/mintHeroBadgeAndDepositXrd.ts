@@ -1,9 +1,12 @@
 import { config } from '../../config'
 import { radixEngineClient } from '../../config'
 
-export const mintUserBadgeAndDepositXrd = (
+export const mintHeroBadgeAndDepositXrd = (
   userId: string,
   accountAddress: string,
+  keyImageUrl = '""',
+  questsCompleted: string[] = [],
+  questCounter = 0,
   badgeAddresses?: Partial<{
     heroBadgeAddress: string
     adminBadgeAddress: string
@@ -32,7 +35,11 @@ export const mintUserBadgeAndDepositXrd = (
           
         MINT_NON_FUNGIBLE
           Address("${heroBadgeAddress}")
-          Map<NonFungibleLocalId, Tuple>(NonFungibleLocalId("<${userId}>") => Tuple(Tuple()))
+          Map<NonFungibleLocalId, Tuple>(NonFungibleLocalId("<${userId}>") => Tuple(Tuple(
+            ${keyImageUrl},
+            Array<String>(${questsCompleted.join(', ')}),
+            ${questCounter}u32,
+          )))
         ;
 
         CALL_METHOD

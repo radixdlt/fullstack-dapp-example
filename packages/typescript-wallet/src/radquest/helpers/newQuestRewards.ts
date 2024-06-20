@@ -60,5 +60,10 @@ export const newQuestRewards = () =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
         )
         .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
-        .map((details): string => details.createdEntities[0].entity_address!)
+        .map(
+          (details): Record<string, string> => ({
+            kycOracleAddress: details.createdEntities[0].entity_address,
+            questRewardsAddress: details.createdEntities[1].entity_address
+          })
+        )
     )
