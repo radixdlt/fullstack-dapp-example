@@ -37,6 +37,7 @@ module.exports = {
     'no-undef': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'svelte/no-at-html-tags': 'off',
-    '@typescript-eslint/ban-ts-comment': 'off'
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/no-non-null-asserted-optional-chain': 'off'
   }
 }

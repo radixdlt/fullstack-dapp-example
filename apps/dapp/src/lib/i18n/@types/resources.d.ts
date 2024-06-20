@@ -5,12 +5,30 @@ interface Resources {
   }
   jetty: {
     'menu-glossary': 'Glossary'
+    'menu-transformGems': 'Transform Gemstones'
+    'menu-fuseElements': 'Fuse Elements'
     'menu-text': 'Hi friend, how can I help you?'
     'claim-rewards': "Wow speedy, you're a fast learner! Here are your rewards for this quest."
     'reward-text_one': '{{name}}'
     'reward-text_other': '{{name}}s'
     'logged-in-with-wallet': "I see you've logged in with your wallet!"
     'go-back-to-quest': 'Go back to quest'
+    cancel: 'Cancel'
+    'transform-gems': {
+      back: 'Back'
+      title0: 'Pick a Transform card'
+      title1: 'Pick two gems'
+      title2: 'Ready to transform?'
+      'complete-button': 'Send to Jetty'
+      'gemcard-gemstone': 'Gemstone'
+      'gemcard-rarity': 'Rarity'
+    }
+    'fuse-elements': {
+      intro: 'I can combine raw elements into colorful gemstones using my magical abilities. Gemstones can be combined with alchemy cards to craft unique and beautiful objects!'
+      text1: 'You have {{count}} Elements right now.'
+      text2: 'Send me {{count}} Elements and I will create a random gemstone.'
+      'send-button': 'Send {{count}} Elements'
+    }
   }
   main: {
     'tabs-basics': 'Basics'
@@ -20,6 +38,11 @@ interface Resources {
       'page-not-found': 'I couldn’t find that page.'
       'something-went-wrong': 'Oops! Something went wrong'
       'go-home-button': 'Go to RadQuest Home'
+    }
+    landingPagePopup: {
+      title: 'Welcome to RadQuest'
+      message: 'Ready to earn your rare NFT and up to $20 in XRD? Start your quest journey now.'
+      button: "Let's begin"
     }
     landingPagePopup: {
       title: 'Welcome to RadQuest'

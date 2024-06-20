@@ -5,7 +5,7 @@
   import { i18n } from '$lib/i18n/i18n'
   import { publicConfig } from '$lib/public-config'
   import { useLocalStorage } from '$lib/utils/local-storage'
-  import { GatewayApi, MessageType } from 'common'
+  import { GatewayApi } from 'common'
   import { user, webSocketClient } from '../../stores'
   import pipe from 'ramda/src/pipe'
   import { sendTransaction } from '$lib/rdt'
