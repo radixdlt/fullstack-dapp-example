@@ -72,6 +72,13 @@
     })
     invalidateAll()
   }
+
+  const setUserAsAdmin = async () => {
+    await fetch('/api/user/type', {
+      method: 'POST',
+      body: JSON.stringify({ type: 'admin' })
+    })
+  }
 </script>
 
 <svelte:window on:keydown={(e) => handleKeydown(e)} />
@@ -94,6 +101,7 @@
       <Button on:click={populate}>Populate With Resources (requires log in + account)</Button>
       <Button on:click={clearDb}>Clear Database (requires log in)</Button>
       <Button on:click={clearLocalStorageAndCookies}>Clear Local Storage</Button>
+      <Button on:click={setUserAsAdmin}>Set user as Admin</Button>
       <Button
         on:click={() => {
           $hide = true
