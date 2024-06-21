@@ -43,8 +43,6 @@ export const TransactionWorker = (
           case 'FailedToSubmitToRadixNetwork':
           case 'FailedToGetTotalRewardedUsdAmount':
           case 'FailedToPollTransactionStatus':
-            await transactionQueue.add({ ...job.data, attempt: attempt + 1 })
-            break
           case 'FailedToConvertStringManifest':
           case 'FailedToSetCompletedStatus':
           case 'FailedToSetTransactionId':

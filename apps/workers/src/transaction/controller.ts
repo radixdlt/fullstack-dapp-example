@@ -1,11 +1,11 @@
 import { ResultAsync, errAsync, okAsync, err, ok, Result } from 'neverthrow'
 import { Job, TransactionJob } from 'queues'
-import { AuditType, PrismaClient, TransactionStatus } from 'database'
+import { AuditType, PrismaClient, TransactionStatus, User } from 'database'
 import {
   Addresses,
   GatewayApi,
+  Message,
   MessageApi,
-  MessageModel,
   type AppLogger,
   type AuditModel,
   type ConfigModel,
@@ -16,7 +16,6 @@ import { radixEngineClient } from 'typescript-wallet'
 import { createRewardsDepositManifest } from './helpers/createRewardsDepositManifest'
 import { QuestDefinitions, QuestId } from 'content'
 import { config } from '../config'
-import { createDirectDepositManifest } from './helpers/createDirectDepositManifest'
 import { createCombinedElementsMintRadgemManifest } from './helpers/createCombinedElementsMintRadgemManifest'
 import { stripNonFungibleLocalId } from '../event/helpers/stripNonFungibleLocalId'
 import { TokenPriceClient } from '../token-price-client'
@@ -34,6 +33,7 @@ export const TransactionWorkerError = {
   FailedToSetTransactionId: 'FailedToSetTransactionId',
   FailedToGetTotalRewardedUsdAmount: 'FailedToGetTotalRewardedUsdAmount',
   FailedToQueryNetworkGateway: 'FailedToQueryNetworkGateway',
+  FailedToSetPendingStatus: 'FailedToSetPendingStatus',
   FailedToSetCompletedStatus: 'FailedToSetCompletedStatus',
   FailedToGetUserIdFromBadgeId: 'FailedToGetUserIdFromBadgeId',
   FailedToGetXrdPrice: 'FailedToGetXrdPrice',
@@ -45,7 +45,11 @@ export const TransactionWorkerError = {
   FailedToSendMessage: 'FailedToSendMessage',
   GatewayError: 'GatewayError',
   HeroBadgeAlreadyClaimed: 'HeroBadgeAlreadyClaimed',
-  FailedToExecuteDbTransaction: 'FailedToExecuteDbTransaction'
+  FailedToExecuteDbTransaction: 'FailedToExecuteDbTransaction',
+  FailedToDeriveUserIdFromBadgeId: 'FailedToDeriveUserIdFromBadgeId',
+  UserNotFound: 'UserNotFound',
+  UserDisabledXrdDeposit: 'UserDisabledXrdDeposit',
+  FailedToCreateMessageInDb: 'FailedToCreateMessageInDb'
 } as const
 
 const getUserIdFromBadgeId = (
@@ -60,6 +64,7 @@ const getUserIdFromBadgeId = (
     })
   return ok(userId)
 }
+
 export type TransactionWorkerControllerError = { reason: TransactionWorkerError; jsError?: unknown }
 export type TransactionWorkerController = ReturnType<typeof TransactionWorkerController>
 export const TransactionWorkerController = ({
@@ -85,8 +90,37 @@ export const TransactionWorkerController = ({
   }: {
     job: Job<TransactionJob>
     logger: AppLogger
-  }): ResultAsync<void, TransactionWorkerControllerError> => {
+  }): ResultAsync<any, TransactionWorkerControllerError> => {
     const { type, transactionKey, attempt, badgeResourceAddress, badgeId } = job.data
+
+    const hasHeroBadge = (user: User) =>
+      gatewayApi
+        .hasHeroBadge(user.accountAddress!)
+        .mapErr((error) => ({
+          reason: TransactionWorkerError.GatewayError,
+          jsError: error
+        }))
+        .andThen((hasHeroBadge) =>
+          hasHeroBadge
+            ? err({
+                reason: TransactionWorkerError.HeroBadgeAlreadyClaimed
+              })
+            : ok(user)
+        )
+
+    const sendMessage = (userId: string, message: Message) =>
+      ResultAsync.fromPromise(
+        dbClient.message.create({
+          data: {
+            userId,
+            data: JSON.stringify(message)
+          }
+        }),
+        (error) => ({
+          reason: TransactionWorkerError.FailedToCreateMessageInDb,
+          jsError: error as Error
+        })
+      ).andThen(({ id }) => messageApi.send(userId, message, id).orElse(() => ok(undefined)))
 
     const dbTransactionBuilder = DbTransactionBuilder({ messageApi, tokenPriceClient, dbClient })
     const addresses = Addresses(config.networkId)
@@ -114,6 +148,23 @@ export const TransactionWorkerController = ({
               })
         )
     }
+
+    const getUserByBadgeId = (
+      badgeId: string
+    ): ResultAsync<User, TransactionWorkerControllerError> =>
+      getUserIdFromBadgeId(badgeId)
+        .mapErr((error) => ({
+          reason: TransactionWorkerError.FailedToDeriveUserIdFromBadgeId,
+          jsError: error.jsError
+        }))
+        .asyncAndThen((userId) =>
+          ResultAsync.fromPromise(dbClient.user.findUnique({ where: { id: userId } }), (error) => ({
+            reason: TransactionWorkerError.FailedToGetUserIdFromBadgeId,
+            jsError: error
+          })).andThen((user) =>
+            user ? ok(user) : err({ reason: TransactionWorkerError.UserNotFound })
+          )
+        )
 
     const handleSubmitTransaction = (
       manifestFactory: (wellKnownAddresses: WellKnownAddresses) => string
@@ -155,52 +206,45 @@ export const TransactionWorkerController = ({
             )
         )
 
-    const handlePollTransactionStatus = (txId: string) =>
-      radixEngineClient.gatewayClient
-        .pollTransactionStatus(txId)
-        .mapErr((jsError) => ({
-          reason: TransactionWorkerError.FailedToPollTransactionStatus,
-          jsError
+    const handlePollTransactionStatus = (
+      txId: string
+    ): ResultAsync<void, TransactionWorkerControllerError> =>
+      transactionModel(logger)
+        .setStatus(
+          { badgeId, badgeResourceAddress, transactionKey, attempt },
+          TransactionStatus.PENDING
+        )
+        .mapErr(({ jsError }) => ({
+          jsError,
+          reason: TransactionWorkerError.FailedToSetPendingStatus
         }))
-        .andThen((response) => {
-          logger.debug({
-            method: 'pollTransactionStatus',
-            txId,
-            status: response?.status
-          })
-          return transactionModel(logger)
-            .setStatus(
-              { badgeId, badgeResourceAddress, transactionKey, attempt },
-              TransactionStatus.COMPLETED
-            )
-            .mapErr(({ jsError }) => ({
-              jsError,
-              reason: TransactionWorkerError.FailedToSetCompletedStatus
+        .andThen(() =>
+          radixEngineClient.gatewayClient
+            .pollTransactionStatus(txId)
+            .mapErr((jsError) => ({
+              reason: TransactionWorkerError.FailedToPollTransactionStatus,
+              jsError
             }))
-        })
-        .map(() => undefined)
+            .andThen((response) => {
+              logger.debug({
+                method: 'pollTransactionStatus',
+                txId,
+                status: response?.status
+              })
+              return transactionModel(logger)
+                .setStatus(
+                  { badgeId, badgeResourceAddress, transactionKey, attempt },
+                  TransactionStatus.COMPLETED
+                )
+                .mapErr(({ jsError }) => ({
+                  jsError,
+                  reason: TransactionWorkerError.FailedToSetCompletedStatus
+                }))
+            })
+            .map(() => undefined)
+        )
 
     switch (type) {
-      case 'MintHeroBadge': {
-        const { accountAddress, badgeId } = job.data
-
-        return getItemFromDb().andThen((item) =>
-          item.transactionId
-            ? handlePollTransactionStatus(item.transactionId)
-            : getUserIdFromBadgeId(badgeId)
-                .asyncAndThen((userId) =>
-                  handleSubmitTransaction((wellKnownAddresses) =>
-                    createDirectDepositManifest({
-                      wellKnownAddresses,
-                      userId,
-                      accountAddress: accountAddress
-                    })
-                  )
-                )
-                .andThen(handlePollTransactionStatus)
-        )
-      }
-
       case 'DepositReward':
         const { questId, badgeId } = job.data
 
@@ -383,47 +427,25 @@ export const TransactionWorkerController = ({
                 })
           )
 
-      case 'AddAccountAddressToHeroBadgeForge': {
-        const { accountAddress, badgeId } = job.data
-        return ResultAsync.combine([
-          gatewayApi.isThirdPartyDepositRuleDisabled(accountAddress),
-          gatewayApi.hasHeroBadge(accountAddress).andThen((hasHeroBadge) =>
-            hasHeroBadge
-              ? err({
-                  reason: TransactionWorkerError.HeroBadgeAlreadyClaimed
-                })
-              : ok(undefined)
-          )
-        ])
-          .mapErr((error) => ({
-            reason: TransactionWorkerError.GatewayError,
-            jsError: error
-          }))
-          .andThen(([isThirdPartyDepositRuleDisabled]) =>
-            getUserIdFromBadgeId(badgeId).asyncAndThen((userId) =>
-              handleSubmitTransaction((wellKnownAddresses) => {
-                const allowAccountAddress = [
+      case 'DepositXrdToAccount': {
+        return getUserByBadgeId(job.data.badgeId).andThen((user) =>
+          gatewayApi
+            .isDepositDisabledForResource(user.accountAddress!, addresses.xrd)
+            .mapErr((error) => ({ reason: TransactionWorkerError.GatewayError, jsError: error }))
+            .andThen((isDisabled) =>
+              isDisabled
+                ? err({ reason: TransactionWorkerError.UserDisabledXrdDeposit })
+                : ok(undefined)
+            )
+            .andThen(() =>
+              handleSubmitTransaction((wellKnownAddresses) =>
+                [
                   `CALL_METHOD
                     Address("${wellKnownAddresses.accountAddress.payerAccount}")
                     "lock_fee"
-                    Decimal("50")
-                ;`,
+                    Decimal("10")
+                  ;`,
 
-                  `CALL_METHOD
-                    Address("${wellKnownAddresses.accountAddress.systemAccount}")
-                    "create_proof_of_amount"
-                    Address("${addresses.badges.adminBadgeAddress}")
-                    Decimal("1")
-                ;`,
-
-                  `CALL_METHOD
-                    Address("${addresses.components.heroBadgeForge}")
-                    "add_user_account"
-                    Address("${accountAddress}")
-                ;`
-                ]
-
-                const depositXrd = [
                   `CALL_METHOD
                     Address("${wellKnownAddresses.accountAddress.payerAccount}")
                     "withdraw"
@@ -432,24 +454,18 @@ export const TransactionWorkerController = ({
                   ;`,
 
                   `CALL_METHOD
-                    Address("${accountAddress}")
+                    Address("${user.accountAddress!}")
                     "try_deposit_batch_or_abort"
                     Expression("ENTIRE_WORKTOP")
                     Enum<0u8>()
                   ;`
-                ]
-
-                const transactionManifestParts: string[] = [...allowAccountAddress]
-
-                if (!isThirdPartyDepositRuleDisabled) transactionManifestParts.push(...depositXrd)
-
-                return transactionManifestParts.join('\n')
-              }).andThen((txId) =>
-                handlePollTransactionStatus(txId).andThen(() =>
+                ].join('\n')
+              ).andThen((transactionId) =>
+                handlePollTransactionStatus(transactionId).andThen(() =>
                   dbTransactionBuilder.helpers
                     .addXrdDepositToAuditTable({
-                      transactionId: txId,
-                      userId: userId,
+                      transactionId,
+                      userId: user.id,
                       xrdAmount: `${config.radQuest.directXrdDepositAmount}`
                     })
                     .andThen((api) => api.exec())
@@ -460,9 +476,39 @@ export const TransactionWorkerController = ({
                 )
               )
             )
-          )
+            .andThen(() =>
+              sendMessage(user.id, { type: 'XrdDepositedToAccount', traceId: job.data.traceId })
+            )
+        )
+      }
 
-          .map(() => {})
+      case 'AddAccountAddressToHeroBadgeForge': {
+        return getUserByBadgeId(job.data.badgeId)
+          .andThen(hasHeroBadge)
+          .andThen((user) =>
+            handleSubmitTransaction((wellKnownAddresses) =>
+              [
+                `CALL_METHOD
+                  Address("${wellKnownAddresses.accountAddress.payerAccount}")
+                  "lock_fee"
+                  Decimal("50")
+                ;`,
+
+                `CALL_METHOD
+                  Address("${wellKnownAddresses.accountAddress.systemAccount}")
+                  "create_proof_of_amount"
+                  Address("${addresses.badges.adminBadgeAddress}")
+                  Decimal("1")
+                ;`,
+
+                `CALL_METHOD
+                  Address("${addresses.components.heroBadgeForge}")
+                  "add_user_account"
+                  Address("${user.accountAddress!}")
+                ;`
+              ].join('\n')
+            ).andThen(handlePollTransactionStatus)
+          )
       }
 
       default:

@@ -10,7 +10,8 @@ export const MessageType = {
   CombineElementsMintRadgem: 'CombineElementsMintRadgem',
   CombineElementsAddRadgemImage: 'CombineElementsAddRadgemImage',
   CombineElementsClaimed: 'CombineElementsClaimed',
-  HeroBadgeReadyToBeClaimed: 'HeroBadgeReadyToBeClaimed'
+  HeroBadgeReadyToBeClaimed: 'HeroBadgeReadyToBeClaimed',
+  XrdDepositedToAccount: 'XrdDepositedToAccount'
 } as const
 
 export type MessageType = (typeof MessageType)[keyof typeof MessageType]
@@ -46,6 +47,9 @@ type Messages = {
     traceId: string
   }
   [MessageType.HeroBadgeReadyToBeClaimed]: {
+    traceId: string
+  }
+  [MessageType.XrdDepositedToAccount]: {
     traceId: string
   }
 }

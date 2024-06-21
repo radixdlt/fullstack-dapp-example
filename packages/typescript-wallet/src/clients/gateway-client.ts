@@ -66,7 +66,7 @@ export const GatewayClient = ({ callApi, gatewayApiClient, networkConfig }: Gate
     const retry = ExponentialBackoff({
       maxDelayTime: 5_000,
       multiplier: 2,
-      timeout: 60_000,
+      timeout: 300_000,
       interval: 1_000
     })
 

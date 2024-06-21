@@ -87,7 +87,7 @@ describe('Event flows', () => {
     queues = getQueues(config.redis)
   })
   it(
-    'should add account address, track event, and send notification to user',
+    'should add account address, track event, send notification to user, and mint hero badge',
     { timeout: 60_000, skip: false },
     async () => {
       const transactionKey = `AddAccountAddressToHeroBadgeForge:${crypto.randomUUID()}`
@@ -123,6 +123,16 @@ describe('Event flows', () => {
       })
 
       expect(item?.status).toBe('COMPLETED')
+
+      const messages = await db.message.findMany({
+        where: { userId: user.id }
+      })
+
+      const message = messages.find(
+        (message) => JSON.parse(message.data as any).type === 'HeroBadgeReadyToBeClaimed'
+      )
+
+      expect(message).toBeDefined()
 
       await radixEngineClient.getXrdFromFaucet()
 
@@ -161,6 +171,52 @@ describe('Event flows', () => {
       expect(result.value).toBe(true)
     }
   )
+
+  it('should deposit XRD to account', { timeout: 60_000, skip: false }, async () => {
+    const transactionKey = `DepositXrdToAccount:${crypto.randomUUID()}`
+    const badgeId = `<${user.id}>`
+
+    const badgeResourceAddress = addresses.badges.heroBadgeAddress
+    const attempt = 0
+
+    await transactionModel(logger).add({
+      transactionKey,
+      badgeId,
+      badgeResourceAddress,
+      attempt
+    })
+
+    const traceId = crypto.randomUUID()
+    const jobId = `${traceId}:${attempt}`
+
+    await transactionQueue.add({
+      traceId,
+      type: 'DepositXrdToAccount',
+      attempt,
+      badgeId,
+      badgeResourceAddress,
+      transactionKey
+    })
+
+    await waitForQueueEvent('completed', transactionQueueEvents, jobId)
+
+    const item = await db.transaction.findFirst({
+      where: { attempt, transactionKey, badgeId, badgeResourceAddress }
+    })
+
+    expect(item?.status).toBe('COMPLETED')
+
+    const result = await gatewayApi.callApi('getEntityDetailsVaultAggregated', [accountAddress])
+
+    if (result.isErr()) throw result.error
+
+    expect(
+      result.value.some((item) =>
+        item.fungible_resources.items.some((token) => token.resource_address === addresses.xrd)
+      )
+    ).toBe(true)
+  })
+
   it('should mint elements and combine them', { timeout: 30_000, skip: false }, async () => {
     await radixEngineClient.getXrdFromFaucet()
 
