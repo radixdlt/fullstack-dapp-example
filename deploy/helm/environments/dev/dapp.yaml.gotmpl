@@ -65,6 +65,12 @@ secrets:
     aws_secret_key: "twilio_service_sid"
     secret_key: "twilio_service_sid"
 
+  - external_secret_name: dapp-mailer-lite-api-key
+    env_variable: "MAILER_LITE_API_KEY"
+    aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
+    aws_secret_key: "mailer_lite_api_key"
+    secret_key: "mailer_lite_api_key"
+
 ingress:
   enabled: true
   annotations:
