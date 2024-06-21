@@ -34,6 +34,12 @@ secrets:
     aws_secret_key: "stokenet_mnemonic"
     secret_key: "workers_stokenet_mnemonic"
 
+  - external_secret_name: mailer-lite-api-key
+    env_variable: "MAILER_LITE_API_KEY"
+    aws_secret_name: "rtlj-prod/eks/radquest/stokenet/secrets"
+    aws_secret_key: "mailer_lite_api_key"
+    secret_key: "mailer_lite_api_key"
+
 ingress:
   enabled: false
 
