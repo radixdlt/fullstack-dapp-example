@@ -14,7 +14,7 @@
     "jsonwebtoken": "^9.0.2",
     "neverthrow": "^6.1.0",
     "prom-client": "^15.1.2",
-    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.39.0"
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.44.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.7",
