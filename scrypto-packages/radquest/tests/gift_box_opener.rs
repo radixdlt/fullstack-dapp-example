@@ -1,0 +1,288 @@
+use scrypto_test::prelude::*;
+
+use radquest::gift_box_opener::gift_box_opener_test::*;
+use radquest::quest_rewards::UserId;
+
+struct Test {
+    env: TestEnvironment<InMemorySubstateDatabase>,
+    gift_box_opener: GiftBoxOpener,
+    bronze_gift_boxes: Bucket,
+    gold_gift_boxes: Bucket,
+    user_id: UserId,
+    hero_badge_proof: Proof,
+    admin_badge_proof: Proof,
+    super_admin_badge_proof: Proof,
+    rewards: Vec<Bucket>,
+}
+
+fn arrange_test_environment() -> Result<Test, RuntimeError> {
+    let mut env = TestEnvironment::new();
+    let package_address =
+        PackageFactory::compile_and_publish(this_package!(), &mut env, CompileProfile::Fast)?;
+
+    let user_id_string = "test_user_id_12345".to_string();
+
+    let super_admin_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
+    let admin_badge =
+        ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(2, &mut env)?;
+    let bronze_gift_boxes = ResourceBuilder::new_fungible(OwnerRole::Fixed(rule!(require(
+        admin_badge.resource_address(&mut env)?
+    ))))
+    .burn_roles(burn_roles! {
+           burner => OWNER;
+           burner_updater => rule!(deny_all);
+    })
+    .mint_initial_supply(2, &mut env)?;
+    let gold_gift_boxes = ResourceBuilder::new_fungible(OwnerRole::Fixed(rule!(require(
+        admin_badge.resource_address(&mut env)?
+    ))))
+    .burn_roles(burn_roles! {
+           burner => OWNER;
+           burner_updater => rule!(deny_all);
+    })
+    .mint_initial_supply(2, &mut env)?;
+    let hero_badge = ResourceBuilder::new_string_non_fungible(OwnerRole::None)
+        .mint_initial_supply(
+            [(
+                StringNonFungibleLocalId::new(user_id_string.clone()).unwrap(),
+                EmptyNonFungibleData {},
+            )],
+            &mut env,
+        )?;
+
+    let gift_box_opener = GiftBoxOpener::new(
+        super_admin_badge.resource_address(&mut env)?,
+        OwnerRole::Fixed(rule!(require(
+            super_admin_badge.resource_address(&mut env)?
+        ))),
+        hero_badge.resource_address(&mut env)?,
+        admin_badge.take(dec!(1), &mut env)?,
+        package_address,
+        &mut env,
+    )?;
+
+    let hero_badge_proof = hero_badge.create_proof_of_all(&mut env)?;
+    let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
+    let super_admin_badge_proof = super_admin_badge.create_proof_of_all(&mut env)?;
+
+    let fungible =
+        ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(10, &mut env)?;
+    let non_fungible = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
+    let rewards = vec![fungible, non_fungible];
+
+    Ok(Test {
+        env,
+        gift_box_opener,
+        bronze_gift_boxes,
+        gold_gift_boxes,
+        user_id: UserId(format!("<{user_id_string}>")),
+        hero_badge_proof,
+        admin_badge_proof,
+        super_admin_badge_proof,
+        rewards,
+    })
+}
+
+#[test]
+fn can_instantiate_gift_box_opener() -> Result<(), RuntimeError> {
+    let _ = arrange_test_environment()?;
+
+    Ok(())
+}
+
+#[test]
+fn can_add_gift_box_resources() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut gift_box_opener,
+        bronze_gift_boxes,
+        gold_gift_boxes,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    // Act
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    let result = gift_box_opener.add_gift_box_resources(
+        vec![
+            bronze_gift_boxes.resource_address(&mut env)?,
+            gold_gift_boxes.resource_address(&mut env)?,
+        ],
+        &mut env,
+    );
+
+    // Assert
+    assert!(result.is_ok());
+    Ok(())
+}
+
+#[test]
+fn can_remove_gift_box_resources() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut gift_box_opener,
+        bronze_gift_boxes,
+        gold_gift_boxes,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    gift_box_opener.add_gift_box_resources(
+        vec![
+            bronze_gift_boxes.resource_address(&mut env)?,
+            gold_gift_boxes.resource_address(&mut env)?,
+        ],
+        &mut env,
+    )?;
+
+    // Act
+    let result = gift_box_opener.remove_gift_box_resources(
+        vec![
+            bronze_gift_boxes.resource_address(&mut env)?,
+            gold_gift_boxes.resource_address(&mut env)?,
+        ],
+        &mut env,
+    );
+
+    // Assert
+    assert!(result.is_ok());
+    Ok(())
+}
+
+#[test]
+fn can_open_gift_box() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut gift_box_opener,
+        bronze_gift_boxes,
+        admin_badge_proof,
+        hero_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    gift_box_opener.add_gift_box_resources(
+        vec![bronze_gift_boxes.resource_address(&mut env)?],
+        &mut env,
+    )?;
+
+    // Act
+    let result = gift_box_opener.open_gift_box(hero_badge_proof, bronze_gift_boxes, &mut env);
+
+    // Assert
+    assert!(result.is_ok());
+    Ok(())
+}
+
+#[test]
+fn can_deposit_rewards() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut gift_box_opener,
+        bronze_gift_boxes,
+        admin_badge_proof,
+        user_id,
+        rewards,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    gift_box_opener.add_gift_box_resources(
+        vec![bronze_gift_boxes.resource_address(&mut env)?],
+        &mut env,
+    )?;
+
+    // Act
+    let result = gift_box_opener.deposit_gift_box_rewards(user_id, rewards, &mut env);
+
+    // Assert
+    assert!(result.is_ok());
+    Ok(())
+}
+
+#[test]
+fn can_claim_rewards() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut gift_box_opener,
+        bronze_gift_boxes,
+        admin_badge_proof,
+        hero_badge_proof,
+        user_id,
+        rewards,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    gift_box_opener.add_gift_box_resources(
+        vec![bronze_gift_boxes.resource_address(&mut env)?],
+        &mut env,
+    )?;
+
+    gift_box_opener.deposit_gift_box_rewards(user_id, rewards, &mut env)?;
+
+    // Act
+    let result = gift_box_opener.claim_gift_box_rewards(hero_badge_proof, &mut env);
+
+    // Assert
+    assert!(result.is_ok());
+    Ok(())
+}
+
+#[test]
+fn can_disable_gift_box_opener() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut gift_box_opener,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+
+    // Act
+    let result = gift_box_opener.disable(&mut env);
+
+    // Assert
+    assert!(result.is_ok());
+    Ok(())
+}
+
+#[test]
+fn cannot_open_gift_box_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut gift_box_opener,
+        bronze_gift_boxes,
+        admin_badge_proof,
+        super_admin_badge_proof,
+        hero_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    gift_box_opener.add_gift_box_resources(
+        vec![bronze_gift_boxes.resource_address(&mut env)?],
+        &mut env,
+    )?;
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    gift_box_opener.disable(&mut env)?;
+
+    // Act
+    let result = gift_box_opener.open_gift_box(hero_badge_proof, bronze_gift_boxes, &mut env);
+
+    // Assert
+    assert!(result.is_err());
+    Ok(())
+}

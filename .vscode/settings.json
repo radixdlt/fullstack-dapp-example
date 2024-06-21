@@ -3,6 +3,15 @@
     "./scrypto-packages/radquest/Cargo.toml",
     "./scrypto-packages/clam-dex/Cargo.toml"
   ],
-  "cSpell.words": ["radcard", "radgem", "radgems", "radmorph", "radquest", "ruid", "Sbor"],
+  "cSpell.words": [
+    "radcard",
+    "radgem",
+    "radgems",
+    "radmorph",
+    "radquest",
+    "ruid",
+    "Sbor",
+    "substate"
+  ],
   "typescript.tsdk": "node_modules/typescript/lib"
 }
