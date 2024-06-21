@@ -14,20 +14,26 @@ export xrd=`resim show $account | grep XRD | grep -o "resource_.\S*" | sed -e "s
 echo "\nPublishing package..."
 export package=`resim publish . | sed "s/Success! New Package: //"`
 
+echo "\nGenerating Resources..."
 export super_admin_badge=`resim new-badge-fixed 1 | grep "Resource:" | grep -o "resource_.*"`
-export admin_badge=`resim run manifests/mint_admin_badges.rtm | grep "Resource:" | grep -o "resource_.*"`
+export admin_badge=`resim run manifests/create_admin_badges.rtm | grep "Resource:" | grep -o "resource_.*"`
 export hero_badge=`resim run manifests/create_hero_badge.rtm | grep "Resource:" | grep -o "resource_.*"`
 export kyc_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
+export gift_box=`resim run manifests/gift-box-opener/create_gift_box.rtm | grep "Resource:" | grep -o "resource_.*"`
 export element=`resim new-token-mutable $admin_badge | grep "Resource:" | grep -o "resource_.*"`
 export radgem=`resim run manifests/create_radgem.rtm  | grep "Resource:" | grep -o "resource_.*"`
 export morph_card=`resim run manifests/create_morph_card.rtm  | grep "Resource:" | grep -o "resource_.*"`
 export radmorph=`resim run manifests/create_radmorph.rtm  | grep "Resource:" | grep -o "resource_.*"`
 
+
+echo "\nGenerating Components..."
 export hero_badge_forge=`resim run manifests/new_hero_badge_forge.rtm | grep "Component:" | grep -o "component_.*"`
 
 quest_rewards_components=`resim run manifests/new_quest_rewards.rtm | grep "Component:"`
 export kyc_oracle=`echo $quest_rewards_components | tail -n2 | head -n1 | grep -o "component_.*"`
 export quest_rewards=`echo $quest_rewards_components | tail -n1 | grep -o "component_.*"`
+
+export gift_box_opener=`resim run manifests/gift-box-opener/new_gift_box_opener.rtm | grep "Component:" | grep -o "component_.*"`
 
 refinery_components=`resim run manifests/new_refinery.rtm | grep "Component:"`
 export image_oracle=`echo $refinery_components | tail -n2 | head -n1 | grep -o "component_.*"`
@@ -50,6 +56,7 @@ echo "super_admin_badge = $super_admin_badge"
 echo "admin_badge = $admin_badge"
 echo "hero_badge = $hero_badge"
 echo "kyc_badge = $kyc_badge"
+echo "gift_box = $gift_box"
 echo "element = $element"
 echo "radgem = $radgem"
 echo "morph_card = $morph_card"
@@ -59,6 +66,7 @@ echo "\nComponent Addresses:"
 echo "hero_badge_forge = $hero_badge_forge"
 echo "quest_rewards = $quest_rewards"
 echo "kyc_oracle = $kyc_oracle"
+echo "gift_box_opener = $gift_box_opener"
 echo "refinery = $refinery"
 echo "image_oracle = $image_oracle"
 echo "morph_card_forge = $morph_card_forge"

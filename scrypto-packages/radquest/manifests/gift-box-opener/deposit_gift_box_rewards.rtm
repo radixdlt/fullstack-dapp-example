@@ -1,0 +1,28 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+CALL_METHOD
+    Address("${account}")
+    "withdraw"
+    Address("${xrd}")
+    Decimal("10")
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("${xrd}")
+    Bucket("reward")
+;
+CALL_METHOD
+    Address("${account}")
+    "create_proof_of_amount"
+    Address("${admin_badge}")
+    Decimal("1")
+;
+CALL_METHOD
+    Address("${gift_box_opener}")
+    "deposit_gift_box_rewards"
+    "<${user_id}>"
+    Array<Bucket>(Bucket("reward"))
+;
+

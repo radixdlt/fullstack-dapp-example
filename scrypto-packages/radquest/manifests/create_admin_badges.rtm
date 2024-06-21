@@ -1,14 +1,14 @@
 CALL_METHOD
     Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
     "lock_fee"
-    Decimal("5000")
+    Decimal("50")
 ;
 
 CREATE_FUNGIBLE_RESOURCE_WITH_INITIAL_SUPPLY
   None
   true
   0u8
-  Decimal("7")
+  Decimal("8")
   Tuple(
       Some(         
         Tuple(
