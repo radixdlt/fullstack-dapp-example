@@ -1,4 +1,4 @@
-FROM node:20.15.0-bullseye-slim AS base
+FROM node:22.3.0-bullseye-slim AS base
 
 ARG NPM_LOCAL_CACHE=.cache
 
