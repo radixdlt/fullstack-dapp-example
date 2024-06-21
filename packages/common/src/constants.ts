@@ -24,22 +24,23 @@ export const Addresses = (networkId: number) => {
             'resource_tdx_2_1nffgrg4sxxswkc3vjydt57y6dcstrl8vp2z22al5h2thzzafk3ql8n',
           otterCoinAddress: 'resource_tdx_2_1t5pvx3yuwa7rxpa8h8uxnx068ruap9k7nqd7k5qxgay4yjalp9seng'
         },
-        package: 'package_tdx_2_1p4fpyjq8sm2l3g383zdy8gju6n7xsztcnmm85u37le880sssqhyfmz',
+        package: 'package_tdx_2_1p4y68vlccy7px6xrthvxf9zsk424nlaasaew299nggpszh26hmlrlp',
         clamDexPackage: 'package_tdx_2_1ph96rek5yr7jh79pw5aqst6e6lm5k62l5pv6j9dxve6scyr3eel3mh',
         components: {
           mayaRouter: 'component_tdx_2_mock_maya_router_address',
-          heroBadgeForge: 'component_tdx_2_1cr0aqcxlna320v2ywzfjatp3nwflrthkwm7m2zmfm0ll9c88y6mcpy',
-          questRewards: 'component_tdx_2_1cq687ktpqvegwcuegzl2mfe90eqg2u39q8sdxw3vxe7wwxtuyv9jvy',
-          kycOracle: 'component_tdx_2_1cr2mfdnzpn2jtf95kafmttjafrdumnppr5pw7fu57m97u7y8tyrlcs',
-          kycOracleKeyValueStore:
-            'internal_keyvaluestore_tdx_2_1kqn4jr73xn4fd82zcgc6vfu6h0qvxxshcy2dc2mw93acvp03fjqcv7',
-          cardForge: 'component_tdx_2_1cp2x28nq95u6ghuzuc0jv3jhpp8tnwcnktpen0angmp3v5w77r8787',
-          radgemForge: 'component_tdx_2_1crpqg9q4rcal3tn4ph7wc872et53489al6hjm90y0gpnqfcf85z7lu',
-          radmorphForge: 'component_tdx_2_1cpg2k7hjul9xn6rf8mklh9m7qenrrx3rsysqd2t33cd4cvhuc5j2f0',
-          imageOracle: 'component_tdx_2_1crxyk3gx6jmct23xeq7k3vau8wl7sec9q3pr55uxz6tde252l2n0rk',
-          refinery: 'component_tdx_2_1crvgj6n49vrpddpktkkgj5kgup9spprhu8vqr27etmfnfcstfm0v70',
           jettySwap: 'component_tdx_2_1czsvrwv0gmdf9fkffv0a0n0mx86r0jw9agz0knxde36yeur83ne0sg',
-          lettySwap: 'component_tdx_2_1crcfm8dw90rxgva0ph8fwl356jntmc3dpnra9y2kn9eecc2e5cy0v9'
+          lettySwap: 'component_tdx_2_1crcfm8dw90rxgva0ph8fwl356jntmc3dpnra9y2kn9eecc2e5cy0v9',
+          heroBadgeForge: 'component_tdx_2_1czjnvym6zfxrs4dxg7d8lhh67e0ewpngs4e54wwg5mgza3mr4cs3rr',
+          kycOracle: 'component_tdx_2_1cq54cmxscpshhtk68dekvwkmfrnt73e6vhdwff9kwf6wx3rhxzjqge',
+          questRewards: 'component_tdx_2_1cp84vfmurajd568zqf4t7qvdy9xaqv343zdk5pltm6ut6n9ne8z7uw',
+          giftBoxOpener: 'component_tdx_2_1crr6wh0ure2mntxx2uk9vzvscywmmjtp3vt6wrejnj7cv95y7yza5h',
+          cardForge: 'component_tdx_2_1czlvjl0fzeuhr9pqfhuyu3g2s7fpkeh5ks5cxnw6kfku8lp7zlwejp',
+          radgemForge: 'component_tdx_2_1cz0v0zf4jxfkeaznjqv07pg4q4jpw29059f4mg5dxgt32p3mk5mgrs',
+          radmorphForge: 'component_tdx_2_1cpqzuk6y9emptfk88h3cq2se8sqlsqm4zqta5evhv2ycrzjvrtvhgl',
+          imageOracle: 'component_tdx_2_1crjml3xl7vqmp595lk47q22037j6k5yp5zsg0qkve6zf3lu87v8a50',
+          refinery: 'component_tdx_2_1cp3a2mqeuruwre7p3v9k9jg2q28w7x7g4n4hc442uftgh23ypcjayc',
+          kycOracleKeyValueStore:
+            'internal_keyvaluestore_tdx_2_1kr84khj5s49zwx4sd69ftg4xusncem6w5889tyy8xu4azh0daka2sg'
         },
         xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
         accounts: {
