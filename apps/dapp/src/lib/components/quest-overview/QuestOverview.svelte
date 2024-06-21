@@ -101,7 +101,7 @@
       var(--background-image), var(--gradient-5);
     background-position-y: 2.5rem;
     height: 100%;
-    width: 343px;
+    width: 21.5rem;
     max-height: 35.3rem;
     position: absolute;
     left: 0;
@@ -110,6 +110,8 @@
 
     @media (max-width: 25rem) {
       width: 84vw;
+      background-image: linear-gradient(transparent 10%, var(--color-light) 40%),
+        var(--background-image), var(--gradient-5);
     }
   }
   .quest-card {
@@ -127,6 +129,10 @@
     box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.2);
     transition: all 0.5s ease;
     padding: var(--spacing-2xl);
+
+    @media (max-width: 25rem) {
+      width: 84vw;
+    }
   }
 
   .border {
