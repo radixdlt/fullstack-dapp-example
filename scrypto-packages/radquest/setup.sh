@@ -27,19 +27,19 @@ export radmorph=`resim run manifests/create_radmorph.rtm  | grep "Resource:" | g
 
 
 echo "\nGenerating Components..."
-export hero_badge_forge=`resim run manifests/new_hero_badge_forge.rtm | grep "Component:" | grep -o "component_.*"`
+export hero_badge_forge=`resim run manifests/hero-badge-forge/new_hero_badge_forge.rtm | grep "Component:" | grep -o "component_.*"`
 
-quest_rewards_components=`resim run manifests/new_quest_rewards.rtm | grep "Component:"`
+quest_rewards_components=`resim run manifests/quest-rewards/new_quest_rewards.rtm | grep "Component:"`
 export kyc_oracle=`echo $quest_rewards_components | tail -n2 | head -n1 | grep -o "component_.*"`
 export quest_rewards=`echo $quest_rewards_components | tail -n1 | grep -o "component_.*"`
 
 export gift_box_opener=`resim run manifests/gift-box-opener/new_gift_box_opener.rtm | grep "Component:" | grep -o "component_.*"`
 
-refinery_components=`resim run manifests/new_refinery.rtm | grep "Component:"`
+refinery_components=`resim run manifests/refinery/new_refinery.rtm | grep "Component:"`
 export image_oracle=`echo $refinery_components | tail -n2 | head -n1 | grep -o "component_.*"`
 export refinery=`echo $refinery_components | tail -n1 | grep -o "component_.*"`
 
-export morph_card_forge=`resim run manifests/new_card_forge.rtm | grep "Component:" | grep -o "component_.*"`
+export morph_card_forge=`resim run manifests/morph-card-forge/new_card_forge.rtm | grep "Component:" | grep -o "component_.*"`
 
 echo "\nSetup Complete & Environment Variables Set"
 echo "------------------------------------------"
