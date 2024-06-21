@@ -1,7 +1,7 @@
 import { radixEngineClient } from '../..'
 import { config } from '../../config'
 
-export const newQuestRewards = () =>
+export const newGiftBoxOpener = () =>
   radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
@@ -9,7 +9,7 @@ export const newQuestRewards = () =>
         CALL_METHOD
             Address("${wellKnownAddresses.accountAddress.payerAccount}")
             "lock_fee"
-            Decimal("100")
+            Decimal("50")
         ;
         CALL_METHOD
             Address("${wellKnownAddresses.accountAddress.dAppDefinitionAccount}")
@@ -25,11 +25,11 @@ export const newQuestRewards = () =>
         ;
         TAKE_ALL_FROM_WORKTOP
             Address("${config.radQuest.badges.adminBadgeAddress}")
-            Bucket("admin_badges")
+            Bucket("admin_badge")
         ;
         CALL_FUNCTION
           Address("${config.radQuest.package}")
-          "QuestRewards"
+          "GiftBoxOpener"
           "new"
           Address("${config.radQuest.badges.superAdminBadgeAddress}")
           Enum<OwnerRole::Fixed>(
@@ -43,11 +43,9 @@ export const newQuestRewards = () =>
                   )
               )
           )
-          Bucket("admin_badges")
           Address("${config.radQuest.badges.heroBadgeAddress}")
-          # TODO: change to KYC badge resource address
-          Address("${config.radQuest.badges.heroBadgeAddress}")
-        ; 
+          Bucket("admin_badge")
+        ;
        `)
         .andThen((value) =>
           submitTransaction({
@@ -61,8 +59,7 @@ export const newQuestRewards = () =>
         .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
         .map(
           (details): Record<string, string> => ({
-            kycOracleAddress: details.createdEntities[0].entity_address,
-            questRewardsAddress: details.createdEntities[1].entity_address
+            giftBoxOpenerAddress: details.createdEntities[0].entity_address
           })
         )
     )
