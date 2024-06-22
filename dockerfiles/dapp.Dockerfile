@@ -1,4 +1,4 @@
-FROM node:21.4-bullseye-slim AS base
+FROM node:22.3.0-bullseye-slim AS base
 
 ARG PUBLIC_NETWORK_ID
 ARG PUBLIC_LOG_LEVEL
