@@ -1,0 +1,33 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+CALL_METHOD
+    Address("${account}")
+    "create_proof_of_non_fungibles"
+    Address("${hero_badge}")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("<${user_id}>")
+    )
+;
+POP_FROM_AUTH_ZONE
+    Proof("hero_badge_proof")
+;
+CALL_METHOD
+    Address("${account}")
+    "withdraw"
+    Address("${gift_box}")
+    Decimal("1")
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("${gift_box}")
+    Bucket("gift_box")
+;
+CALL_METHOD
+    Address("${gift_box_opener}")
+    "open_gift_box"
+    Proof("hero_badge_proof")
+    Bucket("gift_box")
+;
+

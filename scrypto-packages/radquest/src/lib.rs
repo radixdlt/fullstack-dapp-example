@@ -1,3 +1,4 @@
+pub mod gift_box_opener;
 pub mod hero_badge_forge;
 pub mod image_oracle;
 pub mod kyc_oracle;

@@ -1,0 +1,80 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+CREATE_FUNGIBLE_RESOURCE
+    Enum<1u8>(
+        Enum<2u8>(
+            Enum<0u8>(
+                Enum<0u8>(
+                    Enum<1u8>(
+                        Address("${admin_badge}")
+                    )
+                )
+            )
+        )
+    )
+    true
+    0u8
+    Tuple(
+        Enum<1u8>(
+            Tuple(
+                Enum<0u8>(),
+                Enum<1u8>(
+                    Enum<1u8>()
+                )
+            )
+        ),
+        Enum<1u8>(
+            Tuple(
+                Enum<0u8>(),
+                Enum<1u8>(
+                    Enum<1u8>()
+                )
+            )
+        ),
+        Enum<0u8>(),
+        Enum<0u8>(),
+        Enum<0u8>(),
+        Enum<0u8>()
+    )
+    Tuple(
+        Map<String, Tuple>(
+            "name" => Tuple(
+                Enum<1u8>(
+                    Enum<0u8>(
+                        "Gift Box"
+                    )
+                ),
+                true
+            ),
+            "symbol" => Tuple(
+                Enum<1u8>(
+                    Enum<0u8>(
+                        "GBX"
+                    )
+                ),
+                true
+            ),
+            "description" => Tuple(
+                Enum<1u8>(
+                    Enum<0u8>(
+                        "Gift Boxes are filled with treasures and surprises, waiting to be opened."
+                    )
+                ),
+                true
+            ),
+            "icon_url" => Tuple(
+                Enum<1u8>(
+                    Enum<13u8>(
+                        "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"
+                    )
+                ),
+                true
+            )
+        ),
+        Map<String, Enum>()
+    )
+    Enum<0u8>()
+;
