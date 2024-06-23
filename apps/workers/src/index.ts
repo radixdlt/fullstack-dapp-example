@@ -21,6 +21,8 @@ import { TransactionWorkerController } from './transaction/controller'
 import { TokenPriceClient } from './token-price-client'
 import { SystemWorker } from './system/worker'
 import { SystemWorkerController } from './system/controller'
+import { SendMessage } from './helpers/sendMessage'
+import { SetTransactionIntentStatus } from './helpers/setTransactionIntentStatus'
 
 const app = async () => {
   // test db connection
@@ -38,7 +40,8 @@ const app = async () => {
   const gatewayApi = GatewayApi(config.networkId)
   const eventModel = EventModel(dbClient)
   const configModel = ConfigModel(dbClient)
-  const transactionModel = TransactionModel(dbClient)
+  const auditModel = AuditModel(dbClient)
+  const transactionModel = TransactionModel(dbClient, transactionQueue)
   const redisClient = new RedisConnection(config.redis)
   const tokenPriceClient = TokenPriceClient({ logger, redisClient })
 
@@ -51,26 +54,25 @@ const app = async () => {
     accountAddressModel: AccountAddressModel(redisClient, logger),
     configModel,
     tokenPriceClient,
-    messageApi,
     transactionQueue,
-    logger
+    logger,
+    sendMessage: SendMessage({ dbClient, messageApi })
   })
 
   const transactionWorkerController = TransactionWorkerController({
+    auditModel,
     gatewayApi,
     tokenPriceClient,
-    transactionModel,
-    auditModel: AuditModel(dbClient),
-    configModel,
-    messageApi,
-    dbClient
+    sendMessage: SendMessage({ dbClient, messageApi }),
+    setTransactionIntentStatus: SetTransactionIntentStatus(dbClient)
   })
 
   TransactionWorker(connection, {
     logger,
-    transactionWorkerController,
     transactionModel,
-    transactionQueue
+    dbClient,
+    transactionWorkerController,
+    tokenPriceClient
   })
 
   EventWorker(connection, {

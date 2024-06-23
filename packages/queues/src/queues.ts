@@ -49,10 +49,8 @@ export type DepositXrdToAccount = {
 }
 
 export type TransactionJob = {
-  attempt: number
-  transactionKey: string
-  badgeId: string
-  badgeResourceAddress: string
+  userId: string
+  discriminator: string
   traceId: string
 } & (
   | DepositRewardTransactionJob
@@ -105,7 +103,7 @@ export const getQueues = (connection: ConnectionOptions) => {
 
   const addTransactionJob = (item: TransactionJob) =>
     ResultAsync.fromPromise(
-      transactionQueue.add(item.traceId, item, { jobId: `${item.traceId}:${item.attempt}` }),
+      transactionQueue.add(item.discriminator, item, { jobId: item.discriminator }),
       typedError
     )
 

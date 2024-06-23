@@ -36,6 +36,7 @@ model User {
   auditLogs                  Audit[]
   questProgress              QuestProgress[]
   referredUsers              User[] @relation("Referrer")
+  transactions               TransactionIntent[]
 }
 
 model RadMorphImage {
@@ -139,25 +140,36 @@ enum AuditType {
   CLAIMBOX_DEPOSIT
 }
 
-model Transaction {
-  attempt                   Int                   @default(0)
-  transactionKey            String  
-  transactionId             String?
-  status                    TransactionStatus     @default(PENDING)
-  createdAt                 DateTime              @default(now())
+model TransactionIntent {
+  discriminator             String   @id                  
+  status                    TransactionIntentStatus   @default(WAITING)
+  createdAt                 DateTime                  @default(now())
   error                     String?
-  badgeId                   String
-  badgeResourceAddress      String
-  metadata                  Json?
+  userId                    String
+  data                      Json?
+  transactions              SubmittedTransaction[]
 
-  @@id([transactionKey, badgeId, badgeResourceAddress, attempt])
+  user                      User                      @relation(fields: [userId], references: [id])
+
 }
 
-enum TransactionStatus {
+enum TransactionIntentStatus {
+  WAITING
   PENDING
   ERROR
   COMPLETED
 }
+
+model SubmittedTransaction {
+  transactionId        String             @id 
+  transactionIntent    String 
+  status               String  
+  createdAt            DateTime           @default(now())
+
+  transaction          TransactionIntent  @relation(fields: [transactionIntent], references: [discriminator])
+}
+
+
 
 model Config {
   key           String  @id
