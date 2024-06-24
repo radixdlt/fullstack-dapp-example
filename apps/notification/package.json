@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "tsx --watch src/index.ts | npx pino-pretty",
     "build": "tsup",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "tsc": "tsc --noEmit"
   },
   "type": "module",
   "license": "SEE LICENSE",

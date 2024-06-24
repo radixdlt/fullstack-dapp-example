@@ -7,7 +7,8 @@
     "build": "tsup",
     "clean": "rm -rf dist",
     "test": "vitest",
-    "test:ci": "vitest run"
+    "test:ci": "vitest run",
+    "tsc": "tsc --noEmit"
   },
   "license": "SEE LICENSE",
   "dependencies": {
