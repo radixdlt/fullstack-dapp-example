@@ -9,7 +9,7 @@ import { RedisConnection } from 'bullmq'
 */
 
 export type AccountAddressModel = ReturnType<typeof AccountAddressModel>
-export const AccountAddressModel = (redisClient: RedisConnection, logger?: AppLogger) => {
+export const AccountAddressModel = (redisClient: RedisConnection) => (logger?: AppLogger) => {
   const getRedisClient = () => ResultAsync.fromPromise(redisClient.client, typedError)
 
   const addTrackedAddress = (accountAddress: string, questId: string, userId: string) =>

@@ -25,6 +25,13 @@ const { transactionQueue } = getQueues(config.redis)
 
 const redisClient = new RedisConnection(config.redis)
 
+const userModel = UserModel(dbClient)
+const userQuestModel = UserQuestModel(dbClient)
+const transactionModel = TransactionModel(dbClient, transactionQueue)
+const auditModel = AuditModel(dbClient)
+const gatewayApi = GatewayApi(+PUBLIC_NETWORK_ID)
+const accountAddressModel = AccountAddressModel(redisClient)
+
 export const handle: Handle = async ({ event, resolve }) => {
   const origin = event.request.headers.get('origin')
 
@@ -47,27 +54,17 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   event.locals.context = {
     traceId,
-    logger: appLogger.child({
-      traceId,
-      path: event.url.pathname,
-      method: event.request.method
-    })
+    logger
   }
 
-  const userModel = UserModel(dbClient)(logger)
-  const userQuestModel = UserQuestModel(dbClient)(logger)
-  const transactionModel = TransactionModel(dbClient, transactionQueue)(logger)
-  const auditModel = AuditModel(dbClient)(logger)
-  const gatewayApi = GatewayApi(+PUBLIC_NETWORK_ID)
-  const accountAddressModel = AccountAddressModel(redisClient, logger)
-
   event.locals.dependencies = {
-    userModel,
-    userQuestModel,
-    transactionModel,
-    auditModel,
+    userModel: userModel(logger),
+    userQuestModel: userQuestModel(logger),
+    transactionModel: transactionModel(logger),
+    auditModel: auditModel(logger),
+    accountAddressModel: accountAddressModel(logger),
     gatewayApi,
-    accountAddressModel
+    logger
   } satisfies ControllerDependencies
 
   event.locals.controllers = {

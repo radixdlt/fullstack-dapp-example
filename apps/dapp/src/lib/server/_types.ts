@@ -27,5 +27,6 @@ export type ControllerDependencies = {
   auditModel: ReturnType<AuditModel>
   gatewayApi: ReturnType<typeof GatewayApi>
   userQuestModel: ReturnType<UserQuestModel>
-  accountAddressModel: AccountAddressModel
+  accountAddressModel: ReturnType<AccountAddressModel>
+  logger: AppLogger
 }
