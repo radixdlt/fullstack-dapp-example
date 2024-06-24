@@ -67,13 +67,14 @@ export const UserController = ({
               userId
             } satisfies TransactionJob
 
-            return transactionModel
-              .doesTransactionExist(item)
-              .andThen((exists) =>
-                exists
-                  ? okAsync({ httpResponseCode: 200, data: undefined })
-                  : transactionModel.add(item)
-              )
+            return transactionModel.doesTransactionExist(item).andThen((exists) =>
+              exists
+                ? okAsync({ httpResponseCode: 200, data: undefined })
+                : transactionModel.add(item).map(() => ({
+                    httpResponseCode: 201,
+                    data: undefined
+                  }))
+            )
           })
           .mapErr((error) => {
             ctx.logger.error({
@@ -84,10 +85,6 @@ export const UserController = ({
             return createApiError('allowAccountAddressToMintHeroBadgeError', 500)()
           })
       )
-      .map(() => ({
-        httpResponseCode: 201,
-        data: undefined
-      }))
 
   const setAccountAddress = (
     ctx: ControllerMethodContext,

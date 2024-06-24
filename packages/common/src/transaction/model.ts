@@ -20,7 +20,12 @@ export const TransactionModel =
           }
         }),
         (error) => {
-          logger?.error({ error, method: 'add', model: 'TransactionModel' })
+          logger?.error({
+            error,
+            method: 'add',
+            model: 'TransactionModel',
+            payload: { discriminator, userId, ...data }
+          })
           return createApiError('failed to add transaction entry', 400)()
         }
       ).andThen(() =>
