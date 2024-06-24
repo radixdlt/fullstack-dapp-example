@@ -15,7 +15,7 @@ export type FilterTransactionsByAccountAddress = ReturnType<
   typeof FilterTransactionsByAccountAddress
 >
 export const FilterTransactionsByAccountAddress =
-  (accountAddressModel: AccountAddressModel) => async (tx: FilteredTransaction) => {
+  (accountAddressModel: ReturnType<AccountAddressModel>) => async (tx: FilteredTransaction) => {
     let userId
 
     switch (tx.type) {
