@@ -78,6 +78,10 @@ export const RedisKeys = {
   TrackedAccountAddresses: 'tracked-account-addresses'
 }
 
+export const ReferralQuestConfig = {
+  triggerRewardAfterQuest: 'TransferTokens'
+}
+
 export const EventId = {
   DepositHeroBadge: 'DepositHeroBadge',
   JettyReceivedClams: 'JettyReceivedClams',

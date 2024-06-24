@@ -44,19 +44,18 @@ interface Resources {
       message: 'Ready to earn your rare NFT and up to $20 in XRD? Start your quest journey now.'
       button: "Let's begin"
     }
-    landingPagePopup: {
-      title: 'Welcome to RadQuest'
-      message: 'Ready to earn your rare NFT and up to $20 in XRD? Start your quest journey now.'
-      button: "Let's begin"
-    }
   }
   quests: {
+    copy: 'Copy'
     rewards: 'Rewards'
     requirementsDescription: 'Complete the tasks below to claim your rewards. You can always go back and check the information if you’re not sure how.'
     requirementsTitle: 'What You Need to Do'
     nextButton: 'Next'
     keyImageAlt: 'Quest Image'
     backButton: 'Back'
+    shareButton: 'Share'
+    referralsProgress: '{{referred}}/{{maximum}} referrals'
+    inProgress: 'In Progress'
     continueButton: 'Continue'
     placeholderNotFound: 'Placeholder {{id}} not found'
     claimButton: 'Claim'
@@ -162,6 +161,24 @@ interface Resources {
       rewardTiersTab: 'Reward Tiers'
       partyParticipantsTab: 'Party participants'
       introDescription: 'You came to RadQuest following Matt’s link, join his party'
+      introHeader: 'Invite Your Friends'
+      copyReferral: 'Copy your referral link and send it to your friends.'
+      yourReferrals: 'Your Referrals'
+      yourReferralsCount: 'Your Referrals ({{count}}):'
+      referralsSoFar: 'Referrals so far!'
+      referralsSoFarHeader: 'You have {{count}} referrals so far!'
+      referralsSoFarHeader_one: 'You have {{count}} referral so far!'
+      referralsSoFarDescription: 'These friends have signed up using your link and completed the basic quests. You each get 10 XRD!'
+      alreadyClaimed: 'Already claimed: {{amount}} XRD'
+      info_1: '<strong>Your friends will get 10 XRD</strong> when they use your referral link and complete all basic quests.'
+      info_2: '<strong>You’ll also receive 10 XRD</strong> for each referral and you’ll win <strong>extra rewards</strong> at each milestone (5, 10, 15 and 20 referrals)!'
+      shareYourLink: 'Share Your Referral Link:'
+      yourLevel: 'You are at {{level}} Level!'
+      referMore: 'Refer {{count}} more friends to claim your rewards and progress to {{nextLevel}}!'
+      level1: 'Bronze'
+      level2: 'Silver'
+      level3: 'Gold'
+      level4: 'Super'
       requirements: {
         LearnAboutParty: 'Learn about Party Quest'
         ClaimReferralQuestRewards: 'Claim your rewards'

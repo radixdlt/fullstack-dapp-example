@@ -32,7 +32,7 @@ const setUserField = ({ field, ...props }: SetUserFieldProps) =>
   ).map(({ data }) => data)
 
 const getReferrals = () =>
-  fetchWrapper<void>(
+  fetchWrapper<string[]>(
     fetch(`/api/user/referrals`, {
       method: 'GET'
     })

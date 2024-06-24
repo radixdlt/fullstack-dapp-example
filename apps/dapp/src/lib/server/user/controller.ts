@@ -33,10 +33,10 @@ export const UserController = ({
   const valueExists = (input: unknown, errorMessage: string): ResultAsync<boolean, ApiError> =>
     input ? okAsync(true) : errAsync(createApiError(errorMessage, 400)())
 
-  const getReferrals = (ctx: ControllerMethodContext, userId: string) => {
-    return userModel.getById(userId, { referredUsers: true }).map((data) => {
+  const getReferrals = (userId: string) => {
+    return userModel.getReferrals(userId).map((data) => {
       return {
-        data: data.referredUsers.map((user) => user.name),
+        data: data,
         httpResponseCode: 200
       }
     })

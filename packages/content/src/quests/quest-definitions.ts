@@ -54,6 +54,7 @@ export type QuestDefinition = {
   category: QuestCategory
   trackedAccountAddress: boolean
   rewards: Readonly<QuestReward[]>
+  tiersRewards?: QuestReward[][]
   preRequisites: Readonly<string[]>
   requirements: Requirements
   splashImage?: string
@@ -296,10 +297,54 @@ export const QuestDefinitions = () => {
     ReferralQuest: {
       id: 'ReferralQuest',
       category: 'advanced',
+      tiersRewards: [
+        [
+          {
+            name: 'element',
+            amount: 10
+          },
+          {
+            name: 'energyCard',
+            amount: 1
+          },
+          {
+            name: 'xrd',
+            amount: 200
+          }
+        ],
+        [
+          {
+            name: 'element',
+            amount: 10
+          },
+          {
+            name: 'energyCard',
+            amount: 1
+          },
+          {
+            name: 'xrd',
+            amount: 200
+          }
+        ],
+        [
+          {
+            name: 'element',
+            amount: 10
+          },
+          {
+            name: 'energyCard',
+            amount: 1
+          },
+          {
+            name: 'xrd',
+            amount: 200
+          }
+        ]
+      ],
       rewards: [
         {
           name: 'element',
-          amount: 20
+          amount: 10
         },
         {
           name: 'energyCard',
@@ -307,21 +352,13 @@ export const QuestDefinitions = () => {
         },
         {
           name: 'xrd',
-          amount: 10
+          amount: 200
         }
       ],
       trackedAccountAddress: false,
       minutesToComplete: 3,
       preRequisites: ['TransferTokens'],
-      requirements: {
-        LearnAboutParty: {
-          type: 'content'
-        },
-        ClaimReferralQuestRewards: {
-          eventName: 'ClaimReferralQuestRewards',
-          type: 'event'
-        }
-      }
+      requirements: {}
     }
   } as const satisfies { [key: string]: QuestDefinition }
 }
