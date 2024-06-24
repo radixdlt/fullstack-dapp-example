@@ -18,6 +18,8 @@ repositories:
     url: https://raw.githubusercontent.com/radixdlt/helm-charts/master/
     username: {{ requiredEnv "HELM_GH_USER" }}
     password: {{ requiredEnv "HELM_GH_PASS" }}
+  - name: kubesphere 
+    url: https://charts.kubesphere.io/main
 releases:
   - name: dapp
     chart: ./dapp
