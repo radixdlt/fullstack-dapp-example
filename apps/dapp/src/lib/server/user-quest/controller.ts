@@ -127,7 +127,7 @@ export const UserQuestController = ({
             eventId as keyof typeof questDefinition.requirements
           ] as Requirement
           acc[eventId] = {
-            isComplete: requirementsState[eventId].isComplete || false,
+            isComplete: requirementsState[eventId]?.isComplete || false,
             isHidden: requirement.isHidden || false
           }
           return acc
