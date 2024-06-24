@@ -93,6 +93,8 @@
     "build:storybook": {
       "cache": false
     },
-    "tsc": {}
+    "tsc": {
+      "cache": false
+    }
   }
 }
