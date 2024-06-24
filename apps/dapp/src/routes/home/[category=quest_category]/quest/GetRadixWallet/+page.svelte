@@ -83,19 +83,23 @@
       }
     },
     {
-      id: 'get-the-wallet',
-      type: 'regular',
-      skip: walletIsLinked,
-      footer: {
-        next: {
-          enabled: walletIsLinked
-        }
-      }
+      id: '2',
+      type: 'regular'
     },
     {
       id: '3',
       type: 'regular'
     },
+    // {
+    //   id: 'get-the- wallet',
+    //   type: 'regular',
+    //   skip: walletIsLinked,
+    //   footer: {
+    //     next: {
+    //       enabled: walletIsLinked
+    //     }
+    //   }
+    // },
     {
       id: '4',
       type: 'jetty',
@@ -231,7 +235,7 @@
   {/if}
 
   {#if render('6')}
-    {@html text['6.md']}
+    {@html text['6a.md']}
   {/if}
   {#if render('8')}
     {@html text['8.md']}
