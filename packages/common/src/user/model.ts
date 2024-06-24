@@ -1,6 +1,6 @@
 import { ResultAsync, err, errAsync, okAsync } from 'neverthrow'
 import type { PrismaClient, Prisma, User, UserPhoneNumber } from 'database'
-import type { AppLogger } from '../'
+import { ReferralQuestConfig, type AppLogger } from '../'
 import { type ApiError, createApiError } from '../helpers'
 import { getRandomReferralCode } from './get-random-referral-code'
 
@@ -18,6 +18,7 @@ type UserModelType = {
     accountAddress: string,
     include: T
   ) => ResultAsync<User | null, ApiError>
+  getReferrals: (id: string) => ResultAsync<any, ApiError>
   getPhoneNumber: (phoneNumber: string) => ResultAsync<UserPhoneNumber | null, ApiError>
   addAccount: (userId: string, accountAddress: string) => ResultAsync<void, ApiError>
   setUserName: (userId: string, name: string) => ResultAsync<User, ApiError>
@@ -120,6 +121,23 @@ export const UserModel =
       ).andThen((data) =>
         data ? okAsync(data) : errAsync(createApiError('user not found', 404)())
       )
+    const getReferrals = (id: string) =>
+      ResultAsync.fromPromise(
+        db.$queryRaw`
+        SELECT "name" FROM "User" 
+          INNER JOIN "QuestProgress" ON "User".id = "QuestProgress"."userId"
+          WHERE 
+          "User"."referredBy" = (SELECT "referralCode" FROM "User" WHERE id = ${id})
+            AND "QuestProgress"."questId" = ${ReferralQuestConfig.triggerRewardAfterQuest} 
+            AND "QuestProgress".status = 'COMPLETED';
+      `,
+        (error) => {
+          logger?.error({ error, method: 'getReferrals', model: 'UserModel' })
+          return createApiError('failed to get referrals', 400)()
+        }
+      )
+        .map((data) => data as { name: string }[])
+        .map((data) => data.map(({ name }) => name))
 
     const getPhoneNumber = (phoneNumber: string): ResultAsync<UserPhoneNumber | null, ApiError> =>
       ResultAsync.fromPromise<UserPhoneNumber | null, ApiError>(
@@ -167,6 +185,7 @@ export const UserModel =
       create,
       getById,
       getByAccountAddress,
+      getReferrals,
       getPhoneNumber,
       addAccount,
       setUserName,

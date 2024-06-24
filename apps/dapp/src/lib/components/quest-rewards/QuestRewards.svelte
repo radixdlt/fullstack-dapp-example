@@ -5,9 +5,10 @@
 
   export let rewards: Readonly<QuestReward[]> = []
   export let displayName = false
+  export let vertical = false
 </script>
 
-<div class="rewards">
+<div class="rewards" class:vertical>
   {#each rewards as { name, amount }}
     <div class="reward">
       <Icon url={typeToIcon[name]} size="small">
@@ -26,7 +27,12 @@
     flex-wrap: wrap;
     display: flex;
     align-items: center;
-    gap: var(--spacing-2xl);
+    gap: var(--rewards-gap, var(--spacing-2xl));
+  }
+
+  .rewards.vertical {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .reward {
