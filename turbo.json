@@ -92,6 +92,7 @@
     },
     "build:storybook": {
       "cache": false
-    }
+    },
+    "tsc": {}
   }
 }

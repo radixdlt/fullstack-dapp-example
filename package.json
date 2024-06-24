@@ -33,7 +33,8 @@
     "format": "prettier --write apps/**/* packages/**/*",
     "content:build": "turbo content:build --filter content",
     "queues:build": "turbo queues:build --filter queues",
-    "storybook:build": "npx turbo run build:storybook --filter=dapp"
+    "storybook:build": "npx turbo run build:storybook --filter=dapp",
+    "tsc": "npx turbo run tsc"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.4.4",
