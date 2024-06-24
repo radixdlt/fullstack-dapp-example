@@ -19,8 +19,8 @@
 
   let quest: Quest
   const addresses = Addresses(publicConfig.networkId)
-  const jettySwap = writable(data.requirements?.JettySwap)
-  const lettySwap = writable(data.requirements?.LettySwap)
+  const jettySwap = writable(data.requirements?.JettySwap.isComplete)
+  const lettySwap = writable(data.requirements?.LettySwap.isComplete)
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
     unsubscribeWebSocket = $webSocketClient.onMessage((message) => {

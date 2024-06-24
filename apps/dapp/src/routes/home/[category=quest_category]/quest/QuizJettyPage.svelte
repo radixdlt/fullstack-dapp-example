@@ -7,6 +7,7 @@
   import Error from '$lib/components/error/Error.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import { useCookies, type RequirementCookieKey } from '$lib/utils/cookies'
+  import type { QuestRequirement } from '$lib/server/user-quest/controller'
 
   export let text: string
   export let onBack: () => void
@@ -15,18 +16,16 @@
 
   export let quizRequirement: string
   export let questId: QuestId
-  export let requirements: { [key: string]: boolean }
+  export let requirements: { [key: string]: QuestRequirement }
 
   $: cookieRequirementValue =
     useCookies(`requirement-${questId}-${quizRequirement}` as RequirementCookieKey).get() === 'true'
-  $: isCorrectAnswer = requirements[quizRequirement] || cookieRequirementValue
+  $: isCorrectAnswer = requirements[quizRequirement].isComplete || cookieRequirementValue
   $: error = false
 
   const handleCorrectAnswer = () => {
     completeRequirement(questId, quizRequirement)
-      .map(() => {
-        isCorrectAnswer = true
-      })
+      .map(() => (isCorrectAnswer = true))
       .mapErr(() => {
         error = true
       })

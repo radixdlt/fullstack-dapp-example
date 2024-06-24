@@ -16,8 +16,7 @@
 
   let render = (_: string) => false
 
-  let walletIsLinked = writable(data.requirements.GetTheWallet)
-
+  let walletIsLinked = writable(data.requirements.GetTheWallet.isComplete)
   onMount(() => {
     if (isMobile()) {
       // @ts-ignore
@@ -71,13 +70,7 @@
   steps={[
     {
       id: '0',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['0.md']
-      }
+      type: 'regular'
     },
     {
       id: '1',
@@ -105,7 +98,13 @@
     },
     {
       id: '4',
-      type: 'regular'
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['4.md']
+      }
     },
     {
       id: '5',
@@ -118,7 +117,84 @@
       }
     },
     {
-      type: 'requirements'
+      id: '6',
+      type: 'regular'
+    },
+    {
+      id: '7',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['7.md']
+      }
+    },
+    {
+      id: '8',
+      type: 'regular'
+    },
+    {
+      id: '9',
+      type: 'regular'
+    },
+    {
+      id: '10',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['10.md']
+      }
+    },
+    {
+      id: '11',
+      type: 'regular'
+    },
+    {
+      id: '12',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['12.md']
+      }
+    },
+    {
+      id: '13',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['13.md']
+      }
+    },
+    {
+      id: '14',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['14.md']
+      }
+    },
+    {
+      id: '15',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['14.md']
+      }
+    },
+    {
+      id: '16',
+      type: 'regular'
     },
     {
       id: 'unclaimable-requirements',
@@ -126,7 +202,7 @@
       component: ClaimRewards,
       props: {
         rewards: data.rewards,
-        text: text['claim.md'],
+        text: '',
         nextButtonText: $i18n.t('quests:continueButton'),
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next()
@@ -138,7 +214,15 @@
   ]}
   let:render
 >
+  {#if render('0')}
+    {@html text['0.md']}
+  {/if}
+
   {#if render('get-the-wallet')}
+    {@html text['1.md']}
+  {/if}
+
+  {#if render('2')}
     {@html text['2.md']}
   {/if}
 
@@ -146,7 +230,19 @@
     {@html text['3.md']}
   {/if}
 
-  {#if render('4')}
-    {@html text['4.md']}
+  {#if render('6')}
+    {@html text['6.md']}
+  {/if}
+  {#if render('8')}
+    {@html text['8.md']}
+  {/if}
+  {#if render('9')}
+    {@html text['9.md']}
+  {/if}
+  {#if render('11')}
+    {@html text['11.md']}
+  {/if}
+  {#if render('16')}
+    {@html text['16.md']}
   {/if}
 </Quest>

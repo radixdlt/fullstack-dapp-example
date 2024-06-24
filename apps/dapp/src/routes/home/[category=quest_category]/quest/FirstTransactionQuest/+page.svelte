@@ -79,6 +79,16 @@
   let:next
   steps={[
     {
+      id: '0',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['0.md']
+      }
+    },
+    {
       id: '1',
       type: 'jetty',
       component: TextJettyPage,
@@ -98,12 +108,76 @@
     },
     {
       id: '4',
+      type: 'regular'
+    },
+    {
+      id: '5',
       type: 'jetty',
       component: TextJettyPage,
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: text['4.md']
+        text: text['5.md']
+      }
+    },
+    {
+      id: '6',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['6.md']
+      }
+    },
+    {
+      id: '7',
+      type: 'regular'
+    },
+    {
+      id: '8',
+      type: 'regular'
+    },
+    {
+      id: '9',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['9.md']
+      }
+    },
+    {
+      id: '10',
+      type: 'regular'
+    },
+    {
+      id: '11',
+      type: 'regular'
+    },
+    {
+      id: '12',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['12.md']
+      }
+    },
+    {
+      id: '13',
+      type: 'regular'
+    },
+    {
+      id: '14',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['14.md']
       }
     },
     {

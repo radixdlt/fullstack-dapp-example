@@ -114,21 +114,11 @@
     {
       id: '8',
       type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['8.md']
-      }
-    },
-    {
-      id: '9',
-      type: 'jetty',
       component: QuizJettyPage,
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: text['9.md'],
+        text: text['8.md'],
         quizRequirement: 'RadQuestQuiz',
         questId: 'WelcomeToRadQuest',
         requirements: data.requirements,
