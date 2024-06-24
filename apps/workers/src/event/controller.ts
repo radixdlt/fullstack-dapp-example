@@ -44,14 +44,14 @@ export const EventWorkerController = ({
   tokenPriceClient,
   transactionModel,
   logger,
-  accountAddressModel,
+  AccountAddressModel,
   sendMessage
 }: {
   dbClient: PrismaClient
   eventModel: EventModel
   userModel: UserModel
   transactionModel: TransactionModel
-  accountAddressModel: AccountAddressModel
+  AccountAddressModel: AccountAddressModel
   userQuestModel: UserQuestModel
   tokenPriceClient: TokenPriceClient
   logger: AppLogger
@@ -68,6 +68,8 @@ export const EventWorkerController = ({
       transactionId,
       method: 'eventWorker.handler'
     })
+
+    const accountAddressModel = AccountAddressModel(childLogger)
 
     const dbTransactions = databaseTransactions({ dbClient, logger: childLogger, transactionId })
     const dbTransactionBuilder = DbTransactionBuilder({ dbClient, tokenPriceClient })

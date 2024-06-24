@@ -51,7 +51,7 @@ const app = async () => {
     eventModel,
     userModel: UserModel(dbClient),
     transactionModel,
-    accountAddressModel: AccountAddressModel(redisClient, logger),
+    AccountAddressModel: AccountAddressModel(redisClient),
     configModel,
     tokenPriceClient,
     transactionQueue,
