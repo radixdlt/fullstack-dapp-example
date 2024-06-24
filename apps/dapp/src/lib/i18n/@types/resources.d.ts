@@ -1,33 +1,48 @@
 interface Resources {
-  glossary: {
-    back: 'Back'
-    definitionMissing: "Definition doesn't exist"
-  }
-  jetty: {
-    'menu-glossary': 'Glossary'
-    'menu-transformGems': 'Transform Gemstones'
-    'menu-fuseElements': 'Fuse Elements'
-    'menu-text': 'Hi friend, how can I help you?'
-    'claim-rewards': "Wow speedy, you're a fast learner! Here are your rewards for this quest."
-    'reward-text_one': '{{name}}'
-    'reward-text_other': '{{name}}s'
-    'logged-in-with-wallet': "I see you've logged in with your wallet!"
-    'go-back-to-quest': 'Go back to quest'
-    cancel: 'Cancel'
-    'transform-gems': {
-      back: 'Back'
-      title0: 'Pick a Transform card'
-      title1: 'Pick two gems'
-      title2: 'Ready to transform?'
-      'complete-button': 'Send to Jetty'
-      'gemcard-gemstone': 'Gemstone'
-      'gemcard-rarity': 'Rarity'
+  "glossary": {
+    "back": "Back",
+    "definitionMissing": "Definition doesn't exist"
+  },
+  "jetty": {
+    "menu-glossary": "Glossary",
+    "menu-transformGems": "Transform Gemstones",
+    "menu-fuseElements": "Fuse Elements",
+    "menu-text": "Hi friend, how can I help you?",
+    "claim-rewards": "Wow speedy, you're a fast learner! Here are your rewards for this quest.",
+    "reward-text_one": "{{name}}",
+    "reward-text_other": "{{name}}s",
+    "logged-in-with-wallet": "I see you've logged in with your wallet!",
+    "go-back-to-quest": "Go back to quest",
+    "cancel": "Cancel",
+    "transform-gems": {
+      "back": "Back",
+      "title0": "Pick a Transform card",
+      "title1": "Pick two gems",
+      "title2": "Ready to transform?",
+      "complete-button": "Send to Jetty",
+      "gemcard-gemstone": "Gemstone",
+      "gemcard-rarity": "Rarity"
+    },
+    "fuse-elements": {
+      "intro": "I can combine raw elements into colorful gemstones using my magical abilities. Gemstones can be combined with alchemy cards to craft unique and beautiful objects!",
+      "text1": "You have {{count}} Elements right now.",
+      "text2": "Send me {{count}} Elements and I will create a random gemstone.",
+      "send-button": "Send {{count}} Elements"
     }
-    'fuse-elements': {
-      intro: 'I can combine raw elements into colorful gemstones using my magical abilities. Gemstones can be combined with alchemy cards to craft unique and beautiful objects!'
-      text1: 'You have {{count}} Elements right now.'
-      text2: 'Send me {{count}} Elements and I will create a random gemstone.'
-      'send-button': 'Send {{count}} Elements'
+  },
+  "main": {
+    "tabs-basics": "Basics",
+    "tabs-advanced": "Advanced",
+    "external-link-icon": "External link icon",
+    "error-page": {
+      "page-not-found": "I couldn’t find that page.",
+      "something-went-wrong": "Oops! Something went wrong",
+      "go-home-button": "Go to RadQuest Home"
+    },
+    "landingPagePopup": {
+      "title": "Welcome to RadQuest",
+      "message": "Ready to earn your rare NFT and up to $20 in XRD? Start your quest journey now.",
+      "button": "Let's begin"
     }
   }
   main: {
@@ -74,27 +89,48 @@ interface Resources {
         Glossary: 'Use Jetty’s Glossary'
         RadQuestQuiz: 'Complete the RadQuest Quiz'
       }
-      title: 'Welcome to RadQuest'
-      description: 'Begin your Radix journey'
-      introDescription: 'Journey with Jetty through RadQuest and uncover the hidden depths of the Radix ecosystem. Complete tasks and win tokens, NFTs and XRD.'
-    }
-    WhatIsRadix: {
-      requirements: {
-        LearnAboutRadix: 'Learn about the Radix network'
-        RadixQuiz: 'Complete the Radix Quiz'
-        dAppQuiz: 'Complete the dApp Quiz'
+    },
+    "MayaQuest": {
+      "title": "Thorswap Quest",
+      "description": "Learn about Thorswap and how to bridge tokens",
+      "introDescription": "Thorswap is a decentralized exchange that allows you to swap tokens across different blockchains. Learn more about Thorswap and how to bridge tokens.",
+      "requirements": {
+        "MayaRouterWithdrawEvent": "Do at least one bridge/swap of >$50 value"
       }
-      title: 'Introduction to Radix'
-      description: 'Become familiar with the Radix network'
-      introDescription: 'Radix is a decentralized network that aims to solve the scalability problem of blockchain technology. Learn more about Radix and how it works.'
-    }
-    GetRadixWallet: {
-      requirements: {
-        GetTheWallet: 'Download the Radix Wallet'
+    },
+    "ReferralQuest": {
+      "title": "Invite Your Friends Quest",
+      "description": "Invite your friends to give them XRD tokens and earn rewards!",
+      "rewardsTitle": "Party rewards Status",
+      "rewardTiersTab": "Reward Tiers",
+      "partyParticipantsTab": "Party participants",
+      "introDescription": "You came to RadQuest following Matt’s link, join his party",
+      "requirements": {
+        "LearnAboutParty": "Learn about Party Quest",
+        "ClaimReferralQuestRewards": "Claim your rewards"
       }
-      title: 'The Radix Wallet'
-      description: 'Get set up with the Radix Wallet'
-      introDescription: 'The Radix Wallet is your gateway to the Radix network. Download the wallet and get started.'
+    },
+    "SwapQuest": {
+      "requirements": {
+        "LearnAboutDexes": "Learn about DEXes",
+        "JettySwap": "Swap tokens on Jetty Swap",
+        "LettySwap": "Swap tokens on Letty Swap"
+      },
+      "goToJettySwap": "Go to Jetty Swap",
+      "goToLettySwap": "Go to Letty Swap",
+      "title": "Decentralized Exchange (DEX)",
+      "description": "Learn how to swap one token for another at a changing market rate.",
+      "introDescription": "Learn about DEXes\nSwap one token for another kind of token"
+    },
+    "InstapassQuest": {
+      "goToInstapass": "Go to Instapass",
+      "requirements": {
+        "LearnAboutInstapass": "Learn about Instapass",
+        "InstapassBadgeDeposited": "Receive Instapass KYC badge"
+      },
+      "title": "Instapass",
+      "description": "Learn about Instapass",
+      "introDescription": "Instapass is a way to log in to websites without a password. Learn more about Instapass."
     }
     LoginWithWallet: {
       requirements: {
@@ -220,4 +256,4 @@ interface Resources {
   translation: {}
 }
 
-export default Resources
+export default Resources;

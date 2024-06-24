@@ -23,31 +23,29 @@
     "hi": "Meet Jetty",
     "claim": "Claim",
     "requirements": {
-      "Introduction": "Understand what RadQuest is",
-      "Glossary": "Use Jetty’s Glossary",
-      "RadQuestQuiz": "Complete the RadQuest Quiz"
+      "Glossary": "",
+      "Introduction": "",
+      "RadQuestQuiz": "Learn about RadQuest and your guide, Jetty"
     },
     "title": "Welcome to RadQuest",
-    "description": "Begin your Radix journey",
-    "introDescription": "Journey with Jetty through RadQuest and uncover the hidden depths of the Radix ecosystem. Complete tasks and win tokens, NFTs and XRD."
+    "description": "What’s this all about?",
+    "introDescription": "Let’s get started learning about Web3 and Radix – and get some rewards!"
   },
   "WhatIsRadix": {
     "requirements": {
-      "LearnAboutRadix": "Learn about the Radix network",
-      "RadixQuiz": "Complete the Radix Quiz",
-      "dAppQuiz": "Complete the dApp Quiz"
+      "dAppQuiz": "Learn about the Radix Network and dApps"
     },
-    "title": "Introduction to Radix",
-    "description": "Become familiar with the Radix network",
-    "introDescription": "Radix is a decentralized network that aims to solve the scalability problem of blockchain technology. Learn more about Radix and how it works."
+    "title": "The Radix Network",
+    "description": "What is this Radix thing?",
+    "introDescription": "The Radix Network – a breakthrough “layer 1” network for mainstream-ready Web3."
   },
   "GetRadixWallet": {
     "requirements": {
-      "GetTheWallet": "Download the Radix Wallet"
+      "GetTheWallet": "Download the Radix Wallet mobile app, create your first account Login to RadQuest with your Radix Wallet"
     },
-    "title": "The Radix Wallet",
-    "description": "Get set up with the Radix Wallet",
-    "introDescription": "The Radix Wallet is your gateway to the Radix network. Download the wallet and get started."
+    "title": "Get the Radix Wallet",
+    "description": "Your key to dApps and assets on Radix",
+    "introDescription": "Get the Radix Wallet to use with RadQuest any any other dApp built on Radix"
   },
   "LoginWithWallet": {
     "requirements": {
@@ -61,12 +59,15 @@
   },
   "FirstTransactionQuest": {
     "requirements": {
-      "VerifyPhoneNumber": "Verify your phone number",
-      "DepositHeroBadge": "Deposit a hero badge"
+      "VerifyPhoneNumber": "Prove you’re not a robot",
+      "RegisterAccount": "Register an account with RadQuest",
+      "LearnAboutTransactions": "Learn about XRD and Transactions",
+      "DepositHeroBadge": "Get your Hero’s Badge",
+      "JettyReceivedClams": "Get your first XRD and NFT rewards"
     },
-    "title": "First Transaction",
-    "description": "Claim your first rewards",
-    "introDescription": "Get some XRD tokens, and use them to do your first transaction: claiming your quest rewards right to your Radix Wallet.",
+    "title": "Get Some (Web3) Stuff!",
+    "description": "Claim your first quest rewards",
+    "introDescription": "Learn about XRD and transactions – and use them to claim your first quest rewards right to your Radix Wallet.",
     "failedToSendOtp": "Failed to send OTP",
     "phoneNumberExists": "Phone number exists",
     "invalidPhoneNumber": "Invalid phone number",

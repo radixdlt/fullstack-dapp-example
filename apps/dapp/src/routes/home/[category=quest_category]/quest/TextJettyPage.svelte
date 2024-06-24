@@ -4,8 +4,9 @@
   export let text: string
   export let onBack: () => void
   export let onNext: () => void
+  export let isNextDisabled = false
 </script>
 
 {@html text}
 
-<JettyActionButtons on:back={onBack} on:next={onNext} />
+<JettyActionButtons {isNextDisabled} on:back={onBack} on:next={onNext} />

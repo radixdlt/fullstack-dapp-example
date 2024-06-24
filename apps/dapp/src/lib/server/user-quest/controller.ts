@@ -5,6 +5,7 @@ import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId, Requirement } from 'content'
 import { config } from '$lib/config'
+export type QuestRequirement = { isHidden: boolean; isComplete: boolean }
 
 export const UserQuestController = ({
   userQuestModel,
@@ -106,7 +107,7 @@ export const UserQuestController = ({
     )
   }
 
-  const getQuestProgress = (userId: string, questId: keyof Quests) =>
+  const getQuestRequirements = (userId: string, questId: keyof Quests) =>
     ResultAsync.combine([
       userQuestModel.getQuestStatus(userId, questId),
       userQuestModel.findCompletedRequirements(userId, questId)
@@ -114,18 +115,24 @@ export const UserQuestController = ({
       const questDefinition = QuestDefinitions()[questId]
       const requirementsState = completedRequirements.reduce(
         (acc, requirement) => {
-          acc[requirement.requirementId] = true
+          acc[requirement.requirementId] = { isComplete: true }
           return acc
         },
-        {} as Record<string, boolean>
+        {} as Record<string, Omit<QuestRequirement, 'isHidden'>>
       )
 
       const requirements = Object.keys(questDefinition.requirements).reduce(
         (acc, eventId) => {
-          acc[eventId] = requirementsState[eventId] || false
+          const requirement = questDefinition.requirements[
+            eventId as keyof typeof questDefinition.requirements
+          ] as Requirement
+          acc[eventId] = {
+            isComplete: requirementsState[eventId].isComplete || false,
+            isHidden: requirement.isHidden || false
+          }
           return acc
         },
-        {} as Record<string, boolean>
+        {} as Record<string, QuestRequirement>
       )
 
       return {
@@ -187,7 +194,7 @@ export const UserQuestController = ({
     getQuestsProgress,
     completeQuest,
     startQuest,
-    getQuestProgress,
+    getQuestRequirements,
     saveProgress,
     getSavedProgress,
     deleteSavedProgress,

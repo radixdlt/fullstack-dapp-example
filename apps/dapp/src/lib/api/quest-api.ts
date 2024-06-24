@@ -1,4 +1,5 @@
 import { fetchWrapper } from '$lib/helpers/fetch-wrapper'
+import type { QuestRequirement } from '$lib/server/user-quest/controller'
 import type { QuestId } from 'content'
 import type { QuestStatus } from 'database'
 
@@ -17,7 +18,11 @@ const getQuestsInformation = (serverFetch?: typeof fetch) =>
   ).map(({ data }) => data)
 
 const getQuestInformation = (questId: string, serverFetch?: typeof fetch) =>
-  fetchWrapper<{ status: string; requirements: Record<string, boolean>; savedProgress?: number }>(
+  fetchWrapper<{
+    status: string
+    requirements: Record<string, QuestRequirement>
+    savedProgress?: number
+  }>(
     (serverFetch ?? fetch)(`/api/quest/${questId}`, {
       method: 'GET'
     })

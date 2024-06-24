@@ -11,7 +11,7 @@ export const POST: RequestHandler = async ({ locals, params }) => {
 
 export const GET: RequestHandler = async ({ params, locals }) =>
   routeHandler(() =>
-    locals.controllers.userQuestController.getQuestProgress(
+    locals.controllers.userQuestController.getQuestRequirements(
       locals.userId,
       params.questId as QuestId
     )
