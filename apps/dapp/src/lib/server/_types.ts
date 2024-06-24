@@ -9,6 +9,7 @@ import type {
   AccountAddressModel,
   UserQuestModel
 } from 'common'
+import type { PrismaClient } from 'database'
 import type { ResultAsync } from 'neverthrow'
 
 export type ControllerMethodOutput<T = any> = ResultAsync<
@@ -29,4 +30,5 @@ export type ControllerDependencies = {
   userQuestModel: ReturnType<UserQuestModel>
   accountAddressModel: ReturnType<AccountAddressModel>
   logger: AppLogger
+  dbClient: PrismaClient
 }

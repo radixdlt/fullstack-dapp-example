@@ -175,7 +175,6 @@ export const TransactionWorkerController = ({
 
       case 'PopulateResources':
         const { accountAddress } = job.data
-
         return handleSubmitTransaction(
           (wellKnownAddresses) =>
             `
@@ -218,6 +217,37 @@ export const TransactionWorkerController = ({
               Address("${accountAddress}")
               "try_deposit_or_abort"
               Bucket("element_bucket")
+              Enum<0u8>();
+
+              CALL_METHOD
+                Address("${wellKnownAddresses.accountAddress.systemAccount}")
+                "create_proof_of_amount"
+                Address("${addresses.badges.adminBadgeAddress}")
+                Decimal("1")
+              ;
+
+              CALL_METHOD
+                Address("${addresses.components.heroBadgeForge}")
+                "add_user_account"
+                Address("${user.accountAddress!}")
+              ;
+
+              CALL_METHOD
+                Address("${wellKnownAddresses.accountAddress.payerAccount}")
+                "withdraw"
+                Address("${wellKnownAddresses.resourceAddresses.xrd}")
+                Decimal("${config.radQuest.directXrdDepositAmount}")
+              ;
+
+              TAKE_FROM_WORKTOP
+              Address("${addresses.xrd}")
+              Decimal("${config.radQuest.directXrdDepositAmount}")
+              Bucket("xrd_bucket");
+
+              CALL_METHOD
+              Address("${accountAddress}")
+              "try_deposit_or_abort"
+              Bucket("xrd_bucket")
               Enum<0u8>();
           `
         ).andThen(handlePollTransactionStatus)
