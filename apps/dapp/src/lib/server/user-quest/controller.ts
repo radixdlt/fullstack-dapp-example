@@ -1,5 +1,5 @@
 import type { QuestStatus } from 'database'
-import { type ControllerDependencies, type ControllerMethodContext } from '../_types'
+import { type ControllerDependencies } from '../_types'
 import { QuestDefinitions, type Quests } from 'content'
 import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import { ErrorReason, createApiError } from '../../errors'
@@ -25,12 +25,7 @@ export const UserQuestController = ({
       httpResponseCode: 200
     }))
 
-  const saveProgress = (
-    ctx: ControllerMethodContext,
-    userId: string,
-    questId: QuestId,
-    progress: number
-  ) =>
+  const saveProgress = (userId: string, questId: QuestId, progress: number) =>
     userQuestModel
       .saveProgress(questId, userId, progress)
       .map((data) => ({ data, httpResponseCode: 200 }))
@@ -144,12 +139,7 @@ export const UserQuestController = ({
       }
     })
 
-  const completeRequirement = (
-    ctx: ControllerMethodContext,
-    questId: QuestId,
-    requirementId: string,
-    userId: string
-  ) => {
+  const completeRequirement = (questId: QuestId, requirementId: string, userId: string) => {
     const questDefinition = QuestDefinitions()[questId]
     const [, requirement]: [any, Requirement | undefined] = Object.entries(
       questDefinition.requirements
@@ -167,11 +157,7 @@ export const UserQuestController = ({
       .map(() => ({ httpResponseCode: 200, data: undefined }))
   }
 
-  const completeContentRequirement = (
-    ctx: ControllerMethodContext,
-    questId: QuestId,
-    userId: string
-  ) => {
+  const completeContentRequirement = (questId: QuestId, userId: string) => {
     const questDefinition = QuestDefinitions()[questId]
 
     const requirementId = Object.keys(questDefinition.requirements).find(
