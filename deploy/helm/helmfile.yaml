@@ -71,14 +71,14 @@ releases:
     version:  18.6.4
     installed: {{ eq .Environment.Name "pr" }}
     values:
-      - architecture: standalone
-        auth:
-          enabled: false
-        master:
-          persistence:
-            enabled: false
-          extraFlags: 
-          - "--maxmemory-policy noeviction"
+      - environments/{{ .Environment.Name }}/redis.yaml
+
+  - name: redis-exporter
+    chart: kubesphere/redis-exporter
+    version:  3.4.6
+    installed: {{ ne .Environment.Name "pr" }}
+    values:
+      - environments/{{ .Environment.Name }}/redis-exporter.yaml
 
   - name: redis-commander
     chart: ./redis-commander
