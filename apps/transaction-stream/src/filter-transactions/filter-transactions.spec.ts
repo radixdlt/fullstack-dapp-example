@@ -270,7 +270,7 @@ describe('filter transactions', () => {
       ...JettySwap[0],
       receipt: {
         ...JettySwap[0].receipt,
-        events: JettySwap[0].receipt?.events?.map((e) => {
+        events: JettySwap[0].receipt?.events?.map((e: any) => {
           if (!jettySwapEvent(e)) return e
           return {
             ...e,

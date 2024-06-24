@@ -192,7 +192,7 @@ jobs:
         id: changed-svelte-files
         uses: RDXWorks-actions/changed-files@main
         with:
-          files: "./apps/dapp/src/lib/components/**/*.svelte"
+          files: './apps/dapp/src/lib/components/**/*.svelte'
 
       - name: Use Node.js
         uses: RDXWorks-actions/setup-node@main
@@ -204,6 +204,9 @@ jobs:
 
       - name: Build
         run: npm run build:ci
+
+      - name: tsc
+        run: npm run tsc
 
       - name: Unit tests
         run: npm run test:ci
@@ -436,7 +439,7 @@ jobs:
       snyk_target_ref: ${{ github.ref_name }}
       with_sbom: false
 
-  deploy_pull_request: 
+  deploy_pull_request:
     if: ${{ github.event.pull_request }}
     name: Deploy PR
     needs:
@@ -449,16 +452,16 @@ jobs:
       - setup-tags
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
     with:
-      jenkins_job_name: "kubernetes-deployments/job/radquest"
-      github_branch: "${{ github.head_ref }}"
-      application_name: "radquest"
-      hierarchical_namespace: "radquest-ci-pr"
-      create_subnamespace: "true"
-      kubernetes_namespace: "radquest-pr-${{ github.event.number }}"
-      aws_eks_cluster: "rdx-works-main-dev"
-      aws_iam_role_name: "jenkins-radquest-pr-deployer"
-      helmfile_environment: "pr"
-      helmfile_extra_vars: "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }},ci.prNumber=${{ github.event.number }}"
+      jenkins_job_name: 'kubernetes-deployments/job/radquest'
+      github_branch: '${{ github.head_ref }}'
+      application_name: 'radquest'
+      hierarchical_namespace: 'radquest-ci-pr'
+      create_subnamespace: 'true'
+      kubernetes_namespace: 'radquest-pr-${{ github.event.number }}'
+      aws_eks_cluster: 'rdx-works-main-dev'
+      aws_iam_role_name: 'jenkins-radquest-pr-deployer'
+      helmfile_environment: 'pr'
+      helmfile_extra_vars: 'ci.tag=${{ needs.setup-tags.outputs.tag-with-network }},ci.prNumber=${{ github.event.number }}'
     secrets:
       aws_deployment_account_id: ${{ secrets.AWS_DEV_ACCOUNT_ID }}
       secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
@@ -476,15 +479,15 @@ jobs:
       - setup-tags
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
     with:
-      github_environment: "dev"
-      github_branch: "${{ github.ref }}"
-      jenkins_job_name: "kubernetes-deployments/job/radquest"
-      application_name: "radquest"
-      kubernetes_namespace: "radquest-dev"
-      aws_eks_cluster: "rdx-works-main-dev"
-      aws_iam_role_name: "jenkins-radquest-dev-deployer"
-      helmfile_environment: "dev"
-      helmfile_extra_vars: "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}"
+      github_environment: 'dev'
+      github_branch: '${{ github.ref }}'
+      jenkins_job_name: 'kubernetes-deployments/job/radquest'
+      application_name: 'radquest'
+      kubernetes_namespace: 'radquest-dev'
+      aws_eks_cluster: 'rdx-works-main-dev'
+      aws_iam_role_name: 'jenkins-radquest-dev-deployer'
+      helmfile_environment: 'dev'
+      helmfile_extra_vars: 'ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}'
     secrets:
       aws_deployment_account_id: ${{ secrets.AWS_DEV_ACCOUNT_ID }}
       secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
@@ -502,15 +505,15 @@ jobs:
       - setup-tags
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
     with:
-      github_environment: "stokenet"
-      github_branch: "${{ github.ref }}"
-      jenkins_job_name: "kubernetes-deployments/job/radquest"
-      application_name: "radquest"
-      kubernetes_namespace: "radquest-stokenet"
-      aws_eks_cluster: "rtlj-prod"
-      aws_iam_role_name: "jenkins-radquest-stokenet-deployer"
-      helmfile_environment: "stokenet"
-      helmfile_extra_vars: "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}"
+      github_environment: 'stokenet'
+      github_branch: '${{ github.ref }}'
+      jenkins_job_name: 'kubernetes-deployments/job/radquest'
+      application_name: 'radquest'
+      kubernetes_namespace: 'radquest-stokenet'
+      aws_eks_cluster: 'rtlj-prod'
+      aws_iam_role_name: 'jenkins-radquest-stokenet-deployer'
+      helmfile_environment: 'stokenet'
+      helmfile_extra_vars: 'ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}'
     secrets:
       secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
       aws_deployment_account_id: ${{ secrets.AWS_PROD_ACCOUNT_ID }}
@@ -528,15 +531,15 @@ jobs:
       - setup-tags
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
     with:
-      github_environment: "mainnet"
-      github_branch: "${{ github.ref }}"
-      jenkins_job_name: "kubernetes-deployments/job/radquest"
-      application_name: "radquest"
-      kubernetes_namespace: "radquest-mainnet"
-      aws_eks_cluster: "rtlj-prod"
-      aws_iam_role_name: "jenkins-radquest-mainnet-deployer"
-      helmfile_environment: "mainnet"
-      helmfile_extra_vars: "ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}"
+      github_environment: 'mainnet'
+      github_branch: '${{ github.ref }}'
+      jenkins_job_name: 'kubernetes-deployments/job/radquest'
+      application_name: 'radquest'
+      kubernetes_namespace: 'radquest-mainnet'
+      aws_eks_cluster: 'rtlj-prod'
+      aws_iam_role_name: 'jenkins-radquest-mainnet-deployer'
+      helmfile_environment: 'mainnet'
+      helmfile_extra_vars: 'ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}'
     secrets:
       secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
       aws_deployment_account_id: ${{ secrets.AWS_PROD_ACCOUNT_ID }}
@@ -690,7 +693,7 @@ jobs:
           snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
           image: docker.io/radixdlt/radquest-transaction-stream:${{ needs.setup-tags.outputs.tag-with-network }}
           target_ref: ${{ github.ref_name }}
- 
+
   snyk-container-monitor-worker:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -724,7 +727,7 @@ jobs:
           fetch-depth: 0
       - name: Install dependencies
         run: npm install
- 
+
       - name: Validate PR commits with commitlint
         if: github.event_name == 'pull_request'
         run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
