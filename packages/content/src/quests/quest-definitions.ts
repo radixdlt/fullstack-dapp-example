@@ -109,11 +109,7 @@ export const QuestDefinitions = () => {
         RadixQuiz: {
           type: 'offLedger',
           completedByUser: true,
-          isHidden: true
-        },
-        dAppQuiz: {
-          type: 'offLedger',
-          completedByUser: true
+          isHidden: false
         }
       }
     },

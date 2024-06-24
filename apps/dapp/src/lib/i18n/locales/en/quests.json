@@ -31,7 +31,7 @@
   },
   "WhatIsRadix": {
     "requirements": {
-      "dAppQuiz": "Learn about the Radix Network and dApps"
+      "RadixQuiz": "Learn about the Radix Network and dApps"
     },
     "title": "The Radix Network",
     "description": "What is this Radix thing?",
