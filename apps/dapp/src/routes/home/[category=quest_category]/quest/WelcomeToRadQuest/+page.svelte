@@ -20,9 +20,8 @@
   const text = data.text as Quests['WelcomeToRadQuest']['text']
 
   let radQuestGlossaryViewed = writable(data.requirements.Glossary['isComplete'])
-
   const isRadQuestGlossary = (url: URL) =>
-    url.searchParams.has('glossaryAnchor') && url.searchParams.get('glossaryAnchor') === 'RadQuest'
+    url.searchParams.has('glossaryAnchor') && url.searchParams.get('glossaryAnchor') === 'web3'
 
   const getGlossarySubscription = () => {
     return !data.requirements.Glossary
@@ -98,7 +97,7 @@
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
         text: text['6.md'],
-        isNextDisabled: !radQuestGlossaryViewed
+        isNextDisabled: !$radQuestGlossaryViewed
       }
     },
     {
@@ -166,10 +165,6 @@
 
   {#if render('3')}
     {@html text['3.md']}
-  {/if}
-
-  {#if render('4')}
-    {@html text['4.md']}
   {/if}
 
   {#if error}

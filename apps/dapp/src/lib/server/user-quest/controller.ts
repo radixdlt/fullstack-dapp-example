@@ -135,6 +135,7 @@ export const UserQuestController = ({
         {} as Record<string, QuestRequirement>
       )
 
+      console.log(completedRequirements, requirements)
       return {
         data: {
           status:
