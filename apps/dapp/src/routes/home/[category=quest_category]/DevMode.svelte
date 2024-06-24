@@ -12,8 +12,9 @@
   import { useCookies } from '$lib/utils/cookies'
   import { QuestDefinitions } from 'content'
   import { rdt } from '$lib/rdt'
-  import { OneTimeDataRequestBuilder, SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
-  import { userApi } from '$lib/api/user-api'
+  import { OneTimeDataRequestBuilder, fetchWrapper } from '@radixdlt/radix-dapp-toolkit'
+  import { publicConfig } from '$lib/public-config'
+  import { user } from '../../../stores'
 
   let open = false
 
@@ -25,30 +26,41 @@
     invalidateAll()
   }
 
-  const registerAccount = () => {
-    rdt.then((rdt) => {
+  const registerAccount = async () => {
+    await rdt.then((rdt) => {
       rdt.walletApi
-        .sendOneTimeRequest(OneTimeDataRequestBuilder.accounts().exactly(1).withProof())
-        .andThen(({ accounts, proofs }) => {
-          const accountProof = proofs.find(
-            (proof) => proof.type === 'account'
-          )! as SignedChallengeAccount
-
-          return userApi.setUserField({
-            accountAddress: accounts[0].address,
-            proof: accountProof,
-            field: 'accountAddress'
+        .sendOneTimeRequest(OneTimeDataRequestBuilder.accounts().exactly(1))
+        .andThen(({ accounts }) =>
+          fetchWrapper(
+            fetch('/api/debug', {
+              method: 'POST',
+              body: JSON.stringify({
+                accountAddress: accounts[0].address
+              })
+            })
+          ).map(() => {
+            $user!.accountAddress = accounts[0].address
           })
-        })
-        .map(() => {
-          userApi.allowAccountAddressToMintHeroBadge()
-        })
+        )
     })
   }
 
-  const populate = () => {
-    fetch('/api/user/populate-resources', {
-      method: 'POST'
+  const mintBadge = async () => {
+    await rdt.then((rdt) => {
+      rdt.walletApi.sendTransaction({
+        transactionManifest: `             
+          CALL_METHOD
+              Address("${publicConfig.components.heroBadgeForge}")
+              "claim_badge"
+              Address("${$user?.accountAddress || ''}")
+              "${$user?.id}"
+          ;
+          CALL_METHOD
+              Address("${$user?.accountAddress}")
+              "deposit_batch"
+              Expression("ENTIRE_WORKTOP")
+          ;`
+      })
     })
   }
 
@@ -96,12 +108,15 @@
 {#if open}
   <Backdrop>
     <div class="card buttons">
-      <Button on:click={unlockQuests}>Unlock All Quests</Button>
-      <Button on:click={registerAccount}>Register Account + badge</Button>
-      <Button on:click={populate}>Populate With Resources (requires log in + account)</Button>
-      <Button on:click={clearDb}>Clear Database (requires log in)</Button>
+      {#if $user}
+        <Button on:click={unlockQuests}>Unlock All Quests</Button>
+        <Button on:click={registerAccount}>Register and populate account</Button>
+        <Button on:click={mintBadge}>Mint hero badge (requires registered account)</Button>
+        <Button on:click={clearDb}>Clear Database</Button>
+        <Button on:click={setUserAsAdmin}>Set user as Admin</Button>
+      {/if}
       <Button on:click={clearLocalStorageAndCookies}>Clear Local Storage</Button>
-      <Button on:click={setUserAsAdmin}>Set user as Admin</Button>
+
       <Button
         on:click={() => {
           $hide = true

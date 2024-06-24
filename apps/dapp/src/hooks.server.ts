@@ -64,7 +64,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     auditModel: auditModel(logger),
     accountAddressModel: accountAddressModel(logger),
     gatewayApi,
-    logger
+    logger,
+    dbClient
   } satisfies ControllerDependencies
 
   event.locals.controllers = {
