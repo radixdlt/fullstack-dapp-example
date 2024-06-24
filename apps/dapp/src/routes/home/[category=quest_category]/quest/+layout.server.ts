@@ -41,9 +41,7 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent }) =>
       )
     ) {
       Object.entries(questDefinitions[id].requirements).forEach(([key, requirement]) => {
-        const cachedRequirement = cookies.get(`requirement-${id}-${key}`) as
-          | QuestRequirement
-          | undefined
+        const cachedRequirement = cookies.get(`requirement-${id}-${key}`) as boolean | undefined
 
         if (!requirements[key]) {
           requirements[key] = {
@@ -53,7 +51,10 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent }) =>
         }
 
         if (cachedRequirement) {
-          requirements[key] = cachedRequirement
+          requirements[key] = {
+            isComplete: cachedRequirement,
+            isHidden: requirements[key].isHidden
+          }
         }
       })
 

@@ -19,7 +19,7 @@
 
   const text = data.text as Quests['WelcomeToRadQuest']['text']
 
-  let radQuestGlossaryViewed = writable(data.requirements.Glossary['isComplete'])
+  let radQuestGlossaryViewed = writable(true)
   const isRadQuestGlossary = (url: URL) =>
     url.searchParams.has('glossaryAnchor') && url.searchParams.get('glossaryAnchor') === 'web3'
 
