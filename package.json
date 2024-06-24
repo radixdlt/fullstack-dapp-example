@@ -27,6 +27,8 @@
     "common:build": "turbo common:build --filter common",
     "db:build": "turbo build --filter database",
     "db:push": "turbo push --filter database",
+    "db:migrate": "npx prisma migrate dev --schema ./packages/database/prisma/schema.prisma",
+    "db:reset": " npx prisma db push --force-reset --schema ./packages/database/prisma/schema.prisma",
     "lint": "npx --node-options='-r dotenv/config' turbo lint",
     "format": "prettier --write apps/**/* packages/**/*",
     "content:build": "turbo content:build --filter content",

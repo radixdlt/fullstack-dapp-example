@@ -1,21 +1,20 @@
 import BigNumber from 'bignumber.js'
 import { QuestId } from 'content'
-import { EventId, Message, MessageApi, MessageType } from 'common'
+import { EventId, MessageApi } from 'common'
 import { AuditType, Prisma, PrismaClient } from 'database'
 import { ResultAsync, ok, err } from 'neverthrow'
 import { TokenPriceClient } from '../token-price-client'
+import { WorkerError, WorkerOutputError } from '../_types'
 
 export type DbOperation = () => Prisma.PrismaPromise<any>
 
 export type DbTransactionBuilder = ReturnType<typeof DbTransactionBuilder>
 export const DbTransactionBuilder = ({
   dbClient,
-  tokenPriceClient,
-  messageApi
+  tokenPriceClient
 }: {
   dbClient: PrismaClient
   tokenPriceClient: TokenPriceClient
-  messageApi: MessageApi
 }) => {
   const operations: DbOperation[] = []
 
@@ -31,14 +30,12 @@ export const DbTransactionBuilder = ({
     questId,
     requirementId,
     userId,
-    transactionId,
-    traceId
+    transactionId
   }: {
     userId: string
     questId: QuestId
     requirementId: EventId
     transactionId: string
-    traceId: string
   }) => {
     operations.push(
       () =>
@@ -49,33 +46,6 @@ export const DbTransactionBuilder = ({
             requirementId
           }
         }),
-      () => {
-        const message = dbClient.message.create({
-          data: {
-            userId,
-            data: {
-              type: 'QuestRequirementCompleted',
-              questId,
-              requirementId
-            }
-          }
-        })
-
-        message.then((message) => {
-          messageApi.send(
-            userId,
-            {
-              type: 'QuestRequirementCompleted',
-              questId,
-              traceId,
-              requirementId
-            },
-            message.id
-          )
-        })
-
-        return message
-      },
       () =>
         dbClient.event.update({
           where: {
@@ -117,6 +87,10 @@ export const DbTransactionBuilder = ({
     xrdAmount: string
   }) =>
     getXrdPrice(xrdAmount)
+      .mapErr((error) => ({
+        reason: WorkerError.FailedToGetXrdPrice,
+        jsError: error
+      }))
       .map(({ xrdUsdValue }) =>
         operations.push(() =>
           dbClient.audit.create({
@@ -142,7 +116,10 @@ export const DbTransactionBuilder = ({
         }
         return results
       }),
-      (error) => error as Error
+      (error): WorkerOutputError => ({
+        reason: WorkerError.FailedToExecuteDbTransaction,
+        jsError: error as Error
+      })
     )
 
   const api = { add, exec, helpers }

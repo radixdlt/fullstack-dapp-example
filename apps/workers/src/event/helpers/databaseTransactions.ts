@@ -1,5 +1,5 @@
 import { ResultAsync } from 'neverthrow'
-import { AppLogger, MessageType } from 'common'
+import { AppLogger } from 'common'
 import { PrismaClient, QuestStatus } from 'database'
 
 export const databaseTransactions = ({
@@ -24,17 +24,6 @@ export const databaseTransactions = ({
       }
     })
 
-  const createMessage = (type: MessageType, userId: string, questId: string) =>
-    dbClient.message.create({
-      data: {
-        userId,
-        data: {
-          type,
-          questId
-        }
-      }
-    })
-
   const updateEvent = (transactionId: string, userId: string, questId: string) =>
     dbClient.event.update({
       where: {
@@ -50,7 +39,6 @@ export const databaseTransactions = ({
     ResultAsync.fromPromise(
       dbClient.$transaction([
         setQuestProgressStatus(QuestStatus.REWARDS_DEPOSITED, userId, questId),
-        createMessage('QuestRewardsDeposited', userId, questId),
         updateEvent(transactionId, userId, questId)
       ]),
       (error) => {
@@ -70,8 +58,7 @@ export const databaseTransactions = ({
     ResultAsync.fromPromise(
       dbClient.$transaction([
         setQuestProgressStatus(QuestStatus.REWARDS_CLAIMED, userId, questId),
-        updateEvent(transactionId, userId, questId),
-        createMessage('QuestRewardsClaimed', userId, questId)
+        updateEvent(transactionId, userId, questId)
       ]),
       (error) => {
         logger.error({ error, method: 'databaseTransactions.rewardsClaimed' })

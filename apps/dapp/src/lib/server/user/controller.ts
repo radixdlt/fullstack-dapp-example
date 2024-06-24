@@ -1,9 +1,10 @@
-import { AuditModel, GatewayApi, TransactionModel, UserModel } from 'common'
 import type { User } from 'database'
 import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
-import type { ControllerMethodContext, ControllerMethodOutput } from '../_types'
-import { dbClient } from '$lib/db'
-import { Queue } from 'bullmq'
+import type {
+  ControllerDependencies,
+  ControllerMethodContext,
+  ControllerMethodOutput
+} from '../_types'
 import { config } from '$lib/config'
 import { createApiError, type ApiError } from 'common'
 import { type SignedChallengeAccount, parseSignedChallenge } from '@radixdlt/radix-dapp-toolkit'
@@ -14,23 +15,13 @@ import type { TransactionJob } from 'queues'
 
 const isGatewayError = (error: any): error is ErrorResponse => error.details !== undefined
 
-const UserController = ({
-  userModel = UserModel(dbClient),
-  transactionQueue = new Queue<TransactionJob>('TransactionQueue', { connection: config.redis }),
-  transactionModel = TransactionModel(dbClient)
-}: Partial<{
-  userModel: UserModel
-  auditModel: AuditModel
-  transactionModel: TransactionModel
-  transactionQueue: Queue<TransactionJob>
-}>) => {
-  const getUser = (
-    ctx: ControllerMethodContext,
-    userId: string
-  ): ControllerMethodOutput<User | null> =>
-    userModel(ctx.logger)
-      .getById(userId, {})
-      .map((data) => ({ data, httpResponseCode: 200 }))
+export const UserController = ({
+  userModel,
+  transactionModel,
+  gatewayApi
+}: ControllerDependencies) => {
+  const getUser = (userId: string): ControllerMethodOutput<User | null> =>
+    userModel.getById(userId, {}).map((data) => ({ data, httpResponseCode: 200 }))
 
   const accountAddressExists = (
     data: { accountAddress: string | null } | null
@@ -43,14 +34,12 @@ const UserController = ({
     input ? okAsync(true) : errAsync(createApiError(errorMessage, 400)())
 
   const getReferrals = (ctx: ControllerMethodContext, userId: string) => {
-    return userModel(ctx.logger)
-      .getById(userId, { referredUsers: true })
-      .map((data) => {
-        return {
-          data: data.referredUsers.map((user) => user.name),
-          httpResponseCode: 200
-        }
-      })
+    return userModel.getById(userId, { referredUsers: true }).map((data) => {
+      return {
+        data: data.referredUsers.map((user) => user.name),
+        httpResponseCode: 200
+      }
+    })
   }
 
   const allowAccountAddressToMintHeroBadge = (
@@ -61,7 +50,7 @@ const UserController = ({
       userId: string
     }
   ): ControllerMethodOutput<undefined> =>
-    userModel(ctx.logger)
+    userModel
       .getById(userId, { phoneNumber: true })
       .andThen((user) => (user ? ok(user) : err(createApiError('UserNotFound', 404)())))
       .andThen((data) =>
@@ -70,38 +59,22 @@ const UserController = ({
           accountAddressExists(data)
         ])
           .andThen(([, accountAddress]) => {
-            const badgeId = `<${userId}>`
-            const badgeResourceAddress = publicConfig.badges.heroBadgeAddress
-
-            const job = {
+            const item = {
               traceId: ctx.traceId,
               type: 'AddAccountAddressToHeroBadgeForge',
-              badgeId,
-              badgeResourceAddress,
-              attempt: 0,
-              transactionKey: 'AddAccountAddressToHeroBadgeForge',
-              accountAddress
+              discriminator: `AddAccountAddressToHeroBadgeForge:${userId}`,
+              accountAddress,
+              userId
             } satisfies TransactionJob
 
-            return transactionModel(ctx.logger)
-              .doesTransactionExist(job)
-              .andThen((exists) =>
-                exists
-                  ? okAsync({ httpResponseCode: 201, data: undefined })
-                  : transactionModel(ctx.logger)
-                      .add(job)
-                      .andThen(() => {
-                        ctx.logger.debug({
-                          method: 'userController.allowAccountAddressToMintHeroBadge.addJobToQueue',
-                          job
-                        })
-
-                        return ResultAsync.fromPromise(
-                          transactionQueue.add(ctx.traceId, job, { jobId: ctx.traceId }),
-                          (error) => error
-                        )
-                      })
-              )
+            return transactionModel.doesTransactionExist(item).andThen((exists) =>
+              exists
+                ? okAsync({ httpResponseCode: 200, data: undefined })
+                : transactionModel.add(item).map(() => ({
+                    httpResponseCode: 201,
+                    data: undefined
+                  }))
+            )
           })
           .mapErr((error) => {
             ctx.logger.error({
@@ -112,10 +85,6 @@ const UserController = ({
             return createApiError('allowAccountAddressToMintHeroBadgeError', 500)()
           })
       )
-      .map(() => ({
-        httpResponseCode: 201,
-        data: undefined
-      }))
 
   const setAccountAddress = (
     ctx: ControllerMethodContext,
@@ -123,7 +92,7 @@ const UserController = ({
     accountAddress: string,
     proof: SignedChallengeAccount
   ) => {
-    const hasHeroBadge = GatewayApi(publicConfig.networkId)
+    const hasHeroBadge = gatewayApi
       .callApi('getEntityDetailsVaultAggregated', [accountAddress])
       .map(
         ([entityDetails]) =>
@@ -143,7 +112,7 @@ const UserController = ({
 
     const { verifySignedChallenge } = Rola({
       applicationName: 'RadQuest dApp',
-      gatewayApiClient: GatewayApi(config.dapp.networkId).gatewayApiClient,
+      gatewayApiClient: gatewayApi.gatewayApiClient,
       dAppDefinitionAddress: config.dapp.dAppDefinitionAddress,
       networkId: config.dapp.networkId,
       expectedOrigin: config.dapp.expectedOrigin
@@ -166,7 +135,7 @@ const UserController = ({
         } satisfies ApiError
       })
       .andThen(() =>
-        userModel(ctx.logger)
+        userModel
           .addAccount(userId, accountAddress)
           .map((data) => ({ data, httpResponseCode: 200 }))
       )
@@ -175,22 +144,17 @@ const UserController = ({
     if (!name) return errAsync(createApiError('name not provided', 400)())
     if (name.length > 25) return errAsync(createApiError('name cannot exceed 25 characters', 400)())
 
-    return userModel(ctx.logger)
-      .setUserName(userId, name)
-      .map((data) => ({ data, httpResponseCode: 200 }))
+    return userModel.setUserName(userId, name).map((data) => ({ data, httpResponseCode: 200 }))
   }
 
   const populateResources = (ctx: ControllerMethodContext, userId: string) => {
     if (config.dapp.networkId === 1)
       return errAsync(createApiError('not allowed on mainnet', 400)())
 
-    const accountAddressResult = userModel(ctx.logger)
+    const accountAddressResult = userModel
       .getById(userId, {})
       .andThen((user) => (user ? ok(user) : err(createApiError('UserNotFound', 404)())))
       .map((data) => data.accountAddress)
-
-    const badgeId = `<${userId}>`
-    const badgeResourceAddress = publicConfig.badges.heroBadgeAddress
 
     return accountAddressResult
       .andThen((address) => {
@@ -198,34 +162,18 @@ const UserController = ({
         return okAsync(address)
       })
       .andThen((address) =>
-        transactionModel(ctx.logger)
+        transactionModel
           .add({
-            badgeId,
-            badgeResourceAddress,
-            transactionKey: 'populateResources',
-            attempt: 0
+            userId,
+            discriminator: `PopulateResources:${userId}`,
+            type: 'PopulateResources',
+            traceId: ctx.traceId,
+            accountAddress: address
           })
-          .andThen(() => {
-            const job = {
-              traceId: ctx.traceId,
-              type: 'PopulateResources',
-              badgeId,
-              badgeResourceAddress,
-              attempt: 0,
-              transactionKey: `populateResources`,
-              accountAddress: address
-            } satisfies TransactionJob
-
-            ctx.logger.debug({ method: 'userController.populateResources.addJobToQueue', job })
-
-            return ResultAsync.fromPromise(
-              transactionQueue.add(ctx.traceId, job, { jobId: ctx.traceId }),
-              (error) => error
-            ).map((data) => ({
-              httpResponseCode: 201,
-              data
-            }))
-          })
+          .map((data) => ({
+            httpResponseCode: 201,
+            data
+          }))
           .mapErr((error) => {
             ctx.logger.error({ error, method: 'populateResources', event: 'error' })
             return createApiError('populateResourcesError', 500)()
@@ -242,5 +190,3 @@ const UserController = ({
     getReferrals
   }
 }
-
-export const userController = UserController({})

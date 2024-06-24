@@ -197,16 +197,20 @@ exports.Prisma.AuditScalarFieldEnum = {
   xrdUsdValue: 'xrdUsdValue'
 };
 
-exports.Prisma.TransactionScalarFieldEnum = {
-  attempt: 'attempt',
-  transactionKey: 'transactionKey',
-  transactionId: 'transactionId',
+exports.Prisma.TransactionIntentScalarFieldEnum = {
+  discriminator: 'discriminator',
   status: 'status',
   createdAt: 'createdAt',
   error: 'error',
-  badgeId: 'badgeId',
-  badgeResourceAddress: 'badgeResourceAddress',
-  metadata: 'metadata'
+  userId: 'userId',
+  data: 'data'
+};
+
+exports.Prisma.SubmittedTransactionScalarFieldEnum = {
+  transactionId: 'transactionId',
+  transactionIntent: 'transactionIntent',
+  status: 'status',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ConfigScalarFieldEnum = {
@@ -260,7 +264,8 @@ exports.AuditType = exports.$Enums.AuditType = {
   CLAIMBOX_DEPOSIT: 'CLAIMBOX_DEPOSIT'
 };
 
-exports.TransactionStatus = exports.$Enums.TransactionStatus = {
+exports.TransactionIntentStatus = exports.$Enums.TransactionIntentStatus = {
+  WAITING: 'WAITING',
   PENDING: 'PENDING',
   ERROR: 'ERROR',
   COMPLETED: 'COMPLETED'
@@ -278,7 +283,8 @@ exports.Prisma.ModelName = {
   QuestProgress: 'QuestProgress',
   SavedProgress: 'SavedProgress',
   Audit: 'Audit',
-  Transaction: 'Transaction',
+  TransactionIntent: 'TransactionIntent',
+  SubmittedTransaction: 'SubmittedTransaction',
   Config: 'Config'
 };
 

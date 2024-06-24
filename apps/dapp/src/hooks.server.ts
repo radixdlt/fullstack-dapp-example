@@ -1,11 +1,36 @@
 import { authController } from '$lib/server/auth/controller'
 import type { Handle } from '@sveltejs/kit'
 import { config } from '$lib/config'
-import { appLogger } from 'common'
+import {
+  AuditModel,
+  GatewayApi,
+  TransactionModel,
+  UserModel,
+  UserQuestModel,
+  appLogger,
+  AccountAddressModel
+} from 'common'
 import { QuestDefinitions } from 'content'
 import { UserType } from 'database'
+import { dbClient } from '$lib/db'
+import { RedisConnection, getQueues } from 'queues'
+import type { ControllerDependencies } from '$lib/server/_types'
+import { PUBLIC_NETWORK_ID } from '$env/static/public'
+import { UserController } from '$lib/server/user/controller'
+import { UserQuestController } from '$lib/server/user-quest/controller'
 
 const NetworkQuestDefinitions = QuestDefinitions()
+
+const { transactionQueue } = getQueues(config.redis)
+
+const redisClient = new RedisConnection(config.redis)
+
+const userModel = UserModel(dbClient)
+const userQuestModel = UserQuestModel(dbClient)
+const transactionModel = TransactionModel(dbClient, transactionQueue)
+const auditModel = AuditModel(dbClient)
+const gatewayApi = GatewayApi(+PUBLIC_NETWORK_ID)
+const accountAddressModel = AccountAddressModel(redisClient)
 
 export const handle: Handle = async ({ event, resolve }) => {
   const origin = event.request.headers.get('origin')
@@ -21,14 +46,30 @@ export const handle: Handle = async ({ event, resolve }) => {
     })
   }
   const traceId = crypto.randomUUID()
+  const logger = appLogger.child({
+    traceId,
+    path: event.url.pathname,
+    method: event.request.method
+  })
 
   event.locals.context = {
     traceId,
-    logger: appLogger.child({
-      traceId,
-      path: event.url.pathname,
-      method: event.request.method
-    })
+    logger
+  }
+
+  event.locals.dependencies = {
+    userModel: userModel(logger),
+    userQuestModel: userQuestModel(logger),
+    transactionModel: transactionModel(logger),
+    auditModel: auditModel(logger),
+    accountAddressModel: accountAddressModel(logger),
+    gatewayApi,
+    logger
+  } satisfies ControllerDependencies
+
+  event.locals.controllers = {
+    userController: UserController(event.locals.dependencies),
+    userQuestController: UserQuestController(event.locals.dependencies)
   }
 
   if (event.url.pathname === '/.well-known/radix.json') {

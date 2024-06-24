@@ -22,7 +22,7 @@ import { config } from '../config'
 import CombineElementsDepositedEvents from '../fixtures/transactions/combine-elements-deposited-events'
 import CombineElementsMintedRadgemEvents from '../fixtures/transactions/combine-elements-minted-radgem-events'
 
-let accountAddressModel: AccountAddressModel
+let accountAddressModel: ReturnType<AccountAddressModel>
 const trackedTransactionTypes = getTrackedTransactionTypes()
 let filterTransactionsByType = FilterTransactionsByType(trackedTransactionTypes)
 let filterTransactionByAccountAddress: FilterTransactionsByAccountAddress
@@ -33,7 +33,7 @@ const stakingAndSwapUserId = '555'
 describe('filter transactions', () => {
   beforeAll(async () => {
     const inMemoryRedis = await RedisServer()
-    accountAddressModel = AccountAddressModel(new RedisConnection(inMemoryRedis))
+    accountAddressModel = AccountAddressModel(new RedisConnection(inMemoryRedis))()
     filterTransactionByAccountAddress = FilterTransactionsByAccountAddress(accountAddressModel)
   })
 

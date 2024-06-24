@@ -1,127 +1,84 @@
-import { PrismaClient, TransactionStatus } from 'database'
+import { PrismaClient, TransactionIntentStatus, type TransactionIntent } from 'database'
 import { ResultAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers'
+import type { TransactionJob, TransactionQueue } from 'queues'
 
-export type TransactionIdentifierData = {
-  transactionKey: string
-  badgeId: string
-  badgeResourceAddress: string
-  attempt: number
-}
+export type TransactionIdentifierData = Pick<TransactionIntent, 'discriminator' | 'userId'>
 
 export type TransactionModel = ReturnType<typeof TransactionModel>
 
-export const TransactionModel = (db: PrismaClient) => (logger?: AppLogger) => {
-  const add = ({
-    transactionKey,
-    badgeId,
-    badgeResourceAddress,
-    attempt,
-    metadata
-  }: TransactionIdentifierData & { metadata?: string }) => {
-    return ResultAsync.fromPromise(
-      db.transaction.create({
-        data: {
-          badgeId,
-          badgeResourceAddress,
-          transactionKey,
-          attempt,
-          metadata
+export const TransactionModel =
+  (db: PrismaClient, transactionQueue: TransactionQueue) => (logger?: AppLogger) => {
+    const add = ({ discriminator, userId, ...data }: TransactionJob) =>
+      ResultAsync.fromPromise(
+        db.transactionIntent.create({
+          data: {
+            discriminator,
+            userId,
+            data
+          }
+        }),
+        (error) => {
+          logger?.error({
+            error,
+            method: 'add',
+            model: 'TransactionModel',
+            payload: { discriminator, userId, ...data }
+          })
+          return createApiError('failed to add transaction entry', 400)()
         }
-      }),
-      (error) => {
+      ).andThen(() =>
+        transactionQueue
+          .add({ ...data, discriminator, userId })
+          .mapErr((error) => createApiError('failedToAddJobToTransactionQueue', 400)(error))
+      )
+
+    const getItem = (input: TransactionIdentifierData) => {
+      return ResultAsync.fromPromise(db.transactionIntent.findFirst({ where: input }), (error) => {
         logger?.error({ error, method: 'add', model: 'TransactionModel' })
-        return createApiError('failed to add transaction entry', 400)()
-      }
-    )
-  }
+        return createApiError('failed to get transaction', 400)()
+      })
+    }
 
-  const getItem = (input: TransactionIdentifierData) => {
-    return ResultAsync.fromPromise(db.transaction.findFirst({ where: input }), (error) => {
-      logger?.error({ error, method: 'add', model: 'TransactionModel' })
-      return createApiError('failed to get transaction', 400)()
-    })
-  }
-
-  const setTransactionId = (
-    { transactionKey, badgeId, badgeResourceAddress, attempt }: TransactionIdentifierData,
-    transactionId: string
-  ) => {
-    return ResultAsync.fromPromise(
-      db.transaction.update({
-        where: {
-          transactionKey_badgeId_badgeResourceAddress_attempt: {
-            badgeId,
-            badgeResourceAddress,
-            attempt,
-            transactionKey
+    const setStatus = (
+      { userId, discriminator }: TransactionIdentifierData,
+      status: TransactionIntentStatus,
+      error?: string
+    ) => {
+      return ResultAsync.fromPromise(
+        db.transactionIntent.update({
+          where: {
+            userId,
+            discriminator
+          },
+          data: {
+            status,
+            error
           }
-        },
-        data: {
-          transactionId
+        }),
+        (error) => {
+          logger?.error({ error, method: 'setStatus', model: 'TransactionModel' })
+          return createApiError('failed to update transaction status', 400)()
         }
-      }),
-      (error) => {
-        logger?.error({
-          error,
-          method: 'setTransactionId',
-          model: 'TransactionModel',
-          data: { transactionKey, badgeId, badgeResourceAddress, attempt, transactionId }
-        })
-        return createApiError('failed to update transaction id', 400)()
-      }
-    )
-  }
+      )
+    }
 
-  const setStatus = (
-    { transactionKey, badgeId, badgeResourceAddress, attempt }: TransactionIdentifierData,
-    status: TransactionStatus,
-    error?: string
-  ) => {
-    return ResultAsync.fromPromise(
-      db.transaction.update({
-        where: {
-          transactionKey_badgeId_badgeResourceAddress_attempt: {
-            badgeId,
-            badgeResourceAddress,
-            attempt: attempt,
-            transactionKey
-          }
-        },
-        data: {
-          status,
-          error
+    const doesTransactionExist = ({ userId, discriminator }: TransactionIdentifierData) =>
+      ResultAsync.fromPromise(
+        db.transactionIntent.count({
+          where: { userId, discriminator }
+        }),
+        (error) => {
+          logger?.error({ error, method: 'doesTransactionExist', model: 'TransactionModel' })
+          return createApiError('failed to check if transaction exists', 400)()
         }
-      }),
-      (error) => {
-        logger?.error({ error, method: 'setStatus', model: 'TransactionModel' })
-        return createApiError('failed to update transaction status', 400)()
-      }
-    )
-  }
+      ).map((count) => count > 0)
 
-  const doesTransactionExist = ({
-    badgeId,
-    badgeResourceAddress,
-    attempt,
-    transactionKey
-  }: TransactionIdentifierData) =>
-    ResultAsync.fromPromise(
-      db.transaction.count({
-        where: { badgeId, badgeResourceAddress, attempt, transactionKey }
-      }),
-      (error) => {
-        logger?.error({ error, method: 'doesTransactionExist', model: 'TransactionModel' })
-        return createApiError('failed to check if transaction exists', 400)()
-      }
-    ).map((count) => count > 0)
-
-  return {
-    add,
-    setStatus,
-    setTransactionId,
-    getItem,
-    doesTransactionExist
+    return {
+      add,
+      setStatus,
+      getItem,
+      doesTransactionExist
+    }
   }
-}
