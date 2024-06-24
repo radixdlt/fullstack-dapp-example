@@ -1,3 +1,3 @@
-You've showed impeccable form so far!
+Now we’re cooking!
 
-Next quest, you'll have a crack at creating your own transactions from your Radix wallet!
+In the next quest, we’ll crack open your gift box to see what’s inside – and learn how you can start creating your own collectible RadMorph NFTs!

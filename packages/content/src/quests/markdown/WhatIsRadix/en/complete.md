@@ -1,1 +1,3 @@
-Allez mon ami! The next quest beckons!
+Welcome to the Radix Network!
+
+Now let’s head straight on to getting your Radix Wallet…

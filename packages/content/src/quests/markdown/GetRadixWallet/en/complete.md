@@ -1,3 +1,1 @@
-The world is opening up for you. You are learning the ways of Radix!
-
-But do not rest on your laurels – there's plenty more to discover...!
+Wonderful! Time to start really experiencing what Radix can do… **and get some tokens and NFTs**! Onward!

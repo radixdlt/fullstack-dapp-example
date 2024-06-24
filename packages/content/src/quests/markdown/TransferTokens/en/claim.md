@@ -1,5 +1,3 @@
-Here are your rewards!
+**You’ve made it, {name}! You’ve completed the RadQuest basics!**
 
-- X Elements
-- X Clams – I’m sending you some more, you’ll need ‘em on the DEX quest!
-- Morph Card – you’ll need this to metamorphose your Elements and Radgems into a Radmorph!
+Pat yourself on the back and bask in the glory of what you’ve achieved. And enjoy an **extra nice gift**!
