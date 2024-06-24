@@ -16,7 +16,7 @@ export const POST: RequestHandler = async ({ locals }) => {
     dbClient.event.deleteMany({ where: { userId: locals.userId } }),
     dbClient.questProgress.deleteMany({ where: { userId: locals.userId } }),
     dbClient.savedProgress.deleteMany({ where: { userId: locals.userId } }),
-    dbClient.transaction.deleteMany({ where: { badgeId: locals.userId } }),
+    dbClient.transactionIntent.deleteMany({ where: { userId: locals.userId } }),
     dbClient.userPhoneNumber.delete({ where: { userId: locals.userId } })
   ]).then(() =>
     json({

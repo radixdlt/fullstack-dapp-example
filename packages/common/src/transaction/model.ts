@@ -1,4 +1,4 @@
-import { PrismaClient, TransactionIntentStatus, TransactionIntent } from 'database'
+import { PrismaClient, TransactionIntentStatus, type TransactionIntent } from 'database'
 import { ResultAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers'

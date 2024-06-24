@@ -1,11 +1,29 @@
 import { authController } from '$lib/server/auth/controller'
 import type { Handle } from '@sveltejs/kit'
 import { config } from '$lib/config'
-import { appLogger } from 'common'
+import {
+  AuditModel,
+  GatewayApi,
+  TransactionModel,
+  UserModel,
+  UserQuestModel,
+  appLogger,
+  AccountAddressModel
+} from 'common'
 import { QuestDefinitions } from 'content'
 import { UserType } from 'database'
+import { dbClient } from '$lib/db'
+import { RedisConnection, getQueues } from 'queues'
+import type { ControllerDependencies } from '$lib/server/_types'
+import { PUBLIC_NETWORK_ID } from '$env/static/public'
+import { UserController } from '$lib/server/user/controller'
+import { UserQuestController } from '$lib/server/user-quest/controller'
 
 const NetworkQuestDefinitions = QuestDefinitions()
+
+const { transactionQueue } = getQueues(config.redis)
+
+const redisClient = new RedisConnection(config.redis)
 
 export const handle: Handle = async ({ event, resolve }) => {
   const origin = event.request.headers.get('origin')
@@ -21,6 +39,11 @@ export const handle: Handle = async ({ event, resolve }) => {
     })
   }
   const traceId = crypto.randomUUID()
+  const logger = appLogger.child({
+    traceId,
+    path: event.url.pathname,
+    method: event.request.method
+  })
 
   event.locals.context = {
     traceId,
@@ -29,6 +52,27 @@ export const handle: Handle = async ({ event, resolve }) => {
       path: event.url.pathname,
       method: event.request.method
     })
+  }
+
+  const userModel = UserModel(dbClient)(logger)
+  const userQuestModel = UserQuestModel(dbClient)(logger)
+  const transactionModel = TransactionModel(dbClient, transactionQueue)(logger)
+  const auditModel = AuditModel(dbClient)(logger)
+  const gatewayApi = GatewayApi(+PUBLIC_NETWORK_ID)
+  const accountAddressModel = AccountAddressModel(redisClient, logger)
+
+  event.locals.dependencies = {
+    userModel,
+    userQuestModel,
+    transactionModel,
+    auditModel,
+    gatewayApi,
+    accountAddressModel
+  } satisfies ControllerDependencies
+
+  event.locals.controllers = {
+    userController: UserController(event.locals.dependencies),
+    userQuestController: UserQuestController(event.locals.dependencies)
   }
 
   if (event.url.pathname === '/.well-known/radix.json') {

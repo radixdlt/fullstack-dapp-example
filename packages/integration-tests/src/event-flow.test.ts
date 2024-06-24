@@ -15,6 +15,8 @@ import { config } from './config'
 import { QueueEvents } from 'bullmq'
 import crypto from 'crypto'
 
+console.log(process.env)
+
 const eventQueueEvents = new QueueEvents(Queues.EventQueue, { connection: config.redis })
 const transactionQueueEvents = new QueueEvents(Queues.TransactionQueue, {
   connection: config.redis
@@ -54,7 +56,7 @@ let identityAddress: string
 let user: Awaited<ReturnType<typeof createUser>>
 let queues: ReturnType<typeof getQueues>
 
-const transactionModel = TransactionModel(db)
+const transactionModel = TransactionModel(db, transactionQueue)
 
 const addresses = Addresses(2)
 
@@ -90,36 +92,23 @@ describe('Event flows', () => {
     'should add account address, track event, send notification to user, and mint hero badge',
     { timeout: 60_000, skip: false },
     async () => {
-      const transactionKey = `AddAccountAddressToHeroBadgeForge:${crypto.randomUUID()}`
+      const discriminator = `AddAccountAddressToHeroBadgeForge:${crypto.randomUUID()}`
       const badgeId = `<${user.id}>`
 
       const badgeResourceAddress = addresses.badges.heroBadgeAddress
-      const attempt = 0
 
       await transactionModel(logger).add({
-        transactionKey,
-        badgeId,
-        badgeResourceAddress,
-        attempt
-      })
-
-      const traceId = crypto.randomUUID()
-      const jobId = `${traceId}:${attempt}`
-
-      await transactionQueue.add({
-        traceId,
+        userId: user.id,
+        discriminator,
         type: 'AddAccountAddressToHeroBadgeForge',
-        attempt,
-        badgeId,
-        badgeResourceAddress,
-        transactionKey,
+        traceId: crypto.randomUUID(),
         accountAddress: user.accountAddress!
       })
 
-      await waitForQueueEvent('completed', transactionQueueEvents, jobId)
+      await waitForQueueEvent('completed', transactionQueueEvents, discriminator)
 
-      const item = await db.transaction.findFirst({
-        where: { attempt, transactionKey, badgeId, badgeResourceAddress }
+      const item = await db.transactionIntent.findFirst({
+        where: { discriminator }
       })
 
       expect(item?.status).toBe('COMPLETED')
@@ -173,35 +162,21 @@ describe('Event flows', () => {
   )
 
   it('should deposit XRD to account', { timeout: 60_000, skip: false }, async () => {
-    const transactionKey = `DepositXrdToAccount:${crypto.randomUUID()}`
-    const badgeId = `<${user.id}>`
-
-    const badgeResourceAddress = addresses.badges.heroBadgeAddress
-    const attempt = 0
-
-    await transactionModel(logger).add({
-      transactionKey,
-      badgeId,
-      badgeResourceAddress,
-      attempt
-    })
+    const discriminator = `DepositXrdToAccount:${crypto.randomUUID()}`
 
     const traceId = crypto.randomUUID()
-    const jobId = `${traceId}:${attempt}`
 
-    await transactionQueue.add({
-      traceId,
+    await transactionModel(logger).add({
+      discriminator,
+      userId: user.id,
       type: 'DepositXrdToAccount',
-      attempt,
-      badgeId,
-      badgeResourceAddress,
-      transactionKey
+      traceId
     })
 
-    await waitForQueueEvent('completed', transactionQueueEvents, jobId)
+    await waitForQueueEvent('completed', transactionQueueEvents, discriminator)
 
-    const item = await db.transaction.findFirst({
-      where: { attempt, transactionKey, badgeId, badgeResourceAddress }
+    const item = await db.transactionIntent.findFirst({
+      where: { discriminator }
     })
 
     expect(item?.status).toBe('COMPLETED')

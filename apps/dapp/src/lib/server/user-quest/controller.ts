@@ -1,48 +1,29 @@
 import type { QuestStatus } from 'database'
-import { type ControllerMethodContext } from '../_types'
-import { AccountAddressModel, UserModel, UserQuestModel, type AppLogger } from 'common'
+import { type ControllerDependencies, type ControllerMethodContext } from '../_types'
 import { QuestDefinitions, type Quests } from 'content'
 import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
-import { dbClient } from '$lib/db'
 import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId, Requirement } from 'content'
-import { RedisConnection } from 'bullmq'
 import { config } from '$lib/config'
 
-type GetAccountAddressModelFn = typeof getAccountAddressModelFn
-let accountAddressModel: AccountAddressModel | undefined
-const getAccountAddressModelFn = (logger: AppLogger) => {
-  if (accountAddressModel) return accountAddressModel
-
-  accountAddressModel = AccountAddressModel(new RedisConnection(config.redis), logger)
-
-  return accountAddressModel
-}
-
-const UserQuestController = ({
-  userQuestModel = UserQuestModel(dbClient),
-  userModel = UserModel(dbClient),
-  getAccountAddressModel = getAccountAddressModelFn
-}: Partial<{
-  userQuestModel: UserQuestModel
-  userModel: UserModel
-  getAccountAddressModel: GetAccountAddressModelFn
-}>) => {
-  const getQuestsProgress = (ctx: ControllerMethodContext, userId: string) =>
-    userQuestModel(ctx.logger)
-      .getQuestsStatus(userId)
-      .map((output) => ({
-        data: output.reduce<Record<string, { status: QuestStatus }>>(
-          (acc, curr) => ({
-            ...acc,
-            [curr.questId]: {
-              status: curr.status
-            }
-          }),
-          {}
-        ),
-        httpResponseCode: 200
-      }))
+export const UserQuestController = ({
+  userQuestModel,
+  userModel,
+  accountAddressModel
+}: ControllerDependencies) => {
+  const getQuestsProgress = (userId: string) =>
+    userQuestModel.getQuestsStatus(userId).map((output) => ({
+      data: output.reduce<Record<string, { status: QuestStatus }>>(
+        (acc, curr) => ({
+          ...acc,
+          [curr.questId]: {
+            status: curr.status
+          }
+        }),
+        {}
+      ),
+      httpResponseCode: 200
+    }))
 
   const saveProgress = (
     ctx: ControllerMethodContext,
@@ -50,25 +31,23 @@ const UserQuestController = ({
     questId: QuestId,
     progress: number
   ) =>
-    userQuestModel(ctx.logger)
+    userQuestModel
       .saveProgress(questId, userId, progress)
       .map((data) => ({ data, httpResponseCode: 200 }))
 
-  const getSavedProgress = (ctx: ControllerMethodContext, userId: string) =>
-    userQuestModel(ctx.logger)
-      .getSavedProgress(userId)
-      .map((output) => ({
-        data: output,
-        httpResponseCode: 200
-      }))
+  const getSavedProgress = (userId: string) =>
+    userQuestModel.getSavedProgress(userId).map((output) => ({
+      data: output,
+      httpResponseCode: 200
+    }))
 
-  const deleteSavedProgress = (ctx: ControllerMethodContext, userId: string) =>
-    userQuestModel(ctx.logger)
+  const deleteSavedProgress = (userId: string) =>
+    userQuestModel
       .deleteSavedProgress(userId)
       .map(() => ({ httpResponseCode: 200, data: undefined }))
 
-  const completeQuest = (ctx: ControllerMethodContext, userId: string, questId: QuestId) =>
-    userQuestModel(ctx.logger)
+  const completeQuest = (userId: string, questId: QuestId) =>
+    userQuestModel
       .findCompletedRequirements(userId, questId)
       .andThen((completedRequirements) => {
         const questDefinition = QuestDefinitions()[questId]
@@ -76,16 +55,16 @@ const UserQuestController = ({
           return errAsync(createApiError(ErrorReason.requirementsNotMet, 400)())
         }
 
-        return userQuestModel(ctx.logger).updateQuestStatus(questId, userId, 'COMPLETED')
+        return userQuestModel.updateQuestStatus(questId, userId, 'COMPLETED')
       })
       .map(() => ({ httpResponseCode: 200, data: undefined }))
 
-  const startQuest = (ctx: ControllerMethodContext, userId: string, questId: keyof Quests) => {
+  const startQuest = (userId: string, questId: keyof Quests) => {
     const questDefinition = QuestDefinitions()[questId]
 
     const preRequisites = questDefinition.preRequisites
 
-    const questStatusResult = userQuestModel(ctx.logger)
+    const questStatusResult = userQuestModel
       .getQuestStatus(userId, questId)
       .andThen((questStatus) => {
         if (questStatus?.status === 'COMPLETED') {
@@ -95,7 +74,7 @@ const UserQuestController = ({
       })
 
     return questStatusResult.andThen((statusResult) =>
-      userQuestModel(ctx.logger)
+      userQuestModel
         .findPrerequisites(userId, preRequisites as unknown as string[])
         .andThen((completedPrerequisites) => {
           if (
@@ -111,13 +90,13 @@ const UserQuestController = ({
             !statusResult && QuestDefinitions()[questId].trackedAccountAddress
 
           return shouldTrackAccountAddress
-            ? userModel(ctx.logger)
+            ? userModel
                 .getById(userId, {})
                 .andThen((user) =>
                   user ? ok(user) : err(createApiError(ErrorReason.userNotFound, 404)())
                 )
                 .andThen(({ accountAddress }) => {
-                  return getAccountAddressModel(ctx.logger).addTrackedAddress(
+                  return accountAddressModel.addTrackedAddress(
                     accountAddress as string,
                     questId,
                     userId
@@ -126,16 +105,16 @@ const UserQuestController = ({
             : okAsync(undefined)
         })
         .andThen(() => {
-          return userQuestModel(ctx.logger).updateQuestStatus(questId, userId, 'IN_PROGRESS')
+          return userQuestModel.updateQuestStatus(questId, userId, 'IN_PROGRESS')
         })
         .map(() => ({ httpResponseCode: 200, data: undefined }))
     )
   }
 
-  const getQuestProgress = (ctx: ControllerMethodContext, userId: string, questId: keyof Quests) =>
+  const getQuestProgress = (userId: string, questId: keyof Quests) =>
     ResultAsync.combine([
-      userQuestModel(ctx.logger).getQuestStatus(userId, questId),
-      userQuestModel(ctx.logger).findCompletedRequirements(userId, questId)
+      userQuestModel.getQuestStatus(userId, questId),
+      userQuestModel.findCompletedRequirements(userId, questId)
     ]).map(([questStatus, completedRequirements]) => {
       const questDefinition = QuestDefinitions()[questId]
       const requirementsState = completedRequirements.reduce(
@@ -183,7 +162,7 @@ const UserQuestController = ({
       return errAsync(createApiError(ErrorReason.invalidRequirement, 400)())
     }
 
-    return userQuestModel(ctx.logger)
+    return userQuestModel
       .addCompletedRequirement(questId, userId, requirementId)
       .map(() => ({ httpResponseCode: 200, data: undefined }))
   }
@@ -204,17 +183,15 @@ const UserQuestController = ({
       return errAsync(createApiError(ErrorReason.invalidRequirement, 400)())
     }
 
-    const questStatus = userQuestModel(ctx.logger)
-      .getQuestStatus(userId, questId)
-      .andThen((questStatus) => {
-        if (questStatus?.status === 'COMPLETED') {
-          return errAsync(createApiError(ErrorReason.questAlreadyCompleted, 400)())
-        }
-        return okAsync(questStatus)
-      })
+    const questStatus = userQuestModel.getQuestStatus(userId, questId).andThen((questStatus) => {
+      if (questStatus?.status === 'COMPLETED') {
+        return errAsync(createApiError(ErrorReason.questAlreadyCompleted, 400)())
+      }
+      return okAsync(questStatus)
+    })
 
     return questStatus.andThen(() =>
-      userQuestModel(ctx.logger)
+      userQuestModel
         .addCompletedRequirement(questId, userId, requirementId)
         .map(() => ({ httpResponseCode: 200, data: undefined }))
     )
@@ -232,5 +209,3 @@ const UserQuestController = ({
     completeContentRequirement
   }
 }
-
-export const userQuestController = UserQuestController({})

@@ -29,7 +29,8 @@
     "TWILIO_AUTH_TOKEN",
     "TWILIO_ACCOUNT_SID",
     "TWILIO_SERVICE_SID",
-    "NGROK_AUTH_TOKEN"
+    "NGROK_AUTH_TOKEN",
+    "DATABASE_URL"
   ],
   "tasks": {
     "build": {
@@ -37,7 +38,9 @@
       "outputs": [".svelte-kit/**"],
       "cache": false
     },
-    "lint": {},
+    "lint": {
+      "cache": false
+    },
     "format": {},
     "svelte:check": {},
     "test": {},
@@ -45,7 +48,8 @@
     "test:integration": {
       "dependsOn": ["^build"],
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "inputs": ["$TURBO_DEFAULT$"]
     },
     "dev": {
       "dependsOn": ["^build"],

@@ -1,5 +1,9 @@
 import { AppLogger } from '$lib/helpers/logger'
 import type { UserType } from 'database'
+import type { ControllerDependencies } from '$lib/server/_types'
+import type { UserController } from '$lib/server/user/controller'
+import type { UserQuestController } from '$lib/server/user-quest/controller'
+
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 declare global {
@@ -10,6 +14,14 @@ declare global {
       userType: UserType
       authToken: string
       context: { traceId: string; logger: AppLogger }
+      dependencies: ControllerDependencies
+      controllers: {
+        userController: UserController
+        userQuestController: UserQuestController
+      }
+      userQuestModel: UserQuestModel
+      userModel: UserModel
+      getAccountAddressModel: GetAccountAddressModelFn
     }
     // interface PageData {}
     // interface Platform {}
