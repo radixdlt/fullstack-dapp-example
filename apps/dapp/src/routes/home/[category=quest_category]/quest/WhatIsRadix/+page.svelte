@@ -46,7 +46,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: text['4.md']
+        text: text['5.md']
       }
     },
     {

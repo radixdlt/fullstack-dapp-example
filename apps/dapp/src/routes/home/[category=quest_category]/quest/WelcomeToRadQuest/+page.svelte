@@ -128,11 +128,11 @@
           },
           {
             text: text['8b.md'],
-            correct: true
+            correct: false
           },
           {
             text: text['8c.md'],
-            correct: true
+            correct: false
           }
         ]
       }
