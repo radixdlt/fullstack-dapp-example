@@ -1,15 +1,12 @@
 <script lang="ts">
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
   import { i18n } from '$lib/i18n/i18n'
-  import { onMount } from 'svelte'
   import type { LayoutData } from '../$types'
   import Quest from '../Quest.svelte'
   import QuizJettyPage from '../QuizJettyPage.svelte'
   import TextJettyPage from '../TextJettyPage.svelte'
   import Error from '$lib/components/error/Error.svelte'
-  import { page } from '$app/stores'
-  import { writable } from 'svelte/store'
-  import { completeRequirement } from '$lib/helpers/complete-requirement.svelte'
+
   import type { Quests } from 'content'
 
   export let data: LayoutData
@@ -18,32 +15,6 @@
   let error: boolean
 
   const text = data.text as Quests['WelcomeToRadQuest']['text']
-
-  let radQuestGlossaryViewed = writable(true)
-  const isRadQuestGlossary = (url: URL) =>
-    url.searchParams.has('glossaryAnchor') && url.searchParams.get('glossaryAnchor') === 'web3'
-
-  const getGlossarySubscription = () => {
-    return !data.requirements.Glossary
-      ? page.subscribe(({ url }) => {
-          if (isRadQuestGlossary(url)) {
-            completeRequirement('WelcomeToRadQuest', 'Glossary')
-              .map(() => radQuestGlossaryViewed.set(true))
-              .mapErr(() => {
-                error = true
-              })
-          }
-        })
-      : () => {}
-  }
-
-  onMount(() => {
-    const unsubscribe = getGlossarySubscription()
-
-    return () => {
-      unsubscribe()
-    }
-  })
 </script>
 
 <Quest
@@ -96,8 +67,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: text['6.md'],
-        isNextDisabled: !$radQuestGlossaryViewed
+        text: text['6.md']
       }
     },
     {
