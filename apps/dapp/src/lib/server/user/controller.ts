@@ -163,23 +163,22 @@ export const UserController = ({
         return okAsync(address)
       })
       .andThen((address) =>
-        transactionModel
-          .add({
-            userId,
-            discriminator: `PopulateResources:${userId}`,
-            type: 'PopulateResources',
-            traceId: ctx.traceId,
-            accountAddress: address
-          })
-          .map((data) => ({
-            httpResponseCode: 201,
-            data
-          }))
-          .mapErr((error) => {
-            ctx.logger.error({ error, method: 'populateResources', event: 'error' })
-            return createApiError('populateResourcesError', 500)()
-          })
+        transactionModel.add({
+          userId,
+          discriminator: `PopulateResources:${userId}`,
+          type: 'PopulateResources',
+          traceId: ctx.traceId,
+          accountAddress: address
+        })
       )
+      .map((data) => ({
+        httpResponseCode: 201,
+        data
+      }))
+      .mapErr((error) => {
+        ctx.logger.error({ error, method: 'populateResources', event: 'error' })
+        return createApiError('populateResourcesError', 500)()
+      })
   }
 
   const directDepositXrd = (ctx: ControllerMethodContext, userId: string) => {
@@ -195,7 +194,7 @@ export const UserController = ({
       .andThen((accountAddress) =>
         gatewayApi.isDepositDisabledForResource(accountAddress, addresses.xrd).mapErr((error) => {
           ctx.logger.error({ method: 'directDepositXrd.error', error })
-          return err(createApiError('InternalError', 500)(error))
+          return createApiError('InternalError', 500)(error)
         })
       )
       .andThen((isDisabled) =>
@@ -221,7 +220,7 @@ export const UserController = ({
                 }))
                 .mapErr((error) => {
                   ctx.logger.error({ method: 'directDepositXrd.error', error })
-                  return err(createApiError('InternalError', 500)(error))
+                  return createApiError('InternalError', 500)(error)
                 })
         )
       )
