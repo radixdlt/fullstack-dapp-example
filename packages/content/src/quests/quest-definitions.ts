@@ -46,7 +46,7 @@ type OnLedgerRequirement = {
 
 type OffLedgerRequirement = {
   type: 'offLedger'
-  completedByUser?: boolean
+  completedByUser: boolean
 }
 
 type ContentRequirement = {
@@ -122,7 +122,8 @@ export const QuestDefinitions = () => {
       minutesToComplete: 3,
       requirements: {
         ConnectWallet: {
-          type: 'offLedger'
+          type: 'offLedger',
+          completedByUser: true
         }
       }
     },
@@ -157,10 +158,12 @@ export const QuestDefinitions = () => {
       minutesToComplete: 3,
       requirements: {
         VerifyPhoneNumber: {
-          type: 'offLedger'
+          type: 'offLedger',
+          completedByUser: false
         },
         RegisterAccount: {
-          type: 'offLedger'
+          type: 'offLedger',
+          completedByUser: false
         },
         LearnAboutTransactions: {
           type: 'content'

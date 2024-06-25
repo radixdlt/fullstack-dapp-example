@@ -5,6 +5,7 @@ import type { RequestHandler } from './$types'
 export const PUT: RequestHandler = async ({ params, locals }) =>
   routeHandler(() =>
     locals.controllers.userQuestController.completeRequirement(
+      locals.context,
       params.questId as keyof Quests,
       params.requirementId as string,
       locals.userId
