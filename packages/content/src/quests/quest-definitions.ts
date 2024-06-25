@@ -122,7 +122,11 @@ export const QuestDefinitions = () => {
       minutesToComplete: 3,
       requirements: {
         GetTheWallet: {
-          type: 'content'
+          type: 'offLedger',
+          isHidden: true
+        },
+        ConnectWallet: {
+          type: 'offLedger'
         }
       }
     },
@@ -133,14 +137,7 @@ export const QuestDefinitions = () => {
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: ['GetRadixWallet'],
       minutesToComplete: 3,
-      requirements: {
-        ConnectWallet: {
-          type: 'offLedger'
-        },
-        ConnectAccount: {
-          type: 'offLedger'
-        }
-      }
+      requirements: {}
     },
     FirstTransactionQuest: {
       id: 'FirstTransactionQuest',
@@ -188,15 +185,11 @@ export const QuestDefinitions = () => {
       category: 'basic',
       rewards: [
         {
-          name: 'element',
-          amount: 10
+          name: 'xrd',
+          amount: 20
         },
         {
-          name: 'clam',
-          amount: 25
-        },
-        {
-          name: 'energyCard',
+          name: 'giftBox',
           amount: 1
         }
       ],

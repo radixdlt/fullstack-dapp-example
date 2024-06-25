@@ -39,7 +39,7 @@
   },
   "GetRadixWallet": {
     "requirements": {
-      "GetTheWallet": "Download the Radix Wallet mobile app, create your first account Login to RadQuest with your Radix Wallet"
+      "ConnectWallet": "Download the Radix Wallet mobile app, create your first account Login to RadQuest with your Radix Wallet"
     },
     "title": "Get the Radix Wallet",
     "description": "Your key to dApps and assets on Radix",
@@ -80,11 +80,11 @@
   },
   "TransferTokens": {
     "requirements": {
-      "JettyReceivedClams": "Send Clams to Jetty"
+      "JettyReceivedClams": "Send some Clams to Jetty"
     },
-    "title": "Transfer Tokens",
-    "description": "Transfer tokens to another account",
-    "introDescription": "Transfer tokens to another account to earn your reward.",
+    "title": "Transfer Assets",
+    "description": "Transfer stuff using the Radix Wallet",
+    "introDescription": "Use the Radix Wallet’s transfer feature to send tokens, NFTs, and any other kind of asset to different accounts and other people.",
     "copyTextButton_copy": "Copy",
     "copyTextButton_copied": "Copied!"
   },
