@@ -30,7 +30,7 @@
   }
 
   .grey-out {
-    opacity: 0.3;
+    opacity: 0.5;
   }
 
   .text-content {
@@ -57,9 +57,5 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
-  }
-
-  .reduce-opacity {
-    opacity: 0.5;
   }
 </style>
