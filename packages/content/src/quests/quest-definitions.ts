@@ -83,11 +83,6 @@ export const QuestDefinitions = () => {
           type: 'content',
           isHidden: true
         },
-        Glossary: {
-          type: 'offLedger',
-          completedByUser: true,
-          isHidden: true
-        },
         RadQuestQuiz: {
           type: 'offLedger',
           completedByUser: true
