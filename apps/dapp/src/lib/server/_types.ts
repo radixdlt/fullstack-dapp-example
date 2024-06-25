@@ -7,7 +7,8 @@ import type {
   AuditModel,
   GatewayApi,
   AccountAddressModel,
-  UserQuestModel
+  UserQuestModel,
+  Addresses
 } from 'common'
 import type { PrismaClient } from 'database'
 import type { ResultAsync } from 'neverthrow'
@@ -31,4 +32,5 @@ export type ControllerDependencies = {
   accountAddressModel: ReturnType<AccountAddressModel>
   logger: AppLogger
   dbClient: PrismaClient
+  addresses: Addresses
 }

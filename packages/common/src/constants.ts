@@ -1,5 +1,6 @@
 import { RadixNetworkConfigById } from '@radixdlt/babylon-gateway-api-sdk'
 
+export type Addresses = ReturnType<typeof Addresses>
 export const Addresses = (networkId: number) => {
   const networkConfig = RadixNetworkConfigById[networkId]
   return (

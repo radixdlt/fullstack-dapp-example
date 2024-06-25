@@ -18,7 +18,8 @@ const isGatewayError = (error: any): error is ErrorResponse => error.details !==
 export const UserController = ({
   userModel,
   transactionModel,
-  gatewayApi
+  gatewayApi,
+  addresses
 }: ControllerDependencies) => {
   const getUser = (userId: string): ControllerMethodOutput<User | null> =>
     userModel.getById(userId, {}).map((data) => ({ data, httpResponseCode: 200 }))
@@ -181,12 +182,58 @@ export const UserController = ({
       )
   }
 
+  const directDepositXrd = (ctx: ControllerMethodContext, userId: string) => {
+    const discriminator = `PopulateResources:${userId}`
+
+    return userModel
+      .getById(userId, {})
+      .andThen((user) =>
+        user?.accountAddress
+          ? ok(user.accountAddress)
+          : err(createApiError('UserAccountAddressNotSet', 400)())
+      )
+      .andThen((accountAddress) =>
+        gatewayApi.isDepositDisabledForResource(accountAddress, addresses.xrd).mapErr((error) => {
+          ctx.logger.error({ method: 'directDepositXrd.error', error })
+          return err(createApiError('InternalError', 500)(error))
+        })
+      )
+      .andThen((isDisabled) =>
+        isDisabled ? err(createApiError('DepositDisabledForXrd', 400)()) : ok(undefined)
+      )
+      .andThen(() =>
+        transactionModel.doesTransactionExist({ userId, discriminator }).andThen((exists) =>
+          exists
+            ? okAsync({
+                httpResponseCode: 200,
+                data: {}
+              })
+            : transactionModel
+                .add({
+                  userId,
+                  discriminator: `PopulateResources:${userId}`,
+                  type: 'DepositXrdToAccount',
+                  traceId: ctx.traceId
+                })
+                .map(() => ({
+                  httpResponseCode: 201,
+                  data: {}
+                }))
+                .mapErr((error) => {
+                  ctx.logger.error({ method: 'directDepositXrd.error', error })
+                  return err(createApiError('InternalError', 500)(error))
+                })
+        )
+      )
+  }
+
   return {
     getUser,
     allowAccountAddressToMintHeroBadge,
     setAccountAddress,
     populateResources,
     setUserName,
-    getReferrals
+    getReferrals,
+    directDepositXrd
   }
 }
