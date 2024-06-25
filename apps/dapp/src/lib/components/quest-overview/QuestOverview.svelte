@@ -5,8 +5,10 @@
   import PadlockIcon from '@images/padlock.svg'
   import CheckmarkIcon from '@images/checkmark.svg'
   import LockIcon from '@images/padlock.svg'
+  import Hourglass from '@images/hourglass.svg'
   import type { QuestReward } from 'content'
   import type { QuestStatus } from '../../../types'
+  import { i18n } from '$lib/i18n/i18n'
 
   export let title: string
   export let description: string
@@ -15,20 +17,45 @@
   export let backgroundImage: string | undefined = undefined
   export let rewards: Readonly<QuestReward[]> = []
   export let link: string | undefined = undefined
+  export let isReferralQuest = false
+
+  $: hovering = false
+  $: greyOut = !hovering && state === 'completed'
 </script>
 
 <div
   role="button"
   tabindex="0"
-  class="card quest-card"
-  class:border={state === 'in-progress' || state === 'unlocked'}
+  class="quest-card"
   class:hover-shadow={state !== 'locked'}
-  style:--background-image={backgroundImage ? `url(${backgroundImage})` : ''}
+  on:mouseenter={() => (hovering = true)}
+  on:mouseleave={() => (hovering = false)}
 >
-  {#if state === 'completed' || state === 'locked'}
-    <div class="status-icon" class:disabled={state === 'locked'}>
+  <div
+    class="card-background"
+    class:border={state === 'in-progress' || state === 'unlocked'}
+    style:--background-image={backgroundImage ? `url(${backgroundImage})` : ''}
+    class:grey-out={greyOut}
+  >
+    {#if rewards}
+      <div class="rewards">
+        <QuestRewards {rewards} />
+      </div>
+    {/if}
+  </div>
+  {#if state === 'completed' || state === 'locked' || state === 'in-progress'}
+    <div
+      class="status-icon"
+      class:status-icon-with-background={state !== 'in-progress'}
+      class:disabled={state === 'locked'}
+      class:status-icon-in-progress={state === 'in-progress'}
+    >
       {#if state === 'locked'}
         <img src={LockIcon} class="icon disabled" alt="Padlock" />
+      {/if}
+
+      {#if state === 'in-progress'}
+        <img src={Hourglass} class="icon in-progress-icon" alt="Hourglass" />
       {/if}
 
       {#if state === 'completed'}
@@ -38,52 +65,74 @@
   {/if}
 
   <div class="content">
-    <QuestOverviewText reduceDescriptionOpacity {title} {description} {minutesToComplete} />
+    <QuestOverviewText {greyOut} {title} {description} {minutesToComplete} />
 
     <div class="start-button">
       <Button {link} disabled={state === 'locked'}>
         <div class="button-content">
           {#if state === 'unlocked'}
-            Start
+            {$i18n.t('quests:QuestOverviewButton.unlocked')}
+          {:else if state === 'in-progress' && isReferralQuest}
+            {$i18n.t('quests:QuestOverviewButton.referralInProgress')}
           {:else if state === 'in-progress'}
-            Continue
+            {$i18n.t('quests:QuestOverviewButton.inProgress')}
           {:else if state === 'locked'}
             <img src={PadlockIcon} alt="Padlock icon" />
+          {:else if state === 'claim-rewards'}
+            {$i18n.t('quests:QuestOverviewButton.claimRewards')}
           {:else}
-            View Again
+            {$i18n.t('quests:QuestOverviewButton.complete')}
           {/if}
         </div>
       </Button>
     </div>
   </div>
-
-  {#if rewards}
-    <div class="rewards">
-      <QuestRewards {rewards} />
-    </div>
-  {/if}
 </div>
 
 <style lang="scss">
-  .quest-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 21.5rem;
-    height: 92%;
-    max-height: 35.3rem;
-    justify-content: flex-end;
-    background: var(--color-light);
+  .grey-out {
+    opacity: 0.5;
+    transition: opacity 0.15s ease-in-out;
+  }
+  .card-background {
+    background: var(--gradient-5);
     background-size: contain;
     background-image: linear-gradient(transparent 30%, var(--color-light) 50%),
       var(--background-image), var(--gradient-5);
     background-position-y: 2.5rem;
+    height: 100%;
+    width: 21.5rem;
+    max-height: 35.3rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: var(--border-radius-3xl);
+
+    @media (max-width: 25rem) {
+      width: 84vw;
+      background-image: linear-gradient(transparent 10%, var(--color-light) 40%),
+        var(--background-image), var(--gradient-5);
+    }
+  }
+  .quest-card {
+    z-index: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 21.5rem;
+    height: 100%;
+    justify-content: flex-end;
+    margin: 0 0.5rem;
+    max-height: 35.3rem;
+
+    border-radius: var(--border-radius-3xl);
+    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.2);
+    transition: all 0.5s ease;
+    padding: var(--spacing-2xl);
 
     @media (max-width: 25rem) {
       width: 84vw;
     }
-
-    margin: 0 0.5rem;
   }
 
   .border {
@@ -100,8 +149,8 @@
   }
 
   .icon {
-    width: 1rem;
-    height: 1rem;
+    width: 0.8rem;
+    height: 0.8rem;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -112,25 +161,39 @@
     top: 1.5rem;
     left: 1.5rem;
     border-radius: 50%;
-    width: 2rem;
-    height: 2rem;
-    background: var(--gradient-6);
+    width: 1.563rem;
+    height: 1.563rem;
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .status-icon-with-background {
+    background: var(--gradient-6);
+  }
+
+  .status-icon-in-progress {
+    top: 1.3rem;
   }
 
   .content {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
   }
 
   .start-button {
     margin-top: var(--spacing-lg);
   }
 
+  .in-progress-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
   .rewards {
+    z-index: 0;
     position: absolute;
     top: 1.5rem;
     right: 1.5rem;
@@ -139,7 +202,6 @@
   .button-content {
     display: flex;
     justify-content: center;
-    width: 2.3rem;
   }
 
   .content {
@@ -150,11 +212,5 @@
 
   .start-button {
     margin-top: var(--spacing-lg);
-  }
-
-  .button-content {
-    display: flex;
-    justify-content: center;
-    width: 2.3rem;
   }
 </style>

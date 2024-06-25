@@ -26,6 +26,10 @@
       rewards: {
         control: 'number',
         description: 'Amount of rewards to be displayed'
+      },
+      questId: {
+        control: 'text',
+        description: 'Quest id, relevant for referall quest in progress state'
       }
     }
   }

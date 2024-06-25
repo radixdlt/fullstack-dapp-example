@@ -5,9 +5,10 @@
   export let description: string
   export let minutesToComplete: number
   export let reduceDescriptionOpacity = false
+  export let greyOut = false
 </script>
 
-<div class="text-content">
+<div class="text-content" class:grey-out={greyOut}>
   <h3 class="title">
     {title}
   </h3>
@@ -26,6 +27,10 @@
   h3,
   p {
     margin: 0;
+  }
+
+  .grey-out {
+    opacity: 0.5;
   }
 
   .text-content {
@@ -52,9 +57,5 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
-  }
-
-  .reduce-opacity {
-    opacity: 0.5;
   }
 </style>

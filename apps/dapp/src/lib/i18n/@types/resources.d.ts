@@ -65,6 +65,13 @@ interface Resources {
     "completeQuest": "Complete Quest",
     "intro-begin-quest": "Begin Quest",
     "okButton": "OK",
+    "QuestOverviewButton": {
+      "unlocked": "Start",
+      "referralInProgress": "Check Status",
+      "inProgress": "Continue",
+      "claimRewards": "Claim Rewards",
+      "complete": "View Again"
+    },
     "WelcomeToRadQuest": {
       "hi": "Meet Jetty",
       "claim": "Claim",

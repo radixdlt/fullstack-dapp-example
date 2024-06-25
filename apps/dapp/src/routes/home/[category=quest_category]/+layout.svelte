@@ -25,8 +25,14 @@
       )
 
       const isInProgress = data.questStatus[id as QuestId]?.status === 'IN_PROGRESS'
-
-      prev[id as QuestId] = isInProgress ? 'in-progress' : isUnlocked ? 'unlocked' : 'locked'
+      const hasRewardsToClaim = data.questStatus[id as QuestId]?.status === 'REWARDS_DEPOSITED'
+      prev[id as QuestId] = hasRewardsToClaim
+        ? 'claim-rewards'
+        : isInProgress
+          ? 'in-progress'
+          : isUnlocked
+            ? 'unlocked'
+            : 'locked'
 
       return prev
     },
@@ -58,6 +64,7 @@
           backgroundImage={quest.splashImage}
           state={questCardState[id] ?? 'locked'}
           link={`/home/${quest.category}/quest/${id}`}
+          isReferralQuest={id === 'ReferralQuest'}
         />
       </Item>
     {/if}
