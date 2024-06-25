@@ -226,18 +226,6 @@
       }
     },
     {
-      id: 'unclaimable-requirements',
-      type: 'jetty',
-      component: ClaimRewards,
-      props: {
-        rewards: data.rewards,
-        text: '',
-        nextButtonText: $i18n.t('quests:continueButton'),
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next()
-      }
-    },
-    {
       type: 'complete'
     }
   ]}

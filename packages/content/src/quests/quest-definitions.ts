@@ -79,10 +79,6 @@ export const QuestDefinitions = () => {
       preRequisites: [],
       minutesToComplete: 3,
       requirements: {
-        Introduction: {
-          type: 'content',
-          isHidden: true
-        },
         RadQuestQuiz: {
           type: 'offLedger',
           completedByUser: true
@@ -97,10 +93,6 @@ export const QuestDefinitions = () => {
       preRequisites: ['WelcomeToRadQuest'],
       minutesToComplete: 3,
       requirements: {
-        LearnAboutRadix: {
-          type: 'content',
-          isHidden: true
-        },
         RadixQuiz: {
           type: 'offLedger',
           completedByUser: true,
