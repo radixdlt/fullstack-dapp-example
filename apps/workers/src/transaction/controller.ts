@@ -97,44 +97,13 @@ export const TransactionWorkerController = ({
         const questDefinition = QuestDefinitions()[questId as QuestId]
         const rewards = questDefinition.rewards
         const xrdReward = rewards.find((reward) => reward.name === 'xrd')?.amount ?? 0
+        const hasXrdReward = xrdReward > 0
 
-        const triggerDepositRewardsTransaction = (userId: string) => {
-          const hasXrdReward = xrdReward > 0
-          return (
-            hasXrdReward
-              ? tokenPriceClient
-                  .getXrdPrice()
-                  .mapErr((jsError) => ({
-                    reason: WorkerError.FailedToGetXrdPrice,
-                    jsError
-                  }))
-                  .map((xrdPrice) => xrdPrice.multipliedBy(xrdReward))
-                  .andThen((xrdRewardInUsd) =>
-                    checkIfUserHasExceededKycThreshold(userId, xrdRewardInUsd).andThen(
-                      (hasExceededKycThreshold) =>
-                        hasExceededKycThreshold
-                          ? checkIfKycOracleEntryExists(userId).map((hasEntry) => ({
-                              includeKycOracleUpdate: !hasEntry,
-                              xrdRewardInUsd
-                            }))
-                          : ok({ includeKycOracleUpdate: false, xrdRewardInUsd })
-                    )
-                  )
-              : okAsync({ includeKycOracleUpdate: false, xrdRewardInUsd: new BigNumber(0) })
-          )
-            .andThen(({ includeKycOracleUpdate, xrdRewardInUsd }) =>
-              handleSubmitTransaction((wellKnownAddresses) =>
-                createRewardsDepositManifest({
-                  wellKnownAddresses,
-                  questId,
-                  userId,
-                  rewards,
-                  includeKycOracleUpdate
-                })
-              ).map((transactionId) => ({ transactionId, xrdRewardInUsd }))
-            )
-            .map(({ transactionId, xrdRewardInUsd }) => ({ userId, transactionId, xrdRewardInUsd }))
-        }
+        const checkIfKycOracleEntryExists = (userId: string) =>
+          gatewayApi.hasKycEntry(userId).mapErr(({ jsError }) => ({
+            reason: WorkerError.GatewayError,
+            jsError
+          }))
 
         const checkIfUserHasExceededKycThreshold = (
           userId: string,
@@ -150,11 +119,41 @@ export const TransactionWorkerController = ({
               jsError: error
             }))
 
-        const checkIfKycOracleEntryExists = (userId: string) =>
-          gatewayApi.hasKycEntry(userId).mapErr(({ jsError }) => ({
-            reason: WorkerError.GatewayError,
-            jsError
-          }))
+        const handleKycOracleUpdate = hasXrdReward
+          ? tokenPriceClient
+              .getXrdPrice()
+              .mapErr((jsError) => ({
+                reason: WorkerError.FailedToGetXrdPrice,
+                jsError
+              }))
+              .map((xrdPrice) => xrdPrice.multipliedBy(xrdReward))
+              .andThen((xrdRewardInUsd) =>
+                checkIfUserHasExceededKycThreshold(userId, xrdRewardInUsd).andThen(
+                  (hasExceededKycThreshold) =>
+                    hasExceededKycThreshold
+                      ? checkIfKycOracleEntryExists(userId).map((hasEntry) => ({
+                          includeKycOracleUpdate: !hasEntry,
+                          xrdRewardInUsd
+                        }))
+                      : ok({ includeKycOracleUpdate: false, xrdRewardInUsd })
+                )
+              )
+          : okAsync({ includeKycOracleUpdate: false, xrdRewardInUsd: new BigNumber(0) })
+
+        const triggerDepositRewardsTransaction = (userId: string) =>
+          handleKycOracleUpdate
+            .andThen(({ includeKycOracleUpdate, xrdRewardInUsd }) =>
+              handleSubmitTransaction((wellKnownAddresses) =>
+                createRewardsDepositManifest({
+                  wellKnownAddresses,
+                  questId,
+                  userId,
+                  rewards,
+                  includeKycOracleUpdate
+                })
+              ).map((transactionId) => ({ transactionId, xrdRewardInUsd }))
+            )
+            .map(({ transactionId, xrdRewardInUsd }) => ({ userId, transactionId, xrdRewardInUsd }))
 
         return triggerDepositRewardsTransaction(userId).andThen(
           ({ userId, transactionId, xrdRewardInUsd }) =>
@@ -285,24 +284,24 @@ export const TransactionWorkerController = ({
             handleSubmitTransaction((wellKnownAddresses) =>
               [
                 `CALL_METHOD
-                Address("${wellKnownAddresses.accountAddress.payerAccount}")
-                "lock_fee"
-                Decimal("10")
-              ;`,
+                  Address("${wellKnownAddresses.accountAddress.payerAccount}")
+                  "lock_fee"
+                  Decimal("10")
+                ;`,
 
                 `CALL_METHOD
-                Address("${wellKnownAddresses.accountAddress.payerAccount}")
-                "withdraw"
-                Address("${wellKnownAddresses.resourceAddresses.xrd}")
-                Decimal("${config.radQuest.directXrdDepositAmount}")
-              ;`,
+                  Address("${wellKnownAddresses.accountAddress.payerAccount}")
+                  "withdraw"
+                  Address("${wellKnownAddresses.resourceAddresses.xrd}")
+                  Decimal("${config.radQuest.directXrdDepositAmount}")
+                ;`,
 
                 `CALL_METHOD
-                Address("${user.accountAddress!}")
-                "try_deposit_batch_or_abort"
-                Expression("ENTIRE_WORKTOP")
-                Enum<0u8>()
-              ;`
+                  Address("${user.accountAddress!}")
+                  "try_deposit_batch_or_abort"
+                  Expression("ENTIRE_WORKTOP")
+                  Enum<0u8>()
+                ;`
               ].join('\n')
             )
           )
