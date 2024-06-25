@@ -32,8 +32,7 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent }) =>
       [
         questDefinitions['WelcomeToRadQuest'].id,
         questDefinitions['WhatIsRadix'].id,
-        questDefinitions['GetRadixWallet'].id,
-        questDefinitions['LoginWithWallet'].id
+        questDefinitions['GetRadixWallet'].id
         // @ts-ignore
       ].includes(id) &&
       questDefinitions[id].preRequisites.every(
