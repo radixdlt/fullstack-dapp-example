@@ -3,15 +3,17 @@
 
   export let answers: { text: string; correct: boolean }[] = []
   export let correctAnswerSelected = false
+  let correctAnswers = []
 
   const dispatch = createEventDispatcher<{ correctAnswer: boolean }>()
 
   const onChange = (event: Event) => {
     const selectedValue = Number((event.currentTarget as HTMLInputElement)?.value)
-
     if (answers[selectedValue].correct) {
-      dispatch('correctAnswer', true)
-      correctAnswerSelected = true
+      correctAnswers.push(answers[selectedValue])
+      if (correctAnswers.length === answers.filter((answer) => answer.correct).length) {
+        dispatch('correctAnswer', true)
+      }
     }
   }
 </script>

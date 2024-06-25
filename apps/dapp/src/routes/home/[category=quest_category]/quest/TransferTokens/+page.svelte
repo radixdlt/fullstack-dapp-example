@@ -14,6 +14,7 @@
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
   import type { WebSocketClient } from '$lib/websocket-client'
+  import QuizJettyPage from '../QuizJettyPage.svelte'
 
   export let data: PageData
 
@@ -21,7 +22,7 @@
 
   let quest: Quest
 
-  let receivedClams = writable(data.requirements?.JettyReceivedClams)
+  let receivedClams = writable(data.requirements?.JettyReceivedClams.isComplete)
 
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
@@ -46,24 +47,12 @@
   bind:this={quest}
   steps={[
     {
-      id: '1a',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['1a.md']
-      }
+      id: '0',
+      type: 'regular'
     },
     {
-      id: '1b',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['1b.md']
-      }
+      id: '1',
+      type: 'regular'
     },
     {
       id: '2',
@@ -71,6 +60,30 @@
     },
     {
       id: '3',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['3.md']
+      }
+    },
+    {
+      id: '4',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['4.md']
+      }
+    },
+    {
+      id: '5',
+      type: 'regular'
+    },
+    {
+      id: '6',
       type: 'regular'
     },
     {
@@ -98,6 +111,63 @@
       }
     },
     {
+      id: '7',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['7.md']
+      }
+    },
+    {
+      id: '8',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['8.md']
+      }
+    },
+    {
+      id: '9',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['9.md']
+      }
+    },
+    {
+      id: '10',
+      type: 'jetty',
+      component: QuizJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['10.md'],
+        quizRequirement: 'TransferTokens',
+        questId: 'TransferTokens',
+        requirements: data.requirements,
+        answers: [
+          {
+            text: text['10a.md'],
+            correct: true
+          },
+          {
+            text: text['10b.md'],
+            correct: false
+          },
+          {
+            text: text['10c.md'],
+            correct: false
+          }
+        ]
+      }
+    },
+    {
       id: '8',
       type: 'jetty',
       component: TextJettyPage,
@@ -119,28 +189,26 @@
   ]}
   let:render
 >
+  {#if render('0')}
+    {@html text['0.md']}
+  {/if}
+  {#if render('1')}
+    {@html text['1.md']}
+  {/if}
   {#if render('2')}
     {@html text['2.md']}
-  {/if}
-
-  {#if render('3')}
-    {@html text['3.md']}
-  {/if}
-
-  {#if render('4')}
-    {@html text['4.md']}
   {/if}
 
   {#if render('6')}
     {@const jettyAddress = Addresses(parseInt(PUBLIC_NETWORK_ID)).accounts.jetty}
 
     {#if isMobile()}
-      {@html text['7.md']}
+      {@html text['6b.md']}
       <div class="copy-address">
         <CopyTextBox text={shortenAddress(jettyAddress)} value={jettyAddress} />
       </div>
     {:else}
-      {@html text['6.md']}
+      {@html text['6a.md']}
       <div class="qr-code">
         <QR data={jettyAddress} />
       </div>

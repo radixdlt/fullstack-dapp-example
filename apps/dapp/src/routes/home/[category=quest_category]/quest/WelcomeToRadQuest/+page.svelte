@@ -19,10 +19,9 @@
 
   const text = data.text as Quests['WelcomeToRadQuest']['text']
 
-  let radQuestGlossaryViewed = writable(data.requirements.Glossary)
-
+  let radQuestGlossaryViewed = writable(true)
   const isRadQuestGlossary = (url: URL) =>
-    url.searchParams.has('glossaryAnchor') && url.searchParams.get('glossaryAnchor') === 'RadQuest'
+    url.searchParams.has('glossaryAnchor') && url.searchParams.get('glossaryAnchor') === 'web3'
 
   const getGlossarySubscription = () => {
     return !data.requirements.Glossary
@@ -54,6 +53,14 @@
   steps={[
     {
       id: '0',
+      type: 'regular'
+    },
+    {
+      id: '1',
+      type: 'regular'
+    },
+    {
+      id: '3',
       type: 'regular',
       footer: {
         next: {
@@ -63,22 +70,14 @@
       }
     },
     {
-      id: '1',
+      id: '4',
       type: 'jetty',
       component: TextJettyPage,
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: text['1.md']
+        text: text['4.md']
       }
-    },
-    {
-      id: '3',
-      type: 'regular'
-    },
-    {
-      id: '4',
-      type: 'regular'
     },
     {
       id: '5',
@@ -92,11 +91,13 @@
     },
     {
       id: '6',
-      type: 'regular',
-      footer: {
-        next: {
-          enabled: radQuestGlossaryViewed
-        }
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['6.md'],
+        isNextDisabled: !$radQuestGlossaryViewed
       }
     },
     {
@@ -123,11 +124,11 @@
         answers: [
           {
             text: text['8a.md'],
-            correct: false
+            correct: true
           },
           {
             text: text['8b.md'],
-            correct: true
+            correct: false
           },
           {
             text: text['8c.md'],
@@ -137,15 +138,12 @@
       }
     },
     {
-      type: 'requirements'
-    },
-    {
       id: 'unclaimable-requirements',
       type: 'jetty',
       component: ClaimRewards,
       props: {
         rewards: data.rewards,
-        text: data.text['claim.md'],
+        text: '',
         nextButtonText: $i18n.t('quests:continueButton'),
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next()
@@ -161,16 +159,12 @@
     {@html text['0.md']}
   {/if}
 
+  {#if render('1')}
+    {@html text['1.md']}
+  {/if}
+
   {#if render('3')}
     {@html text['3.md']}
-  {/if}
-
-  {#if render('4')}
-    {@html text['4.md']}
-  {/if}
-
-  {#if render('6')}
-    {@html text['6.md']}
   {/if}
 
   {#if error}

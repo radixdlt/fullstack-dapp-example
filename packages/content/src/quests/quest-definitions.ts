@@ -14,6 +14,7 @@ export type QuestRewards = {
   element: FungibleToken
   clam: FungibleToken
   energyCard: FungibleToken
+  giftBox: FungibleToken
 }
 
 export type QuestReward = {
@@ -24,7 +25,8 @@ export const questRewardDisplayName = {
   xrd: 'XRD',
   element: 'Element',
   clam: 'Clam',
-  energyCard: 'Energy Card'
+  energyCard: 'Energy Card',
+  giftBox: 'Gift Box'
 } as const satisfies { [key in QuestReward['name']]: string }
 
 export type Language = keyof typeof Language
@@ -33,7 +35,9 @@ export const Language = { en: 'en' } as const
 
 type Requirements = { [key: string]: Requirement }
 
-export type Requirement = OnLedgerRequirement | OffLedgerRequirement | ContentRequirement
+export type Requirement = (OnLedgerRequirement | OffLedgerRequirement | ContentRequirement) & {
+  isHidden?: boolean
+}
 
 type OnLedgerRequirement = {
   type: 'event'
@@ -76,11 +80,13 @@ export const QuestDefinitions = () => {
       minutesToComplete: 3,
       requirements: {
         Introduction: {
-          type: 'content'
+          type: 'content',
+          isHidden: true
         },
         Glossary: {
           type: 'offLedger',
-          completedByUser: true
+          completedByUser: true,
+          isHidden: true
         },
         RadQuestQuiz: {
           type: 'offLedger',
@@ -97,15 +103,13 @@ export const QuestDefinitions = () => {
       minutesToComplete: 3,
       requirements: {
         LearnAboutRadix: {
-          type: 'content'
+          type: 'content',
+          isHidden: true
         },
         RadixQuiz: {
           type: 'offLedger',
-          completedByUser: true
-        },
-        dAppQuiz: {
-          type: 'offLedger',
-          completedByUser: true
+          completedByUser: true,
+          isHidden: false
         }
       }
     },
@@ -118,7 +122,11 @@ export const QuestDefinitions = () => {
       minutesToComplete: 3,
       requirements: {
         GetTheWallet: {
-          type: 'content'
+          type: 'offLedger',
+          isHidden: true
+        },
+        ConnectWallet: {
+          type: 'offLedger'
         }
       }
     },
@@ -129,14 +137,7 @@ export const QuestDefinitions = () => {
       rewards: [{ name: 'element', amount: 5 }],
       preRequisites: ['GetRadixWallet'],
       minutesToComplete: 3,
-      requirements: {
-        ConnectWallet: {
-          type: 'offLedger'
-        },
-        ConnectAccount: {
-          type: 'offLedger'
-        }
-      }
+      requirements: {}
     },
     FirstTransactionQuest: {
       id: 'FirstTransactionQuest',
@@ -144,12 +145,16 @@ export const QuestDefinitions = () => {
       trackedAccountAddress: false,
       rewards: [
         {
-          name: 'element',
+          name: 'xrd',
           amount: 20
         },
         {
+          name: 'giftBox',
+          amount: 1
+        },
+        {
           name: 'clam',
-          amount: 25
+          amount: 10
         }
       ],
       preRequisites: ['LoginWithWallet'],
@@ -158,7 +163,17 @@ export const QuestDefinitions = () => {
         VerifyPhoneNumber: {
           type: 'offLedger'
         },
+        RegisterAccount: {
+          type: 'offLedger'
+        },
+        LearnAboutTransactions: {
+          type: 'content'
+        },
         [EventId.DepositHeroBadge]: {
+          type: 'event',
+          eventName: 'DepositEvent'
+        },
+        [EventId.JettyReceivedClams]: {
           type: 'event',
           eventName: 'DepositEvent'
         }
@@ -170,15 +185,11 @@ export const QuestDefinitions = () => {
       category: 'basic',
       rewards: [
         {
-          name: 'element',
-          amount: 10
+          name: 'xrd',
+          amount: 20
         },
         {
-          name: 'clam',
-          amount: 25
-        },
-        {
-          name: 'energyCard',
+          name: 'giftBox',
           amount: 1
         }
       ],

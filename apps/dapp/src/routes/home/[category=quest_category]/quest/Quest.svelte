@@ -18,6 +18,7 @@
   import { useLocalStorage } from '$lib/utils/local-storage'
   import CompleteQuest from './CompleteQuest.svelte'
   import { isMobile } from '$lib/utils/is-mobile'
+  import type { QuestRequirement } from '$lib/server/user-quest/controller'
 
   type CompleteStep = _Step<'complete'> & { id: 'complete' }
 
@@ -33,7 +34,7 @@
     | Omit<ClaimRewardsStep, 'id'>
     | Omit<CompleteStep, 'id'>
   )[]
-  export let requirements: Record<string, boolean>
+  export let requirements: Record<string, QuestRequirement>
   export let render: (id: string) => boolean = () => false
 
   export const actions = {
@@ -108,12 +109,13 @@
   if (requirements) {
     _requirements = Object.entries(requirements).reduce(
       (prev, cur) => {
+        if (cur[1].isHidden) return prev
         prev = [
           ...prev,
           {
             // @ts-ignore
             text: $i18n.t(`quests:${id}.requirements.${cur[0]}`),
-            complete: cur[1]
+            complete: cur[1].isComplete
           }
         ]
         return prev
@@ -141,7 +143,7 @@
           questId: id,
           onNext: () => actions.next(),
           onBack: () => actions.back(),
-          text: $quests[id].text['claim.md']
+          text: ''
         }
       }
     }

@@ -3,6 +3,7 @@ import type { LayoutServerLoad } from './$types'
 import { questApi } from '$lib/api/quest-api'
 import { error } from '@sveltejs/kit'
 import { $Enums } from 'database'
+import type { QuestRequirement } from '$lib/server/user-quest/controller'
 
 export const load: LayoutServerLoad = ({ fetch, cookies, url, parent }) =>
   parent().then(async ({ questDefinitions, questStatus }) => {
@@ -12,7 +13,7 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent }) =>
       .getQuestInformation(id, fetch)
       .map((data) => data.requirements)
 
-    let requirements: Record<string, boolean> = {}
+    let requirements: Record<string, QuestRequirement> = {}
 
     if (requirementsResult.isOk()) {
       if (!questStatus[id]?.status) {
@@ -39,15 +40,21 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent }) =>
         (preReq) => questStatus[preReq]?.status === 'COMPLETED'
       )
     ) {
-      Object.keys(questDefinitions[id].requirements).forEach((key) => {
+      Object.entries(questDefinitions[id].requirements).forEach(([key, requirement]) => {
         const cachedRequirement = cookies.get(`requirement-${id}-${key}`) as boolean | undefined
 
         if (!requirements[key]) {
-          requirements[key] = false
+          requirements[key] = {
+            isComplete: false,
+            isHidden: requirement.isHidden
+          }
         }
 
         if (cachedRequirement) {
-          requirements[key] = cachedRequirement
+          requirements[key] = {
+            isComplete: cachedRequirement,
+            isHidden: requirements[key].isHidden
+          }
         }
       })
 

@@ -5,10 +5,13 @@
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
   import { isMobile } from '$lib/utils/is-mobile'
   import { useCookies } from '$lib/utils/cookies'
-  import { writable } from 'svelte/store'
+  import { derived, writable } from 'svelte/store'
   import { i18n } from '$lib/i18n/i18n'
   import TextJettyPage from '../TextJettyPage.svelte'
   import type { Quests } from 'content'
+  import { user } from '../../../../../stores'
+  import SetUsernamePage from './SetUsernamePage.svelte'
+  import SetEmailPage from '../LoginWithWallet/SetEmailPage.svelte'
 
   export let data: PageData
 
@@ -16,8 +19,7 @@
 
   let render = (_: string) => false
 
-  let walletIsLinked = writable(data.requirements.GetTheWallet)
-
+  let walletIsLinked = writable(data.requirements.GetTheWallet?.isComplete)
   onMount(() => {
     if (isMobile()) {
       // @ts-ignore
@@ -42,7 +44,7 @@
     window.addEventListener('radix#chromeExtension#receive', callback)
 
     const interval = setInterval(() => {
-      if (render('get-the-wallet')) {
+      if (render('1')) {
         window.dispatchEvent(
           new CustomEvent('radix#chromeExtension#send', {
             detail: {
@@ -60,7 +62,11 @@
     }
   })
 
+  const loggedIn = derived(user, ($user) => !!$user)
+
   let quest: Quest
+
+  const submitEmail = () => {}
 </script>
 
 <Quest
@@ -71,13 +77,7 @@
   steps={[
     {
       id: '0',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['0.md']
-      }
+      type: 'regular'
     },
     {
       id: '1',
@@ -90,14 +90,8 @@
       }
     },
     {
-      id: 'get-the-wallet',
-      type: 'regular',
-      skip: walletIsLinked,
-      footer: {
-        next: {
-          enabled: walletIsLinked
-        }
-      }
+      id: '2',
+      type: 'regular'
     },
     {
       id: '3',
@@ -105,7 +99,13 @@
     },
     {
       id: '4',
-      type: 'regular'
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['4.md']
+      }
     },
     {
       id: '5',
@@ -118,7 +118,104 @@
       }
     },
     {
-      type: 'requirements'
+      id: '6',
+      type: 'regular',
+      skip: walletIsLinked,
+      footer: {
+        next: {
+          enabled: walletIsLinked
+        }
+      }
+    },
+    {
+      id: '7',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['7.md']
+      }
+    },
+    {
+      id: '8',
+      type: 'regular'
+    },
+    {
+      id: '9',
+      type: 'regular'
+    },
+    {
+      id: '10',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['10.md']
+      }
+    },
+    {
+      id: '11',
+      type: 'regular',
+      footer: {
+        next: {
+          enabled: loggedIn
+        }
+      },
+      skip: loggedIn
+    },
+    {
+      id: '12',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['12.md']
+      }
+    },
+    {
+      id: '13',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['13.md']
+      }
+    },
+    {
+      id: '14',
+      type: 'jetty',
+      component: SetUsernamePage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['14.md']
+      }
+    },
+    {
+      id: '15',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['15.md']
+      }
+    },
+    {
+      id: '16',
+      type: 'regular',
+      footer: {
+        next: {
+          onClick: () => {
+            quest.actions.next()
+            submitEmail()
+          }
+        }
+      }
     },
     {
       id: 'unclaimable-requirements',
@@ -126,7 +223,7 @@
       component: ClaimRewards,
       props: {
         rewards: data.rewards,
-        text: text['claim.md'],
+        text: '',
         nextButtonText: $i18n.t('quests:continueButton'),
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next()
@@ -138,7 +235,15 @@
   ]}
   let:render
 >
-  {#if render('get-the-wallet')}
+  {#if render('0')}
+    {@html text['0.md']}
+  {/if}
+
+  {#if render('1')}
+    {@html text['1.md']}
+  {/if}
+
+  {#if render('2')}
     {@html text['2.md']}
   {/if}
 
@@ -146,7 +251,23 @@
     {@html text['3.md']}
   {/if}
 
-  {#if render('4')}
-    {@html text['4.md']}
+  {#if render('6')}
+    {#if isMobile()}
+      {@html text['6a.md']}
+    {:else}
+      {@html text['6b.md']}
+    {/if}
+  {/if}
+  {#if render('8')}
+    {@html text['8.md']}
+  {/if}
+  {#if render('9')}
+    {@html text['9.md']}
+  {/if}
+  {#if render('11')}
+    {@html text['11.md']}
+  {/if}
+  {#if render('16')}
+    <SetEmailPage text={text['14.md']} />
   {/if}
 </Quest>

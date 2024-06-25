@@ -18,7 +18,7 @@
 
   const text = data.text as Quests['LoginWithWallet']['text']
 
-  const connectAccountReq = writable(data.requirements.ConnectAccount)
+  const connectAccountReq = writable(data.requirements.ConnectAccount.isComplete)
   let waitingOnAccount = false
 
   const loggedIn = derived(user, ($user) => !!$user)

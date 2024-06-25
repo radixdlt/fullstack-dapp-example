@@ -1,3 +1,0 @@
-Hold on a moment! You need your rewards...
-
-Here are **5 more Elements**!

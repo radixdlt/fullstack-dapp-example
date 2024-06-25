@@ -7,19 +7,32 @@
   import VerifyPhoneNumber from './VerifyPhoneNumber.svelte'
   import { ErrorReason } from '$lib/errors'
   import type { PageData } from './$types'
-  import { readable, writable } from 'svelte/store'
+  import { readable, writable, derived } from 'svelte/store'
   import TextJettyPage from '../TextJettyPage.svelte'
   import type { Quests } from 'content'
-  import type { ComponentProps } from 'svelte'
+  import { type ComponentProps, onMount } from 'svelte'
+  import { GatewayApi } from 'common'
+  import { publicConfig } from '$lib/public-config'
+  import { OneTimeDataRequestBuilder, SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
+  import { rdt } from '$lib/rdt'
+  import { userApi } from '$lib/api/user-api'
+  import { user } from '../../../../../stores'
+  import Button from '$lib/components/button/Button.svelte'
 
   export let data: PageData
 
   const text = data.text as Quests['FirstTransactionQuest']['text']
 
   let quest: Quest
-
   let phoneNumber: string
   let oneTimePassword: string[]
+
+  let waitingOnAccount = false
+  let mintBadgeState: ComponentProps<DepositHeroBadge>['state']
+  const loggedIn = derived(user, ($user) => !!$user)
+  const verifyPhoneNumber = writable(data.requirements.VerifyPhoneNumber.isComplete)
+  const connectAccountReq = writable(data.requirements.ConnectAccount.isComplete)
+  const depositHeroBadge = writable(data.requirements.DepositHeroBadge.isComplete)
 
   const errors = {
     [ErrorReason.failedToSendOTP]: $i18n.t('quests:FirstTransactionQuest.failedToSendOtp'),
@@ -35,9 +48,10 @@
     )
   }
 
-  const verifyPhoneNumber = writable(data.requirements.VerifyPhoneNumber)
-
-  const depositHeroBadge = writable(data.requirements.DepositHeroBadge)
+  onMount(() => {
+    const gatewayApi = GatewayApi(publicConfig.networkId)
+    gatewayApi.callApi('getEntityDetailsVaultAggregated', [])
+  })
 
   let otpError: keyof typeof errors | undefined
   let verifyOtpError = false
@@ -69,7 +83,34 @@
       .mapErr(() => (verifyOtpError = true))
   }
 
-  let mintBadgeState: ComponentProps<DepositHeroBadge>['state']
+  const connectAccount = () => {
+    waitingOnAccount = true
+    rdt.then((rdt) => {
+      rdt.walletApi
+        .sendOneTimeRequest(OneTimeDataRequestBuilder.accounts().exactly(1).withProof())
+        .map(async ({ accounts, proofs }) => {
+          waitingOnAccount = false
+          const accountProof = proofs.find(
+            (proof) => proof.type === 'account'
+          )! as SignedChallengeAccount
+
+          const result = await userApi.setUserField({
+            accountAddress: accounts[0].address,
+            proof: accountProof,
+            field: 'accountAddress'
+          })
+
+          if (result.isOk()) {
+            $user!.accountAddress = accounts[0].address
+            $connectAccountReq = true
+            quest.actions.next()
+          }
+        })
+        .mapErr(() => {
+          waitingOnAccount = false
+        })
+    })
+  }
 </script>
 
 <Quest
@@ -79,6 +120,16 @@
   let:next
   steps={[
     {
+      id: '0',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['0.md']
+      }
+    },
+    {
       id: '1',
       type: 'jetty',
       component: TextJettyPage,
@@ -86,24 +137,6 @@
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
         text: text['1.md']
-      }
-    },
-    {
-      id: '2',
-      type: 'regular'
-    },
-    {
-      id: '3',
-      type: 'regular'
-    },
-    {
-      id: '4',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['4.md']
       }
     },
     {
@@ -127,40 +160,43 @@
       }
     },
     {
-      id: '7a',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['7a.md']
-      }
-    },
-    {
-      id: '7b',
+      id: '4',
       type: 'regular'
     },
     {
-      id: '7c',
+      id: '5',
       type: 'jetty',
       component: TextJettyPage,
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: text['7c.md']
+        text: text['5.md']
       }
     },
     {
-      id: 'depositHeroBadge',
-      type: 'regular',
-      skip: depositHeroBadge,
-      footer: {
-        next: {
-          enabled: depositHeroBadge
-        }
+      id: '6',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['6.md']
       }
     },
-
+    {
+      id: '7',
+      type: 'regular',
+      footer: {
+        next: {
+          enabled: loggedIn
+        }
+      },
+      skip: loggedIn
+    },
+    {
+      id: '8',
+      type: 'regular'
+    },
     {
       id: '9',
       type: 'jetty',
@@ -172,9 +208,122 @@
       }
     },
     {
+      id: '10',
+      type: 'regular'
+    },
+    {
+      id: '11',
+      type: 'regular'
+    },
+    {
+      id: '12',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['12.md']
+      }
+    },
+    {
       id: '13',
       type: 'regular'
     },
+    {
+      id: '14',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['14a.md']
+      }
+    },
+
+    {
+      id: '15',
+      type: 'regular'
+    },
+    {
+      id: '16',
+      type: 'regular'
+    },
+    {
+      id: '17',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['17.md']
+      }
+    },
+    {
+      id: '18',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['18.md']
+      }
+    },
+    {
+      id: '19',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['19.md']
+      }
+    },
+    {
+      id: '20',
+      type: 'regular',
+      skip: depositHeroBadge,
+      footer: {
+        next: {
+          enabled: depositHeroBadge
+        }
+      }
+    },
+    {
+      id: '21',
+      type: 'regular'
+    },
+    {
+      id: '22',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['22.md']
+      }
+    },
+
+    {
+      id: '23',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['23.md']
+      }
+    },
+    {
+      id: '24',
+      type: 'jetty',
+      component: TextJettyPage,
+      props: {
+        onBack: () => quest.actions.back(),
+        onNext: () => quest.actions.next(),
+        text: text['24.md']
+      }
+    },
+
     {
       type: 'requirements'
     },
@@ -196,7 +345,8 @@
   {/if}
 
   {#if render('verifyPhoneNumber')}
-    {@html text['5.md']}
+    <p>{$i18n.t('quests:FirstTransactionQuest.enterYourPhoneNumber')}</p>
+    <p>{$i18n.t('quests:FirstTransactionQuest.weWillNotShare')}</p>
     <VerifyPhoneNumber
       bind:phoneNumber
       on:next={next}
@@ -207,7 +357,6 @@
   {/if}
 
   {#if render('verifyOtp')}
-    {@html text['6.md']}
     <VerifyOtp
       bind:phoneNumber
       bind:oneTimePassword
@@ -217,18 +366,45 @@
     />
   {/if}
 
-  {#if render('7b')}
-    {@html text['7b.md']}
+  {#if render('4')}
+    {@html text['4.md']}
   {/if}
 
-  {#if render('depositHeroBadge')}
-    {#if mintBadgeState === 'updateDepositRules'}
-      {@html text['8b.md']}
-    {:else}
-      {@html text['8a.md']}
-    {/if}
+  {#if render('7')}
+    {@html text['7.md']}
 
-    <!-- TODO: use 8b.md conditionally -->
+    <Button on:click={connectAccount} loading={waitingOnAccount}
+      >{$i18n.t('quests:FirstTransactionQuest.registerAccount')}
+    </Button>
+  {/if}
+
+  {#if render('8')}
+    {@html text['8.md']}
+  {/if}
+
+  {#if render('10')}
+    {@html text['10.md']}
+  {/if}
+
+  {#if render('11')}
+    {@html text['11.md']}
+  {/if}
+
+  {#if render('13')}
+    {@html text['13.md']}
+  {/if}
+
+  {#if render('15')}
+    {@html text['15.md']}
+  {/if}
+
+  {#if render('16')}
+    {@html text['16.md']}
+  {/if}
+
+  {#if render('20')}
+    {@html text['20.md']}
+
     <DepositHeroBadge
       on:deposited={() => {
         $depositHeroBadge = true
@@ -239,7 +415,7 @@
     />
   {/if}
 
-  {#if render('13')}
-    {@html text['13.md']}
+  {#if render('21')}
+    {@html text['21.md']}
   {/if}
 </Quest>

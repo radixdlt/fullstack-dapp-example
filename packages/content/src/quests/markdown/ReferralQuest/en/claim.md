@@ -1,1 +1,0 @@
-Great, claim your party rewards!

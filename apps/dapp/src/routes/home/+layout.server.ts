@@ -64,8 +64,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url }) => {
       [
         'requirement-WelcomeToRadQuest-Glossary',
         'requirement-WelcomeToRadQuest-RadQuestQuiz',
-        'requirement-WhatIsRadix-RadixQuiz',
-        'requirement-WhatIsRadix-dAppQuiz'
+        'requirement-WhatIsRadix-RadixQuiz'
       ].map((cookieName) => {
         if (cookies.get(cookieName)) {
           const [, questId, requirementId] = cookieName.split('-')

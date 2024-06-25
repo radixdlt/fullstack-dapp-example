@@ -9,15 +9,14 @@
   import { messageApi } from '$lib/api/message-api'
   import pipe from 'ramda/src/pipe'
   import type { WebSocketClient } from '$lib/websocket-client'
+  import type { QuestRequirement } from '$lib/server/user-quest/controller'
 
   export let questId: keyof Quests
-  export let requirements: Record<string, boolean>
+  export let requirements: Record<string, { isComplete: QuestRequirement['isComplete'] }>
 
   const quest = $quests[questId]
 
-  let requirementsStatus: { id: string; text: string; complete: boolean }[] = Object.entries(
-    requirements
-  ).map(([key, value]) => {
+  let requirementsStatus = Object.entries(requirements).map(([key, value]) => {
     // @ts-ignore
     const type = quest.requirements[key].type
 
@@ -36,7 +35,7 @@
       text: $i18n.t(`quests:${questId}.requirements.${key}`),
       complete: type === 'content' ? true : complete || value
     }
-  })
+  }) as { id: string; text: string; complete: boolean }[]
 
   const dispatch = createEventDispatcher<{
     'all-requirements-met': undefined
