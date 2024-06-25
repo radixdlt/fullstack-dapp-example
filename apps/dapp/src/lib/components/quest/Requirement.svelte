@@ -41,8 +41,6 @@
   }
 
   .text {
-    opacity: 0.6;
-
     &.complete {
       text-decoration: line-through;
     }

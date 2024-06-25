@@ -38,7 +38,7 @@
   {/if}
 
   <div class="content">
-    <QuestOverviewText {title} {description} {minutesToComplete} />
+    <QuestOverviewText reduceDescriptionOpacity {title} {description} {minutesToComplete} />
 
     <div class="start-button">
       <Button {link} disabled={state === 'locked'}>
