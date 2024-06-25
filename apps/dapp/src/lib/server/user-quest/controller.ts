@@ -11,8 +11,42 @@ export type UserQuestController = ReturnType<typeof UserQuestController>
 export const UserQuestController = ({
   userQuestModel,
   userModel,
-  accountAddressModel
+  accountAddressModel,
+  transactionModel
 }: ControllerDependencies) => {
+  const hasAllRequirementsCompleted = (questId: keyof Quests, userId: string) => {
+    const questDefinition = QuestDefinitions()[questId]
+    const requirements = Object.keys(questDefinition.requirements)
+    return userQuestModel
+      .findCompletedRequirements(userId, questId)
+      .map((completedRequirements) => ({
+        isAllCompleted: completedRequirements.length === requirements.length,
+        completedRequirements
+      }))
+  }
+
+  const handleAllRequirementsCompleted = ({
+    userId,
+    questId,
+    traceId
+  }: {
+    userId: string
+    questId: keyof Quests
+    traceId: string
+  }) => {
+    return hasAllRequirementsCompleted(questId, userId).andThen(({ isAllCompleted }) =>
+      isAllCompleted
+        ? transactionModel.add({
+            userId,
+            discriminator: `${questId}:DepositReward:${userId}`,
+            type: 'DepositReward',
+            traceId: traceId,
+            questId
+          })
+        : okAsync(undefined)
+    )
+  }
+
   const getQuestsProgress = (userId: string) =>
     userQuestModel.getQuestsStatus(userId).map((output) => ({
       data: output.reduce<Record<string, { status: QuestStatus }>>(
@@ -170,10 +204,15 @@ export const UserQuestController = ({
 
     return userQuestModel
       .addCompletedRequirement(questId, userId, requirementId)
+      .andThen(() => handleAllRequirementsCompleted({ userId, questId, traceId: ctx.traceId }))
       .map(() => ({ httpResponseCode: 200, data: undefined }))
   }
 
-  const completeContentRequirement = (questId: QuestId, userId: string) => {
+  const completeContentRequirement = (
+    ctx: ControllerMethodContext,
+    questId: QuestId,
+    userId: string
+  ) => {
     const questDefinition = QuestDefinitions()[questId]
 
     const requirementId = Object.keys(questDefinition.requirements).find(
@@ -195,6 +234,7 @@ export const UserQuestController = ({
     return questStatus.andThen(() =>
       userQuestModel
         .addCompletedRequirement(questId, userId, requirementId)
+        .andThen(() => handleAllRequirementsCompleted({ userId, questId, traceId: ctx.traceId }))
         .map(() => ({ httpResponseCode: 200, data: undefined }))
     )
   }

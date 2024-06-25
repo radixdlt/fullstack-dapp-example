@@ -1,6 +1,4 @@
 <script lang="ts">
-  import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
-  import { i18n } from '$lib/i18n/i18n'
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
   import TextJettyPage from '../TextJettyPage.svelte'

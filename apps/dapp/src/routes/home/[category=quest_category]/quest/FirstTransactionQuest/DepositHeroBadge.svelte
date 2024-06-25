@@ -49,13 +49,16 @@
       .andThen(() => messageApi.markAsSeen(messageId))
       .map(() => {
         mintingInProgress = false
+        state = 'hasHeroBadge'
+        dispatch('deposited')
       })
       .mapErr(() => {
         mintingInProgress = false
       })
 
-  const handleMintHeroBadge = () =>
-    userApi
+  const handleMintHeroBadge = () => {
+    mintingInProgress = true
+    return userApi
       .allowAccountAddressToMintHeroBadge()
       .andThen(() => messageApi.getAll())
       .map((messages) => messages.find((message) => message.type === 'HeroBadgeReadyToBeClaimed'))
@@ -63,6 +66,7 @@
       .mapErr(() => {
         mintingInProgress = false
       })
+  }
 
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
@@ -104,7 +108,10 @@
   $: {
     if ($user?.accountAddress)
       gatewayApi.hasHeroBadge($user?.accountAddress).map((hasHeroBadge) => {
-        if (hasHeroBadge) state = 'hasHeroBadge'
+        if (hasHeroBadge) {
+          state = 'hasHeroBadge'
+          dispatch('deposited')
+        }
       })
   }
 
