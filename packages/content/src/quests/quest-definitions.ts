@@ -122,15 +122,6 @@ export const QuestDefinitions = () => {
         }
       }
     },
-    LoginWithWallet: {
-      id: 'LoginWithWallet',
-      category: 'basic',
-      trackedAccountAddress: false,
-      rewards: [{ name: 'element', amount: 5 }],
-      preRequisites: ['GetRadixWallet'],
-      minutesToComplete: 3,
-      requirements: {}
-    },
     FirstTransactionQuest: {
       id: 'FirstTransactionQuest',
       category: 'basic',
@@ -149,7 +140,7 @@ export const QuestDefinitions = () => {
           amount: 10
         }
       ],
-      preRequisites: ['LoginWithWallet'],
+      preRequisites: ['GetRadixWallet'],
       minutesToComplete: 3,
       requirements: {
         VerifyPhoneNumber: {

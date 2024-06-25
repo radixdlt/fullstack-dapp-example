@@ -31,7 +31,6 @@
   let mintBadgeState: ComponentProps<DepositHeroBadge>['state']
   const loggedIn = derived(user, ($user) => !!$user)
   const verifyPhoneNumber = writable(data.requirements.VerifyPhoneNumber.isComplete)
-  const connectAccountReq = writable(data.requirements.ConnectAccount.isComplete)
   const depositHeroBadge = writable(data.requirements.DepositHeroBadge.isComplete)
 
   const errors = {
@@ -102,7 +101,6 @@
 
           if (result.isOk()) {
             $user!.accountAddress = accounts[0].address
-            $connectAccountReq = true
             quest.actions.next()
           }
         })

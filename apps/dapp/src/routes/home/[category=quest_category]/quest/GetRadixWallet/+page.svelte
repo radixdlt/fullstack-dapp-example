@@ -11,7 +11,7 @@
   import type { Quests } from 'content'
   import { user } from '../../../../../stores'
   import SetUsernamePage from './SetUsernamePage.svelte'
-  import SetEmailPage from '../LoginWithWallet/SetEmailPage.svelte'
+  import SetEmailPage from './SetEmailPage.svelte'
   import { questApi } from '$lib/api/quest-api'
 
   export let data: PageData

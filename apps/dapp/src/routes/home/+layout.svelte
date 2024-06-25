@@ -126,7 +126,7 @@
             // - bootstrap the application state (quest progress, user, notifications etc...) and connect to notifications websocket
 
             if (
-              data.questStatus['LoginWithWallet']?.status === 'IN_PROGRESS' &&
+              data.questStatus['GetRadixWallet']?.status === 'IN_PROGRESS' &&
               !useLocalStorage('seen-jetty-get-wallet-notification').get()
             ) {
               useLocalStorage('seen-jetty-get-wallet-notification').set(true)
