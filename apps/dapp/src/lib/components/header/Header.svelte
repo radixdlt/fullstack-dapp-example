@@ -26,6 +26,6 @@
   }
 
   .radix-btn {
-    z-index: 10;
+    z-index: 2;
   }
 </style>
