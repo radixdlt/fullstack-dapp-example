@@ -75,7 +75,7 @@ export const QuestDefinitions = () => {
       id: 'WelcomeToRadQuest',
       trackedAccountAddress: false,
       category: 'basic',
-      rewards: [{ name: 'element', amount: 5 }],
+      rewards: [],
       preRequisites: [],
       minutesToComplete: 3,
       requirements: {
@@ -93,7 +93,7 @@ export const QuestDefinitions = () => {
       id: 'WhatIsRadix',
       category: 'basic',
       trackedAccountAddress: false,
-      rewards: [{ name: 'element', amount: 5 }],
+      rewards: [],
       preRequisites: ['WelcomeToRadQuest'],
       minutesToComplete: 3,
       requirements: {
@@ -112,7 +112,7 @@ export const QuestDefinitions = () => {
       id: 'GetRadixWallet',
       category: 'basic',
       trackedAccountAddress: false,
-      rewards: [{ name: 'element', amount: 5 }],
+      rewards: [],
       preRequisites: ['WhatIsRadix'],
       minutesToComplete: 3,
       requirements: {
