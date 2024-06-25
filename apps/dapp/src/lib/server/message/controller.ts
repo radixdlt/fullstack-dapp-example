@@ -3,6 +3,7 @@ import type { ControllerDependencies, ControllerMethodOutput } from '../_types'
 import { safeParse, array, number } from 'valibot'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 
+export type MessageController = ReturnType<typeof MessageController>
 export const MessageController = ({ messageModel }: ControllerDependencies) => {
   const validateMessageId = (messageIds?: unknown[]): ResultAsync<number[], ApiError> => {
     const result = safeParse(array(number()), messageIds)

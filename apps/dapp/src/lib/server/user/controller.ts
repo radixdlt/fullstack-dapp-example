@@ -14,7 +14,7 @@ import { type ErrorResponse } from '@radixdlt/babylon-gateway-api-sdk'
 import type { TransactionJob } from 'queues'
 
 const isGatewayError = (error: any): error is ErrorResponse => error.details !== undefined
-
+export type UserController = ReturnType<typeof UserController>
 export const UserController = ({
   userModel,
   transactionModel,

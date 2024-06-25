@@ -7,6 +7,7 @@ import type { QuestId, Requirement } from 'content'
 import { config } from '$lib/config'
 export type QuestRequirement = { isHidden: boolean; isComplete: boolean }
 
+export type UserQuestController = ReturnType<typeof UserQuestController>
 export const UserQuestController = ({
   userQuestModel,
   userModel,

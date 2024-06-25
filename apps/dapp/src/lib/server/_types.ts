@@ -16,6 +16,10 @@ import type { ResultAsync } from 'neverthrow'
 import type { AuthModel } from './auth/model'
 import type { Config } from '$lib/config'
 import type { JWT } from './auth/jwt'
+import type { UserController } from '$lib/server/user/controller'
+import type { UserQuestController } from '$lib/server/user-quest/controller'
+import type { AuthController } from '$lib/server/auth/controller'
+import type { MessageController } from '$lib/server/message/controller'
 
 export type ControllerMethodOutput<T = any> = ResultAsync<
   { data: T; httpResponseCode: number },
@@ -25,6 +29,13 @@ export type ControllerMethodOutput<T = any> = ResultAsync<
 export type ControllerMethodContext = {
   logger: AppLogger
   traceId: string
+}
+
+export type Controllers = {
+  userController: UserController
+  userQuestController: UserQuestController
+  authController: AuthController
+  messageController: MessageController
 }
 
 export type ControllerDependencies = {
