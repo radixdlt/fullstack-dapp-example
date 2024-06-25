@@ -64,7 +64,7 @@
     width: fit-content;
   }
 
-  .button > div {
+  .button > * {
     width: fit-content;
   }
 
