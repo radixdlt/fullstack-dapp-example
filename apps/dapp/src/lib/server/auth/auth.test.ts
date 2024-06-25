@@ -8,14 +8,15 @@ import type { SignedChallenge } from '@radixdlt/radix-dapp-toolkit'
 import { appLogger, UserModel } from 'common'
 import { publicConfig } from '$lib/public-config'
 import { UserQuestModel } from 'common'
-import type { Config } from '$lib/config'
+import { config, type Config } from '$lib/config'
+import { JWT } from './jwt'
 
 let mockCtx: MockContext
 let ctx: Context
 let controller: AuthController
 
 const methodCtx = { logger: appLogger, traceId: crypto.randomUUID() }
-const config = {
+const dAppConfig = {
   dapp: {
     expectedOrigin: 'http://localhost:5173',
     dAppDefinitionAddress: publicConfig.dAppDefinitionAddress || '',
@@ -23,6 +24,8 @@ const config = {
     ...Addresses(2)
   }
 } as unknown as Config
+
+const jwt = JWT(config.jwt)
 
 describe('AuthController', () => {
   beforeEach(() => {
@@ -34,7 +37,8 @@ describe('AuthController', () => {
       userModel: UserModel(ctx.prisma)(methodCtx.logger),
       userQuestModel: UserQuestModel(ctx.prisma)(methodCtx.logger),
       gatewayApi: ctx.gatewayApi,
-      config
+      config: dAppConfig,
+      jwt
     } as any)
   })
 
