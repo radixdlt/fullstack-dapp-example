@@ -21,7 +21,7 @@
 
   let quest: Quest
 
-  let receivedClams = writable(data.requirements?.JettyReceivedClams)
+  let receivedClams = writable(data.requirements?.JettyReceivedClams.isComplete)
 
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
@@ -52,7 +52,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: text['1a.md']
+        text: text['1.md']
       }
     },
     {
@@ -62,7 +62,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: text['1b.md']
+        text: text['1.md']
       }
     },
     {
@@ -140,7 +140,7 @@
         <CopyTextBox text={shortenAddress(jettyAddress)} value={jettyAddress} />
       </div>
     {:else}
-      {@html text['6.md']}
+      {@html text['5.md']}
       <div class="qr-code">
         <QR data={jettyAddress} />
       </div>

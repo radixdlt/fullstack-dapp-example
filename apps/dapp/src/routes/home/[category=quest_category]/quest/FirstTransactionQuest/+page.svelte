@@ -35,9 +35,9 @@
     )
   }
 
-  const verifyPhoneNumber = writable(data.requirements.VerifyPhoneNumber)
+  const verifyPhoneNumber = writable(data.requirements.VerifyPhoneNumber.isComplete)
 
-  const depositHeroBadge = writable(data.requirements.DepositHeroBadge)
+  const depositHeroBadge = writable(data.requirements.DepositHeroBadge.isComplete)
 
   let otpError: keyof typeof errors | undefined
   let verifyOtpError = false
@@ -177,7 +177,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: text['14.md']
+        text: text['12.md']
       }
     },
     {
@@ -207,7 +207,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: text['7a.md']
+        text: text['7.md']
       }
     },
     {
@@ -221,7 +221,7 @@
       props: {
         onBack: () => quest.actions.back(),
         onNext: () => quest.actions.next(),
-        text: text['7c.md']
+        text: text['7.md']
       }
     },
     {
@@ -292,14 +292,14 @@
   {/if}
 
   {#if render('7b')}
-    {@html text['7b.md']}
+    {@html text['7.md']}
   {/if}
 
   {#if render('depositHeroBadge')}
     {#if mintBadgeState === 'updateDepositRules'}
-      {@html text['8b.md']}
+      {@html text['8.md']}
     {:else}
-      {@html text['8a.md']}
+      {@html text['8.md']}
     {/if}
 
     <!-- TODO: use 8b.md conditionally -->
