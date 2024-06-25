@@ -8,7 +8,8 @@ import {
   UserModel,
   UserQuestModel,
   appLogger,
-  AccountAddressModel
+  AccountAddressModel,
+  Addresses
 } from 'common'
 import { QuestDefinitions } from 'content'
 import { UserType } from 'database'
@@ -19,6 +20,7 @@ import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { UserController } from '$lib/server/user/controller'
 import { UserQuestController } from '$lib/server/user-quest/controller'
 
+const networkId = +PUBLIC_NETWORK_ID
 const NetworkQuestDefinitions = QuestDefinitions()
 
 const { transactionQueue } = getQueues(config.redis)
@@ -29,8 +31,9 @@ const userModel = UserModel(dbClient)
 const userQuestModel = UserQuestModel(dbClient)
 const transactionModel = TransactionModel(dbClient, transactionQueue)
 const auditModel = AuditModel(dbClient)
-const gatewayApi = GatewayApi(+PUBLIC_NETWORK_ID)
+const gatewayApi = GatewayApi(networkId)
 const accountAddressModel = AccountAddressModel(redisClient)
+const addresses = Addresses(networkId)
 
 export const handle: Handle = async ({ event, resolve }) => {
   const origin = event.request.headers.get('origin')
@@ -65,7 +68,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     accountAddressModel: accountAddressModel(logger),
     gatewayApi,
     logger,
-    dbClient
+    dbClient,
+    addresses
   } satisfies ControllerDependencies
 
   event.locals.controllers = {
