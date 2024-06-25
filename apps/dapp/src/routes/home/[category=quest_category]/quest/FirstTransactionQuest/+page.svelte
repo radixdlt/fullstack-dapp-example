@@ -19,7 +19,6 @@
   import { user } from '../../../../../stores'
   import Button from '$lib/components/button/Button.svelte'
   import { questApi } from '$lib/api/quest-api'
-  import { completeRequirement } from '$lib/helpers/complete-requirement.svelte'
 
   export let data: PageData
 
