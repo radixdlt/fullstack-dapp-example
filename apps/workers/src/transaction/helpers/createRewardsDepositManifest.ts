@@ -22,120 +22,125 @@ export const createRewardsDepositManifest = ({
   }
 }) => {
   const addresses = Addresses(config.networkId)
+  const { payerAccount, systemAccount } = wellKnownAddresses.accountAddress
+  const { adminBadgeAddress } = addresses.badges
+  const { elementAddress, clamAddress } = addresses.resources
+
   const buckets: string[] = []
-  const manifest = [
-    `
-              CALL_METHOD
-                Address("${wellKnownAddresses.accountAddress.payerAccount}")
-                "lock_fee"
-                Decimal("100")
-              ;
+  const manifest: string[] = []
 
-              CALL_METHOD
-              Address("${wellKnownAddresses.accountAddress.systemAccount}")
-              "create_proof_of_amount"
-              Address("${addresses.badges.adminBadgeAddress}") 
-              Decimal("1");  
-            `,
-    rewards
-      .map((reward) => {
-        const bucketName = `bucket${buckets.length + 1}`
-        buckets.push(bucketName)
+  const addToManifest = (...parts: string[]) => manifest.push(...parts)
 
-        if (reward.name === 'element') {
-          return `
-                  MINT_FUNGIBLE
-                    Address("${addresses.resources.elementAddress}")
-                    Decimal("${reward.amount}");
-                    
-                  TAKE_FROM_WORKTOP
-                    Address("${addresses.resources.elementAddress}")
-                    Decimal("${reward.amount}")
-                    Bucket("${bucketName}")
-                  ;`
-        }
+  addToManifest(
+    `CALL_METHOD
+      Address("${payerAccount}")
+      "lock_fee"
+      Decimal("50")
+    ;`,
+    `CALL_METHOD
+      Address("${systemAccount}")
+      "create_proof_of_amount"
+      Address("${adminBadgeAddress}") 
+      Decimal("1")
+    ;`
+  )
 
-        if (reward.name === 'clam') {
-          return `          
-                  MINT_FUNGIBLE
-                    Address("${addresses.resources.clamAddress}")
-                    Decimal("${reward.amount}");
-                    
-                  TAKE_FROM_WORKTOP
-                    Address("${addresses.resources.clamAddress}")
-                    Decimal("${reward.amount}")
-                    Bucket("${bucketName}")
-                  ;`
-        }
+  for (const reward of rewards) {
+    const bucketName = `bucket${buckets.length + 1}`
+    buckets.push(bucketName)
 
-        if (reward.name === 'energyCard') {
-          return `          
-          CALL_METHOD
-              Address("${config.radQuest.components.cardForge}")
-              "mint_random_card"
-              Decimal("${randomFloat()}")
-              "${userId}"
-          ;
-
-          TAKE_ALL_FROM_WORKTOP
-              Address("${config.radQuest.resources.morphEnergyCards}")
+    switch (reward.name) {
+      case 'element':
+        addToManifest(
+          `MINT_FUNGIBLE
+            Address("${elementAddress}")
+            Decimal("${reward.amount}")
+          ;`,
+          `TAKE_FROM_WORKTOP
+            Address("${elementAddress}")
+            Decimal("${reward.amount}")
+            Bucket("${bucketName}")
+          ;`
+        )
+      case 'clam':
+        addToManifest(
+          `MINT_FUNGIBLE
+              Address("${clamAddress}")
+              Decimal("${reward.amount}")
+            ;`,
+          `TAKE_FROM_WORKTOP
+              Address("${elementAddress}")
+              Decimal("${reward.amount}")
               Bucket("${bucketName}")
-          ;
-          `
-        }
+            ;`
+        )
 
-        if (reward.name === 'xrd') {
-          return `
-            CALL_METHOD
-              Address("${wellKnownAddresses.accountAddress.payerAccount}")
-              "withdraw"
-              Address("${addresses.xrd}")
-              Decimal("${reward.amount}");
+      case 'energyCard':
+        addToManifest(
+          `CALL_METHOD
+            Address("${config.radQuest.components.cardForge}")
+            "mint_random_card"
+            Decimal("${randomFloat()}")
+            "${userId}"
+          ;`,
+          `TAKE_ALL_FROM_WORKTOP
+            Address("${config.radQuest.resources.morphEnergyCards}")
+            Bucket("${bucketName}")
+          ;`
+        )
 
-            TAKE_ALL_FROM_WORKTOP
-              Address("${addresses.xrd}")
-              Bucket("${bucketName}");
-          `
-        }
+      case 'xrd':
+        addToManifest(
+          `CALL_METHOD
+            Address("${payerAccount}")
+            "withdraw"
+            Address("${addresses.xrd}")
+            Decimal("${reward.amount}")
+          ;`,
+          `TAKE_ALL_FROM_WORKTOP
+            Address("${addresses.xrd}")
+            Bucket("${bucketName}")
+          ;`
+        )
+    }
+  }
 
-        return undefined
-      })
-      .join('\n'),
-    `
-              CALL_METHOD
-                Address("${wellKnownAddresses.accountAddress.systemAccount}")
-                "create_proof_of_amount"
-                Address("${addresses.badges.adminBadgeAddress}")
-                Decimal("1");          
+  const rewardBuckets = buckets.map((name) => `Bucket("${name}")`)
 
-              CALL_METHOD
-                Address("${addresses.components.questRewards}")
-                "deposit_reward"
-                "<${userId}>"
-                "${questId}"
-                # Array of Buckets to deposit
-                Array<Bucket>(${buckets.map((bucket) => `Bucket("${bucket}")`).join(',')})
-            ;
-    `,
-    includeKycOracleUpdate
-      ? `
-      CALL_METHOD
-          Address("${wellKnownAddresses.accountAddress.systemAccount}")
-          "create_proof_of_amount"
-          Address("${addresses.badges.adminBadgeAddress}")
-          Decimal("1")
-        ;
-        
-      CALL_METHOD
+  // Deposit the rewards to Quest Rewards component
+  addToManifest(
+    `CALL_METHOD
+      Address("${systemAccount}")
+      "create_proof_of_amount"
+      Address("${adminBadgeAddress}")
+      Decimal("1")
+    ;`,
+    `CALL_METHOD
+      Address("${addresses.components.questRewards}")
+      "deposit_reward"
+      "<${userId}>"
+      "${questId}"
+      # Array of Buckets to deposit
+      Array<Bucket>(${rewardBuckets.join(',')})
+    ;`
+  )
+
+  if (includeKycOracleUpdate)
+    addToManifest(
+      `CALL_METHOD
+        Address("${systemAccount}")
+        "create_proof_of_amount"
+        Address("${adminBadgeAddress}")
+        Decimal("1")
+      ;`,
+
+      `CALL_METHOD
         Address("${addresses.components.kycOracle}")
         "update_user_kyc_requirement"
         "${userId}"
         true
       ;`
-      : undefined
-  ]
-    .filter(Boolean)
-    .join('\n')
+    )
 
-  return manifest
+  return manifest.join('\n')
 }

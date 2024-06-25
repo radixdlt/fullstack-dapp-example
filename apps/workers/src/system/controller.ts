@@ -1,5 +1,5 @@
 import { ok } from 'neverthrow'
-import { Job, SystemJob, SystemJobType, TransactionQueue } from 'queues'
+import { Job, SystemJob, SystemJobType } from 'queues'
 import { AppLogger } from 'common'
 import { radixEngineClient } from 'typescript-wallet'
 import { getImageOracleManifest } from './helpers/getImageOracleManifest'
