@@ -1,10 +1,9 @@
-import { dbClient } from '$lib/db'
-import { MessageModel, createApiError, type ApiError, type Message } from 'common'
-import type { ControllerMethodContext, ControllerMethodOutput } from '../_types'
+import { createApiError, type ApiError, type Message } from 'common'
+import type { ControllerDependencies, ControllerMethodOutput } from '../_types'
 import { safeParse, array, number } from 'valibot'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 
-export const MessageController = (messageModel = MessageModel(dbClient)) => {
+export const MessageController = ({ messageModel }: ControllerDependencies) => {
   const validateMessageId = (messageIds?: unknown[]): ResultAsync<number[], ApiError> => {
     const result = safeParse(array(number()), messageIds)
 
@@ -14,40 +13,30 @@ export const MessageController = (messageModel = MessageModel(dbClient)) => {
   }
 
   const markAsSeen = (
-    context: ControllerMethodContext,
     messageIds: number[],
     userId: string
   ): ControllerMethodOutput<{ count: number }> =>
     validateMessageId(messageIds).andThen((validatedMessageIds) =>
-      messageModel(context.logger)
-        .getByUserAndMessageIds(userId, validatedMessageIds)
-        .andThen((userMessages) =>
-          userMessages.length === validatedMessageIds.length
-            ? messageModel(context.logger)
-                .markAsSeen(validatedMessageIds, userId)
-                .map((data) => ({
-                  data,
-                  httpResponseCode: 200
-                }))
-            : errAsync(createApiError('message ids dont belong to user', 400)())
-        )
+      messageModel.getByUserAndMessageIds(userId, validatedMessageIds).andThen((userMessages) =>
+        userMessages.length === validatedMessageIds.length
+          ? messageModel.markAsSeen(validatedMessageIds, userId).map((data) => ({
+              data,
+              httpResponseCode: 200
+            }))
+          : errAsync(createApiError('message ids dont belong to user', 400)())
+      )
     )
 
-  const getUnseen = (
-    context: ControllerMethodContext,
-    userId: string
-  ): ControllerMethodOutput<Omit<Message & { id: number }, 'traceId'>[]> =>
-    messageModel(context.logger)
+  const getUnseen = (userId: string): ControllerMethodOutput<Message[]> =>
+    messageModel
       .getAllUnseen(userId)
-      .map((messages) => ({
-        data: messages.map(({ data, id }) => ({
-          ...(data as Omit<Message, 'traceId'>),
-          id
-        })),
-        httpResponseCode: 200
-      }))
+      .map((messages) =>
+        messages.map(({ data, id }) => {
+          const parsedData = JSON.parse(data as string) as Message
+          return { ...parsedData, id }
+        })
+      )
+      .map((messages) => ({ data: messages, httpResponseCode: 200 }))
 
   return { markAsSeen, getUnseen }
 }
-
-export const messageController = MessageController()

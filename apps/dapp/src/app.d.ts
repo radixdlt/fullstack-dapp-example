@@ -4,6 +4,7 @@ import type { ControllerDependencies } from '$lib/server/_types'
 import type { UserController } from '$lib/server/user/controller'
 import type { UserQuestController } from '$lib/server/user-quest/controller'
 import type { AuthController } from '$lib/server/auth/controller'
+import type { MessageController } from '$lib/server/message/controller'
 
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
@@ -20,6 +21,7 @@ declare global {
         userController: UserController
         userQuestController: UserQuestController
         authController: AuthController
+        messageController: MessageController
       }
       userQuestModel: UserQuestModel
       userModel: UserModel

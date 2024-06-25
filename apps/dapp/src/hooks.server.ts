@@ -9,7 +9,8 @@ import {
   UserQuestModel,
   appLogger,
   AccountAddressModel,
-  Addresses
+  Addresses,
+  MessageModel
 } from 'common'
 import { QuestDefinitions } from 'content'
 import { UserType } from 'database'
@@ -21,6 +22,7 @@ import { UserController } from '$lib/server/user/controller'
 import { UserQuestController } from '$lib/server/user-quest/controller'
 import { AuthModel } from '$lib/server/auth/model'
 import { JWT } from '$lib/server/auth/jwt'
+import { MessageController } from '$lib/server/message/controller'
 
 const networkId = +PUBLIC_NETWORK_ID
 const NetworkQuestDefinitions = QuestDefinitions()
@@ -35,6 +37,7 @@ const userQuestModel = UserQuestModel(dbClient)
 const transactionModel = TransactionModel(dbClient, transactionQueue)
 const auditModel = AuditModel(dbClient)
 const gatewayApi = GatewayApi(networkId)
+const messageModel = MessageModel(dbClient)
 const accountAddressModel = AccountAddressModel(redisClient)
 const addresses = Addresses(networkId)
 
@@ -75,13 +78,15 @@ export const handle: Handle = async ({ event, resolve }) => {
     addresses,
     authModel,
     config,
-    jwt: JWT(config.jwt)
+    jwt: JWT(config.jwt),
+    messageModel: messageModel(logger)
   } satisfies ControllerDependencies
 
   event.locals.controllers = {
     userController: UserController(event.locals.dependencies),
     userQuestController: UserQuestController(event.locals.dependencies),
-    authController: AuthController(event.locals.dependencies)
+    authController: AuthController(event.locals.dependencies),
+    messageController: MessageController(event.locals.dependencies)
   }
 
   if (event.url.pathname === '/.well-known/radix.json') {

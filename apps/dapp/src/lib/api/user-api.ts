@@ -12,6 +12,14 @@ const allowAccountAddressToMintHeroBadge = () =>
     })
   )
 
+const directDepositXrd = () =>
+  fetchWrapper<void>(
+    fetch('/api/user/direct-deposit', {
+      method: 'POST',
+      body: '{}'
+    })
+  )
+
 type SetUserFieldProps =
   | {
       field: 'name'
@@ -42,5 +50,6 @@ export const userApi = {
   me,
   getReferrals,
   allowAccountAddressToMintHeroBadge,
-  setUserField
+  setUserField,
+  directDepositXrd
 } as const
