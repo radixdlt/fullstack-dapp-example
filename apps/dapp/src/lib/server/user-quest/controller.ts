@@ -1,5 +1,5 @@
 import type { QuestStatus } from 'database'
-import { type ControllerDependencies } from '../_types'
+import { type ControllerDependencies, type ControllerMethodContext } from '../_types'
 import { QuestDefinitions, type Quests } from 'content'
 import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import { ErrorReason, createApiError } from '../../errors'
@@ -146,16 +146,24 @@ export const UserQuestController = ({
       }
     })
 
-  const completeRequirement = (questId: QuestId, requirementId: string, userId: string) => {
-    const questDefinition = QuestDefinitions()[questId]
-    const [, requirement]: [any, Requirement | undefined] = Object.entries(
-      questDefinition.requirements
-    ).find(([key, value]) => key === requirementId && value.completedByUser) || [
-      undefined,
-      undefined
-    ]
+  const completeRequirement = (
+    ctx: ControllerMethodContext,
+    questId: QuestId,
+    requirementId: string,
+    userId: string
+  ) => {
+    ctx.logger.debug({
+      method: 'completeRequirement',
+      questId,
+      requirementId,
+      userId
+    })
 
-    if (!requirement) {
+    const questDefinition = QuestDefinitions()[questId]
+
+    const requirement = (questDefinition.requirements as Record<string, Requirement>)[requirementId]
+
+    if (!requirement || requirement.type !== 'offLedger' || !requirement.completedByUser) {
       return errAsync(createApiError(ErrorReason.invalidRequirement, 400)())
     }
 

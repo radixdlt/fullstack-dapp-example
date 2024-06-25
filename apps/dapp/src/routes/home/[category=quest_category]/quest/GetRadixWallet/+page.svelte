@@ -12,6 +12,7 @@
   import { user } from '../../../../../stores'
   import SetUsernamePage from './SetUsernamePage.svelte'
   import SetEmailPage from '../LoginWithWallet/SetEmailPage.svelte'
+  import { questApi } from '$lib/api/quest-api'
 
   export let data: PageData
 
@@ -20,6 +21,7 @@
   let render = (_: string) => false
 
   let walletIsLinked = writable(data.requirements.GetTheWallet?.isComplete)
+
   onMount(() => {
     if (isMobile()) {
       // @ts-ignore
@@ -67,6 +69,12 @@
   let quest: Quest
 
   const submitEmail = () => {}
+
+  $: {
+    if ($user && !data.requirements.ConnectWallet?.isComplete) {
+      questApi.completeRequirement('GetRadixWallet', 'ConnectWallet')
+    }
+  }
 </script>
 
 <Quest

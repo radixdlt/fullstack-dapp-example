@@ -1,43 +1,33 @@
-import { type ControllerMethodContext, type ControllerMethodOutput } from '../_types'
+import {
+  type ControllerDependencies,
+  type ControllerMethodContext,
+  type ControllerMethodOutput
+} from '../_types'
 
 import { hasChallengeExpired } from './helpers/has-challenge-expired'
 import { Rola } from '@radixdlt/rola'
 import { SignedChallenge, parseSignedChallenge } from '@radixdlt/radix-dapp-toolkit'
-import { GatewayApi, type ApiError } from 'common'
+import { type ApiError } from 'common'
 
 import { err, errAsync, ok } from 'neverthrow'
-import { JWT } from './jwt'
-import { AuthModel } from './model'
 import type { Cookies } from '@sveltejs/kit'
 
-import { config, type Config } from '$lib/config'
-import { UserQuestModel, UserModel } from 'common'
-import { dbClient } from '$lib/db'
 import type { UserType } from 'database'
 
-export type AuthControllerInput = Partial<{
-  authModel: AuthModel
-  userModel: UserModel
-  userQuestModel: UserQuestModel
-  jwt: JWT
-  dAppConfig: Config['dapp']
-  gatewayApiClient: GatewayApi['gatewayApiClient']
-}>
 export type AuthController = ReturnType<typeof AuthController>
 export const AuthController = ({
-  jwt = JWT(config.jwt),
-  dAppConfig = config.dapp,
-  authModel = AuthModel(),
-  userModel = UserModel(dbClient),
-  userQuestModel = UserQuestModel(dbClient),
-  gatewayApiClient
-}: AuthControllerInput) => {
-  const { dAppDefinitionAddress, networkId, expectedOrigin } = dAppConfig
-  const gatewayApi = GatewayApi(networkId)
+  jwt,
+  config,
+  authModel,
+  userModel,
+  userQuestModel,
+  gatewayApi
+}: ControllerDependencies) => {
+  const { dAppDefinitionAddress, networkId, expectedOrigin } = config.dapp
 
   const { verifySignedChallenge } = Rola({
     applicationName: 'RadQuest dApp',
-    gatewayApiClient: gatewayApiClient ?? gatewayApi.gatewayApiClient,
+    gatewayApiClient: gatewayApi.gatewayApiClient,
     dAppDefinitionAddress,
     networkId,
     expectedOrigin
@@ -125,11 +115,11 @@ export const AuthController = ({
       })
       .andThen(() => {
         const referredBy = cookies.get('referredBy')
-        return referredBy ? userModel(ctx.logger).confirmReferralCode(referredBy) : ok(undefined)
+        return referredBy ? userModel.confirmReferralCode(referredBy) : ok(undefined)
       })
-      .andThen((referredBy) => userModel(ctx.logger).create(personaProof.address, referredBy))
+      .andThen((referredBy) => userModel.create(personaProof.address, referredBy))
       .andThen(({ id, type }) =>
-        userQuestModel(ctx.logger)
+        userQuestModel
           .addCompletedRequirement('LoginWithWallet', id, 'ConnectWallet')
           .map(() => ({ id, type }))
       )
@@ -167,5 +157,3 @@ export const AuthController = ({
     verifyAuthHeader
   }
 }
-
-export const authController = AuthController({})

@@ -5,20 +5,20 @@ import type { DbClient } from './index'
 
 export type Context = {
   prisma: DbClient
-  gatewayApi: GatewayApi['gatewayApiClient']
+  gatewayApi: GatewayApi
   cookies: Cookies
 }
 
 export type MockContext = {
   prisma: DeepMockProxy<DbClient>
-  gatewayApi: DeepMockProxy<GatewayApi['gatewayApiClient']>
+  gatewayApi: DeepMockProxy<GatewayApi>
   cookies: DeepMockProxy<Cookies>
 }
 
 export const createMockContext = (): MockContext => {
   return {
     prisma: mockDeep<DbClient>(),
-    gatewayApi: mockDeep<GatewayApi['gatewayApiClient']>(),
+    gatewayApi: mockDeep<GatewayApi>(),
     cookies: mockDeep<Cookies>()
   }
 }
