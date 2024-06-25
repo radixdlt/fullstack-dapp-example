@@ -39,7 +39,6 @@
   import { Story, Template } from '@storybook/addon-svelte-csf'
   import QuestOverview from './QuestOverview.svelte'
   import JettyPlatform from '@images/jetty-platform.png'
-  import ReferralQuest from '../../../../static/quests-images/splash/ReferralQuest.webp'
 
   const rewards = [
     {
@@ -93,20 +92,6 @@
       minutesToComplete={1}
       state="unlocked"
       backgroundImage={JettyPlatform}
-      rewards={getRewardData(3)}
-    />
-  </div>
-</Story>
-
-<Story name="Referral">
-  <div style:height="40rem">
-    <QuestOverview
-      isReferralQuest
-      title="Referral Quest"
-      description="Referral Quest."
-      minutesToComplete={3}
-      state="in-progress"
-      backgroundImage={ReferralQuest}
       rewards={getRewardData(3)}
     />
   </div>
