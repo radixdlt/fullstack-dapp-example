@@ -18,6 +18,8 @@
   import { userApi } from '$lib/api/user-api'
   import { user } from '../../../../../stores'
   import Button from '$lib/components/button/Button.svelte'
+  import { questApi } from '$lib/api/quest-api'
+  import { completeRequirement } from '$lib/helpers/complete-requirement.svelte'
 
   export let data: PageData
 
@@ -319,11 +321,13 @@
       component: TextJettyPage,
       props: {
         onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
+        onNext: async () => {
+          await questApi.completeRequirement(data.id, 'LearnAboutTransactions')
+          return quest.actions.next()
+        },
         text: text['24.md']
       }
     },
-
     {
       type: 'requirements'
     },
