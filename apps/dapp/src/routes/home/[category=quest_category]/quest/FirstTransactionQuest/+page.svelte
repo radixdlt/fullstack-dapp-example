@@ -33,7 +33,7 @@
   const verifyPhoneNumber = writable(data.requirements.VerifyPhoneNumber.isComplete)
   const connectAccountReq = writable(data.requirements.ConnectAccount.isComplete)
   const depositHeroBadge = writable(data.requirements.DepositHeroBadge.isComplete)
-  
+
   const errors = {
     [ErrorReason.failedToSendOTP]: $i18n.t('quests:FirstTransactionQuest.failedToSendOtp'),
     [ErrorReason.phoneNumberExists]: $i18n.t('quests:FirstTransactionQuest.phoneNumberExists'),
