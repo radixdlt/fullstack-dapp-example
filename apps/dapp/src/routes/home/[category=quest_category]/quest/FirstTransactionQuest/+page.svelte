@@ -29,7 +29,7 @@
 
   let waitingOnAccount = false
   let mintBadgeState: ComponentProps<DepositHeroBadge>['state']
-  const loggedIn = derived(user, ($user) => !!$user)
+  const registeredAccountAddress = derived(user, ($user) => !!$user?.accountAddress)
   const verifyPhoneNumber = writable(data.requirements.VerifyPhoneNumber.isComplete)
   const depositHeroBadge = writable(data.requirements.DepositHeroBadge.isComplete)
 
@@ -87,22 +87,21 @@
     rdt.then((rdt) => {
       rdt.walletApi
         .sendOneTimeRequest(OneTimeDataRequestBuilder.accounts().exactly(1).withProof())
-        .map(async ({ accounts, proofs }) => {
+        .andThen(({ accounts, proofs }) => {
           waitingOnAccount = false
-          const accountProof = proofs.find(
-            (proof) => proof.type === 'account'
-          )! as SignedChallengeAccount
 
-          const result = await userApi.setUserField({
-            accountAddress: accounts[0].address,
-            proof: accountProof,
-            field: 'accountAddress'
-          })
+          const accountProof = proofs.find((proof) => proof.type === 'account')!
 
-          if (result.isOk()) {
-            $user!.accountAddress = accounts[0].address
-            quest.actions.next()
-          }
+          return userApi
+            .setUserField({
+              accountAddress: accounts[0].address,
+              proof: accountProof as SignedChallengeAccount,
+              field: 'accountAddress'
+            })
+            .map(() => {
+              $user!.accountAddress = accounts[0].address
+              quest.actions.next()
+            })
         })
         .mapErr(() => {
           waitingOnAccount = false
@@ -186,10 +185,10 @@
       type: 'regular',
       footer: {
         next: {
-          enabled: loggedIn
+          enabled: registeredAccountAddress
         }
       },
-      skip: loggedIn
+      skip: registeredAccountAddress
     },
     {
       id: '8',
@@ -233,7 +232,10 @@
       component: TextJettyPage,
       props: {
         onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
+        onNext: () =>
+          userApi.directDepositXrd().map(() => {
+            quest.actions.next()
+          }),
         text: text['14a.md']
       }
     },

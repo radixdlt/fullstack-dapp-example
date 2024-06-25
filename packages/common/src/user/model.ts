@@ -73,8 +73,8 @@ export const UserModel =
           db.completedQuestRequirement.create({
             data: {
               userId: userId,
-              questId: 'LoginWithWallet',
-              requirementId: 'ConnectAccount'
+              questId: 'FirstTransactionQuest',
+              requirementId: 'RegisterAccount'
             }
           })
         ]),
