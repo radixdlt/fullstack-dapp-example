@@ -1,12 +1,14 @@
 import { questApi } from '$lib/api/quest-api'
 import type { LayoutServerLoad } from './$types'
-import { loadQuests, type QuestId } from 'content'
+import { loadLandingPopup, loadQuests, type QuestId } from 'content'
 import type { $Enums } from 'database'
 
 export const load: LayoutServerLoad = async ({ fetch, cookies, url }) => {
   const questStatusResult = await questApi.getQuestsInformation(fetch)
   const questDefinitions = loadQuests('en')
+  const landingPopupDefinitions = loadLandingPopup('en')
   const referredBy = url.searchParams.get('ref')
+
   if (referredBy) {
     cookies.set('referredBy', referredBy, {
       path: '/',
@@ -90,6 +92,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url }) => {
 
   return {
     questStatus,
-    questDefinitions
+    questDefinitions,
+    landingPopupDefinitions
   }
 }
