@@ -157,10 +157,6 @@ export const QuestDefinitions = () => {
         [EventId.DepositHeroBadge]: {
           type: 'event',
           eventName: 'DepositEvent'
-        },
-        [EventId.JettyReceivedClams]: {
-          type: 'event',
-          eventName: 'DepositEvent'
         }
       }
     },
