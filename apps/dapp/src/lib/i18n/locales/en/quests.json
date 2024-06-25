@@ -63,6 +63,7 @@
       "DepositHeroBadge": "Get your Hero’s Badge",
       "JettyReceivedClams": "Get your first XRD and NFT rewards"
     },
+    "registerAccount": "Register Account",
     "title": "Get Some (Web3) Stuff!",
     "description": "Claim your first quest rewards",
     "introDescription": "Learn about XRD and transactions – and use them to claim your first quest rewards right to your Radix Wallet.",
@@ -76,6 +77,8 @@
     "sendSmsButton": "Send SMS",
     "verifyOtpButton": "Verify",
     "verifyOtpText": "Enter the 6-digit code sent to",
+    "enterYourPhoneNumber": "Please enter your phone number to receive an SMS code for verification.",
+    "weWillNotShare": "We will not share your phone number with anyone, and we will not send you any messages other than this verification.",
     "allowMarketing": "I allow RadQuest to add me to the marketing newsletter"
   },
   "TransferTokens": {
