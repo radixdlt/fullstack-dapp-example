@@ -8,12 +8,21 @@ import type { SignedChallenge } from '@radixdlt/radix-dapp-toolkit'
 import { appLogger, UserModel } from 'common'
 import { publicConfig } from '$lib/public-config'
 import { UserQuestModel } from 'common'
+import type { Config } from '$lib/config'
 
 let mockCtx: MockContext
 let ctx: Context
 let controller: AuthController
 
 const methodCtx = { logger: appLogger, traceId: crypto.randomUUID() }
+const config = {
+  dapp: {
+    expectedOrigin: 'http://localhost:5173',
+    dAppDefinitionAddress: publicConfig.dAppDefinitionAddress || '',
+    networkId: 2,
+    ...Addresses(2)
+  }
+} as unknown as Config
 
 describe('AuthController', () => {
   beforeEach(() => {
@@ -22,16 +31,11 @@ describe('AuthController', () => {
 
     controller = AuthController({
       authModel: AuthModel(ctx.prisma),
-      userModel: UserModel(ctx.prisma),
-      userQuestModel: UserQuestModel(ctx.prisma),
-      gatewayApiClient: ctx.gatewayApi,
-      dAppConfig: {
-        expectedOrigin: 'http://localhost:5173',
-        dAppDefinitionAddress: publicConfig.dAppDefinitionAddress || '',
-        networkId: 2,
-        ...Addresses(2)
-      }
-    })
+      userModel: UserModel(ctx.prisma)(methodCtx.logger),
+      userQuestModel: UserQuestModel(ctx.prisma)(methodCtx.logger),
+      gatewayApi: ctx.gatewayApi,
+      config
+    } as any)
   })
 
   it('should create a challenge', async () => {
@@ -69,33 +73,37 @@ describe('AuthController', () => {
       }) as any
     )
 
-    mockCtx.gatewayApi.state.getEntityDetailsVaultAggregated.mockResolvedValueOnce({
-      metadata: {
-        items: [
-          {
-            key: 'owner_keys',
-            value: {
-              raw_hex:
-                '5c228f01202201010120071d98c93108188f982906f9fee7a88cdec6e3f93c3349acfdc94cffa471d7'
+    mockCtx.gatewayApi.gatewayApiClient.state.getEntityDetailsVaultAggregated.mockResolvedValueOnce(
+      {
+        metadata: {
+          items: [
+            {
+              key: 'owner_keys',
+              value: {
+                raw_hex:
+                  '5c228f01202201010120071d98c93108188f982906f9fee7a88cdec6e3f93c3349acfdc94cffa471d7'
+              }
             }
-          }
-        ]
-      }
-    } as any)
+          ]
+        }
+      } as any
+    )
 
-    mockCtx.gatewayApi.state.getEntityDetailsVaultAggregated.mockResolvedValueOnce({
-      metadata: {
-        items: [
-          {
-            key: 'owner_keys',
-            value: {
-              raw_hex:
-                '5c228f01202201010120071d4039545198a67d5458f898afbe0c7ea91ceb5e9cf77b368a73b542be7d'
+    mockCtx.gatewayApi.gatewayApiClient.state.getEntityDetailsVaultAggregated.mockResolvedValueOnce(
+      {
+        metadata: {
+          items: [
+            {
+              key: 'owner_keys',
+              value: {
+                raw_hex:
+                  '5c228f01202201010120071d4039545198a67d5458f898afbe0c7ea91ceb5e9cf77b368a73b542be7d'
+              }
             }
-          }
-        ]
-      }
-    } as any)
+          ]
+        }
+      } as any
+    )
 
     mockCtx.prisma.user.upsert.mockResolvedValue(
       Promise.resolve({ identityAddress: personaProof.address }) as any

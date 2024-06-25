@@ -1,7 +1,6 @@
 import type { RequestHandler } from './$types'
 import { dbClient } from '$lib/db'
 import { error, json } from '@sveltejs/kit'
-import { authController } from '$lib/server/auth/controller'
 import { isDevEnvironment } from '$lib/server/helpers/is-dev-environment'
 
 export const POST: RequestHandler = async ({ locals, cookies }) => {
@@ -9,7 +8,11 @@ export const POST: RequestHandler = async ({ locals, cookies }) => {
 
   await dbClient.user.update({ data: { type: 'ADMIN' }, where: { id: locals.userId } })
 
-  const result = authController.createRefreshTokenCookie(locals.userId, 'ADMIN', cookies)
+  const result = locals.controllers.authController.createRefreshTokenCookie(
+    locals.userId,
+    'ADMIN',
+    cookies
+  )
 
   if (result.isErr()) error(500, 'FailedToCreateRefreshTokenCookie')
 

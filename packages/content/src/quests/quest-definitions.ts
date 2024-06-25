@@ -121,10 +121,6 @@ export const QuestDefinitions = () => {
       preRequisites: ['WhatIsRadix'],
       minutesToComplete: 3,
       requirements: {
-        GetTheWallet: {
-          type: 'offLedger',
-          isHidden: true
-        },
         ConnectWallet: {
           type: 'offLedger'
         }

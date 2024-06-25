@@ -12,6 +12,9 @@ import type {
 } from 'common'
 import type { PrismaClient } from 'database'
 import type { ResultAsync } from 'neverthrow'
+import type { AuthModel } from './auth/model'
+import type { Config } from '$lib/config'
+import type { JWT } from './auth/jwt'
 
 export type ControllerMethodOutput<T = any> = ResultAsync<
   { data: T; httpResponseCode: number },
@@ -33,4 +36,7 @@ export type ControllerDependencies = {
   logger: AppLogger
   dbClient: PrismaClient
   addresses: Addresses
+  authModel: ReturnType<typeof AuthModel>
+  config: Config
+  jwt: JWT
 }

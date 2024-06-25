@@ -1,4 +1,4 @@
-import { authController } from '$lib/server/auth/controller'
+import { AuthController } from '$lib/server/auth/controller'
 import type { Handle } from '@sveltejs/kit'
 import { config } from '$lib/config'
 import {
@@ -19,6 +19,8 @@ import type { ControllerDependencies } from '$lib/server/_types'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { UserController } from '$lib/server/user/controller'
 import { UserQuestController } from '$lib/server/user-quest/controller'
+import { AuthModel } from '$lib/server/auth/model'
+import { JWT } from '$lib/server/auth/jwt'
 
 const networkId = +PUBLIC_NETWORK_ID
 const NetworkQuestDefinitions = QuestDefinitions()
@@ -28,6 +30,7 @@ const { transactionQueue } = getQueues(config.redis)
 const redisClient = new RedisConnection(config.redis)
 
 const userModel = UserModel(dbClient)
+const authModel = AuthModel()
 const userQuestModel = UserQuestModel(dbClient)
 const transactionModel = TransactionModel(dbClient, transactionQueue)
 const auditModel = AuditModel(dbClient)
@@ -69,12 +72,16 @@ export const handle: Handle = async ({ event, resolve }) => {
     gatewayApi,
     logger,
     dbClient,
-    addresses
+    addresses,
+    authModel,
+    config,
+    jwt: JWT(config.jwt)
   } satisfies ControllerDependencies
 
   event.locals.controllers = {
     userController: UserController(event.locals.dependencies),
-    userQuestController: UserQuestController(event.locals.dependencies)
+    userQuestController: UserQuestController(event.locals.dependencies),
+    authController: AuthController(event.locals.dependencies)
   }
 
   if (event.url.pathname === '/.well-known/radix.json') {
@@ -108,10 +115,10 @@ export const handle: Handle = async ({ event, resolve }) => {
   }
 
   if (event.route.id?.includes('(protected)')) {
-    const result = authController
+    const result = event.locals.controllers.authController
       .renewAuthToken(event.cookies)
       .andThen((authToken) =>
-        authController
+        event.locals.controllers.authController
           .verifyAuthToken(authToken)
           .map(({ userId, userType }) => ({ userId, authToken, userType }))
       )
