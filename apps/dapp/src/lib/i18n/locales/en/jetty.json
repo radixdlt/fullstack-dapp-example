@@ -23,5 +23,6 @@
     "text1": "You have {{count}} Elements right now.",
     "text2": "Send me {{count}} Elements and I will create a random gemstone.",
     "send-button": "Send {{count}} Elements"
-  }
+  },
+  "notification-cta": "Go to Quest"
 }

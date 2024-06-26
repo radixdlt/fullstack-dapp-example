@@ -31,6 +31,7 @@
     "@storybook/test": "^7.6.7",
     "@storybook/testing-library": "^0.2.2",
     "@sveltejs/adapter-node": "^2.0.0",
+    "@sveltejs/enhanced-img": "0.3.0",
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "@types/intl-tel-input": "^18.1.4",

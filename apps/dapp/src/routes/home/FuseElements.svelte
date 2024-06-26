@@ -1,5 +1,4 @@
 <script lang="ts">
-  import SpeechBubble from '$lib/components/jetty-dialog/speech-bubble/SpeechBubble.svelte'
   import JettyActionButton from '$lib/components/quest/JettyActionButton.svelte'
   import JettyActionButtons from '$lib/components/quest/JettyActionButtons.svelte'
   import { i18n } from '$lib/i18n/i18n'
@@ -19,6 +18,7 @@
   } from '@radixdlt/babylon-gateway-api-sdk'
   import ClaimRadGem from './ClaimRadGem.svelte'
   import { messageApi } from '$lib/api/message-api'
+  import { context } from '$lib/components/jetty-menu/JettyMenu.svelte'
 
   let rerender = false
 
@@ -217,20 +217,30 @@
   const dispatch = createEventDispatcher<{
     cancel: undefined
   }>()
+
+  const back = context.get('back')
+  const close = context.get('closeMenuItem')
+
+  $: if ($back) {
+    close()
+    $back = false
+  }
 </script>
 
-{#if loadingLedgerData}
-  <SpeechBubble>
+<div class="fuse-elements">
+  {#if loadingLedgerData}
     <LoadingSpinner />
-  </SpeechBubble>
-{:else if errorLoadingElements}
-  <SpeechBubble>error loading elements</SpeechBubble>
-{:else if claimAvailable || elementsDeposited}
-  <ClaimRadGem on:claimed />
-{:else}
-  {#key rerender}
-    {#if useLocalStorage('seen-fuse-elements-intro').get()}
-      <SpeechBubble>
+  {:else if errorLoadingElements}
+    error loading elements
+  {:else if claimAvailable || elementsDeposited}
+    <ClaimRadGem
+      on:claimed={() => {
+        close()
+      }}
+    />
+  {:else}
+    {#key rerender}
+      {#if useLocalStorage('seen-fuse-elements-intro').get()}
         {$i18n.t('jetty:fuse-elements.intro')}
         <JettyActionButton
           on:click={() => {
@@ -240,11 +250,9 @@
         >
           {$i18n.t('quests:nextButton')}
         </JettyActionButton>
-      </SpeechBubble>
-    {:else if noElements}
-      <SpeechBubble>you have no elements</SpeechBubble>
-    {:else}
-      <SpeechBubble>
+      {:else if noElements}
+        you have no elements
+      {:else}
         {$i18n.t('jetty:fuse-elements.text1', { count: parseInt(amountOfElements) })}
         {$i18n.t('jetty:fuse-elements.text2', { count: 10 })}
 
@@ -257,7 +265,13 @@
           on:back={() => dispatch('cancel')}
           on:next={sendElements}
         />
-      </SpeechBubble>
-    {/if}
-  {/key}
-{/if}
+      {/if}
+    {/key}
+  {/if}
+</div>
+
+<style>
+  .fuse-elements {
+    color: var(--color-light);
+  }
+</style>

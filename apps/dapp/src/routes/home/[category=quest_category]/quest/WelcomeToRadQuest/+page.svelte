@@ -2,8 +2,6 @@
   import { i18n } from '$lib/i18n/i18n'
   import type { LayoutData } from '../$types'
   import Quest from '../Quest.svelte'
-  import QuizJettyPage from '../QuizJettyPage.svelte'
-  import TextJettyPage from '../TextJettyPage.svelte'
   import Error from '$lib/components/error/Error.svelte'
 
   import type { Quests } from 'content'
@@ -41,70 +39,39 @@
     },
     {
       id: '4',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['4.md']
-      }
+      type: 'jetty'
     },
     {
       id: '5',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['5.md']
-      }
+      type: 'jetty'
     },
     {
       id: '6',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['6.md']
-      }
+      type: 'jetty'
     },
     {
       id: '7',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['7.md']
-      }
+      type: 'jetty'
     },
     {
       id: '8',
-      type: 'jetty',
-      component: QuizJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['8.md'],
-        quizRequirement: 'RadQuestQuiz',
-        questId: 'WelcomeToRadQuest',
-        requirements: data.requirements,
-        answers: [
-          {
-            text: text['8a.md'],
-            correct: true
-          },
-          {
-            text: text['8b.md'],
-            correct: false
-          },
-          {
-            text: text['8c.md'],
-            correct: false
-          }
-        ]
-      }
+      type: 'jettyQuiz',
+      text: text['8.md'],
+      quizRequirement: 'RadQuestQuiz',
+      answers: [
+        {
+          text: text['8a.md'],
+          correct: true
+        },
+        {
+          text: text['8b.md'],
+          correct: false
+        },
+        {
+          text: text['8c.md'],
+          correct: false
+        }
+      ]
     },
     {
       type: 'complete'
@@ -122,6 +89,22 @@
 
   {#if render('3')}
     {@html text['3.md']}
+  {/if}
+
+  {#if render('4')}
+    {@html text['4.md']}
+  {/if}
+
+  {#if render('5')}
+    {@html text['5.md']}
+  {/if}
+
+  {#if render('6')}
+    {@html text['6.md']}
+  {/if}
+
+  {#if render('7')}
+    {@html text['7.md']}
   {/if}
 
   {#if error}

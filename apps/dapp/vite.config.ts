@@ -1,8 +1,9 @@
 import { sveltekit } from '@sveltejs/kit/vite'
-import { defineConfig } from 'vitest/config'
+import { defineConfig } from 'vite'
 import { ngrok } from 'vite-plugin-ngrok'
+import { enhancedImages } from '@sveltejs/enhanced-img'
 
-const plugins = [sveltekit()]
+const plugins = [sveltekit(), enhancedImages()]
 
 if (process.env.NGROK_AUTH_TOKEN) {
   // @ts-ignore
@@ -10,6 +11,7 @@ if (process.env.NGROK_AUTH_TOKEN) {
 }
 
 export default defineConfig({
+  // @ts-ignore
   plugins,
   test: {
     include: ['src/**/*.{test,spec}.{js,ts}']

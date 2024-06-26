@@ -8,7 +8,7 @@
   } from '$lib/components/quest/Quest.svelte'
   import { onMount, type ComponentProps } from 'svelte'
   import { closeQuest } from './+layout.svelte'
-  import { jettyDialog, quests, scrollToNextQuest, showJetty, user } from '../../../../stores'
+  import { hideJetty, quests, retractJettyMenu, scrollToNextQuest, user } from '../../../../stores'
   import ClaimRewards from './ClaimRewards.svelte'
   import VerifyRequirements from './VerifyRequirements.svelte'
   import { i18n } from '$lib/i18n/i18n'
@@ -16,9 +16,9 @@
   import { useCookies, type RequirementCookieKey } from '$lib/utils/cookies'
   import { completeQuest } from '$lib/utils/complete-quest'
   import { useLocalStorage } from '$lib/utils/local-storage'
-  import CompleteQuest from './CompleteQuest.svelte'
   import { isMobile } from '$lib/utils/is-mobile'
   import type { QuestRequirement } from '$lib/server/user-quest/controller'
+  import QuizJettyPage from './QuizJettyPage.svelte'
 
   type CompleteStep = _Step<'complete'> & { id: 'complete' }
 
@@ -26,13 +26,20 @@
 
   type ClaimRewardsStep = _Step<'claimRewards'> & { id: 'claimRewards' }
 
+  type JettyQuizStep = _Step<'jettyQuiz'> & {
+    text: string
+    answers: { text: string; correct: boolean }[]
+    quizRequirement: string
+  }
+
   export let id: QuestId
   export let steps: (
     | RegularStep
-    | JettyStep<any>
+    | JettyStep
     | Omit<RequirementStep, 'id'>
     | Omit<ClaimRewardsStep, 'id'>
     | Omit<CompleteStep, 'id'>
+    | JettyQuizStep
   )[]
   export let requirements: Record<string, QuestRequirement>
   export let render: (id: string) => boolean = () => false
@@ -71,16 +78,13 @@
       }
     }
 
-    $showJetty = false
+    $retractJettyMenu = true
 
-    return () => {
-      $showJetty = true
-    }
+    return () => ($hideJetty = false)
   })
 
   const _completeQuest = async () => {
     await completeQuest(id, !!$user)
-    $jettyDialog = undefined
     setTimeout(closeQuest, 0)
     if (isMobile()) {
       $scrollToNextQuest = true
@@ -89,6 +93,8 @@
 
   const progressUpdated = (e: CustomEvent<number>) => {
     saveProgress(e.detail)
+
+    nextDisabled = false
 
     if (e.detail !== steps.length - 1) return
 
@@ -138,12 +144,22 @@
       return {
         type: 'jetty',
         id: 'claimRewards',
-        component: ClaimRewards,
-        props: {
-          questId: id,
-          onNext: () => actions.next(),
-          onBack: () => actions.back(),
-          text: ''
+        footer: {
+          next: {
+            text: $i18n.t('quests:claimButton'),
+            onClick: (next, $loading) => {
+              $loading.set(true)
+              claimRewards
+                .claim()
+                .map(() => {
+                  $loading.set(false)
+                  next()
+                })
+                .mapErr(() => {
+                  $loading.set(false)
+                })
+            }
+          }
         }
       }
     }
@@ -152,22 +168,40 @@
       return {
         type: 'jetty',
         id: 'complete',
-        component: CompleteQuest,
-        props: {
-          onBack: () => actions.back(),
-          completeQuest: _completeQuest,
-          text: $quests[id].text['complete.md']
+        footer: {
+          next: {
+            text: $i18n.t('quests:completeQuest'),
+            onClick: () => {
+              _completeQuest()
+            }
+          }
         }
       }
     }
 
+    if (step.type === 'jettyQuiz') {
+      return {
+        type: 'jetty',
+        id: step.id
+      }
+    }
+
     return step
-  }) as (RegularStep | JettyStep<any>)[]
+  }) as (RegularStep | JettyStep)[]
+
+  let currentStep: ComponentProps<Quest>['currentStep']
+
+  $: if (currentStep) $hideJetty = currentStep.type === 'jetty'
+
+  $: jettyQuizSteps = steps.filter((step) => step.type === 'jettyQuiz') as JettyQuizStep[]
+
+  let claimRewards: ClaimRewards
 </script>
 
 <Quest
   bind:this={quest}
   bind:render
+  bind:currentStep
   on:close={closeQuest}
   on:complete={_completeQuest}
   on:progressUpdated={progressUpdated}
@@ -178,7 +212,6 @@
   steps={_steps}
   requirements={_requirements}
   {nextDisabled}
-  jettyRenderer={jettyDialog}
   let:back
   let:next
   let:render
@@ -203,4 +236,30 @@
       }}
     />
   {/if}
+
+  {#if render('claimRewards')}
+    <ClaimRewards bind:this={claimRewards} questId={id} text={$quests[id].text['claim.md']} />
+  {/if}
+
+  {#if render('complete')}
+    {@html $quests[id].text['complete.md']}
+  {/if}
+
+  {#each jettyQuizSteps as jettyQuizStep}
+    {#if render(jettyQuizStep.id)}
+      <QuizJettyPage
+        text={jettyQuizStep.text}
+        answers={jettyQuizStep.answers}
+        quizRequirement={jettyQuizStep.quizRequirement}
+        questId={id}
+        {requirements}
+        on:mount={() => {
+          nextDisabled = true
+        }}
+        on:correct={() => {
+          nextDisabled = false
+        }}
+      />
+    {/if}
+  {/each}
 </Quest>

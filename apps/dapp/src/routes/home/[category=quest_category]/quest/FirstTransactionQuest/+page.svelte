@@ -8,7 +8,6 @@
   import { ErrorReason } from '$lib/errors'
   import type { PageData } from './$types'
   import { readable, writable, derived } from 'svelte/store'
-  import TextJettyPage from '../TextJettyPage.svelte'
   import type { Quests } from 'content'
   import { type ComponentProps, onMount } from 'svelte'
   import { GatewayApi } from 'common'
@@ -119,23 +118,11 @@
   steps={[
     {
       id: '0',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['0.md']
-      }
+      type: 'jetty'
     },
     {
       id: '1',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['1.md']
-      }
+      type: 'jetty'
     },
     {
       id: 'verifyPhoneNumber',
@@ -163,23 +150,11 @@
     },
     {
       id: '5',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['5.md']
-      }
+      type: 'jetty'
     },
     {
       id: '6',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['6.md']
-      }
+      type: 'jetty'
     },
     {
       id: '7',
@@ -197,13 +172,7 @@
     },
     {
       id: '9',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['9.md']
-      }
+      type: 'jetty'
     },
     {
       id: '10',
@@ -215,13 +184,7 @@
     },
     {
       id: '12',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['12.md']
-      }
+      type: 'jetty'
     },
     {
       id: '13',
@@ -230,14 +193,14 @@
     {
       id: '14',
       type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () =>
-          userApi.directDepositXrd().map(() => {
-            quest.actions.next()
-          }),
-        text: text['14a.md']
+      footer: {
+        next: {
+          onClick: (next) => {
+            userApi.directDepositXrd().map(() => {
+              next()
+            })
+          }
+        }
       }
     },
 
@@ -251,33 +214,15 @@
     },
     {
       id: '17',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['17.md']
-      }
+      type: 'jetty'
     },
     {
       id: '18',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['18.md']
-      }
+      type: 'jetty'
     },
     {
       id: '19',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['19.md']
-      }
+      type: 'jetty'
     },
     {
       id: '20',
@@ -295,36 +240,24 @@
     },
     {
       id: '22',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['22.md']
-      }
+      type: 'jetty'
     },
 
     {
       id: '23',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['23.md']
-      }
+      type: 'jetty'
     },
     {
       id: '24',
       type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: async () => {
-          await questApi.completeRequirement(data.id, 'LearnAboutTransactions')
-          return quest.actions.next()
-        },
-        text: text['24.md']
+      footer: {
+        next: {
+          onClick: (next) => {
+            questApi.completeRequirement(data.id, 'LearnAboutTransactions').then(() => {
+              next()
+            })
+          }
+        }
       }
     },
     {
@@ -339,6 +272,14 @@
   ]}
   let:render
 >
+  {#if render('0')}
+    {@html text['0.md']}
+  {/if}
+
+  {#if render('1')}
+    {@html text['1.md']}
+  {/if}
+
   {#if render('2')}
     {@html text['2.md']}
   {/if}
@@ -373,6 +314,14 @@
     {@html text['4.md']}
   {/if}
 
+  {#if render('5')}
+    {@html text['5.md']}
+  {/if}
+
+  {#if render('6')}
+    {@html text['6.md']}
+  {/if}
+
   {#if render('7')}
     {@html text['7.md']}
 
@@ -385,6 +334,10 @@
     {@html text['8.md']}
   {/if}
 
+  {#if render('9')}
+    {@html text['9.md']}
+  {/if}
+
   {#if render('10')}
     {@html text['10.md']}
   {/if}
@@ -393,8 +346,16 @@
     {@html text['11.md']}
   {/if}
 
+  {#if render('12')}
+    {@html text['12.md']}
+  {/if}
+
   {#if render('13')}
     {@html text['13.md']}
+  {/if}
+
+  {#if render('14')}
+    {@html text['14a.md']}
   {/if}
 
   {#if render('15')}
@@ -403,6 +364,18 @@
 
   {#if render('16')}
     {@html text['16.md']}
+  {/if}
+
+  {#if render('17')}
+    {@html text['17.md']}
+  {/if}
+
+  {#if render('18')}
+    {@html text['18.md']}
+  {/if}
+
+  {#if render('19')}
+    {@html text['19.md']}
   {/if}
 
   {#if render('20')}
@@ -420,5 +393,17 @@
 
   {#if render('21')}
     {@html text['21.md']}
+  {/if}
+
+  {#if render('22')}
+    {@html text['22.md']}
+  {/if}
+
+  {#if render('23')}
+    {@html text['23.md']}
+  {/if}
+
+  {#if render('24')}
+    {@html text['24.md']}
   {/if}
 </Quest>

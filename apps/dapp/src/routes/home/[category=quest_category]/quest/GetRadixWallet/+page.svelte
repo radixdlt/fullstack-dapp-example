@@ -5,10 +5,8 @@
   import { isMobile } from '$lib/utils/is-mobile'
   import { useCookies } from '$lib/utils/cookies'
   import { derived, writable } from 'svelte/store'
-  import TextJettyPage from '../TextJettyPage.svelte'
   import type { Quests } from 'content'
   import { user } from '../../../../../stores'
-  import SetUsernamePage from './SetUsernamePage.svelte'
   import SetEmailPage from './SetEmailPage.svelte'
   import { questApi } from '$lib/api/quest-api'
 
@@ -44,7 +42,7 @@
     window.addEventListener('radix#chromeExtension#receive', callback)
 
     const interval = setInterval(() => {
-      if (render('1')) {
+      if (render('6')) {
         window.dispatchEvent(
           new CustomEvent('radix#chromeExtension#send', {
             detail: {
@@ -87,13 +85,7 @@
     },
     {
       id: '1',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['1.md']
-      }
+      type: 'jetty'
     },
     {
       id: '2',
@@ -105,23 +97,11 @@
     },
     {
       id: '4',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['4.md']
-      }
+      type: 'jetty'
     },
     {
       id: '5',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['5.md']
-      }
+      type: 'jetty'
     },
     {
       id: '6',
@@ -135,13 +115,7 @@
     },
     {
       id: '7',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['7.md']
-      }
+      type: 'jetty'
     },
     {
       id: '8',
@@ -153,13 +127,7 @@
     },
     {
       id: '10',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['10.md']
-      }
+      type: 'jetty'
     },
     {
       id: '11',
@@ -173,43 +141,19 @@
     },
     {
       id: '12',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['12.md']
-      }
+      type: 'jetty'
     },
     {
       id: '13',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['13.md']
-      }
+      type: 'jetty'
     },
     {
       id: '14',
-      type: 'jetty',
-      component: SetUsernamePage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['14.md']
-      }
+      type: 'jetty'
     },
     {
       id: '15',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['15.md']
-      }
+      type: 'jetty'
     },
     {
       id: '16',
@@ -245,6 +189,14 @@
     {@html text['3.md']}
   {/if}
 
+  {#if render('4')}
+    {@html text['4.md']}
+  {/if}
+
+  {#if render('5')}
+    {@html text['5.md']}
+  {/if}
+
   {#if render('6')}
     {#if isMobile()}
       {@html text['6a.md']}
@@ -252,15 +204,22 @@
       {@html text['6b.md']}
     {/if}
   {/if}
+
+  {#if render('7')}
+    {@html text['7.md']}
+  {/if}
+
   {#if render('8')}
     {@html text['8.md']}
   {/if}
   {#if render('9')}
     {@html text['9.md']}
   {/if}
+
   {#if render('11')}
     {@html text['11.md']}
   {/if}
+
   {#if render('16')}
     <SetEmailPage text={text['14.md']} />
   {/if}

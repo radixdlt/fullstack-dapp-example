@@ -56,7 +56,10 @@ export const UserController = ({
       .andThen((user) => (user ? ok(user) : err(createApiError('UserNotFound', 404)())))
       .andThen((data) =>
         ResultAsync.combine([
-          valueExists((data as any).phoneNumber, 'missing phone number'),
+          valueExists(
+            publicConfig.networkId !== 1 ? true : (data as any).phoneNumber,
+            'missing phone number'
+          ),
           accountAddressExists(data)
         ])
           .andThen(([, accountAddress]) => {

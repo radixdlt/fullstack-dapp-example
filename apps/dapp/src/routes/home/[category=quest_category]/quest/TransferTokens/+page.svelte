@@ -10,11 +10,9 @@
   import QR from '@svelte-put/qr/svg/QR.svelte'
   import { shortenAddress } from '$lib/utils/shorten-address'
   import { writable } from 'svelte/store'
-  import TextJettyPage from '../TextJettyPage.svelte'
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
   import type { WebSocketClient } from '$lib/websocket-client'
-  import QuizJettyPage from '../QuizJettyPage.svelte'
 
   export let data: PageData
 
@@ -60,23 +58,11 @@
     },
     {
       id: '3',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['3.md']
-      }
+      type: 'jetty'
     },
     {
       id: '4',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['4.md']
-      }
+      type: 'jetty'
     },
     {
       id: '5',
@@ -92,13 +78,7 @@
     },
     {
       id: '5',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['5.md']
-      }
+      type: 'jetty'
     },
     {
       id: '6',
@@ -112,70 +92,37 @@
     },
     {
       id: '7',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['7.md']
-      }
+      type: 'jetty'
     },
     {
       id: '8',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['8.md']
-      }
+      type: 'jetty'
     },
     {
       id: '9',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['9.md']
-      }
+      type: 'jetty'
     },
     {
       id: '10',
-      type: 'jetty',
-      component: QuizJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['10.md'],
-        quizRequirement: 'TransferTokens',
-        questId: 'TransferTokens',
-        requirements: data.requirements,
-        answers: [
-          {
-            text: text['10a.md'],
-            correct: true
-          },
-          {
-            text: text['10b.md'],
-            correct: false
-          },
-          {
-            text: text['10c.md'],
-            correct: false
-          }
-        ]
-      }
-    },
-    {
-      id: '8',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['8.md']
-      }
+      type: 'jettyQuiz',
+
+      text: text['10.md'],
+      quizRequirement: 'TransferTokens',
+
+      answers: [
+        {
+          text: text['10a.md'],
+          correct: true
+        },
+        {
+          text: text['10b.md'],
+          correct: false
+        },
+        {
+          text: text['10c.md'],
+          correct: false
+        }
+      ]
     },
     {
       type: 'requirements'
@@ -199,6 +146,18 @@
     {@html text['2.md']}
   {/if}
 
+  {#if render('3')}
+    {@html text['3.md']}
+  {/if}
+
+  {#if render('4')}
+    {@html text['4.md']}
+  {/if}
+
+  {#if render('5')}
+    {@html text['5.md']}
+  {/if}
+
   {#if render('6')}
     {@const jettyAddress = Addresses(parseInt(PUBLIC_NETWORK_ID)).accounts.jetty}
 
@@ -213,6 +172,18 @@
         <QR data={jettyAddress} />
       </div>
     {/if}
+  {/if}
+
+  {#if render('7')}
+    {@html text['7.md']}
+  {/if}
+
+  {#if render('8')}
+    {@html text['8.md']}
+  {/if}
+
+  {#if render('9')}
+    {@html text['9.md']}
   {/if}
 </Quest>
 

@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
   import { get } from 'svelte/store'
-  import { jettyDialog, user } from '../../../../stores'
+  import { user } from '../../../../stores'
 
   let loggedIn = false
 
@@ -14,7 +14,6 @@
     } else {
       localStorage.removeItem('savedProgress')
     }
-    jettyDialog.set(undefined)
     await invalidateAll()
     setTimeout(() => goto(`/home/${get(page).params.category}`), 0)
   }
