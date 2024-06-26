@@ -20,6 +20,7 @@ import type { UserController } from '$lib/server/user/controller'
 import type { UserQuestController } from '$lib/server/user-quest/controller'
 import type { AuthController } from '$lib/server/auth/controller'
 import type { MessageController } from '$lib/server/message/controller'
+import type { OneTimePasswordController } from '$lib/server/otp/controller'
 
 export type ControllerMethodOutput<T = any> = ResultAsync<
   { data: T; httpResponseCode: number },
@@ -36,6 +37,7 @@ export type Controllers = {
   userQuestController: UserQuestController
   authController: AuthController
   messageController: MessageController
+  oneTimePasswordController: OneTimePasswordController
 }
 
 export type ControllerDependencies = {
