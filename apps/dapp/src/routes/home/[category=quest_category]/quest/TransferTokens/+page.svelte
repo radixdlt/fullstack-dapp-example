@@ -69,10 +69,6 @@
       type: 'regular'
     },
     {
-      id: '6',
-      type: 'regular'
-    },
-    {
       id: '4',
       type: 'regular'
     },
