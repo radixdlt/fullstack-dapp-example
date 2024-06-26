@@ -7,5 +7,6 @@ export const typeToIcon: Record<string, string> = {
   xrd: XRDIcon,
   element: FragmentIcon,
   energyCard: PurpleCardIcon,
-  clam: ClamIcon
+  clam: ClamIcon,
+  giftBox: PurpleCardIcon // TODO: replace with gift box icon
 }
