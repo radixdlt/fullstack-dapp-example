@@ -1,0 +1,60 @@
+<script lang="ts">
+  import { fly } from 'svelte/transition'
+
+  let jettyHeight: number
+</script>
+
+<div class="jetty-page">
+  <div class="z-index-box">
+    <slot />
+  </div>
+  <div
+    transition:fly|global={{
+      y: 100,
+      delay: 500,
+      opacity: 1,
+      duration: 500
+    }}
+    class="jetty-image"
+    bind:clientHeight={jettyHeight}
+    style:--height={`-${jettyHeight - 5}px`}
+  >
+    <enhanced:img src="@images/jetty-excited.webp?enhanced" />
+  </div>
+</div>
+
+<style lang="scss">
+  .jetty-page,
+  .z-index-box {
+    min-height: 10rem;
+    border-radius: var(--border-radius-2xl);
+    background: var(--color-background-dark);
+  }
+
+  .jetty-page {
+    position: relative;
+    color: var(--color-light);
+    margin-top: var(--spacing-3xl);
+    z-index: 2;
+  }
+
+  .z-index-box {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    padding: var(--spacing-2xl);
+  }
+
+  .jetty-image {
+    position: absolute;
+    top: var(--height);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -1;
+
+    :global(img) {
+      height: 5rem;
+      width: 5rem;
+    }
+  }
+</style>

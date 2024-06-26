@@ -3,6 +3,8 @@ import { defineConfig } from 'vite'
 import { ngrok } from 'vite-plugin-ngrok'
 import { enhancedImages } from '@sveltejs/enhanced-img'
 
+const plugins = [sveltekit(), enhancedImages()]
+
 if (process.env.NGROK_AUTH_TOKEN) {
   // @ts-ignore
   plugins.push(ngrok(process.env.NGROK_AUTH_TOKEN))
@@ -10,7 +12,7 @@ if (process.env.NGROK_AUTH_TOKEN) {
 
 export default defineConfig({
   // @ts-ignore
-  plugins: [enhancedImages(), sveltekit()],
+  plugins,
   test: {
     include: ['src/**/*.{test,spec}.{js,ts}']
   },

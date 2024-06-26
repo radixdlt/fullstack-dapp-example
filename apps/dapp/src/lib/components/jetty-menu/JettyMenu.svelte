@@ -34,12 +34,18 @@
   export const openMenuItem = (id: string) => {
     expanded = true
     showMenuItemContent = true
-    currentMenuItem = id
+    currentMenuItem = menuItems.find((item) => item.id === id)!
   }
 
-  let headerText = $i18n.t('jetty:menu-text')
+  let headerText: string
   let showMenuItemContent = false
-  let currentMenuItem: string
+  let currentMenuItem: (typeof menuItems)[number]
+
+  $: if (currentMenuItem && showMenuItemContent) {
+    headerText = currentMenuItem.text
+  } else {
+    headerText = $i18n.t('jetty:menu-text')
+  }
 
   let latestNotification: JettyNotification
 
@@ -80,6 +86,8 @@
 
   const height = 30
   const iconHeight = 5.5
+
+  $: latestNotification = $notifications[$notifications.length - 1]
 </script>
 
 <div class="jetty-menu" style:--menuPosition={`${height * $menuPositionFactor * 0.99}rem`}>
@@ -99,16 +107,21 @@
   </div>
   <div class="header">
     <div class="back">
-      <Icon
-        url={ChevronIcon}
-        on:click={() => {
-          $back = true
-        }}
-        clickable
-      />
+      {#if showMenuItemContent}
+        <Icon
+          url={ChevronIcon}
+          on:click={() => {
+            $back = true
+          }}
+          clickable
+        />
+      {/if}
     </div>
 
     <div class="text">
+      {#if currentMenuItem && showMenuItemContent}
+        <Icon url={currentMenuItem.icon} />
+      {/if}
       {headerText}
     </div>
 
@@ -134,18 +147,29 @@
       >
         <slot {currentMenuItem} {back} />
       </div>
-    {/if}
+    {:else}
+      <div class="main-menu-page">
+        {#if $notifications.length > 0}
+          <div transition:scale>
+            <Notification
+              title="Notification title"
+              text={latestNotification.text}
+              on:dismiss={popNotification}
+              on:goToQuest={() => {
+                popNotification()
+                latestNotification.onGoToQuest()
+              }}
+            />
+          </div>
+        {/if}
 
-    <div class="main-menu-page">
-      {#if $notifications.length > 0}
-        <div transition:scale>
-          <Notification
-            title="Notification title"
-            html="Looks like you have blah lbah!"
-            on:dismiss={popNotification}
-            on:goToQuest={() => {
-              popNotification()
-              latestNotification.onGoToQuest()
+        {#each menuItems as { id, text, icon }}
+          <JettyMenuButton
+            {text}
+            {icon}
+            on:click={() => {
+              showMenuItemContent = true
+              currentMenuItem = { id, text, icon }
             }}
           />
         </div>
@@ -176,6 +200,7 @@
     position: absolute;
     bottom: 0%;
     transform: translateY(var(--menuPosition));
+    z-index: 4;
 
     @include desktop {
       right: 1rem;
@@ -200,19 +225,25 @@
     background-color: var(--color-dark);
     color: var(--color-light);
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    padding: 0 var(--spacing-xl);
     z-index: 2;
 
-    * {
+    > * {
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
+    .text {
+      display: flex;
+      gap: var(--spacing-md);
+    }
     .back,
     .close {
       filter: invert(1);
       opacity: 0.6;
+      width: 2rem;
     }
 
     .text {

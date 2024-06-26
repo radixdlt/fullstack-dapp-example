@@ -15,7 +15,6 @@
   const notifications: Writable<JettyNotification[]> = writable([
     {
       id: 'test',
-      type: 'text',
       text: 'Some notification text',
       onGoToQuest: () => {}
     }
@@ -45,7 +44,7 @@
         }}
         let:currentMenuItem
       >
-        {#if currentMenuItem === 'glossary'}
+        {#if currentMenuItem.id === 'glossary'}
           <Glossary
             glossary={[
               {

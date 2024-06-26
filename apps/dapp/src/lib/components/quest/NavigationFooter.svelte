@@ -10,6 +10,7 @@
   }>()
 
   export let nextDisabled = false
+  export let nextLoading = false
   export let nextButtonText: string | undefined
   export let backButtonText: string | undefined
 
@@ -20,7 +21,9 @@
 <div class="footer-container" transition:fly|local={{ y: 200, opacity: 1, duration: 800 }}>
   <div class="footer quest-footer">
     <Button secondary on:click={() => dispatch('back')}>{backButtonText}</Button>
-    <Button disabled={nextDisabled} on:click={() => dispatch('next')}>{nextButtonText}</Button>
+    <Button disabled={nextDisabled} loading={nextLoading} on:click={() => dispatch('next')}
+      >{nextButtonText}</Button
+    >
   </div>
 </div>
 

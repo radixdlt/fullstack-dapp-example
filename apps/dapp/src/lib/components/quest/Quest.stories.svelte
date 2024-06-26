@@ -7,7 +7,6 @@
 <script lang="ts">
   import { Story, Template } from '@storybook/addon-svelte-csf'
   import Quest from './Quest.svelte'
-  import { writable } from 'svelte/store'
 
   const rewards = [
     {
@@ -51,7 +50,6 @@
           }
         }
       ]}
-      jettyRenderer={writable(undefined)}
       let:render
     >
       {#if render('text1')}

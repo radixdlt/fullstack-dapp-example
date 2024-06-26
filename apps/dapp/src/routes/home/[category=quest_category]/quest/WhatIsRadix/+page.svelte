@@ -1,19 +1,14 @@
 <script lang="ts">
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
-  import TextJettyPage from '../TextJettyPage.svelte'
-  import QuizJettyPage from '../QuizJettyPage.svelte'
   import type { Quests } from 'content'
 
   export let data: PageData
 
   const text = data.text as Quests['WhatIsRadix']['text']
-
-  let quest: Quest
 </script>
 
 <Quest
-  bind:this={quest}
   id={data.id}
   requirements={data.requirements}
   steps={[
@@ -39,13 +34,7 @@
     },
     {
       id: '5',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['5.md']
-      }
+      type: 'jetty'
     },
     {
       id: '6',
@@ -61,40 +50,27 @@
     },
     {
       id: '9',
-      type: 'jetty',
-      component: TextJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['9.md']
-      }
+      type: 'jetty'
     },
     {
       id: '10',
-      type: 'jetty',
-      component: QuizJettyPage,
-      props: {
-        onBack: () => quest.actions.back(),
-        onNext: () => quest.actions.next(),
-        text: text['10.md'],
-        quizRequirement: 'RadixQuiz',
-        questId: 'WhatIsRadix',
-        requirements: data.requirements,
-        answers: [
-          {
-            text: text['10a.md'],
-            correct: false
-          },
-          {
-            text: text['10b.md'],
-            correct: false
-          },
-          {
-            text: text['10c.md'],
-            correct: true
-          }
-        ]
-      }
+      type: 'jettyQuiz',
+      text: text['10.md'],
+      quizRequirement: 'RadixQuiz',
+      answers: [
+        {
+          text: text['10a.md'],
+          correct: false
+        },
+        {
+          text: text['10b.md'],
+          correct: false
+        },
+        {
+          text: text['10c.md'],
+          correct: true
+        }
+      ]
     },
     {
       type: 'complete'
@@ -122,6 +98,10 @@
     {@html text['4.md']}
   {/if}
 
+  {#if render('5')}
+    {@html text['5.md']}
+  {/if}
+
   {#if render('6')}
     {@html text['6.md']}
   {/if}
@@ -132,5 +112,9 @@
 
   {#if render('8')}
     {@html text['8.md']}
+  {/if}
+
+  {#if render('9')}
+    {@html text['9.md']}
   {/if}
 </Quest>

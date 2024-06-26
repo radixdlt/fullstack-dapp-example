@@ -1,151 +1,91 @@
 <script lang="ts">
-  import CardHeader from '../card-header/CardHeader.svelte'
-  import { i18n } from '$lib/i18n/i18n'
-  import { createEventDispatcher } from 'svelte'
+  import { fly } from 'svelte/transition'
+  import { context } from '../jetty-menu/JettyMenu.svelte'
 
   export let glossary: {
+    id: string
     title: string
     html: string
   }[]
-  export let anchor = ''
 
-  $: selectedTitle = anchor ?? ''
-  $: pageTitle = selectedTitle ? 'title' : 'glossary'
+  export const openGlossaryItem = (id: string) => {
+    page = 'item'
+    selectedItem = id
+  }
 
-  $: html = glossary.find(
-    (g) => g.title.toLowerCase().trim() === selectedTitle.toLowerCase().trim()
-  )?.html
+  let page: 'glossary' | 'item' = 'glossary'
+  let selectedItem: string
 
-  const dispatch = createEventDispatcher<{ close: undefined }>()
+  const back = context.get('back')
+  const close = context.get('closeMenuItem')
+
+  $: if ($back) {
+    if (page === 'item') {
+      page = 'glossary'
+    } else {
+      close()
+    }
+    $back = false
+  }
 </script>
 
-<div class="glossary card glossary-card">
-  {#if !anchor}
-    <div>
-      <div class="header">
-        <CardHeader
-          on:click={() => {
-            if (pageTitle === 'title') {
-              pageTitle = 'glossary'
-              selectedTitle = ''
-            } else {
-              dispatch('close')
-            }
-          }}
-        >
-          {selectedTitle ? selectedTitle : $i18n.t('glossary:back')}
-        </CardHeader>
-      </div>
-      {#if selectedTitle}
-        <div class="divider-anchor" />
-      {/if}
-    </div>
-  {:else}
-    <div class="anchor-container">
-      <div class="title-anchor">
-        {selectedTitle}
-      </div>
-      <div class="divider-anchor" />
+<div class="grid-container">
+  {#if page === 'item' && selectedItem}
+    <div
+      class="item-page"
+      transition:fly={{
+        x: 500,
+        duration: 500,
+        opacity: 1
+      }}
+    >
+      {@html glossary.find(({ id }) => id === selectedItem)?.html}
     </div>
   {/if}
 
-  {#if pageTitle === 'title'}
-    <div class="grid-item grid-item-description">
-      <div class="text">
-        {#if html}
-          {@html html}
-        {:else}
-          {$i18n.t('glossary:definitionMissing')}
-        {/if}
-      </div>
-    </div>
-  {/if}
-
-  {#if pageTitle === 'glossary'}
-    <div class="grid-item">
-      {#each glossary as { title }, index}
-        <div>
-          {#if index !== 0 || !selectedTitle}
-            <div class="divider" />
-          {/if}
-          <button
-            class="title"
-            on:click={() => {
-              selectedTitle = title
-              pageTitle = 'title'
-            }}
-          >
-            {title}
-          </button>
-        </div>
-      {/each}
-    </div>
-  {/if}
+  <div class="glossary">
+    {#each glossary as { title, id }}
+      <button
+        class="item"
+        on:click={() => {
+          page = 'item'
+          selectedItem = id
+        }}
+      >
+        {title}
+      </button>
+    {/each}
+  </div>
 </div>
 
 <style lang="scss">
-  .glossary {
+  .grid-container {
     display: grid;
-    grid-template-rows: auto 1fr;
-    height: 70vh;
-    max-height: 40rem;
-    min-width: 20rem;
-    width: 80vw;
-    background-color: transparent;
-    @include desktop {
-      right: 0.5rem;
-      max-width: 431px;
-    }
-    @include mobile {
-      max-width: 768px;
+
+    * {
+      grid-area: 1 / 1;
     }
   }
 
-  .glossary-card {
-    padding: 0px;
-  }
-
-  .header {
-    padding: var(--spacing-xl);
-  }
-
-  .grid-item {
-    grid-area: 2 / 1;
-    overflow-y: auto;
-  }
-
-  .title {
-    font-weight: var(--font-weight-bold);
-    width: fit-content;
-    padding: var(--spacing-xl);
-    padding-left: var(--spacing-2xl);
-  }
-
-  .title-anchor {
-    font-weight: var(--font-weight-bold);
-    width: fit-content;
-    padding: var(--spacing-xl) var(--spacing-2xl);
-  }
-
-  .divider-anchor {
-    height: 1px;
-    background: rgba($color: black, $alpha: 0.2);
-    width: 100%;
-  }
-
-  .anchor-container {
+  .glossary {
     display: flex;
-  }
-  .divider {
-    height: 1px;
-    background: rgba($color: black, $alpha: 0.2);
+    flex-direction: column;
+    gap: var(--spacing-2xl);
   }
 
-  .grid-item-description {
-    padding: var(--spacing-xl);
+  .item {
+    color: var(--color-light);
+    font-weight: var(--font-weight-bold);
   }
 
-  .text {
-    padding: var(--spacing-lg);
+  .item-page {
+    color: var(--color-light);
+    background: var(--color-background-dark);
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    padding-left: 1rem;
+    margin-left: calc(var(--spacing-2xl) * -1);
+    padding-left: var(--spacing-2xl);
   }
 </style>

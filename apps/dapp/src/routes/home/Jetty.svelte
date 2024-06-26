@@ -1,50 +1,80 @@
 <script lang="ts">
-  import Jetty from '$lib/components/jetty/Jetty.svelte'
+  import Glossary from '$lib/components/glossary/Glossary.svelte'
+  import JettyMenu from '$lib/components/jetty-menu/JettyMenu.svelte'
+  import BookIcon from '@images/book-open.svg'
+  import LightningIcon from '@images/lightning-icon.svg'
   import { loadGlossary } from 'content'
-  import { jettyDialog, jettyNotifications, showJetty } from '../../stores'
+  import FuseElements from './FuseElements.svelte'
   import { page } from '$app/stores'
-  import { goto } from '$app/navigation'
   import { markLatestNotificationAsSeen } from '$lib/notifications'
+  import { hideJetty, hideJettyMenu, jettyNotifications, retractJettyMenu } from '../../stores'
+  import { isMobile } from '$lib/utils/is-mobile'
+  import { tick } from 'svelte'
+  import { goto } from '$app/navigation'
 
-  $: glossaryItem = $page.url.searchParams.get('glossaryAnchor')
+  let poppedUp = true
 
-  $: if (glossaryItem) disabled = false
+  $: poppedUp = $page.url.href.includes('quest') && !isMobile() ? false : true
 
-  let jetty: Jetty
+  $: glossaryAnchor = $page.url.href.includes('glossaryAnchor')
+    ? $page.url.href.split('glossaryAnchor=')[1]
+    : undefined
 
-  let disabled = false
-  let hidden = false
-
-  const show = () => {
-    disabled = false
-    hidden = false
+  $: if (glossaryAnchor && jettyMenu) {
+    jettyMenu.openMenuItem('glossary')
+    tick().then(() => glossary.openGlossaryItem(glossaryAnchor))
   }
 
-  const close = () => {
-    if (jetty) jetty.close()
-    disabled = true
-    hidden = true
-  }
+  let jettyMenu: JettyMenu
+  let glossary: Glossary
 
-  $: if ($showJetty) {
-    show()
-  } else {
-    close()
+  let expanded: boolean
+
+  $: if ($retractJettyMenu) {
+    expanded = false
+    $retractJettyMenu = false
   }
 </script>
 
-{#if !hidden || $jettyDialog || glossaryItem}
-  <Jetty
-    bind:this={jetty}
+{#if !$hideJettyMenu}
+  <JettyMenu
+    bind:expanded
+    bind:this={jettyMenu}
+    hideJetty={$hideJetty}
+    {poppedUp}
+    menuItems={[
+      {
+        id: 'glossary',
+        text: 'Glossary',
+        icon: BookIcon
+      },
+      {
+        id: 'fuse-elements',
+        text: 'Fuse Elements',
+        icon: LightningIcon
+      }
+    ]}
     notifications={jettyNotifications}
-    glossary={loadGlossary('en')}
-    glossaryItem={glossaryItem || undefined}
-    dialog={$jettyDialog}
-    {disabled}
-    onCloseGlossary={async () => {
-      $page.url.searchParams.delete('glossaryAnchor')
-      await goto(`?${$page.url.searchParams.toString()}`)
-    }}
     on:notification-opened={markLatestNotificationAsSeen}
-  />
+    on:close={() => {
+      const url = $page.url.searchParams
+      url.delete('glossaryAnchor')
+      goto(`?${url}`)
+    }}
+    let:currentMenuItem
+  >
+    {#if currentMenuItem.id === 'glossary'}
+      <Glossary bind:this={glossary} glossary={loadGlossary('en')} />
+    {/if}
+
+    {#if currentMenuItem.id === 'fuse-elements'}
+      <FuseElements />
+    {/if}
+  </JettyMenu>
+
+  <style lang="scss">
+    :global(.jetty-menu) {
+      z-index: 4;
+    }
+  </style>
 {/if}

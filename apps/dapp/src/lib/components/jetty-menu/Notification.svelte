@@ -6,7 +6,7 @@
   import CrossIcon from '@images/cross.svg'
 
   export let title: string
-  export let html: string
+  export let text: string
 
   const dispatch = createEventDispatcher<{
     dismiss: undefined
@@ -26,7 +26,7 @@
     </div>
 
     <div class="content">
-      {@html html}
+      {text}
     </div>
 
     <Button on:click={() => dispatch('goToQuest')}>

@@ -64,7 +64,6 @@ export const loadUnseenNotifications = () =>
 const notifications = {
   loggedIn: {
     id: 'loggedIn',
-    type: 'text',
     text: i18next.t('jetty:logged-in-with-wallet'),
     onGoToQuest: () => goto(`/home/basic/quest/${QuestDefinitions().GetRadixWallet.id}#12 `)
   }

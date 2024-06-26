@@ -2,15 +2,10 @@
   import Icon from '$lib/components/icon/Icon.svelte'
   import { typeToIcon } from '$lib/utils/type-to-icon'
   import type { QuestReward } from 'content'
-  import JettyActionButtons from '../quest/JettyActionButtons.svelte'
   import { i18n } from '$lib/i18n/i18n'
 
   export let rewards: Readonly<QuestReward[]>
-  export let loading = false
-  export let nextButtonText: string
   export let text: string
-  export let onBack: () => void
-  export let onNext: () => void
 </script>
 
 <div class="rewards">
@@ -27,8 +22,6 @@
     {/each}
   </div>
 </div>
-
-<JettyActionButtons nextText={nextButtonText} {loading} on:back={onBack} on:next={onNext} />
 
 <style lang="scss">
   .rewards {

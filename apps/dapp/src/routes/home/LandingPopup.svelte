@@ -4,17 +4,17 @@
   import { i18n } from '$lib/i18n/i18n'
   import JettyImage from '@images/landing-popup-jetty.webp'
   import { onMount } from 'svelte'
-  import { showJetty } from '../../stores'
+  import { hideJettyMenu } from '../../stores'
   import { backOut } from 'svelte/easing'
   import { scale } from 'svelte/transition'
 
   export let defintions: ReturnType<typeof loadLandingPopup>[0]
 
   onMount(() => {
-    $showJetty = false
+    $hideJettyMenu = true
 
     return () => {
-      $showJetty = true
+      $hideJettyMenu = false
     }
   })
 </script>

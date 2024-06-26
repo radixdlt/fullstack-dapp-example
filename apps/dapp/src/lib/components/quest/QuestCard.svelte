@@ -7,13 +7,13 @@
   import ProgressCard from '../progress-card/ProgressCard.svelte'
   import { createEventDispatcher } from 'svelte'
   import NavigationFooter from './NavigationFooter.svelte'
-  import { writable } from 'svelte/store'
+  import { writable, type Writable } from 'svelte/store'
 
   export let title: string
   export let steps: number
   export let progress: number
   export let cardDisabled = false
-  export let nextOnClick: () => void = () => {
+  export let nextOnClick: (next: () => void, loading: Writable<boolean>) => void = () => {
     dispatch('next')
   }
   export let backOnClick: () => void = () => {
@@ -53,6 +53,8 @@
   let card: ProgressCard
 
   let direction = writable<'right' | 'left'>()
+
+  let footerNextLoading = writable(false)
 </script>
 
 <ProgressCard bind:this={card} {steps} bind:progress disabled={cardDisabled}>
@@ -93,9 +95,14 @@
 
     {#if progress > 0}
       <NavigationFooter
-        on:next={nextOnClick}
+        on:next={() => {
+          nextOnClick(() => {
+            dispatch('next')
+          }, footerNextLoading)
+        }}
         on:back={backOnClick}
         nextDisabled={footerNextDisabled}
+        nextLoading={$footerNextLoading}
         {nextButtonText}
         {backButtonText}
         on:complete
@@ -144,7 +151,6 @@
     display: flex;
     justify-content: center;
     align-items: end;
-    border-top: 1px solid rgba(0, 0, 0, 0.2);
   }
 
   .footer {

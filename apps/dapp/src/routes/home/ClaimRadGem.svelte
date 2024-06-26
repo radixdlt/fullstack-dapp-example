@@ -1,6 +1,5 @@
 <script lang="ts">
   import Button from '$lib/components/button/Button.svelte'
-  import SpeechBubble from '$lib/components/jetty-dialog/speech-bubble/SpeechBubble.svelte'
   import { publicConfig } from '$lib/public-config'
   import { sendTransaction } from '$lib/rdt'
   import { createEventDispatcher, onMount } from 'svelte'
@@ -124,10 +123,8 @@
   }
 </script>
 
-<SpeechBubble>
-  {#if preview}
-    <img src={preview.image} alt="A Radgem" />
-    {preview.name}
-  {/if}
-  <Button {loading} on:click={onClick}>Claim</Button>
-</SpeechBubble>
+{#if preview}
+  <img src={preview.image} alt="A Radgem" />
+  {preview.name}
+{/if}
+<Button {loading} on:click={onClick}>Claim</Button>
