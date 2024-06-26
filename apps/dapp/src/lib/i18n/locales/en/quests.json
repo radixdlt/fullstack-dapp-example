@@ -52,16 +52,6 @@
     "description": "Your key to dApps and assets on Radix",
     "introDescription": "Get the Radix Wallet to use with RadQuest any any other dApp built on Radix"
   },
-  "LoginWithWallet": {
-    "requirements": {
-      "ConnectWallet": "Connect your Radix Wallet",
-      "ConnectAccount": "Connect your account"
-    },
-    "title": "Login with Wallet",
-    "description": "Login with your Radix Wallet",
-    "introDescription": "Login with your Radix Wallet to start earning rewards.",
-    "connectAccount": "Connect Account"
-  },
   "FirstTransactionQuest": {
     "requirements": {
       "VerifyPhoneNumber": "Prove you’re not a robot",

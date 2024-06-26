@@ -120,7 +120,7 @@ export const AuthController = ({
       .andThen((referredBy) => userModel.create(personaProof.address, referredBy))
       .andThen(({ id, type }) =>
         userQuestModel
-          .addCompletedRequirement('LoginWithWallet', id, 'ConnectWallet')
+          .addCompletedRequirement('GetRadixWallet', id, 'ConnectWallet')
           .map(() => ({ id, type }))
       )
       .andThen(({ id, type }) => jwt.createTokens(id, type))

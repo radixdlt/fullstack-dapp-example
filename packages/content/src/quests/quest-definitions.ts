@@ -137,7 +137,7 @@ export const QuestDefinitions = () => {
           amount: 10
         }
       ],
-      preRequisites: ['LoginWithWallet'],
+      preRequisites: ['GetRadixWallet'],
       minutesToComplete: 3,
       requirements: {
         VerifyPhoneNumber: {

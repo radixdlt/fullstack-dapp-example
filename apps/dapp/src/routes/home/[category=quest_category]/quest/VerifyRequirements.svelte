@@ -111,11 +111,7 @@
                 dispatch('all-requirements-met')
               }
 
-              if (
-                ['WelcomeToRadQuest', 'WhatIsRadix', 'GetRadixWallet', 'LoginWithWallet'].includes(
-                  questId
-                )
-              ) {
+              if (['WelcomeToRadQuest', 'WhatIsRadix', 'GetRadixWallet'].includes(questId)) {
                 checkRequirements()
               }
             })
