@@ -33,7 +33,7 @@
   import QuestCard from './QuestCard.svelte'
   import Intro from './Intro.svelte'
   import { createEventDispatcher } from 'svelte'
-  import type { Writable } from 'svelte/store'
+  import { readable, type Writable } from 'svelte/store'
   import type { Readable, Unsubscriber } from 'svelte/motion'
   import JettyPage from './JettyPage.svelte'
 
@@ -118,8 +118,13 @@
 
   $: currentStep = _steps[progress]
 
-  $: currentStepEnabledStore =
-    currentStep.type !== 'intro' ? currentStep.footer?.next?.enabled : undefined
+  let currentStepEnabledStore: Writable<boolean> | Readable<boolean> = readable(true)
+
+  $: if (currentStep.type !== 'intro' && currentStep.footer?.next?.enabled) {
+    currentStepEnabledStore = currentStep.footer.next.enabled
+  } else {
+    currentStepEnabledStore = readable(true)
+  }
 </script>
 
 <QuestCard
@@ -131,7 +136,7 @@
   on:prev={back}
   nextOnClick={currentStep.type !== 'intro' ? currentStep.footer?.next?.onClick ?? next : next}
   backOnClick={currentStep.type !== 'intro' ? currentStep.footer?.back?.onClick ?? back : back}
-  footerNextDisabled={nextDisabled || !($currentStepEnabledStore ?? true)}
+  footerNextDisabled={nextDisabled || !$currentStepEnabledStore}
   nextButtonText={currentStep.type !== 'intro' ? currentStep.footer?.next?.text : undefined}
   backButtonText={currentStep.type !== 'intro' ? currentStep.footer?.back?.text : undefined}
 >

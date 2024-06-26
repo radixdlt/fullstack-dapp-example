@@ -20,7 +20,7 @@
   $: hideJetty ? ($jettyPosition = jettyHeight) : ($jettyPosition = 0)
 </script>
 
-<div class="jetty-popup">
+<div class="jetty-popup" class:gradient-border={notification}>
   <button
     class="jetty-icon"
     style:--image={`url(${HappyJetty})`}
@@ -48,6 +48,19 @@
 <style lang="scss">
   .jetty-popup {
     position: relative;
+
+    &.gradient-border::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: -1;
+      margin: -3px;
+      border-radius: 50% 50% 0 0;
+      background: var(--gradient-6);
+    }
   }
 
   .jetty-icon {

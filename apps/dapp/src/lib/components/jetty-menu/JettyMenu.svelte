@@ -12,7 +12,7 @@
   import CrossIcon from '@images/cross.svg'
   import ChevronIcon from '@images/chevron-left.svg'
   import JettyMenuButton from './JettyMenuButton.svelte'
-  import { fly, scale } from 'svelte/transition'
+  import { scale } from 'svelte/transition'
   import { writable, type Writable } from 'svelte/store'
   import { useContext } from '$lib/utils/context'
   import { tweened } from 'svelte/motion'
@@ -73,14 +73,14 @@
     easing: cubicOut
   })
 
-  const jettyPosition = tweened<number>(undefined, {
+  const jettyPositionFactor = tweened<number>(undefined, {
     duration: 500,
     easing: cubicOut
   })
 
   $: expanded ? ($menuPositionFactor = 0) : ($menuPositionFactor = 1)
 
-  $: poppedUp ? ($jettyPosition = 0) : ($jettyPosition = 0.3)
+  $: poppedUp ? ($jettyPositionFactor = 0) : ($jettyPositionFactor = 0.3)
 
   $: if (!expanded) dispatch('close')
 
@@ -90,11 +90,15 @@
   $: latestNotification = $notifications[$notifications.length - 1]
 </script>
 
-<div class="jetty-menu" style:--menuPosition={`${height * $menuPositionFactor * 0.99}rem`}>
+<div
+  class="jetty-menu"
+  style:--height={`${height}rem`}
+  style:--menuPosition={`${height * $menuPositionFactor * 0.99}rem`}
+>
   <div
     class="jetty-icon"
     style:--height={`-${iconHeight}rem`}
-    style:transform="translateY({iconHeight * $jettyPosition + 8}px)"
+    style:transform="translateY({iconHeight * $jettyPositionFactor + 0.6}rem)"
   >
     <JettyPopup
       on:click={() => {
@@ -137,14 +141,7 @@
   </div>
   <div class="content">
     {#if showMenuItemContent}
-      <div
-        class="menu-item-page"
-        transition:fly={{
-          x: 500,
-          duration: 500,
-          opacity: 1
-        }}
-      >
+      <div class="menu-item-page">
         <slot {currentMenuItem} {back} />
       </div>
     {:else}
@@ -172,20 +169,9 @@
               currentMenuItem = { id, text, icon }
             }}
           />
-        </div>
-      {/if}
-
-      {#each menuItems as { id, text, icon }}
-        <JettyMenuButton
-          {text}
-          {icon}
-          on:click={() => {
-            showMenuItemContent = true
-            currentMenuItem = id
-          }}
-        />
-      {/each}
-    </div>
+        {/each}
+      </div>
+    {/if}
   </div>
 </div>
 
@@ -194,7 +180,7 @@
     display: flex;
     flex-direction: column;
     background-color: var(--color-background-dark);
-    height: 30rem;
+    height: var(--height);
     width: 25rem;
     border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
     position: absolute;
@@ -252,14 +238,7 @@
   }
 
   .content {
-    display: grid;
-    > * {
-      grid-area: 1 / 1;
-      padding: var(--spacing-2xl);
-    }
-
-    overflow-x: hidden;
-    z-index: 2;
+    padding: var(--spacing-2xl);
   }
 
   .main-menu-page {
