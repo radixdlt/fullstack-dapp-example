@@ -46,11 +46,14 @@ export const createRewardsDepositManifest = ({
   )
 
   for (const reward of rewards) {
-    const bucketName = `bucket${buckets.length + 1}`
-    buckets.push(bucketName)
+    const createBucket = (name: string) => {
+      const bucketName = `${name}_bucket_${buckets.length + 1}`
+      buckets.push(bucketName)
+      return bucketName
+    }
 
     switch (reward.name) {
-      case 'element':
+      case 'element': {
         addToManifest(
           `MINT_FUNGIBLE
             Address("${elementAddress}")
@@ -59,23 +62,28 @@ export const createRewardsDepositManifest = ({
           `TAKE_FROM_WORKTOP
             Address("${elementAddress}")
             Decimal("${reward.amount}")
-            Bucket("${bucketName}")
+            Bucket("${createBucket('element')}")
           ;`
         )
-      case 'clam':
+        break
+      }
+
+      case 'clam': {
         addToManifest(
           `MINT_FUNGIBLE
               Address("${clamAddress}")
               Decimal("${reward.amount}")
             ;`,
           `TAKE_FROM_WORKTOP
-              Address("${elementAddress}")
+              Address("${clamAddress}")
               Decimal("${reward.amount}")
-              Bucket("${bucketName}")
+              Bucket("${createBucket('clam')}")
             ;`
         )
+        break
+      }
 
-      case 'energyCard':
+      case 'energyCard': {
         addToManifest(
           `CALL_METHOD
             Address("${config.radQuest.components.cardForge}")
@@ -85,11 +93,13 @@ export const createRewardsDepositManifest = ({
           ;`,
           `TAKE_ALL_FROM_WORKTOP
             Address("${config.radQuest.resources.morphEnergyCards}")
-            Bucket("${bucketName}")
+            Bucket("${createBucket('energyCard')}")
           ;`
         )
+        break
+      }
 
-      case 'xrd':
+      case 'xrd': {
         addToManifest(
           `CALL_METHOD
             Address("${payerAccount}")
@@ -99,9 +109,14 @@ export const createRewardsDepositManifest = ({
           ;`,
           `TAKE_ALL_FROM_WORKTOP
             Address("${addresses.xrd}")
-            Bucket("${bucketName}")
+            Bucket("${createBucket('xrd')}")
           ;`
         )
+        break
+      }
+
+      default:
+        break
     }
   }
 
@@ -142,5 +157,5 @@ export const createRewardsDepositManifest = ({
       ;`
     )
 
-  return manifest.join('\n')
+  return manifest.map((line) => line.trim()).join('\n')
 }

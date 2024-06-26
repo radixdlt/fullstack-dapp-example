@@ -62,12 +62,16 @@ export const TransactionWorkerController = ({
           reason: WorkerError.FailedToGetManifestBuilder,
           jsError
         }))
-        .andThen(({ convertStringManifest, submitTransaction, wellKnownAddresses }) =>
-          convertStringManifest(manifestFactory(wellKnownAddresses))
-            .mapErr((jsError) => ({
-              reason: WorkerError.FailedToConvertStringManifest,
-              jsError
-            }))
+        .andThen(({ convertStringManifest, submitTransaction, wellKnownAddresses }) => {
+          const manifest = manifestFactory(wellKnownAddresses)
+          return convertStringManifest(manifest)
+            .mapErr((jsError) => {
+              logger.debug(manifest)
+              return {
+                reason: WorkerError.FailedToConvertStringManifest,
+                jsError
+              }
+            })
             .andThen((transactionManifest) =>
               submitTransaction({
                 transactionManifest,
@@ -79,7 +83,7 @@ export const TransactionWorkerController = ({
               }))
             )
             .map(({ txId }) => txId)
-        )
+        })
 
     const handlePollTransactionStatus = (txId: string): ResultAsync<string, WorkerOutputError> =>
       radixEngineClient.gatewayClient

@@ -7,15 +7,13 @@ import {
   combineElementsDeposit,
   radquestEntityAddresses
 } from 'typescript-wallet'
-import { Addresses, GatewayApi, TransactionModel, appLogger } from 'common'
+import { Addresses, GatewayApi, TransactionModel, UserQuestModel, appLogger } from 'common'
 import { PrismaClient } from 'database'
 import { ResultAsync } from 'neverthrow'
 import { Queues, getQueues } from 'queues'
 import { config } from './config'
 import { QueueEvents } from 'bullmq'
 import crypto from 'crypto'
-
-console.log(process.env)
 
 const eventQueueEvents = new QueueEvents(Queues.EventQueue, { connection: config.redis })
 const transactionQueueEvents = new QueueEvents(Queues.TransactionQueue, {
@@ -57,6 +55,7 @@ let user: Awaited<ReturnType<typeof createUser>>
 let queues: ReturnType<typeof getQueues>
 
 const transactionModel = TransactionModel(db, transactionQueue)
+const userQuestModel = UserQuestModel(db)(logger)
 
 const addresses = Addresses(2)
 
@@ -93,9 +92,60 @@ describe('Event flows', () => {
     { timeout: 60_000, skip: false },
     async () => {
       const discriminator = `AddAccountAddressToHeroBadgeForge:${crypto.randomUUID()}`
-      const badgeId = `<${user.id}>`
 
-      const badgeResourceAddress = addresses.badges.heroBadgeAddress
+      await db.questProgress.upsert({
+        create: { questId: 'FirstTransactionQuest', userId: user.id, status: 'IN_PROGRESS' },
+        update: { status: 'IN_PROGRESS' },
+        where: { questId_userId: { questId: 'FirstTransactionQuest', userId: user.id } }
+      })
+
+      await db.completedQuestRequirement.upsert({
+        create: {
+          questId: 'FirstTransactionQuest',
+          userId: user.id,
+          requirementId: 'VerifyPhoneNumber'
+        },
+        update: {},
+        where: {
+          questId_userId_requirementId: {
+            questId: 'FirstTransactionQuest',
+            userId: user.id,
+            requirementId: 'VerifyPhoneNumber'
+          }
+        }
+      })
+
+      await db.completedQuestRequirement.upsert({
+        create: {
+          questId: 'FirstTransactionQuest',
+          userId: user.id,
+          requirementId: 'RegisterAccount'
+        },
+        update: {},
+        where: {
+          questId_userId_requirementId: {
+            questId: 'FirstTransactionQuest',
+            userId: user.id,
+            requirementId: 'RegisterAccount'
+          }
+        }
+      })
+
+      await db.completedQuestRequirement.upsert({
+        create: {
+          questId: 'FirstTransactionQuest',
+          userId: user.id,
+          requirementId: 'LearnAboutTransactions'
+        },
+        update: {},
+        where: {
+          questId_userId_requirementId: {
+            questId: 'FirstTransactionQuest',
+            userId: user.id,
+            requirementId: 'LearnAboutTransactions'
+          }
+        }
+      })
 
       await transactionModel(logger).add({
         userId: user.id,

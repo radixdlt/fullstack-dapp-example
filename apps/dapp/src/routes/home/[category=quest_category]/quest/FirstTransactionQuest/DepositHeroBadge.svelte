@@ -70,35 +70,18 @@
 
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
-    unsubscribeWebSocket = $webSocketClient.onMessage(async (event) => {
+    unsubscribeWebSocket = $webSocketClient.onMessage(async (message) => {
       if (
-        event.type === 'QuestRequirementCompleted' &&
-        event.questId === questId &&
-        event.requirementId === 'DepositHeroBadge'
+        message.type === 'QuestRequirementCompleted' &&
+        message.questId === questId &&
+        message.requirementId === 'DepositHeroBadge'
       ) {
-        messageApi.markAsSeen(event.id)
+        messageApi.markAsSeen(message.id)
         dispatch('deposited')
       }
 
-      if (event.type === 'HeroBadgeReadyToBeClaimed') {
-        await rdtInstance
-          .andThen((rdt) => {
-            const claimHeroBadgeManifest = `
-              CALL_METHOD
-                  Address("${publicConfig.components.heroBadgeForge}")
-                  "claim_badge"
-                  Address("${$user?.accountAddress || ''}")
-                  "${$user?.id}"
-              ;
-              CALL_METHOD
-                  Address("${$user?.accountAddress}")
-                  "deposit_batch"
-                  Expression("ENTIRE_WORKTOP")
-              ;
-            `
-            return rdt.walletApi.sendTransaction({ transactionManifest: claimHeroBadgeManifest })
-          })
-          .andThen(() => messageApi.markAsSeen(event.id))
+      if (message.type === 'HeroBadgeReadyToBeClaimed') {
+        await claimHeroBadge(message.id)
       }
     })
   }
