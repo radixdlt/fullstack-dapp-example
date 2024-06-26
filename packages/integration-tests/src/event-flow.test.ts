@@ -60,6 +60,36 @@ const waitForMessage = async (userId: string, messageType: string) => {
   logger.info({ method: 'waitForMessage.complete', message: expectedMessage })
 }
 
+const completeQuestRequirements = async (
+  userId: string,
+  questId: string,
+  requirementIds: string[]
+) => {
+  await db.questProgress.upsert({
+    create: { questId, userId, status: 'IN_PROGRESS' },
+    update: { status: 'IN_PROGRESS' },
+    where: { questId_userId: { questId, userId } }
+  })
+
+  for (const requirementId of requirementIds) {
+    await db.completedQuestRequirement.upsert({
+      create: {
+        questId,
+        userId,
+        requirementId
+      },
+      update: {},
+      where: {
+        questId_userId_requirementId: {
+          questId,
+          userId,
+          requirementId
+        }
+      }
+    })
+  }
+}
+
 if (!networkName) throw new Error('PUBLIC_NETWORK_ID env var not set to a valid network')
 
 const radixEngineClient = RadixEngineClient({
@@ -112,59 +142,11 @@ describe('Event flows', () => {
     async () => {
       const discriminator = `AddAccountAddressToHeroBadgeForge:${crypto.randomUUID()}`
 
-      await db.questProgress.upsert({
-        create: { questId: 'FirstTransactionQuest', userId: user.id, status: 'IN_PROGRESS' },
-        update: { status: 'IN_PROGRESS' },
-        where: { questId_userId: { questId: 'FirstTransactionQuest', userId: user.id } }
-      })
-
-      await db.completedQuestRequirement.upsert({
-        create: {
-          questId: 'FirstTransactionQuest',
-          userId: user.id,
-          requirementId: 'VerifyPhoneNumber'
-        },
-        update: {},
-        where: {
-          questId_userId_requirementId: {
-            questId: 'FirstTransactionQuest',
-            userId: user.id,
-            requirementId: 'VerifyPhoneNumber'
-          }
-        }
-      })
-
-      await db.completedQuestRequirement.upsert({
-        create: {
-          questId: 'FirstTransactionQuest',
-          userId: user.id,
-          requirementId: 'RegisterAccount'
-        },
-        update: {},
-        where: {
-          questId_userId_requirementId: {
-            questId: 'FirstTransactionQuest',
-            userId: user.id,
-            requirementId: 'RegisterAccount'
-          }
-        }
-      })
-
-      await db.completedQuestRequirement.upsert({
-        create: {
-          questId: 'FirstTransactionQuest',
-          userId: user.id,
-          requirementId: 'LearnAboutTransactions'
-        },
-        update: {},
-        where: {
-          questId_userId_requirementId: {
-            questId: 'FirstTransactionQuest',
-            userId: user.id,
-            requirementId: 'LearnAboutTransactions'
-          }
-        }
-      })
+      await completeQuestRequirements(user.id, 'FirstTransactionQuest', [
+        'VerifyPhoneNumber',
+        'RegisterAccount',
+        'LearnAboutTransactions'
+      ])
 
       await transactionModel(logger).add({
         userId: user.id,
