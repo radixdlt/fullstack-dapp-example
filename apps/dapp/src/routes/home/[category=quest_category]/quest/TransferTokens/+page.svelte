@@ -185,10 +185,6 @@
   {#if render('2')}
     {@html text['2.md']}
   {/if}
-  {#if render('5')}
-    {@html text['5.md']}
-  {/if}
-
   {#if render('3')}
     {@html text['3.md']}
   {/if}
@@ -227,6 +223,18 @@
 
   {#if render('9')}
     {@html text['9.md']}
+  {/if}
+  {#if render('complete0')}
+    {@html text['complete0.md']}
+  {/if}
+  {#if render('complete1')}
+    {@html text['complete1.md']}
+  {/if}
+  {#if render('complete2')}
+    {@html text['complete2.md']}
+  {/if}
+  {#if render('complete3')}
+    {@html text['complete3.md']}
   {/if}
 </Quest>
 
