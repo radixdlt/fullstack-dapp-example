@@ -23,6 +23,7 @@ import { UserQuestController } from '$lib/server/user-quest/controller'
 import { AuthModel } from '$lib/server/auth/model'
 import { JWT } from '$lib/server/auth/jwt'
 import { MessageController } from '$lib/server/message/controller'
+import { OneTimePasswordController } from '$lib/server/otp/controller'
 
 const networkId = +PUBLIC_NETWORK_ID
 const NetworkQuestDefinitions = QuestDefinitions()
@@ -86,7 +87,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     userController: UserController(event.locals.dependencies),
     userQuestController: UserQuestController(event.locals.dependencies),
     authController: AuthController(event.locals.dependencies),
-    messageController: MessageController(event.locals.dependencies)
+    messageController: MessageController(event.locals.dependencies),
+    oneTimePasswordController: OneTimePasswordController(event.locals.dependencies)
   }
 
   if (event.url.pathname === '/.well-known/radix.json') {

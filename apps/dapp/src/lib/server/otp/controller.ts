@@ -1,12 +1,10 @@
-import { type ControllerMethodContext, type ControllerMethodOutput } from '../_types'
+import { type ControllerDependencies, type ControllerMethodOutput } from '../_types'
 import { Result, ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import { safeParse, string } from 'valibot'
-import { twilioService } from './twilioClient'
-import { dbClient } from '$lib/db'
-import { UserModel, UserQuestModel } from 'common'
 import { ErrorReason, createApiError, type ApiError } from '../../errors'
 import parsePhoneNumber from 'libphonenumber-js'
 import { sha256Hash } from './helpers/sha256Hash'
+import Twilio from 'twilio'
 
 const deriveCountryFromPhoneNumber = (value: string) => {
   const result = parsePhoneNumber(value)
@@ -15,15 +13,16 @@ const deriveCountryFromPhoneNumber = (value: string) => {
     : err({ reason: 'FailedToDeriveCountryFromPhoneNumber' })
 }
 
+export type OneTimePasswordController = ReturnType<typeof OneTimePasswordController>
 export const OneTimePasswordController = ({
-  userQuestModel = UserQuestModel(dbClient),
-  userModel = UserModel(dbClient),
-  twilio = twilioService
-}: Partial<{
-  userModel: UserModel
-  userQuestModel: UserQuestModel
-  twilio: typeof twilioService
-}>) => {
+  userQuestModel,
+  userModel,
+  config,
+  logger
+}: ControllerDependencies) => {
+  const twilioClient = Twilio(config.twilio.accountSid, config.twilio.authToken)
+  const twilio = twilioClient.verify.v2.services(config.twilio.serviceSid)
+
   const validatePhoneNumber = (phoneNumber?: string): ResultAsync<string, ApiError> => {
     // TODO: Add phone number validation
     // https://github.com/jackocnr/intl-tel-input
@@ -44,14 +43,12 @@ export const OneTimePasswordController = ({
     ])
   }
 
-  const sendOneTimePassword = (ctx: ControllerMethodContext, phoneNumber: string) =>
+  const sendOneTimePassword = (phoneNumber: string) =>
     validatePhoneNumber(phoneNumber)
       .andThen((phoneNumber) =>
         sha256Hash(phoneNumber)
           .mapErr(() => createApiError(ErrorReason.failedToAddPhoneNumber, 400)())
-          .asyncAndThen((hashOfPhoneNumber) =>
-            userModel(ctx.logger).getPhoneNumber(hashOfPhoneNumber)
-          )
+          .asyncAndThen((hashOfPhoneNumber) => userModel.getPhoneNumber(hashOfPhoneNumber))
       )
       .andThen((phoneNumberExists) =>
         phoneNumberExists
@@ -61,12 +58,14 @@ export const OneTimePasswordController = ({
                 to: phoneNumber,
                 channel: 'sms'
               }),
-              createApiError(ErrorReason.failedToSendOTP, 400)
+              (error) => {
+                logger.error({ method: 'sendOneTimePassword.error', twilioError: error })
+                return createApiError(ErrorReason.failedToSendOTP, 400)(error)
+              }
             ).map((result) => ({ httpResponseCode: 200, data: { status: result.status } }))
       )
 
   const verifyOneTimePassword = (
-    ctx: ControllerMethodContext,
     userId: string,
     phoneNumber: string,
     oneTimePassword: string
@@ -89,7 +88,7 @@ export const OneTimePasswordController = ({
       )
       .mapErr(() => createApiError(ErrorReason.failedToHashPhoneNumber, 400)())
       .andThen(([country, hashOfPhoneNumber]) =>
-        userQuestModel(ctx.logger)
+        userQuestModel
           .addVerifiedPhoneNumber(userId, country, hashOfPhoneNumber)
           .mapErr(() => createApiError(ErrorReason.failedToAddPhoneNumber, 400)())
       )
@@ -97,5 +96,3 @@ export const OneTimePasswordController = ({
 
   return { sendOneTimePassword, verifyOneTimePassword }
 }
-
-export const oneTimePasswordController = OneTimePasswordController({})
