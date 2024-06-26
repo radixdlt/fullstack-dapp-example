@@ -251,6 +251,14 @@ export const EventWorkerController = ({
             dbTransactionBuilder.helpers
               .questRequirementCompleted(questValues)
               .exec()
+              .andThen(() =>
+                sendMessage(questValues.userId, {
+                  type: 'QuestRequirementCompleted',
+                  requirementId: questValues.requirementId,
+                  questId,
+                  traceId
+                })
+              )
               .andThen(() => handleAllQuestRequirementCompleted(questValues))
           )
           .andThen((value) =>
