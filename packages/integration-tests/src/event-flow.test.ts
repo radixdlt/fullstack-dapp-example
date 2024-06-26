@@ -41,6 +41,25 @@ const networkName = gatewayApi.networkConfig.networkName
 
 const logger = appLogger
 
+const waitForMessage = async (userId: string, messageType: string) => {
+  logger.info({ method: 'waitForMessage.start', userId, messageType })
+
+  let expectedMessage: any
+  while (!expectedMessage) {
+    const messages = await db.message.findMany({
+      where: { userId }
+    })
+
+    expectedMessage = messages.find(
+      (message) => JSON.parse(message.data as any).type === messageType
+    )
+
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+  }
+
+  logger.info({ method: 'waitForMessage.complete', message: expectedMessage })
+}
+
 if (!networkName) throw new Error('PUBLIC_NETWORK_ID env var not set to a valid network')
 
 const radixEngineClient = RadixEngineClient({
@@ -163,15 +182,7 @@ describe('Event flows', () => {
 
       expect(item?.status).toBe('COMPLETED')
 
-      const messages = await db.message.findMany({
-        where: { userId: user.id }
-      })
-
-      const message = messages.find(
-        (message) => JSON.parse(message.data as any).type === 'HeroBadgeReadyToBeClaimed'
-      )
-
-      expect(message).toBeDefined()
+      await waitForMessage(user.id, 'HeroBadgeReadyToBeClaimed')
 
       await radixEngineClient.getXrdFromFaucet()
 
