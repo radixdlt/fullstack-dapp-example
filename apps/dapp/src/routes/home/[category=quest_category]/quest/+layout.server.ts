@@ -1,13 +1,23 @@
 import type { QuestId } from 'content'
 import type { LayoutServerLoad } from './$types'
 import { questApi } from '$lib/api/quest-api'
-import { error } from '@sveltejs/kit'
+import { error, redirect } from '@sveltejs/kit'
 import { $Enums } from 'database'
+import { userApi } from '$lib/api/user-api'
 import type { QuestRequirement } from '$lib/server/user-quest/controller'
 
-export const load: LayoutServerLoad = ({ fetch, cookies, url, parent }) =>
+export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) =>
   parent().then(async ({ questDefinitions, questStatus }) => {
     const id = url.pathname.split('/')[4] as QuestId
+
+    locals.context.logger.info({ questId: id })
+
+    const requiresLogin = !['WelcomeToRadQuest', 'WhatIsRadix', 'GetRadixWallet'].includes(id)
+
+    if (requiresLogin) {
+      const user = await userApi.me(fetch)
+      if (user.isErr()) return redirect(301, '/home/basic')
+    }
 
     const requirementsResult = await questApi
       .getQuestInformation(id, fetch)
