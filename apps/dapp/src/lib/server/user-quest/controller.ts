@@ -5,6 +5,7 @@ import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId, Requirement } from 'content'
 import { config } from '$lib/config'
+import { hasAnyRewards } from '../helpers/has-any-rewards'
 export type QuestRequirement = { isHidden: boolean; isComplete: boolean }
 
 export type UserQuestController = ReturnType<typeof UserQuestController>
@@ -35,7 +36,7 @@ export const UserQuestController = ({
     traceId: string
   }) => {
     return hasAllRequirementsCompleted(questId, userId).andThen(({ isAllCompleted }) =>
-      isAllCompleted
+      isAllCompleted && hasAnyRewards(questId)
         ? transactionModel.add({
             userId,
             discriminator: `${questId}:DepositReward:${userId}`,
