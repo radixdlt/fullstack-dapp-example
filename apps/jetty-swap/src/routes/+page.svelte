@@ -249,6 +249,13 @@
             <p class="error-text not-enough-resource">
               {$i18n.t('main:not-enough-resource', { resource: clamResource?.name })}
             </p>
+          {:else}
+            <p class="balance" class:letty-balance={!isJetty}>
+              {$i18n.t('main:balance-amount', {
+                count: parseInt(currentBalance.toString(), 0),
+                resource: clamResource?.name
+              })}
+            </p>
           {/if}
         </TokenSwapInput>
         <div class="switch-wrapper">
@@ -457,5 +464,14 @@
 
   .not-enough-resource {
     font-size: var(--text-xs);
+  }
+
+  .balance {
+    font-size: var(--text-sm);
+    color: var(--color-dark);
+  }
+
+  .letty-balance {
+    font-weight: var(--font-weight-light);
   }
 </style>

@@ -5,7 +5,7 @@
   "guarantee-hint-part-2": "settings in your Radix Wallet.",
   "estimated-amount-pt1": "Estimated",
   "estimated-amount-pt2": "at market price",
-  "balance-amount_one": "Balance: {{count}} {{resource}}",
+  "balance-amount": "Balance: {{count}} {{resource}}",
   "balance-amount_other": "Balance: {{count}} {{resource}}s",
   "from": "from",
   "to": "to",
