@@ -113,11 +113,11 @@
 
     loading = true
     sendTransaction({ transactionManifest: manifest })
-      .then(() => {
+      .map(() => {
         loading = false
         dispatch('claimed')
       })
-      .catch(() => {
+      .mapErr(() => {
         loading = false
       })
   }
