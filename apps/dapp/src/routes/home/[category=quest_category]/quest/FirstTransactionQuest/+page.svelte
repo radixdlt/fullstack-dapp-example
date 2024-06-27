@@ -253,9 +253,7 @@
       footer: {
         next: {
           onClick: (next) => {
-            questApi.completeRequirement(data.id, 'LearnAboutTransactions').then(() => {
-              next()
-            })
+            next()
           }
         }
       }
