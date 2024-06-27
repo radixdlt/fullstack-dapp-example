@@ -177,11 +177,9 @@
         modal = 'success'
         swapResult = { ...(elementResource as Resource), count: toInput }
         updateBalances($walletData?.accounts[0].address as string)
-      })
-      .andThen(() => {
         swapButtonLoading = false
-        return ok('')
       })
+      .mapErr(() => (swapButtonLoading = false))
   }
 
   //todo to be replaced once we have oracle
