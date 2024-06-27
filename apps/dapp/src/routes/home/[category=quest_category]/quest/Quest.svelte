@@ -142,7 +142,9 @@
         id: 'requirements',
         footer: {
           next: {
-            enabled: requirementsNextEnabled
+            onClick: (next) => {
+              next()
+            }
           }
         }
       }
