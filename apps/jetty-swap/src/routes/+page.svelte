@@ -252,7 +252,7 @@
           {:else}
             <p class="balance" class:letty-balance={!isJetty}>
               {$i18n.t('main:balance-amount', {
-                count: parseInt(currentBalance.toString(), 0),
+                count: parseInt(currentBalance.toString()),
                 resource: clamResource?.name
               })}
             </p>
