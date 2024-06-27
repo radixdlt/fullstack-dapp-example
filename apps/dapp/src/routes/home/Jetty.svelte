@@ -13,7 +13,7 @@
 
   let poppedUp = true
 
-  $: poppedUp = $page.url.href.includes('quest') ? false : true
+  $: poppedUp = expanded || hoveringOverJetty
 
   $: glossaryAnchor = $page.url.href.includes('glossaryAnchor')
     ? $page.url.href.split('glossaryAnchor=')[1]
@@ -33,12 +33,17 @@
     expanded = false
     $retractJettyMenu = false
   }
+
+  let hoveringOverJetty = false
 </script>
 
 {#if !$hideJettyMenu}
   <JettyMenu
     bind:expanded
     bind:this={jettyMenu}
+    on:hover-over-jetty={(e) => {
+      hoveringOverJetty = e.detail
+    }}
     hideJetty={$hideJetty}
     {poppedUp}
     menuItems={[

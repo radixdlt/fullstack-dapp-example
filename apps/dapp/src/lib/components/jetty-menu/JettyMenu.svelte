@@ -52,6 +52,7 @@
   const dispatch = createEventDispatcher<{
     'notification-opened': undefined
     close: undefined
+    'hover-over-jetty': boolean
   }>()
 
   const popNotification = () => {
@@ -88,7 +89,17 @@
 </script>
 
 <div class="jetty-menu" style:--menuPosition={`${$menuPositionFactor * 98}%`}>
-  <div class="jetty-icon" style:--iconPosition={`${$jettyPositionFactor * 30 - 88}%`}>
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <div
+    class="jetty-icon"
+    style:--iconPosition={`${$jettyPositionFactor * 30 - 88}%`}
+    on:mouseenter={() => {
+      dispatch('hover-over-jetty', true)
+    }}
+    on:mouseleave={() => {
+      dispatch('hover-over-jetty', false)
+    }}
+  >
     <JettyPopup
       on:click={() => {
         expanded = !expanded
