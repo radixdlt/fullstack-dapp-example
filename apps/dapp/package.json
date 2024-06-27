@@ -63,24 +63,25 @@
   },
   "type": "module",
   "dependencies": {
-    "common": "*",
-    "content": "*",
-    "database": "*",
-    "queues": "*",
-    "typescript-wallet": "*",
     "@radixdlt/radix-dapp-toolkit": "^2.0.0-v2.35",
     "@radixdlt/rola": "^1.0.2",
     "@svelte-put/qr": "^1.2.0",
     "bignumber.js": "^9.1.2",
     "bullmq": "^5.3.1",
+    "common": "*",
+    "content": "*",
+    "database": "*",
     "i18next": "^23.8.2",
     "intl-tel-input": "^19.5.5",
     "jsonwebtoken": "^9.0.2",
     "libphonenumber-js": "^1.11.2",
     "neverthrow": "^6.1.0",
     "pino": "^8.17.2",
+    "queues": "*",
     "ramda": "^0.30.0",
+    "svelte-gestures": "^5.0.1",
     "svelte-i18next": "^2.2.2",
-    "twilio": "^4.22.0"
+    "twilio": "^4.22.0",
+    "typescript-wallet": "*"
   }
 }

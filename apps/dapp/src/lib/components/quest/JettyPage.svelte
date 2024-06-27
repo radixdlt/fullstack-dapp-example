@@ -1,6 +1,8 @@
 <script lang="ts">
   import { fly } from 'svelte/transition'
 
+  export let animate: boolean
+
   let jettyHeight: number
 </script>
 
@@ -9,11 +11,11 @@
     <slot />
   </div>
   <div
-    transition:fly|global={{
+    in:fly|global={{
       y: 100,
-      delay: 500,
+      delay: animate ? 500 : 0,
       opacity: 1,
-      duration: 500
+      duration: animate ? 500 : 0
     }}
     class="jetty-image"
     bind:clientHeight={jettyHeight}

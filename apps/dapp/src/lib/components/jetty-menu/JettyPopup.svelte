@@ -72,7 +72,7 @@
 
     @include mobile {
       width: 5.5rem;
-      height: 4.5rem;
+      height: 5rem;
     }
 
     background: var(--color-dark);

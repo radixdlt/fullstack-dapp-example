@@ -9,11 +9,11 @@
   import { markLatestNotificationAsSeen } from '$lib/notifications'
   import { hideJetty, hideJettyMenu, jettyNotifications, retractJettyMenu } from '../../stores'
   import { tick } from 'svelte'
-  import { goto } from '$app/navigation'
+  import { pushState } from '$app/navigation'
 
   let poppedUp = true
 
-  $: poppedUp = $page.url.href.includes('quest') ? false : true
+  $: poppedUp = expanded || hoveringOverJetty
 
   $: glossaryAnchor = $page.url.href.includes('glossaryAnchor')
     ? $page.url.href.split('glossaryAnchor=')[1]
@@ -33,12 +33,27 @@
     expanded = false
     $retractJettyMenu = false
   }
+
+  let hoveringOverJetty = false
+
+  const setExpanded = (value: boolean) => (expanded = value)
+
+  $: if (!($page.state as any).jettyMenuExpanded) setExpanded(false)
 </script>
 
 {#if !$hideJettyMenu}
   <JettyMenu
     bind:expanded
     bind:this={jettyMenu}
+    on:hover-over-jetty={(e) => {
+      hoveringOverJetty = e.detail
+    }}
+    on:open={() => {
+      pushState('', { jettyMenuExpanded: true })
+    }}
+    on:close={() => {
+      history.back()
+    }}
     hideJetty={$hideJetty}
     {poppedUp}
     menuItems={[
@@ -55,11 +70,6 @@
     ]}
     notifications={jettyNotifications}
     on:notification-opened={markLatestNotificationAsSeen}
-    on:close={() => {
-      const url = $page.url.searchParams
-      url.delete('glossaryAnchor')
-      goto(`?${url}`)
-    }}
     let:currentMenuItem
   >
     {#if currentMenuItem.id === 'glossary'}
