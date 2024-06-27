@@ -51,7 +51,9 @@
   export const checkRequirements = () => {
     return questApi.getQuestInformation(questId).map(({ requirements, status }) => {
       const requirementValueList = Object.entries(requirements)
-      const allRequirementsMet = requirementValueList.every(([_, { isComplete }]) => isComplete)
+      const allRequirementsMet =
+        requirementValueList.every(([_, { isComplete }]) => isComplete) &&
+        ['REWARDS_DEPOSITED', 'COMPLETED'].includes(status)
 
       requirementsStatus = requirementValueList.map(([key, { isComplete }]) => {
         return {
@@ -61,7 +63,7 @@
         }
       })
 
-      if (allRequirementsMet && ['REWARDS_DEPOSITED', 'COMPLETED'].includes(status)) {
+      if (allRequirementsMet) {
         if (!dispatched) dispatch('all-requirements-met')
         dispatched = true
         setLoading(false)
