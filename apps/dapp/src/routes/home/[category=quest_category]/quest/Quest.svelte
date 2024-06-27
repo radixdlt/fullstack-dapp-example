@@ -141,8 +141,13 @@
         type: 'regular',
         id: 'requirements',
         footer: {
+          enabled: requirementsNextEnabled,
           next: {
-            enabled: requirementsNextEnabled
+            onClick: (next) => {
+              verifyRequirements.checkRequirements().map((requirementsFulfilled) => {
+                if (requirementsFulfilled) next()
+              })
+            }
           }
         }
       }
@@ -204,6 +209,7 @@
   $: jettyQuizSteps = steps.filter((step) => step.type === 'jettyQuiz') as JettyQuizStep[]
 
   let claimRewards: ClaimRewards
+  let verifyRequirements: VerifyRequirements
 </script>
 
 <Quest
