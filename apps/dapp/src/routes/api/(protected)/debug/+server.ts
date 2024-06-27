@@ -41,6 +41,8 @@ export const POST: RequestHandler = async ({ locals, request }) => {
       'GB',
       crypto.randomUUID()
     )
+  } else if (type === 'clearPhoneNumbers') {
+    await locals.dependencies.dbClient.userPhoneNumber.deleteMany({})
   }
 
   return json({}, { status: 200 })

@@ -57,6 +57,17 @@
     )
   }
 
+  const clearPhoneNumbers = async () => {
+    await fetchWrapper(
+      fetch('/api/debug', {
+        method: 'POST',
+        body: JSON.stringify({
+          type: 'clearPhoneNumbers'
+        })
+      })
+    )
+  }
+
   const mintBadge = async () => {
     await rdt.then((rdt) => {
       rdt.walletApi.sendTransaction({
@@ -128,6 +139,7 @@
         <Button on:click={setUserAsAdmin}>Set user as Admin</Button>
         <Button on:click={addPhoneNumber}>Bypass phone verification</Button>
       {/if}
+      <Button on:click={clearPhoneNumbers}>Clear phone numbers</Button>
       <Button on:click={clearLocalStorageAndCookies}>Clear Local Storage</Button>
 
       <Button
