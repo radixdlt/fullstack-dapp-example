@@ -11,7 +11,7 @@ export const SendMessage =
       dbClient.message.create({
         data: {
           userId,
-          data: JSON.stringify(message)
+          data: message
         }
       }),
       (error): WorkerOutputError => ({
