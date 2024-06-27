@@ -69,6 +69,12 @@
     align-items: center;
     width: 6rem;
     height: 5.5rem;
+
+    @include mobile {
+      width: 5.5rem;
+      height: 4.5rem;
+    }
+
     background: var(--color-dark);
     border-radius: 50% 50% 0 0;
     overflow: hidden;
@@ -81,6 +87,11 @@
   .jetty-img {
     width: 4.5rem;
     height: 4.5rem;
+
+    @include mobile {
+      width: 4rem;
+      height: 4rem;
+    }
   }
 
   .notification {
@@ -103,9 +114,17 @@
     :first-child {
       transform: translateX(0.8rem);
     }
+
+    @include mobile {
+      transform: rotate(90deg) translateX(-0.7rem) scale(0.7);
+    }
   }
 
   .down-arrow {
     transform: rotate(270deg) translateX(1rem);
+
+    @include mobile {
+      transform: rotate(270deg) translateX(0.7rem) scale(0.7);
+    }
   }
 </style>
