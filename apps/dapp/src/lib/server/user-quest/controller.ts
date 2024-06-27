@@ -221,7 +221,7 @@ export const UserQuestController = ({
     )
 
     if (!requirementId) {
-      return { httpResponseCode: 200, data: undefined }
+      return okAsync({ httpResponseCode: 200, data: undefined })
     }
 
     const questStatus = userQuestModel.getQuestStatus(userId, questId).andThen((questStatus) => {
