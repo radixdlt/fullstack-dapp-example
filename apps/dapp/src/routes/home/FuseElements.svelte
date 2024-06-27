@@ -73,7 +73,7 @@
     `
 
     waitingForSendElements = true
-    return (await sendTransaction({ transactionManifest }))
+    return sendTransaction({ transactionManifest })
       .map(() => {
         waitingForSendElements = false
       })
