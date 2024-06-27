@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
+  import { crossfade } from 'svelte/transition'
 
   export let tabs: {
     name: string
@@ -13,6 +14,10 @@
   }
 
   const dispatch = createEventDispatcher<{ 'tab-changed': string }>()
+
+  const [send, receive] = crossfade({
+    duration: 300
+  })
 
   $: dispatch('tab-changed', activeTab)
 </script>
@@ -28,6 +33,9 @@
         >
           {tab.name}
         </button>
+        {#if activeTab === tab.id}
+          <div class="underline" out:send={{ key: 1 }} in:receive={{ key: 1 }} />
+        {/if}
       </div>
     </div>
   {/each}
@@ -37,7 +45,6 @@
   .tabs {
     display: flex;
     gap: var(--spacing-2xl);
-    align-items: center;
   }
 
   .tab-container {
@@ -55,13 +62,17 @@
 
   .active {
     color: var(--color-dark);
-    background: color-mix(in srgb, var(--color-dark) 20%, transparent);
-    border-radius: var(--border-radius-lg);
-    padding: var(--spacing-xs) var(--spacing-md);
   }
 
   .inactive {
     opacity: 0.4;
     transition: opacity 0.4s ease-in-out;
+  }
+
+  .underline {
+    width: 100%;
+    height: 0.13rem;
+    background: var(--color-dark);
+    border-radius: var(--border-radius-md);
   }
 </style>
