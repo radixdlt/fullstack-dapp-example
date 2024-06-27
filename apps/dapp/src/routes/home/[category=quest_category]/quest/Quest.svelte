@@ -239,7 +239,6 @@
       questId={id}
       {requirements}
       on:all-requirements-met={() => {
-        debugger
         $requirementsNextEnabled = true
         if (lastProgress < progress) next()
       }}
