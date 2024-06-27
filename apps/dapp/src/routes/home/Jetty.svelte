@@ -8,13 +8,12 @@
   import { page } from '$app/stores'
   import { markLatestNotificationAsSeen } from '$lib/notifications'
   import { hideJetty, hideJettyMenu, jettyNotifications, retractJettyMenu } from '../../stores'
-  import { isMobile } from '$lib/utils/is-mobile'
   import { tick } from 'svelte'
   import { goto } from '$app/navigation'
 
   let poppedUp = true
 
-  $: poppedUp = $page.url.href.includes('quest') && !isMobile() ? false : true
+  $: poppedUp = $page.url.href.includes('quest') ? false : true
 
   $: glossaryAnchor = $page.url.href.includes('glossaryAnchor')
     ? $page.url.href.split('glossaryAnchor=')[1]
