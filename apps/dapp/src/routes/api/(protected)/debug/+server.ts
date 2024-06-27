@@ -8,28 +8,42 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 
   const userId = locals.userId
 
-  const { accountAddress } = await request.json()
+  const body = await request.json()
 
-  await locals.dependencies.dbClient.user.update({
-    data: { accountAddress },
-    where: { id: userId }
-  })
+  const { accountAddress, type } = body
 
-  await locals.dependencies.dbClient.completedQuestRequirement.create({
-    data: {
+  locals.context.logger.info({ method: 'debug', userId, body })
+
+  if (type === 'registerAccount') {
+    await locals.dependencies.dbClient.user.update({
+      data: { accountAddress },
+      where: { id: userId }
+    })
+
+    await locals.dependencies.dbClient.completedQuestRequirement.create({
+      data: {
+        userId,
+        questId: 'FirstTransactionQuest',
+        requirementId: 'RegisterAccount'
+      }
+    })
+
+    await locals.dependencies.transactionModel.add({
+      type: 'PopulateResources',
+      accountAddress: accountAddress,
+      discriminator: `PopulateResources:${locals.context.traceId}`,
       userId,
-      questId: 'FirstTransactionQuest',
-      requirementId: 'RegisterAccount'
-    }
-  })
-
-  await locals.dependencies.transactionModel.add({
-    type: 'PopulateResources',
-    accountAddress: accountAddress,
-    discriminator: `PopulateResources:${locals.context.traceId}`,
-    userId,
-    traceId: locals.context.traceId
-  })
+      traceId: locals.context.traceId
+    })
+  } else if (type === 'addPhoneNumber') {
+    await locals.dependencies.userQuestModel.addVerifiedPhoneNumber(
+      userId,
+      'GB',
+      crypto.randomUUID()
+    )
+  } else if (type === 'clearPhoneNumbers') {
+    await locals.dependencies.dbClient.userPhoneNumber.deleteMany({})
+  }
 
   return json({}, { status: 200 })
 }
