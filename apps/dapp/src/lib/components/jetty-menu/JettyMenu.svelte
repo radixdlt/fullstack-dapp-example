@@ -88,7 +88,7 @@
 </script>
 
 <div class="jetty-menu" style:--menuPosition={`${$menuPositionFactor * 98}%`}>
-  <div class="jetty-icon" style:--iconPosition={`${$jettyPositionFactor * 30 - 90}%`}>
+  <div class="jetty-icon" style:--iconPosition={`${$jettyPositionFactor * 30 - 88}%`}>
     <JettyPopup
       on:click={() => {
         expanded = !expanded
