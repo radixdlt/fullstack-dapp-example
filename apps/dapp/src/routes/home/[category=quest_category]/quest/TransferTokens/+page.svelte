@@ -172,6 +172,12 @@
       type: 'jetty'
     },
     {
+      type: 'requirements'
+    },
+    {
+      type: 'claimRewards'
+    },
+    {
       type: 'complete'
     }
   ]}
