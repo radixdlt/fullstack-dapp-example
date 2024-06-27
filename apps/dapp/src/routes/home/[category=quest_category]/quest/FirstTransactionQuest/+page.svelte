@@ -17,7 +17,7 @@
   import { userApi } from '$lib/api/user-api'
   import { user } from '../../../../../stores'
   import Button from '$lib/components/button/Button.svelte'
-  import { questApi } from '$lib/api/quest-api'
+  import { err, ok } from 'neverthrow'
 
   export let data: PageData
 
@@ -47,8 +47,9 @@
     )
   }
 
+  const gatewayApi = GatewayApi(publicConfig.networkId)
+
   onMount(() => {
-    const gatewayApi = GatewayApi(publicConfig.networkId)
     gatewayApi.callApi('getEntityDetailsVaultAggregated', [])
   })
 
@@ -92,16 +93,25 @@
 
           const accountProof = proofs.find((proof) => proof.type === 'account')!
 
-          return userApi
-            .setUserField({
-              accountAddress: accounts[0].address,
-              proof: accountProof as SignedChallengeAccount,
-              field: 'accountAddress'
-            })
-            .map(() => {
-              $user!.accountAddress = accounts[0].address
-              quest.actions.next()
-            })
+          return gatewayApi
+            .hasHeroBadge(accounts[0].address)
+            .andThen((hasHeroBadge) =>
+              hasHeroBadge ? err({ reason: 'UserHasHeroBadge' }) : ok(undefined)
+            )
+            .andThen(() =>
+              userApi
+                .setUserField({
+                  accountAddress: accounts[0].address,
+                  proof: accountProof as SignedChallengeAccount,
+                  field: 'accountAddress'
+                })
+                .andThen(() =>
+                  userApi.allowAccountAddressToMintHeroBadge().map(() => {
+                    $user!.accountAddress = accounts[0].address
+                    quest.actions.next()
+                  })
+                )
+            )
         })
         .mapErr(() => {
           waitingOnAccount = false
