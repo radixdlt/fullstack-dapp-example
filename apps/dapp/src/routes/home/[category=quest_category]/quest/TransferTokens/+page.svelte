@@ -153,6 +153,9 @@
       ]
     },
     {
+      type: 'requirements'
+    },
+    {
       type: 'claimRewards'
     },
     {
@@ -170,12 +173,6 @@
     {
       id: 'complete3',
       type: 'jetty'
-    },
-    {
-      type: 'requirements'
-    },
-    {
-      type: 'claimRewards'
     },
     {
       type: 'complete'
