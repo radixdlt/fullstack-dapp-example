@@ -69,14 +69,6 @@
       type: 'regular'
     },
     {
-      id: '4',
-      type: 'regular'
-    },
-    {
-      id: '5',
-      type: 'jetty'
-    },
-    {
       id: '6',
       type: 'regular',
       skip: receivedClams,
@@ -103,7 +95,7 @@
       type: 'jettyQuiz',
 
       text: text['10.md'],
-      quizRequirement: 'TransferTokens',
+      quizRequirement: 'PersonaQuiz',
 
       answers: [
         {
@@ -121,10 +113,63 @@
       ]
     },
     {
-      type: 'requirements'
+      id: '11',
+      type: 'jettyQuiz',
+      text: text['11.md'],
+      quizRequirement: 'TransactionQuiz',
+      answers: [
+        {
+          text: text['11a.md'],
+          correct: true
+        },
+        {
+          text: text['11b.md'],
+          correct: false
+        },
+        {
+          text: text['11c.md'],
+          correct: false
+        }
+      ]
+    },
+    {
+      id: '12',
+      type: 'jettyQuiz',
+      text: text['12.md'],
+      quizRequirement: 'XrdQuiz',
+      answers: [
+        {
+          text: text['12a.md'],
+          correct: true
+        },
+        {
+          text: text['12b.md'],
+          correct: false
+        },
+        {
+          text: text['12c.md'],
+          correct: false
+        }
+      ]
     },
     {
       type: 'claimRewards'
+    },
+    {
+      id: 'complete0',
+      type: 'jetty'
+    },
+    {
+      id: 'complete1',
+      type: 'jetty'
+    },
+    {
+      id: 'complete2',
+      type: 'jetty'
+    },
+    {
+      id: 'complete3',
+      type: 'jetty'
     },
     {
       type: 'complete'
@@ -141,7 +186,6 @@
   {#if render('2')}
     {@html text['2.md']}
   {/if}
-
   {#if render('3')}
     {@html text['3.md']}
   {/if}
@@ -180,6 +224,18 @@
 
   {#if render('9')}
     {@html text['9.md']}
+  {/if}
+  {#if render('complete0')}
+    {@html text['complete0.md']}
+  {/if}
+  {#if render('complete1')}
+    {@html text['complete1.md']}
+  {/if}
+  {#if render('complete2')}
+    {@html text['complete2.md']}
+  {/if}
+  {#if render('complete3')}
+    {@html text['complete3.md']}
   {/if}
 </Quest>
 

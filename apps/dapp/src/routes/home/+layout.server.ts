@@ -51,17 +51,6 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url }) => {
       }
     }
 
-    if (
-      cookies.get('quest-status-LoginWithWallet') === 'IN_PROGRESS' &&
-      questStatus['GetRadixWallet']?.status !== 'COMPLETED'
-    ) {
-      await questApi.startQuest('GetRadixWallet', fetch)
-      questStatus['GetRadixWallet'] = {
-        savedProgress: 0,
-        status: 'IN_PROGRESS'
-      }
-    }
-
     Promise.all(
       ['requirement-WelcomeToRadQuest-RadQuestQuiz', 'requirement-WhatIsRadix-RadixQuiz'].map(
         (cookieName) => {

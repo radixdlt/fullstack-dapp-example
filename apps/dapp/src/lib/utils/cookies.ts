@@ -6,10 +6,7 @@ type CookieEntry<K, V> = {
   value: V
 }
 
-type PreLoggedInQuests = Extract<
-  QuestId,
-  'WelcomeToRadQuest' | 'WhatIsRadix' | 'GetRadixWallet' | 'LoginWithWallet'
->
+type PreLoggedInQuests = Extract<QuestId, 'WelcomeToRadQuest' | 'WhatIsRadix' | 'GetRadixWallet'>
 
 export type QuestStatusCookieKey = `quest-status-${QuestId}`
 

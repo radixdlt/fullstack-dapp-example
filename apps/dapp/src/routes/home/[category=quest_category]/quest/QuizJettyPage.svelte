@@ -18,7 +18,7 @@
 
   $: cookieRequirementValue =
     useCookies(`requirement-${questId}-${quizRequirement}` as RequirementCookieKey).get() === 'true'
-  $: isCorrectAnswer = requirements[quizRequirement].isComplete || cookieRequirementValue
+  $: isCorrectAnswer = requirements[quizRequirement]?.isComplete || cookieRequirementValue
   $: error = false
 
   const dispatch = createEventDispatcher<{ correct: undefined; mount: undefined }>()

@@ -20,7 +20,6 @@ export const AuthController = ({
   config,
   authModel,
   userModel,
-  userQuestModel,
   gatewayApi
 }: ControllerDependencies) => {
   const { dAppDefinitionAddress, networkId, expectedOrigin } = config.dapp
@@ -118,11 +117,6 @@ export const AuthController = ({
         return referredBy ? userModel.confirmReferralCode(referredBy) : ok(undefined)
       })
       .andThen((referredBy) => userModel.create(personaProof.address, referredBy))
-      .andThen(({ id, type }) =>
-        userQuestModel
-          .addCompletedRequirement('LoginWithWallet', id, 'ConnectWallet')
-          .map(() => ({ id, type }))
-      )
       .andThen(({ id, type }) => jwt.createTokens(id, type))
       .map(({ authToken, refreshToken }) => ({
         data: {

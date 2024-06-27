@@ -172,6 +172,21 @@ export const QuestDefinitions = () => {
         [EventId.JettyReceivedClams]: {
           type: 'event',
           eventName: 'DepositEvent'
+        },
+        PersonaQuiz: {
+          type: 'offLedger',
+          completedByUser: true,
+          isHidden: true
+        },
+        TransactionQuiz: {
+          type: 'offLedger',
+          completedByUser: true,
+          isHidden: true
+        },
+        XrdQuiz: {
+          type: 'offLedger',
+          completedByUser: true,
+          isHidden: true
         }
       }
     },
