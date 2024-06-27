@@ -144,9 +144,7 @@
           enabled: requirementsNextEnabled,
           next: {
             onClick: (next) => {
-              verifyRequirements.checkRequirements().map((requirementsFulfilled) => {
-                if (requirementsFulfilled) next()
-              })
+              next()
             }
           }
         }
@@ -209,7 +207,6 @@
   $: jettyQuizSteps = steps.filter((step) => step.type === 'jettyQuiz') as JettyQuizStep[]
 
   let claimRewards: ClaimRewards
-  let verifyRequirements: VerifyRequirements
 </script>
 
 <Quest
@@ -238,7 +235,7 @@
     <VerifyRequirements
       questId={id}
       {requirements}
-      on:all-requirements-met={() => {
+      on:all-requirements-met|once={() => {
         $requirementsNextEnabled = true
         if (lastProgress < progress) next()
       }}
