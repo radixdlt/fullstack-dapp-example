@@ -6,9 +6,6 @@
   import { questApi } from '$lib/api/quest-api'
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
   import { user } from '../../../../stores'
-  import { userApi } from '$lib/api/user-api'
-  import pipe from 'ramda/src/pipe'
-  import { ResultAsync } from 'neverthrow'
 
   export let questId: keyof Quests
   export let text: string
@@ -29,40 +26,35 @@
     }
   })
 
-  export const claim = pipe(
-    () => userApi.me(),
-    (result) => result.map((me) => me.accountAddress!),
-    (result) =>
-      result.andThen((accountAddress) =>
-        ResultAsync.fromPromise(
-          sendTransaction({
-            transactionManifest: `
-                  CALL_METHOD
-                    Address("${accountAddress}")
-                    "create_proof_of_non_fungibles"
-                    Address("${publicConfig.badges.heroBadgeAddress}")
-                    Array<NonFungibleLocalId>(NonFungibleLocalId("<${$user?.id}>"));
+  export const claim = () =>
+    sendTransaction({
+      transactionManifest: `
+        CALL_METHOD
+          Address("${$user?.accountAddress!}")
+          "create_proof_of_non_fungibles"
+          Address("${publicConfig.badges.heroBadgeAddress}")
+          Array<NonFungibleLocalId>(NonFungibleLocalId("<${$user?.id}>"))
+        ;
 
-                  POP_FROM_AUTH_ZONE
-                    Proof("hero_badge_proof");
+        POP_FROM_AUTH_ZONE
+          Proof("hero_badge_proof")
+        ;
 
-                  CALL_METHOD
-                    Address("${publicConfig.components.questRewards}")
-                    "claim_reward"
-                    "${questId}"
-                    Proof("hero_badge_proof")
-                    None;
+        CALL_METHOD
+          Address("${publicConfig.components.questRewards}")
+          "claim_reward"
+          "${questId}"
+          Proof("hero_badge_proof")
+          None
+        ;
 
-                  CALL_METHOD
-                    Address("${accountAddress}")
-                    "deposit_batch"
-                    Expression("ENTIRE_WORKTOP");
-                `
-          }),
-          (e) => e as Error
-        )
-      )
-  )
+        CALL_METHOD
+          Address("${$user?.accountAddress}")
+          "deposit_batch"
+          Expression("ENTIRE_WORKTOP")
+        ;
+      `
+    })
 </script>
 
 <ClaimRewards rewards={questDefinition.rewards} {text} />
