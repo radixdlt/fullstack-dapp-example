@@ -145,7 +145,7 @@
   {/if}
 
   {#if currentStep.type === 'jetty'}
-    <JettyPage>
+    <JettyPage animate={_steps[lastProgress].type !== 'jetty'}>
       <slot {render} {next} {back} {skip} {lastProgress} {progress} {currentStep} />
     </JettyPage>
   {:else}
