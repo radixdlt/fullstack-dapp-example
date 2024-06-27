@@ -135,14 +135,16 @@
 
   let requirementsNextEnabled = writable(false)
 
+  let _steps: (RegularStep | JettyStep)[]
+
   $: _steps = steps.map((step) => {
     if (step.type === 'requirements') {
       return {
         type: 'regular',
         id: 'requirements',
         footer: {
-          enabled: requirementsNextEnabled,
           next: {
+            enabled: requirementsNextEnabled,
             onClick: (next) => {
               next()
             }
@@ -198,7 +200,7 @@
     }
 
     return step
-  }) as (RegularStep | JettyStep)[]
+  })
 
   let currentStep: ComponentProps<Quest>['currentStep']
 
