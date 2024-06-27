@@ -16,7 +16,8 @@ export const load: LayoutServerLoad = async ({ locals, params }) => {
       transactions: true
     }
   })
+
   if (!user) redirect(200, '/users')
 
-  return { user }
+  return { user: JSON.parse(JSON.stringify(user)) }
 }
