@@ -79,10 +79,6 @@
         messageApi.markAsSeen(message.id)
         dispatch('deposited')
       }
-
-      if (message.type === 'HeroBadgeReadyToBeClaimed') {
-        await claimHeroBadge(message.id)
-      }
     })
   }
 

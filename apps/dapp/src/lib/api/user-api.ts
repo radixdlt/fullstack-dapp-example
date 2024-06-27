@@ -2,7 +2,8 @@ import { fetchWrapper } from '$lib/helpers/fetch-wrapper'
 import type { SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
 import type { User } from 'database'
 
-const me = () => fetchWrapper<User>(fetch('/api/user')).map(({ data }) => data)
+const me = (serverFetch?: typeof fetch) =>
+  fetchWrapper<User>((serverFetch ?? fetch)('/api/user')).map(({ data }) => data)
 
 const allowAccountAddressToMintHeroBadge = () =>
   fetchWrapper<void>(

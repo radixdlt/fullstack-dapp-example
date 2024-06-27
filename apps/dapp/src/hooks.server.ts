@@ -155,6 +155,16 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.userType = result.value.userType
     event.locals.authToken = result.value.authToken
 
+    const userExists = await dbClient.user
+      .count({ where: { id: result.value.userId } })
+      .then((count) => count > 0)
+
+    if (!userExists) {
+      event.cookies.delete('jwt', { path: '/' })
+      const response = await resolve(event, {})
+      return response
+    }
+
     const response = await resolve(event)
     response.headers.set('Access-Control-Allow-Origin', origin || '*')
     response.headers.set('Access-Control-Allow-Credentials', 'true')

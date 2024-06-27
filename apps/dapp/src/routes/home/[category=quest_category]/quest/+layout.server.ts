@@ -1,17 +1,42 @@
 import type { QuestId } from 'content'
 import type { LayoutServerLoad } from './$types'
 import { questApi } from '$lib/api/quest-api'
-import { error } from '@sveltejs/kit'
+import { error, redirect } from '@sveltejs/kit'
 import { $Enums } from 'database'
+import { userApi } from '$lib/api/user-api'
 import type { QuestRequirement } from '$lib/server/user-quest/controller'
 
-export const load: LayoutServerLoad = ({ fetch, cookies, url, parent }) =>
+export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) =>
   parent().then(async ({ questDefinitions, questStatus }) => {
     const id = url.pathname.split('/')[4] as QuestId
+
+    locals.context.logger.info({ questId: id })
+
+    const requiresLogin = !['WelcomeToRadQuest', 'WhatIsRadix', 'GetRadixWallet'].includes(id)
+
+    if (requiresLogin) {
+      const user = await userApi.me(fetch)
+      if (user.isErr()) return redirect(301, '/home/basic')
+    }
 
     const requirementsResult = await questApi
       .getQuestInformation(id, fetch)
       .map((data) => data.requirements)
+
+    const failedToFetchRequirements = requirementsResult.isErr()
+    const isInvalidRefreshToken =
+      failedToFetchRequirements &&
+      (requirementsResult.error.data as any).error === 'invalidRefreshToken'
+    const hasCompletedFirstQuests =
+      [
+        questDefinitions['WelcomeToRadQuest'].id,
+        questDefinitions['WhatIsRadix'].id,
+        questDefinitions['GetRadixWallet'].id
+        // @ts-ignore
+      ].includes(id) &&
+      questDefinitions[id].preRequisites.every(
+        (preReq) => questStatus[preReq]?.status === 'COMPLETED'
+      )
 
     let requirements: Record<string, QuestRequirement> = {}
 
@@ -27,18 +52,7 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent }) =>
       }
 
       requirements = requirementsResult.value
-    } else if (
-      (requirementsResult.error.data as any).error === 'invalidRefreshToken' &&
-      [
-        questDefinitions['WelcomeToRadQuest'].id,
-        questDefinitions['WhatIsRadix'].id,
-        questDefinitions['GetRadixWallet'].id
-        // @ts-ignore
-      ].includes(id) &&
-      questDefinitions[id].preRequisites.every(
-        (preReq) => questStatus[preReq]?.status === 'COMPLETED'
-      )
-    ) {
+    } else if (failedToFetchRequirements && isInvalidRefreshToken && hasCompletedFirstQuests) {
       Object.entries(questDefinitions[id].requirements).forEach(([key, requirement]) => {
         const cachedRequirement = cookies.get(`requirement-${id}-${key}`) as boolean | undefined
 

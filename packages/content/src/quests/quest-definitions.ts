@@ -143,9 +143,6 @@ export const QuestDefinitions = () => {
           type: 'offLedger',
           completedByUser: false
         },
-        LearnAboutTransactions: {
-          type: 'content'
-        },
         [EventId.DepositHeroBadge]: {
           type: 'event',
           eventName: 'DepositEvent'
@@ -203,9 +200,6 @@ export const QuestDefinitions = () => {
       minutesToComplete: 5,
       preRequisites: ['TransferTokens'],
       requirements: {
-        LearnStaking: {
-          type: 'content'
-        },
         [EventId.XrdStaked]: {
           eventName: 'StakedXrd',
           type: 'event'
@@ -233,9 +227,6 @@ export const QuestDefinitions = () => {
       minutesToComplete: 5,
       preRequisites: ['TransferTokens'],
       requirements: {
-        LearnAboutDexes: {
-          type: 'content'
-        },
         [EventId.JettySwap]: {
           eventName: 'JettySwapEvent',
           type: 'event'
