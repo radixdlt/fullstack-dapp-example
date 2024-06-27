@@ -41,8 +41,6 @@
     loading: boolean
   }>()
 
-  let dispatched = false
-
   const setLoading = (isLoading: boolean) => {
     dispatch('loading', isLoading)
     loading = isLoading
@@ -53,7 +51,7 @@
       const requirementValueList = Object.entries(requirements)
       const allRequirementsMet =
         requirementValueList.every(([_, { isComplete }]) => isComplete) &&
-        ['REWARDS_DEPOSITED', 'COMPLETED'].includes(status)
+        ['REWARDS_DEPOSITED', 'REWARDS_CLAIMED', 'COMPLETED'].includes(status)
 
       requirementsStatus = requirementValueList.map(([key, { isComplete }]) => {
         return {
@@ -64,8 +62,7 @@
       })
 
       if (allRequirementsMet) {
-        if (!dispatched) dispatch('all-requirements-met')
-        dispatched = true
+        dispatch('all-requirements-met')
         setLoading(false)
       } else {
         setLoading(false)
