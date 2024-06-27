@@ -20,6 +20,7 @@
   import type { JettyNotification, jettyNotifications } from '../../../stores'
   import { createEventDispatcher } from 'svelte'
   import Notification from './Notification.svelte'
+  import { swipe, type SwipeCustomEvent } from 'svelte-gestures'
 
   export let expanded = false
   export let poppedUp = true
@@ -52,6 +53,7 @@
   const dispatch = createEventDispatcher<{
     'notification-opened': undefined
     close: undefined
+    open: undefined
     'hover-over-jetty': boolean
   }>()
 
@@ -90,9 +92,24 @@
   }
 
   $: latestNotification = $notifications[$notifications.length - 1]
+
+  const handleSwipe = (event: SwipeCustomEvent) => {
+    if (event.detail.direction === 'top') {
+      expanded = true
+    }
+
+    if (event.detail.direction === 'bottom') {
+      expanded = false
+    }
+  }
 </script>
 
-<div class="jetty-menu" style:--menuPosition={`${$menuPositionFactor * 98}%`}>
+<div
+  class="jetty-menu"
+  style:--menuPosition={`${$menuPositionFactor * 98}%`}
+  use:swipe
+  on:swipe={handleSwipe}
+>
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
     class="jetty-icon"
