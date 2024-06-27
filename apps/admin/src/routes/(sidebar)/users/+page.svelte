@@ -6,12 +6,16 @@
 
   import Delete from './Delete.svelte'
   import type { PageData } from './$types'
+  import { publicConfig } from '$lib/public-config'
+  import { GatewayApi } from 'common'
 
   let openDelete: boolean = false // modal control
 
   export let data: PageData
 
   const Users = data.users
+
+  const gateway = GatewayApi(publicConfig.networkId)
 
   // eslint-disable-next-line
   let current_user = {}
@@ -25,7 +29,7 @@
   </div>
   <Table>
     <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
-      {#each ['Id', 'identity Address', 'Country', 'Actions'] as title}
+      {#each ['Id', 'identity Address', 'Account address', 'Country', 'Actions'] as title}
         <TableHeadCell class="p-4 font-medium">{title}</TableHeadCell>
       {/each}
     </TableHead>
@@ -33,7 +37,7 @@
       {#each Users as user}
         <TableBodyRow class="text-base">
           <TableBodyCell
-            class="mr-12 flex items-center space-x-6 whitespace-nowrap p-4"
+            class="mr-12 flex items-center space-x-6 whitespace-nowrap p-4 cursor-pointer"
             on:click={() => {
               window.location.href = `/users/${user.id}`
             }}
@@ -49,6 +53,17 @@
             class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
           >
             {user.identityAddress}
+          </TableBodyCell>
+          <TableBodyCell
+            class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-blue-500 dark:text-blue-500 xl:max-w-xs"
+          >
+            {#if user.accountAddress}
+              <a
+                target="_blank"
+                href={`${gateway.networkConfig.dashboardUrl}/account/${user.accountAddress}`}
+                >{user.accountAddress}</a
+              >
+            {/if}
           </TableBodyCell>
           <TableBodyCell class="p-4">{user.country}</TableBodyCell>
 
