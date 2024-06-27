@@ -15,6 +15,14 @@ export const POST: RequestHandler = async ({ locals, request }) => {
     where: { id: userId }
   })
 
+  await locals.dependencies.dbClient.completedQuestRequirement.create({
+    data: {
+      userId,
+      questId: 'FirstTransactionQuest',
+      requirementId: 'RegisterAccount'
+    }
+  })
+
   await locals.dependencies.transactionModel.add({
     type: 'PopulateResources',
     accountAddress: accountAddress,
