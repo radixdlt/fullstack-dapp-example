@@ -141,20 +141,15 @@
 
     clearTimeout(timer)
     timer = setTimeout(() => {
-      swapButtonLoading = true
       getBalanceChange({
         amount,
         fromTokenAddress: clamResource?.id as string,
         toTokenAddress: elementResource?.id as string,
         swapComponent,
         userAddress: $walletData?.accounts[0].address as string
+      }).then((amount) => {
+        toInput = amount
       })
-        .then((amount) => {
-          toInput = amount
-        })
-        .finally(() => {
-          swapButtonLoading = false
-        })
     }, 750)
   }
 
