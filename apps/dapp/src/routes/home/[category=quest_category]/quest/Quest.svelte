@@ -226,6 +226,7 @@
   let:back
   let:next
   let:render
+  let:skip
   let:lastProgress
   let:progress
 >
@@ -243,7 +244,12 @@
   {/if}
 
   {#if render('claimRewards')}
-    <ClaimRewards bind:this={claimRewards} questId={id} text={$quests[id].text['claim.md']} />
+    <ClaimRewards
+      bind:this={claimRewards}
+      questId={id}
+      text={$quests[id].text['claim.md']}
+      on:claimed={skip}
+    />
   {/if}
 
   {#if render('complete')}
