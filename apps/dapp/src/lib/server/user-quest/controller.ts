@@ -221,7 +221,7 @@ export const UserQuestController = ({
     )
 
     if (!requirementId) {
-      return errAsync(createApiError(ErrorReason.invalidRequirement, 400)())
+      return okAsync({ httpResponseCode: 200, data: undefined })
     }
 
     const questStatus = userQuestModel.getQuestStatus(userId, questId).andThen((questStatus) => {
