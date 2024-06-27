@@ -21,6 +21,7 @@
   let quest: Quest
 
   let receivedClams = writable(data.requirements?.JettyReceivedClams.isComplete)
+
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
     unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
@@ -134,7 +135,7 @@
     {
       id: '12',
       type: 'jettyQuiz',
-      text: text['11.md'],
+      text: text['12.md'],
       quizRequirement: 'XrdQuiz',
       answers: [
         {

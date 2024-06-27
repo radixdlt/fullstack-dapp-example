@@ -15,7 +15,6 @@ export type QuestRewards = {
   clam: FungibleToken
   energyCard: FungibleToken
   giftBox: FungibleToken
-  fancyGiftBox: FungibleToken
 }
 
 export type QuestReward = {
@@ -27,8 +26,7 @@ export const questRewardDisplayName = {
   element: 'Element',
   clam: 'Clam',
   energyCard: 'Energy Card',
-  giftBox: 'Gift Box',
-  fancyGiftBox: 'Fancy Gift Box'
+  giftBox: 'Gift Box'
 } as const satisfies { [key in QuestReward['name']]: string }
 
 export type Language = keyof typeof Language
@@ -48,7 +46,7 @@ type OnLedgerRequirement = {
 
 type OffLedgerRequirement = {
   type: 'offLedger'
-  completedByUser?: boolean
+  completedByUser: boolean
 }
 
 type ContentRequirement = {
@@ -77,7 +75,7 @@ export const QuestDefinitions = () => {
       id: 'WelcomeToRadQuest',
       trackedAccountAddress: false,
       category: 'basic',
-      rewards: [{ name: 'element', amount: 5 }],
+      rewards: [],
       preRequisites: [],
       minutesToComplete: 3,
       requirements: {
@@ -91,7 +89,7 @@ export const QuestDefinitions = () => {
       id: 'WhatIsRadix',
       category: 'basic',
       trackedAccountAddress: false,
-      rewards: [{ name: 'element', amount: 5 }],
+      rewards: [],
       preRequisites: ['WelcomeToRadQuest'],
       minutesToComplete: 3,
       requirements: {
@@ -106,16 +104,13 @@ export const QuestDefinitions = () => {
       id: 'GetRadixWallet',
       category: 'basic',
       trackedAccountAddress: false,
-      rewards: [{ name: 'element', amount: 5 }],
+      rewards: [],
       preRequisites: ['WhatIsRadix'],
       minutesToComplete: 3,
       requirements: {
-        GetTheWallet: {
-          type: 'offLedger',
-          isHidden: true
-        },
         ConnectWallet: {
-          type: 'offLedger'
+          type: 'offLedger',
+          completedByUser: true
         }
       }
     },
@@ -141,10 +136,12 @@ export const QuestDefinitions = () => {
       minutesToComplete: 3,
       requirements: {
         VerifyPhoneNumber: {
-          type: 'offLedger'
+          type: 'offLedger',
+          completedByUser: false
         },
         RegisterAccount: {
-          type: 'offLedger'
+          type: 'offLedger',
+          completedByUser: false
         },
         LearnAboutTransactions: {
           type: 'content'
@@ -165,7 +162,7 @@ export const QuestDefinitions = () => {
           amount: 20
         },
         {
-          name: 'fancyGiftBox',
+          name: 'giftBox',
           amount: 1
         }
       ],
