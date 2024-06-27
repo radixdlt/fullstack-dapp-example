@@ -29,7 +29,7 @@
   </div>
   <Table>
     <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
-      {#each ['Id', 'identity Address', 'Account address', 'Country', 'Actions'] as title}
+      {#each ['Id', 'identity Address', 'Created', 'Account address', 'Country', 'Actions'] as title}
         <TableHeadCell class="p-4 font-medium">{title}</TableHeadCell>
       {/each}
     </TableHead>
@@ -48,6 +48,11 @@
               </div>
               <div class="text-sm font-normal text-gray-500 dark:text-gray-400">{user.id}</div>
             </div>
+          </TableBodyCell>
+          <TableBodyCell
+            class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
+          >
+            {user.createdAt}
           </TableBodyCell>
           <TableBodyCell
             class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
