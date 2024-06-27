@@ -18,7 +18,7 @@
 
   const text = data.text as Quests['StakingQuest']['text']
 
-  const stakedXrd = writable(data.requirements?.StakedXrd.isComplete)
+  const stakedXrd = writable(data.requirements?.StakedXrd?.isComplete)
   const rewardsDeposited = writable(
     data.questStatus.StakingQuest?.status === 'REWARDS_DEPOSITED' ||
       data.questStatus.StakingQuest?.status === 'COMPLETED'
