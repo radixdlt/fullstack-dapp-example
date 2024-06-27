@@ -50,9 +50,7 @@ const waitForMessage = async (userId: string, messageType: string) => {
       where: { userId }
     })
 
-    expectedMessage = messages.find(
-      (message) => JSON.parse(message.data as any).type === messageType
-    )
+    expectedMessage = messages.find((message) => (message.data as any).type === messageType)
 
     await new Promise((resolve) => setTimeout(resolve, 1000))
   }
