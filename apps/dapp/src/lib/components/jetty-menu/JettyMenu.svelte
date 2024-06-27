@@ -83,7 +83,11 @@
 
   $: poppedUp ? ($jettyPositionFactor = 0) : ($jettyPositionFactor = 1)
 
-  $: if (!expanded) dispatch('close')
+  $: if (expanded) {
+    dispatch('open')
+  } else {
+    dispatch('close')
+  }
 
   $: latestNotification = $notifications[$notifications.length - 1]
 </script>
