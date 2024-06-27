@@ -30,6 +30,27 @@ enum RewardAmount {
     NonFungibleAmount(IndexSet<NonFungibleLocalId>),
 }
 
+impl RewardAmount {
+    fn add_rewards(&mut self, other: &RewardAmount) {
+        match (self, other) {
+            (RewardAmount::FungibleAmount(value), RewardAmount::FungibleAmount(other_value)) => {
+                if let Some(new_value) = value.checked_add(*other_value) {
+                    *value = new_value;
+                } else {
+                    panic!("Fungible reward add overflow")
+                }
+            }
+            (
+                RewardAmount::NonFungibleAmount(values),
+                RewardAmount::NonFungibleAmount(other_values),
+            ) => {
+                values.extend(other_values.clone());
+            }
+            _ => panic!("Wrong resource type for resource address"),
+        }
+    }
+}
+
 #[derive(ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 struct RewardInfo {
     resource_address: ResourceAddress,
@@ -248,9 +269,12 @@ mod quest_rewards {
                     RewardState::Unclaimed {
                         ref mut resources_record,
                     } => {
-                        let result = resources_record
-                            .insert(reward.resource_address(), reward_amount.clone());
-                        assert!(result.is_none(), "Duplicate reward resource");
+                        resources_record
+                            .entry(reward.resource_address())
+                            .and_modify(|existing_reward_amount| {
+                                existing_reward_amount.add_rewards(&reward_amount)
+                            })
+                            .or_insert(reward_amount.clone());
                     }
                     RewardState::Claimed => {
                         let mut resources_record = HashMap::new();

@@ -100,7 +100,7 @@ fn can_deposit_rewards() -> Result<(), RuntimeError> {
 }
 
 #[test]
-fn cannot_overwrite_reward_with_another_deposit() -> Result<(), RuntimeError> {
+fn can_aggregate_rewards_fungible_with_another_deposit() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,
@@ -123,12 +123,60 @@ fn cannot_overwrite_reward_with_another_deposit() -> Result<(), RuntimeError> {
     )?;
 
     let reward_3 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
+
     // Act
     let result =
         quest_rewards.deposit_reward(user_id, QuestId("1".into()), vec![reward_3], &mut env);
 
     // Assert
-    assert!(result.is_err());
+    assert!(result.is_ok());
+
+    Ok(())
+}
+
+#[test]
+fn can_aggregate_rewards_nonfungible_with_another_deposit() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut quest_rewards,
+        user_id,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    let nf = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
+
+    let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
+    let reward_2 = BucketFactory::create_non_fungible_bucket(
+        nf.resource_address(&mut env)?,
+        [(NonFungibleLocalId::ruid([1; 32]), ())],
+        Mock,
+        &mut env,
+    )?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    quest_rewards.deposit_reward(
+        user_id.clone(),
+        QuestId("1".into()),
+        vec![reward_1, reward_2],
+        &mut env,
+    )?;
+
+    let reward_3 = BucketFactory::create_non_fungible_bucket(
+        nf.resource_address(&mut env)?,
+        [(NonFungibleLocalId::ruid([3; 32]), ())],
+        Mock,
+        &mut env,
+    )?;
+
+    // Act
+    let result =
+        quest_rewards.deposit_reward(user_id, QuestId("1".into()), vec![reward_3], &mut env);
+
+    // Assert
+    assert!(result.is_ok());
     Ok(())
 }
 
@@ -166,11 +214,146 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
         &mut env,
     )?;
 
+    assert_eq!(response.len(), 2);
     let response_1 = response[0].resource_address(&mut env)?;
     let response_2 = response[1].resource_address(&mut env)?;
 
     assert!(response_1 == reward_1_address || response_1 == reward_2_address);
     assert!(response_2 == reward_1_address || response_2 == reward_2_address);
+
+    Ok(())
+}
+
+#[test]
+fn can_claim_rewards_after_multiple_deposit_of_fungible_in_separate_calls() -> Result<(), RuntimeError>
+{
+    // Arrange
+    let Test {
+        mut env,
+        mut quest_rewards,
+        hero_badge,
+        user_id,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
+    let reward_2 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
+    let reward_3 = BucketFactory::create_fungible_bucket(XRD, 50.into(), Mock, &mut env)?;
+    let reward_1_address = reward_1.resource_address(&mut env)?;
+    let reward_2_address = reward_2.resource_address(&mut env)?;
+
+    let quest_id = QuestId("1".into());
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    quest_rewards.deposit_reward(
+        user_id.clone(),
+        quest_id.clone(),
+        vec![reward_1, reward_2],
+        &mut env,
+    )?;
+
+    quest_rewards.deposit_reward(user_id, quest_id.clone(), vec![reward_3], &mut env)?;
+
+    // Act
+    let response = quest_rewards.claim_reward(
+        quest_id,
+        hero_badge.create_proof_of_all(&mut env)?,
+        None,
+        &mut env,
+    )?;
+
+    // Assert
+    assert_eq!(response.len(), 2);
+
+    // XRD
+    let amount = response
+        .iter()
+        .find(|r| r.resource_address(&mut env).unwrap() == reward_1_address)
+        .unwrap()
+        .amount(&mut env)?;
+    assert_eq!(amount, 150.into());
+
+    // NonFungible
+    let local_ids = response
+        .iter()
+        .find(|r| r.resource_address(&mut env).unwrap() == reward_2_address)
+        .unwrap()
+        .non_fungible_local_ids(&mut env)?;
+    assert_eq!(local_ids.len(), 1);
+
+    Ok(())
+}
+
+#[test]
+fn can_claim_rewards_after_multiple_deposit_of_nonfungible_in_separate_calls(
+) -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut quest_rewards,
+        hero_badge,
+        user_id,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
+    let reward_2 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([(), ()], &mut env)?;
+    let reward_3 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
+    let reward_1_address = reward_1.resource_address(&mut env)?;
+    let reward_2_address = reward_2.resource_address(&mut env)?;
+    let reward_3_address = reward_3.resource_address(&mut env)?;
+
+    let quest_id = QuestId("1".into());
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    quest_rewards.deposit_reward(
+        user_id.clone(),
+        quest_id.clone(),
+        vec![reward_1, reward_2],
+        &mut env,
+    )?;
+
+    quest_rewards.deposit_reward(user_id, quest_id.clone(), vec![reward_3], &mut env)?;
+
+    // Act
+    let response = quest_rewards.claim_reward(
+        quest_id,
+        hero_badge.create_proof_of_all(&mut env)?,
+        None,
+        &mut env,
+    )?;
+
+    // Assert
+    assert_eq!(response.len(), 3);
+
+    // XRD
+    let amount = response
+        .iter()
+        .find(|r| r.resource_address(&mut env).unwrap() == reward_1_address)
+        .unwrap()
+        .amount(&mut env)?;
+    assert_eq!(amount, 100.into());
+
+    // NonFungible #1
+    let local_ids = response
+        .iter()
+        .find(|r| r.resource_address(&mut env).unwrap() == reward_2_address)
+        .unwrap()
+        .non_fungible_local_ids(&mut env)?;
+    assert_eq!(local_ids.len(), 2);
+
+    // NonFungible #2
+    let local_ids = response
+        .iter()
+        .find(|r| r.resource_address(&mut env).unwrap() == reward_3_address)
+        .unwrap()
+        .non_fungible_local_ids(&mut env)?;
+    assert_eq!(local_ids.len(), 1);
 
     Ok(())
 }

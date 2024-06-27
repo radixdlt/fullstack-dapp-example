@@ -24,15 +24,15 @@ export const Addresses = (networkId: number) => {
             'resource_tdx_2_1nffgrg4sxxswkc3vjydt57y6dcstrl8vp2z22al5h2thzzafk3ql8n',
           otterCoinAddress: 'resource_tdx_2_1t5pvx3yuwa7rxpa8h8uxnx068ruap9k7nqd7k5qxgay4yjalp9seng'
         },
-        package: 'package_tdx_2_1p4m6su4hc9ek7ruwrnn2fjv74df2ly3yjnms92e0kskrcapfzvswzz',
+        package: 'package_tdx_2_1p4fpyjq8sm2l3g383zdy8gju6n7xsztcnmm85u37le880sssqhyfmz',
         clamDexPackage: 'package_tdx_2_1ph96rek5yr7jh79pw5aqst6e6lm5k62l5pv6j9dxve6scyr3eel3mh',
         components: {
           mayaRouter: 'component_tdx_2_mock_maya_router_address',
           heroBadgeForge: 'component_tdx_2_1cr0aqcxlna320v2ywzfjatp3nwflrthkwm7m2zmfm0ll9c88y6mcpy',
-          questRewards: 'component_tdx_2_1crexnhzv546pjn09s563a3ue8scjwulzm02c7rmzjr0x3scx6wkmgd',
-          kycOracle: 'component_tdx_2_1cq7xedk2d4q7pfck50pjenz9sr4nyd27rf8k8kn3vrysflk4knlnuh',
+          questRewards: 'component_tdx_2_1cq687ktpqvegwcuegzl2mfe90eqg2u39q8sdxw3vxe7wwxtuyv9jvy',
+          kycOracle: 'component_tdx_2_1cr2mfdnzpn2jtf95kafmttjafrdumnppr5pw7fu57m97u7y8tyrlcs',
           kycOracleKeyValueStore:
-            'internal_keyvaluestore_tdx_2_1kzv5kpywzny24t6dethzfd8mezywgdlaf6erx4grxjp8yt6eyaxmp9',
+            'internal_keyvaluestore_tdx_2_1kqn4jr73xn4fd82zcgc6vfu6h0qvxxshcy2dc2mw93acvp03fjqcv7',
           cardForge: 'component_tdx_2_1cp2x28nq95u6ghuzuc0jv3jhpp8tnwcnktpen0angmp3v5w77r8787',
           radgemForge: 'component_tdx_2_1crpqg9q4rcal3tn4ph7wc872et53489al6hjm90y0gpnqfcf85z7lu',
           radmorphForge: 'component_tdx_2_1cpg2k7hjul9xn6rf8mklh9m7qenrrx3rsysqd2t33cd4cvhuc5j2f0',
