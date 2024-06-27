@@ -55,9 +55,8 @@
 
   .active {
     color: var(--color-dark);
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.35rem;
+    background: color-mix(in srgb, var(--color-dark) 20%, transparent);
+    border-radius: var(--border-radius-lg);
     padding: var(--spacing-xs) var(--spacing-md);
   }
 
