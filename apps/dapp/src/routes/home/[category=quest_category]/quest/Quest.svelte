@@ -19,6 +19,7 @@
   import { isMobile } from '$lib/utils/is-mobile'
   import type { QuestRequirement } from '$lib/server/user-quest/controller'
   import QuizJettyPage from './QuizJettyPage.svelte'
+  import { writable } from 'svelte/store'
 
   type CompleteStep = _Step<'complete'> & { id: 'complete' }
 
@@ -132,11 +133,18 @@
 
   let nextDisabled = false
 
+  let requirementsNextEnabled = writable(false)
+
   $: _steps = steps.map((step) => {
     if (step.type === 'requirements') {
       return {
         type: 'regular',
-        id: 'requirements'
+        id: 'requirements',
+        footer: {
+          next: {
+            enabled: requirementsNextEnabled
+          }
+        }
       }
     }
 
@@ -225,14 +233,8 @@
       questId={id}
       {requirements}
       on:all-requirements-met={() => {
-        nextDisabled = false
+        $requirementsNextEnabled = true
         if (lastProgress < progress) next()
-      }}
-      on:requirements-not-met={() => {
-        nextDisabled = true
-      }}
-      on:loading={(e) => {
-        e.detail ? (nextDisabled = true) : (nextDisabled = false)
       }}
     />
   {/if}

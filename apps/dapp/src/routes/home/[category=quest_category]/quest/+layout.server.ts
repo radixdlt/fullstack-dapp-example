@@ -65,7 +65,7 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
 
         if (cachedRequirement) {
           requirements[key] = {
-            isComplete: cachedRequirement,
+            isComplete: cachedRequirement ?? false,
             isHidden: requirements[key].isHidden
           }
         }
@@ -85,7 +85,6 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
 
     if (questStatus[id]?.status === 'COMPLETED')
       cookies.delete(`saved-progress-${id}`, { path: '/' })
-
     return {
       id,
       requirements,

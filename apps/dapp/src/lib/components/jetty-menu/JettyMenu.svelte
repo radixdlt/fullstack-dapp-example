@@ -80,26 +80,15 @@
 
   $: expanded ? ($menuPositionFactor = 0) : ($menuPositionFactor = 1)
 
-  $: poppedUp ? ($jettyPositionFactor = 0) : ($jettyPositionFactor = 0.3)
+  $: poppedUp ? ($jettyPositionFactor = 0) : ($jettyPositionFactor = 1)
 
   $: if (!expanded) dispatch('close')
-
-  const height = 30
-  const iconHeight = 5.5
 
   $: latestNotification = $notifications[$notifications.length - 1]
 </script>
 
-<div
-  class="jetty-menu"
-  style:--height={`${height}rem`}
-  style:--menuPosition={`${height * $menuPositionFactor * 0.99}rem`}
->
-  <div
-    class="jetty-icon"
-    style:--height={`-${iconHeight}rem`}
-    style:transform="translateY({iconHeight * $jettyPositionFactor + 0.6}rem)"
-  >
+<div class="jetty-menu" style:--menuPosition={`${$menuPositionFactor * 98}%`}>
+  <div class="jetty-icon" style:--iconPosition={`${$jettyPositionFactor * 30 - 90}%`}>
     <JettyPopup
       on:click={() => {
         expanded = !expanded
@@ -180,13 +169,13 @@
     display: flex;
     flex-direction: column;
     background-color: var(--color-background-dark);
-    height: var(--height);
+    height: 30rem;
     width: 25rem;
     border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
     position: absolute;
-    bottom: 0%;
-    transform: translateY(var(--menuPosition));
+    bottom: 0;
     z-index: 4;
+    transform: translateY(var(--menuPosition));
 
     @include desktop {
       right: 1rem;
@@ -199,9 +188,10 @@
 
   .jetty-icon {
     position: absolute;
-    top: var(--height);
+    top: 0;
     right: 1.5rem;
     z-index: 1;
+    transform: translateY(var(--iconPosition));
   }
 
   .header {

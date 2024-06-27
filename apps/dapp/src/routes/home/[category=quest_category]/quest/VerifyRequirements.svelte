@@ -33,7 +33,7 @@
       id: key,
       //@ts-ignore
       text: $i18n.t(`quests:${questId}.requirements.${key}`),
-      complete: type === 'content' ? true : complete || value
+      complete: type === 'content' ? true : complete || value.isComplete
     }
   }) as { id: string; text: string; complete: boolean }[]
 
@@ -64,7 +64,7 @@
   const readRequirementsFromDb = () =>
     questApi.getQuestInformation(questId).map((response) => {
       requirementsStatus = requirementsStatus.map((requirement) => {
-        if (response.requirements[requirement.id]) {
+        if (response.requirements[requirement.id].isComplete) {
           return {
             ...requirement,
             complete: true
