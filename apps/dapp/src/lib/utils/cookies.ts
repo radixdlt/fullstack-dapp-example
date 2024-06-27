@@ -14,11 +14,14 @@ export type RequirementCookieKey = `requirement-${PreLoggedInQuests}-${string}`
 
 export type SavedProgressCookieKey = `saved-progress-${QuestId}`
 
+export type JwtCookieKey = string
+
 export const useCookies = <
   T extends
     | CookieEntry<QuestStatusCookieKey, $Enums.QuestStatus>
     | CookieEntry<RequirementCookieKey, boolean>
-    | CookieEntry<SavedProgressCookieKey, number>,
+    | CookieEntry<SavedProgressCookieKey, number>
+    | CookieEntry<JwtCookieKey, string>,
   V extends T['key']
 >(
   item: V

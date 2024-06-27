@@ -53,11 +53,13 @@
       networkId,
       dAppDefinitionAddress: dAppDefinitionAddress ?? '',
       logger,
-      featureFlags: ['ExperimentalMobileSupport'],
       onDisconnect: async () => {
-        authApi.logout()
+        await authApi.logout()
+
         $webSocketClient?.close()
         $webSocketClient = undefined
+
+        useCookies('jwt').clear()
 
         Object.entries($quests).forEach(([questId, quest]) => {
           useCookies(`quest-status-${questId as QuestId}`).clear()
