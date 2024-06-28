@@ -1,9 +1,10 @@
 import { questApi } from '$lib/api/quest-api'
+import { ResultAsync, okAsync } from 'neverthrow'
 import type { LayoutServerLoad } from './$types'
 import { loadLandingPopup, loadQuests, type QuestId } from 'content'
 import type { $Enums } from 'database'
 
-export const load: LayoutServerLoad = async ({ fetch, cookies, url }) => {
+export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) => {
   const questStatusResult = await questApi.getQuestsInformation(fetch)
   const questDefinitions = loadQuests('en')
   const landingPopupDefinitions = loadLandingPopup('en')
@@ -33,8 +34,8 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url }) => {
         cookies.get(`quest-status-${questId}`) === 'COMPLETED' &&
         questStatus[questId]?.status !== 'COMPLETED'
       ) {
-        await questApi.completeContentRequirement(questId, fetch).mapErr(() => {})
-        await questApi.completeQuest(questId, fetch).mapErr(() => {})
+        await questApi.completeContentRequirement(questId, fetch)
+        await questApi.completeQuest(questId, fetch)
         questStatus[questId] = {
           savedProgress: questStatus[questId]?.savedProgress ?? 0,
           status: 'COMPLETED'
@@ -51,18 +52,22 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url }) => {
       }
     }
 
-    Promise.all(
+    await ResultAsync.combine(
       ['requirement-WelcomeToRadQuest-RadQuestQuiz', 'requirement-WhatIsRadix-RadixQuiz'].map(
         (cookieName) => {
           if (cookies.get(cookieName)) {
             const [, questId, requirementId] = cookieName.split('-')
             return questApi.completeRequirement(questId as QuestId, requirementId, fetch)
           }
-
-          return Promise.resolve()
+          return okAsync(undefined)
         }
       )
     )
+
+    locals.context.logger.debug({
+      userId: locals.userId,
+      questStatus
+    })
   } else {
     for (const quest of Object.values(questDefinitions)) {
       const cachedStatus = cookies.get(`quest-status-${quest.id}`) as $Enums.QuestStatus | undefined

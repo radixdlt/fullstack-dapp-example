@@ -59,7 +59,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   const logger = appLogger.child({
     traceId,
     path: event.url.pathname,
-    method: event.request.method
+    httpMethod: event.request.method
   })
 
   event.locals.context = {
