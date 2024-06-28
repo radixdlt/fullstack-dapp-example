@@ -1,6 +1,10 @@
 import { publicConfig } from '$lib/public-config'
 
-export const createClaimRewardsTransaction = (accountAddress: string, userId: string, questId: string) => {
+export const createClaimRewardsTransaction = (
+  accountAddress: string,
+  userId: string,
+  questId: string
+) => {
   return `
         CALL_METHOD
           Address("${accountAddress}")

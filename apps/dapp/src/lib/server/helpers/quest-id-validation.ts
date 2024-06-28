@@ -1,7 +1,5 @@
 import { QuestDefinitions } from 'content'
 
-const NetworkQuestDefinitions = QuestDefinitions()
-
 export const createInvalidQuestIdResponse = () =>
   new Response(JSON.stringify({ error: 'invalid quest id', status: 400 }), {
     headers: {
@@ -10,5 +8,4 @@ export const createInvalidQuestIdResponse = () =>
     status: 400
   })
 
-export const isValidQuestId = (questId: string) =>
-  Object.keys(NetworkQuestDefinitions).includes(questId)
+export const isValidQuestId = (questId: string) => Object.keys(QuestDefinitions()).includes(questId)

@@ -29,7 +29,11 @@
 
   export const claim = () =>
     sendTransaction({
-      transactionManifest: createClaimRewardsTransaction($user?.accountAddress!, $user?.id!, questId)
+      transactionManifest: createClaimRewardsTransaction(
+        $user?.accountAddress!,
+        $user?.id!,
+        questId
+      )
     })
 </script>
 
