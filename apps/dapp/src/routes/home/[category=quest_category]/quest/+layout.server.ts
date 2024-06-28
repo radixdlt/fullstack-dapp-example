@@ -10,8 +10,6 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
   parent().then(async ({ questDefinitions, questStatus }) => {
     const id = url.pathname.split('/')[4] as QuestId
 
-    locals.context.logger.info({ questId: id })
-
     const requiresLogin = !['WelcomeToRadQuest', 'WhatIsRadix', 'GetRadixWallet'].includes(id)
 
     if (requiresLogin) {
@@ -85,6 +83,9 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
 
     if (questStatus[id]?.status === 'COMPLETED')
       cookies.delete(`saved-progress-${id}`, { path: '/' })
+
+    locals.context.logger.info({ questId: id, requirements })
+
     return {
       id,
       requirements,
