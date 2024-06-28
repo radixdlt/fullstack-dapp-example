@@ -1,16 +1,9 @@
 import { publicConfig } from '$lib/public-config'
 
-export const createClaimRewardsTransaction = (
-  accountAddress?: string | null,
-  userId?: string,
-  questId?: string
-) => {
-  if (!accountAddress || !userId || !questId) {
-    throw new Error('Missing required parameters')
-  }
+export const createClaimRewardsTransaction = (accountAddress: string, userId: string, questId: string) => {
   return `
         CALL_METHOD
-          Address("${accountAddress!}")
+          Address("${accountAddress}")
           "create_proof_of_non_fungibles"
           Address("${publicConfig.badges.heroBadgeAddress}")
           Array<NonFungibleLocalId>(NonFungibleLocalId("<${userId}>"))
