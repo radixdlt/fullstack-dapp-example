@@ -12,19 +12,21 @@
   export let resource: Resource | undefined = undefined
   export let state: 'default' | 'error' = 'default'
   export let disabled = false
+
+  let inputRef: HTMLElement | undefined
 </script>
 
-<div class="container">
+<button class="container" on:click={() => inputRef?.focus()}>
   <p class="text-label card-title">{cardTitle}</p>
   <div class="input-row">
-    <Input {disabled} --width="90%" {state} placeholder="0" bind:value />
+    <Input bind:ref={inputRef} {disabled} --width="90%" {state} placeholder="0" bind:value />
     <div class="resource">
       <Icon --size="20px" url={resource?.icon} />
       <p class="resource-name">{resource?.name ?? ''}</p>
     </div>
   </div>
   <slot />
-</div>
+</button>
 
 <style lang="scss">
   p {
@@ -33,6 +35,7 @@
   }
 
   .container {
+    cursor: default;
     height: 8.75rem;
     border-radius: var(--border-radius-xl);
     background: var(--color-white);

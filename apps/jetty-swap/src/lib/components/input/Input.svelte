@@ -4,13 +4,21 @@
   export let placeholder = ''
   export let state: 'default' | 'error' = 'default'
   export let disabled = false
+  export let ref: HTMLElement | undefined = undefined
   function inputHandler(event: Event) {
     const input = event.target as HTMLInputElement
     onInput(input.value)
   }
 </script>
 
-<input {disabled} class={`text-title ${state}`} {placeholder} on:input={inputHandler} bind:value />
+<input
+  {disabled}
+  bind:this={ref}
+  class={`text-title ${state}`}
+  {placeholder}
+  on:input={inputHandler}
+  bind:value
+/>
 
 <style>
   input {
