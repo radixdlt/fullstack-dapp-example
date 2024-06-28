@@ -9,7 +9,8 @@ import type {
   AccountAddressModel,
   UserQuestModel,
   Addresses,
-  MessageModel
+  MessageModel,
+  NotificationModel
 } from 'common'
 import type { PrismaClient } from 'database'
 import type { ResultAsync } from 'neverthrow'
@@ -21,6 +22,7 @@ import type { UserQuestController } from '$lib/server/user-quest/controller'
 import type { AuthController } from '$lib/server/auth/controller'
 import type { MessageController } from '$lib/server/message/controller'
 import type { OneTimePasswordController } from '$lib/server/otp/controller'
+import type { NotificationController } from '$lib/server/notification/controller'
 
 export type ControllerMethodOutput<T = any> = ResultAsync<
   { data: T; httpResponseCode: number },
@@ -38,6 +40,7 @@ export type Controllers = {
   authController: AuthController
   messageController: MessageController
   oneTimePasswordController: OneTimePasswordController
+  notificationController: NotificationController
 }
 
 export type ControllerDependencies = {
@@ -48,6 +51,7 @@ export type ControllerDependencies = {
   userQuestModel: ReturnType<UserQuestModel>
   accountAddressModel: ReturnType<AccountAddressModel>
   messageModel: ReturnType<MessageModel>
+  notificationModel: ReturnType<NotificationModel>
   logger: AppLogger
   dbClient: PrismaClient
   addresses: Addresses

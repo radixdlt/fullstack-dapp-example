@@ -17,7 +17,15 @@ export const NotificationModel = (db: PrismaClient) => (logger?: AppLogger) => {
         }
       }),
       (error) => {
-        logger?.error({ error, method: 'add', model: 'NotificationModel' })
+        logger?.error({
+          error,
+          method: 'add',
+          model: 'NotificationModel',
+          data: {
+            userId,
+            notificationId
+          }
+        })
         return createApiError('failed to add notification', 400)()
       }
     )
@@ -52,7 +60,12 @@ export const NotificationModel = (db: PrismaClient) => (logger?: AppLogger) => {
         }
       }),
       (error) => {
-        logger?.error({ error, method: 'markAsSeen', model: 'NotificationModel' })
+        logger?.error({
+          error,
+          method: 'markAsSeen',
+          model: 'NotificationModel',
+          data: { id, userId }
+        })
         return createApiError('failed to mark notification as seen', 400)()
       }
     )
