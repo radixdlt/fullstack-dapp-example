@@ -8,12 +8,16 @@ import {
   radquestEntityAddresses
 } from 'typescript-wallet'
 import { Addresses, GatewayApi, TransactionModel, UserQuestModel, appLogger } from 'common'
-import { PrismaClient } from 'database'
+import { PrismaClient, User } from 'database'
 import { ResultAsync } from 'neverthrow'
 import { Queues, getQueues } from 'queues'
 import { config } from './config'
 import { QueueEvents } from 'bullmq'
 import crypto from 'crypto'
+import { createUser } from './helpers/create-user'
+import { addVerifiedPhoneNumberRequirement } from './helpers/add-completed-requirement'
+import { completeQuestRequirements } from './helpers/complete-quest-requirements'
+import { waitForMessage } from './helpers/wait-for-message'
 
 const eventQueueEvents = new QueueEvents(Queues.EventQueue, { connection: config.redis })
 const transactionQueueEvents = new QueueEvents(Queues.TransactionQueue, {
@@ -41,53 +45,6 @@ const networkName = gatewayApi.networkConfig.networkName
 
 const logger = appLogger
 
-const waitForMessage = async (userId: string, messageType: string) => {
-  logger.info({ method: 'waitForMessage.start', userId, messageType })
-
-  let expectedMessage: any
-  while (!expectedMessage) {
-    const messages = await db.message.findMany({
-      where: { userId }
-    })
-
-    expectedMessage = messages.find((message) => (message.data as any).type === messageType)
-
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-  }
-
-  logger.info({ method: 'waitForMessage.complete', message: expectedMessage })
-}
-
-const completeQuestRequirements = async (
-  userId: string,
-  questId: string,
-  requirementIds: string[]
-) => {
-  await db.questProgress.upsert({
-    create: { questId, userId, status: 'IN_PROGRESS' },
-    update: { status: 'IN_PROGRESS' },
-    where: { questId_userId: { questId, userId } }
-  })
-
-  for (const requirementId of requirementIds) {
-    await db.completedQuestRequirement.upsert({
-      create: {
-        questId,
-        userId,
-        requirementId
-      },
-      update: {},
-      where: {
-        questId_userId_requirementId: {
-          questId,
-          userId,
-          requirementId
-        }
-      }
-    })
-  }
-}
-
 if (!networkName) throw new Error('PUBLIC_NETWORK_ID env var not set to a valid network')
 
 const radixEngineClient = RadixEngineClient({
@@ -98,27 +55,13 @@ const radixEngineClient = RadixEngineClient({
 
 let accountAddress: string
 let identityAddress: string
-let user: Awaited<ReturnType<typeof createUser>>
+let user: User
 let queues: ReturnType<typeof getQueues>
 
 const transactionModel = TransactionModel(db, transactionQueue)
 const userQuestModel = UserQuestModel(db)(logger)
 
 const addresses = Addresses(2)
-
-const createUser = async (
-  identityAddress: string,
-  accountAddress: string,
-  id = crypto.randomUUID().replace(/-/g, '')
-) =>
-  db.user.create({
-    data: { identityAddress, accountAddress, id, referralCode: crypto.randomUUID() }
-  })
-
-const addVerifiedPhoneNumberRequirement = async (userId: string) =>
-  db.completedQuestRequirement.create({
-    data: { userId, questId: 'FirstTransactionQuest', requirementId: 'VerifyPhoneNumber' }
-  })
 
 describe('Event flows', () => {
   beforeAll(async () => {
@@ -130,8 +73,8 @@ describe('Event flows', () => {
     const value = result.value
     accountAddress = value[0].testAccount
     identityAddress = value[1]
-    user = await createUser(identityAddress, accountAddress)
-    await addVerifiedPhoneNumberRequirement(user.id)
+    user = await createUser(db)(identityAddress, accountAddress)
+    await addVerifiedPhoneNumberRequirement(db)(user.id)
     queues = getQueues(config.redis)
   })
   it(
@@ -140,7 +83,7 @@ describe('Event flows', () => {
     async () => {
       const discriminator = `AddAccountAddressToHeroBadgeForge:${crypto.randomUUID()}`
 
-      await completeQuestRequirements(user.id, 'FirstTransactionQuest', [
+      await completeQuestRequirements(db)(user.id, 'FirstTransactionQuest', [
         'VerifyPhoneNumber',
         'RegisterAccount',
         'LearnAboutTransactions'
@@ -162,7 +105,7 @@ describe('Event flows', () => {
 
       expect(item?.status).toBe('COMPLETED')
 
-      await waitForMessage(user.id, 'HeroBadgeReadyToBeClaimed')
+      await waitForMessage(logger, db)(user.id, 'HeroBadgeReadyToBeClaimed')
 
       await radixEngineClient.getXrdFromFaucet()
 
