@@ -166,12 +166,14 @@ export const EventWorkerController = ({
         job.data.relevantEvents.DepositedEvent
       )
 
-      return transactionModel(childLogger).add({
-        discriminator: `CombinedElementsMintRadgem:${traceId}`,
-        userId: userId!,
-        type: 'CombinedElementsMintRadgem',
-        traceId
-      })
+      return getUserById(userId!, dbClient).andThen(() =>
+        transactionModel(childLogger).add({
+          discriminator: `CombinedElementsMintRadgem:${traceId}`,
+          userId: userId!,
+          type: 'CombinedElementsMintRadgem',
+          traceId
+        })
+      )
     }
 
     const handelCombineElementsMintedRadgemEvent = () => {
@@ -179,13 +181,15 @@ export const EventWorkerController = ({
         job.data.relevantEvents.MintedRadgemEvent
       )
 
-      return transactionModel(childLogger).add({
-        discriminator: `CombinedElementsAddRadgemImage:${radgemId}`,
-        userId: userId!,
-        type: 'CombinedElementsAddRadgemImage',
-        radgemId: radgemId!,
-        traceId
-      })
+      return getUserById(userId!, dbClient).andThen(() =>
+        transactionModel(childLogger).add({
+          discriminator: `CombinedElementsAddRadgemImage:${radgemId}`,
+          userId: userId!,
+          type: 'CombinedElementsAddRadgemImage',
+          radgemId: radgemId!,
+          traceId
+        })
+      )
     }
 
     const handleQuestWithTrackedAccount = (
