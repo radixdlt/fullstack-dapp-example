@@ -6,6 +6,7 @@
   import { questApi } from '$lib/api/quest-api'
   import ClaimRewards from '$lib/components/claim-rewards/ClaimRewards.svelte'
   import { user } from '../../../../stores'
+  import { createClaimRewardsTransaction } from '$lib/helpers/create-claim-rewards-transaction'
 
   export let questId: keyof Quests
   export let text: string
@@ -28,32 +29,7 @@
 
   export const claim = () =>
     sendTransaction({
-      transactionManifest: `
-        CALL_METHOD
-          Address("${$user?.accountAddress!}")
-          "create_proof_of_non_fungibles"
-          Address("${publicConfig.badges.heroBadgeAddress}")
-          Array<NonFungibleLocalId>(NonFungibleLocalId("<${$user?.id}>"))
-        ;
-
-        POP_FROM_AUTH_ZONE
-          Proof("hero_badge_proof")
-        ;
-
-        CALL_METHOD
-          Address("${publicConfig.components.questRewards}")
-          "claim_reward"
-          "${questId}"
-          Proof("hero_badge_proof")
-          None
-        ;
-
-        CALL_METHOD
-          Address("${$user?.accountAddress}")
-          "deposit_batch"
-          Expression("ENTIRE_WORKTOP")
-        ;
-      `
+      transactionManifest: createClaimRewardsTransaction($user?.accountAddress, $user?.id, questId)
     })
 </script>
 
