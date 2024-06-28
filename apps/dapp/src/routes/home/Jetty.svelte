@@ -4,13 +4,20 @@
   import BookIcon from '@images/book-open.svg'
   import LightningIcon from '@images/lightning-icon.svg'
   import { loadGlossary } from 'content'
-  import FuseElements from './FuseElements.svelte'
+  import FuseElements, { checkClaimAvailable } from './FuseElements.svelte'
   import { page } from '$app/stores'
   import { markLatestNotificationAsSeen } from '$lib/notifications'
-  import { hideJetty, hideJettyMenu, jettyNotifications, retractJettyMenu } from '../../stores'
+  import {
+    hideJetty,
+    hideJettyMenu,
+    jettyNotifications,
+    retractJettyMenu,
+    user
+  } from '../../stores'
   import { tick } from 'svelte'
   import { pushState } from '$app/navigation'
   import { isMobile } from '$lib/utils/is-mobile'
+  import { writable } from 'svelte/store'
 
   let poppedUp = false
   let expanded = false
@@ -39,6 +46,20 @@
   const setExpanded = (value: boolean) => (expanded = value)
 
   $: if (!($page.state as any).jettyMenuExpanded) setExpanded(false)
+
+  let claimAvailable = writable(false)
+
+  const checkClaimStatus = () => {
+    checkClaimAvailable($user?.id!)
+      .map(() => {
+        claimAvailable.set(true)
+      })
+      .mapErr(() => {
+        claimAvailable.set(false)
+      })
+  }
+
+  $: if (expanded) checkClaimStatus()
 </script>
 
 {#if !$hideJettyMenu}
@@ -51,6 +72,10 @@
     on:open={() => {
       pushState('', { jettyMenuExpanded: true })
     }}
+    on:close={() => {
+      history.back()
+    }}
+    on:item-content-closed={checkClaimStatus}
     hideJetty={$hideJetty}
     {poppedUp}
     menuItems={[
@@ -62,19 +87,25 @@
       {
         id: 'fuse-elements',
         text: 'Fuse Elements',
-        icon: LightningIcon
+        icon: LightningIcon,
+        alert: claimAvailable
       }
     ]}
     notifications={jettyNotifications}
     on:notification-opened={markLatestNotificationAsSeen}
     let:currentMenuItem
+    let:back
   >
     {#if currentMenuItem.id === 'glossary'}
       <Glossary bind:this={glossary} glossary={loadGlossary('en')} />
     {/if}
 
     {#if currentMenuItem.id === 'fuse-elements'}
-      <FuseElements />
+      <FuseElements
+        on:cancel={() => {
+          back.set(true)
+        }}
+      />
     {/if}
   </JettyMenu>
 

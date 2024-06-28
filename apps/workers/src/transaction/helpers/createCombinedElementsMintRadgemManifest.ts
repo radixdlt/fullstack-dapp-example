@@ -31,7 +31,7 @@ CALL_METHOD
 CALL_METHOD
   Address("${refinery}")
   "combine_elements_mint_radgem"
-  NonFungibleGlobalId("${badgeResourceAddress}:<${badgeId}>")
+  NonFungibleGlobalId("${badgeResourceAddress}:${badgeId}")
   Decimal("${randomFloat()}")
   Decimal("${randomFloat()}")
 ;

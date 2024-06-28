@@ -25,6 +25,7 @@ import { getDetailsFromCombineElementsMintedRadgemEvent } from './helpers/getDet
 import { WorkerError } from '../_types'
 import { getUserById } from '../helpers/getUserById'
 import { SendMessage } from '../helpers/sendMessage'
+import { getUserIdFromRadgemImageEvent } from './helpers/getUserIdFromRadgemImageEvent'
 
 type EventEmitter = {
   entity: {
@@ -182,13 +183,25 @@ export const EventWorkerController = ({
       )
 
       return getUserById(userId!, dbClient).andThen(() =>
-        transactionModel(childLogger).add({
-          discriminator: `CombinedElementsAddRadgemImage:${radgemId}`,
-          userId: userId!,
-          type: 'CombinedElementsAddRadgemImage',
-          radgemId: radgemId!,
-          traceId
-        })
+        transactionModel(childLogger)
+          .add({
+            discriminator: `CombinedElementsAddRadgemImage:${radgemId}`,
+            userId: userId!,
+            type: 'CombinedElementsAddRadgemImage',
+            radgemId: radgemId!,
+            traceId
+          })
+          .andThen(() => sendMessage(userId!, { type: 'CombineElementsMintRadgem', traceId }))
+      )
+    }
+
+    const handleAddedRadgemImage = () => {
+      const userId = getUserIdFromRadgemImageEvent(job.data.relevantEvents.AddedRadgemImageEvent)
+        .split('<')[1]
+        .split('>')[0]
+
+      return getUserById(userId, dbClient).andThen(() =>
+        sendMessage(userId, { type: 'CombineElementsAddRadgemImage', traceId })
       )
     }
 
@@ -252,7 +265,7 @@ export const EventWorkerController = ({
       case EventId.CombineElementsMintedRadgem:
         return handelCombineElementsMintedRadgemEvent()
       case EventId.CombineElementsAddedRadgemImage:
-        return okAsync(undefined)
+        return handleAddedRadgemImage()
       case EventId.DepositHeroBadge:
         return getUserIdFromDepositHeroBadgeEvent(
           job.data.relevantEvents.HeroBadgeDeposited

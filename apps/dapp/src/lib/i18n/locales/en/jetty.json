@@ -9,6 +9,7 @@
   "logged-in-with-wallet": "I see you've logged in with your wallet!",
   "go-back-to-quest": "Go back to quest",
   "cancel": "Cancel",
+  "close": "Close",
   "transform-gems": {
     "back": "Back",
     "title0": "Pick a Transform card",
@@ -19,10 +20,17 @@
     "gemcard-rarity": "Rarity"
   },
   "fuse-elements": {
-    "intro": "I can combine raw elements into colorful gemstones using my magical abilities. Gemstones can be combined with alchemy cards to craft unique and beautiful objects!",
-    "text1": "You have {{count}} Elements right now.",
-    "text2": "Send me {{count}} Elements and I will create a random gemstone.",
-    "send-button": "Send {{count}} Elements"
+    "intro": "I can combine raw elements into colorful RadGems using my magical abilities.",
+    "intro2": "RadGems can be combined with any alchemy cards to craft unique and beautiful RadMorph objects!",
+    "text1": "I see you have {{count}} Elements in your wallet.",
+    "text2": "Give me {{count}} Elements and I will fuse them into a random RadGem.",
+    "send-button": "Send {{count}} Elements",
+    "not-enough-elements": "I need 10 Elements to create a RadGem. You only have {{count}} Elements right now!",
+    "no-elements": "You don't have any Elements in your wallet. Claim at least 10 Elements by completing quests, and then come back!",
+    "fusing-elements": "Fusing your Elements now",
+    "radgem-claimed": "Did you like the new RadGem? Remember it can be a different color and shape next time!",
+    "elements-left": "You have {{count}} Elements left.",
+    "new-radgem": "Here you go, a new RadGem for you!"
   },
   "notification-cta": "Go to Quest"
 }

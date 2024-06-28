@@ -34,7 +34,7 @@ CALL_METHOD
 CALL_METHOD
   Address("${refinery}")
   "combine_elements_add_radgem_image"
-  NonFungibleGlobalId("${badgeResourceAddress}:<${badgeId}>")
+  NonFungibleGlobalId("${badgeResourceAddress}:${badgeId}")
   NonFungibleLocalId("${radgemId}")
   "${keyImageUrl}"
 ;
