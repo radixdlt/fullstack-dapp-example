@@ -18,7 +18,7 @@
     class:primary={!secondary}
     class:secondary
     class:loading
-    target={isExternal ? '_blank' : '_self'}
+    target={isExternal ? '_blank' : ''}
     data-sveltekit-preload-data
   >
     {#if loading}
