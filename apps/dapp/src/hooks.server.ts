@@ -12,7 +12,6 @@ import {
   Addresses,
   MessageModel
 } from 'common'
-import { QuestDefinitions } from 'content'
 import { UserType } from 'database'
 import { dbClient } from '$lib/db'
 import { RedisConnection, getQueues } from 'queues'
@@ -24,9 +23,18 @@ import { AuthModel } from '$lib/server/auth/model'
 import { JWT } from '$lib/server/auth/jwt'
 import { MessageController } from '$lib/server/message/controller'
 import { OneTimePasswordController } from '$lib/server/otp/controller'
+import { createPreflightResponse } from '$lib/server/helpers/cors'
+import { createWellKnownResponse } from '$lib/server/helpers/create-well-known-response'
+import {
+  createInvalidQuestIdResponse,
+  isValidQuestId
+} from '$lib/server/helpers/quest-id-validation'
+import {
+  createForbiddenResponse,
+  createUnauthorizedResponse
+} from '$lib/server/helpers/create-error-response'
 
 const networkId = +PUBLIC_NETWORK_ID
-const NetworkQuestDefinitions = QuestDefinitions()
 
 const { transactionQueue } = getQueues(config.redis)
 
@@ -46,14 +54,15 @@ export const handle: Handle = async ({ event, resolve }) => {
   const origin = event.request.headers.get('origin')
 
   if (event.request.method === 'OPTIONS') {
-    return new Response('ok', {
-      headers: {
-        'Access-Control-Allow-Credentials': 'true',
-        'Access-Control-Allow-Origin': origin || '*',
-        'Access-Control-Allow-Methods': 'OPTIONS,POST',
-        'Access-Control-Allow-Headers': 'Content-Type'
-      }
-    })
+    return createPreflightResponse(origin)
+  }
+
+  if (event.url.pathname === '/.well-known/radix.json') {
+    return createWellKnownResponse()
+  }
+
+  if (event.params.questId && !isValidQuestId(event.params.questId)) {
+    return createInvalidQuestIdResponse()
   }
   const traceId = crypto.randomUUID()
   const logger = appLogger.child({
@@ -91,36 +100,6 @@ export const handle: Handle = async ({ event, resolve }) => {
     oneTimePasswordController: OneTimePasswordController(event.locals.dependencies)
   }
 
-  if (event.url.pathname === '/.well-known/radix.json') {
-    return new Response(
-      JSON.stringify({
-        callbackPath: '/connect',
-        dApps: [
-          {
-            dAppDefinitionAddress: config.dapp.dAppDefinitionAddress
-          }
-        ]
-      }),
-      {
-        headers: {
-          'content-type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        }
-      }
-    )
-  }
-
-  if (event.params.questId) {
-    if (!Object.keys(NetworkQuestDefinitions).includes(event.params.questId)) {
-      return new Response(JSON.stringify({ error: 'invalid quest id', status: 400 }), {
-        headers: {
-          'content-type': 'application/json'
-        },
-        status: 400
-      })
-    }
-  }
-
   if (event.route.id?.includes('(protected)')) {
     const result = event.locals.controllers.authController
       .renewAuthToken(event.cookies)
@@ -132,23 +111,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 
     if (result.isErr()) {
       event.cookies.delete('jwt', { path: '/' })
-      return new Response(JSON.stringify({ error: result.error.reason, status: 401 }), {
-        headers: {
-          'content-type': 'application/json'
-        },
-        status: 401
-      })
+      return createUnauthorizedResponse(result.error.reason)
     }
 
-    if (event.route.id?.includes('(admin)')) {
-      if (result.value.userType !== UserType.ADMIN) {
-        return new Response(JSON.stringify({ error: 'Unauthorized', status: 403 }), {
-          headers: {
-            'content-type': 'application/json'
-          },
-          status: 403
-        })
-      }
+    if (event.route.id?.includes('(admin)') && result.value.userType !== UserType.ADMIN) {
+      return createForbiddenResponse()
     }
 
     event.locals.userId = result.value.userId
