@@ -26,7 +26,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: var(--spacing-xl);
+    margin: var(--spacing-lg) 0;
   }
 
   .quests {
@@ -42,6 +42,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    height: 95%;
 
     @include desktop {
       gap: var(--spacing-2xl);

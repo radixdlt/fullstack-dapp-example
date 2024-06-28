@@ -10,10 +10,12 @@
   import { hideJetty, hideJettyMenu, jettyNotifications, retractJettyMenu } from '../../stores'
   import { tick } from 'svelte'
   import { pushState } from '$app/navigation'
+  import { isMobile } from '$lib/utils/is-mobile'
 
-  let poppedUp = true
+  let poppedUp = false
+  let expanded = false
 
-  $: poppedUp = expanded || hoveringOverJetty
+  $: poppedUp = isMobile() ? expanded : expanded || hoveringOverJetty
 
   $: glossaryAnchor = $page.url.href.includes('glossaryAnchor')
     ? $page.url.href.split('glossaryAnchor=')[1]
@@ -26,8 +28,6 @@
 
   let jettyMenu: JettyMenu
   let glossary: Glossary
-
-  let expanded: boolean
 
   $: if ($retractJettyMenu) {
     expanded = false

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { publicConfig } from '$lib/public-config'
   import { sendTransaction } from '$lib/rdt'
   import { createEventDispatcher, onMount } from 'svelte'
   import { QuestDefinitions, type Quests } from 'content'
