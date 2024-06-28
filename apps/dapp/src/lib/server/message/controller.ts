@@ -33,8 +33,8 @@ export const MessageController = ({ messageModel }: ControllerDependencies) => {
       .getAllUnseen(userId)
       .map((messages) =>
         messages.map(({ data, id }) => {
-          const parsedData = JSON.parse(data as string) as Message
-          return { ...parsedData, id }
+          const value = data as Message
+          return { ...value, id } satisfies Message & { id: number }
         })
       )
       .map((messages) => ({ data: messages, httpResponseCode: 200 }))

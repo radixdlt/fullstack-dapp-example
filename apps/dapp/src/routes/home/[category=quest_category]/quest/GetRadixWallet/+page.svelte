@@ -28,7 +28,7 @@
     }
 
     const callback = ({ detail }: any) => {
-      if (detail.eventType !== 'extensionStatus') return
+      if (detail.eventType !== 'extensionStatus' || !render('6')) return
       const { isWalletLinked } = detail
 
       if (isWalletLinked) {

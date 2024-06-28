@@ -10,7 +10,8 @@ import {
   appLogger,
   AccountAddressModel,
   Addresses,
-  MessageModel
+  MessageModel,
+  NotificationModel
 } from 'common'
 import { UserType } from 'database'
 import { dbClient } from '$lib/db'
@@ -18,6 +19,7 @@ import { RedisConnection, getQueues } from 'queues'
 import type { ControllerDependencies } from '$lib/server/_types'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { UserController } from '$lib/server/user/controller'
+import { NotificationController } from '$lib/server/notification/controller'
 import { UserQuestController } from '$lib/server/user-quest/controller'
 import { AuthModel } from '$lib/server/auth/model'
 import { JWT } from '$lib/server/auth/jwt'
@@ -49,6 +51,7 @@ const gatewayApi = GatewayApi(networkId)
 const messageModel = MessageModel(dbClient)
 const accountAddressModel = AccountAddressModel(redisClient)
 const addresses = Addresses(networkId)
+const notificationModel = NotificationModel(dbClient)
 
 export const handle: Handle = async ({ event, resolve }) => {
   const origin = event.request.headers.get('origin')
@@ -89,7 +92,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     authModel,
     config,
     jwt: JWT(config.jwt),
-    messageModel: messageModel(logger)
+    messageModel: messageModel(logger),
+    notificationModel: notificationModel(logger)
   } satisfies ControllerDependencies
 
   event.locals.controllers = {
@@ -97,7 +101,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     userQuestController: UserQuestController(event.locals.dependencies),
     authController: AuthController(event.locals.dependencies),
     messageController: MessageController(event.locals.dependencies),
-    oneTimePasswordController: OneTimePasswordController(event.locals.dependencies)
+    oneTimePasswordController: OneTimePasswordController(event.locals.dependencies),
+    notificationController: NotificationController(event.locals.dependencies)
   }
 
   if (event.route.id?.includes('(protected)')) {

@@ -1,10 +1,9 @@
-import { notificationController } from '$lib/server/notification/controller'
 import { routeHandler } from '$lib/server/route-handler'
 import type { RequestHandler } from './$types'
 
 export const POST: RequestHandler = async ({ locals, request }) => {
   const requestBody = await request.json()
   return routeHandler(() =>
-    notificationController.markAsSeen(locals.context, requestBody.notificationId, locals.userId)
+    locals.controllers.notificationController.markAsSeen(requestBody.notificationId, locals.userId)
   )
 }
