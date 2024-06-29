@@ -134,7 +134,7 @@ export const handle: Handle = async ({ event, resolve }) => {
       .then((count) => count > 0)
 
     if (!userExists) {
-      event.cookies.delete('jwt', { path: '/' })
+      event.locals.dependencies.jwt.removeRefreshTokenCookie(event.cookies)
       const response = await resolve(event, {})
       return response
     }

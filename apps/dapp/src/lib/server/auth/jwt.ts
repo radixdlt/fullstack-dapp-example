@@ -56,6 +56,10 @@ export const JWT = (input: JWTInput) => {
     'Set-Cookie': cookies.serialize(refreshToken.key, token, createRefreshTokenOptions())
   })
 
+  const removeRefreshTokenCookie = (cookies: Cookies) => ({
+    'Set-Cookie': cookies.delete(refreshToken.key, createRefreshTokenOptions())
+  })
+
   const rotateRefreshToken = (
     cookies: Cookies
   ): Result<{ ['Set-Cookie']: string }, { jsError?: Error; reason: string }> =>
@@ -87,6 +91,7 @@ export const JWT = (input: JWTInput) => {
     rotateRefreshToken,
     renewAuthToken,
     createRefreshTokenCookie,
-    verifyToken
+    verifyToken,
+    removeRefreshTokenCookie
   }
 }
