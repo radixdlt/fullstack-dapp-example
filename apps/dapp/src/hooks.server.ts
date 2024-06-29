@@ -127,6 +127,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.userType = result.value.userType
     event.locals.authToken = result.value.authToken
 
+    appLogger.setBindings({ userId: event.locals.userId })
+
     const userExists = await dbClient.user
       .count({ where: { id: result.value.userId } })
       .then((count) => count > 0)
