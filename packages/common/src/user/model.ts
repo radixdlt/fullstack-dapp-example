@@ -9,9 +9,14 @@ type GetByIdReturnType<T> = User & T extends { referredUsers: true }
   : User
 
 type UserModelType = {
+  doesUserExist: (identityAddress: string) => ResultAsync<boolean, ApiError>
   create: (identityAddress: string, referredBy?: string) => ResultAsync<User, ApiError>
   getById: <T extends Prisma.UserInclude<any>>(
     id: string,
+    include: T
+  ) => ResultAsync<GetByIdReturnType<T>, ApiError>
+  getByIdentityAddress: <T extends Prisma.UserInclude<any>>(
+    identityAddress: string,
     include: T
   ) => ResultAsync<GetByIdReturnType<T>, ApiError>
   getByAccountAddress: <T extends Prisma.UserInclude<any>>(
@@ -30,8 +35,17 @@ export type UserModel = ReturnType<typeof UserModel>
 export const UserModel =
   (db: PrismaClient) =>
   (logger: AppLogger): UserModelType => {
-    const create = (identityAddress: string, referredBy?: string): ResultAsync<User, ApiError> =>
-      ResultAsync.fromPromise<User, ApiError>(
+    const doesUserExist = (identityAddress: string) =>
+      ResultAsync.fromPromise(
+        db.user.count({ where: { identityAddress } }).then((count) => count > 0),
+        (error) => {
+          logger?.error({ error, method: 'createUser', model: 'UserModel' })
+          return createApiError('failed to create user', 400)()
+        }
+      )
+
+    const create = (identityAddress: string, referredBy?: string): ResultAsync<User, ApiError> => {
+      return ResultAsync.fromPromise<User, ApiError>(
         db.user.upsert({
           create: {
             identityAddress,
@@ -60,6 +74,7 @@ export const UserModel =
 
         return err(data)
       })
+    }
 
     const addAccount = (userId: string, accountAddress: string) =>
       ResultAsync.fromPromise(
@@ -92,6 +107,30 @@ export const UserModel =
         }),
         (error) => {
           logger?.error({ error, method: 'getById', where: { id }, model: 'UserModel' })
+          return createApiError('failed to get user', 400)()
+        }
+      ).andThen((data) =>
+        data
+          ? okAsync(data as unknown as GetByIdReturnType<T>)
+          : errAsync(createApiError('user not found', 404)())
+      )
+
+    const getByIdentityAddress = <T extends Prisma.UserInclude<any>>(
+      identityAddress: string,
+      include: T
+    ) =>
+      ResultAsync.fromPromise(
+        db.user.findUnique({
+          where: { identityAddress },
+          include
+        }),
+        (error) => {
+          logger?.error({
+            error,
+            method: 'getByIdentityAddress',
+            where: { identityAddress },
+            model: 'UserModel'
+          })
           return createApiError('failed to get user', 400)()
         }
       ).andThen((data) =>
@@ -182,8 +221,10 @@ export const UserModel =
       ).map((data) => (data ? referralCode : undefined))
 
     return {
+      doesUserExist,
       create,
       getById,
+      getByIdentityAddress,
       getByAccountAddress,
       getReferrals,
       getPhoneNumber,

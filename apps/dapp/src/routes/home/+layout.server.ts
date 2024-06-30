@@ -30,10 +30,14 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
     questStatus = questStatusResult.value
 
     for (const questId of ['WelcomeToRadQuest', 'WhatIsRadix', 'GetRadixWallet'] as const) {
-      if (
-        cookies.get(`quest-status-${questId}`) === 'COMPLETED' &&
-        questStatus[questId]?.status !== 'COMPLETED'
-      ) {
+      const questStatusCookieValue = cookies.get(`quest-status-${questId}`) ?? ''
+
+      const syncQuestStatusCookieValueWithDb =
+        questStatusCookieValue === 'COMPLETED' && questStatus[questId]?.status !== 'COMPLETED'
+
+      const missingQuestStatusInDb = !questStatus[questId]?.status
+
+      if (syncQuestStatusCookieValueWithDb) {
         await questApi.completeContentRequirement(questId, fetch)
         await questApi.completeQuest(questId, fetch)
         questStatus[questId] = {
@@ -41,8 +45,8 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
           status: 'COMPLETED'
         }
       } else if (
-        cookies.get(`quest-status-${questId}`) === 'COMPLETED' &&
-        !questStatus[questId]?.status
+        ['COMPLETED', 'IN_PROGRESS'].includes(questStatusCookieValue) &&
+        missingQuestStatusInDb
       ) {
         await questApi.startQuest(questId, fetch)
         questStatus[questId] = {
@@ -63,11 +67,6 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
         }
       )
     )
-
-    locals.context.logger.debug({
-      userId: locals.userId,
-      questStatus
-    })
   } else {
     for (const quest of Object.values(questDefinitions)) {
       const cachedStatus = cookies.get(`quest-status-${quest.id}`) as $Enums.QuestStatus | undefined
@@ -81,6 +80,10 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
       }
     }
   }
+
+  locals.context.logger.debug({
+    questStatus
+  })
 
   return {
     questStatus,

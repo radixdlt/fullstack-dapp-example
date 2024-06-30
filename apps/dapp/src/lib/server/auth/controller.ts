@@ -7,12 +7,13 @@ import {
 import { hasChallengeExpired } from './helpers/has-challenge-expired'
 import { Rola } from '@radixdlt/rola'
 import { SignedChallenge, parseSignedChallenge } from '@radixdlt/radix-dapp-toolkit'
-import { type ApiError } from 'common'
+import { createApiError, type ApiError } from 'common'
 
-import { err, errAsync, ok } from 'neverthrow'
+import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import type { Cookies } from '@sveltejs/kit'
 
 import type { UserType } from 'database'
+import { dbClient } from '$lib/db'
 
 export type AuthController = ReturnType<typeof AuthController>
 export const AuthController = ({
@@ -20,7 +21,8 @@ export const AuthController = ({
   config,
   authModel,
   userModel,
-  gatewayApi
+  gatewayApi,
+  logger
 }: ControllerDependencies) => {
   const { dAppDefinitionAddress, networkId, expectedOrigin } = config.dapp
 
@@ -46,6 +48,34 @@ export const AuthController = ({
         return error
       })
 
+  const getReferredBy = (cookies: Cookies): ResultAsync<string | undefined, ApiError> => {
+    const referredBy = cookies.get('referredBy')
+    return referredBy ? userModel.confirmReferralCode(referredBy) : okAsync(undefined)
+  }
+
+  const updateConnectWalletRequirement = (userId: string) =>
+    ResultAsync.fromPromise(
+      dbClient.completedQuestRequirement.upsert({
+        where: {
+          questId_userId_requirementId: {
+            userId,
+            questId: 'GetRadixWallet',
+            requirementId: 'ConnectWallet'
+          }
+        },
+        update: {},
+        create: {
+          userId,
+          questId: 'GetRadixWallet',
+          requirementId: 'ConnectWallet'
+        }
+      }),
+      (error) => {
+        logger?.error({ error, method: 'updateConnectWalletRequirement', model: 'UserQuestModel' })
+        return createApiError('failed to update connect wallet requirement', 400)()
+      }
+    ).map(() => {})
+
   const login = (
     ctx: ControllerMethodContext,
     proofs: {
@@ -57,7 +87,7 @@ export const AuthController = ({
     headers: { ['Set-Cookie']: string }
   }> => {
     const { personaProof } = proofs
-    ctx.logger.debug({ personaProof, method: 'login', event: 'start' })
+    ctx.logger.debug({ method: 'login', personaProof })
     const parsedPersonaResult = parseSignedChallenge(personaProof)
     if (!parsedPersonaResult.success) {
       if (!parsedPersonaResult.success) {
@@ -109,14 +139,15 @@ export const AuthController = ({
             } satisfies ApiError
           })
       )
-      .map(() => {
-        ctx.logger.debug({ method: 'login.verifiedSignedChallenges.success' })
-      })
-      .andThen(() => {
-        const referredBy = cookies.get('referredBy')
-        return referredBy ? userModel.confirmReferralCode(referredBy) : ok(undefined)
-      })
-      .andThen((referredBy) => userModel.create(personaProof.address, referredBy))
+      .andThen(() =>
+        userModel.doesUserExist(personaProof.address).andThen((userExists) =>
+          userExists
+            ? userModel.getByIdentityAddress(personaProof.address, {})
+            : getReferredBy(cookies)
+                .andThen((referredBy) => userModel.create(personaProof.address, referredBy))
+                .andThen((user) => updateConnectWalletRequirement(user.id).map(() => user))
+        )
+      )
       .andThen(({ id, type }) => jwt.createTokens(id, type))
       .map(({ authToken, refreshToken }) => ({
         data: {
