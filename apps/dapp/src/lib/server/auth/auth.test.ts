@@ -113,6 +113,12 @@ describe('AuthController', () => {
       Promise.resolve({ identityAddress: personaProof.address }) as any
     )
 
+    mockCtx.prisma.user.findUnique.mockResolvedValue(
+      Promise.resolve({ identityAddress: personaProof.address }) as any
+    )
+
+    mockCtx.prisma.user.count.mockResolvedValue(Promise.resolve(true) as any)
+
     mockCtx.prisma.completedQuestRequirement.upsert.mockResolvedValue(Promise.resolve({}) as any)
 
     const result = await controller.login(
