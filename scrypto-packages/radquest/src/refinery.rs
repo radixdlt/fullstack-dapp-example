@@ -118,18 +118,26 @@ mod refinery {
             self.enabled = false;
         }
 
+        fn get_user_id_from_badge_proof(&self, hero_badge: Proof) -> UserId {
+            let mut local_id_string = hero_badge
+                .check(self.hero_badge_address)
+                .as_non_fungible()
+                .non_fungible_local_id()
+                .to_string();
+            // Check for and remove the `<` and `>` at the start and end that show it's a String type ID.
+            assert!(
+                local_id_string.pop() == Some('>') && local_id_string.remove(0) == '<',
+                "Invalid id format"
+            );
+            UserId(local_id_string)
+        }
+
         // User deposits Elements to be turned into a RadGem
         pub fn combine_elements_deposit(&self, hero_badge_proof: Proof, elements: Bucket) -> () {
             assert!(self.enabled, "Refinery component disabled");
             assert_eq!(elements.resource_address(), self.element_address);
             assert_eq!(elements.amount(), dec!(10));
-            let user_id = UserId(
-                hero_badge_proof
-                    .check(self.hero_badge_address)
-                    .as_non_fungible()
-                    .non_fungible_local_id()
-                    .to_string(),
-            );
+            let user_id = self.get_user_id_from_badge_proof(hero_badge_proof);
 
             self.admin_badge
                 .authorize_with_amount(1, || elements.burn());
@@ -204,13 +212,7 @@ mod refinery {
 
         // User claims RadGem by presenting hero badge
         pub fn combine_elements_claim(&mut self, hero_badge_proof: Proof) -> Bucket {
-            let user_id = UserId(
-                hero_badge_proof
-                    .check(self.hero_badge_address)
-                    .as_non_fungible()
-                    .non_fungible_local_id()
-                    .to_string(),
-            );
+            let user_id = self.get_user_id_from_badge_proof(hero_badge_proof);
 
             // Get the user's RadGem IDs from the record
             let mut radgem_record = self.radgem_records.get_mut(&user_id).unwrap();

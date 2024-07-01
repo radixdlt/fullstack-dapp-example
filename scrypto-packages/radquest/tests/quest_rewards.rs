@@ -62,7 +62,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         quest_rewards,
         kyc_oracle,
         hero_badge,
-        user_id: UserId(format!("<{user_id_string}>")),
+        user_id: UserId(user_id_string),
         admin_badge_proof,
         super_admin_badge_proof,
     })
@@ -225,8 +225,8 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
 }
 
 #[test]
-fn can_claim_rewards_after_multiple_deposit_of_fungible_in_separate_calls() -> Result<(), RuntimeError>
-{
+fn can_claim_rewards_after_multiple_deposit_of_fungible_in_separate_calls(
+) -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,

@@ -77,7 +77,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         gift_box_opener,
         bronze_gift_boxes,
         gold_gift_boxes,
-        user_id: UserId(format!("<{user_id_string}>")),
+        user_id: UserId(user_id_string),
         hero_badge_proof,
         admin_badge_proof,
         super_admin_badge_proof,

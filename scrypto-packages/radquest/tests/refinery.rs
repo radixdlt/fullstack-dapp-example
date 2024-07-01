@@ -34,10 +34,11 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         .mint_initial_supply([()], &mut env)?;
     let admin_badge =
         ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(4, &mut env)?;
+    let user_id_string = "user1234".to_string();
     let hero_badge = ResourceBuilder::new_string_non_fungible(OwnerRole::None)
         .mint_initial_supply(
             [(
-                StringNonFungibleLocalId::new("user1234").unwrap(),
+                StringNonFungibleLocalId::new(user_id_string.clone()).unwrap(),
                 EmptyNonFungibleData {},
             )],
             &mut env,
@@ -131,13 +132,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
     let super_admin_badge_proof = super_admin_badge.create_proof_of_all(&mut env)?;
     let hero_badge_proof = hero_badge.create_proof_of_all(&mut env)?;
-    let user_id = UserId(
-        hero_badge
-            .non_fungible_local_ids(&mut env)?
-            .pop()
-            .unwrap()
-            .to_string(),
-    );
+    let user_id = UserId(user_id_string);
 
     Ok(Test {
         env,
