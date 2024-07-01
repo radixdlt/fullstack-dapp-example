@@ -330,7 +330,7 @@ export const EventWorkerController = ({
               .andThen(() =>
                 sendMessage(questValues.userId, {
                   type: 'QuestRequirementCompleted',
-                  questId: questValues.requirementId,
+                  questId: questValues.questId,
                   requirementId: questValues.requirementId,
                   traceId
                 })
