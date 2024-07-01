@@ -51,9 +51,6 @@
     on:open={() => {
       pushState('', { jettyMenuExpanded: true })
     }}
-    on:close={() => {
-      history.back()
-    }}
     hideJetty={$hideJetty}
     {poppedUp}
     menuItems={[
