@@ -14,9 +14,6 @@ declare global {
       context: { traceId: string; logger: AppLogger }
       dependencies: ControllerDependencies
       controllers: Controllers
-      userQuestModel: UserQuestModel
-      userModel: UserModel
-      getAccountAddressModel: GetAccountAddressModelFn
     }
     // interface PageData {}
     // interface Platform {}

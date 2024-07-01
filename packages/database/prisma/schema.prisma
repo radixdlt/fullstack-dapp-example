@@ -38,6 +38,7 @@ model User {
   questProgress              QuestProgress[]
   referredUsers              User[] @relation("Referrer")
   transactions               TransactionIntent[]
+  marketing                  Marketing[]
 }
 
 model RadMorphImage {
@@ -170,9 +171,20 @@ model SubmittedTransaction {
   transaction          TransactionIntent  @relation(fields: [transactionIntent], references: [discriminator])
 }
 
-
-
 model Config {
   key           String  @id
   value         String
+}
+
+model Marketing {
+  id            Int      @id @default(autoincrement()) 
+  userId        String  
+  utm_campaign  String?
+  utm_medium    String?
+  utm_source    String?
+  utm_id        String?
+  utm_content   String?
+  utm_term      String?
+
+  user          User     @relation(fields: [userId], references: [id])
 }

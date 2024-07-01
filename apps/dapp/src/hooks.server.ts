@@ -11,7 +11,8 @@ import {
   AccountAddressModel,
   Addresses,
   MessageModel,
-  NotificationModel
+  NotificationModel,
+  MarketingModel
 } from 'common'
 import { UserType } from 'database'
 import { dbClient } from '$lib/db'
@@ -52,6 +53,7 @@ const messageModel = MessageModel(dbClient)
 const accountAddressModel = AccountAddressModel(redisClient)
 const addresses = Addresses(networkId)
 const notificationModel = NotificationModel(dbClient)
+const marketingModel = MarketingModel(dbClient)
 
 export const handle: Handle = async ({ event, resolve }) => {
   const origin = event.request.headers.get('origin')
@@ -93,7 +95,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     config,
     jwt: JWT(config.jwt),
     messageModel: messageModel(logger),
-    notificationModel: notificationModel(logger)
+    notificationModel: notificationModel(logger),
+    marketingModel: marketingModel(logger)
   } satisfies ControllerDependencies
 
   event.locals.controllers = {

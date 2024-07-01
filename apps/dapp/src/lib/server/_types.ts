@@ -10,7 +10,8 @@ import type {
   UserQuestModel,
   Addresses,
   MessageModel,
-  NotificationModel
+  NotificationModel,
+  MarketingModel
 } from 'common'
 import type { PrismaClient } from 'database'
 import type { ResultAsync } from 'neverthrow'
@@ -52,6 +53,7 @@ export type ControllerDependencies = {
   accountAddressModel: ReturnType<AccountAddressModel>
   messageModel: ReturnType<MessageModel>
   notificationModel: ReturnType<NotificationModel>
+  marketingModel: ReturnType<MarketingModel>
   logger: AppLogger
   dbClient: PrismaClient
   addresses: Addresses

@@ -3,12 +3,35 @@ import { ResultAsync, okAsync } from 'neverthrow'
 import type { LayoutServerLoad } from './$types'
 import { loadLandingPopup, loadQuests, type QuestId } from 'content'
 import type { $Enums } from 'database'
+import { CookieKeys, encodeBase64, utmKeys, type MarketingUtmValues } from 'common'
+import type { Cookies } from '@sveltejs/kit'
 
 export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) => {
   const questStatusResult = await questApi.getQuestsInformation(fetch)
   const questDefinitions = loadQuests('en')
   const landingPopupDefinitions = loadLandingPopup('en')
   const referredBy = url.searchParams.get('ref')
+
+  const storeUtmValues = (searchParams: URLSearchParams, cookie: Cookies) => {
+    const referredBy = url.searchParams.get('ref')
+
+    const utmValues: MarketingUtmValues = Object.fromEntries(
+      utmKeys.map((key) => [key, searchParams.get(key)]).filter(([, value]) => value)
+    )
+
+    if (referredBy) utmValues.utm_medium = referredBy
+
+    if (Object.keys(utmValues).length) {
+      encodeBase64(JSON.stringify(utmValues)).map((base64Encoded) => {
+        cookie.set(CookieKeys.Utm, base64Encoded, {
+          path: '/',
+          expires: new Date('9999-12-31'),
+          httpOnly: false
+        })
+        locals.context.logger.debug({ utmValues, base64Encoded, method: 'storeUtmValues' })
+      })
+    }
+  }
 
   if (referredBy) {
     cookies.set('referredBy', referredBy, {
@@ -79,6 +102,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
         }
       }
     }
+    storeUtmValues(url.searchParams, cookies)
   }
 
   locals.context.logger.debug({

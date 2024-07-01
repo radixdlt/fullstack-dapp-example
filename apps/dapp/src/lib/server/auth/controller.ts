@@ -7,9 +7,16 @@ import {
 import { hasChallengeExpired } from './helpers/has-challenge-expired'
 import { Rola } from '@radixdlt/rola'
 import { SignedChallenge, parseSignedChallenge } from '@radixdlt/radix-dapp-toolkit'
-import { createApiError, type ApiError } from 'common'
+import {
+  createApiError,
+  type ApiError,
+  CookieKeys,
+  decodeBase64,
+  parseJSON,
+  type MarketingUtmValues
+} from 'common'
 
-import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
+import { Result, ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import type { Cookies } from '@sveltejs/kit'
 
 import type { UserType } from 'database'
@@ -22,7 +29,8 @@ export const AuthController = ({
   authModel,
   userModel,
   gatewayApi,
-  logger
+  logger,
+  marketingModel
 }: ControllerDependencies) => {
   const { dAppDefinitionAddress, networkId, expectedOrigin } = config.dapp
 
@@ -52,6 +60,25 @@ export const AuthController = ({
     const referredBy = cookies.get('referredBy')
     return referredBy ? userModel.confirmReferralCode(referredBy) : okAsync(undefined)
   }
+
+  const getUtmValuesFromCookie = (
+    cookies: Cookies
+  ): Result<MarketingUtmValues | undefined, never> => {
+    const maybeValue = cookies.get(CookieKeys.Utm)
+    if (!maybeValue) return ok(undefined)
+
+    return decodeBase64(maybeValue)
+      .andThen(parseJSON<MarketingUtmValues>)
+      .orElse((error) => {
+        logger.debug({ method: 'getUtmValues.error', error })
+        return ok(undefined)
+      })
+  }
+
+  const addUtmToDb = (userId: string, cookies: Cookies) =>
+    getUtmValuesFromCookie(cookies)
+      .asyncAndThen((values) => (values ? marketingModel.add(userId, values) : okAsync(undefined)))
+      .map(() => cookies.delete(CookieKeys.Utm, { path: '/' }))
 
   const updateConnectWalletRequirement = (userId: string) =>
     ResultAsync.fromPromise(
@@ -145,7 +172,12 @@ export const AuthController = ({
             ? userModel.getByIdentityAddress(personaProof.address, {})
             : getReferredBy(cookies)
                 .andThen((referredBy) => userModel.create(personaProof.address, referredBy))
-                .andThen((user) => updateConnectWalletRequirement(user.id).map(() => user))
+                .andThen((user) =>
+                  ResultAsync.combine([
+                    updateConnectWalletRequirement(user.id),
+                    addUtmToDb(user.id, cookies)
+                  ]).map(() => user)
+                )
         )
       )
       .andThen(({ id, type }) => jwt.createTokens(id, type))
