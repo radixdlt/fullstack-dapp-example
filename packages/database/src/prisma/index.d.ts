@@ -83,6 +83,11 @@ export type SubmittedTransaction = $Result.DefaultSelection<Prisma.$SubmittedTra
  * 
  */
 export type Config = $Result.DefaultSelection<Prisma.$ConfigPayload>
+/**
+ * Model Marketing
+ * 
+ */
+export type Marketing = $Result.DefaultSelection<Prisma.$MarketingPayload>
 
 /**
  * Enums
@@ -402,6 +407,16 @@ export class PrismaClient<
     * ```
     */
   get config(): Prisma.ConfigDelegate<ExtArgs>;
+
+  /**
+   * `prisma.marketing`: Exposes CRUD operations for the **Marketing** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Marketings
+    * const marketings = await prisma.marketing.findMany()
+    * ```
+    */
+  get marketing(): Prisma.MarketingDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -892,7 +907,8 @@ export namespace Prisma {
     Audit: 'Audit',
     TransactionIntent: 'TransactionIntent',
     SubmittedTransaction: 'SubmittedTransaction',
-    Config: 'Config'
+    Config: 'Config',
+    Marketing: 'Marketing'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -909,7 +925,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'user' | 'radMorphImage' | 'userPhoneNumber' | 'challenge' | 'event' | 'message' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'transactionIntent' | 'submittedTransaction' | 'config'
+      modelProps: 'user' | 'radMorphImage' | 'userPhoneNumber' | 'challenge' | 'event' | 'message' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'transactionIntent' | 'submittedTransaction' | 'config' | 'marketing'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1893,6 +1909,76 @@ export namespace Prisma {
           }
         }
       }
+      Marketing: {
+        payload: Prisma.$MarketingPayload<ExtArgs>
+        fields: Prisma.MarketingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MarketingFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$MarketingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MarketingFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>
+          }
+          findFirst: {
+            args: Prisma.MarketingFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$MarketingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MarketingFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>
+          }
+          findMany: {
+            args: Prisma.MarketingFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>[]
+          }
+          create: {
+            args: Prisma.MarketingCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>
+          }
+          createMany: {
+            args: Prisma.MarketingCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MarketingCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>[]
+          }
+          delete: {
+            args: Prisma.MarketingDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>
+          }
+          update: {
+            args: Prisma.MarketingUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>
+          }
+          deleteMany: {
+            args: Prisma.MarketingDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MarketingUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.MarketingUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>
+          }
+          aggregate: {
+            args: Prisma.MarketingAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateMarketing>
+          }
+          groupBy: {
+            args: Prisma.MarketingGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<MarketingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MarketingCountArgs<ExtArgs>,
+            result: $Utils.Optional<MarketingCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2060,6 +2146,7 @@ export namespace Prisma {
     questProgress: number
     referredUsers: number
     transactions: number
+    marketing: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2070,6 +2157,7 @@ export namespace Prisma {
     questProgress?: boolean | UserCountOutputTypeCountQuestProgressArgs
     referredUsers?: boolean | UserCountOutputTypeCountReferredUsersArgs
     transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
+    marketing?: boolean | UserCountOutputTypeCountMarketingArgs
   }
 
   // Custom InputTypes
@@ -2130,6 +2218,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TransactionIntentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMarketingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketingWhereInput
   }
 
 
@@ -2374,6 +2469,7 @@ export namespace Prisma {
     questProgress?: boolean | User$questProgressArgs<ExtArgs>
     referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
+    marketing?: boolean | User$marketingArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2413,6 +2509,7 @@ export namespace Prisma {
     questProgress?: boolean | User$questProgressArgs<ExtArgs>
     referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
+    marketing?: boolean | User$marketingArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2432,6 +2529,7 @@ export namespace Prisma {
       questProgress: Prisma.$QuestProgressPayload<ExtArgs>[]
       referredUsers: Prisma.$UserPayload<ExtArgs>[]
       transactions: Prisma.$TransactionIntentPayload<ExtArgs>[]
+      marketing: Prisma.$MarketingPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2852,6 +2950,8 @@ export namespace Prisma {
     referredUsers<T extends User$referredUsersArgs<ExtArgs> = {}>(args?: Subset<T, User$referredUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findMany'> | Null>;
 
     transactions<T extends User$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionIntentPayload<ExtArgs>, T, 'findMany'> | Null>;
+
+    marketing<T extends User$marketingArgs<ExtArgs> = {}>(args?: Subset<T, User$marketingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'findMany'> | Null>;
 
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3390,6 +3490,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TransactionIntentScalarFieldEnum | TransactionIntentScalarFieldEnum[]
+  }
+
+  /**
+   * User.marketing
+   */
+  export type User$marketingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Marketing
+     */
+    select?: MarketingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingInclude<ExtArgs> | null
+    where?: MarketingWhereInput
+    orderBy?: MarketingOrderByWithRelationInput | MarketingOrderByWithRelationInput[]
+    cursor?: MarketingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MarketingScalarFieldEnum | MarketingScalarFieldEnum[]
   }
 
   /**
@@ -15599,6 +15719,1035 @@ export namespace Prisma {
 
 
   /**
+   * Model Marketing
+   */
+
+  export type AggregateMarketing = {
+    _count: MarketingCountAggregateOutputType | null
+    _avg: MarketingAvgAggregateOutputType | null
+    _sum: MarketingSumAggregateOutputType | null
+    _min: MarketingMinAggregateOutputType | null
+    _max: MarketingMaxAggregateOutputType | null
+  }
+
+  export type MarketingAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type MarketingSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type MarketingMinAggregateOutputType = {
+    id: number | null
+    userId: string | null
+    utm_campaign: string | null
+    utm_medium: string | null
+    utm_source: string | null
+    utm_id: string | null
+    utm_content: string | null
+    utm_term: string | null
+  }
+
+  export type MarketingMaxAggregateOutputType = {
+    id: number | null
+    userId: string | null
+    utm_campaign: string | null
+    utm_medium: string | null
+    utm_source: string | null
+    utm_id: string | null
+    utm_content: string | null
+    utm_term: string | null
+  }
+
+  export type MarketingCountAggregateOutputType = {
+    id: number
+    userId: number
+    utm_campaign: number
+    utm_medium: number
+    utm_source: number
+    utm_id: number
+    utm_content: number
+    utm_term: number
+    _all: number
+  }
+
+
+  export type MarketingAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type MarketingSumAggregateInputType = {
+    id?: true
+  }
+
+  export type MarketingMinAggregateInputType = {
+    id?: true
+    userId?: true
+    utm_campaign?: true
+    utm_medium?: true
+    utm_source?: true
+    utm_id?: true
+    utm_content?: true
+    utm_term?: true
+  }
+
+  export type MarketingMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    utm_campaign?: true
+    utm_medium?: true
+    utm_source?: true
+    utm_id?: true
+    utm_content?: true
+    utm_term?: true
+  }
+
+  export type MarketingCountAggregateInputType = {
+    id?: true
+    userId?: true
+    utm_campaign?: true
+    utm_medium?: true
+    utm_source?: true
+    utm_id?: true
+    utm_content?: true
+    utm_term?: true
+    _all?: true
+  }
+
+  export type MarketingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Marketing to aggregate.
+     */
+    where?: MarketingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Marketings to fetch.
+     */
+    orderBy?: MarketingOrderByWithRelationInput | MarketingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MarketingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Marketings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Marketings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Marketings
+    **/
+    _count?: true | MarketingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MarketingAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MarketingSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MarketingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MarketingMaxAggregateInputType
+  }
+
+  export type GetMarketingAggregateType<T extends MarketingAggregateArgs> = {
+        [P in keyof T & keyof AggregateMarketing]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMarketing[P]>
+      : GetScalarType<T[P], AggregateMarketing[P]>
+  }
+
+
+
+
+  export type MarketingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketingWhereInput
+    orderBy?: MarketingOrderByWithAggregationInput | MarketingOrderByWithAggregationInput[]
+    by: MarketingScalarFieldEnum[] | MarketingScalarFieldEnum
+    having?: MarketingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MarketingCountAggregateInputType | true
+    _avg?: MarketingAvgAggregateInputType
+    _sum?: MarketingSumAggregateInputType
+    _min?: MarketingMinAggregateInputType
+    _max?: MarketingMaxAggregateInputType
+  }
+
+  export type MarketingGroupByOutputType = {
+    id: number
+    userId: string
+    utm_campaign: string | null
+    utm_medium: string | null
+    utm_source: string | null
+    utm_id: string | null
+    utm_content: string | null
+    utm_term: string | null
+    _count: MarketingCountAggregateOutputType | null
+    _avg: MarketingAvgAggregateOutputType | null
+    _sum: MarketingSumAggregateOutputType | null
+    _min: MarketingMinAggregateOutputType | null
+    _max: MarketingMaxAggregateOutputType | null
+  }
+
+  type GetMarketingGroupByPayload<T extends MarketingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MarketingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MarketingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MarketingGroupByOutputType[P]>
+            : GetScalarType<T[P], MarketingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MarketingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    utm_campaign?: boolean
+    utm_medium?: boolean
+    utm_source?: boolean
+    utm_id?: boolean
+    utm_content?: boolean
+    utm_term?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["marketing"]>
+
+  export type MarketingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    utm_campaign?: boolean
+    utm_medium?: boolean
+    utm_source?: boolean
+    utm_id?: boolean
+    utm_content?: boolean
+    utm_term?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["marketing"]>
+
+  export type MarketingSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    utm_campaign?: boolean
+    utm_medium?: boolean
+    utm_source?: boolean
+    utm_id?: boolean
+    utm_content?: boolean
+    utm_term?: boolean
+  }
+
+  export type MarketingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type MarketingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $MarketingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Marketing"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      userId: string
+      utm_campaign: string | null
+      utm_medium: string | null
+      utm_source: string | null
+      utm_id: string | null
+      utm_content: string | null
+      utm_term: string | null
+    }, ExtArgs["result"]["marketing"]>
+    composites: {}
+  }
+
+  type MarketingGetPayload<S extends boolean | null | undefined | MarketingDefaultArgs> = $Result.GetResult<Prisma.$MarketingPayload, S>
+
+  type MarketingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<MarketingFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: MarketingCountAggregateInputType | true
+    }
+
+  export interface MarketingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Marketing'], meta: { name: 'Marketing' } }
+    /**
+     * Find zero or one Marketing that matches the filter.
+     * @param {MarketingFindUniqueArgs} args - Arguments to find a Marketing
+     * @example
+     * // Get one Marketing
+     * const marketing = await prisma.marketing.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends MarketingFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, MarketingFindUniqueArgs<ExtArgs>>
+    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one Marketing that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {MarketingFindUniqueOrThrowArgs} args - Arguments to find a Marketing
+     * @example
+     * // Get one Marketing
+     * const marketing = await prisma.marketing.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends MarketingFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, MarketingFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first Marketing that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingFindFirstArgs} args - Arguments to find a Marketing
+     * @example
+     * // Get one Marketing
+     * const marketing = await prisma.marketing.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends MarketingFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, MarketingFindFirstArgs<ExtArgs>>
+    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first Marketing that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingFindFirstOrThrowArgs} args - Arguments to find a Marketing
+     * @example
+     * // Get one Marketing
+     * const marketing = await prisma.marketing.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends MarketingFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, MarketingFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more Marketings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Marketings
+     * const marketings = await prisma.marketing.findMany()
+     * 
+     * // Get first 10 Marketings
+     * const marketings = await prisma.marketing.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const marketingWithIdOnly = await prisma.marketing.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends MarketingFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, MarketingFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a Marketing.
+     * @param {MarketingCreateArgs} args - Arguments to create a Marketing.
+     * @example
+     * // Create one Marketing
+     * const Marketing = await prisma.marketing.create({
+     *   data: {
+     *     // ... data to create a Marketing
+     *   }
+     * })
+     * 
+    **/
+    create<T extends MarketingCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, MarketingCreateArgs<ExtArgs>>
+    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many Marketings.
+     * @param {MarketingCreateManyArgs} args - Arguments to create many Marketings.
+     * @example
+     * // Create many Marketings
+     * const marketing = await prisma.marketing.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+    **/
+    createMany<T extends MarketingCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, MarketingCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Marketings and returns the data saved in the database.
+     * @param {MarketingCreateManyAndReturnArgs} args - Arguments to create many Marketings.
+     * @example
+     * // Create many Marketings
+     * const marketing = await prisma.marketing.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Marketings and only return the `id`
+     * const marketingWithIdOnly = await prisma.marketing.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends MarketingCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, MarketingCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'createManyAndReturn'>>
+
+    /**
+     * Delete a Marketing.
+     * @param {MarketingDeleteArgs} args - Arguments to delete one Marketing.
+     * @example
+     * // Delete one Marketing
+     * const Marketing = await prisma.marketing.delete({
+     *   where: {
+     *     // ... filter to delete one Marketing
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends MarketingDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, MarketingDeleteArgs<ExtArgs>>
+    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one Marketing.
+     * @param {MarketingUpdateArgs} args - Arguments to update one Marketing.
+     * @example
+     * // Update one Marketing
+     * const marketing = await prisma.marketing.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends MarketingUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, MarketingUpdateArgs<ExtArgs>>
+    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Marketings.
+     * @param {MarketingDeleteManyArgs} args - Arguments to filter Marketings to delete.
+     * @example
+     * // Delete a few Marketings
+     * const { count } = await prisma.marketing.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends MarketingDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, MarketingDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Marketings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Marketings
+     * const marketing = await prisma.marketing.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends MarketingUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, MarketingUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Marketing.
+     * @param {MarketingUpsertArgs} args - Arguments to update or create a Marketing.
+     * @example
+     * // Update or create a Marketing
+     * const marketing = await prisma.marketing.upsert({
+     *   create: {
+     *     // ... data to create a Marketing
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Marketing we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends MarketingUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, MarketingUpsertArgs<ExtArgs>>
+    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of Marketings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingCountArgs} args - Arguments to filter Marketings to count.
+     * @example
+     * // Count the number of Marketings
+     * const count = await prisma.marketing.count({
+     *   where: {
+     *     // ... the filter for the Marketings we want to count
+     *   }
+     * })
+    **/
+    count<T extends MarketingCountArgs>(
+      args?: Subset<T, MarketingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MarketingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Marketing.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MarketingAggregateArgs>(args: Subset<T, MarketingAggregateArgs>): Prisma.PrismaPromise<GetMarketingAggregateType<T>>
+
+    /**
+     * Group by Marketing.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MarketingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MarketingGroupByArgs['orderBy'] }
+        : { orderBy?: MarketingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MarketingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMarketingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Marketing model
+   */
+  readonly fields: MarketingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Marketing.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MarketingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the Marketing model
+   */ 
+  interface MarketingFieldRefs {
+    readonly id: FieldRef<"Marketing", 'Int'>
+    readonly userId: FieldRef<"Marketing", 'String'>
+    readonly utm_campaign: FieldRef<"Marketing", 'String'>
+    readonly utm_medium: FieldRef<"Marketing", 'String'>
+    readonly utm_source: FieldRef<"Marketing", 'String'>
+    readonly utm_id: FieldRef<"Marketing", 'String'>
+    readonly utm_content: FieldRef<"Marketing", 'String'>
+    readonly utm_term: FieldRef<"Marketing", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Marketing findUnique
+   */
+  export type MarketingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Marketing
+     */
+    select?: MarketingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingInclude<ExtArgs> | null
+    /**
+     * Filter, which Marketing to fetch.
+     */
+    where: MarketingWhereUniqueInput
+  }
+
+  /**
+   * Marketing findUniqueOrThrow
+   */
+  export type MarketingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Marketing
+     */
+    select?: MarketingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingInclude<ExtArgs> | null
+    /**
+     * Filter, which Marketing to fetch.
+     */
+    where: MarketingWhereUniqueInput
+  }
+
+  /**
+   * Marketing findFirst
+   */
+  export type MarketingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Marketing
+     */
+    select?: MarketingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingInclude<ExtArgs> | null
+    /**
+     * Filter, which Marketing to fetch.
+     */
+    where?: MarketingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Marketings to fetch.
+     */
+    orderBy?: MarketingOrderByWithRelationInput | MarketingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Marketings.
+     */
+    cursor?: MarketingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Marketings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Marketings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Marketings.
+     */
+    distinct?: MarketingScalarFieldEnum | MarketingScalarFieldEnum[]
+  }
+
+  /**
+   * Marketing findFirstOrThrow
+   */
+  export type MarketingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Marketing
+     */
+    select?: MarketingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingInclude<ExtArgs> | null
+    /**
+     * Filter, which Marketing to fetch.
+     */
+    where?: MarketingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Marketings to fetch.
+     */
+    orderBy?: MarketingOrderByWithRelationInput | MarketingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Marketings.
+     */
+    cursor?: MarketingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Marketings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Marketings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Marketings.
+     */
+    distinct?: MarketingScalarFieldEnum | MarketingScalarFieldEnum[]
+  }
+
+  /**
+   * Marketing findMany
+   */
+  export type MarketingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Marketing
+     */
+    select?: MarketingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingInclude<ExtArgs> | null
+    /**
+     * Filter, which Marketings to fetch.
+     */
+    where?: MarketingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Marketings to fetch.
+     */
+    orderBy?: MarketingOrderByWithRelationInput | MarketingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Marketings.
+     */
+    cursor?: MarketingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Marketings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Marketings.
+     */
+    skip?: number
+    distinct?: MarketingScalarFieldEnum | MarketingScalarFieldEnum[]
+  }
+
+  /**
+   * Marketing create
+   */
+  export type MarketingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Marketing
+     */
+    select?: MarketingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Marketing.
+     */
+    data: XOR<MarketingCreateInput, MarketingUncheckedCreateInput>
+  }
+
+  /**
+   * Marketing createMany
+   */
+  export type MarketingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Marketings.
+     */
+    data: MarketingCreateManyInput | MarketingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Marketing createManyAndReturn
+   */
+  export type MarketingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Marketing
+     */
+    select?: MarketingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Marketings.
+     */
+    data: MarketingCreateManyInput | MarketingCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Marketing update
+   */
+  export type MarketingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Marketing
+     */
+    select?: MarketingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Marketing.
+     */
+    data: XOR<MarketingUpdateInput, MarketingUncheckedUpdateInput>
+    /**
+     * Choose, which Marketing to update.
+     */
+    where: MarketingWhereUniqueInput
+  }
+
+  /**
+   * Marketing updateMany
+   */
+  export type MarketingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Marketings.
+     */
+    data: XOR<MarketingUpdateManyMutationInput, MarketingUncheckedUpdateManyInput>
+    /**
+     * Filter which Marketings to update
+     */
+    where?: MarketingWhereInput
+  }
+
+  /**
+   * Marketing upsert
+   */
+  export type MarketingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Marketing
+     */
+    select?: MarketingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Marketing to update in case it exists.
+     */
+    where: MarketingWhereUniqueInput
+    /**
+     * In case the Marketing found by the `where` argument doesn't exist, create a new Marketing with this data.
+     */
+    create: XOR<MarketingCreateInput, MarketingUncheckedCreateInput>
+    /**
+     * In case the Marketing was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MarketingUpdateInput, MarketingUncheckedUpdateInput>
+  }
+
+  /**
+   * Marketing delete
+   */
+  export type MarketingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Marketing
+     */
+    select?: MarketingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingInclude<ExtArgs> | null
+    /**
+     * Filter which Marketing to delete.
+     */
+    where: MarketingWhereUniqueInput
+  }
+
+  /**
+   * Marketing deleteMany
+   */
+  export type MarketingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Marketings to delete
+     */
+    where?: MarketingWhereInput
+  }
+
+  /**
+   * Marketing without action
+   */
+  export type MarketingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Marketing
+     */
+    select?: MarketingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketingInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -15752,6 +16901,20 @@ export namespace Prisma {
   };
 
   export type ConfigScalarFieldEnum = (typeof ConfigScalarFieldEnum)[keyof typeof ConfigScalarFieldEnum]
+
+
+  export const MarketingScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    utm_campaign: 'utm_campaign',
+    utm_medium: 'utm_medium',
+    utm_source: 'utm_source',
+    utm_id: 'utm_id',
+    utm_content: 'utm_content',
+    utm_term: 'utm_term'
+  };
+
+  export type MarketingScalarFieldEnum = (typeof MarketingScalarFieldEnum)[keyof typeof MarketingScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -15966,6 +17129,7 @@ export namespace Prisma {
     questProgress?: QuestProgressListRelationFilter
     referredUsers?: UserListRelationFilter
     transactions?: TransactionIntentListRelationFilter
+    marketing?: MarketingListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -15988,6 +17152,7 @@ export namespace Prisma {
     questProgress?: QuestProgressOrderByRelationAggregateInput
     referredUsers?: UserOrderByRelationAggregateInput
     transactions?: TransactionIntentOrderByRelationAggregateInput
+    marketing?: MarketingOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -16013,6 +17178,7 @@ export namespace Prisma {
     questProgress?: QuestProgressListRelationFilter
     referredUsers?: UserListRelationFilter
     transactions?: TransactionIntentListRelationFilter
+    marketing?: MarketingListRelationFilter
   }, "id" | "identityAddress" | "referralCode">
 
   export type UserOrderByWithAggregationInput = {
@@ -16680,6 +17846,78 @@ export namespace Prisma {
     value?: StringWithAggregatesFilter<"Config"> | string
   }
 
+  export type MarketingWhereInput = {
+    AND?: MarketingWhereInput | MarketingWhereInput[]
+    OR?: MarketingWhereInput[]
+    NOT?: MarketingWhereInput | MarketingWhereInput[]
+    id?: IntFilter<"Marketing"> | number
+    userId?: StringFilter<"Marketing"> | string
+    utm_campaign?: StringNullableFilter<"Marketing"> | string | null
+    utm_medium?: StringNullableFilter<"Marketing"> | string | null
+    utm_source?: StringNullableFilter<"Marketing"> | string | null
+    utm_id?: StringNullableFilter<"Marketing"> | string | null
+    utm_content?: StringNullableFilter<"Marketing"> | string | null
+    utm_term?: StringNullableFilter<"Marketing"> | string | null
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type MarketingOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    utm_campaign?: SortOrderInput | SortOrder
+    utm_medium?: SortOrderInput | SortOrder
+    utm_source?: SortOrderInput | SortOrder
+    utm_id?: SortOrderInput | SortOrder
+    utm_content?: SortOrderInput | SortOrder
+    utm_term?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type MarketingWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: MarketingWhereInput | MarketingWhereInput[]
+    OR?: MarketingWhereInput[]
+    NOT?: MarketingWhereInput | MarketingWhereInput[]
+    userId?: StringFilter<"Marketing"> | string
+    utm_campaign?: StringNullableFilter<"Marketing"> | string | null
+    utm_medium?: StringNullableFilter<"Marketing"> | string | null
+    utm_source?: StringNullableFilter<"Marketing"> | string | null
+    utm_id?: StringNullableFilter<"Marketing"> | string | null
+    utm_content?: StringNullableFilter<"Marketing"> | string | null
+    utm_term?: StringNullableFilter<"Marketing"> | string | null
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type MarketingOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    utm_campaign?: SortOrderInput | SortOrder
+    utm_medium?: SortOrderInput | SortOrder
+    utm_source?: SortOrderInput | SortOrder
+    utm_id?: SortOrderInput | SortOrder
+    utm_content?: SortOrderInput | SortOrder
+    utm_term?: SortOrderInput | SortOrder
+    _count?: MarketingCountOrderByAggregateInput
+    _avg?: MarketingAvgOrderByAggregateInput
+    _max?: MarketingMaxOrderByAggregateInput
+    _min?: MarketingMinOrderByAggregateInput
+    _sum?: MarketingSumOrderByAggregateInput
+  }
+
+  export type MarketingScalarWhereWithAggregatesInput = {
+    AND?: MarketingScalarWhereWithAggregatesInput | MarketingScalarWhereWithAggregatesInput[]
+    OR?: MarketingScalarWhereWithAggregatesInput[]
+    NOT?: MarketingScalarWhereWithAggregatesInput | MarketingScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Marketing"> | number
+    userId?: StringWithAggregatesFilter<"Marketing"> | string
+    utm_campaign?: StringNullableWithAggregatesFilter<"Marketing"> | string | null
+    utm_medium?: StringNullableWithAggregatesFilter<"Marketing"> | string | null
+    utm_source?: StringNullableWithAggregatesFilter<"Marketing"> | string | null
+    utm_id?: StringNullableWithAggregatesFilter<"Marketing"> | string | null
+    utm_content?: StringNullableWithAggregatesFilter<"Marketing"> | string | null
+    utm_term?: StringNullableWithAggregatesFilter<"Marketing"> | string | null
+  }
+
   export type UserCreateInput = {
     id?: string
     identityAddress: string
@@ -16699,6 +17937,7 @@ export namespace Prisma {
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
+    marketing?: MarketingCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -16720,6 +17959,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
+    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -16741,6 +17981,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -16762,6 +18003,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -17407,6 +18649,79 @@ export namespace Prisma {
     value?: StringFieldUpdateOperationsInput | string
   }
 
+  export type MarketingCreateInput = {
+    utm_campaign?: string | null
+    utm_medium?: string | null
+    utm_source?: string | null
+    utm_id?: string | null
+    utm_content?: string | null
+    utm_term?: string | null
+    user: UserCreateNestedOneWithoutMarketingInput
+  }
+
+  export type MarketingUncheckedCreateInput = {
+    id?: number
+    userId: string
+    utm_campaign?: string | null
+    utm_medium?: string | null
+    utm_source?: string | null
+    utm_id?: string | null
+    utm_content?: string | null
+    utm_term?: string | null
+  }
+
+  export type MarketingUpdateInput = {
+    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_id?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_content?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_term?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneRequiredWithoutMarketingNestedInput
+  }
+
+  export type MarketingUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_id?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_content?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_term?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MarketingCreateManyInput = {
+    id?: number
+    userId: string
+    utm_campaign?: string | null
+    utm_medium?: string | null
+    utm_source?: string | null
+    utm_id?: string | null
+    utm_content?: string | null
+    utm_term?: string | null
+  }
+
+  export type MarketingUpdateManyMutationInput = {
+    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_id?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_content?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_term?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MarketingUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_id?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_content?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_term?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -17512,6 +18827,12 @@ export namespace Prisma {
     none?: TransactionIntentWhereInput
   }
 
+  export type MarketingListRelationFilter = {
+    every?: MarketingWhereInput
+    some?: MarketingWhereInput
+    none?: MarketingWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -17542,6 +18863,10 @@ export namespace Prisma {
   }
 
   export type TransactionIntentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MarketingOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18185,6 +19510,47 @@ export namespace Prisma {
     value?: SortOrder
   }
 
+  export type MarketingCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    utm_campaign?: SortOrder
+    utm_medium?: SortOrder
+    utm_source?: SortOrder
+    utm_id?: SortOrder
+    utm_content?: SortOrder
+    utm_term?: SortOrder
+  }
+
+  export type MarketingAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type MarketingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    utm_campaign?: SortOrder
+    utm_medium?: SortOrder
+    utm_source?: SortOrder
+    utm_id?: SortOrder
+    utm_content?: SortOrder
+    utm_term?: SortOrder
+  }
+
+  export type MarketingMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    utm_campaign?: SortOrder
+    utm_medium?: SortOrder
+    utm_source?: SortOrder
+    utm_id?: SortOrder
+    utm_content?: SortOrder
+    utm_term?: SortOrder
+  }
+
+  export type MarketingSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
   export type UserCreateNestedOneWithoutReferredUsersInput = {
     create?: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
     connectOrCreate?: UserCreateOrConnectWithoutReferredUsersInput
@@ -18252,6 +19618,13 @@ export namespace Prisma {
     connect?: TransactionIntentWhereUniqueInput | TransactionIntentWhereUniqueInput[]
   }
 
+  export type MarketingCreateNestedManyWithoutUserInput = {
+    create?: XOR<MarketingCreateWithoutUserInput, MarketingUncheckedCreateWithoutUserInput> | MarketingCreateWithoutUserInput[] | MarketingUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MarketingCreateOrConnectWithoutUserInput | MarketingCreateOrConnectWithoutUserInput[]
+    createMany?: MarketingCreateManyUserInputEnvelope
+    connect?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
+  }
+
   export type EventUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<EventCreateWithoutUserInput, EventUncheckedCreateWithoutUserInput> | EventCreateWithoutUserInput[] | EventUncheckedCreateWithoutUserInput[]
     connectOrCreate?: EventCreateOrConnectWithoutUserInput | EventCreateOrConnectWithoutUserInput[]
@@ -18311,6 +19684,13 @@ export namespace Prisma {
     connectOrCreate?: TransactionIntentCreateOrConnectWithoutUserInput | TransactionIntentCreateOrConnectWithoutUserInput[]
     createMany?: TransactionIntentCreateManyUserInputEnvelope
     connect?: TransactionIntentWhereUniqueInput | TransactionIntentWhereUniqueInput[]
+  }
+
+  export type MarketingUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<MarketingCreateWithoutUserInput, MarketingUncheckedCreateWithoutUserInput> | MarketingCreateWithoutUserInput[] | MarketingUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MarketingCreateOrConnectWithoutUserInput | MarketingCreateOrConnectWithoutUserInput[]
+    createMany?: MarketingCreateManyUserInputEnvelope
+    connect?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -18457,6 +19837,20 @@ export namespace Prisma {
     deleteMany?: TransactionIntentScalarWhereInput | TransactionIntentScalarWhereInput[]
   }
 
+  export type MarketingUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MarketingCreateWithoutUserInput, MarketingUncheckedCreateWithoutUserInput> | MarketingCreateWithoutUserInput[] | MarketingUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MarketingCreateOrConnectWithoutUserInput | MarketingCreateOrConnectWithoutUserInput[]
+    upsert?: MarketingUpsertWithWhereUniqueWithoutUserInput | MarketingUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MarketingCreateManyUserInputEnvelope
+    set?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
+    disconnect?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
+    delete?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
+    connect?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
+    update?: MarketingUpdateWithWhereUniqueWithoutUserInput | MarketingUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MarketingUpdateManyWithWhereWithoutUserInput | MarketingUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MarketingScalarWhereInput | MarketingScalarWhereInput[]
+  }
+
   export type EventUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<EventCreateWithoutUserInput, EventUncheckedCreateWithoutUserInput> | EventCreateWithoutUserInput[] | EventUncheckedCreateWithoutUserInput[]
     connectOrCreate?: EventCreateOrConnectWithoutUserInput | EventCreateOrConnectWithoutUserInput[]
@@ -18573,6 +19967,20 @@ export namespace Prisma {
     update?: TransactionIntentUpdateWithWhereUniqueWithoutUserInput | TransactionIntentUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: TransactionIntentUpdateManyWithWhereWithoutUserInput | TransactionIntentUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: TransactionIntentScalarWhereInput | TransactionIntentScalarWhereInput[]
+  }
+
+  export type MarketingUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MarketingCreateWithoutUserInput, MarketingUncheckedCreateWithoutUserInput> | MarketingCreateWithoutUserInput[] | MarketingUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MarketingCreateOrConnectWithoutUserInput | MarketingCreateOrConnectWithoutUserInput[]
+    upsert?: MarketingUpsertWithWhereUniqueWithoutUserInput | MarketingUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MarketingCreateManyUserInputEnvelope
+    set?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
+    disconnect?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
+    delete?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
+    connect?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
+    update?: MarketingUpdateWithWhereUniqueWithoutUserInput | MarketingUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MarketingUpdateManyWithWhereWithoutUserInput | MarketingUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MarketingScalarWhereInput | MarketingScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutPhoneNumberInput = {
@@ -18775,6 +20183,20 @@ export namespace Prisma {
     upsert?: TransactionIntentUpsertWithoutTransactionsInput
     connect?: TransactionIntentWhereUniqueInput
     update?: XOR<XOR<TransactionIntentUpdateToOneWithWhereWithoutTransactionsInput, TransactionIntentUpdateWithoutTransactionsInput>, TransactionIntentUncheckedUpdateWithoutTransactionsInput>
+  }
+
+  export type UserCreateNestedOneWithoutMarketingInput = {
+    create?: XOR<UserCreateWithoutMarketingInput, UserUncheckedCreateWithoutMarketingInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMarketingInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutMarketingNestedInput = {
+    create?: XOR<UserCreateWithoutMarketingInput, UserUncheckedCreateWithoutMarketingInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMarketingInput
+    upsert?: UserUpsertWithoutMarketingInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMarketingInput, UserUpdateWithoutMarketingInput>, UserUncheckedUpdateWithoutMarketingInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -19095,6 +20517,7 @@ export namespace Prisma {
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
+    marketing?: MarketingCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReferredUsersInput = {
@@ -19115,6 +20538,7 @@ export namespace Prisma {
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
+    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReferredUsersInput = {
@@ -19287,6 +20711,7 @@ export namespace Prisma {
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
+    marketing?: MarketingCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReferredByUserInput = {
@@ -19307,6 +20732,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
+    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReferredByUserInput = {
@@ -19347,6 +20773,35 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type MarketingCreateWithoutUserInput = {
+    utm_campaign?: string | null
+    utm_medium?: string | null
+    utm_source?: string | null
+    utm_id?: string | null
+    utm_content?: string | null
+    utm_term?: string | null
+  }
+
+  export type MarketingUncheckedCreateWithoutUserInput = {
+    id?: number
+    utm_campaign?: string | null
+    utm_medium?: string | null
+    utm_source?: string | null
+    utm_id?: string | null
+    utm_content?: string | null
+    utm_term?: string | null
+  }
+
+  export type MarketingCreateOrConnectWithoutUserInput = {
+    where: MarketingWhereUniqueInput
+    create: XOR<MarketingCreateWithoutUserInput, MarketingUncheckedCreateWithoutUserInput>
+  }
+
+  export type MarketingCreateManyUserInputEnvelope = {
+    data: MarketingCreateManyUserInput | MarketingCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutReferredUsersInput = {
     update: XOR<UserUpdateWithoutReferredUsersInput, UserUncheckedUpdateWithoutReferredUsersInput>
     create: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
@@ -19376,6 +20831,7 @@ export namespace Prisma {
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReferredUsersInput = {
@@ -19396,6 +20852,7 @@ export namespace Prisma {
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type EventUpsertWithWhereUniqueWithoutUserInput = {
@@ -19633,6 +21090,36 @@ export namespace Prisma {
     data?: JsonNullableFilter<"TransactionIntent">
   }
 
+  export type MarketingUpsertWithWhereUniqueWithoutUserInput = {
+    where: MarketingWhereUniqueInput
+    update: XOR<MarketingUpdateWithoutUserInput, MarketingUncheckedUpdateWithoutUserInput>
+    create: XOR<MarketingCreateWithoutUserInput, MarketingUncheckedCreateWithoutUserInput>
+  }
+
+  export type MarketingUpdateWithWhereUniqueWithoutUserInput = {
+    where: MarketingWhereUniqueInput
+    data: XOR<MarketingUpdateWithoutUserInput, MarketingUncheckedUpdateWithoutUserInput>
+  }
+
+  export type MarketingUpdateManyWithWhereWithoutUserInput = {
+    where: MarketingScalarWhereInput
+    data: XOR<MarketingUpdateManyMutationInput, MarketingUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type MarketingScalarWhereInput = {
+    AND?: MarketingScalarWhereInput | MarketingScalarWhereInput[]
+    OR?: MarketingScalarWhereInput[]
+    NOT?: MarketingScalarWhereInput | MarketingScalarWhereInput[]
+    id?: IntFilter<"Marketing"> | number
+    userId?: StringFilter<"Marketing"> | string
+    utm_campaign?: StringNullableFilter<"Marketing"> | string | null
+    utm_medium?: StringNullableFilter<"Marketing"> | string | null
+    utm_source?: StringNullableFilter<"Marketing"> | string | null
+    utm_id?: StringNullableFilter<"Marketing"> | string | null
+    utm_content?: StringNullableFilter<"Marketing"> | string | null
+    utm_term?: StringNullableFilter<"Marketing"> | string | null
+  }
+
   export type UserCreateWithoutPhoneNumberInput = {
     id?: string
     identityAddress: string
@@ -19651,6 +21138,7 @@ export namespace Prisma {
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
+    marketing?: MarketingCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPhoneNumberInput = {
@@ -19671,6 +21159,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
+    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPhoneNumberInput = {
@@ -19707,6 +21196,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPhoneNumberInput = {
@@ -19727,6 +21217,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutEventsInput = {
@@ -19747,6 +21238,7 @@ export namespace Prisma {
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
+    marketing?: MarketingCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEventsInput = {
@@ -19767,6 +21259,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
+    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEventsInput = {
@@ -19803,6 +21296,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEventsInput = {
@@ -19823,6 +21317,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutMessagesInput = {
@@ -19843,6 +21338,7 @@ export namespace Prisma {
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
+    marketing?: MarketingCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMessagesInput = {
@@ -19863,6 +21359,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
+    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMessagesInput = {
@@ -19899,6 +21396,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -19919,6 +21417,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutCompletedQuestRequirementsInput = {
@@ -19939,6 +21438,7 @@ export namespace Prisma {
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
+    marketing?: MarketingCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCompletedQuestRequirementsInput = {
@@ -19959,6 +21459,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
+    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCompletedQuestRequirementsInput = {
@@ -19995,6 +21496,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompletedQuestRequirementsInput = {
@@ -20015,6 +21517,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutQuestProgressInput = {
@@ -20035,6 +21538,7 @@ export namespace Prisma {
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
+    marketing?: MarketingCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutQuestProgressInput = {
@@ -20055,6 +21559,7 @@ export namespace Prisma {
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
+    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutQuestProgressInput = {
@@ -20091,6 +21596,7 @@ export namespace Prisma {
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutQuestProgressInput = {
@@ -20111,6 +21617,7 @@ export namespace Prisma {
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSavedProgressInput = {
@@ -20131,6 +21638,7 @@ export namespace Prisma {
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
+    marketing?: MarketingCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSavedProgressInput = {
@@ -20151,6 +21659,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
+    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSavedProgressInput = {
@@ -20187,6 +21696,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSavedProgressInput = {
@@ -20207,6 +21717,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -20227,6 +21738,7 @@ export namespace Prisma {
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
+    marketing?: MarketingCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -20247,6 +21759,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
+    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -20283,6 +21796,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -20303,6 +21817,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SubmittedTransactionCreateWithoutTransactionInput = {
@@ -20345,6 +21860,7 @@ export namespace Prisma {
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
+    marketing?: MarketingCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -20365,6 +21881,7 @@ export namespace Prisma {
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
+    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -20427,6 +21944,7 @@ export namespace Prisma {
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
+    marketing?: MarketingUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -20447,6 +21965,7 @@ export namespace Prisma {
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
+    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TransactionIntentCreateWithoutTransactionsInput = {
@@ -20501,6 +22020,106 @@ export namespace Prisma {
     data?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type UserCreateWithoutMarketingInput = {
+    id?: string
+    identityAddress: string
+    createdAt?: Date | string
+    accountAddress?: string | null
+    name?: string | null
+    country?: string | null
+    type?: $Enums.UserType
+    referralCode: string
+    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
+    events?: EventCreateNestedManyWithoutUserInput
+    messages?: MessageCreateNestedManyWithoutUserInput
+    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
+    completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
+    savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
+    auditLogs?: AuditCreateNestedManyWithoutUserInput
+    questProgress?: QuestProgressCreateNestedManyWithoutUserInput
+    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
+    transactions?: TransactionIntentCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutMarketingInput = {
+    id?: string
+    identityAddress: string
+    createdAt?: Date | string
+    accountAddress?: string | null
+    name?: string | null
+    country?: string | null
+    type?: $Enums.UserType
+    referralCode: string
+    referredBy?: string | null
+    events?: EventUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
+    completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
+    savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
+    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
+    questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
+    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
+    transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutMarketingInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMarketingInput, UserUncheckedCreateWithoutMarketingInput>
+  }
+
+  export type UserUpsertWithoutMarketingInput = {
+    update: XOR<UserUpdateWithoutMarketingInput, UserUncheckedUpdateWithoutMarketingInput>
+    create: XOR<UserCreateWithoutMarketingInput, UserUncheckedCreateWithoutMarketingInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMarketingInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMarketingInput, UserUncheckedUpdateWithoutMarketingInput>
+  }
+
+  export type UserUpdateWithoutMarketingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identityAddress?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
+    events?: EventUpdateManyWithoutUserNestedInput
+    messages?: MessageUpdateManyWithoutUserNestedInput
+    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
+    completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
+    savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
+    auditLogs?: AuditUpdateManyWithoutUserNestedInput
+    questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
+    transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMarketingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identityAddress?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    events?: EventUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
+    completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
+    savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
+    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
+    questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
+    transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type EventCreateManyUserInput = {
     transactionId: string
     id: string
@@ -20552,6 +22171,16 @@ export namespace Prisma {
     createdAt?: Date | string
     error?: string | null
     data?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type MarketingCreateManyUserInput = {
+    id?: number
+    utm_campaign?: string | null
+    utm_medium?: string | null
+    utm_source?: string | null
+    utm_id?: string | null
+    utm_content?: string | null
+    utm_term?: string | null
   }
 
   export type EventUpdateWithoutUserInput = {
@@ -20673,6 +22302,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReferredByUserInput = {
@@ -20693,6 +22323,7 @@ export namespace Prisma {
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutReferredByUserInput = {
@@ -20730,6 +22361,35 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     error?: NullableStringFieldUpdateOperationsInput | string | null
     data?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type MarketingUpdateWithoutUserInput = {
+    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_id?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_content?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_term?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MarketingUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_id?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_content?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_term?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MarketingUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_id?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_content?: NullableStringFieldUpdateOperationsInput | string | null
+    utm_term?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SubmittedTransactionCreateManyTransactionInput = {
@@ -20825,6 +22485,10 @@ export namespace Prisma {
      * @deprecated Use ConfigDefaultArgs instead
      */
     export type ConfigArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ConfigDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use MarketingDefaultArgs instead
+     */
+    export type MarketingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = MarketingDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

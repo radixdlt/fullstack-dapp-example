@@ -219,6 +219,17 @@ exports.Prisma.ConfigScalarFieldEnum = {
   value: 'value'
 };
 
+exports.Prisma.MarketingScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  utm_campaign: 'utm_campaign',
+  utm_medium: 'utm_medium',
+  utm_source: 'utm_source',
+  utm_id: 'utm_id',
+  utm_content: 'utm_content',
+  utm_term: 'utm_term'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -286,7 +297,8 @@ exports.Prisma.ModelName = {
   Audit: 'Audit',
   TransactionIntent: 'TransactionIntent',
   SubmittedTransaction: 'SubmittedTransaction',
-  Config: 'Config'
+  Config: 'Config',
+  Marketing: 'Marketing'
 };
 
 /**

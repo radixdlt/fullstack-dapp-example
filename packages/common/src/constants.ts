@@ -101,3 +101,7 @@ export const EventId = {
 } as const
 
 export type EventId = keyof typeof EventId
+
+export const CookieKeys = {
+  Utm: 'rq_ma'
+} as const
