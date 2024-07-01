@@ -13,10 +13,12 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
   const referredBy = url.searchParams.get('ref')
 
   const storeUtmValues = (searchParams: URLSearchParams, cookie: Cookies) => {
-    const referredBy = url.searchParams.get('ref')
+    const referredBy = searchParams.get('ref')
+
+    const searchParamsFormatted = new URLSearchParams(url.search.toLowerCase())
 
     const utmValues: MarketingUtmValues = Object.fromEntries(
-      utmKeys.map((key) => [key, searchParams.get(key)]).filter(([, value]) => value)
+      utmKeys.map((key) => [key, searchParamsFormatted.get(key)]).filter(([, value]) => value)
     )
 
     if (referredBy) utmValues.utm_medium = referredBy

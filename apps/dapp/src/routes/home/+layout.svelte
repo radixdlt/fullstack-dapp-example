@@ -139,6 +139,8 @@
             // TODO: logout user and give feedback that the session has expired
             if (status === 401) radixDappToolkit.disconnect()
           })
+      } else {
+        authApi.logout()
       }
     })
 
