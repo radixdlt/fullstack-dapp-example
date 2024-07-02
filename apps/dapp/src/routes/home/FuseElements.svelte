@@ -1,9 +1,110 @@
+<script lang="ts" context="module">
+  const getRadgemKeystoreAddress = (details: StateEntityDetailsResponseItemDetails) => {
+    if (details!.type === 'Component') {
+      return (details!.state! as any).fields.find(
+        (field: any) => field.field_name === 'radgem_records'
+      )!.value as string
+    }
+  }
+
+  const getKeyValueStoreKeys = (keyStoreAddress: string) =>
+    ResultAsync.fromPromise(
+      GatewayApi(publicConfig.networkId).gatewayApiClient.state.innerClient.keyValueStoreKeys({
+        stateKeyValueStoreKeysRequest: {
+          key_value_store_address: keyStoreAddress!
+        }
+      }),
+      (e) => e as Error
+    )
+
+  const getRawHexFromKeyValueStoreKeys =
+    (userId: string) =>
+    (keys: StateKeyValueStoreKeysResponse): ResultAsync<string, string> => {
+      const userKey = keys.items.find(
+        ({ key }) =>
+          key.programmatic_json.kind === 'Tuple' &&
+          key.programmatic_json.fields.find(
+            (field) => field.kind === 'NonFungibleLocalId' && field.value === `<${userId}>`
+          )
+      )
+
+      return userKey ? okAsync(userKey.key.raw_hex) : errAsync('No claim available')
+    }
+
+  const getKeyValueStoreData = (keyStoreAddress: string) => (rawHex: string) => {
+    if (!rawHex) {
+      return errAsync('No claim available')
+    } else {
+      return ResultAsync.fromPromise(
+        GatewayApi(publicConfig.networkId).gatewayApiClient.state.innerClient.keyValueStoreData({
+          stateKeyValueStoreDataRequest: {
+            key_value_store_address: keyStoreAddress,
+            keys: [
+              {
+                key_hex: rawHex
+              },
+              {
+                key_json: {
+                  kind: 'Tuple',
+                  fields: [
+                    {
+                      kind: 'U32',
+                      value: '1'
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }),
+        (e) => e as Error
+      )
+    }
+  }
+
+  const claimAvailableInKeyValueStore = (
+    storeData: StateKeyValueStoreDataResponse
+  ): ResultAsync<string, string> => {
+    const unclaimed = storeData.entries.find(
+      ({ value }) =>
+        value.programmatic_json.kind === 'Enum' &&
+        value.programmatic_json.variant_name === 'Unclaimed'
+    )
+
+    if (unclaimed) {
+      const nftId = (
+        (unclaimed.value.programmatic_json as ProgrammaticScryptoSborValueTuple).fields[0] as any
+      ).elements[0].value
+
+      return okAsync(nftId)
+    }
+
+    return errAsync('No claim available')
+  }
+
+  export const checkClaimAvailable = (userId: string) =>
+    pipe(
+      () =>
+        GatewayApi(publicConfig.networkId).callApi('getEntityDetailsVaultAggregated', [
+          publicConfig.components.refinery
+        ]),
+      (result) => result.map(([{ details }]) => getRadgemKeystoreAddress(details!)),
+      (result) =>
+        result.andThen((keyStoreAddress) =>
+          pipe(
+            () => getKeyValueStoreKeys(keyStoreAddress!),
+            (result) => result.andThen(getRawHexFromKeyValueStoreKeys(userId)),
+            (result) => result.andThen(getKeyValueStoreData(keyStoreAddress!)),
+            (result) => result.andThen(claimAvailableInKeyValueStore)
+          )()
+        )
+    )()
+</script>
+
 <script lang="ts">
-  import JettyActionButton from '$lib/components/quest/JettyActionButton.svelte'
   import JettyActionButtons from '$lib/components/quest/JettyActionButtons.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import { publicConfig } from '$lib/public-config'
-  import { useLocalStorage } from '$lib/utils/local-storage'
   import { GatewayApi } from 'common'
   import { user, webSocketClient } from '../../stores'
   import pipe from 'ramda/src/pipe'
@@ -14,11 +115,14 @@
   import type {
     StateEntityDetailsResponseItemDetails,
     StateKeyValueStoreKeysResponse,
-    StateKeyValueStoreDataResponse
+    StateKeyValueStoreDataResponse,
+    ProgrammaticScryptoSborValueTuple
   } from '@radixdlt/babylon-gateway-api-sdk'
   import ClaimRadGem from './ClaimRadGem.svelte'
   import { messageApi } from '$lib/api/message-api'
   import { context } from '$lib/components/jetty-menu/JettyMenu.svelte'
+  import Button from '$lib/components/button/Button.svelte'
+  import FuseElementsPage from './FuseElementsPage.svelte'
 
   let rerender = false
 
@@ -31,7 +135,10 @@
   let amountOfElements: string
   let errorLoadingElements = false
   let claimAvailable: boolean
+  let claimableRadGemId: string
+  let waitingForElementsDeposited = false
   let elementsDeposited = false
+  let radgemClaimed = false
 
   const sendElements = async () => {
     const transactionManifest = `
@@ -76,101 +183,12 @@
     return sendTransaction({ transactionManifest })
       .map(() => {
         waitingForSendElements = false
+        waitingForElementsDeposited = true
       })
       .mapErr(() => {
         waitingForSendElements = false
       })
   }
-
-  const getRadgemKeystoreAddress = (details: StateEntityDetailsResponseItemDetails) => {
-    if (details!.type === 'Component') {
-      return (details!.state! as any).fields.find(
-        (field: any) => field.field_name === 'radgem_records'
-      )!.value as string
-    }
-  }
-
-  const getKeyValueStoreKeys = (keyStoreAddress: string) =>
-    ResultAsync.fromPromise(
-      gateway.gatewayApiClient.state.innerClient.keyValueStoreKeys({
-        stateKeyValueStoreKeysRequest: {
-          key_value_store_address: keyStoreAddress!
-        }
-      }),
-      (e) => e as Error
-    )
-
-  const getRawHexFromKeyValueStoreKeys = (
-    keys: StateKeyValueStoreKeysResponse
-  ): ResultAsync<string, string> => {
-    const userKey = keys.items.find(
-      ({ key }) =>
-        key.programmatic_json.kind === 'Tuple' &&
-        key.programmatic_json.fields.find(
-          (field) => field.kind === 'NonFungibleLocalId' && field.value === `<${$user?.id}>`
-        )
-    )
-
-    return userKey ? okAsync(userKey.key.raw_hex) : errAsync('No claim available')
-  }
-
-  const getKeyValueStoreData = (keyStoreAddress: string) => (rawHex: string) => {
-    if (!rawHex) {
-      return errAsync('No claim available')
-    } else {
-      return ResultAsync.fromPromise(
-        gateway.gatewayApiClient.state.innerClient.keyValueStoreData({
-          stateKeyValueStoreDataRequest: {
-            key_value_store_address: keyStoreAddress,
-            keys: [
-              {
-                key_hex: rawHex
-              },
-              {
-                key_json: {
-                  kind: 'Tuple',
-                  fields: [
-                    {
-                      kind: 'U32',
-                      value: '1'
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        }),
-        (e) => e as Error
-      )
-    }
-  }
-
-  const claimAvailableInKeyValueStore = (
-    storeData: StateKeyValueStoreDataResponse
-  ): ResultAsync<boolean, string> => {
-    const unclaimed = storeData.entries.find(
-      ({ value }) =>
-        value.programmatic_json.kind === 'Enum' &&
-        value.programmatic_json.variant_name === 'Unclaimed'
-    )
-
-    if (unclaimed) return okAsync(true)
-    return errAsync('No claim available')
-  }
-
-  const checkClaimAvailable = pipe(
-    () => gateway.callApi('getEntityDetailsVaultAggregated', [publicConfig.components.refinery]),
-    (result) => result.map(([{ details }]) => getRadgemKeystoreAddress(details!)),
-    (result) =>
-      result.andThen((keyStoreAddress) =>
-        pipe(
-          () => getKeyValueStoreKeys(keyStoreAddress!),
-          (result) => result.andThen(getRawHexFromKeyValueStoreKeys),
-          (result) => result.andThen(getKeyValueStoreData(keyStoreAddress!)),
-          (result) => result.andThen(claimAvailableInKeyValueStore)
-        )()
-      )
-  )
 
   const checkAmountOfElements = pipe(
     () => gateway.callApi('getEntityDetailsVaultAggregated', [$user?.accountAddress!]),
@@ -186,15 +204,21 @@
           noElements = true
           return
         }
+
         amountOfElements = element.vaults.items[0].amount
+
+        if (parseInt(amountOfElements) === 0) {
+          noElements = true
+        }
       })
   )
 
   onMount(() => {
-    ResultAsync.combineWithAllErrors([checkAmountOfElements(), checkClaimAvailable()])
-      .map(([_, _claimAvailable]) => {
+    ResultAsync.combineWithAllErrors([checkAmountOfElements(), checkClaimAvailable($user?.id!)])
+      .map(([_, radGemId]) => {
         loadingLedgerData = false
-        claimAvailable = _claimAvailable
+        claimAvailable = true
+        claimableRadGemId = radGemId
       })
       .mapErr(([_, _errorLoadingElements]) => {
         loadingLedgerData = false
@@ -204,8 +228,13 @@
     const unsub = webSocketClient.subscribe((ws) => {
       if (ws)
         ws.onMessage((msg) => {
-          if (msg.type === 'CombineElementsMintRadgem') {
-            elementsDeposited = true
+          if (msg.type === 'CombineElementsAddRadgemImage') {
+            checkClaimAvailable($user?.id!).map((radGemId) => {
+              claimAvailable = true
+              claimableRadGemId = radGemId
+              waitingForElementsDeposited = false
+              elementsDeposited = true
+            })
             messageApi.markAsSeen([msg.id])
           }
         })
@@ -229,49 +258,105 @@
 
 <div class="fuse-elements">
   {#if loadingLedgerData}
-    <LoadingSpinner />
+    <div class="loading">
+      <LoadingSpinner />
+    </div>
   {:else if errorLoadingElements}
+    <!-- TODO handle error -->
     error loading elements
+  {:else if waitingForElementsDeposited}
+    {$i18n.t('jetty:fuse-elements.fusing-elements')}...
+  {:else if radgemClaimed}
+    <FuseElementsPage singleAction>
+      <div slot="content">
+        {$i18n.t('jetty:fuse-elements.radgem-claimed')}
+
+        <p>
+          {$i18n.t('jetty:fuse-elements.elements-left', {
+            count: parseInt(amountOfElements)
+          })}
+        </p>
+      </div>
+
+      <Button slot="actions" on:click={() => dispatch('cancel')}>{$i18n.t('jetty:close')}</Button>
+    </FuseElementsPage>
   {:else if claimAvailable || elementsDeposited}
     <ClaimRadGem
+      id={claimableRadGemId}
       on:claimed={() => {
-        close()
+        checkAmountOfElements().map(() => {
+          radgemClaimed = true
+        })
       }}
     />
   {:else}
     {#key rerender}
-      {#if useLocalStorage('seen-fuse-elements-intro').get()}
-        {$i18n.t('jetty:fuse-elements.intro')}
-        <JettyActionButton
-          on:click={() => {
-            useLocalStorage('seen-fuse-elements-intro').set(true)
-            rerender = true
-          }}
-        >
-          {$i18n.t('quests:nextButton')}
-        </JettyActionButton>
-      {:else if noElements}
-        you have no elements
-      {:else}
-        {$i18n.t('jetty:fuse-elements.text1', { count: parseInt(amountOfElements) })}
-        {$i18n.t('jetty:fuse-elements.text2', { count: 10 })}
+      <FuseElementsPage singleAction={noElements || parseInt(amountOfElements) < 10}>
+        <div slot="content">
+          {$i18n.t('jetty:fuse-elements.intro')}
 
-        <JettyActionButtons
-          backText={$i18n.t('jetty:cancel')}
-          nextText={$i18n.t('jetty:fuse-elements.send-button', {
-            count: 10
-          })}
-          loading={waitingForSendElements}
-          on:back={() => dispatch('cancel')}
-          on:next={sendElements}
-        />
-      {/if}
+          <p>
+            {$i18n.t('jetty:fuse-elements.intro2')}
+          </p>
+
+          {#if noElements}
+            <p class="bold">
+              {$i18n.t('jetty:fuse-elements.no-elements')}
+            </p>
+          {:else if parseInt(amountOfElements) < 10}
+            <p>
+              {$i18n.t('jetty:fuse-elements.not-enough-elements', {
+                count: parseInt(amountOfElements)
+              })}
+            </p>
+          {:else}
+            <p>
+              {$i18n.t('jetty:fuse-elements.text1', { count: parseInt(amountOfElements) })}
+            </p>
+
+            <p class="bold">
+              {$i18n.t('jetty:fuse-elements.text2', { count: 10 })}
+            </p>
+          {/if}
+        </div>
+
+        <div slot="actions">
+          {#if noElements}
+            <Button on:click={() => dispatch('cancel')}>{$i18n.t('jetty:close')}</Button>
+          {:else if parseInt(amountOfElements) >= 10}
+            <JettyActionButtons
+              backText={$i18n.t('jetty:cancel')}
+              nextText={$i18n.t('jetty:fuse-elements.send-button', {
+                count: 10
+              })}
+              loading={waitingForSendElements}
+              on:back={() => dispatch('cancel')}
+              on:next={sendElements}
+            />
+          {:else}
+            <Button on:click={() => dispatch('cancel')}>{$i18n.t('jetty:close')}</Button>
+          {/if}
+        </div>
+      </FuseElementsPage>
     {/key}
   {/if}
 </div>
 
-<style>
+<style lang="scss">
   .fuse-elements {
+    display: flex;
+    justify-content: center;
     color: var(--color-light);
+    height: 100%;
+  }
+  .bold {
+    font-weight: var(--font-weight-bold);
+  }
+
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
   }
 </style>

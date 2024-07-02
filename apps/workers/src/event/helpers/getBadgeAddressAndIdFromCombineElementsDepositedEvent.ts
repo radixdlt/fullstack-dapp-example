@@ -29,14 +29,12 @@ const findNonFungibleIdField = (fields?: ProgrammaticScryptoSborValue[]) =>
       field.kind === 'NonFungibleLocalId'
   )
 
-export const getBadgeAddressAndIdFromCombineElementsDepositedEvent = (event: EventsItem) => {
+export const getUserIdFromCombineElementsDepositedEvent = (event: EventsItem) => {
   if (event.data?.kind !== 'Tuple') throw new Error('Invalid event data')
 
   const globalId = findNonFungibleGlobalIdField(event.data?.fields)
 
-  const badgeResourceAddress = findResourceAddressField(globalId)?.value
+  const userId = stripNonFungibleLocalId(findNonFungibleIdField(globalId)?.value)
 
-  const badgeId = stripNonFungibleLocalId(findNonFungibleIdField(globalId)?.value)
-
-  return { badgeResourceAddress, badgeId }
+  return { userId }
 }

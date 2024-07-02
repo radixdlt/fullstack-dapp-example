@@ -19,12 +19,13 @@ import {
 import { getDataFromQuestRewardsEvent } from './helpers/getDataFromQuestRewardsEvent'
 import { databaseTransactions } from './helpers/databaseTransactions'
 import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent'
-import { getBadgeAddressAndIdFromCombineElementsDepositedEvent } from './helpers/getBadgeAddressAndIdFromCombineElementsDepositedEvent'
+import { getUserIdFromCombineElementsDepositedEvent } from './helpers/getBadgeAddressAndIdFromCombineElementsDepositedEvent'
 import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 import { getDetailsFromCombineElementsMintedRadgemEvent } from './helpers/getDetailsFromCombineElementsMintedRadgemEvent'
 import { WorkerError } from '../_types'
 import { getUserById } from '../helpers/getUserById'
 import { SendMessage } from '../helpers/sendMessage'
+import { getUserIdFromRadgemImageEvent } from './helpers/getUserIdFromRadgemImageEvent'
 
 type EventEmitter = {
   entity: {
@@ -162,61 +163,46 @@ export const EventWorkerController = ({
       )
 
     const handelCombineElementsDepositedEvent = () => {
-      const {
-        badgeResourceAddress,
-        badgeId
-      }: {
-        badgeResourceAddress?: string
-        badgeId?: string
-      } = getBadgeAddressAndIdFromCombineElementsDepositedEvent(
+      const { userId } = getUserIdFromCombineElementsDepositedEvent(
         job.data.relevantEvents.DepositedEvent
       )
 
-      if (!badgeId || !badgeResourceAddress) {
-        return errAsync('Invalid badge data')
-      }
-
-      return ensureValidData(transactionId, { localId: badgeId }).andThen(() => {
-        return transactionModel(childLogger).add({
+      return getUserById(userId!, dbClient).andThen(() =>
+        transactionModel(childLogger).add({
           discriminator: `CombinedElementsMintRadgem:${traceId}`,
-          userId: badgeId.slice(1, -1),
+          userId: userId!,
           type: 'CombinedElementsMintRadgem',
           traceId
         })
-      })
+      )
     }
 
     const handelCombineElementsMintedRadgemEvent = () => {
-      const {
-        badgeResourceAddress,
-        badgeId,
-        radgemId
-      }: {
-        badgeResourceAddress?: string
-        badgeId?: string
-        radgemId?: string
-      } = getDetailsFromCombineElementsMintedRadgemEvent(job.data.relevantEvents.MintedRadgemEvent)
+      const { userId, radgemId } = getDetailsFromCombineElementsMintedRadgemEvent(
+        job.data.relevantEvents.MintedRadgemEvent
+      )
 
-      if (!badgeId || !badgeResourceAddress) {
-        return errAsync('Invalid badge data')
-      }
-      if (!radgemId) {
-        return errAsync('Invalid radgem data')
-      }
-
-      const userId = badgeId.slice(1, -1)
-
-      return ensureValidData(transactionId, { localId: badgeId }).andThen(() => {
-        return transactionModel(childLogger)
+      return getUserById(userId!, dbClient).andThen(() =>
+        transactionModel(childLogger)
           .add({
             discriminator: `CombinedElementsAddRadgemImage:${radgemId}`,
-            userId,
+            userId: userId!,
             type: 'CombinedElementsAddRadgemImage',
-            radgemId,
+            radgemId: radgemId!,
             traceId
           })
-          .andThen(() => sendMessage(userId, { type: 'CombineElementsMintRadgem', traceId }))
-      })
+          .andThen(() => sendMessage(userId!, { type: 'CombineElementsMintRadgem', traceId }))
+      )
+    }
+
+    const handleAddedRadgemImage = () => {
+      const userId = getUserIdFromRadgemImageEvent(job.data.relevantEvents.AddedRadgemImageEvent)
+        .split('<')[1]
+        .split('>')[0]
+
+      return getUserById(userId, dbClient).andThen(() =>
+        sendMessage(userId, { type: 'CombineElementsAddRadgemImage', traceId })
+      )
     }
 
     const handleQuestWithTrackedAccount = (
@@ -279,7 +265,7 @@ export const EventWorkerController = ({
       case EventId.CombineElementsMintedRadgem:
         return handelCombineElementsMintedRadgemEvent()
       case EventId.CombineElementsAddedRadgemImage:
-        return okAsync(undefined)
+        return handleAddedRadgemImage()
       case EventId.DepositHeroBadge:
         return getUserIdFromDepositHeroBadgeEvent(
           job.data.relevantEvents.HeroBadgeDeposited

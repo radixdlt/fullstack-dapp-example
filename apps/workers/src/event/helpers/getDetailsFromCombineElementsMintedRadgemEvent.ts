@@ -42,11 +42,9 @@ export const getDetailsFromCombineElementsMintedRadgemEvent = (event: EventsItem
 
   const globalId = findNonFungibleGlobalIdField(event.data?.fields)
 
-  const badgeResourceAddress = findResourceAddressField(globalId)?.value
-
-  const badgeId = stripNonFungibleLocalId(findNonFungibleIdField(globalId)?.value)
+  const userId = stripNonFungibleLocalId(findNonFungibleIdField(globalId)?.value)
 
   const radgemId = findNonFungibleRadgemLocalIdField(event.data?.fields)
 
-  return { badgeResourceAddress, badgeId, radgemId }
+  return { userId, radgemId }
 }

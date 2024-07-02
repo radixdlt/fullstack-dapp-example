@@ -28,6 +28,7 @@
     id: string
     text: string
     icon: string
+    alert?: Writable<boolean>
   }[]
   export let notifications: typeof jettyNotifications = writable([])
   export let hideJetty = false
@@ -55,6 +56,7 @@
     close: undefined
     open: undefined
     'hover-over-jetty': boolean
+    'item-content-closed': undefined
   }>()
 
   const popNotification = () => {
@@ -85,11 +87,7 @@
 
   $: poppedUp ? ($jettyPositionFactor = 0) : ($jettyPositionFactor = 1)
 
-  $: if (expanded) {
-    dispatch('open')
-  } else {
-    dispatch('close')
-  }
+  $: if (!expanded) dispatch('close')
 
   $: latestNotification = $notifications[$notifications.length - 1]
 
@@ -102,6 +100,8 @@
       expanded = false
     }
   }
+
+  $: if (!showMenuItemContent) dispatch('item-content-closed')
 </script>
 
 <div
@@ -181,13 +181,14 @@
           </div>
         {/if}
 
-        {#each menuItems as { id, text, icon }}
+        {#each menuItems as { id, text, icon, alert }}
           <JettyMenuButton
             {text}
             {icon}
+            {alert}
             on:click={() => {
               showMenuItemContent = true
-              currentMenuItem = { id, text, icon }
+              currentMenuItem = { id, text, icon, alert }
             }}
           />
         {/each}
@@ -198,8 +199,8 @@
 
 <style lang="scss">
   .jetty-menu {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 4rem 1fr;
     background-color: var(--color-background-dark);
     height: 30rem;
     width: 25rem;
@@ -229,7 +230,6 @@
   .header {
     border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
     width: 100%;
-    height: 4rem;
     background-color: var(--color-dark);
     color: var(--color-light);
     display: flex;
