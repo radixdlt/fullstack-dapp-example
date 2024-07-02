@@ -5,9 +5,10 @@
   export let text: string
   export let icon: string
   export let alert = writable(false)
+  export let disabled = false
 </script>
 
-<button class="jetty-menu-button" on:click>
+<button class="jetty-menu-button" class:disabled on:click>
   <div class="icon-and-text">
     <Icon url={icon} />
     {text}
