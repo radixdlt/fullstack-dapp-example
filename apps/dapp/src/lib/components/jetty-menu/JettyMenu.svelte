@@ -2,6 +2,7 @@
   export const context = useContext<{
     back: Writable<boolean>
     closeMenuItem: () => void
+    hideBackButton: Writable<boolean>
   }>()
 </script>
 
@@ -66,9 +67,13 @@
     dispatch('notification-opened')
   }
 
+  const hideBackButton = writable(false)
+
   context.set('closeMenuItem', () => {
     showMenuItemContent = false
   })
+
+  context.set('hideBackButton', hideBackButton)
 
   const back = writable(false)
 
@@ -102,7 +107,10 @@
     }
   }
 
-  $: if (!showMenuItemContent) dispatch('item-content-closed')
+  $: if (!showMenuItemContent) {
+    $hideBackButton = false
+    dispatch('item-content-closed')
+  }
 
   let enabledItems: typeof menuItems
   let disabledItems: typeof menuItems
@@ -146,7 +154,7 @@
   </div>
   <div class="header">
     <div class="back">
-      {#if showMenuItemContent}
+      {#if showMenuItemContent && !$hideBackButton}
         <Icon
           url={ChevronIcon}
           on:click={() => {

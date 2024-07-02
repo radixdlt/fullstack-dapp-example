@@ -254,6 +254,8 @@
     close()
     $back = false
   }
+
+  $: if (waitingForElementsDeposited || claimAvailable) context.get('hideBackButton').set(true)
 </script>
 
 <div class="fuse-elements">
