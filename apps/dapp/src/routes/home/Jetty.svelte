@@ -16,7 +16,7 @@
   } from '../../stores'
   import { tick } from 'svelte'
   import { isMobile } from '$lib/utils/is-mobile'
-  import { writable } from 'svelte/store'
+  import { derived, writable } from 'svelte/store'
 
   let poppedUp = false
   let expanded = false
@@ -77,7 +77,8 @@
         id: 'fuse-elements',
         text: 'Fuse Elements',
         icon: LightningIcon,
-        alert: claimAvailable
+        alert: claimAvailable,
+        disabled: derived(user, ($user) => !($user && $user.accountAddress && $user.id))
       }
     ]}
     notifications={jettyNotifications}

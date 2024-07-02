@@ -13,11 +13,11 @@
   import ChevronIcon from '@images/chevron-left.svg'
   import JettyMenuButton from './JettyMenuButton.svelte'
   import { scale } from 'svelte/transition'
-  import { writable, type Writable } from 'svelte/store'
+  import { get, writable, type Readable, type Writable } from 'svelte/store'
   import { useContext } from '$lib/utils/context'
   import { tweened } from 'svelte/motion'
   import { cubicOut } from 'svelte/easing'
-  import type { JettyNotification, jettyNotifications } from '../../../stores'
+  import { user, type JettyNotification, type jettyNotifications } from '../../../stores'
   import { createEventDispatcher } from 'svelte'
   import Notification from './Notification.svelte'
   import { swipe, type SwipeCustomEvent } from 'svelte-gestures'
@@ -28,6 +28,7 @@
     id: string
     text: string
     icon: string
+    disabled?: Readable<boolean>
     alert?: Writable<boolean>
   }[]
   export let notifications: typeof jettyNotifications = writable([])
@@ -102,6 +103,19 @@
   }
 
   $: if (!showMenuItemContent) dispatch('item-content-closed')
+
+  let enabledItems: typeof menuItems
+  let disabledItems: typeof menuItems
+
+  $: {
+    $user
+    enabledItems = menuItems.filter((item) => (item.disabled ? !get(item.disabled) : true))
+  }
+
+  $: {
+    $user
+    disabledItems = menuItems.filter((item) => (item.disabled ? get(item.disabled) : false))
+  }
 </script>
 
 <div
@@ -181,17 +195,25 @@
           </div>
         {/if}
 
-        {#each menuItems as { id, text, icon, alert }}
+        {#each enabledItems as item}
           <JettyMenuButton
-            {text}
-            {icon}
-            {alert}
+            text={item.text}
+            icon={item.icon}
+            alert={item.alert}
             on:click={() => {
               showMenuItemContent = true
-              currentMenuItem = { id, text, icon, alert }
+              currentMenuItem = item
             }}
           />
         {/each}
+
+        {#if disabledItems.length > 0}
+          {$i18n.t('jetty:connect-your-wallet')}
+
+          {#each disabledItems as item}
+            <JettyMenuButton disabled text={item.text} icon={item.icon} alert={item.alert} />
+          {/each}
+        {/if}
       </div>
     {/if}
   </div>
@@ -267,6 +289,8 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xl);
+    color: var(--color-light);
+    font-weight: var(--font-weight-bold);
   }
 
   .menu-item-page {

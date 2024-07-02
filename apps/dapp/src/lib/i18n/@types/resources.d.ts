@@ -24,6 +24,7 @@ interface Resources {
       'gemcard-gemstone': 'Gemstone'
       'gemcard-rarity': 'Rarity'
     }
+    'connect-your-wallet': 'Once you connect your Radix Wallet, you can unlock these options'
     'fuse-elements': {
       intro: 'I can combine raw elements into colorful RadGems using my magical abilities.'
       intro2: 'RadGems can be combined with any alchemy cards to craft unique and beautiful RadMorph objects!'
