@@ -3,13 +3,11 @@ import { config } from '../../config'
 
 export const combineElementsDeposit = ({
   accountAddress,
-  badgeAddress,
-  badgeLocalId,
+  userId,
   radixEngineClient
 }: {
   accountAddress: string
-  badgeAddress: string
-  badgeLocalId: string
+  userId: string
   radixEngineClient: ReturnType<typeof RadixEngineClient>
 }) => {
   return radixEngineClient
@@ -25,8 +23,8 @@ export const combineElementsDeposit = ({
         CALL_METHOD
           Address("${accountAddress}")
           "create_proof_of_non_fungibles"
-          Address("${badgeAddress}")
-          Array<NonFungibleLocalId>(NonFungibleLocalId("${badgeLocalId}"))
+          Address("${config.radQuest.badges.heroBadgeAddress}")
+          Array<NonFungibleLocalId>(NonFungibleLocalId("<${userId}>"))
         ;
 
         POP_FROM_AUTH_ZONE
