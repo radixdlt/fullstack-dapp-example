@@ -4,6 +4,8 @@ export const WorkerError = {
   FailedToSubmitToRadixNetwork: 'FailedToSubmitToRadixNetwork',
   FailedToPollTransactionStatus: 'FailedToPollTransactionStatus',
   FailedToGetManifestBuilder: 'FailedToGetManifestBuilder',
+  FailedToGetPartialRewards: 'FailedToGetPartialRewards',
+  FailedToSendReferralRewards: 'FailedToSendReferralRewards',
   FailedToConvertStringManifest: 'FailedToConvertStringManifest',
   FailedToSetTransactionId: 'FailedToSetTransactionId',
   FailedToGetTotalRewardedUsdAmount: 'FailedToGetTotalRewardedUsdAmount',

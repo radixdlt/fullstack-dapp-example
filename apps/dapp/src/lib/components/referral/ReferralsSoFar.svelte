@@ -47,10 +47,10 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
-    margin-left: 2.1rem;
   }
 
   .link.active {
+    margin-left: 2.1rem;
     text-decoration: underline;
     font-weight: var(--font-weight-bold);
   }

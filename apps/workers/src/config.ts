@@ -6,6 +6,7 @@ export const config = {
     password: process.env.REDIS_PASSWORD ?? 'password'
   },
   usdKYCThreshold: 5, // amount of dollars before system requires Instapass KYC
+  referralRewardXrdAmount: 50, // amount of XRD to reward referrer when referee completes basic quests
   postgres: {
     database: process.env.POSTGRES_DATABASE ?? 'radquest',
     host: process.env.POSTGRES_HOST ?? 'localhost',

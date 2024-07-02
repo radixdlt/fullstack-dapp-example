@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "test:integration": "vitest"
+    "test:integration": "vitest event",
+    "test:referral": "vitest referral"
   },
   "license": "SEE LICENSE",
   "dependencies": {
     "neverthrow": "^6.1.0",
     "database": "*",
+    "content": "*",
     "common": "*",
     "queues": "*",
     "typescript-wallet": "*"

@@ -39,6 +39,7 @@ model User {
   referredUsers              User[] @relation("Referrer")
   transactions               TransactionIntent[]
   marketing                  Marketing[]
+  referralXrd                ReferralXrd?
 }
 
 model RadMorphImage {
@@ -52,6 +53,14 @@ model UserPhoneNumber {
   createdAt       DateTime  @default(now())
 
   user            User      @relation(fields: [userId], references: [id])
+}
+
+model ReferralXrd {
+  userId           String @id @unique
+  claimed          Int
+  readyToClaim     Int
+    
+  user            User            @relation(fields: [userId], references: [id])
 }
 
 model Challenge {

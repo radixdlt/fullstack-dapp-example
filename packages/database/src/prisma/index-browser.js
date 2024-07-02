@@ -142,6 +142,12 @@ exports.Prisma.UserPhoneNumberScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.ReferralXrdScalarFieldEnum = {
+  userId: 'userId',
+  claimed: 'claimed',
+  readyToClaim: 'readyToClaim'
+};
+
 exports.Prisma.ChallengeScalarFieldEnum = {
   challenge: 'challenge',
   createdAt: 'createdAt'
@@ -287,6 +293,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   RadMorphImage: 'RadMorphImage',
   UserPhoneNumber: 'UserPhoneNumber',
+  ReferralXrd: 'ReferralXrd',
   Challenge: 'Challenge',
   Event: 'Event',
   Message: 'Message',

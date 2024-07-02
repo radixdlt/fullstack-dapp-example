@@ -3,16 +3,72 @@
   import ReferralLevel from '$lib/components/referral/ReferralLevel.svelte'
   import ReferralsSoFar from '$lib/components/referral/ReferralsSoFar.svelte'
   import ShareBox from '$lib/components/referral/ShareBox.svelte'
+
+  import FireIcon from '@images/fire.svg'
+  import { createClaimRewardsTransaction } from '$lib/helpers/create-claim-rewards-transaction'
   import { i18n } from '$lib/i18n/i18n'
+  import { sendTransaction } from '$lib/rdt'
 
   import { QuestDefinitions } from 'content'
   import { createEventDispatcher } from 'svelte'
+  import { user } from '../../../../../stores'
+  import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
+
+  type Level = 'BronzeLevel' | 'SilverLevel' | 'GoldLevel'
 
   export let referrals: string[]
-  const tiersRewards = QuestDefinitions().ReferralQuest.tiersRewards
-  const dispatch = createEventDispatcher<{ seeReferrals: undefined }>()
-  const alreadyClaimed = 80
-  const claimNow = 40
+  export let claimed: number
+  export let readyToClaim: number
+  export let progress: Record<Level, string>
+
+  const dispatch = createEventDispatcher<{ seeReferrals: undefined; refresh: undefined }>()
+
+  const requirements = QuestDefinitions().ReferralQuest.requirements
+  const threshold = {
+    BronzeLevel: requirements.BronzeLevel.threshold,
+    SilverLevel: requirements.SilverLevel.threshold,
+    GoldLevel: requirements.GoldLevel.threshold
+  }
+
+  $: loading = false
+
+  $: currentLevel =
+    (Object.entries(progress).find(([_, status]) => status === 'IN_PROGRESS')?.[0] as Level) ||
+    ('BronzeLevel' as Level)
+  $: nextLevel =
+    currentLevel === 'BronzeLevel'
+      ? 'SilverLevel'
+      : currentLevel === 'SilverLevel'
+        ? 'GoldLevel'
+        : ('SuperLevel' as Level | 'SuperLevel')
+  $: nextLevelIn =
+    nextLevel === 'SuperLevel' ? -1 : threshold[currentLevel as Level] - referrals.length
+  $: hasWaitingRewards = Object.entries(progress).some(
+    ([_, status]) => status === 'REWARDS_DEPOSITED'
+  )
+  $: unlockedSuperLevel = referrals.length >= threshold.GoldLevel
+
+  const claimXrd = () => {
+    loading = true
+    sendTransaction({
+      transactionManifest: createClaimRewardsTransaction(
+        $user?.accountAddress!,
+        $user?.id!,
+        `ReferralQuest`
+      )
+    })
+      .map(() => {
+        loading = false
+        dispatch('refresh')
+      })
+      .mapErr(() => {
+        loading = false
+      })
+  }
+
+  const refresh = () => {
+    dispatch('refresh')
+  }
 </script>
 
 <div class="wrapper text-center">
@@ -27,42 +83,84 @@
       dispatch('seeReferrals')
     }}
   />
-  <div class="already-claimed">
-    {$i18n.t('quests:ReferralQuest.alreadyClaimed', { amount: alreadyClaimed })}
-  </div>
-  <div class="claim-button">
-    <Button>
-      <div class="claim-button-text">
-        {$i18n.t('quests:claimButton')}
-        {claimNow} XRD
-      </div>
-    </Button>
-  </div>
+  {#if claimed !== 0}
+    <div class="already-claimed">
+      {$i18n.t('quests:ReferralQuest.alreadyClaimed', { amount: claimed })}
+    </div>
+  {/if}
+
+  {#if readyToClaim > 0}
+    <div class="claim-button">
+      <Button on:click={claimXrd} disabled={loading}>
+        <div class="claim-button-text">
+          {#if loading}
+            <LoadingSpinner />
+          {:else}
+            {$i18n.t('quests:claimButton')}
+            {readyToClaim} XRD
+          {/if}
+        </div>
+      </Button>
+    </div>
+  {/if}
 
   <div class="your-level">
-    <div><strong>{$i18n.t('quests:ReferralQuest.yourLevel', { level: 'Silver' })}</strong></div>
-    {$i18n.t('quests:ReferralQuest.referMore', { nextLevel: 'Gold', count: 3 })}
+    {#if unlockedSuperLevel}
+      <div class="super-level">
+        <img src={FireIcon} alt="" />
+        <strong>{$i18n.t('quests:ReferralQuest.unlockedSuperLevel')}</strong>
+        <p>
+          {$i18n.t('quests:ReferralQuest.unlockedSuperLevelInfo', { mail: 'hello@radixdlt.com' })}
+        </p>
+      </div>
+    {:else}
+      <div>
+        <strong
+          >{$i18n.t('quests:ReferralQuest.yourLevel', {
+            level: $i18n.t(`quests:ReferralQuest.${currentLevel}`)
+          })}</strong
+        >
+        
+      </div>
+      {#if nextLevel !== 'SuperLevel'}
+        {$i18n.t('quests:ReferralQuest.referMore', {
+          nextLevel: $i18n.t(`quests:ReferralQuest.${nextLevel}`),
+          count: nextLevelIn
+        })}
+      {:else}
+        {#if hasWaitingRewards}
+          {$i18n.t('quests:ReferralQuest.rewardsWaiting')}
+        {/if}
+      {/if}
+    {/if}
   </div>
   <div class="referral-levels">
     <ReferralLevel
-      name={$i18n.t('quests:ReferralQuest.level1')}
-      maximum={5}
-      referred={5}
-      rewards={tiersRewards[0]}
+      level="BronzeLevel"
+      on:refresh={refresh}
+      maximum={threshold.BronzeLevel}
+      referred={referrals.length}
+      status={progress.BronzeLevel}
     ></ReferralLevel>
     <ReferralLevel
-      name={$i18n.t('quests:ReferralQuest.level2')}
-      maximum={10}
-      referred={7}
-      rewards={tiersRewards[1]}
+      level="SilverLevel"
+      on:refresh={refresh}
+      maximum={threshold.SilverLevel}
+      referred={referrals.length}
+      status={progress.SilverLevel}
     ></ReferralLevel>
 
     <ReferralLevel
-      name={$i18n.t('quests:ReferralQuest.level3')}
-      maximum={20}
-      referred={0}
-      rewards={tiersRewards[2]}
+      level="GoldLevel"
+      on:refresh={refresh}
+      maximum={threshold.GoldLevel}
+      referred={referrals.length}
+      status={progress.GoldLevel}
     ></ReferralLevel>
+
+    {#if unlockedSuperLevel}
+      <ReferralLevel level="SuperLevel" status=""></ReferralLevel>
+    {/if}
   </div>
 </div>
 
@@ -76,6 +174,17 @@
   }
   .text-14 {
     font-size: var(--text-xs);
+  }
+  .super-level {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    p {
+      margin: 0;
+    }
+    img {
+      margin-bottom: var(--spacing-md);
+    }
   }
   .referral-levels {
     display: flex;

@@ -10,7 +10,7 @@ import {
 } from 'common'
 import { radixEngineClient } from 'typescript-wallet'
 import { createRewardsDepositManifest } from './helpers/createRewardsDepositManifest'
-import { QuestDefinitions, QuestId } from 'content'
+import { QuestDefinitions, QuestId, QuestReward } from 'content'
 import { config } from '../config'
 import { createCombinedElementsMintRadgemManifest } from './helpers/createCombinedElementsMintRadgemManifest'
 import { TokenPriceClient } from '../token-price-client'
@@ -91,87 +91,121 @@ export const TransactionWorkerController = ({
         }))
         .map(() => txId)
 
+    const handleDepositRewards = (rewards: QuestReward[], questId: string) => {
+      const xrdReward = rewards.find((reward) => reward.name === 'xrd')?.amount ?? 0
+      const hasXrdReward = xrdReward > 0
+
+      const checkIfKycOracleEntryExists = (userId: string) =>
+        gatewayApi.hasKycEntry(userId).mapErr(({ jsError }) => ({
+          reason: WorkerError.GatewayError,
+          jsError
+        }))
+
+      const checkIfUserHasExceededKycThreshold = (
+        userId: string,
+        xrdRewardInUsd: BigNumber
+      ): ResultAsync<boolean, { reason: WorkerError; jsError: unknown }> =>
+        auditModel(logger)
+          .getUsdAmount(userId)
+          .map((distributedUsdAmount) =>
+            xrdRewardInUsd.plus(distributedUsdAmount).isGreaterThan(config.usdKYCThreshold)
+          )
+          .mapErr((error) => ({
+            reason: WorkerError.FailedToGetTotalRewardedUsdAmount,
+            jsError: error
+          }))
+
+      const handleKycOracleUpdate = hasXrdReward
+        ? tokenPriceClient
+            .getXrdPrice()
+            .mapErr((jsError) => ({
+              reason: WorkerError.FailedToGetXrdPrice,
+              jsError
+            }))
+            .map((xrdPrice) => xrdPrice.multipliedBy(xrdReward))
+            .andThen((xrdRewardInUsd) =>
+              checkIfUserHasExceededKycThreshold(userId, xrdRewardInUsd).andThen(
+                (hasExceededKycThreshold) =>
+                  hasExceededKycThreshold
+                    ? checkIfKycOracleEntryExists(userId).map((hasEntry) => ({
+                        includeKycOracleUpdate: !hasEntry,
+                        xrdRewardInUsd
+                      }))
+                    : ok({ includeKycOracleUpdate: false, xrdRewardInUsd })
+              )
+            )
+        : okAsync({ includeKycOracleUpdate: false, xrdRewardInUsd: new BigNumber(0) })
+
+      const triggerDepositRewardsTransaction = (userId: string) =>
+        handleKycOracleUpdate
+          .andThen(({ includeKycOracleUpdate, xrdRewardInUsd }) =>
+            handleSubmitTransaction((wellKnownAddresses) =>
+              createRewardsDepositManifest({
+                wellKnownAddresses,
+                questId,
+                userId,
+                rewards,
+                includeKycOracleUpdate
+              })
+            ).map((transactionId) => ({ transactionId, xrdRewardInUsd }))
+          )
+          .map(({ transactionId, xrdRewardInUsd }) => ({ userId, transactionId, xrdRewardInUsd }))
+
+      return triggerDepositRewardsTransaction(userId).andThen(
+        ({ userId, transactionId, xrdRewardInUsd }) =>
+          handlePollTransactionStatus(transactionId).andThen(() =>
+            auditModel(logger)
+              .add({
+                transactionId,
+                userId,
+                type: AuditType.CLAIMBOX_DEPOSIT,
+                xrdUsdValue: xrdRewardInUsd.toNumber()
+              })
+              .mapErr(({ jsError }) => ({
+                reason: WorkerError.FailedToAddAuditEntry,
+                jsError
+              }))
+          )
+      )
+    }
+
+    const getPartialRewards = (questId: QuestId, requirement: string) => {
+      const questDefinition = QuestDefinitions()[questId as QuestId] as {
+        partialRewards: Record<string, QuestReward[]>
+      }
+
+      const rewards = questDefinition?.partialRewards?.[requirement]
+
+      return rewards ? ok(rewards) : err({ reason: WorkerError.FailedToGetPartialRewards })
+    }
+
     switch (type) {
+      case 'DepositXrdReward': {
+        const { amount, questId } = job.data
+        const rewards = [
+          {
+            name: 'xrd',
+            amount: Number(amount)
+          }
+        ] satisfies QuestReward[]
+
+        return handleDepositRewards(rewards, questId)
+      }
+
+      case 'DepositPartialReward': {
+        const { questId, requirement } = job.data
+
+        return getPartialRewards(questId as QuestId, requirement).asyncAndThen((rewards) =>
+          handleDepositRewards(rewards, `${questId}:${requirement}`)
+        )
+      }
       case 'DepositReward':
         const { questId } = job.data
 
         const questDefinition = QuestDefinitions()[questId as QuestId]
         const rewards = questDefinition.rewards
-        const xrdReward = rewards.find((reward) => reward.name === 'xrd')?.amount ?? 0
-        const hasXrdReward = xrdReward > 0
 
-        const checkIfKycOracleEntryExists = (userId: string) =>
-          gatewayApi.hasKycEntry(userId).mapErr(({ jsError }) => ({
-            reason: WorkerError.GatewayError,
-            jsError
-          }))
-
-        const checkIfUserHasExceededKycThreshold = (
-          userId: string,
-          xrdRewardInUsd: BigNumber
-        ): ResultAsync<boolean, { reason: WorkerError; jsError: unknown }> =>
-          auditModel(logger)
-            .getUsdAmount(userId)
-            .map((distributedUsdAmount) =>
-              xrdRewardInUsd.plus(distributedUsdAmount).isGreaterThan(config.usdKYCThreshold)
-            )
-            .mapErr((error) => ({
-              reason: WorkerError.FailedToGetTotalRewardedUsdAmount,
-              jsError: error
-            }))
-
-        const handleKycOracleUpdate = hasXrdReward
-          ? tokenPriceClient
-              .getXrdPrice()
-              .mapErr((jsError) => ({
-                reason: WorkerError.FailedToGetXrdPrice,
-                jsError
-              }))
-              .map((xrdPrice) => xrdPrice.multipliedBy(xrdReward))
-              .andThen((xrdRewardInUsd) =>
-                checkIfUserHasExceededKycThreshold(userId, xrdRewardInUsd).andThen(
-                  (hasExceededKycThreshold) =>
-                    hasExceededKycThreshold
-                      ? checkIfKycOracleEntryExists(userId).map((hasEntry) => ({
-                          includeKycOracleUpdate: !hasEntry,
-                          xrdRewardInUsd
-                        }))
-                      : ok({ includeKycOracleUpdate: false, xrdRewardInUsd })
-                )
-              )
-          : okAsync({ includeKycOracleUpdate: false, xrdRewardInUsd: new BigNumber(0) })
-
-        const triggerDepositRewardsTransaction = (userId: string) =>
-          handleKycOracleUpdate
-            .andThen(({ includeKycOracleUpdate, xrdRewardInUsd }) =>
-              handleSubmitTransaction((wellKnownAddresses) =>
-                createRewardsDepositManifest({
-                  wellKnownAddresses,
-                  questId,
-                  userId,
-                  rewards,
-                  includeKycOracleUpdate
-                })
-              ).map((transactionId) => ({ transactionId, xrdRewardInUsd }))
-            )
-            .map(({ transactionId, xrdRewardInUsd }) => ({ userId, transactionId, xrdRewardInUsd }))
-
-        return triggerDepositRewardsTransaction(userId).andThen(
-          ({ userId, transactionId, xrdRewardInUsd }) =>
-            handlePollTransactionStatus(transactionId).andThen(() =>
-              auditModel(logger)
-                .add({
-                  transactionId,
-                  userId,
-                  type: AuditType.CLAIMBOX_DEPOSIT,
-                  xrdUsdValue: xrdRewardInUsd.toNumber()
-                })
-                .mapErr(({ jsError }) => ({
-                  reason: WorkerError.FailedToAddAuditEntry,
-                  jsError
-                }))
-            )
-        )
+        return handleDepositRewards(rewards as unknown as QuestReward[], questId)
 
       case 'PopulateResources':
         const { accountAddress } = job.data

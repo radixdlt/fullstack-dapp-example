@@ -11,6 +11,7 @@ export const MessageType = {
   CombineElementsAddRadgemImage: 'CombineElementsAddRadgemImage',
   CombineElementsClaimed: 'CombineElementsClaimed',
   HeroBadgeReadyToBeClaimed: 'HeroBadgeReadyToBeClaimed',
+  ReferralCompletedBasicQuests: 'ReferralCompletedBasicQuests',
   XrdDepositedToAccount: 'XrdDepositedToAccount'
 } as const
 
@@ -52,6 +53,7 @@ type Messages = {
   [MessageType.XrdDepositedToAccount]: {
     traceId: string
   }
+  [MessageType.ReferralCompletedBasicQuests]: { traceId: string }
 }
 
 export type Message = {
