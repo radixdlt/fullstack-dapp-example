@@ -103,8 +103,7 @@ export const UserController = ({
           entityDetails.non_fungible_resources.items
             .find((item) => item.resource_address === publicConfig.badges.heroBadgeAddress)
             ?.vaults.items.some(
-              (vault) =>
-                vault.total_count > 0 && vault.items?.some((item) => item === `<${userId}>`)
+              (vault) => vault.total_count > 0 && vault.items?.some((item) => item === userId)
             ) ?? false
       )
 
