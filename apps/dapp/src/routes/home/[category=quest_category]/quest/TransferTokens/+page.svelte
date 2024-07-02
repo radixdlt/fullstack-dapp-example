@@ -207,12 +207,12 @@
     {#if isMobile()}
       {@html text['6b.md']}
       <div class="copy-address">
-        <CopyTextBox text={shortenAddress(jettyAddress)} value={jettyAddress} />
+        <CopyTextBox text={shortenAddress(jettyAddress.address)} value={jettyAddress.address} />
       </div>
     {:else}
       {@html text['6a.md']}
       <div class="qr-code">
-        <QR data={jettyAddress} />
+        <QR data={jettyAddress.address} />
       </div>
     {/if}
   {/if}
