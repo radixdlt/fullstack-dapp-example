@@ -89,13 +89,11 @@
     "copyTextButton_copied": "Copied!"
   },
   "StakingQuest": {
-    "goToRadixDashboard": "Go to Radix Dashboard",
-    "title": "Doing first Radix Network stake",
-    "description": "Learn what staking is and what it brings you and the Radar network.",
-    "introDescription": "What is staking and what does it matter? Earn some APY with your staked tokens.",
+    "title": "Radix Network Staking",
+    "description": "Help the network, earn APY",
+    "introDescription": "Put your XRD to work helping secure the Radix Network – and earning you some yield",
     "requirements": {
-      "LearnStaking": "Learn about staking",
-      "StakedXrd": "Stake your XRD on dashboard"
+      "XrdStaked": "Stake your XRD on dashboard"
     }
   },
   "MayaQuest": {

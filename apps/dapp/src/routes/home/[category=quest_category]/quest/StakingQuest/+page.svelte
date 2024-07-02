@@ -1,14 +1,9 @@
 <script lang="ts">
   import Quest from '../Quest.svelte'
   import type { PageData } from '../StakingQuest/$types'
-  import { i18n } from '$lib/i18n/i18n'
-  import Button from '$lib/components/button/Button.svelte'
   import { onDestroy } from 'svelte'
   import { webSocketClient } from '../../../../../stores'
   import { writable } from 'svelte/store'
-  import { questApi } from '$lib/api/quest-api'
-  import { RadixNetworkConfigById } from '@radixdlt/radix-dapp-toolkit'
-  import { publicConfig } from '$lib/public-config'
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
   import type { WebSocketClient } from '$lib/websocket-client'
@@ -40,10 +35,6 @@
   }
 
   onDestroy(() => unsubscribeWebSocket?.())
-
-  const stakingLearnt = () => {
-    questApi.completeContentRequirement(data.id)
-  }
 </script>
 
 <Quest
@@ -51,43 +42,47 @@
   bind:this={quest}
   steps={[
     {
-      id: 'text1',
+      id: '0',
       type: 'regular'
     },
     {
-      id: 'text2',
-      type: 'regular',
-      footer: {
-        next: {
-          onClick: () => {
-            stakingLearnt()
-            quest.actions.next()
-          }
-        }
-      }
-    },
-    {
-      id: 'text3',
+      id: '1',
       type: 'regular'
     },
     {
-      id: 'text4',
-      type: 'regular',
-      skip: stakedXrd,
-      footer: {
-        next: {
-          enabled: stakedXrd
-        }
-      }
+      id: '2',
+      type: 'regular'
     },
     {
-      id: 'text5',
-      type: 'regular',
-      footer: {
-        next: {
-          enabled: rewardsDeposited
-        }
-      }
+      id: '3',
+      type: 'jetty'
+    },
+    {
+      id: '4',
+      type: 'regular'
+    },
+    {
+      id: '5',
+      type: 'regular'
+    },
+    {
+      id: '6',
+      type: 'regular'
+    },
+    {
+      id: '7',
+      type: 'regular'
+    },
+    {
+      id: '8',
+      type: 'regular'
+    },
+    {
+      id: '9',
+      type: 'jetty'
+    },
+    {
+      type: 'requirements'
     },
     {
       type: 'claimRewards'
@@ -98,35 +93,44 @@
   ]}
   let:render
 >
-  {#if render('text1')}
+  {#if render('0')}
     {@html text['0.md']}
   {/if}
 
-  {#if render('text2')}
+  {#if render('1')}
     {@html text['1.md']}
   {/if}
 
-  {#if render('text3')}
+  {#if render('2')}
     {@html text['2.md']}
-
-    <Button
-      isExternal
-      link={`${RadixNetworkConfigById[publicConfig.networkId]['dashboardUrl']}/network-staking`}
-    >
-      <span>{$i18n.t('quests:StakingQuest.goToRadixDashboard')}</span>
-    </Button>
   {/if}
 
-  {#if render('text4')}
+  {#if render('3')}
     {@html text['3.md']}
   {/if}
 
-  {#if render('text5')}
+  {#if render('4')}
     {@html text['4.md']}
   {/if}
 
-  {#if render('text6')}
+  {#if render('5')}
     {@html text['5.md']}
+  {/if}
+
+  {#if render('6')}
+    {@html text['6.md']}
+  {/if}
+
+  {#if render('7')}
+    {@html text['7.md']}
+  {/if}
+
+  {#if render('8')}
+    {@html text['8.md']}
+  {/if}
+
+  {#if render('9')}
+    {@html text['9.md']}
   {/if}
 </Quest>
 

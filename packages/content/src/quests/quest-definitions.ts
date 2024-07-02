@@ -193,7 +193,11 @@ export const QuestDefinitions = () => {
       trackedAccountAddress: true,
       rewards: [
         {
-          name: 'element',
+          name: 'giftBox',
+          amount: 1
+        },
+        {
+          name: 'xrd',
           amount: 50
         }
       ],
