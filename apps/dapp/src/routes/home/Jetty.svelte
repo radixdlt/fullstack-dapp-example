@@ -15,7 +15,6 @@
     user
   } from '../../stores'
   import { tick } from 'svelte'
-  import { pushState } from '$app/navigation'
   import { isMobile } from '$lib/utils/is-mobile'
   import { writable } from 'svelte/store'
 
@@ -43,10 +42,6 @@
 
   let hoveringOverJetty = false
 
-  const setExpanded = (value: boolean) => (expanded = value)
-
-  $: if (!($page.state as any).jettyMenuExpanded) setExpanded(false)
-
   let claimAvailable = writable(false)
 
   const checkClaimStatus = () => {
@@ -68,12 +63,6 @@
     bind:this={jettyMenu}
     on:hover-over-jetty={(e) => {
       hoveringOverJetty = e.detail
-    }}
-    on:open={() => {
-      pushState('', { jettyMenuExpanded: true })
-    }}
-    on:close={() => {
-      history.back()
     }}
     on:item-content-closed={checkClaimStatus}
     hideJetty={$hideJetty}
