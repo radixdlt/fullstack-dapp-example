@@ -64,7 +64,7 @@
 
   const claimAvailableInKeyValueStore = (
     storeData: StateKeyValueStoreDataResponse
-  ): ResultAsync<string, string> => {
+  ): ResultAsync<string[], string> => {
     const unclaimed = storeData.entries.find(
       ({ value }) =>
         value.programmatic_json.kind === 'Enum' &&
@@ -72,11 +72,11 @@
     )
 
     if (unclaimed) {
-      const nftId = (
+      const nftIds = (
         (unclaimed.value.programmatic_json as ProgrammaticScryptoSborValueTuple).fields[0] as any
-      ).elements[0].value
+      ).elements.map((element: any) => element.value) as string[]
 
-      return okAsync(nftId)
+      return okAsync(nftIds)
     }
 
     return errAsync('No claim available')
@@ -135,7 +135,7 @@
   let amountOfElements: string
   let errorLoadingElements = false
   let claimAvailable: boolean
-  let claimableRadGemId: string
+  let claimableRadGemIds: string[]
   let waitingForElementsDeposited = false
   let elementsDeposited = false
   let radgemClaimed = false
@@ -215,10 +215,10 @@
 
   onMount(() => {
     ResultAsync.combineWithAllErrors([checkAmountOfElements(), checkClaimAvailable($user?.id!)])
-      .map(([_, radGemId]) => {
+      .map(([_, radGemIds]) => {
         loadingLedgerData = false
         claimAvailable = true
-        claimableRadGemId = radGemId
+        claimableRadGemIds = radGemIds
       })
       .mapErr(([_, _errorLoadingElements]) => {
         loadingLedgerData = false
@@ -231,7 +231,7 @@
           if (msg.type === 'CombineElementsAddRadgemImage') {
             checkClaimAvailable($user?.id!).map((radGemId) => {
               claimAvailable = true
-              claimableRadGemId = radGemId
+              claimableRadGemIds = radGemId
               waitingForElementsDeposited = false
               elementsDeposited = true
             })
@@ -282,7 +282,7 @@
     </FuseElementsPage>
   {:else if claimAvailable || elementsDeposited}
     <ClaimRadGem
-      id={claimableRadGemId}
+      ids={claimableRadGemIds}
       on:claimed={() => {
         checkAmountOfElements().map(() => {
           radgemClaimed = true

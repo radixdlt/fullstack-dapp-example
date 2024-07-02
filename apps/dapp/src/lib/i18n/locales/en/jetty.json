@@ -30,7 +30,8 @@
     "fusing-elements": "Fusing your Elements now",
     "radgem-claimed": "Did you like the new RadGem? Remember it can be a different color and shape next time!",
     "elements-left": "You have {{count}} Elements left.",
-    "new-radgem": "Here you go, a new RadGem for you!"
+    "new-radgem": "Here you go, a new RadGem for you!",
+    "multiple-radgems": "You have multiple RadGems ready to be claimed."
   },
   "notification-cta": "Go to Quest"
 }

@@ -13,7 +13,7 @@
   import { i18n } from '$lib/i18n/i18n'
   import FuseElementsPage from './FuseElementsPage.svelte'
 
-  export let id: string
+  export let ids: string[]
 
   let loading = false
   let preview: {
@@ -48,7 +48,7 @@
       GatewayApi(publicConfig.networkId).callApi(
         'getNonFungibleData',
         publicConfig.resources.radgemAddress,
-        [id]
+        ids
       ),
     (result) =>
       result.map(([response]) => {
@@ -71,10 +71,11 @@
   )
 
   onMount(() => {
-    getRadgemPreview().map((_preview) => {
-      console.log(_preview)
-      preview = _preview
-    })
+    if (ids.length === 1) {
+      getRadgemPreview().map((_preview) => {
+        preview = _preview
+      })
+    }
   })
 
   const dispatch = createEventDispatcher<{
@@ -101,6 +102,10 @@
       <img src={preview.image} alt="A Radgem" />
       {preview.name}
     {/if}
+    {#if ids.length > 1}
+      {$i18n.t('jetty:fuse-elements.multiple-radgems')}
+      <enhanced:img src="@images/multiple-gems.webp?enhanced" />
+    {/if}
   </div>
 
   <Button slot="actions" {loading} on:click={onClick}>Claim</Button>
@@ -112,9 +117,10 @@
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-xl);
+    font-weight: var(--font-weight-bold);
   }
   img {
-    width: 10rem;
-    height: 10rem;
+    width: 13rem;
+    height: 13rem;
   }
 </style>
