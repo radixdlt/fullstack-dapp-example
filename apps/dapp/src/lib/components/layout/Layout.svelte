@@ -22,7 +22,6 @@
     display: grid;
     grid-template-rows: auto 1fr;
     min-height: 100dvh;
-    background: var(--gradient-3) no-repeat center fixed;
   }
 
   .tabs {
