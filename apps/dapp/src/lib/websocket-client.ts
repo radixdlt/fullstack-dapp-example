@@ -4,6 +4,7 @@ import type { Message } from 'common'
 import { authApi } from './api/auth-api'
 import type { RadixDappToolkit } from '@radixdlt/radix-dapp-toolkit'
 import { messageApi as messageApiFn, type MessageApi } from './api/message-api'
+import { writable } from 'svelte/store'
 
 export type WebSocketClient = ReturnType<typeof WebSocketClient>
 export const WebSocketClient = ({
@@ -98,3 +99,5 @@ export const WebSocketClient = ({
     }
   }
 }
+
+export const webSocketClient = writable<WebSocketClient | undefined>(undefined)

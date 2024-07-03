@@ -59,6 +59,10 @@ body {
   /* Light and Dark */
   --color-light: #fffbf4;
   --color-dark: #111f29;
+  background: var(--gradient-3);
+  background-color: var(
+    --color-background-dark
+  ); /* This color is visible inside safari status bar, gradient doesn't work here */
 }
 
 /* ------------------ */

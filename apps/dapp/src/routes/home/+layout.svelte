@@ -7,13 +7,13 @@
   import { ResultAsync } from 'neverthrow'
   import { publicConfig } from '$lib/public-config'
   import { goto, invalidateAll } from '$app/navigation'
-  import { quests, user, webSocketClient } from '../../stores'
+  import { quests, user } from '../../stores'
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import { resolveRDT } from '$lib/rdt'
-  import { WebSocketClient } from '$lib/websocket-client'
+  import { webSocketClient, WebSocketClient } from '$lib/websocket-client'
   import { questApi } from '$lib/api/quest-api'
   import { LandingPopupId, QuestCategory, loadLandingPopup, type QuestId } from 'content'
   import { useLocalStorage } from '$lib/utils/local-storage'
@@ -25,6 +25,7 @@
   import { useCookies } from '$lib/utils/cookies'
   import Jetty from './Jetty.svelte'
   import { loadUnseenNotifications, pushNotification } from '$lib/notifications'
+  import Footer from '$lib/components/footer/footer.svelte'
 
   export let data: LayoutData
 
@@ -198,4 +199,6 @@
   <svelte:fragment slot="quests">
     <slot />
   </svelte:fragment>
+
+  <Footer slot="footer" />
 </Layout>

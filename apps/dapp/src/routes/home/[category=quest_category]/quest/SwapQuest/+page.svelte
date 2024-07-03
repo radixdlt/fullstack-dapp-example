@@ -3,7 +3,7 @@
   import Quest from '../Quest.svelte'
   import { writable } from 'svelte/store'
   import { onDestroy } from 'svelte'
-  import { webSocketClient } from '../../../../../stores'
+  import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { messageApi } from '$lib/api/message-api'
   import Button from '$lib/components/button/Button.svelte'
   import { publicConfig } from '$lib/public-config'
@@ -11,7 +11,6 @@
   import { Addresses } from 'common'
   import { questApi } from '$lib/api/quest-api'
   import type { PageData } from './$types'
-  import type { WebSocketClient } from '$lib/websocket-client'
 
   export let data: PageData
 

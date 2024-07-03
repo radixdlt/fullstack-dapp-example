@@ -1,13 +1,13 @@
 <script lang="ts">
   import { createEventDispatcher, onDestroy, onMount } from 'svelte'
   import { questApi } from '$lib/api/quest-api'
-  import { quests, user, webSocketClient } from '../../../../stores'
+  import { quests, user } from '../../../../stores'
   import type { Quests } from 'content'
   import RequirementsPage from '$lib/components/quest/RequirementsPage.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import { useCookies, type RequirementCookieKey } from '$lib/utils/cookies'
   import { messageApi } from '$lib/api/message-api'
-  import type { WebSocketClient } from '$lib/websocket-client'
+  import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import type { QuestRequirement } from '$lib/server/user-quest/controller'
 
   export let questId: keyof Quests

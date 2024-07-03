@@ -10,5 +10,13 @@
   "landingPagePopup": {
     "jetty-img-alt": "Jetty",
     "button": "Let's begin"
+  },
+  "footer": {
+    "runs-on-radix-alt": "Runs on radix icon",
+    "copyright-alt": "Copyright",
+    "join-radix": "Join the Radix Community",
+    "learn-more": "Learn more",
+    "all-rights": "Radix Publishing Ltd, 2024. All rights reserved. Radix Publishing Ltd. ",
+    "privacy-notice": "Privacy Notice"
   }
 }
