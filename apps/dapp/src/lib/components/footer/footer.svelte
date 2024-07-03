@@ -11,10 +11,23 @@
   import Github from '../social-icons/Github.svelte'
   import Medium from '../social-icons/Medium.svelte'
   import Linkedin from '../social-icons/Linkedin.svelte'
-  import { Addresses } from 'common'
-  import { PUBLIC_NETWORK_ID } from '$env/static/public'
 
-  const { social, radixDlt } = Addresses(+PUBLIC_NETWORK_ID)
+  const { social, radixDlt } = {
+    social: {
+      discord: 'https://discord.com/invite/radixdlt',
+      facebook: 'https://www.facebook.com/RadixDLT/',
+      github: 'https://github.com/radixdlt',
+      medium: 'https://radixdlt.medium.com/',
+      reddit: 'https://www.reddit.com/r/Radix/',
+      telegram: 'https://t.me/radix_dlt',
+      x: 'https://x.com/RadixDLT',
+      youtube: 'https://www.youtube.com/c/radixdlt',
+      linkedin: 'https://www.linkedin.com/company/radixdlt'
+    },
+    radixDlt: {
+      url: 'https://www.radixdlt.com'
+    }
+  }
 
   const iconHoverColor = 'var(--color-primary)'
   $: radixDltHover = false
