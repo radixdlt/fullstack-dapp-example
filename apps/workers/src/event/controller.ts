@@ -167,7 +167,7 @@ export const EventWorkerController = ({
         job.data.relevantEvents.DepositedEvent
       )
 
-      return ensureValidData(transactionId, { userId }).andThen(() =>
+      return getUserById(userId!, dbClient).andThen(() =>
         transactionModel(childLogger).add({
           discriminator: `CombinedElementsMintRadgem:${traceId}`,
           userId,
@@ -182,7 +182,7 @@ export const EventWorkerController = ({
         job.data.relevantEvents.MintedRadgemEvent
       )
 
-      return ensureValidData(transactionId, { localId: userId }).andThen(() =>
+      return getUserById(userId, dbClient).andThen(() =>
         transactionModel(childLogger)
           .add({
             discriminator: `CombinedElementsAddRadgemImage:${radgemId}`,
