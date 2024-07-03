@@ -119,16 +119,15 @@ mod refinery {
         }
 
         fn get_user_id_from_badge_proof(&self, hero_badge: Proof) -> UserId {
-            let mut local_id_string = hero_badge
+            let local_id_string = match hero_badge
                 .check(self.hero_badge_address)
                 .as_non_fungible()
                 .non_fungible_local_id()
-                .to_string();
-            // Check for and remove the `<` and `>` at the start and end that show it's a String type ID.
-            assert!(
-                local_id_string.pop() == Some('>') && local_id_string.remove(0) == '<',
-                "Invalid id format"
-            );
+            {
+                NonFungibleLocalId::String(local_id) => local_id.value().to_owned(),
+                _ => unreachable!("All hero badges have String local IDs"),
+            };
+
             UserId(local_id_string)
         }
 
