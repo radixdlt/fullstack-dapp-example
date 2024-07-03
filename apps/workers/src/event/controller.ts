@@ -19,7 +19,7 @@ import {
 import { getDataFromQuestRewardsEvent } from './helpers/getDataFromQuestRewardsEvent'
 import { databaseTransactions } from './helpers/databaseTransactions'
 import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent'
-import { getUserIdFromCombineElementsDepositedEvent } from './helpers/getBadgeAddressAndIdFromCombineElementsDepositedEvent'
+import { getBadgeAddressAndIdFromCombineElementsDepositedEvent as getUserIdFromCombineElementsDepositedEvent } from './helpers/getUserIdFromCombineElementsDepositedEvent'
 import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 import { getDetailsFromCombineElementsMintedRadgemEvent } from './helpers/getDetailsFromCombineElementsMintedRadgemEvent'
 import { WorkerError } from '../_types'
@@ -163,14 +163,18 @@ export const EventWorkerController = ({
       )
 
     const handelCombineElementsDepositedEvent = () => {
-      const { userId } = getUserIdFromCombineElementsDepositedEvent(
+      const userId = getUserIdFromCombineElementsDepositedEvent(
         job.data.relevantEvents.DepositedEvent
       )
 
-      return getUserById(userId!, dbClient).andThen(() =>
+      if (!userId) {
+        return errAsync('Invalid hero badge data')
+      }
+
+      return ensureValidData(transactionId, { userId }).andThen(() =>
         transactionModel(childLogger).add({
           discriminator: `CombinedElementsMintRadgem:${traceId}`,
-          userId: userId!,
+          userId,
           type: 'CombinedElementsMintRadgem',
           traceId
         })
@@ -178,11 +182,22 @@ export const EventWorkerController = ({
     }
 
     const handelCombineElementsMintedRadgemEvent = () => {
-      const { userId, radgemId } = getDetailsFromCombineElementsMintedRadgemEvent(
-        job.data.relevantEvents.MintedRadgemEvent
-      )
+      const {
+        userId,
+        radgemId
+      }: {
+        userId?: string
+        radgemId?: string
+      } = getDetailsFromCombineElementsMintedRadgemEvent(job.data.relevantEvents.MintedRadgemEvent)
 
-      return getUserById(userId!, dbClient).andThen(() =>
+      if (!userId) {
+        return errAsync('Invalid hero badge data')
+      }
+      if (!radgemId) {
+        return errAsync('Invalid radgem data')
+      }
+
+      return ensureValidData(transactionId, { localId: userId }).andThen(() =>
         transactionModel(childLogger)
           .add({
             discriminator: `CombinedElementsAddRadgemImage:${radgemId}`,

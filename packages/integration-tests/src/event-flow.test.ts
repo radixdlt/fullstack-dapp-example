@@ -208,8 +208,7 @@ describe('Event flows', () => {
 
     await combineElementsDeposit({
       accountAddress,
-      badgeAddress: radquestEntityAddresses.badges.heroBadgeAddress,
-      badgeLocalId: `<${user.id}>`,
+      userId: user.id,
       radixEngineClient: radixEngineClient as RadixEngineClient
     })
       .map((txId) => {
