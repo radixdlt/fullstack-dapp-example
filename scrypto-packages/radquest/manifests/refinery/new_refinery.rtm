@@ -30,6 +30,7 @@ CALL_FUNCTION
         )
     )
     Bucket("admin_badge")
+    Address("${hero_badge}")
     Address("${element}")
     Address("${morph_card}")
     Address("${radgem}")

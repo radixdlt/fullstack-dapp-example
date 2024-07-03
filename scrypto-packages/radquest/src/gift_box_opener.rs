@@ -66,17 +66,24 @@ mod gift_box_opener {
             self.enabled = false;
         }
 
+        fn get_user_id_from_badge_proof(&self, hero_badge: Proof) -> UserId {
+            let local_id_string = match hero_badge
+                .check(self.hero_badge_address)
+                .as_non_fungible()
+                .non_fungible_local_id()
+            {
+                NonFungibleLocalId::String(local_id) => local_id.value().to_owned(),
+                _ => unreachable!("All hero badges have String local IDs"),
+            };
+
+            UserId(local_id_string)
+        }
+
         pub fn open_gift_box(&mut self, hero_badge: Proof, gift_box: Bucket) {
             assert!(self.enabled, "GiftBoxOpener disabled");
 
             // Check and get user id from hero badge proof
-            let user_id = UserId(
-                hero_badge
-                    .check(self.hero_badge_address)
-                    .as_non_fungible()
-                    .non_fungible_local_id()
-                    .to_string(),
-            );
+            let user_id = self.get_user_id_from_badge_proof(hero_badge);
 
             // Check gift box address
             self.gift_box_managers
@@ -96,14 +103,7 @@ mod gift_box_opener {
         }
 
         pub fn claim_gift_box_rewards(&mut self, hero_badge: Proof) -> Vec<Bucket> {
-            // Check and get user id from hero badge proof
-            let user_id = UserId(
-                hero_badge
-                    .check(self.hero_badge_address)
-                    .as_non_fungible()
-                    .non_fungible_local_id()
-                    .to_string(),
-            );
+            let user_id = self.get_user_id_from_badge_proof(hero_badge);
 
             // Retrieve rewards records
             let rewards_records = self

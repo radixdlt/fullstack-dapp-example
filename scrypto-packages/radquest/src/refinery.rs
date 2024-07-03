@@ -3,6 +3,7 @@ use scrypto::prelude::*;
 use crate::{
     image_oracle::image_oracle::ImageOracle,
     morph_card_forge::MorphCardData,
+    quest_rewards::UserId,
     radgem_forge::{radgem_forge::RadgemForge, RadgemData},
     radmorph_forge::{radmorph_forge::RadmorphForge, RadmorphData},
 };
@@ -51,8 +52,9 @@ mod refinery {
     struct Refinery {
         enabled: bool,
         admin_badge: FungibleVault,
-        radgem_records: KeyValueStore<NonFungibleGlobalId, RadgemDeposit>,
+        radgem_records: KeyValueStore<UserId, RadgemDeposit>,
         radgem_vault: NonFungibleVault,
+        hero_badge_address: ResourceAddress,
         element_address: ResourceAddress,
         radgem_address: ResourceAddress,
         morph_card_address: ResourceAddress,
@@ -67,6 +69,7 @@ mod refinery {
             super_admin_badge_address: ResourceAddress,
             owner_role: OwnerRole,
             mut admin_badge: Bucket,
+            hero_badge_address: ResourceAddress,
             element_address: ResourceAddress,
             morph_card_address: ResourceAddress,
             radgem_address: ResourceAddress,
@@ -93,6 +96,7 @@ mod refinery {
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
                 radgem_records: KeyValueStore::new(),
                 radgem_vault: NonFungibleVault::new(radgem_address),
+                hero_badge_address,
                 element_address,
                 radgem_address,
                 morph_card_address,
@@ -114,29 +118,36 @@ mod refinery {
             self.enabled = false;
         }
 
+        fn get_user_id_from_badge_proof(&self, hero_badge: Proof) -> UserId {
+            let local_id_string = match hero_badge
+                .check(self.hero_badge_address)
+                .as_non_fungible()
+                .non_fungible_local_id()
+            {
+                NonFungibleLocalId::String(local_id) => local_id.value().to_owned(),
+                _ => unreachable!("All hero badges have String local IDs"),
+            };
+
+            UserId(local_id_string)
+        }
+
         // User deposits Elements to be turned into a RadGem
-        pub fn combine_elements_deposit(&self, badge_proof: Proof, elements: Bucket) -> () {
+        pub fn combine_elements_deposit(&self, hero_badge_proof: Proof, elements: Bucket) -> () {
             assert!(self.enabled, "Refinery component disabled");
             assert_eq!(elements.resource_address(), self.element_address);
             assert_eq!(elements.amount(), dec!(10));
-            let badge_address = badge_proof.resource_address();
-            let badge_local_id = badge_proof
-                .skip_checking()
-                .as_non_fungible()
-                .non_fungible_local_id();
-
-            let badge_id = NonFungibleGlobalId::new(badge_address, badge_local_id);
+            let user_id = self.get_user_id_from_badge_proof(hero_badge_proof);
 
             self.admin_badge
                 .authorize_with_amount(1, || elements.burn());
 
-            Runtime::emit_event(CombineElementsDepositedEvent { badge_id });
+            Runtime::emit_event(CombineElementsDepositedEvent { user_id });
         }
 
         // Mint a random RadGem
         pub fn combine_elements_mint_radgem(
             &mut self,
-            badge_id: NonFungibleGlobalId,
+            user_id: UserId,
             rand_num_1: Decimal,
             rand_num_2: Decimal,
         ) -> () {
@@ -147,16 +158,16 @@ mod refinery {
                 .authorize_with_amount(1, || self.radgem_forge.mint_radgem(rand_num_1, rand_num_2));
 
             // Update the user's RadGem record
-            if self.radgem_records.get(&badge_id).is_none() {
+            if self.radgem_records.get(&user_id).is_none() {
                 self.radgem_records.insert(
-                    badge_id.clone(),
+                    user_id.clone(),
                     RadgemDeposit::Unclaimed(vec![radgem_bucket
                         .as_non_fungible()
                         .non_fungible_local_id()]),
                 );
             } else {
                 let radgem_id = radgem_bucket.as_non_fungible().non_fungible_local_id();
-                let mut radgem_record = self.radgem_records.get_mut(&badge_id).unwrap();
+                let mut radgem_record = self.radgem_records.get_mut(&user_id).unwrap();
 
                 match *radgem_record {
                     RadgemDeposit::Unclaimed(ref mut radgem_ids) => radgem_ids.push(radgem_id),
@@ -176,7 +187,7 @@ mod refinery {
             self.radgem_vault.put(radgem_bucket.as_non_fungible());
 
             Runtime::emit_event(CombineElementsMintedRadgemEvent {
-                badge_id,
+                user_id,
                 radgem_local_id,
                 radgem_data,
             });
@@ -184,7 +195,7 @@ mod refinery {
 
         pub fn combine_elements_add_radgem_image(
             &mut self,
-            badge_id: NonFungibleGlobalId,
+            user_id: UserId,
             radgem_local_id: NonFungibleLocalId,
             key_image_url: Url,
         ) {
@@ -195,21 +206,15 @@ mod refinery {
                     .update_key_image(radgem_local_id, key_image_url)
             });
 
-            Runtime::emit_event(CombineElementsAddedRadgemImageEvent { badge_id });
+            Runtime::emit_event(CombineElementsAddedRadgemImageEvent { user_id });
         }
 
         // User claims RadGem by presenting hero badge
-        pub fn combine_elements_claim(&mut self, badge_proof: Proof) -> Bucket {
-            let badge_address = badge_proof.resource_address();
-            let badge_local_id = badge_proof
-                .skip_checking()
-                .as_non_fungible()
-                .non_fungible_local_id();
-
-            let badge_id = NonFungibleGlobalId::new(badge_address, badge_local_id);
+        pub fn combine_elements_claim(&mut self, hero_badge_proof: Proof) -> Bucket {
+            let user_id = self.get_user_id_from_badge_proof(hero_badge_proof);
 
             // Get the user's RadGem IDs from the record
-            let mut radgem_record = self.radgem_records.get_mut(&badge_id).unwrap();
+            let mut radgem_record = self.radgem_records.get_mut(&user_id).unwrap();
 
             let radgems = match *radgem_record {
                 RadgemDeposit::Claimed => panic!("RadGems already claimed"),
@@ -223,7 +228,7 @@ mod refinery {
                 }
             };
 
-            Runtime::emit_event(CombineElementsClaimedEvent { badge_id });
+            Runtime::emit_event(CombineElementsClaimedEvent { user_id });
 
             radgems.into()
         }
@@ -328,24 +333,24 @@ mod refinery {
 
 #[derive(ScryptoSbor, ScryptoEvent)]
 pub struct CombineElementsDepositedEvent {
-    badge_id: NonFungibleGlobalId,
+    user_id: UserId,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
 pub struct CombineElementsMintedRadgemEvent {
-    badge_id: NonFungibleGlobalId,
+    user_id: UserId,
     radgem_local_id: NonFungibleLocalId,
     radgem_data: RadgemData,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
 pub struct CombineElementsAddedRadgemImageEvent {
-    badge_id: NonFungibleGlobalId,
+    user_id: UserId,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
 pub struct CombineElementsClaimedEvent {
-    badge_id: NonFungibleGlobalId,
+    user_id: UserId,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]

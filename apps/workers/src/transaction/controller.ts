@@ -46,12 +46,9 @@ export const TransactionWorkerController = ({
     logger: AppLogger
     dbTransactionBuilder: DbTransactionBuilder
   }): ResultAsync<any, WorkerOutputError> => {
-    const { type, userId, discriminator } = job.data
+    const { type, userId } = job.data
 
     const addresses = Addresses(config.networkId)
-
-    const badgeId = `<${userId}>`
-    const badgeResourceAddress = addresses.badges.heroBadgeAddress
 
     const handleSubmitTransaction = (
       manifestFactory: (wellKnownAddresses: WellKnownAddresses) => string
@@ -96,7 +93,7 @@ export const TransactionWorkerController = ({
 
     switch (type) {
       case 'DepositReward':
-        const { questId, userId } = job.data
+        const { questId } = job.data
 
         const questDefinition = QuestDefinitions()[questId as QuestId]
         const rewards = questDefinition.rewards
@@ -259,8 +256,7 @@ export const TransactionWorkerController = ({
         return handleSubmitTransaction((wellKnownAddresses) =>
           createCombinedElementsMintRadgemManifest({
             wellKnownAddresses,
-            badgeResourceAddress,
-            badgeId
+            userId
           })
         ).andThen(handlePollTransactionStatus)
 
@@ -269,9 +265,9 @@ export const TransactionWorkerController = ({
         return handleSubmitTransaction((wellKnownAddresses) =>
           createCombinedElementsAddRadgemImageManifest({
             wellKnownAddresses,
-            badgeResourceAddress,
-            badgeId,
+            userId,
             radgemId,
+            // TODO: keyImageUrl should be fetched from the database
             keyImageUrl:
               'https://stokenet-dashboard.radixdlt.com/_app/immutable/assets/nft-placeholder.2eDdybqV.svg'
           })

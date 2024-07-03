@@ -4,12 +4,10 @@ import { randomFloat } from '../../helpers/randomFloat'
 
 export const createCombinedElementsMintRadgemManifest = ({
   wellKnownAddresses,
-  badgeResourceAddress,
-  badgeId
+  userId
 }: {
   wellKnownAddresses: WellKnownAddresses
-  badgeResourceAddress: string
-  badgeId: string
+  userId: string
 }) => {
   const { adminBadgeAddress } = config.radQuest.badges
   const { refinery } = config.radQuest.components
@@ -31,7 +29,7 @@ CALL_METHOD
 CALL_METHOD
   Address("${refinery}")
   "combine_elements_mint_radgem"
-  NonFungibleGlobalId("${badgeResourceAddress}:${badgeId}")
+  "${userId}"
   Decimal("${randomFloat()}")
   Decimal("${randomFloat()}")
 ;

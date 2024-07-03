@@ -1,13 +1,7 @@
 import { config } from '../../config'
 import { radixEngineClient } from '../../config'
 
-export const mintThenCombineElementsDeposit = ({
-  badgeAddress,
-  badgeLocalId
-}: {
-  badgeAddress: string
-  badgeLocalId: string
-}) => {
+export const mintThenCombineElementsDeposit = ({ userId }: { userId: string }) => {
   return radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
@@ -33,8 +27,8 @@ export const mintThenCombineElementsDeposit = ({
         CALL_METHOD
           Address("${wellKnownAddresses.accountAddress.systemAccount}")
           "create_proof_of_non_fungibles"
-          Address("${badgeAddress}")
-          Array<NonFungibleLocalId>(NonFungibleLocalId("${badgeLocalId}"))
+          Address("${config.radQuest.badges.heroBadgeAddress}")
+          Array<NonFungibleLocalId>(NonFungibleLocalId("<${userId}">))
         ;
 
         POP_FROM_AUTH_ZONE

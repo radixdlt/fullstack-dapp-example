@@ -19,7 +19,7 @@ import {
 import { getDataFromQuestRewardsEvent } from './helpers/getDataFromQuestRewardsEvent'
 import { databaseTransactions } from './helpers/databaseTransactions'
 import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent'
-import { getUserIdFromCombineElementsDepositedEvent } from './helpers/getBadgeAddressAndIdFromCombineElementsDepositedEvent'
+import { getUserIdFromCombineElementsDepositedEvent } from './helpers/getUserIdFromCombineElementsDepositedEvent'
 import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 import { getDetailsFromCombineElementsMintedRadgemEvent } from './helpers/getDetailsFromCombineElementsMintedRadgemEvent'
 import { WorkerError } from '../_types'
@@ -163,14 +163,14 @@ export const EventWorkerController = ({
       )
 
     const handelCombineElementsDepositedEvent = () => {
-      const { userId } = getUserIdFromCombineElementsDepositedEvent(
+      const userId = getUserIdFromCombineElementsDepositedEvent(
         job.data.relevantEvents.DepositedEvent
       )
 
       return getUserById(userId!, dbClient).andThen(() =>
         transactionModel(childLogger).add({
           discriminator: `CombinedElementsMintRadgem:${traceId}`,
-          userId: userId!,
+          userId,
           type: 'CombinedElementsMintRadgem',
           traceId
         })
@@ -182,7 +182,7 @@ export const EventWorkerController = ({
         job.data.relevantEvents.MintedRadgemEvent
       )
 
-      return getUserById(userId!, dbClient).andThen(() =>
+      return getUserById(userId, dbClient).andThen(() =>
         transactionModel(childLogger)
           .add({
             discriminator: `CombinedElementsAddRadgemImage:${radgemId}`,

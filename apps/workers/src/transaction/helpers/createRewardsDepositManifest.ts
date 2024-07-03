@@ -133,7 +133,7 @@ export const createRewardsDepositManifest = ({
     `CALL_METHOD
       Address("${addresses.components.questRewards}")
       "deposit_reward"
-      "<${userId}>"
+      "${userId}"
       "${questId}"
       # Array of Buckets to deposit
       Array<Bucket>(${rewardBuckets.join(',')})

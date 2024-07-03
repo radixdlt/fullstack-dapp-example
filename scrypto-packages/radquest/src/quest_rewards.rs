@@ -117,19 +117,27 @@ mod quest_rewards {
             self.enabled = false;
         }
 
+        fn get_user_id_from_badge_proof(&self, hero_badge: Proof) -> UserId {
+            let local_id_string = match hero_badge
+                .check(self.hero_badge_address)
+                .as_non_fungible()
+                .non_fungible_local_id()
+            {
+                NonFungibleLocalId::String(local_id) => local_id.value().to_owned(),
+                _ => unreachable!("All hero badges have String local IDs"),
+            };
+
+            UserId(local_id_string)
+        }
+
         fn authorize_claim(
             &self,
             quest_id: &QuestId,
             hero_badge: Proof,
             did_badge: Option<Proof>,
         ) -> UserId {
-            let hero_badge = hero_badge.check(self.hero_badge_address);
-            let user_id = UserId(
-                hero_badge
-                    .as_non_fungible()
-                    .non_fungible_local_id()
-                    .to_string(),
-            );
+            let user_id = self.get_user_id_from_badge_proof(hero_badge);
+
             let reward_state = self
                 .rewards_record
                 .get(&(user_id.clone(), quest_id.clone()))

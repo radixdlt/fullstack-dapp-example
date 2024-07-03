@@ -31,7 +31,7 @@ fn create_hero_badge() {
         metadata!(
             init {
               "name" => "Hero Badges", locked;
-              "description" => "Hero Badges are handed to each nobel RadQuest champion as they set forth.", locked;
+              "description" => "Hero Badges are handed to each noble RadQuest champion as they set forth.", locked;
               "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
             }
         ),

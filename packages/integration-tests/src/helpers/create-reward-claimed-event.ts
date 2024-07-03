@@ -17,7 +17,7 @@ export const createRewardClaimedEvent = (userId: string, questId: string) => {
     data: {
       fields: [
         {
-          value: `<${userId}>`,
+          value: userId,
           kind: 'String',
           type_name: 'UserId',
           field_name: 'user_id'
