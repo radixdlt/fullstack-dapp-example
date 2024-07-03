@@ -3,7 +3,6 @@
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
-  import { webSocketClient } from '../../../../../stores'
   import { onDestroy } from 'svelte'
   import { isMobile } from '$lib/utils/is-mobile'
   import CopyTextBox from '$lib/components/copy-text-box/CopyTextBox.svelte'
@@ -12,7 +11,7 @@
   import { writable } from 'svelte/store'
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
-  import type { WebSocketClient } from '$lib/websocket-client'
+  import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
 
   export let data: PageData
 

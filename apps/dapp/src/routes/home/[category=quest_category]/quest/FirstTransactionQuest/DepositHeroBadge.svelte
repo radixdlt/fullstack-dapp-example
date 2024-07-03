@@ -5,12 +5,12 @@
   import { okAsync } from 'neverthrow'
   import { onDestroy } from 'svelte'
   import { createEventDispatcher } from 'svelte'
-  import { user, webSocketClient } from '../../../../../stores'
+  import { user } from '../../../../../stores'
   import Button from '$lib/components/button/Button.svelte'
   import { userApi } from '$lib/api/user-api'
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
-  import type { WebSocketClient } from '$lib/websocket-client'
+  import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { ResultAsync } from 'neverthrow'
 
   const rdtInstance = ResultAsync.fromSafePromise(rdt)

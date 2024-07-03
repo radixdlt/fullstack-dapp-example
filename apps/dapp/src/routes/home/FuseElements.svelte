@@ -106,7 +106,7 @@
   import { i18n } from '$lib/i18n/i18n'
   import { publicConfig } from '$lib/public-config'
   import { GatewayApi } from 'common'
-  import { user, webSocketClient } from '../../stores'
+  import { user } from '../../stores'
   import pipe from 'ramda/src/pipe'
   import { sendTransaction } from '$lib/rdt'
   import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
@@ -123,6 +123,7 @@
   import { context } from '$lib/components/jetty-menu/JettyMenu.svelte'
   import Button from '$lib/components/button/Button.svelte'
   import FuseElementsPage from './FuseElementsPage.svelte'
+  import { webSocketClient } from '$lib/websocket-client'
 
   let rerender = false
 

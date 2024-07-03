@@ -2,11 +2,10 @@
   import Quest from '../Quest.svelte'
   import type { PageData } from '../StakingQuest/$types'
   import { onDestroy } from 'svelte'
-  import { webSocketClient } from '../../../../../stores'
+  import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { writable } from 'svelte/store'
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
-  import type { WebSocketClient } from '$lib/websocket-client'
 
   export let data: PageData
   let quest: Quest
