@@ -59,6 +59,20 @@ export const Addresses = (networkId: number) => {
           radquest: {
             url: 'https://radquest-dev.rdx-works-main.extratools.works'
           }
+        },
+        social: {
+          discord: 'https://discord.com/invite/radixdlt',
+          facebook: 'https://www.facebook.com/RadixDLT/',
+          github: 'https://github.com/radixdlt',
+          medium: 'https://radixdlt.medium.com/',
+          reddit: 'https://www.reddit.com/r/Radix/',
+          telegram: 'https://t.me/radix_dlt',
+          x: 'https://x.com/RadixDLT',
+          youtube: 'https://www.youtube.com/c/radixdlt',
+          linkedin: 'https://www.linkedin.com/company/radixdlt'
+        },
+        radixDlt: {
+          url: 'https://www.radixdlt.com'
         }
       }
     } as const
