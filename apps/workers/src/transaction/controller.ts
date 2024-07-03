@@ -50,9 +50,6 @@ export const TransactionWorkerController = ({
 
     const addresses = Addresses(config.networkId)
 
-    const badgeId = `<${userId}>`
-    const badgeResourceAddress = addresses.badges.heroBadgeAddress
-
     const handleSubmitTransaction = (
       manifestFactory: (wellKnownAddresses: WellKnownAddresses) => string
     ): ResultAsync<string, { reason: WorkerError; jsError: unknown }> =>
@@ -259,8 +256,7 @@ export const TransactionWorkerController = ({
         return handleSubmitTransaction((wellKnownAddresses) =>
           createCombinedElementsMintRadgemManifest({
             wellKnownAddresses,
-            badgeResourceAddress,
-            badgeId
+            userId
           })
         ).andThen(handlePollTransactionStatus)
 
@@ -269,9 +265,9 @@ export const TransactionWorkerController = ({
         return handleSubmitTransaction((wellKnownAddresses) =>
           createCombinedElementsAddRadgemImageManifest({
             wellKnownAddresses,
-            badgeResourceAddress,
-            badgeId,
+            userId,
             radgemId,
+            // TODO: keyImageUrl should be fetched from the database
             keyImageUrl:
               'https://stokenet-dashboard.radixdlt.com/_app/immutable/assets/nft-placeholder.2eDdybqV.svg'
           })
