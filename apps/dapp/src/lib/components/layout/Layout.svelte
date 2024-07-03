@@ -12,13 +12,16 @@
       <slot name="quests" />
     </div>
   </div>
+
+  <slot name="footer" />
 </div>
 
 <style lang="scss">
   .layout {
+    overflow-y: auto;
     display: grid;
     grid-template-rows: auto 1fr;
-    height: 100dvh;
+    min-height: 100dvh;
     background: var(--gradient-3) no-repeat center fixed;
   }
 
@@ -42,7 +45,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 95%;
 
     @include desktop {
       gap: var(--spacing-2xl);

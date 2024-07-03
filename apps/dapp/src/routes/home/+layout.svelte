@@ -25,6 +25,7 @@
   import { useCookies } from '$lib/utils/cookies'
   import Jetty from './Jetty.svelte'
   import { loadUnseenNotifications, pushNotification } from '$lib/notifications'
+  import Footer from '$lib/components/footer/footer.svelte'
 
   export let data: LayoutData
 
@@ -198,4 +199,6 @@
   <svelte:fragment slot="quests">
     <slot />
   </svelte:fragment>
+
+  <Footer slot="footer" />
 </Layout>

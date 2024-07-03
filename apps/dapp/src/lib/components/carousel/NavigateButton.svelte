@@ -28,7 +28,7 @@
     transition: background-color 0.2s ease-in-out;
     background-color: var(--color-dark);
     opacity: 0.5;
-
+    z-index: 1;
     &:hover {
       opacity: 0.8;
     }

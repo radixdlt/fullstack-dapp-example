@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { i18n } from '$lib/i18n/i18n'
-  import ExternalLink from '@images/external-link.svg'
   import LoadingSpinner from '../loading-spinner/LoadingSpinner.svelte'
+  import ExternalLink from '../externalLink/ExternalLink.svelte'
 
   export let disabled = false
   export let secondary = false
@@ -26,7 +25,7 @@
     {:else}
       <slot />
       {#if isExternal}
-        <img src={ExternalLink} alt={$i18n.t('main:external-link-icon')} />
+        <ExternalLink --fill="white" />
       {/if}
     {/if}
   </a>
