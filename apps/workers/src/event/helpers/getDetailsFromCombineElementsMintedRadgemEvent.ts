@@ -22,9 +22,8 @@ const findUserIdField = (fields?: ProgrammaticScryptoSborValue[]) =>
 export const getDetailsFromCombineElementsMintedRadgemEvent = (event: EventsItem) => {
   if (event.data?.kind !== 'Tuple') throw new Error('Invalid event data')
 
-  const userId = findUserIdField(event.data?.fields)?.value
-
-  const radgemId = findNonFungibleRadgemLocalIdField(event.data?.fields)
-
-  return { userId, radgemId }
+  return {
+    userId: findUserIdField(event.data?.fields)?.value!,
+    radgemId: findNonFungibleRadgemLocalIdField(event.data?.fields)!
+  }
 }

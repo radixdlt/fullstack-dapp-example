@@ -28,7 +28,9 @@ export const TransactionWorker = (
       const childLogger = logger.child({
         traceId: job.data.traceId,
         type: job.data.type,
-        jobId: job.id
+        jobId: job.id,
+        userId,
+        queue: Queues.TransactionQueue
       })
 
       childLogger.debug({ method: 'transactionWorker.process', data: job.data })

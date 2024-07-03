@@ -46,7 +46,7 @@ export const TransactionWorkerController = ({
     logger: AppLogger
     dbTransactionBuilder: DbTransactionBuilder
   }): ResultAsync<any, WorkerOutputError> => {
-    const { type, userId, discriminator } = job.data
+    const { type, userId } = job.data
 
     const addresses = Addresses(config.networkId)
 
@@ -93,7 +93,7 @@ export const TransactionWorkerController = ({
 
     switch (type) {
       case 'DepositReward':
-        const { questId, userId } = job.data
+        const { questId } = job.data
 
         const questDefinition = QuestDefinitions()[questId as QuestId]
         const rewards = questDefinition.rewards

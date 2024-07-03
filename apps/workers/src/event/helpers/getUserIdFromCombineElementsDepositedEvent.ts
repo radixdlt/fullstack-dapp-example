@@ -10,8 +10,8 @@ const findUserIdField = (fields?: ProgrammaticScryptoSborValue[]) =>
       field.kind === 'String' && field.type_name === 'UserId' && field.field_name === 'user_id'
   )
 
-export const getBadgeAddressAndIdFromCombineElementsDepositedEvent = (event: EventsItem) => {
+export const getUserIdFromCombineElementsDepositedEvent = (event: EventsItem) => {
   if (event.data?.kind !== 'Tuple') throw new Error('Invalid event data')
 
-  return findUserIdField(event.data?.fields)?.value
+  return findUserIdField(event.data?.fields)?.value!
 }
