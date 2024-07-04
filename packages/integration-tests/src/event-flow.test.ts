@@ -375,7 +375,7 @@ describe('Event flows', () => {
   })
 
   describe('Referral flow', () => {
-    it.only(
+    it(
       'should complete basic quest, deposit reward, claim reward',
       { timeout: 90_000, skip: false },
       async () => {
