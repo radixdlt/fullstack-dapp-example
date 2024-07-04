@@ -1,0 +1,25 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+
+CALL_METHOD
+    Address("${account}")
+    "create_proof_of_amount"
+    Address("${xrd}")
+    Decimal("1")
+;
+
+SET_OWNER_ROLE
+    Address("${super_admin_badge}")
+    Enum<AccessRule::Protected>(
+        Enum<AccessRuleNode::ProofRule>(
+            Enum<ProofRule::Require>(
+                Enum<ResourceOrNonFungible::Resource>(
+                    Address("${super_admin_badge}")
+                )
+            )
+        )
+    )
+;

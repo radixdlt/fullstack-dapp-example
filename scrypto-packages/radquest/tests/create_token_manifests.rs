@@ -3,8 +3,76 @@ use scrypto_test::prelude::*;
 use scrypto_test::sdk::DIVISIBILITY_NONE;
 use scrypto_test::utils::dump_manifest_to_file_system;
 
+#[test]
+fn create_a_super_admin_badge() {
+    let network = NetworkDefinition::mainnet();
+
+    let manifest_builder = ManifestBuilder::new().create_fungible_resource(
+        OwnerRole::Updatable(rule!(require(XRD))),
+        true,
+        DIVISIBILITY_NONE,
+        FungibleResourceRoles::default(),
+        metadata!(
+            init {
+              "name" => "RadQuest Super Admin Badge", updatable;
+              "tags" => vec!["radquest", "badge"], updatable;
+            }
+        ),
+        Some(dec!(1)),
+    );
+
+    dump_manifest_to_file_system(
+        manifest_builder.object_names(),
+        &manifest_builder.build(),
+        "./manifests/test-generated",
+        Some("create_a_super_admin_badge"),
+        &network,
+    )
+    .err();
+}
+
+#[test]
+fn create_an_admin_badge() {
+    let network = NetworkDefinition::mainnet();
+
+    let manifest_builder = ManifestBuilder::new().create_fungible_resource(
+        OwnerRole::Fixed(rule!(require(XRD))),
+        true,
+        DIVISIBILITY_NONE,
+        FungibleResourceRoles {
+            mint_roles: mint_roles! {
+                minter => OWNER;
+                minter_updater => OWNER;
+            },
+            recall_roles: recall_roles! {
+                recaller => OWNER;
+                recaller_updater => OWNER;
+            },
+            ..Default::default()
+        },
+        metadata!(
+            init {
+              "name" => "RadQuest Admin Badge", updatable;
+              "tags" => vec!["radquest", "badge"], updatable;
+            }
+        ),
+        None,
+    );
+
+    dump_manifest_to_file_system(
+        manifest_builder.object_names(),
+        &manifest_builder.build(),
+        "./manifests/test-generated",
+        Some("create_admin_badge"),
+        &network,
+    )
+    .err();
+}
+
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
 struct HeroBadgeData {
+    name: String,
+    description: String,
     #[mutable]
     key_image_url: Url,
     #[mutable]
@@ -24,15 +92,20 @@ fn create_hero_badge() {
         NonFungibleResourceRoles {
             mint_roles: mint_roles! {
                 minter => OWNER;
-                minter_updater => rule!(deny_all);
+                minter_updater => OWNER;
+            },
+            withdraw_roles: withdraw_roles! {
+                withdrawer => rule!(deny_all);
+                withdrawer_updater => OWNER;
             },
             ..Default::default()
         },
         metadata!(
             init {
-              "name" => "Hero Badges", locked;
-              "description" => "Hero Badges are handed to each noble RadQuest champion as they set forth.", locked;
-              "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
+              "name" => "RadQuest Hero Badges", updatable;
+              "description" =>"A unique Hero Badge NFT is given to every RadQuest quester. It is presented whenever interacting with RadQuest, like claiming rewards or crafting RadMorphs.", updatable;
+              "tags" => vec!["radquest", "badge"], updatable;
+              "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
             }
         ),
         None::<IndexMap<NonFungibleLocalId, HeroBadgeData>>,
