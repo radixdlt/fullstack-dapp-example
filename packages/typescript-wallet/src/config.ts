@@ -13,7 +13,13 @@ const networkName = gatewayApi.networkConfig.networkName
 if (!networkName) throw new Error('PUBLIC_NETWORK_ID env var not set to a valid network')
 
 export const radixEngineClient = RadixEngineClient({
-  accounts: { payerAccount: 1, systemAccount: 2, dAppDefinitionAccount: 3, jetty: 4 },
+  accounts: {
+    payerAccount: 1,
+    ownerAccount: 2,
+    systemAccount: 3,
+    dAppDefinitionAccount: 4,
+    jetty: 5
+  },
   gatewayApi,
   mnemonic: process.env.MNEMONIC!
 })

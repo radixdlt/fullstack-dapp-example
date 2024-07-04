@@ -11,57 +11,44 @@ export const createSuperAdminBadge = () =>
             Decimal("10")
           ;
 
+          ALLOCATE_GLOBAL_ADDRESS
+              Address("${wellKnownAddresses.packageAddresses.resourcePackage}")
+              "FungibleResourceManager"
+              AddressReservation("super_admin_badge")
+              NamedAddress("super_admin_badge")
+          ;          
+
           CREATE_FUNGIBLE_RESOURCE_WITH_INITIAL_SUPPLY
-            None
+            Enum<OwnerRole::Fixed>(
+                Enum<AccessRule::Protected>(
+                    Enum<AccessRuleNode::ProofRule>(
+                        Enum<ProofRule::Require>(
+                            Enum<ResourceOrNonFungible::Resource>(
+                                NamedAddress("super_admin_badge")
+                            )
+                        )
+                    )
+                )
+            )
             true
             0u8
             Decimal("1")
             Tuple(
-              Some(         
-                Tuple(
-                  Some(Enum<AccessRule::DenyAll>()),  
-                  Some(Enum<AccessRule::DenyAll>())
-                )
-              ),
-              Some(         
-                Tuple(
-                  Some(Enum<AccessRule::DenyAll>()),  
-                  Some(Enum<AccessRule::DenyAll>())
-                )
-              ),
-              Some(         
-                Tuple(
-                  Some(Enum<AccessRule::DenyAll>()),  
-                  Some(Enum<AccessRule::DenyAll>())
-                )
-              ),
-              Some(         
-                Tuple(
-                  Some(Enum<AccessRule::DenyAll>()),  
-                  Some(Enum<AccessRule::DenyAll>())
-                )
-              ),
-              Some(         
-                Tuple(
-                  Some(Enum<AccessRule::AllowAll>()),  
-                  Some(Enum<AccessRule::DenyAll>())
-                )
-              ),
-              Some(         
-                Tuple(
-                  Some(Enum<AccessRule::AllowAll>()),  
-                  Some(Enum<AccessRule::DenyAll>())
-                )
-              )
+              None,
+              None,
+              None,
+              None,
+              None,
+              None
             )
             Tuple(
               Map<String, Tuple>(
                 "name" => Tuple(
-                  Some(Enum<Metadata::String>("Super Admin Badge")),                  
+                  Some(Enum<Metadata::String>("RadQuest Super Admin Badge")),                  
                   false                                                         
                 ),
                 "tags" => Tuple(
-                  Some(Enum<Metadata::StringArray>(Array<String>("badge"))),                  
+                  Some(Enum<Metadata::StringArray>(Array<String>("badge", "radquest"))),                  
                   false                                                         
                 )
               ),
@@ -72,17 +59,19 @@ export const createSuperAdminBadge = () =>
                 "metadata_locker_updater" => None
               )
             )
-            None
+            Some(
+                AddressReservation("super_admin_badge")
+            )
           ;
 
           CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress.dAppDefinitionAccount}")
+            Address("${wellKnownAddresses.accountAddress.ownerAccount}")
             "try_deposit_batch_or_abort"
             Expression("ENTIRE_WORKTOP")
             Enum<0u8>()
           ;`)
         .andThen((transactionManifest) =>
-          submitTransaction({ transactionManifest, signers: ['dAppDefinitionAccount'] })
+          submitTransaction({ transactionManifest, signers: ['ownerAccount'] })
         )
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)

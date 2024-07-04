@@ -132,7 +132,7 @@ export const createHeroBadgeResource = (adminBadge: string) => {
         ;
         `)
         .andThen((transactionManifest) =>
-          submitTransaction({ transactionManifest, signers: ['dAppDefinitionAccount'] })
+          submitTransaction({ transactionManifest, signers: ['systemAccount'] })
         )
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
