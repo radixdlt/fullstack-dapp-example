@@ -26,7 +26,8 @@ export const WorkerError = {
   UserNotFound: 'UserNotFound',
   UserDisabledXrdDeposit: 'UserDisabledXrdDeposit',
   FailedToCreateMessageInDb: 'FailedToCreateMessageInDb',
-  FailedToUpdateTransactionIntentStatus: 'FailedToUpdateTransactionIntentStatus'
+  FailedToUpdateTransactionIntentStatus: 'FailedToUpdateTransactionIntentStatus',
+  FailedToUpdateReferralReward: 'FailedToUpdateReferralReward'
 } as const
 
 export type WorkerOutputError = { reason: WorkerError; jsError?: unknown }

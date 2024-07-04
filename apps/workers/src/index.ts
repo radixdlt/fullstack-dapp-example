@@ -21,6 +21,7 @@ import { SystemWorker } from './system/worker'
 import { SystemWorkerController } from './system/controller'
 import { MessageHelper } from './helpers/messageHelper'
 import { TransactionIntentHelper } from './helpers/transactionIntentHelper'
+import { ReferralRewardAction } from './helpers/referalReward'
 
 const app = async () => {
   // test db connection
@@ -42,6 +43,7 @@ const app = async () => {
   const redisClient = new RedisConnection(config.redis)
   const tokenPriceClient = TokenPriceClient({ logger, redisClient })
   const sendMessage = MessageHelper({ dbClient, messageApi })
+  const referralRewardAction = ReferralRewardAction(dbClient)
 
   const eventWorkerController = EventWorkerController({
     logger,
@@ -49,14 +51,16 @@ const app = async () => {
     tokenPriceClient,
     transactionIntent: TransactionIntentHelper({ dbClient, transactionQueue }),
     AccountAddressModel: AccountAddressModel(redisClient),
-    sendMessage
+    sendMessage,
+    referralRewardAction
   })
 
   const transactionWorkerController = TransactionWorkerController({
     auditModel,
     gatewayApi,
     tokenPriceClient,
-    sendMessage
+    sendMessage,
+    referralRewardAction
   })
 
   TransactionWorker(connection, {

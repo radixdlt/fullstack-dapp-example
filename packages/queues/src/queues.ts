@@ -58,6 +58,7 @@ export type DepositXrdRewardTransactionJob = {
   type: 'DepositXrdReward'
   questId: string
   amount: number
+  transactionId: string
 }
 
 export type TransactionJob = {

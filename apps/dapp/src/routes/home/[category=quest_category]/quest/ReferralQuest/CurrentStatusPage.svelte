@@ -120,17 +120,14 @@
             level: $i18n.t(`quests:ReferralQuest.${currentLevel}`)
           })}</strong
         >
-        
       </div>
       {#if nextLevel !== 'SuperLevel'}
         {$i18n.t('quests:ReferralQuest.referMore', {
           nextLevel: $i18n.t(`quests:ReferralQuest.${nextLevel}`),
           count: nextLevelIn
         })}
-      {:else}
-        {#if hasWaitingRewards}
-          {$i18n.t('quests:ReferralQuest.rewardsWaiting')}
-        {/if}
+      {:else if hasWaitingRewards}
+        {$i18n.t('quests:ReferralQuest.rewardsWaiting')}
       {/if}
     {/if}
   </div>

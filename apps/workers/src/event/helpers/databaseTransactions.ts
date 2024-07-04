@@ -13,14 +13,19 @@ export const databaseTransactions = ({
   transactionId: string
 }) => {
   const setQuestProgressStatus = (status: QuestStatus, userId: string, questId: string) =>
-    dbClient.questProgress.update({
+    dbClient.questProgress.upsert({
       where: {
         questId_userId: {
           userId,
           questId
         }
       },
-      data: {
+      update: {
+        status
+      },
+      create: {
+        userId,
+        questId,
         status
       }
     })

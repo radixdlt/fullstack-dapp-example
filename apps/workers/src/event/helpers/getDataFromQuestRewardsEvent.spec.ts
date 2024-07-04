@@ -68,7 +68,7 @@ describe('GetDataFromQuestRewardsEvent', () => {
         type_name: 'RewardDepositedEvent'
       }
     } as EventsItem
-    const result = getDataFromQuestRewardsEvent(fixture)
+    const result = getDataFromQuestRewardsEvent(fixture)._unsafeUnwrap()
     expect(result?.xrdAmount).toEqual(20)
   })
 
@@ -160,7 +160,7 @@ describe('GetDataFromQuestRewardsEvent', () => {
         type_name: 'RewardDepositedEvent'
       }
     } as EventsItem
-    const result = getDataFromQuestRewardsEvent(fixture)
+    const result = getDataFromQuestRewardsEvent(fixture)._unsafeUnwrap()
     expect(result?.xrdAmount).toEqual(20)
   })
 })

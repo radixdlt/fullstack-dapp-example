@@ -68,7 +68,7 @@ export const getDataFromQuestRewardsEvent = (
 
     if (!userIdField || !questIdField || !rewardsField) return err({ reason: 'InvalidEventData' })
 
-    const userId = stripNonFungibleLocalId(userIdField.value)!
+    const userId = userIdField.value!
     const questId = questIdField.value as QuestId
     const xrdAmount = getXrdAmountFromRewards(rewardsField)
 

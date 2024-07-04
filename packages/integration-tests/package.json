@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "test:integration": "vitest event",
-    "test:referral": "vitest referral"
+    "test:integration": "vitest event"
   },
   "license": "SEE LICENSE",
   "dependencies": {

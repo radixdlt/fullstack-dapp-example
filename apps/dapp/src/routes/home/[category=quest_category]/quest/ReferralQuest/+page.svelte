@@ -7,14 +7,25 @@
   import OngoingQuest from '$lib/components/quest/OngoingQuest.svelte'
   import { userApi } from '$lib/api/user-api'
   import { onDestroy, onMount } from 'svelte'
-  import { user, webSocketClient } from '../../../../../stores'
+  import { user } from '../../../../../stores'
   import { messageApi } from '$lib/api/message-api'
-  import type { WebSocketClient } from '$lib/websocket-client'
+  import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
+  import type { QuestStatus } from 'database'
 
-  let referralsData: { referrals: string[]; readyToClaim: number; claimed: number } = {
+  let referralsData: {
+    referrals: string[]
+    readyToClaim: number
+    claimed: number
+    progress: Record<'BronzeLevel' | 'SilverLevel' | 'GoldLevel', QuestStatus>
+  } = {
     referrals: [],
     readyToClaim: 0,
-    claimed: 0
+    claimed: 0,
+    progress: {
+      BronzeLevel: 'IN_PROGRESS',
+      SilverLevel: 'IN_PROGRESS',
+      GoldLevel: 'IN_PROGRESS'
+    }
   }
 
   const getReferralsState = () => {

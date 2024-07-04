@@ -1,24 +1,23 @@
 import { TokenPriceClient } from './../token-price-client'
 import { okAsync, errAsync, err, ok, ResultAsync } from 'neverthrow'
-import { EventJob, Job, TransactionQueue } from 'queues'
+import { EventJob, Job } from 'queues'
 import { QuestDefinitions, QuestId, Quests } from 'content'
 import {
-  ConfigModel,
   EventId,
   MessageType,
   ReferralQuestConfig,
   UserByReferralCode,
   getAccountFromMayaRouterWithdrawEvent
 } from 'common'
-import { AppLogger, UserModel, UserQuestModel, AccountAddressModel } from 'common'
-import { PrismaClient, QuestStatus, ReferralAction } from 'database'
+import { AppLogger, AccountAddressModel } from 'common'
+import { PrismaClient, QuestStatus } from 'database'
 import {
   getAccountAddressFromAccountAddedEvent,
   getUserIdFromDepositHeroBadgeEvent
 } from './helpers/getUserIdFromDepositHeroBadgeEvent'
 import { getDataFromQuestRewardsEvent } from './helpers/getDataFromQuestRewardsEvent'
 import { databaseTransactions } from './helpers/databaseTransactions'
-import { getUserIdFromWithdrawEvent } from './helpers/getUserIdFromWithdrawEvent'
+import { getAccountAddressFromWithdrawEvent } from './helpers/getAccountAddressFromWidthdrawEvent'
 import { getUserIdFromCombineElementsDepositedEvent } from './helpers/getUserIdFromCombineElementsDepositedEvent'
 import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 import { getDetailsFromCombineElementsMintedRadgemEvent } from './helpers/getDetailsFromCombineElementsMintedRadgemEvent'
@@ -28,6 +27,7 @@ import { MessageHelper } from '../helpers/messageHelper'
 import { getUserIdFromRadgemImageEvent } from './helpers/getUserIdFromRadgemImageEvent'
 import { config } from '../config'
 import { TransactionIntentHelper } from '../helpers/transactionIntentHelper'
+import { ReferralRewardAction } from '../helpers/referalReward'
 
 type EventEmitter = {
   entity: {
@@ -46,7 +46,8 @@ export const EventWorkerController = ({
   logger,
   AccountAddressModel,
   sendMessage,
-  transactionIntent
+  transactionIntent,
+  referralRewardAction
 }: {
   dbClient: PrismaClient
   AccountAddressModel: AccountAddressModel
@@ -54,6 +55,7 @@ export const EventWorkerController = ({
   logger: AppLogger
   sendMessage: MessageHelper
   transactionIntent: TransactionIntentHelper
+  referralRewardAction: ReferralRewardAction
 }) => {
   const handler = (job: Job<EventJob>) => {
     const { traceId, type, transactionId } = job.data
@@ -236,34 +238,6 @@ export const EventWorkerController = ({
         (error) => ({ reason: WorkerError.FailedToGetUserFromDb, jsError: error })
       ).andThen((user) => (user ? ok(user) : err({ reason: WorkerError.UserNotFound })))
 
-    const addReferralRewardAction = ({
-      transactionId,
-      userId,
-      xrdValue,
-      action
-    }: {
-      transactionId: string
-      userId: string
-      xrdValue: number
-      action: ReferralAction
-    }) =>
-      ResultAsync.fromPromise(
-        dbClient.referral.upsert({
-          where: {
-            eventId: transactionId,
-            userId
-          },
-          create: {
-            action,
-            eventId: transactionId,
-            userId,
-            xrdValue
-          },
-          update: {}
-        }),
-        (error) => ({ reason: 'FailedToUpdateReferralRewards', jsError: error })
-      )
-
     const handleReferrerRewards = (user: UserByReferralCode) => {
       const questProgressResult = user.questProgress.some(
         (quest) => quest.questId === 'ReferralQuest:BronzeLevel'
@@ -277,11 +251,14 @@ export const EventWorkerController = ({
 
       return questProgressResult
         .andThen(() =>
-          addReferralRewardAction({
-            transactionId,
+          transactionIntent.add({
+            questId: 'ReferralQuest',
             userId: user.id,
-            xrdValue: config.referralRewardXrdAmount,
-            action: 'INC'
+            traceId,
+            type: 'DepositXrdReward',
+            amount: config.referralRewardXrdAmount,
+            discriminator: `ReferralQuest:${user.id}:${transactionId}`,
+            transactionId
           })
         )
         .andThen(() => handleTiersRewards(user))
@@ -448,10 +425,10 @@ export const EventWorkerController = ({
                   if (user.referredBy && shouldTriggerReferralRewardFlow)
                     return getUserByReferralCode(user.referredBy).andThen(handleReferrerRewards)
                   else if (questId === 'ReferralQuest')
-                    return addReferralRewardAction({
+                    return referralRewardAction({
                       transactionId,
                       userId,
-                      xrdValue: xrdAmount,
+                      xrdValue: -xrdAmount,
                       action: 'DEC'
                     })
 
@@ -499,28 +476,28 @@ export const EventWorkerController = ({
         )
 
       case EventId.JettyReceivedClams: {
-        return getUserIdFromWithdrawEvent(job.data.relevantEvents.WithdrawEvent, dbClient)
-          .map((userId) => ({
-            questId: 'TransferTokens' as QuestId,
-            requirementId: type,
-            userId,
-            transactionId,
-            traceId
-          }))
-          .andThen((questValues) =>
-            dbTransactionBuilder.helpers
-              .questRequirementCompleted(questValues)
+        return getAccountAddressFromWithdrawEvent(job.data.relevantEvents.WithdrawEvent)
+          .asyncAndThen(getUserByAccountAddress)
+          .andThen((user) => {
+            const values = {
+              questId: 'TransferTokens' as QuestId,
+              requirementId: type,
+              userId: user.id,
+              transactionId
+            }
+            return dbTransactionBuilder.helpers
+              .questRequirementCompleted(values)
               .exec()
               .andThen(() =>
-                sendMessage(questValues.userId, {
+                sendMessage(user.id, {
                   type: 'QuestRequirementCompleted',
-                  questId: questValues.questId,
-                  requirementId: questValues.requirementId,
+                  questId: 'TransferTokens',
+                  requirementId: type,
                   traceId
                 })
               )
-              .andThen(() => handleAllQuestRequirementCompleted(questValues))
-          )
+              .andThen(() => handleAllQuestRequirementCompleted(values))
+          })
       }
       case EventId.MayaRouterWithdrawEvent: {
         const maybeAccountAddress = getAccountFromMayaRouterWithdrawEvent(

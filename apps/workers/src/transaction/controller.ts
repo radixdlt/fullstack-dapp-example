@@ -20,18 +20,21 @@ import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 import { WorkerOutputError, WorkerError } from '../_types'
 import { MessageHelper } from '../helpers/messageHelper'
 import { SetTransactionIntentStatus } from '../helpers/setTransactionIntentStatus'
+import { ReferralRewardAction } from '../helpers/referalReward'
 
 export type TransactionWorkerController = ReturnType<typeof TransactionWorkerController>
 export const TransactionWorkerController = ({
   auditModel,
   gatewayApi,
   tokenPriceClient,
-  sendMessage
+  sendMessage,
+  referralRewardAction
 }: {
   auditModel: AuditModel
   gatewayApi: GatewayApi
   tokenPriceClient: TokenPriceClient
   sendMessage: MessageHelper
+  referralRewardAction: ReferralRewardAction
 }) => {
   const handler = ({
     job,
@@ -179,15 +182,24 @@ export const TransactionWorkerController = ({
 
     switch (type) {
       case 'DepositXrdReward': {
-        const { amount, questId } = job.data
-        const rewards = [
-          {
-            name: 'xrd',
-            amount: Number(amount)
-          }
-        ] satisfies QuestReward[]
+        const { amount, transactionId } = job.data
 
-        return handleDepositRewards(rewards, questId)
+        return handleDepositRewards(
+          [
+            {
+              name: 'xrd',
+              amount
+            }
+          ],
+          job.data.questId
+        ).andThen(() =>
+          referralRewardAction({
+            action: 'INC',
+            xrdValue: amount,
+            userId: user.id,
+            transactionId
+          })
+        )
       }
 
       case 'DepositPartialReward': {
