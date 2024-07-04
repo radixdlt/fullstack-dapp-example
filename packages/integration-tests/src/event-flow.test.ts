@@ -11,7 +11,6 @@ import {
 import {
   AccountAddressModel,
   Addresses,
-  ErrorReason,
   GatewayApi,
   TransactionModel,
   UserModel,
@@ -19,7 +18,7 @@ import {
   appLogger
 } from 'common'
 import { PrismaClient, User } from 'database'
-import { ResultAsync, err, errAsync } from 'neverthrow'
+import { ResultAsync, errAsync } from 'neverthrow'
 import { Queues, RedisConnection, getQueues } from 'queues'
 import { config } from './config'
 import { QueueEvents } from 'bullmq'
@@ -28,8 +27,6 @@ import { createUser } from './helpers/create-user'
 import { addVerifiedPhoneNumberRequirement } from './helpers/add-completed-requirement'
 import { completeQuestRequirements } from './helpers/complete-quest-requirements'
 import { waitForMessage } from './helpers/wait-for-message'
-import { RadixEngineToolkit, PrivateKey, PublicKey } from '@radixdlt/radix-engine-toolkit'
-import { secureRandom } from '../../typescript-wallet/src/helpers'
 import { AccountHelper } from './helpers/accountHelper'
 
 const eventQueueEvents = new QueueEvents(Queues.EventQueue, { connection: config.redis })
@@ -89,6 +86,19 @@ const startQuestAndAddTrackedAccount = (userId: string, questId: string) =>
         : errAsync('User not found')
     )
     .andThen(() => userQuestModel.updateQuestStatus(questId, userId, 'IN_PROGRESS'))
+
+const completeTransferTokensQuest = async (user: User) => {
+  const questId = 'TransferTokens'
+
+  await startQuestAndAddTrackedAccount(user.id, questId)
+  await completeQuestRequirements(db)(user.id, questId, [
+    'PersonaQuiz',
+    'TransactionQuiz',
+    'XrdQuiz'
+  ])
+
+  await mintClams(10, user.accountAddress!)
+}
 
 describe('Event flows', () => {
   beforeAll(async () => {
@@ -237,6 +247,7 @@ describe('Event flows', () => {
     expect(
       (await accountAddressModel.getTrackedAddressUserId(accountAddress, questId))._unsafeUnwrap()
     ).toBe(user.id)
+
     await mintClams(10, accountAddress)
 
     await radixEngineClient.getXrdFromFaucet()
