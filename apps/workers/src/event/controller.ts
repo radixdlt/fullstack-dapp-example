@@ -10,15 +10,8 @@ import {
   UserByReferralCode,
   getAccountFromMayaRouterWithdrawEvent
 } from 'common'
-import {
-  AppLogger,
-  EventModel,
-  UserModel,
-  UserQuestModel,
-  TransactionModel,
-  AccountAddressModel
-} from 'common'
-import { CompletedQuestRequirement, PrismaClient, QuestProgress, User } from 'database'
+import { AppLogger, UserModel, UserQuestModel, AccountAddressModel } from 'common'
+import { PrismaClient, QuestStatus, ReferralAction } from 'database'
 import {
   getAccountAddressFromAccountAddedEvent,
   getUserIdFromDepositHeroBadgeEvent
@@ -31,9 +24,10 @@ import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 import { getDetailsFromCombineElementsMintedRadgemEvent } from './helpers/getDetailsFromCombineElementsMintedRadgemEvent'
 import { WorkerError } from '../_types'
 import { getUserById } from '../helpers/getUserById'
-import { SendMessage } from '../helpers/sendMessage'
+import { MessageHelper } from '../helpers/messageHelper'
 import { getUserIdFromRadgemImageEvent } from './helpers/getUserIdFromRadgemImageEvent'
 import { config } from '../config'
+import { TransactionIntentHelper } from '../helpers/transactionIntentHelper'
 
 type EventEmitter = {
   entity: {
@@ -48,25 +42,18 @@ type EventEmitter = {
 export type EventWorkerController = ReturnType<typeof EventWorkerController>
 export const EventWorkerController = ({
   dbClient,
-  userModel,
-  userQuestModel,
   tokenPriceClient,
-  transactionModel,
   logger,
   AccountAddressModel,
-  sendMessage
+  sendMessage,
+  transactionIntent
 }: {
   dbClient: PrismaClient
-  eventModel: EventModel
-  userModel: UserModel
-  transactionModel: TransactionModel
   AccountAddressModel: AccountAddressModel
-  userQuestModel: UserQuestModel
   tokenPriceClient: TokenPriceClient
   logger: AppLogger
-  transactionQueue: TransactionQueue
-  configModel: ConfigModel
-  sendMessage: SendMessage
+  sendMessage: MessageHelper
+  transactionIntent: TransactionIntentHelper
 }) => {
   const handler = (job: Job<EventJob>) => {
     const { traceId, type, transactionId } = job.data
@@ -83,203 +70,225 @@ export const EventWorkerController = ({
     const dbTransactions = databaseTransactions({ dbClient, logger: childLogger, transactionId })
     const dbTransactionBuilder = DbTransactionBuilder({ dbClient, tokenPriceClient })
 
-    const ensureValidData = <T, U = T>(transactionId: string, data: Partial<T> | undefined) =>
-      okAsync(data && Object.values(data).every((d) => d !== undefined)).andThen((isValid) => {
-        if (isValid) {
-          return okAsync(data as U)
-        }
-
-        childLogger.error({
-          transactionId,
-          message: 'Failed to parse event data',
-          data
-        })
-
-        return errAsync({ reason: 'InvalidData' })
-      })
-
-    const hasAllRequirementsCompleted = (questId: keyof Quests, userId: string) => {
-      const questDefinition = QuestDefinitions()[questId]
-      const requirements = Object.keys(questDefinition.requirements)
-      return userQuestModel(childLogger)
-        .findCompletedRequirements(userId, questId)
-        .map((completedRequirements) => ({
-          isAllCompleted: completedRequirements.length === requirements.length,
-          completedRequirements
-        }))
-    }
-
-    const handleRewardDeposited = () =>
-      ensureValidData(
-        transactionId,
-        getDataFromQuestRewardsEvent(job.data.relevantEvents.RewardDepositedEvent)
-      ).andThen(({ userId, questId, xrdAmount }) =>
-        getUserById(userId, dbClient).andThen(() =>
-          dbTransactions
-            .rewardsDeposited({
-              userId,
-              questId,
-              xrdAmount
-            })
-            .andThen(() =>
-              sendMessage(userId, {
-                type: 'QuestRewardsDeposited',
-                questId,
-                traceId
-              })
-            )
-        )
+    const getCompletedRequirements = (userId: string, questId: string) =>
+      ResultAsync.fromPromise(
+        dbClient.completedQuestRequirement.findMany({
+          where: {
+            userId,
+            questId
+          }
+        }),
+        (error) => ({ reason: 'FailedToFindCompletedRequirements', jsError: error })
       )
 
-    const sendReferralXrdReward = (userId: string, questId: string, refereeUserId: string) =>
-      transactionModel(logger).add({
-        discriminator: `${questId}:DepositXrdReward:${refereeUserId}`,
-        userId,
-        type: 'DepositXrdReward',
-        questId,
-        traceId,
-        amount: config.referralRewardXrdAmount
-      })
+    const hasCompletedAllQuestRequirements = (questId: keyof Quests, userId: string) => {
+      const questDefinition = QuestDefinitions()[questId]
+      const requirements = Object.keys(questDefinition.requirements)
 
-    const prepareDataStructures = (
-      referrer: User & {
-        referredUsers: User[]
-        completedQuestRequirements: CompletedQuestRequirement[]
-        questProgress: QuestProgress[]
-      }
-    ) => {
+      return getCompletedRequirements(userId, questId).map((completedRequirements) => ({
+        isAllCompleted: completedRequirements.length === requirements.length,
+        completedRequirements
+      }))
+    }
+
+    const updateQuestProgressStatus = ({
+      userId,
+      questId,
+      status
+    }: {
+      userId: string
+      questId: string
+      status: QuestStatus
+    }) =>
+      ResultAsync.fromPromise(
+        dbClient.questProgress.upsert({
+          where: {
+            questId_userId: {
+              userId,
+              questId
+            }
+          },
+          create: {
+            userId,
+            questId,
+            status
+          },
+          update: {
+            status
+          }
+        }),
+        (error) => ({ reason: 'FailedToUpdateQuestProgress', jsError: error })
+      )
+
+    const addCompletedQuestRequirement = ({
+      questId,
+      userId,
+      requirementId
+    }: {
+      questId: string
+      userId: string
+      requirementId: string
+    }) =>
+      ResultAsync.fromPromise(
+        dbClient.completedQuestRequirement.upsert({
+          where: {
+            questId_userId_requirementId: {
+              userId,
+              questId,
+              requirementId
+            }
+          },
+          create: {
+            userId,
+            questId,
+            requirementId
+          },
+          update: {}
+        }),
+        (error) => ({ reason: 'FailedToAddCompletedRequirement', jsError: error })
+      )
+
+    const handleTiersRewards = (
+      referrer: UserByReferralCode
+    ): ResultAsync<undefined, { reason: string; jsError?: unknown }> => {
       const currentReferralsAmount = referrer.referredUsers.length
       const userId = referrer.id
       const requirements = QuestDefinitions()['ReferralQuest'].requirements
-      const tiersRequirements = referrer.completedQuestRequirements
+      const unlockedRewards = referrer.completedQuestRequirements
         .filter((req) => req.questId === 'ReferralQuest')
-        .reduce(
-          (acc, requirement) => {
-            acc[requirement.requirementId] = true
-            return acc
-          },
-          {} as Record<string, boolean>
+        .reduce<Record<string, boolean>>((acc, requirement) => {
+          acc[requirement.requirementId] = true
+          return acc
+        }, {})
+
+      const unlockReward = (tier: 'BronzeLevel' | 'SilverLevel' | 'GoldLevel') =>
+        addCompletedQuestRequirement({
+          questId: 'ReferralQuest',
+          userId,
+          requirementId: tier
+        }).andThen(() =>
+          transactionIntent.add({
+            userId,
+            discriminator: `ReferralQuest:${tier}:${userId}`,
+            type: 'DepositPartialReward',
+            requirement: tier,
+            traceId,
+            questId: 'ReferralQuest'
+          })
         )
-      return okAsync({
-        currentReferralsAmount,
-        userId,
-        requirements,
-        tiersRequirements
-      })
-    }
 
-    const handleTiersRewards = (data: {
-      currentReferralsAmount: number
-      userId: string
-      requirements: Record<string, any>
-      tiersRequirements: Record<string, boolean>
-    }) => {
-      const { currentReferralsAmount, userId, requirements, tiersRequirements } = data
+      const shouldUnlockBronzeLevel =
+        currentReferralsAmount === requirements.BronzeLevel.threshold &&
+        !unlockedRewards.BronzeLevel
 
-      const singleTierHandler = (tier: string, nextTier?: string) => {
-        return userQuestModel(logger)
-          .addCompletedRequirement('ReferralQuest', userId, tier)
+      const shouldUnlockSilverLevel =
+        currentReferralsAmount === requirements.SilverLevel.threshold &&
+        !unlockedRewards.SilverLevel
+
+      const shouldUnlockGoldLevel =
+        currentReferralsAmount === requirements.GoldLevel.threshold && !unlockedRewards.GoldLevel
+
+      if (shouldUnlockBronzeLevel) {
+        return unlockReward('BronzeLevel')
           .andThen(() =>
-            nextTier
-              ? userQuestModel(logger).updateQuestStatus(
-                  `ReferralQuest:${nextTier}`,
-                  userId,
-                  'IN_PROGRESS'
-                )
-              : okAsync(undefined)
-          )
-          .andThen(() =>
-            transactionModel(logger).add({
+            updateQuestProgressStatus({
               userId,
-              discriminator: `ReferralQuest:${tier}:${userId}`,
-              type: 'DepositPartialReward',
-              requirement: tier,
-              traceId,
-              questId: 'ReferralQuest'
+              questId: `ReferralQuest:SilverLevel`,
+              status: 'IN_PROGRESS'
             })
           )
-      }
-
-      if (
-        currentReferralsAmount === requirements.BronzeLevel.threshold &&
-        !tiersRequirements.BronzeLevel
-      ) {
-        return singleTierHandler('BronzeLevel', 'SilverLevel')
-      }
-
-      if (
-        currentReferralsAmount === requirements.SilverLevel.threshold &&
-        !tiersRequirements.SilverLevel
-      ) {
-        return singleTierHandler('SilverLevel', 'GoldLevel')
-      }
-
-      if (
-        currentReferralsAmount === requirements.GoldLevel.threshold &&
-        !tiersRequirements.GoldLevel
-      ) {
-        return singleTierHandler('GoldLevel')
+          .map(() => undefined)
+      } else if (shouldUnlockSilverLevel) {
+        return unlockReward('SilverLevel')
+          .andThen(() =>
+            updateQuestProgressStatus({
+              userId,
+              questId: `ReferralQuest:GoldLevel`,
+              status: 'IN_PROGRESS'
+            })
+          )
+          .map(() => undefined)
+      } else if (shouldUnlockGoldLevel) {
+        return unlockReward('GoldLevel').map(() => undefined)
       }
 
       return okAsync(undefined)
     }
 
-    const ensureQuestProgress = (referrer: UserByReferralCode) => {
-      return userQuestModel(logger)
-        .getQuestStatus(referrer.id, 'ReferralQuest:BronzeLevel')
-        .andThen((progress) =>
-          progress
-            ? okAsync(referrer)
-            : userQuestModel(logger)
-                .updateQuestStatus('ReferralQuest:BronzeLevel', referrer.id, 'IN_PROGRESS')
-                .map(() => referrer)
-        )
-    }
+    const getUserByReferralCode = (referralCode: string) =>
+      ResultAsync.fromPromise(
+        dbClient.user.findUnique({
+          where: { referralCode },
+          include: {
+            referredUsers: true,
+            questProgress: true,
+            completedQuestRequirements: true
+          }
+        }),
+        (error) => ({ reason: WorkerError.FailedToGetUserFromDb, jsError: error })
+      ).andThen((user) => (user ? ok(user) : err({ reason: WorkerError.UserNotFound })))
 
-    const handleReferrerRewards = ({ referredBy, id }: User, questId: string) => {
-      const isUserReferred = referredBy !== null
+    const getUserByAccountAddress = (accountAddress: string) =>
+      ResultAsync.fromPromise(
+        dbClient.user.findFirst({
+          where: { accountAddress }
+        }),
+        (error) => ({ reason: WorkerError.FailedToGetUserFromDb, jsError: error })
+      ).andThen((user) => (user ? ok(user) : err({ reason: WorkerError.UserNotFound })))
 
-      if (!isUserReferred || questId !== ReferralQuestConfig.triggerRewardAfterQuest) {
-        return okAsync(undefined)
-      }
-
-      return userModel(childLogger)
-        .getByReferralCode(referredBy)
-        .andThen((referrer) => ensureQuestProgress(referrer))
-        .andThen((referrer) => prepareDataStructures(referrer))
-        .andThen((data) =>
-          ResultAsync.combineWithAllErrors([
-            handleTiersRewards(data),
-            sendReferralXrdReward(data.userId, 'ReferralQuest', id)
-          ])
-            .mapErr((errors) => ({
-              reason: WorkerError.FailedToSendReferralRewards,
-              jsError: errors
-            }))
-            .andThen(() =>
-              sendMessage(data.userId, { type: MessageType.ReferralCompletedBasicQuests, traceId })
-            )
-        )
-    }
-
-    const handleRewardClaimed = () =>
-      ensureValidData(
-        transactionId,
-        getDataFromQuestRewardsEvent(job.data.relevantEvents.RewardClaimedEvent)
-      ).andThen(({ userId, questId, xrdAmount }) =>
-        getUserById(userId, dbClient).andThen((user) =>
-          dbTransactions
-            .rewardsClaimed({ userId, questId, xrdAmount })
-            .andThen(() =>
-              sendMessage(userId, {
-                type: 'QuestRewardsClaimed',
-                questId,
-                traceId
-              })
-            )
-            .andThen(() => handleReferrerRewards(user, questId))
-        )
+    const addReferralRewardAction = ({
+      transactionId,
+      userId,
+      xrdValue,
+      action
+    }: {
+      transactionId: string
+      userId: string
+      xrdValue: number
+      action: ReferralAction
+    }) =>
+      ResultAsync.fromPromise(
+        dbClient.referral.upsert({
+          where: {
+            eventId: transactionId,
+            userId
+          },
+          create: {
+            action,
+            eventId: transactionId,
+            userId,
+            xrdValue
+          },
+          update: {}
+        }),
+        (error) => ({ reason: 'FailedToUpdateReferralRewards', jsError: error })
       )
+
+    const handleReferrerRewards = (user: UserByReferralCode) => {
+      const questProgressResult = user.questProgress.some(
+        (quest) => quest.questId === 'ReferralQuest:BronzeLevel'
+      )
+        ? okAsync(undefined)
+        : updateQuestProgressStatus({
+            userId: user.id,
+            questId: 'ReferralQuest:BronzeLevel',
+            status: 'IN_PROGRESS'
+          }).map(() => undefined)
+
+      return questProgressResult
+        .andThen(() =>
+          addReferralRewardAction({
+            transactionId,
+            userId: user.id,
+            xrdValue: config.referralRewardXrdAmount,
+            action: 'INC'
+          })
+        )
+        .andThen(() => handleTiersRewards(user))
+        .andThen(() =>
+          sendMessage(user.id, { type: MessageType.ReferralCompletedBasicQuests, traceId })
+        )
+    }
 
     const handleAllQuestRequirementCompleted = ({
       questId,
@@ -288,9 +297,9 @@ export const EventWorkerController = ({
       questId: QuestId
       userId: string
     }) =>
-      hasAllRequirementsCompleted(questId, userId).andThen((value) =>
+      hasCompletedAllQuestRequirements(questId, userId).andThen((value) =>
         value.isAllCompleted
-          ? transactionModel(childLogger)
+          ? transactionIntent
               .add({
                 userId,
                 discriminator: `${questId}:DepositReward:${userId}`,
@@ -311,7 +320,7 @@ export const EventWorkerController = ({
       )
 
       return getUserById(userId!, dbClient).andThen(() =>
-        transactionModel(childLogger).add({
+        transactionIntent.add({
           discriminator: `CombinedElementsMintRadgem:${traceId}`,
           userId,
           type: 'CombinedElementsMintRadgem',
@@ -326,7 +335,7 @@ export const EventWorkerController = ({
       )
 
       return getUserById(userId, dbClient).andThen(() =>
-        transactionModel(childLogger)
+        transactionIntent
           .add({
             discriminator: `CombinedElementsAddRadgemImage:${radgemId}`,
             userId: userId!,
@@ -400,9 +409,58 @@ export const EventWorkerController = ({
 
     switch (type) {
       case EventId.QuestRewardDeposited:
-        return handleRewardDeposited()
+        return getDataFromQuestRewardsEvent(job.data.relevantEvents.RewardDepositedEvent)
+          .asyncAndThen(({ userId, questId }) =>
+            getUserById(userId, dbClient)
+              .andThen(() =>
+                dbTransactions.rewardsDeposited({
+                  userId,
+                  questId
+                })
+              )
+              .andThen(() =>
+                sendMessage(userId, {
+                  type: 'QuestRewardsDeposited',
+                  questId,
+                  traceId
+                })
+              )
+          )
+          .map(() => undefined)
+
       case EventId.QuestRewardClaimed:
-        return handleRewardClaimed()
+        return getDataFromQuestRewardsEvent(job.data.relevantEvents.RewardClaimedEvent)
+          .asyncAndThen(({ userId, questId, xrdAmount }) =>
+            getUserById(userId, dbClient).andThen((user) =>
+              dbTransactions
+                .rewardsClaimed({ userId: user.id, questId })
+                .andThen(() =>
+                  sendMessage(userId, {
+                    type: 'QuestRewardsClaimed',
+                    questId,
+                    traceId
+                  })
+                )
+                .andThen(() => {
+                  const shouldTriggerReferralRewardFlow =
+                    questId === ReferralQuestConfig.triggerRewardAfterQuest
+
+                  if (user.referredBy && shouldTriggerReferralRewardFlow)
+                    return getUserByReferralCode(user.referredBy).andThen(handleReferrerRewards)
+                  else if (questId === 'ReferralQuest')
+                    return addReferralRewardAction({
+                      transactionId,
+                      userId,
+                      xrdValue: xrdAmount,
+                      action: 'DEC'
+                    })
+
+                  return okAsync(undefined)
+                })
+            )
+          )
+          .map(() => undefined)
+
       case EventId.CombineElementsDeposited:
         return handelCombineElementsDepositedEvent()
       case EventId.CombineElementsMintedRadgem:
@@ -432,15 +490,12 @@ export const EventWorkerController = ({
         return getAccountAddressFromAccountAddedEvent(
           job.data.relevantEvents.AccountAddedEvent
         ).asyncAndThen((accountAddress) =>
-          userModel(childLogger)
-            .getByAccountAddress(accountAddress, {})
-            .andThen((user) => (user ? ok(user) : err({ reason: WorkerError.UserNotFound })))
-            .andThen((user) =>
-              sendMessage(user.id, {
-                type: 'HeroBadgeReadyToBeClaimed',
-                traceId: job.data.traceId
-              })
-            )
+          getUserByAccountAddress(accountAddress).andThen((user) =>
+            sendMessage(user.id, {
+              type: 'HeroBadgeReadyToBeClaimed',
+              traceId: job.data.traceId
+            })
+          )
         )
 
       case EventId.JettyReceivedClams: {

@@ -20,7 +20,7 @@ describe('GetDataFromQuestRewardsEvent', () => {
       data: {
         fields: [
           {
-            value: '<ddf270cb3276418a9ba24e86f92cc27f>',
+            value: 'ddf270cb3276418a9ba24e86f92cc27f',
             kind: 'String',
             type_name: 'UserId',
             field_name: 'user_id'
@@ -87,7 +87,7 @@ describe('GetDataFromQuestRewardsEvent', () => {
       data: {
         fields: [
           {
-            value: '<ddf270cb3276418a9ba24e86f92cc27f>',
+            value: 'ddf270cb3276418a9ba24e86f92cc27f',
             kind: 'String',
             type_name: 'UserId',
             field_name: 'user_id'

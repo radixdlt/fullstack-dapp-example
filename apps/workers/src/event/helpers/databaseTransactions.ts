@@ -1,6 +1,7 @@
 import { ResultAsync } from 'neverthrow'
 import { AppLogger } from 'common'
 import { PrismaClient, PrismaPromise, QuestStatus } from 'database'
+import { QuestId } from 'content'
 
 export const databaseTransactions = ({
   dbClient,
@@ -35,59 +36,12 @@ export const databaseTransactions = ({
       }
     })
 
-  const updateReadyToClaimReferralXrd = (userId: string, xrdAmount: number) =>
-    dbClient.referralXrd.upsert({
-      where: {
-        userId
-      },
-      create: {
-        userId,
-        readyToClaim: xrdAmount,
-        claimed: 0
-      },
-      update: {
-        readyToClaim: {
-          increment: xrdAmount
-        }
-      }
-    })
-
-  const updateClaimedReferralXrd = (userId: string, xrdAmount: number) =>
-    dbClient.referralXrd.update({
-      where: {
-        userId
-      },
-      data: {
-        claimed: {
-          increment: xrdAmount
-        },
-        readyToClaim: {
-          decrement: xrdAmount
-        }
-      }
-    })
-
-  const rewardsDeposited = ({
-    userId,
-    questId,
-    xrdAmount
-  }: {
-    userId: string
-    questId: string
-    xrdAmount: number
-  }) =>
+  const rewardsDeposited = ({ userId, questId }: { userId: string; questId: string }) =>
     ResultAsync.fromPromise(
-      dbClient.$transaction(
-        [
-          setQuestProgressStatus(QuestStatus.REWARDS_DEPOSITED, userId, questId),
-          updateEvent(transactionId, userId, questId),
-          ...[
-            questId === 'ReferralQuest'
-              ? updateReadyToClaimReferralXrd(userId, xrdAmount)
-              : undefined
-          ]
-        ].filter((query) => query !== undefined) as PrismaPromise<any>[]
-      ),
+      dbClient.$transaction([
+        setQuestProgressStatus(QuestStatus.REWARDS_DEPOSITED, userId, questId),
+        updateEvent(transactionId, userId, questId)
+      ]),
       (error) => {
         logger.error({
           error,
@@ -101,28 +55,43 @@ export const databaseTransactions = ({
       }
     )
 
-  const rewardsClaimed = ({
-    userId,
-    questId,
-    xrdAmount
-  }: {
-    userId: string
-    questId: string
-    xrdAmount: number
-  }) =>
+  const rewardsClaimed = ({ userId, questId }: { userId: string; questId: QuestId }) =>
     ResultAsync.fromPromise(
-      dbClient.$transaction(
-        [
-          setQuestProgressStatus(QuestStatus.REWARDS_CLAIMED, userId, questId),
-          updateEvent(transactionId, userId, questId),
-          ...[questId === 'ReferralQuest' ? updateClaimedReferralXrd(userId, xrdAmount) : undefined]
-        ].filter((query) => query !== undefined) as PrismaPromise<any>[]
-      ),
-      (error) => {
-        logger.error({ error, method: 'databaseTransactions.rewardsClaimed' })
+      dbClient.$transaction(async (db) => {
+        await db.questProgress.update({
+          where: {
+            questId_userId: {
+              userId,
+              questId
+            }
+          },
+          data: {
+            status: QuestStatus.REWARDS_CLAIMED
+          }
+        })
+
+        await dbClient.event.update({
+          where: {
+            transactionId
+          },
+          data: {
+            questId,
+            userId
+          }
+        })
+      }),
+      (jsError) => {
+        logger.error({
+          error: jsError,
+          method: 'databaseTransactions.rewardsClaimed',
+          data: {
+            userId,
+            questId
+          }
+        })
         return {
-          error,
-          message: 'failed to set deposit rewards database entries'
+          reason: 'FailedToUpdateDatabase',
+          jsError
         }
       }
     )

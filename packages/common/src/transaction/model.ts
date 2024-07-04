@@ -12,19 +12,24 @@ export const TransactionModel =
   (db: PrismaClient, transactionQueue: TransactionQueue) => (logger?: AppLogger) => {
     const add = ({ discriminator, userId, ...data }: TransactionJob) =>
       ResultAsync.fromPromise(
-        db.transactionIntent.create({
-          data: {
+        db.transactionIntent.upsert({
+          where: {
+            discriminator,
+            userId
+          },
+          create: {
             discriminator,
             userId,
             data
-          }
+          },
+          update: {}
         }),
         (error) => {
           logger?.error({
             error,
             method: 'add',
             model: 'TransactionModel',
-            payload: { discriminator, userId, ...data }
+            data: { discriminator, userId, ...data }
           })
           return createApiError('failed to add transaction entry', 400)()
         }

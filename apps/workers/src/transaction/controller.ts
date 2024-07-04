@@ -18,7 +18,7 @@ import BigNumber from 'bignumber.js'
 import { createCombinedElementsAddRadgemImageManifest } from './helpers/createCombinedElementsAddRadgemImageManifest'
 import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 import { WorkerOutputError, WorkerError } from '../_types'
-import { SendMessage } from '../helpers/sendMessage'
+import { MessageHelper } from '../helpers/messageHelper'
 import { SetTransactionIntentStatus } from '../helpers/setTransactionIntentStatus'
 
 export type TransactionWorkerController = ReturnType<typeof TransactionWorkerController>
@@ -26,14 +26,12 @@ export const TransactionWorkerController = ({
   auditModel,
   gatewayApi,
   tokenPriceClient,
-  sendMessage,
-  setTransactionIntentStatus
+  sendMessage
 }: {
   auditModel: AuditModel
   gatewayApi: GatewayApi
   tokenPriceClient: TokenPriceClient
-  sendMessage: SendMessage
-  setTransactionIntentStatus: SetTransactionIntentStatus
+  sendMessage: MessageHelper
 }) => {
   const handler = ({
     job,

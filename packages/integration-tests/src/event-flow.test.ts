@@ -11,6 +11,7 @@ import {
 import {
   AccountAddressModel,
   Addresses,
+  ErrorReason,
   GatewayApi,
   TransactionModel,
   UserModel,
@@ -27,6 +28,9 @@ import { createUser } from './helpers/create-user'
 import { addVerifiedPhoneNumberRequirement } from './helpers/add-completed-requirement'
 import { completeQuestRequirements } from './helpers/complete-quest-requirements'
 import { waitForMessage } from './helpers/wait-for-message'
+import { RadixEngineToolkit, PrivateKey, PublicKey } from '@radixdlt/radix-engine-toolkit'
+import { secureRandom } from '../../typescript-wallet/src/helpers'
+import { AccountHelper } from './helpers/accountHelper'
 
 const eventQueueEvents = new QueueEvents(Queues.EventQueue, { connection: config.redis })
 const transactionQueueEvents = new QueueEvents(Queues.TransactionQueue, {
@@ -51,6 +55,8 @@ const gatewayApi = GatewayApi(2)
 const db = new PrismaClient()
 const redisClient = new RedisConnection(config.redis)
 const networkName = gatewayApi.networkConfig.networkName
+
+const accountHelper = AccountHelper(db)
 
 const logger = appLogger
 
@@ -280,5 +286,33 @@ describe('Event flows', () => {
     })
 
     expect(questRequirementMessageExists).toBeTruthy()
+  })
+
+  describe('Referral flow', () => {
+    it.only('should', { timeout: 30_000, skip: false }, async () => {
+      const result = await accountHelper
+        .createAccount()
+        .andThen(({ user }) =>
+          ResultAsync.combine(
+            new Array(10)
+              .fill(0)
+              .map(() =>
+                accountHelper
+                  .createAccount({ referredBy: user.referralCode })
+                  .map(({ user }) => user)
+              )
+          ).map((users) => ({ referrer: user, users }))
+        )
+
+      if (result.isErr()) throw result.error
+
+      const { referrer, users } = result.value
+
+      // const { user: referee } = refereeResult.value
+
+      console.log({ referrer, users })
+
+      expect(true).toBe(true)
+    })
   })
 })

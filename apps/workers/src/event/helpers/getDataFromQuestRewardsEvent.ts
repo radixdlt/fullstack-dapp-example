@@ -6,10 +6,11 @@ import {
   ProgrammaticScryptoSborValueEnum,
   ProgrammaticScryptoSborValueDecimal
 } from '@radixdlt/babylon-gateway-api-sdk'
-import { isQuestRewardEvent } from './isQuestRewardEvent'
 import { stripNonFungibleLocalId } from './stripNonFungibleLocalId'
 import { config } from '../../config'
 import { Addresses } from 'common'
+import { QuestId } from 'content'
+import { err, ok, Result } from 'neverthrow'
 
 type SborValueKind = ProgrammaticScryptoSborValue['kind']
 
@@ -51,28 +52,27 @@ export const getXrdAmountFromRewards = (rewardsField: ProgrammaticScryptoSborVal
   return xrdAmount
 }
 
-export const getDataFromQuestRewardsEvent = (event: EventsItem) => {
-  if (isQuestRewardEvent(event)) {
-    if (event.data.kind === 'Tuple') {
-      const userIdField = event.data.fields.find(
-        (field) => field.field_name === 'user_id' && field.kind === 'String'
-      ) as ProgrammaticScryptoSborValueString
-      const questIdField = event.data.fields.find(
-        (field) => field.field_name === 'quest_id' && field.kind === 'String'
-      ) as ProgrammaticScryptoSborValueString
-      const rewardsField = event.data.fields.find(
-        (field) => field.field_name === 'rewards' && field.kind === 'Array'
-      ) as ProgrammaticScryptoSborValueArray
+export const getDataFromQuestRewardsEvent = (
+  event: EventsItem
+): Result<{ userId: string; questId: QuestId; xrdAmount: number }, { reason: string }> => {
+  if (event.data.kind === 'Tuple') {
+    const userIdField = event.data.fields.find(
+      (field) => field.field_name === 'user_id' && field.kind === 'String'
+    ) as ProgrammaticScryptoSborValueString
+    const questIdField = event.data.fields.find(
+      (field) => field.field_name === 'quest_id' && field.kind === 'String'
+    ) as ProgrammaticScryptoSborValueString
+    const rewardsField = event.data.fields.find(
+      (field) => field.field_name === 'rewards' && field.kind === 'Array'
+    ) as ProgrammaticScryptoSborValueArray
 
-      if (!userIdField || !questIdField || !rewardsField) return
+    if (!userIdField || !questIdField || !rewardsField) return err({ reason: 'InvalidEventData' })
 
-      const userId = stripNonFungibleLocalId(userIdField.value)
-      const questId = questIdField.value
-      const xrdAmount = getXrdAmountFromRewards(rewardsField)
+    const userId = stripNonFungibleLocalId(userIdField.value)!
+    const questId = questIdField.value as QuestId
+    const xrdAmount = getXrdAmountFromRewards(rewardsField)
 
-      return { userId, questId, xrdAmount }
-    }
+    return ok({ userId, questId, xrdAmount })
   }
-
-  return
+  return err({ reason: 'FailedToGetDataFromEvent' })
 }
