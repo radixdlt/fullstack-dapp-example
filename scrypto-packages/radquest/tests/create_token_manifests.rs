@@ -32,7 +32,7 @@ fn create_a_super_admin_badge() {
 }
 
 #[test]
-fn create_an_admin_badge() {
+fn create_admin_badge() {
     let network = NetworkDefinition::mainnet();
 
     let manifest_builder = ManifestBuilder::new().create_fungible_resource(
@@ -44,9 +44,17 @@ fn create_an_admin_badge() {
                 minter => OWNER;
                 minter_updater => OWNER;
             },
+            burn_roles: burn_roles! {
+                burner => OWNER;
+                burner_updater => OWNER;
+            },
             recall_roles: recall_roles! {
                 recaller => OWNER;
                 recaller_updater => OWNER;
+            },
+            withdraw_roles: withdraw_roles! {
+                withdrawer => OWNER;
+                withdrawer_updater => OWNER;
             },
             ..Default::default()
         },

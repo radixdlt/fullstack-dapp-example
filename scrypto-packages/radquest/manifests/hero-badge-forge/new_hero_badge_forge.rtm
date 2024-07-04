@@ -5,6 +5,12 @@ CALL_METHOD
 ;
 CALL_METHOD
     Address("${account}")
+    "create_proof_of_amount"
+    Address("${super_admin_badge}")
+    Decimal("1")
+;
+CALL_METHOD
+    Address("${account}")
     "withdraw"
     Address("${admin_badge}")
     Decimal("1")
