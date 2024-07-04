@@ -85,7 +85,7 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
   [EventId.JettyReceivedClams]: {
     DepositEvent: resourceDeposited(
       config.radQuest.resources.clamAddress,
-      config.radQuest.accounts.jetty
+      config.radQuest.accounts.jetty.address
     ),
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress)
   },
