@@ -46,7 +46,8 @@ type OnLedgerRequirement = {
 
 type OffLedgerRequirement = {
   type: 'offLedger'
-  completedByUser: boolean
+  completedByUser?: boolean
+  threshold?: number
 }
 
 type ContentRequirement = {
@@ -58,7 +59,7 @@ export type QuestDefinition = {
   category: QuestCategory
   trackedAccountAddress: boolean
   rewards: Readonly<QuestReward[]>
-  tiersRewards?: QuestReward[][]
+  partialRewards?: Record<string, QuestReward[]>
   preRequisites: Readonly<string[]>
   requirements: Requirements
   splashImage?: string
@@ -291,8 +292,8 @@ export const QuestDefinitions = () => {
     ReferralQuest: {
       id: 'ReferralQuest',
       category: 'advanced',
-      tiersRewards: [
-        [
+      partialRewards: {
+        BronzeLevel: [
           {
             name: 'element',
             amount: 10
@@ -306,7 +307,7 @@ export const QuestDefinitions = () => {
             amount: 200
           }
         ],
-        [
+        SilverLevel: [
           {
             name: 'element',
             amount: 10
@@ -320,7 +321,7 @@ export const QuestDefinitions = () => {
             amount: 200
           }
         ],
-        [
+        GoldLevel: [
           {
             name: 'element',
             amount: 10
@@ -334,7 +335,7 @@ export const QuestDefinitions = () => {
             amount: 200
           }
         ]
-      ],
+      },
       rewards: [
         {
           name: 'element',
@@ -352,7 +353,23 @@ export const QuestDefinitions = () => {
       trackedAccountAddress: false,
       minutesToComplete: 3,
       preRequisites: ['TransferTokens'],
-      requirements: {}
+      requirements: {
+        BronzeLevel: {
+          type: 'offLedger',
+          threshold: 5
+        },
+        SilverLevel: {
+          type: 'offLedger',
+          threshold: 15
+        },
+        GoldLevel: {
+          type: 'offLedger',
+          threshold: 35
+        },
+        SuperLevel: {
+          type: 'offLedger'
+        }
+      }
     }
   } as const satisfies { [key: string]: QuestDefinition }
 }

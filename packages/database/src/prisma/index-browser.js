@@ -142,6 +142,13 @@ exports.Prisma.UserPhoneNumberScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.ReferralScalarFieldEnum = {
+  eventId: 'eventId',
+  userId: 'userId',
+  action: 'action',
+  xrdValue: 'xrdValue'
+};
+
 exports.Prisma.ChallengeScalarFieldEnum = {
   challenge: 'challenge',
   createdAt: 'createdAt'
@@ -264,6 +271,11 @@ exports.UserType = exports.$Enums.UserType = {
   ADMIN: 'ADMIN'
 };
 
+exports.ReferralAction = exports.$Enums.ReferralAction = {
+  INC: 'INC',
+  DEC: 'DEC'
+};
+
 exports.QuestStatus = exports.$Enums.QuestStatus = {
   IN_PROGRESS: 'IN_PROGRESS',
   REWARDS_DEPOSITED: 'REWARDS_DEPOSITED',
@@ -287,6 +299,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   RadMorphImage: 'RadMorphImage',
   UserPhoneNumber: 'UserPhoneNumber',
+  Referral: 'Referral',
   Challenge: 'Challenge',
   Event: 'Event',
   Message: 'Message',

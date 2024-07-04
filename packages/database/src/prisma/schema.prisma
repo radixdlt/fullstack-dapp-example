@@ -39,6 +39,7 @@ model User {
   referredUsers              User[]                      @relation("Referrer")
   transactions               TransactionIntent[]
   marketing                  Marketing[]
+  referals                   Referral[]
 }
 
 model RadMorphImage {
@@ -52,6 +53,23 @@ model UserPhoneNumber {
   createdAt   DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
+}
+
+enum ReferralAction {
+  INC
+  DEC
+}
+
+model Referral {
+  eventId  String         @id @unique
+  userId   String
+  action   ReferralAction
+  xrdValue Decimal
+
+  event Event @relation(fields: [eventId], references: [transactionId])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model Challenge {
@@ -68,7 +86,8 @@ model Event {
   processedAt   DateTime?
   error         String?
 
-  user User? @relation(fields: [userId], references: [id])
+  user     User?      @relation(fields: [userId], references: [id])
+  referral Referral[]
 }
 
 model Message {

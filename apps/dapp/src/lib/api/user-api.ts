@@ -1,6 +1,6 @@
 import { fetchWrapper } from '$lib/helpers/fetch-wrapper'
 import type { SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
-import type { User } from 'database'
+import type { QuestStatus, User } from 'database'
 
 const me = (serverFetch?: typeof fetch) =>
   fetchWrapper<User>((serverFetch ?? fetch)('/api/user')).map(({ data }) => data)
@@ -41,7 +41,12 @@ const setUserField = ({ field, ...props }: SetUserFieldProps) =>
   ).map(({ data }) => data)
 
 const getReferrals = () =>
-  fetchWrapper<string[]>(
+  fetchWrapper<{
+    referrals: string[]
+    claimed: number
+    readyToClaim: number
+    progress: Record<'BronzeLevel' | 'SilverLevel' | 'GoldLevel', QuestStatus>
+  }>(
     fetch(`/api/user/referrals`, {
       method: 'GET'
     })

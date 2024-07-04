@@ -48,6 +48,19 @@ export type DepositXrdToAccount = {
   type: 'DepositXrdToAccount'
 }
 
+export type DepositPartialRewardTransactionJob = {
+  type: 'DepositPartialReward'
+  questId: string
+  requirement: string
+}
+
+export type DepositXrdRewardTransactionJob = {
+  type: 'DepositXrdReward'
+  questId: string
+  amount: number
+  transactionId: string
+}
+
 export type TransactionJob = {
   userId: string
   discriminator: string
@@ -55,6 +68,8 @@ export type TransactionJob = {
 } & (
   | DepositRewardTransactionJob
   | CombinedElementsMintRadgemTransactionJob
+  | DepositPartialRewardTransactionJob
+  | DepositXrdRewardTransactionJob
   | CombinedElementsAddRadgemImageTransactionJob
   | PopulateResourcesTransactionJob
   | AddAccountAddressToHeroBadgeForgeJob

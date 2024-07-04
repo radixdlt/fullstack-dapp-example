@@ -1,5 +1,13 @@
 import { ResultAsync, err, errAsync, okAsync } from 'neverthrow'
-import type { PrismaClient, Prisma, User, UserPhoneNumber } from 'database'
+import type {
+  PrismaClient,
+  Prisma,
+  User,
+  UserPhoneNumber,
+  CompletedQuestRequirement,
+  QuestProgress,
+  QuestStatus
+} from 'database'
 import { ReferralQuestConfig, type AppLogger } from '../'
 import { type ApiError, createApiError } from '../helpers'
 import { getRandomReferralCode } from './get-random-referral-code'
@@ -7,6 +15,19 @@ import { getRandomReferralCode } from './get-random-referral-code'
 type GetByIdReturnType<T> = User & T extends { referredUsers: true }
   ? { referredUsers: User[] }
   : User
+
+export type UserByReferralCode = User & {
+  referredUsers: User[]
+  questProgress: QuestProgress[]
+  completedQuestRequirements: CompletedQuestRequirement[]
+}
+
+export type ReferralsState = {
+  claimed: number
+  readyToClaim: number
+  referrals: string[]
+  progress: Record<string, QuestStatus>
+}
 
 type UserModelType = {
   doesUserExist: (identityAddress: string) => ResultAsync<boolean, ApiError>
@@ -23,7 +44,8 @@ type UserModelType = {
     accountAddress: string,
     include: T
   ) => ResultAsync<User | null, ApiError>
-  getReferrals: (id: string) => ResultAsync<any, ApiError>
+  getByReferralCode: (referralCode: string) => ResultAsync<UserByReferralCode, ApiError>
+  getReferrals: (id: string) => ResultAsync<ReferralsState, ApiError>
   getPhoneNumber: (phoneNumber: string) => ResultAsync<UserPhoneNumber | null, ApiError>
   addAccount: (userId: string, accountAddress: string) => ResultAsync<void, ApiError>
   setUserName: (userId: string, name: string) => ResultAsync<User, ApiError>
@@ -161,22 +183,78 @@ export const UserModel =
         data ? okAsync(data) : errAsync(createApiError('user not found', 404)())
       )
     const getReferrals = (id: string) =>
+      ResultAsync.combineWithAllErrors([
+        ResultAsync.fromPromise(
+          db.$queryRaw`
+            SELECT "name" FROM "User" 
+              INNER JOIN "QuestProgress" ON "User".id = "QuestProgress"."userId"
+              WHERE 
+              "User"."referredBy" = (SELECT "referralCode" FROM "User" WHERE id = ${id})
+                AND "QuestProgress"."questId" = ${ReferralQuestConfig.triggerRewardAfterQuest} 
+                AND ("QuestProgress"."status" = 'COMPLETED' OR "QuestProgress"."status" = 'REWARDS_CLAIMED');
+            `,
+          (error) => {
+            logger?.error({ error, method: 'getReferrals.raw', model: 'UserModel' })
+            return 'failed to get referrals'
+          }
+        ),
+        // ResultAsync.fromPromise(db.referralXrd.findFirst({ where: { userId: id } }), (error) => {
+        //   logger?.error({ error, method: 'getReferrals.referralXrd', model: 'UserModel' })
+        //   return 'failed to get referralXrd'
+        // }),
+        ResultAsync.fromPromise(
+          db.questProgress.findMany({
+            where: { userId: id, questId: { startsWith: 'ReferralQuest:' } }
+          }),
+          (error) => {
+            logger?.error({ error, method: 'getReferrals.questProgress', model: 'UserModel' })
+            return 'failed to get referralXrd'
+          }
+        ).map((progress) =>
+          (progress || []).reduce(
+            (acc, curr) => {
+              acc[curr.questId.split(':')[1]] = curr.status
+              return acc
+            },
+            {} as Record<string, QuestStatus>
+          )
+        )
+      ])
+        .map(
+          ([referrals, progress]: [any, any]) =>
+            ({
+              referrals: referrals.map((referral: { name: string }) => referral.name),
+              readyToClaim: 0,
+              claimed: 0,
+              progress
+            }) as ReferralsState
+        )
+        .mapErr((jsError) => createApiError('failed to get referrals', 400)(jsError))
+
+    const getByReferralCode = (referralCode: string) =>
       ResultAsync.fromPromise(
-        db.$queryRaw`
-        SELECT "name" FROM "User" 
-          INNER JOIN "QuestProgress" ON "User".id = "QuestProgress"."userId"
-          WHERE 
-          "User"."referredBy" = (SELECT "referralCode" FROM "User" WHERE id = ${id})
-            AND "QuestProgress"."questId" = ${ReferralQuestConfig.triggerRewardAfterQuest} 
-            AND "QuestProgress".status = 'COMPLETED';
-      `,
+        db.user.findUnique({
+          where: { referralCode },
+          include: {
+            referredUsers: true,
+            questProgress: true,
+            completedQuestRequirements: true
+          }
+        }),
         (error) => {
-          logger?.error({ error, method: 'getReferrals', model: 'UserModel' })
-          return createApiError('failed to get referrals', 400)()
+          logger?.error({
+            error,
+            method: 'getByReferralCode',
+            where: { referralCode },
+            model: 'UserModel'
+          })
+          return createApiError('failed to get user by referral code', 400)()
         }
+      ).andThen((data) =>
+        data
+          ? okAsync(data as UserByReferralCode)
+          : errAsync(createApiError('user not found by referral code', 404)())
       )
-        .map((data) => data as { name: string }[])
-        .map((data) => data.map(({ name }) => name))
 
     const getPhoneNumber = (phoneNumber: string): ResultAsync<UserPhoneNumber | null, ApiError> =>
       ResultAsync.fromPromise<UserPhoneNumber | null, ApiError>(
@@ -226,6 +304,7 @@ export const UserModel =
       getById,
       getByIdentityAddress,
       getByAccountAddress,
+      getByReferralCode,
       getReferrals,
       getPhoneNumber,
       addAccount,

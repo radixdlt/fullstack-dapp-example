@@ -3,13 +3,11 @@ import { ConnectionOptions } from 'bullmq'
 import {
   EventModel,
   MessageApi,
-  UserQuestModel,
   AuditModel,
   UserModel,
   TransactionModel,
   AccountAddressModel,
-  GatewayApi,
-  ConfigModel
+  GatewayApi
 } from 'common'
 import { logger } from './helpers/logger'
 import { RedisConnection, getQueues } from 'queues'
@@ -21,8 +19,9 @@ import { TransactionWorkerController } from './transaction/controller'
 import { TokenPriceClient } from './token-price-client'
 import { SystemWorker } from './system/worker'
 import { SystemWorkerController } from './system/controller'
-import { SendMessage } from './helpers/sendMessage'
-import { SetTransactionIntentStatus } from './helpers/setTransactionIntentStatus'
+import { MessageHelper } from './helpers/messageHelper'
+import { TransactionIntentHelper } from './helpers/transactionIntentHelper'
+import { ReferralRewardAction } from './helpers/referalReward'
 
 const app = async () => {
   // test db connection
@@ -39,32 +38,29 @@ const app = async () => {
 
   const gatewayApi = GatewayApi(config.networkId)
   const eventModel = EventModel(dbClient)
-  const configModel = ConfigModel(dbClient)
   const auditModel = AuditModel(dbClient)
   const transactionModel = TransactionModel(dbClient, transactionQueue)
   const redisClient = new RedisConnection(config.redis)
   const tokenPriceClient = TokenPriceClient({ logger, redisClient })
+  const sendMessage = MessageHelper({ dbClient, messageApi })
+  const referralRewardAction = ReferralRewardAction(dbClient)
 
   const eventWorkerController = EventWorkerController({
-    dbClient,
-    userQuestModel: UserQuestModel(dbClient),
-    eventModel,
-    userModel: UserModel(dbClient),
-    transactionModel,
-    AccountAddressModel: AccountAddressModel(redisClient),
-    configModel,
-    tokenPriceClient,
-    transactionQueue,
     logger,
-    sendMessage: SendMessage({ dbClient, messageApi })
+    dbClient,
+    tokenPriceClient,
+    transactionIntent: TransactionIntentHelper({ dbClient, transactionQueue }),
+    AccountAddressModel: AccountAddressModel(redisClient),
+    sendMessage,
+    referralRewardAction
   })
 
   const transactionWorkerController = TransactionWorkerController({
     auditModel,
     gatewayApi,
     tokenPriceClient,
-    sendMessage: SendMessage({ dbClient, messageApi }),
-    setTransactionIntentStatus: SetTransactionIntentStatus(dbClient)
+    sendMessage,
+    referralRewardAction
   })
 
   TransactionWorker(connection, {

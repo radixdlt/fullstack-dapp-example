@@ -1,3 +1,4 @@
+import { err, ok } from 'neverthrow'
 import { fetchWrapper } from '../helpers/fetch-wrapper'
 import type { AppLogger } from '../helpers/logger'
 
@@ -11,6 +12,7 @@ export const MessageType = {
   CombineElementsAddRadgemImage: 'CombineElementsAddRadgemImage',
   CombineElementsClaimed: 'CombineElementsClaimed',
   HeroBadgeReadyToBeClaimed: 'HeroBadgeReadyToBeClaimed',
+  ReferralCompletedBasicQuests: 'ReferralCompletedBasicQuests',
   XrdDepositedToAccount: 'XrdDepositedToAccount'
 } as const
 
@@ -52,6 +54,7 @@ type Messages = {
   [MessageType.XrdDepositedToAccount]: {
     traceId: string
   }
+  [MessageType.ReferralCompletedBasicQuests]: { traceId: string }
 }
 
 export type Message = {
@@ -61,8 +64,9 @@ export type Message = {
 export type MessageApi = ReturnType<typeof MessageApi>
 export const MessageApi = ({ baseUrl, logger }: { baseUrl: string; logger?: AppLogger }) => {
   return {
-    send: (userId: string, data: Message, id: number) =>
-      fetchWrapper<undefined>(
+    send: (userId: string, data: Message, id: number) => {
+      logger?.debug({ method: 'messageApi.send', userId, data, id })
+      return fetchWrapper<undefined>(
         fetch(`${baseUrl}/api/send`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -72,8 +76,11 @@ export const MessageApi = ({ baseUrl, logger }: { baseUrl: string; logger?: AppL
         .map(({ status }) => {
           logger?.debug({ method: 'messageApi.send.response', data, status })
         })
-        .mapErr((error) => {
+        .orElse((error) => {
+          if (error.status === 404) return ok(undefined)
           logger?.error({ method: 'messageApi.send.error', data, error })
+          return err(error)
         })
+    }
   }
 }

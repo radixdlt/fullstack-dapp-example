@@ -3,8 +3,8 @@ import { ResultAsync, ok } from 'neverthrow'
 import { WorkerError, WorkerOutputError } from '../_types'
 import { MessageApi, Message } from 'common'
 
-export type SendMessage = ReturnType<typeof SendMessage>
-export const SendMessage =
+export type MessageHelper = ReturnType<typeof MessageHelper>
+export const MessageHelper =
   ({ dbClient, messageApi }: { dbClient: PrismaClient; messageApi: MessageApi }) =>
   (userId: string, message: Message) =>
     ResultAsync.fromPromise(

@@ -15,10 +15,10 @@ import {
   TransactionModel,
   UserModel,
   UserQuestModel,
-  appLogger
+  createAppLogger
 } from 'common'
 import { PrismaClient, User } from 'database'
-import { ResultAsync, err, errAsync } from 'neverthrow'
+import { ResultAsync, errAsync } from 'neverthrow'
 import { Queues, RedisConnection, getQueues } from 'queues'
 import { config } from './config'
 import { QueueEvents } from 'bullmq'
@@ -27,6 +27,7 @@ import { createUser } from './helpers/create-user'
 import { addVerifiedPhoneNumberRequirement } from './helpers/add-completed-requirement'
 import { completeQuestRequirements } from './helpers/complete-quest-requirements'
 import { waitForMessage } from './helpers/wait-for-message'
+import { AccountHelper, Account } from './helpers/accountHelper'
 
 const eventQueueEvents = new QueueEvents(Queues.EventQueue, { connection: config.redis })
 const transactionQueueEvents = new QueueEvents(Queues.TransactionQueue, {
@@ -52,7 +53,9 @@ const db = new PrismaClient()
 const redisClient = new RedisConnection(config.redis)
 const networkName = gatewayApi.networkConfig.networkName
 
-const logger = appLogger
+const accountHelper = AccountHelper(db)
+
+const logger = createAppLogger({ level: 'debug' })
 
 if (!networkName) throw new Error('PUBLIC_NETWORK_ID env var not set to a valid network')
 
@@ -83,6 +86,94 @@ const startQuestAndAddTrackedAccount = (userId: string, questId: string) =>
         : errAsync('User not found')
     )
     .andThen(() => userQuestModel.updateQuestStatus(questId, userId, 'IN_PROGRESS'))
+
+const completeTransferTokensQuest = async (user: User) => {
+  const questId = 'TransferTokens'
+
+  await startQuestAndAddTrackedAccount(user.id, questId)
+  await completeQuestRequirements(db)(user.id, questId, [
+    'PersonaQuiz',
+    'TransactionQuiz',
+    'XrdQuiz'
+  ])
+
+  await mintClams(10, user.accountAddress!)
+}
+
+const executeUserReferralFlow = async ({ user, getXrdFromFaucet, submitTransaction }: Account) => {
+  console.log('Getting XRD from faucet')
+  await getXrdFromFaucet()
+  console.log('Mining hero badge')
+  await mintHeroBadge(user.id, user.accountAddress!, undefined, [], 0, {
+    heroBadgeAddress: radquestEntityAddresses.badges.heroBadgeAddress
+  })
+  console.log('Completing transfer tokens quest')
+  await completeTransferTokensQuest(user)
+  await submitTransaction(`
+    CALL_METHOD
+      Address("${user.accountAddress}")
+      "lock_fee"
+      Decimal("50")
+    ;
+    CALL_METHOD
+      Address("${user.accountAddress}")
+      "withdraw"
+      Address("${addresses.resources.clamAddress}")
+      Decimal("10")
+    ;
+    TAKE_FROM_WORKTOP
+      Address("${addresses.resources.clamAddress}")
+      Decimal("10")
+      Bucket("clam_bucket")
+    ;
+    CALL_METHOD
+      Address("${addresses.accounts.jetty.address}")
+      "try_deposit_or_abort"
+      Bucket("clam_bucket")
+      Enum<0u8>()
+    ;
+  `).andThen((api) => api.pollTransactionStatus())
+  await waitForMessage(logger, db)(user.id, 'QuestRewardsDeposited')
+  console.log('Claiming rewards for transfer tokens quest')
+  await submitTransaction(`
+    CALL_METHOD
+      Address("${user.accountAddress}")
+      "lock_fee"
+      Decimal("10")
+    ;
+    CALL_METHOD
+      Address("${user.accountAddress}")
+      "create_proof_of_non_fungibles"
+      Address("${addresses.badges.heroBadgeAddress}")
+      Array<NonFungibleLocalId>(NonFungibleLocalId("<${user.id}>"))
+    ;
+    POP_FROM_AUTH_ZONE
+      Proof("hero_badge_proof")
+    ;
+    CALL_METHOD
+      Address("${addresses.components.questRewards}")
+      "claim_reward"
+      "TransferTokens"
+      Proof("hero_badge_proof")
+      None
+    ;
+    CALL_METHOD
+      Address("${user.accountAddress}")
+      "deposit_batch"
+      Expression("ENTIRE_WORKTOP")
+    ;
+  `).andThen((api) => api.pollTransactionStatus())
+}
+
+const getXrdRewardToClaim = async (userId: string) =>
+  db.referral
+    .aggregate({
+      where: { userId },
+      _sum: {
+        xrdValue: true
+      }
+    })
+    .then((result) => result._sum?.xrdValue?.toNumber())
 
 describe('Event flows', () => {
   beforeAll(async () => {
@@ -231,6 +322,7 @@ describe('Event flows', () => {
     expect(
       (await accountAddressModel.getTrackedAddressUserId(accountAddress, questId))._unsafeUnwrap()
     ).toBe(user.id)
+
     await mintClams(10, accountAddress)
 
     await radixEngineClient.getXrdFromFaucet()
@@ -256,7 +348,7 @@ describe('Event flows', () => {
                 Bucket("bucket1")
             ;
             CALL_METHOD
-                Address("${addresses.accounts.jetty}")
+                Address("${addresses.accounts.jetty.address}")
                 "try_deposit_or_abort"
                 Bucket("bucket1")
                 Enum<0u8>()
@@ -280,5 +372,83 @@ describe('Event flows', () => {
     })
 
     expect(questRequirementMessageExists).toBeTruthy()
+  })
+
+  describe('Referral flow', () => {
+    it(
+      'should complete basic quest, deposit reward, claim reward',
+      { timeout: 90_000, skip: false },
+      async () => {
+        const numberOfReferredUsers = 1
+        const accountsResult = await accountHelper
+          .createAccount({ logger, networkId: 2 })
+          .andThen((referrer) =>
+            ResultAsync.combine(
+              new Array(numberOfReferredUsers).fill(0).map(() =>
+                accountHelper.createAccount({
+                  referredBy: referrer.user.referralCode,
+                  logger,
+                  networkId: 2
+                })
+              )
+            ).map((users) => ({ referrer, users }))
+          )
+
+        if (accountsResult.isErr()) throw accountsResult.error
+
+        const { referrer, users } = accountsResult.value
+
+        await referrer.getXrdFromFaucet()
+        await mintHeroBadge(referrer.user.id, referrer.user.accountAddress!, undefined, [], 0, {
+          heroBadgeAddress: radquestEntityAddresses.badges.heroBadgeAddress
+        })
+
+        for (const account of users) {
+          await executeUserReferralFlow(account)
+          await waitForMessage(logger, db)(referrer.user.id, 'ReferralCompletedBasicQuests')
+        }
+
+        await waitForMessage(logger, db)(referrer.user.id, 'QuestRewardsDeposited')
+
+        expect(await getXrdRewardToClaim(referrer.user.id)).toEqual(50)
+
+        await referrer
+          .submitTransaction(
+            `
+        CALL_METHOD
+          Address("${referrer.user.accountAddress}")
+          "lock_fee"
+          Decimal("10")
+        ;
+        CALL_METHOD
+          Address("${referrer.user.accountAddress}")
+          "create_proof_of_non_fungibles"
+          Address("${addresses.badges.heroBadgeAddress}")
+          Array<NonFungibleLocalId>(NonFungibleLocalId("<${referrer.user.id}>"))
+        ;
+        POP_FROM_AUTH_ZONE
+          Proof("hero_badge_proof")
+        ;
+        CALL_METHOD
+          Address("${addresses.components.questRewards}")
+          "claim_reward"
+          "ReferralQuest"
+          Proof("hero_badge_proof")
+          None
+        ;
+        CALL_METHOD
+          Address("${referrer.user.accountAddress}")
+          "deposit_batch"
+          Expression("ENTIRE_WORKTOP")
+        ;
+  `
+          )
+          .andThen((api) => api.pollTransactionStatus())
+
+        await waitForMessage(logger, db)(referrer.user.id, 'QuestRewardsClaimed')
+
+        expect(await getXrdRewardToClaim(referrer.user.id)).toEqual(0)
+      }
+    )
   })
 })

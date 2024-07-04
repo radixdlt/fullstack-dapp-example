@@ -1,6 +1,7 @@
 import { ResultAsync } from 'neverthrow'
 import { AppLogger } from 'common'
-import { PrismaClient, QuestStatus } from 'database'
+import { PrismaClient, PrismaPromise, QuestStatus } from 'database'
+import { QuestId } from 'content'
 
 export const databaseTransactions = ({
   dbClient,
@@ -12,14 +13,19 @@ export const databaseTransactions = ({
   transactionId: string
 }) => {
   const setQuestProgressStatus = (status: QuestStatus, userId: string, questId: string) =>
-    dbClient.questProgress.update({
+    dbClient.questProgress.upsert({
       where: {
         questId_userId: {
           userId,
           questId
         }
       },
-      data: {
+      update: {
+        status
+      },
+      create: {
+        userId,
+        questId,
         status
       }
     })
@@ -54,17 +60,43 @@ export const databaseTransactions = ({
       }
     )
 
-  const rewardsClaimed = ({ userId, questId }: { userId: string; questId: string }) =>
+  const rewardsClaimed = ({ userId, questId }: { userId: string; questId: QuestId }) =>
     ResultAsync.fromPromise(
-      dbClient.$transaction([
-        setQuestProgressStatus(QuestStatus.REWARDS_CLAIMED, userId, questId),
-        updateEvent(transactionId, userId, questId)
-      ]),
-      (error) => {
-        logger.error({ error, method: 'databaseTransactions.rewardsClaimed' })
+      dbClient.$transaction(async (db) => {
+        await db.questProgress.update({
+          where: {
+            questId_userId: {
+              userId,
+              questId
+            }
+          },
+          data: {
+            status: QuestStatus.REWARDS_CLAIMED
+          }
+        })
+
+        await dbClient.event.update({
+          where: {
+            transactionId
+          },
+          data: {
+            questId,
+            userId
+          }
+        })
+      }),
+      (jsError) => {
+        logger.error({
+          error: jsError,
+          method: 'databaseTransactions.rewardsClaimed',
+          data: {
+            userId,
+            questId
+          }
+        })
         return {
-          error,
-          message: 'failed to set deposit rewards database entries'
+          reason: 'FailedToUpdateDatabase',
+          jsError
         }
       }
     )
