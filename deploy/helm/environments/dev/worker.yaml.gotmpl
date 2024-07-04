@@ -28,11 +28,23 @@ secrets:
     aws_secret_key: "postgresql-password"
     secret_key: "workers-database-password"
 
-  - external_secret_name: worker-mnemonic
-    env_variable: "MNEMONIC"
+  - external_secret_name: worker-payer-mnemonic
+    env_variable: "PAYER_MNEMONIC"
     aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
     aws_secret_key: "stokenet_mnemonic"
-    secret_key: "workers_stokenet_mnemonic"
+    secret_key: "workers_stokenet_payer_mnemonic"
+  
+  - external_secret_name: worker-system-mnemonic
+    env_variable: "SYSTEM_MNEMONIC"
+    aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
+    aws_secret_key: "stokenet_mnemonic"
+    secret_key: "workers_stokenet_system_mnemonic"
+
+  - external_secret_name: worker-owner-mnemonic
+    env_variable: "OWNER_MNEMONIC"
+    aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
+    aws_secret_key: "stokenet_mnemonic"
+    secret_key: "workers_stokenet_owner_mnemonic"
 
   - external_secret_name: worker-mailer-lite-api-key
     env_variable: "MAILER_LITE_API_KEY"
