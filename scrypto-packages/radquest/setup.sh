@@ -16,7 +16,6 @@ export package=`resim publish . | sed "s/Success! New Package: //"`
 
 echo "\nGenerating Resources..."
 export super_admin_badge=`resim run manifests/create_a_super_admin_badge.rtm | grep "Resource:" | grep -o "resource_.*"`
-resim run manifests/update_super_admin_badge_owner.rtm
 export admin_badge=`resim run manifests/create_admin_badges.rtm | grep "Resource:" | grep -o "resource_.*"`
 export hero_badge=`resim run manifests/create_hero_badge.rtm | grep "Resource:" | grep -o "resource_.*"`
 export kyc_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
