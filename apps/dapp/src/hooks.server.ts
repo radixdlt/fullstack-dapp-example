@@ -12,7 +12,8 @@ import {
   Addresses,
   MessageModel,
   NotificationModel,
-  MarketingModel
+  MarketingModel,
+  RadMorphModel
 } from 'common'
 import { UserType } from 'database'
 import { dbClient } from '$lib/db'
@@ -36,6 +37,7 @@ import {
   createForbiddenResponse,
   createUnauthorizedResponse
 } from '$lib/server/helpers/create-error-response'
+import { RadmorphController } from '$lib/server/radmorph/controller'
 
 const networkId = +PUBLIC_NETWORK_ID
 
@@ -54,6 +56,7 @@ const accountAddressModel = AccountAddressModel(redisClient)
 const addresses = Addresses(networkId)
 const notificationModel = NotificationModel(dbClient)
 const marketingModel = MarketingModel(dbClient)
+const radMorphModel = RadMorphModel(dbClient)
 
 export const handle: Handle = async ({ event, resolve }) => {
   const origin = event.request.headers.get('origin')
@@ -96,7 +99,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     jwt: JWT(config.jwt),
     messageModel: messageModel(logger),
     notificationModel: notificationModel(logger),
-    marketingModel: marketingModel(logger)
+    marketingModel: marketingModel(logger),
+    radMorphModel: radMorphModel(logger)
   } satisfies ControllerDependencies
 
   event.locals.controllers = {
@@ -105,7 +109,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     authController: AuthController(event.locals.dependencies),
     messageController: MessageController(event.locals.dependencies),
     oneTimePasswordController: OneTimePasswordController(event.locals.dependencies),
-    notificationController: NotificationController(event.locals.dependencies)
+    notificationController: NotificationController(event.locals.dependencies),
+    radmorphController: RadmorphController(event.locals.dependencies)
   }
 
   if (event.route.id?.includes('(protected)')) {
@@ -143,8 +148,6 @@ export const handle: Handle = async ({ event, resolve }) => {
     }
 
     const response = await resolve(event)
-    response.headers.set('Access-Control-Allow-Origin', origin || '*')
-    response.headers.set('Access-Control-Allow-Credentials', 'true')
     return response
   }
 
