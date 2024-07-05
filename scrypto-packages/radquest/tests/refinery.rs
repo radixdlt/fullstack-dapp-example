@@ -376,8 +376,7 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
 
     // Act
     let result = refinery.create_radmorph(
-        radgems.take(dec!(1), &mut env)?,
-        radgems.take(dec!(1), &mut env)?,
+        radgems.take(dec!(2), &mut env)?,
         morph_card,
         key_image_url,
         &mut env,
@@ -411,8 +410,7 @@ fn cannot_create_radmorph_with_incorrect_image_url() -> Result<(), RuntimeError>
 
     // Act
     let result = refinery.create_radmorph(
-        radgems.take(dec!(1), &mut env)?,
-        radgems.take(dec!(1), &mut env)?,
+        radgems.take(dec!(2), &mut env)?,
         morph_card,
         UncheckedUrl("https://www.example.com".to_string()),
         &mut env,
@@ -486,8 +484,7 @@ pub fn cannot_create_radmorph_when_disabled() -> Result<(), RuntimeError> {
     LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
     refinery.disable(&mut env)?;
     let result = refinery.create_radmorph(
-        radgems.take(dec!(1), &mut env)?,
-        radgems.take(dec!(1), &mut env)?,
+        radgems.take(dec!(2), &mut env)?,
         morph_card,
         UncheckedUrl("https://www.example.com".to_string()),
         &mut env,
