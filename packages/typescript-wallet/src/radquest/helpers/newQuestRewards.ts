@@ -45,8 +45,7 @@ export const newQuestRewards = () =>
           )
           Bucket("admin_badges")
           Address("${config.radQuest.badges.heroBadgeAddress}")
-          # TODO: change to KYC badge resource address
-          Address("${config.radQuest.badges.heroBadgeAddress}")
+          Address("${config.radQuest.badges.kycBadgeAddress}")
         ; 
        `)
         .andThen((value) =>
