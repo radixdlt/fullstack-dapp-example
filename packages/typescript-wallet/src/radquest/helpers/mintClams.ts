@@ -9,7 +9,7 @@ export const mintClams = (amount: number, accountAddress: string) => {
         CALL_METHOD 
           Address("${wellKnownAddresses.accountAddress.payerAccount}") 
           "lock_fee"
-          Decimal("10")
+          Decimal("20")
         ;
 
         CALL_METHOD

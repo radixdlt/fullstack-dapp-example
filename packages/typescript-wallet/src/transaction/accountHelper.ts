@@ -1,10 +1,10 @@
-import { ResultAsync } from 'neverthrow'
-import { createUser } from './create-user'
+import { ResultAsync, okAsync } from 'neverthrow'
 import crypto from 'node:crypto'
-import { RadixEngineToolkit, PrivateKey, PublicKey } from '@radixdlt/radix-engine-toolkit'
+import { RadixEngineToolkit } from '@radixdlt/radix-engine-toolkit'
 import { PrismaClient } from 'database'
-import { TransactionHelper } from 'typescript-wallet'
-import { AppLogger } from 'common'
+import { TransactionHelper } from './transaction-helper'
+import { AppLogger, createUser } from 'common'
+import { generateMnemonic, getDerivationPath, mnemonicToKeyPair } from '../helpers'
 
 export const secureRandom = (byteCount: number): string =>
   crypto.randomBytes(byteCount).toString('hex')
@@ -13,18 +13,31 @@ export type Account = ReturnType<
   Awaited<ReturnType<AccountHelper['createAccount']>>['_unsafeUnwrap']
 >
 export type CreateAccountInput = {
-  privateKeyHex?: string
+  mnemonic?: string
   networkId?: number
   referredBy?: string
   logger?: AppLogger
+  derivationPath?: string
 }
 export type AccountHelper = ReturnType<typeof AccountHelper>
 export const AccountHelper = (dbClient: PrismaClient) => {
   const createAccount = (input?: CreateAccountInput) => {
-    const { privateKeyHex = secureRandom(32), networkId = 1, referredBy, logger } = input || {}
-    const privateKey = new PrivateKey.Ed25519(privateKeyHex)
+    const {
+      mnemonic = generateMnemonic(),
+      networkId = 1,
+      referredBy,
+      logger,
+      derivationPath
+    } = input || {}
 
-    const publicKey = new PublicKey.Ed25519(privateKey.publicKeyHex())
+    const keyPairResult = mnemonicToKeyPair(
+      mnemonic,
+      derivationPath ?? getDerivationPath(networkId)
+    )
+
+    if (keyPairResult.isErr()) throw new Error('Unable to derive key pair from mnemonic')
+
+    const { privateKey, publicKey } = keyPairResult.value
 
     const getAccountAddress = () =>
       ResultAsync.fromPromise(
@@ -39,17 +52,14 @@ export const AccountHelper = (dbClient: PrismaClient) => {
       )
 
     const { submitTransaction, getXrdFromFaucet } = TransactionHelper({
-      networkId: networkId,
-      privateKeyHex: privateKeyHex,
+      networkId,
+      onSignature: (builder) => okAsync(builder.sign(privateKey)),
       logger
     })
 
     return ResultAsync.combine([getAccountAddress(), getIdentityAddress()])
       .andThen(([accountAddress, identityAddress]) =>
-        ResultAsync.fromPromise(
-          createUser(dbClient)(identityAddress, accountAddress, referredBy),
-          (error) => error as Error
-        )
+        createUser(dbClient)({ identityAddress, accountAddress, referredBy })
       )
       .map((user) => ({
         user,

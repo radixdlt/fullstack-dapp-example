@@ -5,7 +5,6 @@ import {
   type TransactionManifest,
   ManifestBuilder,
   ManifestSborStringRepresentation,
-  PrivateKey,
   PublicKey,
   RadixEngineToolkit,
   TransactionBuilder,
@@ -16,27 +15,9 @@ import {
 } from '@radixdlt/radix-engine-toolkit'
 import { Result, ResultAsync, err, ok } from 'neverthrow'
 import { typedError } from '../helpers/typed-error'
-import { mnemonicToKeyPair } from '../helpers/mnemonicToKeyPair'
+import { ENTITY_TYPE, KEY_TYPE, mnemonicToKeyPair } from '../helpers/mnemonicToKeyPair'
 import { GatewayClient } from './gateway-client'
 import { type AppLogger, GatewayApi, appLogger as logger } from 'common'
-
-const getSignerKeys = (mnemonic: string, derivationPath: string) => {
-  const { privateKey } = mnemonicToKeyPair(mnemonic, derivationPath).unwrapOr({
-    privateKey: ''
-  })
-
-  if (!privateKey) return err('Unable to derive private key')
-
-  const signerPrivateKey = new PrivateKey.Ed25519(privateKey)
-
-  const signerPublicKey = new PublicKey.Ed25519(signerPrivateKey.publicKeyHex())
-
-  return ok({
-    privateKey: signerPrivateKey,
-    publicKey: signerPublicKey,
-    publicKeyHex: Buffer.from(signerPublicKey.publicKey).toString('hex')
-  })
-}
 
 const deriveAccountAddressFromPublicKey = (publicKey: PublicKey, networkId: number) => {
   return ResultAsync.fromPromise(
@@ -69,20 +50,9 @@ export const RadixEngineClient = <
   const networkConfig = gatewayApi.networkConfig
   const { networkId, dashboardUrl } = networkConfig
 
-  const KEY_TYPE = {
-    TRANSACTION_SIGNING: 1460,
-    AUTHENTICATION_SIGNING: 1678,
-    MESSAGE_ENCRYPTION: 1391
-  } as const
-
-  const ENTITY_TYPE = {
-    ACCOUNT: 525,
-    IDENTITY: 618
-  } as const
-
   const result = Result.combine(
     Object.entries(accounts).map(([name, derivationIndex]) =>
-      getSignerKeys(
+      mnemonicToKeyPair(
         mnemonic,
         `m/44'/1022'/${networkId}'/${ENTITY_TYPE.ACCOUNT}'/${KEY_TYPE.TRANSACTION_SIGNING}'/${derivationIndex}'`
       ).map(({ publicKey, privateKey }) => ({
@@ -100,7 +70,7 @@ export const RadixEngineClient = <
   ) as { [n in keyof T]: Omit<(typeof result.value)[0], 'name'> }
 
   const getIdentityAddressAtDerivationIndex = (derivationIndex: number) =>
-    getSignerKeys(
+    mnemonicToKeyPair(
       mnemonic,
       `m/44'/1022'/${networkId}'/${ENTITY_TYPE.IDENTITY}'/${KEY_TYPE.AUTHENTICATION_SIGNING}'/${derivationIndex}'`
     )
@@ -329,7 +299,7 @@ export const RadixEngineClient = <
     buildTransaction,
     submitTransaction,
     getManifestBuilder,
-    getSignerKeys,
+    getSignerKeys: mnemonicToKeyPair,
     gatewayClient,
     decodeSbor,
     convertStringManifest,

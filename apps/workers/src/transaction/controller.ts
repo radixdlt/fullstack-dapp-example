@@ -88,6 +88,7 @@ export const TransactionWorkerController = ({
         .pollTransactionStatus(txId)
         .mapErr((jsError) => ({
           reason: WorkerError.FailedToPollTransactionStatus,
+          txId,
           jsError
         }))
         .map(() => txId)

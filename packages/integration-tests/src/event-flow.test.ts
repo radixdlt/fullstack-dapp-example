@@ -6,7 +6,10 @@ import {
   mintElements,
   combineElementsDeposit,
   radquestEntityAddresses,
-  mintClams
+  mintClams,
+  AccountHelper,
+  Account,
+  TransactionHelper
 } from 'typescript-wallet'
 import {
   AccountAddressModel,
@@ -15,19 +18,18 @@ import {
   TransactionModel,
   UserModel,
   UserQuestModel,
-  createAppLogger
+  createAppLogger,
+  createUser
 } from 'common'
 import { PrismaClient, User } from 'database'
-import { ResultAsync, errAsync } from 'neverthrow'
+import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 import { Queues, RedisConnection, getQueues } from 'queues'
 import { config } from './config'
 import { QueueEvents } from 'bullmq'
 import crypto from 'crypto'
-import { createUser } from './helpers/create-user'
 import { addVerifiedPhoneNumberRequirement } from './helpers/add-completed-requirement'
 import { completeQuestRequirements } from './helpers/complete-quest-requirements'
 import { waitForMessage } from './helpers/wait-for-message'
-import { AccountHelper, Account } from './helpers/accountHelper'
 
 const eventQueueEvents = new QueueEvents(Queues.EventQueue, { connection: config.redis })
 const transactionQueueEvents = new QueueEvents(Queues.TransactionQueue, {
@@ -99,6 +101,21 @@ const completeTransferTokensQuest = async (user: User) => {
 
   await mintClams(10, user.accountAddress!)
 }
+
+const createUsers = async ({
+  referredBy,
+  numberOfUsers = 1,
+  networkId = 2
+}: Partial<{ referredBy: string; numberOfUsers: number; networkId: number }>) =>
+  ResultAsync.combine(
+    new Array(numberOfUsers).fill(0).map(() =>
+      accountHelper.createAccount({
+        referredBy,
+        logger,
+        networkId
+      })
+    )
+  )
 
 const executeUserReferralFlow = async ({ user, getXrdFromFaucet, submitTransaction }: Account) => {
   console.log('Getting XRD from faucet')
@@ -185,7 +202,7 @@ describe('Event flows', () => {
     const value = result.value
     accountAddress = value[0].testAccount
     identityAddress = value[1]
-    user = await createUser(db)(identityAddress, accountAddress)
+    user = (await createUser(db)({ identityAddress, accountAddress }))._unsafeUnwrap()
     await addVerifiedPhoneNumberRequirement(db)(user.id)
     queues = getQueues(config.redis)
   })
@@ -379,26 +396,21 @@ describe('Event flows', () => {
       'should complete basic quest, deposit reward, claim reward',
       { timeout: 90_000, skip: false },
       async () => {
-        const numberOfReferredUsers = 1
-        const accountsResult = await accountHelper
-          .createAccount({ logger, networkId: 2 })
-          .andThen((referrer) =>
-            ResultAsync.combine(
-              new Array(numberOfReferredUsers).fill(0).map(() =>
-                accountHelper.createAccount({
-                  referredBy: referrer.user.referralCode,
-                  logger,
-                  networkId: 2
-                })
-              )
-            ).map((users) => ({ referrer, users }))
-          )
+        const referrer = (
+          await accountHelper.createAccount({ logger, networkId: 2 })
+        )._unsafeUnwrap()
 
-        if (accountsResult.isErr()) throw accountsResult.error
-
-        const { referrer, users } = accountsResult.value
+        const users = (
+          await createUsers({ referredBy: referrer.user.referralCode, numberOfUsers: 1 })
+        )._unsafeUnwrap()
 
         await referrer.getXrdFromFaucet()
+
+        const systemAccount = TransactionHelper({
+          networkId: 2,
+          onSignature: (builder) => okAsync(builder)
+        })
+
         await mintHeroBadge(referrer.user.id, referrer.user.accountAddress!, undefined, [], 0, {
           heroBadgeAddress: radquestEntityAddresses.badges.heroBadgeAddress
         })
@@ -415,33 +427,33 @@ describe('Event flows', () => {
         await referrer
           .submitTransaction(
             `
-        CALL_METHOD
-          Address("${referrer.user.accountAddress}")
-          "lock_fee"
-          Decimal("10")
-        ;
-        CALL_METHOD
-          Address("${referrer.user.accountAddress}")
-          "create_proof_of_non_fungibles"
-          Address("${addresses.badges.heroBadgeAddress}")
-          Array<NonFungibleLocalId>(NonFungibleLocalId("<${referrer.user.id}>"))
-        ;
-        POP_FROM_AUTH_ZONE
-          Proof("hero_badge_proof")
-        ;
-        CALL_METHOD
-          Address("${addresses.components.questRewards}")
-          "claim_reward"
-          "ReferralQuest"
-          Proof("hero_badge_proof")
-          None
-        ;
-        CALL_METHOD
-          Address("${referrer.user.accountAddress}")
-          "deposit_batch"
-          Expression("ENTIRE_WORKTOP")
-        ;
-  `
+              CALL_METHOD
+                Address("${referrer.user.accountAddress}")
+                "lock_fee"
+                Decimal("10")
+              ;
+              CALL_METHOD
+                Address("${referrer.user.accountAddress}")
+                "create_proof_of_non_fungibles"
+                Address("${addresses.badges.heroBadgeAddress}")
+                Array<NonFungibleLocalId>(NonFungibleLocalId("<${referrer.user.id}>"))
+              ;
+              POP_FROM_AUTH_ZONE
+                Proof("hero_badge_proof")
+              ;
+              CALL_METHOD
+                Address("${addresses.components.questRewards}")
+                "claim_reward"
+                "ReferralQuest"
+                Proof("hero_badge_proof")
+                None
+              ;
+              CALL_METHOD
+                Address("${referrer.user.accountAddress}")
+                "deposit_batch"
+                Expression("ENTIRE_WORKTOP")
+              ;
+          `
           )
           .andThen((api) => api.pollTransactionStatus())
 
