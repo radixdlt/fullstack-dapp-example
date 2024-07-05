@@ -22,7 +22,7 @@ export const mintAdminBadge = ({
         ;
 
         CALL_METHOD
-          Address("${wellKnownAddresses.accountAddress.dAppDefinitionAccount}")
+          Address("${wellKnownAddresses.accountAddress.ownerAccount}")
           "create_proof_of_amount"
           Address("${superAdminBadgeAddress}")
           Decimal("1")
@@ -42,7 +42,7 @@ export const mintAdminBadge = ({
         
         `)
         .andThen((transactionManifest) =>
-          submitTransaction({ transactionManifest, signers: ['dAppDefinitionAccount'] })
+          submitTransaction({ transactionManifest, signers: ['ownerAccount'] })
         )
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
