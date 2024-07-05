@@ -48,7 +48,7 @@ export const createSuperAdminBadge = () =>
                   false                                                         
                 ),
                 "tags" => Tuple(
-                  Some(Enum<Metadata::StringArray>(Array<String>("badge", "radquest"))),                  
+                  Some(Enum<Metadata::StringArray>(Array<String>("radquest", "badge"))),                  
                   false                                                         
                 )
               ),
