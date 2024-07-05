@@ -1,7 +1,7 @@
 use scrypto_test::prelude::*;
 
 use radquest::kyc_oracle::kyc_oracle_test::*;
-use radquest::quest_rewards::{quest_rewards_test::*, DidData, QuestId, UserId};
+use radquest::quest_rewards::{quest_rewards_test::*, QuestId, UserId};
 
 struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,
@@ -33,7 +33,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
             &mut env,
         )?;
     let kyc_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
-        .mint_initial_supply([DidData { radquest_kyc: true }], &mut env)?;
+        .mint_initial_supply([()], &mut env)?;
 
     let quest_rewards = QuestRewards::new(
         super_admin_badge.resource_address(&mut env)?,

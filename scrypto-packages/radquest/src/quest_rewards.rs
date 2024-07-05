@@ -10,12 +10,6 @@ pub struct UserId(pub String);
 #[sbor(transparent)]
 pub struct QuestId(pub String);
 
-// TODO: Update with actual KycData struct when available
-#[derive(ScryptoSbor, NonFungibleData, PartialEq, Eq, Debug, Clone)]
-pub struct DidData {
-    pub radquest_kyc: bool,
-}
-
 #[derive(ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 enum RewardState {
     Unclaimed {
@@ -134,7 +128,7 @@ mod quest_rewards {
             &self,
             quest_id: &QuestId,
             hero_badge: Proof,
-            did_badge: Option<Proof>,
+            kyc_badge: Option<Proof>,
         ) -> UserId {
             let user_id = self.get_user_id_from_badge_proof(hero_badge);
 
@@ -155,16 +149,7 @@ mod quest_rewards {
                     });
 
                     if resources_record.contains_key(&XRD) && kyc_required {
-                        // Check did_badge for KYC validity
-                        let non_fungible_data: DidData = did_badge
-                            .unwrap()
-                            .check(self.kyc_badge_address)
-                            .as_non_fungible()
-                            .non_fungible()
-                            .data();
-                        if !non_fungible_data.radquest_kyc {
-                            panic!("KYC is not valid");
-                        }
+                        kyc_badge.unwrap().check(self.kyc_badge_address);
                     };
                 }
             }
