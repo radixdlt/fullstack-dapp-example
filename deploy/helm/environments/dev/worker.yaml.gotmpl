@@ -28,6 +28,12 @@ secrets:
     aws_secret_key: "postgresql-password"
     secret_key: "workers-database-password"
 
+  - external_secret_name: worker-mnemonic
+    env_variable: "MNEMONIC"
+    aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
+    aws_secret_key: "stokenet_mnemonic"
+    secret_key: "workers_stokenet_mnemonic"
+
   - external_secret_name: worker-payer-mnemonic
     env_variable: "PAYER_MNEMONIC"
     aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
