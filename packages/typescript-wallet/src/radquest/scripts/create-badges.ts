@@ -12,8 +12,10 @@ const mintAdminBadgeToSystemAccount = (adminBadgeAddress: string, superAdminBadg
     })
   )
 
-createBadgeResources().andThen(({ adminBadgeAddress, superAdminBadgeAddress, heroBadgeAddress }) =>
-  mintAdminBadgeToSystemAccount(adminBadgeAddress, superAdminBadgeAddress).map(() =>
-    logger.debug({ adminBadgeAddress, superAdminBadgeAddress, heroBadgeAddress })
+createBadgeResources()
+  .andThen(({ adminBadgeAddress, superAdminBadgeAddress, heroBadgeAddress }) =>
+    mintAdminBadgeToSystemAccount(adminBadgeAddress, superAdminBadgeAddress).map(() =>
+      logger.debug({ adminBadgeAddress, superAdminBadgeAddress, heroBadgeAddress })
+    )
   )
-)
+  .mapErr((error) => logger.error(error))

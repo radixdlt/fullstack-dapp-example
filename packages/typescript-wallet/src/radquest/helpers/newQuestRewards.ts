@@ -12,7 +12,7 @@ export const newQuestRewards = () =>
             Decimal("100")
         ;
         CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress.dAppDefinitionAccount}")
+            Address("${wellKnownAddresses.accountAddress.ownerAccount}")
             "create_proof_of_amount"
             Address("${config.radQuest.badges.superAdminBadgeAddress}") 
             Decimal("1")
@@ -45,14 +45,13 @@ export const newQuestRewards = () =>
           )
           Bucket("admin_badges")
           Address("${config.radQuest.badges.heroBadgeAddress}")
-          # TODO: change to KYC badge resource address
-          Address("${config.radQuest.badges.heroBadgeAddress}")
+          Address("${config.radQuest.badges.kycBadgeAddress}")
         ; 
        `)
         .andThen((value) =>
           submitTransaction({
             transactionManifest: value,
-            signers: ['systemAccount', 'dAppDefinitionAccount']
+            signers: ['systemAccount', 'ownerAccount']
           })
         )
         .andThen(({ txId }) =>

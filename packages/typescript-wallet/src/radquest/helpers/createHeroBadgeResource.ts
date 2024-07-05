@@ -32,6 +32,12 @@ export const createHeroBadgeResource = (adminBadge: string) => {
                             Enum<14u8>(
                                 Array<Enum>(
                                     Enum<0u8>(
+                                        12u8
+                                    ),
+                                    Enum<0u8>(
+                                        12u8
+                                    ),
+                                    Enum<0u8>(
                                         198u8
                                     ),
                                     Enum<1u8>(
@@ -56,6 +62,8 @@ export const createHeroBadgeResource = (adminBadge: string) => {
                                 Enum<1u8>(
                                     Enum<0u8>(
                                         Array<String>(
+                                            "name",
+                                            "description",
                                             "key_image_url",
                                             "quests_completed",
                                             "quest_counter"
@@ -87,15 +95,20 @@ export const createHeroBadgeResource = (adminBadge: string) => {
                 Enum<1u8>(
                     Tuple(
                         Enum<0u8>(),
-                        Enum<1u8>(
-                            Enum<1u8>()
-                        )
+                        Enum<0u8>()
                     )
                 ),
                 Enum<0u8>(),
                 Enum<0u8>(),
                 Enum<0u8>(),
-                Enum<0u8>(),
+                Enum<1u8>(
+                    Tuple(
+                        Enum<1u8>(
+                            Enum<1u8>()
+                        ),
+                        Enum<0u8>()
+                    )
+                ),
                 Enum<0u8>(),
                 Enum<0u8>()
             )
@@ -104,18 +117,29 @@ export const createHeroBadgeResource = (adminBadge: string) => {
                     "name" => Tuple(
                         Enum<1u8>(
                             Enum<0u8>(
-                                "Hero Badges"
+                                "RadQuest Hero Badges"
                             )
                         ),
-                        true
+                        false
                     ),
                     "description" => Tuple(
                         Enum<1u8>(
                             Enum<0u8>(
-                                "Hero Badges are handed to each nobel RadQuest champion as they set forth."
+                                "A unique Hero Badge NFT is given to every RadQuest quester. It is presented whenever interacting with RadQuest, like claiming rewards or crafting RadMorphs."
                             )
                         ),
-                        true
+                        false
+                    ),
+                    "tags" => Tuple(
+                        Enum<1u8>(
+                            Enum<128u8>(
+                                Array<String>(
+                                    "radquest",
+                                    "badge"
+                                )
+                            )
+                        ),
+                        false
                     ),
                     "icon_url" => Tuple(
                         Enum<1u8>(
@@ -123,7 +147,7 @@ export const createHeroBadgeResource = (adminBadge: string) => {
                                 "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"
                             )
                         ),
-                        true
+                        false
                     )
                 ),
                 Map<String, Enum>()
@@ -132,7 +156,7 @@ export const createHeroBadgeResource = (adminBadge: string) => {
         ;
         `)
         .andThen((transactionManifest) =>
-          submitTransaction({ transactionManifest, signers: ['dAppDefinitionAccount'] })
+          submitTransaction({ transactionManifest, signers: ['systemAccount'] })
         )
         .andThen(({ txId }) =>
           radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)

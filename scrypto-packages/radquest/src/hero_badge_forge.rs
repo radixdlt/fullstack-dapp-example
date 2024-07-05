@@ -4,6 +4,8 @@ use crate::quest_rewards::{QuestId, UserId};
 
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor, PartialEq, Eq, Debug, Clone)]
 pub struct HeroBadgeData {
+    name: String,
+    description: String,
     #[mutable]
     key_image_url: Url,
     #[mutable]
@@ -23,7 +25,7 @@ mod hero_badge_forge {
       methods {
         disable => restrict_to: [super_admin];
         add_user_account => restrict_to: [admin];
-        claim_badge=> PUBLIC;
+        claim_badge => PUBLIC;
         hero_completed_quest => restrict_to: [admin];
         update_key_image_url => restrict_to: [admin];
       }
@@ -94,6 +96,8 @@ mod hero_badge_forge {
             self.admin_badge.as_fungible().authorize_with_amount(1, || {
                 self.hero_badge_manager
                     .mint_non_fungible(&NonFungibleLocalId::string(user_id.0).unwrap(), HeroBadgeData {
+                        name: "Your Hero Badge".to_string(),
+                        description: "Your progress through your RadQuest journey is tracked right on your Hero Badge. Take a look at the “quests_completed” to see what you’ve accomplished!".to_string(),
                         key_image_url: Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"),
                         quests_completed: vec![],
                         quest_counter: 0,

@@ -13,7 +13,7 @@ export const newClamDex = (name: string, description: string, price?: number) =>
     Decimal("500")
 ;
 CALL_METHOD
-    Address("${wellKnownAddresses.accountAddress.dAppDefinitionAccount}")
+    Address("${wellKnownAddresses.accountAddress.ownerAccount}")
     "create_proof_of_amount"
     Address("${config.radQuest.badges.superAdminBadgeAddress}") 
     Decimal("1")
@@ -60,7 +60,7 @@ CALL_METHOD
         .andThen((value) =>
           submitTransaction({
             transactionManifest: value,
-            signers: ['systemAccount', 'dAppDefinitionAccount']
+            signers: ['systemAccount', 'ownerAccount']
           })
         )
         .andThen(({ txId }) =>
