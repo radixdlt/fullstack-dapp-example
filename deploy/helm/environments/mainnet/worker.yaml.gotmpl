@@ -29,21 +29,21 @@ secrets:
   
   - external_secret_name: worker-payer-mnemonic
     env_variable: "PAYER_MNEMONIC"
-    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/worker-payer"
+    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/worker-payer-primary"
     aws_secret_key: "mainnet_mnemonic"
-    secret_key: "workers_mainnet_payer_mnemonic"
+    secret_key: "mnemonic"
   
   - external_secret_name: worker-system-mnemonic
     env_variable: "SYSTEM_MNEMONIC"
-    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/worker-system"
+    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/worker-system-primary"
     aws_secret_key: "mainnet_mnemonic"
-    secret_key: "workers_mainnet_system_mnemonic"
+    secret_key: "mnemonic"
 
   - external_secret_name: worker-owner-mnemonic
     env_variable: "OWNER_MNEMONIC"
-    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/worker-owner"
+    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/worker-owner-primary"
     aws_secret_key: "mainnet_mnemonic"
-    secret_key: "workers_mainnet_owner_mnemonic"
+    secret_key: "mnemonic"
 
   - external_secret_name: worker-mailer-lite-api-key
     env_variable: "MAILER_LITE_API_KEY"
