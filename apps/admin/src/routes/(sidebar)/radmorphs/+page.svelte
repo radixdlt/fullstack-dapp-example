@@ -53,7 +53,6 @@
         on:click={async () => {
           fetch('/radmorphs/populate-image-oracle', {
             method: 'POST',
-            body: JSON.stringify(filesToBeUploaded),
             headers: {
               'Content-Type': 'application/json'
             }
