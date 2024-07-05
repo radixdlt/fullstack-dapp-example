@@ -7,6 +7,7 @@ import {
   PublicKey,
   RadixEngineToolkit,
   TransactionBuilder,
+  TransactionBuilderIntentSignaturesStep,
   TransactionHeader,
   TransactionManifest,
   bucket,
@@ -15,22 +16,21 @@ import {
 } from '@radixdlt/radix-engine-toolkit'
 import { typedError, GatewayApi, AppLogger } from 'common'
 import { ResultAsync, err, ok, okAsync } from 'neverthrow'
+import { secureRandom } from '../helpers'
 
 export type TransactionHelper = ReturnType<typeof TransactionHelper>
 
 export const TransactionHelper = ({
   networkId,
-  privateKeyHex,
+  onSignature,
   logger
 }: {
   networkId: number
-  privateKeyHex: string
+  onSignature: (
+    builder: TransactionBuilderIntentSignaturesStep
+  ) => ResultAsync<TransactionBuilderIntentSignaturesStep, Error>
   logger?: AppLogger
 }) => {
-  if (!privateKeyHex) throw new Error('Private key not provided')
-
-  const privateKey = new PrivateKey.Ed25519(privateKeyHex)
-
   const gatewayClient = GatewayApi(networkId)
 
   const submitNotarizedTransactionHex = (notarized_transaction_hex: string) =>
@@ -95,16 +95,23 @@ export const TransactionHelper = ({
 
   const getTransactionBuilder = () => ResultAsync.fromSafePromise(TransactionBuilder.new())
 
+  const createNotaryKeyPair = () => new PrivateKey.Ed25519(secureRandom(32))
+
   const createSignedNotarizedTransaction = (
     transactionManifest: TransactionManifest,
     message?: Message
-  ) =>
-    ResultAsync.combine([getTransactionBuilder(), createTransactionHeader(privateKey.publicKey())])
+  ) => {
+    const notaryPrivateKey = createNotaryKeyPair()
+    return ResultAsync.combine([
+      getTransactionBuilder(),
+      createTransactionHeader(notaryPrivateKey.publicKey())
+    ])
       .map(([builder, transactionHeader]) => builder.header(transactionHeader))
       .map((builder) => (message ? builder.message(message) : builder))
       .map((builder) => builder.manifest(transactionManifest))
-      .map((builder) => builder.sign(privateKey))
-      .map((builder) => builder.notarize(privateKey))
+      .andThen(onSignature)
+      .map((builder) => builder.notarize(notaryPrivateKey))
+  }
 
   const compileNotarizedTransaction = (notarizedTransaction: NotarizedTransaction) =>
     ResultAsync.fromPromise(
