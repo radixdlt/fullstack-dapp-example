@@ -18,7 +18,8 @@
     "bullmq": "^5.7.8",
     "database": "*",
     "neverthrow": "^6.1.0",
-    "pino": "^8.17.2"
+    "pino": "^8.17.2",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.5",

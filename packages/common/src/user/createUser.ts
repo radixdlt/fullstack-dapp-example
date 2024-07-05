@@ -1,7 +1,7 @@
 import { PrismaClient } from 'database'
 import { ResultAsync } from 'neverthrow'
 import { getRandomReferralCode } from './get-random-referral-code'
-import { randomUUID } from 'node:crypto'
+import { v4 } from 'uuid'
 
 export const createUser =
   (db: PrismaClient) =>
@@ -19,7 +19,7 @@ export const createUser =
         data: {
           identityAddress,
           accountAddress,
-          id: randomUUID().replace(/-/g, ''),
+          id: v4().replace(/-/g, ''),
           referralCode: getRandomReferralCode(),
           referredBy
         }
