@@ -1,49 +1,27 @@
-import {
-  Addresses,
-  GatewayApi,
-  RadMorphModel,
-  UserModel,
-  createApiError,
-  type AppLogger
-} from 'common'
-import type { ControllerMethodContext } from '../_types'
+import { Addresses, createApiError } from 'common'
+import type { ControllerDependencies, ControllerMethodContext } from '../_types'
 import { config } from '$lib/config'
 import { Result, ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
-import { dbClient } from '$lib/db'
 import { type ColorCode, type ShaderCode, type ShapeCode } from 'common'
 
-import { chunk } from '@radixdlt/babylon-gateway-api-sdk'
-import { Queue } from 'bullmq'
-import { SystemJobType, type SystemJob } from 'queues'
 import { getCardShape } from './helpers/get-card-shape'
 import { getRadgemCodes } from './helpers/get-radgem-codes'
 import { confirmAccountHasLocalIds } from './helpers/confirm-account-has-local-ids'
-import { validateRadmorphConfiguration } from './helpers/validate-radmorph-configuration'
 import { validateRadmorphImageBody } from './helpers/validate-radmorph-image-body'
 
-const RADMORPH_CHUNK_SIZE = 350
-
+export type RadmorphController = ReturnType<typeof RadmorphController>
 export const RadmorphController = ({
-  gatewayApi = GatewayApi(config.dapp.networkId),
-  userModel = UserModel(dbClient),
-  radMorphModel = RadMorphModel(dbClient),
-  systemQueue = new Queue<SystemJob>('SystemQueue', { connection: config.redis })
-}: Partial<{
-  gatewayApi: GatewayApi
-  userModel: UserModel
-  radMorphModel: RadMorphModel
-  systemQueue: Queue<SystemJob>
-}>) => {
-  const getKeyImageUrl = (
-    logger: AppLogger,
-    radmorphAttributes: {
-      shape: ShapeCode
-      material: ShaderCode
-      color1: ColorCode
-      color2: ColorCode
-    }
-  ) =>
-    radMorphModel(logger)
+  radMorphModel,
+  gatewayApi,
+  userModel
+}: ControllerDependencies) => {
+  const getKeyImageUrl = (radmorphAttributes: {
+    shape: ShapeCode
+    material: ShaderCode
+    color1: ColorCode
+    color2: ColorCode
+  }) =>
+    radMorphModel
       .getUrl(radmorphAttributes)
       .andThen((data) =>
         data ? ok(data.url) : err(createApiError('Radmorph image not found', 404)())
@@ -52,7 +30,7 @@ export const RadmorphController = ({
   const addresses = Addresses(config.dapp.networkId)
 
   const getUserAccountAddress = (ctx: ControllerMethodContext, userId: string) =>
-    userModel(ctx.logger)
+    userModel
       .getById(userId, {})
       .andThen((user) =>
         user?.accountAddress
@@ -95,68 +73,12 @@ export const RadmorphController = ({
           const { color: color2, material: material2, rarity: rarity2 } = radgem2Codes
           const material = rarity1 >= rarity2 ? material1 : material2
 
-          return getKeyImageUrl(ctx.logger, { shape, material, color1, color2 })
+          return getKeyImageUrl({ shape, material, color1, color2 })
         })
         .map((imageUrl) => ({ data: { imageUrl }, httpResponseCode: 200 }))
     )
 
-  const addChunksToQueue = (
-    ctx: ControllerMethodContext,
-    chunks: { id: string; url: string }[][]
-  ) =>
-    ResultAsync.fromPromise(
-      systemQueue.addBulk(
-        chunks.map((chunk) => ({
-          name: crypto.randomUUID(),
-          data: {
-            traceId: ctx.traceId,
-            type: SystemJobType.PopulateRadmorphs,
-            data: chunk
-          }
-        }))
-      ),
-      (e) => createApiError('Failed to add chunks to queue', 400)(e)
-    )
-
-  const duplicateConfigurationWithReversedColors = (configuration: Record<string, string>) =>
-    Object.entries(configuration).reduce(
-      (acc, [id, url]) => {
-        const [shape, shader, color1, color2] = id.split('_')
-        const reversedId = `${shape}_${shader}_${color2}_${color1}`
-        acc[id] = url
-        acc[reversedId] = url
-        return acc
-      },
-      {} as Record<string, string>
-    )
-
-  const uploadRadmorphConfiguration = (ctx: ControllerMethodContext, requestBody: unknown) => {
-    return validateRadmorphConfiguration(requestBody)
-      .map((configuration) => duplicateConfigurationWithReversedColors(configuration))
-      .map((items) => Object.entries(items).map(([id, url]) => ({ id, url })))
-      .asyncAndThen((chunks) => radMorphModel(ctx.logger).addMany(chunks))
-      .map(() => ({ data: {}, httpResponseCode: 200 }))
-  }
-
-  const populateImageOracle = (ctx: ControllerMethodContext) => {
-    return radMorphModel(ctx.logger)
-      .list()
-      .map((items) => chunk(items, RADMORPH_CHUNK_SIZE))
-      .andThen((chunks) => addChunksToQueue(ctx, chunks))
-      .map(() => ({ data: {}, httpResponseCode: 200 }))
-  }
-
-  const getRadmorphImageNoAuth = () => {
-    // TODO: Implement
-    return okAsync({ data: {}, httpResponseCode: 200 })
-  }
-
   return {
-    getRadmorphImage,
-    getRadmorphImageNoAuth,
-    uploadRadmorphConfiguration,
-    populateImageOracle
+    getRadmorphImage
   }
 }
-
-export const radmorphController = RadmorphController({})
