@@ -150,7 +150,9 @@ export const availableEnergyCardsByRarity = availableCards.reduce<{
   [EnergyCardRarity.UltraRare]: UltraRareEnergyCard[]
 }>(
   (acc, value) => {
-    acc[value.rarity].push(value as any)
+    if (value.rarity === EnergyCardRarity.Common) acc['Common'].push(value)
+    else if (value.rarity === EnergyCardRarity.Rare) acc['Rare'].push(value)
+    else acc['Ultra-Rare'].push(value)
     return acc
   },
   {
@@ -159,3 +161,5 @@ export const availableEnergyCardsByRarity = availableCards.reduce<{
     [EnergyCardRarity.UltraRare]: []
   } as const
 )
+
+export const starterBoxCard = energyCardMap.S001
