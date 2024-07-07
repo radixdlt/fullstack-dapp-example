@@ -1,29 +1,8 @@
-import {
-  EnergyCardRarity,
-  availableEnergyCardsByRarity,
-  getRandomCardByRarity,
-  starterBoxCard
-} from '../energy-cards'
+import { EnergyCardRarity, getRandomCardByRarity, starterBoxCard } from '../energy-cards'
+import { GiftBoxKind } from './types'
 
-const GiftBoxKind = {
-  Starter: 'Starter',
-  Simple: 'Simple',
-  Fancy: 'Fancy',
-  Elite: 'Elite'
-} as const
-
-export type GiftBoxKind = (typeof GiftBoxKind)[keyof typeof GiftBoxKind]
-
-const getRandomIntInclusiveFn = ({ min, max }: { min: number; max: number }) => {
-  const minCeiled = Math.ceil(min)
-  const maxFloored = Math.floor(max)
-  return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled)
-}
-
-const getRandomFloatFn = () => Math.random()
-
-type GiftBoxConfig = ReturnType<typeof GiftBoxConfig>
-const GiftBoxConfig = ({
+export type GiftBoxRewardConfig = ReturnType<typeof GiftBoxRewardConfig>
+export const GiftBoxRewardConfig = ({
   getRandomFloat,
   getRandomIntInclusive
 }: {
@@ -90,20 +69,7 @@ const GiftBoxConfig = ({
     }
   }) as const
 
-const GiftBox = (config: GiftBoxConfig) => {
-  const open = (kind: GiftBoxKind) => ({
-    rewards: {
-      energyCard: config[kind].getEnergyCard(),
-      elements: config[kind].getElements()
-    }
-  })
-
-  return { open }
-}
-
-export const giftBox = GiftBox(
-  GiftBoxConfig({
-    getRandomFloat: getRandomFloatFn,
-    getRandomIntInclusive: getRandomIntInclusiveFn
-  })
-)
+export const GiftBoxReward = (config: GiftBoxRewardConfig) => (kind: GiftBoxKind) => ({
+  energyCard: config[kind].getEnergyCard(),
+  elements: config[kind].getElements()
+})

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import { giftBox } from './gift-box'
+import { GiftBoxReward, GiftBoxRewardConfig } from './gift-box-reward'
 import { starterBoxCard, availableEnergyCardsByRarity, EnergyCardRarity } from '../energy-cards'
+import { getRandomFloat, getRandomIntInclusive } from '../helpers/random'
 
 const cards = availableEnergyCardsByRarity
 
@@ -8,9 +9,16 @@ const commonCards = cards.Common
 const rareCards = cards.Rare
 const ultraRareCards = cards['Ultra-Rare']
 
-describe('GiftBox', () => {
+const giftBoxRewards = GiftBoxReward(
+  GiftBoxRewardConfig({
+    getRandomFloat,
+    getRandomIntInclusive
+  })
+)
+
+describe('GiftBoxRewards', () => {
   it('should open a Starter gift box', () => {
-    const actual = giftBox.open('Starter').rewards
+    const actual = giftBoxRewards('Starter')
     expect(actual.elements).toEqual(10)
     expect(actual.energyCard.energyType).toEqual(starterBoxCard.energyType)
   })
@@ -24,7 +32,7 @@ describe('GiftBox', () => {
     }
 
     new Array(10_000).fill(0).forEach(() => {
-      const actual = giftBox.open('Simple').rewards
+      const actual = giftBoxRewards('Simple')
       expect(actual.elements).greaterThanOrEqual(15)
       expect(actual.elements).lessThanOrEqual(24)
       expect(expectedEnergyTypes).toContain(actual.energyCard.energyType)
@@ -45,7 +53,7 @@ describe('GiftBox', () => {
     }
 
     new Array(10_000).fill(0).forEach(() => {
-      const actual = giftBox.open('Fancy').rewards
+      const actual = giftBoxRewards('Fancy')
       expect(actual.elements).greaterThanOrEqual(25)
       expect(actual.elements).lessThanOrEqual(34)
       expect(expectedEnergyTypes).toContain(actual.energyCard.energyType)
@@ -67,7 +75,7 @@ describe('GiftBox', () => {
     }
 
     new Array(10_000).fill(0).forEach(() => {
-      const actual = giftBox.open('Elite').rewards
+      const actual = giftBoxRewards('Elite')
       expect(actual.elements).greaterThanOrEqual(35)
       expect(actual.elements).lessThanOrEqual(45)
       expect(expectedEnergyTypes).toContain(actual.energyCard.energyType)
