@@ -238,7 +238,7 @@ describe('Event flows', () => {
 
       await radixEngineClient.getXrdFromFaucet()
 
-      await radixEngineClient
+      const claimBadgeResult = await radixEngineClient
         .getManifestBuilder()
         .andThen(({ convertStringManifest, submitTransaction }) => {
           const transactionManifest = `
@@ -263,8 +263,14 @@ describe('Event flows', () => {
             .andThen((transactionManifest) =>
               submitTransaction({ transactionManifest, signers: [] })
             )
-            .andThen(({ txId }) => radixEngineClient.gatewayClient.pollTransactionStatus(txId))
+            .andThen(({ txId }) =>
+              radixEngineClient.gatewayClient
+                .pollTransactionStatus(txId)
+                .mapErr((err) => ({ err, txId }))
+            )
         })
+
+      if (claimBadgeResult.isErr()) throw claimBadgeResult.error
 
       const result = await gatewayApi.hasHeroBadge(accountAddress)
 
