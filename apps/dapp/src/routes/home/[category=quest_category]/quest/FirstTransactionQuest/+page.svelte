@@ -9,7 +9,7 @@
   import type { PageData } from './$types'
   import { readable, writable, derived } from 'svelte/store'
   import type { Quests } from 'content'
-  import { type ComponentProps, onMount } from 'svelte'
+  import { type ComponentProps } from 'svelte'
   import { GatewayApi } from 'common'
   import { publicConfig } from '$lib/public-config'
   import { OneTimeDataRequestBuilder, SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'

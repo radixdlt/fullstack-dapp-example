@@ -89,7 +89,7 @@ export default [
               {
                 kind: 'Reference',
                 type_name: 'ResourceAddress',
-                value: 'resource_tdx_2_1thhecsamda2fsql9rqrth0rnlee8k6049n6dgswvj7g99rfe9u5nd5'
+                value: addresses.resources.clamAddress
               },
               {
                 kind: 'Decimal',
