@@ -16,12 +16,12 @@ export const Addresses = (networkId: number) => {
           kycBadgeAddress: 'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan'
         },
         resources: {
-          elementAddress: 'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72',
+          elementAddress: 'resource_tdx_2_1th26phxf2k6rwqvk932lx0ql36qd88fjwy02hj8w099ala2vh3pvw4',
           clamAddress: 'resource_tdx_2_1thhecsamda2fsql9rqrth0rnlee8k6049n6dgswvj7g99rfe9u5nd5',
           morphEnergyCards:
-            'resource_tdx_2_1ngwfwe363l7rag3l2n8pcqjh3828nden6tdsrlww640ggnkv0hvn32',
-          radgemAddress: 'resource_tdx_2_1ngsqqj66xx6u7athxynr0n95phj3ljuvje2hkzfvd90ua8569csaje',
-          radmorphAddress: 'resource_tdx_2_1nghxdspyat6ef69w8rcg5xk0sjeluk664yf485g9csmqzufhkytxlx',
+            'resource_tdx_2_1nfnnzphs3mqfphqr5nlg8pfwxyrt5dw7eukn3ff5q20ckv68wglqtz',
+          radgemAddress: 'resource_tdx_2_1ngfyw2t0c8mrrf96a0p9hufx2t3czxx6hgjxfrkmu5yaw9zvfh6jz9',
+          radmorphAddress: 'resource_tdx_2_1nghd6pe3njlavrah0f0lhu7trs4r3xjzjs4ze5msfa4r6szppd774m',
           instapassBadgeAddress:
             'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan',
           otterCoinAddress: 'resource_tdx_2_1t5pvx3yuwa7rxpa8h8uxnx068ruap9k7nqd7k5qxgay4yjalp9seng'
