@@ -32,8 +32,9 @@
   }
 
   .quests {
-    height: 39rem;
     min-height: 20rem;
+    height: calc(100dvh - 9rem);
+    max-height: 39rem;
   }
 
   .content {
