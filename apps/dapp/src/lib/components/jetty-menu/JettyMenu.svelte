@@ -291,6 +291,8 @@
 
   .content {
     padding: var(--spacing-2xl);
+    scrollbar-width: none;
+    overflow-y: scroll;
   }
 
   .main-menu-page {
