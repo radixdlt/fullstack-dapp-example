@@ -144,6 +144,17 @@
     :global(a) {
       text-decoration: underline;
     }
+
+    :global(blockquote) {
+      margin-left: 0;
+      border-radius: 20px;
+      background: var(--Background-Gradient-2, linear-gradient(67deg, #f9dfcf 0%, #e6b2bb 102.4%));
+      padding: var(--spacing-lg) var(--spacing-xl);
+
+      :global(p) {
+        margin: 0;
+      }
+    }
   }
 
   .intro-footer {
