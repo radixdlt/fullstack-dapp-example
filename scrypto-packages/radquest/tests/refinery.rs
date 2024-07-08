@@ -94,7 +94,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
             [MorphCardData {
                 key_image_url: UncheckedUrl("https://www.example.com".to_string()),
                 name: "Molten Lava Morph Card".to_string(),
-                energy: "Molten Lava".to_string(),
+                energy_type: "Molten Lava".to_string(),
                 rarity: RARITY[1].to_string(), // Uncommon,
                 availability: "Random".to_string(),
             }],
@@ -398,7 +398,10 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
 
     let data = format!(
         "{}{}{}{}",
-        morph_card_data.energy, radgem_a_data.material, radgem_a_data.color, radgem_b_data.color,
+        morph_card_data.energy_type,
+        radgem_a_data.material,
+        radgem_a_data.color,
+        radgem_b_data.color,
     );
 
     let key_hash = keccak256_hash(data.as_bytes());

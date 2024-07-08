@@ -290,7 +290,7 @@ mod refinery {
 
                 let pre_hash_string = format!(
                     "{}{}{}{}",
-                    morph_card_data.energy,
+                    morph_card_data.energy_type,
                     radgem_a_data.material,
                     radgem_a_data.color,
                     radgem_b_data.color,

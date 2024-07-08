@@ -102,7 +102,7 @@ mod radmorph_forge {
                 key_image_url,
                 rarity,
                 material,
-                morph_card_data.energy,
+                morph_card_data.energy_type,
                 radgem1_data.color,
                 radgem2_data.color,
             );
