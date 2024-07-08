@@ -2,6 +2,8 @@
   import { otpApi } from '$lib/api/otp-api'
   import Quest from '../Quest.svelte'
   import { i18n } from '$lib/i18n/i18n'
+  import { okAsync } from 'neverthrow'
+  import { onMount, onDestroy } from 'svelte'
   import DepositHeroBadge from './DepositHeroBadge.svelte'
   import VerifyOtp from './VerifyOTP.svelte'
   import VerifyPhoneNumber from './VerifyPhoneNumber.svelte'
@@ -17,7 +19,9 @@
   import { userApi } from '$lib/api/user-api'
   import { user } from '../../../../../stores'
   import Button from '$lib/components/button/Button.svelte'
-  import { err, ok } from 'neverthrow'
+  import { err, ok, ResultAsync } from 'neverthrow'
+  import { messageApi } from '$lib/api/message-api'
+  import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
 
   export let data: PageData
 
@@ -27,8 +31,18 @@
   let phoneNumber: string
   let oneTimePassword: string[]
 
+  let sendingOTP = false
+  let verifyOtpError = false
   let waitingOnAccount = false
+  let xrdDepositLoading = false
+  let chosenAccountHasXrd = false
+
+  let otpError: keyof typeof errors | undefined
   let mintBadgeState: ComponentProps<DepositHeroBadge>['state']
+  let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
+
+  const gatewayApi = GatewayApi(publicConfig.networkId)
+  const skipXrdDepositPage = writable<boolean>(false)
   const registeredAccountAddress = derived(user, ($user) => !!$user?.accountAddress)
   const verifyPhoneNumber = writable(data.requirements.VerifyPhoneNumber.isComplete)
   const depositHeroBadge = writable(data.requirements.DepositHeroBadge.isComplete)
@@ -47,14 +61,19 @@
     )
   }
 
-  const gatewayApi = GatewayApi(publicConfig.networkId)
-
-  let otpError: keyof typeof errors | undefined
-  let verifyOtpError = false
+  $: if ($webSocketClient) {
+    unsubscribeWebSocket = $webSocketClient.onMessage(async (message) => {
+      if (message.type === 'XrdDepositedToAccount') {
+        messageApi.markAsSeen(message.id)
+        if (xrdDepositLoading) {
+          xrdDepositLoading = false
+          quest.actions.next()
+        }
+      }
+    })
+  }
 
   $: phoneNumberError = otpError ? errors[otpError] : undefined
-
-  let sendingOTP = false
 
   const handleApiError = ({ data }: { data?: { message: keyof typeof errors } }) => {
     otpError = data?.message
@@ -70,7 +89,10 @@
   }
 
   const directDepositXrd = () => {
-    userApi.directDepositXrd()
+    xrdDepositLoading = true
+    userApi.directDepositXrd().mapErr(() => {
+      xrdDepositLoading = false
+    })
   }
 
   export const verifyOneTimePassword = () => {
@@ -94,11 +116,11 @@
           const accountProof = proofs.find((proof) => proof.type === 'account')!
 
           return gatewayApi
-            .hasHeroBadge(accounts[0].address)
-            .andThen((hasHeroBadge) =>
-              hasHeroBadge ? err({ reason: 'UserHasHeroBadge' }) : ok(undefined)
+            .hasHeroBadgeAndXrd(accounts[0].address)
+            .andThen(({ hasHeroBadge, hasXrd }) =>
+              hasHeroBadge ? err({ reason: 'UserHasHeroBadge' }) : ok(hasXrd)
             )
-            .andThen(() =>
+            .andThen((hasXrd) =>
               userApi
                 .setUserField({
                   accountAddress: accounts[0].address,
@@ -106,10 +128,22 @@
                   field: 'accountAddress'
                 })
                 .andThen(() =>
-                  userApi.allowAccountAddressToMintHeroBadge().map(() => {
-                    $user!.accountAddress = accounts[0].address
-                    quest.actions.next()
-                  })
+                  userApi
+                    .allowAccountAddressToMintHeroBadge()
+                    .map(() => {
+                      $user!.accountAddress = accounts[0].address
+                      quest.actions.next()
+                      chosenAccountHasXrd = hasXrd
+                    })
+                    .andThen(() =>
+                      gatewayApi
+                        .isDepositDisabledForResource(accounts[0].address, publicConfig.xrd)
+                        .map((disabled) => {
+                          if (disabled) {
+                            skipXrdDepositPage.set(true)
+                          }
+                        })
+                    )
                 )
             )
         })
@@ -118,6 +152,34 @@
         })
     })
   }
+
+  onMount(() => {
+    userApi.hasReceivedXrd().andThen((received) => {
+      if (received) {
+        skipXrdDepositPage.set(true)
+        return okAsync(undefined)
+      }
+
+      if ($user?.accountAddress) {
+        return ResultAsync.combine([
+          gatewayApi
+            .isDepositDisabledForResource($user.accountAddress, publicConfig.xrd)
+            .map((disabled) => {
+              if (disabled) {
+                skipXrdDepositPage.set(true)
+              }
+            }),
+          gatewayApi.hasHeroBadgeAndXrd($user!.accountAddress).map(({ hasXrd }) => {
+            chosenAccountHasXrd = hasXrd
+          })
+        ])
+      }
+
+      return okAsync(undefined)
+    })
+  })
+
+  onDestroy(() => unsubscribeWebSocket?.())
 </script>
 
 <Quest
@@ -202,9 +264,14 @@
     },
     {
       id: '14',
-      type: 'jetty'
+      type: 'jetty',
+      skip: skipXrdDepositPage,
+      footer: {
+        next: {
+          enabled: writable(false)
+        }
+      }
     },
-
     {
       id: '15',
       type: 'regular'
@@ -324,9 +391,11 @@
   {#if render('7')}
     {@html text['7.md']}
 
-    <Button on:click={connectAccount} loading={waitingOnAccount}
-      >{$i18n.t('quests:FirstTransactionQuest.registerAccount')}
-    </Button>
+    <div class="center">
+      <Button on:click={connectAccount} loading={waitingOnAccount}
+        >{$i18n.t('quests:FirstTransactionQuest.registerAccount')}
+      </Button>
+    </div>
   {/if}
 
   {#if render('8')}
@@ -354,8 +423,17 @@
   {/if}
 
   {#if render('14')}
-    {@html text['14a.md']}
-    <Button on:click={directDepositXrd}>{$i18n.t('quests:FirstTransactionQuest.getXrd')}</Button>
+    {#if chosenAccountHasXrd}
+      {@html text['14b.md']}
+    {:else}
+      {@html text['14a.md']}
+    {/if}
+
+    <div class="center">
+      <Button on:click={directDepositXrd} loading={xrdDepositLoading}>
+        {$i18n.t('quests:FirstTransactionQuest.getXrd')}
+      </Button>
+    </div>
   {/if}
 
   {#if render('15')}
@@ -407,3 +485,11 @@
     {@html text['24.md']}
   {/if}
 </Quest>
+
+<style lang="scss">
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>

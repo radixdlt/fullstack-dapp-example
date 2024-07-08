@@ -150,6 +150,11 @@ export const UserController = ({
     return userModel.setUserName(userId, name).map((data) => ({ data, httpResponseCode: 200 }))
   }
 
+  const doesTransactionExist = (userId: string, discriminator: string) =>
+    transactionModel
+      .doesTransactionExist({ userId, discriminator })
+      .map((exists) => ({ data: { exists }, httpResponseCode: 200 }))
+
   const populateResources = (ctx: ControllerMethodContext, userId: string) => {
     if (config.dapp.networkId === 1)
       return errAsync(createApiError('not allowed on mainnet', 400)())
@@ -230,6 +235,7 @@ export const UserController = ({
 
   return {
     getUser,
+    doesTransactionExist,
     allowAccountAddressToMintHeroBadge,
     setAccountAddress,
     populateResources,
