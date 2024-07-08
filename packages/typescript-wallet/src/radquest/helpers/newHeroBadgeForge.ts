@@ -36,7 +36,7 @@ export const newHeroBadgeForge = () => {
                     Enum<0u8>(
                         Enum<0u8>(
                             Enum<1u8>(
-                                Address("${config.radQuest.badges.adminBadgeAddress}")
+                                Address("${config.radQuest.badges.superAdminBadgeAddress}")
                             )
                         )
                     )

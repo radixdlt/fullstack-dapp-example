@@ -36,6 +36,8 @@ export const mintHeroBadge = (
         MINT_NON_FUNGIBLE
           Address("${heroBadgeAddress}")
           Map<NonFungibleLocalId, Tuple>(NonFungibleLocalId("<${userId}>") => Tuple(Tuple(
+            "Your Hero Badge",
+            "Your progress through your RadQuest journey",
             ${keyImageUrl},
             Array<String>(${questsCompleted.join(', ')}),
             ${questCounter}u32,
