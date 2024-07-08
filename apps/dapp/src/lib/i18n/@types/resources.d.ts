@@ -133,7 +133,7 @@ interface Resources {
       failedToSendOtp: 'Failed to send OTP'
       phoneNumberExists: 'Phone number exists'
       invalidPhoneNumber: 'Invalid phone number'
-      invalidOtp: 'Invalid one time password'
+      invalidOtp: 'Invalid code'
       invalidRequest: 'Invalid request'
       failedToAddPhoneNumber: 'Failed to add phone number'
       phoneNumberInputTitle: 'Your phone number'
