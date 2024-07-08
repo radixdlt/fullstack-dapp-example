@@ -38,9 +38,9 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
                 key_image_url: UncheckedUrl("".to_string()),
                 name: "Crystalline Coral Radgem".to_string(),
                 description: "The Common Crystalline material of this Blood Radgem is graded at a quality of 5 out of a possible 25.".to_string(),
-                material: MATERIAL[0].name.to_string(), // Crystalline,
-                color: COLOR[0].to_string(),            // Blood,
-                rarity: MATERIAL[0].rarity.name.to_string(), // Common
+                material: MATERIAL[0].name.to_lowercase(), // crystalline,
+                color: COLOR[0].to_lowercase(),            // blood,   
+                rarity: MATERIAL[0].rarity.name.to_lowercase(), // common
                 quality: dec!(5),
             }],
             &mut env,
@@ -139,9 +139,9 @@ fn can_mint_common_radgem() -> Result<(), RuntimeError> {
     let radgem_id = radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
     let radgem_data: RadgemData =
         ResourceManager(radgem_address).get_non_fungible_data(radgem_id, &mut env)?;
-    assert_eq!(radgem_data.rarity, "Common");
-    assert_eq!(radgem_data.material, "Crystalline");
-    assert_eq!(radgem_data.color, "Sky");
+    assert_eq!(radgem_data.rarity, "common");
+    assert_eq!(radgem_data.material, "crystalline");
+    assert_eq!(radgem_data.color, "sky");
     assert_eq!(radgem_data.quality, dec!(3));
     assert!(radgem_data.name.contains("RadGem"));
     assert!(radgem_data.name.contains("Crystalline"));
@@ -168,9 +168,9 @@ fn can_mint_rare_radgem() -> Result<(), RuntimeError> {
     let radgem_id = radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
     let radgem_data: RadgemData =
         ResourceManager(radgem_address).get_non_fungible_data(radgem_id, &mut env)?;
-    assert_eq!(radgem_data.rarity, "Rare");
-    assert_eq!(radgem_data.material, "Metallic");
-    assert_eq!(radgem_data.color, "Coral");
+    assert_eq!(radgem_data.rarity, "rare");
+    assert_eq!(radgem_data.material, "metallic");
+    assert_eq!(radgem_data.color, "coral");
     assert_eq!(radgem_data.quality, dec!(11));
     assert!(radgem_data.name.contains("RadGem"));
     assert!(radgem_data.name.contains("Metallic"));
@@ -197,9 +197,9 @@ fn can_mint_ultra_rare_radgem() -> Result<(), RuntimeError> {
     let radgem_id = radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
     let radgem_data: RadgemData =
         ResourceManager(radgem_address).get_non_fungible_data(radgem_id, &mut env)?;
-    assert_eq!(radgem_data.rarity, "Ultra Rare");
-    assert_eq!(radgem_data.material, "Radiant");
-    assert_eq!(radgem_data.color, "Ocean");
+    assert_eq!(radgem_data.rarity, "ultra rare");
+    assert_eq!(radgem_data.material, "radiant");
+    assert_eq!(radgem_data.color, "ocean");
     assert_eq!(radgem_data.quality, dec!(21));
     assert_eq!(radgem_data.description, "The Ultra Rare Radiant material of this Ocean RadGem is graded at a quality of 21 out of a possible 25.");
     assert!(radgem_data.name.contains("RadGem"));

@@ -126,9 +126,9 @@ mod radgem_forge {
                     quality.to_string()
                 ),
                 description: format!("The {} {} material of this {} RadGem is graded at a quality of {} out of a possible 25.", rarity, material, color, quality.to_string()),
-                material,
-                color,
-                rarity,
+                material: material.to_lowercase(),
+                color: color.to_lowercase(),
+                rarity: rarity.to_lowercase(),
                 quality,
             };
 
@@ -152,7 +152,7 @@ mod radgem_forge {
             &self,
             material_num: Decimal,
             quality_num: Decimal,
-        ) -> (String, String, Decimal) {
+        ) -> (&str, &str, Decimal) {
             assert!(
                 material_num >= dec!(0) && material_num <= dec!(1),
                 "rand_num must be between 0 and 1 inclusive"
@@ -172,31 +172,27 @@ mod radgem_forge {
                 .unwrap()
                 + material.rarity.min_quality;
 
-            (
-                material.name.to_string(),
-                material.rarity.name.to_string(),
-                quality,
-            )
+            (material.name, material.rarity.name, quality)
         }
 
-        fn assign_color(&self, color_num: Decimal) -> String {
+        fn assign_color(&self, color_num: Decimal) -> &str {
             assert!(
                 color_num >= dec!(0) && color_num <= dec!(1),
                 "rand_num must be between 0 and 1 inclusive"
             );
 
-            let relative_n = color_num * COLOR.len();
-            match relative_n {
-                rn if rn < dec!(1) => COLOR[0].to_string(),
-                rn if rn < dec!(2) => COLOR[1].to_string(),
-                rn if rn < dec!(3) => COLOR[2].to_string(),
-                rn if rn < dec!(4) => COLOR[3].to_string(),
-                rn if rn < dec!(5) => COLOR[4].to_string(),
-                rn if rn < dec!(6) => COLOR[5].to_string(),
-                rn if rn < dec!(7) => COLOR[6].to_string(),
-                rn if rn < dec!(8) => COLOR[7].to_string(),
-                rn if rn < dec!(9) => COLOR[8].to_string(),
-                _ => COLOR[9].to_string(),
+            let n = color_num * COLOR.len();
+            match n {
+                n if n < dec!(1) => COLOR[0],
+                n if n < dec!(2) => COLOR[1],
+                n if n < dec!(3) => COLOR[2],
+                n if n < dec!(4) => COLOR[3],
+                n if n < dec!(5) => COLOR[4],
+                n if n < dec!(6) => COLOR[5],
+                n if n < dec!(7) => COLOR[6],
+                n if n < dec!(8) => COLOR[7],
+                n if n < dec!(9) => COLOR[8],
+                _ => COLOR[9],
             }
         }
     }
