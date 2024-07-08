@@ -2,7 +2,7 @@ use scrypto_test::prelude::*;
 
 use radquest::{
     image_oracle::image_oracle_test::*,
-    morph_card_forge::MorphCardData,
+    morph_card_forge::MorphEnergyCardData,
     quest_rewards::UserId,
     radgem_forge::{RadgemData, COLOR, MATERIAL},
     radmorph_forge::{radmorph_forge_test::*, RadmorphData},
@@ -91,7 +91,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
             burner_updater => rule!(deny_all);
         ))
         .mint_initial_supply(
-            [MorphCardData {
+            [MorphEnergyCardData {
                 key_image_url: UncheckedUrl("https://www.example.com".to_string()),
                 name: "Molten Lava Morph Card".to_string(),
                 energy_type: "Molten Lava".to_string(),
@@ -372,8 +372,9 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     let m = morph_card.non_fungible_local_ids(&mut env)?.pop().unwrap();
-    let morph_card_data: MorphCardData = ResourceManager(morph_card.resource_address(&mut env)?)
-        .get_non_fungible_data(m, &mut env)?;
+    let morph_card_data: MorphEnergyCardData =
+        ResourceManager(morph_card.resource_address(&mut env)?)
+            .get_non_fungible_data(m, &mut env)?;
     let radgem_ids = radgems.non_fungible_local_ids(&mut env)?;
     let radgem_1_data: RadgemData = ResourceManager(radgems.resource_address(&mut env)?)
         .get_non_fungible_data(radgem_ids[0].clone(), &mut env)?;

@@ -1,4 +1,4 @@
-use crate::{morph_card_forge::MorphCardData, radgem_forge::RadgemData, refinery::RARITY};
+use crate::{morph_card_forge::MorphEnergyCardData, radgem_forge::RadgemData, refinery::RARITY};
 use scrypto::prelude::*;
 
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
@@ -61,7 +61,7 @@ mod radmorph_forge {
 
         pub fn mint_radmorph(
             &mut self,
-            morph_card_data: MorphCardData,
+            morph_card_data: MorphEnergyCardData,
             radgem1_data: RadgemData,
             radgem2_data: RadgemData,
             key_image_url: Url,

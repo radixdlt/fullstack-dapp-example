@@ -2,7 +2,7 @@ use scrypto::prelude::*;
 
 use crate::{
     image_oracle::image_oracle::ImageOracle,
-    morph_card_forge::MorphCardData,
+    morph_card_forge::MorphEnergyCardData,
     quest_rewards::UserId,
     radgem_forge::{radgem_forge::RadgemForge, RadgemData},
     radmorph_forge::{radmorph_forge::RadmorphForge, RadmorphData},
@@ -263,7 +263,7 @@ mod refinery {
                 .data();
             let morph_card_data = morph_card
                 .as_non_fungible()
-                .non_fungible::<MorphCardData>()
+                .non_fungible::<MorphEnergyCardData>()
                 .data();
 
             let radgem_1_rarity_weight = RARITY

@@ -2,7 +2,7 @@ use scrypto::prelude::Url;
 use scrypto_test::prelude::*;
 
 use radquest::morph_card_forge::morph_card_forge_test::*;
-use radquest::morph_card_forge::MorphCardData;
+use radquest::morph_card_forge::MorphEnergyCardData;
 use radquest::quest_rewards::UserId;
 
 struct Test {
@@ -22,7 +22,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let admin_badges =
         ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(2, &mut env)?;
 
-    let morph_card = ResourceBuilder::new_ruid_non_fungible::<MorphCardData>(OwnerRole::None)
+    let morph_card = ResourceBuilder::new_ruid_non_fungible::<MorphEnergyCardData>(OwnerRole::None)
         .mint_roles(mint_roles! {
             minter => rule!(require(admin_badges.resource_address(&mut env)?));
             minter_updater => rule!(deny_all);

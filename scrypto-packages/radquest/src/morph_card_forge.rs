@@ -3,7 +3,7 @@ use scrypto::prelude::*;
 use crate::quest_rewards::UserId;
 
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
-pub struct MorphCardData {
+pub struct MorphEnergyCardData {
     pub key_image_url: Url,
     pub name: String,
     pub description: String,
@@ -76,7 +76,7 @@ mod morph_card_forge {
         ) -> Bucket {
             assert!(self.enabled, "MorphCard component disabled");
 
-            let morph_card_data = MorphCardData {
+            let morph_card_data = MorphEnergyCardData {
                 key_image_url,
                 name,
                 description,
@@ -108,5 +108,5 @@ mod morph_card_forge {
 pub struct MorphCardMintedEvent {
     user_id: UserId,
     local_id: NonFungibleLocalId,
-    morph_card_data: MorphCardData,
+    morph_card_data: MorphEnergyCardData,
 }
