@@ -5,9 +5,9 @@ import { getRandomFloat, getRandomIntInclusive } from '../helpers/random'
 
 const cards = availableEnergyCardsByRarity
 
-const commonCards = cards.Common
-const rareCards = cards.Rare
-const ultraRareCards = cards['Ultra-Rare']
+const commonCards = cards['Common']
+const rareCards = cards['Rare']
+const ultraRareCards = cards['Ultra-rare']
 
 const giftBoxRewards = GiftBoxReward(
   GiftBoxRewardConfig({
@@ -16,11 +16,14 @@ const giftBoxRewards = GiftBoxReward(
   })
 )
 
+giftBoxRewards('Simple').energyCard
+
 describe('GiftBoxRewards', () => {
   it('should open a Starter gift box', () => {
     const actual = giftBoxRewards('Starter')
+
     expect(actual.elements).toEqual(10)
-    expect(actual.energyCard.energyType).toEqual(starterBoxCard.energyType)
+    expect(actual.energyCard.energy_type).toEqual(starterBoxCard.energyType)
   })
   it('should open a Simple gift box', () => {
     const expectedEnergyTypes = [...commonCards, ...rareCards].map((card) => card.energyType)
@@ -31,13 +34,16 @@ describe('GiftBoxRewards', () => {
       [EnergyCardRarity.UltraRare]: 0
     }
 
-    new Array(10_000).fill(0).forEach(() => {
+    const cards = new Array(10_000).fill(0).map(() => {
       const actual = giftBoxRewards('Simple')
       expect(actual.elements).greaterThanOrEqual(15)
       expect(actual.elements).lessThanOrEqual(24)
-      expect(expectedEnergyTypes).toContain(actual.energyCard.energyType)
+      expect(expectedEnergyTypes).toContain(actual.energyCard.energy_type)
       cardDistribution[actual.energyCard.rarity]++
+      return actual
     })
+
+    console.log(cards[0])
 
     console.log({ simple: cardDistribution })
   })
@@ -56,7 +62,7 @@ describe('GiftBoxRewards', () => {
       const actual = giftBoxRewards('Fancy')
       expect(actual.elements).greaterThanOrEqual(25)
       expect(actual.elements).lessThanOrEqual(34)
-      expect(expectedEnergyTypes).toContain(actual.energyCard.energyType)
+      expect(expectedEnergyTypes).toContain(actual.energyCard.energy_type)
       cardDistribution[actual.energyCard.rarity]++
     })
 
@@ -78,7 +84,7 @@ describe('GiftBoxRewards', () => {
       const actual = giftBoxRewards('Elite')
       expect(actual.elements).greaterThanOrEqual(35)
       expect(actual.elements).lessThanOrEqual(45)
-      expect(expectedEnergyTypes).toContain(actual.energyCard.energyType)
+      expect(expectedEnergyTypes).toContain(actual.energyCard.energy_type)
       cardDistribution[actual.energyCard.rarity]++
     })
 

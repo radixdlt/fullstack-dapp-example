@@ -1,4 +1,9 @@
-import { EnergyCardRarity, getRandomCardByRarity, starterBoxCard } from '../energy-cards'
+import {
+  EnergyCardRarity,
+  getRandomCardByRarity,
+  starterBoxCard,
+  transformEnergyCardToNfData
+} from '../energy-cards'
 import { GiftBoxKind } from './types'
 
 export type GiftBoxRewardConfig = ReturnType<typeof GiftBoxRewardConfig>
@@ -8,10 +13,26 @@ export const GiftBoxRewardConfig = ({
 }: {
   getRandomFloat: () => number
   getRandomIntInclusive: ({ min, max }: { min: number; max: number }) => number
-}) =>
-  ({
+}) => {
+  const getQualityByRarity = (rarity: EnergyCardRarity) => {
+    switch (rarity) {
+      case 'Common':
+        return getRandomIntInclusive({ min: 15, max: 24 })
+
+      case 'Rare':
+        return getRandomIntInclusive({ min: 25, max: 34 })
+
+      case 'Ultra-rare':
+        return getRandomIntInclusive({ min: 35, max: 45 })
+    }
+  }
+
+  return {
     [GiftBoxKind.Starter]: {
-      getEnergyCard: () => starterBoxCard,
+      getEnergyCard: () => ({
+        card: starterBoxCard,
+        quality: getQualityByRarity(starterBoxCard.rarity)
+      }),
       getElements: () => 10
     },
     [GiftBoxKind.Simple]: {
@@ -23,7 +44,13 @@ export const GiftBoxRewardConfig = ({
         } else {
           rarity = EnergyCardRarity.Rare
         }
-        return getRandomCardByRarity(rarity, getRandomFloat())
+        return {
+          card: getRandomCardByRarity({
+            rarity,
+            randomFloat: getRandomFloat()
+          }),
+          quality: getQualityByRarity(rarity)
+        }
       },
       getElements: () =>
         getRandomIntInclusive({
@@ -42,7 +69,13 @@ export const GiftBoxRewardConfig = ({
         } else {
           rarity = EnergyCardRarity.UltraRare
         }
-        return getRandomCardByRarity(rarity, getRandomFloat())
+        return {
+          card: getRandomCardByRarity({
+            rarity,
+            randomFloat: getRandomFloat()
+          }),
+          quality: getQualityByRarity(rarity)
+        }
       },
       getElements: () =>
         getRandomIntInclusive({
@@ -59,7 +92,13 @@ export const GiftBoxRewardConfig = ({
         } else {
           rarity = EnergyCardRarity.UltraRare
         }
-        return getRandomCardByRarity(rarity, getRandomFloat())
+        return {
+          card: getRandomCardByRarity({
+            rarity,
+            randomFloat: getRandomFloat()
+          }),
+          quality: getQualityByRarity(rarity)
+        }
       },
       getElements: () =>
         getRandomIntInclusive({
@@ -67,9 +106,13 @@ export const GiftBoxRewardConfig = ({
           max: 45
         })
     }
-  }) as const
+  } as const
+}
 
-export const GiftBoxReward = (config: GiftBoxRewardConfig) => (kind: GiftBoxKind) => ({
-  energyCard: config[kind].getEnergyCard(),
-  elements: config[kind].getElements()
-})
+export const GiftBoxReward = (config: GiftBoxRewardConfig) => (kind: GiftBoxKind) => {
+  const energyCard = config[kind].getEnergyCard()
+  return {
+    energyCard: transformEnergyCardToNfData(energyCard.card, energyCard.quality),
+    elements: config[kind].getElements()
+  }
+}

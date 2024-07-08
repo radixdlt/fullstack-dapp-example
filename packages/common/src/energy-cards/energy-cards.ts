@@ -2,7 +2,7 @@ export type EnergyCardRarity = (typeof EnergyCardRarity)[keyof typeof EnergyCard
 export const EnergyCardRarity = {
   Common: 'Common',
   Rare: 'Rare',
-  UltraRare: 'Ultra-Rare'
+  UltraRare: 'Ultra-rare'
 } as const
 
 type EnergyCardMap = typeof energyCardMap
@@ -15,11 +15,12 @@ type EnergyCard<Rarity extends EnergyCardRarity> = {
 
 type CommonEnergyCard = EnergyCard<'Common'>
 type RareEnergyCard = EnergyCard<'Rare'>
-type UltraRareEnergyCard = EnergyCard<'Ultra-Rare'>
+type UltraRareEnergyCard = EnergyCard<'Ultra-rare'>
 
 const energyCardMap = {
   S001: {
     energyType: 'Whirlpool Spiral',
+    energyDescription: 'the sinking gyre of a whirlpool spiral',
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: false,
@@ -27,6 +28,7 @@ const energyCardMap = {
   },
   S005: {
     energyType: 'Tidal Wave',
+    energyDescription: 'the inescapable surges of a tidal wave',
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: true,
@@ -34,6 +36,7 @@ const energyCardMap = {
   },
   S004: {
     energyType: 'Molten Lava',
+    energyDescription: 'the fiery flow of molten lava',
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: true,
@@ -41,6 +44,7 @@ const energyCardMap = {
   },
   S008: {
     energyType: 'Pyroclastic Flow',
+    energyDescription: 'the boiling blast of a pyroclastic flow',
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: true,
@@ -48,6 +52,7 @@ const energyCardMap = {
   },
   S011: {
     energyType: 'Rainbow Curve',
+    energyDescription: 'the prismatic power of a rainbow curve',
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: true,
@@ -55,6 +60,7 @@ const energyCardMap = {
   },
   S009: {
     energyType: 'Polar Blizzard',
+    energyDescription: 'the furious freeze of a polar blizzard',
     rarity: EnergyCardRarity.Common,
     limitedEdition: true,
     currentlyAvailable: true,
@@ -62,6 +68,7 @@ const energyCardMap = {
   },
   S013: {
     energyType: 'Hydrothermal Vent',
+    energyDescription: 'the steamy release of a hydrothermal vent',
     rarity: EnergyCardRarity.Common,
     limitedEdition: true,
     currentlyAvailable: true,
@@ -69,6 +76,7 @@ const energyCardMap = {
   },
   S015: {
     energyType: 'Volcanic Lightning',
+    energyDescription: 'the high-altitude sparking of volcanic lightning',
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: false,
@@ -76,6 +84,7 @@ const energyCardMap = {
   },
   S006: {
     energyType: 'Storm Cell',
+    energyDescription: 'the churning rotations of a storm cell',
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: false,
@@ -83,6 +92,7 @@ const energyCardMap = {
   },
   S018: {
     energyType: 'Aurora Borealis',
+    energyDescription: 'the ethereal energies of the aurora borealis',
     rarity: EnergyCardRarity.Rare,
     limitedEdition: false,
     currentlyAvailable: true,
@@ -90,6 +100,7 @@ const energyCardMap = {
   },
   S012: {
     energyType: 'Magnetic Field',
+    energyDescription: 'the ineluctable intensity of a magnetic field',
     rarity: EnergyCardRarity.Rare,
     limitedEdition: false,
     currentlyAvailable: true,
@@ -97,6 +108,7 @@ const energyCardMap = {
   },
   S007: {
     energyType: 'Nuclear Fusion',
+    energyDescription: 'the tumultuous turmoil of nuclear fusion',
     rarity: EnergyCardRarity.Rare,
     limitedEdition: false,
     currentlyAvailable: true,
@@ -104,6 +116,7 @@ const energyCardMap = {
   },
   S002: {
     energyType: 'Earthquake Tremor',
+    energyDescription: 'the oscillating overthrust of an earthquake tremor',
     rarity: EnergyCardRarity.Rare,
     limitedEdition: true,
     currentlyAvailable: true,
@@ -111,6 +124,7 @@ const energyCardMap = {
   },
   S017: {
     energyType: 'Tropical Cyclone',
+    energyDescription: 'the swirling vortex of a tropical cyclone',
     rarity: EnergyCardRarity.Rare,
     limitedEdition: true,
     currentlyAvailable: true,
@@ -118,6 +132,7 @@ const energyCardMap = {
   },
   S003: {
     energyType: 'Gamma Rays',
+    energyDescription: 'the invisible frequencies of gamma rays',
     rarity: EnergyCardRarity.Rare,
     limitedEdition: true,
     currentlyAvailable: false,
@@ -125,6 +140,7 @@ const energyCardMap = {
   },
   S010: {
     energyType: 'Gravity Force',
+    energyDescription: 'the distorting interactions of the gravity force',
     rarity: EnergyCardRarity.Rare,
     limitedEdition: true,
     currentlyAvailable: false,
@@ -132,6 +148,7 @@ const energyCardMap = {
   },
   S014: {
     energyType: 'Supernova Explosion',
+    energyDescription: 'the galactic strength of a supernova explosion',
     rarity: EnergyCardRarity.UltraRare,
     limitedEdition: false,
     currentlyAvailable: true,
@@ -139,6 +156,7 @@ const energyCardMap = {
   },
   S019: {
     energyType: 'Black Hole',
+    energyDescription: 'the unseen unknowns of a black hole',
     rarity: EnergyCardRarity.UltraRare,
     limitedEdition: false,
     currentlyAvailable: true,
@@ -146,6 +164,7 @@ const energyCardMap = {
   },
   S016: {
     energyType: 'Fire Tornado',
+    energyDescription: 'the searing swirl of a fire tornado',
     rarity: EnergyCardRarity.UltraRare,
     limitedEdition: true,
     currentlyAvailable: true,
@@ -153,6 +172,7 @@ const energyCardMap = {
   },
   S020: {
     energyType: 'Solar Flare',
+    energyDescription: 'the shooting jet of a solar flare',
     rarity: EnergyCardRarity.UltraRare,
     limitedEdition: true,
     currentlyAvailable: false,
@@ -184,7 +204,26 @@ export const availableEnergyCardsByRarity = availableCards.reduce<{
 
 export const starterBoxCard = energyCardMap.S001
 
-export const getRandomCardByRarity = (rarity: EnergyCardRarity, randomFloat: number) =>
+export const transformEnergyCardToNfData = (
+  card: EnergyCard<EnergyCardRarity>,
+  quality: number
+) => ({
+  key_image_url: card.keyImageUrl,
+  name: `${card.energyType} Card {${quality}}${card.limitedEdition ? ' {limited}' : ''}`,
+  description: `Use this${card.limitedEdition ? ' limited edition' : ''} Morph Energy Card to fuse 2 RadGems using ${card.energyDescription}! The ${card.rarity} shape defined by this card is rated at a quality of {${quality}}.`,
+  energy_type: card.energyType,
+  rarity: card.rarity,
+  quality,
+  limited_edition: card.limitedEdition
+})
+
+export const getRandomCardByRarity = ({
+  rarity,
+  randomFloat
+}: {
+  rarity: EnergyCardRarity
+  randomFloat: number
+}) =>
   availableEnergyCardsByRarity[rarity][
     Math.floor(randomFloat * availableEnergyCardsByRarity[rarity].length)
   ]
