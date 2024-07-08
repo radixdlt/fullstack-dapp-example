@@ -49,10 +49,6 @@
 
   const gatewayApi = GatewayApi(publicConfig.networkId)
 
-  onMount(() => {
-    gatewayApi.callApi('getEntityDetailsVaultAggregated', [])
-  })
-
   let otpError: keyof typeof errors | undefined
   let verifyOtpError = false
 
@@ -71,6 +67,10 @@
     sendingOTP = false
     if (otpError) return
     quest.actions.next()
+  }
+
+  const directDepositXrd = () => {
+    userApi.directDepositXrd()
   }
 
   export const verifyOneTimePassword = () => {
@@ -202,16 +202,7 @@
     },
     {
       id: '14',
-      type: 'jetty',
-      footer: {
-        next: {
-          onClick: (next) => {
-            userApi.directDepositXrd().map(() => {
-              next()
-            })
-          }
-        }
-      }
+      type: 'jetty'
     },
 
     {
@@ -364,6 +355,7 @@
 
   {#if render('14')}
     {@html text['14a.md']}
+    <Button on:click={directDepositXrd}>{$i18n.t('quests:FirstTransactionQuest.getXrd')}</Button>
   {/if}
 
   {#if render('15')}
