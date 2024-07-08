@@ -41,12 +41,6 @@ secrets:
     aws_secret_key: "dapp_jwt_secret"
     secret_key: "dapp_jwt_secret"
 
-  - external_secret_name: dapp-mnemonic
-    env_variable: "MNEMONIC"
-    aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
-    aws_secret_key: "stokenet_mnemonic"
-    secret_key: "stokenet_mnemonic"
-
   - external_secret_name: dapp-twilio-account-sid
     env_variable: "TWILIO_ACCOUNT_SID"
     aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
