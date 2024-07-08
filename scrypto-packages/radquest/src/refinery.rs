@@ -148,14 +148,16 @@ mod refinery {
         pub fn combine_elements_mint_radgem(
             &mut self,
             user_id: UserId,
-            rand_num_1: Decimal,
-            rand_num_2: Decimal,
+            seed_num_1: Decimal,
+            seed_num_2: Decimal,
+            seed_num_3: Decimal,
         ) -> () {
             assert!(self.enabled, "Refinery component disabled");
 
-            let radgem_bucket = self
-                .admin_badge
-                .authorize_with_amount(1, || self.radgem_forge.mint_radgem(rand_num_1, rand_num_2));
+            let radgem_bucket = self.admin_badge.authorize_with_amount(1, || {
+                self.radgem_forge
+                    .mint_radgem(seed_num_1, seed_num_2, seed_num_3)
+            });
 
             // Update the user's RadGem record
             if self.radgem_records.get(&user_id).is_none() {

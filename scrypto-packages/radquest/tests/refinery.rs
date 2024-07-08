@@ -67,16 +67,20 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
                 RadgemData {
                     key_image_url: UncheckedUrl("".to_string()),
                     name: "Crystalline Coral Radgem".to_string(),
+                    description: "The Common Crystalline material of this Blood Radgem is graded at a quality of 5 out of a possible 25.".to_string(),
                     material: MATERIAL[0].name.to_string(), // Crystalline,
                     color: COLOR[0].to_string(),            // Blood,
-                    rarity: RARITY[1].to_string(),          // Uncommon
+                    rarity: MATERIAL[0].rarity.name.to_string(),          // Common,
+                    quality: dec!(5),
                 },
                 RadgemData {
                     key_image_url: UncheckedUrl("".to_string()),
                     name: "Metallic Forest Radgem".to_string(),
+                    description: "The Rare Metallic material of this Forest Radgem is graded at a quality of 10 out of a possible 25.".to_string(),
                     material: MATERIAL[1].name.to_string(), // Metallic,
                     color: COLOR[1].to_string(),            // Forest,
-                    rarity: RARITY[0].to_string(),          // Common,
+                    rarity: MATERIAL[1].rarity.name.to_string(),          // Rare,
+                    quality: dec!(10),
                 },
             ],
             &mut env,
@@ -219,7 +223,13 @@ fn can_combine_elements_mint_radgem() -> Result<(), RuntimeError> {
 
     // Act
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_mint_radgem(user_id, dec!(0.318), dec!(0.822), &mut env)?;
+    refinery.combine_elements_mint_radgem(
+        user_id,
+        dec!(0.318),
+        dec!(0.822),
+        dec!(0.517),
+        &mut env,
+    )?;
 
     // Assert
     Ok(())
@@ -238,7 +248,13 @@ fn can_combine_elements_add_radgem_image() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_mint_radgem(user_id.clone(), dec!(0.97), dec!(0.87), &mut env)?;
+    refinery.combine_elements_mint_radgem(
+        user_id.clone(),
+        dec!(0.97),
+        dec!(0.87),
+        dec!(0.37),
+        &mut env,
+    )?;
 
     let mut radgem_local_id: Option<NonFungibleLocalId> = None;
     env.with_component_state(refinery, |refinery_state: &mut RefineryState, env| {
@@ -284,7 +300,13 @@ fn can_combine_elements_claim() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_mint_radgem(user_id.clone(), dec!(0.97), dec!(0.89), &mut env)?;
+    refinery.combine_elements_mint_radgem(
+        user_id.clone(),
+        dec!(0.97),
+        dec!(0.89),
+        dec!(0.93),
+        &mut env,
+    )?;
 
     // Act
     let result = refinery.combine_elements_claim(hero_badge_proof, &mut env)?;
@@ -307,13 +329,25 @@ fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_mint_radgem(user_id.clone(), dec!(0.97), dec!(0.87), &mut env)?;
+    refinery.combine_elements_mint_radgem(
+        user_id.clone(),
+        dec!(0.97),
+        dec!(0.87),
+        dec!(0.43),
+        &mut env,
+    )?;
 
     // Act
     let result_1 =
         refinery.combine_elements_claim(hero_badge.create_proof_of_all(&mut env)?, &mut env)?;
 
-    refinery.combine_elements_mint_radgem(user_id.clone(), dec!(0.16), dec!(0.64), &mut env)?;
+    refinery.combine_elements_mint_radgem(
+        user_id.clone(),
+        dec!(0.16),
+        dec!(0.64),
+        dec!(0.29),
+        &mut env,
+    )?;
 
     let result_2 =
         refinery.combine_elements_claim(hero_badge.create_proof_of_all(&mut env)?, &mut env)?;

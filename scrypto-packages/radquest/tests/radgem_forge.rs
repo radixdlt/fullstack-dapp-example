@@ -37,9 +37,11 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
             [RadgemData {
                 key_image_url: UncheckedUrl("".to_string()),
                 name: "Crystalline Coral Radgem".to_string(),
+                description: "The Common Crystalline material of this Blood Radgem is graded at a quality of 5 out of a possible 25.".to_string(),
                 material: MATERIAL[0].name.to_string(), // Crystalline,
                 color: COLOR[0].to_string(),            // Blood,
                 rarity: MATERIAL[0].rarity.name.to_string(), // Common
+                quality: dec!(5),
             }],
             &mut env,
         )?;
@@ -98,7 +100,7 @@ fn can_mint_radgem() -> Result<(), RuntimeError> {
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
 
-    let radgem = radgem_forge.mint_radgem(dec!(0.5), dec!(0.5), &mut env)?;
+    let radgem = radgem_forge.mint_radgem(dec!(0.5), dec!(0.5), dec!(0.5), &mut env)?;
 
     assert_eq!(radgem.amount(&mut env)?, dec!(1));
 
@@ -113,7 +115,7 @@ fn cannot_mint_radgem_without_admin_badge() -> Result<(), RuntimeError> {
         ..
     } = arrange_test_environment()?;
 
-    let result = radgem_forge.mint_radgem(dec!(0.5), dec!(0.5), &mut env);
+    let result = radgem_forge.mint_radgem(dec!(0.5), dec!(0.5), dec!(0.5), &mut env);
 
     assert!(result.is_err(),);
 
@@ -132,7 +134,7 @@ fn can_mint_common_radgem() -> Result<(), RuntimeError> {
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
     // 2nd seed number below 0.75 to ensure a common radgem
-    let radgem = radgem_forge.mint_radgem(dec!(0.4), dec!(0.6), &mut env)?;
+    let radgem = radgem_forge.mint_radgem(dec!(0.4), dec!(0.6), dec!(0.5), &mut env)?;
 
     let radgem_id = radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
     let radgem_data: RadgemData =
@@ -140,9 +142,11 @@ fn can_mint_common_radgem() -> Result<(), RuntimeError> {
     assert_eq!(radgem_data.rarity, "Common");
     assert_eq!(radgem_data.material, "Crystalline");
     assert_eq!(radgem_data.color, "Sky");
+    assert_eq!(radgem_data.quality, dec!(3));
     assert!(radgem_data.name.contains("RadGem"));
     assert!(radgem_data.name.contains("Crystalline"));
     assert!(radgem_data.name.contains("Sky"));
+    assert!(radgem_data.name.contains("{3/100}"));
 
     Ok(())
 }
@@ -159,7 +163,7 @@ fn can_mint_rare_radgem() -> Result<(), RuntimeError> {
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
     // 2nd seed numbers above 0.75 and bellow 0.95 to ensure a rare radgem
-    let radgem = radgem_forge.mint_radgem(dec!(0.5), dec!(0.8), &mut env)?;
+    let radgem = radgem_forge.mint_radgem(dec!(0.5), dec!(0.8), dec!(0.5), &mut env)?;
 
     let radgem_id = radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
     let radgem_data: RadgemData =
@@ -167,9 +171,11 @@ fn can_mint_rare_radgem() -> Result<(), RuntimeError> {
     assert_eq!(radgem_data.rarity, "Rare");
     assert_eq!(radgem_data.material, "Metallic");
     assert_eq!(radgem_data.color, "Coral");
+    assert_eq!(radgem_data.quality, dec!(11));
     assert!(radgem_data.name.contains("RadGem"));
     assert!(radgem_data.name.contains("Metallic"));
     assert!(radgem_data.name.contains("Coral"));
+    assert!(radgem_data.name.contains("11"));
 
     Ok(())
 }
@@ -186,7 +192,7 @@ fn can_mint_ultra_rare_radgem() -> Result<(), RuntimeError> {
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
     // 2nd seed numbers above 0.95 to ensure an ultra rare radgem
-    let radgem = radgem_forge.mint_radgem(dec!(0.2), dec!(0.95), &mut env)?;
+    let radgem = radgem_forge.mint_radgem(dec!(0.2), dec!(0.95), dec!(0.5), &mut env)?;
 
     let radgem_id = radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
     let radgem_data: RadgemData =
@@ -194,9 +200,12 @@ fn can_mint_ultra_rare_radgem() -> Result<(), RuntimeError> {
     assert_eq!(radgem_data.rarity, "Ultra Rare");
     assert_eq!(radgem_data.material, "Radiant");
     assert_eq!(radgem_data.color, "Ocean");
+    assert_eq!(radgem_data.quality, dec!(21));
+    assert_eq!(radgem_data.description, "The Ultra Rare Radiant material of this Ocean RadGem is graded at a quality of 21 out of a possible 25.");
     assert!(radgem_data.name.contains("RadGem"));
     assert!(radgem_data.name.contains("Radiant"));
     assert!(radgem_data.name.contains("Ocean"));
+    assert!(radgem_data.name.contains("21"));
 
     Ok(())
 }
@@ -270,7 +279,7 @@ pub fn can_not_mint_radgems_when_disabled() -> Result<(), RuntimeError> {
 
     // Act
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    let result = radgem_forge.mint_radgem(dec!(0.5), dec!(0.5), &mut env);
+    let result = radgem_forge.mint_radgem(dec!(0.5), dec!(0.5), dec!(0.5), &mut env);
 
     // Assert
     println!("{:?}", result);
