@@ -156,6 +156,21 @@ export const GatewayApi = (networkId: number) => {
       )
     )
 
+  const hasHeroBadgeAndXrd = (accountAddress: string) =>
+    callApi('getEntityDetailsVaultAggregated', [accountAddress]).map(([response]) => {
+      const hasHeroBadge = response.non_fungible_resources.items.some(
+        (item) => item.resource_address === addresses.badges.heroBadgeAddress
+      )
+
+      const hasXrd = response.fungible_resources.items.some(
+        (item) =>
+          item.resource_address === addresses.xrd &&
+          item.vaults.items.some((vault) => Number(vault.amount) > 0)
+      )
+
+      return { hasHeroBadge, hasXrd }
+    })
+
   return {
     hasKycEntry,
     isDepositDisabledForResource,
@@ -163,6 +178,7 @@ export const GatewayApi = (networkId: number) => {
     gatewayApiClient,
     extractedMethods,
     hasHeroBadge,
+    hasHeroBadgeAndXrd,
     callApi,
     callApiWithCache
   }

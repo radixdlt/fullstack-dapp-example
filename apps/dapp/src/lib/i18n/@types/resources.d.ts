@@ -112,6 +112,7 @@ interface Resources {
       requirements: {
         ConnectWallet: 'Download the Radix Wallet mobile app, create your first account Login to RadQuest with your Radix Wallet'
       }
+      walletDownloadPage: 'Go to Wallet Download Page'
       title: 'Get the Radix Wallet'
       description: 'Your key to dApps and assets on Radix'
       introDescription: 'Get the Radix Wallet to use with RadQuest any any other dApp built on Radix'

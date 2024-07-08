@@ -40,6 +40,13 @@ const setUserField = ({ field, ...props }: SetUserFieldProps) =>
     })
   ).map(({ data }) => data)
 
+const hasReceivedXrd = () =>
+  fetchWrapper<{ exists: boolean }>(
+    fetch(`/api/user/has-received-xrd`, {
+      method: 'GET'
+    })
+  ).map(({ data }) => data.exists)
+
 const getReferrals = () =>
   fetchWrapper<{
     referrals: string[]
@@ -57,5 +64,6 @@ export const userApi = {
   getReferrals,
   allowAccountAddressToMintHeroBadge,
   setUserField,
+  hasReceivedXrd,
   directDepositXrd
 } as const
