@@ -65,5 +65,10 @@
     background: var(--color-background-dark);
     height: 100%;
     width: 100%;
+
+    > :global(h2) {
+      color: var(--color-light);
+      margin-top: 0;
+    }
   }
 </style>
