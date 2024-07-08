@@ -28,6 +28,10 @@
       type: 'regular'
     },
     {
+      id: '2',
+      type: 'regular'
+    },
+    {
       id: '3',
       type: 'regular',
       footer: {
@@ -84,6 +88,10 @@
   {/if}
 
   {#if render('1')}
+    {@html text['1.md']}
+  {/if}
+
+  {#if render('2')}
     {@html text['1.md']}
   {/if}
 
