@@ -4,7 +4,7 @@ use radquest::{
     image_oracle::image_oracle_test::*,
     morph_card_forge::MorphCardData,
     quest_rewards::UserId,
-    radgem_forge::{RadgemData, COMMON_COLOR, MATERIAL, RARE_COLOR},
+    radgem_forge::{RadgemData, COLOR, MATERIAL},
     radmorph_forge::{radmorph_forge_test::*, RadmorphData},
     refinery::{refinery_test::*, RARITY},
 };
@@ -67,16 +67,16 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
                 RadgemData {
                     key_image_url: UncheckedUrl("".to_string()),
                     name: "Crystalline Coral Radgem".to_string(),
-                    material: MATERIAL[0].to_string(), // Crystalline,
-                    color: RARE_COLOR[0].to_string(),  // Coral,
-                    rarity: RARITY[1].to_string(),     // Uncommon
+                    material: MATERIAL[0].name.to_string(), // Crystalline,
+                    color: COLOR[0].to_string(),            // Blood,
+                    rarity: RARITY[1].to_string(),          // Uncommon
                 },
                 RadgemData {
                     key_image_url: UncheckedUrl("".to_string()),
                     name: "Metallic Forest Radgem".to_string(),
-                    material: MATERIAL[1].to_string(),  // Metallic,
-                    color: COMMON_COLOR[1].to_string(), // Forest,
-                    rarity: RARITY[0].to_string(),      // Common,
+                    material: MATERIAL[1].name.to_string(), // Metallic,
+                    color: COLOR[1].to_string(),            // Forest,
+                    rarity: RARITY[0].to_string(),          // Common,
                 },
             ],
             &mut env,

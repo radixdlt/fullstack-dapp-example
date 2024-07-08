@@ -1,7 +1,4 @@
-use radquest::{
-    radgem_forge::{radgem_forge_test::*, RadgemData, MATERIAL, RARE_COLOR},
-    refinery::RARITY,
-};
+use radquest::radgem_forge::{radgem_forge_test::*, RadgemData, COLOR, MATERIAL};
 use scrypto_test::prelude::*;
 
 struct Test {
@@ -40,9 +37,9 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
             [RadgemData {
                 key_image_url: UncheckedUrl("".to_string()),
                 name: "Crystalline Coral Radgem".to_string(),
-                material: MATERIAL[0].to_string(), // Crystalline,
-                color: RARE_COLOR[0].to_string(),  // Coral,
-                rarity: RARITY[0].to_string(),     // Common
+                material: MATERIAL[0].name.to_string(), // Crystalline,
+                color: COLOR[0].to_string(),            // Blood,
+                rarity: MATERIAL[0].rarity.name.to_string(), // Common
             }],
             &mut env,
         )?;
@@ -134,35 +131,18 @@ fn can_mint_common_radgem() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    // both seed numbers below 2/3 to ensure a common radgem
-    let radgem = radgem_forge.mint_radgem(dec!(0.65), dec!(0.59), &mut env)?;
+    // 2nd seed number below 0.75 to ensure a common radgem
+    let radgem = radgem_forge.mint_radgem(dec!(0.4), dec!(0.6), &mut env)?;
 
     let radgem_id = radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
     let radgem_data: RadgemData =
         ResourceManager(radgem_address).get_non_fungible_data(radgem_id, &mut env)?;
-    assert_eq!(radgem_data.rarity, RARITY[0].to_string(),);
-
-    Ok(())
-}
-
-#[test]
-fn can_mint_uncommon_radgem() -> Result<(), RuntimeError> {
-    let Test {
-        mut env,
-        mut radgem_forge,
-        radgem_address,
-        admin_badge_proof,
-        ..
-    } = arrange_test_environment()?;
-
-    LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    // one seed numbers above and one bellow 2/3 to ensure a rare radgem
-    let radgem = radgem_forge.mint_radgem(dec!(0.65), dec!(0.75), &mut env)?;
-
-    let radgem_id = radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
-    let radgem_data: RadgemData =
-        ResourceManager(radgem_address).get_non_fungible_data(radgem_id, &mut env)?;
-    assert_eq!(radgem_data.rarity, RARITY[1].to_string());
+    assert_eq!(radgem_data.rarity, "Common");
+    assert_eq!(radgem_data.material, "Crystalline");
+    assert_eq!(radgem_data.color, "Sky");
+    assert!(radgem_data.name.contains("RadGem"));
+    assert!(radgem_data.name.contains("Crystalline"));
+    assert!(radgem_data.name.contains("Sky"));
 
     Ok(())
 }
@@ -178,13 +158,45 @@ fn can_mint_rare_radgem() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    // both seed numbers above 2/3 to ensure an rare radgem
-    let radgem = radgem_forge.mint_radgem(dec!(0.75), dec!(0.88), &mut env)?;
+    // 2nd seed numbers above 0.75 and bellow 0.95 to ensure a rare radgem
+    let radgem = radgem_forge.mint_radgem(dec!(0.5), dec!(0.8), &mut env)?;
 
     let radgem_id = radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
     let radgem_data: RadgemData =
         ResourceManager(radgem_address).get_non_fungible_data(radgem_id, &mut env)?;
-    assert_eq!(radgem_data.rarity, RARITY[2].to_string());
+    assert_eq!(radgem_data.rarity, "Rare");
+    assert_eq!(radgem_data.material, "Metallic");
+    assert_eq!(radgem_data.color, "Coral");
+    assert!(radgem_data.name.contains("RadGem"));
+    assert!(radgem_data.name.contains("Metallic"));
+    assert!(radgem_data.name.contains("Coral"));
+
+    Ok(())
+}
+
+#[test]
+fn can_mint_ultra_rare_radgem() -> Result<(), RuntimeError> {
+    let Test {
+        mut env,
+        mut radgem_forge,
+        radgem_address,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    // 2nd seed numbers above 0.95 to ensure an ultra rare radgem
+    let radgem = radgem_forge.mint_radgem(dec!(0.2), dec!(0.95), &mut env)?;
+
+    let radgem_id = radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
+    let radgem_data: RadgemData =
+        ResourceManager(radgem_address).get_non_fungible_data(radgem_id, &mut env)?;
+    assert_eq!(radgem_data.rarity, "Ultra Rare");
+    assert_eq!(radgem_data.material, "Radiant");
+    assert_eq!(radgem_data.color, "Ocean");
+    assert!(radgem_data.name.contains("RadGem"));
+    assert!(radgem_data.name.contains("Radiant"));
+    assert!(radgem_data.name.contains("Ocean"));
 
     Ok(())
 }
