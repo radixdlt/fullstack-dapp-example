@@ -18,7 +18,7 @@ export default [
     affected_global_entities: [
       'transactiontracker_tdx_2_1stxxxxxxxxxxtxtrakxxxxxxxxx006844685494xxxxxxxxxxzw7jp',
       'consensusmanager_tdx_2_1scxxxxxxxxxxcnsmgrxxxxxxxxx000999665565xxxxxxxxxv6cg29',
-      'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72',
+      addresses.resources.radgemAddress,
       'account_tdx_2_129kjd8vfcn29emc0attwtxm4272duqmc595du57pgp5wk875z8hljj'
     ],
     confirmed_at: '2024-07-04T18:17:34.909Z',
@@ -266,8 +266,7 @@ export default [
               },
               entity_module: 'Main',
               substate_type: 'FungibleResourceManagerFieldTotalSupply',
-              entity_address:
-                'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72',
+              entity_address: addresses.resources.radgemAddress,
               partition_kind: 'Field',
               partition_number: 64
             },
@@ -569,7 +568,7 @@ export default [
             variant_name: 'Fungible',
             fields: [
               {
-                value: 'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72',
+                value: addresses.resources.radgemAddress,
                 kind: 'Reference',
                 type_name: 'ResourceAddress'
               },
@@ -589,8 +588,7 @@ export default [
             entity: {
               is_global: true,
               entity_type: 'GlobalFungibleResource',
-              entity_address:
-                'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72'
+              entity_address: addresses.resources.radgemAddress
             },
             object_module_id: 'Main'
           },
@@ -613,8 +611,7 @@ export default [
             entity: {
               is_global: true,
               entity_type: 'GlobalGenericComponent',
-              entity_address:
-                'component_tdx_2_1cql6w207srlnej6p92nq3z2n9tnp3ltng2l0m40qlhfjr7ur7hxlny'
+              entity_address: addresses.components.refinery
             },
             object_module_id: 'Main'
           },
@@ -727,8 +724,7 @@ export default [
       fungible_balance_changes: [
         {
           entity_address: 'account_tdx_2_129kjd8vfcn29emc0attwtxm4272duqmc595du57pgp5wk875z8hljj',
-          resource_address:
-            'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72',
+          resource_address: addresses.resources.radgemAddress,
           balance_change: '-10'
         }
       ],
