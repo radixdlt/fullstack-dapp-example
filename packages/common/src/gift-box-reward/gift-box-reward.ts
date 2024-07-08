@@ -109,6 +109,7 @@ export const GiftBoxRewardConfig = ({
   } as const
 }
 
+export type GiftBoxReward = ReturnType<typeof GiftBoxReward>
 export const GiftBoxReward = (config: GiftBoxRewardConfig) => (kind: GiftBoxKind) => {
   const energyCard = config[kind].getEnergyCard()
   return {
