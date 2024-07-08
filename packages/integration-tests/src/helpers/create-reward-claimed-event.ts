@@ -32,7 +32,7 @@ export const createRewardClaimedEvent = (userId: string, questId: string) => {
           element_kind: 'Reference',
           elements: [
             {
-              value: 'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72',
+              value: addresses.resources.radgemAddress,
               kind: 'Reference',
               type_name: 'ResourceAddress'
             }

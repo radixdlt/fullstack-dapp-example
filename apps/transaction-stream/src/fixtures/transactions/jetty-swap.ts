@@ -129,8 +129,7 @@ export default [
             entity: {
               is_global: true,
               entity_type: 'GlobalFungibleResource',
-              entity_address:
-                'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72'
+              entity_address: addresses.resources.radgemAddress
             },
             object_module_id: 'Main'
           },
@@ -208,7 +207,7 @@ export default [
               {
                 kind: 'Reference',
                 type_name: 'ResourceAddress',
-                value: 'resource_tdx_2_1t49wp9mm70nzw6hmxts8z84tk7d8v2dchet8shpg2dv4jy9q9m2w72'
+                value: addresses.resources.radgemAddress
               },
               {
                 kind: 'Decimal',

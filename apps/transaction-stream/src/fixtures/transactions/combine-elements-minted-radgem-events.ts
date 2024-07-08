@@ -1482,8 +1482,7 @@ export default [
             entity: {
               is_global: true,
               entity_type: 'GlobalNonFungibleResource',
-              entity_address:
-                'resource_tdx_2_1ngsqqj66xx6u7athxynr0n95phj3ljuvje2hkzfvd90ua8569csaje'
+              entity_address: addresses.resources.radgemAddress
             },
             object_module_id: 'Main'
           },
