@@ -9,6 +9,8 @@
   import { user } from '../../../../../stores'
   import SetEmailPage from './SetEmailPage.svelte'
   import { questApi } from '$lib/api/quest-api'
+  import Button from '$lib/components/button/Button.svelte'
+  import { i18n } from '$lib/i18n/i18n'
 
   export let data: PageData
 
@@ -202,6 +204,11 @@
       {@html text['6a.md']}
     {:else}
       {@html text['6b.md']}
+      <div class="center">
+        <Button link="https://wallet.radixdlt.com" isExternal={true}
+          >{$i18n.t('quests:GetRadixWallet.walletDownloadPage')}</Button
+        >
+      </div>
     {/if}
   {/if}
 
@@ -244,3 +251,11 @@
     <SetEmailPage text={text['14.md']} />
   {/if}
 </Quest>
+
+<style lang="scss">
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
