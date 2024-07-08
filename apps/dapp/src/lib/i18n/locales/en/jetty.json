@@ -10,15 +10,6 @@
   "go-back-to-quest": "Go back to quest",
   "cancel": "Cancel",
   "close": "Close",
-  "transform-gems": {
-    "back": "Back",
-    "title0": "Pick a Transform card",
-    "title1": "Pick two gems",
-    "title2": "Ready to transform?",
-    "complete-button": "Send to Jetty",
-    "gemcard-gemstone": "Gemstone",
-    "gemcard-rarity": "Rarity"
-  },
   "connect-your-wallet": "Once you connect your Radix Wallet, you can unlock these options",
   "fuse-elements": {
     "intro": "I can combine raw elements into colorful RadGems using my magical abilities.",
@@ -33,6 +24,30 @@
     "elements-left": "You have {{count}} Elements left.",
     "new-radgem": "Here you go, a new RadGem for you!",
     "multiple-radgems": "You have multiple RadGems ready to be claimed."
+  },
+  "create-radmorphs": {
+    "intro": "Harnessing the power of a Morph Energy Card, I can help combine 2 RadGems into a beautiful and unique RadMorph!",
+    "intro2": "The colors, materials, and quality of the Card and RadGems you choose will decide what your RadMorph looks like, as well as its ultimate quality.",
+    "intro3-success": "To get started, you’ll choose a card and 2 RadGems and see a preview of what the resulting RadMorph will be...",
+    "intro3-fail": "Oops! You only have {{radgems}} RadGems and {{energyCards}} Morph Energy Cards right now.",
+    "get-started": "Get Started",
+    "back": "Back",
+    "title-pick-card": "Pick a Morph Energy Card",
+    "title-card-selected": "Card selected!",
+    "title-pick-2-gems": "Pick 2 RadGems",
+    "title-pick-1-gem": "Pick 1 more RadGem",
+    "title-gems-selected": "2 RadGems selected!",
+    "title-review": "You have chosen...",
+    "generate-preview": "Generate Preview",
+    "card-quality": "Quality: {{quality}}/50",
+    "gem-quality": "Quality: {{quality}}/25",
+    "radmorph-quality": "Quality: {{quality}}/100",
+    "previewing-radmorph": "Previewing RadMorph",
+    "radmorph-preview-title": "{{firstRadmorph}} and {{secondRadmorph}}",
+    "radmorph-preview-text": "Ready to create this RadMorph? Continue to give Jetty the Card and RadGems, and receive back the RadMorph.",
+    "create-radmorph-button": "Create RadMorph",
+    "start-again-button": "Start Again",
+    "radmorph-created": "You can now find your RadMorph under NFTs in your registered Radix account. Treasure it – or trade it with friends if you like!"
   },
   "notification-cta": "Go to Quest"
 }

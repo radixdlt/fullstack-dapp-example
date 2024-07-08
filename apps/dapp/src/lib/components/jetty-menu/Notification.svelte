@@ -46,6 +46,7 @@
     border-radius: var(--border-radius-xl);
     padding: var(--spacing-xl);
     gap: var(--spacing-xl);
+    color: var(--color-dark);
   }
 
   .red-dot {

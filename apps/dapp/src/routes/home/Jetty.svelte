@@ -17,6 +17,8 @@
   import { tick } from 'svelte'
   import { isMobile } from '$lib/utils/is-mobile'
   import { derived, writable } from 'svelte/store'
+  import MinimizeIcon from '@images/minimize.svg'
+  import CreateRadMorphs from './CreateRadMorphs.svelte'
 
   let poppedUp = false
   let expanded = false
@@ -79,6 +81,12 @@
         icon: LightningIcon,
         alert: claimAvailable,
         disabled: derived(user, ($user) => !($user && $user.accountAddress && $user.id))
+      },
+      {
+        id: 'radmorphs',
+        text: 'Create RadMorphs',
+        icon: MinimizeIcon,
+        disabled: derived(user, ($user) => !($user && $user.accountAddress && $user.id))
       }
     ]}
     notifications={jettyNotifications}
@@ -92,6 +100,14 @@
 
     {#if currentMenuItem.id === 'fuse-elements'}
       <FuseElements
+        on:cancel={() => {
+          back.set(true)
+        }}
+      />
+    {/if}
+
+    {#if currentMenuItem.id === 'radmorphs'}
+      <CreateRadMorphs
         on:cancel={() => {
           back.set(true)
         }}
