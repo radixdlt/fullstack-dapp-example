@@ -10,7 +10,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
             Enum<0u8>(
                 Enum<0u8>(
                     Enum<1u8>(
-                        Address("${admin_badge}")
+                        Address("${super_admin_badge}")
                     )
                 )
             )
@@ -81,7 +81,17 @@ CREATE_NON_FUNGIBLE_RESOURCE
     Tuple(
         Enum<1u8>(
             Tuple(
-                Enum<0u8>(),
+                Enum<1u8>(
+                    Enum<2u8>(
+                        Enum<0u8>(
+                            Enum<0u8>(
+                                Enum<1u8>(
+                                    Address("${admin_badge}")
+                                )
+                            )
+                        )
+                    )
+                ),
                 Enum<1u8>(
                     Enum<1u8>()
                 )
@@ -89,7 +99,17 @@ CREATE_NON_FUNGIBLE_RESOURCE
         ),
         Enum<1u8>(
             Tuple(
-                Enum<0u8>(),
+                Enum<1u8>(
+                    Enum<2u8>(
+                        Enum<0u8>(
+                            Enum<0u8>(
+                                Enum<1u8>(
+                                    Address("${admin_badge}")
+                                )
+                            )
+                        )
+                    )
+                ),
                 Enum<1u8>(
                     Enum<1u8>()
                 )

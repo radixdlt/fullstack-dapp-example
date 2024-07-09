@@ -194,11 +194,11 @@ fn create_radgem() {
         true,
         NonFungibleResourceRoles {
             mint_roles: mint_roles! {
-                minter => OWNER;
+                minter => rule!(require(XRD));
                 minter_updater => rule!(deny_all);
             },
             burn_roles: burn_roles! {
-                burner => OWNER;
+                burner => rule!(require(XRD));
                 burner_updater => rule!(deny_all);
             },
             ..Default::default()
@@ -236,7 +236,7 @@ struct MorphEnergyCardData {
 }
 
 #[test]
-fn create_morph_card() {
+fn create_morph_energy_card() {
     let network = NetworkDefinition::mainnet();
 
     let manifest_builder = ManifestBuilder::new().create_non_fungible_resource(
@@ -245,11 +245,11 @@ fn create_morph_card() {
         true,
         NonFungibleResourceRoles {
             mint_roles: mint_roles! {
-                minter => OWNER;
+                minter => rule!(require(XRD));
                 minter_updater => rule!(deny_all);
             },
             burn_roles: burn_roles! {
-                burner => OWNER;
+                burner => rule!(require(XRD));
                 burner_updater => rule!(deny_all);
             },
             ..Default::default()
