@@ -18,6 +18,10 @@ export const config = {
   notification: {
     baseUrl: process.env.NOTIFICATION_INTERNAL_API_URL!
   },
+  mailerLite: {
+    apiKey: process.env.MAILER_LITE_API_KEY ?? '',
+    groupId: process.env.PUBLIC_MAILER_LITE_RADQUEST_GROUP_ID
+  },
   priceService: {
     baseUrl: process.env.PRICE_SERVICE_URL || 'https://token-price-service.radixdlt.com'
   },

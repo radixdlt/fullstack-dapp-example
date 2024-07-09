@@ -7,7 +7,8 @@ import {
   UserModel,
   TransactionModel,
   AccountAddressModel,
-  GatewayApi
+  GatewayApi,
+  MailerLiteModel
 } from 'common'
 import { logger } from './helpers/logger'
 import { RedisConnection, getQueues } from 'queues'
@@ -49,6 +50,10 @@ const app = async () => {
     logger,
     dbClient,
     tokenPriceClient,
+    mailerLiteModel: MailerLiteModel({
+      apiKey: config.mailerLite.apiKey,
+      groupId: config.mailerLite.groupId || ''
+    }),
     transactionIntent: TransactionIntentHelper({ dbClient, transactionQueue }),
     AccountAddressModel: AccountAddressModel(redisClient),
     sendMessage,

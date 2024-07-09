@@ -12,7 +12,8 @@ import type {
   MessageModel,
   NotificationModel,
   MarketingModel,
-  RadMorphModel
+  RadMorphModel,
+  MailerLiteModel
 } from 'common'
 import type { PrismaClient } from 'database'
 import type { ResultAsync } from 'neverthrow'
@@ -49,6 +50,7 @@ export type Controllers = {
 
 export type ControllerDependencies = {
   userModel: ReturnType<UserModel>
+  mailerLiteModel: ReturnType<MailerLiteModel>
   transactionModel: ReturnType<TransactionModel>
   auditModel: ReturnType<AuditModel>
   gatewayApi: ReturnType<typeof GatewayApi>

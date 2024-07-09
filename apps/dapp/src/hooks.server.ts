@@ -13,7 +13,8 @@ import {
   MessageModel,
   NotificationModel,
   MarketingModel,
-  RadMorphModel
+  RadMorphModel,
+  MailerLiteModel
 } from 'common'
 import { UserType } from 'database'
 import { dbClient } from '$lib/db'
@@ -54,6 +55,10 @@ const gatewayApi = GatewayApi(networkId)
 const messageModel = MessageModel(dbClient)
 const accountAddressModel = AccountAddressModel(redisClient)
 const addresses = Addresses(networkId)
+const mailerLiteModel = MailerLiteModel({
+  apiKey: config.mailerLite.apiKey,
+  groupId: config.mailerLite.groupId || ''
+})
 const notificationModel = NotificationModel(dbClient)
 const marketingModel = MarketingModel(dbClient)
 const radMorphModel = RadMorphModel(dbClient)
@@ -88,6 +93,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     userModel: userModel(logger),
     userQuestModel: userQuestModel(logger),
     transactionModel: transactionModel(logger),
+    mailerLiteModel: mailerLiteModel(logger),
     auditModel: auditModel(logger),
     accountAddressModel: accountAddressModel(logger),
     gatewayApi,

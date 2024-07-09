@@ -4,9 +4,13 @@ import { WorkerOutputError, WorkerError } from '../_types'
 
 export const getUserById = (
   userId: string,
-  dbClient: PrismaClient
+  dbClient: PrismaClient,
+  include: { email?: true } = {}
 ): ResultAsync<User, WorkerOutputError> =>
-  ResultAsync.fromPromise(dbClient.user.findUnique({ where: { id: userId } }), (error) => ({
-    reason: WorkerError.FailedToGetUserFromDb,
-    jsError: error
-  })).andThen((user) => (user ? ok(user) : err({ reason: WorkerError.UserNotFound })))
+  ResultAsync.fromPromise(
+    dbClient.user.findUnique({ where: { id: userId }, include }),
+    (error) => ({
+      reason: WorkerError.FailedToGetUserFromDb,
+      jsError: error
+    })
+  ).andThen((user) => (user ? ok(user) : err({ reason: WorkerError.UserNotFound })))

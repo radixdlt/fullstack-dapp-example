@@ -122,10 +122,14 @@
             )
             .andThen((hasXrd) =>
               userApi
-                .setUserField({
-                  accountAddress: accounts[0].address,
-                  proof: accountProof as SignedChallengeAccount,
-                  field: 'accountAddress'
+                .setUserFields({
+                  fields: [
+                    {
+                      accountAddress: accounts[0].address,
+                      proof: accountProof as SignedChallengeAccount,
+                      field: 'accountAddress'
+                    }
+                  ]
                 })
                 .andThen(() =>
                   userApi

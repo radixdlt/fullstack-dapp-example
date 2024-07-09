@@ -21,10 +21,15 @@ const directDepositXrd = () =>
     })
   )
 
-type SetUserFieldProps =
+export type UserFieldData =
   | {
       field: 'name'
       name: string
+    }
+  | {
+      field: 'email'
+      email: string
+      newsletter: boolean
     }
   | {
       field: 'accountAddress'
@@ -32,9 +37,13 @@ type SetUserFieldProps =
       proof: SignedChallengeAccount
     }
 
-const setUserField = ({ field, ...props }: SetUserFieldProps) =>
+type SetUserFieldProps = {
+  fields: UserFieldData[]
+}
+
+const setUserFields = (props: SetUserFieldProps) =>
   fetchWrapper<void>(
-    fetch(`/api/user?field=${field}`, {
+    fetch(`/api/user`, {
       method: 'PUT',
       body: JSON.stringify(props)
     })
@@ -63,7 +72,7 @@ export const userApi = {
   me,
   getReferrals,
   allowAccountAddressToMintHeroBadge,
-  setUserField,
   hasReceivedXrd,
+  setUserFields,
   directDepositXrd
 } as const

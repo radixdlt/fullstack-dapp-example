@@ -1,12 +1,27 @@
 <script lang="ts">
-  import EnterEmail from './EnterEmail.svelte'
+  import Checkbox from '$lib/components/checkbox/Checkbox.svelte'
+  import EmailInput from '$lib/components/email-input/EmailInput.svelte'
 
-  export let text: string
+  export let privacyPolicyText: string
+  export let marketingUpdatesText: string
 
-  let email: string
-  let sendNewsletter = false
+  export let email: string
+  export let sendNewsletter: boolean
+
+  let emailInput: EmailInput
 </script>
 
-{@html text}
+<div class="enter-email">
+  <EmailInput bind:this={emailInput} bind:email />
 
-<EnterEmail bind:email bind:checked={sendNewsletter} />
+  {@html privacyPolicyText}
+
+  <Checkbox bind:checked={sendNewsletter}>{@html marketingUpdatesText}</Checkbox>
+</div>
+
+<style lang="scss">
+  .enter-email {
+    display: flex;
+    flex-direction: column;
+  }
+</style>

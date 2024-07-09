@@ -4,6 +4,7 @@ import type {
   Prisma,
   User,
   UserPhoneNumber,
+  UserEmail,
   CompletedQuestRequirement,
   QuestProgress,
   QuestStatus
@@ -51,6 +52,7 @@ type UserModelType = {
   setUserName: (userId: string, name: string) => ResultAsync<User, ApiError>
   getPhoneNumberByUserId: (userId: string) => ResultAsync<string | undefined, ApiError>
   confirmReferralCode: (referralCode: string) => ResultAsync<string | undefined, ApiError>
+  setEmail: (userId: string, email: string, newsletter: boolean) => ResultAsync<UserEmail, ApiError>
 }
 
 export type UserModel = ReturnType<typeof UserModel>
@@ -279,6 +281,26 @@ export const UserModel =
         }
       )
 
+    const setEmail = (userId: string, email: string, newsletter: boolean) =>
+      ResultAsync.fromPromise(
+        db.userEmail.upsert({
+          create: {
+            userId,
+            email,
+            newsletter
+          },
+          update: {
+            email,
+            newsletter
+          },
+          where: { userId }
+        }),
+        (error) => {
+          logger?.error({ error, method: 'setEmail', model: 'UserModel' })
+          return createApiError('failed to set user email', 400)()
+        }
+      )
+
     const getPhoneNumberByUserId = (userId: string): ResultAsync<string | undefined, ApiError> =>
       ResultAsync.fromPromise(db.userPhoneNumber.findFirst({ where: { userId } }), (error) => {
         logger?.error({ error, method: 'getPhoneNumberByUserId', model: 'UserModel' })
@@ -310,6 +332,7 @@ export const UserModel =
       addAccount,
       setUserName,
       getPhoneNumberByUserId,
-      confirmReferralCode
+      confirmReferralCode,
+      setEmail
     }
   }

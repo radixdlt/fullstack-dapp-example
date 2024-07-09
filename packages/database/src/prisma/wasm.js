@@ -131,6 +131,12 @@ exports.Prisma.UserScalarFieldEnum = {
   referredBy: 'referredBy'
 };
 
+exports.Prisma.UserEmailScalarFieldEnum = {
+  userId: 'userId',
+  email: 'email',
+  newsletter: 'newsletter'
+};
+
 exports.Prisma.RadMorphImageScalarFieldEnum = {
   id: 'id',
   url: 'url'
@@ -297,6 +303,7 @@ exports.TransactionIntentStatus = exports.$Enums.TransactionIntentStatus = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  UserEmail: 'UserEmail',
   RadMorphImage: 'RadMorphImage',
   UserPhoneNumber: 'UserPhoneNumber',
   Referral: 'Referral',
