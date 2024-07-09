@@ -50,12 +50,13 @@
   bind:this={carousel}
   class="carousel"
   on:wheel={(e) => {
+    const delta = e.deltaY || e.deltaX
     e.preventDefault()
     e.stopImmediatePropagation()
     if (!canScroll) return
     canScroll = false
     e.currentTarget.scrollBy({
-      left: e.deltaY < 0 ? -400 : 400,
+      left: delta < 0 ? -400 : 400,
       behavior: 'smooth'
     })
     setTimeout(() => {
