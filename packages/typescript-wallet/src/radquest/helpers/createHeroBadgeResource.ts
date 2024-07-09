@@ -1,6 +1,12 @@
 import { radixEngineClient } from '../../config'
 
-export const createHeroBadgeResource = (adminBadge: string) => {
+export const createHeroBadgeResource = ({
+  superAdminBadgeAddress,
+  adminBadgeAddress
+}: {
+  superAdminBadgeAddress: string
+  adminBadgeAddress: string
+}) => {
   return radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
@@ -17,7 +23,7 @@ export const createHeroBadgeResource = (adminBadge: string) => {
                     Enum<0u8>(
                         Enum<0u8>(
                             Enum<1u8>(
-                                Address("${adminBadge}")
+                                Address("${superAdminBadgeAddress}")
                             )
                         )
                     )
@@ -94,7 +100,17 @@ export const createHeroBadgeResource = (adminBadge: string) => {
             Tuple(
                 Enum<1u8>(
                     Tuple(
-                        Enum<0u8>(),
+                        Enum<1u8>(
+                            Enum<2u8>(
+                                Enum<0u8>(
+                                    Enum<0u8>(
+                                        Enum<1u8>(
+                                            Address("${adminBadgeAddress}")
+                                        )
+                                    )
+                                )
+                            )
+                        ),
                         Enum<0u8>()
                     )
                 ),
@@ -145,6 +161,16 @@ export const createHeroBadgeResource = (adminBadge: string) => {
                         Enum<1u8>(
                             Enum<13u8>(
                                 "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"
+                            )
+                        ),
+                        false
+                    ),
+                    "dapp_definitions" => Tuple(
+                        Enum<1u8>(
+                            Enum<128u8>(
+                                Array<String>(
+                                    "dapp_definition_account_address"
+                                )
                             )
                         ),
                         false

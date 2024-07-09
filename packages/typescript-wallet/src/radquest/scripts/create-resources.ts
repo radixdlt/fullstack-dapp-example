@@ -1,6 +1,6 @@
 import { radixEngineClient } from '../../config'
 import { logger } from '../../helpers/logger'
-import { createBadgeResources } from '../helpers/createBadgeResources'
+import { createResources } from '../helpers/createResources'
 import { mintAdminBadge } from '../helpers/mintAdminBadge'
 
 const mintAdminBadgeToSystemAccount = (adminBadgeAddress: string, superAdminBadgeAddress: string) =>
@@ -12,10 +12,11 @@ const mintAdminBadgeToSystemAccount = (adminBadgeAddress: string, superAdminBadg
     })
   )
 
-createBadgeResources()
-  .andThen(({ adminBadgeAddress, superAdminBadgeAddress, heroBadgeAddress }) =>
-    mintAdminBadgeToSystemAccount(adminBadgeAddress, superAdminBadgeAddress).map(() =>
-      logger.debug({ adminBadgeAddress, superAdminBadgeAddress, heroBadgeAddress })
-    )
+createResources()
+  .andThen((resources) =>
+    mintAdminBadgeToSystemAccount(
+      resources.adminBadgeAddress,
+      resources.superAdminBadgeAddress
+    ).map(() => logger.debug(resources))
   )
   .mapErr((error) => logger.error(error))

@@ -1,6 +1,12 @@
-import { config, radixEngineClient } from '../../config'
+import { radixEngineClient } from '../../config'
 
-export const createClamResource = () => {
+export const createClamResource = ({
+  superAdminBadgeAddress,
+  adminBadgeAddress
+}: {
+  superAdminBadgeAddress: string
+  adminBadgeAddress: string
+}) => {
   return radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
@@ -17,7 +23,7 @@ export const createClamResource = () => {
                   Enum<0u8>(
                       Enum<0u8>(
                           Enum<1u8>(
-                              Address("${config.radQuest.badges.superAdminBadgeAddress}"),
+                              Address("${superAdminBadgeAddress}"),
                           )
                       )
                   )
@@ -34,7 +40,7 @@ export const createClamResource = () => {
                           Enum<0u8>(
                               Enum<0u8>(
                                   Enum<1u8>(
-                                      Address("${config.radQuest.badges.adminBadgeAddress}")
+                                      Address("${adminBadgeAddress}")
                                   )
                               )
                           )
@@ -53,7 +59,7 @@ export const createClamResource = () => {
                           Enum<0u8>(
                               Enum<0u8>(
                                   Enum<1u8>(
-                                      Address("${config.radQuest.badges.adminBadgeAddress}")
+                                      Address("${adminBadgeAddress}")
                                   )
                               )
                           )
@@ -91,7 +97,7 @@ export const createClamResource = () => {
                       Enum<0u8>(
                           Enum<0u8>(
                               Enum<1u8>(
-                                  Address("${config.radQuest.badges.superAdminBadgeAddress}"),
+                                  Address("${superAdminBadgeAddress}"),
                               )
                           )
                       )

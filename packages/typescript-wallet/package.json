@@ -11,7 +11,7 @@
     "wallet:list:accounts": "npx tsx ./src/scripts/account-address.ts",
     "wallet:create:mnemonic": "npx tsx ./src/scripts/generate-mnemonic.ts",
     "wallet:faucet": "npx tsx ./src/scripts/faucet.ts",
-    "wallet:create:badges": "npx tsx ./src/radquest/scripts/create-badges.ts",
+    "wallet:create:resources": "npx tsx ./src/radquest/scripts/create-resources.ts",
     "wallet:mint-hero-badge": "npx tsx ./src/radquest/scripts/mint-hero-badge.ts",
     "wallet:mint-admin-badge": "npx tsx ./src/radquest/scripts/mint-admin-badge.ts",
     "wallet:deploy:radquest": "npx tsx ./src/radquest/scripts/deploy-radquest.ts",
