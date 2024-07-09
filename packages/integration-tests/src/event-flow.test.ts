@@ -14,6 +14,7 @@ import {
   AccountAddressModel,
   Addresses,
   GatewayApi,
+  GiftBoxKind,
   TransactionModel,
   UserModel,
   UserQuestModel,
