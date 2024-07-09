@@ -101,7 +101,7 @@ fn create_hero_badge() {
         true,
         NonFungibleResourceRoles {
             mint_roles: mint_roles! {
-                minter => OWNER;
+                minter => rule!(require(XRD));
                 minter_updater => OWNER;
             },
             withdraw_roles: withdraw_roles! {
