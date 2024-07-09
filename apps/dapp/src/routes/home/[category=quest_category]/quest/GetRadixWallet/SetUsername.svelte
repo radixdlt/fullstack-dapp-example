@@ -1,12 +1,11 @@
 <script lang="ts">
-  import JettyActionButtons from '$lib/components/quest/JettyActionButtons.svelte'
   import Input from '$lib/components/input/Input.svelte'
   import { user } from '../../../../../stores'
   import { writable } from 'svelte/store'
   import { userApi } from '$lib/api/user-api'
+  import Button from '$lib/components/button/Button.svelte'
+  import { i18n } from '$lib/i18n/i18n'
 
-  export let text: string
-  export let onBack: () => void
   export let onNext: () => void
 
   let nameInput = $user?.label ?? ''
@@ -20,15 +19,26 @@
 
     if (result.isErr()) error = (result.error.data as any).message
     else {
+      if ($user) {
+        $user.label = nameInput
+      }
+
       error = ''
       onNext()
     }
   }
 </script>
 
-{@html text}
-
 <Input bind:value={nameInput} />
 {error}
 
-<JettyActionButtons isNextDisabled={!canSaveName} on:back={onBack} on:next={setUserName} />
+<div class="center">
+  <Button on:click={setUserName}>{$i18n.t('quests:GetRadixWallet.confirmSetUsername')}</Button>
+</div>
+
+<style lang="scss">
+  .center {
+    display: flex;
+    justify-content: center;
+  }
+</style>

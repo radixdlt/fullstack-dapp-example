@@ -27,7 +27,7 @@
     flex-wrap: wrap;
     display: flex;
     align-items: center;
-    gap: var(--rewards-gap, var(--spacing-2xl));
+    gap: var(--rewards-gap, var(--spacing-lg));
   }
 
   .rewards.vertical {

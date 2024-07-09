@@ -67,7 +67,7 @@ interface Resources {
     copy: 'Copy'
     rewards: 'Rewards'
     requirementsDescription: 'Complete the tasks below to claim your rewards. You can always go back and check the information if you’re not sure how.'
-    requirementsTitle: 'What You Need to Do'
+    requirementsTitle: 'What you will do'
     nextButton: 'Next'
     keyImageAlt: 'Quest Image'
     backButton: 'Back'
@@ -116,6 +116,7 @@ interface Resources {
       title: 'Get the Radix Wallet'
       description: 'Your key to dApps and assets on Radix'
       introDescription: 'Get the Radix Wallet to use with RadQuest any any other dApp built on Radix'
+      confirmSetUsername: 'Confirm'
     }
     FirstTransactionQuest: {
       requirements: {
@@ -133,7 +134,7 @@ interface Resources {
       failedToSendOtp: 'Failed to send OTP'
       phoneNumberExists: 'Phone number exists'
       invalidPhoneNumber: 'Invalid phone number'
-      invalidOtp: 'Invalid one time password'
+      invalidOtp: 'Invalid code'
       invalidRequest: 'Invalid request'
       failedToAddPhoneNumber: 'Failed to add phone number'
       phoneNumberInputTitle: 'Your phone number'
@@ -244,4 +245,4 @@ interface Resources {
   translation: {}
 }
 
-export default Resources
+export default Resources;

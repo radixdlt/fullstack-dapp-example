@@ -26,6 +26,7 @@
   }
 
   .radix-btn {
+    --radix-connect-button-border-radius: 20px;
     z-index: 2;
   }
 </style>

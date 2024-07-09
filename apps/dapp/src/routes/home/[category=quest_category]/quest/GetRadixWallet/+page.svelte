@@ -11,6 +11,7 @@
   import { questApi } from '$lib/api/quest-api'
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
+  import SetUsername from './SetUsername.svelte'
 
   export let data: PageData
 
@@ -241,6 +242,7 @@
 
   {#if render('14')}
     {@html text['14.md']}
+    <SetUsername onNext={quest.actions.next} />
   {/if}
 
   {#if render('15')}
@@ -248,7 +250,7 @@
   {/if}
 
   {#if render('16')}
-    <SetEmailPage text={text['14.md']} />
+    <SetEmailPage text="" />
   {/if}
 </Quest>
 
