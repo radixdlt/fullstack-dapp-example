@@ -22,10 +22,9 @@
     (keys: StateKeyValueStoreKeysResponse): ResultAsync<string, string> => {
       const userKey = keys.items.find(
         ({ key }) =>
-          key.programmatic_json.kind === 'Tuple' &&
-          key.programmatic_json.fields.find(
-            (field) => field.kind === 'NonFungibleLocalId' && field.value === `<${userId}>`
-          )
+          key.programmatic_json.type_name === 'UserId' &&
+          key.programmatic_json.kind === 'String' &&
+          key.programmatic_json.value === userId
       )
 
       return userKey ? okAsync(userKey.key.raw_hex) : errAsync('No claim available')
@@ -102,7 +101,6 @@
 </script>
 
 <script lang="ts">
-  import JettyActionButtons from '$lib/components/quest/JettyActionButtons.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import { publicConfig } from '$lib/public-config'
   import { GatewayApi } from 'common'
@@ -121,9 +119,8 @@
   import ClaimRadGem from './ClaimRadGem.svelte'
   import { messageApi } from '$lib/api/message-api'
   import { context } from '$lib/components/jetty-menu/JettyMenu.svelte'
-  import Button from '$lib/components/button/Button.svelte'
-  import FuseElementsPage from './FuseElementsPage.svelte'
   import { webSocketClient } from '$lib/websocket-client'
+  import JettyMenuItemPage from './JettyMenuItemPage.svelte'
 
   let rerender = false
 
@@ -270,8 +267,13 @@
   {:else if waitingForElementsDeposited}
     {$i18n.t('jetty:fuse-elements.fusing-elements')}...
   {:else if radgemClaimed}
-    <FuseElementsPage singleAction>
-      <div slot="content">
+    <JettyMenuItemPage
+      action={{
+        text: $i18n.t('jetty:close'),
+        onClick: () => dispatch('cancel')
+      }}
+    >
+      <div>
         {$i18n.t('jetty:fuse-elements.radgem-claimed')}
 
         <p>
@@ -280,9 +282,7 @@
           })}
         </p>
       </div>
-
-      <Button slot="actions" on:click={() => dispatch('cancel')}>{$i18n.t('jetty:close')}</Button>
-    </FuseElementsPage>
+    </JettyMenuItemPage>
   {:else if claimAvailable || elementsDeposited}
     <ClaimRadGem
       ids={claimableRadGemIds}
@@ -294,8 +294,30 @@
     />
   {:else}
     {#key rerender}
-      <FuseElementsPage singleAction={noElements || parseInt(amountOfElements) < 10}>
-        <div slot="content">
+      <JettyMenuItemPage
+        action={noElements || parseInt(amountOfElements) < 10
+          ? {
+              text: $i18n.t('jetty:close'),
+              onClick: () => dispatch('cancel')
+            }
+          : undefined}
+        actions={parseInt(amountOfElements) >= 10
+          ? {
+              left: {
+                text: $i18n.t('jetty:close'),
+                onClick: () => dispatch('cancel')
+              },
+              right: {
+                text: $i18n.t('jetty:fuse-elements.send-button', {
+                  count: 10
+                }),
+                onClick: sendElements
+              }
+            }
+          : undefined}
+        loading={waitingForSendElements}
+      >
+        <div>
           {$i18n.t('jetty:fuse-elements.intro')}
 
           <p>
@@ -322,25 +344,7 @@
             </p>
           {/if}
         </div>
-
-        <div slot="actions">
-          {#if noElements}
-            <Button on:click={() => dispatch('cancel')}>{$i18n.t('jetty:close')}</Button>
-          {:else if parseInt(amountOfElements) >= 10}
-            <JettyActionButtons
-              backText={$i18n.t('jetty:cancel')}
-              nextText={$i18n.t('jetty:fuse-elements.send-button', {
-                count: 10
-              })}
-              loading={waitingForSendElements}
-              on:back={() => dispatch('cancel')}
-              on:next={sendElements}
-            />
-          {:else}
-            <Button on:click={() => dispatch('cancel')}>{$i18n.t('jetty:close')}</Button>
-          {/if}
-        </div>
-      </FuseElementsPage>
+      </JettyMenuItemPage>
     {/key}
   {/if}
 </div>

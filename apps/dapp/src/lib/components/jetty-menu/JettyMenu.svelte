@@ -232,7 +232,7 @@
     display: grid;
     grid-template-rows: 4rem 1fr;
     background-color: var(--color-background-dark);
-    height: 30rem;
+    height: 34rem;
     width: 25rem;
     border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
     position: absolute;

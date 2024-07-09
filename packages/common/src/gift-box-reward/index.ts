@@ -1,2 +1,2 @@
-export * from './gift-box-reward';
-export * from './types';
+export * from './gift-box-reward'
+export * from './types'

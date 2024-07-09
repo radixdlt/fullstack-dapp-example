@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Button from '$lib/components/button/Button.svelte'
   import { publicConfig } from '$lib/public-config'
   import { sendTransaction } from '$lib/rdt'
   import { createEventDispatcher, onMount } from 'svelte'
@@ -11,7 +10,7 @@
   } from '@radixdlt/babylon-gateway-api-sdk'
   import pipe from 'ramda/src/pipe'
   import { i18n } from '$lib/i18n/i18n'
-  import FuseElementsPage from './FuseElementsPage.svelte'
+  import FuseElementsPage from './JettyMenuItemPage.svelte'
 
   export let ids: string[]
 
@@ -95,8 +94,14 @@
   }
 </script>
 
-<FuseElementsPage singleAction>
-  <div class="claim-radgem" slot="content">
+<FuseElementsPage
+  action={{
+    text: 'Claim',
+    onClick
+  }}
+  {loading}
+>
+  <div class="claim-radgem">
     {#if preview}
       {$i18n.t('jetty:fuse-elements.new-radgem')}
       <img src={preview.image} alt="A Radgem" />
@@ -107,8 +112,6 @@
       <enhanced:img src="@images/multiple-gems.webp?enhanced" />
     {/if}
   </div>
-
-  <Button slot="actions" {loading} on:click={onClick}>Claim</Button>
 </FuseElementsPage>
 
 <style lang="scss">

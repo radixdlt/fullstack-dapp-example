@@ -241,11 +241,48 @@ export const TransactionWorkerController = ({
             MINT_FUNGIBLE
               Address("${addresses.resources.elementAddress}")
               Decimal("100");
+
+            CALL_METHOD
+              Address("${addresses.components.cardForge}")
+              "mint_random_card"
+              Decimal("0.62")
+              "<${user.id}>";
+
+              CALL_METHOD
+              Address("${addresses.components.cardForge}")
+              "mint_random_card"
+              Decimal("0.62")
+              "<${user.id}>";
+
+              CALL_METHOD
+              Address("${addresses.components.cardForge}")
+              "mint_random_card"
+              Decimal("0.62")
+              "<${user.id}>";
+
+              CALL_METHOD
+              Address("${addresses.components.cardForge}")
+              "mint_random_card"
+              Decimal("0.62")
+              "<${user.id}>";
+
+              CALL_METHOD
+              Address("${addresses.components.cardForge}")
+              "mint_random_card"
+              Decimal("0.62")
+              "<${user.id}>";
                 
             TAKE_FROM_WORKTOP
               Address("${addresses.resources.clamAddress}")
               Decimal("100")
               Bucket("clam_bucket");
+
+                
+            TAKE_FROM_WORKTOP
+              Address("${addresses.resources.morphEnergyCards}")
+              Decimal("5")
+              Bucket("card_bucket");
+
 
             TAKE_FROM_WORKTOP
               Address("${addresses.resources.elementAddress}")
@@ -262,6 +299,12 @@ export const TransactionWorkerController = ({
               Address("${accountAddress}")
               "try_deposit_or_abort"
               Bucket("element_bucket")
+              Enum<0u8>();
+            
+            CALL_METHOD
+              Address("${accountAddress}")
+              "try_deposit_or_abort"
+              Bucket("card_bucket")
               Enum<0u8>();
 
               CALL_METHOD
@@ -293,7 +336,8 @@ export const TransactionWorkerController = ({
               Address("${accountAddress}")
               "try_deposit_or_abort"
               Bucket("xrd_bucket")
-              Enum<0u8>();
+              Enum<0u8>()
+          ;
           `
         ).andThen(handlePollTransactionStatus)
 
