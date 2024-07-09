@@ -41,7 +41,6 @@
   <slot name="header" {progress} />
 
   <ProgressBar totalSteps={steps} bind:progress />
-
   <slot name="content" {animationDuration} {width} {height} {progress} />
 </div>
 
@@ -51,9 +50,9 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-rows: 3rem auto 1fr;
+    grid-template-rows: auto auto 1fr;
     min-height: 28rem;
-    min-width: 20rem;
+    width: 25rem;
     overflow-y: hidden;
   }
 </style>

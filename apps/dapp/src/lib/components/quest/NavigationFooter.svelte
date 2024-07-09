@@ -29,7 +29,7 @@
 
 <style>
   .footer {
-    padding: var(--spacing-xl) var(--spacing-2xl);
+    padding: var(--spacing-xl);
   }
 
   .footer-container {
