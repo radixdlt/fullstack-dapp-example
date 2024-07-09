@@ -27,8 +27,9 @@
     left: 0;
   }
   .backdrop {
-    backdrop-filter: blur(1px);
-    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    opacity: 0.9;
+    background: var(--gradient-3);
   }
 
   .content {
