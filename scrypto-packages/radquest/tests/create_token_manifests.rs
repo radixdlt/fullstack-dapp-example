@@ -142,11 +142,11 @@ fn create_gift_box() {
         DIVISIBILITY_NONE,
         FungibleResourceRoles {
             mint_roles: mint_roles! {
-                minter => OWNER;
+                minter => rule!(require(XRD));
                 minter_updater => rule!(deny_all);
             },
             burn_roles: burn_roles! {
-                burner => OWNER;
+                burner => rule!(require(XRD));
                 burner_updater => rule!(deny_all);
             },
             ..Default::default()
@@ -155,6 +155,7 @@ fn create_gift_box() {
             init {
               "name" => "Gift Box", updatable;
               "description" => "Gift Boxes are filled with treasures and surprises, waiting to be opened.", updatable;
+              "tags" => vec!["radquest"], updatable;
               "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
               "dapp_definitions" => vec!["dapp_definition_account_address"], updatable;
             }
