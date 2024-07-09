@@ -52,18 +52,6 @@ export const createRewardsDepositManifest = ({
       return bucketName
     }
 
-    // CALL_METHOD
-    //   Address("${addresses.accounts.system.address}")
-    //   "create_proof_of_amount"
-    //   Address("${addresses.badges.adminBadgeAddress}")
-    //   Decimal("1")
-    // ;
-
-    // MINT_FUNGIBLE
-    //   Address("${addresses.resources.giftBox[kind]}")
-    //   Decimal("1")
-    // ;
-
     switch (reward.name) {
       case 'starterGiftBox': {
         addToManifest(

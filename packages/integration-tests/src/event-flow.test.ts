@@ -9,7 +9,8 @@ import {
   mintClams,
   AccountHelper,
   Account,
-  TransactionHelper
+  TransactionHelper,
+  mintGiftBox
 } from 'typescript-wallet'
 import {
   AccountAddressModel,
@@ -481,5 +482,69 @@ describe('Event flows', () => {
         expect(await getXrdRewardToClaim(referrer.user.id)).toEqual(0)
       }
     )
+  })
+
+  describe.only('giftbox', () => {
+    it('should mint starter gift box and open it', { timeout: 30_000, skip: false }, async () => {
+      const userResult = await accountHelper.createAccount({ logger, networkId: 2 })
+
+      if (userResult.isErr()) throw userResult.error
+
+      const { user, getXrdFromFaucet, submitTransaction } = userResult.value
+
+      await mintHeroBadge(user.id, user.accountAddress!, undefined, [], 0, {
+        heroBadgeAddress: radquestEntityAddresses.badges.heroBadgeAddress
+      })
+
+      await getXrdFromFaucet()
+
+      const mintGiftBoxResult = await mintGiftBox('starter', user.accountAddress!)
+
+      if (mintGiftBoxResult.isErr()) throw mintGiftBoxResult.error
+
+      const openGiftBoxResult = await submitTransaction(`
+        CALL_METHOD
+          Address("${user.accountAddress}")
+          "lock_fee"
+          Decimal("50")
+        ;
+
+        CALL_METHOD
+          Address("${user.accountAddress}")
+          "create_proof_of_non_fungibles"
+          Address("${addresses.badges.heroBadgeAddress}")
+          Array<NonFungibleLocalId>(
+              NonFungibleLocalId("<${user.id}>")
+          )
+        ;
+
+        POP_FROM_AUTH_ZONE
+          Proof("hero_badge_proof")
+        ;
+
+        CALL_METHOD
+          Address("${user.accountAddress}")
+          "withdraw"
+          Address("${addresses.resources.giftBox.starter}")
+          Decimal("1")
+        ;
+
+        TAKE_ALL_FROM_WORKTOP
+          Address("${addresses.resources.giftBox.starter}")
+          Bucket("gift_box")
+        ;
+        
+        CALL_METHOD
+          Address("${addresses.components.giftBoxOpener}")
+          "open_gift_box"
+          Proof("hero_badge_proof")
+          Bucket("gift_box")
+        ;
+      `).andThen((api) => api.pollTransactionStatus().map(() => api.transactionId))
+
+      if (openGiftBoxResult.isErr()) throw openGiftBoxResult.error
+
+      console.log(openGiftBoxResult.value)
+    })
   })
 })
