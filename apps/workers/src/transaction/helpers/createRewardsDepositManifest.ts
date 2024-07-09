@@ -24,7 +24,7 @@ export const createRewardsDepositManifest = ({
   const addresses = Addresses(config.networkId)
   const { payerAccount, systemAccount } = wellKnownAddresses.accountAddress
   const { adminBadgeAddress } = addresses.badges
-  const { elementAddress, clamAddress } = addresses.resources
+  const { elementAddress, clamAddress, giftBox } = addresses.resources
 
   const buckets: string[] = []
   const manifest: string[] = []
@@ -52,17 +52,73 @@ export const createRewardsDepositManifest = ({
       return bucketName
     }
 
+    // CALL_METHOD
+    //   Address("${addresses.accounts.system.address}")
+    //   "create_proof_of_amount"
+    //   Address("${addresses.badges.adminBadgeAddress}")
+    //   Decimal("1")
+    // ;
+
+    // MINT_FUNGIBLE
+    //   Address("${addresses.resources.giftBox[kind]}")
+    //   Decimal("1")
+    // ;
+
     switch (reward.name) {
-      case 'element': {
+      case 'starterGiftBox': {
         addToManifest(
           `MINT_FUNGIBLE
-            Address("${elementAddress}")
+            Address("${giftBox.starter}")
             Decimal("${reward.amount}")
           ;`,
           `TAKE_FROM_WORKTOP
-            Address("${elementAddress}")
+            Address("${giftBox.starter}")
             Decimal("${reward.amount}")
-            Bucket("${createBucket('element')}")
+            Bucket("${createBucket('gift_box')}")
+          ;`
+        )
+        break
+      }
+      case 'simpleGiftBox': {
+        addToManifest(
+          `MINT_FUNGIBLE
+            Address("${giftBox.simple}")
+            Decimal("${reward.amount}")
+          ;`,
+          `TAKE_FROM_WORKTOP
+            Address("${giftBox.simple}")
+            Decimal("${reward.amount}")
+            Bucket("${createBucket('gift_box')}")
+          ;`
+        )
+        break
+      }
+
+      case 'fancyGiftBox': {
+        addToManifest(
+          `MINT_FUNGIBLE
+            Address("${giftBox.fancy}")
+            Decimal("${reward.amount}")
+          ;`,
+          `TAKE_FROM_WORKTOP
+            Address("${giftBox.fancy}")
+            Decimal("${reward.amount}")
+            Bucket("${createBucket('gift_box')}")
+          ;`
+        )
+        break
+      }
+
+      case 'eliteGiftBox': {
+        addToManifest(
+          `MINT_FUNGIBLE
+            Address("${giftBox.elite}")
+            Decimal("${reward.amount}")
+          ;`,
+          `TAKE_FROM_WORKTOP
+            Address("${giftBox.elite}")
+            Decimal("${reward.amount}")
+            Bucket("${createBucket('gift_box')}")
           ;`
         )
         break
@@ -79,22 +135,6 @@ export const createRewardsDepositManifest = ({
               Decimal("${reward.amount}")
               Bucket("${createBucket('clam')}")
             ;`
-        )
-        break
-      }
-
-      case 'energyCard': {
-        addToManifest(
-          `CALL_METHOD
-            Address("${config.radQuest.components.cardForge}")
-            "mint_random_card"
-            Decimal("${randomFloat()}")
-            "${userId}"
-          ;`,
-          `TAKE_ALL_FROM_WORKTOP
-            Address("${config.radQuest.resources.morphEnergyCards}")
-            Bucket("${createBucket('energyCard')}")
-          ;`
         )
         break
       }

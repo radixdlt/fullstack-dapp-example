@@ -14,8 +14,8 @@
       amount: 5
     },
     {
-      name: 'element',
-      amount: 10
+      name: 'simpleGiftBox',
+      amount: 1
     }
   ] as const
 

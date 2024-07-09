@@ -11,10 +11,11 @@ export type FungibleToken = { amount: number }
 
 export type QuestRewards = {
   xrd: FungibleToken
-  element: FungibleToken
   clam: FungibleToken
-  energyCard: FungibleToken
-  giftBox: FungibleToken
+  starterGiftBox: FungibleToken
+  simpleGiftBox: FungibleToken
+  fancyGiftBox: FungibleToken
+  eliteGiftBox: FungibleToken
 }
 
 export type QuestReward = {
@@ -23,10 +24,11 @@ export type QuestReward = {
 
 export const questRewardDisplayName = {
   xrd: 'XRD',
-  element: 'Element',
   clam: 'Clam',
-  energyCard: 'Energy Card',
-  giftBox: 'Gift Box'
+  starterGiftBox: 'Starter Gift Box',
+  simpleGiftBox: 'Simple Gift Box',
+  fancyGiftBox: 'Fancy Gift Box',
+  eliteGiftBox: 'Elite Gift Box'
 } as const satisfies { [key in QuestReward['name']]: string }
 
 export type Language = keyof typeof Language
@@ -122,10 +124,10 @@ export const QuestDefinitions = () => {
       rewards: [
         {
           name: 'xrd',
-          amount: 20
+          amount: 25
         },
         {
-          name: 'giftBox',
+          name: 'starterGiftBox',
           amount: 1
         },
         {
@@ -160,7 +162,7 @@ export const QuestDefinitions = () => {
           amount: 20
         },
         {
-          name: 'giftBox',
+          name: 'fancyGiftBox',
           amount: 1
         }
       ],
@@ -194,7 +196,7 @@ export const QuestDefinitions = () => {
       trackedAccountAddress: true,
       rewards: [
         {
-          name: 'giftBox',
+          name: 'simpleGiftBox',
           amount: 1
         },
         {
@@ -216,15 +218,11 @@ export const QuestDefinitions = () => {
       category: 'advanced',
       rewards: [
         {
-          name: 'element',
-          amount: 10
-        },
-        {
           name: 'xrd',
           amount: 10
         },
         {
-          name: 'energyCard',
+          name: 'fancyGiftBox',
           amount: 1
         }
       ],
@@ -247,12 +245,12 @@ export const QuestDefinitions = () => {
       category: 'advanced',
       rewards: [
         {
-          name: 'element',
+          name: 'xrd',
           amount: 50
         },
         {
-          name: 'xrd',
-          amount: 120
+          name: 'simpleGiftBox',
+          amount: 1
         }
       ],
       trackedAccountAddress: true,
@@ -270,12 +268,12 @@ export const QuestDefinitions = () => {
       category: 'advanced',
       rewards: [
         {
-          name: 'element',
-          amount: 50
+          name: 'eliteGiftBox',
+          amount: 1
         },
         {
           name: 'xrd',
-          amount: 50
+          amount: 250
         }
       ],
       splashImage: '/quests-images/splash/InstabridgeQuest.webp',
@@ -295,59 +293,27 @@ export const QuestDefinitions = () => {
       partialRewards: {
         BronzeLevel: [
           {
-            name: 'element',
-            amount: 10
-          },
-          {
-            name: 'energyCard',
+            name: 'simpleGiftBox',
             amount: 1
-          },
-          {
-            name: 'xrd',
-            amount: 200
           }
         ],
         SilverLevel: [
           {
-            name: 'element',
-            amount: 10
-          },
-          {
-            name: 'energyCard',
+            name: 'fancyGiftBox',
             amount: 1
-          },
-          {
-            name: 'xrd',
-            amount: 200
           }
         ],
         GoldLevel: [
           {
-            name: 'element',
-            amount: 10
-          },
-          {
-            name: 'energyCard',
+            name: 'eliteGiftBox',
             amount: 1
-          },
-          {
-            name: 'xrd',
-            amount: 200
           }
         ]
       },
       rewards: [
         {
-          name: 'element',
-          amount: 10
-        },
-        {
-          name: 'energyCard',
-          amount: 1
-        },
-        {
           name: 'xrd',
-          amount: 200
+          amount: 30
         }
       ],
       trackedAccountAddress: false,
@@ -356,15 +322,15 @@ export const QuestDefinitions = () => {
       requirements: {
         BronzeLevel: {
           type: 'offLedger',
-          threshold: 5
+          threshold: 1
         },
         SilverLevel: {
           type: 'offLedger',
-          threshold: 15
+          threshold: 5
         },
         GoldLevel: {
           type: 'offLedger',
-          threshold: 35
+          threshold: 10
         },
         SuperLevel: {
           type: 'offLedger'

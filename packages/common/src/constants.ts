@@ -24,7 +24,14 @@ export const Addresses = (networkId: number) => {
           radmorphAddress: 'resource_tdx_2_1ntl0225s23ap0zkzpc7xpnqy8zh97yud4gltl7jn4ggqdam7nf8u9u',
           instapassBadgeAddress:
             'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan',
-          otterCoinAddress: 'resource_tdx_2_1t5pvx3yuwa7rxpa8h8uxnx068ruap9k7nqd7k5qxgay4yjalp9seng'
+          otterCoinAddress:
+            'resource_tdx_2_1t5pvx3yuwa7rxpa8h8uxnx068ruap9k7nqd7k5qxgay4yjalp9seng',
+          giftBox: {
+            starter: 'resource_tdx_2_1t5mjyg2ypn4xcyz24fxelqdcrtpvcagsaf8wm0sl4mx60qq72xl3j5',
+            simple: 'resource_tdx_2_1t5yh4c7kynz84f3lz9tpmx0vlstkat2cmxfe8j3z5teg07wngsuqu6',
+            fancy: 'resource_tdx_2_1tkalk3pwr3dkmluj7rujvg6r27c3kmmw46p6tveqelfhm6mhfyj069',
+            elite: 'resource_tdx_2_1t4vlqdywf6m4p3eeecu2cglneeqt7lc8mrl9xnaryzs9u9edxsr65u'
+          }
         },
         package: 'package_tdx_2_1p522k7zdjdvjahsl0u9lld86zmr6mj5m7zkjsvqnn34n4r9vhzc74m',
         clamDexPackage: 'package_tdx_2_1ph96rek5yr7jh79pw5aqst6e6lm5k62l5pv6j9dxve6scyr3eel3mh',
@@ -66,7 +73,6 @@ export const Addresses = (networkId: number) => {
             accessController: ''
           }
         },
-
         dapps: {
           instapass: {
             url: 'https://instapass-lite-dev.instapass.fi/RadQuest/'
@@ -126,4 +132,43 @@ export type EventId = keyof typeof EventId
 
 export const CookieKeys = {
   Utm: 'rq_ma'
+} as const
+
+export type Metadata = typeof metadata
+export type GiftBoxKey = keyof Metadata['resources']['giftBox']
+export type GiftBoxMetadata =
+  (typeof metadata.resources.giftBox)[keyof typeof metadata.resources.giftBox]
+export const metadata = {
+  resources: {
+    giftBox: {
+      starter: {
+        name: 'Starter Gift Box',
+        description:
+          'This Gift Box from RadQuest’s Jetty will get you started with a common Morph Energy Card and enough Elements to create a couple of RadGems. Ask Jetty to open it!',
+        icon_url: '',
+        tags: ['radquest']
+      },
+      simple: {
+        name: 'Simple Gift Box',
+        description:
+          'This simple Gift Box from RadQuest’s Jetty contains a common or rare Morph Energy Card and a handful of Elements. Ask Jetty to open it!',
+        icon_url: '',
+        tags: ['radquest']
+      },
+      fancy: {
+        name: 'Fancy Gift Box',
+        description:
+          'This fancy Gift Box from RadQuest’s Jetty contains a common, rare, or sometimes even ultra-rare Morph Energy Card and a goodly quantity of Elements. Ask Jetty to open it!',
+        icon_url: '',
+        tags: ['radquest']
+      },
+      elite: {
+        name: 'Elite Gift Box',
+        description:
+          'This truly elite Gift Box from RadQuest’s Jetty, reserved for only the most committed, contains only a rare or ultra-rare Morph Energy Card and a substantial quantity of Elements. Ask Jetty to open it!',
+        icon_url: '',
+        tags: ['radquest']
+      }
+    }
+  }
 } as const
