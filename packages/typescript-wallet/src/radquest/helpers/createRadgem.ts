@@ -160,7 +160,7 @@ export const createRadgem = () => {
                         Enum<1u8>(
                             Enum<128u8>(
                                 Array<String>(
-                                    "dapp_definition_account_address"
+                                    "${config.radQuest.accounts.dAppDefinition.address}"
                                 )
                             )
                         ),
