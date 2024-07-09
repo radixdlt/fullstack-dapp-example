@@ -4,17 +4,17 @@ import {
   generateMnemonic,
   mintHeroBadge,
   mintElements,
-  combineElementsDeposit,
   radquestEntityAddresses,
   mintClams,
   AccountHelper,
   Account,
-  TransactionHelper
+  mintGiftBox
 } from 'typescript-wallet'
 import {
   AccountAddressModel,
   Addresses,
   GatewayApi,
+  GiftBoxKind,
   TransactionModel,
   UserModel,
   UserQuestModel,
@@ -22,7 +22,7 @@ import {
   createUser
 } from 'common'
 import { PrismaClient, User } from 'database'
-import { ResultAsync, errAsync, okAsync } from 'neverthrow'
+import { ResultAsync, errAsync } from 'neverthrow'
 import { Queues, RedisConnection, getQueues } from 'queues'
 import { config } from './config'
 import { QueueEvents } from 'bullmq'
@@ -318,28 +318,80 @@ describe('Event flows', () => {
     ).toBe(true)
   })
 
-  it('should mint elements and combine them', { timeout: 30_000, skip: false }, async () => {
-    await radixEngineClient.getXrdFromFaucet()
+  describe('radgem', async () => {
+    const userResult = await accountHelper.createAccount({ logger, networkId: 2 })
 
-    const mintHeroBadgeResult = await mintHeroBadge(user.id, accountAddress, undefined, [], 0, {
-      heroBadgeAddress: radquestEntityAddresses.badges.heroBadgeAddress
-    })
+    if (userResult.isErr()) throw userResult.error
+
+    const { user, getXrdFromFaucet, submitTransaction } = userResult.value
+
+    await getXrdFromFaucet()
+
+    await mintElements(10, user.accountAddress!)
+
+    const mintHeroBadgeResult = await mintHeroBadge(
+      user.id,
+      user.accountAddress!,
+      undefined,
+      [],
+      0,
+      {
+        heroBadgeAddress: radquestEntityAddresses.badges.heroBadgeAddress
+      }
+    )
 
     if (mintHeroBadgeResult.isErr()) throw mintHeroBadgeResult.error
 
-    await mintElements(10, accountAddress)
+    it('combine elements into a RadGem', { timeout: 30_000, skip: false }, async () => {
+      const result = await submitTransaction(`
+        CALL_METHOD
+            Address("${user.accountAddress}")
+            "lock_fee"
+            Decimal("50")
+        ;
 
-    await combineElementsDeposit({
-      accountAddress,
-      userId: user.id,
-      radixEngineClient: radixEngineClient as RadixEngineClient
+        CALL_METHOD
+            Address("${user.accountAddress}")
+            "create_proof_of_non_fungibles"
+            Address("${addresses.badges.heroBadgeAddress}")
+            Array<NonFungibleLocalId>(NonFungibleLocalId("<${user?.id}>"))
+        ;
+
+        POP_FROM_AUTH_ZONE
+            Proof("userBadge")
+        ;
+
+        CALL_METHOD
+            Address("${user?.accountAddress}")
+            "withdraw" 
+            Address("${addresses.resources.elementAddress}")
+            Decimal("10") 
+        ;
+
+        TAKE_ALL_FROM_WORKTOP 
+            Address("${addresses.resources.elementAddress}") 
+            Bucket("elements")
+        ;
+
+        CALL_METHOD
+            Address("${addresses.components.refinery}")
+            "combine_elements_deposit"
+            Proof("userBadge")
+            Bucket("elements")
+        ;
+
+        CALL_METHOD
+            Address("${user.accountAddress}")
+            "deposit_batch"
+            Expression("ENTIRE_WORKTOP")
+        ;
+
+
+        `).andThen((api) => api.pollTransactionStatus().map(() => api.transactionId))
+
+      if (result.isErr()) throw result.error
+      console.log('Transaction ID:', result.value)
     })
-      .map((txId) => {
-        console.log({ txId })
-      })
-      .mapErr((error) => {
-        console.log({ error })
-      })
   })
 
   it('should send clams to jetty and claim rewards', { timeout: 60_000, skip: false }, async () => {
@@ -423,11 +475,6 @@ describe('Event flows', () => {
 
         await referrer.getXrdFromFaucet()
 
-        const systemAccount = TransactionHelper({
-          networkId: 2,
-          onSignature: (builder) => okAsync(builder)
-        })
-
         await mintHeroBadge(referrer.user.id, referrer.user.accountAddress!, undefined, [], 0, {
           heroBadgeAddress: radquestEntityAddresses.badges.heroBadgeAddress
         })
@@ -481,5 +528,130 @@ describe('Event flows', () => {
         expect(await getXrdRewardToClaim(referrer.user.id)).toEqual(0)
       }
     )
+  })
+
+  describe('giftbox', async () => {
+    const userResult = await accountHelper.createAccount({ logger, networkId: 2 })
+
+    if (userResult.isErr()) throw userResult.error
+
+    const { user, getXrdFromFaucet, submitTransaction } = userResult.value
+
+    await mintHeroBadge(user.id, user.accountAddress!, undefined, [], 0, {
+      heroBadgeAddress: radquestEntityAddresses.badges.heroBadgeAddress
+    })
+
+    await getXrdFromFaucet()
+
+    const mintGiftBoxes = async () =>
+      await ResultAsync.combine([
+        mintGiftBox('Starter', user.accountAddress!),
+        mintGiftBox('Simple', user.accountAddress!),
+        mintGiftBox('Fancy', user.accountAddress!),
+        mintGiftBox('Elite', user.accountAddress!)
+      ])
+
+    const mintGiftBoxesResult = await mintGiftBoxes()
+
+    if (mintGiftBoxesResult.isErr()) throw mintGiftBoxesResult.error
+
+    const openGiftBox = async (kind: GiftBoxKind) => {
+      const openGiftBoxResult = await submitTransaction(`
+        CALL_METHOD
+          Address("${user.accountAddress}")
+          "lock_fee"
+          Decimal("50")
+        ;
+
+        CALL_METHOD
+          Address("${user.accountAddress}")
+          "create_proof_of_non_fungibles"
+          Address("${addresses.badges.heroBadgeAddress}")
+          Array<NonFungibleLocalId>(
+              NonFungibleLocalId("<${user.id}>")
+          )
+        ;
+
+        POP_FROM_AUTH_ZONE
+          Proof("hero_badge_proof")
+        ;
+
+        CALL_METHOD
+          Address("${user.accountAddress}")
+          "withdraw"
+          Address("${addresses.resources.giftBox[kind]}")
+          Decimal("1")
+        ;
+
+        TAKE_ALL_FROM_WORKTOP
+          Address("${addresses.resources.giftBox[kind]}")
+          Bucket("gift_box")
+        ;
+
+        CALL_METHOD
+          Address("${addresses.components.giftBoxOpener}")
+          "open_gift_box"
+          Proof("hero_badge_proof")
+          Bucket("gift_box")
+        ;
+      `).andThen((api) => api.pollTransactionStatus().map(() => api.transactionId))
+
+      if (openGiftBoxResult.isErr()) throw openGiftBoxResult.error
+    }
+
+    const claimGiftBoxReward = async () => {
+      const result = await submitTransaction(`
+        CALL_METHOD
+            Address("${user.accountAddress}")
+            "lock_fee"
+            Decimal("50")
+        ;
+        CALL_METHOD
+            Address("${user.accountAddress}")
+            "create_proof_of_non_fungibles"
+            Address("${addresses.badges.heroBadgeAddress}")
+            Array<NonFungibleLocalId>(
+                NonFungibleLocalId("<${user.id}>")
+            )
+        ;
+        POP_FROM_AUTH_ZONE
+            Proof("hero_badge_proof")
+        ;
+        CALL_METHOD
+            Address("${addresses.components.giftBoxOpener}")
+            "claim_gift_box_rewards"
+            Proof("hero_badge_proof")
+        ;
+        CALL_METHOD
+            Address("${user.accountAddress}")
+            "deposit_batch"
+            Expression("ENTIRE_WORKTOP")
+        ;`).andThen((api) => api.pollTransactionStatus())
+      if (result.isErr()) throw result.error
+    }
+
+    it('open Starter gift box', { timeout: 60_000, skip: false }, async () => {
+      await openGiftBox('Starter')
+      await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+      await claimGiftBoxReward()
+    })
+
+    it('open Simple gift box', { timeout: 60_000, skip: false }, async () => {
+      await openGiftBox('Simple')
+      await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+      await claimGiftBoxReward()
+    })
+
+    it('open Fancy gift box', { timeout: 60_000, skip: false }, async () => {
+      await openGiftBox('Fancy')
+      await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+      await claimGiftBoxReward()
+    })
+
+    it('open Elite gift box', { timeout: 60_000, skip: false }, async () => {
+      await openGiftBox('Elite')
+      await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+      await claimGiftBoxReward()
+    })
   })
 })

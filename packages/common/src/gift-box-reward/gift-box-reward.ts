@@ -6,6 +6,8 @@ import {
 } from '../energy-cards'
 import { GiftBoxKind } from './types'
 
+const CARD_MAX_QUALITY = 50
+
 export type GiftBoxRewardConfig = ReturnType<typeof GiftBoxRewardConfig>
 export const GiftBoxRewardConfig = ({
   getRandomFloat,
@@ -23,7 +25,7 @@ export const GiftBoxRewardConfig = ({
         return getRandomIntInclusive({ min: 25, max: 34 })
 
       case 'Ultra-rare':
-        return getRandomIntInclusive({ min: 35, max: 45 })
+        return getRandomIntInclusive({ min: 35, max: 50 })
     }
   }
 
@@ -113,7 +115,7 @@ export type GiftBoxReward = ReturnType<typeof GiftBoxReward>
 export const GiftBoxReward = (config: GiftBoxRewardConfig) => (kind: GiftBoxKind) => {
   const energyCard = config[kind].getEnergyCard()
   return {
-    energyCard: transformEnergyCardToNfData(energyCard.card, energyCard.quality),
+    energyCard: transformEnergyCardToNfData(energyCard.card, energyCard.quality, CARD_MAX_QUALITY),
     elements: config[kind].getElements()
   }
 }

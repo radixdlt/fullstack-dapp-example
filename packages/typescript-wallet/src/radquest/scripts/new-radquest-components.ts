@@ -43,7 +43,6 @@ mintAdminBadge({
     result.cardForge = cardForgeAddress
     return cardForgeAddress
   })
-  .andThen((cardForgeAddress) => addCardForgeCards(cardForgeAddress))
   .andThen(() => newRefinery())
   .map(({ radgemForgeAddress, radmorphForgeAddress, imageOracleAddress, refineryAddress }) => {
     result.radgemForge = radgemForgeAddress

@@ -150,10 +150,13 @@ export const TransactionHelper = ({
 
   const pollTransactionStatus = (
     transactionId: string
-  ): ResultAsync<undefined, { jsError?: Error; reason: PollTransactionStatusError }> =>
+  ): ResultAsync<
+    undefined,
+    { jsError?: Error; reason: PollTransactionStatusError; transactionId: string }
+  > =>
     ResultAsync.fromPromise<
       TransactionStatusResponse,
-      { jsError: Error; reason: PollTransactionStatusError }
+      { jsError: Error; reason: PollTransactionStatusError; transactionId: string }
     >(
       new Promise(async (resolve, reject) => {
         let response: TransactionStatusResponse | undefined
@@ -182,11 +185,15 @@ export const TransactionHelper = ({
 
         resolve(response)
       }),
-      (error) => ({ jsError: error as Error, reason: PollTransactionStatusError.GatewayError })
+      (error) => ({
+        jsError: error as Error,
+        reason: PollTransactionStatusError.GatewayError,
+        transactionId
+      })
     ).andThen((response) =>
       response.status === 'CommittedSuccess'
         ? ok(undefined)
-        : err({ reason: PollTransactionStatusError.TransactionFailed })
+        : err({ reason: PollTransactionStatusError.TransactionFailed, transactionId })
     )
 
   const getKnownAddresses = () =>

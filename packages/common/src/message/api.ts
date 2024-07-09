@@ -13,7 +13,8 @@ export const MessageType = {
   CombineElementsClaimed: 'CombineElementsClaimed',
   HeroBadgeReadyToBeClaimed: 'HeroBadgeReadyToBeClaimed',
   ReferralCompletedBasicQuests: 'ReferralCompletedBasicQuests',
-  XrdDepositedToAccount: 'XrdDepositedToAccount'
+  XrdDepositedToAccount: 'XrdDepositedToAccount',
+  GiftBoxDeposited: 'GiftBoxDeposited'
 } as const
 
 export type MessageType = (typeof MessageType)[keyof typeof MessageType]
@@ -55,6 +56,7 @@ type Messages = {
     traceId: string
   }
   [MessageType.ReferralCompletedBasicQuests]: { traceId: string }
+  [MessageType.GiftBoxDeposited]: { traceId: string }
 }
 
 export type Message = {

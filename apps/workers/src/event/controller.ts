@@ -1,5 +1,5 @@
 import { TokenPriceClient } from './../token-price-client'
-import { okAsync, errAsync, err, ok, ResultAsync } from 'neverthrow'
+import { okAsync, errAsync, err, ok, ResultAsync, Result } from 'neverthrow'
 import { EventJob, Job } from 'queues'
 import { QuestDefinitions, QuestId, Quests } from 'content'
 import {
@@ -8,7 +8,8 @@ import {
   MessageType,
   QuestTogetherConfig,
   UserByReferralCode,
-  getAccountFromMayaRouterWithdrawEvent
+  getAccountFromMayaRouterWithdrawEvent,
+  getValuesFromEvent
 } from 'common'
 import { AppLogger, AccountAddressModel } from 'common'
 import { PrismaClient, QuestStatus, User } from 'database'
@@ -38,6 +39,18 @@ type EventEmitter = {
   }
   type: string
   object_module_id: string
+}
+
+type GiftBoxKind = keyof typeof config.radQuest.resources.giftBox
+
+const giftBoxMap = Object.entries(config.radQuest.resources.giftBox).reduce<
+  Record<string, GiftBoxKind>
+>((acc, [key, value]) => ({ ...acc, [value]: key as GiftBoxKind }), {})
+
+const getGiftBoxKindByResourceAddress = (resourceAddress: string) => {
+  const giftBoxKind = giftBoxMap[resourceAddress]
+  if (!giftBoxKind) err({ reason: 'GiftBoxKindNotFound' })
+  return ok(giftBoxKind)
 }
 
 export type EventWorkerController = ReturnType<typeof EventWorkerController>
@@ -554,6 +567,44 @@ export const EventWorkerController = ({
             completedRequirements.filter(({ requirementId }) =>
               ([EventId.JettySwap, EventId.LettySwap] as string[]).includes(requirementId)
             ).length === 2
+        )
+      }
+
+      case EventId.GiftBoxOpened: {
+        return getValuesFromEvent(
+          { user_id: 'String', resource_address: 'Reference' },
+          job.data.relevantEvents.GiftBoxOpenedEvent
+        ).asyncAndThen(({ user_id: userId, resource_address: giftBoxResourceAddress }) =>
+          getUserById(userId, dbClient)
+            .andThen((user) =>
+              getGiftBoxKindByResourceAddress(giftBoxResourceAddress).map((giftBoxKind) => ({
+                user,
+                giftBoxKind
+              }))
+            )
+            .andThen(({ user, giftBoxKind }) =>
+              transactionIntent.add({
+                type: 'DepositGiftBoxReward',
+                discriminator: `${EventId.GiftBoxOpened}:${job.data.transactionId}`,
+                userId: user.id,
+                traceId: job.data.traceId,
+                giftBoxKind
+              })
+            )
+        )
+      }
+
+      case EventId.GiftBoxDeposited: {
+        return getValuesFromEvent(
+          { user_id: 'String' },
+          job.data.relevantEvents.GiftBoxDepositedEvent
+        ).asyncAndThen(({ user_id: userId }) =>
+          getUserById(userId, dbClient).andThen((user) =>
+            sendMessage(user.id, {
+              type: 'GiftBoxDeposited',
+              traceId
+            }).map(() => undefined)
+          )
         )
       }
 

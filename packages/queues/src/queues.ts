@@ -1,7 +1,7 @@
 import type { EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
 import { type ConnectionOptions, Queue } from 'bullmq'
 import { ResultAsync } from 'neverthrow'
-import { EventId, typedError } from 'common'
+import { EventId, GiftBoxKind, typedError } from 'common'
 
 export const Queues = {
   EventQueue: 'EventQueue',
@@ -61,6 +61,11 @@ export type DepositXrdRewardTransactionJob = {
   transactionId: string
 }
 
+export type DepositGiftBoxRewardTransactionJob = {
+  type: 'DepositGiftBoxReward'
+  giftBoxKind: GiftBoxKind
+}
+
 export type TransactionJob = {
   userId: string
   discriminator: string
@@ -74,6 +79,7 @@ export type TransactionJob = {
   | PopulateResourcesTransactionJob
   | AddAccountAddressToHeroBadgeForgeJob
   | DepositXrdToAccount
+  | DepositGiftBoxRewardTransactionJob
 )
 
 export type RadmorphSystemJob = {

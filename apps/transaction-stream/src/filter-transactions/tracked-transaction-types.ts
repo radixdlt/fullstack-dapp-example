@@ -106,13 +106,10 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
     ClaimedEvent: refineryEmitted('CombineElementsClaimedEvent')
   },
   [EventId.MayaRouterWithdrawEvent]: {
-    MayaRouterWithdrawEvent: (event: EventsItem) => {
-      return (
-        event.name === 'MayaRouterWithdrawEvent' &&
-        (event.emitter as EventEmitter).entity.entity_address ===
-          config.radQuest.components.mayaRouter
-      )
-    }
+    MayaRouterWithdrawEvent: (event: EventsItem) =>
+      event.name === 'MayaRouterWithdrawEvent' &&
+      (event.emitter as EventEmitter).entity.entity_address ===
+        config.radQuest.components.mayaRouter
   },
   [EventId.InstapassBadgeDeposited]: {
     MintedEvent: nonFungibleMinted(config.radQuest.resources.instapassBadgeAddress),
@@ -130,6 +127,18 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
     AccountAddedEvent: eventEmittedByComponent(
       'AccountAddedEvent',
       config.radQuest.components.heroBadgeForge
+    )
+  },
+  [EventId.GiftBoxOpened]: {
+    GiftBoxOpenedEvent: eventEmittedByComponent(
+      'GiftBoxOpenedEvent',
+      config.radQuest.components.giftBoxOpener
+    )
+  },
+  [EventId.GiftBoxDeposited]: {
+    GiftBoxDepositedEvent: eventEmittedByComponent(
+      'GiftBoxDepositedEvent',
+      config.radQuest.components.giftBoxOpener
     )
   }
 })
