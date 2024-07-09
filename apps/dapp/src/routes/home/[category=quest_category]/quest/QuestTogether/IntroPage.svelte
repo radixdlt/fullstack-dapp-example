@@ -4,11 +4,11 @@
 </script>
 
 <div class="wrapper">
-  <h3>{$i18n.t('quests:ReferralQuest.introHeader')}</h3>
-  <p class="header">{$i18n.t('quests:ReferralQuest.copyReferral')}</p>
+  <h3>{$i18n.t('quests:QuestTogether.introHeader')}</h3>
+  <p class="header">{$i18n.t('quests:QuestTogether.copyReferral')}</p>
   <ShareBox />
-  <p class="info">{@html $i18n.t('quests:ReferralQuest.info_1')}</p>
-  <p class="info">{@html $i18n.t('quests:ReferralQuest.info_2')}</p>
+  <p class="info">{@html $i18n.t('quests:QuestTogether.info_1')}</p>
+  <p class="info">{@html $i18n.t('quests:QuestTogether.info_2')}</p>
 </div>
 
 <style lang="scss">

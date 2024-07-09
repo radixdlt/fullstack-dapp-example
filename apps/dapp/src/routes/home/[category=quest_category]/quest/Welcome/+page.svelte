@@ -11,7 +11,7 @@
   let quest: Quest
   let error: boolean
 
-  const text = data.text as Quests['WelcomeToRadQuest']['text']
+  const text = data.text as Quests['Welcome']['text']
 </script>
 
 <Quest
@@ -36,7 +36,7 @@
       type: 'regular',
       footer: {
         next: {
-          text: $i18n.t('quests:WelcomeToRadQuest.hi'),
+          text: $i18n.t('quests:Welcome.hi'),
           onClick: () => quest.actions.next()
         }
       }

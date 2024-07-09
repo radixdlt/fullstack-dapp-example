@@ -22,9 +22,9 @@
 >
   <span class="amount">{count}</span>
   <span class="link" class:active={count > 0}>
-    {$i18n.t('quests:ReferralQuest.referralsSoFar')}
+    {$i18n.t('quests:QuestTogether.referralsSoFar')}
     {#if count > 0}
-      <img src={ChevronRight} alt={$i18n.t('quests:ReferralQuest.referralsSoFar')} />
+      <img src={ChevronRight} alt={$i18n.t('quests:QuestTogether.referralsSoFar')} />
     {/if}
   </span>
 </button>

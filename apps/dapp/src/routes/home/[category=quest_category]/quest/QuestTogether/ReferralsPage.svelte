@@ -6,14 +6,14 @@
 </script>
 
 <div class="info">
-  <strong>{$i18n.t('quests:ReferralQuest.referralsSoFarHeader', { count })}</strong>
+  <strong>{$i18n.t('quests:QuestTogether.referralsSoFarHeader', { count })}</strong>
   <div>
-    {$i18n.t('quests:ReferralQuest.referralsSoFarDescription')}
+    {$i18n.t('quests:QuestTogether.referralsSoFarDescription')}
   </div>
 </div>
 
 <ul>
-  <li>{$i18n.t('quests:ReferralQuest.yourReferralsCount', { count })}</li>
+  <li>{$i18n.t('quests:QuestTogether.yourReferralsCount', { count })}</li>
   {#each referrals as referral}
     <li><img src={AvatarPlaceholder} alt={referral} />{referral}</li>
   {/each}

@@ -39,7 +39,7 @@
 
   const setGetWalletRequirementInStore = () => {
     // @ts-ignore
-    useCookies('requirement-GetRadixWallet-GetTheWallet').set(true)
+    useCookies('requirement-SetupWallet-GetTheWallet').set(true)
   }
   onMount(() => {
     showLandingPopup = !useLocalStorage('seen-landing-popup').get()
@@ -129,7 +129,7 @@
             // - bootstrap the application state (quest progress, user, notifications etc...) and connect to notifications websocket
 
             if (
-              data.questStatus['GetRadixWallet']?.status === 'IN_PROGRESS' &&
+              data.questStatus['SetupWallet']?.status === 'IN_PROGRESS' &&
               !useLocalStorage('seen-jetty-get-wallet-notification').get()
             ) {
               useLocalStorage('seen-jetty-get-wallet-notification').set(true)

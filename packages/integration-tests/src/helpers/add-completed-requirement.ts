@@ -7,4 +7,4 @@ export const addCompletedRequirement =
     })
 
 export const addVerifiedPhoneNumberRequirement = (db: PrismaClient) => async (userId: string) =>
-  addCompletedRequirement(db)(userId, 'FirstTransactionQuest', 'VerifyPhoneNumber')
+  addCompletedRequirement(db)(userId, 'GetStuff', 'VerifyPhoneNumber')

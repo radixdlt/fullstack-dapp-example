@@ -93,7 +93,7 @@ describe('GetDataFromQuestRewardsEvent', () => {
             field_name: 'user_id'
           },
           {
-            value: 'FirstTransactionQuest',
+            value: 'GetStuff',
             kind: 'String',
             type_name: 'QuestId',
             field_name: 'quest_id'

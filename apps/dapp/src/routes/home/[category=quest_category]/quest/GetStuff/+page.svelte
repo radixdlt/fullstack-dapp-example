@@ -8,7 +8,7 @@
   import VerifyOtp from './VerifyOTP.svelte'
   import VerifyPhoneNumber from './VerifyPhoneNumber.svelte'
   import { ErrorReason } from '$lib/errors'
-  import type { PageData } from './$types'
+  import type { PageData } from '../FirstTransactionQuest/$types'
   import { readable, writable, derived } from 'svelte/store'
   import type { Quests } from 'content'
   import { type ComponentProps } from 'svelte'
@@ -25,7 +25,7 @@
 
   export let data: PageData
 
-  const text = data.text as Quests['FirstTransactionQuest']['text']
+  const text = data.text as Quests['GetStuff']['text']
 
   let quest: Quest
   let phoneNumber: string
@@ -48,17 +48,13 @@
   const depositHeroBadge = writable(data.requirements.DepositHeroBadge.isComplete)
 
   const errors = {
-    [ErrorReason.failedToSendOTP]: $i18n.t('quests:FirstTransactionQuest.failedToSendOtp'),
-    [ErrorReason.phoneNumberExists]: $i18n.t('quests:FirstTransactionQuest.phoneNumberExists'),
-    [ErrorReason.invalidPhoneNumber]: $i18n.t('quests:FirstTransactionQuest.invalidPhoneNumber'),
-    [ErrorReason.invalidOTP]: $i18n.t('quests:FirstTransactionQuest.invalidOtp'),
-    [ErrorReason.otpInvalidRequest]: $i18n.t('quests:FirstTransactionQuest.invalidRequest'),
-    [ErrorReason.failedToAddPhoneNumber]: $i18n.t(
-      'quests:FirstTransactionQuest.failedToAddPhoneNumber'
-    ),
-    [ErrorReason.failedToHashPhoneNumber]: $i18n.t(
-      'quests:FirstTransactionQuest.failedToAddPhoneNumber'
-    )
+    [ErrorReason.failedToSendOTP]: $i18n.t('quests:GetStuff.failedToSendOtp'),
+    [ErrorReason.phoneNumberExists]: $i18n.t('quests:GetStuff.phoneNumberExists'),
+    [ErrorReason.invalidPhoneNumber]: $i18n.t('quests:GetStuff.invalidPhoneNumber'),
+    [ErrorReason.invalidOTP]: $i18n.t('quests:GetStuff.invalidOtp'),
+    [ErrorReason.otpInvalidRequest]: $i18n.t('quests:GetStuff.invalidRequest'),
+    [ErrorReason.failedToAddPhoneNumber]: $i18n.t('quests:GetStuff.failedToAddPhoneNumber'),
+    [ErrorReason.failedToHashPhoneNumber]: $i18n.t('quests:GetStuff.failedToAddPhoneNumber')
   }
 
   $: if ($webSocketClient) {
@@ -359,8 +355,8 @@
   {/if}
 
   {#if render('verifyPhoneNumber')}
-    <p>{$i18n.t('quests:FirstTransactionQuest.enterYourPhoneNumber')}</p>
-    <p>{$i18n.t('quests:FirstTransactionQuest.weWillNotShare')}</p>
+    <p>{$i18n.t('quests:GetStuff.enterYourPhoneNumber')}</p>
+    <p>{$i18n.t('quests:GetStuff.weWillNotShare')}</p>
     <VerifyPhoneNumber
       bind:phoneNumber
       on:next={next}
@@ -397,7 +393,7 @@
 
     <div class="center">
       <Button on:click={connectAccount} loading={waitingOnAccount}
-        >{$i18n.t('quests:FirstTransactionQuest.registerAccount')}
+        >{$i18n.t('quests:GetStuff.registerAccount')}
       </Button>
     </div>
   {/if}
@@ -435,7 +431,7 @@
 
     <div class="center">
       <Button on:click={directDepositXrd} loading={xrdDepositLoading}>
-        {$i18n.t('quests:FirstTransactionQuest.getXrd')}
+        {$i18n.t('quests:GetStuff.getXrd')}
       </Button>
     </div>
   {/if}

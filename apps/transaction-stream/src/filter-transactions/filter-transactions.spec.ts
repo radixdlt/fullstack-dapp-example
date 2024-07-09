@@ -125,7 +125,7 @@ describe('filter transactions', () => {
   it('should add tracked address and validate that it exists in redis', async () => {
     const addActiveQuestResult = await accountAddressModel.addTrackedAddress(
       stakingAndSwapAddress,
-      'StakingQuest',
+      'NetworkStaking',
       stakingAndSwapUserId
     )
 
@@ -133,7 +133,7 @@ describe('filter transactions', () => {
 
     const trackedAdress = await accountAddressModel.getTrackedAddressUserId(
       stakingAndSwapAddress,
-      'StakingQuest'
+      'NetworkStaking'
     )
 
     if (trackedAdress.isErr()) throw trackedAdress.error
@@ -222,7 +222,7 @@ describe('filter transactions', () => {
   it('should add tracked address and validate that it exists in redis', async () => {
     const addActiveQuestResult = await accountAddressModel.addTrackedAddress(
       stakingAndSwapAddress,
-      'SwapQuest',
+      'DEXSwaps',
       stakingAndSwapUserId
     )
 
@@ -230,7 +230,7 @@ describe('filter transactions', () => {
 
     const trackedAdress = await accountAddressModel.getTrackedAddressUserId(
       stakingAndSwapAddress,
-      'SwapQuest'
+      'DEXSwaps'
     )
 
     if (trackedAdress.isErr()) throw trackedAdress.error

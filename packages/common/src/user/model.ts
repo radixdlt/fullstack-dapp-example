@@ -9,7 +9,7 @@ import type {
   QuestProgress,
   QuestStatus
 } from 'database'
-import { ReferralQuestConfig, type AppLogger } from '../'
+import { QuestTogetherConfig, type AppLogger } from '../'
 import { type ApiError, createApiError } from '../helpers'
 import { getRandomReferralCode } from './get-random-referral-code'
 
@@ -112,7 +112,7 @@ export const UserModel =
           db.completedQuestRequirement.create({
             data: {
               userId: userId,
-              questId: 'FirstTransactionQuest',
+              questId: 'GetStuff',
               requirementId: 'RegisterAccount'
             }
           })
@@ -192,7 +192,7 @@ export const UserModel =
               INNER JOIN "QuestProgress" ON "User".id = "QuestProgress"."userId"
               WHERE 
               "User"."referredBy" = (SELECT "referralCode" FROM "User" WHERE id = ${id})
-                AND "QuestProgress"."questId" = ${ReferralQuestConfig.triggerRewardAfterQuest} 
+                AND "QuestProgress"."questId" = ${QuestTogetherConfig.triggerRewardAfterQuest} 
                 AND ("QuestProgress"."status" = 'COMPLETED' OR "QuestProgress"."status" = 'REWARDS_CLAIMED');
             `,
           (error) => {
@@ -206,7 +206,7 @@ export const UserModel =
         // }),
         ResultAsync.fromPromise(
           db.questProgress.findMany({
-            where: { userId: id, questId: { startsWith: 'ReferralQuest:' } }
+            where: { userId: id, questId: { startsWith: 'QuestTogether:' } }
           }),
           (error) => {
             logger?.error({ error, method: 'getReferrals.questProgress', model: 'UserModel' })

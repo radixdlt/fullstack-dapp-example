@@ -37,7 +37,7 @@
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient && $user) {
     unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
-      if (message.type === 'QuestRewardsDeposited' && message.questId === 'ReferralQuest') {
+      if (message.type === 'QuestRewardsDeposited' && message.questId === 'QuestTogether') {
         getReferralsState()
         messageApi.markAsSeen(message.id)
       }
@@ -54,7 +54,7 @@
 </script>
 
 <OngoingQuest
-  title={$i18n.t('quests:ReferralQuest.title')}
+  title={$i18n.t('quests:QuestTogether.title')}
   steps={[{ hasFooter: true }, {}, { hasFooter: true }]}
 >
   <svelte:fragment slot="content" let:progress let:next>
@@ -80,7 +80,7 @@
       <Button
         on:click={() => {
           next()
-        }}>{$i18n.t('quests:ReferralQuest.yourReferrals')}</Button
+        }}>{$i18n.t('quests:QuestTogether.yourReferrals')}</Button
       >
     {:else if progress === 2}
       <Button

@@ -219,7 +219,7 @@ describe('Event flows', () => {
     async () => {
       const discriminator = `AddAccountAddressToHeroBadgeForge:${crypto.randomUUID()}`
 
-      await completeQuestRequirements(db)(user.id, 'FirstTransactionQuest', [
+      await completeQuestRequirements(db)(user.id, 'GetStuff', [
         'VerifyPhoneNumber',
         'RegisterAccount',
         'LearnAboutTransactions'
@@ -461,7 +461,7 @@ describe('Event flows', () => {
               CALL_METHOD
                 Address("${addresses.components.questRewards}")
                 "claim_reward"
-                "ReferralQuest"
+                "QuestTogether"
                 Proof("hero_badge_proof")
                 None
               ;

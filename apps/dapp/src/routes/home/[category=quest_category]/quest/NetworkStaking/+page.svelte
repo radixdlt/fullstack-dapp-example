@@ -1,6 +1,6 @@
 <script lang="ts">
   import Quest from '../Quest.svelte'
-  import type { PageData } from '../StakingQuest/$types'
+  import type { PageData } from '../NetworkStaking/$types'
   import { onDestroy } from 'svelte'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { writable } from 'svelte/store'
@@ -10,12 +10,12 @@
   export let data: PageData
   let quest: Quest
 
-  const text = data.text as Quests['StakingQuest']['text']
+  const text = data.text as Quests['NetworkStaking']['text']
 
   const stakedXrd = writable(data.requirements?.StakedXrd?.isComplete)
   const rewardsDeposited = writable(
-    data.questStatus.StakingQuest?.status === 'REWARDS_DEPOSITED' ||
-      data.questStatus.StakingQuest?.status === 'COMPLETED'
+    data.questStatus.NetworkStaking?.status === 'REWARDS_DEPOSITED' ||
+      data.questStatus.NetworkStaking?.status === 'COMPLETED'
   )
 
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
@@ -26,7 +26,7 @@
         messageApi.markAsSeen(message.id)
       }
 
-      if (message.type === 'QuestRewardsDeposited' && message.questId === 'StakingQuest') {
+      if (message.type === 'QuestRewardsDeposited' && message.questId === 'NetworkStaking') {
         $rewardsDeposited = true
         messageApi.markAsSeen(message.id)
       }

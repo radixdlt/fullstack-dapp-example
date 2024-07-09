@@ -6,7 +6,7 @@ import {
   EventId,
   MailerLiteModel,
   MessageType,
-  ReferralQuestConfig,
+  QuestTogetherConfig,
   UserByReferralCode,
   getAccountFromMayaRouterWithdrawEvent
 } from 'common'
@@ -158,9 +158,9 @@ export const EventWorkerController = ({
     ): ResultAsync<undefined, { reason: string; jsError?: unknown }> => {
       const currentReferralsAmount = referrer.referredUsers.length
       const userId = referrer.id
-      const requirements = QuestDefinitions()['ReferralQuest'].requirements
+      const requirements = QuestDefinitions()['QuestTogether'].requirements
       const unlockedRewards = referrer.completedQuestRequirements
-        .filter((req) => req.questId === 'ReferralQuest')
+        .filter((req) => req.questId === 'QuestTogether')
         .reduce<Record<string, boolean>>((acc, requirement) => {
           acc[requirement.requirementId] = true
           return acc
@@ -168,17 +168,17 @@ export const EventWorkerController = ({
 
       const unlockReward = (tier: 'BronzeLevel' | 'SilverLevel' | 'GoldLevel') =>
         addCompletedQuestRequirement({
-          questId: 'ReferralQuest',
+          questId: 'QuestTogether',
           userId,
           requirementId: tier
         }).andThen(() =>
           transactionIntent.add({
             userId,
-            discriminator: `ReferralQuest:${tier}:${userId}`,
+            discriminator: `QuestTogether:${tier}:${userId}`,
             type: 'DepositPartialReward',
             requirement: tier,
             traceId,
-            questId: 'ReferralQuest'
+            questId: 'QuestTogether'
           })
         )
 
@@ -198,7 +198,7 @@ export const EventWorkerController = ({
           .andThen(() =>
             updateQuestProgressStatus({
               userId,
-              questId: `ReferralQuest:SilverLevel`,
+              questId: `QuestTogether:SilverLevel`,
               status: 'IN_PROGRESS'
             })
           )
@@ -208,7 +208,7 @@ export const EventWorkerController = ({
           .andThen(() =>
             updateQuestProgressStatus({
               userId,
-              questId: `ReferralQuest:GoldLevel`,
+              questId: `QuestTogether:GoldLevel`,
               status: 'IN_PROGRESS'
             })
           )
@@ -243,24 +243,24 @@ export const EventWorkerController = ({
 
     const handleReferrerRewards = (user: UserByReferralCode) => {
       const questProgressResult = user.questProgress.some(
-        (quest) => quest.questId === 'ReferralQuest:BronzeLevel'
+        (quest) => quest.questId === 'QuestTogether:BronzeLevel'
       )
         ? okAsync(undefined)
         : updateQuestProgressStatus({
             userId: user.id,
-            questId: 'ReferralQuest:BronzeLevel',
+            questId: 'QuestTogether:BronzeLevel',
             status: 'IN_PROGRESS'
           }).map(() => undefined)
 
       return questProgressResult
         .andThen(() =>
           transactionIntent.add({
-            questId: 'ReferralQuest',
+            questId: 'QuestTogether',
             userId: user.id,
             traceId,
             type: 'DepositXrdReward',
             amount: config.referralRewardXrdAmount,
-            discriminator: `ReferralQuest:${user.id}:${transactionId}`,
+            discriminator: `QuestTogether:${user.id}:${transactionId}`,
             transactionId
           })
         )
@@ -433,7 +433,7 @@ export const EventWorkerController = ({
                 )
                 .andThen(() => {
                   const shouldTriggerReferralRewardFlow =
-                    questId === ReferralQuestConfig.triggerRewardAfterQuest
+                    questId === QuestTogetherConfig.triggerRewardAfterQuest
 
                   if (user.referredBy && shouldTriggerReferralRewardFlow)
                     return getUserByReferralCode(user.referredBy)
@@ -443,7 +443,7 @@ export const EventWorkerController = ({
                           user as User & { email: { email: string; newsletter: boolean } }
                         )
                       )
-                  else if (questId === 'ReferralQuest')
+                  else if (questId === 'QuestTogether')
                     return referralRewardAction({
                       transactionId,
                       userId,
@@ -469,7 +469,7 @@ export const EventWorkerController = ({
         ).asyncAndThen((userId) =>
           getUserById(userId, dbClient)
             .map(() => ({
-              questId: 'FirstTransactionQuest' as QuestId,
+              questId: 'GetStuff' as QuestId,
               requirementId: type,
               userId,
               transactionId,
@@ -523,14 +523,14 @@ export const EventWorkerController = ({
           job.data.relevantEvents.MayaRouterWithdrawEvent
         )
 
-        return handleQuestWithTrackedAccount(maybeAccountAddress, 'MayaQuest')
+        return handleQuestWithTrackedAccount(maybeAccountAddress, 'Thorswap')
       }
       case EventId.InstapassBadgeDeposited: {
         const maybeAccountAddress = (
           job.data.relevantEvents['DepositedEvent'].emitter as EventEmitter
         ).entity.entity_address
 
-        return handleQuestWithTrackedAccount(maybeAccountAddress, 'InstapassQuest')
+        return handleQuestWithTrackedAccount(maybeAccountAddress, 'Instapass')
       }
 
       case EventId.XrdStaked: {
@@ -538,7 +538,7 @@ export const EventWorkerController = ({
           job.data.relevantEvents['WithdrawEvent'].emitter as any
         ).entity.entity_address
 
-        return handleQuestWithTrackedAccount(maybeAccountAddress, 'StakingQuest')
+        return handleQuestWithTrackedAccount(maybeAccountAddress, 'NetworkStaking')
       }
 
       case EventId.JettySwap:
@@ -549,7 +549,7 @@ export const EventWorkerController = ({
 
         return handleQuestWithTrackedAccount(
           maybeAccountAddress,
-          'SwapQuest',
+          'DEXSwaps',
           ({ completedRequirements }) =>
             completedRequirements.filter(({ requirementId }) =>
               ([EventId.JettySwap, EventId.LettySwap] as string[]).includes(requirementId)

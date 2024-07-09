@@ -74,8 +74,8 @@ export type QuestId = ReturnType<typeof QuestDefinitions>[keyof ReturnType<
 
 export const QuestDefinitions = () => {
   return {
-    WelcomeToRadQuest: {
-      id: 'WelcomeToRadQuest',
+    Welcome: {
+      id: 'Welcome',
       trackedAccountAddress: false,
       category: 'basic',
       rewards: [],
@@ -93,7 +93,7 @@ export const QuestDefinitions = () => {
       category: 'basic',
       trackedAccountAddress: false,
       rewards: [],
-      preRequisites: ['WelcomeToRadQuest'],
+      preRequisites: ['Welcome'],
       minutesToComplete: 3,
       requirements: {
         RadixQuiz: {
@@ -103,8 +103,8 @@ export const QuestDefinitions = () => {
         }
       }
     },
-    GetRadixWallet: {
-      id: 'GetRadixWallet',
+    SetupWallet: {
+      id: 'SetupWallet',
       category: 'basic',
       trackedAccountAddress: false,
       rewards: [],
@@ -117,8 +117,8 @@ export const QuestDefinitions = () => {
         }
       }
     },
-    FirstTransactionQuest: {
-      id: 'FirstTransactionQuest',
+    GetStuff: {
+      id: 'GetStuff',
       category: 'basic',
       trackedAccountAddress: false,
       rewards: [
@@ -135,7 +135,7 @@ export const QuestDefinitions = () => {
           amount: 10
         }
       ],
-      preRequisites: ['GetRadixWallet'],
+      preRequisites: ['SetupWallet'],
       minutesToComplete: 3,
       requirements: {
         VerifyPhoneNumber: {
@@ -166,7 +166,7 @@ export const QuestDefinitions = () => {
           amount: 1
         }
       ],
-      preRequisites: ['FirstTransactionQuest'],
+      preRequisites: ['GetStuff'],
       minutesToComplete: 3,
       requirements: {
         [EventId.JettyReceivedClams]: {
@@ -190,8 +190,8 @@ export const QuestDefinitions = () => {
         }
       }
     },
-    StakingQuest: {
-      id: 'StakingQuest',
+    NetworkStaking: {
+      id: 'NetworkStaking',
       category: 'advanced',
       trackedAccountAddress: true,
       rewards: [
@@ -213,8 +213,8 @@ export const QuestDefinitions = () => {
         }
       }
     },
-    SwapQuest: {
-      id: 'SwapQuest',
+    DEXSwaps: {
+      id: 'DEXSwaps',
       category: 'advanced',
       rewards: [
         {
@@ -240,8 +240,8 @@ export const QuestDefinitions = () => {
         }
       }
     },
-    InstapassQuest: {
-      id: 'InstapassQuest',
+    Instapass: {
+      id: 'Instapass',
       category: 'advanced',
       rewards: [
         {
@@ -263,8 +263,8 @@ export const QuestDefinitions = () => {
         }
       }
     },
-    MayaQuest: {
-      id: 'MayaQuest',
+    Thorswap: {
+      id: 'Thorswap',
       category: 'advanced',
       rewards: [
         {
@@ -276,7 +276,7 @@ export const QuestDefinitions = () => {
           amount: 250
         }
       ],
-      splashImage: '/quests-images/splash/InstabridgeQuest.webp',
+      splashImage: '/quests-images/splash/Thorswap.webp',
       trackedAccountAddress: true,
       minutesToComplete: 10,
       preRequisites: ['TransferTokens'],
@@ -287,8 +287,8 @@ export const QuestDefinitions = () => {
         }
       }
     },
-    ReferralQuest: {
-      id: 'ReferralQuest',
+    QuestTogether: {
+      id: 'QuestTogether',
       category: 'advanced',
       partialRewards: {
         BronzeLevel: [

@@ -112,7 +112,7 @@ export const RedisKeys = {
   TrackedAccountAddresses: 'tracked-account-addresses'
 }
 
-export const ReferralQuestConfig = {
+export const QuestTogetherConfig = {
   triggerRewardAfterQuest: 'TransferTokens'
 }
 

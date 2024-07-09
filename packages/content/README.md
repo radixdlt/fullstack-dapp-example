@@ -55,7 +55,7 @@ On the other hand, you can have a complex quest page with a Svelte component. Fo
   ProofOfHuman: {
     category: 'Basic',
     rewards: [],
-    preRequisites: ['FirstTransactionQuest'],
+    preRequisites: ['GetStuff'],
     requirements: [],
     minutesToComplete: 6,
     i18n: {
@@ -119,7 +119,7 @@ To add a Quest you need to add an entry in the `src/quests/quest-definitions.ts`
 ├── SendAssetsQuest
 │   └── en
 │       └── 0.md
-└── SwapQuest
+└── DEXSwaps
     └── en
         ├── 0.md
         ├── 1.md

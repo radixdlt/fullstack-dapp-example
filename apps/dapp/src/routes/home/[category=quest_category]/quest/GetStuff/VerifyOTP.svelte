@@ -40,7 +40,7 @@
 
 <div class="verify-otp">
   <div class="text-faded">
-    {$i18n.t('quests:FirstTransactionQuest.verifyOtpText')}
+    {$i18n.t('quests:GetStuff.verifyOtpText')}
     {phoneNumber}
   </div>
 
@@ -56,7 +56,7 @@
   <div style:height="2rem">
     {#if error}
       <Error>
-        {$i18n.t('quests:FirstTransactionQuest.invalidOtp')}
+        {$i18n.t('quests:GetStuff.invalidOtp')}
       </Error>
     {/if}
   </div>
@@ -73,7 +73,7 @@
     on:click={() => {
       dispatch('verifyOtp')
     }}
-    >{$i18n.t('quests:FirstTransactionQuest.verifyOtpButton')}
+    >{$i18n.t('quests:GetStuff.verifyOtpButton')}
   </Button>
 </div>
 
