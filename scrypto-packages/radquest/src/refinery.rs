@@ -2,7 +2,7 @@ use scrypto::prelude::*;
 
 use crate::{
     image_oracle::image_oracle::ImageOracle,
-    morph_card_forge::MorphCardData,
+    morph_card_forge::MorphEnergyCardData,
     quest_rewards::UserId,
     radgem_forge::{radgem_forge::RadgemForge, RadgemData},
     radmorph_forge::{radmorph_forge::RadmorphForge, RadmorphData},
@@ -148,14 +148,16 @@ mod refinery {
         pub fn combine_elements_mint_radgem(
             &mut self,
             user_id: UserId,
-            rand_num_1: Decimal,
-            rand_num_2: Decimal,
+            seed_num_1: Decimal,
+            seed_num_2: Decimal,
+            seed_num_3: Decimal,
         ) -> () {
             assert!(self.enabled, "Refinery component disabled");
 
-            let radgem_bucket = self
-                .admin_badge
-                .authorize_with_amount(1, || self.radgem_forge.mint_radgem(rand_num_1, rand_num_2));
+            let radgem_bucket = self.admin_badge.authorize_with_amount(1, || {
+                self.radgem_forge
+                    .mint_radgem(seed_num_1, seed_num_2, seed_num_3)
+            });
 
             // Update the user's RadGem record
             if self.radgem_records.get(&user_id).is_none() {
@@ -236,22 +238,21 @@ mod refinery {
         // transforms RadGems and RadCard into a RadMorph
         pub fn create_radmorph(
             &mut self,
-            radgem_1: Bucket,
-            radgem_2: Bucket,
+            mut radgems: Bucket,
             morph_card: Bucket,
             key_image_url: Url,
         ) -> Bucket {
             assert!(self.enabled, "Refinery component disabled");
             // Confirm the resources
-            assert_eq!(radgem_1.resource_address(), self.radgem_address);
-            assert_eq!(radgem_2.resource_address(), self.radgem_address);
+            assert_eq!(radgems.resource_address(), self.radgem_address);
             assert_eq!(morph_card.resource_address(), self.morph_card_address);
 
-            for bucket in [&radgem_1, &radgem_2, &morph_card] {
-                assert_eq!(bucket.amount(), dec!(1));
-            }
+            assert_eq!(radgems.amount(), dec!(2));
+            assert_eq!(morph_card.amount(), dec!(1));
 
             // Get the RadGem and MorphCard data
+            let radgem_1 = radgems.take(1);
+            let radgem_2 = radgems.take(1);
             let radgem_1_data: RadgemData = radgem_1
                 .as_non_fungible()
                 .non_fungible::<RadgemData>()
@@ -262,7 +263,7 @@ mod refinery {
                 .data();
             let morph_card_data = morph_card
                 .as_non_fungible()
-                .non_fungible::<MorphCardData>()
+                .non_fungible::<MorphEnergyCardData>()
                 .data();
 
             let radgem_1_rarity_weight = RARITY
@@ -289,7 +290,7 @@ mod refinery {
 
                 let pre_hash_string = format!(
                     "{}{}{}{}",
-                    morph_card_data.energy,
+                    morph_card_data.energy_type,
                     radgem_a_data.material,
                     radgem_a_data.color,
                     radgem_b_data.color,

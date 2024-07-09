@@ -1,18 +1,61 @@
-use crate::refinery::RARITY;
 use scrypto::prelude::*;
 
-pub const COMMON_COLOR: [&str; 5] = ["Blood", "Forest", "Ocean", "Sand", "Sky"];
-pub const RARE_COLOR: [&str; 5] = ["Coral", "Dusk", "Flame", "Glacier", "Smoke"];
-pub const MATERIAL: [&str; 3] = ["Crystalline", "Metallic", "Radiant"];
+pub const COLOR: [&str; 10] = [
+    "Blood", "Forest", "Ocean", "Sand", "Sky", "Coral", "Dusk", "Flame", "Glacier", "Smoke",
+];
+
+pub struct MaterialRarity {
+    pub name: &'static str,
+    occurrence: Decimal,
+    min_quality: u8,
+    max_quality: u8,
+}
+
+pub struct Material {
+    pub name: &'static str,
+    pub rarity: MaterialRarity,
+}
+
+pub const MATERIAL: [Material; 3] = [
+    Material {
+        name: "Crystalline",
+        rarity: MaterialRarity {
+            name: "Common",
+            occurrence: dec!(0.75),
+            min_quality: 1,
+            max_quality: 5,
+        },
+    },
+    Material {
+        name: "Metallic",
+        rarity: MaterialRarity {
+            name: "Rare",
+            occurrence: dec!(0.20),
+            min_quality: 6,
+            max_quality: 15,
+        },
+    },
+    Material {
+        name: "Radiant",
+        rarity: MaterialRarity {
+            name: "Ultra-Rare",
+            occurrence: dec!(0.05),
+            min_quality: 16,
+            max_quality: 25,
+        },
+    },
+];
 
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 pub struct RadgemData {
     #[mutable]
     pub key_image_url: Url,
     pub name: String,
+    pub description: String,
     pub material: String,
     pub color: String,
     pub rarity: String,
+    pub quality: Decimal,
 }
 
 #[blueprint]
@@ -63,18 +106,30 @@ mod radgem_forge {
             self.enabled = false;
         }
 
-        pub fn mint_radgem(&mut self, rand_num_1: Decimal, rand_num_2: Decimal) -> Bucket {
+        pub fn mint_radgem(
+            &mut self,
+            color_num: Decimal,
+            material_num: Decimal,
+            quality_num: Decimal,
+        ) -> Bucket {
             assert!(self.enabled, "RadgemForge component disabled");
-            let material = self.assign_material(rand_num_2);
-            let color = self.assign_color(rand_num_1);
-            let rarity = self.assign_rarity(&material, &color);
+            let (material, rarity, quality) =
+                self.assign_material_rarity_and_quality(material_num, quality_num);
+            let color = self.assign_color(color_num);
 
             let radgem = RadgemData {
                 key_image_url: Url::of(""),
-                name: format!("{} {} RadGem", material, color),
-                material,
-                color,
-                rarity,
+                name: format!(
+                    "{} {} RadGem {{{}/100}}",
+                    material,
+                    color,
+                    quality.to_string()
+                ),
+                description: format!("The {} {} material of this {} RadGem is graded at a quality of {} out of a possible 25.", rarity, material, color, quality.to_string()),
+                material: material.to_lowercase(),
+                color: color.to_lowercase(),
+                rarity: rarity.to_lowercase(),
+                quality,
             };
 
             self.admin_badge.authorize_with_amount(1, || {
@@ -93,71 +148,52 @@ mod radgem_forge {
             });
         }
 
-        fn assign_material(&self, n: Decimal) -> String {
+        fn assign_material_rarity_and_quality(
+            &self,
+            material_num: Decimal,
+            quality_num: Decimal,
+        ) -> (&str, &str, Decimal) {
             assert!(
-                n >= dec!(0) && n <= dec!(1),
+                material_num >= dec!(0) && material_num <= dec!(1),
                 "rand_num must be between 0 and 1 inclusive"
             );
 
-            let relative_n = n * 3;
-            match relative_n {
-                n if n < dec!(1) => MATERIAL[0].to_string(),
-                n if n < dec!(2) => MATERIAL[1].to_string(),
-                _ => MATERIAL[2].to_string(),
+            let material = match material_num {
+                n if n < MATERIAL[0].rarity.occurrence => &MATERIAL[0],
+                n if n < (MATERIAL[0].rarity.occurrence + MATERIAL[1].rarity.occurrence) => {
+                    &MATERIAL[1]
+                }
+                _ => &MATERIAL[2],
+            };
+
+            let quality = (quality_num
+                * (material.rarity.max_quality - material.rarity.min_quality))
+                .checked_ceiling()
+                .unwrap()
+                + material.rarity.min_quality;
+
+            (material.name, material.rarity.name, quality)
+        }
+
+        fn assign_color(&self, color_num: Decimal) -> &str {
+            assert!(
+                color_num >= dec!(0) && color_num <= dec!(1),
+                "rand_num must be between 0 and 1 inclusive"
+            );
+
+            let n = color_num * COLOR.len();
+            match n {
+                n if n < dec!(1) => COLOR[0],
+                n if n < dec!(2) => COLOR[1],
+                n if n < dec!(3) => COLOR[2],
+                n if n < dec!(4) => COLOR[3],
+                n if n < dec!(5) => COLOR[4],
+                n if n < dec!(6) => COLOR[5],
+                n if n < dec!(7) => COLOR[6],
+                n if n < dec!(8) => COLOR[7],
+                n if n < dec!(9) => COLOR[8],
+                _ => COLOR[9],
             }
-        }
-
-        fn assign_color(&self, n: Decimal) -> String {
-            assert!(
-                n >= dec!(0) && n <= dec!(1),
-                "rand_num must be between 0 and 1 inclusive"
-            );
-
-            let common_prob = dec!(2) / 3;
-            let rare_prob = 1 - common_prob;
-
-            return if n <= common_prob {
-                let relative_n = n * (1 / common_prob) * 5;
-                match relative_n {
-                    rn if rn < dec!(1) => COMMON_COLOR[0].to_string(),
-                    rn if rn < dec!(2) => COMMON_COLOR[1].to_string(),
-                    rn if rn < dec!(3) => COMMON_COLOR[2].to_string(),
-                    rn if rn < dec!(4) => COMMON_COLOR[3].to_string(),
-                    _ => COMMON_COLOR[4].to_string(),
-                }
-            } else {
-                let relative_n = (n - common_prob) * (1 / rare_prob) * 5;
-                match relative_n {
-                    rn if rn < dec!(1) => RARE_COLOR[0].to_string(),
-                    rn if rn < dec!(2) => RARE_COLOR[1].to_string(),
-                    rn if rn < dec!(3) => RARE_COLOR[2].to_string(),
-                    rn if rn < dec!(4) => RARE_COLOR[3].to_string(),
-                    _ => RARE_COLOR[4].to_string(),
-                }
-            };
-        }
-
-        fn assign_rarity(&self, material: &String, color: &String) -> String {
-            let color_rarity = if COMMON_COLOR.contains(&color.as_str()) {
-                RARITY[0]
-            } else {
-                RARITY[1]
-            };
-
-            let material_rarity = match material.as_str() {
-                m if m == MATERIAL[0] => RARITY[0],
-                m if m == MATERIAL[1] => RARITY[0],
-                m if m == MATERIAL[2] => RARITY[1],
-                _ => panic!("Invalid material"),
-            };
-
-            return match (color_rarity, material_rarity) {
-                rr if rr == (RARITY[0], RARITY[0]) => RARITY[0].to_string(),
-                rr if rr == (RARITY[1], RARITY[0]) => RARITY[1].to_string(),
-                rr if rr == (RARITY[0], RARITY[1]) => RARITY[1].to_string(),
-                rr if rr == (RARITY[1], RARITY[1]) => RARITY[2].to_string(),
-                _ => panic!("Invalid rarity combination"),
-            };
         }
     }
 }

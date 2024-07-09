@@ -7,7 +7,7 @@ CALL_METHOD
     Address("${account}")
     "create_proof_of_non_fungibles"
     Address("${hero_badge}")
-    Array<NonFungibleLocalId>(NonFungibleLocalId("<${hero_badge_id}>"))
+    Array<NonFungibleLocalId>(NonFungibleLocalId("<${user_id}>"))
 ;
 POP_FROM_AUTH_ZONE
     Proof("hero_badge_proof")

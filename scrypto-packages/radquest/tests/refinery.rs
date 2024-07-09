@@ -2,9 +2,9 @@ use scrypto_test::prelude::*;
 
 use radquest::{
     image_oracle::image_oracle_test::*,
-    morph_card_forge::MorphCardData,
+    morph_card_forge::MorphEnergyCardData,
     quest_rewards::UserId,
-    radgem_forge::{RadgemData, COMMON_COLOR, MATERIAL, RARE_COLOR},
+    radgem_forge::{RadgemData, COLOR, MATERIAL},
     radmorph_forge::{radmorph_forge_test::*, RadmorphData},
     refinery::{refinery_test::*, RARITY},
 };
@@ -67,16 +67,20 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
                 RadgemData {
                     key_image_url: UncheckedUrl("".to_string()),
                     name: "Crystalline Coral Radgem".to_string(),
-                    material: MATERIAL[0].to_string(), // Crystalline,
-                    color: RARE_COLOR[0].to_string(),  // Coral,
-                    rarity: RARITY[1].to_string(),     // Uncommon
+                    description: "The Common Crystalline material of this Blood Radgem is graded at a quality of 5 out of a possible 25.".to_string(),
+                    material: MATERIAL[0].name.to_string(), // Crystalline,
+                    color: COLOR[0].to_string(),            // Blood,
+                    rarity: MATERIAL[0].rarity.name.to_string(),          // Common,
+                    quality: dec!(5),
                 },
                 RadgemData {
                     key_image_url: UncheckedUrl("".to_string()),
                     name: "Metallic Forest Radgem".to_string(),
-                    material: MATERIAL[1].to_string(),  // Metallic,
-                    color: COMMON_COLOR[1].to_string(), // Forest,
-                    rarity: RARITY[0].to_string(),      // Common,
+                    description: "The Rare Metallic material of this Forest Radgem is graded at a quality of 10 out of a possible 25.".to_string(),
+                    material: MATERIAL[1].name.to_string(), // Metallic,
+                    color: COLOR[1].to_string(),            // Forest,
+                    rarity: MATERIAL[1].rarity.name.to_string(),          // Rare,
+                    quality: dec!(10),
                 },
             ],
             &mut env,
@@ -87,10 +91,10 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
             burner_updater => rule!(deny_all);
         ))
         .mint_initial_supply(
-            [MorphCardData {
+            [MorphEnergyCardData {
                 key_image_url: UncheckedUrl("https://www.example.com".to_string()),
                 name: "Molten Lava Morph Card".to_string(),
-                energy: "Molten Lava".to_string(),
+                energy_type: "Molten Lava".to_string(),
                 rarity: RARITY[1].to_string(), // Uncommon,
                 availability: "Random".to_string(),
             }],
@@ -219,7 +223,13 @@ fn can_combine_elements_mint_radgem() -> Result<(), RuntimeError> {
 
     // Act
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_mint_radgem(user_id, dec!(0.318), dec!(0.822), &mut env)?;
+    refinery.combine_elements_mint_radgem(
+        user_id,
+        dec!(0.318),
+        dec!(0.822),
+        dec!(0.517),
+        &mut env,
+    )?;
 
     // Assert
     Ok(())
@@ -238,7 +248,13 @@ fn can_combine_elements_add_radgem_image() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_mint_radgem(user_id.clone(), dec!(0.97), dec!(0.87), &mut env)?;
+    refinery.combine_elements_mint_radgem(
+        user_id.clone(),
+        dec!(0.97),
+        dec!(0.87),
+        dec!(0.37),
+        &mut env,
+    )?;
 
     let mut radgem_local_id: Option<NonFungibleLocalId> = None;
     env.with_component_state(refinery, |refinery_state: &mut RefineryState, env| {
@@ -284,7 +300,13 @@ fn can_combine_elements_claim() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_mint_radgem(user_id.clone(), dec!(0.97), dec!(0.89), &mut env)?;
+    refinery.combine_elements_mint_radgem(
+        user_id.clone(),
+        dec!(0.97),
+        dec!(0.89),
+        dec!(0.93),
+        &mut env,
+    )?;
 
     // Act
     let result = refinery.combine_elements_claim(hero_badge_proof, &mut env)?;
@@ -307,13 +329,25 @@ fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_mint_radgem(user_id.clone(), dec!(0.97), dec!(0.87), &mut env)?;
+    refinery.combine_elements_mint_radgem(
+        user_id.clone(),
+        dec!(0.97),
+        dec!(0.87),
+        dec!(0.43),
+        &mut env,
+    )?;
 
     // Act
     let result_1 =
         refinery.combine_elements_claim(hero_badge.create_proof_of_all(&mut env)?, &mut env)?;
 
-    refinery.combine_elements_mint_radgem(user_id.clone(), dec!(0.16), dec!(0.64), &mut env)?;
+    refinery.combine_elements_mint_radgem(
+        user_id.clone(),
+        dec!(0.16),
+        dec!(0.64),
+        dec!(0.29),
+        &mut env,
+    )?;
 
     let result_2 =
         refinery.combine_elements_claim(hero_badge.create_proof_of_all(&mut env)?, &mut env)?;
@@ -338,8 +372,9 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     let m = morph_card.non_fungible_local_ids(&mut env)?.pop().unwrap();
-    let morph_card_data: MorphCardData = ResourceManager(morph_card.resource_address(&mut env)?)
-        .get_non_fungible_data(m, &mut env)?;
+    let morph_card_data: MorphEnergyCardData =
+        ResourceManager(morph_card.resource_address(&mut env)?)
+            .get_non_fungible_data(m, &mut env)?;
     let radgem_ids = radgems.non_fungible_local_ids(&mut env)?;
     let radgem_1_data: RadgemData = ResourceManager(radgems.resource_address(&mut env)?)
         .get_non_fungible_data(radgem_ids[0].clone(), &mut env)?;
@@ -364,7 +399,10 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
 
     let data = format!(
         "{}{}{}{}",
-        morph_card_data.energy, radgem_a_data.material, radgem_a_data.color, radgem_b_data.color,
+        morph_card_data.energy_type,
+        radgem_a_data.material,
+        radgem_a_data.color,
+        radgem_b_data.color,
     );
 
     let key_hash = keccak256_hash(data.as_bytes());
@@ -376,8 +414,7 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
 
     // Act
     let result = refinery.create_radmorph(
-        radgems.take(dec!(1), &mut env)?,
-        radgems.take(dec!(1), &mut env)?,
+        radgems.take(dec!(2), &mut env)?,
         morph_card,
         key_image_url,
         &mut env,
@@ -411,8 +448,7 @@ fn cannot_create_radmorph_with_incorrect_image_url() -> Result<(), RuntimeError>
 
     // Act
     let result = refinery.create_radmorph(
-        radgems.take(dec!(1), &mut env)?,
-        radgems.take(dec!(1), &mut env)?,
+        radgems.take(dec!(2), &mut env)?,
         morph_card,
         UncheckedUrl("https://www.example.com".to_string()),
         &mut env,
@@ -486,8 +522,7 @@ pub fn cannot_create_radmorph_when_disabled() -> Result<(), RuntimeError> {
     LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
     refinery.disable(&mut env)?;
     let result = refinery.create_radmorph(
-        radgems.take(dec!(1), &mut env)?,
-        radgems.take(dec!(1), &mut env)?,
+        radgems.take(dec!(2), &mut env)?,
         morph_card,
         UncheckedUrl("https://www.example.com".to_string()),
         &mut env,

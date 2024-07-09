@@ -16,6 +16,7 @@ fn create_a_super_admin_badge() {
             init {
               "name" => "RadQuest Super Admin Badge", updatable;
               "tags" => vec!["radquest", "badge"], updatable;
+              "dapp_definitions" => vec!["dapp_definition_account_address"], updatable;
             }
         ),
         Some(dec!(1)),
@@ -62,6 +63,7 @@ fn create_admin_badge() {
             init {
               "name" => "RadQuest Admin Badge", updatable;
               "tags" => vec!["radquest", "badge"], updatable;
+              "dapp_definitions" => vec!["dapp_definition_account_address"], updatable;
             }
         ),
         None,
@@ -114,6 +116,7 @@ fn create_hero_badge() {
               "description" =>"A unique Hero Badge NFT is given to every RadQuest quester. It is presented whenever interacting with RadQuest, like claiming rewards or crafting RadMorphs.", updatable;
               "tags" => vec!["radquest", "badge"], updatable;
               "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
+              "dapp_definitions" => vec!["dapp_definition_account_address"], updatable;
             }
         ),
         None::<IndexMap<NonFungibleLocalId, HeroBadgeData>>,
@@ -150,10 +153,10 @@ fn create_gift_box() {
         },
         metadata!(
             init {
-              "name" => "Gift Box", locked;
-              "symbol" => "GBX", locked;
-              "description" => "Gift Boxes are filled with treasures and surprises, waiting to be opened.", locked;
-              "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
+              "name" => "Gift Box", updatable;
+              "description" => "Gift Boxes are filled with treasures and surprises, waiting to be opened.", updatable;
+              "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
+              "dapp_definitions" => vec!["dapp_definition_account_address"], updatable;
             }
         ),
         None,
@@ -174,9 +177,11 @@ struct RadgemData {
     #[mutable]
     key_image_url: Url,
     name: String,
+    description: String,
     material: String,
     color: String,
     rarity: String,
+    quality: Decimal,
 }
 
 #[test]
@@ -189,20 +194,21 @@ fn create_radgem() {
         true,
         NonFungibleResourceRoles {
             mint_roles: mint_roles! {
-                minter => OWNER;
+                minter => rule!(require(XRD));
                 minter_updater => rule!(deny_all);
             },
             burn_roles: burn_roles! {
-                burner => OWNER;
+                burner => rule!(require(XRD));
                 burner_updater => rule!(deny_all);
             },
             ..Default::default()
         },
         metadata!(
             init {
-              "name" => "RadGems", locked;
-              "description" => "Two Radgems can be combined with a Morph Energy Card by RadQuest's Jetty to produce a beautiful Radmorph.", locked;
-              "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
+              "name" => "RadGems", updatable;
+              "description" => "Two RadGems can be combined with a Morph Energy Card by RadQuest’s Jetty to produce a beautiful RadMorph NFT. Higher quality RadGems will contribute to a higher quality RadMorph.", updatable;
+              "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
+              "dapp_definitions" => vec!["dapp_definition_account_address"], updatable;
             }
         ),
         None::<IndexMap<NonFungibleLocalId, RadgemData>>,
@@ -220,16 +226,17 @@ fn create_radgem() {
 
 #[derive(ScryptoSbor, NonFungibleData, ManifestSbor)]
 struct MorphEnergyCardData {
-    #[mutable]
     key_image_url: Url,
     name: String,
+    description: String,
+    energy_type: String,
     rarity: String,
-    energy: String,
-    availability: String,
+    quality: Decimal,
+    limited_edition: bool,
 }
 
 #[test]
-fn create_morph_card() {
+fn create_morph_energy_card() {
     let network = NetworkDefinition::mainnet();
 
     let manifest_builder = ManifestBuilder::new().create_non_fungible_resource(
@@ -238,20 +245,23 @@ fn create_morph_card() {
         true,
         NonFungibleResourceRoles {
             mint_roles: mint_roles! {
-                minter => OWNER;
+                minter => rule!(require(XRD));
                 minter_updater => rule!(deny_all);
             },
             burn_roles: burn_roles! {
-                burner => OWNER;
+                burner => rule!(require(XRD));
                 burner_updater => rule!(deny_all);
             },
             ..Default::default()
         },
         metadata!(
           init {
-            "name" => "Morph Energy Cards", locked;
-            "description" => "These cards allow RadQuest’s Jetty to harness the primordial energies of the RadQuest realm to fuse Radgems into intricate and beautiful collectible Radmorphs.", locked;
-            "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
+            "name" => "Morph Energy Cards", updatable;
+            "description" => "A Morph Energy Card can be combined with 2 RadGems by RadQuest’s Jetty to produce a beautiful RadMorph NFT. Higher quality Energy Cards will contribute to a higher quality RadMorph.
+
+Morph Energy Cards allow RadQuest’s Jetty to harness the primordial energies of the universe to morph two RadGems into different shapes to create intricate, beautiful, and collectible RadMorphs.", updatable;
+            "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
+            "dapp_definitions" => vec!["dapp_definition_account_address"], updatable;
           }
         ),
         None::<IndexMap<NonFungibleLocalId, MorphEnergyCardData>>,
@@ -295,9 +305,10 @@ fn create_radmorph() {
         },
         metadata!(
           init {
-            "name" => "RadMorphs", locked;
-            "description" => "Fused in the boundless energies of the RadQuest realm, RadMorphs are treasured by the dedicated and true of Radix.", locked;
-            "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
+            "name" => "RadMorphs", updatable;
+            "description" => "Fused in the boundless energies of the RadQuest realm, RadMorphs are treasured by the dedicated and true of Radix.", updatable;
+            "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
+            "dapp_definitions" => vec!["dapp_definition_account_address"], updatable;
           }
         ),
         None::<IndexMap<NonFungibleLocalId, RadmorphData>>,
@@ -338,6 +349,7 @@ pub fn create_otter_coin() {
             "symbol" => "OTT", locked;
             "description" => "The official currency of RadQuest otters, Otter Coins are used to purchase delicious clams, and may one day have other value besides.", locked;
             "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
+            "dapp_definitions" => vec!["dapp_definition_account_address"], updatable;
           }
         ),
         None

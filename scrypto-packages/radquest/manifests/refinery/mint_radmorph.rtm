@@ -1,0 +1,40 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("10")
+;
+
+CALL_METHOD
+    Address("${account}")
+    "withdraw_non_fungibles"
+    Address("${radgem}")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("${radgem_1_id}")
+        NonFungibleLocalId("${radgem_2_id}")
+    )
+;
+TAKE_ALL_FROM_WORKTOP Address("${radgem}") Bucket("radgems");
+
+CALL_METHOD
+    Address("${account}")
+    "withdraw_non_fungibles"
+    Address("${morph_card}")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("${morph_card_id}")
+    )
+;
+TAKE_ALL_FROM_WORKTOP Address("${morph_card}") Bucket("morph_energy_card");
+
+CALL_METHOD
+    Address("${refinery}")
+    "create_radmorph"
+    Bucket("radgems")
+    Bucket("morph_energy_card")
+    "https://www.example.url"
+;
+
+CALL_METHOD
+    Address("${account}")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;

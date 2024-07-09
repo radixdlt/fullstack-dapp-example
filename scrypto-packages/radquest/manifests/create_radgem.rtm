@@ -38,6 +38,12 @@ CREATE_NON_FUNGIBLE_RESOURCE
                             ),
                             Enum<0u8>(
                                 12u8
+                            ),
+                            Enum<0u8>(
+                                12u8
+                            ),
+                            Enum<0u8>(
+                                192u8
                             )
                         )
                     )
@@ -52,9 +58,11 @@ CREATE_NON_FUNGIBLE_RESOURCE
                                 Array<String>(
                                     "key_image_url",
                                     "name",
+                                    "description",
                                     "material",
                                     "color",
-                                    "rarity"
+                                    "rarity",
+                                    "quality"
                                 )
                             )
                         )
@@ -111,44 +119,9 @@ CREATE_NON_FUNGIBLE_RESOURCE
         ),
         Enum<0u8>(),
         Enum<0u8>(),
-        Enum<1u8>(
-            Tuple(
-                Enum<1u8>(
-                    Enum<0u8>()
-                ),
-                Enum<1u8>(
-                    Enum<1u8>()
-                )
-            )
-        ),
-        Enum<1u8>(
-            Tuple(
-                Enum<1u8>(
-                    Enum<0u8>()
-                ),
-                Enum<1u8>(
-                    Enum<1u8>()
-                )
-            )
-        ),
-        Enum<1u8>(
-            Tuple(
-                Enum<1u8>(
-                    Enum<2u8>(
-                        Enum<0u8>(
-                            Enum<0u8>(
-                                Enum<1u8>(
-                                    Address("${admin_badge}")
-                                )
-                            )
-                        )
-                    )
-                ),
-                Enum<1u8>(
-                    Enum<1u8>()
-                )
-            )
-        )
+        Enum<0u8>(),
+        Enum<0u8>(),
+        Enum<0u8>()
     )
     Tuple(
         Map<String, Tuple>(
@@ -158,23 +131,33 @@ CREATE_NON_FUNGIBLE_RESOURCE
                         "RadGems"
                     )
                 ),
-                true
+                false
             ),
             "description" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "Two Radgems can be combined with a Morph Energy Card by RadQuest's Jetty to produce a beautiful Radmorph."
+                        "Two RadGems can be combined with a Morph Energy Card by RadQuest’s Jetty to produce a beautiful RadMorph NFT. Higher quality RadGems will contribute to a higher quality RadMorph."
                     )
                 ),
-                true
+                false
             ),
             "icon_url" => Tuple(
                 Enum<1u8>(
-                    Enum<0u8>(
+                    Enum<13u8>(
                         "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"
                     )
                 ),
-                true
+                false
+            ),
+            "dapp_definitions" => Tuple(
+                Enum<1u8>(
+                    Enum<128u8>(
+                        Array<String>(
+                            "dapp_definition_account_address"
+                        )
+                    )
+                ),
+                false
             )
         ),
         Map<String, Enum>()

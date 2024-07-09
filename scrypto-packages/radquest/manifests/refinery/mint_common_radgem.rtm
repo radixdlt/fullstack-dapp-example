@@ -13,8 +13,8 @@ CALL_METHOD
 
 CALL_METHOD
     Address("${refinery}")
-    "combine_elements_process_1"
-    "<${user_id}>"
+    "combine_elements_mint_radgem"
+    "${user_id}"
     Decimal("0.65")
     Decimal("0.3")
 ;
