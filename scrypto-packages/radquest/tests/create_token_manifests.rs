@@ -230,6 +230,7 @@ struct MorphEnergyCardData {
     name: String,
     description: String,
     energy_type: String,
+    energy_description: String,
     rarity: String,
     quality: Decimal,
     limited_edition: bool,
@@ -271,7 +272,7 @@ Morph Energy Cards allow RadQuest’s Jetty to harness the primordial energies o
         manifest_builder.object_names(),
         &manifest_builder.build(),
         "./manifests/test-generated",
-        Some("create_morph_card"),
+        Some("create_morph_energy_card"),
         &network,
     )
     .err();
@@ -281,11 +282,20 @@ Morph Energy Cards allow RadQuest’s Jetty to harness the primordial energies o
 struct RadmorphData {
     key_image_url: Url,
     name: String,
-    rarity: String,
+    description: String,
+    quality: Decimal,
     material: String,
-    energy: String,
-    color_1: String,
-    color_2: String,
+    card_type: String,
+    card_rarity: String,
+    card_quality: Decimal,
+    radgem_1_color: String,
+    radgem_1_material: String,
+    radgem_1_rarity: String,
+    radgem_1_quality: Decimal,
+    radgem_2_color: String,
+    radgem_2_material: String,
+    radgem_2_rarity: String,
+    radgem_2_quality: Decimal,
 }
 
 #[test]
@@ -298,15 +308,19 @@ fn create_radmorph() {
         true,
         NonFungibleResourceRoles {
             mint_roles: mint_roles! {
-                minter => OWNER;
+                minter => rule!(require(XRD));
                 minter_updater => rule!(deny_all);
+            },
+            burn_roles: burn_roles! {
+                burner => rule!(require(XRD));
+                burner_updater => rule!(deny_all);
             },
             ..Default::default()
         },
         metadata!(
           init {
             "name" => "RadMorphs", updatable;
-            "description" => "Fused in the boundless energies of the RadQuest realm, RadMorphs are treasured by the dedicated and true of Radix.", updatable;
+            "description" => "Fused in the boundless energies of the RadQuest realm, RadMorphs are treasured by the dedicated and true of the Radix community.", updatable;
             "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
             "dapp_definitions" => vec!["dapp_definition_account_address"], updatable;
           }

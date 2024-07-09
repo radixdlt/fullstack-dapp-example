@@ -310,10 +310,10 @@ mod refinery {
 
                 // Mint a RadMorph
                 self.radmorph_forge.mint_radmorph(
+                    key_image_url,
                     morph_card_data,
                     radgem_a_data,
                     radgem_b_data,
-                    key_image_url,
                 )
             });
 
