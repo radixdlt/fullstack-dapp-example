@@ -59,17 +59,17 @@
 
 <ProgressCard bind:this={card} {steps} bind:progress disabled={cardDisabled}>
   <div slot="header" class="header">
-    <button class="icon" on:click={() => dispatch('close')}>
-      <Icon url={CrossIcon} />
-    </button>
+    <div />
     <header class="title">
       {title}
     </header>
-    <div />
+    <button class="icon" on:click={() => dispatch('close')}>
+      <Icon url={CrossIcon} />
+    </button>
   </div>
 
   <svelte:fragment slot="content" let:width let:animationDuration>
-    <div bind:this={content} class="content card">
+    <div bind:this={content} class="card content">
       {#key progress}
         <div
           in:fly|local={{
@@ -122,8 +122,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--spacing-xl);
+    padding: 1.5rem;
     border-bottom: 1px solid var(--color-light);
+
+    > *:first-child {
+      width: 1.5rem;
+    }
+
+    > *:last-child {
+      width: 1.5rem;
+    }
   }
 
   .content {

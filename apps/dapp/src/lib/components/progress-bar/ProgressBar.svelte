@@ -18,8 +18,8 @@
 <style lang="scss">
   .progress-bar {
     width: 100%;
-    height: 0.2rem;
-    background: rgba($color: black, $alpha: 0.2);
+    height: 4px;
+    background: rgba($color: #6260ff, $alpha: 0.2);
     position: relative;
   }
 
@@ -30,7 +30,7 @@
     left: 0;
     height: 100%;
     width: calc(var(--step) / calc(var(--steps) - 1) * 100%);
-    background: var(--color-background-dark);
+    background: var(--color-primary);
     border-radius: var(--border-radius-3xl);
     transition: width 0.3s ease-in-out;
   }

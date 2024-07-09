@@ -245,4 +245,4 @@ interface Resources {
   translation: {}
 }
 
-export default Resources;
+export default Resources
