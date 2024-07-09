@@ -8,16 +8,6 @@ use crate::{
     radmorph_forge::{radmorph_forge::RadmorphForge, RadmorphData},
 };
 
-pub const RARITY: [&str; 7] = [
-    "Common",
-    "Uncommon",
-    "Rare",
-    "Fine",
-    "Precious",
-    "Superb",
-    "Magnificent",
-];
-
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
 enum RadgemDeposit {
     Unclaimed(Vec<NonFungibleLocalId>),
@@ -253,6 +243,8 @@ mod refinery {
             // Get the RadGem and MorphCard data
             let radgem_1 = radgems.take(1);
             let radgem_2 = radgems.take(1);
+            radgems.drop_empty();
+
             let radgem_1_data: RadgemData = radgem_1
                 .as_non_fungible()
                 .non_fungible::<RadgemData>()
@@ -266,34 +258,26 @@ mod refinery {
                 .non_fungible::<MorphEnergyCardData>()
                 .data();
 
-            let radgem_1_rarity_weight = RARITY
-                .iter()
-                .position(|&r| r == &radgem_1_data.rarity)
-                .unwrap();
-            let radgem_2_rarity_weight = RARITY
-                .iter()
-                .position(|&r| r == &radgem_2_data.rarity)
-                .unwrap();
-
-            let (radgem_a_data, radgem_b_data) = if radgem_1_rarity_weight >= radgem_2_rarity_weight
-            {
-                (radgem_1_data, radgem_2_data)
-            } else {
-                (radgem_2_data, radgem_1_data)
-            };
-
             let radmorph = self.admin_badge.authorize_with_amount(1, || {
                 // Burn resources
                 radgem_1.burn();
                 radgem_2.burn();
                 morph_card.burn();
 
+                let material =
+                    if radgem_1_data.material == "radiant" || radgem_2_data.material == "radiant" {
+                        "radiant"
+                    } else if radgem_1_data.material == "metallic"
+                        || radgem_2_data.material == "metallic"
+                    {
+                        "metallic"
+                    } else {
+                        "crystalline"
+                    };
+
                 let pre_hash_string = format!(
                     "{}{}{}{}",
-                    morph_card_data.energy_type,
-                    radgem_a_data.material,
-                    radgem_a_data.color,
-                    radgem_b_data.color,
+                    morph_card_data.energy_type, material, radgem_1_data.color, radgem_2_data.color,
                 );
 
                 let result = self
@@ -312,8 +296,8 @@ mod refinery {
                 self.radmorph_forge.mint_radmorph(
                     key_image_url,
                     morph_card_data,
-                    radgem_a_data,
-                    radgem_b_data,
+                    radgem_1_data,
+                    radgem_2_data,
                 )
             });
 

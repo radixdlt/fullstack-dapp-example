@@ -78,7 +78,8 @@ fn can_mint_morph_card() -> Result<(), RuntimeError> {
         "Molten Lava Morph Card {42/50} Limited".to_string(),
         "Use this limited-edition Morph Energy Card to fuse 2 RadGems using the fiery flow of molten lava! The rare shape defined by this card is rated at a quality level of 42 out of a possible 50.".to_string(),
         "molten lava".to_string(),
-        "rare".to_string(),
+        "the fiery flow of molten lava".to_string(),
+        "ultra-rare".to_string(),
         dec!(42),
         true,
         &mut env
@@ -135,6 +136,7 @@ pub fn cannot_mint_card_when_disabled() -> Result<(), RuntimeError> {
         "Molten Lava Morph Card {42/50} Limited".to_string(),
         "Use this limited-edition Morph Energy Card to fuse 2 RadGems using the fiery flow of molten lava! The rare shape defined by this card is rated at a quality level of 42 out of a possible 50.".to_string(),
         "molten lava".to_string(),
+        "the fiery flow of molten lava".to_string(),
         "rare".to_string(),
         dec!(42),
         true,

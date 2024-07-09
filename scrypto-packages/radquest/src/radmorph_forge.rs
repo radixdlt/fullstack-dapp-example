@@ -79,18 +79,20 @@ mod radmorph_forge {
             assert!(self.enabled, "RadmorphForge component disabled");
 
             let quality = card_data.quality + radgem_1_data.quality + radgem_2_data.quality;
-            let quality_text = self.get_quality_descriptor(quality);
-            let material_text =
-                self.get_rarer_material(&radgem_1_data.material, &radgem_2_data.material);
+            let quality_text = Self::get_quality_descriptor(quality);
+            let material =
+                Self::get_rarer_material(&radgem_1_data.material, &radgem_2_data.material)
+                    .to_string();
+            let material_text = Self::to_title_case(material.clone());
             let limited_text = match card_data.limited_edition {
                 true => " Limited",
                 false => "",
             };
-            let color_1_text = self.to_title_case(radgem_1_data.color.clone());
-            let color_2_text = self.to_title_case(radgem_2_data.color.clone());
-            let energy_type_text = self.to_title_case(card_data.energy_type.clone());
-            let radgem_1_material_text = self.to_title_case(radgem_1_data.material.clone());
-            let radgem_2_material_text = self.to_title_case(radgem_2_data.material.clone());
+            let color_1_text = Self::to_title_case(radgem_1_data.color.clone());
+            let color_2_text = Self::to_title_case(radgem_2_data.color.clone());
+            let energy_type_text = Self::to_title_case(card_data.energy_type.clone());
+            let radgem_1_material_text = Self::to_title_case(radgem_1_data.material.clone());
+            let radgem_2_material_text = Self::to_title_case(radgem_2_data.material.clone());
 
             let name = format!(
                 "{} {} {} and {} {} RadMorph {{{}/100}}{}",
@@ -109,7 +111,7 @@ mod radmorph_forge {
                 name,
                 description,
                 quality,
-                material: material_text.to_lowercase(),
+                material,
                 card_type: card_data.energy_type,
                 card_rarity: card_data.rarity,
                 card_quality: card_data.quality,
@@ -129,7 +131,7 @@ mod radmorph_forge {
             })
         }
 
-        fn get_quality_descriptor(&self, quality: Decimal) -> &str {
+        fn get_quality_descriptor(quality: Decimal) -> &'static str {
             match quality {
                 quality if quality < dec!(21) => "Basic",
                 quality if quality < dec!(41) => "Fine",
@@ -139,17 +141,17 @@ mod radmorph_forge {
             }
         }
 
-        fn get_rarer_material(&self, material_1: &str, material_2: &str) -> &str {
+        fn get_rarer_material(material_1: &str, material_2: &str) -> &'static str {
             if material_1 == "radiant" || material_2 == "radiant" {
-                "Radiant"
+                "radiant"
             } else if material_1 == "metallic" || material_2 == "metallic" {
-                "Metallic"
+                "metallic"
             } else {
-                "Crystalline"
+                "crystalline"
             }
         }
 
-        fn to_title_case(&self, s: String) -> String {
+        fn to_title_case(s: String) -> String {
             s.split_whitespace()
                 .map(|word| {
                     let mut c = word.chars();

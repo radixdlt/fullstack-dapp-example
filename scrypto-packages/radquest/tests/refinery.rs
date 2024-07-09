@@ -6,7 +6,7 @@ use radquest::{
     quest_rewards::UserId,
     radgem_forge::{RadgemData, COLOR, MATERIAL},
     radmorph_forge::{radmorph_forge_test::*, RadmorphData},
-    refinery::{refinery_test::*, RARITY},
+    refinery::refinery_test::*,
 };
 
 struct Test {
@@ -68,18 +68,18 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
                     key_image_url: UncheckedUrl("".to_string()),
                     name: "Crystalline Coral Radgem".to_string(),
                     description: "The Common Crystalline material of this Blood Radgem is graded at a quality of 5 out of a possible 25.".to_string(),
-                    material: MATERIAL[0].name.to_string(), // Crystalline,
-                    color: COLOR[0].to_string(),            // Blood,
-                    rarity: MATERIAL[0].rarity.name.to_string(),          // Common,
+                    material: MATERIAL[0].name.to_lowercase(), // crystalline,
+                    color: COLOR[0].to_lowercase(),            // blood,
+                    rarity: MATERIAL[0].rarity.name.to_lowercase(),          // common,
                     quality: dec!(5),
                 },
                 RadgemData {
                     key_image_url: UncheckedUrl("".to_string()),
                     name: "Metallic Forest Radgem".to_string(),
                     description: "The Rare Metallic material of this Forest Radgem is graded at a quality of 10 out of a possible 25.".to_string(),
-                    material: MATERIAL[1].name.to_string(), // Metallic,
-                    color: COLOR[1].to_string(),            // Forest,
-                    rarity: MATERIAL[1].rarity.name.to_string(),          // Rare,
+                    material: MATERIAL[1].name.to_lowercase(), // metallic,
+                    color: COLOR[1].to_lowercase(),            // forest,
+                    rarity: MATERIAL[1].rarity.name.to_lowercase(),          // rare,
                     quality: dec!(10),
                 },
             ],
@@ -94,9 +94,12 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
             [MorphEnergyCardData {
                 key_image_url: UncheckedUrl("https://www.example.com".to_string()),
                 name: "Molten Lava Morph Card".to_string(),
-                energy_type: "Molten Lava".to_string(),
-                rarity: RARITY[1].to_string(), // Uncommon,
-                availability: "Random".to_string(),
+                description: "".to_string(),
+                energy_type: "molten lava".to_string(),
+                energy_description: "the fiery flow of molten lava".to_string(),
+                rarity: "common".to_string(),
+                quality: dec!(5),
+                limited_edition: false,
             }],
             &mut env,
         )?;
@@ -281,7 +284,7 @@ fn can_combine_elements_add_radgem_image() -> Result<(), RuntimeError> {
         .get_non_fungible_data(radgem_local_id.unwrap(), &mut env)
         .unwrap();
 
-    assert_eq!(data.name, "Radiant Smoke RadGem");
+    assert_eq!(data.name, "Metallic Smoke RadGem {10/100}");
     assert_eq!(data.key_image_url, UncheckedUrl::of("www.new_url.test"));
 
     Ok(())
@@ -382,27 +385,17 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
         .get_non_fungible_data(radgem_ids[1].clone(), &mut env)?;
     let key_image_url = UncheckedUrl("https://www.example.com".to_string());
 
-    let radgem_1_rarity_weight = RARITY
-        .iter()
-        .position(|&r| r == &radgem_1_data.rarity)
-        .unwrap();
-    let radgem_2_rarity_weight = RARITY
-        .iter()
-        .position(|&r| r == &radgem_2_data.rarity)
-        .unwrap();
-
-    let (radgem_a_data, radgem_b_data) = if radgem_1_rarity_weight >= radgem_2_rarity_weight {
-        (radgem_1_data, radgem_2_data)
+    let material = if radgem_1_data.material == "radiant" || radgem_2_data.material == "radiant" {
+        "radiant"
+    } else if radgem_1_data.material == "metallic" || radgem_2_data.material == "metallic" {
+        "metallic"
     } else {
-        (radgem_2_data, radgem_1_data)
+        "crystalline"
     };
 
     let data = format!(
         "{}{}{}{}",
-        morph_card_data.energy_type,
-        radgem_a_data.material,
-        radgem_a_data.color,
-        radgem_b_data.color,
+        morph_card_data.energy_type, material, radgem_1_data.color, radgem_2_data.color,
     );
 
     let key_hash = keccak256_hash(data.as_bytes());
@@ -413,12 +406,14 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
     env.enable_auth_module();
 
     // Act
-    let result = refinery.create_radmorph(
-        radgems.take(dec!(2), &mut env)?,
-        morph_card,
-        key_image_url,
-        &mut env,
-    )?;
+    let result = refinery
+        .create_radmorph(
+            radgems.take(dec!(2), &mut env)?,
+            morph_card,
+            key_image_url,
+            &mut env,
+        )
+        .unwrap();
 
     // Assert
     assert_eq!(result.amount(&mut env)?, dec!(1));
@@ -429,7 +424,7 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
         ResourceManager(radmorph_address).get_non_fungible_data(radmorph_id, &mut env)?;
     assert_eq!(
         radmorph_data.name,
-        "Precious Crystalline Molten Lava RadMorph".to_string(),
+        "Basic Metallic Blood and Forest Molten Lava RadMorph {20/100}".to_string(),
     );
 
     Ok(())
