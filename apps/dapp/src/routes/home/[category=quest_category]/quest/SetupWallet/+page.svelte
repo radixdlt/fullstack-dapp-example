@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import Quest from '../Quest.svelte'
-  import type { PageData } from '../GetRadixWallet/$types'
+  import type { PageData } from './$types'
   import { isMobile } from '$lib/utils/is-mobile'
   import { useCookies } from '$lib/utils/cookies'
   import { derived, writable } from 'svelte/store'
@@ -21,8 +21,13 @@
   let render = (_: string) => false
   let marketingUpdatesCheckbox: boolean
   let email = $user?.email?.email || ''
+  let hasError: boolean
+  let isMailEnabled = writable<boolean>(true)
   let walletIsLinked = writable(data.requirements.GetTheWallet?.isComplete)
 
+  $: {
+    isMailEnabled.set(!hasError)
+  }
   onMount(() => {
     if (isMobile()) {
       // @ts-ignore
@@ -77,12 +82,15 @@
 
     userApi
       .setUserFields({ fields: [{ field: 'email', email, newsletter: marketingUpdatesCheckbox }] })
-      .then(() => {
+      .map(() => {
         if ($user) {
           $user.email = { email, newsletter: marketingUpdatesCheckbox }
         }
 
         quest.actions.next()
+      })
+      .mapErr(() => {
+        hasError = true
       })
   }
 
@@ -181,6 +189,7 @@
       skip: writable($user?.email?.newsletter || false),
       footer: {
         next: {
+          enabled: isMailEnabled,
           onClick: () => {
             submitEmailOrProceed()
           }
@@ -271,6 +280,7 @@
     <SetEmailPage
       bind:sendNewsletter={marketingUpdatesCheckbox}
       bind:email
+      bind:hasError
       privacyPolicyText={text['16-2.md']}
       marketingUpdatesText={text['16-3.md']}
     />

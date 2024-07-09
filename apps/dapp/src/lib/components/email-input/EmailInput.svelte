@@ -1,9 +1,15 @@
 <script lang="ts">
   export let email: string
-  export const validate = () => !!email && email.includes('@') && email.includes('.')
 </script>
 
-<input bind:value={email} class="email-input" placeholder="myaddress@email.com (optional)" />
+<input
+  bind:value={email}
+  on:change
+  on:input
+  class="email-input"
+  placeholder="myaddress@email.com (optional)"
+  on:blur
+/>
 
 <style lang="scss">
   .email-input {
