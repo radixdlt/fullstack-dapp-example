@@ -33,7 +33,7 @@
     display: grid;
     grid-template-rows: auto 1fr;
     height: 100dvh;
-    background: var(--gradient-3) no-repeat center fixed;
+    background: var(--gradient-7) no-repeat center fixed;
   }
 
   .centered {
