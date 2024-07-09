@@ -7,7 +7,8 @@ import {
   radquestEntityAddresses,
   mintClams,
   AccountHelper,
-  Account
+  Account,
+  mintGiftBox
 } from 'typescript-wallet'
 import {
   AccountAddressModel,
