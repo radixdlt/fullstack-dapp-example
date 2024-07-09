@@ -13,6 +13,7 @@
   },
   "license": "SEE LICENSE",
   "dependencies": {
+    "@mailerlite/mailerlite-nodejs": "^1.2.2",
     "@radixdlt/babylon-gateway-api-sdk": "^1.3.0",
     "@radixdlt/radix-dapp-toolkit": "^2.0.0",
     "bullmq": "^5.7.8",

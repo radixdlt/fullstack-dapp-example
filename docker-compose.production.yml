@@ -29,6 +29,7 @@ services:
       - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
       - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
       - TWILIO_SERVICE_SID=${TWILIO_SERVICE_SID}
+      - PUBLIC_MAILER_LITE_RADQUEST_GROUP_ID=${PUBLIC_MAILER_LITE_RADQUEST_GROUP_ID}
     command: pm2-runtime apps/dapp/build/index.js
 
   notification:
@@ -85,6 +86,7 @@ services:
       - LOG_LEVEL=${PUBLIC_LOG_LEVEL}
       - MNEMONIC=${MNEMONIC}
       - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
+      - PUBLIC_MAILER_LITE_RADQUEST_GROUP_ID=${PUBLIC_MAILER_LITE_RADQUEST_GROUP_ID}
     command: pm2-runtime apps/workers/dist/index.cjs
 
   jetty-swap:

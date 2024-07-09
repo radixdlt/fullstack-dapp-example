@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model UserEmail
+ * 
+ */
+export type UserEmail = $Result.DefaultSelection<Prisma.$UserEmailPayload>
+/**
  * Model RadMorphImage
  * 
  */
@@ -294,6 +299,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs>;
+
+  /**
+   * `prisma.userEmail`: Exposes CRUD operations for the **UserEmail** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserEmails
+    * const userEmails = await prisma.userEmail.findMany()
+    * ```
+    */
+  get userEmail(): Prisma.UserEmailDelegate<ExtArgs>;
 
   /**
    * `prisma.radMorphImage`: Exposes CRUD operations for the **RadMorphImage** model.
@@ -922,6 +937,7 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    UserEmail: 'UserEmail',
     RadMorphImage: 'RadMorphImage',
     UserPhoneNumber: 'UserPhoneNumber',
     Referral: 'Referral',
@@ -953,7 +969,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'user' | 'radMorphImage' | 'userPhoneNumber' | 'referral' | 'challenge' | 'event' | 'message' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'transactionIntent' | 'submittedTransaction' | 'config' | 'marketing'
+      modelProps: 'user' | 'userEmail' | 'radMorphImage' | 'userPhoneNumber' | 'referral' | 'challenge' | 'event' | 'message' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'transactionIntent' | 'submittedTransaction' | 'config' | 'marketing'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1024,6 +1040,76 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>,
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserEmail: {
+        payload: Prisma.$UserEmailPayload<ExtArgs>
+        fields: Prisma.UserEmailFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserEmailFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserEmailFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>
+          }
+          findFirst: {
+            args: Prisma.UserEmailFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserEmailFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>
+          }
+          findMany: {
+            args: Prisma.UserEmailFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>[]
+          }
+          create: {
+            args: Prisma.UserEmailCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>
+          }
+          createMany: {
+            args: Prisma.UserEmailCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserEmailCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>[]
+          }
+          delete: {
+            args: Prisma.UserEmailDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>
+          }
+          update: {
+            args: Prisma.UserEmailUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserEmailDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserEmailUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.UserEmailUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>
+          }
+          aggregate: {
+            args: Prisma.UserEmailAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateUserEmail>
+          }
+          groupBy: {
+            args: Prisma.UserEmailGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<UserEmailGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserEmailCountArgs<ExtArgs>,
+            result: $Utils.Optional<UserEmailCountAggregateOutputType> | number
           }
         }
       }
@@ -2600,6 +2686,7 @@ export namespace Prisma {
     referredByUser?: boolean | User$referredByUserArgs<ExtArgs>
     events?: boolean | User$eventsArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
+    email?: boolean | User$emailArgs<ExtArgs>
     phoneNumber?: boolean | User$phoneNumberArgs<ExtArgs>
     completedQuestRequirements?: boolean | User$completedQuestRequirementsArgs<ExtArgs>
     savedProgress?: boolean | User$savedProgressArgs<ExtArgs>
@@ -2641,6 +2728,7 @@ export namespace Prisma {
     referredByUser?: boolean | User$referredByUserArgs<ExtArgs>
     events?: boolean | User$eventsArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
+    email?: boolean | User$emailArgs<ExtArgs>
     phoneNumber?: boolean | User$phoneNumberArgs<ExtArgs>
     completedQuestRequirements?: boolean | User$completedQuestRequirementsArgs<ExtArgs>
     savedProgress?: boolean | User$savedProgressArgs<ExtArgs>
@@ -2662,6 +2750,7 @@ export namespace Prisma {
       referredByUser: Prisma.$UserPayload<ExtArgs> | null
       events: Prisma.$EventPayload<ExtArgs>[]
       messages: Prisma.$MessagePayload<ExtArgs>[]
+      email: Prisma.$UserEmailPayload<ExtArgs> | null
       phoneNumber: Prisma.$UserPhoneNumberPayload<ExtArgs> | null
       completedQuestRequirements: Prisma.$CompletedQuestRequirementPayload<ExtArgs>[]
       savedProgress: Prisma.$SavedProgressPayload<ExtArgs> | null
@@ -3077,6 +3166,8 @@ export namespace Prisma {
     events<T extends User$eventsArgs<ExtArgs> = {}>(args?: Subset<T, User$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, 'findMany'> | Null>;
 
     messages<T extends User$messagesArgs<ExtArgs> = {}>(args?: Subset<T, User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, 'findMany'> | Null>;
+
+    email<T extends User$emailArgs<ExtArgs> = {}>(args?: Subset<T, User$emailArgs<ExtArgs>>): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
 
     phoneNumber<T extends User$phoneNumberArgs<ExtArgs> = {}>(args?: Subset<T, User$phoneNumberArgs<ExtArgs>>): Prisma__UserPhoneNumberClient<$Result.GetResult<Prisma.$UserPhoneNumberPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
 
@@ -3506,6 +3597,21 @@ export namespace Prisma {
   }
 
   /**
+   * User.email
+   */
+  export type User$emailArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEmail
+     */
+    select?: UserEmailSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEmailInclude<ExtArgs> | null
+    where?: UserEmailWhereInput
+  }
+
+  /**
    * User.phoneNumber
    */
   export type User$phoneNumberArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3687,6 +3793,941 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserEmail
+   */
+
+  export type AggregateUserEmail = {
+    _count: UserEmailCountAggregateOutputType | null
+    _min: UserEmailMinAggregateOutputType | null
+    _max: UserEmailMaxAggregateOutputType | null
+  }
+
+  export type UserEmailMinAggregateOutputType = {
+    userId: string | null
+    email: string | null
+    newsletter: boolean | null
+  }
+
+  export type UserEmailMaxAggregateOutputType = {
+    userId: string | null
+    email: string | null
+    newsletter: boolean | null
+  }
+
+  export type UserEmailCountAggregateOutputType = {
+    userId: number
+    email: number
+    newsletter: number
+    _all: number
+  }
+
+
+  export type UserEmailMinAggregateInputType = {
+    userId?: true
+    email?: true
+    newsletter?: true
+  }
+
+  export type UserEmailMaxAggregateInputType = {
+    userId?: true
+    email?: true
+    newsletter?: true
+  }
+
+  export type UserEmailCountAggregateInputType = {
+    userId?: true
+    email?: true
+    newsletter?: true
+    _all?: true
+  }
+
+  export type UserEmailAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserEmail to aggregate.
+     */
+    where?: UserEmailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserEmails to fetch.
+     */
+    orderBy?: UserEmailOrderByWithRelationInput | UserEmailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserEmailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserEmails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserEmails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserEmails
+    **/
+    _count?: true | UserEmailCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserEmailMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserEmailMaxAggregateInputType
+  }
+
+  export type GetUserEmailAggregateType<T extends UserEmailAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserEmail]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserEmail[P]>
+      : GetScalarType<T[P], AggregateUserEmail[P]>
+  }
+
+
+
+
+  export type UserEmailGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserEmailWhereInput
+    orderBy?: UserEmailOrderByWithAggregationInput | UserEmailOrderByWithAggregationInput[]
+    by: UserEmailScalarFieldEnum[] | UserEmailScalarFieldEnum
+    having?: UserEmailScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserEmailCountAggregateInputType | true
+    _min?: UserEmailMinAggregateInputType
+    _max?: UserEmailMaxAggregateInputType
+  }
+
+  export type UserEmailGroupByOutputType = {
+    userId: string
+    email: string
+    newsletter: boolean
+    _count: UserEmailCountAggregateOutputType | null
+    _min: UserEmailMinAggregateOutputType | null
+    _max: UserEmailMaxAggregateOutputType | null
+  }
+
+  type GetUserEmailGroupByPayload<T extends UserEmailGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserEmailGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserEmailGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserEmailGroupByOutputType[P]>
+            : GetScalarType<T[P], UserEmailGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserEmailSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    email?: boolean
+    newsletter?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userEmail"]>
+
+  export type UserEmailSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    email?: boolean
+    newsletter?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userEmail"]>
+
+  export type UserEmailSelectScalar = {
+    userId?: boolean
+    email?: boolean
+    newsletter?: boolean
+  }
+
+  export type UserEmailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserEmailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserEmailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserEmail"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      userId: string
+      email: string
+      newsletter: boolean
+    }, ExtArgs["result"]["userEmail"]>
+    composites: {}
+  }
+
+  type UserEmailGetPayload<S extends boolean | null | undefined | UserEmailDefaultArgs> = $Result.GetResult<Prisma.$UserEmailPayload, S>
+
+  type UserEmailCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<UserEmailFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: UserEmailCountAggregateInputType | true
+    }
+
+  export interface UserEmailDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserEmail'], meta: { name: 'UserEmail' } }
+    /**
+     * Find zero or one UserEmail that matches the filter.
+     * @param {UserEmailFindUniqueArgs} args - Arguments to find a UserEmail
+     * @example
+     * // Get one UserEmail
+     * const userEmail = await prisma.userEmail.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends UserEmailFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, UserEmailFindUniqueArgs<ExtArgs>>
+    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one UserEmail that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {UserEmailFindUniqueOrThrowArgs} args - Arguments to find a UserEmail
+     * @example
+     * // Get one UserEmail
+     * const userEmail = await prisma.userEmail.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends UserEmailFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserEmailFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first UserEmail that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserEmailFindFirstArgs} args - Arguments to find a UserEmail
+     * @example
+     * // Get one UserEmail
+     * const userEmail = await prisma.userEmail.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends UserEmailFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserEmailFindFirstArgs<ExtArgs>>
+    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first UserEmail that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserEmailFindFirstOrThrowArgs} args - Arguments to find a UserEmail
+     * @example
+     * // Get one UserEmail
+     * const userEmail = await prisma.userEmail.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends UserEmailFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserEmailFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more UserEmails that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserEmailFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserEmails
+     * const userEmails = await prisma.userEmail.findMany()
+     * 
+     * // Get first 10 UserEmails
+     * const userEmails = await prisma.userEmail.findMany({ take: 10 })
+     * 
+     * // Only select the `userId`
+     * const userEmailWithUserIdOnly = await prisma.userEmail.findMany({ select: { userId: true } })
+     * 
+    **/
+    findMany<T extends UserEmailFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserEmailFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a UserEmail.
+     * @param {UserEmailCreateArgs} args - Arguments to create a UserEmail.
+     * @example
+     * // Create one UserEmail
+     * const UserEmail = await prisma.userEmail.create({
+     *   data: {
+     *     // ... data to create a UserEmail
+     *   }
+     * })
+     * 
+    **/
+    create<T extends UserEmailCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, UserEmailCreateArgs<ExtArgs>>
+    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many UserEmails.
+     * @param {UserEmailCreateManyArgs} args - Arguments to create many UserEmails.
+     * @example
+     * // Create many UserEmails
+     * const userEmail = await prisma.userEmail.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+    **/
+    createMany<T extends UserEmailCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserEmailCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserEmails and returns the data saved in the database.
+     * @param {UserEmailCreateManyAndReturnArgs} args - Arguments to create many UserEmails.
+     * @example
+     * // Create many UserEmails
+     * const userEmail = await prisma.userEmail.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserEmails and only return the `userId`
+     * const userEmailWithUserIdOnly = await prisma.userEmail.createManyAndReturn({ 
+     *   select: { userId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends UserEmailCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserEmailCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'createManyAndReturn'>>
+
+    /**
+     * Delete a UserEmail.
+     * @param {UserEmailDeleteArgs} args - Arguments to delete one UserEmail.
+     * @example
+     * // Delete one UserEmail
+     * const UserEmail = await prisma.userEmail.delete({
+     *   where: {
+     *     // ... filter to delete one UserEmail
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends UserEmailDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, UserEmailDeleteArgs<ExtArgs>>
+    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one UserEmail.
+     * @param {UserEmailUpdateArgs} args - Arguments to update one UserEmail.
+     * @example
+     * // Update one UserEmail
+     * const userEmail = await prisma.userEmail.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends UserEmailUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, UserEmailUpdateArgs<ExtArgs>>
+    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more UserEmails.
+     * @param {UserEmailDeleteManyArgs} args - Arguments to filter UserEmails to delete.
+     * @example
+     * // Delete a few UserEmails
+     * const { count } = await prisma.userEmail.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends UserEmailDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, UserEmailDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserEmails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserEmailUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserEmails
+     * const userEmail = await prisma.userEmail.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends UserEmailUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, UserEmailUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one UserEmail.
+     * @param {UserEmailUpsertArgs} args - Arguments to update or create a UserEmail.
+     * @example
+     * // Update or create a UserEmail
+     * const userEmail = await prisma.userEmail.upsert({
+     *   create: {
+     *     // ... data to create a UserEmail
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserEmail we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends UserEmailUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, UserEmailUpsertArgs<ExtArgs>>
+    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of UserEmails.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserEmailCountArgs} args - Arguments to filter UserEmails to count.
+     * @example
+     * // Count the number of UserEmails
+     * const count = await prisma.userEmail.count({
+     *   where: {
+     *     // ... the filter for the UserEmails we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserEmailCountArgs>(
+      args?: Subset<T, UserEmailCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserEmailCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserEmail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserEmailAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserEmailAggregateArgs>(args: Subset<T, UserEmailAggregateArgs>): Prisma.PrismaPromise<GetUserEmailAggregateType<T>>
+
+    /**
+     * Group by UserEmail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserEmailGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserEmailGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserEmailGroupByArgs['orderBy'] }
+        : { orderBy?: UserEmailGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserEmailGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserEmailGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserEmail model
+   */
+  readonly fields: UserEmailFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserEmail.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserEmailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the UserEmail model
+   */ 
+  interface UserEmailFieldRefs {
+    readonly userId: FieldRef<"UserEmail", 'String'>
+    readonly email: FieldRef<"UserEmail", 'String'>
+    readonly newsletter: FieldRef<"UserEmail", 'Boolean'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserEmail findUnique
+   */
+  export type UserEmailFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEmail
+     */
+    select?: UserEmailSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEmailInclude<ExtArgs> | null
+    /**
+     * Filter, which UserEmail to fetch.
+     */
+    where: UserEmailWhereUniqueInput
+  }
+
+  /**
+   * UserEmail findUniqueOrThrow
+   */
+  export type UserEmailFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEmail
+     */
+    select?: UserEmailSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEmailInclude<ExtArgs> | null
+    /**
+     * Filter, which UserEmail to fetch.
+     */
+    where: UserEmailWhereUniqueInput
+  }
+
+  /**
+   * UserEmail findFirst
+   */
+  export type UserEmailFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEmail
+     */
+    select?: UserEmailSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEmailInclude<ExtArgs> | null
+    /**
+     * Filter, which UserEmail to fetch.
+     */
+    where?: UserEmailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserEmails to fetch.
+     */
+    orderBy?: UserEmailOrderByWithRelationInput | UserEmailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserEmails.
+     */
+    cursor?: UserEmailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserEmails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserEmails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserEmails.
+     */
+    distinct?: UserEmailScalarFieldEnum | UserEmailScalarFieldEnum[]
+  }
+
+  /**
+   * UserEmail findFirstOrThrow
+   */
+  export type UserEmailFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEmail
+     */
+    select?: UserEmailSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEmailInclude<ExtArgs> | null
+    /**
+     * Filter, which UserEmail to fetch.
+     */
+    where?: UserEmailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserEmails to fetch.
+     */
+    orderBy?: UserEmailOrderByWithRelationInput | UserEmailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserEmails.
+     */
+    cursor?: UserEmailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserEmails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserEmails.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserEmails.
+     */
+    distinct?: UserEmailScalarFieldEnum | UserEmailScalarFieldEnum[]
+  }
+
+  /**
+   * UserEmail findMany
+   */
+  export type UserEmailFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEmail
+     */
+    select?: UserEmailSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEmailInclude<ExtArgs> | null
+    /**
+     * Filter, which UserEmails to fetch.
+     */
+    where?: UserEmailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserEmails to fetch.
+     */
+    orderBy?: UserEmailOrderByWithRelationInput | UserEmailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserEmails.
+     */
+    cursor?: UserEmailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserEmails from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserEmails.
+     */
+    skip?: number
+    distinct?: UserEmailScalarFieldEnum | UserEmailScalarFieldEnum[]
+  }
+
+  /**
+   * UserEmail create
+   */
+  export type UserEmailCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEmail
+     */
+    select?: UserEmailSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEmailInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserEmail.
+     */
+    data: XOR<UserEmailCreateInput, UserEmailUncheckedCreateInput>
+  }
+
+  /**
+   * UserEmail createMany
+   */
+  export type UserEmailCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserEmails.
+     */
+    data: UserEmailCreateManyInput | UserEmailCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserEmail createManyAndReturn
+   */
+  export type UserEmailCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEmail
+     */
+    select?: UserEmailSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many UserEmails.
+     */
+    data: UserEmailCreateManyInput | UserEmailCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEmailIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserEmail update
+   */
+  export type UserEmailUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEmail
+     */
+    select?: UserEmailSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEmailInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserEmail.
+     */
+    data: XOR<UserEmailUpdateInput, UserEmailUncheckedUpdateInput>
+    /**
+     * Choose, which UserEmail to update.
+     */
+    where: UserEmailWhereUniqueInput
+  }
+
+  /**
+   * UserEmail updateMany
+   */
+  export type UserEmailUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserEmails.
+     */
+    data: XOR<UserEmailUpdateManyMutationInput, UserEmailUncheckedUpdateManyInput>
+    /**
+     * Filter which UserEmails to update
+     */
+    where?: UserEmailWhereInput
+  }
+
+  /**
+   * UserEmail upsert
+   */
+  export type UserEmailUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEmail
+     */
+    select?: UserEmailSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEmailInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserEmail to update in case it exists.
+     */
+    where: UserEmailWhereUniqueInput
+    /**
+     * In case the UserEmail found by the `where` argument doesn't exist, create a new UserEmail with this data.
+     */
+    create: XOR<UserEmailCreateInput, UserEmailUncheckedCreateInput>
+    /**
+     * In case the UserEmail was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserEmailUpdateInput, UserEmailUncheckedUpdateInput>
+  }
+
+  /**
+   * UserEmail delete
+   */
+  export type UserEmailDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEmail
+     */
+    select?: UserEmailSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEmailInclude<ExtArgs> | null
+    /**
+     * Filter which UserEmail to delete.
+     */
+    where: UserEmailWhereUniqueInput
+  }
+
+  /**
+   * UserEmail deleteMany
+   */
+  export type UserEmailDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserEmails to delete
+     */
+    where?: UserEmailWhereInput
+  }
+
+  /**
+   * UserEmail without action
+   */
+  export type UserEmailDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserEmail
+     */
+    select?: UserEmailSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserEmailInclude<ExtArgs> | null
   }
 
 
@@ -17954,6 +18995,15 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const UserEmailScalarFieldEnum: {
+    userId: 'userId',
+    email: 'email',
+    newsletter: 'newsletter'
+  };
+
+  export type UserEmailScalarFieldEnum = (typeof UserEmailScalarFieldEnum)[keyof typeof UserEmailScalarFieldEnum]
+
+
   export const RadMorphImageScalarFieldEnum: {
     id: 'id',
     url: 'url'
@@ -18201,6 +19251,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'ReferralAction'
    */
   export type EnumReferralActionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReferralAction'>
@@ -18324,6 +19381,7 @@ export namespace Prisma {
     referredByUser?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     events?: EventListRelationFilter
     messages?: MessageListRelationFilter
+    email?: XOR<UserEmailNullableRelationFilter, UserEmailWhereInput> | null
     phoneNumber?: XOR<UserPhoneNumberNullableRelationFilter, UserPhoneNumberWhereInput> | null
     completedQuestRequirements?: CompletedQuestRequirementListRelationFilter
     savedProgress?: XOR<SavedProgressNullableRelationFilter, SavedProgressWhereInput> | null
@@ -18348,6 +19406,7 @@ export namespace Prisma {
     referredByUser?: UserOrderByWithRelationInput
     events?: EventOrderByRelationAggregateInput
     messages?: MessageOrderByRelationAggregateInput
+    email?: UserEmailOrderByWithRelationInput
     phoneNumber?: UserPhoneNumberOrderByWithRelationInput
     completedQuestRequirements?: CompletedQuestRequirementOrderByRelationAggregateInput
     savedProgress?: SavedProgressOrderByWithRelationInput
@@ -18375,6 +19434,7 @@ export namespace Prisma {
     referredByUser?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     events?: EventListRelationFilter
     messages?: MessageListRelationFilter
+    email?: XOR<UserEmailNullableRelationFilter, UserEmailWhereInput> | null
     phoneNumber?: XOR<UserPhoneNumberNullableRelationFilter, UserPhoneNumberWhereInput> | null
     completedQuestRequirements?: CompletedQuestRequirementListRelationFilter
     savedProgress?: XOR<SavedProgressNullableRelationFilter, SavedProgressWhereInput> | null
@@ -18414,6 +19474,51 @@ export namespace Prisma {
     type?: EnumUserTypeWithAggregatesFilter<"User"> | $Enums.UserType
     referralCode?: StringWithAggregatesFilter<"User"> | string
     referredBy?: StringNullableWithAggregatesFilter<"User"> | string | null
+  }
+
+  export type UserEmailWhereInput = {
+    AND?: UserEmailWhereInput | UserEmailWhereInput[]
+    OR?: UserEmailWhereInput[]
+    NOT?: UserEmailWhereInput | UserEmailWhereInput[]
+    userId?: StringFilter<"UserEmail"> | string
+    email?: StringFilter<"UserEmail"> | string
+    newsletter?: BoolFilter<"UserEmail"> | boolean
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type UserEmailOrderByWithRelationInput = {
+    userId?: SortOrder
+    email?: SortOrder
+    newsletter?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserEmailWhereUniqueInput = Prisma.AtLeast<{
+    userId?: string
+    email?: string
+    AND?: UserEmailWhereInput | UserEmailWhereInput[]
+    OR?: UserEmailWhereInput[]
+    NOT?: UserEmailWhereInput | UserEmailWhereInput[]
+    newsletter?: BoolFilter<"UserEmail"> | boolean
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }, "email" | "userId" | "email">
+
+  export type UserEmailOrderByWithAggregationInput = {
+    userId?: SortOrder
+    email?: SortOrder
+    newsletter?: SortOrder
+    _count?: UserEmailCountOrderByAggregateInput
+    _max?: UserEmailMaxOrderByAggregateInput
+    _min?: UserEmailMinOrderByAggregateInput
+  }
+
+  export type UserEmailScalarWhereWithAggregatesInput = {
+    AND?: UserEmailScalarWhereWithAggregatesInput | UserEmailScalarWhereWithAggregatesInput[]
+    OR?: UserEmailScalarWhereWithAggregatesInput[]
+    NOT?: UserEmailScalarWhereWithAggregatesInput | UserEmailScalarWhereWithAggregatesInput[]
+    userId?: StringWithAggregatesFilter<"UserEmail"> | string
+    email?: StringWithAggregatesFilter<"UserEmail"> | string
+    newsletter?: BoolWithAggregatesFilter<"UserEmail"> | boolean
   }
 
   export type RadMorphImageWhereInput = {
@@ -19193,6 +20298,7 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
+    email?: UserEmailCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
@@ -19216,6 +20322,7 @@ export namespace Prisma {
     referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
@@ -19239,6 +20346,7 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
+    email?: UserEmailUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
@@ -19262,6 +20370,7 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
@@ -19306,6 +20415,47 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserEmailCreateInput = {
+    email: string
+    newsletter?: boolean
+    user: UserCreateNestedOneWithoutEmailInput
+  }
+
+  export type UserEmailUncheckedCreateInput = {
+    userId: string
+    email: string
+    newsletter?: boolean
+  }
+
+  export type UserEmailUpdateInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    newsletter?: BoolFieldUpdateOperationsInput | boolean
+    user?: UserUpdateOneRequiredWithoutEmailNestedInput
+  }
+
+  export type UserEmailUncheckedUpdateInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    newsletter?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type UserEmailCreateManyInput = {
+    userId: string
+    email: string
+    newsletter?: boolean
+  }
+
+  export type UserEmailUpdateManyMutationInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    newsletter?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type UserEmailUncheckedUpdateManyInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    newsletter?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type RadMorphImageCreateInput = {
@@ -20105,6 +21255,11 @@ export namespace Prisma {
     none?: MessageWhereInput
   }
 
+  export type UserEmailNullableRelationFilter = {
+    is?: UserEmailWhereInput | null
+    isNot?: UserEmailWhereInput | null
+  }
+
   export type UserPhoneNumberNullableRelationFilter = {
     is?: UserPhoneNumberWhereInput | null
     isNot?: UserPhoneNumberWhereInput | null
@@ -20294,6 +21449,42 @@ export namespace Prisma {
     _max?: NestedEnumUserTypeFilter<$PrismaModel>
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type UserRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type UserEmailCountOrderByAggregateInput = {
+    userId?: SortOrder
+    email?: SortOrder
+    newsletter?: SortOrder
+  }
+
+  export type UserEmailMaxOrderByAggregateInput = {
+    userId?: SortOrder
+    email?: SortOrder
+    newsletter?: SortOrder
+  }
+
+  export type UserEmailMinOrderByAggregateInput = {
+    userId?: SortOrder
+    email?: SortOrder
+    newsletter?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type RadMorphImageCountOrderByAggregateInput = {
     id?: SortOrder
     url?: SortOrder
@@ -20307,11 +21498,6 @@ export namespace Prisma {
   export type RadMorphImageMinOrderByAggregateInput = {
     id?: SortOrder
     url?: SortOrder
-  }
-
-  export type UserRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
   }
 
   export type UserPhoneNumberCountOrderByAggregateInput = {
@@ -20950,6 +22136,12 @@ export namespace Prisma {
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
+  export type UserEmailCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserEmailCreateWithoutUserInput, UserEmailUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserEmailCreateOrConnectWithoutUserInput
+    connect?: UserEmailWhereUniqueInput
+  }
+
   export type UserPhoneNumberCreateNestedOneWithoutUserInput = {
     create?: XOR<UserPhoneNumberCreateWithoutUserInput, UserPhoneNumberUncheckedCreateWithoutUserInput>
     connectOrCreate?: UserPhoneNumberCreateOrConnectWithoutUserInput
@@ -21023,6 +22215,12 @@ export namespace Prisma {
     connectOrCreate?: MessageCreateOrConnectWithoutUserInput | MessageCreateOrConnectWithoutUserInput[]
     createMany?: MessageCreateManyUserInputEnvelope
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type UserEmailUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<UserEmailCreateWithoutUserInput, UserEmailUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserEmailCreateOrConnectWithoutUserInput
+    connect?: UserEmailWhereUniqueInput
   }
 
   export type UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput = {
@@ -21138,6 +22336,16 @@ export namespace Prisma {
     update?: MessageUpdateWithWhereUniqueWithoutUserInput | MessageUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: MessageUpdateManyWithWhereWithoutUserInput | MessageUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type UserEmailUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserEmailCreateWithoutUserInput, UserEmailUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserEmailCreateOrConnectWithoutUserInput
+    upsert?: UserEmailUpsertWithoutUserInput
+    disconnect?: UserEmailWhereInput | boolean
+    delete?: UserEmailWhereInput | boolean
+    connect?: UserEmailWhereUniqueInput
+    update?: XOR<XOR<UserEmailUpdateToOneWithWhereWithoutUserInput, UserEmailUpdateWithoutUserInput>, UserEmailUncheckedUpdateWithoutUserInput>
   }
 
   export type UserPhoneNumberUpdateOneWithoutUserNestedInput = {
@@ -21286,6 +22494,16 @@ export namespace Prisma {
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
   }
 
+  export type UserEmailUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<UserEmailCreateWithoutUserInput, UserEmailUncheckedCreateWithoutUserInput>
+    connectOrCreate?: UserEmailCreateOrConnectWithoutUserInput
+    upsert?: UserEmailUpsertWithoutUserInput
+    disconnect?: UserEmailWhereInput | boolean
+    delete?: UserEmailWhereInput | boolean
+    connect?: UserEmailWhereUniqueInput
+    update?: XOR<XOR<UserEmailUpdateToOneWithWhereWithoutUserInput, UserEmailUpdateWithoutUserInput>, UserEmailUncheckedUpdateWithoutUserInput>
+  }
+
   export type UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput = {
     create?: XOR<UserPhoneNumberCreateWithoutUserInput, UserPhoneNumberUncheckedCreateWithoutUserInput>
     connectOrCreate?: UserPhoneNumberCreateOrConnectWithoutUserInput
@@ -21402,6 +22620,24 @@ export namespace Prisma {
     update?: ReferralUpdateWithWhereUniqueWithoutUserInput | ReferralUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ReferralUpdateManyWithWhereWithoutUserInput | ReferralUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutEmailInput = {
+    create?: XOR<UserCreateWithoutEmailInput, UserUncheckedCreateWithoutEmailInput>
+    connectOrCreate?: UserCreateOrConnectWithoutEmailInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type UserUpdateOneRequiredWithoutEmailNestedInput = {
+    create?: XOR<UserCreateWithoutEmailInput, UserUncheckedCreateWithoutEmailInput>
+    connectOrCreate?: UserCreateOrConnectWithoutEmailInput
+    upsert?: UserUpsertWithoutEmailInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutEmailInput, UserUpdateWithoutEmailInput>, UserUncheckedUpdateWithoutEmailInput>
   }
 
   export type UserCreateNestedOneWithoutPhoneNumberInput = {
@@ -21820,6 +23056,19 @@ export namespace Prisma {
     _max?: NestedEnumUserTypeFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedEnumReferralActionFilter<$PrismaModel = never> = {
     equals?: $Enums.ReferralAction | EnumReferralActionFieldRefInput<$PrismaModel>
     in?: $Enums.ReferralAction[] | ListEnumReferralActionFieldRefInput<$PrismaModel>
@@ -22023,6 +23272,7 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
+    email?: UserEmailCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
@@ -22045,6 +23295,7 @@ export namespace Prisma {
     referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
@@ -22111,6 +23362,21 @@ export namespace Prisma {
   export type MessageCreateManyUserInputEnvelope = {
     data: MessageCreateManyUserInput | MessageCreateManyUserInput[]
     skipDuplicates?: boolean
+  }
+
+  export type UserEmailCreateWithoutUserInput = {
+    email: string
+    newsletter?: boolean
+  }
+
+  export type UserEmailUncheckedCreateWithoutUserInput = {
+    email: string
+    newsletter?: boolean
+  }
+
+  export type UserEmailCreateOrConnectWithoutUserInput = {
+    where: UserEmailWhereUniqueInput
+    create: XOR<UserEmailCreateWithoutUserInput, UserEmailUncheckedCreateWithoutUserInput>
   }
 
   export type UserPhoneNumberCreateWithoutUserInput = {
@@ -22220,6 +23486,7 @@ export namespace Prisma {
     referralCode: string
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
+    email?: UserEmailCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
@@ -22242,6 +23509,7 @@ export namespace Prisma {
     referralCode: string
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
@@ -22365,6 +23633,7 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
+    email?: UserEmailUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
@@ -22387,6 +23656,7 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
@@ -22451,6 +23721,27 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Message"> | Date | string
     seenAt?: DateTimeNullableFilter<"Message"> | Date | string | null
     data?: JsonFilter<"Message">
+  }
+
+  export type UserEmailUpsertWithoutUserInput = {
+    update: XOR<UserEmailUpdateWithoutUserInput, UserEmailUncheckedUpdateWithoutUserInput>
+    create: XOR<UserEmailCreateWithoutUserInput, UserEmailUncheckedCreateWithoutUserInput>
+    where?: UserEmailWhereInput
+  }
+
+  export type UserEmailUpdateToOneWithWhereWithoutUserInput = {
+    where?: UserEmailWhereInput
+    data: XOR<UserEmailUpdateWithoutUserInput, UserEmailUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserEmailUpdateWithoutUserInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    newsletter?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type UserEmailUncheckedUpdateWithoutUserInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    newsletter?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserPhoneNumberUpsertWithoutUserInput = {
@@ -22688,6 +23979,114 @@ export namespace Prisma {
     xrdValue?: DecimalFilter<"Referral"> | Decimal | DecimalJsLike | number | string
   }
 
+  export type UserCreateWithoutEmailInput = {
+    id?: string
+    identityAddress: string
+    createdAt?: Date | string
+    accountAddress?: string | null
+    name?: string | null
+    country?: string | null
+    type?: $Enums.UserType
+    referralCode: string
+    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
+    events?: EventCreateNestedManyWithoutUserInput
+    messages?: MessageCreateNestedManyWithoutUserInput
+    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
+    completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
+    savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
+    auditLogs?: AuditCreateNestedManyWithoutUserInput
+    questProgress?: QuestProgressCreateNestedManyWithoutUserInput
+    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
+    transactions?: TransactionIntentCreateNestedManyWithoutUserInput
+    marketing?: MarketingCreateNestedManyWithoutUserInput
+    referals?: ReferralCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutEmailInput = {
+    id?: string
+    identityAddress: string
+    createdAt?: Date | string
+    accountAddress?: string | null
+    name?: string | null
+    country?: string | null
+    type?: $Enums.UserType
+    referralCode: string
+    referredBy?: string | null
+    events?: EventUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
+    completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
+    savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
+    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
+    questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
+    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
+    transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
+    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
+    referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutEmailInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutEmailInput, UserUncheckedCreateWithoutEmailInput>
+  }
+
+  export type UserUpsertWithoutEmailInput = {
+    update: XOR<UserUpdateWithoutEmailInput, UserUncheckedUpdateWithoutEmailInput>
+    create: XOR<UserCreateWithoutEmailInput, UserUncheckedCreateWithoutEmailInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutEmailInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutEmailInput, UserUncheckedUpdateWithoutEmailInput>
+  }
+
+  export type UserUpdateWithoutEmailInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identityAddress?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
+    events?: EventUpdateManyWithoutUserNestedInput
+    messages?: MessageUpdateManyWithoutUserNestedInput
+    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
+    completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
+    savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
+    auditLogs?: AuditUpdateManyWithoutUserNestedInput
+    questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
+    transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUpdateManyWithoutUserNestedInput
+    referals?: ReferralUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutEmailInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identityAddress?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    events?: EventUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
+    completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
+    savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
+    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
+    questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
+    transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
+    referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type UserCreateWithoutPhoneNumberInput = {
     id?: string
     identityAddress: string
@@ -22700,6 +24099,7 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
+    email?: UserEmailCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
@@ -22722,6 +24122,7 @@ export namespace Prisma {
     referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
@@ -22760,6 +24161,7 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
+    email?: UserEmailUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
@@ -22782,6 +24184,7 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
@@ -22829,6 +24232,7 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
+    email?: UserEmailCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
@@ -22851,6 +24255,7 @@ export namespace Prisma {
     referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
@@ -22920,6 +24325,7 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
+    email?: UserEmailUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
@@ -22942,6 +24348,7 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
@@ -22963,6 +24370,7 @@ export namespace Prisma {
     referralCode: string
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
+    email?: UserEmailCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
@@ -22985,6 +24393,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
@@ -23045,6 +24454,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
+    email?: UserEmailUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
@@ -23067,6 +24477,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
@@ -23105,6 +24516,7 @@ export namespace Prisma {
     referralCode: string
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
+    email?: UserEmailCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
@@ -23127,6 +24539,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
+    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
@@ -23165,6 +24578,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
+    email?: UserEmailUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
@@ -23187,6 +24601,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
+    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
@@ -23210,6 +24625,7 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
+    email?: UserEmailCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
@@ -23232,6 +24648,7 @@ export namespace Prisma {
     referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
@@ -23270,6 +24687,7 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
+    email?: UserEmailUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
@@ -23292,6 +24710,7 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
@@ -23314,6 +24733,7 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
+    email?: UserEmailCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
@@ -23336,6 +24756,7 @@ export namespace Prisma {
     referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
@@ -23374,6 +24795,7 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
+    email?: UserEmailUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
@@ -23396,6 +24818,7 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
@@ -23418,6 +24841,7 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
+    email?: UserEmailCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
@@ -23440,6 +24864,7 @@ export namespace Prisma {
     referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
@@ -23478,6 +24903,7 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
+    email?: UserEmailUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
@@ -23500,6 +24926,7 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
@@ -23522,6 +24949,7 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
+    email?: UserEmailCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
@@ -23544,6 +24972,7 @@ export namespace Prisma {
     referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
@@ -23582,6 +25011,7 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
+    email?: UserEmailUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
@@ -23604,6 +25034,7 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
@@ -23648,6 +25079,7 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
+    email?: UserEmailCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
@@ -23670,6 +25102,7 @@ export namespace Prisma {
     referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
@@ -23734,6 +25167,7 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
+    email?: UserEmailUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
@@ -23756,6 +25190,7 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
@@ -23830,6 +25265,7 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
+    email?: UserEmailCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
@@ -23852,6 +25288,7 @@ export namespace Prisma {
     referredBy?: string | null
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
@@ -23890,6 +25327,7 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
+    email?: UserEmailUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
@@ -23912,6 +25350,7 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
@@ -24105,6 +25544,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
+    email?: UserEmailUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
@@ -24127,6 +25567,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
@@ -24291,6 +25732,10 @@ export namespace Prisma {
      * @deprecated Use UserDefaultArgs instead
      */
     export type UserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use UserEmailDefaultArgs instead
+     */
+    export type UserEmailArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserEmailDefaultArgs<ExtArgs>
     /**
      * @deprecated Use RadMorphImageDefaultArgs instead
      */

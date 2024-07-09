@@ -18,19 +18,20 @@ enum UserType {
 }
 
 model User {
-  id                String          @id @default("")
-  identityAddress   String          @unique
-  createdAt         DateTime        @default(now())
-  accountAddress    String?         
-  name              String?         
-  country           String?
-  type              UserType        @default(USER)
-  referralCode      String          @unique
-  referredBy        String?
-  referredByUser    User?           @relation("Referrer", fields: [referredBy], references: [referralCode])
+  id                          String          @id @default("")
+  identityAddress             String          @unique
+  createdAt                   DateTime        @default(now())
+  accountAddress              String?         
+  name                        String?         
+  country                     String?
+  type                        UserType        @default(USER)
+  referralCode                String          @unique
+  referredBy                  String?
+  referredByUser              User?           @relation("Referrer", fields: [referredBy], references: [referralCode]) 
   
   events                     Event[]
   messages                   Message[]
+  email                      UserEmail?   
   phoneNumber                UserPhoneNumber?
   completedQuestRequirements CompletedQuestRequirement[]
   savedProgress              SavedProgress?
@@ -40,6 +41,13 @@ model User {
   transactions               TransactionIntent[]
   marketing                  Marketing[]
   referals                   Referral[]
+}
+
+model UserEmail {
+  userId          String    @unique
+  email           String    @id @unique
+  newsletter      Boolean   @default(false)    
+  user            User      @relation(fields: [userId], references: [id])
 }
 
 model RadMorphImage {

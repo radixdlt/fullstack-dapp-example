@@ -82,6 +82,7 @@
     "svelte-gestures": "^5.0.1",
     "svelte-i18next": "^2.2.2",
     "twilio": "^4.22.0",
-    "typescript-wallet": "*"
+    "typescript-wallet": "*",
+    "valibot": "0.36.0"
   }
 }

@@ -158,7 +158,6 @@ interface Resources {
       verifyOtpText: 'Enter the 6-digit code sent to'
       enterYourPhoneNumber: 'Please enter your phone number to receive an SMS code for verification.'
       weWillNotShare: 'We will not share your phone number with anyone, and we will not send you any messages other than this verification.'
-      allowMarketing: 'I allow RadQuest to add me to the marketing newsletter'
     }
     TransferTokens: {
       requirements: {

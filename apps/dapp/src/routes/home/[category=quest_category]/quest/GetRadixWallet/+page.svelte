@@ -12,13 +12,15 @@
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import SetUsername from './SetUsername.svelte'
+  import { userApi } from '$lib/api/user-api'
 
   export let data: PageData
 
   const text = data.text as Quests['GetRadixWallet']['text']
 
   let render = (_: string) => false
-
+  let marketingUpdatesCheckbox: boolean
+  let email = $user?.email?.email || ''
   let walletIsLinked = writable(data.requirements.GetTheWallet?.isComplete)
 
   onMount(() => {
@@ -67,7 +69,22 @@
 
   let quest: Quest
 
-  const submitEmail = () => {}
+  const submitEmailOrProceed = async () => {
+    if (!email.length && !marketingUpdatesCheckbox) {
+      quest.actions.next()
+      return
+    }
+
+    userApi
+      .setUserFields({ fields: [{ field: 'email', email, newsletter: marketingUpdatesCheckbox }] })
+      .then(() => {
+        if ($user) {
+          $user.email = { email, newsletter: marketingUpdatesCheckbox }
+        }
+
+        quest.actions.next()
+      })
+  }
 
   $: {
     if ($user && !data.requirements.ConnectWallet?.isComplete) {
@@ -161,11 +178,11 @@
     {
       id: '16',
       type: 'regular',
+      skip: writable($user?.email?.newsletter || false),
       footer: {
         next: {
           onClick: () => {
-            quest.actions.next()
-            submitEmail()
+            submitEmailOrProceed()
           }
         }
       }
@@ -250,7 +267,13 @@
   {/if}
 
   {#if render('16')}
-    <SetEmailPage text="" />
+    {@html text['16-1.md']}
+    <SetEmailPage
+      bind:sendNewsletter={marketingUpdatesCheckbox}
+      bind:email
+      privacyPolicyText={text['16-2.md']}
+      marketingUpdatesText={text['16-3.md']}
+    />
   {/if}
 </Quest>
 

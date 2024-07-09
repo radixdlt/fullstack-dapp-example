@@ -16,11 +16,12 @@ const {
   REDIS_PASSWORD,
   TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN,
-  TWILIO_SERVICE_SID
+  TWILIO_SERVICE_SID,
+  MAILER_LITE_API_KEY
 } = privateEnv
 
 // $env/dynamic/public does not work in CI build
-const { PUBLIC_LOG_LEVEL = 'debug' } = process.env
+const { PUBLIC_LOG_LEVEL = 'debug', PUBLIC_MAILER_LITE_RADQUEST_GROUP_ID } = process.env
 
 const getDomain = () => {
   const value = /(?<=\.).+/.exec(EXPECTED_ORIGIN ?? '')
@@ -58,6 +59,10 @@ export const config = {
     networkId: publicConfig.networkId,
     dAppDefinitionAddress: publicConfig.dAppDefinitionAddress ?? '',
     ...Addresses(publicConfig.networkId)
+  },
+  mailerLite: {
+    apiKey: MAILER_LITE_API_KEY ?? '',
+    groupId: PUBLIC_MAILER_LITE_RADQUEST_GROUP_ID
   },
   logLevel: PUBLIC_LOG_LEVEL
 }

@@ -4,7 +4,9 @@ import { type Quests } from 'content'
 
 export const quests = writable<Quests>()
 
-export const user = writable<(User & { label: string }) | undefined>(undefined)
+export const user = writable<
+  (User & { label: string; email?: { email: string; newsletter: boolean } }) | undefined
+>(undefined)
 
 export type JettyNotification = {
   id: string

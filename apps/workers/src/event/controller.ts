@@ -4,13 +4,14 @@ import { EventJob, Job } from 'queues'
 import { QuestDefinitions, QuestId, Quests } from 'content'
 import {
   EventId,
+  MailerLiteModel,
   MessageType,
   ReferralQuestConfig,
   UserByReferralCode,
   getAccountFromMayaRouterWithdrawEvent
 } from 'common'
 import { AppLogger, AccountAddressModel } from 'common'
-import { PrismaClient, QuestStatus } from 'database'
+import { PrismaClient, QuestStatus, User } from 'database'
 import {
   getAccountAddressFromAccountAddedEvent,
   getUserIdFromDepositHeroBadgeEvent
@@ -45,6 +46,7 @@ export const EventWorkerController = ({
   tokenPriceClient,
   logger,
   AccountAddressModel,
+  mailerLiteModel,
   sendMessage,
   transactionIntent,
   referralRewardAction
@@ -52,6 +54,7 @@ export const EventWorkerController = ({
   dbClient: PrismaClient
   AccountAddressModel: AccountAddressModel
   tokenPriceClient: TokenPriceClient
+  mailerLiteModel: MailerLiteModel
   logger: AppLogger
   sendMessage: MessageHelper
   transactionIntent: TransactionIntentHelper
@@ -334,6 +337,16 @@ export const EventWorkerController = ({
       )
     }
 
+    const updateMailerLiteFields = (
+      user: User & { email: { email: string; newsletter: boolean } }
+    ) => {
+      if (!user.email.newsletter) {
+        return okAsync(undefined)
+      }
+
+      return mailerLiteModel(logger).addOrUpdate(user.email.email, { hasFinishedBasicQuests: true })
+    }
+
     const handleQuestWithTrackedAccount = (
       maybeAccountAddress: string | undefined,
       questId: QuestId,
@@ -408,7 +421,7 @@ export const EventWorkerController = ({
       case EventId.QuestRewardClaimed:
         return getDataFromQuestRewardsEvent(job.data.relevantEvents.RewardClaimedEvent)
           .asyncAndThen(({ userId, questId, xrdAmount }) =>
-            getUserById(userId, dbClient).andThen((user) =>
+            getUserById(userId, dbClient, { email: true }).andThen((user) =>
               dbTransactions
                 .rewardsClaimed({ userId: user.id, questId })
                 .andThen(() =>
@@ -423,7 +436,13 @@ export const EventWorkerController = ({
                     questId === ReferralQuestConfig.triggerRewardAfterQuest
 
                   if (user.referredBy && shouldTriggerReferralRewardFlow)
-                    return getUserByReferralCode(user.referredBy).andThen(handleReferrerRewards)
+                    return getUserByReferralCode(user.referredBy)
+                      .andThen(handleReferrerRewards)
+                      .andThen(() =>
+                        updateMailerLiteFields(
+                          user as User & { email: { email: string; newsletter: boolean } }
+                        )
+                      )
                   else if (questId === 'ReferralQuest')
                     return referralRewardAction({
                       transactionId,

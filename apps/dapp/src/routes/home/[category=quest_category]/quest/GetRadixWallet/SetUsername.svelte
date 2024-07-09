@@ -14,7 +14,7 @@
 
   const setUserName = async () => {
     $canSaveName = false
-    const result = await userApi.setUserField({ name: nameInput, field: 'name' })
+    const result = await userApi.setUserFields({ fields: [{ name: nameInput, field: 'name' }] })
     $canSaveName = true
 
     if (result.isErr()) error = (result.error.data as any).message

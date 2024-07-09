@@ -31,6 +31,7 @@ model User {
 
   events                     Event[]
   messages                   Message[]
+  email                      UserEmail?
   phoneNumber                UserPhoneNumber?
   completedQuestRequirements CompletedQuestRequirement[]
   savedProgress              SavedProgress?
@@ -40,6 +41,13 @@ model User {
   transactions               TransactionIntent[]
   marketing                  Marketing[]
   referals                   Referral[]
+}
+
+model UserEmail {
+  userId     String  @unique
+  email      String  @id @unique
+  newsletter Boolean @default(false)
+  user       User    @relation(fields: [userId], references: [id])
 }
 
 model RadMorphImage {

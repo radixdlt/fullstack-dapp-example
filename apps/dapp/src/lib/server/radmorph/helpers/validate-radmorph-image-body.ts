@@ -1,6 +1,6 @@
 import { createApiError } from 'common'
 import { err, ok } from 'neverthrow'
-import { safeParse, type Output, string, object } from 'valibot'
+import { safeParse, type InferOutput, string, object } from 'valibot'
 
 export const validateRadmorphImageBody = (requestBody: unknown) => {
   const requestBodyType = object({
@@ -14,7 +14,7 @@ export const validateRadmorphImageBody = (requestBody: unknown) => {
   if (!parseResult.success) {
     return err(createApiError('Invalid request body', 400)(parseResult.issues))
   }
-  const { card, radgem1, radgem2 } = requestBody as Output<typeof requestBodyType>
+  const { card, radgem1, radgem2 } = requestBody as InferOutput<typeof requestBodyType>
 
   return ok({
     card,

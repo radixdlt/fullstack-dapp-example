@@ -16,16 +16,8 @@
 </script>
 
 <button {disabled} on:click|stopPropagation={handleOnClick} class="wrapper">
-  <label class="label">
-    <input
-      {disabled}
-      class="checkbox"
-      type="checkbox"
-      class:checked
-      class:disabled
-      bind:checked
-      style:--icon={`url(${CheckedIcon})`}
-    />
+  <label class="label" style:--icon={`url(${CheckedIcon})`}>
+    <input {disabled} class="checkbox" type="checkbox" class:checked class:disabled bind:checked />
     <slot />
   </label>
 </button>
@@ -38,12 +30,14 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
+    cursor: pointer;
   }
   .label {
     display: flex;
     align-items: center;
     font-size: var(--text-sm);
     gap: var(--spacing-md);
+    cursor: pointer;
   }
   .checkbox {
     cursor: pointer;

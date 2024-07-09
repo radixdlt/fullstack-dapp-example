@@ -1,10 +1,10 @@
-import type { User } from 'database'
 import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import type {
   ControllerDependencies,
   ControllerMethodContext,
   ControllerMethodOutput
 } from '../_types'
+import type { User } from 'database'
 import { config } from '$lib/config'
 import { createApiError, type ApiError } from 'common'
 import { type SignedChallengeAccount, parseSignedChallenge } from '@radixdlt/radix-dapp-toolkit'
@@ -12,17 +12,30 @@ import { Rola } from '@radixdlt/rola'
 import { publicConfig } from '$lib/public-config'
 import { type ErrorResponse } from '@radixdlt/babylon-gateway-api-sdk'
 import type { TransactionJob } from 'queues'
+import * as valibot from 'valibot'
 
 const isGatewayError = (error: any): error is ErrorResponse => error.details !== undefined
+const EmailSchema = valibot.object({
+  email: valibot.pipe(
+    valibot.string(),
+    valibot.nonEmpty('Please enter your email.'),
+    valibot.email('The email is badly formatted.')
+  )
+})
 export type UserController = ReturnType<typeof UserController>
 export const UserController = ({
   userModel,
   transactionModel,
   gatewayApi,
+  mailerLiteModel,
   addresses
 }: ControllerDependencies) => {
   const getUser = (userId: string): ControllerMethodOutput<User | null> =>
-    userModel.getById(userId, {}).map((data) => ({ data, httpResponseCode: 200 }))
+    userModel
+      .getById(userId, {
+        email: true
+      })
+      .map((data) => ({ data, httpResponseCode: 200 }))
 
   const accountAddressExists = (
     data: { accountAddress: string | null } | null
@@ -56,10 +69,7 @@ export const UserController = ({
       .andThen((user) => (user ? ok(user) : err(createApiError('UserNotFound', 404)())))
       .andThen((data) =>
         ResultAsync.combine([
-          valueExists(
-            publicConfig.networkId !== 1 ? true : (data as any).phoneNumber,
-            'missing phone number'
-          ),
+          valueExists((data as any).phoneNumber, 'missing phone number'),
           accountAddressExists(data)
         ])
           .andThen(([, accountAddress]) => {
@@ -143,7 +153,8 @@ export const UserController = ({
           .map((data) => ({ data, httpResponseCode: 200 }))
       )
   }
-  const setUserName = (ctx: ControllerMethodContext, userId: string, name: string) => {
+
+  const setUserName = (userId: string, name: string) => {
     if (!name) return errAsync(createApiError('name not provided', 400)())
     if (name.length > 25) return errAsync(createApiError('name cannot exceed 25 characters', 400)())
 
@@ -154,6 +165,18 @@ export const UserController = ({
     transactionModel
       .doesTransactionExist({ userId, discriminator })
       .map((exists) => ({ data: { exists }, httpResponseCode: 200 }))
+
+  const setEmail = (userId: string, email: string, newsletter: boolean) => {
+    const parseResult = valibot.safeParse(EmailSchema, { email })
+    if (!parseResult.success) {
+      return errAsync(createApiError('Invalid email format', 400)(parseResult.issues))
+    }
+
+    return userModel
+      .setEmail(userId, email, newsletter)
+      .andThen(() => (newsletter ? mailerLiteModel.addOrUpdate(email) : okAsync(undefined)))
+      .map(() => ({ httpResponseCode: 200, data: {} }))
+  }
 
   const populateResources = (ctx: ControllerMethodContext, userId: string) => {
     if (config.dapp.networkId === 1)
@@ -241,6 +264,7 @@ export const UserController = ({
     populateResources,
     setUserName,
     getReferrals,
-    directDepositXrd
+    directDepositXrd,
+    setEmail
   }
 }
