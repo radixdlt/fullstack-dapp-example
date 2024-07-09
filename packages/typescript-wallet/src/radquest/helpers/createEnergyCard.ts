@@ -47,6 +47,9 @@ export const createEnergyCard = () => {
                                         12u8
                                     ),
                                     Enum<0u8>(
+                                        12u8
+                                    ),
+                                    Enum<0u8>(
                                         192u8
                                     ),
                                     Enum<0u8>(
@@ -67,6 +70,7 @@ export const createEnergyCard = () => {
                                             "name",
                                             "description",
                                             "energy_type",
+                                            "energy_description",
                                             "rarity",
                                             "quality",
                                             "limited_edition"
@@ -158,7 +162,7 @@ export const createEnergyCard = () => {
                         Enum<1u8>(
                             Enum<128u8>(
                                 Array<String>(
-                                    "${config.radQuest.accounts.dAppDefinition.address}"
+                                    "dapp_definition_account_address"
                                 )
                             )
                         ),
