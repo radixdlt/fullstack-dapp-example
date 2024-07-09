@@ -92,7 +92,7 @@
   {/if}
 
   {#if render('2')}
-    {@html text['1.md']}
+    {@html text['2.md']}
   {/if}
 
   {#if render('3')}
