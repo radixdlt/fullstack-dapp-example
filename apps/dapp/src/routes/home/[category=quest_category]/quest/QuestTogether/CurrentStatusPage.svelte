@@ -23,7 +23,7 @@
 
   const dispatch = createEventDispatcher<{ seeReferrals: undefined; refresh: undefined }>()
 
-  const requirements = QuestDefinitions().ReferralQuest.requirements
+  const requirements = QuestDefinitions().QuestTogether.requirements
   const threshold = {
     BronzeLevel: requirements.BronzeLevel.threshold,
     SilverLevel: requirements.SilverLevel.threshold,
@@ -54,7 +54,7 @@
       transactionManifest: createClaimRewardsTransaction(
         $user?.accountAddress!,
         $user?.id!,
-        `ReferralQuest`
+        `QuestTogether`
       )
     })
       .map(() => {
@@ -72,7 +72,7 @@
 </script>
 
 <div class="wrapper text-center">
-  <strong class="text-14">{$i18n.t('quests:ReferralQuest.shareYourLink')}</strong>
+  <strong class="text-14">{$i18n.t('quests:QuestTogether.shareYourLink')}</strong>
   <div class="share-box">
     <ShareBox />
   </div>
@@ -85,7 +85,7 @@
   />
   {#if claimed !== 0}
     <div class="already-claimed">
-      {$i18n.t('quests:ReferralQuest.alreadyClaimed', { amount: claimed })}
+      {$i18n.t('quests:QuestTogether.alreadyClaimed', { amount: claimed })}
     </div>
   {/if}
 
@@ -108,26 +108,26 @@
     {#if unlockedSuperLevel}
       <div class="super-level">
         <img src={FireIcon} alt="" />
-        <strong>{$i18n.t('quests:ReferralQuest.unlockedSuperLevel')}</strong>
+        <strong>{$i18n.t('quests:QuestTogether.unlockedSuperLevel')}</strong>
         <p>
-          {$i18n.t('quests:ReferralQuest.unlockedSuperLevelInfo', { mail: 'hello@radixdlt.com' })}
+          {$i18n.t('quests:QuestTogether.unlockedSuperLevelInfo', { mail: 'hello@radixdlt.com' })}
         </p>
       </div>
     {:else}
       <div>
         <strong
-          >{$i18n.t('quests:ReferralQuest.yourLevel', {
-            level: $i18n.t(`quests:ReferralQuest.${currentLevel}`)
+          >{$i18n.t('quests:QuestTogether.yourLevel', {
+            level: $i18n.t(`quests:QuestTogether.${currentLevel}`)
           })}</strong
         >
       </div>
       {#if nextLevel !== 'SuperLevel'}
-        {$i18n.t('quests:ReferralQuest.referMore', {
-          nextLevel: $i18n.t(`quests:ReferralQuest.${nextLevel}`),
+        {$i18n.t('quests:QuestTogether.referMore', {
+          nextLevel: $i18n.t(`quests:QuestTogether.${nextLevel}`),
           count: nextLevelIn
         })}
       {:else if hasWaitingRewards}
-        {$i18n.t('quests:ReferralQuest.rewardsWaiting')}
+        {$i18n.t('quests:QuestTogether.rewardsWaiting')}
       {/if}
     {/if}
   </div>

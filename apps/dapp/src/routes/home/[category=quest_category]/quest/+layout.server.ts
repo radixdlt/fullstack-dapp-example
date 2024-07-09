@@ -10,7 +10,7 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
   parent().then(async ({ questDefinitions, questStatus }) => {
     const id = url.pathname.split('/')[4] as QuestId
 
-    const requiresLogin = !['WelcomeToRadQuest', 'WhatIsRadix', 'GetRadixWallet'].includes(id)
+    const requiresLogin = !['Welcome', 'WhatIsRadix', 'SetupWallet'].includes(id)
 
     if (requiresLogin) {
       const user = await userApi.me(fetch)
@@ -27,9 +27,9 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
       (requirementsResult.error.data as any).error === 'invalidRefreshToken'
     const hasCompletedFirstQuests =
       [
-        questDefinitions['WelcomeToRadQuest'].id,
+        questDefinitions['Welcome'].id,
         questDefinitions['WhatIsRadix'].id,
-        questDefinitions['GetRadixWallet'].id
+        questDefinitions['SetupWallet'].id
         // @ts-ignore
       ].includes(id) &&
       questDefinitions[id].preRequisites.every(

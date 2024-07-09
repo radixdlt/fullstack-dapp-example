@@ -10,7 +10,7 @@
   import { i18n } from '$lib/i18n/i18n'
   import { Addresses } from 'common'
   import { questApi } from '$lib/api/quest-api'
-  import type { PageData } from './$types'
+  import type { PageData } from '../DEXSwaps/$types'
 
   export let data: PageData
 
@@ -113,7 +113,7 @@
 
     <div class="go-to-swap">
       <Button isExternal link={addresses.dapps.jettySwap.url}>
-        <span>{$i18n.t('quests:SwapQuest.goToJettySwap')}</span>
+        <span>{$i18n.t('quests:DEXSwaps.goToJettySwap')}</span>
       </Button>
     </div>
   {/if}
@@ -127,7 +127,7 @@
 
     <div class="go-to-swap">
       <Button isExternal link={addresses.dapps.lettySwap.url}>
-        <span>{$i18n.t('quests:SwapQuest.goToLettySwap')}</span>
+        <span>{$i18n.t('quests:DEXSwaps.goToLettySwap')}</span>
       </Button>
     </div>
   {/if}

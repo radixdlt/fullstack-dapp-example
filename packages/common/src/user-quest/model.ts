@@ -45,7 +45,7 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
         db.completedQuestRequirement.create({
           data: {
             userId: userId,
-            questId: 'FirstTransactionQuest',
+            questId: 'GetStuff',
             requirementId: 'VerifyPhoneNumber'
           }
         })

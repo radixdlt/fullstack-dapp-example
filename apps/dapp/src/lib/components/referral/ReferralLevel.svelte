@@ -15,18 +15,18 @@
   import { createEventDispatcher } from 'svelte'
   import LoadingSpinner from '../loading-spinner/LoadingSpinner.svelte'
 
-  type Level = keyof ReturnType<typeof QuestDefinitions>['ReferralQuest']['partialRewards']
+  type Level = keyof ReturnType<typeof QuestDefinitions>['QuestTogether']['partialRewards']
 
   export let level: Level | 'SuperLevel'
   export let maximum: number = 0
   export let referred: number = 0
   export let status: string | undefined
 
-  const questDefinition = QuestDefinitions().ReferralQuest
+  const questDefinition = QuestDefinitions().QuestTogether
   const dispatch = createEventDispatcher<{ refresh: undefined }>()
 
   $: loading = false
-  $: name = $i18n.t(`quests:ReferralQuest.${level}`)
+  $: name = $i18n.t(`quests:QuestTogether.${level}`)
   $: rewards = questDefinition.partialRewards?.[level as Level] || []
   $: requirement = questDefinition.requirements?.[level as Level]
   $: icon =
@@ -45,7 +45,7 @@
       transactionManifest: createClaimRewardsTransaction(
         $user?.accountAddress!,
         $user?.id!,
-        `ReferralQuest:${level}`
+        `QuestTogether:${level}`
       )
     })
       .map(() => {
@@ -66,11 +66,11 @@
 >
   <svelte:fragment slot="referrals">
     {#if level === 'SuperLevel'}
-      {$i18n.t('quests:ReferralQuest.progressSuperLevel', {
+      {$i18n.t('quests:QuestTogether.progressSuperLevel', {
         count: questDefinition.requirements.GoldLevel.threshold
       })}
     {:else}
-      {$i18n.t('quests:ReferralQuest.referralsProgress', {
+      {$i18n.t('quests:QuestTogether.referralsProgress', {
         referred: referredCount,
         maximum: requirement.threshold
       })}
@@ -79,8 +79,8 @@
 
   <svelte:fragment slot="content">
     {#if level === 'SuperLevel'}
-      <p>{$i18n.t('quests:ReferralQuest.SuperLevelInfo')}</p>
-      <Button>{$i18n.t('quests:ReferralQuest.SuperLevelButton')}</Button>
+      <p>{$i18n.t('quests:QuestTogether.SuperLevelInfo')}</p>
+      <Button>{$i18n.t('quests:QuestTogether.SuperLevelButton')}</Button>
     {:else}
       <div class="rewards">{$i18n.t('quests:rewards')}:</div>
       <QuestRewards {rewards} displayName vertical --rewards-gap="0.5rem" />
@@ -104,7 +104,7 @@
         </div>
       </Button>
     {:else if status === 'REWARDS_CLAIMED'}
-      <strong>{$i18n.t('quests:ReferralQuest.rewardsClaimed')}</strong>
+      <strong>{$i18n.t('quests:QuestTogether.rewardsClaimed')}</strong>
     {/if}
   </svelte:fragment>
 </ReferralLevelUI>

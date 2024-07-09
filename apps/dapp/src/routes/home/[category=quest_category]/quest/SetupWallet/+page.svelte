@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import Quest from '../Quest.svelte'
-  import type { PageData } from './$types'
+  import type { PageData } from '../GetRadixWallet/$types'
   import { isMobile } from '$lib/utils/is-mobile'
   import { useCookies } from '$lib/utils/cookies'
   import { derived, writable } from 'svelte/store'
@@ -16,7 +16,7 @@
 
   export let data: PageData
 
-  const text = data.text as Quests['GetRadixWallet']['text']
+  const text = data.text as Quests['SetupWallet']['text']
 
   let render = (_: string) => false
   let marketingUpdatesCheckbox: boolean
@@ -26,7 +26,7 @@
   onMount(() => {
     if (isMobile()) {
       // @ts-ignore
-      useCookies('requirement-GetRadixWallet-GetTheWallet').set(true)
+      useCookies('requirement-SetupWallet-GetTheWallet').set(true)
       $walletIsLinked = true
       quest.actions.next()
       return
@@ -38,7 +38,7 @@
 
       if (isWalletLinked) {
         // @ts-ignore
-        useCookies('requirement-GetRadixWallet-GetTheWallet').set(true)
+        useCookies('requirement-SetupWallet-GetTheWallet').set(true)
         $walletIsLinked = true
         quest.actions.next()
       }
@@ -88,7 +88,7 @@
 
   $: {
     if ($user && !data.requirements.ConnectWallet?.isComplete) {
-      questApi.completeRequirement('GetRadixWallet', 'ConnectWallet')
+      questApi.completeRequirement('SetupWallet', 'ConnectWallet')
     }
   }
 </script>
@@ -224,7 +224,7 @@
       {@html text['6b.md']}
       <div class="center">
         <Button link="https://wallet.radixdlt.com" isExternal={true}
-          >{$i18n.t('quests:GetRadixWallet.walletDownloadPage')}</Button
+          >{$i18n.t('quests:SetupWallet.walletDownloadPage')}</Button
         >
       </div>
     {/if}

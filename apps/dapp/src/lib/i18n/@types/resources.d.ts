@@ -105,7 +105,7 @@ interface Resources {
       claimRewards: 'Claim Rewards'
       complete: 'View Again'
     }
-    WelcomeToRadQuest: {
+    Welcome: {
       hi: 'Meet Jetty'
       claim: 'Claim'
       requirements: {
@@ -123,7 +123,7 @@ interface Resources {
       description: 'What is this Radix thing?'
       introDescription: 'The Radix Network – a breakthrough “layer 1” network for mainstream-ready Web3.'
     }
-    GetRadixWallet: {
+    SetupWallet: {
       requirements: {
         ConnectWallet: 'Download the Radix Wallet mobile app, create your first account Login to RadQuest with your Radix Wallet'
       }
@@ -133,7 +133,7 @@ interface Resources {
       introDescription: 'Get the Radix Wallet to use with RadQuest any any other dApp built on Radix'
       confirmSetUsername: 'Confirm'
     }
-    FirstTransactionQuest: {
+    GetStuff: {
       requirements: {
         VerifyPhoneNumber: 'Prove you’re not a robot'
         RegisterAccount: 'Register an account with RadQuest'
@@ -169,7 +169,7 @@ interface Resources {
       copyTextButton_copy: 'Copy'
       copyTextButton_copied: 'Copied!'
     }
-    StakingQuest: {
+    NetworkStaking: {
       title: 'Radix Network Staking'
       description: 'Help the network, earn APY'
       introDescription: 'Put your XRD to work helping secure the Radix Network – and earning you some yield'
@@ -177,7 +177,7 @@ interface Resources {
         XrdStaked: 'Stake your XRD on dashboard'
       }
     }
-    MayaQuest: {
+    Thorswap: {
       title: 'Thorswap Quest'
       description: 'Learn about Thorswap and how to bridge tokens'
       introDescription: 'Thorswap is a decentralized exchange that allows you to swap tokens across different blockchains. Learn more about Thorswap and how to bridge tokens.'
@@ -185,7 +185,7 @@ interface Resources {
         MayaRouterWithdrawEvent: 'Do at least one bridge/swap of >$50 value'
       }
     }
-    ReferralQuest: {
+    QuestTogether: {
       title: 'Invite Your Friends Quest'
       description: 'Invite your friends to give them XRD tokens and earn rewards!'
       rewardsTitle: 'Party rewards Status'
@@ -220,10 +220,10 @@ interface Resources {
       referralsProgress: '{{referred}}/{{maximum}} referrals'
       requirements: {
         LearnAboutParty: 'Learn about Party Quest'
-        ClaimReferralQuestRewards: 'Claim your rewards'
+        ClaimQuestTogetherRewards: 'Claim your rewards'
       }
     }
-    SwapQuest: {
+    DEXSwaps: {
       requirements: {
         LearnAboutDexes: 'Learn about DEXes'
         JettySwap: 'Swap tokens on Jetty Swap'
@@ -235,7 +235,7 @@ interface Resources {
       description: 'Learn how to swap one token for another at a changing market rate.'
       introDescription: 'Learn about DEXes\nSwap one token for another kind of token'
     }
-    InstapassQuest: {
+    Instapass: {
       goToInstapass: 'Go to Instapass'
       requirements: {
         LearnAboutInstapass: 'Learn about Instapass'

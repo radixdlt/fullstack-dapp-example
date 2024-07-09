@@ -2,7 +2,7 @@
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import Quest from '../Quest.svelte'
-  import type { PageData } from './$types'
+  import type { PageData } from '../Instapass/$types'
   import type { Quests } from 'content'
   import { user } from '../../../../../stores'
   import { Addresses } from 'common'
@@ -10,7 +10,7 @@
 
   export let data: PageData
 
-  const text = data.text as Quests['InstapassQuest']['text']
+  const text = data.text as Quests['Instapass']['text']
 
   let quest: Quest
   const { dapps } = Addresses(parseInt(PUBLIC_NETWORK_ID))
@@ -39,7 +39,7 @@
 >
   {#if render('0')}
     <Button isExternal link={`${dapps.instapass.url}${$user?.accountAddress}`}>
-      <span>{$i18n.t('quests:InstapassQuest.goToInstapass')}</span>
+      <span>{$i18n.t('quests:Instapass.goToInstapass')}</span>
     </Button>
     {@html text['0.md']}
   {/if}

@@ -33,7 +33,7 @@
 {error}
 
 <div class="center">
-  <Button on:click={setUserName}>{$i18n.t('quests:GetRadixWallet.confirmSetUsername')}</Button>
+  <Button on:click={setUserName}>{$i18n.t('quests:SetupWallet.confirmSetUsername')}</Button>
 </div>
 
 <style lang="scss">

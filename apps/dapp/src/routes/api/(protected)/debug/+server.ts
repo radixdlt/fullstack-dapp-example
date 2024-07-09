@@ -23,7 +23,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
     await locals.dependencies.dbClient.completedQuestRequirement.create({
       data: {
         userId,
-        questId: 'FirstTransactionQuest',
+        questId: 'GetStuff',
         requirementId: 'RegisterAccount'
       }
     })

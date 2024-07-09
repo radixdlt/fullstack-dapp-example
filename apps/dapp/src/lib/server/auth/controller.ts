@@ -86,14 +86,14 @@ export const AuthController = ({
         where: {
           questId_userId_requirementId: {
             userId,
-            questId: 'GetRadixWallet',
+            questId: 'SetupWallet',
             requirementId: 'ConnectWallet'
           }
         },
         update: {},
         create: {
           userId,
-          questId: 'GetRadixWallet',
+          questId: 'SetupWallet',
           requirementId: 'ConnectWallet'
         }
       }),

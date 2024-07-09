@@ -1,9 +1,9 @@
 <script lang="ts">
   import Quest from '../Quest.svelte'
-  import type { PageData } from './$types'
+  import type { PageData } from '../Thorswap/$types'
   import type { Quests } from 'content'
   export let data: PageData
-  const text = data.text as Quests['MayaQuest']['text']
+  const text = data.text as Quests['Thorswap']['text']
   let quest: Quest
 </script>
 

@@ -17,7 +17,7 @@
   export let backgroundImage: string | undefined = undefined
   export let rewards: Readonly<QuestReward[]> = []
   export let link: string | undefined = undefined
-  export let isReferralQuest = false
+  export let isQuestTogether = false
 
   $: hovering = false
   $: greyOut = !hovering && state === 'completed'
@@ -72,7 +72,7 @@
         <div class="button-content">
           {#if state === 'unlocked'}
             {$i18n.t('quests:QuestOverviewButton.unlocked')}
-          {:else if state === 'in-progress' && isReferralQuest}
+          {:else if state === 'in-progress' && isQuestTogether}
             {$i18n.t('quests:QuestOverviewButton.referralInProgress')}
           {:else if state === 'in-progress'}
             {$i18n.t('quests:QuestOverviewButton.inProgress')}

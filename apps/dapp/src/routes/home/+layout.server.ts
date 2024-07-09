@@ -54,7 +54,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
   if (questStatusResult.isOk()) {
     questStatus = questStatusResult.value
 
-    for (const questId of ['WelcomeToRadQuest', 'WhatIsRadix', 'GetRadixWallet'] as const) {
+    for (const questId of ['Welcome', 'WhatIsRadix', 'SetupWallet'] as const) {
       const questStatusCookieValue = cookies.get(`quest-status-${questId}`) ?? ''
 
       const syncQuestStatusCookieValueWithDb =
@@ -82,7 +82,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
     }
 
     await ResultAsync.combine(
-      ['requirement-WelcomeToRadQuest-RadQuestQuiz', 'requirement-WhatIsRadix-RadixQuiz'].map(
+      ['requirement-Welcome-RadQuestQuiz', 'requirement-WhatIsRadix-RadixQuiz'].map(
         (cookieName) => {
           if (cookies.get(cookieName)) {
             const [, questId, requirementId] = cookieName.split('-')

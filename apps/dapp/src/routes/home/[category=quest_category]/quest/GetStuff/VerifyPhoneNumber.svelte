@@ -12,7 +12,7 @@
 
 <div class="container">
   <div class="phone-number">
-    <div class="text-faded">{$i18n.t('quests:FirstTransactionQuest.phoneNumberInputTitle')}</div>
+    <div class="text-faded">{$i18n.t('quests:GetStuff.phoneNumberInputTitle')}</div>
 
     <PhoneNumberInput bind:number={phoneNumber} />
 
@@ -24,7 +24,7 @@
       </Error>
     {/if}
 
-    <Button on:click {loading}>{$i18n.t('quests:FirstTransactionQuest.sendSmsButton')}</Button>
+    <Button on:click {loading}>{$i18n.t('quests:GetStuff.sendSmsButton')}</Button>
   </div>
 </div>
 
