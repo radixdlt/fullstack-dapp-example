@@ -191,17 +191,17 @@ fn can_mint_ultra_rare_radgem() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    // 2nd seed numbers above 0.95 to ensure an ultra rare radgem
+    // 2nd seed numbers above 0.95 to ensure an ultra-rare radgem
     let radgem = radgem_forge.mint_radgem(dec!(0.2), dec!(0.95), dec!(0.5), &mut env)?;
 
     let radgem_id = radgem.non_fungible_local_ids(&mut env)?.pop().unwrap();
     let radgem_data: RadgemData =
         ResourceManager(radgem_address).get_non_fungible_data(radgem_id, &mut env)?;
-    assert_eq!(radgem_data.rarity, "ultra rare");
+    assert_eq!(radgem_data.rarity, "ultra-rare");
     assert_eq!(radgem_data.material, "radiant");
     assert_eq!(radgem_data.color, "ocean");
     assert_eq!(radgem_data.quality, dec!(21));
-    assert_eq!(radgem_data.description, "The Ultra Rare Radiant material of this Ocean RadGem is graded at a quality of 21 out of a possible 25.");
+    assert_eq!(radgem_data.description, "The Ultra-Rare Radiant material of this Ocean RadGem is graded at a quality of 21 out of a possible 25.");
     assert!(radgem_data.name.contains("RadGem"));
     assert!(radgem_data.name.contains("Radiant"));
     assert!(radgem_data.name.contains("Ocean"));

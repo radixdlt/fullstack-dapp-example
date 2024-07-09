@@ -38,7 +38,7 @@ pub const MATERIAL: [Material; 3] = [
     Material {
         name: "Radiant",
         rarity: MaterialRarity {
-            name: "Ultra Rare",
+            name: "Ultra-Rare",
             occurrence: dec!(0.05),
             min_quality: 16,
             max_quality: 25,
