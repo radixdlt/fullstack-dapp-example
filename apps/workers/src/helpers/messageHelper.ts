@@ -1,7 +1,7 @@
 import { PrismaClient } from 'database'
 import { ResultAsync, ok } from 'neverthrow'
 import { WorkerError, WorkerOutputError } from '../_types'
-import { MessageApi, Message } from 'common'
+import { MessageApi, Message, AppLogger } from 'common'
 
 export type MessageHelper = ReturnType<typeof MessageHelper>
 export const MessageHelper =
@@ -14,8 +14,16 @@ export const MessageHelper =
           data: message
         }
       }),
-      (error): WorkerOutputError => ({
-        reason: WorkerError.FailedToCreateMessageInDb,
-        jsError: error as Error
-      })
+      (error): WorkerOutputError => {
+        return {
+          reason: WorkerError.FailedToCreateMessageInDb,
+          jsError: {
+            prismaError: error as Error,
+            data: {
+              userId,
+              data: message
+            }
+          }
+        }
+      }
     ).andThen(({ id }) => messageApi.send(userId, message, id).orElse(() => ok(undefined)))

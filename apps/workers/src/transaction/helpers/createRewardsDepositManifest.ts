@@ -1,17 +1,21 @@
-import { Addresses } from 'common'
+import { Addresses, EnergyCardNfData } from 'common'
 import { QuestReward } from 'content'
 import { config } from '../../config'
-import { randomFloat } from '../../helpers/randomFloat'
 
 export const createRewardsDepositManifest = ({
   wellKnownAddresses,
   questId,
   userId,
   rewards,
-  includeKycOracleUpdate = false
+  includeKycOracleUpdate = false,
+  depositRewardsTo
 }: {
-  rewards: readonly QuestReward[]
-  questId: string
+  rewards: (
+    | QuestReward
+    | { name: 'energyCard'; card: EnergyCardNfData }
+    | { name: 'elements'; amount: number }
+  )[]
+  questId?: string
   userId: string
   includeKycOracleUpdate?: boolean
   wellKnownAddresses: {
@@ -20,11 +24,12 @@ export const createRewardsDepositManifest = ({
       systemAccount: string
     }
   }
+  depositRewardsTo: 'questRewards' | 'giftBoxOpener'
 }) => {
   const addresses = Addresses(config.networkId)
   const { payerAccount, systemAccount } = wellKnownAddresses.accountAddress
   const { adminBadgeAddress } = addresses.badges
-  const { elementAddress, clamAddress, giftBox } = addresses.resources
+  const { elementAddress, morphEnergyCards, clamAddress, giftBox } = addresses.resources
 
   const buckets: string[] = []
   const manifest: string[] = []
@@ -56,11 +61,11 @@ export const createRewardsDepositManifest = ({
       case 'starterGiftBox': {
         addToManifest(
           `MINT_FUNGIBLE
-            Address("${giftBox.starter}")
+            Address("${giftBox.Starter}")
             Decimal("${reward.amount}")
           ;`,
           `TAKE_FROM_WORKTOP
-            Address("${giftBox.starter}")
+            Address("${giftBox.Starter}")
             Decimal("${reward.amount}")
             Bucket("${createBucket('gift_box')}")
           ;`
@@ -70,11 +75,11 @@ export const createRewardsDepositManifest = ({
       case 'simpleGiftBox': {
         addToManifest(
           `MINT_FUNGIBLE
-            Address("${giftBox.simple}")
+            Address("${giftBox.Simple}")
             Decimal("${reward.amount}")
           ;`,
           `TAKE_FROM_WORKTOP
-            Address("${giftBox.simple}")
+            Address("${giftBox.Simple}")
             Decimal("${reward.amount}")
             Bucket("${createBucket('gift_box')}")
           ;`
@@ -85,11 +90,11 @@ export const createRewardsDepositManifest = ({
       case 'fancyGiftBox': {
         addToManifest(
           `MINT_FUNGIBLE
-            Address("${giftBox.fancy}")
+            Address("${giftBox.Fancy}")
             Decimal("${reward.amount}")
           ;`,
           `TAKE_FROM_WORKTOP
-            Address("${giftBox.fancy}")
+            Address("${giftBox.Fancy}")
             Decimal("${reward.amount}")
             Bucket("${createBucket('gift_box')}")
           ;`
@@ -100,11 +105,11 @@ export const createRewardsDepositManifest = ({
       case 'eliteGiftBox': {
         addToManifest(
           `MINT_FUNGIBLE
-            Address("${giftBox.elite}")
+            Address("${giftBox.Elite}")
             Decimal("${reward.amount}")
           ;`,
           `TAKE_FROM_WORKTOP
-            Address("${giftBox.elite}")
+            Address("${giftBox.Elite}")
             Decimal("${reward.amount}")
             Bucket("${createBucket('gift_box')}")
           ;`
@@ -127,6 +132,21 @@ export const createRewardsDepositManifest = ({
         break
       }
 
+      case 'elements': {
+        addToManifest(
+          `MINT_FUNGIBLE
+              Address("${elementAddress}")
+              Decimal("${reward.amount}")
+            ;`,
+          `TAKE_FROM_WORKTOP
+              Address("${elementAddress}")
+              Decimal("${reward.amount}")
+              Bucket("${createBucket('elements')}")
+            ;`
+        )
+        break
+      }
+
       case 'xrd': {
         addToManifest(
           `CALL_METHOD
@@ -143,6 +163,32 @@ export const createRewardsDepositManifest = ({
         break
       }
 
+      case 'energyCard': {
+        const { key_image_url, description, name, energy_type, rarity, quality, limited_edition } =
+          reward.card
+
+        addToManifest(
+          `CALL_METHOD
+              Address("${config.radQuest.components.cardForge}")
+              "mint_card"
+              "${userId}"
+              "${key_image_url}"
+              "${name}"
+              "${description}"
+              "${energy_type}"
+              "${rarity}"
+              Decimal("${quality}")
+              ${limited_edition}
+          ;`,
+
+          `TAKE_ALL_FROM_WORKTOP
+            Address("${morphEnergyCards}")
+            Bucket("${createBucket('card')}")
+        ;`
+        )
+        break
+      }
+
       default:
         break
     }
@@ -151,14 +197,15 @@ export const createRewardsDepositManifest = ({
   const rewardBuckets = buckets.map((name) => `Bucket("${name}")`)
 
   // Deposit the rewards to Quest Rewards component
-  addToManifest(
-    `CALL_METHOD
+  if (depositRewardsTo === 'questRewards')
+    addToManifest(
+      `CALL_METHOD
       Address("${systemAccount}")
       "create_proof_of_amount"
       Address("${adminBadgeAddress}")
       Decimal("1")
     ;`,
-    `CALL_METHOD
+      `CALL_METHOD
       Address("${addresses.components.questRewards}")
       "deposit_reward"
       "${userId}"
@@ -166,7 +213,25 @@ export const createRewardsDepositManifest = ({
       # Array of Buckets to deposit
       Array<Bucket>(${rewardBuckets.join(',')})
     ;`
-  )
+    )
+
+  if (depositRewardsTo === 'giftBoxOpener')
+    addToManifest(
+      `CALL_METHOD
+        Address("${systemAccount}")
+        "create_proof_of_amount"
+        Address("${adminBadgeAddress}")
+        Decimal("1")
+      ;`,
+
+      `CALL_METHOD
+        Address("${addresses.components.giftBoxOpener}")
+        "deposit_gift_box_rewards"
+        "${userId}"
+        # Array of Buckets to deposit
+        Array<Bucket>(${rewardBuckets.join(',')})
+      ;`
+    )
 
   if (includeKycOracleUpdate)
     addToManifest(

@@ -7,15 +7,17 @@ export const EnergyCardRarity = {
 
 type EnergyCardMap = typeof energyCardMap
 
-type EnergyCard<Rarity extends EnergyCardRarity> = {
+type GenericEnergyCard<Rarity extends EnergyCardRarity> = {
   [Key in keyof EnergyCardMap]: EnergyCardMap[Key]['rarity'] extends Rarity
     ? EnergyCardMap[Key]
     : never
-}[keyof EnergyCardMap]
+}[keyof EnergyCardMap] & { key: string }
 
-type CommonEnergyCard = EnergyCard<'Common'>
-type RareEnergyCard = EnergyCard<'Rare'>
-type UltraRareEnergyCard = EnergyCard<'Ultra-rare'>
+type CommonEnergyCard = GenericEnergyCard<'Common'>
+type RareEnergyCard = GenericEnergyCard<'Rare'>
+type UltraRareEnergyCard = GenericEnergyCard<'Ultra-rare'>
+
+export type EnergyCard = GenericEnergyCard<EnergyCardRarity>
 
 const energyCardMap = {
   S001: {
@@ -180,9 +182,9 @@ const energyCardMap = {
   }
 } as const
 
-const availableCards = Object.values(energyCardMap).filter(
-  ({ currentlyAvailable }) => currentlyAvailable
-)
+const availableCards = Object.entries(energyCardMap)
+  .filter(([, { currentlyAvailable }]) => currentlyAvailable)
+  .map(([key, value]) => ({ ...value, key }))
 
 export const availableEnergyCardsByRarity = availableCards.reduce<{
   [EnergyCardRarity.Common]: CommonEnergyCard[]
@@ -202,20 +204,28 @@ export const availableEnergyCardsByRarity = availableCards.reduce<{
   } as const
 )
 
-export const starterBoxCard = energyCardMap.S001
+export const starterBoxCard = { ...energyCardMap.S001, key: 'S001' }
 
+export type EnergyCardNfData = ReturnType<typeof transformEnergyCardToNfData> & {
+  key_image_url: string
+  key: string
+}
 export const transformEnergyCardToNfData = (
-  card: EnergyCard<EnergyCardRarity>,
-  quality: number
-) => ({
-  key_image_url: card.keyImageUrl,
-  name: `${card.energyType} Card {${quality}}${card.limitedEdition ? ' {limited}' : ''}`,
-  description: `Use this${card.limitedEdition ? ' limited edition' : ''} Morph Energy Card to fuse 2 RadGems using ${card.energyDescription}! The ${card.rarity} shape defined by this card is rated at a quality of {${quality}}.`,
-  energy_type: card.energyType,
-  rarity: card.rarity,
-  quality,
-  limited_edition: card.limitedEdition
-})
+  card: EnergyCard,
+  quality: number,
+  maxQuality: number
+) => {
+  const rarity = card.rarity.toLowerCase()
+  return {
+    key: card.key,
+    name: `${card.energyType} Card {${quality}/${maxQuality}}${card.limitedEdition ? ' Limited' : ''}`,
+    description: `Use this${card.limitedEdition ? ' limited-edition' : ''} Morph Energy Card to fuse 2 RadGems using ${card.energyDescription}! The ${rarity} shape defined by this card is rated at a quality level of ${quality} out of a possible ${maxQuality}.`,
+    energy_type: card.energyType.toLowerCase(),
+    rarity,
+    quality,
+    limited_edition: card.limitedEdition
+  }
+}
 
 export const getRandomCardByRarity = ({
   rarity,

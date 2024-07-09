@@ -4,6 +4,10 @@ import { AuditType, User } from 'database'
 import {
   Addresses,
   GatewayApi,
+  GiftBoxReward,
+  GiftBoxRewardConfig,
+  getRandomFloat,
+  getRandomIntInclusive,
   type AppLogger,
   type AuditModel,
   type WellKnownAddresses
@@ -50,6 +54,10 @@ export const TransactionWorkerController = ({
     const { type, userId } = job.data
 
     const addresses = Addresses(config.networkId)
+
+    const getGiftBoxRewards = GiftBoxReward(
+      GiftBoxRewardConfig({ getRandomFloat, getRandomIntInclusive })
+    )
 
     const handleSubmitTransaction = (
       manifestFactory: (wellKnownAddresses: WellKnownAddresses) => string
@@ -147,7 +155,8 @@ export const TransactionWorkerController = ({
                 questId,
                 userId,
                 rewards,
-                includeKycOracleUpdate
+                includeKycOracleUpdate,
+                depositRewardsTo: 'questRewards'
               })
             ).map((transactionId) => ({ transactionId, xrdRewardInUsd }))
           )
@@ -217,6 +226,35 @@ export const TransactionWorkerController = ({
         const rewards = questDefinition.rewards
 
         return handleDepositRewards(rewards as unknown as QuestReward[], questId)
+
+      case 'DepositGiftBoxReward': {
+        const { giftBoxKind } = job.data
+
+        const { elements: elementAmount, energyCard } = getGiftBoxRewards(giftBoxKind)
+
+        const rewards: Parameters<typeof createRewardsDepositManifest>[0]['rewards'] = [
+          { name: 'elements', amount: elementAmount }
+        ]
+
+        if (energyCard)
+          rewards.push({
+            name: 'energyCard',
+            card: {
+              ...energyCard,
+              key_image_url: `https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=${energyCard.key}`
+            }
+          })
+
+        return handleSubmitTransaction((wellKnownAddresses) =>
+          createRewardsDepositManifest({
+            wellKnownAddresses,
+            userId,
+            rewards,
+            includeKycOracleUpdate: false,
+            depositRewardsTo: 'giftBoxOpener'
+          })
+        ).andThen(handlePollTransactionStatus)
+      }
 
       case 'PopulateResources':
         const { accountAddress } = job.data

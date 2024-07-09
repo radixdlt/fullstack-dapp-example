@@ -8,13 +8,18 @@ export const waitForMessage =
     let expectedMessage: any
     while (!expectedMessage) {
       const messages = await db.message.findMany({
-        where: { userId }
+        where: { userId, seenAt: null }
       })
 
       expectedMessage = messages.find((message) => (message.data as any).type === messageType)
 
       await new Promise((resolve) => setTimeout(resolve, 1000))
     }
+
+    await db.message.update({
+      where: { userId, id: expectedMessage.id },
+      data: { seenAt: new Date() }
+    })
 
     logger.info({ method: 'waitForMessage.complete', message: expectedMessage })
   }

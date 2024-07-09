@@ -57,6 +57,9 @@ export const TransactionWorker = (
               })
             )
         )
+        .map(() => {
+          childLogger.debug({ method: 'transactionWorker.process.success', data: job.data })
+        })
         .orElse((error) => {
           childLogger.error({
             method: 'transactionWorkerWorker.process.error',
@@ -64,16 +67,12 @@ export const TransactionWorker = (
             error
           })
 
-          return transactionModel(childLogger).setStatus(
-            { discriminator, userId },
-            TransactionIntentStatus.ERROR,
-            error.reason
-          )
+          return transactionModel(childLogger)
+            .setStatus({ discriminator, userId }, TransactionIntentStatus.ERROR, error.reason)
+            .map(() => undefined)
         })
 
       if (result.isErr()) throw result.error
-
-      childLogger.debug({ method: 'transactionWorker.process.success', data: job.data })
     },
     { connection }
   )
