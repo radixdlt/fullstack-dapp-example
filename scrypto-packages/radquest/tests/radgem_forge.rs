@@ -47,7 +47,10 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         )?;
     let radgem_forge = RadgemForge::new(
         super_admin_badge.resource_address(&mut env)?,
-        OwnerRole::None,
+        OwnerRole::Fixed(rule!(require(
+            super_admin_badge.resource_address(&mut env)?
+        ))),
+        FAUCET, // used as dapp_definition for testing
         admin_badge.take(dec!(1), &mut env)?,
         _radgem.resource_address(&mut env)?,
         package_address,

@@ -39,6 +39,7 @@ mod morph_card_forge {
         pub fn new(
             super_admin_badge_address: ResourceAddress,
             owner_role: OwnerRole,
+            dapp_definition: ComponentAddress,
             admin_badge: Bucket,
             morph_card_address: ResourceAddress,
         ) -> Global<MorphCardForge> {
@@ -55,6 +56,11 @@ mod morph_card_forge {
             .roles(roles!(
                 admin => rule!(require(admin_badge_address));
                 super_admin => rule!(require(super_admin_badge_address));
+            ))
+            .metadata(metadata!(
+                init {
+                    "dapp_definition" => dapp_definition, updatable;
+                }
             ))
             .globalize()
         }

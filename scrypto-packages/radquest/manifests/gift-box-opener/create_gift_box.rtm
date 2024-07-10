@@ -86,7 +86,7 @@ CREATE_FUNGIBLE_RESOURCE
                     )
                 ),
                 false
-            )
+            ),
             "icon_url" => Tuple(
                 Enum<1u8>(
                     Enum<13u8>(

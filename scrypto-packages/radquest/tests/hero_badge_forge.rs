@@ -89,6 +89,7 @@ impl LedgerTestEnvironment {
                         (
                             super_admin_badge,
                             OwnerRole::Fixed(rule!(require(super_admin_badge))),
+                            FAUCET, // used as dapp_definition for testing
                             lookup.bucket("admin_badge"),
                             hero_badge,
                         )

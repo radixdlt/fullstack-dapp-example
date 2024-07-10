@@ -58,6 +58,7 @@ mod refinery {
         pub fn new(
             super_admin_badge_address: ResourceAddress,
             owner_role: OwnerRole,
+            dapp_definition: ComponentAddress,
             mut admin_badge: Bucket,
             hero_badge_address: ResourceAddress,
             element_address: ResourceAddress,
@@ -68,19 +69,22 @@ mod refinery {
             let radgem_forge = RadgemForge::new(
                 super_admin_badge_address,
                 owner_role.clone(),
+                dapp_definition,
                 admin_badge.take(1),
                 radgem_address,
             );
             let radmorph_forge = RadmorphForge::new(
                 super_admin_badge_address,
                 owner_role.clone(),
+                dapp_definition,
                 admin_badge.take(1),
                 radmorph_address,
             );
 
             let admin_badge_address = admin_badge.resource_address();
 
-            let image_oracle = ImageOracle::new(owner_role.clone(), admin_badge_address);
+            let image_oracle =
+                ImageOracle::new(owner_role.clone(), dapp_definition, admin_badge_address);
             Self {
                 enabled: true,
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
@@ -99,6 +103,11 @@ mod refinery {
             .roles(roles!(
                 admin => rule!(require(admin_badge_address));
                 super_admin => rule!(require(super_admin_badge_address));
+            ))
+            .metadata(metadata!(
+                init {
+                    "dapp_definition" => dapp_definition, updatable;
+                }
             ))
             .globalize()
         }

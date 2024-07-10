@@ -35,6 +35,7 @@ CALL_FUNCTION
             )
         )
     )
+    Address("${dapp_definition}")
     Bucket("admin_badge")
     Address("${hero_badge}")
     Address("${element}")

@@ -40,6 +40,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         OwnerRole::Fixed(rule!(require(
             super_admin_badge.resource_address(&mut env)?
         ))),
+        FAUCET, // used as dapp_definition for testing
         admin_badge.take(dec!(1), &mut env)?,
         hero_badge.resource_address(&mut env)?,
         kyc_badge.resource_address(&mut env)?,

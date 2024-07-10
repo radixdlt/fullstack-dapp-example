@@ -22,6 +22,7 @@ mod kyc_oracle {
     impl KycOracle {
         pub fn new(
             owner_role: OwnerRole,
+            dapp_definition: ComponentAddress,
             admin_badge_address: ResourceAddress,
         ) -> Global<KycOracle> {
             Self {
@@ -31,6 +32,11 @@ mod kyc_oracle {
             .prepare_to_globalize(owner_role)
             .roles(roles!(
                 admin => rule!(require(admin_badge_address));
+            ))
+            .metadata(metadata!(
+                init {
+                    "dapp_definition" => dapp_definition, updatable;
+                }
             ))
             .globalize()
         }

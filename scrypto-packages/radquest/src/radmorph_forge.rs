@@ -45,6 +45,7 @@ mod radmorph_forge {
         pub fn new(
             super_admin_badge_address: ResourceAddress,
             owner_role: OwnerRole,
+            dapp_definition: ComponentAddress,
             admin_badge: Bucket,
             radmorph_address: ResourceAddress,
         ) -> Global<RadmorphForge> {
@@ -60,6 +61,11 @@ mod radmorph_forge {
             .roles(roles!(
                 admin => rule!(require(admin_badge_address));
                 super_admin => rule!(require(super_admin_badge_address));
+            ))
+            .metadata(metadata!(
+                init {
+                    "dapp_definition" => dapp_definition, updatable;
+                }
             ))
             .globalize()
         }

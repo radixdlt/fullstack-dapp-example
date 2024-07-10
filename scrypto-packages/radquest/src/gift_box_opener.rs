@@ -39,6 +39,7 @@ mod gift_box_opener {
         pub fn new(
             super_admin_badge_address: ResourceAddress,
             owner_role: OwnerRole,
+            dapp_definition: ComponentAddress,
             hero_badge_address: ResourceAddress,
             admin_badge: Bucket,
         ) -> Global<GiftBoxOpener> {
@@ -57,6 +58,11 @@ mod gift_box_opener {
                 admin => rule!(require(admin_badge_address));
                 super_admin => rule!(require(super_admin_badge_address));
             })
+            .metadata(metadata!(
+                init {
+                    "dapp_definition" => dapp_definition, updatable;
+                }
+            ))
             .globalize()
         }
 
