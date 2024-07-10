@@ -43,6 +43,7 @@ export const newGiftBoxOpener = () =>
                   )
               )
           )
+          Address("${config.radQuest.accounts.dAppDefinition.address}")
           Address("${config.radQuest.badges.heroBadgeAddress}")
           Bucket("admin_badge")
         ;

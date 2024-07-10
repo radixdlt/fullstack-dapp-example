@@ -43,6 +43,7 @@ export const newQuestRewards = () =>
                   )
               )
           )
+          Address("${config.radQuest.accounts.dAppDefinition.address}")
           Bucket("admin_badges")
           Address("${config.radQuest.badges.heroBadgeAddress}")
           Address("${config.radQuest.badges.kycBadgeAddress}")

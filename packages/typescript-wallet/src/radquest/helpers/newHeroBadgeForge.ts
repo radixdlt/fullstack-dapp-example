@@ -42,6 +42,7 @@ export const newHeroBadgeForge = () => {
                     )
                 )
             )
+            Address("${config.radQuest.accounts.dAppDefinition.address}")
             Bucket("admin_badge")
             Address("${config.radQuest.badges.heroBadgeAddress}")
         ;
