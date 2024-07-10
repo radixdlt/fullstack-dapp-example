@@ -1,14 +1,28 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher, onMount } from 'svelte'
+  import LightbulbOutline from './lightbulb_outline.svg'
 
-  export let answers: { text: string; correct: boolean }[] = []
+  const formId = crypto.randomUUID()
+
+  type Answer = { text: string; correct: boolean; info: string }
+
+  export let answers: Answer[] = []
   export let correctAnswerSelected = false
+
+  onMount(() => {
+    if (correctAnswerSelected) {
+      selectedAnswer = answers.find((answer) => answer.correct)!
+    }
+  })
+
   let correctAnswers = []
+  let selectedAnswer: Answer
 
   const dispatch = createEventDispatcher<{ correctAnswer: boolean }>()
 
-  const onChange = (event: Event) => {
+  const onChange = (event: Event, answer: Answer) => {
     const selectedValue = Number((event.currentTarget as HTMLInputElement)?.value)
+    selectedAnswer = answer
     if (answers[selectedValue].correct) {
       correctAnswers.push(answers[selectedValue])
       if (correctAnswers.length === answers.filter((answer) => answer.correct).length) {
@@ -22,17 +36,28 @@
   {#each answers as answer, index}
     <label>
       <input
-        type="checkbox"
-        on:change={onChange}
+        type="radio"
+        name={formId}
+        on:change={(ev) => onChange(ev, answer)}
         value={index}
         checked={correctAnswerSelected && answer.correct}
-        class:correct={answer.correct}
-        class:incorrect={!answer.correct}
+        class:correct={answer.correct && selectedAnswer === answer}
+        class:incorrect={!answer.correct && selectedAnswer === answer}
       />
-      <span>{@html answer.text}</span>
+      <span class:incorrect-answer={!answer.correct && selectedAnswer === answer}
+        >{@html answer.text}</span
+      >
     </label>
   {/each}
 </div>
+{#if selectedAnswer}
+  <hr />
+
+  <span class="info">
+    <img src={LightbulbOutline} alt="Lightbulb icon" />
+    {selectedAnswer.info}
+  </span>
+{/if}
 
 <style lang="scss">
   div {
@@ -41,11 +66,8 @@
     gap: var(--spacing-xl);
   }
 
-  div.correct-answer {
-    label,
-    input {
-      pointer-events: none;
-    }
+  .incorrect-answer {
+    text-decoration: line-through;
   }
 
   label {
@@ -59,6 +81,17 @@
     }
   }
 
+  .info {
+    font-style: italic;
+  }
+
+  hr {
+    height: 1px;
+    border: none;
+    background: #fff;
+    margin-top: var(--spacing-2xl);
+  }
+
   input {
     cursor: pointer;
     display: grid;
@@ -67,38 +100,37 @@
     min-width: 1rem;
     height: 1rem;
     border: 0.15rem solid currentColor;
+    border-radius: 0.2rem;
     margin-top: 0.3rem;
+    transition: border-color 150ms ease-in-out;
+
+    &.correct {
+      border-color: var(--color-primary);
+    }
+
+    &.incorrect {
+      border-color: var(--color-error);
+    }
   }
 
   input::before {
     content: '';
-    width: 0.65rem;
-    height: 0.65rem;
+    width: 1rem;
+    height: 1rem;
     transform: scale(0);
-    transition: 120ms transform ease-in-out;
+    transition: 150ms transform ease-in-out;
   }
 
   input.correct::before {
-    box-shadow: inset 1rem 1rem var(--color-primary);
-    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    background:
+      center / 75% no-repeat url('@images/checkbox-checkmark.svg'),
+      var(--color-primary);
   }
 
   input.incorrect::before {
-    box-shadow: inset 1rem 1rem var(--color-error);
-    clip-path: polygon(
-      20% 0%,
-      0% 20%,
-      30% 50%,
-      0% 80%,
-      20% 100%,
-      50% 70%,
-      80% 100%,
-      100% 80%,
-      70% 50%,
-      100% 20%,
-      80% 0%,
-      50% 30%
-    );
+    background:
+      center / 100% no-repeat url('@images/cross-white.svg'),
+      var(--color-error);
   }
 
   input:checked::before {

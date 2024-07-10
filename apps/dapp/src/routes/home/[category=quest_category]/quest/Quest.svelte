@@ -29,7 +29,7 @@
 
   type JettyQuizStep = _Step<'jettyQuiz'> & {
     text: string
-    answers: { text: string; correct: boolean }[]
+    answers: { text: string; correct: boolean; info: string }[]
     quizRequirement: string
   }
 
