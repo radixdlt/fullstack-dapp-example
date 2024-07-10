@@ -1,6 +1,12 @@
 import { config, radixEngineClient } from '../../config'
 
-export const createRadgem = () => {
+export const createRadgem = ({
+  superAdminBadgeAddress,
+  adminBadgeAddress
+}: {
+  superAdminBadgeAddress: string
+  adminBadgeAddress: string
+}) => {
   return radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
@@ -8,7 +14,7 @@ export const createRadgem = () => {
         CALL_METHOD
             Address("${wellKnownAddresses.accountAddress.payerAccount}")
             "lock_fee"
-            Decimal("500")
+            Decimal("50")
         ;
 
         CREATE_NON_FUNGIBLE_RESOURCE
@@ -17,7 +23,7 @@ export const createRadgem = () => {
                     Enum<0u8>(
                         Enum<0u8>(
                             Enum<1u8>(
-                                Address("${config.radQuest.badges.superAdminBadgeAddress}")
+                                Address("${superAdminBadgeAddress}")
                             )
                         )
                     )
@@ -95,7 +101,7 @@ export const createRadgem = () => {
                                 Enum<0u8>(
                                     Enum<0u8>(
                                         Enum<1u8>(
-                                            Address("${config.radQuest.badges.adminBadgeAddress}")
+                                            Address("${adminBadgeAddress}")
                                         )
                                     )
                                 )
@@ -113,7 +119,7 @@ export const createRadgem = () => {
                                 Enum<0u8>(
                                     Enum<0u8>(
                                         Enum<1u8>(
-                                            Address("${config.radQuest.badges.adminBadgeAddress}")
+                                            Address("${adminBadgeAddress}")
                                         )
                                     )
                                 )

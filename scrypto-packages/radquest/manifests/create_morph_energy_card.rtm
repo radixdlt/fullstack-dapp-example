@@ -40,6 +40,9 @@ CREATE_NON_FUNGIBLE_RESOURCE
                                 12u8
                             ),
                             Enum<0u8>(
+                                12u8
+                            ),
+                            Enum<0u8>(
                                 192u8
                             ),
                             Enum<0u8>(
@@ -60,6 +63,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
                                     "name",
                                     "description",
                                     "energy_type",
+                                    "energy_description",
                                     "rarity",
                                     "quality",
                                     "limited_edition"

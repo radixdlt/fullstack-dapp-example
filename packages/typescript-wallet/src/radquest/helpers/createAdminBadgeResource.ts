@@ -1,4 +1,4 @@
-import { radixEngineClient } from '../../config'
+import { config, radixEngineClient } from '../../config'
 
 export const createAdminBadgeResource = (superAdminBadgeAddress: string) => {
   return radixEngineClient
@@ -71,6 +71,16 @@ export const createAdminBadgeResource = (superAdminBadgeAddress: string) => {
                                 Array<String>(
                                     "radquest",
                                     "badge"
+                                )
+                            )
+                        ),
+                        false
+                    ),
+                    "dapp_definitions" => Tuple(
+                        Enum<1u8>(
+                            Enum<128u8>(
+                                Array<String>(
+                                    "${config.radQuest.accounts.dAppDefinition.address}"
                                 )
                             )
                         ),

@@ -44,7 +44,7 @@ export const newCardForge = () => {
                 )
                 # admin_badge should be super_admin_badge
                 Bucket("admin_badge")
-                Address("${config.radQuest.resources.morphEnergyCards}");
+                Address("${config.radQuest.resources.morphEnergyCardAddress}");
             `)
         .andThen((value) =>
           submitTransaction({

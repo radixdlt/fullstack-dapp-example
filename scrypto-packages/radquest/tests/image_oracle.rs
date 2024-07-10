@@ -1,4 +1,4 @@
-use radquest::{image_oracle::image_oracle_test::*, radgem_forge::MATERIAL};
+use radquest::image_oracle::image_oracle_test::*;
 use scrypto_test::prelude::*;
 
 struct Test {
@@ -169,7 +169,7 @@ fn can_remove_key_image_url_hashes() -> Result<(), RuntimeError> {
 #[test]
 fn hash_value() {
     for i in 1..=3 {
-        let nf_data = format!("{}{}{}{}", "Molten Lava", MATERIAL[i - 1], "Dusk", "Forest");
+        let nf_data = format!("{}{}{}{}", "molten lava", "metallic", "dusk", "forest");
         let nf_data_hash = keccak256_hash(nf_data.as_bytes().to_vec());
         let image_url = format!("https://www.test.com/image{}url", i);
         let image_url_hash = keccak256_hash(image_url.as_bytes().to_vec());

@@ -1,6 +1,12 @@
 import { config, radixEngineClient } from '../../config'
 
-export const createOtterCoin = () => {
+export const createOtterCoin = ({
+  superAdminBadgeAddress,
+  adminBadgeAddress
+}: {
+  superAdminBadgeAddress: string
+  adminBadgeAddress: string
+}) => {
   return radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
@@ -16,7 +22,7 @@ CREATE_FUNGIBLE_RESOURCE
             Enum<0u8>(
                 Enum<0u8>(
                     Enum<1u8>(
-                        Address("${config.radQuest.badges.superAdminBadgeAddress}")
+                        Address("${superAdminBadgeAddress}")
                     )
                 )
             )
@@ -32,7 +38,7 @@ CREATE_FUNGIBLE_RESOURCE
                         Enum<0u8>(
                             Enum<0u8>(
                                 Enum<1u8>(
-                                    Address("${config.radQuest.badges.adminBadgeAddress}")
+                                    Address("${adminBadgeAddress}")
                                 )
                             )
                         )
@@ -50,7 +56,7 @@ CREATE_FUNGIBLE_RESOURCE
                         Enum<0u8>(
                             Enum<0u8>(
                                 Enum<1u8>(
-                                    Address("${config.radQuest.badges.adminBadgeAddress}")
+                                    Address("${adminBadgeAddress}")
                                 )
                             )
                         )
@@ -117,6 +123,17 @@ CREATE_FUNGIBLE_RESOURCE
                     )
                 ),
                 true
+            ),
+            "dapp_definitions" => Tuple(
+                Enum<1u8>(
+                    Enum<128u8>(
+                        Array<String>(
+                            "${config.radQuest.accounts.jettySwapDappDefinition.address}",
+                            "${config.radQuest.accounts.lettySwapDappDefinition.address}"
+                        )
+                    )
+                ),
+                false
             )
         ),
         Map<String, Enum>()

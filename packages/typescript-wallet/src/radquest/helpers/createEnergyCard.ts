@@ -1,6 +1,12 @@
 import { config, radixEngineClient } from '../../config'
 
-export const createEnergyCard = () => {
+export const createEnergyCard = ({
+  superAdminBadgeAddress,
+  adminBadgeAddress
+}: {
+  superAdminBadgeAddress: string
+  adminBadgeAddress: string
+}) => {
   return radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
@@ -8,7 +14,7 @@ export const createEnergyCard = () => {
             CALL_METHOD
             Address("${wellKnownAddresses.accountAddress.payerAccount}")
             "lock_fee"
-            Decimal("500")
+            Decimal("50")
         ;
         
         CREATE_NON_FUNGIBLE_RESOURCE
@@ -17,7 +23,7 @@ export const createEnergyCard = () => {
                     Enum<0u8>(
                         Enum<0u8>(
                             Enum<1u8>(
-                                Address("${config.radQuest.badges.superAdminBadgeAddress}")
+                                Address("${superAdminBadgeAddress}")
                             )
                         )
                     )
@@ -33,6 +39,9 @@ export const createEnergyCard = () => {
                                 Array<Enum>(
                                     Enum<0u8>(
                                         198u8
+                                    ),
+                                    Enum<0u8>(
+                                        12u8
                                     ),
                                     Enum<0u8>(
                                         12u8
@@ -67,6 +76,7 @@ export const createEnergyCard = () => {
                                             "name",
                                             "description",
                                             "energy_type",
+                                            "energy_description",
                                             "rarity",
                                             "quality",
                                             "limited_edition"
@@ -93,7 +103,7 @@ export const createEnergyCard = () => {
                                 Enum<0u8>(
                                     Enum<0u8>(
                                         Enum<1u8>(
-                                            Address("${config.radQuest.badges.adminBadgeAddress}")
+                                            Address("${adminBadgeAddress}")
                                         )
                                     )
                                 )
@@ -111,7 +121,7 @@ export const createEnergyCard = () => {
                                 Enum<0u8>(
                                     Enum<0u8>(
                                         Enum<1u8>(
-                                            Address("${config.radQuest.badges.adminBadgeAddress}")
+                                            Address("${adminBadgeAddress}")
                                         )
                                     )
                                 )

@@ -1,5 +1,8 @@
-import { Addresses } from 'common'
+import { config } from '../../config'
 import { logger } from '../../helpers/logger'
 import { createHeroBadgeResource } from '../helpers/createHeroBadgeResource'
 
-createHeroBadgeResource(Addresses(2).badges.adminBadgeAddress).map((result) => logger.debug(result))
+createHeroBadgeResource({
+  superAdminBadgeAddress: config.radQuest.badges.superAdminBadgeAddress,
+  adminBadgeAddress: config.radQuest.badges.adminBadgeAddress
+}).map((result) => logger.debug(result))

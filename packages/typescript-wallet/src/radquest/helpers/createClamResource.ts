@@ -1,6 +1,12 @@
 import { config, radixEngineClient } from '../../config'
 
-export const createClamResource = () => {
+export const createClamResource = ({
+  superAdminBadgeAddress,
+  adminBadgeAddress
+}: {
+  superAdminBadgeAddress: string
+  adminBadgeAddress: string
+}) => {
   return radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
@@ -17,7 +23,7 @@ export const createClamResource = () => {
                   Enum<0u8>(
                       Enum<0u8>(
                           Enum<1u8>(
-                              Address("${config.radQuest.badges.superAdminBadgeAddress}"),
+                              Address("${superAdminBadgeAddress}"),
                           )
                       )
                   )
@@ -34,7 +40,7 @@ export const createClamResource = () => {
                           Enum<0u8>(
                               Enum<0u8>(
                                   Enum<1u8>(
-                                      Address("${config.radQuest.badges.adminBadgeAddress}")
+                                      Address("${adminBadgeAddress}")
                                   )
                               )
                           )
@@ -53,7 +59,7 @@ export const createClamResource = () => {
                           Enum<0u8>(
                               Enum<0u8>(
                                   Enum<1u8>(
-                                      Address("${config.radQuest.badges.adminBadgeAddress}")
+                                      Address("${adminBadgeAddress}")
                                   )
                               )
                           )
@@ -82,6 +88,34 @@ export const createClamResource = () => {
                 "symbol" => Tuple(
                   Some(Enum<Metadata::String>("CLAM")),                  
                   false                                                         
+                ),
+                "tags" => Tuple(
+                    Enum<1u8>(
+                        Enum<128u8>(
+                            Array<String>(
+                                "radquest"
+                            )
+                        )
+                    ),
+                    false
+                ),
+                "icon_url" => Tuple(
+                    Enum<1u8>(
+                        Enum<13u8>(
+                            "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"
+                        )
+                    ),
+                    false
+                ),
+                "dapp_definitions" => Tuple(
+                    Enum<1u8>(
+                        Enum<128u8>(
+                            Array<String>(
+                                "${config.radQuest.accounts.dAppDefinition.address}"
+                            )
+                        )
+                    ),
+                    false
                 )
               ),
               Map<String, Enum>(
@@ -91,7 +125,7 @@ export const createClamResource = () => {
                       Enum<0u8>(
                           Enum<0u8>(
                               Enum<1u8>(
-                                  Address("${config.radQuest.badges.superAdminBadgeAddress}"),
+                                  Address("${superAdminBadgeAddress}"),
                               )
                           )
                       )

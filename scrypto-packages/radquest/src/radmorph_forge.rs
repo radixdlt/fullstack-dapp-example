@@ -1,15 +1,25 @@
-use crate::{morph_card_forge::MorphEnergyCardData, radgem_forge::RadgemData, refinery::RARITY};
 use scrypto::prelude::*;
+
+use crate::{morph_card_forge::MorphEnergyCardData, radgem_forge::RadgemData};
 
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 pub struct RadmorphData {
     pub key_image_url: Url,
     pub name: String,
-    rarity: String,
-    material: String,
-    energy: String,
-    color_1: String,
-    color_2: String,
+    pub description: String,
+    pub quality: Decimal,
+    pub material: String,
+    pub card_type: String,
+    pub card_rarity: String,
+    pub card_quality: Decimal,
+    pub radgem_1_color: String,
+    pub radgem_1_material: String,
+    pub radgem_1_rarity: String,
+    pub radgem_1_quality: Decimal,
+    pub radgem_2_color: String,
+    pub radgem_2_material: String,
+    pub radgem_2_rarity: String,
+    pub radgem_2_quality: Decimal,
 }
 
 #[blueprint]
@@ -61,75 +71,97 @@ mod radmorph_forge {
 
         pub fn mint_radmorph(
             &mut self,
-            morph_card_data: MorphEnergyCardData,
-            radgem1_data: RadgemData,
-            radgem2_data: RadgemData,
             key_image_url: Url,
+            card_data: MorphEnergyCardData,
+            radgem_1_data: RadgemData,
+            radgem_2_data: RadgemData,
         ) -> Bucket {
             assert!(self.enabled, "RadmorphForge component disabled");
-            let morph_card_rarity_weight = RARITY
-                .iter()
-                .position(|&r| r == &morph_card_data.rarity)
-                .unwrap();
-            let radgem1_rarity_weight = RARITY
-                .iter()
-                .position(|&r| r == &radgem1_data.rarity)
-                .unwrap();
-            let radgem2_rarity_weight = RARITY
-                .iter()
-                .position(|&r| r == &radgem2_data.rarity)
-                .unwrap();
 
-            let material = if &radgem1_rarity_weight >= &radgem2_rarity_weight {
-                radgem1_data.material
-            } else {
-                radgem2_data.material
+            let quality = card_data.quality + radgem_1_data.quality + radgem_2_data.quality;
+            let quality_text = Self::get_quality_descriptor(quality);
+            let material =
+                Self::get_rarer_material(&radgem_1_data.material, &radgem_2_data.material)
+                    .to_string();
+            let material_text = Self::to_title_case(material.clone());
+            let limited_text = match card_data.limited_edition {
+                true => " Limited",
+                false => "",
             };
+            let color_1_text = Self::to_title_case(radgem_1_data.color.clone());
+            let color_2_text = Self::to_title_case(radgem_2_data.color.clone());
+            let energy_type_text = Self::to_title_case(card_data.energy_type.clone());
+            let radgem_1_material_text = Self::to_title_case(radgem_1_data.material.clone());
+            let radgem_2_material_text = Self::to_title_case(radgem_2_data.material.clone());
 
-            let total_rarity =
-                morph_card_rarity_weight + radgem1_rarity_weight + radgem2_rarity_weight;
-            let rarity = if total_rarity < 2 {
-                RARITY[3].to_string() // Fine
-            } else if total_rarity < 4 {
-                RARITY[4].to_string() // Precious
-            } else if total_rarity < 6 {
-                RARITY[5].to_string() // Superb
-            } else {
-                RARITY[6].to_string() // Magnificent
-            };
-
-            let radmorph = self.get_radmorph_data(
-                key_image_url,
-                rarity,
-                material,
-                morph_card_data.energy_type,
-                radgem1_data.color,
-                radgem2_data.color,
+            let name = format!(
+                "{} {} {} and {} {} RadMorph {{{}/100}}{}",
+                quality_text,
+                material_text,
+                color_1_text,
+                color_2_text,
+                energy_type_text,
+                quality,
+                limited_text
             );
+            let description = format!("A {} {} RadGem and {} {} RadGem were fused in {} to produce this {} {} RadMorph. Its overall quality is rated as {} – {} out of a possible 100.", radgem_1_material_text, color_1_text, radgem_2_material_text, color_2_text, card_data.energy_description, material_text, energy_type_text, quality_text, quality);
+
+            let radmorph_data = RadmorphData {
+                key_image_url,
+                name,
+                description,
+                quality,
+                material,
+                card_type: card_data.energy_type,
+                card_rarity: card_data.rarity,
+                card_quality: card_data.quality,
+                radgem_1_color: radgem_1_data.color,
+                radgem_1_material: radgem_1_data.material,
+                radgem_1_rarity: radgem_1_data.rarity,
+                radgem_1_quality: radgem_1_data.quality,
+                radgem_2_color: radgem_2_data.color,
+                radgem_2_material: radgem_2_data.material,
+                radgem_2_rarity: radgem_2_data.rarity,
+                radgem_2_quality: radgem_2_data.quality,
+            };
+
             self.admin_badge.authorize_with_amount(1, || {
                 self.radmorph_resource_manager
-                    .mint_ruid_non_fungible(radmorph)
+                    .mint_ruid_non_fungible(radmorph_data)
             })
         }
 
-        fn get_radmorph_data(
-            &self,
-            key_image_url: Url,
-            rarity: String,
-            material: String,
-            energy: String,
-            color_1: String,
-            color_2: String,
-        ) -> RadmorphData {
-            RadmorphData {
-                name: format!("{} {} {} RadMorph", rarity, material, energy),
-                key_image_url,
-                rarity,
-                material,
-                energy,
-                color_1,
-                color_2,
+        fn get_quality_descriptor(quality: Decimal) -> &'static str {
+            match quality {
+                quality if quality < dec!(21) => "Basic",
+                quality if quality < dec!(41) => "Fine",
+                quality if quality < dec!(61) => "Excellent",
+                quality if quality < dec!(81) => "Superb",
+                _ => "Exquisite",
             }
+        }
+
+        fn get_rarer_material(material_1: &str, material_2: &str) -> &'static str {
+            if material_1 == "radiant" || material_2 == "radiant" {
+                "radiant"
+            } else if material_1 == "metallic" || material_2 == "metallic" {
+                "metallic"
+            } else {
+                "crystalline"
+            }
+        }
+
+        fn to_title_case(s: String) -> String {
+            s.split_whitespace()
+                .map(|word| {
+                    let mut c = word.chars();
+                    match c.next() {
+                        None => String::new(),
+                        Some(f) => f.to_uppercase().collect::<String>() + c.as_str(),
+                    }
+                })
+                .collect::<Vec<_>>()
+                .join(" ")
         }
     }
 }

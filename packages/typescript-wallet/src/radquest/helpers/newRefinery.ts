@@ -45,7 +45,7 @@ export const newRefinery = () => {
             Bucket("admin_badges")
             Address("${config.radQuest.badges.heroBadgeAddress}")
             Address("${config.radQuest.resources.elementAddress}")
-            Address("${config.radQuest.resources.morphEnergyCards}")
+            Address("${config.radQuest.resources.morphEnergyCardAddress}")
             Address("${config.radQuest.resources.radgemAddress}")
             Address("${config.radQuest.resources.radmorphAddress}")
         ;

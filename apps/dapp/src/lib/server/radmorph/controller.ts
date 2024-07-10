@@ -49,7 +49,7 @@ export const RadmorphController = ({
         radgem1,
         radgem2
       ]),
-      gatewayApi.callApi('getNonFungibleData', addresses.resources.morphEnergyCards, [card])
+      gatewayApi.callApi('getNonFungibleData', addresses.resources.morphEnergyCardAddress, [card])
     ])
       .andThen(([radgemData, cardData]) =>
         Result.combine([

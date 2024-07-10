@@ -103,14 +103,14 @@
 
         ;[amountOfRadGems, amountOfEnergyCards] = [
           publicConfig.resources.radgemAddress,
-          publicConfig.resources.morphEnergyCards
+          publicConfig.resources.morphEnergyCardAddress
         ].map(getAmountOfNft)
 
         getGemData(publicConfig.resources.radgemAddress).map((data) => {
           gemData = data
         })
 
-        getEnergyCardData(publicConfig.resources.morphEnergyCards).map((data) => {
+        getEnergyCardData(publicConfig.resources.morphEnergyCardAddress).map((data) => {
           energyCardData = data
         })
 
@@ -156,12 +156,12 @@
       CALL_METHOD
           Address("${$user!.accountAddress}")
           "withdraw_non_fungibles"
-          Address("${publicConfig.resources.morphEnergyCards}")
+          Address("${publicConfig.resources.morphEnergyCardAddress}")
           Array<NonFungibleLocalId>(
               NonFungibleLocalId("${selectedCard.id}")
           );
 
-      TAKE_ALL_FROM_WORKTOP Address("${publicConfig.resources.morphEnergyCards}") Bucket("morph_energy_card");
+      TAKE_ALL_FROM_WORKTOP Address("${publicConfig.resources.morphEnergyCardAddress}") Bucket("morph_energy_card");
 
       CALL_METHOD
           Address("${publicConfig.components.refinery}")

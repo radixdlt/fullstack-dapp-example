@@ -1,7 +1,15 @@
 import { GiftBoxMetadata } from 'common'
 import { config, radixEngineClient } from '../../config'
 
-export const createGiftBoxResource = (metadata: GiftBoxMetadata) => {
+export const createGiftBoxResource = ({
+  superAdminBadgeAddress,
+  adminBadgeAddress,
+  metadata
+}: {
+  superAdminBadgeAddress: string
+  adminBadgeAddress: string
+  metadata: GiftBoxMetadata
+}) => {
   return radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
@@ -13,76 +21,113 @@ export const createGiftBoxResource = (metadata: GiftBoxMetadata) => {
         ;
 
         CREATE_FUNGIBLE_RESOURCE
-          Enum<1u8>(
-              Enum<2u8>(
-                  Enum<0u8>(
-                      Enum<0u8>(
-                          Enum<1u8>(
-                              Address("${config.radQuest.badges.adminBadgeAddress}"),
-                          )
-                      )
-                  )
-              )
-          )
-          true
-          0u8
-          Tuple(
-            # Mint Roles (if None: defaults to DenyAll, DenyAll)
-            Some(         
-              Tuple(
-                None, # Minter (if None: defaults to Owner)
-                Some(Enum<AccessRule::DenyAll>()) # Minter Updater (if None: defaults to Owner)
-              )
-            ),
-            # Burn Roles (if None: defaults to DenyAll, DenyAll)
-            Some(         
-              Tuple(
-                None,  
-                Some(Enum<AccessRule::DenyAll>())
-              )
-            ),
-            # Freeze Roles (if None: defaults to DenyAll, DenyAll)
-            None,
-            # Recall Roles (if None: defaults to DenyAll, DenyAll)
-            None,
-            # Withdraw Roles (if None: defaults to AllowAll, DenyAll)
-            None,
-            # Deposit Roles (if None: defaults to AllowAll, DenyAll)
-            None
-          )
-          Tuple(
-              Map<String, Tuple>(
-                "name" => Tuple(
-                  Some(Enum<Metadata::String>("${metadata.name}")),                  
-                  false                                                         
-                ),
-                "description" => Tuple(
-                  Some(Enum<Metadata::String>("${metadata.description}")),                  
-                  false                                                         
-                ),
-                "tags" => Tuple(
-                  Enum<1u8>(
-                    Enum<128u8>(
-                      Array<String>(
-                        ${metadata.tags.map((tag) => `"${tag}"`).join(', ')}
-                      )
+            Enum<1u8>(
+                Enum<2u8>(
+                    Enum<0u8>(
+                        Enum<0u8>(
+                            Enum<1u8>(
+                                Address("${superAdminBadgeAddress}")
+                            )
+                        )
                     )
-                  ),
-                  false
                 )
-              ),
-              Map<String, Enum>(
-                # Metadata roles
-                "metadata_setter" => None,
-                # Metadata setter role
-                "metadata_setter_updater" => None,
-                # Metadata locker role
-                "metadata_locker" => None,          
-                "metadata_locker_updater" => None
-              )
-          )
-          None
-        ;`)
+            )
+            true
+            0u8
+            Tuple(
+                Enum<1u8>(
+                    Tuple(
+                        Enum<1u8>(
+                            Enum<2u8>(
+                                Enum<0u8>(
+                                    Enum<0u8>(
+                                        Enum<1u8>(
+                                            Address("${adminBadgeAddress}")
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        Enum<1u8>(
+                            Enum<1u8>()
+                        )
+                    )
+                ),
+                Enum<1u8>(
+                    Tuple(
+                        Enum<1u8>(
+                            Enum<2u8>(
+                                Enum<0u8>(
+                                    Enum<0u8>(
+                                        Enum<1u8>(
+                                            Address("${adminBadgeAddress}")
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        Enum<1u8>(
+                            Enum<1u8>()
+                        )
+                    )
+                ),
+                Enum<0u8>(),
+                Enum<0u8>(),
+                Enum<0u8>(),
+                Enum<0u8>()
+            )
+            Tuple(
+                Map<String, Tuple>(
+                    "name" => Tuple(
+                        Enum<1u8>(
+                            Enum<0u8>(
+                                "${metadata.name}"
+                            )
+                        ),
+                        false
+                    ),
+                    "description" => Tuple(
+                        Enum<1u8>(
+                            Enum<0u8>(
+                                "${metadata.description}"
+                            )
+                        ),
+                        false
+                    ),
+                    "tags" => Tuple(
+                        Enum<1u8>(
+                            Enum<128u8>(
+                                Array<String>(
+                                    ${metadata.tags.map((tag) => `"${tag}"`).join(', ')}
+                                )
+                            )
+                        ),
+                        false
+                    ),
+                    "icon_url" => Tuple(
+                        Enum<1u8>(
+                            Enum<13u8>(
+                                "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"
+                            )
+                        ),
+                        false
+                    ),
+                    "dapp_definitions" => Tuple(
+                        Enum<1u8>(
+                            Enum<128u8>(
+                                Array<String>(
+                                    "${config.radQuest.accounts.dAppDefinition.address}"
+                                )
+                            )
+                        ),
+                        false
+                    )
+                ),
+                Map<String, Enum>()
+            )
+            Enum<0u8>()
+        ;
+        `)
         .andThen((value) =>
           submitTransaction({ transactionManifest: value, signers: ['systemAccount'] })
         )

@@ -29,7 +29,7 @@ export const createRewardsDepositManifest = ({
   const addresses = Addresses(config.networkId)
   const { payerAccount, systemAccount } = wellKnownAddresses.accountAddress
   const { adminBadgeAddress } = addresses.badges
-  const { elementAddress, morphEnergyCards, clamAddress, giftBox } = addresses.resources
+  const { elementAddress, morphEnergyCardAddress, clamAddress, giftBox } = addresses.resources
 
   const buckets: string[] = []
   const manifest: string[] = []
@@ -182,7 +182,7 @@ export const createRewardsDepositManifest = ({
           ;`,
 
           `TAKE_ALL_FROM_WORKTOP
-            Address("${morphEnergyCards}")
+            Address("${morphEnergyCardAddress}")
             Bucket("${createBucket('card')}")
         ;`
         )

@@ -27,7 +27,7 @@ export const confirmAccountHasLocalIds = (
           }
         })
       })
-    } else if (resource.resource_address === addresses.resources.morphEnergyCards) {
+    } else if (resource.resource_address === addresses.resources.morphEnergyCardAddress) {
       resource.vaults.items.forEach((vault) => {
         vault.items?.forEach((nfId) => {
           if (nfId === card) {

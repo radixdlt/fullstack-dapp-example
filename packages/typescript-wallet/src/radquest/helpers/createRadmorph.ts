@@ -1,6 +1,12 @@
 import { config, radixEngineClient } from '../../config'
 
-export const createRadmorph = () => {
+export const createRadmorph = ({
+  superAdminBadgeAddress,
+  adminBadgeAddress
+}: {
+  superAdminBadgeAddress: string
+  adminBadgeAddress: string
+}) => {
   return radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
@@ -8,7 +14,7 @@ export const createRadmorph = () => {
         CALL_METHOD
             Address("${wellKnownAddresses.accountAddress.payerAccount}")
             "lock_fee"
-            Decimal("500")
+            Decimal("50")
         ;
 
         CREATE_NON_FUNGIBLE_RESOURCE
@@ -17,7 +23,7 @@ export const createRadmorph = () => {
                     Enum<0u8>(
                         Enum<0u8>(
                             Enum<1u8>(
-                                Address("${config.radQuest.badges.superAdminBadgeAddress}"),
+                                Address("${superAdminBadgeAddress}")
                             )
                         )
                     )
@@ -41,7 +47,7 @@ export const createRadmorph = () => {
                                         12u8
                                     ),
                                     Enum<0u8>(
-                                        12u8
+                                        192u8
                                     ),
                                     Enum<0u8>(
                                         12u8
@@ -51,6 +57,33 @@ export const createRadmorph = () => {
                                     ),
                                     Enum<0u8>(
                                         12u8
+                                    ),
+                                    Enum<0u8>(
+                                        192u8
+                                    ),
+                                    Enum<0u8>(
+                                        12u8
+                                    ),
+                                    Enum<0u8>(
+                                        12u8
+                                    ),
+                                    Enum<0u8>(
+                                        12u8
+                                    ),
+                                    Enum<0u8>(
+                                        192u8
+                                    ),
+                                    Enum<0u8>(
+                                        12u8
+                                    ),
+                                    Enum<0u8>(
+                                        12u8
+                                    ),
+                                    Enum<0u8>(
+                                        12u8
+                                    ),
+                                    Enum<0u8>(
+                                        192u8
                                     )
                                 )
                             )
@@ -65,11 +98,20 @@ export const createRadmorph = () => {
                                         Array<String>(
                                             "key_image_url",
                                             "name",
-                                            "rarity",
+                                            "description",
+                                            "quality",
                                             "material",
-                                            "energy",
-                                            "color_1",
-                                            "color_2"
+                                            "card_type",
+                                            "card_rarity",
+                                            "card_quality",
+                                            "radgem_1_color",
+                                            "radgem_1_material",
+                                            "radgem_1_rarity",
+                                            "radgem_1_quality",
+                                            "radgem_2_color",
+                                            "radgem_2_material",
+                                            "radgem_2_rarity",
+                                            "radgem_2_quality"
                                         )
                                     )
                                 )
@@ -86,60 +128,46 @@ export const createRadmorph = () => {
                 Array<String>()
             )
             Tuple(
-                # Mint Roles 
                 Enum<1u8>(
                     Tuple(
-                        # Minter
                         Enum<1u8>(
                             Enum<2u8>(
                                 Enum<0u8>(
                                     Enum<0u8>(
                                         Enum<1u8>(
-                                            Address("${config.radQuest.badges.adminBadgeAddress}")
+                                            Address("${adminBadgeAddress}")
                                         )
                                     )
                                 )
                             )
                         ),
-                        # Minter Updater - DenyAll
                         Enum<1u8>(
                             Enum<1u8>()
                         )
                     )
                 ),
-                # Burn Roles - None (defaults to DenyAll, DenyAll if None)
-                Enum<0u8>(),
-                # Freeze Roles - None (defaults to DenyAll, DenyAll if None)
-                Enum<0u8>(),
-                # Recall Roles - None (defaults to DenyAll, DenyAll if None)
-                Enum<0u8>(),
-                # Withdraw Roles
                 Enum<1u8>(
                     Tuple(
-                        # Withdrawer - AllowAll
                         Enum<1u8>(
-                            Enum<0u8>()
+                            Enum<2u8>(
+                                Enum<0u8>(
+                                    Enum<0u8>(
+                                        Enum<1u8>(
+                                            Address("${adminBadgeAddress}")
+                                        )
+                                    )
+                                )
+                            )
                         ),
-                        # Withdrawer Updater - DenyAll
                         Enum<1u8>(
                             Enum<1u8>()
                         )
                     )
                 ),
-                # Deposit Roles
-                Enum<1u8>(
-                    Tuple(
-                        # Depositor - AllowAll
-                        Enum<1u8>(
-                            Enum<0u8>()
-                        ),
-                        # Depositor Updater - DenyAll
-                        Enum<1u8>(
-                            Enum<1u8>()
-                        )
-                    )
-                ),
-                # Non Fungible Data Updater Roles - None (defaults to DenyAll, DenyAll if None)
+                Enum<0u8>(),
+                Enum<0u8>(),
+                Enum<0u8>(),
+                Enum<0u8>(),
                 Enum<0u8>()
             )
             Tuple(
@@ -150,15 +178,15 @@ export const createRadmorph = () => {
                                 "RadMorphs"
                             )
                         ),
-                        true
+                        false
                     ),
                     "description" => Tuple(
                         Enum<1u8>(
                             Enum<0u8>(
-                                "Fused in the boundless energies of the RadQuest realm, RadMorphs are treasured by the dedicated and true of Radix."
+                                "Fused in the boundless energies of the RadQuest realm, RadMorphs are treasured by the dedicated and true of the Radix community."
                             )
                         ),
-                        true
+                        false
                     ),
                     "icon_url" => Tuple(
                         Enum<1u8>(
@@ -166,12 +194,21 @@ export const createRadmorph = () => {
                                 "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"
                             )
                         ),
-                        true
+                        false
+                    ),
+                    "dapp_definitions" => Tuple(
+                        Enum<1u8>(
+                            Enum<128u8>(
+                                Array<String>(
+                                    "${config.radQuest.accounts.dAppDefinition.address}"
+                                )
+                            )
+                        ),
+                        false
                     )
                 ),
                 Map<String, Enum>()
             )
-            # Metadata Setter and Locker Roles - None (defaults to OWNER when None)
             Enum<0u8>()
         ;
         `)
