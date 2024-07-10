@@ -39,7 +39,6 @@ export const createClaimXRDRewardsTransaction = (
       `
 }
 
-
 export const createClaimRewardsTransaction = (
   accountAddress: string,
   userId: string,

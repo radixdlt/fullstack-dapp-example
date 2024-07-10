@@ -313,7 +313,7 @@ export const QuestDefinitions = () => {
       rewards: [
         {
           name: 'xrd',
-          amount: 30
+          amount: 500
         }
       ],
       trackedAccountAddress: false,
