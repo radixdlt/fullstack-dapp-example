@@ -3,7 +3,6 @@ import { QuestReward } from 'content'
 import { config } from '../../config'
 
 export const createRewardsDepositManifest = ({
-  wellKnownAddresses,
   questId,
   userId,
   rewards,
@@ -18,16 +17,10 @@ export const createRewardsDepositManifest = ({
   questId?: string
   userId: string
   includeKycOracleUpdate?: boolean
-  wellKnownAddresses: {
-    accountAddress: {
-      payerAccount: string
-      systemAccount: string
-    }
-  }
   depositRewardsTo: 'questRewards' | 'giftBoxOpener'
 }) => {
   const addresses = Addresses(config.networkId)
-  const { payerAccount, systemAccount } = wellKnownAddresses.accountAddress
+  const { payer, system } = addresses.accounts
   const { adminBadgeAddress } = addresses.badges
   const { elementAddress, morphEnergyCardAddress, clamAddress, giftBox } = addresses.resources
 
@@ -37,13 +30,24 @@ export const createRewardsDepositManifest = ({
   const addToManifest = (...parts: string[]) => manifest.push(...parts)
 
   addToManifest(
-    `CALL_METHOD
-      Address("${payerAccount}")
+    `
+    CALL_METHOD
+      Address("${payer.accessController}")
+      "create_proof"
+    ;
+
+    CALL_METHOD
+      Address("${system.accessController}")
+      "create_proof"
+    ;
+    
+    CALL_METHOD
+      Address("${payer.address}")
       "lock_fee"
       Decimal("50")
     ;`,
     `CALL_METHOD
-      Address("${systemAccount}")
+      Address("${system.address}")
       "create_proof_of_amount"
       Address("${adminBadgeAddress}") 
       Decimal("1")
@@ -150,7 +154,7 @@ export const createRewardsDepositManifest = ({
       case 'xrd': {
         addToManifest(
           `CALL_METHOD
-            Address("${payerAccount}")
+            Address("${payer.address}")
             "withdraw"
             Address("${addresses.xrd}")
             Decimal("${reward.amount}")
@@ -200,7 +204,7 @@ export const createRewardsDepositManifest = ({
   if (depositRewardsTo === 'questRewards')
     addToManifest(
       `CALL_METHOD
-      Address("${systemAccount}")
+      Address("${system.address}")
       "create_proof_of_amount"
       Address("${adminBadgeAddress}")
       Decimal("1")
@@ -218,7 +222,7 @@ export const createRewardsDepositManifest = ({
   if (depositRewardsTo === 'giftBoxOpener')
     addToManifest(
       `CALL_METHOD
-        Address("${systemAccount}")
+        Address("${system.address}")
         "create_proof_of_amount"
         Address("${adminBadgeAddress}")
         Decimal("1")
@@ -236,7 +240,7 @@ export const createRewardsDepositManifest = ({
   if (includeKycOracleUpdate)
     addToManifest(
       `CALL_METHOD
-        Address("${systemAccount}")
+        Address("${system.address}")
         "create_proof_of_amount"
         Address("${adminBadgeAddress}")
         Decimal("1")

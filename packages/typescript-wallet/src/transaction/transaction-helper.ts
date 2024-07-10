@@ -18,6 +18,19 @@ import { typedError, GatewayApi, AppLogger } from 'common'
 import { ResultAsync, err, ok, okAsync } from 'neverthrow'
 import { secureRandom } from '../helpers'
 
+export type TransactionHelperError =
+  (typeof TransactionHelperError)[keyof typeof TransactionHelperError]
+export const TransactionHelperError = {
+  FailedToConvertStringManifest: 'FailedToConvertStringManifest',
+  FailedToGetTransactionIntentHash: 'FailedToGetTransactionIntentHash',
+  GatewayError: 'GatewayError',
+  FailedToSignTransaction: 'FailedToSignTransaction',
+  FailedToNotarizeTransaction: 'FailedToNotarizeTransaction',
+  FailedToCompileNotarizedTransaction: 'FailedToCompileNotarizedTransaction',
+  TransactionFailed: 'TransactionFailed',
+  FailedToSubmitTransaction: 'FailedToSubmitTransaction'
+} as const
+
 export type TransactionHelper = ReturnType<typeof TransactionHelper>
 
 export const TransactionHelper = ({
@@ -40,13 +53,10 @@ export const TransactionHelper = ({
           notarized_transaction_hex
         }
       }),
-      typedError
+      (error) => ({ reason: TransactionHelperError.FailedToSubmitTransaction, jsError: error })
     )
 
-  const transformStringManifest = (
-    stringManifest: string,
-    blobs: Uint8Array[] = []
-  ): ResultAsync<TransactionManifest, Error> =>
+  const transformStringManifest = (stringManifest: string, blobs: Uint8Array[] = []) =>
     ResultAsync.fromPromise(
       RadixEngineToolkit.Instructions.convert(
         { kind: 'String', value: stringManifest },
@@ -54,12 +64,23 @@ export const TransactionHelper = ({
         'Parsed'
       ),
       typedError
-    ).map((instructions) => ({ instructions, blobs }))
+    )
+      .map((instructions) => ({ instructions, blobs }))
+      .mapErr((error) => {
+        logger?.error(stringManifest)
+        return {
+          reason: TransactionHelperError.FailedToConvertStringManifest,
+          jsError: error
+        }
+      })
 
   const getTransactionIntentHash = (notarizedTransaction: NotarizedTransaction) =>
     ResultAsync.fromPromise(
       RadixEngineToolkit.Intent.hash(notarizedTransaction.signedIntent.intent),
-      typedError
+      (error) => ({
+        reason: TransactionHelperError.FailedToGetTransactionIntentHash,
+        jsError: error
+      })
     )
 
   const buildTransaction = (transactionManifest: TransactionManifest, message?: Message) =>
@@ -92,6 +113,7 @@ export const TransactionHelper = ({
           tipPercentage: 0 /* The percentage of fees that goes to validators */
         })
       )
+      .mapErr((error) => ({ reason: TransactionHelperError.GatewayError, jsError: error }))
 
   const getTransactionBuilder = () => ResultAsync.fromSafePromise(TransactionBuilder.new())
 
@@ -100,7 +122,13 @@ export const TransactionHelper = ({
   const createSignedNotarizedTransaction = (
     transactionManifest: TransactionManifest,
     message?: Message
-  ) => {
+  ): ResultAsync<
+    NotarizedTransaction,
+    {
+      reason: 'GatewayError' | 'FailedToSignTransaction' | 'FailedToNotarizeTransaction'
+      jsError: unknown
+    }
+  > => {
     const notaryPrivateKey = createNotaryKeyPair()
     return ResultAsync.combine([
       getTransactionBuilder(),
@@ -109,30 +137,47 @@ export const TransactionHelper = ({
       .map(([builder, transactionHeader]) => builder.header(transactionHeader))
       .map((builder) => (message ? builder.message(message) : builder))
       .map((builder) => builder.manifest(transactionManifest))
-      .andThen(onSignature)
-      .map((builder) => builder.notarize(notaryPrivateKey))
+      .andThen((builder) =>
+        onSignature(builder).mapErr((error) => ({
+          reason: TransactionHelperError.FailedToSignTransaction,
+          jsError: error
+        }))
+      )
+      .andThen((builder) =>
+        ResultAsync.fromPromise(builder.notarize(notaryPrivateKey), (error) => ({
+          reason: TransactionHelperError.FailedToNotarizeTransaction,
+          jsError: error
+        }))
+      )
   }
 
   const compileNotarizedTransaction = (notarizedTransaction: NotarizedTransaction) =>
     ResultAsync.fromPromise(
       RadixEngineToolkit.NotarizedTransaction.compile(notarizedTransaction),
       typedError
-    ).map((byteArray) => Buffer.from(byteArray).toString('hex'))
+    )
+      .map((byteArray) => Buffer.from(byteArray).toString('hex'))
+      .mapErr((error) => ({
+        reason: TransactionHelperError.FailedToCompileNotarizedTransaction,
+        jsError: error as Error
+      }))
 
   const submitTransaction = (
     transactionManifest: TransactionManifest | string,
     message?: Message
-  ) =>
+  ): ResultAsync<
+    { transactionId: string; response: TransactionStatusResponse },
+    { reason: TransactionHelperError }
+  > =>
     (typeof transactionManifest === 'string'
       ? transformStringManifest(transactionManifest)
       : okAsync(transactionManifest)
     ).andThen((transactionManifest) =>
       buildTransaction(transactionManifest, message).andThen(
         ({ compiledTransactionHex, transactionId }) =>
-          submitNotarizedTransactionHex(compiledTransactionHex).map(() => ({
-            transactionId,
-            pollTransactionStatus: () => pollTransactionStatus(transactionId)
-          }))
+          submitNotarizedTransactionHex(compiledTransactionHex).andThen(() =>
+            pollTransactionStatus(transactionId).map((response) => ({ transactionId, response }))
+          )
       )
     )
 
@@ -142,21 +187,10 @@ export const TransactionHelper = ({
       (error) => error as Error
     )
 
-  type PollTransactionStatusError = keyof typeof PollTransactionStatusError
-  const PollTransactionStatusError = {
-    GatewayError: 'GatewayError',
-    TransactionFailed: 'TransactionFailed'
-  } as const
-
-  const pollTransactionStatus = (
-    transactionId: string
-  ): ResultAsync<
-    undefined,
-    { jsError?: Error; reason: PollTransactionStatusError; transactionId: string }
-  > =>
+  const pollTransactionStatus = (transactionId: string) =>
     ResultAsync.fromPromise<
       TransactionStatusResponse,
-      { jsError: Error; reason: PollTransactionStatusError; transactionId: string }
+      { jsError: unknown; reason: TransactionHelperError; transactionId: string }
     >(
       new Promise(async (resolve, reject) => {
         let response: TransactionStatusResponse | undefined
@@ -186,14 +220,14 @@ export const TransactionHelper = ({
         resolve(response)
       }),
       (error) => ({
-        jsError: error as Error,
-        reason: PollTransactionStatusError.GatewayError,
+        jsError: error,
+        reason: TransactionHelperError.GatewayError,
         transactionId
       })
     ).andThen((response) =>
       response.status === 'CommittedSuccess'
-        ? ok(undefined)
-        : err({ reason: PollTransactionStatusError.TransactionFailed, transactionId })
+        ? ok(response)
+        : err({ reason: TransactionHelperError.TransactionFailed, transactionId })
     )
 
   const getKnownAddresses = () =>
@@ -220,5 +254,11 @@ export const TransactionHelper = ({
       })
       .andThen(submitTransaction)
 
-  return { submitTransaction, getXrdFromFaucet, transformStringManifest, pollTransactionStatus }
+  return {
+    submitTransaction,
+    getXrdFromFaucet,
+    transformStringManifest,
+    pollTransactionStatus,
+    getKnownAddresses
+  }
 }

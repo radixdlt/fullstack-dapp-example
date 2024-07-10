@@ -66,13 +66,7 @@ export const AccountHelper = (dbClient: PrismaClient) => {
         privateKey,
         publicKey,
         submitTransaction,
-        getXrdFromFaucet: () =>
-          getXrdFromFaucet({ address: user.accountAddress! }).andThen(
-            ({ pollTransactionStatus, transactionId }) => {
-              console.log({ transactionId })
-              return pollTransactionStatus()
-            }
-          )
+        getXrdFromFaucet: () => getXrdFromFaucet({ address: user.accountAddress! })
       }))
   }
 

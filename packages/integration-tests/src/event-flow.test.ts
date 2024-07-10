@@ -2,13 +2,14 @@ import { describe, it, expect, beforeAll } from 'vitest'
 import {
   RadixEngineClient,
   generateMnemonic,
-  mintHeroBadge,
   mintElements,
   radquestEntityAddresses,
   mintClams,
   AccountHelper,
   Account,
-  mintGiftBox
+  mintGiftBox,
+  withSigners,
+  TransactionHelper
 } from 'typescript-wallet'
 import {
   AccountAddressModel,
@@ -79,6 +80,61 @@ const accountAddressModel = AccountAddressModel(redisClient)(logger)
 
 const addresses = Addresses(2)
 
+const { payer, system } = addresses.accounts
+const { adminBadgeAddress, heroBadgeAddress } = addresses.badges
+
+const systemTransactionHelper = TransactionHelper({
+  networkId: 2,
+  onSignature: withSigners(2, 'system'),
+  logger
+})
+
+const mintHeroBadge = async (userId: string, accountAddress: string) => {
+  const result = await systemTransactionHelper.submitTransaction(`
+        CALL_METHOD 
+          Address("${payer.accessController}") 
+          "create_proof"
+        ;
+
+        CALL_METHOD 
+          Address("${system.accessController}") 
+          "create_proof"
+        ;
+
+
+        CALL_METHOD 
+          Address("${payer.address}") 
+          "lock_fee"
+          Decimal("10")
+        ;
+
+        CALL_METHOD
+          Address("${system.address}")
+          "create_proof_of_amount"
+          Address("${adminBadgeAddress}")
+          Decimal("1")
+        ;
+          
+        MINT_NON_FUNGIBLE
+          Address("${heroBadgeAddress}")
+          Map<NonFungibleLocalId, Tuple>(NonFungibleLocalId("<${userId}>") => Tuple(Tuple(
+            "Your Hero Badge",
+            "Your progress through your RadQuest journey",
+            "",
+            Array<String>(),
+            0u32,
+          )))
+        ;
+
+        CALL_METHOD
+          Address("${accountAddress}")
+          "try_deposit_batch_or_abort"
+          Expression("ENTIRE_WORKTOP")
+          Enum<0u8>()
+        ;`)
+  if (result.isErr()) throw result.error
+}
+
 const startQuestAndAddTrackedAccount = (userId: string, questId: string) =>
   userModel
     .getById(userId, {})
@@ -102,30 +158,7 @@ const completeTransferTokensQuest = async (user: User) => {
   await mintClams(10, user.accountAddress!)
 }
 
-const createUsers = async ({
-  referredBy,
-  numberOfUsers = 1,
-  networkId = 2
-}: Partial<{ referredBy: string; numberOfUsers: number; networkId: number }>) =>
-  ResultAsync.combine(
-    new Array(numberOfUsers).fill(0).map(() =>
-      accountHelper.createAccount({
-        referredBy,
-        logger,
-        networkId
-      })
-    )
-  )
-
-const executeUserReferralFlow = async ({ user, getXrdFromFaucet, submitTransaction }: Account) => {
-  console.log('Getting XRD from faucet')
-  await getXrdFromFaucet()
-  console.log('Mining hero badge')
-  const mintHeroBadgeResult = await mintHeroBadge(user.id, user.accountAddress!, undefined, [], 0, {
-    heroBadgeAddress: addresses.badges.heroBadgeAddress
-  })
-
-  if (mintHeroBadgeResult.isErr()) throw mintHeroBadgeResult.error
+const executeUserReferralFlow = async ({ user, submitTransaction }: Account) => {
   console.log('Completing transfer tokens quest')
   await completeTransferTokensQuest(user)
   await submitTransaction(`
@@ -151,7 +184,7 @@ const executeUserReferralFlow = async ({ user, getXrdFromFaucet, submitTransacti
       Bucket("clam_bucket")
       Enum<0u8>()
     ;
-  `).andThen((api) => api.pollTransactionStatus())
+  `)
   await waitForMessage(logger, db)(user.id, 'QuestRewardsDeposited')
   console.log('Claiming rewards for transfer tokens quest')
   const claimRewardResult = await submitTransaction(`
@@ -181,7 +214,7 @@ const executeUserReferralFlow = async ({ user, getXrdFromFaucet, submitTransacti
       "deposit_batch"
       Expression("ENTIRE_WORKTOP")
     ;
-  `).andThen((api) => api.pollTransactionStatus())
+  `)
 
   if (claimRewardResult.isErr()) throw claimRewardResult.error
 }
@@ -198,6 +231,23 @@ const getXrdRewardToClaim = async (userId: string) =>
       console.log({ sum: result._sum })
       return result._sum?.xrdValue?.toNumber()
     })
+
+const createAccount = async (
+  value?: Partial<{ withXrd: boolean; withHeroBadge: boolean; referredBy: string }>
+) => {
+  const { withXrd = false, withHeroBadge = false, referredBy } = value ?? {}
+  const userResult = await accountHelper.createAccount({ logger, networkId: 2, referredBy })
+  if (userResult.isErr()) throw userResult.error
+  const { getXrdFromFaucet } = userResult.value
+  if (withXrd) {
+    const faucetResult = await getXrdFromFaucet()
+    if (faucetResult.isErr()) throw faucetResult.error
+  }
+  if (withHeroBadge)
+    await mintHeroBadge(userResult.value.user.id, userResult.value.user.accountAddress!)
+
+  return userResult.value
+}
 
 describe('Event flows', () => {
   beforeAll(async () => {
@@ -217,6 +267,8 @@ describe('Event flows', () => {
     'should add account address, track event, send notification to user, and mint hero badge',
     { timeout: 60_000, skip: false },
     async () => {
+      const { user, submitTransaction } = await createAccount({ withXrd: true })
+
       const discriminator = `AddAccountAddressToHeroBadgeForge:${crypto.randomUUID()}`
 
       await completeQuestRequirements(db)(user.id, 'GetStuff', [
@@ -243,43 +295,28 @@ describe('Event flows', () => {
 
       await waitForMessage(logger, db)(user.id, 'HeroBadgeReadyToBeClaimed')
 
-      await radixEngineClient.getXrdFromFaucet()
-
-      const claimBadgeResult = await radixEngineClient
-        .getManifestBuilder()
-        .andThen(({ convertStringManifest, submitTransaction }) => {
-          const transactionManifest = `
-          CALL_METHOD
-              Address("${accountAddress}")
-              "lock_fee"
-              Decimal("50")
-          ;
-          CALL_METHOD
-              Address("${addresses.components.heroBadgeForge}")
-              "claim_badge"
-              Address("${accountAddress}")
-              "${user.id}"
-          ;
-          CALL_METHOD
-              Address("${accountAddress}")
-              "deposit_batch"
-              Expression("ENTIRE_WORKTOP")
-          ;
-        `
-          return convertStringManifest(transactionManifest)
-            .andThen((transactionManifest) =>
-              submitTransaction({ transactionManifest, signers: [] })
-            )
-            .andThen(({ txId }) =>
-              radixEngineClient.gatewayClient
-                .pollTransactionStatus(txId)
-                .mapErr((err) => ({ err, txId }))
-            )
-        })
+      const claimBadgeResult = await submitTransaction(`
+        CALL_METHOD
+            Address("${user.accountAddress}")
+            "lock_fee"
+            Decimal("50")
+        ;
+        CALL_METHOD
+            Address("${addresses.components.heroBadgeForge}")
+            "claim_badge"
+            Address("${user.accountAddress}")
+            "${user.id}"
+        ;
+        CALL_METHOD
+            Address("${user.accountAddress}")
+            "deposit_batch"
+            Expression("ENTIRE_WORKTOP")
+        ;
+      `)
 
       if (claimBadgeResult.isErr()) throw claimBadgeResult.error
 
-      const result = await gatewayApi.hasHeroBadge(accountAddress)
+      const result = await gatewayApi.hasHeroBadge(user.accountAddress!)
 
       if (result.isErr()) throw result.error
 
@@ -288,6 +325,7 @@ describe('Event flows', () => {
   )
 
   it('should deposit XRD to account', { timeout: 60_000, skip: false }, async () => {
+    const { user } = await createAccount()
     const discriminator = `DepositXrdToAccount:${crypto.randomUUID()}`
 
     const traceId = crypto.randomUUID()
@@ -307,7 +345,9 @@ describe('Event flows', () => {
 
     expect(item?.status).toBe('COMPLETED')
 
-    const result = await gatewayApi.callApi('getEntityDetailsVaultAggregated', [accountAddress])
+    const result = await gatewayApi.callApi('getEntityDetailsVaultAggregated', [
+      user.accountAddress!
+    ])
 
     if (result.isErr()) throw result.error
 
@@ -319,28 +359,9 @@ describe('Event flows', () => {
   })
 
   describe('radgem', async () => {
-    const userResult = await accountHelper.createAccount({ logger, networkId: 2 })
-
-    if (userResult.isErr()) throw userResult.error
-
-    const { user, getXrdFromFaucet, submitTransaction } = userResult.value
-
-    await getXrdFromFaucet()
+    const { submitTransaction, user } = await createAccount({ withXrd: true, withHeroBadge: true })
 
     await mintElements(10, user.accountAddress!)
-
-    const mintHeroBadgeResult = await mintHeroBadge(
-      user.id,
-      user.accountAddress!,
-      undefined,
-      [],
-      0,
-      {
-        heroBadgeAddress: radquestEntityAddresses.badges.heroBadgeAddress
-      }
-    )
-
-    if (mintHeroBadgeResult.isErr()) throw mintHeroBadgeResult.error
 
     it('combine elements into a RadGem', { timeout: 30_000, skip: false }, async () => {
       const result = await submitTransaction(`
@@ -387,7 +408,7 @@ describe('Event flows', () => {
         ;
 
 
-        `).andThen((api) => api.pollTransactionStatus().map(() => api.transactionId))
+        `)
 
       if (result.isErr()) throw result.error
       console.log('Transaction ID:', result.value)
@@ -465,19 +486,17 @@ describe('Event flows', () => {
       'should complete basic quest, deposit reward, claim reward',
       { timeout: 90_000, skip: false },
       async () => {
-        const referrer = (
-          await accountHelper.createAccount({ logger, networkId: 2 })
-        )._unsafeUnwrap()
+        const referrer = await createAccount({ withXrd: true, withHeroBadge: true })
 
-        const users = (
-          await createUsers({ referredBy: referrer.user.referralCode, numberOfUsers: 1 })
-        )._unsafeUnwrap()
-
-        await referrer.getXrdFromFaucet()
-
-        await mintHeroBadge(referrer.user.id, referrer.user.accountAddress!, undefined, [], 0, {
-          heroBadgeAddress: radquestEntityAddresses.badges.heroBadgeAddress
-        })
+        const users = await Promise.all(
+          new Array(1).fill(0).map(() =>
+            createAccount({
+              referredBy: referrer.user.referralCode,
+              withHeroBadge: true,
+              withXrd: true
+            })
+          )
+        )
 
         for (const account of users) {
           await executeUserReferralFlow(account)
@@ -488,9 +507,8 @@ describe('Event flows', () => {
 
         // expect(await getXrdRewardToClaim(referrer.user.id)).toEqual(50)
 
-        const claimRewardResult = await referrer
-          .submitTransaction(
-            `
+        const claimRewardResult = await referrer.submitTransaction(
+          `
               CALL_METHOD
                 Address("${referrer.user.accountAddress}")
                 "lock_fee"
@@ -518,8 +536,7 @@ describe('Event flows', () => {
                 Expression("ENTIRE_WORKTOP")
               ;
           `
-          )
-          .andThen((api) => api.pollTransactionStatus())
+        )
 
         if (claimRewardResult.isErr()) throw claimRewardResult.error
 
@@ -531,17 +548,7 @@ describe('Event flows', () => {
   })
 
   describe('giftbox', async () => {
-    const userResult = await accountHelper.createAccount({ logger, networkId: 2 })
-
-    if (userResult.isErr()) throw userResult.error
-
-    const { user, getXrdFromFaucet, submitTransaction } = userResult.value
-
-    await mintHeroBadge(user.id, user.accountAddress!, undefined, [], 0, {
-      heroBadgeAddress: radquestEntityAddresses.badges.heroBadgeAddress
-    })
-
-    await getXrdFromFaucet()
+    const { user, submitTransaction } = await createAccount({ withXrd: true, withHeroBadge: true })
 
     const mintGiftBoxes = async () =>
       await ResultAsync.combine([
@@ -594,7 +601,7 @@ describe('Event flows', () => {
           Proof("hero_badge_proof")
           Bucket("gift_box")
         ;
-      `).andThen((api) => api.pollTransactionStatus().map(() => api.transactionId))
+      `)
 
       if (openGiftBoxResult.isErr()) throw openGiftBoxResult.error
     }
@@ -626,7 +633,7 @@ describe('Event flows', () => {
             Address("${user.accountAddress}")
             "deposit_batch"
             Expression("ENTIRE_WORKTOP")
-        ;`).andThen((api) => api.pollTransactionStatus())
+        ;`)
       if (result.isErr()) throw result.error
     }
 

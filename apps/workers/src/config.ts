@@ -1,4 +1,8 @@
 import { Addresses } from 'common'
+import { getDerivationPath, mnemonicToKeyPair } from 'typescript-wallet'
+
+const networkId = parseInt(process.env.PUBLIC_NETWORK_ID ?? '2', 10)
+
 export const config = {
   redis: {
     host: process.env.REDIS_HOST ?? 'localhost',
@@ -25,9 +29,27 @@ export const config = {
   priceService: {
     baseUrl: process.env.PRICE_SERVICE_URL || 'https://token-price-service.radixdlt.com'
   },
-  networkId: parseInt(process.env.PUBLIC_NETWORK_ID ?? '2', 10),
+  networkId,
   radQuest: {
-    ...Addresses(parseInt(process.env.PUBLIC_NETWORK_ID ?? '2', 10)),
+    ...Addresses(networkId),
     directXrdDepositAmount: 10
+  },
+  keyPairs: {
+    payer: mnemonicToKeyPair(
+      process.env.PAYER_MNEMONIC!,
+      getDerivationPath(networkId, 'TRANSACTION_SIGNING', 'ACCOUNT', 0)
+    ),
+    owner: mnemonicToKeyPair(
+      process.env.OWNER_MNEMONIC!,
+      getDerivationPath(networkId, 'TRANSACTION_SIGNING', 'ACCOUNT', 0)
+    ),
+    system: mnemonicToKeyPair(
+      process.env.SYSTEM_MNEMONIC!,
+      getDerivationPath(networkId, 'TRANSACTION_SIGNING', 'ACCOUNT', 0)
+    ),
+    dAppDefinition: mnemonicToKeyPair(
+      process.env.DAPP_DEFINITION_MNEMONIC!,
+      getDerivationPath(networkId, 'TRANSACTION_SIGNING', 'ACCOUNT', 0)
+    )
   }
 }
