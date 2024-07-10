@@ -56,8 +56,7 @@ const messageModel = MessageModel(dbClient)
 const accountAddressModel = AccountAddressModel(redisClient)
 const addresses = Addresses(networkId)
 const mailerLiteModel = MailerLiteModel({
-  apiKey: config.mailerLite.apiKey,
-  groupId: config.mailerLite.groupId || ''
+  apiKey: config.mailerLite.apiKey
 })
 const notificationModel = NotificationModel(dbClient)
 const marketingModel = MarketingModel(dbClient)
