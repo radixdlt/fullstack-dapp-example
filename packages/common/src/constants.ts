@@ -8,46 +8,45 @@ export const Addresses = (networkId: number) => {
       Stokenet: {
         badges: {
           adminBadgeAddress:
-            'resource_tdx_2_1thghfsg3fz0ve5kppr4wgykgnswg34ueuev7l5nwxhmx95nhxjkr00',
+            'resource_tdx_2_1t4d7sy9f2hc3s9w38dlm36mnajxcj6wn6gvrlvrhhjc2peazy3agdl',
           superAdminBadgeAddress:
-            'resource_tdx_2_1t4gpac5c4fjekyufz25gyd5jwv4tz9dusgx0vg3k7wfgft7hgqvwhk',
+            'resource_tdx_2_1t5g979v3szdnzludtdl3j9zefu7zcyma55wg5hr7yvth8ela0wvfw4',
           heroBadgeAddress:
-            'resource_tdx_2_1nfac48pgc0mckv3lq42x0pzka3gysuk5qtw57gknwzmlu5sc65dfjz',
+            'resource_tdx_2_1ntzzh6cw63az3p5g0ak97dkvahdgxvk38v07lnlcddjcw94kacj58l',
           kycBadgeAddress: 'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan',
           instapassBadgeAddress:
             'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan'
         },
         resources: {
-          elementAddress: 'resource_tdx_2_1t49aftat2gyrxljntfxplvv79qjxp38ct4al6khp5u6mgze66rakys',
-          clamAddress: 'resource_tdx_2_1thdlg7lfsrele424h7y36vlpvj3rrf2chnlp290lx3tu49akusu5p6',
-          radgemAddress: 'resource_tdx_2_1ng9u50zrh72ydqtt92mvlgdvfr46yy08als9mxqyrtqsg3fsz3wnz6',
+          elementAddress: 'resource_tdx_2_1tk0nyp9a6p6jwt90utsffxzf7vsyqa6re8lz68sswwl2zp7fc372pq',
+          clamAddress: 'resource_tdx_2_1t57xphjyq8hstxf776rlpmhm0dtk36hvvemk5ntkrnzvvfvkw0xh6m',
+          radgemAddress: 'resource_tdx_2_1nfynmdhcjftpgwepydpqv2hu68z2qwd4lng32swnf9z3f3zj73u7u0',
           morphEnergyCardAddress:
-            'resource_tdx_2_1nt6tndwvdprn0yjffa35d4yfw7p0pdx8wnh960pthtru0v26ulem7d',
-          radmorphAddress: 'resource_tdx_2_1ngepzfes9femxaxqn7xt3shca239q73jsca44qmxscarjm269tpk2q',
+            'resource_tdx_2_1nfryxzu7y5xj3f296jjrpk3el7u97q9cf0l7ea89vsu3p6j6ua0nzz',
+          radmorphAddress: 'resource_tdx_2_1n2ywedpf6kd3e96khelvp6c05ykeuprmvaasm7c4qmwtumualq9vnh',
           otterCoinAddress:
-            'resource_tdx_2_1tkumkgvqtcagqwqsty83sjced2sgshdh8gfkqmu0exh2r7j3mwkqrs',
-
+            'resource_tdx_2_1t552ls9tn8p92452kx4wpd3qksg6mgm7mx74ekew09n2hkjv3qanfz',
           giftBox: {
-            Starter: 'resource_tdx_2_1t4ejqj5vx857fznc26e9qwmdhl7w34y4yhxugwqq4s4zgwl4jy8t03',
-            Simple: 'resource_tdx_2_1thq84l5w8q74dkq9ks3qjv0llt6td347y00hc4shmj90u5rahcegwr',
-            Fancy: 'resource_tdx_2_1tkg659espj2gg30erwfdtguydz37ftsu8d2c350wrqr5cc8mcgwrgl',
-            Elite: 'resource_tdx_2_1th9flh264rnqh8uw4np24kyf26egueh8fmfwtaqstg09g5d3v6ewzv'
+            Starter: 'resource_tdx_2_1t5nswz4tv90cr67h5cn8hpw62zvs50u90s2hqayqjtw3s9x3t584k5',
+            Simple: 'resource_tdx_2_1th5ngrqy3xkl4ce90yqn74wqd4efucdcn3zaegcg8km5yg730ksq6k',
+            Fancy: 'resource_tdx_2_1tkkmfgyp8yjfd0h555hjc4n3358de62ftnv25akkfhfpy4vj77uw3e',
+            Elite: 'resource_tdx_2_1t5ts7egnc8akwwa5uueq24nyyw7n2dnrs0cgfrhsywf0qcs8lja55c'
           }
         },
-        radQuestPackage: 'package_tdx_2_1pheu6hryyn8vhxvmelz9pes87ff799ar27d3q0nk3e8z6xsn9cslk3',
+        radQuestPackage: 'package_tdx_2_1p47g0ah5efzstj0ywcslylem62tne5eh05nu4jp7nnpjz4krl7prmf',
         clamDexPackage: 'package_tdx_2_1ph96rek5yr7jh79pw5aqst6e6lm5k62l5pv6j9dxve6scyr3eel3mh',
         components: {
-          heroBadgeForge: 'component_tdx_2_1cr262ammquudnwev5hhn3fnuznesavmz5uymnlltv6yzvxug5rc4g6',
-          kycOracle: 'component_tdx_2_1cz4jm8xe55gf2ta9p4ztdupuh3y7m7mzvraqwfesm22cywl0xymas0',
-          questRewards: 'component_tdx_2_1crlszgfe23nr86fs4hdksdx2crrrh8h88kr5tq59r3d3v6dysm4mrh',
-          giftBoxOpener: 'component_tdx_2_1cp4n0g9spnhkq5azrnhh9ej7gcwvq9afr6kmurwvqj74slma23mdaa',
-          cardForge: 'component_tdx_2_1czxraa5k8pxp5hh78c4me6arv6cwzfha35v8d6jy92p02tc6h3sjes',
-          radgemForge: 'component_tdx_2_1cran4x289l84rfrn7jw4fjvvp020j5pe4azh8ajglc7frdpn5yxfwx',
-          radmorphForge: 'component_tdx_2_1cpdemw654yluwlcp0w8607gzwt6ap8cvlj7lc52q8petnggehvy8zu',
-          imageOracle: 'component_tdx_2_1crnutdclhxfa69tjfg3ue3hptknmxftn6lrfhdcwspg6rxzlnhzl5c',
-          refinery: 'component_tdx_2_1cpdn5qwfujv56sl64v7ys5v4fmrrjavvh3puuwhxgh20v0eumfypnf',
+          heroBadgeForge: 'component_tdx_2_1cz9hluu9fuemr2gpvq7henugcgfzqps46rrg6ts3p8fjtz5lthslg2',
+          kycOracle: 'component_tdx_2_1czqsa5axakx6ve740hxafuulef7a50u5hmc9kmcxjp3pj6lm37xnyp',
+          questRewards: 'component_tdx_2_1cr9h09w76m5p3ctgkpg7ynxvj2q5gral3uxsr3nl8valhsz8p7w6l0',
+          giftBoxOpener: 'component_tdx_2_1crjxe0rdx4yzgv28wk2l99t85ks4e5fqhxu29xuj2r2lczdjnumy5g',
+          cardForge: 'component_tdx_2_1cpzu3v723ezqm3vv9s25cprdhwpajds8ua5dd55j64xmdjlv96cst3',
+          radgemForge: 'component_tdx_2_1cpvurndgpyxqpd0tfccjjuruner04238k3mrtrevk2re3cuwjyxt7v',
+          radmorphForge: 'component_tdx_2_1cp0jsq5sxc66n94gycyvfhum7fn3ktkdaulssdcmya7877v9cz8lzz',
+          imageOracle: 'component_tdx_2_1cplvxrpam3m99n870yn5zdq09yza25v9ezju89u9xx9lq0tzdd750t',
+          refinery: 'component_tdx_2_1czu5tzswgcp9qm64qm3du3v38uzmxl3uhpfs9tdzdztgf2yx6evmfg',
           kycOracleKeyValueStore:
-            'internal_keyvaluestore_tdx_2_1kzs2y3td8v3e3wy8yrxx775zrscz7c3zdctaq49ge6nvvwj6dqyh3w',
+            'internal_keyvaluestore_tdx_2_1kzugqdyae6me77ecyctcxaqqhcrrxn27a6q3g93v0mtweslswh99r6',
           mayaRouter: 'component_tdx_2_mock_maya_router_address',
           jettySwap: 'component_tdx_2_1czsvrwv0gmdf9fkffv0a0n0mx86r0jw9agz0knxde36yeur83ne0sg',
           lettySwap: 'component_tdx_2_1crcfm8dw90rxgva0ph8fwl356jntmc3dpnra9y2kn9eecc2e5cy0v9'
@@ -155,28 +154,28 @@ export type GiftBoxMetadata =
 export const metadata = {
   resources: {
     giftBox: {
-      starter: {
+      Starter: {
         name: 'Starter Gift Box',
         description:
           'This Gift Box from RadQuest’s Jetty will get you started with a common Morph Energy Card and enough Elements to create a couple of RadGems. Ask Jetty to open it!',
         icon_url: '',
         tags: ['radquest']
       },
-      simple: {
+      Simple: {
         name: 'Simple Gift Box',
         description:
           'This simple Gift Box from RadQuest’s Jetty contains a common or rare Morph Energy Card and a handful of Elements. Ask Jetty to open it!',
         icon_url: '',
         tags: ['radquest']
       },
-      fancy: {
+      Fancy: {
         name: 'Fancy Gift Box',
         description:
           'This fancy Gift Box from RadQuest’s Jetty contains a common, rare, or sometimes even ultra-rare Morph Energy Card and a goodly quantity of Elements. Ask Jetty to open it!',
         icon_url: '',
         tags: ['radquest']
       },
-      elite: {
+      Elite: {
         name: 'Elite Gift Box',
         description:
           'This truly elite Gift Box from RadQuest’s Jetty, reserved for only the most committed, contains only a rare or ultra-rare Morph Energy Card and a substantial quantity of Elements. Ask Jetty to open it!',
