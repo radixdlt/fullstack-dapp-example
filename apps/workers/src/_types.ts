@@ -1,3 +1,5 @@
+import { TransactionHelperError } from 'typescript-wallet'
+
 export type WorkerError = (typeof WorkerError)[keyof typeof WorkerError]
 export const WorkerError = {
   FailedToGetUserFromDb: 'FailedToGetUserFromDb',
@@ -27,7 +29,10 @@ export const WorkerError = {
   UserDisabledXrdDeposit: 'UserDisabledXrdDeposit',
   FailedToCreateMessageInDb: 'FailedToCreateMessageInDb',
   FailedToUpdateTransactionIntentStatus: 'FailedToUpdateTransactionIntentStatus',
-  FailedToUpdateReferralReward: 'FailedToUpdateReferralReward'
+  FailedToUpdateReferralReward: 'FailedToUpdateReferralReward',
+  FailedToGetKeyPairs: 'FailedToGetKeyPairs',
+  TransactionFailed: 'TransactionFailed',
+  FailedToUpdateSubmittedTransaction: 'FailedToUpdateSubmittedTransaction'
 } as const
 
-export type WorkerOutputError = { reason: WorkerError; jsError?: unknown }
+export type WorkerOutputError = { reason: WorkerError | TransactionHelperError; jsError?: unknown }

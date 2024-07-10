@@ -1,25 +1,33 @@
-import { WellKnownAddresses } from 'common'
 import { config } from '../../config'
 
 export const createDirectDepositManifest = ({
-  wellKnownAddresses,
   userId,
   accountAddress
 }: {
-  wellKnownAddresses: WellKnownAddresses
   userId: string
   accountAddress: string
 }) => {
   const { heroBadgeAddress, adminBadgeAddress } = config.radQuest.badges
   const directXrdDepositAmount = config.radQuest.directXrdDepositAmount
+  const { payer, system } = config.radQuest.accounts
+
   return `
+    CALL_METHOD
+      Address("${payer.accessController}")
+      "create_proof"
+    ;
+
+    CALL_METHOD
+      Address("${system.accessController}")
+      "create_proof"
+    ;
     CALL_METHOD 
-      Address("${wellKnownAddresses.accountAddress.payerAccount}") 
+      Address("${payer.address}") 
       "lock_fee"
       Decimal("10");
 
     CALL_METHOD
-      Address("${wellKnownAddresses.accountAddress.systemAccount}")
+      Address("${system.address}")
       "create_proof_of_amount"
       Address("${adminBadgeAddress}")
       Decimal("1");
@@ -29,9 +37,9 @@ export const createDirectDepositManifest = ({
       Map<NonFungibleLocalId, Tuple>(NonFungibleLocalId("<${userId}>") => Tuple(Tuple()));
 
     CALL_METHOD
-      Address("${wellKnownAddresses.accountAddress.payerAccount}")
+      Address("${payer.address}")
       "withdraw"
-      Address("${wellKnownAddresses.resourceAddresses.xrd}")
+      Address("${config.radQuest.xrd}")
       Decimal("${directXrdDepositAmount}");
 
     CALL_METHOD

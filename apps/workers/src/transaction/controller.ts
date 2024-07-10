@@ -2,17 +2,15 @@ import { ResultAsync, errAsync, okAsync, err, ok } from 'neverthrow'
 import { Job, TransactionJob } from 'queues'
 import { AuditType, User } from 'database'
 import {
-  Addresses,
   GatewayApi,
   GiftBoxReward,
   GiftBoxRewardConfig,
   getRandomFloat,
   getRandomIntInclusive,
   type AppLogger,
-  type AuditModel,
-  type WellKnownAddresses
+  type AuditModel
 } from 'common'
-import { radixEngineClient } from 'typescript-wallet'
+import { TransactionHelper, TransactionHelperError, withSigners } from 'typescript-wallet'
 import { createRewardsDepositManifest } from './helpers/createRewardsDepositManifest'
 import { QuestDefinitions, QuestId, QuestReward } from 'content'
 import { config } from '../config'
@@ -23,8 +21,12 @@ import { createCombinedElementsAddRadgemImageManifest } from './helpers/createCo
 import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 import { WorkerOutputError, WorkerError } from '../_types'
 import { MessageHelper } from '../helpers/messageHelper'
-import { SetTransactionIntentStatus } from '../helpers/setTransactionIntentStatus'
 import { ReferralRewardAction } from '../helpers/referalReward'
+import { dbClient } from '../db-client'
+import { log } from 'node:console'
+
+const { xrd, accounts, badges, resources, components } = config.radQuest
+const { system, payer } = accounts
 
 export type TransactionWorkerController = ReturnType<typeof TransactionWorkerController>
 export const TransactionWorkerController = ({
@@ -53,53 +55,60 @@ export const TransactionWorkerController = ({
   }): ResultAsync<any, WorkerOutputError> => {
     const { type, userId } = job.data
 
-    const addresses = Addresses(config.networkId)
+    const transactionHelper = TransactionHelper({
+      networkId: config.networkId,
+      onSignature: withSigners(config.networkId, 'system', 'payer'),
+      logger
+    })
+
+    const upsertSubmittedTransaction = ({
+      transactionId,
+      status
+    }: {
+      transactionId: string
+      status: 'PENDING' | 'COMPLETED' | 'FAILED'
+    }) =>
+      ResultAsync.fromPromise(
+        dbClient.submittedTransaction.upsert({
+          create: { transactionId, transactionIntent: job.data.discriminator, status },
+          update: { status },
+          where: { transactionId, transactionIntent: job.data.discriminator }
+        }),
+        (error) => ({ reason: WorkerError.FailedToUpdateSubmittedTransaction, jsError: error })
+      )
 
     const getGiftBoxRewards = GiftBoxReward(
       GiftBoxRewardConfig({ getRandomFloat, getRandomIntInclusive })
     )
 
-    const handleSubmitTransaction = (
-      manifestFactory: (wellKnownAddresses: WellKnownAddresses) => string
-    ): ResultAsync<string, { reason: WorkerError; jsError: unknown }> =>
-      radixEngineClient
-        .getManifestBuilder()
-        .mapErr((jsError) => ({
-          reason: WorkerError.FailedToGetManifestBuilder,
-          jsError
-        }))
-        .andThen(({ convertStringManifest, submitTransaction, wellKnownAddresses }) => {
-          const manifest = manifestFactory(wellKnownAddresses)
-          return convertStringManifest(manifest)
-            .mapErr((jsError) => {
-              logger.debug(manifest)
-              return {
-                reason: WorkerError.FailedToConvertStringManifest,
-                jsError
-              }
-            })
-            .andThen((transactionManifest) =>
-              submitTransaction({
-                transactionManifest,
-                signers: ['systemAccount'],
-                logger
-              }).mapErr((jsError) => ({
-                reason: WorkerError.FailedToSubmitToRadixNetwork,
-                jsError
-              }))
-            )
-            .map(({ txId }) => txId)
+    const handleSubmitTransaction = (manifest: string) =>
+      transactionHelper
+        .submitTransaction(manifest, {
+          onTransactionId: (transactionId) => {
+            transactionId = transactionId
+            return upsertSubmittedTransaction({ transactionId, status: 'PENDING' })
+          }
         })
+        .orElse((error) => {
+          logger.error({
+            method: 'handleSubmitTransaction.err',
+            transactionId: error.transactionId,
+            status: 'FAILED'
+          })
 
-    const handlePollTransactionStatus = (txId: string): ResultAsync<string, WorkerOutputError> =>
-      radixEngineClient.gatewayClient
-        .pollTransactionStatus(txId)
-        .mapErr((jsError) => ({
-          reason: WorkerError.FailedToPollTransactionStatus,
-          txId,
-          jsError
-        }))
-        .map(() => txId)
+          return error.transactionId
+            ? upsertSubmittedTransaction({
+                status: 'FAILED',
+                transactionId: error.transactionId
+              }).andThen(() => errAsync(error))
+            : errAsync(error)
+        })
+        .andThen((value) =>
+          upsertSubmittedTransaction({
+            transactionId: value.transactionId,
+            status: 'COMPLETED'
+          }).map(() => value)
+        )
 
     const handleDepositRewards = (rewards: QuestReward[], questId: string) => {
       const xrdReward = rewards.find((reward) => reward.name === 'xrd')?.amount ?? 0
@@ -149,34 +158,31 @@ export const TransactionWorkerController = ({
       const triggerDepositRewardsTransaction = (userId: string) =>
         handleKycOracleUpdate
           .andThen(({ includeKycOracleUpdate, xrdRewardInUsd }) =>
-            handleSubmitTransaction((wellKnownAddresses) =>
+            handleSubmitTransaction(
               createRewardsDepositManifest({
-                wellKnownAddresses,
                 questId,
                 userId,
                 rewards,
                 includeKycOracleUpdate,
                 depositRewardsTo: 'questRewards'
               })
-            ).map((transactionId) => ({ transactionId, xrdRewardInUsd }))
+            ).map(({ transactionId }) => ({ transactionId, xrdRewardInUsd }))
           )
           .map(({ transactionId, xrdRewardInUsd }) => ({ userId, transactionId, xrdRewardInUsd }))
 
       return triggerDepositRewardsTransaction(userId).andThen(
         ({ userId, transactionId, xrdRewardInUsd }) =>
-          handlePollTransactionStatus(transactionId).andThen(() =>
-            auditModel(logger)
-              .add({
-                transactionId,
-                userId,
-                type: AuditType.CLAIMBOX_DEPOSIT,
-                xrdUsdValue: xrdRewardInUsd.toNumber()
-              })
-              .mapErr(({ jsError }) => ({
-                reason: WorkerError.FailedToAddAuditEntry,
-                jsError
-              }))
-          )
+          auditModel(logger)
+            .add({
+              transactionId,
+              userId,
+              type: AuditType.CLAIMBOX_DEPOSIT,
+              xrdUsdValue: xrdRewardInUsd.toNumber()
+            })
+            .mapErr(({ jsError }) => ({
+              reason: WorkerError.FailedToAddAuditEntry,
+              jsError
+            }))
       )
     }
 
@@ -245,85 +251,92 @@ export const TransactionWorkerController = ({
             }
           })
 
-        return handleSubmitTransaction((wellKnownAddresses) =>
+        return handleSubmitTransaction(
           createRewardsDepositManifest({
-            wellKnownAddresses,
             userId,
             rewards,
             includeKycOracleUpdate: false,
             depositRewardsTo: 'giftBoxOpener'
           })
-        ).andThen(handlePollTransactionStatus)
+        )
       }
 
       case 'PopulateResources':
         const { accountAddress } = job.data
         return handleSubmitTransaction(
-          (wellKnownAddresses) =>
-            `
+          `
             CALL_METHOD
-              Address("${wellKnownAddresses.accountAddress.payerAccount}")
+              Address("${payer.accessController}")
+              "create_proof"
+            ;
+
+            CALL_METHOD
+              Address("${system.accessController}")
+              "create_proof"
+            ;
+            
+            CALL_METHOD
+              Address("${payer.address}")
               "lock_fee"
               Decimal("100");
 
             CALL_METHOD
-              Address("${wellKnownAddresses.accountAddress.systemAccount}")
+              Address("${system.address}")
               "create_proof_of_amount"
-              Address("${addresses.badges.adminBadgeAddress}") 
+              Address("${badges.adminBadgeAddress}") 
               Decimal("1");  
               
             MINT_FUNGIBLE
-              Address("${addresses.resources.clamAddress}")
+              Address("${resources.clamAddress}")
               Decimal("100");
 
             MINT_FUNGIBLE
-              Address("${addresses.resources.elementAddress}")
+              Address("${resources.elementAddress}")
               Decimal("100");
 
             CALL_METHOD
-              Address("${addresses.components.cardForge}")
+              Address("${components.cardForge}")
               "mint_random_card"
               Decimal("0.62")
               "<${user.id}>";
 
               CALL_METHOD
-              Address("${addresses.components.cardForge}")
+              Address("${components.cardForge}")
               "mint_random_card"
               Decimal("0.62")
               "<${user.id}>";
 
               CALL_METHOD
-              Address("${addresses.components.cardForge}")
+              Address("${components.cardForge}")
               "mint_random_card"
               Decimal("0.62")
               "<${user.id}>";
 
               CALL_METHOD
-              Address("${addresses.components.cardForge}")
+              Address("${components.cardForge}")
               "mint_random_card"
               Decimal("0.62")
               "<${user.id}>";
 
               CALL_METHOD
-              Address("${addresses.components.cardForge}")
+              Address("${components.cardForge}")
               "mint_random_card"
               Decimal("0.62")
               "<${user.id}>";
                 
             TAKE_FROM_WORKTOP
-              Address("${addresses.resources.clamAddress}")
+              Address("${resources.clamAddress}")
               Decimal("100")
               Bucket("clam_bucket");
 
                 
             TAKE_FROM_WORKTOP
-              Address("${addresses.resources.morphEnergyCardAddress}")
+              Address("${resources.morphEnergyCardAddress}")
               Decimal("5")
               Bucket("card_bucket");
 
-
             TAKE_FROM_WORKTOP
-              Address("${addresses.resources.elementAddress}")
+              Address("${resources.elementAddress}")
               Decimal("100")
               Bucket("element_bucket");
 
@@ -346,27 +359,27 @@ export const TransactionWorkerController = ({
               Enum<0u8>();
 
               CALL_METHOD
-                Address("${wellKnownAddresses.accountAddress.systemAccount}")
+                Address("${system.address}")
                 "create_proof_of_amount"
-                Address("${addresses.badges.adminBadgeAddress}")
+                Address("${badges.adminBadgeAddress}")
                 Decimal("1")
               ;
 
               CALL_METHOD
-                Address("${addresses.components.heroBadgeForge}")
+                Address("${components.heroBadgeForge}")
                 "add_user_account"
                 Address("${user.accountAddress!}")
               ;
 
               CALL_METHOD
-                Address("${wellKnownAddresses.accountAddress.payerAccount}")
+                Address("${payer.address}")
                 "withdraw"
-                Address("${wellKnownAddresses.resourceAddresses.xrd}")
+                Address("${xrd}")
                 Decimal("${config.radQuest.directXrdDepositAmount}")
               ;
 
               TAKE_FROM_WORKTOP
-              Address("${addresses.xrd}")
+              Address("${xrd}")
               Decimal("${config.radQuest.directXrdDepositAmount}")
               Bucket("xrd_bucket");
 
@@ -377,49 +390,57 @@ export const TransactionWorkerController = ({
               Enum<0u8>()
           ;
           `
-        ).andThen(handlePollTransactionStatus)
+        )
 
       case 'CombinedElementsMintRadgem':
-        return handleSubmitTransaction((wellKnownAddresses) =>
+        return handleSubmitTransaction(
           createCombinedElementsMintRadgemManifest({
-            wellKnownAddresses,
             userId
           })
-        ).andThen(handlePollTransactionStatus)
+        )
 
       case 'CombinedElementsAddRadgemImage':
         const { radgemId } = job.data
-        return handleSubmitTransaction((wellKnownAddresses) =>
+        return handleSubmitTransaction(
           createCombinedElementsAddRadgemImageManifest({
-            wellKnownAddresses,
             userId,
             radgemId,
             // TODO: keyImageUrl should be fetched from the database
             keyImageUrl:
               'https://stokenet-dashboard.radixdlt.com/_app/immutable/assets/nft-placeholder.2eDdybqV.svg'
           })
-        ).andThen(handlePollTransactionStatus)
+        )
 
       case 'DepositXrdToAccount':
         return gatewayApi
-          .isDepositDisabledForResource(user.accountAddress!, addresses.xrd)
+          .isDepositDisabledForResource(user.accountAddress!, xrd)
           .mapErr((error) => ({ reason: WorkerError.GatewayError, jsError: error }))
           .andThen((isDisabled) =>
             isDisabled ? err({ reason: WorkerError.UserDisabledXrdDeposit }) : ok(undefined)
           )
           .andThen(() =>
-            handleSubmitTransaction((wellKnownAddresses) =>
+            handleSubmitTransaction(
               [
                 `CALL_METHOD
-                  Address("${wellKnownAddresses.accountAddress.payerAccount}")
+                  Address("${payer.accessController}")
+                  "create_proof"
+                ;`,
+
+                `CALL_METHOD
+                  Address("${system.accessController}")
+                  "create_proof"
+                ;`,
+
+                `CALL_METHOD
+                  Address("${payer.address}")
                   "lock_fee"
                   Decimal("10")
                 ;`,
 
                 `CALL_METHOD
-                  Address("${wellKnownAddresses.accountAddress.payerAccount}")
+                  Address("${payer.address}")
                   "withdraw"
-                  Address("${wellKnownAddresses.resourceAddresses.xrd}")
+                  Address("${xrd}")
                   Decimal("${config.radQuest.directXrdDepositAmount}")
                 ;`,
 
@@ -432,8 +453,8 @@ export const TransactionWorkerController = ({
               ].join('\n')
             )
           )
-          .andThen(handlePollTransactionStatus)
-          .andThen((transactionId) =>
+
+          .andThen(({ transactionId }) =>
             dbTransactionBuilder.helpers.addXrdDepositToAuditTable({
               transactionId,
               userId: user.id,
@@ -446,28 +467,38 @@ export const TransactionWorkerController = ({
           )
 
       case 'AddAccountAddressToHeroBadgeForge':
-        return handleSubmitTransaction((wellKnownAddresses) =>
+        return handleSubmitTransaction(
           [
             `CALL_METHOD
-                Address("${wellKnownAddresses.accountAddress.payerAccount}")
+            Address("${payer.accessController}")
+            "create_proof"
+          ;`,
+
+            `CALL_METHOD
+            Address("${system.accessController}")
+            "create_proof"
+          ;`,
+
+            `CALL_METHOD
+                Address("${payer.address}")
                 "lock_fee"
                 Decimal("50")
               ;`,
 
             `CALL_METHOD
-                Address("${wellKnownAddresses.accountAddress.systemAccount}")
+                Address("${system.address}")
                 "create_proof_of_amount"
-                Address("${addresses.badges.adminBadgeAddress}")
+                Address("${badges.adminBadgeAddress}")
                 Decimal("1")
               ;`,
 
             `CALL_METHOD
-                Address("${addresses.components.heroBadgeForge}")
+                Address("${components.heroBadgeForge}")
                 "add_user_account"
                 Address("${user.accountAddress!}")
               ;`
           ].join('\n')
-        ).andThen(handlePollTransactionStatus)
+        )
 
       default:
         return errAsync({

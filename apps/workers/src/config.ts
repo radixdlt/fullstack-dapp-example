@@ -1,4 +1,7 @@
 import { Addresses } from 'common'
+
+const networkId = parseInt(process.env.PUBLIC_NETWORK_ID ?? '2', 10)
+
 export const config = {
   redis: {
     host: process.env.REDIS_HOST ?? 'localhost',
@@ -25,9 +28,9 @@ export const config = {
   priceService: {
     baseUrl: process.env.PRICE_SERVICE_URL || 'https://token-price-service.radixdlt.com'
   },
-  networkId: parseInt(process.env.PUBLIC_NETWORK_ID ?? '2', 10),
+  networkId,
   radQuest: {
-    ...Addresses(parseInt(process.env.PUBLIC_NETWORK_ID ?? '2', 10)),
+    ...Addresses(networkId),
     directXrdDepositAmount: 10
   }
 }

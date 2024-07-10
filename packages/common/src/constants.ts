@@ -13,7 +13,9 @@ export const Addresses = (networkId: number) => {
             'resource_tdx_2_1t4gpac5c4fjekyufz25gyd5jwv4tz9dusgx0vg3k7wfgft7hgqvwhk',
           heroBadgeAddress:
             'resource_tdx_2_1nfac48pgc0mckv3lq42x0pzka3gysuk5qtw57gknwzmlu5sc65dfjz',
-          kycBadgeAddress: 'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan'
+          kycBadgeAddress: 'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan',
+          instapassBadgeAddress:
+            'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan'
         },
         resources: {
           elementAddress: 'resource_tdx_2_1t49aftat2gyrxljntfxplvv79qjxp38ct4al6khp5u6mgze66rakys',
@@ -24,6 +26,7 @@ export const Addresses = (networkId: number) => {
           radmorphAddress: 'resource_tdx_2_1ngepzfes9femxaxqn7xt3shca239q73jsca44qmxscarjm269tpk2q',
           otterCoinAddress:
             'resource_tdx_2_1tkumkgvqtcagqwqsty83sjced2sgshdh8gfkqmu0exh2r7j3mwkqrs',
+
           giftBox: {
             Starter: 'resource_tdx_2_1t4ejqj5vx857fznc26e9qwmdhl7w34y4yhxugwqq4s4zgwl4jy8t03',
             Simple: 'resource_tdx_2_1thq84l5w8q74dkq9ks3qjv0llt6td347y00hc4shmj90u5rahcegwr',

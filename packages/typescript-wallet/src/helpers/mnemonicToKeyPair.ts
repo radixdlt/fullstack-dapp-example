@@ -3,6 +3,7 @@ import { ok } from 'neverthrow'
 import { derivePath, getPublicKey } from 'ed25519-hd-key'
 import { secureRandom } from './secure-random'
 import { PrivateKey, PublicKey } from '@radixdlt/radix-engine-toolkit'
+import { deriveAccountAddressFromPublicKey } from './deriveAccountAddressFromPublicKey'
 
 export const generateMnemonic = () => bip39.entropyToMnemonic(secureRandom(32))
 
@@ -25,7 +26,9 @@ export const mnemonicToKeyPair = (mnemonic: string, derivationPath: string) =>
       return {
         privateKey,
         publicKey,
-        publicKeyHex: Buffer.from(publicKey.publicKey).toString('hex')
+        publicKeyHex: Buffer.from(publicKey.publicKey).toString('hex'),
+        getAccountAddress: (networkId: number) =>
+          deriveAccountAddressFromPublicKey(publicKey, networkId)
       }
     })
 
