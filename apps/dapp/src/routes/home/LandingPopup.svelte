@@ -1,41 +1,64 @@
 <script lang="ts">
-  import type { loadLandingPopup } from 'content'
+  import { LandingPopupId, type LandingPopupDefinition } from 'content'
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import JettyImage from '@images/landing-popup-jetty.webp'
-  import { onMount } from 'svelte'
-  import { hideJettyMenu } from '../../stores'
   import { backOut } from 'svelte/easing'
   import { scale } from 'svelte/transition'
+  import { useLocalStorage } from '$lib/utils/local-storage'
+  import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
+  import { onMount } from 'svelte'
 
-  export let defintions: ReturnType<typeof loadLandingPopup>[0]
+  type Popup = LandingPopupDefinition & { html: string; id: LandingPopupId }
+
+  export let definitions: Popup[]
+
+  let seenLandingPopup: boolean
+  let visibleLandingPopup: Popup
 
   onMount(() => {
-    $hideJettyMenu = true
-
-    return () => {
-      $hideJettyMenu = false
-    }
+    seenLandingPopup = !!useLocalStorage('seen-landing-popup').get()
+    const searchParams = new URLSearchParams(window.location.search)
+    definitions.find((definition) => {
+      if (
+        (definition.queryParamValue &&
+          searchParams.has(definition.queryParamName) &&
+          searchParams.get(definition.queryParamName) === definition.queryParamValue) ||
+        (searchParams.has(definition.queryParamName) && !definition.queryParamValue)
+      ) {
+        visibleLandingPopup = definition
+        return true
+      }
+    })
   })
+
+  const hideLandingPopup = () => {
+    useLocalStorage('seen-landing-popup').set(true)
+    seenLandingPopup = true
+  }
 </script>
 
-<div class="landing-popup card" transition:scale|local={{ easing: backOut }}>
-  <div class="image only-desktop">
-    <img src={JettyImage} alt={$i18n.t('main:landingPagePopup.jetty-img-alt')} />
-  </div>
+{#if !seenLandingPopup && visibleLandingPopup}
+  <Backdrop zIndex={5}>
+    <div class="landing-popup card" transition:scale|local={{ easing: backOut }}>
+      <div class="image only-desktop">
+        <img src={JettyImage} alt={$i18n.t('main:landingPagePopup.jetty-img-alt')} />
+      </div>
 
-  <div class="landing-popup-content">
-    {@html defintions.html}
+      <div class="landing-popup-content">
+        {@html visibleLandingPopup.html}
 
-    <div class="image only-mobile">
-      <img src={JettyImage} alt={$i18n.t('main:landingPagePopup.jetty-img-alt')} />
+        <div class="image only-mobile">
+          <img src={JettyImage} alt={$i18n.t('main:landingPagePopup.jetty-img-alt')} />
+        </div>
+
+        <div class="button">
+          <Button on:click={hideLandingPopup}>{$i18n.t('main:landingPagePopup.button')}</Button>
+        </div>
+      </div>
     </div>
-
-    <div class="button">
-      <Button on:click>{$i18n.t('main:landingPagePopup.button')}</Button>
-    </div>
-  </div>
-</div>
+  </Backdrop>
+{/if}
 
 <style lang="scss">
   div.landing-popup-content :global(p) {

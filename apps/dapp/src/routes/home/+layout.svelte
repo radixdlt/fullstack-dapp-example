@@ -15,9 +15,8 @@
   import { resolveRDT } from '$lib/rdt'
   import { webSocketClient, WebSocketClient } from '$lib/websocket-client'
   import { questApi } from '$lib/api/quest-api'
-  import { LandingPopupId, QuestCategory, loadLandingPopup, type QuestId } from 'content'
+  import { QuestCategory, type QuestId } from 'content'
   import { useLocalStorage } from '$lib/utils/local-storage'
-  import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import LandingPopup from './LandingPopup.svelte'
   import { page } from '$app/stores'
   import { isMobile } from '$lib/utils/is-mobile'
@@ -32,9 +31,6 @@
   $quests = data.questDefinitions
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
-  let landingPopupDefintion = data.landingPopupDefinitions.find(
-    (d) => d.id === LandingPopupId.Welcome
-  ) as NonNullable<ReturnType<typeof loadLandingPopup>[0]>
   const { dAppDefinitionAddress, networkId } = publicConfig
 
   const setGetWalletRequirementInStore = () => {
@@ -42,8 +38,6 @@
     useCookies('requirement-SetupWallet-GetTheWallet').set(true)
   }
   onMount(() => {
-    showLandingPopup = !useLocalStorage('seen-landing-popup').get()
-
     if (isMobile() && $page.url.searchParams.get('wallet') === 'true') {
       setGetWalletRequirementInStore()
     }
@@ -163,22 +157,9 @@
       })
     }
   })
-
-  let showLandingPopup = false
 </script>
 
-{#if showLandingPopup}
-  <Backdrop>
-    <LandingPopup
-      defintions={landingPopupDefintion}
-      on:click={() => {
-        showLandingPopup = false
-        useLocalStorage('seen-landing-popup').set(true)
-      }}
-    />
-  </Backdrop>
-{/if}
-
+<LandingPopup definitions={data.landingPopupDefinitions} />
 <Jetty />
 
 <Layout>
