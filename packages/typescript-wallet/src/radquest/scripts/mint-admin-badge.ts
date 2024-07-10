@@ -1,7 +1,10 @@
 import { Addresses } from 'common'
 import { mintAdminBadge } from '../helpers/mintAdminBadge'
 
+const { accounts, badges } = Addresses(parseInt(process.env.PUBLIC_NETWORK_ID!))
+
 mintAdminBadge({
-  adminBadgeAddress: Addresses(2).badges.adminBadgeAddress,
-  superAdminBadgeAddress: Addresses(2).badges.superAdminBadgeAddress
+  accountAddress: accounts.system.address,
+  adminBadgeAddress: badges.adminBadgeAddress,
+  superAdminBadgeAddress: badges.superAdminBadgeAddress
 })
