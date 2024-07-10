@@ -5,7 +5,7 @@
   import ShareBox from '$lib/components/referral/ShareBox.svelte'
 
   import FireIcon from '@images/fire.svg'
-  import { createClaimRewardsTransaction } from '$lib/helpers/create-claim-rewards-transaction'
+  import { createClaimRewardsTransaction, createClaimXRDRewardsTransaction } from '$lib/helpers/create-claim-rewards-transaction'
   import { i18n } from '$lib/i18n/i18n'
   import { sendTransaction } from '$lib/rdt'
 
@@ -51,10 +51,11 @@
   const claimXrd = () => {
     loading = true
     sendTransaction({
-      transactionManifest: createClaimRewardsTransaction(
+      transactionManifest: createClaimXRDRewardsTransaction(
         $user?.accountAddress!,
         $user?.id!,
-        `QuestTogether`
+        `QuestTogether`,
+        readyToClaim
       )
     })
       .map(() => {

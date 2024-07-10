@@ -200,10 +200,30 @@ export const UserModel =
             return 'failed to get referrals'
           }
         ),
-        // ResultAsync.fromPromise(db.referralXrd.findFirst({ where: { userId: id } }), (error) => {
-        //   logger?.error({ error, method: 'getReferrals.referralXrd', model: 'UserModel' })
-        //   return 'failed to get referralXrd'
-        // }),
+        ResultAsync.fromPromise(
+          db.referral.aggregate({
+            where: { userId: id, action: 'DEC' },
+            _sum: {
+              xrdValue: true
+            }
+          }),
+          (error) => {
+            logger?.error({ error, method: 'getReferrals.referralXrd', model: 'UserModel' })
+            return 'failed to get referralXrd'
+          }
+        ).map((result) => result._sum?.xrdValue?.toNumber() || 0),
+        ResultAsync.fromPromise(
+          db.referral.aggregate({
+            where: { userId: id },
+            _sum: {
+              xrdValue: true
+            }
+          }),
+          (error) => {
+            logger?.error({ error, method: 'getReferrals.referralXrd', model: 'UserModel' })
+            return 'failed to get referralXrd'
+          }
+        ).map((result) => result._sum?.xrdValue?.toNumber()),
         ResultAsync.fromPromise(
           db.questProgress.findMany({
             where: { userId: id, questId: { startsWith: 'QuestTogether:' } }
@@ -223,11 +243,11 @@ export const UserModel =
         )
       ])
         .map(
-          ([referrals, progress]: [any, any]) =>
+          ([referrals, claimed, readyToClaim, progress]: [any, any, any, any]) =>
             ({
               referrals: referrals.map((referral: { name: string }) => referral.name),
-              readyToClaim: 0,
-              claimed: 0,
+              readyToClaim,
+              claimed: claimed * -1,
               progress
             }) as ReferralsState
         )
