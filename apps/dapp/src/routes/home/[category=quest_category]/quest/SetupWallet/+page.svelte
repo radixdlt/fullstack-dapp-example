@@ -263,8 +263,8 @@
   {/if}
 
   {#if render('9a')}
-    {@html text['9a.md']}
-    <Checkbox bind:checked={$confirmedWalletInstall}>{@html text['9a-checkbox.md']}</Checkbox>
+    {@html text['9a-2.md']}
+    <Checkbox bind:checked={$confirmedWalletInstall}>{@html text['9a-2-checkbox.md']}</Checkbox>
   {/if}
 
   {#if render('9b')}
