@@ -176,6 +176,8 @@ export const TransactionHelper = ({
     const message = optional?.message
     const onTransactionId = optional?.onTransactionId ?? (() => okAsync(undefined))
 
+    console.log(transactionManifest)
+
     return (
       typeof transactionManifest === 'string'
         ? transformStringManifest(transactionManifest)

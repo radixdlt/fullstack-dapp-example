@@ -10,7 +10,7 @@ import {
   type AppLogger,
   type AuditModel
 } from 'common'
-import { TransactionHelper, withSigners } from 'typescript-wallet'
+import { TransactionHelper, TransactionHelperError, withSigners } from 'typescript-wallet'
 import { createRewardsDepositManifest } from './helpers/createRewardsDepositManifest'
 import { QuestDefinitions, QuestId, QuestReward } from 'content'
 import { config } from '../config'
@@ -23,6 +23,7 @@ import { WorkerOutputError, WorkerError } from '../_types'
 import { MessageHelper } from '../helpers/messageHelper'
 import { ReferralRewardAction } from '../helpers/referalReward'
 import { dbClient } from '../db-client'
+import { log } from 'node:console'
 
 const { xrd, accounts, badges, resources, components } = config.radQuest
 const { system, payer } = accounts
@@ -74,7 +75,7 @@ export const TransactionWorkerController = ({
         dbClient.submittedTransaction.upsert({
           create: { transactionId, transactionIntent: job.data.discriminator, status },
           update: { status },
-          where: { transactionId }
+          where: { transactionId, transactionIntent: job.data.discriminator }
         }),
         (error) => ({ reason: WorkerError.FailedToUpdateSubmittedTransaction, jsError: error })
       )
@@ -84,7 +85,7 @@ export const TransactionWorkerController = ({
     )
 
     const handleSubmitTransaction = (manifest: string) => {
-      let transactionId: string | undefined
+      let transactionId: string
       return transactionHelper
         .submitTransaction(manifest, {
           onTransactionId: (transactionId) => {
@@ -92,15 +93,25 @@ export const TransactionWorkerController = ({
             return upsertSubmittedTransaction({ transactionId, status: 'PENDING' })
           }
         })
+        .orElse((error) => {
+          logger.error({
+            method: 'handleSubmitTransaction.err',
+            transactionId,
+            status: 'FAILED'
+          })
+
+          return transactionId
+            ? upsertSubmittedTransaction({
+                transactionId: transactionId,
+                status: 'FAILED'
+              }).andThen(() => errAsync(error))
+            : errAsync(error)
+        })
         .andThen((value) =>
-          upsertSubmittedTransaction({ transactionId: value.transactionId, status: 'COMPLETED' })
-        )
-        .orElse((err) =>
-          transactionId
-            ? upsertSubmittedTransaction({ transactionId, status: 'FAILED' }).andThen(() =>
-                errAsync(err)
-              )
-            : errAsync(err)
+          upsertSubmittedTransaction({
+            transactionId: value.transactionId,
+            status: 'COMPLETED'
+          }).map(() => value)
         )
     }
 

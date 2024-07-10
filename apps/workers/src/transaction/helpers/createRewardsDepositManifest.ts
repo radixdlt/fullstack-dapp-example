@@ -168,8 +168,16 @@ export const createRewardsDepositManifest = ({
       }
 
       case 'energyCard': {
-        const { key_image_url, description, name, energy_type, rarity, quality, limited_edition } =
-          reward.card
+        const {
+          key_image_url,
+          description,
+          name,
+          energy_type,
+          rarity,
+          quality,
+          limited_edition,
+          energy_description
+        } = reward.card
 
         addToManifest(
           `CALL_METHOD
@@ -180,6 +188,7 @@ export const createRewardsDepositManifest = ({
               "${name}"
               "${description}"
               "${energy_type}"
+              "${energy_description}"
               "${rarity}"
               Decimal("${quality}")
               ${limited_edition}
