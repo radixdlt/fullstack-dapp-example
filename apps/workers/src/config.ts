@@ -1,5 +1,4 @@
 import { Addresses } from 'common'
-import { getDerivationPath, mnemonicToKeyPair } from 'typescript-wallet'
 
 const networkId = parseInt(process.env.PUBLIC_NETWORK_ID ?? '2', 10)
 
@@ -33,23 +32,5 @@ export const config = {
   radQuest: {
     ...Addresses(networkId),
     directXrdDepositAmount: 10
-  },
-  keyPairs: {
-    payer: mnemonicToKeyPair(
-      process.env.PAYER_MNEMONIC!,
-      getDerivationPath(networkId, 'TRANSACTION_SIGNING', 'ACCOUNT', 0)
-    ),
-    owner: mnemonicToKeyPair(
-      process.env.OWNER_MNEMONIC!,
-      getDerivationPath(networkId, 'TRANSACTION_SIGNING', 'ACCOUNT', 0)
-    ),
-    system: mnemonicToKeyPair(
-      process.env.SYSTEM_MNEMONIC!,
-      getDerivationPath(networkId, 'TRANSACTION_SIGNING', 'ACCOUNT', 0)
-    ),
-    dAppDefinition: mnemonicToKeyPair(
-      process.env.DAPP_DEFINITION_MNEMONIC!,
-      getDerivationPath(networkId, 'TRANSACTION_SIGNING', 'ACCOUNT', 0)
-    )
   }
 }
