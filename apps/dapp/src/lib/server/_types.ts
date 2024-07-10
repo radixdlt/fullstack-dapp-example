@@ -27,6 +27,7 @@ import type { MessageController } from '$lib/server/message/controller'
 import type { OneTimePasswordController } from '$lib/server/otp/controller'
 import type { NotificationController } from '$lib/server/notification/controller'
 import type { ImageController } from './image/controller'
+import type { getQueues } from 'queues'
 
 export type ControllerMethodOutput<T = any> = ResultAsync<
   { data: T; httpResponseCode: number },
@@ -66,4 +67,5 @@ export type ControllerDependencies = {
   authModel: ReturnType<typeof AuthModel>
   config: Config
   jwt: JWT
+  systemQueue: ReturnType<typeof getQueues>['systemQueue']
 }

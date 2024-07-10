@@ -4,9 +4,8 @@ import {
   EventModel,
   MessageApi,
   AuditModel,
-  UserModel,
   TransactionModel,
-  AccountAddressModel,
+  AccountAddressModel as AccountAddressModelFn,
   GatewayApi,
   MailerLiteModel
 } from 'common'
@@ -45,6 +44,7 @@ const app = async () => {
   const tokenPriceClient = TokenPriceClient({ logger, redisClient })
   const sendMessage = MessageHelper({ dbClient, messageApi })
   const referralRewardAction = ReferralRewardAction(dbClient)
+  const AccountAddressModel = AccountAddressModelFn(redisClient)
 
   const eventWorkerController = EventWorkerController({
     logger,
@@ -54,7 +54,7 @@ const app = async () => {
       apiKey: config.mailerLite.apiKey
     }),
     transactionIntent: TransactionIntentHelper({ dbClient, transactionQueue }),
-    AccountAddressModel: AccountAddressModel(redisClient),
+    AccountAddressModel,
     sendMessage,
     referralRewardAction
   })
@@ -84,7 +84,8 @@ const app = async () => {
   SystemWorker(connection, {
     logger,
     systemWorkerController: SystemWorkerController({
-      logger
+      logger,
+      AccountAddressModel
     })
   })
 

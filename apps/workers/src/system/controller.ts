@@ -1,13 +1,21 @@
 import { ok } from 'neverthrow'
 import { Job, SystemJob, SystemJobType } from 'queues'
-import { AppLogger } from 'common'
+import { AccountAddressModel, AppLogger } from 'common'
 import { getImageOracleManifest } from './helpers/getImageOracleManifest'
 import { config } from '../config'
-import { TransactionHelper, withSigners } from 'typescript-wallet'
+import { AccountHelper, TransactionHelper, withSigners } from 'typescript-wallet'
+import { dbClient } from '../db-client'
+import { completeQuestRequirements } from './helpers/completeQuestRequirements'
 
 export type SystemWorkerController = ReturnType<typeof SystemWorkerController>
-export const SystemWorkerController = ({ logger }: { logger: AppLogger }) => {
-  const handler = (job: Job<SystemJob>) => {
+export const SystemWorkerController = ({
+  logger,
+  AccountAddressModel
+}: {
+  logger: AppLogger
+  AccountAddressModel: AccountAddressModel
+}) => {
+  const handler = async (job: Job<SystemJob>) => {
     const { traceId, type } = job.data
 
     const childLogger = logger.child({
@@ -16,17 +24,168 @@ export const SystemWorkerController = ({ logger }: { logger: AppLogger }) => {
       method: 'systemWorkerController.handler'
     })
 
+    const accountAddressModel = AccountAddressModel(childLogger)
+
     const transactionHelper = TransactionHelper({
       networkId: config.networkId,
       onSignature: withSigners(config.networkId, 'system', 'payer'),
       logger
     })
 
+    const { payer, system, jetty } = config.radQuest.accounts
+    const { adminBadgeAddress, heroBadgeAddress } = config.radQuest.badges
+    const { clamAddress } = config.radQuest.resources
+
+    const accountHelper = AccountHelper(dbClient)
+
+    const mintHeroBadge = async (userId: string, accountAddress: string) => {
+      const result = await transactionHelper.submitTransaction(`
+            CALL_METHOD 
+              Address("${payer.accessController}") 
+              "create_proof"
+            ;
+    
+            CALL_METHOD 
+              Address("${system.accessController}") 
+              "create_proof"
+            ;
+    
+            CALL_METHOD 
+              Address("${payer.address}") 
+              "lock_fee"
+              Decimal("10")
+            ;
+    
+            CALL_METHOD
+              Address("${system.address}")
+              "create_proof_of_amount"
+              Address("${adminBadgeAddress}")
+              Decimal("1")
+            ;
+              
+            MINT_NON_FUNGIBLE
+              Address("${heroBadgeAddress}")
+              Map<NonFungibleLocalId, Tuple>(NonFungibleLocalId("<${userId}>") => Tuple(Tuple(
+                "Your Hero Badge",
+                "Your progress through your RadQuest journey",
+                "",
+                Array<String>(),
+                0u32,
+              )))
+            ;
+    
+            CALL_METHOD
+              Address("${accountAddress}")
+              "try_deposit_batch_or_abort"
+              Expression("ENTIRE_WORKTOP")
+              Enum<0u8>()
+            ;`)
+      if (result.isErr()) throw result.error
+    }
+
+    const createAccount = async (
+      value?: Partial<{ withXrd: boolean; withHeroBadge: boolean; referredBy: string }>
+    ) => {
+      const { withXrd = false, withHeroBadge = false, referredBy } = value ?? {}
+      const userResult = await accountHelper.createAccount({ logger, networkId: 2, referredBy })
+
+      if (userResult.isErr()) throw userResult.error
+
+      const { getXrdFromFaucet, user } = userResult.value
+      logger.debug({ method: 'createAccount', user })
+      if (withXrd) {
+        const faucetResult = await getXrdFromFaucet()
+        if (faucetResult.isErr()) throw faucetResult.error
+      }
+      if (withHeroBadge)
+        await mintHeroBadge(userResult.value.user.id, userResult.value.user.accountAddress!)
+
+      return userResult.value
+    }
+
     switch (type) {
       case SystemJobType.PopulateRadmorphs:
         return transactionHelper
           .submitTransaction(getImageOracleManifest(job.data.data))
           .map(() => undefined)
+
+      case SystemJobType.AddReferral: {
+        const { user, submitTransaction } = await createAccount({
+          referredBy: job.data.referralCode,
+          withHeroBadge: true,
+          withXrd: true
+        })
+        await accountAddressModel.addTrackedAddress(user.accountAddress!, 'TransferTokens', user.id)
+
+        await completeQuestRequirements(dbClient)(user.id, 'TransferTokens', [
+          'PersonaQuiz',
+          'TransactionQuiz',
+          'XrdQuiz'
+        ])
+
+        await transactionHelper.submitTransaction(`
+          CALL_METHOD 
+            Address("${payer.accessController}") 
+            "create_proof"
+          ;
+
+          CALL_METHOD 
+            Address("${system.accessController}") 
+            "create_proof"
+          ;
+
+          CALL_METHOD 
+            Address("${payer.address}") 
+            "lock_fee"
+            Decimal("20")
+          ;
+
+          CALL_METHOD
+            Address("${system.address}")
+            "create_proof_of_amount"
+            Address("${adminBadgeAddress}")
+            Decimal("1")
+          ;
+            
+          MINT_FUNGIBLE
+            Address("${clamAddress}")
+            Decimal("10")
+          ;
+
+          CALL_METHOD
+            Address("${user.accountAddress}")
+            "try_deposit_batch_or_abort"
+            Expression("ENTIRE_WORKTOP")
+            None
+          ;`)
+
+        await submitTransaction(`
+            CALL_METHOD
+              Address("${user.accountAddress}")
+              "lock_fee"
+              Decimal("50")
+            ;
+            CALL_METHOD
+              Address("${user.accountAddress}")
+              "withdraw"
+              Address("${clamAddress}")
+              Decimal("10")
+            ;
+            TAKE_FROM_WORKTOP
+              Address("${clamAddress}")
+              Decimal("10")
+              Bucket("clam_bucket")
+            ;
+            CALL_METHOD
+              Address("${jetty.address}")
+              "try_deposit_or_abort"
+              Bucket("clam_bucket")
+              Enum<0u8>()
+            ;
+          `)
+
+        return ok(undefined)
+      }
 
       default:
         childLogger.error({

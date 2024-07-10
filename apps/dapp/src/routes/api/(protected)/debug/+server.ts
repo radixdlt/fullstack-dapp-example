@@ -43,6 +43,18 @@ export const POST: RequestHandler = async ({ locals, request }) => {
     )
   } else if (type === 'clearPhoneNumbers') {
     await locals.dependencies.dbClient.userPhoneNumber.deleteMany({})
+  } else if (type === 'addReferral') {
+    const userResult = await locals.dependencies.userModel.getById(userId, {})
+    if (userResult.isErr()) {
+      return json({}, { status: 400 })
+    }
+
+    await locals.dependencies.systemQueue.queue.add('AddReferral', {
+      type: 'AddReferral',
+      userId,
+      referralCode: userResult.value.referralCode,
+      traceId: locals.context.traceId
+    })
   }
 
   return json({}, { status: 200 })

@@ -42,7 +42,7 @@ import { ImageController } from '$lib/server/image/controller'
 
 const networkId = +PUBLIC_NETWORK_ID
 
-const { transactionQueue } = getQueues(config.redis)
+const { transactionQueue, systemQueue } = getQueues(config.redis)
 
 const redisClient = new RedisConnection(config.redis)
 
@@ -105,7 +105,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     messageModel: messageModel(logger),
     notificationModel: notificationModel(logger),
     marketingModel: marketingModel(logger),
-    imageModel: imageModel(logger)
+    imageModel: imageModel(logger),
+    systemQueue
   } satisfies ControllerDependencies
 
   event.locals.controllers = {
