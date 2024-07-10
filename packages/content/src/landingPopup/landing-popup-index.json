@@ -1,4 +1,14 @@
 {
+  "m_testkol": {
+    "en": {
+      "0.md": "<h2>Welcome to RadQuest</h2>\n<p>The Crypto Banter team loves to send people to me! I will be your guide to Radix. Continue your adventure and claim your XRD onboarding bonus worth $20!</p>\n"
+    }
+  },
+  "m_testpaidad": {
+    "en": {
+      "0.md": "<h2>Welcome to RadQuest</h2>\n<p>Fantastic! Another visitor from X ready to dive into RadQuest. I will be your guide to Radix. Continue your adventure and claim your XRD onboarding bonus worth $20!</p>\n"
+    }
+  },
   "userreferral": {
     "en": {
       "0.md": "<h2>Welcome to RadQuest</h2>\n<p><strong>”{inviter_name}”</strong> has invited you to join them on RadQuest. Complete the “basics” quests and you’ll <em>each</em> be able to claim a 25 XRD reward.</p>\n"

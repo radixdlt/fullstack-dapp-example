@@ -1,0 +1,1 @@
+A signed method call to a single smart contract.

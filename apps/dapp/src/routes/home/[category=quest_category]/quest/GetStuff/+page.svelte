@@ -264,6 +264,10 @@
     },
     {
       id: '14',
+      type: 'regular'
+    },
+    {
+      id: '15',
       type: 'jetty',
       skip: skipXrdDepositPage,
       footer: {
@@ -271,10 +275,6 @@
           enabled: writable(false)
         }
       }
-    },
-    {
-      id: '15',
-      type: 'regular'
     },
     {
       id: '16',
@@ -304,11 +304,11 @@
     },
     {
       id: '21',
-      type: 'regular'
+      type: 'jetty'
     },
     {
       id: '22',
-      type: 'jetty'
+      type: 'regular'
     },
 
     {
@@ -423,10 +423,14 @@
   {/if}
 
   {#if render('14')}
+    {@html text['14.md']}
+  {/if}
+
+  {#if render('15')}
     {#if chosenAccountHasXrd}
-      {@html text['14b.md']}
+      {@html text['15a.md']}
     {:else}
-      {@html text['14a.md']}
+      {@html text['15b.md']}
     {/if}
 
     <div class="center">
@@ -434,10 +438,6 @@
         {$i18n.t('quests:GetStuff.getXrd')}
       </Button>
     </div>
-  {/if}
-
-  {#if render('15')}
-    {@html text['15.md']}
   {/if}
 
   {#if render('16')}

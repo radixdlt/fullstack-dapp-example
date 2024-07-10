@@ -13,6 +13,7 @@
   import { i18n } from '$lib/i18n/i18n'
   import SetUsername from './SetUsername.svelte'
   import { userApi } from '$lib/api/user-api'
+  import Checkbox from '$lib/components/checkbox/Checkbox.svelte'
 
   export let data: PageData
 
@@ -22,6 +23,7 @@
   let marketingUpdatesCheckbox: boolean
   let email = $user?.email?.email || ''
   let hasError: boolean
+  let confirmedWalletInstall = writable<boolean>(false)
   let isMailEnabled = writable<boolean>(true)
   let walletIsLinked = writable(data.requirements.GetTheWallet?.isComplete)
 
@@ -38,7 +40,7 @@
     }
 
     const callback = ({ detail }: any) => {
-      if (detail.eventType !== 'extensionStatus' || !render('6')) return
+      if (detail.eventType !== 'extensionStatus' || !render('9b')) return
       const { isWalletLinked } = detail
 
       if (isWalletLinked) {
@@ -52,7 +54,7 @@
     window.addEventListener('radix#chromeExtension#receive', callback)
 
     const interval = setInterval(() => {
-      if (render('6')) {
+      if (render('9b')) {
         window.dispatchEvent(
           new CustomEvent('radix#chromeExtension#send', {
             detail: {
@@ -117,7 +119,7 @@
     },
     {
       id: '2',
-      type: 'regular'
+      type: 'jetty'
     },
     {
       id: '3',
@@ -129,10 +131,32 @@
     },
     {
       id: '5',
-      type: 'jetty'
+      type: 'regular'
     },
     {
       id: '6',
+      type: 'regular'
+    },
+    {
+      id: '7',
+      type: 'regular'
+    },
+    {
+      id: '8',
+      type: 'jetty'
+    },
+    {
+      id: '9a',
+      type: 'regular',
+      skip: writable(!isMobile()),
+      footer: {
+        next: {
+          enabled: confirmedWalletInstall
+        }
+      }
+    },
+    {
+      id: '9b',
       type: 'regular',
       skip: walletIsLinked,
       footer: {
@@ -142,23 +166,23 @@
       }
     },
     {
-      id: '7',
-      type: 'jetty'
-    },
-    {
-      id: '8',
-      type: 'regular'
-    },
-    {
-      id: '9',
-      type: 'regular'
-    },
-    {
       id: '10',
       type: 'jetty'
     },
     {
       id: '11',
+      type: 'regular'
+    },
+    {
+      id: '12',
+      type: 'regular'
+    },
+    {
+      id: '13',
+      type: 'jetty'
+    },
+    {
+      id: '14',
       type: 'regular',
       footer: {
         next: {
@@ -168,23 +192,23 @@
       skip: loggedIn
     },
     {
-      id: '12',
-      type: 'jetty'
-    },
-    {
-      id: '13',
-      type: 'jetty'
-    },
-    {
-      id: '14',
-      type: 'jetty'
-    },
-    {
       id: '15',
       type: 'jetty'
     },
     {
       id: '16',
+      type: 'jetty'
+    },
+    {
+      id: '17',
+      type: 'jetty'
+    },
+    {
+      id: '18',
+      type: 'jetty'
+    },
+    {
+      id: '19',
       type: 'regular',
       skip: writable($user?.email?.newsletter || false),
       footer: {
@@ -227,16 +251,7 @@
   {/if}
 
   {#if render('6')}
-    {#if isMobile()}
-      {@html text['6a.md']}
-    {:else}
-      {@html text['6b.md']}
-      <div class="center">
-        <Button link="https://wallet.radixdlt.com" isExternal={true}
-          >{$i18n.t('quests:SetupWallet.walletDownloadPage')}</Button
-        >
-      </div>
-    {/if}
+    {@html text['6.md']}
   {/if}
 
   {#if render('7')}
@@ -246,8 +261,19 @@
   {#if render('8')}
     {@html text['8.md']}
   {/if}
-  {#if render('9')}
-    {@html text['9.md']}
+
+  {#if render('9a')}
+    {@html text['9a.md']}
+    <Checkbox bind:checked={$confirmedWalletInstall}>{@html text['9a-checkbox.md']}</Checkbox>
+  {/if}
+
+  {#if render('9b')}
+    {@html text['9b.md']}
+    <div class="center">
+      <Button link="https://wallet.radixdlt.com" isExternal={true}
+        >{$i18n.t('quests:SetupWallet.walletDownloadPage')}</Button
+      >
+    </div>
   {/if}
 
   {#if render('10')}
@@ -268,7 +294,6 @@
 
   {#if render('14')}
     {@html text['14.md']}
-    <SetUsername onNext={quest.actions.next} />
   {/if}
 
   {#if render('15')}
@@ -276,13 +301,26 @@
   {/if}
 
   {#if render('16')}
-    {@html text['16-1.md']}
+    {@html text['16.md']}
+  {/if}
+
+  {#if render('17')}
+    {@html text['17.md']}
+    <SetUsername onNext={quest.actions.next} />
+  {/if}
+
+  {#if render('18')}
+    {@html text['18.md']}
+  {/if}
+
+  {#if render('19')}
+    {@html text['19-1.md']}
     <SetEmailPage
       bind:sendNewsletter={marketingUpdatesCheckbox}
       bind:email
       bind:hasError
-      privacyPolicyText={text['16-2.md']}
-      marketingUpdatesText={text['16-3.md']}
+      privacyPolicyText={text['19-2.md']}
+      marketingUpdatesText={text['19-3.md']}
     />
   {/if}
 </Quest>

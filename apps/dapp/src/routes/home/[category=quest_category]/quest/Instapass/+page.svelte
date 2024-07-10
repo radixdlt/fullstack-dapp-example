@@ -26,7 +26,28 @@
       type: 'regular'
     },
     {
-      type: 'requirements'
+      id: '1',
+      type: 'regular'
+    },
+    {
+      id: '2',
+      type: 'jetty'
+    },
+    {
+      id: '3',
+      type: 'regular'
+    },
+    {
+      id: '4',
+      type: 'regular'
+    },
+    {
+      id: '5',
+      type: 'regular'
+    },
+    {
+      id: '6',
+      type: 'jetty'
     },
     {
       type: 'claimRewards'
@@ -38,12 +59,43 @@
   let:render
 >
   {#if render('0')}
-    <Button isExternal link={`${dapps.instapass.url}${$user?.accountAddress}`}>
-      <span>{$i18n.t('quests:Instapass.goToInstapass')}</span>
-    </Button>
     {@html text['0.md']}
+  {/if}
+
+  {#if render('1')}
+    {@html text['1.md']}
+  {/if}
+
+  {#if render('2')}
+    {@html text['2.md']}
+  {/if}
+
+  {#if render('3')}
+    {@html text['3.md']}
+  {/if}
+
+  {#if render('4')}
+    {@html text['4.md']}
+    <div class="center">
+      <Button isExternal link={`${dapps.instapass.url}${$user?.accountAddress}`}>
+        <span>{$i18n.t('quests:Instapass.goToInstapass')}</span>
+      </Button>
+    </div>
+  {/if}
+
+  {#if render('5')}
+    {@html text['5.md']}
+  {/if}
+
+  {#if render('6')}
+    {@html text['6.md']}
   {/if}
 </Quest>
 
 <style lang="scss">
+  .center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 </style>

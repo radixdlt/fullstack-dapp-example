@@ -10,7 +10,7 @@ export type GlossaryDefinitions = Record<GlossaryId, GlossaryDefinition>
 
 export const GlossaryDefinitions: GlossaryDefinitions = {
   radixnetwork: {
-    en: { title: 'The Radix Network' }
+    en: { title: 'Radix Network' }
   },
   radquest: {
     en: { title: 'RadQuest' }

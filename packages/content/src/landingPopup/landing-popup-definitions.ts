@@ -4,12 +4,22 @@ export type LandingPopupDefinition = {
 }
 
 export enum LandingPopupId {
-  UserReferral = 'userreferral'
+  UserReferral = 'userreferral',
+  m_TestKOL = 'm_testkol',
+  m_TestPaidAd = 'm_testpaidad'
 }
 
 export const LandingPopupDefinitions = {
   [LandingPopupId.UserReferral]: {
     queryParamName: 'ref'
+  },
+  [LandingPopupId.m_TestKOL]: {
+    queryParamName: 'utm',
+    queryParamValue: 'testkol'
+  },
+  [LandingPopupId.m_TestPaidAd]: {
+    queryParamName: 'utm',
+    queryParamValue: 'm_testpaidad'
   }
 }
 

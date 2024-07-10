@@ -30,11 +30,11 @@
     "hi": "Meet Jetty",
     "claim": "Claim",
     "requirements": {
-      "RadQuestQuiz": "Learn about RadQuest and your guide, Jetty"
+      "RadQuestQuiz": "Learn about RadQuest – and your guide, Jetty"
     },
     "title": "Welcome to RadQuest",
     "description": "What’s this all about?",
-    "introDescription": "Let’s get started learning about Web3 and Radix – and get some rewards!"
+    "introDescription": "Let’s get started learning about web3 and Radix – and get some rewards!"
   },
   "WhatIsRadix": {
     "requirements": {
@@ -42,16 +42,16 @@
     },
     "title": "The Radix Network",
     "description": "What is this Radix thing?",
-    "introDescription": "The Radix Network – a breakthrough “layer 1” network for mainstream-ready Web3."
+    "introDescription": "The Radix Network – a breakthrough “layer-1” network for mainstream-ready web3."
   },
   "SetupWallet": {
     "requirements": {
-      "ConnectWallet": "Download the Radix Wallet mobile app, create your first account Login to RadQuest with your Radix Wallet"
+      "ConnectWallet": "Download the Radix Wallet mobile app, create your first Account Login to RadQuest with your Radix Wallet"
     },
     "walletDownloadPage": "Go to Wallet Download Page",
     "title": "Get the Radix Wallet",
-    "description": "Your key to dApps and assets on Radix",
-    "introDescription": "Get the Radix Wallet to use with RadQuest any any other dApp built on Radix",
+    "description": "Your key to assets and dApps and assets on Radix",
+    "introDescription": "Get the Radix Wallet to use with RadQuest or any other dApp built on Radix.",
     "confirmSetUsername": "Confirm"
   },
   "GetStuff": {
@@ -84,9 +84,9 @@
     "requirements": {
       "JettyReceivedClams": "Send some Clams to Jetty"
     },
-    "title": "Transfer Assets",
+    "title": "Transfer Tokens",
     "description": "Transfer stuff using the Radix Wallet",
-    "introDescription": "Use the Radix Wallet’s transfer feature to send tokens, NFTs, and any other kind of asset to different accounts and other people.",
+    "introDescription": "Use the Radix Wallet’s transfer feature to send tokens, NFTs, and any other kind of asset to different Accounts and other people.",
     "copyTextButton_copy": "Copy",
     "copyTextButton_copied": "Copied!"
   },
@@ -157,13 +157,13 @@
     "introDescription": "Learn about DEXes\nSwap one token for another kind of token"
   },
   "Instapass": {
-    "goToInstapass": "Go to Instapass",
+    "goToInstapass": "Instapass Lite Signup",
     "requirements": {
-      "LearnAboutInstapass": "Learn about Instapass",
-      "InstapassBadgeDeposited": "Receive Instapass KYC badge"
+      "LearnAboutInstapass": "Do a simple verification at the Instapass Lite dApp",
+      "InstapassBadgeDeposited": "Get your Instapass RadQuest badge"
     },
-    "title": "Instapass",
-    "description": "Learn about Instapass",
-    "introDescription": "Instapass is a way to log in to websites without a password. Learn more about Instapass."
+    "title": "Get Verified with Instapass",
+    "description": "A quick check to unlock more XRD",
+    "introDescription": "Answer a few basic questions at Instapass to unlock more XRD rewards."
   }
 }

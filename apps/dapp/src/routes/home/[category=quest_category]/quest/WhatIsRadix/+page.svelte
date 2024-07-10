@@ -46,28 +46,27 @@
     },
     {
       id: '8',
-      type: 'regular'
-    },
-    {
-      id: '9',
       type: 'jetty'
     },
     {
-      id: '10',
+      id: '9',
       type: 'jettyQuiz',
-      text: text['10.md'],
+      text: text['9.md'],
       quizRequirement: 'RadixQuiz',
       answers: [
         {
-          text: text['10a.md'],
+          text: text['9a-answer.md'],
+          info: text['9a-result.md'],
           correct: false
         },
         {
-          text: text['10b.md'],
+          text: text['9b-answer.md'],
+          info: text['9b-result.md'],
           correct: false
         },
         {
-          text: text['10c.md'],
+          text: text['9c-answer.md'],
+          info: text['9c-result.md'],
           correct: true
         }
       ]
@@ -112,9 +111,5 @@
 
   {#if render('8')}
     {@html text['8.md']}
-  {/if}
-
-  {#if render('9')}
-    {@html text['9.md']}
   {/if}
 </Quest>

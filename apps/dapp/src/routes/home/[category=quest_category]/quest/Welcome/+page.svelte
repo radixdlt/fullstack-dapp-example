@@ -59,20 +59,27 @@
     },
     {
       id: '8',
+      type: 'jetty'
+    },
+    {
+      id: '9',
       type: 'jettyQuiz',
-      text: text['8.md'],
+      text: text['9.md'],
       quizRequirement: 'RadQuestQuiz',
       answers: [
         {
-          text: text['8a.md'],
+          text: text['9a-answer.md'],
+          info: text['9a-result.md'],
           correct: true
         },
         {
-          text: text['8b.md'],
+          text: text['9b-answer.md'],
+          info: text['9b-result.md'],
           correct: false
         },
         {
-          text: text['8c.md'],
+          text: text['9c-answer.md'],
+          info: text['9c-result.md'],
           correct: false
         }
       ]
@@ -113,6 +120,10 @@
 
   {#if render('7')}
     {@html text['7.md']}
+  {/if}
+
+  {#if render('8')}
+    {@html text['8.md']}
   {/if}
 
   {#if error}
