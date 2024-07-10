@@ -10,7 +10,7 @@
   import { createEventDispatcher, onMount } from 'svelte'
 
   export let text: string
-  export let answers: { text: string; correct: boolean }[] = []
+  export let answers: { text: string; correct: boolean; info: string }[] = []
 
   export let quizRequirement: string
   export let questId: QuestId
@@ -24,6 +24,7 @@
   const dispatch = createEventDispatcher<{ correct: undefined; mount: undefined }>()
 
   const handleCorrectAnswer = () => {
+    if (isCorrectAnswer) return
     completeRequirement(questId, quizRequirement)
       .map(() => (isCorrectAnswer = true))
       .mapErr(() => {

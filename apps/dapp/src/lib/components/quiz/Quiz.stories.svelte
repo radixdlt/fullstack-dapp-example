@@ -22,15 +22,18 @@
     answers: [
       {
         text: 'the collective noun for 2000-tentacled giant squids',
-        correct: false
+        correct: false,
+        info: 'Nope! That would be a "squadron" of squids.'
       },
       {
         text: 'the scientific name for the hive of the mythical Radon Bumblebee.',
-        correct: false
+        correct: false,
+        info: 'Nope! That would be the "Radon Bumblehive."'
       },
       {
         text: 'a decentralized ecosystem of networked computer nodes designed to make accessing Web3 easier for developers and users.',
-        correct: true
+        correct: true,
+        info: 'Correct! A Jetty is a decentralized ecosystem os'
       }
     ]
   }}
