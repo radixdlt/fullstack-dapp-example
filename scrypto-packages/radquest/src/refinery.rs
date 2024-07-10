@@ -242,8 +242,7 @@ mod refinery {
 
             // Get the RadGem and MorphCard data
             let radgem_1 = radgems.take(1);
-            let radgem_2 = radgems.take(1);
-            radgems.drop_empty();
+            let radgem_2 = radgems;
 
             let radgem_1_data: RadgemData = radgem_1
                 .as_non_fungible()
