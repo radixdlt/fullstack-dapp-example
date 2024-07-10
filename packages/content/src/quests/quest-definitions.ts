@@ -196,12 +196,12 @@ export const QuestDefinitions = () => {
       trackedAccountAddress: true,
       rewards: [
         {
-          name: 'simpleGiftBox',
-          amount: 1
-        },
-        {
           name: 'xrd',
           amount: 50
+        },
+        {
+          name: 'simpleGiftBox',
+          amount: 1
         }
       ],
       minutesToComplete: 5,
@@ -268,12 +268,12 @@ export const QuestDefinitions = () => {
       category: 'advanced',
       rewards: [
         {
-          name: 'eliteGiftBox',
-          amount: 1
-        },
-        {
           name: 'xrd',
           amount: 250
+        },
+        {
+          name: 'eliteGiftBox',
+          amount: 1
         }
       ],
       splashImage: '/quests-images/splash/Thorswap.webp',
@@ -314,6 +314,18 @@ export const QuestDefinitions = () => {
         {
           name: 'xrd',
           amount: 500
+        },
+        {
+          name: 'simpleGiftBox',
+          amount: 1
+        },
+        {
+          name: 'fancyGiftBox',
+          amount: 1
+        },
+        {
+          name: 'eliteGiftBox',
+          amount: 1
         }
       ],
       trackedAccountAddress: false,
