@@ -6,6 +6,7 @@ import { createElementResource } from './createElementResource'
 import { createRadgem } from './createRadgem'
 import { createEnergyCard } from './createEnergyCard'
 import { createRadmorph } from './createRadmorph'
+import { createOtterCoin } from '../../clam-dex/helpers/createOtterCoin'
 
 let resources: Record<string, string> = {}
 
@@ -24,6 +25,8 @@ export const createResources = () =>
         .map((energyCardAddress) => (resources.energyCardAddress = energyCardAddress))
         .andThen(() => createRadmorph({ superAdminBadgeAddress, adminBadgeAddress }))
         .map((radmorphAddress) => (resources.radmorphAddress = radmorphAddress))
+        .andThen(() => createOtterCoin({ superAdminBadgeAddress, adminBadgeAddress }))
+        .map((otterCoinAddress) => (resources.otterCoinAddress = otterCoinAddress))
         .map(() => ({ adminBadgeAddress, superAdminBadgeAddress, ...resources }))
     )
   )

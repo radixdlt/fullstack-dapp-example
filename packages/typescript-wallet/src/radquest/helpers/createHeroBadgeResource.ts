@@ -1,4 +1,4 @@
-import { radixEngineClient } from '../../config'
+import { config, radixEngineClient } from '../../config'
 
 export const createHeroBadgeResource = ({
   superAdminBadgeAddress,
@@ -14,7 +14,7 @@ export const createHeroBadgeResource = ({
       CALL_METHOD
         Address("${wellKnownAddresses.accountAddress.payerAccount}")
         "lock_fee"
-        Decimal("10")
+        Decimal("50")
       ;
 
         CREATE_NON_FUNGIBLE_RESOURCE
@@ -169,7 +169,7 @@ export const createHeroBadgeResource = ({
                         Enum<1u8>(
                             Enum<128u8>(
                                 Array<String>(
-                                    "dapp_definition_account_address"
+                                    "${config.radQuest.accounts.dAppDefinition.address}"
                                 )
                             )
                         ),

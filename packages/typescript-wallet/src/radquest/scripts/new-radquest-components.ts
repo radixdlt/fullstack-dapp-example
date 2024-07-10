@@ -5,20 +5,9 @@ import { newQuestRewards } from '../helpers/newQuestRewards'
 import { newGiftBoxOpener } from '../helpers/newGiftBoxOpener'
 import { newRefinery } from '../helpers/newRefinery'
 import { newCardForge } from '../helpers/newCardForge'
-import { addCardForgeCards } from '../helpers/addCardForeCards'
 import { logger } from '../../helpers'
 
-let result = {
-  heroBadgeForge: '',
-  kycOracle: '',
-  questRewards: '',
-  giftBoxOpener: '',
-  cardForge: '',
-  radgemForge: '',
-  radmorphForge: '',
-  imageOracle: '',
-  refinery: ''
-}
+let result: Record<string, string> = {}
 
 mintAdminBadge({
   adminBadgeAddress: Addresses(2).badges.adminBadgeAddress,
