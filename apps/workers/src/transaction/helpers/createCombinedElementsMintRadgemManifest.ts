@@ -36,6 +36,7 @@ CALL_METHOD
   "${userId}"
   Decimal("${randomFloat()}")
   Decimal("${randomFloat()}")
+  Decimal("${randomFloat()}")
 ;
 `
 }

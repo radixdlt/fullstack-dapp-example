@@ -171,13 +171,11 @@ export const TransactionHelper = ({
     }>
   ): ResultAsync<
     { transactionId: string; response: TransactionStatusResponse },
-    { reason: TransactionHelperError }
+    { reason: TransactionHelperError; transactionId?: string }
   > => {
     const message = optional?.message
     const onTransactionId = optional?.onTransactionId ?? (() => okAsync(undefined))
-
-    console.log(transactionManifest)
-
+    if (typeof transactionManifest === 'string') console.log(transactionManifest)
     return (
       typeof transactionManifest === 'string'
         ? transformStringManifest(transactionManifest)
@@ -188,7 +186,8 @@ export const TransactionHelper = ({
           onTransactionId(transactionId)
             .mapErr((error) => ({
               reason: TransactionHelperError.FailedToExecuteTransactionIdCallback,
-              jsError: error
+              jsError: error,
+              transactionId
             }))
             .andThen(() =>
               submitNotarizedTransactionHex(compiledTransactionHex).andThen(() =>

@@ -57,10 +57,7 @@ export const TransactionWorkerController = ({
 
     const transactionHelper = TransactionHelper({
       networkId: config.networkId,
-      onSignature:
-        config.networkId === 1
-          ? withSigners(config.networkId, 'system', 'payer')
-          : withSigners(config.networkId, 'system'),
+      onSignature: withSigners(config.networkId, 'system', 'payer'),
       logger
     })
 
@@ -84,9 +81,8 @@ export const TransactionWorkerController = ({
       GiftBoxRewardConfig({ getRandomFloat, getRandomIntInclusive })
     )
 
-    const handleSubmitTransaction = (manifest: string) => {
-      let transactionId: string
-      return transactionHelper
+    const handleSubmitTransaction = (manifest: string) =>
+      transactionHelper
         .submitTransaction(manifest, {
           onTransactionId: (transactionId) => {
             transactionId = transactionId
@@ -96,14 +92,14 @@ export const TransactionWorkerController = ({
         .orElse((error) => {
           logger.error({
             method: 'handleSubmitTransaction.err',
-            transactionId,
+            transactionId: error.transactionId,
             status: 'FAILED'
           })
 
-          return transactionId
+          return error.transactionId
             ? upsertSubmittedTransaction({
-                transactionId: transactionId,
-                status: 'FAILED'
+                status: 'FAILED',
+                transactionId: error.transactionId
               }).andThen(() => errAsync(error))
             : errAsync(error)
         })
@@ -113,7 +109,6 @@ export const TransactionWorkerController = ({
             status: 'COMPLETED'
           }).map(() => value)
         )
-    }
 
     const handleDepositRewards = (rewards: QuestReward[], questId: string) => {
       const xrdReward = rewards.find((reward) => reward.name === 'xrd')?.amount ?? 0

@@ -84,13 +84,7 @@ const { adminBadgeAddress, heroBadgeAddress } = addresses.badges
 
 const systemTransactionHelper = TransactionHelper({
   networkId: 2,
-  onSignature: withSigners(2, 'system'),
-  logger
-})
-
-const payerTransactionHelper = TransactionHelper({
-  networkId: 2,
-  onSignature: withSigners(2, 'payer'),
+  onSignature: withSigners(2, 'system', 'payer'),
   logger
 })
 
@@ -256,7 +250,6 @@ const createAccount = async (
 
 describe('Event flows', () => {
   beforeAll(async () => {
-    await payerTransactionHelper.getXrdFromFaucet({ address: payer.address })
     const result = await ResultAsync.combine([
       radixEngineClient.getAccounts(),
       radixEngineClient.getIdentityAddressAtDerivationIndex(0)
@@ -364,12 +357,15 @@ describe('Event flows', () => {
     ).toBe(true)
   })
 
-  describe.only('radgem', async () => {
-    const { submitTransaction, user } = await createAccount({ withXrd: true, withHeroBadge: true })
-
-    await mintElements(10, user.accountAddress!)
-
+  describe('radgem', async () => {
     it('combine elements into a RadGem', { timeout: 30_000, skip: false }, async () => {
+      const { submitTransaction, user } = await createAccount({
+        withXrd: true,
+        withHeroBadge: true
+      })
+
+      await mintElements(10, user.accountAddress!)
+
       const result = await submitTransaction(`
         CALL_METHOD
             Address("${user.accountAddress}")
