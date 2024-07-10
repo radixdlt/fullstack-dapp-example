@@ -22,6 +22,7 @@ import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 import { WorkerOutputError, WorkerError } from '../_types'
 import { MessageHelper } from '../helpers/messageHelper'
 import { ReferralRewardAction } from '../helpers/referalReward'
+import { dbClient } from '../db-client'
 
 const { xrd, accounts, badges, resources, components } = config.radQuest
 const { system, payer } = accounts
@@ -62,12 +63,46 @@ export const TransactionWorkerController = ({
       logger
     })
 
+    const upsertSubmittedTransaction = ({
+      transactionId,
+      status
+    }: {
+      transactionId: string
+      status: 'PENDING' | 'COMPLETED' | 'FAILED'
+    }) =>
+      ResultAsync.fromPromise(
+        dbClient.submittedTransaction.upsert({
+          create: { transactionId, transactionIntent: job.data.discriminator, status },
+          update: { status },
+          where: { transactionId }
+        }),
+        (error) => ({ reason: WorkerError.FailedToUpdateSubmittedTransaction, jsError: error })
+      )
+
     const getGiftBoxRewards = GiftBoxReward(
       GiftBoxRewardConfig({ getRandomFloat, getRandomIntInclusive })
     )
 
-    const handleSubmitTransaction = (manifest: string) =>
-      transactionHelper.submitTransaction(manifest)
+    const handleSubmitTransaction = (manifest: string) => {
+      let transactionId: string | undefined
+      return transactionHelper
+        .submitTransaction(manifest, {
+          onTransactionId: (transactionId) => {
+            transactionId = transactionId
+            return upsertSubmittedTransaction({ transactionId, status: 'PENDING' })
+          }
+        })
+        .andThen((value) =>
+          upsertSubmittedTransaction({ transactionId: value.transactionId, status: 'COMPLETED' })
+        )
+        .orElse((err) =>
+          transactionId
+            ? upsertSubmittedTransaction({ transactionId, status: 'FAILED' }).andThen(() =>
+                errAsync(err)
+              )
+            : errAsync(err)
+        )
+    }
 
     const handleDepositRewards = (rewards: QuestReward[], questId: string) => {
       const xrdReward = rewards.find((reward) => reward.name === 'xrd')?.amount ?? 0

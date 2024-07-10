@@ -28,7 +28,8 @@ export const TransactionHelperError = {
   FailedToNotarizeTransaction: 'FailedToNotarizeTransaction',
   FailedToCompileNotarizedTransaction: 'FailedToCompileNotarizedTransaction',
   TransactionFailed: 'TransactionFailed',
-  FailedToSubmitTransaction: 'FailedToSubmitTransaction'
+  FailedToSubmitTransaction: 'FailedToSubmitTransaction',
+  FailedToExecuteTransactionIdCallback: 'FailedToExecuteTransactionIdCallback'
 } as const
 
 export type TransactionHelper = ReturnType<typeof TransactionHelper>
@@ -164,22 +165,40 @@ export const TransactionHelper = ({
 
   const submitTransaction = (
     transactionManifest: TransactionManifest | string,
-    message?: Message
+    optional?: Partial<{
+      message: Message
+      onTransactionId: (transactionId: string) => ResultAsync<any, unknown>
+    }>
   ): ResultAsync<
     { transactionId: string; response: TransactionStatusResponse },
     { reason: TransactionHelperError }
-  > =>
-    (typeof transactionManifest === 'string'
-      ? transformStringManifest(transactionManifest)
-      : okAsync(transactionManifest)
+  > => {
+    const message = optional?.message
+    const onTransactionId = optional?.onTransactionId ?? (() => okAsync(undefined))
+
+    return (
+      typeof transactionManifest === 'string'
+        ? transformStringManifest(transactionManifest)
+        : okAsync(transactionManifest)
     ).andThen((transactionManifest) =>
       buildTransaction(transactionManifest, message).andThen(
         ({ compiledTransactionHex, transactionId }) =>
-          submitNotarizedTransactionHex(compiledTransactionHex).andThen(() =>
-            pollTransactionStatus(transactionId).map((response) => ({ transactionId, response }))
-          )
+          onTransactionId(transactionId)
+            .mapErr((error) => ({
+              reason: TransactionHelperError.FailedToExecuteTransactionIdCallback,
+              jsError: error
+            }))
+            .andThen(() =>
+              submitNotarizedTransactionHex(compiledTransactionHex).andThen(() =>
+                pollTransactionStatus(transactionId).map((response) => ({
+                  transactionId,
+                  response
+                }))
+              )
+            )
       )
     )
+  }
 
   const getTransactionStatus = (txId: string) =>
     ResultAsync.fromPromise(

@@ -31,7 +31,8 @@ export const WorkerError = {
   FailedToUpdateTransactionIntentStatus: 'FailedToUpdateTransactionIntentStatus',
   FailedToUpdateReferralReward: 'FailedToUpdateReferralReward',
   FailedToGetKeyPairs: 'FailedToGetKeyPairs',
-  TransactionFailed: 'TransactionFailed'
+  TransactionFailed: 'TransactionFailed',
+  FailedToUpdateSubmittedTransaction: 'FailedToUpdateSubmittedTransaction'
 } as const
 
 export type WorkerOutputError = { reason: WorkerError | TransactionHelperError; jsError?: unknown }
