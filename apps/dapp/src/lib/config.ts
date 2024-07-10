@@ -21,7 +21,7 @@ const {
 } = privateEnv
 
 // $env/dynamic/public does not work in CI build
-const { PUBLIC_LOG_LEVEL = 'debug', PUBLIC_MAILER_LITE_RADQUEST_GROUP_ID } = process.env
+const { PUBLIC_LOG_LEVEL = 'debug' } = process.env
 
 const getDomain = () => {
   const value = /(?<=\.).+/.exec(EXPECTED_ORIGIN ?? '')
@@ -61,8 +61,7 @@ export const config = {
     ...Addresses(publicConfig.networkId)
   },
   mailerLite: {
-    apiKey: MAILER_LITE_API_KEY ?? '',
-    groupId: PUBLIC_MAILER_LITE_RADQUEST_GROUP_ID
+    apiKey: MAILER_LITE_API_KEY ?? ''
   },
   logLevel: PUBLIC_LOG_LEVEL
 }

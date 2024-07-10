@@ -4,8 +4,10 @@ import { ResultAsync } from 'neverthrow'
 
 export type MailerLiteModel = ReturnType<typeof MailerLiteModel>
 export const MailerLiteModel =
-  ({ apiKey, groupId }: { apiKey: string; groupId: string }) =>
+  ({ apiKey }: { apiKey: string }) =>
   (logger: AppLogger) => {
+    const groupId = '123854994345559323'
+
     const mailerlite = new MailerLite({
       api_key: apiKey
     })

@@ -51,8 +51,7 @@ const app = async () => {
     dbClient,
     tokenPriceClient,
     mailerLiteModel: MailerLiteModel({
-      apiKey: config.mailerLite.apiKey,
-      groupId: config.mailerLite.groupId || ''
+      apiKey: config.mailerLite.apiKey
     }),
     transactionIntent: TransactionIntentHelper({ dbClient, transactionQueue }),
     AccountAddressModel: AccountAddressModel(redisClient),
