@@ -18,26 +18,26 @@ export const colorCodeDescription = {
 } as const
 
 export const shapeCodeDescription = {
-  'Molten Lava': 'S001',
-  'Pyroclastic Flow': 'S002',
-  'Volcanic Lightning': 'S003',
-  'Tropical Cyclone': 'S004',
-  'Polar Blizzard': 'S005',
-  Earthquake: 'S006',
-  'Fire Tornado': 'S007',
-  'Tidal Wave': 'S008',
-  'Hydrothermal Vent': 'S009',
-  'Rainbow Power': 'S010',
-  'Storm Cell': 'S011',
-  'Solar Flare': 'S012',
-  'Nuclear Fusion': 'S013',
-  'Aurora Borealis': 'S014',
-  'Gravity Force': 'S015',
-  'Magnetic Field': 'S016',
-  'Gamma Rays': 'S017',
-  'Black Hole': 'S018',
-  Supernova: 'S019',
-  Whirlpool: 'S020'
+  'Whirlpool Spiral': 'S001',
+  'Earthquake Tremor': 'S002',
+  'Gamma Rays': 'S003',
+  'Molten Lava': 'S004',
+  'Tidal Wave': 'S005',
+  'Storm Cell': 'S006',
+  'Nuclear Fusion': 'S007',
+  'Pyroclastic Flow': 'S008',
+  'Polar Blizzard': 'S009',
+  'Gravity Force': 'S010',
+  'Rainbow Curve': 'S011',
+  'Magnetic Field': 'S012',
+  'Hydrothermal Vent': 'S013',
+  'Supernova Explosion': 'S014',
+  'Volanic Lightning': 'S015',
+  'Fire Tornado': 'S016',
+  'Tropical Cyclone': 'S017',
+  'Aurora Borealis': 'S018',
+  'Black Hole': 'S019',
+  'Solar Flare': 'S020'
 } as const
 
 const reverse = <T extends Record<any, any>>(obj: T): ReverseMap<T> =>

@@ -24,10 +24,10 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  */
 export type UserEmail = $Result.DefaultSelection<Prisma.$UserEmailPayload>
 /**
- * Model RadMorphImage
+ * Model Image
  * 
  */
-export type RadMorphImage = $Result.DefaultSelection<Prisma.$RadMorphImagePayload>
+export type Image = $Result.DefaultSelection<Prisma.$ImagePayload>
 /**
  * Model UserPhoneNumber
  * 
@@ -111,6 +111,15 @@ export namespace $Enums {
 export type UserType = (typeof UserType)[keyof typeof UserType]
 
 
+export const ImageType: {
+  RadMorph: 'RadMorph',
+  RadGem: 'RadGem',
+  Card: 'Card'
+};
+
+export type ImageType = (typeof ImageType)[keyof typeof ImageType]
+
+
 export const ReferralAction: {
   INC: 'INC',
   DEC: 'DEC'
@@ -151,6 +160,10 @@ export type TransactionIntentStatus = (typeof TransactionIntentStatus)[keyof typ
 export type UserType = $Enums.UserType
 
 export const UserType: typeof $Enums.UserType
+
+export type ImageType = $Enums.ImageType
+
+export const ImageType: typeof $Enums.ImageType
 
 export type ReferralAction = $Enums.ReferralAction
 
@@ -311,14 +324,14 @@ export class PrismaClient<
   get userEmail(): Prisma.UserEmailDelegate<ExtArgs>;
 
   /**
-   * `prisma.radMorphImage`: Exposes CRUD operations for the **RadMorphImage** model.
+   * `prisma.image`: Exposes CRUD operations for the **Image** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more RadMorphImages
-    * const radMorphImages = await prisma.radMorphImage.findMany()
+    * // Fetch zero or more Images
+    * const images = await prisma.image.findMany()
     * ```
     */
-  get radMorphImage(): Prisma.RadMorphImageDelegate<ExtArgs>;
+  get image(): Prisma.ImageDelegate<ExtArgs>;
 
   /**
    * `prisma.userPhoneNumber`: Exposes CRUD operations for the **UserPhoneNumber** model.
@@ -938,7 +951,7 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     UserEmail: 'UserEmail',
-    RadMorphImage: 'RadMorphImage',
+    Image: 'Image',
     UserPhoneNumber: 'UserPhoneNumber',
     Referral: 'Referral',
     Challenge: 'Challenge',
@@ -969,7 +982,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'user' | 'userEmail' | 'radMorphImage' | 'userPhoneNumber' | 'referral' | 'challenge' | 'event' | 'message' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'transactionIntent' | 'submittedTransaction' | 'config' | 'marketing'
+      modelProps: 'user' | 'userEmail' | 'image' | 'userPhoneNumber' | 'referral' | 'challenge' | 'event' | 'message' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'transactionIntent' | 'submittedTransaction' | 'config' | 'marketing'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1113,73 +1126,73 @@ export namespace Prisma {
           }
         }
       }
-      RadMorphImage: {
-        payload: Prisma.$RadMorphImagePayload<ExtArgs>
-        fields: Prisma.RadMorphImageFieldRefs
+      Image: {
+        payload: Prisma.$ImagePayload<ExtArgs>
+        fields: Prisma.ImageFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.RadMorphImageFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$RadMorphImagePayload> | null
+            args: Prisma.ImageFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ImagePayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.RadMorphImageFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$RadMorphImagePayload>
+            args: Prisma.ImageFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ImagePayload>
           }
           findFirst: {
-            args: Prisma.RadMorphImageFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$RadMorphImagePayload> | null
+            args: Prisma.ImageFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ImagePayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.RadMorphImageFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$RadMorphImagePayload>
+            args: Prisma.ImageFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ImagePayload>
           }
           findMany: {
-            args: Prisma.RadMorphImageFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$RadMorphImagePayload>[]
+            args: Prisma.ImageFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ImagePayload>[]
           }
           create: {
-            args: Prisma.RadMorphImageCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$RadMorphImagePayload>
+            args: Prisma.ImageCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ImagePayload>
           }
           createMany: {
-            args: Prisma.RadMorphImageCreateManyArgs<ExtArgs>,
+            args: Prisma.ImageCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.RadMorphImageCreateManyAndReturnArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$RadMorphImagePayload>[]
+            args: Prisma.ImageCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ImagePayload>[]
           }
           delete: {
-            args: Prisma.RadMorphImageDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$RadMorphImagePayload>
+            args: Prisma.ImageDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ImagePayload>
           }
           update: {
-            args: Prisma.RadMorphImageUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$RadMorphImagePayload>
+            args: Prisma.ImageUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ImagePayload>
           }
           deleteMany: {
-            args: Prisma.RadMorphImageDeleteManyArgs<ExtArgs>,
+            args: Prisma.ImageDeleteManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
           updateMany: {
-            args: Prisma.RadMorphImageUpdateManyArgs<ExtArgs>,
+            args: Prisma.ImageUpdateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
           }
           upsert: {
-            args: Prisma.RadMorphImageUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$RadMorphImagePayload>
+            args: Prisma.ImageUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$ImagePayload>
           }
           aggregate: {
-            args: Prisma.RadMorphImageAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateRadMorphImage>
+            args: Prisma.ImageAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateImage>
           }
           groupBy: {
-            args: Prisma.RadMorphImageGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<RadMorphImageGroupByOutputType>[]
+            args: Prisma.ImageGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<ImageGroupByOutputType>[]
           }
           count: {
-            args: Prisma.RadMorphImageCountArgs<ExtArgs>,
-            result: $Utils.Optional<RadMorphImageCountAggregateOutputType> | number
+            args: Prisma.ImageCountArgs<ExtArgs>,
+            result: $Utils.Optional<ImageCountAggregateOutputType> | number
           }
         }
       }
@@ -4732,308 +4745,319 @@ export namespace Prisma {
 
 
   /**
-   * Model RadMorphImage
+   * Model Image
    */
 
-  export type AggregateRadMorphImage = {
-    _count: RadMorphImageCountAggregateOutputType | null
-    _min: RadMorphImageMinAggregateOutputType | null
-    _max: RadMorphImageMaxAggregateOutputType | null
+  export type AggregateImage = {
+    _count: ImageCountAggregateOutputType | null
+    _min: ImageMinAggregateOutputType | null
+    _max: ImageMaxAggregateOutputType | null
   }
 
-  export type RadMorphImageMinAggregateOutputType = {
+  export type ImageMinAggregateOutputType = {
     id: string | null
     url: string | null
+    type: $Enums.ImageType | null
   }
 
-  export type RadMorphImageMaxAggregateOutputType = {
+  export type ImageMaxAggregateOutputType = {
     id: string | null
     url: string | null
+    type: $Enums.ImageType | null
   }
 
-  export type RadMorphImageCountAggregateOutputType = {
+  export type ImageCountAggregateOutputType = {
     id: number
     url: number
+    type: number
     _all: number
   }
 
 
-  export type RadMorphImageMinAggregateInputType = {
+  export type ImageMinAggregateInputType = {
     id?: true
     url?: true
+    type?: true
   }
 
-  export type RadMorphImageMaxAggregateInputType = {
+  export type ImageMaxAggregateInputType = {
     id?: true
     url?: true
+    type?: true
   }
 
-  export type RadMorphImageCountAggregateInputType = {
+  export type ImageCountAggregateInputType = {
     id?: true
     url?: true
+    type?: true
     _all?: true
   }
 
-  export type RadMorphImageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ImageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which RadMorphImage to aggregate.
+     * Filter which Image to aggregate.
      */
-    where?: RadMorphImageWhereInput
+    where?: ImageWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of RadMorphImages to fetch.
+     * Determine the order of Images to fetch.
      */
-    orderBy?: RadMorphImageOrderByWithRelationInput | RadMorphImageOrderByWithRelationInput[]
+    orderBy?: ImageOrderByWithRelationInput | ImageOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: RadMorphImageWhereUniqueInput
+    cursor?: ImageWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` RadMorphImages from the position of the cursor.
+     * Take `±n` Images from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` RadMorphImages.
+     * Skip the first `n` Images.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned RadMorphImages
+     * Count returned Images
     **/
-    _count?: true | RadMorphImageCountAggregateInputType
+    _count?: true | ImageCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: RadMorphImageMinAggregateInputType
+    _min?: ImageMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: RadMorphImageMaxAggregateInputType
+    _max?: ImageMaxAggregateInputType
   }
 
-  export type GetRadMorphImageAggregateType<T extends RadMorphImageAggregateArgs> = {
-        [P in keyof T & keyof AggregateRadMorphImage]: P extends '_count' | 'count'
+  export type GetImageAggregateType<T extends ImageAggregateArgs> = {
+        [P in keyof T & keyof AggregateImage]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateRadMorphImage[P]>
-      : GetScalarType<T[P], AggregateRadMorphImage[P]>
+        : GetScalarType<T[P], AggregateImage[P]>
+      : GetScalarType<T[P], AggregateImage[P]>
   }
 
 
 
 
-  export type RadMorphImageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: RadMorphImageWhereInput
-    orderBy?: RadMorphImageOrderByWithAggregationInput | RadMorphImageOrderByWithAggregationInput[]
-    by: RadMorphImageScalarFieldEnum[] | RadMorphImageScalarFieldEnum
-    having?: RadMorphImageScalarWhereWithAggregatesInput
+  export type ImageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ImageWhereInput
+    orderBy?: ImageOrderByWithAggregationInput | ImageOrderByWithAggregationInput[]
+    by: ImageScalarFieldEnum[] | ImageScalarFieldEnum
+    having?: ImageScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: RadMorphImageCountAggregateInputType | true
-    _min?: RadMorphImageMinAggregateInputType
-    _max?: RadMorphImageMaxAggregateInputType
+    _count?: ImageCountAggregateInputType | true
+    _min?: ImageMinAggregateInputType
+    _max?: ImageMaxAggregateInputType
   }
 
-  export type RadMorphImageGroupByOutputType = {
+  export type ImageGroupByOutputType = {
     id: string
     url: string
-    _count: RadMorphImageCountAggregateOutputType | null
-    _min: RadMorphImageMinAggregateOutputType | null
-    _max: RadMorphImageMaxAggregateOutputType | null
+    type: $Enums.ImageType
+    _count: ImageCountAggregateOutputType | null
+    _min: ImageMinAggregateOutputType | null
+    _max: ImageMaxAggregateOutputType | null
   }
 
-  type GetRadMorphImageGroupByPayload<T extends RadMorphImageGroupByArgs> = Prisma.PrismaPromise<
+  type GetImageGroupByPayload<T extends ImageGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<RadMorphImageGroupByOutputType, T['by']> &
+      PickEnumerable<ImageGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof RadMorphImageGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof ImageGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], RadMorphImageGroupByOutputType[P]>
-            : GetScalarType<T[P], RadMorphImageGroupByOutputType[P]>
+              : GetScalarType<T[P], ImageGroupByOutputType[P]>
+            : GetScalarType<T[P], ImageGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type RadMorphImageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ImageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     url?: boolean
-  }, ExtArgs["result"]["radMorphImage"]>
+    type?: boolean
+  }, ExtArgs["result"]["image"]>
 
-  export type RadMorphImageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ImageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     url?: boolean
-  }, ExtArgs["result"]["radMorphImage"]>
+    type?: boolean
+  }, ExtArgs["result"]["image"]>
 
-  export type RadMorphImageSelectScalar = {
+  export type ImageSelectScalar = {
     id?: boolean
     url?: boolean
+    type?: boolean
   }
 
 
-  export type $RadMorphImagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "RadMorphImage"
+  export type $ImagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Image"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
       url: string
-    }, ExtArgs["result"]["radMorphImage"]>
+      type: $Enums.ImageType
+    }, ExtArgs["result"]["image"]>
     composites: {}
   }
 
-  type RadMorphImageGetPayload<S extends boolean | null | undefined | RadMorphImageDefaultArgs> = $Result.GetResult<Prisma.$RadMorphImagePayload, S>
+  type ImageGetPayload<S extends boolean | null | undefined | ImageDefaultArgs> = $Result.GetResult<Prisma.$ImagePayload, S>
 
-  type RadMorphImageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<RadMorphImageFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: RadMorphImageCountAggregateInputType | true
+  type ImageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ImageFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ImageCountAggregateInputType | true
     }
 
-  export interface RadMorphImageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RadMorphImage'], meta: { name: 'RadMorphImage' } }
+  export interface ImageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Image'], meta: { name: 'Image' } }
     /**
-     * Find zero or one RadMorphImage that matches the filter.
-     * @param {RadMorphImageFindUniqueArgs} args - Arguments to find a RadMorphImage
+     * Find zero or one Image that matches the filter.
+     * @param {ImageFindUniqueArgs} args - Arguments to find a Image
      * @example
-     * // Get one RadMorphImage
-     * const radMorphImage = await prisma.radMorphImage.findUnique({
+     * // Get one Image
+     * const image = await prisma.image.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findUnique<T extends RadMorphImageFindUniqueArgs<ExtArgs>>(
-      args: SelectSubset<T, RadMorphImageFindUniqueArgs<ExtArgs>>
-    ): Prisma__RadMorphImageClient<$Result.GetResult<Prisma.$RadMorphImagePayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+    findUnique<T extends ImageFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, ImageFindUniqueArgs<ExtArgs>>
+    ): Prisma__ImageClient<$Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
 
     /**
-     * Find one RadMorphImage that matches the filter or throw an error with `error.code='P2025'` 
+     * Find one Image that matches the filter or throw an error with `error.code='P2025'` 
      * if no matches were found.
-     * @param {RadMorphImageFindUniqueOrThrowArgs} args - Arguments to find a RadMorphImage
+     * @param {ImageFindUniqueOrThrowArgs} args - Arguments to find a Image
      * @example
-     * // Get one RadMorphImage
-     * const radMorphImage = await prisma.radMorphImage.findUniqueOrThrow({
+     * // Get one Image
+     * const image = await prisma.image.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findUniqueOrThrow<T extends RadMorphImageFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, RadMorphImageFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__RadMorphImageClient<$Result.GetResult<Prisma.$RadMorphImagePayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+    findUniqueOrThrow<T extends ImageFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, ImageFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__ImageClient<$Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
 
     /**
-     * Find the first RadMorphImage that matches the filter.
+     * Find the first Image that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RadMorphImageFindFirstArgs} args - Arguments to find a RadMorphImage
+     * @param {ImageFindFirstArgs} args - Arguments to find a Image
      * @example
-     * // Get one RadMorphImage
-     * const radMorphImage = await prisma.radMorphImage.findFirst({
+     * // Get one Image
+     * const image = await prisma.image.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findFirst<T extends RadMorphImageFindFirstArgs<ExtArgs>>(
-      args?: SelectSubset<T, RadMorphImageFindFirstArgs<ExtArgs>>
-    ): Prisma__RadMorphImageClient<$Result.GetResult<Prisma.$RadMorphImagePayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+    findFirst<T extends ImageFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, ImageFindFirstArgs<ExtArgs>>
+    ): Prisma__ImageClient<$Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
 
     /**
-     * Find the first RadMorphImage that matches the filter or
+     * Find the first Image that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RadMorphImageFindFirstOrThrowArgs} args - Arguments to find a RadMorphImage
+     * @param {ImageFindFirstOrThrowArgs} args - Arguments to find a Image
      * @example
-     * // Get one RadMorphImage
-     * const radMorphImage = await prisma.radMorphImage.findFirstOrThrow({
+     * // Get one Image
+     * const image = await prisma.image.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findFirstOrThrow<T extends RadMorphImageFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, RadMorphImageFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__RadMorphImageClient<$Result.GetResult<Prisma.$RadMorphImagePayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+    findFirstOrThrow<T extends ImageFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, ImageFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__ImageClient<$Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
 
     /**
-     * Find zero or more RadMorphImages that matches the filter.
+     * Find zero or more Images that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RadMorphImageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {ImageFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all RadMorphImages
-     * const radMorphImages = await prisma.radMorphImage.findMany()
+     * // Get all Images
+     * const images = await prisma.image.findMany()
      * 
-     * // Get first 10 RadMorphImages
-     * const radMorphImages = await prisma.radMorphImage.findMany({ take: 10 })
+     * // Get first 10 Images
+     * const images = await prisma.image.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const radMorphImageWithIdOnly = await prisma.radMorphImage.findMany({ select: { id: true } })
+     * const imageWithIdOnly = await prisma.image.findMany({ select: { id: true } })
      * 
     **/
-    findMany<T extends RadMorphImageFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, RadMorphImageFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RadMorphImagePayload<ExtArgs>, T, 'findMany'>>
+    findMany<T extends ImageFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ImageFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, 'findMany'>>
 
     /**
-     * Create a RadMorphImage.
-     * @param {RadMorphImageCreateArgs} args - Arguments to create a RadMorphImage.
+     * Create a Image.
+     * @param {ImageCreateArgs} args - Arguments to create a Image.
      * @example
-     * // Create one RadMorphImage
-     * const RadMorphImage = await prisma.radMorphImage.create({
+     * // Create one Image
+     * const Image = await prisma.image.create({
      *   data: {
-     *     // ... data to create a RadMorphImage
+     *     // ... data to create a Image
      *   }
      * })
      * 
     **/
-    create<T extends RadMorphImageCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, RadMorphImageCreateArgs<ExtArgs>>
-    ): Prisma__RadMorphImageClient<$Result.GetResult<Prisma.$RadMorphImagePayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+    create<T extends ImageCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, ImageCreateArgs<ExtArgs>>
+    ): Prisma__ImageClient<$Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, 'create'>, never, ExtArgs>
 
     /**
-     * Create many RadMorphImages.
-     * @param {RadMorphImageCreateManyArgs} args - Arguments to create many RadMorphImages.
+     * Create many Images.
+     * @param {ImageCreateManyArgs} args - Arguments to create many Images.
      * @example
-     * // Create many RadMorphImages
-     * const radMorphImage = await prisma.radMorphImage.createMany({
+     * // Create many Images
+     * const image = await prisma.image.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
     **/
-    createMany<T extends RadMorphImageCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, RadMorphImageCreateManyArgs<ExtArgs>>
+    createMany<T extends ImageCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ImageCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many RadMorphImages and returns the data saved in the database.
-     * @param {RadMorphImageCreateManyAndReturnArgs} args - Arguments to create many RadMorphImages.
+     * Create many Images and returns the data saved in the database.
+     * @param {ImageCreateManyAndReturnArgs} args - Arguments to create many Images.
      * @example
-     * // Create many RadMorphImages
-     * const radMorphImage = await prisma.radMorphImage.createManyAndReturn({
+     * // Create many Images
+     * const image = await prisma.image.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many RadMorphImages and only return the `id`
-     * const radMorphImageWithIdOnly = await prisma.radMorphImage.createManyAndReturn({ 
+     * // Create many Images and only return the `id`
+     * const imageWithIdOnly = await prisma.image.createManyAndReturn({ 
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -5043,32 +5067,32 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
     **/
-    createManyAndReturn<T extends RadMorphImageCreateManyAndReturnArgs<ExtArgs>>(
-      args?: SelectSubset<T, RadMorphImageCreateManyAndReturnArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RadMorphImagePayload<ExtArgs>, T, 'createManyAndReturn'>>
+    createManyAndReturn<T extends ImageCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, ImageCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, 'createManyAndReturn'>>
 
     /**
-     * Delete a RadMorphImage.
-     * @param {RadMorphImageDeleteArgs} args - Arguments to delete one RadMorphImage.
+     * Delete a Image.
+     * @param {ImageDeleteArgs} args - Arguments to delete one Image.
      * @example
-     * // Delete one RadMorphImage
-     * const RadMorphImage = await prisma.radMorphImage.delete({
+     * // Delete one Image
+     * const Image = await prisma.image.delete({
      *   where: {
-     *     // ... filter to delete one RadMorphImage
+     *     // ... filter to delete one Image
      *   }
      * })
      * 
     **/
-    delete<T extends RadMorphImageDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, RadMorphImageDeleteArgs<ExtArgs>>
-    ): Prisma__RadMorphImageClient<$Result.GetResult<Prisma.$RadMorphImagePayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+    delete<T extends ImageDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, ImageDeleteArgs<ExtArgs>>
+    ): Prisma__ImageClient<$Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
 
     /**
-     * Update one RadMorphImage.
-     * @param {RadMorphImageUpdateArgs} args - Arguments to update one RadMorphImage.
+     * Update one Image.
+     * @param {ImageUpdateArgs} args - Arguments to update one Image.
      * @example
-     * // Update one RadMorphImage
-     * const radMorphImage = await prisma.radMorphImage.update({
+     * // Update one Image
+     * const image = await prisma.image.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -5078,34 +5102,34 @@ export namespace Prisma {
      * })
      * 
     **/
-    update<T extends RadMorphImageUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, RadMorphImageUpdateArgs<ExtArgs>>
-    ): Prisma__RadMorphImageClient<$Result.GetResult<Prisma.$RadMorphImagePayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+    update<T extends ImageUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, ImageUpdateArgs<ExtArgs>>
+    ): Prisma__ImageClient<$Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, 'update'>, never, ExtArgs>
 
     /**
-     * Delete zero or more RadMorphImages.
-     * @param {RadMorphImageDeleteManyArgs} args - Arguments to filter RadMorphImages to delete.
+     * Delete zero or more Images.
+     * @param {ImageDeleteManyArgs} args - Arguments to filter Images to delete.
      * @example
-     * // Delete a few RadMorphImages
-     * const { count } = await prisma.radMorphImage.deleteMany({
+     * // Delete a few Images
+     * const { count } = await prisma.image.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
     **/
-    deleteMany<T extends RadMorphImageDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, RadMorphImageDeleteManyArgs<ExtArgs>>
+    deleteMany<T extends ImageDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, ImageDeleteManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more RadMorphImages.
+     * Update zero or more Images.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RadMorphImageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {ImageUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many RadMorphImages
-     * const radMorphImage = await prisma.radMorphImage.updateMany({
+     * // Update many Images
+     * const image = await prisma.image.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -5115,59 +5139,59 @@ export namespace Prisma {
      * })
      * 
     **/
-    updateMany<T extends RadMorphImageUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, RadMorphImageUpdateManyArgs<ExtArgs>>
+    updateMany<T extends ImageUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, ImageUpdateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create or update one RadMorphImage.
-     * @param {RadMorphImageUpsertArgs} args - Arguments to update or create a RadMorphImage.
+     * Create or update one Image.
+     * @param {ImageUpsertArgs} args - Arguments to update or create a Image.
      * @example
-     * // Update or create a RadMorphImage
-     * const radMorphImage = await prisma.radMorphImage.upsert({
+     * // Update or create a Image
+     * const image = await prisma.image.upsert({
      *   create: {
-     *     // ... data to create a RadMorphImage
+     *     // ... data to create a Image
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the RadMorphImage we want to update
+     *     // ... the filter for the Image we want to update
      *   }
      * })
     **/
-    upsert<T extends RadMorphImageUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, RadMorphImageUpsertArgs<ExtArgs>>
-    ): Prisma__RadMorphImageClient<$Result.GetResult<Prisma.$RadMorphImagePayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+    upsert<T extends ImageUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, ImageUpsertArgs<ExtArgs>>
+    ): Prisma__ImageClient<$Result.GetResult<Prisma.$ImagePayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
 
     /**
-     * Count the number of RadMorphImages.
+     * Count the number of Images.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RadMorphImageCountArgs} args - Arguments to filter RadMorphImages to count.
+     * @param {ImageCountArgs} args - Arguments to filter Images to count.
      * @example
-     * // Count the number of RadMorphImages
-     * const count = await prisma.radMorphImage.count({
+     * // Count the number of Images
+     * const count = await prisma.image.count({
      *   where: {
-     *     // ... the filter for the RadMorphImages we want to count
+     *     // ... the filter for the Images we want to count
      *   }
      * })
     **/
-    count<T extends RadMorphImageCountArgs>(
-      args?: Subset<T, RadMorphImageCountArgs>,
+    count<T extends ImageCountArgs>(
+      args?: Subset<T, ImageCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], RadMorphImageCountAggregateOutputType>
+          : GetScalarType<T['select'], ImageCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a RadMorphImage.
+     * Allows you to perform aggregations operations on a Image.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RadMorphImageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {ImageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -5187,13 +5211,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends RadMorphImageAggregateArgs>(args: Subset<T, RadMorphImageAggregateArgs>): Prisma.PrismaPromise<GetRadMorphImageAggregateType<T>>
+    aggregate<T extends ImageAggregateArgs>(args: Subset<T, ImageAggregateArgs>): Prisma.PrismaPromise<GetImageAggregateType<T>>
 
     /**
-     * Group by RadMorphImage.
+     * Group by Image.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {RadMorphImageGroupByArgs} args - Group by arguments.
+     * @param {ImageGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -5208,14 +5232,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends RadMorphImageGroupByArgs,
+      T extends ImageGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: RadMorphImageGroupByArgs['orderBy'] }
-        : { orderBy?: RadMorphImageGroupByArgs['orderBy'] },
+        ? { orderBy: ImageGroupByArgs['orderBy'] }
+        : { orderBy?: ImageGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -5264,20 +5288,20 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, RadMorphImageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRadMorphImageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, ImageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetImageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the RadMorphImage model
+   * Fields of the Image model
    */
-  readonly fields: RadMorphImageFieldRefs;
+  readonly fields: ImageFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for RadMorphImage.
+   * The delegate class that acts as a "Promise-like" for Image.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__RadMorphImageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__ImageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
 
 
@@ -5306,296 +5330,297 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the RadMorphImage model
+   * Fields of the Image model
    */ 
-  interface RadMorphImageFieldRefs {
-    readonly id: FieldRef<"RadMorphImage", 'String'>
-    readonly url: FieldRef<"RadMorphImage", 'String'>
+  interface ImageFieldRefs {
+    readonly id: FieldRef<"Image", 'String'>
+    readonly url: FieldRef<"Image", 'String'>
+    readonly type: FieldRef<"Image", 'ImageType'>
   }
     
 
   // Custom InputTypes
   /**
-   * RadMorphImage findUnique
+   * Image findUnique
    */
-  export type RadMorphImageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ImageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RadMorphImage
+     * Select specific fields to fetch from the Image
      */
-    select?: RadMorphImageSelect<ExtArgs> | null
+    select?: ImageSelect<ExtArgs> | null
     /**
-     * Filter, which RadMorphImage to fetch.
+     * Filter, which Image to fetch.
      */
-    where: RadMorphImageWhereUniqueInput
+    where: ImageWhereUniqueInput
   }
 
   /**
-   * RadMorphImage findUniqueOrThrow
+   * Image findUniqueOrThrow
    */
-  export type RadMorphImageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ImageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RadMorphImage
+     * Select specific fields to fetch from the Image
      */
-    select?: RadMorphImageSelect<ExtArgs> | null
+    select?: ImageSelect<ExtArgs> | null
     /**
-     * Filter, which RadMorphImage to fetch.
+     * Filter, which Image to fetch.
      */
-    where: RadMorphImageWhereUniqueInput
+    where: ImageWhereUniqueInput
   }
 
   /**
-   * RadMorphImage findFirst
+   * Image findFirst
    */
-  export type RadMorphImageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ImageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RadMorphImage
+     * Select specific fields to fetch from the Image
      */
-    select?: RadMorphImageSelect<ExtArgs> | null
+    select?: ImageSelect<ExtArgs> | null
     /**
-     * Filter, which RadMorphImage to fetch.
+     * Filter, which Image to fetch.
      */
-    where?: RadMorphImageWhereInput
+    where?: ImageWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of RadMorphImages to fetch.
+     * Determine the order of Images to fetch.
      */
-    orderBy?: RadMorphImageOrderByWithRelationInput | RadMorphImageOrderByWithRelationInput[]
+    orderBy?: ImageOrderByWithRelationInput | ImageOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for RadMorphImages.
+     * Sets the position for searching for Images.
      */
-    cursor?: RadMorphImageWhereUniqueInput
+    cursor?: ImageWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` RadMorphImages from the position of the cursor.
+     * Take `±n` Images from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` RadMorphImages.
+     * Skip the first `n` Images.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of RadMorphImages.
+     * Filter by unique combinations of Images.
      */
-    distinct?: RadMorphImageScalarFieldEnum | RadMorphImageScalarFieldEnum[]
+    distinct?: ImageScalarFieldEnum | ImageScalarFieldEnum[]
   }
 
   /**
-   * RadMorphImage findFirstOrThrow
+   * Image findFirstOrThrow
    */
-  export type RadMorphImageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ImageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RadMorphImage
+     * Select specific fields to fetch from the Image
      */
-    select?: RadMorphImageSelect<ExtArgs> | null
+    select?: ImageSelect<ExtArgs> | null
     /**
-     * Filter, which RadMorphImage to fetch.
+     * Filter, which Image to fetch.
      */
-    where?: RadMorphImageWhereInput
+    where?: ImageWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of RadMorphImages to fetch.
+     * Determine the order of Images to fetch.
      */
-    orderBy?: RadMorphImageOrderByWithRelationInput | RadMorphImageOrderByWithRelationInput[]
+    orderBy?: ImageOrderByWithRelationInput | ImageOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for RadMorphImages.
+     * Sets the position for searching for Images.
      */
-    cursor?: RadMorphImageWhereUniqueInput
+    cursor?: ImageWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` RadMorphImages from the position of the cursor.
+     * Take `±n` Images from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` RadMorphImages.
+     * Skip the first `n` Images.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of RadMorphImages.
+     * Filter by unique combinations of Images.
      */
-    distinct?: RadMorphImageScalarFieldEnum | RadMorphImageScalarFieldEnum[]
+    distinct?: ImageScalarFieldEnum | ImageScalarFieldEnum[]
   }
 
   /**
-   * RadMorphImage findMany
+   * Image findMany
    */
-  export type RadMorphImageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ImageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RadMorphImage
+     * Select specific fields to fetch from the Image
      */
-    select?: RadMorphImageSelect<ExtArgs> | null
+    select?: ImageSelect<ExtArgs> | null
     /**
-     * Filter, which RadMorphImages to fetch.
+     * Filter, which Images to fetch.
      */
-    where?: RadMorphImageWhereInput
+    where?: ImageWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of RadMorphImages to fetch.
+     * Determine the order of Images to fetch.
      */
-    orderBy?: RadMorphImageOrderByWithRelationInput | RadMorphImageOrderByWithRelationInput[]
+    orderBy?: ImageOrderByWithRelationInput | ImageOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing RadMorphImages.
+     * Sets the position for listing Images.
      */
-    cursor?: RadMorphImageWhereUniqueInput
+    cursor?: ImageWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` RadMorphImages from the position of the cursor.
+     * Take `±n` Images from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` RadMorphImages.
+     * Skip the first `n` Images.
      */
     skip?: number
-    distinct?: RadMorphImageScalarFieldEnum | RadMorphImageScalarFieldEnum[]
+    distinct?: ImageScalarFieldEnum | ImageScalarFieldEnum[]
   }
 
   /**
-   * RadMorphImage create
+   * Image create
    */
-  export type RadMorphImageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ImageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RadMorphImage
+     * Select specific fields to fetch from the Image
      */
-    select?: RadMorphImageSelect<ExtArgs> | null
+    select?: ImageSelect<ExtArgs> | null
     /**
-     * The data needed to create a RadMorphImage.
+     * The data needed to create a Image.
      */
-    data: XOR<RadMorphImageCreateInput, RadMorphImageUncheckedCreateInput>
+    data: XOR<ImageCreateInput, ImageUncheckedCreateInput>
   }
 
   /**
-   * RadMorphImage createMany
+   * Image createMany
    */
-  export type RadMorphImageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ImageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many RadMorphImages.
+     * The data used to create many Images.
      */
-    data: RadMorphImageCreateManyInput | RadMorphImageCreateManyInput[]
+    data: ImageCreateManyInput | ImageCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * RadMorphImage createManyAndReturn
+   * Image createManyAndReturn
    */
-  export type RadMorphImageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ImageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RadMorphImage
+     * Select specific fields to fetch from the Image
      */
-    select?: RadMorphImageSelectCreateManyAndReturn<ExtArgs> | null
+    select?: ImageSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * The data used to create many RadMorphImages.
+     * The data used to create many Images.
      */
-    data: RadMorphImageCreateManyInput | RadMorphImageCreateManyInput[]
+    data: ImageCreateManyInput | ImageCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * RadMorphImage update
+   * Image update
    */
-  export type RadMorphImageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ImageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RadMorphImage
+     * Select specific fields to fetch from the Image
      */
-    select?: RadMorphImageSelect<ExtArgs> | null
+    select?: ImageSelect<ExtArgs> | null
     /**
-     * The data needed to update a RadMorphImage.
+     * The data needed to update a Image.
      */
-    data: XOR<RadMorphImageUpdateInput, RadMorphImageUncheckedUpdateInput>
+    data: XOR<ImageUpdateInput, ImageUncheckedUpdateInput>
     /**
-     * Choose, which RadMorphImage to update.
+     * Choose, which Image to update.
      */
-    where: RadMorphImageWhereUniqueInput
+    where: ImageWhereUniqueInput
   }
 
   /**
-   * RadMorphImage updateMany
+   * Image updateMany
    */
-  export type RadMorphImageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ImageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update RadMorphImages.
+     * The data used to update Images.
      */
-    data: XOR<RadMorphImageUpdateManyMutationInput, RadMorphImageUncheckedUpdateManyInput>
+    data: XOR<ImageUpdateManyMutationInput, ImageUncheckedUpdateManyInput>
     /**
-     * Filter which RadMorphImages to update
+     * Filter which Images to update
      */
-    where?: RadMorphImageWhereInput
+    where?: ImageWhereInput
   }
 
   /**
-   * RadMorphImage upsert
+   * Image upsert
    */
-  export type RadMorphImageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ImageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RadMorphImage
+     * Select specific fields to fetch from the Image
      */
-    select?: RadMorphImageSelect<ExtArgs> | null
+    select?: ImageSelect<ExtArgs> | null
     /**
-     * The filter to search for the RadMorphImage to update in case it exists.
+     * The filter to search for the Image to update in case it exists.
      */
-    where: RadMorphImageWhereUniqueInput
+    where: ImageWhereUniqueInput
     /**
-     * In case the RadMorphImage found by the `where` argument doesn't exist, create a new RadMorphImage with this data.
+     * In case the Image found by the `where` argument doesn't exist, create a new Image with this data.
      */
-    create: XOR<RadMorphImageCreateInput, RadMorphImageUncheckedCreateInput>
+    create: XOR<ImageCreateInput, ImageUncheckedCreateInput>
     /**
-     * In case the RadMorphImage was found with the provided `where` argument, update it with this data.
+     * In case the Image was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<RadMorphImageUpdateInput, RadMorphImageUncheckedUpdateInput>
+    update: XOR<ImageUpdateInput, ImageUncheckedUpdateInput>
   }
 
   /**
-   * RadMorphImage delete
+   * Image delete
    */
-  export type RadMorphImageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ImageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RadMorphImage
+     * Select specific fields to fetch from the Image
      */
-    select?: RadMorphImageSelect<ExtArgs> | null
+    select?: ImageSelect<ExtArgs> | null
     /**
-     * Filter which RadMorphImage to delete.
+     * Filter which Image to delete.
      */
-    where: RadMorphImageWhereUniqueInput
+    where: ImageWhereUniqueInput
   }
 
   /**
-   * RadMorphImage deleteMany
+   * Image deleteMany
    */
-  export type RadMorphImageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ImageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which RadMorphImages to delete
+     * Filter which Images to delete
      */
-    where?: RadMorphImageWhereInput
+    where?: ImageWhereInput
   }
 
   /**
-   * RadMorphImage without action
+   * Image without action
    */
-  export type RadMorphImageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ImageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the RadMorphImage
+     * Select specific fields to fetch from the Image
      */
-    select?: RadMorphImageSelect<ExtArgs> | null
+    select?: ImageSelect<ExtArgs> | null
   }
 
 
@@ -19004,12 +19029,13 @@ export namespace Prisma {
   export type UserEmailScalarFieldEnum = (typeof UserEmailScalarFieldEnum)[keyof typeof UserEmailScalarFieldEnum]
 
 
-  export const RadMorphImageScalarFieldEnum: {
+  export const ImageScalarFieldEnum: {
     id: 'id',
-    url: 'url'
+    url: 'url',
+    type: 'type'
   };
 
-  export type RadMorphImageScalarFieldEnum = (typeof RadMorphImageScalarFieldEnum)[keyof typeof RadMorphImageScalarFieldEnum]
+  export type ImageScalarFieldEnum = (typeof ImageScalarFieldEnum)[keyof typeof ImageScalarFieldEnum]
 
 
   export const UserPhoneNumberScalarFieldEnum: {
@@ -19254,6 +19280,20 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'ImageType'
+   */
+  export type EnumImageTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImageType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ImageType[]'
+   */
+  export type ListEnumImageTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImageType[]'>
     
 
 
@@ -19521,41 +19561,46 @@ export namespace Prisma {
     newsletter?: BoolWithAggregatesFilter<"UserEmail"> | boolean
   }
 
-  export type RadMorphImageWhereInput = {
-    AND?: RadMorphImageWhereInput | RadMorphImageWhereInput[]
-    OR?: RadMorphImageWhereInput[]
-    NOT?: RadMorphImageWhereInput | RadMorphImageWhereInput[]
-    id?: StringFilter<"RadMorphImage"> | string
-    url?: StringFilter<"RadMorphImage"> | string
+  export type ImageWhereInput = {
+    AND?: ImageWhereInput | ImageWhereInput[]
+    OR?: ImageWhereInput[]
+    NOT?: ImageWhereInput | ImageWhereInput[]
+    id?: StringFilter<"Image"> | string
+    url?: StringFilter<"Image"> | string
+    type?: EnumImageTypeFilter<"Image"> | $Enums.ImageType
   }
 
-  export type RadMorphImageOrderByWithRelationInput = {
+  export type ImageOrderByWithRelationInput = {
     id?: SortOrder
     url?: SortOrder
+    type?: SortOrder
   }
 
-  export type RadMorphImageWhereUniqueInput = Prisma.AtLeast<{
+  export type ImageWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    AND?: RadMorphImageWhereInput | RadMorphImageWhereInput[]
-    OR?: RadMorphImageWhereInput[]
-    NOT?: RadMorphImageWhereInput | RadMorphImageWhereInput[]
-    url?: StringFilter<"RadMorphImage"> | string
+    AND?: ImageWhereInput | ImageWhereInput[]
+    OR?: ImageWhereInput[]
+    NOT?: ImageWhereInput | ImageWhereInput[]
+    url?: StringFilter<"Image"> | string
+    type?: EnumImageTypeFilter<"Image"> | $Enums.ImageType
   }, "id">
 
-  export type RadMorphImageOrderByWithAggregationInput = {
+  export type ImageOrderByWithAggregationInput = {
     id?: SortOrder
     url?: SortOrder
-    _count?: RadMorphImageCountOrderByAggregateInput
-    _max?: RadMorphImageMaxOrderByAggregateInput
-    _min?: RadMorphImageMinOrderByAggregateInput
+    type?: SortOrder
+    _count?: ImageCountOrderByAggregateInput
+    _max?: ImageMaxOrderByAggregateInput
+    _min?: ImageMinOrderByAggregateInput
   }
 
-  export type RadMorphImageScalarWhereWithAggregatesInput = {
-    AND?: RadMorphImageScalarWhereWithAggregatesInput | RadMorphImageScalarWhereWithAggregatesInput[]
-    OR?: RadMorphImageScalarWhereWithAggregatesInput[]
-    NOT?: RadMorphImageScalarWhereWithAggregatesInput | RadMorphImageScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"RadMorphImage"> | string
-    url?: StringWithAggregatesFilter<"RadMorphImage"> | string
+  export type ImageScalarWhereWithAggregatesInput = {
+    AND?: ImageScalarWhereWithAggregatesInput | ImageScalarWhereWithAggregatesInput[]
+    OR?: ImageScalarWhereWithAggregatesInput[]
+    NOT?: ImageScalarWhereWithAggregatesInput | ImageScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Image"> | string
+    url?: StringWithAggregatesFilter<"Image"> | string
+    type?: EnumImageTypeWithAggregatesFilter<"Image"> | $Enums.ImageType
   }
 
   export type UserPhoneNumberWhereInput = {
@@ -20458,39 +20503,46 @@ export namespace Prisma {
     newsletter?: BoolFieldUpdateOperationsInput | boolean
   }
 
-  export type RadMorphImageCreateInput = {
+  export type ImageCreateInput = {
     id: string
     url: string
+    type: $Enums.ImageType
   }
 
-  export type RadMorphImageUncheckedCreateInput = {
+  export type ImageUncheckedCreateInput = {
     id: string
     url: string
+    type: $Enums.ImageType
   }
 
-  export type RadMorphImageUpdateInput = {
+  export type ImageUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    type?: EnumImageTypeFieldUpdateOperationsInput | $Enums.ImageType
   }
 
-  export type RadMorphImageUncheckedUpdateInput = {
+  export type ImageUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    type?: EnumImageTypeFieldUpdateOperationsInput | $Enums.ImageType
   }
 
-  export type RadMorphImageCreateManyInput = {
+  export type ImageCreateManyInput = {
     id: string
     url: string
+    type: $Enums.ImageType
   }
 
-  export type RadMorphImageUpdateManyMutationInput = {
+  export type ImageUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    type?: EnumImageTypeFieldUpdateOperationsInput | $Enums.ImageType
   }
 
-  export type RadMorphImageUncheckedUpdateManyInput = {
+  export type ImageUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    type?: EnumImageTypeFieldUpdateOperationsInput | $Enums.ImageType
   }
 
   export type UserPhoneNumberCreateInput = {
@@ -21485,19 +21537,39 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type RadMorphImageCountOrderByAggregateInput = {
-    id?: SortOrder
-    url?: SortOrder
+  export type EnumImageTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImageType | EnumImageTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImageType[] | ListEnumImageTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImageType[] | ListEnumImageTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImageTypeFilter<$PrismaModel> | $Enums.ImageType
   }
 
-  export type RadMorphImageMaxOrderByAggregateInput = {
+  export type ImageCountOrderByAggregateInput = {
     id?: SortOrder
     url?: SortOrder
+    type?: SortOrder
   }
 
-  export type RadMorphImageMinOrderByAggregateInput = {
+  export type ImageMaxOrderByAggregateInput = {
     id?: SortOrder
     url?: SortOrder
+    type?: SortOrder
+  }
+
+  export type ImageMinOrderByAggregateInput = {
+    id?: SortOrder
+    url?: SortOrder
+    type?: SortOrder
+  }
+
+  export type EnumImageTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImageType | EnumImageTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImageType[] | ListEnumImageTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImageType[] | ListEnumImageTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImageTypeWithAggregatesFilter<$PrismaModel> | $Enums.ImageType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumImageTypeFilter<$PrismaModel>
+    _max?: NestedEnumImageTypeFilter<$PrismaModel>
   }
 
   export type UserPhoneNumberCountOrderByAggregateInput = {
@@ -22640,6 +22712,10 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutEmailInput, UserUpdateWithoutEmailInput>, UserUncheckedUpdateWithoutEmailInput>
   }
 
+  export type EnumImageTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ImageType
+  }
+
   export type UserCreateNestedOneWithoutPhoneNumberInput = {
     create?: XOR<UserCreateWithoutPhoneNumberInput, UserUncheckedCreateWithoutPhoneNumberInput>
     connectOrCreate?: UserCreateOrConnectWithoutPhoneNumberInput
@@ -23067,6 +23143,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedEnumImageTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImageType | EnumImageTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImageType[] | ListEnumImageTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImageType[] | ListEnumImageTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImageTypeFilter<$PrismaModel> | $Enums.ImageType
+  }
+
+  export type NestedEnumImageTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ImageType | EnumImageTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ImageType[] | ListEnumImageTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ImageType[] | ListEnumImageTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumImageTypeWithAggregatesFilter<$PrismaModel> | $Enums.ImageType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumImageTypeFilter<$PrismaModel>
+    _max?: NestedEnumImageTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumReferralActionFilter<$PrismaModel = never> = {
@@ -25737,9 +25830,9 @@ export namespace Prisma {
      */
     export type UserEmailArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserEmailDefaultArgs<ExtArgs>
     /**
-     * @deprecated Use RadMorphImageDefaultArgs instead
+     * @deprecated Use ImageDefaultArgs instead
      */
-    export type RadMorphImageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = RadMorphImageDefaultArgs<ExtArgs>
+    export type ImageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ImageDefaultArgs<ExtArgs>
     /**
      * @deprecated Use UserPhoneNumberDefaultArgs instead
      */

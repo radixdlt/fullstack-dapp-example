@@ -45,7 +45,7 @@ describe('hash creation', () => {
       ])
     ).toBe(
       `Tuple(
-        Bytes("d1889d1a7275e49c18c7c07d24063af49651adbeda382b637d72b2a127f868be"),
+        Bytes("596e82f104e6b62e240dde6b7e13a14fe862677369f6132f759bc5e9fd9dc2ec"),
         Bytes("dd052a044d37f98bb5a3edf71f6fb08fd8787f42243d3fb6b54a0ca09b909643"),
       )`
     )

@@ -1,6 +1,6 @@
 import type { LayoutServerLoad } from './$types'
 
 export const load: LayoutServerLoad = async ({ locals }) => {
-  const radMorphImages = await locals.dbClient.radMorphImage.findMany({})
-  return { radMorphImages }
+  const images = await locals.dbClient.image.findMany({})
+  return { images }
 }

@@ -3,35 +3,37 @@ import { ResultAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers'
 
-export type RadMorphModel = ReturnType<typeof RadMorphModel>
+export type ImageModel = ReturnType<typeof ImageModel>
 
-export type RadMorphModelMethods = ReturnType<RadMorphModel>
+export type ImageModelMethods = ReturnType<ImageModel>
 
-export const RadMorphModel = (db: PrismaClient) => (logger?: AppLogger) => {
+export const ImageModel = (db: PrismaClient) => (logger?: AppLogger) => {
   const addMany = (data: { url: string; id: string }[]) =>
     ResultAsync.fromPromise(
       db.$transaction(async (transaction) => {
-        await transaction.radMorphImage.deleteMany({
+        await transaction.image.deleteMany({
           where: { id: { in: data.map((d) => d.id) } }
         })
-        await transaction.radMorphImage.createMany({
-          data
+        await transaction.image.createMany({
+          data: data.map((item) => ({ ...item, type: 'RadMorph' }))
         })
       }),
       (error) => {
-        logger?.error({ error, method: 'addMany', model: 'RadMorphModel' })
+        logger?.error({ error, method: 'addMany', model: 'ImageModel' })
         return createApiError('failed to add many radmorphs images', 400)()
       }
     )
 
-  const list = () =>
+  const listRadmorphs = () =>
     ResultAsync.fromPromise(
-      db.radMorphImage.findMany({
-        where: {}
+      db.image.findMany({
+        where: {
+          type: 'RadMorph'
+        }
       }),
       (error) => {
-        logger?.error({ error, method: 'list', model: 'RadMorphModel' })
-        return createApiError('failed to get radmorphs', 400)()
+        logger?.error({ error, method: 'listRadmorphs', model: 'ImageModel' })
+        return createApiError('failed to get radmorph images', 400)()
       }
     )
 
@@ -47,7 +49,7 @@ export const RadMorphModel = (db: PrismaClient) => (logger?: AppLogger) => {
     color2: string
   }) =>
     ResultAsync.fromPromise(
-      db.radMorphImage.findFirst({
+      db.image.findFirst({
         where: {
           OR: [
             {
@@ -60,7 +62,7 @@ export const RadMorphModel = (db: PrismaClient) => (logger?: AppLogger) => {
         }
       }),
       (error) => {
-        logger?.error({ error, method: 'getUrl', model: 'RadMorphModel' })
+        logger?.error({ error, method: 'getUrl', model: 'ImageModel' })
         return createApiError('failed to get radmorph image url', 400)()
       }
     )
@@ -68,6 +70,6 @@ export const RadMorphModel = (db: PrismaClient) => (logger?: AppLogger) => {
   return {
     getUrl,
     addMany,
-    list
+    listRadmorphs
   }
 }
