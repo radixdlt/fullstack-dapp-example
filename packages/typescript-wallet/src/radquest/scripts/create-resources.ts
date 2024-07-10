@@ -20,7 +20,7 @@ createResources()
       adminBadgeAddress: resources.adminBadgeAddress
     })
       .map((giftBoxes) => giftBoxes.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}))
-      .map((giftBoxes) => ({ ...resources, ...giftBoxes }))
+      .map((giftBox) => ({ ...resources, giftBox }))
       .andThen((resources) =>
         mintAdminBadgeToSystemAccount(
           resources.adminBadgeAddress,

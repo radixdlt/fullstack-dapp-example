@@ -22,7 +22,7 @@ export const createResources = () =>
         .andThen(() => createRadgem({ superAdminBadgeAddress, adminBadgeAddress }))
         .map((radgemAddress) => (resources.radgemAddress = radgemAddress))
         .andThen(() => createEnergyCard({ superAdminBadgeAddress, adminBadgeAddress }))
-        .map((energyCardAddress) => (resources.energyCardAddress = energyCardAddress))
+        .map((energyCardAddress) => (resources.morphEnergyCardAddress = energyCardAddress))
         .andThen(() => createRadmorph({ superAdminBadgeAddress, adminBadgeAddress }))
         .map((radmorphAddress) => (resources.radmorphAddress = radmorphAddress))
         .andThen(() => createOtterCoin({ superAdminBadgeAddress, adminBadgeAddress }))

@@ -8,29 +8,29 @@ export const Addresses = (networkId: number) => {
       Stokenet: {
         badges: {
           adminBadgeAddress:
-            'resource_tdx_2_1t42w8wgdpg2uk6zgcynd239kzuvc4wc2czwcllvzh4rq73wlu8pkec',
+            'resource_tdx_2_1t4xlsunrlwsphz8xs4z3lkx95nsdcduvp0ns2n6jsarpzwj0mttvwj',
           superAdminBadgeAddress:
-            'resource_tdx_2_1tk60umm6u6rv87yr3gy4qxd24uqqxpa72e6alnrqjg6fk75j203psl',
+            'resource_tdx_2_1t55stdr7xlkxu27j5qqz402lsuua9tz6gzpc9ky8k5utm4mk2vcmkh',
           heroBadgeAddress:
-            'resource_tdx_2_1nfav05g6tnuvhtphz6t7rv8wpsceh8hh4mg5aud6c0996dkuzz98e7',
+            'resource_tdx_2_1nfdq2k28ye2ywn8dsc3kxdfqv94p8wl7mkphqj2yrh9fxfegh3qpx4',
           kycBadgeAddress: 'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan'
         },
         resources: {
-          elementAddress: 'resource_tdx_2_1thlheurytvscgaagsfr6ydjktyqudjlnyghqjarsl9gw8tzegzax8k',
-          clamAddress: 'resource_tdx_2_1thpvfcsuwfkp60pvrd5kcn9rg6d7pa0myk4hqrv28qa40j3efctvyv',
-          morphEnergyCards:
-            'resource_tdx_2_1nfvcf4zs9g9398fjw5ywgrms7elagy04aql0jnv5ty57ckr2ehhnh5',
-          radgemAddress: 'resource_tdx_2_1nf96jrpa3lxxzc27y3dttlsg3xvqyjeuddwh4zl6lu59zhdmhv2jqv',
-          radmorphAddress: 'resource_tdx_2_1ntl0225s23ap0zkzpc7xpnqy8zh97yud4gltl7jn4ggqdam7nf8u9u',
+          elementAddress: 'resource_tdx_2_1th2kwgcqwms3668eup3chd4f0ntw44nwtdhk466hc375uw3700x7sl',
+          clamAddress: 'resource_tdx_2_1thtp8ud63sjl0ue6qrz3vrg9tm340e639xm8c8pzhqcsv3lqh2c7vj',
+          radgemAddress: 'resource_tdx_2_1ngppcvg3w58g8zgcky45czq5uuumalh42ftpzm7jsgwftdypd80v4r',
+          morphEnergyCardAddress:
+            'resource_tdx_2_1nfu5400kzjp33d23paldzh7qha9r422wpyc7hr4jmzm03cnl0sqpy6',
+          radmorphAddress: 'resource_tdx_2_1nf6znt7e25gw82mzryc3urr99lzls5kru3lm2l6z5tt4lyhd8u62er',
+          otterCoinAddress:
+            'resource_tdx_2_1t53hs37sxq0xgyg2hd8fd3lqfakhp09m8tmhkp0kqtwp859rqvja7w',
           instapassBadgeAddress:
             'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan',
-          otterCoinAddress:
-            'resource_tdx_2_1t5pvx3yuwa7rxpa8h8uxnx068ruap9k7nqd7k5qxgay4yjalp9seng',
           giftBox: {
-            Starter: 'resource_tdx_2_1t5mjyg2ypn4xcyz24fxelqdcrtpvcagsaf8wm0sl4mx60qq72xl3j5',
-            Simple: 'resource_tdx_2_1t5yh4c7kynz84f3lz9tpmx0vlstkat2cmxfe8j3z5teg07wngsuqu6',
-            Fancy: 'resource_tdx_2_1tkalk3pwr3dkmluj7rujvg6r27c3kmmw46p6tveqelfhm6mhfyj069',
-            Elite: 'resource_tdx_2_1t4vlqdywf6m4p3eeecu2cglneeqt7lc8mrl9xnaryzs9u9edxsr65u'
+            Starter: 'resource_tdx_2_1t53t0x0lh5t4mw9r6gtr490cxetvafeszkyrwzhmryls3fkmq3ymwz',
+            Simple: 'resource_tdx_2_1tktsu0xcn03y9klzr3qm3avrwu0dwr8lugyuzsccx8ftm34f7fg4zj',
+            Fancy: 'resource_tdx_2_1thzh76rwwnvc5ncdwyjjw6uzqwr8txf4q6rg90xyzkxz26pmu89546',
+            Elite: 'resource_tdx_2_1t4fkt03j9rwyshp3p28y75gqrqwt0stv3v47hrnrag4uwkxln3zn8c'
           }
         },
         package: 'package_tdx_2_1p4s8zzff75nl96nmzxu6scrmfpflm0k0smtsfruel9vd3ndfyt5lzk',

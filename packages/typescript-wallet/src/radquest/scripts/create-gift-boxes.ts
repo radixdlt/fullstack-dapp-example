@@ -17,7 +17,7 @@ export const createGiftBoxes = ({
         superAdminBadgeAddress,
         adminBadgeAddress,
         metadata: value
-      }).map((res) => [key + 'GiftBox', res])
+      }).map((res) => [key, res])
     )
   )
 
