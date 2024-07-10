@@ -55,7 +55,7 @@
 
   <span class="info">
     <img src={LightbulbOutline} alt="Lightbulb icon" />
-    {selectedAnswer.info}
+    {@html selectedAnswer.info}
   </span>
 {/if}
 
@@ -83,6 +83,10 @@
 
   .info {
     font-style: italic;
+  }
+
+  .info :global(p) {
+    display: inline;
   }
 
   hr {
