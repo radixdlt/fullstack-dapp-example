@@ -1,4 +1,4 @@
-import { radixEngineClient } from '../../config'
+import { config, radixEngineClient } from '../../config'
 
 export const createOtterCoin = ({
   superAdminBadgeAddress,
@@ -123,6 +123,17 @@ CREATE_FUNGIBLE_RESOURCE
                     )
                 ),
                 true
+            ),
+            "dapp_definitions" => Tuple(
+                Enum<1u8>(
+                    Enum<128u8>(
+                        Array<String>(
+                            "${config.radQuest.accounts.jettySwapDappDefinition.address}",
+                            "${config.radQuest.accounts.lettySwapDappDefinition.address}"
+                        )
+                    )
+                ),
+                false
             )
         ),
         Map<String, Enum>()

@@ -76,6 +76,12 @@ export const Addresses = (networkId: number) => {
           jetty: {
             address: 'account_tdx_2_1290rrczjj4gxh9k0w30ukywwhzm9ltrmkqk0jcfaj50t5f6n4xxezt',
             accessController: ''
+          },
+          jettySwapDappDefinition: {
+            address: 'account_tdx_2_128e634vx9dfg0prxz2zwj8c7k48y28ftyggl52ppdk6qe9x7q3m2r9'
+          },
+          lettySwapDappDefinition: {
+            address: 'account_tdx_2_1299hh40njlhtn54n0kllj2ldxq32asfsp3apvfvqwp775wh50yslp6'
           }
         },
         dapps: {

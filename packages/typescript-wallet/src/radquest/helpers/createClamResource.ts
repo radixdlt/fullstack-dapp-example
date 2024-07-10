@@ -1,4 +1,4 @@
-import { radixEngineClient } from '../../config'
+import { config, radixEngineClient } from '../../config'
 
 export const createClamResource = ({
   superAdminBadgeAddress,
@@ -88,6 +88,34 @@ export const createClamResource = ({
                 "symbol" => Tuple(
                   Some(Enum<Metadata::String>("CLAM")),                  
                   false                                                         
+                ),
+                "tags" => Tuple(
+                    Enum<1u8>(
+                        Enum<128u8>(
+                            Array<String>(
+                                "radquest"
+                            )
+                        )
+                    ),
+                    false
+                ),
+                "icon_url" => Tuple(
+                    Enum<1u8>(
+                        Enum<13u8>(
+                            "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"
+                        )
+                    ),
+                    false
+                ),
+                "dapp_definitions" => Tuple(
+                    Enum<1u8>(
+                        Enum<128u8>(
+                            Array<String>(
+                                "${config.radQuest.accounts.dAppDefinition.address}"
+                            )
+                        )
+                    ),
+                    false
                 )
               ),
               Map<String, Enum>(
