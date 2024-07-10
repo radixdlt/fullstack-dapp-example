@@ -8,7 +8,7 @@
   import VerifyOtp from './VerifyOTP.svelte'
   import VerifyPhoneNumber from './VerifyPhoneNumber.svelte'
   import { ErrorReason } from '$lib/errors'
-  import type { PageData } from '../FirstTransactionQuest/$types'
+  import type { PageData } from './$types'
   import { readable, writable, derived } from 'svelte/store'
   import type { Quests } from 'content'
   import { type ComponentProps } from 'svelte'

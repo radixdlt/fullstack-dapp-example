@@ -1,6 +1,5 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
-  import CheckedIcon from '@images/checkbox-checkmark.svg'
 
   export let checked = false
   export let disabled = false
@@ -16,7 +15,7 @@
 </script>
 
 <button {disabled} on:click|stopPropagation={handleOnClick} class="wrapper">
-  <label class="label" style:--icon={`url(${CheckedIcon})`}>
+  <label class="label">
     <input {disabled} class="checkbox" type="checkbox" class:checked class:disabled bind:checked />
     <slot />
   </label>
@@ -55,7 +54,7 @@
 
   .checked {
     background:
-      center / 50% no-repeat var(--icon),
+      center / 50% no-repeat url('@images/checkbox-checkmark.svg'),
       var(--color-primary);
   }
 

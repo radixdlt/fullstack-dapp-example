@@ -1,6 +1,8 @@
 <script lang="ts">
   import { elasticOut } from 'svelte/easing'
 
+  export let faded: boolean = true
+
   const shake = (_: HTMLElement) => ({
     duration: 500,
     easing: elasticOut,
@@ -8,7 +10,7 @@
   })
 </script>
 
-<div class="error text-faded" in:shake>
+<div class="error" class:text-faded={faded} in:shake>
   <div class="icon-text"><slot /></div>
 </div>
 

@@ -88,6 +88,7 @@ interface Resources {
     backButton: 'Back'
     shareButton: 'Share'
     inProgress: 'In Progress'
+    invalidEmail: 'Invalid email'
     continueButton: 'Continue'
     placeholderNotFound: 'Placeholder {{id}} not found'
     claimButton: 'Claim'
