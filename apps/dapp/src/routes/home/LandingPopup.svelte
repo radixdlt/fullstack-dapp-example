@@ -8,6 +8,7 @@
   import { useLocalStorage } from '$lib/utils/local-storage'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import { onMount } from 'svelte'
+  import { user } from '../../stores'
 
   type Popup = LandingPopupDefinition & { html: string; id: LandingPopupId }
 
@@ -17,7 +18,7 @@
   let visibleLandingPopup: Popup
 
   onMount(() => {
-    seenLandingPopup = !!useLocalStorage('seen-landing-popup').get()
+    seenLandingPopup = !!(useLocalStorage('seen-landing-popup').get() || $user)
     const searchParams = new URLSearchParams(window.location.search)
     definitions.find((definition) => {
       if (
@@ -30,6 +31,16 @@
         return true
       }
     })
+
+    const unsubscribe = user.subscribe((value) => {
+      if (value) {
+        useLocalStorage('seen-landing-popup').set(true)
+      }
+    })
+
+    return () => {
+      unsubscribe()
+    }
   })
 
   const hideLandingPopup = () => {
