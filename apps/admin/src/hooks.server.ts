@@ -2,8 +2,8 @@ import { error, type Handle } from '@sveltejs/kit'
 import { env as privateEnv } from '$env/dynamic/private'
 import { verifyJwt } from '$lib/verify-jwt'
 import { PrismaClient } from 'database'
-import { RadmorphController } from '$lib/server/radmorph/controller'
-import { RadMorphModel, appLogger } from 'common'
+import { ImageController } from '$lib/server/image/controller'
+import { ImageModel, appLogger } from 'common'
 import { getQueues } from 'queues'
 import { config } from '$lib/config'
 
@@ -23,8 +23,8 @@ const dbClient = new PrismaClient({
 const { systemQueue } = getQueues(config.redis)
 const logger = appLogger
 
-const radmorphController = RadmorphController({
-  radMorphModel: RadMorphModel(dbClient)(logger),
+const imageController = ImageController({
+  imageModel: ImageModel(dbClient)(logger),
   systemQueue: systemQueue.queue
 })
 
@@ -50,7 +50,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.userId = userId
     event.locals.userType = userType
     event.locals.dbClient = dbClient
-    event.locals.radmorphController = radmorphController
+    event.locals.imageController = imageController
 
     return resolve(event, {})
   }

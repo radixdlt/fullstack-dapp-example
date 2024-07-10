@@ -12,7 +12,7 @@ import type {
   MessageModel,
   NotificationModel,
   MarketingModel,
-  RadMorphModel,
+  ImageModel,
   MailerLiteModel
 } from 'common'
 import type { PrismaClient } from 'database'
@@ -26,7 +26,7 @@ import type { AuthController } from '$lib/server/auth/controller'
 import type { MessageController } from '$lib/server/message/controller'
 import type { OneTimePasswordController } from '$lib/server/otp/controller'
 import type { NotificationController } from '$lib/server/notification/controller'
-import type { RadmorphController } from './radmorph/controller'
+import type { ImageController } from './image/controller'
 
 export type ControllerMethodOutput<T = any> = ResultAsync<
   { data: T; httpResponseCode: number },
@@ -45,7 +45,7 @@ export type Controllers = {
   messageController: MessageController
   oneTimePasswordController: OneTimePasswordController
   notificationController: NotificationController
-  radmorphController: RadmorphController
+  imageController: ImageController
 }
 
 export type ControllerDependencies = {
@@ -59,7 +59,7 @@ export type ControllerDependencies = {
   messageModel: ReturnType<MessageModel>
   notificationModel: ReturnType<NotificationModel>
   marketingModel: ReturnType<MarketingModel>
-  radMorphModel: ReturnType<RadMorphModel>
+  imageModel: ReturnType<ImageModel>
   logger: AppLogger
   dbClient: PrismaClient
   addresses: Addresses

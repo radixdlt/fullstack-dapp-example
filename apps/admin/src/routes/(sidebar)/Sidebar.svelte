@@ -34,7 +34,7 @@
   })
 
   let posts = [
-    { name: 'RadMorphs', icon: ChartPieOutline, href: '/radmorphs' },
+    { name: 'Images', icon: ChartPieOutline, href: '/images' },
     {
       name: 'Users',
       icon: RectangleListSolid,

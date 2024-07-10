@@ -13,7 +13,7 @@ import {
   MessageModel,
   NotificationModel,
   MarketingModel,
-  RadMorphModel,
+  ImageModel,
   MailerLiteModel
 } from 'common'
 import { UserType } from 'database'
@@ -38,7 +38,7 @@ import {
   createForbiddenResponse,
   createUnauthorizedResponse
 } from '$lib/server/helpers/create-error-response'
-import { RadmorphController } from '$lib/server/radmorph/controller'
+import { ImageController } from '$lib/server/image/controller'
 
 const networkId = +PUBLIC_NETWORK_ID
 
@@ -61,7 +61,7 @@ const mailerLiteModel = MailerLiteModel({
 })
 const notificationModel = NotificationModel(dbClient)
 const marketingModel = MarketingModel(dbClient)
-const radMorphModel = RadMorphModel(dbClient)
+const imageModel = ImageModel(dbClient)
 
 export const handle: Handle = async ({ event, resolve }) => {
   const origin = event.request.headers.get('origin')
@@ -106,7 +106,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     messageModel: messageModel(logger),
     notificationModel: notificationModel(logger),
     marketingModel: marketingModel(logger),
-    radMorphModel: radMorphModel(logger)
+    imageModel: imageModel(logger)
   } satisfies ControllerDependencies
 
   event.locals.controllers = {
@@ -116,7 +116,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     messageController: MessageController(event.locals.dependencies),
     oneTimePasswordController: OneTimePasswordController(event.locals.dependencies),
     notificationController: NotificationController(event.locals.dependencies),
-    radmorphController: RadmorphController(event.locals.dependencies)
+    imageController: ImageController(event.locals.dependencies)
   }
 
   if (event.route.id?.includes('(protected)')) {

@@ -9,19 +9,15 @@ import { getRadgemCodes } from './helpers/get-radgem-codes'
 import { confirmAccountHasLocalIds } from './helpers/confirm-account-has-local-ids'
 import { validateRadmorphImageBody } from './helpers/validate-radmorph-image-body'
 
-export type RadmorphController = ReturnType<typeof RadmorphController>
-export const RadmorphController = ({
-  radMorphModel,
-  gatewayApi,
-  userModel
-}: ControllerDependencies) => {
+export type ImageController = ReturnType<typeof ImageController>
+export const ImageController = ({ imageModel, gatewayApi, userModel }: ControllerDependencies) => {
   const getKeyImageUrl = (radmorphAttributes: {
     shape: ShapeCode
     material: ShaderCode
     color1: ColorCode
     color2: ColorCode
   }) =>
-    radMorphModel
+    imageModel
       .getUrl(radmorphAttributes)
       .andThen((data) =>
         data ? ok(data.url) : err(createApiError('Radmorph image not found', 404)())

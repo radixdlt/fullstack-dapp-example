@@ -1,4 +1,4 @@
-import { RadMorphModel, createApiError } from 'common'
+import { ImageModel, createApiError } from 'common'
 
 import { ResultAsync } from 'neverthrow'
 
@@ -9,12 +9,12 @@ import { validateRadmorphConfiguration } from './helpers/validate-radmorph-confi
 
 const RADMORPH_CHUNK_SIZE = 350
 
-export type RadmorphController = ReturnType<typeof RadmorphController>
-export const RadmorphController = ({
-  radMorphModel,
+export type ImageController = ReturnType<typeof ImageController>
+export const ImageController = ({
+  imageModel,
   systemQueue
 }: {
-  radMorphModel: ReturnType<RadMorphModel>
+  imageModel: ReturnType<ImageModel>
   systemQueue: Queue<SystemJob>
 }) => {
   const addChunksToQueue = (chunks: { id: string; url: string }[][]) => {
@@ -48,23 +48,23 @@ export const RadmorphController = ({
       {} as Record<string, string>
     )
 
-  const uploadRadmorphConfiguration = (requestBody: unknown) =>
-    validateRadmorphConfiguration(requestBody)
-      .map((configuration) => duplicateConfigurationWithReversedColors(configuration))
-      .map((items) => Object.entries(items).map(([id, url]) => ({ id, url })))
-      .asyncAndThen((chunks) => radMorphModel.addMany(chunks))
-      .map(() => ({ data: {}, httpResponseCode: 200 }))
+  const uploadImagesJson = (requestBody: unknown) =>
+    validateRadmorphConfiguration(requestBody).asyncAndThen(({ data, imageType }) => {
+      const items = imageType === 'RadMorph' ? duplicateConfigurationWithReversedColors(data) : data
+      const chunks = Object.entries(items).map(([id, url]) => ({ id, url, imageType }))
+      return imageModel.addMany(chunks).map(() => ({ data: {}, httpResponseCode: 200 }))
+    })
 
   const populateImageOracle = () => {
-    return radMorphModel
-      .list()
+    return imageModel
+      .listRadmorphs()
       .map((items) => chunk(items, RADMORPH_CHUNK_SIZE))
       .andThen((chunks) => addChunksToQueue(chunks))
       .map(() => ({ data: {}, httpResponseCode: 200 }))
   }
 
   return {
-    uploadRadmorphConfiguration,
+    uploadImagesJson,
     populateImageOracle
   }
 }

@@ -1,9 +1,12 @@
 import { createApiError } from 'common'
 import { err, ok } from 'neverthrow'
-import { safeParse, type Output, string, record } from 'valibot'
+import { safeParse, type Output, string, record, object } from 'valibot'
 
 export const validateRadmorphConfiguration = (requestBody: unknown) => {
-  const radmorphsConfiguration = record(string(), string())
+  const radmorphsConfiguration = object({
+    data: record(string(), string()),
+    imageType: string()
+  })
 
   type Config = Output<typeof radmorphsConfiguration>
 

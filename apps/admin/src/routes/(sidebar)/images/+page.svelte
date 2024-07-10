@@ -1,14 +1,29 @@
 <script lang="ts">
   import Card from '$lib/widgets/Card.svelte'
-  import { Button, Heading, TableHeadCell } from 'flowbite-svelte'
+  import { http } from '$lib/http'
+  import { Button, Heading, Select, TableHeadCell, Label } from 'flowbite-svelte'
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead } from 'flowbite-svelte'
   import type { PageData } from './$types'
 
   export let data: PageData
 
-  const radmorphImages = data.radMorphImages
-
   let filesToBeUploaded: Record<string, string> = {}
+  let imageType: string
+
+  const imageTypes = [
+    {
+      value: 'RadMorph',
+      name: 'RadMorph'
+    },
+    {
+      value: 'RadGem',
+      name: 'RadGem'
+    },
+    {
+      value: 'Card',
+      name: 'Card'
+    }
+  ]
 
   const handleFileUpload = async (files: FileList | null) => {
     const file = files ? files[0] : undefined
@@ -29,40 +44,31 @@
 </script>
 
 <div class="mt-px space-y-4">
-  <Card title="Upload RadMorph images">
-    <input
-      type="file"
-      accept="application/JSON"
-      on:change={(event) => handleFileUpload(event?.currentTarget?.files)}
-    />
+  <Card title="Upload Images">
+    <div class="flex items-center">
+      <input
+        type="file"
+        accept="application/JSON"
+        on:change={(event) => handleFileUpload(event?.currentTarget?.files)}
+      />
+      <div>
+        <Label for="imageType" class="mb-2">Image Type</Label>
+        <Select id="imageType" items={imageTypes} bind:value={imageType} />
+      </div>
+    </div>
+
     <div>
       <Button
         class="my-5"
+        disabled={!imageType}
         on:click={async () => {
-          fetch('/radmorphs/upload-json', {
-            method: 'POST',
-            body: JSON.stringify(filesToBeUploaded),
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
+          http.post('/radmorphs/upload-json', { data: filesToBeUploaded, imageType })
         }}>Set in DB</Button
-      >
-
-      <Button
-        on:click={async () => {
-          fetch('/radmorphs/populate-image-oracle', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-        }}>Populate image oracle</Button
       >
     </div>
     {#if Object.keys(filesToBeUploaded).length > 0}
       <Heading class="py-4 text-md font-semibold text-gray-900 dark:text-white">
-        RadMorph Images to be uploaded
+        Images to be uploaded
       </Heading>
       <Table>
         <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
@@ -73,13 +79,13 @@
         <TableBody>
           {#each Object.entries(filesToBeUploaded) as radmorphImage}
             <TableBodyRow class="text-base">
-              <TableBodyCell class="mr-12 flex items-center space-x-6 whitespace-nowrap p-4">
+              <TableBodyCell class="flex items-center space-x-6 whitespace-nowrap p-4">
                 {radmorphImage[0]}
               </TableBodyCell>
               <TableBodyCell
                 class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
               >
-                <a href={radmorphImage[1]} target="_blank">radmorphImage[1]</a>
+                <a href={radmorphImage[1]} target="_blank">{radmorphImage[1]}</a>
               </TableBodyCell>
             </TableBodyRow>
           {/each}
@@ -90,29 +96,37 @@
 </div>
 
 <main class="mt-10 relative h-full w-full overflow-y-auto bg-white dark:bg-gray-800">
-  <div class="p-4">
+  <div class="p-4 grid gap-4 align-center grid-cols-2">
     <Heading tag="h1" class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
-      RadMorph Images
+      Images
     </Heading>
+    <Button
+      on:click={async () => {
+        http.post('/radmorphs/populate-image-oracle')
+      }}>Populate image oracle</Button
+    >
   </div>
   <Table>
     <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
-      {#each ['Id', 'Url'] as title}
+      {#each ['Id', 'Url', 'Type'] as title}
         <TableHeadCell class="p-4 font-medium">{title}</TableHeadCell>
       {/each}
     </TableHead>
     <TableBody>
-      {#each radmorphImages as radmorphImage}
+      {#each data.images as image}
         <TableBodyRow class="text-base">
-          <TableBodyCell
-            class="mr-12 flex items-center space-x-6 whitespace-nowrap p-4 cursor-pointer"
-          >
-            {radmorphImage.id}
+          <TableBodyCell class="flex items-center space-x-6 whitespace-nowrap p-4 cursor-pointer">
+            {image.id}
           </TableBodyCell>
           <TableBodyCell
             class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
           >
-            <a href={radmorphImage.url} target="_blank">{radmorphImage.url}</a>
+            <a href={image.url} target="_blank">{image.url}</a>
+          </TableBodyCell>
+          <TableBodyCell
+            class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
+          >
+            <a href={image.url} target="_blank">{image.type}</a>
           </TableBodyCell>
         </TableBodyRow>
       {/each}

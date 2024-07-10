@@ -50,9 +50,16 @@ model UserEmail {
   user            User      @relation(fields: [userId], references: [id])
 }
 
-model RadMorphImage {
-  id  String  @id
-  url String
+enum ImageType {
+  RadMorph
+  RadGem
+  Card 
+}
+
+model Image {
+  id    String  @id
+  url   String
+  type  ImageType
 }
 
 model UserPhoneNumber {

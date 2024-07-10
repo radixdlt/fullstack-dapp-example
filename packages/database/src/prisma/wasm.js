@@ -137,9 +137,10 @@ exports.Prisma.UserEmailScalarFieldEnum = {
   newsletter: 'newsletter'
 };
 
-exports.Prisma.RadMorphImageScalarFieldEnum = {
+exports.Prisma.ImageScalarFieldEnum = {
   id: 'id',
-  url: 'url'
+  url: 'url',
+  type: 'type'
 };
 
 exports.Prisma.UserPhoneNumberScalarFieldEnum = {
@@ -277,6 +278,12 @@ exports.UserType = exports.$Enums.UserType = {
   ADMIN: 'ADMIN'
 };
 
+exports.ImageType = exports.$Enums.ImageType = {
+  RadMorph: 'RadMorph',
+  RadGem: 'RadGem',
+  Card: 'Card'
+};
+
 exports.ReferralAction = exports.$Enums.ReferralAction = {
   INC: 'INC',
   DEC: 'DEC'
@@ -304,7 +311,7 @@ exports.TransactionIntentStatus = exports.$Enums.TransactionIntentStatus = {
 exports.Prisma.ModelName = {
   User: 'User',
   UserEmail: 'UserEmail',
-  RadMorphImage: 'RadMorphImage',
+  Image: 'Image',
   UserPhoneNumber: 'UserPhoneNumber',
   Referral: 'Referral',
   Challenge: 'Challenge',

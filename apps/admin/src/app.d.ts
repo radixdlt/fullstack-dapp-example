@@ -1,5 +1,5 @@
 import type { UserType, PrismaClient } from 'database'
-import type { RadmorphController } from '$lib/server/radmorph/controller'
+import type { ImageController } from '$lib/server/image/controller'
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 declare global {
@@ -12,7 +12,7 @@ declare global {
       userId: string
       userType: UserType
       dbClient: PrismaClient
-      radmorphController: RadmorphController
+      imageController: ImageController
     }
   }
 }
