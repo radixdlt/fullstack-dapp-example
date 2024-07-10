@@ -123,12 +123,12 @@
         {
           text: text['11a-answer.md'],
           info: text['11a-result.md'],
-          correct: true
+          correct: false
         },
         {
           text: text['11b-answer.md'],
           info: text['11b-result.md'],
-          correct: false
+          correct: true
         },
         {
           text: text['11c-answer.md'],
