@@ -48,6 +48,7 @@ mintAdminBadge({
       result,
       `\n\nDon't forget to get the kycOracleKeyValueStore from the Dashboard!
 
+You can find it here:
 https://stokenet-dashboard.radixdlt.com/component/${result.kycOracle}/state`
     )
   )

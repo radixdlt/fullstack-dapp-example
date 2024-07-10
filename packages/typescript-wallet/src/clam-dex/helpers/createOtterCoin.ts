@@ -16,6 +16,7 @@ export const createOtterCoin = ({
     "lock_fee"
     Decimal("50")
 ;
+
 CREATE_FUNGIBLE_RESOURCE
     Enum<1u8>(
         Enum<2u8>(
@@ -69,41 +70,15 @@ CREATE_FUNGIBLE_RESOURCE
         ),
         Enum<0u8>(),
         Enum<0u8>(),
-        Enum<1u8>(
-            Tuple(
-                Enum<1u8>(
-                    Enum<0u8>()
-                ),
-                Enum<1u8>(
-                    Enum<1u8>()
-                )
-            )
-        ),
-        Enum<1u8>(
-            Tuple(
-                Enum<1u8>(
-                    Enum<0u8>()
-                ),
-                Enum<1u8>(
-                    Enum<1u8>()
-                )
-            )
-        )
+        Enum<0u8>(),
+        Enum<0u8>()
     )
     Tuple(
         Map<String, Tuple>(
             "name" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "Otter Coin"
-                    )
-                ),
-                true
-            ),
-            "symbol" => Tuple(
-                Enum<1u8>(
-                    Enum<0u8>(
-                        "OTT"
+                        "Ottercoin"
                     )
                 ),
                 true
@@ -111,10 +86,20 @@ CREATE_FUNGIBLE_RESOURCE
             "description" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "The official currency of RadQuest otters, Otter Coins are used to purchase delicious clams, and may one day have other value besides."
+                        "Ottercoin was created by RadQuest’s guide otter, Jetty. Maybe you can buy some with a few Clams?\n\nClams are a token that is fungible and highly divisible. That means every clam is worth just the same as another, and you can send and hold even tiny fractions of an ottercoin!"
                     )
                 ),
                 true
+            ),
+            "tags" => Tuple(
+                Enum<1u8>(
+                    Enum<128u8>(
+                        Array<String>(
+                            "radquest"
+                        )
+                    )
+                ),
+                false
             ),
             "icon_url" => Tuple(
                 Enum<1u8>(
@@ -128,8 +113,7 @@ CREATE_FUNGIBLE_RESOURCE
                 Enum<1u8>(
                     Enum<128u8>(
                         Array<String>(
-                            "${config.radQuest.accounts.jettySwapDappDefinition.address}",
-                            "${config.radQuest.accounts.lettySwapDappDefinition.address}"
+                            "${config.radQuest.accounts.dAppDefinition.address}"
                         )
                     )
                 ),

@@ -188,6 +188,16 @@ export const createRadmorph = ({
                         ),
                         false
                     ),
+                    "tags" => Tuple(
+                        Enum<1u8>(
+                            Enum<128u8>(
+                                Array<String>(
+                                    "radquest"
+                                )
+                            )
+                        ),
+                        false
+                    ),
                     "icon_url" => Tuple(
                         Enum<1u8>(
                             Enum<13u8>(

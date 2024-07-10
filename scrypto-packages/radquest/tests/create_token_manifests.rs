@@ -202,12 +202,17 @@ fn create_radgem() {
                 burner => rule!(require(XRD));
                 burner_updater => rule!(deny_all);
             },
+            non_fungible_data_update_roles: non_fungible_data_update_roles! {
+                non_fungible_data_updater => rule!(require(XRD));
+                non_fungible_data_updater_updater => rule!(deny_all);
+            },
             ..Default::default()
         },
         metadata!(
             init {
               "name" => "RadGems", updatable;
               "description" => "Two RadGems can be combined with a Morph Energy Card by RadQuest’s Jetty to produce a beautiful RadMorph NFT. Higher quality RadGems will contribute to a higher quality RadMorph.", updatable;
+              "tags" => vec!["radquest"], updatable;
               "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
               "dapp_definitions" => vec!["dapp_definition_account_address"], updatable;
             }
@@ -262,6 +267,7 @@ fn create_morph_energy_card() {
             "description" => "A Morph Energy Card can be combined with 2 RadGems by RadQuest’s Jetty to produce a beautiful RadMorph NFT. Higher quality Energy Cards will contribute to a higher quality RadMorph.
 
 Morph Energy Cards allow RadQuest’s Jetty to harness the primordial energies of the universe to morph two RadGems into different shapes to create intricate, beautiful, and collectible RadMorphs.", updatable;
+            "tags" => vec!["radquest"], updatable;
             "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
             "dapp_definitions" => vec!["dapp_definition_account_address"], updatable;
           }
@@ -322,6 +328,7 @@ fn create_radmorph() {
           init {
             "name" => "RadMorphs", updatable;
             "description" => "Fused in the boundless energies of the RadQuest realm, RadMorphs are treasured by the dedicated and true of the Radix community.", updatable;
+            "tags" => vec!["radquest"], updatable;
             "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
             "dapp_definitions" => vec!["dapp_definition_account_address"], updatable;
           }
@@ -340,7 +347,7 @@ fn create_radmorph() {
 }
 
 #[test]
-pub fn create_otter_coin() {
+pub fn create_ottercoin() {
     let network = NetworkDefinition::mainnet();
 
     let manifest_builder = ManifestBuilder::new().create_fungible_resource(
@@ -349,20 +356,22 @@ pub fn create_otter_coin() {
         scrypto::prelude::DIVISIBILITY_MAXIMUM,
         FungibleResourceRoles {
             mint_roles: mint_roles! {
-                minter => OWNER;
+                minter => rule!(require(XRD));
                 minter_updater => rule!(deny_all);
             },
             burn_roles: burn_roles! {
-                burner => OWNER;
+                burner => rule!(require(XRD));
                 burner_updater => rule!(deny_all);
             },
             ..Default::default()
         },
         metadata!(
           init {
-            "name" => "Otter Coin", locked;
-            "symbol" => "OTT", locked;
-            "description" => "The official currency of RadQuest otters, Otter Coins are used to purchase delicious clams, and may one day have other value besides.", locked;
+            "name" => "Ottercoin", locked;
+            "description" => "Ottercoin was created by RadQuest’s guide otter, Jetty. Maybe you can buy some with a few Clams?
+
+Clams are a token that is fungible and highly divisible. That means every clam is worth just the same as another, and you can send and hold even tiny fractions of an ottercoin!", locked;
+            "tags" => vec!["radquest"], updatable;
             "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
             "dapp_definitions" => vec!["dapp_definition_account_address"], updatable;
           }
@@ -374,7 +383,7 @@ pub fn create_otter_coin() {
         manifest_builder.object_names(),
         &manifest_builder.build(),
         "./manifests/test-generated",
-        Some("create_otter_coin"),
+        Some("create_ottercoin"),
         &network,
     )
     .err();

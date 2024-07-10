@@ -143,6 +143,16 @@ CREATE_NON_FUNGIBLE_RESOURCE
                 ),
                 false
             ),
+            "tags" => Tuple(
+                Enum<1u8>(
+                    Enum<128u8>(
+                        Array<String>(
+                            "radquest"
+                        )
+                    )
+                ),
+                false
+            ),
             "icon_url" => Tuple(
                 Enum<1u8>(
                     Enum<13u8>(
@@ -155,7 +165,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
                 Enum<1u8>(
                     Enum<128u8>(
                         Array<String>(
-                            "dapp_definition_account_address"
+                            "${dapp_definition}"
                         )
                     )
                 ),
