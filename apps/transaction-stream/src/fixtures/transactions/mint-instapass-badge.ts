@@ -18,7 +18,7 @@ export default [
     fee_paid: '0.99459903015',
     affected_global_entities: [
       'transactiontracker_tdx_2_1stxxxxxxxxxxtxtrakxxxxxxxxx006844685494xxxxxxxxxxzw7jp',
-      addresses.resources.instapassBadgeAddress,
+      addresses.badges.instapassBadgeAddress,
       'account_tdx_2_12y30p7vks8pmc20h44s8zk3xtjfax2v34nul8vkfnpr30zanlrs9m4',
       'account_tdx_2_12yrnzzkn6m74pfgze3gtpsx3sxv5kf5rq4k3rufglqqczva9v77eds',
       'consensusmanager_tdx_2_1scxxxxxxxxxxcnsmgrxxxxxxxxx000999665565xxxxxxxxxv6cg29',
@@ -176,7 +176,7 @@ export default [
               },
               entity_module: 'Main',
               substate_type: 'NonFungibleResourceManagerDataEntry',
-              entity_address: addresses.resources.instapassBadgeAddress,
+              entity_address: addresses.badges.instapassBadgeAddress,
               partition_kind: 'KeyValue',
               partition_number: 65
             },
@@ -211,7 +211,7 @@ export default [
                       programmatic_json: null
                     }
                   },
-                  entity_address: addresses.resources.instapassBadgeAddress
+                  entity_address: addresses.badges.instapassBadgeAddress
                 }
               }
             }
@@ -254,7 +254,7 @@ export default [
               },
               entity_module: 'Main',
               substate_type: 'NonFungibleResourceManagerDataEntry',
-              entity_address: addresses.resources.instapassBadgeAddress,
+              entity_address: addresses.badges.instapassBadgeAddress,
               partition_kind: 'KeyValue',
               partition_number: 65
             },
@@ -289,7 +289,7 @@ export default [
                       programmatic_json: null
                     }
                   },
-                  entity_address: addresses.resources.instapassBadgeAddress
+                  entity_address: addresses.badges.instapassBadgeAddress
                 }
               }
             }
@@ -705,7 +705,7 @@ export default [
               substate_hex: null,
               substate_data: {
                 key: {
-                  resource_address: addresses.resources.instapassBadgeAddress
+                  resource_address: addresses.badges.instapassBadgeAddress
                 },
                 value: {
                   vault: {
@@ -781,7 +781,7 @@ export default [
                     global: false,
                     blueprint_info: {
                       features: [],
-                      outer_object: addresses.resources.instapassBadgeAddress,
+                      outer_object: addresses.badges.instapassBadgeAddress,
                       blueprint_name: 'NonFungibleVault',
                       package_address:
                         'package_tdx_2_1pkgxxxxxxxxxresrcexxxxxxxxx000538436477xxxxxxxxxmn4mes',
@@ -1395,7 +1395,7 @@ export default [
               substate_hex: null,
               substate_data: {
                 key: {
-                  resource_address: addresses.resources.instapassBadgeAddress
+                  resource_address: addresses.badges.instapassBadgeAddress
                 },
                 value: {
                   vault: {
@@ -1471,7 +1471,7 @@ export default [
                     global: false,
                     blueprint_info: {
                       features: [],
-                      outer_object: addresses.resources.instapassBadgeAddress,
+                      outer_object: addresses.badges.instapassBadgeAddress,
                       blueprint_name: 'NonFungibleVault',
                       package_address:
                         'package_tdx_2_1pkgxxxxxxxxxresrcexxxxxxxxx000538436477xxxxxxxxxmn4mes',
@@ -1793,7 +1793,7 @@ export default [
               },
               entity_module: 'Main',
               substate_type: 'NonFungibleResourceManagerFieldTotalSupply',
-              entity_address: addresses.resources.instapassBadgeAddress,
+              entity_address: addresses.badges.instapassBadgeAddress,
               partition_kind: 'Field',
               partition_number: 64
             },
@@ -2015,7 +2015,7 @@ export default [
             entity: {
               is_global: true,
               entity_type: 'GlobalNonFungibleResource',
-              entity_address: addresses.resources.instapassBadgeAddress
+              entity_address: addresses.badges.instapassBadgeAddress
             },
             object_module_id: 'Main'
           },
@@ -2044,7 +2044,7 @@ export default [
             entity: {
               is_global: true,
               entity_type: 'GlobalNonFungibleResource',
-              entity_address: addresses.resources.instapassBadgeAddress
+              entity_address: addresses.badges.instapassBadgeAddress
             },
             object_module_id: 'Main'
           },
@@ -2109,7 +2109,7 @@ export default [
             variant_name: 'NonFungible',
             fields: [
               {
-                value: addresses.resources.instapassBadgeAddress,
+                value: addresses.badges.instapassBadgeAddress,
                 kind: 'Reference',
                 type_name: 'ResourceAddress'
               },
@@ -2135,7 +2135,7 @@ export default [
             entity: {
               is_global: true,
               entity_type: 'GlobalNonFungibleResource',
-              entity_address: addresses.resources.instapassBadgeAddress
+              entity_address: addresses.badges.instapassBadgeAddress
             },
             object_module_id: 'Main'
           },
@@ -2164,7 +2164,7 @@ export default [
             entity: {
               is_global: true,
               entity_type: 'GlobalNonFungibleResource',
-              entity_address: addresses.resources.instapassBadgeAddress
+              entity_address: addresses.badges.instapassBadgeAddress
             },
             object_module_id: 'Main'
           },
@@ -2229,7 +2229,7 @@ export default [
             variant_name: 'NonFungible',
             fields: [
               {
-                value: addresses.resources.instapassBadgeAddress,
+                value: addresses.badges.instapassBadgeAddress,
                 kind: 'Reference',
                 type_name: 'ResourceAddress'
               },
