@@ -134,7 +134,24 @@ export const createRadgem = ({
                 Enum<0u8>(),
                 Enum<0u8>(),
                 Enum<0u8>(),
-                Enum<0u8>()
+                Enum<1u8>(
+                    Tuple(
+                        Enum<1u8>(
+                            Enum<2u8>(
+                                Enum<0u8>(
+                                    Enum<0u8>(
+                                        Enum<1u8>(
+                                            Address("${adminBadgeAddress}")
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        Enum<1u8>(
+                            Enum<1u8>()
+                        )
+                    )
+                )
             )
             Tuple(
                 Map<String, Tuple>(
@@ -150,6 +167,16 @@ export const createRadgem = ({
                         Enum<1u8>(
                             Enum<0u8>(
                                 "Two RadGems can be combined with a Morph Energy Card by RadQuest’s Jetty to produce a beautiful RadMorph NFT. Higher quality RadGems will contribute to a higher quality RadMorph."
+                            )
+                        ),
+                        false
+                    ),
+                    "tags" => Tuple(
+                        Enum<1u8>(
+                            Enum<128u8>(
+                                Array<String>(
+                                    "radquest"
+                                )
                             )
                         ),
                         false
