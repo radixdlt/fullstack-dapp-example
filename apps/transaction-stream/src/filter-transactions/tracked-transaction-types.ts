@@ -112,8 +112,8 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
         config.radQuest.components.mayaRouter
   },
   [EventId.InstapassBadgeDeposited]: {
-    MintedEvent: nonFungibleMinted(config.radQuest.resources.instapassBadgeAddress),
-    DepositedEvent: resourceDeposited(config.radQuest.resources.instapassBadgeAddress)
+    MintedEvent: nonFungibleMinted(config.radQuest.badges.instapassBadgeAddress),
+    DepositedEvent: resourceDeposited(config.radQuest.badges.instapassBadgeAddress)
   },
   [EventId.JettySwap]: {
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress),
