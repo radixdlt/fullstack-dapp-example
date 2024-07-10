@@ -317,7 +317,7 @@ export const TransactionWorkerController = ({
 
                 
             TAKE_FROM_WORKTOP
-              Address("${addresses.resources.morphEnergyCards}")
+              Address("${addresses.resources.morphEnergyCardAddress}")
               Decimal("5")
               Bucket("card_bucket");
 

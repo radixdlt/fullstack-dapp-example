@@ -6,6 +6,7 @@ import { newGiftBoxOpener } from '../helpers/newGiftBoxOpener'
 import { newRefinery } from '../helpers/newRefinery'
 import { newCardForge } from '../helpers/newCardForge'
 import { logger } from '../../helpers'
+import { registerGiftBoxResources } from '../helpers/registerGiftBoxResources'
 
 let result: Record<string, string> = {}
 
@@ -27,6 +28,7 @@ mintAdminBadge({
   .map(({ giftBoxOpenerAddress }) => {
     result.giftBoxOpener = giftBoxOpenerAddress
   })
+  .andThen(() => registerGiftBoxResources())
   .andThen(() => newCardForge())
   .map(({ cardForgeAddress }) => {
     result.cardForge = cardForgeAddress
@@ -44,6 +46,7 @@ mintAdminBadge({
     logger.debug(
       '\nNew component addresses:',
       result,
-      "\n\n Don't forget to get the kycOracleKeyValueStore from the Dashboard!"
+      `\n\nDon't forget to get the kycOracleKeyValueStore from the Dashboard!
+      https://stokenet-dashboard.radixdlt.com/component/${result.kycOracle}/state`
     )
   )
