@@ -80,12 +80,14 @@ mod quest_rewards {
         pub fn new(
             super_admin_badge_address: ResourceAddress,
             owner_role: OwnerRole,
+            dapp_definition: ComponentAddress,
             admin_badge: Bucket,
             hero_badge_address: ResourceAddress,
             kyc_badge_address: ResourceAddress,
         ) -> Global<QuestRewards> {
             let admin_badge_address = admin_badge.resource_address();
-            let kyc_oracle = KycOracle::new(owner_role.clone(), admin_badge_address.clone());
+            let kyc_oracle =
+                KycOracle::new(owner_role.clone(), dapp_definition, admin_badge_address);
 
             Self {
                 enabled: true,
@@ -102,6 +104,11 @@ mod quest_rewards {
             .roles(roles!(
                 admin => rule!(require(admin_badge_address));
                 super_admin => rule!(require(super_admin_badge_address));
+            ))
+            .metadata(metadata!(
+                init {
+                    "dapp_definition" => dapp_definition, updatable;
+                }
             ))
             .globalize()
         }

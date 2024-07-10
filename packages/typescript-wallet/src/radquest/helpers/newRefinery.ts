@@ -27,7 +27,7 @@ export const newRefinery = () => {
             Bucket("admin_badges")
         ;
         CALL_FUNCTION
-            Address("${config.radQuest.package}")
+            Address("${config.radQuest.radQuestPackage}")
             "Refinery"
             "new"
             Address("${config.radQuest.badges.superAdminBadgeAddress}")
@@ -42,6 +42,7 @@ export const newRefinery = () => {
                     )
                 )
             )
+            Address("${config.radQuest.accounts.dAppDefinition.address}")
             Bucket("admin_badges")
             Address("${config.radQuest.badges.heroBadgeAddress}")
             Address("${config.radQuest.resources.elementAddress}")

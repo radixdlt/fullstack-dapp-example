@@ -1,7 +1,8 @@
 import { config, radixEngineClient } from '../../config'
 
 export const createElementResource = ({
-  superAdminBadgeAddress
+  superAdminBadgeAddress,
+  adminBadgeAddress
 }: {
   superAdminBadgeAddress: string
   adminBadgeAddress: string
@@ -32,16 +33,36 @@ export const createElementResource = ({
           0u8
           Tuple(
             # Mint Roles (if None: defaults to DenyAll, DenyAll)
-            Some(         
+            Enum<1u8>(
               Tuple(
-                None, # Minter (if None: defaults to Owner)
-                Some(Enum<AccessRule::DenyAll>()) # Minter Updater (if None: defaults to Owner)
+                Enum<1u8>(
+                  Enum<2u8>(
+                    Enum<0u8>(
+                      Enum<0u8>(
+                        Enum<1u8>(
+                          Address("${adminBadgeAddress}")
+                        )
+                      )
+                    )
+                  )
+                ),
+                Some(Enum<AccessRule::DenyAll>())
               )
             ),
             # Burn Roles (if None: defaults to DenyAll, DenyAll)
             Some(         
               Tuple(
-                None,  
+                Enum<1u8>(
+                  Enum<2u8>(
+                    Enum<0u8>(
+                      Enum<0u8>(
+                        Enum<1u8>(
+                          Address("${adminBadgeAddress}")
+                        )
+                      )
+                    )
+                  )
+                ),  
                 Some(Enum<AccessRule::DenyAll>())
               )
             ),

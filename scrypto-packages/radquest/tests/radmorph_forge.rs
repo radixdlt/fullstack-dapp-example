@@ -88,7 +88,10 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
 
     let radmorph_forge = RadmorphForge::new(
         super_admin_badge.resource_address(&mut env)?,
-        OwnerRole::None,
+        OwnerRole::Fixed(rule!(require(
+            super_admin_badge.resource_address(&mut env)?
+        ))),
+        FAUCET, // used as dapp_definition for testing
         admin_badge.take(dec!(1), &mut env)?,
         radmorph_address,
         package_address,

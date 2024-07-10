@@ -10,6 +10,7 @@ export account=`echo "$temp_account" | grep Account | grep -o "account_.*"`
 export privatekey=`echo "$temp_account" | grep Private | sed "s/Private key: //"`
 export account_badge=`echo "$temp_account" | grep Owner | grep -o "resource_.*"`
 export xrd=`resim show $account | grep XRD | grep -o "resource_.\S*" | sed -e "s/://"`
+export dapp_definition=$account
 
 echo "\nPublishing package..."
 export package=`resim publish . | sed "s/Success! New Package: //"`
@@ -22,7 +23,7 @@ export kyc_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:
 export gift_box=`resim run manifests/gift-box-opener/create_gift_box.rtm | grep "Resource:" | grep -o "resource_.*"`
 export element=`resim new-token-mutable $admin_badge | grep "Resource:" | grep -o "resource_.*"`
 export radgem=`resim run manifests/create_radgem.rtm  | grep "Resource:" | grep -o "resource_.*"`
-export morph_card=`resim run manifests/create_morph_card.rtm  | grep "Resource:" | grep -o "resource_.*"`
+export morph_card=`resim run manifests/create_morph_energy_card.rtm  | grep "Resource:" | grep -o "resource_.*"`
 export radmorph=`resim run manifests/create_radmorph.rtm  | grep "Resource:" | grep -o "resource_.*"`
 
 
@@ -80,4 +81,5 @@ echo "\nAdditional Environment Variables Set:"
 echo "super_admin_badge_id = $super_admin_badge_id"
 echo "user_id = $user_id"
 echo "quest_id = $quest_id"
-echo "user_account (set to match \$account variable) = $user_account"
+echo "user_account (set to match \$account) = $user_account"
+echo "dapp_definition (set to match \$account) = $user_account"

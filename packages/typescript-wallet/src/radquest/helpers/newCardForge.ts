@@ -27,7 +27,7 @@ export const newCardForge = () => {
                 Bucket("admin_badge")
             ;
             CALL_FUNCTION
-                Address("${config.radQuest.package}")
+                Address("${config.radQuest.radQuestPackage}")
                 "MorphCardForge"
                 "new"
                 Address("${config.radQuest.badges.superAdminBadgeAddress}")
@@ -36,13 +36,13 @@ export const newCardForge = () => {
                         Enum<AccessRuleNode::ProofRule>(
                             Enum<ProofRule::Require>(
                                 Enum<ResourceOrNonFungible::Resource>(
-                                    Address("${config.radQuest.badges.adminBadgeAddress}")
+                                    Address("${config.radQuest.badges.superAdminBadgeAddress}")
                                 )
                             )
                         )
                     )
                 )
-                # admin_badge should be super_admin_badge
+                Address("${config.radQuest.accounts.dAppDefinition.address}")
                 Bucket("admin_badge")
                 Address("${config.radQuest.resources.morphEnergyCardAddress}");
             `)
