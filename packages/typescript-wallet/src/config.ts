@@ -1,7 +1,6 @@
 import { RadixEngineClient } from './clients'
 import { Addresses, GatewayApi } from 'common'
 
-if (!process.env.MNEMONIC) throw new Error('MNEMONIC env var not set')
 if (!process.env.PUBLIC_NETWORK_ID) throw new Error('PUBLIC_NETWORK_ID env var not set')
 
 const networkId = parseInt(process.env.PUBLIC_NETWORK_ID)

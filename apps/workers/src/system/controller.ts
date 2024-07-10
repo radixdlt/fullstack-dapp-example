@@ -1,8 +1,9 @@
 import { ok } from 'neverthrow'
 import { Job, SystemJob, SystemJobType } from 'queues'
 import { AppLogger } from 'common'
-import { radixEngineClient } from 'typescript-wallet'
 import { getImageOracleManifest } from './helpers/getImageOracleManifest'
+import { config } from '../config'
+import { TransactionHelper, withSigners } from 'typescript-wallet'
 
 export type SystemWorkerController = ReturnType<typeof SystemWorkerController>
 export const SystemWorkerController = ({ logger }: { logger: AppLogger }) => {
@@ -15,21 +16,17 @@ export const SystemWorkerController = ({ logger }: { logger: AppLogger }) => {
       method: 'systemWorkerController.handler'
     })
 
+    const transactionHelper = TransactionHelper({
+      networkId: config.networkId,
+      onSignature: withSigners(config.networkId, 'system', 'payer'),
+      logger
+    })
+
     switch (type) {
       case SystemJobType.PopulateRadmorphs:
-        return radixEngineClient
-          .getManifestBuilder()
-          .andThen(({ convertStringManifest, submitTransaction, wellKnownAddresses }) =>
-            convertStringManifest(
-              getImageOracleManifest(wellKnownAddresses, job.data.data)
-            ).andThen((transactionManifest) =>
-              submitTransaction({
-                transactionManifest,
-                signers: ['systemAccount'],
-                logger
-              }).andThen(({ txId }) => radixEngineClient.gatewayClient.pollTransactionStatus(txId))
-            )
-          )
+        return transactionHelper
+          .submitTransaction(getImageOracleManifest(job.data.data))
+          .map(() => undefined)
 
       default:
         childLogger.error({

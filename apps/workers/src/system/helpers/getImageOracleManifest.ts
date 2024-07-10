@@ -31,29 +31,37 @@ export const radmorphUrlsToTuples = (radmorphs: { id: string; url: string }[]) =
     .join(',')
 }
 
-export const getImageOracleManifest = (
-  wellKnownAddresses: WellKnownAddresses,
-  radmorphs: { id: string; url: string }[]
-) => {
-  const addresses = Addresses(config.networkId)
+export const getImageOracleManifest = (radmorphs: { id: string; url: string }[]) => {
+  const { accounts, badges, components } = Addresses(config.networkId)
 
   return `
-CALL_METHOD
-    Address("${wellKnownAddresses.accountAddress.payerAccount}")
+  CALL_METHOD 
+    Address("${accounts.payer.accessController}") 
+    "create_proof"
+  ;
+  CALL_METHOD 
+    Address("${accounts.system.accessController}") 
+    "create_proof"
+  ;
+
+  CALL_METHOD
+    Address("${accounts.payer}")
     "lock_fee"
-    Decimal("100");
+    Decimal("100")
+  ;
 
-CALL_METHOD
-    Address("${wellKnownAddresses.accountAddress.systemAccount}")
+  CALL_METHOD
+    Address("${accounts.system.address}")
     "create_proof_of_amount"
-    Address("${addresses.badges.adminBadgeAddress}") 
-    Decimal("1");
+    Address("${badges.adminBadgeAddress}") 
+    Decimal("1")
+  ;
 
-CALL_METHOD
-    Address("${addresses.components.imageOracle}")
+  CALL_METHOD
+    Address("${components.imageOracle}")
     "set_key_image_url_hashes"
     Array<Tuple>(
       ${radmorphUrlsToTuples(radmorphs)}
-    );
-    `
+    )
+  ;`
 }
