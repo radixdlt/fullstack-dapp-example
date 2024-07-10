@@ -28,7 +28,7 @@ mintAdminBadge({
   .map(({ giftBoxOpenerAddress }) => {
     result.giftBoxOpener = giftBoxOpenerAddress
   })
-  .andThen(() => registerGiftBoxResources())
+  .andThen(() => registerGiftBoxResources(result.giftBoxOpener))
   .andThen(() => newCardForge())
   .map(({ cardForgeAddress }) => {
     result.cardForge = cardForgeAddress
@@ -47,6 +47,7 @@ mintAdminBadge({
       '\nNew component addresses:',
       result,
       `\n\nDon't forget to get the kycOracleKeyValueStore from the Dashboard!
-      https://stokenet-dashboard.radixdlt.com/component/${result.kycOracle}/state`
+
+https://stokenet-dashboard.radixdlt.com/component/${result.kycOracle}/state`
     )
   )

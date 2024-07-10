@@ -27,7 +27,7 @@ export const newHeroBadgeForge = () => {
             Bucket("admin_badge")
         ;
         CALL_FUNCTION
-            Address("${config.radQuest.package}")
+            Address("${config.radQuest.radQuestPackage}")
             "HeroBadgeForge"
             "new"
             Address("${config.radQuest.badges.superAdminBadgeAddress}")

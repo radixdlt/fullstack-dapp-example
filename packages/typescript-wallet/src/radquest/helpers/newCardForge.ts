@@ -27,7 +27,7 @@ export const newCardForge = () => {
                 Bucket("admin_badge")
             ;
             CALL_FUNCTION
-                Address("${config.radQuest.package}")
+                Address("${config.radQuest.radQuestPackage}")
                 "MorphCardForge"
                 "new"
                 Address("${config.radQuest.badges.superAdminBadgeAddress}")

@@ -1,7 +1,7 @@
 import { config } from '../../config'
 import { radixEngineClient } from '../../config'
 
-export const registerGiftBoxResources = () => {
+export const registerGiftBoxResources = (giftBoxOpener: string) => {
   return radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
@@ -22,7 +22,7 @@ export const registerGiftBoxResources = () => {
             Decimal("1")
         ;
         CALL_METHOD
-            Address("${config.radQuest.components.giftBoxOpener}")
+            Address("${giftBoxOpener}")
             "add_gift_box_resources"
             Array<Address>(${giftBoxResourcesAddresses})
         ;
