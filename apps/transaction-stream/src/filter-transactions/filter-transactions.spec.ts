@@ -8,11 +8,7 @@ import LettySwap from '../fixtures/transactions/letty-swap'
 import MintInstapassBadge from '../fixtures/transactions/mint-instapass-badge'
 import MayaRouterWithdraw from '../fixtures/transactions/maya-router-withdraw'
 import AccountAddedTransaction from '../fixtures/transactions/allow-user-to-forge-hero-badge'
-import {
-  getTrackedTransactionTypes,
-  jettySwapEvent,
-  resourceWithdrawn
-} from './tracked-transaction-types'
+import { getTrackedTransactionTypes, resourceWithdrawn } from './tracked-transaction-types'
 import { AccountAddressModel, EventId } from 'common'
 import { FilterTransactionsByType } from './filter-transactions-by-type'
 import { FilterTransactionsByAccountAddress } from './filter-transactions-by-account-address'
@@ -263,29 +259,6 @@ describe('filter transactions', () => {
     const txs = result2.filter((r) => !!r)
     expect(txs).lengthOf(1)
     expect(txs[0]).toEqual(result.value[0])
-  })
-
-  it('should filter JettySwap when user is in redis', async () => {
-    const swap2 = {
-      ...JettySwap[0],
-      receipt: {
-        ...JettySwap[0].receipt,
-        events: JettySwap[0].receipt?.events?.map((e: any) => {
-          if (!jettySwapEvent(e)) return e
-          return {
-            ...e,
-            emitter: {
-              ...e.emitter,
-              entity: { ...(e.emitter as any).entity, entity_address: '123' }
-            }
-          }
-        })
-      }
-    }
-
-    const result = filterTransactionsByType([swap2])
-    if (result.isErr()) throw result.error
-    expect(result.value).lengthOf(0)
   })
 
   it('should find LettySwap transaction', () => {

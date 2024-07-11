@@ -15,19 +15,14 @@ type EventEmitter = {
   object_module_id: string
 }
 
+export type TrackedTransactions = Record<EventId, Record<string, (event: EventsItem) => boolean>>
+
 export const eventEmittedByComponent =
   (eventName: string, componentAddress: string) => (event: EventsItem) =>
     event.name === eventName &&
     (event.emitter as EventEmitter).entity.entity_address === componentAddress
 
-export const isEmittedByQuestRewards = (event: EventsItem) =>
-  (event.emitter as EventEmitter).entity.entity_address === config.radQuest.components.questRewards
-export const isEmittedByRefinery = (event: EventsItem) =>
-  (event.emitter as EventEmitter).entity.entity_address === config.radQuest.components.refinery
-
-export type TrackedTransactions = Record<EventId, Record<string, (event: EventsItem) => boolean>>
-
-const resourceDeposited = (resource: string, toAccount?: string) => (event: EventsItem) => {
+const resourceDeposited = (resourceAddress: string, toAccount?: string) => (event: EventsItem) => {
   if (event.name !== 'DepositEvent' || event.data.kind !== 'Enum') return false
 
   if (toAccount && toAccount !== (event.emitter as EventEmitter).entity.entity_address) return false
@@ -36,7 +31,7 @@ const resourceDeposited = (resource: string, toAccount?: string) => (event: Even
     (field): field is ProgrammaticScryptoSborValueReference => field.kind === 'Reference'
   )
 
-  return resourceField?.value === resource
+  return resourceField?.value === resourceAddress
 }
 
 export const resourceWithdrawn = (resource: string) => (event: EventsItem) => {
@@ -56,28 +51,22 @@ export const xrdStaked = (event: EventsItem) => {
   )
 }
 
-const questRewardsEmitted = (eventName: string) => (event: EventsItem) =>
-  event.name === eventName && isEmittedByQuestRewards(event)
-const refineryEmitted = (eventName: string) => (event: EventsItem) =>
-  event.name === eventName && isEmittedByRefinery(event)
-
 const nonFungibleMinted = (resource: string) => (event: EventsItem) =>
   event.name === 'MintNonFungibleResourceEvent' &&
   (event.emitter as EventEmitter)?.entity?.entity_address === resource
 
-export const jettySwapEvent = (component: string) => (event: EventsItem) => {
-  return (
-    event.name === 'JettySwapEvent' &&
-    (event.emitter as EventEmitter).entity.entity_address === component
-  )
-}
-
 export const getTrackedTransactionTypes = (): TrackedTransactions => ({
   [EventId.QuestRewardDeposited]: {
-    RewardDepositedEvent: questRewardsEmitted('RewardDepositedEvent')
+    RewardDepositedEvent: eventEmittedByComponent(
+      'RewardDepositedEvent',
+      config.radQuest.components.questRewards
+    )
   },
   [EventId.QuestRewardClaimed]: {
-    RewardClaimedEvent: questRewardsEmitted('RewardClaimedEvent')
+    RewardClaimedEvent: eventEmittedByComponent(
+      'RewardClaimedEvent',
+      config.radQuest.components.questRewards
+    )
   },
   [EventId.DepositHeroBadge]: {
     HeroBadgeDeposited: resourceDeposited(config.radQuest.badges.heroBadgeAddress)
@@ -94,22 +83,34 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
     WithdrawEvent: resourceWithdrawn(config.radQuest.xrd)
   },
   [EventId.CombineElementsDeposited]: {
-    DepositedEvent: refineryEmitted('CombineElementsDepositedEvent')
+    DepositedEvent: eventEmittedByComponent(
+      'CombineElementsDepositedEvent',
+      config.radQuest.components.refinery
+    )
   },
   [EventId.CombineElementsMintedRadgem]: {
-    MintedRadgemEvent: refineryEmitted('CombineElementsMintedRadgemEvent')
+    MintedRadgemEvent: eventEmittedByComponent(
+      'CombineElementsMintedRadgemEvent',
+      config.radQuest.components.refinery
+    )
   },
   [EventId.CombineElementsAddedRadgemImage]: {
-    AddedRadgemImageEvent: refineryEmitted('CombineElementsAddedRadgemImageEvent')
+    AddedRadgemImageEvent: eventEmittedByComponent(
+      'CombineElementsAddedRadgemImageEvent',
+      config.radQuest.components.refinery
+    )
   },
   [EventId.CombineElementsClaimed]: {
-    ClaimedEvent: refineryEmitted('CombineElementsClaimedEvent')
+    ClaimedEvent: eventEmittedByComponent(
+      'CombineElementsClaimedEvent',
+      config.radQuest.components.refinery
+    )
   },
   [EventId.MayaRouterWithdrawEvent]: {
-    MayaRouterWithdrawEvent: (event: EventsItem) =>
-      event.name === 'MayaRouterWithdrawEvent' &&
-      (event.emitter as EventEmitter).entity.entity_address ===
-        config.radQuest.components.mayaRouter
+    MayaRouterWithdrawEvent: eventEmittedByComponent(
+      'MayaRouterWithdrawEvent',
+      config.radQuest.components.mayaRouter
+    )
   },
   [EventId.InstapassBadgeDeposited]: {
     MintedEvent: nonFungibleMinted(config.radQuest.badges.instapassBadgeAddress),
@@ -117,11 +118,11 @@ export const getTrackedTransactionTypes = (): TrackedTransactions => ({
   },
   [EventId.JettySwap]: {
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress),
-    JettySwapEvent: jettySwapEvent(config.radQuest.components.jettySwap)
+    JettySwapEvent: eventEmittedByComponent('JettySwapEvent', config.radQuest.components.jettySwap)
   },
   [EventId.LettySwap]: {
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress),
-    JettySwapEvent: jettySwapEvent(config.radQuest.components.lettySwap)
+    JettySwapEvent: eventEmittedByComponent('JettySwapEvent', config.radQuest.components.lettySwap)
   },
   [EventId.AccountAllowedToForgeHeroBadge]: {
     AccountAddedEvent: eventEmittedByComponent(
