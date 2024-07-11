@@ -7,7 +7,8 @@ import {
   TransactionModel,
   AccountAddressModel as AccountAddressModelFn,
   GatewayApi,
-  MailerLiteModel
+  MailerLiteModel,
+  ImageModel
 } from 'common'
 import { logger } from './helpers/logger'
 import { RedisConnection, getQueues } from 'queues'
@@ -62,6 +63,7 @@ const app = async () => {
   const transactionWorkerController = TransactionWorkerController({
     auditModel,
     gatewayApi,
+    imageModel: ImageModel(dbClient),
     tokenPriceClient,
     sendMessage,
     referralRewardAction
