@@ -150,6 +150,11 @@
         <Button on:click={setUserAsAdmin}>Set user as Admin</Button>
         <Button on:click={addPhoneNumber}>Bypass phone verification</Button>
         <Button on:click={addReferral}>Add referral</Button>
+        <Button
+          on:click={() => {
+            console.log($user)
+          }}>Log User</Button
+        >
       {/if}
       <Button on:click={clearPhoneNumbers}>Clear phone numbers</Button>
       <Button on:click={clearLocalStorageAndCookies}>Clear Local Storage</Button>

@@ -7,7 +7,7 @@
   import { i18n } from '$lib/i18n/i18n'
   import { onMount } from 'svelte'
 
-  let nameInput = $user?.label ?? ''
+  let nameInput = $user?.name || $user?.label || ''
   let canSaveName = writable(true)
   let error = ''
 
@@ -23,7 +23,7 @@
     if (result.isErr()) error = (result.error.data as any).message
     else {
       if ($user) {
-        $user.label = nameInput
+        $user.name = nameInput
       }
 
       error = ''

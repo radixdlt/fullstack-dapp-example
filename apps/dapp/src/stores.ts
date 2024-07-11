@@ -5,7 +5,12 @@ import { type Quests } from 'content'
 export const quests = writable<Quests>()
 
 export const user = writable<
-  (User & { label: string; email?: { email: string; newsletter: boolean } }) | undefined
+  | (User & {
+      label: string
+      email?: { email: string; newsletter: boolean }
+      referredByUser?: { name?: string }
+    })
+  | undefined
 >(undefined)
 
 export type JettyNotification = {

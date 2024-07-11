@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { htmlReplace } from '$lib/helpers/html-replace'
+  import { user } from '../../../../../stores'
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
   import type { Quests } from 'content'
@@ -29,6 +31,6 @@
   let:render
 >
   {#if render('0')}
-    {@html text['0.md']}
+    {@html htmlReplace(text['0.md'], { inviter_name: $user?.referredByUser?.name })}
   {/if}
 </Quest>

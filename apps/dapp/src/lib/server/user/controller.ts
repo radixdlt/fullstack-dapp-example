@@ -33,7 +33,8 @@ export const UserController = ({
   const getUser = (userId: string): ControllerMethodOutput<User | null> =>
     userModel
       .getById(userId, {
-        email: true
+        email: true,
+        referredByUser: true
       })
       .map((data) => ({ data, httpResponseCode: 200 }))
 
