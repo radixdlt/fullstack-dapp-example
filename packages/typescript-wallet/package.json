@@ -27,7 +27,7 @@
     "wallet:create:giftboxes": "npx tsx ./src/radquest/scripts/create-gift-boxes.ts",
     "wallet:create:radgem": "npx tsx ./src/radquest/scripts/create-radgem.ts",
     "wallet:create:radmorph": "npx tsx ./src/radquest/scripts/create-radmorph.ts",
-    "wallet:create:otter-coin": "npx tsx ./src/clam-dex/scripts/create-otter-coin.ts",
+    "wallet:create:ottercoin": "npx tsx ./src/clam-dex/scripts/create-ottercoin.ts",
     "wallet:new:card-forge": "npx tsx ./src/radquest/scripts/new-card-forge.ts",
     "wallet:new:refinery": "npx tsx ./src/radquest/scripts/new-refinery.ts",
     "wallet:mint-then-combine-elements-deposit": "npx tsx ./src/radquest/scripts/mint-then-combine-elements-deposit.ts",
