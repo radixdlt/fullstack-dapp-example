@@ -24,7 +24,7 @@ export const Addresses = (networkId: number) => {
           morphEnergyCardAddress:
             'resource_tdx_2_1nfryxzu7y5xj3f296jjrpk3el7u97q9cf0l7ea89vsu3p6j6ua0nzz',
           radmorphAddress: 'resource_tdx_2_1n2ywedpf6kd3e96khelvp6c05ykeuprmvaasm7c4qmwtumualq9vnh',
-          otterCoinAddress:
+          ottercoinAddress:
             'resource_tdx_2_1t552ls9tn8p92452kx4wpd3qksg6mgm7mx74ekew09n2hkjv3qanfz',
           giftBox: {
             Starter: 'resource_tdx_2_1t5nswz4tv90cr67h5cn8hpw62zvs50u90s2hqayqjtw3s9x3t584k5',

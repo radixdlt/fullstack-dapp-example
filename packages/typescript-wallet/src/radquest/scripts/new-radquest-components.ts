@@ -41,10 +41,10 @@ mintAdminBadge({
     result.imageOracle = imageOracleAddress
     result.refinery = refineryAddress
   })
-  .mapErr((err) => logger.error(err))
+  .mapErr((err) => logger.error(err, '\n\nDid you forget to rebuild the Scrypto package?'))
   .map(() =>
     logger.debug(
-      '\nNew component addresses:',
+      '\nNew RadQuest component addresses:',
       result,
       `\n\nDon't forget to get the kycOracleKeyValueStore from the Dashboard!
 
