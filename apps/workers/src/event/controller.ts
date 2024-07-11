@@ -445,7 +445,10 @@ export const EventWorkerController = ({
                   })
                 )
                 .andThen(() =>
-                  handleMailerLiteBasicQuestFinished(questId, user as User & { email: { email: string } })
+                  handleMailerLiteBasicQuestFinished(
+                    questId,
+                    user as User & { email: { email: string } }
+                  )
                 )
                 .andThen(() => {
                   const shouldTriggerReferralRewardFlow =
@@ -453,20 +456,23 @@ export const EventWorkerController = ({
 
                   if (user.referredBy && shouldTriggerReferralRewardFlow)
                     return getUserByReferralCode(user.referredBy).andThen((refferingUser) => {
+                      const triggerRewardsForReferredUser = () =>
+                        addCompletedQuestRequirement({
+                          questId: 'JoinFriend',
+                          userId: user.id,
+                          requirementId: 'CompleteBasicQuests'
+                        }).andThen(() =>
+                          handleAllQuestRequirementCompleted({
+                            questId: 'JoinFriend',
+                            userId: user.id
+                          })
+                        )
+
                       return refferingUser.referredUsers.length < QuestTogetherConfig.maxReferrals
                         ? handleReferrerRewards(refferingUser).andThen(() =>
-                            addCompletedQuestRequirement({
-                              questId: 'JoinFriend',
-                              userId: user.id,
-                              requirementId: 'CompleteBasicQuests'
-                            }).andThen(() =>
-                              handleAllQuestRequirementCompleted({
-                                questId: 'JoinFriend',
-                                userId: user.id
-                              })
-                            )
+                            triggerRewardsForReferredUser()
                           )
-                        : okAsync(undefined)
+                        : triggerRewardsForReferredUser()
                     })
                   else if (questId === 'QuestTogether')
                     return referralRewardAction({
