@@ -1,7 +1,7 @@
 <script lang="ts">
   import Carousel from '$lib/components/carousel/Carousel.svelte'
-  import GemCard from '$lib/components/transform-gems/GemCard.svelte'
-  import TransformCard from '$lib/components/transform-gems/TransformCard.svelte'
+  import GemCard from '$lib/components/resource-card/GemCard.svelte'
+  import TransformCard from '$lib/components/resource-card/TransformCard.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import { createEventDispatcher } from 'svelte'
   import JettyMenuItemPage from './JettyMenuItemPage.svelte'
@@ -11,6 +11,7 @@
     energy: string
     image: string
     rarity: string
+    quality: number
   }[] = []
 
   export let gems: {
@@ -152,6 +153,7 @@
                 image={card.image}
                 energy={card.energy}
                 rarity={card.rarity}
+                quality={card.quality}
                 selected={i === selectedTransformCard}
                 bind:this={transformCardComponents[i]}
                 on:selected={() => onTransformCardSelected(i)}
@@ -217,7 +219,7 @@
           <Item>
             {#if selectedTransformCard !== undefined}
               <TransformCard
-                selectable={false}
+                disabled={true}
                 selected={true}
                 image={cards[selectedTransformCard].image}
                 energy={cards[selectedTransformCard].energy}
@@ -228,7 +230,7 @@
           {#each selectedGems as i}
             <Item>
               <GemCard
-                selectable={false}
+                disabled={true}
                 selected={true}
                 image={gems[i].image}
                 gemstone={gems[i].material}

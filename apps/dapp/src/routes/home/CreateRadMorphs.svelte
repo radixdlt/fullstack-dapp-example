@@ -1,3 +1,52 @@
+<script lang="ts" context="module">
+  const gateway = GatewayApi(publicConfig.networkId)
+
+  const getNftData = (items: StateEntityDetailsVaultResponseItem[], resourceAddress: string) => {
+    const resource = items[0].non_fungible_resources.items.find(
+      (item) => item.resource_address === resourceAddress
+    )
+
+    const ids = resource?.vaults.items.map((item) => item.items || []).flat() || []
+
+    return gateway.callApi('getNonFungibleData', resourceAddress, ids).map((response) =>
+      response.map((item) => ({
+        id: item.non_fungible_id,
+        fields: (item.data?.programmatic_json as ProgrammaticScryptoSborValueTuple).fields
+      }))
+    )
+  }
+
+  export const getStringDataValue = (name: string) => (fields: ProgrammaticScryptoSborValue[]) =>
+    (fields.find((f) => f.field_name === name) as ProgrammaticScryptoSborValueString)?.value
+
+  const getGemData = pipe(getNftData, (result) =>
+    result.map((data) =>
+      data.map(({ id, fields }) => ({
+        id,
+        name: getStringDataValue('name')(fields),
+        material: getStringDataValue('material')(fields),
+        image: getStringDataValue('key_image_url')(fields),
+        rarity: getStringDataValue('rarity')(fields),
+        color: getStringDataValue('color')(fields)
+      }))
+    )
+  )
+
+  const getEnergyCardData = pipe(getNftData, (result) =>
+    result.map((data) =>
+      data.map(({ id, fields }) => ({
+        id,
+        name: getStringDataValue('name')(fields),
+        energy: getStringDataValue('energy_type')(fields),
+        image: getStringDataValue('key_image_url')(fields),
+        rarity: getStringDataValue('rarity')(fields),
+        availability: getStringDataValue('availability')(fields),
+        quality: getStringDataValue('quality')(fields)
+      }))
+    )
+  )
+</script>
+
 <script lang="ts">
   import pipe from 'ramda/src/pipe'
   import { user } from '../../stores'
@@ -11,14 +60,13 @@
   import type {
     ProgrammaticScryptoSborValueTuple,
     ProgrammaticScryptoSborValueString,
-    ProgrammaticScryptoSborValue
+    ProgrammaticScryptoSborValue,
+    StateEntityDetailsVaultResponseItem
   } from '@radixdlt/babylon-gateway-api-sdk'
   import { sendTransaction } from '$lib/rdt'
   import { ResultAsync } from 'neverthrow'
   import { getRadmorphImage } from '$lib/api/radmorph-api'
   import TransformGems from './TransformGems.svelte'
-
-  const gateway = GatewayApi(publicConfig.networkId)
 
   let loadingLedgerData = true
   let amountOfRadGems: number
@@ -31,6 +79,7 @@
     image: string
     rarity: string
     availability: string
+    quality: string
   }[]
   let gemData: {
     id: string
@@ -57,60 +106,16 @@
           )
         }
 
-        const getNftData = (resourceAddress: string) => {
-          const resource = items[0].non_fungible_resources.items.find(
-            (item) => item.resource_address === resourceAddress
-          )
-
-          const ids = resource?.vaults.items.map((item) => item.items || []).flat() || []
-
-          return gateway.callApi('getNonFungibleData', resourceAddress, ids).map((response) =>
-            response.map((item) => ({
-              id: item.non_fungible_id,
-              fields: (item.data?.programmatic_json as ProgrammaticScryptoSborValueTuple).fields
-            }))
-          )
-        }
-
-        const getStringDataValue = (name: string) => (fields: ProgrammaticScryptoSborValue[]) =>
-          (fields.find((f) => f.field_name === name) as ProgrammaticScryptoSborValueString)?.value
-
-        const getGemData = pipe(getNftData, (result) =>
-          result.map((data) =>
-            data.map(({ id, fields }) => ({
-              id,
-              name: getStringDataValue('name')(fields),
-              material: getStringDataValue('material')(fields),
-              image: getStringDataValue('key_image_url')(fields),
-              rarity: getStringDataValue('rarity')(fields),
-              color: getStringDataValue('color')(fields)
-            }))
-          )
-        )
-
-        const getEnergyCardData = pipe(getNftData, (result) =>
-          result.map((data) =>
-            data.map(({ id, fields }) => ({
-              id,
-              name: getStringDataValue('name')(fields),
-              energy: getStringDataValue('energy')(fields),
-              image: getStringDataValue('key_image_url')(fields),
-              rarity: getStringDataValue('rarity')(fields),
-              availability: getStringDataValue('availability')(fields)
-            }))
-          )
-        )
-
         ;[amountOfRadGems, amountOfEnergyCards] = [
           publicConfig.resources.radgemAddress,
           publicConfig.resources.morphEnergyCardAddress
         ].map(getAmountOfNft)
 
-        getGemData(publicConfig.resources.radgemAddress).map((data) => {
+        getGemData(items, publicConfig.resources.radgemAddress).map((data) => {
           gemData = data
         })
 
-        getEnergyCardData(publicConfig.resources.morphEnergyCardAddress).map((data) => {
+        getEnergyCardData(items, publicConfig.resources.morphEnergyCardAddress).map((data) => {
           energyCardData = data
         })
 
