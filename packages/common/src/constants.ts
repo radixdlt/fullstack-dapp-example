@@ -119,7 +119,8 @@ export const RedisKeys = {
 }
 
 export const QuestTogetherConfig = {
-  triggerRewardAfterQuest: 'TransferTokens'
+  triggerRewardAfterQuest: 'TransferTokens',
+  maxReferrals: 10
 }
 
 export const EventId = {

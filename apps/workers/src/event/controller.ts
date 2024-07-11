@@ -30,6 +30,7 @@ import { getUserIdFromRadgemImageEvent } from './helpers/getUserIdFromRadgemImag
 import { config } from '../config'
 import { TransactionIntentHelper } from '../helpers/transactionIntentHelper'
 import { ReferralRewardAction } from '../helpers/referalReward'
+import { completeQuestRequirements } from '../system/helpers/completeQuestRequirements'
 
 type EventEmitter = {
   entity: {
@@ -449,13 +450,28 @@ export const EventWorkerController = ({
                     questId === QuestTogetherConfig.triggerRewardAfterQuest
 
                   if (user.referredBy && shouldTriggerReferralRewardFlow)
-                    return getUserByReferralCode(user.referredBy)
-                      .andThen(handleReferrerRewards)
-                      .andThen(() =>
-                        updateMailerLiteFields(
-                          user as User & { email: { email: string; newsletter: boolean } }
-                        )
-                      )
+                    return getUserByReferralCode(user.referredBy).andThen((refferingUser) => {
+                      return refferingUser.referredUsers.length < QuestTogetherConfig.maxReferrals
+                        ? handleReferrerRewards(refferingUser)
+                            .andThen(() =>
+                              addCompletedQuestRequirement({
+                                questId: 'JoinFriend',
+                                userId: user.id,
+                                requirementId: 'CompleteBasicQuests'
+                              }).andThen(() =>
+                                handleAllQuestRequirementCompleted({
+                                  questId: 'JoinFriend',
+                                  userId: user.id
+                                })
+                              )
+                            )
+                            .andThen(() =>
+                              updateMailerLiteFields(
+                                user as User & { email: { email: string; newsletter: boolean } }
+                              )
+                            )
+                        : okAsync(undefined)
+                    })
                   else if (questId === 'QuestTogether')
                     return referralRewardAction({
                       transactionId,
