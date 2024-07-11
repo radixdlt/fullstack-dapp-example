@@ -19,9 +19,7 @@ export const ImageController = ({ imageModel, gatewayApi, userModel }: Controlle
   }) =>
     imageModel
       .getUrl(radmorphAttributes)
-      .andThen((data) =>
-        data ? ok(data.url) : err(createApiError('Radmorph image not found', 404)())
-      )
+      .andThen((url) => (url ? ok(url) : err(createApiError('Radmorph image not found', 404)())))
 
   const addresses = Addresses(config.dapp.networkId)
 
