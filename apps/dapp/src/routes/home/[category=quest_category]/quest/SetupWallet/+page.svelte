@@ -306,7 +306,7 @@
 
   {#if render('17')}
     {@html text['17.md']}
-    <SetUsername onNext={quest.actions.next} />
+    <SetUsername />
   {/if}
 
   {#if render('18')}

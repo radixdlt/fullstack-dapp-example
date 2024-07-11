@@ -5,12 +5,15 @@
   import { userApi } from '$lib/api/user-api'
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
-
-  export let onNext: () => void
+  import { onMount } from 'svelte'
 
   let nameInput = $user?.label ?? ''
   let canSaveName = writable(true)
   let error = ''
+
+  onMount(() => {
+    setUserName()
+  })
 
   const setUserName = async () => {
     $canSaveName = false
@@ -24,7 +27,6 @@
       }
 
       error = ''
-      onNext()
     }
   }
 </script>
