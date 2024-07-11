@@ -388,7 +388,7 @@ describe('Event flows', () => {
             Address("${user?.accountAddress}")
             "withdraw" 
             Address("${addresses.resources.elementAddress}")
-            Decimal("10") 
+            Decimal("5") 
         ;
 
         TAKE_ALL_FROM_WORKTOP 

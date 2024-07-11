@@ -35,7 +35,7 @@ export const combineElementsDeposit = ({
           Address("${accountAddress}")
           "withdraw" 
           Address("${config.radQuest.resources.elementAddress}")
-          Decimal("10") 
+          Decimal("5") 
         ;
 
         TAKE_ALL_FROM_WORKTOP 

@@ -19,7 +19,7 @@ CALL_METHOD
   Address("${account}")
   "withdraw" 
   Address("${elements}")
-  Decimal("10") 
+  Decimal("5") 
 ;
 
 TAKE_ALL_FROM_WORKTOP 

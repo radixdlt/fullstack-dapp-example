@@ -134,7 +134,7 @@ mod refinery {
         pub fn combine_elements_deposit(&self, hero_badge_proof: Proof, elements: Bucket) -> () {
             assert!(self.enabled, "Refinery component disabled");
             assert_eq!(elements.resource_address(), self.element_address);
-            assert_eq!(elements.amount(), dec!(10));
+            assert_eq!(elements.amount(), dec!(5));
             let user_id = self.get_user_id_from_badge_proof(hero_badge_proof);
 
             self.admin_badge
