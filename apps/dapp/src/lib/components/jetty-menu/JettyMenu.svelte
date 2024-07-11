@@ -124,6 +124,10 @@
     $user
     disabledItems = menuItems.filter((item) => (item.disabled ? get(item.disabled) : false))
   }
+
+  $: if (!expanded) {
+    setTimeout(() => (showMenuItemContent = false), 500)
+  }
 </script>
 
 <div
