@@ -30,6 +30,6 @@ export const config = {
   networkId,
   radQuest: {
     ...Addresses(networkId),
-    directXrdDepositAmount: 10
+    directXrdDepositAmount: 5
   }
 }
