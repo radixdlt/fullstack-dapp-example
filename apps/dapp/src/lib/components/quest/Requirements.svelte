@@ -25,7 +25,18 @@
     gap: var(--spacing-xl);
     overflow: hidden;
 
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 20px;
+    background: linear-gradient(
+      67deg,
+      rgba(249, 223, 207, 0.5) 0%,
+      rgba(230, 178, 187, 0.5) 102.4%
+    );
+    padding: 1rem var(--spacing-xl);
+
     .requirements-title {
+      color: var(--color-nearly-black);
       font-weight: var(--font-weight-bold);
       align-self: center;
     }

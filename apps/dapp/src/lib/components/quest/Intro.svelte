@@ -40,7 +40,7 @@
     align-items: center;
 
     @include desktop {
-      padding: var(--spacing-2xl);
+      padding: var(--spacing-xl);
     }
   }
 
