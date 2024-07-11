@@ -257,6 +257,21 @@ interface Resources {
       "introDescription": "Answer a few basic questions at Instapass to unlock more XRD rewards."
     }
   },
+  "rewards": {
+    "xrd": "XRD",
+    "xrd_one": "XRD",
+    "xrd_other": "XRDs",
+    "clam_one": "Clam",
+    "clam_other": "Clams",
+    "starterGiftBox_one": "Starter Gift Box",
+    "starterGiftBox_other": "Starter Gift Boxes",
+    "simpleGiftBox_one": "Simple Gift Box",
+    "simpleGiftBox_other": "Simple Gift Boxes",
+    "fancyGiftBox_one": "Fancy Gift Box",
+    "fancyGiftBox_other": "Fancy Gift Boxes",
+    "eliteGiftBox_one": "Elite Gift Box",
+    "eliteGiftBox_other": "Elite Gift Boxes"
+  },
   "transformGems": {
     "back": "Back",
     "title0": "Pick a Transform card",

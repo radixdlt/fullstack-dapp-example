@@ -16,7 +16,7 @@
         <Icon url={typeToIcon[name]} size="xlarge" />
         <div class="reward-text">
           {amount}
-          {$i18n.t('jetty:reward-text', { count: 0, name })}
+          {$i18n.t(`rewards:${name}`, { count: amount })}
         </div>
       </div>
     {/each}

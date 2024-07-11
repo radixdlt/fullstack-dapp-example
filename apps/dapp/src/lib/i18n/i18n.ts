@@ -4,6 +4,7 @@ import enQuests from './locales/en/quests.json'
 import enGlossary from './locales/en/glossary.json'
 import enJetty from './locales/en/jetty.json'
 import enMain from './locales/en/main.json'
+import enRewards from './locales/en/rewards.json'
 import enTransformGems from './locales/en/transformGems.json'
 
 i18next.init({
@@ -15,6 +16,7 @@ i18next.init({
       glossary: enGlossary,
       jetty: enJetty,
       main: enMain,
+      rewards: enRewards,
       transformGems: enTransformGems
     }
   }
