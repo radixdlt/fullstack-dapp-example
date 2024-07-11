@@ -36,6 +36,14 @@
     "description": "What’s this all about?",
     "introDescription": "Let’s get started learning about web3 and Radix – and get some rewards!"
   },
+  "JoinFriend": {
+    "requirements": {
+      "CompleteBasicQuests": "Complete the Basic Quests"
+    },
+    "title": "Join Your Friend",
+    "description": "Accept your friend’s invitation!",
+    "introDescription": "Once you’ve done the basic quests, accept your friend’s invitation and claim your reward"
+  },
   "WhatIsRadix": {
     "requirements": {
       "RadixQuiz": "Learn about the Radix Network and dApps"

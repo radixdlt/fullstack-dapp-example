@@ -23,3 +23,5 @@ package-lock.json
 yarn.lock
 vitest.config.ts.timestamp*
 /packages/database/src/prisma/**/*
+landing-popup-index.json
+resources.d.ts

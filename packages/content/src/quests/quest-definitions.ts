@@ -190,6 +190,26 @@ export const QuestDefinitions = () => {
         }
       }
     },
+    JoinFriend: {
+      id: 'JoinFriend',
+      category: 'advanced',
+      trackedAccountAddress: false,
+      splashImage: '/quests-images/splash/QuestTogether.webp',
+      rewards: [
+        {
+          name: 'xrd',
+          amount: 25
+        }
+      ],
+      minutesToComplete: 1,
+      preRequisites: ['TransferTokens'],
+      requirements: {
+        CompleteBasicQuests: {
+          type: 'offLedger',
+          completedByUser: false
+        }
+      }
+    },
     NetworkStaking: {
       id: 'NetworkStaking',
       category: 'advanced',
