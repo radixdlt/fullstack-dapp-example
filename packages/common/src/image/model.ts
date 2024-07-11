@@ -43,29 +43,32 @@ export const ImageModel = (db: PrismaClient) => (logger?: AppLogger) => {
     color1,
     color2
   }: {
-    shape: string
-    material: string
-    color1: string
-    color2: string
-  }) =>
-    ResultAsync.fromPromise(
+    shape?: string
+    material?: string
+    color1?: string
+    color2?: string
+  }) => {
+    const id1 = [shape, material, color1, color2].filter(Boolean).join('_')
+    const id2 = [shape, material, color2, color1].filter(Boolean).join('_')
+    return ResultAsync.fromPromise(
       db.image.findFirst({
         where: {
           OR: [
             {
-              id: `${shape}_${material}_${color1}_${color2}`
+              id: id1
             },
             {
-              id: `${shape}_${material}_${color2}_${color1}`
+              id: id2
             }
           ]
         }
       }),
       (error) => {
         logger?.error({ error, method: 'getUrl', model: 'ImageModel' })
-        return createApiError('failed to get radmorph image url', 400)()
+        return createApiError('failed to get image url', 400)()
       }
-    )
+    ).map((image) => image?.url ?? '')
+  }
 
   return {
     getUrl,

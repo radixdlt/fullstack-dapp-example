@@ -5,6 +5,7 @@ import {
   GatewayApi,
   GiftBoxReward,
   GiftBoxRewardConfig,
+  ImageModel,
   getRandomFloat,
   getRandomIntInclusive,
   type AppLogger,
@@ -23,7 +24,6 @@ import { WorkerOutputError, WorkerError } from '../_types'
 import { MessageHelper } from '../helpers/messageHelper'
 import { ReferralRewardAction } from '../helpers/referalReward'
 import { dbClient } from '../db-client'
-import { log } from 'node:console'
 
 const { xrd, accounts, badges, resources, components } = config.radQuest
 const { system, payer } = accounts
@@ -32,11 +32,13 @@ export type TransactionWorkerController = ReturnType<typeof TransactionWorkerCon
 export const TransactionWorkerController = ({
   auditModel,
   gatewayApi,
+  imageModel,
   tokenPriceClient,
   sendMessage,
   referralRewardAction
 }: {
   auditModel: AuditModel
+  imageModel: ImageModel
   gatewayApi: GatewayApi
   tokenPriceClient: TokenPriceClient
   sendMessage: MessageHelper
@@ -238,27 +240,28 @@ export const TransactionWorkerController = ({
 
         const { elements: elementAmount, energyCard } = getGiftBoxRewards(giftBoxKind)
 
-        const rewards: Parameters<typeof createRewardsDepositManifest>[0]['rewards'] = [
-          { name: 'elements', amount: elementAmount }
-        ]
-
-        if (energyCard)
-          rewards.push({
-            name: 'energyCard',
-            card: {
-              ...energyCard,
-              key_image_url: `https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=${energyCard.key}`
-            }
-          })
-
-        return handleSubmitTransaction(
-          createRewardsDepositManifest({
-            userId,
-            rewards,
-            includeKycOracleUpdate: false,
-            depositRewardsTo: 'giftBoxOpener'
-          })
-        )
+        return imageModel(logger)
+          .getUrl({ shape: energyCard.key })
+          .mapErr((error) => ({ reason: WorkerError.FailedToGetImageUrl, jsError: error }))
+          .andThen((imageUrl) =>
+            handleSubmitTransaction(
+              createRewardsDepositManifest({
+                userId,
+                rewards: [
+                  { name: 'elements', amount: elementAmount },
+                  {
+                    name: 'energyCard',
+                    card: {
+                      ...energyCard,
+                      key_image_url: imageUrl
+                    }
+                  }
+                ],
+                includeKycOracleUpdate: false,
+                depositRewardsTo: 'giftBoxOpener'
+              })
+            )
+          )
       }
 
       case 'PopulateResources':

@@ -10,6 +10,7 @@ export const WorkerError = {
   FailedToSendReferralRewards: 'FailedToSendReferralRewards',
   FailedToConvertStringManifest: 'FailedToConvertStringManifest',
   FailedToSetTransactionId: 'FailedToSetTransactionId',
+  FailedToGetImageUrl: 'FailedToGetImageUrl',
   FailedToGetTotalRewardedUsdAmount: 'FailedToGetTotalRewardedUsdAmount',
   FailedToSetPendingStatus: 'FailedToSetPendingStatus',
   FailedToSetCompletedStatus: 'FailedToSetCompletedStatus',
