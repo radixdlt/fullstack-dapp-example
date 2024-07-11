@@ -38,6 +38,7 @@
       image: string
       rarity: string
       availability: string
+      quality: number
     }
   }
 
@@ -194,7 +195,8 @@
               energy: getStringDataValue('energy_type')(fields),
               image: getStringDataValue('key_image_url')(fields),
               rarity: getStringDataValue('rarity')(fields),
-              availability: getStringDataValue('availability')(fields)
+              availability: getStringDataValue('availability')(fields),
+              quality: parseInt(getStringDataValue('quality')(fields))
             }
 
             return {
@@ -320,6 +322,7 @@
               image={rewards.cardData.image}
               energy={rewards.cardData.energy}
               rarity={rewards.cardData.rarity}
+              quality={rewards.cardData.quality}
             />
           </div>
 

@@ -41,7 +41,7 @@
         image: getStringDataValue('key_image_url')(fields),
         rarity: getStringDataValue('rarity')(fields),
         availability: getStringDataValue('availability')(fields),
-        quality: getStringDataValue('quality')(fields)
+        quality: parseInt(getStringDataValue('quality')(fields))
       }))
     )
   )
@@ -79,7 +79,7 @@
     image: string
     rarity: string
     availability: string
-    quality: string
+    quality: number
   }[]
   let gemData: {
     id: string

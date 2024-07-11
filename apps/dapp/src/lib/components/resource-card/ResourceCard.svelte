@@ -17,7 +17,7 @@
   <button
     class:selected
     on:click={() => {
-      if (!disabled) return
+      if (disabled) return
       selected = !selected
       selected ? dispatch('selected') : dispatch('deselected')
     }}

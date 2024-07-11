@@ -224,6 +224,7 @@
                 image={cards[selectedTransformCard].image}
                 energy={cards[selectedTransformCard].energy}
                 rarity={cards[selectedTransformCard].rarity}
+                quality={cards[selectedTransformCard].quality}
               />
             {/if}
           </Item>
