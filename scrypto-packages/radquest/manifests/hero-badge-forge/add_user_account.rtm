@@ -13,4 +13,5 @@ CALL_METHOD
     Address("${hero_badge_forge}")
     "add_user_account"
     Address("${user_account}")
+    "${user_id}"
 ;
