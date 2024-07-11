@@ -126,7 +126,7 @@ mod radgem_forge {
             let radgem = RadgemData {
                 key_image_url: Url::of(""),
                 name: format!(
-                    "{} {} RadGem {{{}/100}}",
+                    "{} {} RadGem {{{}/25}}",
                     material,
                     color,
                     quality.to_string()

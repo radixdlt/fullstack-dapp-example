@@ -149,7 +149,7 @@ fn can_mint_common_radgem() -> Result<(), RuntimeError> {
     assert!(radgem_data.name.contains("RadGem"));
     assert!(radgem_data.name.contains("Crystalline"));
     assert!(radgem_data.name.contains("Sky"));
-    assert!(radgem_data.name.contains("{3/100}"));
+    assert!(radgem_data.name.contains("{3/25}"));
 
     Ok(())
 }
