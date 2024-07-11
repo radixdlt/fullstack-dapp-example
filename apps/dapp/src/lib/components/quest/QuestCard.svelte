@@ -145,8 +145,9 @@
 
     overflow-y: auto;
 
-    :global(img) {
-      max-width: 100%;
+    :global(p) > :global(img) {
+      max-width: calc(100% + 2 * var(--spacing-2xl));
+      margin: 0 calc(-1 * var(--spacing-2xl));
     }
 
     :global(a) {
