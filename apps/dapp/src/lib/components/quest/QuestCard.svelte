@@ -134,6 +134,10 @@
     }
   }
 
+  .card.content {
+    border-radius: 0;
+  }
+
   .content {
     box-shadow: none;
     display: grid;

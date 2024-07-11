@@ -140,7 +140,8 @@ body {
     pointer-events: none;
   }
 
-  transition: all 0.5s ease;
+  // transition: all 0.5s ease;
+  // TODO: Add selective transaition back if you know it's needed (no "all")
 }
 
 .hide-scrollbar {

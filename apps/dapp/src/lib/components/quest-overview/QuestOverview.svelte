@@ -127,7 +127,8 @@
 
     border-radius: var(--border-radius-3xl);
     box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.2);
-    transition: all 0.5s ease;
+    // transition: all 0.5s ease;
+    // TODO: Add selective transaition back if you know it's needed (no "all")
     padding: var(--spacing-2xl);
 
     @media (max-width: 25rem) {
