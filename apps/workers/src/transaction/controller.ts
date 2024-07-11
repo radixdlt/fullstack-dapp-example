@@ -294,35 +294,41 @@ export const TransactionWorkerController = ({
               Address("${resources.elementAddress}")
               Decimal("100");
 
-            CALL_METHOD
-              Address("${components.cardForge}")
-              "mint_random_card"
-              Decimal("0.62")
-              "<${user.id}>";
+              MINT_FUNGIBLE
+              Address("${resources.giftBox.Starter}")
+              Decimal("20");
 
-              CALL_METHOD
-              Address("${components.cardForge}")
-              "mint_random_card"
-              Decimal("0.62")
-              "<${user.id}>";
+              MINT_FUNGIBLE
+              Address("${resources.giftBox.Simple}")
+              Decimal("20");
 
-              CALL_METHOD
-              Address("${components.cardForge}")
-              "mint_random_card"
-              Decimal("0.62")
-              "<${user.id}>";
+              MINT_FUNGIBLE
+              Address("${resources.giftBox.Fancy}")
+              Decimal("20");
 
-              CALL_METHOD
-              Address("${components.cardForge}")
-              "mint_random_card"
-              Decimal("0.62")
-              "<${user.id}>";
+              MINT_FUNGIBLE
+              Address("${resources.giftBox.Elite}")
+              Decimal("20");
 
-              CALL_METHOD
-              Address("${components.cardForge}")
-              "mint_random_card"
-              Decimal("0.62")
-              "<${user.id}>";
+
+          ${Array(5)
+            .fill(
+              `CALL_METHOD
+            Address("${config.radQuest.components.cardForge}")
+            "mint_card"
+            "${userId}"
+            ""
+            "Test Card"
+            "This is just a test card"
+            "Molten Banana"
+            "Such amazing energy"
+            "Common"
+            Decimal("10")
+            false
+          `
+            )
+            .join(';')}
+          ;
                 
             TAKE_FROM_WORKTOP
               Address("${resources.clamAddress}")
@@ -340,11 +346,25 @@ export const TransactionWorkerController = ({
               Decimal("100")
               Bucket("element_bucket");
 
-            CALL_METHOD
-              Address("${accountAddress}")
-              "try_deposit_or_abort"
-              Bucket("clam_bucket")
-              Enum<0u8>();
+              TAKE_FROM_WORKTOP
+              Address("${resources.giftBox.Starter}")
+              Decimal("20")
+              Bucket("starterBox_bucket");
+      
+              TAKE_FROM_WORKTOP
+              Address("${resources.giftBox.Simple}")
+              Decimal("20")
+              Bucket("simpleBox_bucket");
+      
+              TAKE_FROM_WORKTOP
+              Address("${resources.giftBox.Fancy}")
+              Decimal("20")
+              Bucket("fancyBox_bucket");
+      
+              TAKE_FROM_WORKTOP
+              Address("${resources.giftBox.Elite}")
+              Decimal("20")
+              Bucket("eliteBox_bucket");
 
             CALL_METHOD
               Address("${accountAddress}")
@@ -359,11 +379,41 @@ export const TransactionWorkerController = ({
               Enum<0u8>();
 
               CALL_METHOD
-                Address("${system.address}")
-                "create_proof_of_amount"
-                Address("${badges.adminBadgeAddress}")
-                Decimal("1")
-              ;
+              Address("${system.address}")
+              "create_proof_of_amount"
+              Address("${badges.adminBadgeAddress}")
+              Decimal("1")
+            ;
+
+              CALL_METHOD
+              Address("${accountAddress}")
+              "try_deposit_or_abort"
+              Bucket("starterBox_bucket")
+              Enum<0u8>();
+
+              CALL_METHOD
+              Address("${accountAddress}")
+              "try_deposit_or_abort"
+              Bucket("simpleBox_bucket")
+              Enum<0u8>();
+
+              CALL_METHOD
+              Address("${accountAddress}")
+              "try_deposit_or_abort"
+              Bucket("fancyBox_bucket")
+              Enum<0u8>();
+
+              CALL_METHOD
+              Address("${accountAddress}")
+              "try_deposit_or_abort"
+              Bucket("eliteBox_bucket")
+              Enum<0u8>();
+
+              CALL_METHOD
+              Address("${accountAddress}")
+              "try_deposit_or_abort"
+              Bucket("clam_bucket")
+              Enum<0u8>();
 
               CALL_METHOD
                 Address("${components.heroBadgeForge}")
@@ -387,8 +437,7 @@ export const TransactionWorkerController = ({
               Address("${accountAddress}")
               "try_deposit_or_abort"
               Bucket("xrd_bucket")
-              Enum<0u8>()
-          ;
+              Enum<0u8>();
           `
         )
 
@@ -448,8 +497,8 @@ export const TransactionWorkerController = ({
                   Address("${user.accountAddress!}")
                   "try_deposit_batch_or_abort"
                   Expression("ENTIRE_WORKTOP")
-                  Enum<0u8>()
-                ;`
+        Enum < 0u8 > ()
+          ; `
               ].join('\n')
             )
           )
@@ -458,7 +507,7 @@ export const TransactionWorkerController = ({
             dbTransactionBuilder.helpers.addXrdDepositToAuditTable({
               transactionId,
               userId: user.id,
-              xrdAmount: `${config.radQuest.directXrdDepositAmount}`
+              xrdAmount: `${config.radQuest.directXrdDepositAmount} `
             })
           )
           .andThen((api) => api.exec())

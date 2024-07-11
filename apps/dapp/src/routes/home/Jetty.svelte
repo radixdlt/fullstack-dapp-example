@@ -19,6 +19,7 @@
   import { derived, writable } from 'svelte/store'
   import MinimizeIcon from '@images/minimize.svg'
   import CreateRadMorphs from './CreateRadMorphs.svelte'
+  import OpenGiftBox from './OpenGiftBox.svelte'
 
   let poppedUp = false
   let expanded = false
@@ -76,6 +77,12 @@
         icon: BookIcon
       },
       {
+        id: 'gift-box',
+        text: 'Open Gift Box',
+        icon: LightningIcon,
+        disabled: derived(user, ($user) => !($user && $user.accountAddress && $user.id))
+      },
+      {
         id: 'fuse-elements',
         text: 'Fuse Elements',
         icon: LightningIcon,
@@ -96,6 +103,14 @@
   >
     {#if currentMenuItem.id === 'glossary'}
       <Glossary bind:this={glossary} glossary={loadGlossary('en')} />
+    {/if}
+
+    {#if currentMenuItem.id === 'gift-box'}
+      <OpenGiftBox
+        on:cancel={() => {
+          back.set(true)
+        }}
+      />
     {/if}
 
     {#if currentMenuItem.id === 'fuse-elements'}

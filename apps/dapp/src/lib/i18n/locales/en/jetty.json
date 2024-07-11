@@ -11,6 +11,7 @@
   "cancel": "Cancel",
   "close": "Close",
   "connect-your-wallet": "Once you connect your Radix Wallet, you can unlock these options",
+  "elements": "Elements",
   "fuse-elements": {
     "intro": "I can combine raw elements into colorful RadGems using my magical abilities.",
     "intro2": "RadGems can be combined with any alchemy cards to craft unique and beautiful RadMorph objects!",
@@ -48,6 +49,17 @@
     "create-radmorph-button": "Create RadMorph",
     "start-again-button": "Start Again",
     "radmorph-created": "You can now find your RadMorph under NFTs in your registered Radix account. Treasure it – or trade it with friends if you like!"
+  },
+  "open-gift-box": {
+    "no-boxes": "Sorry, you don’t have any Gift Boxes in your registered Radix account to open right now.",
+    "one-box-title": "Let's see what's in your Starter Gift Box!",
+    "open-gift-box-button": "Open Gift Box",
+    "gift-box-title": "{{name}} Gift Box",
+    "opening-gift-box": "Opening",
+    "gift-box-opened-title": "Starter Gift Box opened!",
+    "gift-box-opened-subtitle": "Here's what was inside",
+    "quantity": "Quantity: {{count}}",
+    "claimed": "You can now find the contents of your Gift Box in your account in your Radix Wallet."
   },
   "notification-cta": "Go to Quest"
 }
