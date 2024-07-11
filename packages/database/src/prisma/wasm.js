@@ -209,7 +209,8 @@ exports.Prisma.AuditScalarFieldEnum = {
   userId: 'userId',
   date: 'date',
   type: 'type',
-  xrdUsdValue: 'xrdUsdValue'
+  xrdUsdValue: 'xrdUsdValue',
+  data: 'data'
 };
 
 exports.Prisma.TransactionIntentScalarFieldEnum = {

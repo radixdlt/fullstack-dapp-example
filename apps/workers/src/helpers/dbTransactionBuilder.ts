@@ -61,51 +61,7 @@ export const DbTransactionBuilder = ({
     return api
   }
 
-  const getXrdPrice = (
-    value: string | undefined
-  ): ResultAsync<{ xrdUsdValue: number; xrdAmount: BigNumber }, { reason: string }> => {
-    const result = value ? ok(BigNumber(value)) : err({ reason: 'xrdAmountNotFound' })
-
-    return result.asyncAndThen((xrdAmount) =>
-      tokenPriceClient
-        .getXrdPrice()
-        .mapErr(() => ({ reason: 'CouldNotGetXrdCurrentPriceError' }))
-        .map((xrdPrice) => ({
-          xrdUsdValue: xrdAmount.multipliedBy(xrdPrice).toNumber(),
-          xrdAmount
-        }))
-    )
-  }
-
-  const addXrdDepositToAuditTable = ({
-    userId,
-    transactionId,
-    xrdAmount
-  }: {
-    userId: string
-    transactionId: string
-    xrdAmount: string
-  }) =>
-    getXrdPrice(xrdAmount)
-      .mapErr((error) => ({
-        reason: WorkerError.FailedToGetXrdPrice,
-        jsError: error
-      }))
-      .map(({ xrdUsdValue }) =>
-        operations.push(() =>
-          dbClient.audit.create({
-            data: {
-              transactionId,
-              userId,
-              type: AuditType.DIRECT_DEPOSIT,
-              xrdUsdValue
-            }
-          })
-        )
-      )
-      .map(() => api)
-
-  const helpers = { questRequirementCompleted, addXrdDepositToAuditTable } as const
+  const helpers = { questRequirementCompleted } as const
 
   const exec = () =>
     ResultAsync.fromPromise(
