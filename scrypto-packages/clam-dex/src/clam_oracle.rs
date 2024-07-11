@@ -2,103 +2,49 @@ use scrypto::prelude::*;
 
 #[blueprint]
 mod clam_oracle {
+
     struct ClamOracle {
         starting_time: Instant,
-        price: Option<Decimal>,
+        stable_price: bool,
     }
     impl ClamOracle {
-        pub fn new(price: Option<Decimal>) -> Global<ClamOracle> {
+        pub fn new(
+            owner_role: OwnerRole,
+            dapp_definition: ComponentAddress,
+            stable_price: bool,
+        ) -> Global<ClamOracle> {
             Self {
-                starting_time: Clock::current_time_rounded_to_minutes(),
-                price,
+                starting_time: Clock::current_time_rounded_to_seconds(),
+                stable_price,
             }
             .instantiate()
-            .prepare_to_globalize(OwnerRole::None)
+            .prepare_to_globalize(owner_role)
             .metadata(metadata!(
                 init {
-                    "name" => "Clam Oracle Component", locked;
-                    "description" => "Pseudo oracle that provides price of Clams in Otter Coin.", locked;
+                    "dapp_definition" => dapp_definition, updatable;
                 }
             ))
             .globalize()
         }
 
-        // TODO: update function for with required logic. Make sure price cannot have greater divisibility than tokens
         pub fn get_price(&self) -> Decimal {
-            if self.price.is_some() {
-                return self.price.unwrap();
+            if self.stable_price {
+                return dec!(10);
             }
 
-            let current_time_in_seconds =
-                Clock::current_time_rounded_to_seconds().seconds_since_unix_epoch;
+            let t = Clock::current_time_rounded_to_seconds().seconds_since_unix_epoch;
 
-            let time = current_time_in_seconds - self.starting_time.seconds_since_unix_epoch;
-            let half_period = 180;
+            let fluctuation = (dec!(0.258) * (t % 2))
+                + (dec!(0.11) * (t % 3))
+                + (dec!(0.095) * (t % 5))
+                + (dec!(0.022) * (t % 7))
+                + (dec!(0.001) * (t % 11));
 
-            let dec_normalized_time = Decimal::from(time % (2 * half_period));
-            let dec_half_period = Decimal::from(half_period);
-
-            let max_value = dec!(11);
-            let epsilon = max_value / 2;
-
-            if dec_normalized_time < dec_half_period {
-                // Linear rise for the first half (3 minutes)
-
-                let proportion_of_time_passed =
-                    dec_normalized_time.checked_div(dec_half_period).unwrap();
-
-                let linear_increase = proportion_of_time_passed.checked_mul(max_value).unwrap();
-
-                let price_during_first_half = if linear_increase < epsilon {
-                    linear_increase.checked_add(epsilon).unwrap()
-                } else {
-                    linear_increase
-                };
-
-                return price_during_first_half
-                    .checked_round(2, RoundingMode::ToZero)
-                    .unwrap();
-            } else {
-                // Linear fall for the second half (3 minutes)
-
-                // This calculation represents the time that has elapsed within the second
-                // half of the total time period, which is used to determine the proportion
-                // of time passed within the second half.
-                // elapsed_time_in_second_half = dec_normalized_time - dec_half_period
-                let elapsed_time_in_second_half =
-                    dec_normalized_time.checked_sub(dec_half_period).unwrap();
-
-                // This calculation represents the proportion of time passed within the second
-                // half of the time period which indicates how far along the second half we are.
-                // It will be used to scale the decrease in price.
-                // proportion_of_time_passed = elapsed_time_in_second_half / dec_half_period
-                let proportion_of_time_passed = elapsed_time_in_second_half
-                    .checked_div(dec_half_period)
-                    .unwrap();
-
-                // This calculation represents the linear decrease in the price during the
-                // second half of the time period.
-                // linear_decrease = proportion_of_time_passed * max_value
-                let linear_decrease = proportion_of_time_passed.checked_mul(max_value).unwrap();
-
-                // This calculation represents the price during the second half of the time period.
-                // We then add a small value epsilon such that it does not approach zero.
-                // price_during_second_half = max_value - linear_decrease
-                let price_during_second_half = max_value
-                    .checked_sub(linear_decrease)
-                    .and_then(|result| {
-                        if result < epsilon {
-                            result.checked_add(epsilon)
-                        } else {
-                            Some(result)
-                        }
-                    })
-                    .unwrap();
-
-                return price_during_second_half
-                    .checked_round(2, RoundingMode::ToZero)
-                    .unwrap();
-            };
+            dec!(10)
+                .checked_mul(fluctuation)
+                .unwrap()
+                .checked_add(5)
+                .unwrap()
         }
     }
 }
