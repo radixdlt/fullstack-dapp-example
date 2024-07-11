@@ -1,6 +1,6 @@
 import { ok } from 'neverthrow'
 import { Job, SystemJob, SystemJobType } from 'queues'
-import { AccountAddressModel, AppLogger } from 'common'
+import { AccountAddressModel, AppLogger, waitForMessage } from 'common'
 import { getImageOracleManifest } from './helpers/getImageOracleManifest'
 import { config } from '../config'
 import { AccountHelper, TransactionHelper, withSigners } from 'typescript-wallet'
@@ -35,6 +35,7 @@ export const SystemWorkerController = ({
     const { payer, system, jetty } = config.radQuest.accounts
     const { adminBadgeAddress, heroBadgeAddress } = config.radQuest.badges
     const { clamAddress } = config.radQuest.resources
+    const { questRewards } = config.radQuest.components
 
     const accountHelper = AccountHelper(dbClient)
 
@@ -181,6 +182,37 @@ export const SystemWorkerController = ({
               "try_deposit_or_abort"
               Bucket("clam_bucket")
               Enum<0u8>()
+            ;
+          `)
+
+        await waitForMessage(logger, dbClient)(user.id, 'QuestRewardsDeposited')
+
+        await submitTransaction(`
+            CALL_METHOD
+              Address("${user.accountAddress}")
+              "lock_fee"
+              Decimal("10")
+            ;
+            CALL_METHOD
+              Address("${user.accountAddress}")
+              "create_proof_of_non_fungibles"
+              Address("${heroBadgeAddress}")
+              Array<NonFungibleLocalId>(NonFungibleLocalId("<${user.id}>"))
+            ;
+            POP_FROM_AUTH_ZONE
+              Proof("hero_badge_proof")
+            ;
+            CALL_METHOD
+              Address("${questRewards}")
+              "claim_reward"
+              "TransferTokens"
+              Proof("hero_badge_proof")
+              None
+            ;
+            CALL_METHOD
+              Address("${user.accountAddress}")
+              "deposit_batch"
+              Expression("ENTIRE_WORKTOP")
             ;
           `)
 

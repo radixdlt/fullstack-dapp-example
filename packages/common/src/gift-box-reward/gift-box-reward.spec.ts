@@ -23,15 +23,17 @@ describe('GiftBoxRewards', () => {
     const actual = giftBoxRewards('Starter')
 
     expect(actual.elements).toEqual(10)
-    expect(actual.energyCard.energy_type).toEqual(starterBoxCard.energyType)
+    expect(actual.energyCard.energy_type).toEqual(starterBoxCard.energyType.toLowerCase())
   })
   it('should open a Simple gift box', () => {
-    const expectedEnergyTypes = [...commonCards, ...rareCards].map((card) => card.energyType)
+    const expectedEnergyTypes = [...commonCards, ...rareCards].map((card) =>
+      card.energyType.toLowerCase()
+    )
 
     const cardDistribution = {
-      [EnergyCardRarity.Common]: 0,
-      [EnergyCardRarity.Rare]: 0,
-      [EnergyCardRarity.UltraRare]: 0
+      [EnergyCardRarity.Common.toLowerCase()]: 0,
+      [EnergyCardRarity.Rare.toLowerCase()]: 0,
+      [EnergyCardRarity.UltraRare.toLowerCase()]: 0
     }
 
     const cards = new Array(10_000).fill(0).map(() => {
@@ -48,14 +50,14 @@ describe('GiftBoxRewards', () => {
     console.log({ simple: cardDistribution })
   })
   it('should open a Fancy gift box', () => {
-    const expectedEnergyTypes = [...commonCards, ...rareCards, ...ultraRareCards].map(
-      (card) => card.energyType
+    const expectedEnergyTypes = [...commonCards, ...rareCards, ...ultraRareCards].map((card) =>
+      card.energyType.toLowerCase()
     )
 
     const cardDistribution = {
-      [EnergyCardRarity.Common]: 0,
-      [EnergyCardRarity.Rare]: 0,
-      [EnergyCardRarity.UltraRare]: 0
+      [EnergyCardRarity.Common.toLowerCase()]: 0,
+      [EnergyCardRarity.Rare.toLowerCase()]: 0,
+      [EnergyCardRarity.UltraRare.toLowerCase()]: 0
     }
 
     new Array(10_000).fill(0).forEach(() => {
@@ -70,14 +72,14 @@ describe('GiftBoxRewards', () => {
   })
 
   it('should open a Elite gift box', () => {
-    const expectedEnergyTypes = [...commonCards, ...rareCards, ...ultraRareCards].map(
-      (card) => card.energyType
+    const expectedEnergyTypes = [...commonCards, ...rareCards, ...ultraRareCards].map((card) =>
+      card.energyType.toLowerCase()
     )
 
     const cardDistribution = {
-      [EnergyCardRarity.Common]: 0,
-      [EnergyCardRarity.Rare]: 0,
-      [EnergyCardRarity.UltraRare]: 0
+      [EnergyCardRarity.Common.toLowerCase()]: 0,
+      [EnergyCardRarity.Rare.toLowerCase()]: 0,
+      [EnergyCardRarity.UltraRare.toLowerCase()]: 0
     }
 
     new Array(10_000).fill(0).forEach(() => {

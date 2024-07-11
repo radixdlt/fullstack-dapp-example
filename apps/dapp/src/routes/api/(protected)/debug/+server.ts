@@ -48,13 +48,14 @@ export const POST: RequestHandler = async ({ locals, request }) => {
     if (userResult.isErr()) {
       return json({}, { status: 400 })
     }
-
-    await locals.dependencies.systemQueue.queue.add('AddReferral', {
-      type: 'AddReferral',
-      userId,
-      referralCode: userResult.value.referralCode,
-      traceId: locals.context.traceId
-    })
+    const user = userResult.value
+    if (user)
+      await locals.dependencies.systemQueue.queue.add('AddReferral', {
+        type: 'AddReferral',
+        userId,
+        referralCode: user.referralCode,
+        traceId: locals.context.traceId
+      })
   }
 
   return json({}, { status: 200 })
