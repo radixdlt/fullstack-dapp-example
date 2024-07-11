@@ -174,7 +174,7 @@ export const UserController = ({
 
     return userModel
       .setEmail(userId, email, newsletter)
-      .andThen(() => mailerLiteModel.addOrUpdate(email, {newsletter}))
+      .andThen(() => mailerLiteModel.addOrUpdate(email, { newsletter }))
       .map(() => ({ httpResponseCode: 200, data: {} }))
   }
 

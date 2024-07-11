@@ -36,7 +36,12 @@ export const MailerLiteModel =
         }),
         createApiError('failed to add subscriber to mailerlite', 500)
       ).map((data) => {
-        logger.debug({ method: 'MailerLiteModel.addOrUpdate', email, newsletter, hasFinishedBasicQuests })
+        logger.debug({
+          method: 'MailerLiteModel.addOrUpdate',
+          email,
+          newsletter,
+          hasFinishedBasicQuests
+        })
         return data
       })
     }
