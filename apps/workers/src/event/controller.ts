@@ -351,14 +351,13 @@ export const EventWorkerController = ({
       )
     }
 
-    const updateMailerLiteFields = (
-      user: User & { email: { email: string; newsletter: boolean } }
+    const handleMailerLiteBasicQuestFinished = (
+      questId: string,
+      user: { email: { email: string } }
     ) => {
-      if (!user.email.newsletter) {
-        return okAsync(undefined)
-      }
-
-      return mailerLiteModel(logger).addOrUpdate(user.email.email, { hasFinishedBasicQuests: true })
+      return questId === 'TransferTokens'
+        ? mailerLiteModel(logger).addOrUpdate(user.email.email, { hasFinishedBasicQuests: true })
+        : okAsync(undefined)
     }
 
     const handleQuestWithTrackedAccount = (
@@ -445,6 +444,9 @@ export const EventWorkerController = ({
                     traceId
                   })
                 )
+                .andThen(() =>
+                  handleMailerLiteBasicQuestFinished(questId, user as User & { email: { email: string } })
+                )
                 .andThen(() => {
                   const shouldTriggerReferralRewardFlow =
                     questId === QuestTogetherConfig.triggerRewardAfterQuest
@@ -452,24 +454,18 @@ export const EventWorkerController = ({
                   if (user.referredBy && shouldTriggerReferralRewardFlow)
                     return getUserByReferralCode(user.referredBy).andThen((refferingUser) => {
                       return refferingUser.referredUsers.length < QuestTogetherConfig.maxReferrals
-                        ? handleReferrerRewards(refferingUser)
-                            .andThen(() =>
-                              addCompletedQuestRequirement({
+                        ? handleReferrerRewards(refferingUser).andThen(() =>
+                            addCompletedQuestRequirement({
+                              questId: 'JoinFriend',
+                              userId: user.id,
+                              requirementId: 'CompleteBasicQuests'
+                            }).andThen(() =>
+                              handleAllQuestRequirementCompleted({
                                 questId: 'JoinFriend',
-                                userId: user.id,
-                                requirementId: 'CompleteBasicQuests'
-                              }).andThen(() =>
-                                handleAllQuestRequirementCompleted({
-                                  questId: 'JoinFriend',
-                                  userId: user.id
-                                })
-                              )
+                                userId: user.id
+                              })
                             )
-                            .andThen(() =>
-                              updateMailerLiteFields(
-                                user as User & { email: { email: string; newsletter: boolean } }
-                              )
-                            )
+                          )
                         : okAsync(undefined)
                     })
                   else if (questId === 'QuestTogether')
