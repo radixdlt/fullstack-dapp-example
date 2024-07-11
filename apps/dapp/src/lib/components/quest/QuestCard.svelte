@@ -144,6 +144,7 @@
     }
 
     overflow-y: auto;
+    overflow-x: hidden;
 
     :global(p) > :global(img) {
       max-width: calc(100% + 2 * var(--spacing-2xl));

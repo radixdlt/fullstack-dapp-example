@@ -35,7 +35,9 @@
 
   const setGetWalletRequirementInStore = () => {
     // @ts-ignore
-    useCookies('requirement-SetupWallet-GetTheWallet').set(true)
+    useCookies('requirement-SetupWallet-ConnectWallet').set(true)
+    // @ts-ignore
+    useCookies('requirement-SetupWallet-DownloadWallet').set(true)
   }
   onMount(() => {
     if (isMobile() && $page.url.searchParams.get('wallet') === 'true') {

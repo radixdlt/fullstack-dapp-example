@@ -22,15 +22,6 @@ export type QuestReward = {
   [Key in keyof QuestRewards]: QuestRewards[Key] & { name: Key }
 }[keyof QuestRewards]
 
-export const questRewardDisplayName = {
-  xrd: 'XRD',
-  clam: 'Clam',
-  starterGiftBox: 'Starter Gift Box',
-  simpleGiftBox: 'Simple Gift Box',
-  fancyGiftBox: 'Fancy Gift Box',
-  eliteGiftBox: 'Elite Gift Box'
-} as const satisfies { [key in QuestReward['name']]: string }
-
 export type Language = keyof typeof Language
 
 export const Language = { en: 'en' } as const
@@ -111,6 +102,10 @@ export const QuestDefinitions = () => {
       preRequisites: ['WhatIsRadix'],
       minutesToComplete: 3,
       requirements: {
+        DownloadWallet: {
+          type: 'offLedger',
+          completedByUser: true
+        },
         ConnectWallet: {
           type: 'offLedger',
           completedByUser: true

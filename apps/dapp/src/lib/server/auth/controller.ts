@@ -101,7 +101,34 @@ export const AuthController = ({
         logger?.error({ error, method: 'updateConnectWalletRequirement', model: 'UserQuestModel' })
         return createApiError('failed to update connect wallet requirement', 400)()
       }
-    ).map(() => {})
+    )
+
+  const updateDownloadWalletRequirement = (userId: string) =>
+    ResultAsync.fromPromise(
+      dbClient.completedQuestRequirement.upsert({
+        where: {
+          questId_userId_requirementId: {
+            userId,
+            questId: 'SetupWallet',
+            requirementId: 'DownloadWallet'
+          }
+        },
+        update: {},
+        create: {
+          userId,
+          questId: 'SetupWallet',
+          requirementId: 'DownloadWallet'
+        }
+      }),
+      (error) => {
+        logger?.error({
+          error,
+          method: 'updateDownloadWalletRequirement',
+          model: 'UserQuestModel'
+        })
+        return createApiError('failed to update download wallet requirement', 400)()
+      }
+    )
 
   const login = (
     ctx: ControllerMethodContext,
@@ -174,6 +201,7 @@ export const AuthController = ({
                 .andThen((referredBy) => userModel.create(personaProof.address, referredBy))
                 .andThen((user) =>
                   ResultAsync.combine([
+                    updateDownloadWalletRequirement(user.id),
                     updateConnectWalletRequirement(user.id),
                     addUtmToDb(user.id, cookies)
                   ]).map(() => user)

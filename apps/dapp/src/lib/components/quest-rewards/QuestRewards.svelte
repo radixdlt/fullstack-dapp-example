@@ -1,7 +1,8 @@
 <script lang="ts">
+  import { i18n } from '$lib/i18n/i18n'
   import { typeToIcon } from '$lib/utils/type-to-icon'
   import Icon from '../icon/Icon.svelte'
-  import { questRewardDisplayName, type QuestReward } from 'content'
+  import { type QuestReward } from 'content'
 
   export let rewards: Readonly<QuestReward[]> = []
   export let displayName = false
@@ -15,7 +16,7 @@
         {amount}
       </Icon>
       {#if displayName}
-        {questRewardDisplayName[name]}{amount > 1 ? 's' : ''}
+        {$i18n.t(`rewards:${name}`, { count: Number(amount) })}
       {/if}
     </div>
   {/each}

@@ -25,7 +25,7 @@
   let hasError: boolean
   let confirmedWalletInstall = writable<boolean>(false)
   let isMailEnabled = writable<boolean>(true)
-  let walletIsLinked = writable(data.requirements.GetTheWallet?.isComplete)
+  let walletIsLinked = writable(data.requirements.ConnectWallet?.isComplete)
 
   $: {
     isMailEnabled.set(!hasError)
@@ -33,7 +33,9 @@
   onMount(() => {
     if (isMobile()) {
       // @ts-ignore
-      useCookies('requirement-SetupWallet-GetTheWallet').set(true)
+      useCookies('requirement-SetupWallet-ConnectWallet').set(true)
+      // @ts-ignore
+      useCookies('requirement-SetupWallet-DownloadWallet').set(true)
       $walletIsLinked = true
       quest.actions.next()
       return
@@ -45,7 +47,9 @@
 
       if (isWalletLinked) {
         // @ts-ignore
-        useCookies('requirement-SetupWallet-GetTheWallet').set(true)
+        useCookies('requirement-SetupWallet-ConnectWallet').set(true)
+        // @ts-ignore
+        useCookies('requirement-SetupWallet-DownloadWallet').set(true)
         $walletIsLinked = true
         quest.actions.next()
       }
@@ -99,6 +103,7 @@
   $: {
     if ($user && !data.requirements.ConnectWallet?.isComplete) {
       questApi.completeRequirement('SetupWallet', 'ConnectWallet')
+      questApi.completeRequirement('SetupWallet', 'DownloadWallet')
     }
   }
 </script>
@@ -263,6 +268,10 @@
   {/if}
 
   {#if render('9a')}
+    {@html text['9a-1.md']}
+
+    <!-- TODO:  AppsFlyer link -->
+
     {@html text['9a-2.md']}
     <Checkbox bind:checked={$confirmedWalletInstall}>{@html text['9a-2-checkbox.md']}</Checkbox>
   {/if}

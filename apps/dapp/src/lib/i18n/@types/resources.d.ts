@@ -82,7 +82,7 @@ interface Resources {
     "copy": "Copy",
     "rewards": "Rewards",
     "requirementsDescription": "Complete the tasks below to claim your rewards. You can always go back and check the information if you’re not sure how.",
-    "requirementsTitle": "What you will do",
+    "requirementsTitle": "What you'll do",
     "nextButton": "Next",
     "keyImageAlt": "Quest Image",
     "backButton": "Back",
@@ -134,7 +134,8 @@ interface Resources {
     },
     "SetupWallet": {
       "requirements": {
-        "ConnectWallet": "Download the Radix Wallet mobile app, create your first Account Login to RadQuest with your Radix Wallet"
+        "ConnectWallet": "Login to RadQuest with your Radix Wallet",
+        "DownloadWallet": "Download the Radix Wallet mobile app, create your first Account"
       },
       "walletDownloadPage": "Go to Wallet Download Page",
       "title": "Get the Radix Wallet",
@@ -150,7 +151,8 @@ interface Resources {
         "DepositHeroBadge": "Get your Hero’s Badge",
         "JettyReceivedClams": "Get your first XRD and NFT rewards"
       },
-      "getXrd": "Receive 10 XRD",
+      "claimHeroBadge": "Claim Hero's Badge",
+      "getXrd": "Receive 5 XRD",
       "registerAccount": "Register Account",
       "title": "Get Some (Web3) Stuff!",
       "description": "Claim your first quest rewards",
@@ -254,6 +256,21 @@ interface Resources {
       "description": "A quick check to unlock more XRD",
       "introDescription": "Answer a few basic questions at Instapass to unlock more XRD rewards."
     }
+  },
+  "rewards": {
+    "xrd": "XRD",
+    "xrd_one": "XRD",
+    "xrd_other": "XRDs",
+    "clam_one": "Clam",
+    "clam_other": "Clams",
+    "starterGiftBox_one": "Starter Gift Box",
+    "starterGiftBox_other": "Starter Gift Boxes",
+    "simpleGiftBox_one": "Simple Gift Box",
+    "simpleGiftBox_other": "Simple Gift Boxes",
+    "fancyGiftBox_one": "Fancy Gift Box",
+    "fancyGiftBox_other": "Fancy Gift Boxes",
+    "eliteGiftBox_one": "Elite Gift Box",
+    "eliteGiftBox_other": "Elite Gift Boxes"
   },
   "transformGems": {
     "back": "Back",
