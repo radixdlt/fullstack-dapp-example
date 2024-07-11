@@ -111,6 +111,10 @@ export const QuestDefinitions = () => {
       preRequisites: ['WhatIsRadix'],
       minutesToComplete: 3,
       requirements: {
+        DownloadWallet: {
+          type: 'offLedger',
+          completedByUser: true
+        },
         ConnectWallet: {
           type: 'offLedger',
           completedByUser: true
