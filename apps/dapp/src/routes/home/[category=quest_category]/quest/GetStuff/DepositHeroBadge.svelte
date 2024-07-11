@@ -12,6 +12,7 @@
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { ResultAsync } from 'neverthrow'
+  import { i18n } from '$lib/i18n/i18n'
 
   const rdtInstance = ResultAsync.fromSafePromise(rdt)
   export let questId: keyof Quests
@@ -98,7 +99,9 @@
 </script>
 
 <div class="deposit-hero-badge">
-  <Button on:click={handleMintHeroBadge} loading={mintingInProgress}>Get Hero badge</Button>
+  <Button on:click={handleMintHeroBadge} loading={mintingInProgress}>
+    {$i18n.t('quests:GetStuff.claimHeroBadge')}
+  </Button>
 </div>
 
 <style>

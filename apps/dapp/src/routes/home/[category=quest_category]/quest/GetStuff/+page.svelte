@@ -428,9 +428,9 @@
 
   {#if render('15')}
     {#if chosenAccountHasXrd}
-      {@html text['15a.md']}
-    {:else}
       {@html text['15b.md']}
+    {:else}
+      {@html text['15a.md']}
     {/if}
 
     <div class="center">
