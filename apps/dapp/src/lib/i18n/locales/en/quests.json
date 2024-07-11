@@ -30,11 +30,11 @@
     "hi": "Meet Jetty",
     "claim": "Claim",
     "requirements": {
-      "RadQuestQuiz": "Learn about RadQuest – and your guide, Jetty"
+      "RadQuestQuiz": "Learn about RadQuest… and your guide, Jetty"
     },
     "title": "Welcome to RadQuest",
     "description": "What’s this all about?",
-    "introDescription": "Let’s get started learning about web3 and Radix – and get some rewards!"
+    "introDescription": "Complete quests, learn about web3 and Radix, get some rewards!"
   },
   "JoinFriend": {
     "requirements": {
@@ -50,7 +50,7 @@
     },
     "title": "The Radix Network",
     "description": "What is this Radix thing?",
-    "introDescription": "The Radix Network – a breakthrough “layer-1” network for mainstream-ready web3."
+    "introDescription": "The Radix Network: a breakthrough “layer-1” network for mainstream-ready web3."
   },
   "SetupWallet": {
     "requirements": {
