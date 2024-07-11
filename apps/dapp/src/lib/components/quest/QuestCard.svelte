@@ -2,7 +2,6 @@
   import Icon from '$lib/components/icon/Icon.svelte'
   import CrossIcon from '@images/cross.svg'
   import Button from '$lib/components/button/Button.svelte'
-  import { fly } from 'svelte/transition'
   import { i18n } from '$lib/i18n/i18n'
   import ProgressCard from '../progress-card/ProgressCard.svelte'
   import { createEventDispatcher } from 'svelte'
@@ -22,13 +21,6 @@
   export let footerNextDisabled = false
   export let nextButtonText: string | undefined
   export let backButtonText: string | undefined
-
-  const flyOut = (el: any) => {
-    const width = card ? card.getWidth() : 0
-    const duration = card ? card.getAnimationDuration() : 0
-
-    return fly(el, { x: ($direction === 'right' ? -width : width) * 2, duration, opacity: 1 })
-  }
 
   const dispatch = createEventDispatcher<{
     next: undefined
@@ -68,27 +60,17 @@
     </button>
   </div>
 
-  <svelte:fragment slot="content" let:width let:animationDuration>
+  <svelte:fragment slot="content">
     <div bind:this={content} class="card content">
       {#key progress}
-        <div
-          in:fly|local={{
-            x: ($direction === 'right' ? width : -width) * 2,
-            opacity: 1,
-            duration: animationDuration
-          }}
-          out:flyOut|local
-        >
+        <div>
           <slot {progress} />
         </div>
       {/key}
     </div>
 
     {#if progress === 0}
-      <div
-        class="footer intro-footer"
-        transition:fly|local={{ x: -width * 2, opacity: 1, duration: animationDuration }}
-      >
+      <div class="footer intro-footer">
         <Button on:click={() => dispatch('next')}>{$i18n.t('quests:intro-begin-quest')}</Button>
       </div>
     {/if}
