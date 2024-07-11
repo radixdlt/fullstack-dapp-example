@@ -223,7 +223,7 @@ export const UserModel =
             logger?.error({ error, method: 'getReferrals.referralXrd', model: 'UserModel' })
             return 'failed to get referralXrd'
           }
-        ).map((result) => result._sum?.xrdValue?.toNumber()),
+        ).map((result) => result._sum?.xrdValue?.toNumber() || 0),
         ResultAsync.fromPromise(
           db.questProgress.findMany({
             where: { userId: id, questId: { startsWith: 'QuestTogether:' } }
@@ -243,7 +243,12 @@ export const UserModel =
         )
       ])
         .map(
-          ([referrals, claimed, readyToClaim, progress]: [any, any, any, any]) =>
+          ([referrals, claimed, readyToClaim, progress]: [
+            { name: string }[],
+            number,
+            number,
+            Record<string, QuestStatus>
+          ]) =>
             ({
               referrals: referrals.map((referral: { name: string }) => referral.name),
               readyToClaim,
