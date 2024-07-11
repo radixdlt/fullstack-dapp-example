@@ -6,7 +6,7 @@
     type RegularStep,
     type _Step
   } from '$lib/components/quest/Quest.svelte'
-  import { onMount, type ComponentProps } from 'svelte'
+  import { createEventDispatcher, onMount, type ComponentProps } from 'svelte'
   import { closeQuest } from './+layout.svelte'
   import { hideJetty, quests, retractJettyMenu, scrollToNextQuest, user } from '../../../../stores'
   import ClaimRewards from './ClaimRewards.svelte'
@@ -87,6 +87,7 @@
 
   const _completeQuest = async () => {
     await completeQuest(id, !!$user)
+    dispatch('completed')
     setTimeout(closeQuest, 0)
     if (isMobile()) {
       $scrollToNextQuest = true
@@ -210,6 +211,10 @@
   $: jettyQuizSteps = steps.filter((step) => step.type === 'jettyQuiz') as JettyQuizStep[]
 
   let claimRewards: ClaimRewards
+
+  const dispatch = createEventDispatcher<{
+    completed: undefined
+  }>()
 </script>
 
 <Quest
