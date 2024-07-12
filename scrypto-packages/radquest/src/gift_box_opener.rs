@@ -85,11 +85,25 @@ mod gift_box_opener {
             UserId(local_id_string)
         }
 
+        fn check_rewards_record_length(&self, user_id: UserId) {
+            match self.rewards_record.get(&user_id) {
+                Some(reward_record) => {
+                    assert!(
+                        (*reward_record).len() < 10,
+                        "User has reached the maximum number of rewards records"
+                    );
+                }
+                None => {}
+            }
+        }
+
         pub fn open_gift_box(&mut self, hero_badge: Proof, gift_box: Bucket) {
             assert!(self.enabled, "GiftBoxOpener disabled");
 
             // Check and get user id from hero badge proof
             let user_id = self.get_user_id_from_badge_proof(hero_badge);
+
+            self.check_rewards_record_length(user_id.clone());
 
             // Check gift box address
             self.gift_box_managers
@@ -119,7 +133,10 @@ mod gift_box_opener {
                 .pop()
                 .unwrap();
 
-            Runtime::emit_event(GiftBoxRewardsClaimedEvent { user_id });
+            Runtime::emit_event(GiftBoxRewardsClaimedEvent {
+                user_id,
+                rewards: rewards_records.clone(),
+            });
 
             // Use the  rewards records to retrieve rewards from vaults
             rewards_records
@@ -146,6 +163,8 @@ mod gift_box_opener {
         }
 
         pub fn deposit_gift_box_rewards(&mut self, user_id: UserId, rewards: Vec<Bucket>) {
+            self.check_rewards_record_length(user_id.clone());
+
             // Create a new rewards record
             let mut new_rewards_record = HashMap::new();
             for reward in &rewards {
@@ -168,12 +187,12 @@ mod gift_box_opener {
             let user_rewards_records = self.rewards_record.get_mut(&user_id);
             match user_rewards_records {
                 Some(mut record) => {
-                    record.push(new_rewards_record);
+                    record.push(new_rewards_record.clone());
                 }
                 None => {
                     drop(user_rewards_records);
                     self.rewards_record
-                        .insert(user_id.clone(), vec![new_rewards_record]);
+                        .insert(user_id.clone(), vec![new_rewards_record.clone()]);
                 }
             }
 
@@ -193,7 +212,10 @@ mod gift_box_opener {
                 }
             }
 
-            Runtime::emit_event(GiftBoxDepositedEvent { user_id });
+            Runtime::emit_event(GiftBoxDepositedEvent {
+                user_id,
+                rewards: new_rewards_record,
+            });
         }
 
         pub fn add_gift_box_resources(&mut self, resource_addresses: Vec<ResourceAddress>) {
@@ -226,9 +248,11 @@ struct GiftBoxOpenedEvent {
 #[derive(Debug, ScryptoSbor, ScryptoEvent)]
 struct GiftBoxRewardsClaimedEvent {
     user_id: UserId,
+    rewards: HashMap<ResourceAddress, RewardAmount>,
 }
 
 #[derive(Debug, ScryptoSbor, ScryptoEvent)]
 struct GiftBoxDepositedEvent {
     user_id: UserId,
+    rewards: HashMap<ResourceAddress, RewardAmount>,
 }
