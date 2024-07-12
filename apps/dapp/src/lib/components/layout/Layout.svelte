@@ -28,12 +28,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: var(--spacing-lg) 0;
+  }
+
+  .header {
+    height: 10dvh;
   }
 
   .quests {
     min-height: 20rem;
-    height: calc(100dvh - 9rem);
+    height: calc(80dvh);
     max-height: 39rem;
   }
 
@@ -45,6 +48,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    height: 90dvh;
 
     @include desktop {
       gap: var(--spacing-2xl);

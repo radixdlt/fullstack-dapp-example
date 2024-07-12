@@ -74,3 +74,9 @@
 </Carousel>
 
 <slot />
+
+<style>
+  :global(.carousel > .item) {
+    padding: var(--spacing-2xl) 0;
+  }
+</style>
