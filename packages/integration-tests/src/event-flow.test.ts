@@ -159,7 +159,9 @@ const completeTransferTokensQuest = async (user: User) => {
 
 const executeUserReferralFlow = async ({ user, submitTransaction }: Account) => {
   console.log('Completing transfer tokens quest')
+  await accountAddressModel.addTrackedAddress(user.accountAddress!, 'TransferTokens', user.id)
   await completeTransferTokensQuest(user)
+
   await submitTransaction(`
     CALL_METHOD
       Address("${user.accountAddress}")
@@ -217,19 +219,6 @@ const executeUserReferralFlow = async ({ user, submitTransaction }: Account) => 
 
   if (claimRewardResult.isErr()) throw claimRewardResult.error
 }
-
-const getXrdRewardToClaim = async (userId: string) =>
-  db.referral
-    .aggregate({
-      where: { userId },
-      _sum: {
-        xrdValue: true
-      }
-    })
-    .then((result) => {
-      console.log({ sum: result._sum })
-      return result._sum?.xrdValue?.toNumber()
-    })
 
 const createAccount = async (
   value?: Partial<{ withXrd: boolean; withHeroBadge: boolean; referredBy: string }>
