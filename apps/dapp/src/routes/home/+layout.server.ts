@@ -11,6 +11,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
   const questDefinitions = loadQuests('en')
   const landingPopupDefinitions = loadLandingPopup('en')
   const referredBy = url.searchParams.get('ref')
+  const dappReferrer = url.searchParams.get('dapp_referrer')
 
   const storeUtmValues = (searchParams: URLSearchParams, cookie: Cookies) => {
     const referredBy = searchParams.get('ref')
@@ -43,6 +44,13 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
     })
   }
 
+  if (dappReferrer) {
+    cookies.set('dapp_referrer', dappReferrer, {
+      path: '/',
+      expires: new Date('9999-12-31'),
+      httpOnly: false
+    })
+  }
   let questStatus = {} as Record<
     QuestId,
     {
