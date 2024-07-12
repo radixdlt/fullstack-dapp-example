@@ -63,7 +63,6 @@
   .item-page {
     color: var(--color-light);
     background: var(--color-background-dark);
-    height: 100%;
     width: 100%;
 
     > :global(h2) {
