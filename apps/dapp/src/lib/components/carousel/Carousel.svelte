@@ -6,10 +6,12 @@
 
   let carousel: HTMLElement
 
-  let isScrolledToStart: boolean
-  let isScrolledToEnd: boolean
+  let isScrolledToStart = true
+  let isScrolledToEnd = false
 
   let items: HTMLElement[]
+
+  $: console.log('is', isScrolledToStart)
 
   export const scrollToNext = () => {
     if (!carousel) return

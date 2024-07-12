@@ -52,26 +52,28 @@
   }
 </script>
 
-<Carousel bind:this={carousel} let:Item>
-  {#each _quests as [id, quest]}
-    {#if quest.category === $page.params.category}
-      {#if id !== 'JoinFriend' || (id === 'JoinFriend' && $user?.referredBy)}
-        <Item>
-          <QuestOverview
-            title={$i18n.t(`quests:${id}.title`)}
-            description={$i18n.t(`quests:${id}.description`)}
-            minutesToComplete={quest.minutesToComplete}
-            rewards={quest.rewards}
-            backgroundImage={quest.splashImage}
-            state={questCardState[id] ?? 'locked'}
-            link={`/home/${quest.category}/quest/${id}`}
-            isQuestTogether={id === 'QuestTogether'}
-          />
-        </Item>
+{#key $page.params.category}
+  <Carousel bind:this={carousel} let:Item>
+    {#each _quests as [id, quest]}
+      {#if quest.category === $page.params.category}
+        {#if id !== 'JoinFriend' || (id === 'JoinFriend' && $user?.referredBy)}
+          <Item>
+            <QuestOverview
+              title={$i18n.t(`quests:${id}.title`)}
+              description={$i18n.t(`quests:${id}.description`)}
+              minutesToComplete={quest.minutesToComplete}
+              rewards={quest.rewards}
+              backgroundImage={quest.splashImage}
+              state={questCardState[id] ?? 'locked'}
+              link={`/home/${quest.category}/quest/${id}`}
+              isQuestTogether={id === 'QuestTogether'}
+            />
+          </Item>
+        {/if}
       {/if}
-    {/if}
-  {/each}
-</Carousel>
+    {/each}
+  </Carousel>
+{/key}
 
 <slot />
 
