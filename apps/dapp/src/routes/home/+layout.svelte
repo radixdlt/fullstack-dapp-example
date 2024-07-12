@@ -150,9 +150,9 @@
 
 <LandingPopup definitions={data.landingPopupDefinitions} />
 
-<Layout>
-  <Jetty />
+<Jetty />
 
+<Layout>
   <Header slot="header" />
 
   <Tabs

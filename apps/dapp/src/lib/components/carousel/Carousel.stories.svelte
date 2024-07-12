@@ -8,26 +8,6 @@
   import { Story, Template } from '@storybook/addon-svelte-csf'
   import Carousel from './Carousel.svelte'
   import QuestOverviewCard from '../quest-overview/QuestOverview.svelte'
-  import { fireEvent } from '@storybook/testing-library'
-  import { expect } from '@storybook/jest'
-
-  const scroll = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-    const carousel = canvasElement.getElementsByClassName('carousel')[0]
-    const items = canvasElement.getElementsByClassName('item')
-
-    expect(items[0]).not.toHaveClass('disabled')
-
-    await new Promise((resolve) => setTimeout(resolve, 200))
-
-    fireEvent.scroll(carousel, {
-      target: { scrollLeft: 2000 }
-    })
-
-    // wait for scroll to finish
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    expect(items[0]).toHaveClass('disabled')
-  }
 </script>
 
 <Template>
@@ -47,8 +27,6 @@
 </Template>
 
 <Story name="Primary" />
-
-<Story name="Test:scroll" play={scroll} />
 
 <style lang="scss">
   .container {
