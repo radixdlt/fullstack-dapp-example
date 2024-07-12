@@ -1,4 +1,5 @@
 import { config } from '../../config'
+import { transactionBuilder } from '../../transaction/transactionBuilder'
 
 export const mintHeroBadgeAndDepositXrd = (
   userId: string,
@@ -42,7 +43,7 @@ export const mintHeroBadgeAndDepositXrd = (
         CALL_METHOD
           Address("${config.radQuest.accounts.payer.address}")
           "withdraw"
-          Address("${wellKnownAddresses.resourceAddresses.xrd}")
+          Address("${config.radQuest.xrd}")
           Decimal("${config.directXrdDepositAmount}");
 
         CALL_METHOD
@@ -53,5 +54,5 @@ export const mintHeroBadgeAndDepositXrd = (
         ;`
   return transactionBuilder({ transactionManifest, signers: ['payer', 'system'] })
     .submit()
-    .andThen(({ transactionId }) => transactionId)
+    .map(({ transactionId }) => transactionId)
 }
