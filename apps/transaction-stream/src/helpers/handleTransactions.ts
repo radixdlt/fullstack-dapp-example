@@ -3,7 +3,7 @@ import {
   FilteredTransaction,
   FilterTransactionsByType
 } from '../filter-transactions/filter-transactions-by-type'
-import { AppLogger, EventModelMethods, splitArrayIntoChunks, typedError } from 'common'
+import { AppLogger, EventId, EventModelMethods, splitArrayIntoChunks, typedError } from 'common'
 import { getQueues } from 'queues'
 import { StateVersionModel } from '../state-version/state-version.model'
 import crypto from 'node:crypto'
@@ -36,35 +36,32 @@ export const HandleTransactions =
     continueStream: (delay: number) => void
   }) =>
     filterTransactionsByType(transactions)
-      .asyncAndThen((txs) => {
-        const txChunks = splitArrayIntoChunks(txs, 10)
-        const handleChunks = async () => {
-          let results: FilteredTransaction[] = []
-          for (const txChunk of txChunks) {
-            const filterPromises = txChunk.map(filterTransactionsByAccountAddress)
-            const resu = await ResultAsync.fromPromise(Promise.all(filterPromises), typedError)
-
-            if (resu.isOk())
-              results = results.concat(resu.value.filter((tx): tx is FilteredTransaction => !!tx))
-          }
-          return results
-        }
-
-        return ResultAsync.fromPromise(handleChunks(), typedError)
-      })
-      .andThen((filteredTransactions) =>
-        eventModel
+      .asyncAndThen((transactions) =>
+        ResultAsync.combine(transactions.map(filterTransactionsByAccountAddress)).map(
+          (transactions) =>
+            transactions.filter((transaction): transaction is FilteredTransaction => !!transaction)
+        )
+      )
+      .andThen((filteredTransactions) => {
+        return eventModel
           .addMultiple(
-            filteredTransactions.map((tx) => ({
-              eventId: tx.type,
-              transactionId: tx.transactionId
+            filteredTransactions.map((transaction) => ({
+              eventId: transaction.type,
+              transactionId: transaction.transactionId,
+              userId: transaction.userId!,
+              data: transaction.data,
+              questId: transaction.questId
             }))
           )
-          .andThen(() =>
+          .andThen((items) =>
             eventQueue.addBulk(
-              filteredTransactions.map((tx) => ({
+              items.map((item) => ({
                 traceId: crypto.randomUUID(),
-                ...tx
+                eventId: item.id as unknown as EventId,
+                type: item.id as unknown as EventId,
+                transactionId: item.transactionId,
+                userId: item.userId!,
+                data: item.data as Record<string, Record<string, string>>
               }))
             )
           )
@@ -80,4 +77,4 @@ export const HandleTransactions =
             continueStream(filteredTransactions.length ? 0 : 1000)
             return stateVersionModel.setLatestStateVersion(stateVersion)
           })
-      )
+      })

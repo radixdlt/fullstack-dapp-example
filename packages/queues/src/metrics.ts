@@ -38,23 +38,23 @@ const setupQueueEvents = (input: {
 
   const setWaitingJobs = async () => {
     const value = await input.queue.getJobCountByTypes('wait')
-    childLogger?.debug({ status: `waiting`, value })
+    childLogger?.trace({ status: `waiting`, value })
     input.trackMetricsFn.waitingJobs.set(value)
   }
   const setProgressJobs = async () => {
     const value = await input.queue.getJobCountByTypes('active')
-    childLogger?.debug({ status: `active`, value })
+    childLogger?.trace({ status: `active`, value })
     input.trackMetricsFn.activeJobs.set(value)
   }
   const setFailedJobs = async () => {
     const value = await input.queue.getJobCountByTypes('failed')
-    childLogger?.debug({ status: 'failed', value })
+    childLogger?.trace({ status: 'failed', value })
     input.trackMetricsFn.failedJobs.set(value)
   }
 
   const setCompletedJobs = async () => {
     const value = await input.queue.getJobCountByTypes('completed')
-    childLogger?.debug({ status: 'completed', value })
+    childLogger?.trace({ status: 'completed', value })
     input.trackMetricsFn.completedJobs.set(value)
   }
 

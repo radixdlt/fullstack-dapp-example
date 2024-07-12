@@ -1,4 +1,3 @@
-import type { EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
 import { type ConnectionOptions, Queue } from 'bullmq'
 import { ResultAsync } from 'neverthrow'
 import { EventId, GiftBoxKind, typedError } from 'common'
@@ -18,8 +17,11 @@ export const SystemJobType = {
 export type EventJob = {
   type: EventId
   traceId: string
+  eventId: string
+  questId?: string
   transactionId: string
-  relevantEvents: Record<string, EventsItem>
+  userId: string
+  data: Record<string, Record<string, string>>
 }
 
 export type DepositRewardTransactionJob = {

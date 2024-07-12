@@ -1,5 +1,7 @@
-import { type PrismaClient } from 'database'
-import { ResultAsync } from 'neverthrow'
+import { PrismaClient } from 'database'
+// @ts-ignore
+import Prisma from 'prisma'
+import { ResultAsync, okAsync } from 'neverthrow'
 import { type ApiError, createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers'
 
@@ -24,23 +26,37 @@ export const EventModel = (db: PrismaClient) => (logger?: AppLogger) => {
       eventId: string
       questId?: string
       transactionId: string
-      userId?: string
+      userId: string
+      data: Record<string, Record<string, string>>
     }[]
-  ) =>
-    ResultAsync.fromPromise<{ count: number }, ApiError>(
-      db.event.createMany({
-        data: events.map((event) => ({
-          id: event.eventId,
-          questId: event.questId,
-          transactionId: event.transactionId,
-          userId: event.userId
-        }))
-      }),
+  ) => {
+    if (events.length === 0) return okAsync([])
+
+    const values = events
+      .map(
+        (item) =>
+          `('${item.eventId}', '${item.transactionId}', '${item.userId}', '${JSON.stringify(item.data)}'::jsonb)`
+      )
+      .join(', ')
+
+    const query = [
+      `with data("id", "transactionId", "userId", "data") AS (VALUES ${values})`,
+      'insert into "Event" ("id", "transactionId", "userId", "data")',
+      'select d."id", d."transactionId", d."userId", d."data"',
+      'from data d',
+      'where exists (select 1 from "User" u where u."id" = d."userId")',
+      'AND not exists (select 1 from "Event" u where u."transactionId" = d."transactionId")',
+      'Returning *;'
+    ].join(' ')
+
+    return ResultAsync.fromPromise<Event[], ApiError>(
+      events.length ? db.$queryRawUnsafe(query) : Promise.resolve([]),
       (error) => {
-        logger?.error({ error, method: 'addMultiple', model: 'EventModel' })
+        logger?.error({ error, method: 'addMultiple.error', model: 'EventModel' })
         return createApiError('failed to add multiple events', 400)()
       }
     )
+  }
 
   const update = (
     transactionId: string,

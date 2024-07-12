@@ -3,7 +3,7 @@ import {
   ProgrammaticScryptoSborValueReference
 } from '@radixdlt/babylon-gateway-api-sdk'
 import { config } from '../config'
-import { EventId } from 'common'
+import { EventId, GetValuesFromEventInput, getValuesFromEvent } from 'common'
 
 type EventEmitter = {
   entity: {
@@ -15,131 +15,207 @@ type EventEmitter = {
   object_module_id: string
 }
 
-export type TrackedTransactions = Record<EventId, Record<string, (event: EventsItem) => boolean>>
+export type TrackedTransactions = Record<
+  EventId,
+  Record<string, (event: EventsItem) => Record<string, string> | undefined>
+>
 
-export const eventEmittedByComponent =
-  (eventName: string, componentAddress: string) => (event: EventsItem) =>
-    event.name === eventName &&
-    (event.emitter as EventEmitter).entity.entity_address === componentAddress
+const eventEmittedByComponent =
+  ({
+    eventName,
+    componentAddress,
+    keys
+  }: {
+    eventName: string
+    componentAddress: string
+    keys: GetValuesFromEventInput
+  }) =>
+  (event: EventsItem) => {
+    const isMatch =
+      event.name === eventName &&
+      (event.emitter as EventEmitter).entity.entity_address === componentAddress
 
-const resourceDeposited = (resourceAddress: string, toAccount?: string) => (event: EventsItem) => {
-  if (event.name !== 'DepositEvent' || event.data.kind !== 'Enum') return false
+    return isMatch ? getValuesFromEvent(keys, event) : undefined
+  }
 
-  if (toAccount && toAccount !== (event.emitter as EventEmitter).entity.entity_address) return false
+const resourceDeposited =
+  ({
+    resourceAddress,
+    toAccount,
+    key
+  }: {
+    resourceAddress: string
+    toAccount?: string
+    key?: string
+  }) =>
+  (event: EventsItem) => {
+    if (event.name !== 'DepositEvent' || event.data.kind !== 'Enum') return undefined
 
-  const resourceField = event.data.fields.find(
-    (field): field is ProgrammaticScryptoSborValueReference => field.kind === 'Reference'
-  )
+    if (toAccount && toAccount !== (event.emitter as EventEmitter).entity.entity_address)
+      return undefined
 
-  return resourceField?.value === resourceAddress
+    const resourceField = event.data.fields.find(
+      (field): field is ProgrammaticScryptoSborValueReference => field.kind === 'Reference'
+    )
+
+    const isMatch = resourceField?.value === resourceAddress
+    const entity_address = (event.emitter as { entity: { entity_address: string } }).entity
+      .entity_address
+    const keyValue = key ? { [key]: entity_address } : {}
+
+    return isMatch ? keyValue : undefined
+  }
+
+export const resourceWithdrawn = (resourceAddress: string, key?: string) => (event: EventsItem) => {
+  if (event.name !== 'WithdrawEvent' || event.data.kind !== 'Enum') return undefined
+  const entity_address = (event.emitter as { entity: { entity_address: string } }).entity
+    .entity_address
+
+  const values = getValuesFromEvent({ ResourceAddress: { kind: 'Reference' } }, event)
+
+  const isMatch = values.ResourceAddress === resourceAddress
+
+  const keyValue = key ? { [key]: entity_address } : {}
+
+  return isMatch && entity_address ? keyValue : undefined
 }
 
-export const resourceWithdrawn = (resource: string) => (event: EventsItem) => {
-  if (event.name !== 'WithdrawEvent' || event.data.kind !== 'Enum') return false
-
-  const resourceField = event.data.fields.find(
-    (field): field is ProgrammaticScryptoSborValueReference => field.kind === 'Reference'
-  )
-
-  return resourceField?.value === resource
-}
-
-export const xrdStaked = (event: EventsItem) => {
-  return (
+const xrdStaked = (event: EventsItem) => {
+  const isMatch =
     event.name === 'StakeEvent' &&
     (event.emitter as EventEmitter)?.entity.entity_type === 'GlobalValidator'
-  )
+  return isMatch ? {} : undefined
 }
 
-const nonFungibleMinted = (resource: string) => (event: EventsItem) =>
-  event.name === 'MintNonFungibleResourceEvent' &&
-  (event.emitter as EventEmitter)?.entity?.entity_address === resource
+const nonFungibleMinted =
+  (resource: string, keys: GetValuesFromEventInput) => (event: EventsItem) => {
+    const isMatch =
+      event.name === 'MintNonFungibleResourceEvent' &&
+      (event.emitter as EventEmitter)?.entity?.entity_address === resource
+    return isMatch ? getValuesFromEvent(keys, event) : {}
+  }
 
-export const getTrackedTransactionTypes = (): TrackedTransactions => ({
+export const trackedTransactionTypes: TrackedTransactions = {
   [EventId.QuestRewardDeposited]: {
-    RewardDepositedEvent: eventEmittedByComponent(
-      'RewardDepositedEvent',
-      config.radQuest.components.questRewards
-    )
+    RewardDepositedEvent: eventEmittedByComponent({
+      eventName: 'RewardDepositedEvent',
+      componentAddress: config.radQuest.components.questRewards,
+      keys: {
+        user_id: { kind: 'String', key: 'userId' },
+        quest_id: { kind: 'String', key: 'questId' }
+      }
+    })
   },
   [EventId.QuestRewardClaimed]: {
-    RewardClaimedEvent: eventEmittedByComponent(
-      'RewardClaimedEvent',
-      config.radQuest.components.questRewards
-    )
+    RewardClaimedEvent: eventEmittedByComponent({
+      eventName: 'RewardClaimedEvent',
+      componentAddress: config.radQuest.components.questRewards,
+      keys: {
+        user_id: { kind: 'String', key: 'userId' },
+        quest_id: { kind: 'String', key: 'questId' }
+      }
+    })
   },
   [EventId.DepositHeroBadge]: {
-    HeroBadgeDeposited: resourceDeposited(config.radQuest.badges.heroBadgeAddress)
+    HeroBadgeDeposited: eventEmittedByComponent({
+      componentAddress: config.radQuest.components.heroBadgeForge,
+      eventName: 'BadgeClaimedEvent',
+      keys: { user_id: { kind: 'String', key: 'userId' } }
+    })
   },
   [EventId.JettyReceivedClams]: {
-    DepositEvent: resourceDeposited(
-      config.radQuest.resources.clamAddress,
-      config.radQuest.accounts.jetty.address
-    ),
-    WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress)
+    DepositEvent: resourceDeposited({
+      resourceAddress: config.radQuest.resources.clamAddress,
+      toAccount: config.radQuest.accounts.jetty.address
+    }),
+    WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress, 'accountAddress')
   },
   [EventId.XrdStaked]: {
     XrdStake: xrdStaked,
-    WithdrawEvent: resourceWithdrawn(config.radQuest.xrd)
+    WithdrawEvent: resourceWithdrawn(config.radQuest.xrd, 'accountAddress')
   },
   [EventId.CombineElementsDeposited]: {
-    DepositedEvent: eventEmittedByComponent(
-      'CombineElementsDepositedEvent',
-      config.radQuest.components.refinery
-    )
+    DepositedEvent: eventEmittedByComponent({
+      eventName: 'CombineElementsDepositedEvent',
+      componentAddress: config.radQuest.components.refinery,
+      keys: { user_id: { kind: 'String', key: 'userId' } }
+    })
   },
   [EventId.CombineElementsMintedRadgem]: {
-    MintedRadgemEvent: eventEmittedByComponent(
-      'CombineElementsMintedRadgemEvent',
-      config.radQuest.components.refinery
-    )
+    MintedRadgemEvent: eventEmittedByComponent({
+      eventName: 'CombineElementsMintedRadgemEvent',
+      componentAddress: config.radQuest.components.refinery,
+      keys: {
+        user_id: { kind: 'String', key: 'userId' }
+      }
+    })
   },
   [EventId.CombineElementsAddedRadgemImage]: {
-    AddedRadgemImageEvent: eventEmittedByComponent(
-      'CombineElementsAddedRadgemImageEvent',
-      config.radQuest.components.refinery
-    )
+    AddedRadgemImageEvent: eventEmittedByComponent({
+      eventName: 'CombineElementsAddedRadgemImageEvent',
+      componentAddress: config.radQuest.components.refinery,
+      keys: { user_id: { kind: 'String', key: 'userId' } }
+    })
   },
   [EventId.CombineElementsClaimed]: {
-    ClaimedEvent: eventEmittedByComponent(
-      'CombineElementsClaimedEvent',
-      config.radQuest.components.refinery
-    )
+    ClaimedEvent: eventEmittedByComponent({
+      eventName: 'CombineElementsClaimedEvent',
+      componentAddress: config.radQuest.components.refinery,
+      keys: { user_id: { kind: 'String', key: 'userId' } }
+    })
   },
   [EventId.MayaRouterWithdrawEvent]: {
-    MayaRouterWithdrawEvent: eventEmittedByComponent(
-      'MayaRouterWithdrawEvent',
-      config.radQuest.components.mayaRouter
-    )
+    MayaRouterWithdrawEvent: eventEmittedByComponent({
+      eventName: 'MayaRouterWithdrawEvent',
+      componentAddress: config.radQuest.components.mayaRouter,
+      keys: { intended_recipient: { kind: 'Reference', key: 'accountAddress' } }
+    })
   },
   [EventId.InstapassBadgeDeposited]: {
-    MintedEvent: nonFungibleMinted(config.radQuest.badges.instapassBadgeAddress),
-    DepositedEvent: resourceDeposited(config.radQuest.badges.instapassBadgeAddress)
+    MintedEvent: nonFungibleMinted(config.radQuest.badges.instapassBadgeAddress, {}),
+    DepositedEvent: resourceDeposited({
+      resourceAddress: config.radQuest.badges.instapassBadgeAddress,
+      key: 'accountAddress'
+    })
   },
   [EventId.JettySwap]: {
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress),
-    JettySwapEvent: eventEmittedByComponent('JettySwapEvent', config.radQuest.components.jettySwap)
+    JettySwapEvent: eventEmittedByComponent({
+      eventName: 'JettySwapEvent',
+      componentAddress: config.radQuest.components.jettySwap,
+      keys: {}
+    })
   },
   [EventId.LettySwap]: {
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress),
-    JettySwapEvent: eventEmittedByComponent('JettySwapEvent', config.radQuest.components.lettySwap)
+    JettySwapEvent: eventEmittedByComponent({
+      eventName: 'JettySwapEvent',
+      componentAddress: config.radQuest.components.lettySwap,
+      keys: {}
+    })
   },
   [EventId.AccountAllowedToForgeHeroBadge]: {
-    AccountAddedEvent: eventEmittedByComponent(
-      'AccountAddedEvent',
-      config.radQuest.components.heroBadgeForge
-    )
+    AccountAddedEvent: eventEmittedByComponent({
+      eventName: 'AccountAddedEvent',
+      componentAddress: config.radQuest.components.heroBadgeForge,
+      keys: { account: { kind: 'Reference', key: 'accountAddress' } }
+    })
   },
   [EventId.GiftBoxOpened]: {
-    GiftBoxOpenedEvent: eventEmittedByComponent(
-      'GiftBoxOpenedEvent',
-      config.radQuest.components.giftBoxOpener
-    )
+    GiftBoxOpenedEvent: eventEmittedByComponent({
+      eventName: 'GiftBoxOpenedEvent',
+      componentAddress: config.radQuest.components.giftBoxOpener,
+      keys: {
+        user_id: { kind: 'String', key: 'userId' },
+        resource_address: { kind: 'Reference', key: 'giftBoxResourceAddress' }
+      }
+    })
   },
   [EventId.GiftBoxDeposited]: {
-    GiftBoxDepositedEvent: eventEmittedByComponent(
-      'GiftBoxDepositedEvent',
-      config.radQuest.components.giftBoxOpener
-    )
+    GiftBoxDepositedEvent: eventEmittedByComponent({
+      eventName: 'GiftBoxDepositedEvent',
+      componentAddress: config.radQuest.components.giftBoxOpener,
+      keys: { user_id: { kind: 'String', key: 'userId' } }
+    })
   }
-})
+} as const

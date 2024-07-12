@@ -530,7 +530,7 @@ export namespace Prisma {
 
   /**
    * Prisma Client JS version: 5.15.0
-   * Query Engine version: 12e25d8d06f6ea5a0252864dd9a03b1bb51f3022
+   * Query Engine version: 34ace0eb2704183d2c05b60b52fba5c43c13f303
    */
   export type PrismaVersion = {
     client: string
@@ -8428,8 +8428,8 @@ export namespace Prisma {
   export type EventMinAggregateOutputType = {
     transactionId: string | null
     id: string | null
-    questId: string | null
     userId: string | null
+    questId: string | null
     createdAt: Date | null
     processedAt: Date | null
     error: string | null
@@ -8438,8 +8438,8 @@ export namespace Prisma {
   export type EventMaxAggregateOutputType = {
     transactionId: string | null
     id: string | null
-    questId: string | null
     userId: string | null
+    questId: string | null
     createdAt: Date | null
     processedAt: Date | null
     error: string | null
@@ -8448,11 +8448,12 @@ export namespace Prisma {
   export type EventCountAggregateOutputType = {
     transactionId: number
     id: number
-    questId: number
     userId: number
+    questId: number
     createdAt: number
     processedAt: number
     error: number
+    data: number
     _all: number
   }
 
@@ -8460,8 +8461,8 @@ export namespace Prisma {
   export type EventMinAggregateInputType = {
     transactionId?: true
     id?: true
-    questId?: true
     userId?: true
+    questId?: true
     createdAt?: true
     processedAt?: true
     error?: true
@@ -8470,8 +8471,8 @@ export namespace Prisma {
   export type EventMaxAggregateInputType = {
     transactionId?: true
     id?: true
-    questId?: true
     userId?: true
+    questId?: true
     createdAt?: true
     processedAt?: true
     error?: true
@@ -8480,11 +8481,12 @@ export namespace Prisma {
   export type EventCountAggregateInputType = {
     transactionId?: true
     id?: true
-    questId?: true
     userId?: true
+    questId?: true
     createdAt?: true
     processedAt?: true
     error?: true
+    data?: true
     _all?: true
   }
 
@@ -8563,11 +8565,12 @@ export namespace Prisma {
   export type EventGroupByOutputType = {
     transactionId: string
     id: string
+    userId: string
     questId: string | null
-    userId: string | null
     createdAt: Date
     processedAt: Date | null
     error: string | null
+    data: JsonValue
     _count: EventCountAggregateOutputType | null
     _min: EventMinAggregateOutputType | null
     _max: EventMaxAggregateOutputType | null
@@ -8590,12 +8593,13 @@ export namespace Prisma {
   export type EventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     transactionId?: boolean
     id?: boolean
-    questId?: boolean
     userId?: boolean
+    questId?: boolean
     createdAt?: boolean
     processedAt?: boolean
     error?: boolean
-    user?: boolean | Event$userArgs<ExtArgs>
+    data?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
     referral?: boolean | Event$referralArgs<ExtArgs>
     _count?: boolean | EventCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["event"]>
@@ -8603,47 +8607,50 @@ export namespace Prisma {
   export type EventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     transactionId?: boolean
     id?: boolean
-    questId?: boolean
     userId?: boolean
+    questId?: boolean
     createdAt?: boolean
     processedAt?: boolean
     error?: boolean
-    user?: boolean | Event$userArgs<ExtArgs>
+    data?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["event"]>
 
   export type EventSelectScalar = {
     transactionId?: boolean
     id?: boolean
-    questId?: boolean
     userId?: boolean
+    questId?: boolean
     createdAt?: boolean
     processedAt?: boolean
     error?: boolean
+    data?: boolean
   }
 
   export type EventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | Event$userArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
     referral?: boolean | Event$referralArgs<ExtArgs>
     _count?: boolean | EventCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type EventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | Event$userArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $EventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Event"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs> | null
+      user: Prisma.$UserPayload<ExtArgs>
       referral: Prisma.$ReferralPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       transactionId: string
       id: string
+      userId: string
       questId: string | null
-      userId: string | null
       createdAt: Date
       processedAt: Date | null
       error: string | null
+      data: Prisma.JsonValue
     }, ExtArgs["result"]["event"]>
     composites: {}
   }
@@ -9034,7 +9041,7 @@ export namespace Prisma {
   export interface Prisma__EventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
 
-    user<T extends Event$userArgs<ExtArgs> = {}>(args?: Subset<T, Event$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
 
     referral<T extends Event$referralArgs<ExtArgs> = {}>(args?: Subset<T, Event$referralArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, 'findMany'> | Null>;
 
@@ -9068,11 +9075,12 @@ export namespace Prisma {
   interface EventFieldRefs {
     readonly transactionId: FieldRef<"Event", 'String'>
     readonly id: FieldRef<"Event", 'String'>
-    readonly questId: FieldRef<"Event", 'String'>
     readonly userId: FieldRef<"Event", 'String'>
+    readonly questId: FieldRef<"Event", 'String'>
     readonly createdAt: FieldRef<"Event", 'DateTime'>
     readonly processedAt: FieldRef<"Event", 'DateTime'>
     readonly error: FieldRef<"Event", 'String'>
+    readonly data: FieldRef<"Event", 'Json'>
   }
     
 
@@ -9388,21 +9396,6 @@ export namespace Prisma {
      * Filter which Events to delete
      */
     where?: EventWhereInput
-  }
-
-  /**
-   * Event.user
-   */
-  export type Event$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
   }
 
   /**
@@ -19076,11 +19069,12 @@ export namespace Prisma {
   export const EventScalarFieldEnum: {
     transactionId: 'transactionId',
     id: 'id',
-    questId: 'questId',
     userId: 'userId',
+    questId: 'questId',
     createdAt: 'createdAt',
     processedAt: 'processedAt',
-    error: 'error'
+    error: 'error',
+    data: 'data'
   };
 
   export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
@@ -19335,6 +19329,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -19345,13 +19346,6 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
     
 
 
@@ -19755,23 +19749,25 @@ export namespace Prisma {
     NOT?: EventWhereInput | EventWhereInput[]
     transactionId?: StringFilter<"Event"> | string
     id?: StringFilter<"Event"> | string
+    userId?: StringFilter<"Event"> | string
     questId?: StringNullableFilter<"Event"> | string | null
-    userId?: StringNullableFilter<"Event"> | string | null
     createdAt?: DateTimeFilter<"Event"> | Date | string
     processedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     error?: StringNullableFilter<"Event"> | string | null
-    user?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    data?: JsonFilter<"Event">
+    user?: XOR<UserRelationFilter, UserWhereInput>
     referral?: ReferralListRelationFilter
   }
 
   export type EventOrderByWithRelationInput = {
     transactionId?: SortOrder
     id?: SortOrder
+    userId?: SortOrder
     questId?: SortOrderInput | SortOrder
-    userId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     processedAt?: SortOrderInput | SortOrder
     error?: SortOrderInput | SortOrder
+    data?: SortOrder
     user?: UserOrderByWithRelationInput
     referral?: ReferralOrderByRelationAggregateInput
   }
@@ -19782,23 +19778,25 @@ export namespace Prisma {
     OR?: EventWhereInput[]
     NOT?: EventWhereInput | EventWhereInput[]
     id?: StringFilter<"Event"> | string
+    userId?: StringFilter<"Event"> | string
     questId?: StringNullableFilter<"Event"> | string | null
-    userId?: StringNullableFilter<"Event"> | string | null
     createdAt?: DateTimeFilter<"Event"> | Date | string
     processedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     error?: StringNullableFilter<"Event"> | string | null
-    user?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    data?: JsonFilter<"Event">
+    user?: XOR<UserRelationFilter, UserWhereInput>
     referral?: ReferralListRelationFilter
   }, "transactionId">
 
   export type EventOrderByWithAggregationInput = {
     transactionId?: SortOrder
     id?: SortOrder
+    userId?: SortOrder
     questId?: SortOrderInput | SortOrder
-    userId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     processedAt?: SortOrderInput | SortOrder
     error?: SortOrderInput | SortOrder
+    data?: SortOrder
     _count?: EventCountOrderByAggregateInput
     _max?: EventMaxOrderByAggregateInput
     _min?: EventMinOrderByAggregateInput
@@ -19810,11 +19808,12 @@ export namespace Prisma {
     NOT?: EventScalarWhereWithAggregatesInput | EventScalarWhereWithAggregatesInput[]
     transactionId?: StringWithAggregatesFilter<"Event"> | string
     id?: StringWithAggregatesFilter<"Event"> | string
+    userId?: StringWithAggregatesFilter<"Event"> | string
     questId?: StringNullableWithAggregatesFilter<"Event"> | string | null
-    userId?: StringNullableWithAggregatesFilter<"Event"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Event"> | Date | string
     processedAt?: DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
     error?: StringNullableWithAggregatesFilter<"Event"> | string | null
+    data?: JsonWithAggregatesFilter<"Event">
   }
 
   export type MessageWhereInput = {
@@ -20689,18 +20688,20 @@ export namespace Prisma {
     createdAt?: Date | string
     processedAt?: Date | string | null
     error?: string | null
-    user?: UserCreateNestedOneWithoutEventsInput
+    data?: JsonNullValueInput | InputJsonValue
+    user: UserCreateNestedOneWithoutEventsInput
     referral?: ReferralCreateNestedManyWithoutEventInput
   }
 
   export type EventUncheckedCreateInput = {
     transactionId: string
     id: string
+    userId: string
     questId?: string | null
-    userId?: string | null
     createdAt?: Date | string
     processedAt?: Date | string | null
     error?: string | null
+    data?: JsonNullValueInput | InputJsonValue
     referral?: ReferralUncheckedCreateNestedManyWithoutEventInput
   }
 
@@ -20711,29 +20712,32 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    user?: UserUpdateOneWithoutEventsNestedInput
+    data?: JsonNullValueInput | InputJsonValue
+    user?: UserUpdateOneRequiredWithoutEventsNestedInput
     referral?: ReferralUpdateManyWithoutEventNestedInput
   }
 
   export type EventUncheckedUpdateInput = {
     transactionId?: StringFieldUpdateOperationsInput | string
     id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
     questId?: NullableStringFieldUpdateOperationsInput | string | null
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: JsonNullValueInput | InputJsonValue
     referral?: ReferralUncheckedUpdateManyWithoutEventNestedInput
   }
 
   export type EventCreateManyInput = {
     transactionId: string
     id: string
+    userId: string
     questId?: string | null
-    userId?: string | null
     createdAt?: Date | string
     processedAt?: Date | string | null
     error?: string | null
+    data?: JsonNullValueInput | InputJsonValue
   }
 
   export type EventUpdateManyMutationInput = {
@@ -20743,16 +20747,18 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: JsonNullValueInput | InputJsonValue
   }
 
   export type EventUncheckedUpdateManyInput = {
     transactionId?: StringFieldUpdateOperationsInput | string
     id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
     questId?: NullableStringFieldUpdateOperationsInput | string | null
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: JsonNullValueInput | InputJsonValue
   }
 
   export type MessageCreateInput = {
@@ -21714,61 +21720,6 @@ export namespace Prisma {
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
-
-  export type EventCountOrderByAggregateInput = {
-    transactionId?: SortOrder
-    id?: SortOrder
-    questId?: SortOrder
-    userId?: SortOrder
-    createdAt?: SortOrder
-    processedAt?: SortOrder
-    error?: SortOrder
-  }
-
-  export type EventMaxOrderByAggregateInput = {
-    transactionId?: SortOrder
-    id?: SortOrder
-    questId?: SortOrder
-    userId?: SortOrder
-    createdAt?: SortOrder
-    processedAt?: SortOrder
-    error?: SortOrder
-  }
-
-  export type EventMinOrderByAggregateInput = {
-    transactionId?: SortOrder
-    id?: SortOrder
-    questId?: SortOrder
-    userId?: SortOrder
-    createdAt?: SortOrder
-    processedAt?: SortOrder
-    error?: SortOrder
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
   export type JsonFilter<$PrismaModel = never> = 
     | PatchUndefined<
         Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -21790,6 +21741,87 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type EventCountOrderByAggregateInput = {
+    transactionId?: SortOrder
+    id?: SortOrder
+    userId?: SortOrder
+    questId?: SortOrder
+    createdAt?: SortOrder
+    processedAt?: SortOrder
+    error?: SortOrder
+    data?: SortOrder
+  }
+
+  export type EventMaxOrderByAggregateInput = {
+    transactionId?: SortOrder
+    id?: SortOrder
+    userId?: SortOrder
+    questId?: SortOrder
+    createdAt?: SortOrder
+    processedAt?: SortOrder
+    error?: SortOrder
+  }
+
+  export type EventMinOrderByAggregateInput = {
+    transactionId?: SortOrder
+    id?: SortOrder
+    userId?: SortOrder
+    questId?: SortOrder
+    createdAt?: SortOrder
+    processedAt?: SortOrder
+    error?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> = 
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type MessageCountOrderByAggregateInput = {
@@ -21836,31 +21868,6 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
-  }
-  export type JsonWithAggregatesFilter<$PrismaModel = never> = 
-    | PatchUndefined<
-        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedJsonFilter<$PrismaModel>
-    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type NotificationNotificationIdUserIdCompoundUniqueInput = {
@@ -22816,12 +22823,10 @@ export namespace Prisma {
     set?: Date | string | null
   }
 
-  export type UserUpdateOneWithoutEventsNestedInput = {
+  export type UserUpdateOneRequiredWithoutEventsNestedInput = {
     create?: XOR<UserCreateWithoutEventsInput, UserUncheckedCreateWithoutEventsInput>
     connectOrCreate?: UserCreateOrConnectWithoutEventsInput
     upsert?: UserUpsertWithoutEventsInput
-    disconnect?: UserWhereInput | boolean
-    delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutEventsInput, UserUpdateWithoutEventsInput>, UserUncheckedUpdateWithoutEventsInput>
   }
@@ -23252,6 +23257,28 @@ export namespace Prisma {
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
+  export type NestedJsonFilter<$PrismaModel = never> = 
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
@@ -23278,28 +23305,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
-  }
-  export type NestedJsonFilter<$PrismaModel = never> = 
-    | PatchUndefined<
-        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
-
-  export type NestedJsonFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type NestedEnumQuestStatusFilter<$PrismaModel = never> = {
@@ -23433,6 +23438,7 @@ export namespace Prisma {
     createdAt?: Date | string
     processedAt?: Date | string | null
     error?: string | null
+    data?: JsonNullValueInput | InputJsonValue
     referral?: ReferralCreateNestedManyWithoutEventInput
   }
 
@@ -23443,6 +23449,7 @@ export namespace Prisma {
     createdAt?: Date | string
     processedAt?: Date | string | null
     error?: string | null
+    data?: JsonNullValueInput | InputJsonValue
     referral?: ReferralUncheckedCreateNestedManyWithoutEventInput
   }
 
@@ -23806,11 +23813,12 @@ export namespace Prisma {
     NOT?: EventScalarWhereInput | EventScalarWhereInput[]
     transactionId?: StringFilter<"Event"> | string
     id?: StringFilter<"Event"> | string
+    userId?: StringFilter<"Event"> | string
     questId?: StringNullableFilter<"Event"> | string | null
-    userId?: StringNullableFilter<"Event"> | string | null
     createdAt?: DateTimeFilter<"Event"> | Date | string
     processedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     error?: StringNullableFilter<"Event"> | string | null
+    data?: JsonFilter<"Event">
   }
 
   export type MessageUpsertWithWhereUniqueWithoutUserInput = {
@@ -24320,17 +24328,19 @@ export namespace Prisma {
     createdAt?: Date | string
     processedAt?: Date | string | null
     error?: string | null
-    user?: UserCreateNestedOneWithoutEventsInput
+    data?: JsonNullValueInput | InputJsonValue
+    user: UserCreateNestedOneWithoutEventsInput
   }
 
   export type EventUncheckedCreateWithoutReferralInput = {
     transactionId: string
     id: string
+    userId: string
     questId?: string | null
-    userId?: string | null
     createdAt?: Date | string
     processedAt?: Date | string | null
     error?: string | null
+    data?: JsonNullValueInput | InputJsonValue
   }
 
   export type EventCreateOrConnectWithoutReferralInput = {
@@ -24407,17 +24417,19 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
-    user?: UserUpdateOneWithoutEventsNestedInput
+    data?: JsonNullValueInput | InputJsonValue
+    user?: UserUpdateOneRequiredWithoutEventsNestedInput
   }
 
   export type EventUncheckedUpdateWithoutReferralInput = {
     transactionId?: StringFieldUpdateOperationsInput | string
     id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
     questId?: NullableStringFieldUpdateOperationsInput | string | null
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: JsonNullValueInput | InputJsonValue
   }
 
   export type UserUpsertWithoutReferalsInput = {
@@ -25486,6 +25498,7 @@ export namespace Prisma {
     createdAt?: Date | string
     processedAt?: Date | string | null
     error?: string | null
+    data?: JsonNullValueInput | InputJsonValue
   }
 
   export type MessageCreateManyUserInput = {
@@ -25556,6 +25569,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: JsonNullValueInput | InputJsonValue
     referral?: ReferralUpdateManyWithoutEventNestedInput
   }
 
@@ -25566,6 +25580,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: JsonNullValueInput | InputJsonValue
     referral?: ReferralUncheckedUpdateManyWithoutEventNestedInput
   }
 
@@ -25576,6 +25591,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: JsonNullValueInput | InputJsonValue
   }
 
   export type MessageUpdateWithoutUserInput = {

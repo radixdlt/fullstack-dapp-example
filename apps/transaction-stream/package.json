@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.10.7",
+    "prisma": "^5.16.2",
     "redis-memory-server": "^0.10.0",
     "tsup": "^8.0.2",
     "tsx": "^4.1.3",

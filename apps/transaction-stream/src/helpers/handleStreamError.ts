@@ -28,8 +28,8 @@ export const HandleStreamError =
         errorType: 'StateVersionBeyondEndOfKnownLedgerError',
         ...error
       })
-      // current state version is beyond the end of the known ledger, wait 30 seconds before restarting the stream
-      stream.setStatus('run', THIRTY_SECONDS)
+      // current state version is beyond the end of the known ledger, wait before restarting the stream
+      stream.setStatus('run', TEN_SECONDS)
     } else {
       logger.error({ method: 'stream.error$', errorType: 'UnhandledError', ...error })
       // TODO: implement handler of different errors types

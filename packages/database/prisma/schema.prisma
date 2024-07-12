@@ -95,13 +95,14 @@ model Challenge {
 model Event {
   transactionId     String          @id
   id                String
+  userId            String
   questId           String?
-  userId            String?
   createdAt         DateTime        @default(now())
   processedAt       DateTime?
   error             String?
+  data              Json            @default("{}")
 
-  user              User?            @relation(fields: [userId], references: [id])
+  user              User            @relation(fields: [userId], references: [id])
   referral          Referral[]         
 }
 
