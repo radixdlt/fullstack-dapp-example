@@ -62,12 +62,10 @@
           useCookies(`quest-status-${questId as QuestId}`).clear()
           useCookies(`saved-progress-${questId as QuestId}`).clear()
           Object.keys(quest.requirements).forEach((id) => {
-            // @ts-ignore
             useCookies(`requirement-${questId}-${id}`).clear()
           })
         })
         useLocalStorage('savedProgress').clear()
-        useLocalStorage('seen-jetty-get-wallet-notification').clear()
 
         $user = undefined
 
@@ -78,7 +76,6 @@
     radixDappToolkit.walletApi.provideChallengeGenerator(async () => {
       const result = await authApi.createChallenge()
 
-      // TODO: handle challenge creation failure and give user some feedback
       if (result.isErr()) throw new Error('Failed to create challenge')
 
       return result.value
@@ -90,10 +87,8 @@
       const { proofs } = data
       const personaProof = proofs.find((proof) => proof.type === 'persona')
       if (personaProof) {
-        // TODO: set the current user in a store
         const result = await authApi.login(personaProof)
 
-        // TODO: handle login failure and give user some feedback
         if (result.isErr()) {
           radixDappToolkit.disconnect()
           throw Error('Failed to login')
@@ -121,19 +116,11 @@
 
             await invalidateAll()
 
-            // TODO:
-            // - bootstrap the application state (quest progress, user, notifications etc...) and connect to notifications websocket
-
-            if (
-              data.questStatus['SetupWallet']?.status === 'IN_PROGRESS' &&
-              !useLocalStorage('seen-jetty-get-wallet-notification').get()
-            ) {
-              useLocalStorage('seen-jetty-get-wallet-notification').set(true)
+            if (data.questStatus['SetupWallet']?.status === 'IN_PROGRESS') {
               pushNotification('loggedIn')
             }
           })
           .mapErr(({ status }) => {
-            // TODO: logout user and give feedback that the session has expired
             if (status === 401) radixDappToolkit.disconnect()
           })
       } else {
@@ -162,9 +149,10 @@
 </script>
 
 <LandingPopup definitions={data.landingPopupDefinitions} />
-<Jetty />
 
 <Layout>
+  <Jetty />
+
   <Header slot="header" />
 
   <Tabs

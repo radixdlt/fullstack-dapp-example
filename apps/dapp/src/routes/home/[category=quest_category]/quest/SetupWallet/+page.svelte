@@ -16,6 +16,7 @@
   import Checkbox from '$lib/components/checkbox/Checkbox.svelte'
   import { htmlReplace } from '$lib/helpers/html-replace'
   import AppsFlyer from './AppsFlyer.svelte'
+  import { markNotificationAsSeen } from '$lib/notifications'
 
   export let data: PageData
 
@@ -113,6 +114,9 @@
 <Quest
   bind:this={quest}
   bind:render
+  on:completed={() => {
+    markNotificationAsSeen('loggedIn')
+  }}
   id={data.id}
   requirements={data.requirements}
   steps={[

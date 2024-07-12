@@ -9,7 +9,6 @@ export const useLocalStorage = <
   T extends
     | LocalStorageEntry<'savedProgress', { questId: QuestId; progress: number }>
     | LocalStorageEntry<'seen-landing-popup', boolean>
-    | LocalStorageEntry<'seen-jetty-get-wallet-notification', boolean>
     | LocalStorageEntry<'seen-fuse-elements-intro', boolean>
     | LocalStorageEntry<'seen-fuse-elements-outro', boolean>,
   V extends T['key']

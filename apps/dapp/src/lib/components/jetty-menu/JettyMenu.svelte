@@ -21,7 +21,7 @@
   import { user, type JettyNotification, type jettyNotifications } from '../../../stores'
   import { createEventDispatcher } from 'svelte'
   import Notification from './Notification.svelte'
-  import { swipe, type SwipeCustomEvent } from 'svelte-gestures'
+  import { swipe } from 'svelte-gestures'
 
   export let expanded = false
   export let poppedUp = true
@@ -97,16 +97,6 @@
 
   $: latestNotification = $notifications[$notifications.length - 1]
 
-  const handleSwipe = (event: SwipeCustomEvent) => {
-    if (event.detail.direction === 'top') {
-      expanded = true
-    }
-
-    if (event.detail.direction === 'bottom') {
-      expanded = false
-    }
-  }
-
   $: if (!showMenuItemContent) {
     $hideBackButton = false
     dispatch('item-content-closed')
@@ -124,13 +114,17 @@
     $user
     disabledItems = menuItems.filter((item) => (item.disabled ? get(item.disabled) : false))
   }
+
+  $: if (!expanded) {
+    setTimeout(() => (showMenuItemContent = false), 500)
+  }
 </script>
 
 <div
   class="jetty-menu"
   style:--menuPosition={`${$menuPositionFactor * 98}%`}
   use:swipe
-  on:swipe={handleSwipe}
+  on:swipe={() => {}}
 >
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
@@ -234,6 +228,7 @@
     background-color: var(--color-background-dark);
     height: 34rem;
     width: 25rem;
+    max-height: 80%;
     border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
     position: absolute;
     bottom: 0;
@@ -307,5 +302,7 @@
     width: 100%;
     background: var(--color-background-dark);
     z-index: 2;
+    overflow-y: scroll;
+    scrollbar-width: none;
   }
 </style>

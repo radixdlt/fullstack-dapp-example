@@ -20,6 +20,7 @@
   import MinimizeIcon from '@images/minimize.svg'
   import CreateRadMorphs from './CreateRadMorphs.svelte'
   import OpenGiftBox from './OpenGiftBox.svelte'
+  import { goto } from '$app/navigation'
 
   let poppedUp = false
   let expanded = false
@@ -30,9 +31,13 @@
     ? $page.url.href.split('glossaryAnchor=')[1]
     : undefined
 
-  $: if (glossaryAnchor && jettyMenu) {
+  const openGlossaryItem = () => {
     jettyMenu.openMenuItem('glossary')
-    tick().then(() => glossary.openGlossaryItem(glossaryAnchor))
+    tick().then(() => glossary.openGlossaryItem(glossaryAnchor!))
+  }
+
+  $: if (glossaryAnchor && jettyMenu) {
+    openGlossaryItem()
   }
 
   let jettyMenu: JettyMenu
@@ -58,6 +63,14 @@
   }
 
   $: if (expanded) checkClaimStatus()
+
+  const undoGlossaryAnchor = () => {
+    goto($page.url.href.split('?')[0])
+  }
+
+  $: if (!expanded && glossaryAnchor) {
+    undoGlossaryAnchor()
+  }
 </script>
 
 {#if !$hideJettyMenu}

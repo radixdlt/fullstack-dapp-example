@@ -42,6 +42,26 @@ export const markLatestNotificationAsSeen = pipe(
     })
 )
 
+export const markNotificationAsSeen = (id: keyof typeof notifications) =>
+  pipe(
+    () =>
+      fromPromise(
+        fetch(`/api/notification/seen`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ notificationId: id })
+        }),
+        (e) => e as Error
+      ),
+    (result) =>
+      result.andThen((response) => {
+        if (!response.ok) return errAsync(Error('Failed to mark notification as seen'))
+
+        jettyNotifications.update((notifications) => notifications.filter((n) => n.id !== id))
+        return okAsync(response)
+      })
+  )()
+
 export const loadUnseenNotifications = () =>
   pipe(
     () => fromPromise(fetch('/api/notification'), (e) => e as Error),

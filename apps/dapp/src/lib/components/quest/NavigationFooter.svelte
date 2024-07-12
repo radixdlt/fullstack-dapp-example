@@ -2,7 +2,6 @@
   import { i18n } from '$lib/i18n/i18n'
   import { createEventDispatcher } from 'svelte'
   import Button from '../button/Button.svelte'
-  import { fly } from 'svelte/transition'
 
   const dispatch = createEventDispatcher<{
     back: undefined
@@ -18,7 +17,7 @@
   $: if (!backButtonText) backButtonText = $i18n.t('quests:backButton')
 </script>
 
-<div class="footer-container" transition:fly|local={{ y: 200, opacity: 1, duration: 800 }}>
+<div class="footer-container">
   <div class="footer quest-footer">
     <Button secondary on:click={() => dispatch('back')}>{backButtonText}</Button>
     <Button disabled={nextDisabled} loading={nextLoading} on:click={() => dispatch('next')}
