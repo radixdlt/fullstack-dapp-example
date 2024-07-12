@@ -304,7 +304,6 @@
   }
 
   .menu-item-page {
-    height: 100%;
     width: 100%;
     background: var(--color-background-dark);
     z-index: 2;
