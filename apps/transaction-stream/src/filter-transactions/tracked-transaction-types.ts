@@ -102,7 +102,8 @@ export const trackedTransactionTypes: TrackedTransactions = {
       componentAddress: config.radQuest.components.questRewards,
       keys: {
         user_id: { kind: 'String', key: 'userId' },
-        quest_id: { kind: 'String', key: 'questId' }
+        quest_id: { kind: 'String', key: 'questId' },
+        rewards: { kind: 'Array', key: 'rewards' }
       }
     })
   },

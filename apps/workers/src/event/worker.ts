@@ -39,6 +39,7 @@ export const EventWorker = (
       const result = await getUserById(job.data.userId, dependencies.dbClient, {
         email: true
       }).andThen((user) => eventWorkerController.handler(job, user as UserExtended))
+
       if (result.isErr()) {
         logger.debug({
           method: 'eventWorker.process.error',
@@ -47,6 +48,7 @@ export const EventWorker = (
           transactionId: job.data.transactionId,
           error: result.error
         })
+
         await eventModel(logger).update(job.data.transactionId, {
           error: getReason(result.error) ?? 'UnknownError'
         })

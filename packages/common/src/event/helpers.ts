@@ -40,7 +40,8 @@ const DataKind = {
   String: 'String',
   Reference: 'Reference',
   Decimal: 'Decimal',
-  ResourceAddress: 'ResourceAddress'
+  ResourceAddress: 'ResourceAddress',
+  Array: 'Array'
 } as const
 
 type DataKindTransform = {
@@ -61,10 +62,13 @@ export const getValuesFromEvent = (
   }
 
   return getEventDataFields(event.data).reduce<Record<string, string>>((acc, field) => {
-    if (field.field_name) {
+    if (field.field_name && field.kind === 'Array') {
+      const key = keys[field.field_name]
+      if (key?.kind === field.kind) acc[key.key ?? field.field_name] = JSON.stringify(field)
+    } else if (field.field_name && field.kind !== 'Array') {
       const key = keys[field.field_name]
       if (key?.kind === field.kind) acc[key.key ?? field.field_name] = field.value
-    } else if (field.type_name) {
+    } else if (field.type_name && field.kind !== 'Array') {
       const key = keys[field.type_name]
       if (key?.kind === field.kind) acc[key.key ?? field.type_name] = field.value
     }

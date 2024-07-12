@@ -414,32 +414,29 @@ describe('Event flows', () => {
     })
   })
 
-  it.only(
-    'should send clams to jetty and claim rewards',
-    { timeout: 60_000, skip: false },
-    async () => {
-      const questId = 'TransferTokens'
+  it('should send clams to jetty and claim rewards', { timeout: 60_000, skip: false }, async () => {
+    const questId = 'TransferTokens'
 
-      await startQuestAndAddTrackedAccount(user.id, questId)
-      await completeQuestRequirements(db)(user.id, questId, [
-        'PersonaQuiz',
-        'TransactionQuiz',
-        'XrdQuiz'
-      ])
-      expect(
-        (await accountAddressModel.getTrackedAddressUserId(accountAddress, questId))._unsafeUnwrap()
-      ).toBe(user.id)
+    await startQuestAndAddTrackedAccount(user.id, questId)
+    await completeQuestRequirements(db)(user.id, questId, [
+      'PersonaQuiz',
+      'TransactionQuiz',
+      'XrdQuiz'
+    ])
+    expect(
+      (await accountAddressModel.getTrackedAddressUserId(accountAddress, questId))._unsafeUnwrap()
+    ).toBe(user.id)
 
-      const mintClamsResult = await mintClams(10, accountAddress)
+    const mintClamsResult = await mintClams(10, accountAddress)
 
-      if (mintClamsResult.isErr()) throw mintClamsResult.error
+    if (mintClamsResult.isErr()) throw mintClamsResult.error
 
-      await radixEngineClient.getXrdFromFaucet()
+    await radixEngineClient.getXrdFromFaucet()
 
-      await radixEngineClient
-        .getManifestBuilder()
-        .andThen(({ convertStringManifest, submitTransaction }) => {
-          const transactionManifest = `
+    await radixEngineClient
+      .getManifestBuilder()
+      .andThen(({ convertStringManifest, submitTransaction }) => {
+        const transactionManifest = `
             CALL_METHOD
                 Address("${accountAddress}")
                 "lock_fee"
@@ -463,28 +460,25 @@ describe('Event flows', () => {
                 Enum<0u8>()
             ;
         `
-          return convertStringManifest(transactionManifest)
-            .andThen((transactionManifest) =>
-              submitTransaction({ transactionManifest, signers: [] })
-            )
-            .andThen(({ txId }) => radixEngineClient.gatewayClient.pollTransactionStatus(txId))
-        })
-
-      await waitForMessage(logger, db)(user.id, 'QuestRequirementCompleted')
-
-      const userMessages = await db.user.findUnique({
-        include: { messages: true },
-        where: { id: user.id }
+        return convertStringManifest(transactionManifest)
+          .andThen((transactionManifest) => submitTransaction({ transactionManifest, signers: [] }))
+          .andThen(({ txId }) => radixEngineClient.gatewayClient.pollTransactionStatus(txId))
       })
 
-      const questRequirementMessageExists = userMessages?.messages.some((message) => {
-        const data = message.data as any
-        return data.type === 'QuestRequirementCompleted' && data.questId === questId
-      })
+    await waitForMessage(logger, db)(user.id, 'QuestRequirementCompleted')
 
-      expect(questRequirementMessageExists).toBeTruthy()
-    }
-  )
+    const userMessages = await db.user.findUnique({
+      include: { messages: true },
+      where: { id: user.id }
+    })
+
+    const questRequirementMessageExists = userMessages?.messages.some((message) => {
+      const data = message.data as any
+      return data.type === 'QuestRequirementCompleted' && data.questId === questId
+    })
+
+    expect(questRequirementMessageExists).toBeTruthy()
+  })
 
   describe('Referral flow', () => {
     it(
