@@ -7,34 +7,34 @@ const addresses = Addresses(2)
 export default [
   {
     transaction_status: 'CommittedSuccess',
-    state_version: 32217822,
-    epoch: 16547,
-    round: 246,
-    round_timestamp: '2024-07-11T09:27:00.908Z',
+    state_version: 32905219,
+    epoch: 16922,
+    round: 498,
+    round_timestamp: '2024-07-12T16:42:47.68Z',
     payload_hash:
-      'notarizedtransaction_tdx_2_16zx4va8cjgun4q7e42whfmq0qtffdcuae3ky0qqennhply33ztvsj053tp',
-    intent_hash: 'txid_tdx_2_1y6e4erc68hv2lnyylzvu82kydrjlp3azh2d9a5yrv0gw4yg728qqa290je',
-    fee_paid: '1.16124224181',
+      'notarizedtransaction_tdx_2_1zw3029grn5vgunh6kjw9c4r6wdeu8jtwz8g39ffafupfy5nw0xvqdymkzl',
+    intent_hash: 'txid_tdx_2_1qkncjemh8unajgtuhx4tce3n82zxrt408nt3hgnd6q7mkwdat43sz8uukp',
+    fee_paid: '1.16296589499',
     affected_global_entities: [
       'transactiontracker_tdx_2_1stxxxxxxxxxxtxtrakxxxxxxxxx006844685494xxxxxxxxxxzw7jp',
-      'resource_tdx_2_1nfynmdhcjftpgwepydpqv2hu68z2qwd4lng32swnf9z3f3zj73u7u0',
-      'component_tdx_2_1czu5tzswgcp9qm64qm3du3v38uzmxl3uhpfs9tdzdztgf2yx6evmfg',
+      'resource_tdx_2_1ntwug8aft5zle35lwnap5q8fnak8w7s7jnc7vlh2xh5ltye9epfx7c',
+      'component_tdx_2_1cq46e9fpa58a66us5h8eh2v5wz8ysmt7awgy0mq8nazpmu43dnqq9e',
       'consensusmanager_tdx_2_1scxxxxxxxxxxcnsmgrxxxxxxxxx000999665565xxxxxxxxxv6cg29',
       'account_tdx_2_12yytw8a6z570f43fecznvayhvfdmh5ctvpkft8pzsnjdqzdjt5azt0'
     ],
-    confirmed_at: '2024-07-11T09:27:00.908Z',
+    confirmed_at: '2024-07-12T16:42:47.68Z',
     raw_hex:
-      '4d22030221022104210707020aa3400000000000000aa5400000000000000932f9aa852201012007206c711846e643303cf7be1ddb4ba97fbcec1c0447c3fbe23fa62f7056a651878c010108000020220541038000c368ae579fe9e8a06b5455172534c4735178dcff865fc086d522c0b3b0720c0c6372656174655f70726f6f66210041038000c377326b749620301ddd949be31d8fb3cd5d54db300fbaac1dcbc45260df0c0c6372656174655f70726f6f662100410380005108b71fba153cf4d629ce05367497625bbbd30b606c959c2284e4d009b20c086c6f636b5f666565210185000088b116afe3b502000000000000000000000000000000410380005117ad8600c385dcc1865d3a3ffe12078e67065db7c027673ec33a7266540c166372656174655f70726f6f665f6f665f616d6f756e74210280005d5be810a955f11815d13b7fb8eb73ec8d8969d3d2183fb077bcb0a0e7a285000064a7b3b6e00d0000000000000000000000000000000041038000c0b9458a0e4602506f5506e2de45913f05b37e3cb85302ada2689684a8860c1c636f6d62696e655f656c656d656e74735f6d696e745f72616467656d21040c20646162333236666561643834343736366262643935363962663436303432646585707739a31f375805000000000000000000000000000000008554f652666382fc0a000000000000000000000000000000008570f58f6156a1e60b00000000000000000000000000000000202000220000202202010220072080d28c8cb4f51c479def1dbc5b64bff55e6b8fb4b14cacb3dce59a6dc92e3fcf210120074079662b731ea0b30ab9f5771f3ba06958ba788ba3404c14c53528971207fafe81ca5f5aca017740d7677834801f6d1890705673aa542da398d028150a96918f0801022007200ba8ab972cb010f24646e44ede724feabbb559476d0018ef5564ad9be7dd48b32101200740f41427e8982a06bf91ebdaba621085c2a9804a5f619a6224c403887006c0208fd783daa7f368d66b2cbf71f46276e8b672c47bd7d164d5f568cde8fe584aa401220101210120074098bc439be9d536ccd55b6668ce1c106f0dd4c39f937968c46bcc4d931526b7b3ea1065885d2b25b566a894c189dfe0040e318f2618675194663956283bd08f04',
+      '4d22030221022104210707020a1a420000000000000a1c42000000000000097054219822010120072034009dd9adf244204cdc7d32b6a4eb87a3dff08a9c51db571e678f2666e09d3f010108000020220541038000c368ae579fe9e8a06b5455172534c4735178dcff865fc086d522c0b3b0720c0c6372656174655f70726f6f66210041038000c377326b749620301ddd949be31d8fb3cd5d54db300fbaac1dcbc45260df0c0c6372656174655f70726f6f662100410380005108b71fba153cf4d629ce05367497625bbbd30b606c959c2284e4d009b20c086c6f636b5f666565210185000088b116afe3b502000000000000000000000000000000410380005117ad8600c385dcc1865d3a3ffe12078e67065db7c027673ec33a7266540c166372656174655f70726f6f665f6f665f616d6f756e74210280005d46451539dd773f2624c8d60517afdf0895597ca50a2b03aff5ff95f15185000064a7b3b6e00d0000000000000000000000000000000041038000c02bac9521ed0fdd6b90a5cf9ba994708e486d7eeb9047ec079f441df2b10c1c636f6d62696e655f656c656d656e74735f6d696e745f72616467656d21040c2065613930636462383034653434316666386266333063363265343566663939668570c1d174712f58070000000000000000000000000000000085d002db6a2a7d6f070000000000000000000000000000000085b4c1dbe0a275ab0900000000000000000000000000000000202000220000202202010220072080d28c8cb4f51c479def1dbc5b64bff55e6b8fb4b14cacb3dce59a6dc92e3fcf2101200740cfb22f046f9d1269372c3ca5410b79bc536b603d470d259506ac23de20f1f75c5dc8e19f2f2a14af16099b52aff4920f8065a1eaf43bc0bf6d688e0ff9aea90b01022007200ba8ab972cb010f24646e44ede724feabbb559476d0018ef5564ad9be7dd48b32101200740ffb55704ce8dc2f2e06f109b341ddbf477466376b66fd2cf2e7ca52fd221d86dc5bcb6e4bacc740d10b18ed175ed338c047b07bc3e3d37b84d2ad8304ee8d70d22010121012007408f504e1f9517daa486fc5ffe1882d34e3ec307d1944eddf50714dd0f412364943d61f2ed41d6a696929a823572b401a019d0d262db3e5638cccd7f51b032c908',
     receipt: {
       status: 'CommittedSuccess',
       fee_summary: {
         xrd_total_royalty_cost: '0',
-        xrd_total_storage_cost: '0.17805099181',
+        xrd_total_storage_cost: '0.18053054499',
         xrd_total_tipping_cost: '0',
-        xrd_total_execution_cost: '0.90717505',
-        xrd_total_finalization_cost: '0.0760162',
-        execution_cost_units_consumed: 18143501,
-        finalization_cost_units_consumed: 1520324
+        xrd_total_execution_cost: '0.90641885',
+        xrd_total_finalization_cost: '0.0760165',
+        execution_cost_units_consumed: 18128377,
+        finalization_cost_units_consumed: 1520330
       },
       costing_parameters: {
         xrd_usd_price: '16.666666666666666666',
@@ -48,15 +48,15 @@ export default [
         finalization_cost_unit_price: '0.00000005'
       },
       fee_destination: {
-        to_burn: '0.580621120905',
-        to_proposer: '0.2903105604525',
-        to_validator_set: '0.2903105604525',
+        to_burn: '0.581482947495',
+        to_proposer: '0.2907414737475',
+        to_validator_set: '0.2907414737475',
         to_royalty_recipients: []
       },
       fee_source: {
         from_vaults: [
           {
-            xrd_amount: '1.16124224181',
+            xrd_amount: '1.16296589499',
             vault_entity: {
               is_global: false,
               entity_type: 'InternalFungibleVault',
@@ -73,9 +73,9 @@ export default [
               substate_hex: null,
               substate_data: {
                 key: {
-                  intent_hash: '26b35c8f1a3dd8afcc84f899c3aac468e5f0c7a2ba9a5ed08363d0ea911e51c0',
+                  intent_hash: '05a78967773f27d9217cb9aabc66333a8461aeaf3cd71ba26dd03dbb39bd5d63',
                   intent_hash_bech32m:
-                    'txid_tdx_2_1y6e4erc68hv2lnyylzvu82kydrjlp3azh2d9a5yrv0gw4yg728qqa290je'
+                    'txid_tdx_2_1qkncjemh8unajgtuhx4tce3n82zxrt408nt3hgnd6q7mkwdat43sz8uukp'
                 },
                 value: {
                   status: 'CommittedSuccess'
@@ -88,17 +88,17 @@ export default [
             substate_id: {
               entity_type: 'GlobalTransactionTracker',
               substate_key: {
-                key_hex: '5c20072026b35c8f1a3dd8afcc84f899c3aac468e5f0c7a2ba9a5ed08363d0ea911e51c0',
+                key_hex: '5c20072005a78967773f27d9217cb9aabc66333a8461aeaf3cd71ba26dd03dbb39bd5d63',
                 key_type: 'Map',
                 db_sort_key_hex:
-                  '0b651aa65a9d37698ac7e20ac730392769a644705c20072026b35c8f1a3dd8afcc84f899c3aac468e5f0c7a2ba9a5ed08363d0ea911e51c0'
+                  '98fabaaa69ada47328b0eba0531a241467e2f3765c20072005a78967773f27d9217cb9aabc66333a8461aeaf3cd71ba26dd03dbb39bd5d63'
               },
               entity_module: 'Main',
               substate_type: 'TransactionTrackerCollectionEntry',
               entity_address:
                 'transactiontracker_tdx_2_1stxxxxxxxxxxtxtrakxxxxxxxxx006844685494xxxxxxxxxxzw7jp',
               partition_kind: 'KeyValue',
-              partition_number: 230
+              partition_number: 234
             },
             system_structure: {
               type: 'ObjectKeyValuePartitionEntry',
@@ -144,15 +144,15 @@ export default [
                   non_fungible_local_id: {
                     id_type: 'RUID',
                     sbor_hex:
-                      '5cc0032e79613d8b3d1007296fdc7de6f37ea011a5ea94270c5df1de73d62ed5bd8ab7',
+                      '5cc003f309b64620a1ea9948a053483f54d60815f86126235bb627ca33a7779408cfcf',
                     simple_rep:
-                      '{2e79613d8b3d1007-296fdc7de6f37ea0-11a5ea94270c5df1-de73d62ed5bd8ab7}'
+                      '{f309b64620a1ea99-48a053483f54d608-15f86126235bb627-ca33a7779408cfcf}'
                   }
                 },
                 value: {
                   data_struct: {
                     struct_data: {
-                      hex: '5c21070c000c1d4d6574616c6c69632053616e642052616447656d207b31342f3130307d0c615468652052617265204d6574616c6c6963206d6174657269616c206f6620746869732053616e642052616447656d206973206772616465642061742061207175616c697479206f66203134206f7574206f66206120706f737369626c652032352e0c086d6574616c6c69630c0473616e640c0472617265a000007827d3fd49c200000000000000000000000000000000',
+                      hex: '5c21070c000c1f4372797374616c6c696e6520436f72616c2052616447656d207b342f32357d0c6654686520436f6d6d6f6e204372797374616c6c696e65206d6174657269616c206f66207468697320436f72616c2052616447656d206973206772616465642061742061207175616c697479206f662034206f7574206f66206120706f737369626c652032352e0c0b6372797374616c6c696e650c05636f72616c0c06636f6d6d6f6ea00000909dceda823700000000000000000000000000000000',
                       programmatic_json: null
                     },
                     owned_entities: [],
@@ -167,15 +167,15 @@ export default [
             substate_id: {
               entity_type: 'GlobalNonFungibleResource',
               substate_key: {
-                key_hex: '5cc0032e79613d8b3d1007296fdc7de6f37ea011a5ea94270c5df1de73d62ed5bd8ab7',
+                key_hex: '5cc003f309b64620a1ea9948a053483f54d60815f86126235bb627ca33a7779408cfcf',
                 key_type: 'Map',
                 db_sort_key_hex:
-                  'ac7797969a4fb838eec390fc24a5a0a26ca493d25cc0032e79613d8b3d1007296fdc7de6f37ea011a5ea94270c5df1de73d62ed5bd8ab7'
+                  'af3ad0a481fa8143b833ab9165998c6d7e28639b5cc003f309b64620a1ea9948a053483f54d60815f86126235bb627ca33a7779408cfcf'
               },
               entity_module: 'Main',
               substate_type: 'NonFungibleResourceManagerDataEntry',
               entity_address:
-                'resource_tdx_2_1nfynmdhcjftpgwepydpqv2hu68z2qwd4lng32swnf9z3f3zj73u7u0',
+                'resource_tdx_2_1ntwug8aft5zle35lwnap5q8fnak8w7s7jnc7vlh2xh5ltye9epfx7c',
               partition_kind: 'KeyValue',
               partition_number: 65
             },
@@ -211,7 +211,7 @@ export default [
                     }
                   },
                   entity_address:
-                    'resource_tdx_2_1nfynmdhcjftpgwepydpqv2hu68z2qwd4lng32swnf9z3f3zj73u7u0'
+                    'resource_tdx_2_1ntwug8aft5zle35lwnap5q8fnak8w7s7jnc7vlh2xh5ltye9epfx7c'
                 }
               }
             }
@@ -222,14 +222,14 @@ export default [
               substate_data: {
                 key: {
                   key_data: {
-                    hex: '5c0c206461623332366665616438343437363662626439353639626634363034326465',
+                    hex: '5c0c206561393063646238303465343431666638626633306336326534356666393966',
                     programmatic_json: null
                   }
                 },
                 value: {
                   data: {
                     struct_data: {
-                      hex: '5c22000120c001032e79613d8b3d1007296fdc7de6f37ea011a5ea94270c5df1de73d62ed5bd8ab7',
+                      hex: '5c22000120c00103f309b64620a1ea9948a053483f54d60815f86126235bb627ca33a7779408cfcf',
                       programmatic_json: null
                     },
                     owned_entities: [],
@@ -244,15 +244,15 @@ export default [
             substate_id: {
               entity_type: 'InternalKeyValueStore',
               substate_key: {
-                key_hex: '5c0c206461623332366665616438343437363662626439353639626634363034326465',
+                key_hex: '5c0c206561393063646238303465343431666638626633306336326534356666393966',
                 key_type: 'Map',
                 db_sort_key_hex:
-                  'f9fdeb78243f39066cbea6f49ad5b94bc89fe2cb5c0c206461623332366665616438343437363662626439353639626634363034326465'
+                  '1c9f2536de5e322aae3cdd13e1dd3bcd8e51f5905c0c206561393063646238303465343431666638626633306336326534356666393966'
               },
               entity_module: 'Main',
               substate_type: 'GenericKeyValueStoreEntry',
               entity_address:
-                'internal_keyvaluestore_tdx_2_1kq3xxdunjl8phasuj7sjdyrteht37ync9uy2uuaff7lshv6d3u0sak',
+                'internal_keyvaluestore_tdx_2_1kzx6gec3p0vrq483lr38j72vppzadeynt62keseeprg3lmffzqzsm0',
               partition_kind: 'KeyValue',
               partition_number: 64
             },
@@ -269,7 +269,7 @@ export default [
                   }
                 },
                 entity_address:
-                  'internal_keyvaluestore_tdx_2_1kq3xxdunjl8phasuj7sjdyrteht37ync9uy2uuaff7lshv6d3u0sak'
+                  'internal_keyvaluestore_tdx_2_1kzx6gec3p0vrq483lr38j72vppzadeynt62keseeprg3lmffzqzsm0'
               },
               value_full_type_id: {
                 schema_hash: '8b4b20d818d91d3884f195ccb3b1e65838cca6b654f11f63b40efeea28d8d226',
@@ -282,7 +282,7 @@ export default [
                   }
                 },
                 entity_address:
-                  'internal_keyvaluestore_tdx_2_1kq3xxdunjl8phasuj7sjdyrteht37ync9uy2uuaff7lshv6d3u0sak'
+                  'internal_keyvaluestore_tdx_2_1kzx6gec3p0vrq483lr38j72vppzadeynt62keseeprg3lmffzqzsm0'
               }
             }
           },
@@ -294,9 +294,9 @@ export default [
                   non_fungible_local_id: {
                     id_type: 'RUID',
                     sbor_hex:
-                      '5cc0032e79613d8b3d1007296fdc7de6f37ea011a5ea94270c5df1de73d62ed5bd8ab7',
+                      '5cc003f309b64620a1ea9948a053483f54d60815f86126235bb627ca33a7779408cfcf',
                     simple_rep:
-                      '{2e79613d8b3d1007-296fdc7de6f37ea0-11a5ea94270c5df1-de73d62ed5bd8ab7}'
+                      '{f309b64620a1ea99-48a053483f54d608-15f86126235bb627-ca33a7779408cfcf}'
                   }
                 },
                 value: {
@@ -310,15 +310,15 @@ export default [
             substate_id: {
               entity_type: 'InternalNonFungibleVault',
               substate_key: {
-                key_hex: '5cc0032e79613d8b3d1007296fdc7de6f37ea011a5ea94270c5df1de73d62ed5bd8ab7',
+                key_hex: '5cc003f309b64620a1ea9948a053483f54d60815f86126235bb627ca33a7779408cfcf',
                 key_type: 'Map',
                 db_sort_key_hex:
-                  'ac7797969a4fb838eec390fc24a5a0a26ca493d25cc0032e79613d8b3d1007296fdc7de6f37ea011a5ea94270c5df1de73d62ed5bd8ab7'
+                  'af3ad0a481fa8143b833ab9165998c6d7e28639b5cc003f309b64620a1ea9948a053483f54d60815f86126235bb627ca33a7779408cfcf'
               },
               entity_module: 'Main',
               substate_type: 'NonFungibleVaultContentsIndexEntry',
               entity_address:
-                'internal_vault_tdx_2_1npl742hkf0wz7z63sdtclhl3kemss46t88cnpqgka5angh79tqa00p',
+                'internal_vault_tdx_2_1nrcsvkwss79pp0crvfdlej425eqcy22dzxhy6l6htmt5q5tn3heftc',
               partition_kind: 'Index',
               partition_number: 65
             },
@@ -374,39 +374,39 @@ export default [
                   },
                   proposer_rewards: [
                     {
-                      xrd_amount: '0.147477315255',
-                      validator_index: {
-                        index: 4
-                      }
-                    },
-                    {
-                      xrd_amount: '1.1858472879925',
+                      xrd_amount: '2.046110199655',
                       validator_index: {
                         index: 0
                       }
                     },
                     {
-                      xrd_amount: '0.2609727244425',
+                      xrd_amount: '1.6277090861',
                       validator_index: {
                         index: 1
                       }
                     },
                     {
-                      xrd_amount: '0.1669773209225',
-                      validator_index: {
-                        index: 5
-                      }
-                    },
-                    {
-                      xrd_amount: '0.4800227338675',
+                      xrd_amount: '0.8053210390375',
                       validator_index: {
                         index: 3
                       }
                     },
                     {
-                      xrd_amount: '0.147477315255',
+                      xrd_amount: '0.0686544917875',
                       validator_index: {
                         index: 2
+                      }
+                    },
+                    {
+                      xrd_amount: '0.3938060277375',
+                      validator_index: {
+                        index: 5
+                      }
+                    },
+                    {
+                      xrd_amount: '0.147477315255',
+                      validator_index: {
+                        index: 4
                       }
                     }
                   ]
@@ -442,39 +442,39 @@ export default [
                   },
                   proposer_rewards: [
                     {
-                      xrd_amount: '0.147477315255',
-                      validator_index: {
-                        index: 4
-                      }
-                    },
-                    {
-                      xrd_amount: '0.89553672754',
+                      xrd_amount: '1.7553687259075',
                       validator_index: {
                         index: 0
                       }
                     },
                     {
-                      xrd_amount: '0.2609727244425',
+                      xrd_amount: '1.6277090861',
                       validator_index: {
                         index: 1
                       }
                     },
                     {
-                      xrd_amount: '0.1669773209225',
-                      validator_index: {
-                        index: 5
-                      }
-                    },
-                    {
-                      xrd_amount: '0.4800227338675',
+                      xrd_amount: '0.8053210390375',
                       validator_index: {
                         index: 3
                       }
                     },
                     {
-                      xrd_amount: '0.147477315255',
+                      xrd_amount: '0.0686544917875',
                       validator_index: {
                         index: 2
+                      }
+                    },
+                    {
+                      xrd_amount: '0.3938060277375',
+                      validator_index: {
+                        index: 5
+                      }
+                    },
+                    {
+                      xrd_amount: '0.147477315255',
+                      validator_index: {
+                        index: 4
                       }
                     }
                   ]
@@ -509,7 +509,7 @@ export default [
               substate_hex: null,
               substate_data: {
                 value: {
-                  amount: '78908.58896001091'
+                  amount: '81394.79522892908'
                 },
                 is_locked: false,
                 substate_type: 'FungibleVaultFieldBalance'
@@ -534,7 +534,7 @@ export default [
               substate_hex: null,
               substate_data: {
                 value: {
-                  amount: '78909.75020225272'
+                  amount: '81395.95819482407'
                 },
                 is_locked: false,
                 substate_type: 'FungibleVaultFieldBalance'
@@ -566,7 +566,7 @@ export default [
               substate_hex: null,
               substate_data: {
                 value: {
-                  total_supply: '9'
+                  total_supply: '4'
                 },
                 is_locked: false,
                 substate_type: 'NonFungibleResourceManagerFieldTotalSupply'
@@ -583,7 +583,7 @@ export default [
               entity_module: 'Main',
               substate_type: 'NonFungibleResourceManagerFieldTotalSupply',
               entity_address:
-                'resource_tdx_2_1nfynmdhcjftpgwepydpqv2hu68z2qwd4lng32swnf9z3f3zj73u7u0',
+                'resource_tdx_2_1ntwug8aft5zle35lwnap5q8fnak8w7s7jnc7vlh2xh5ltye9epfx7c',
               partition_kind: 'Field',
               partition_number: 64
             },
@@ -591,7 +591,7 @@ export default [
               substate_hex: null,
               substate_data: {
                 value: {
-                  total_supply: '8'
+                  total_supply: '3'
                 },
                 is_locked: false,
                 substate_type: 'NonFungibleResourceManagerFieldTotalSupply'
@@ -623,7 +623,7 @@ export default [
               substate_hex: null,
               substate_data: {
                 value: {
-                  amount: '9'
+                  amount: '4'
                 },
                 is_locked: false,
                 substate_type: 'NonFungibleVaultFieldBalance'
@@ -640,7 +640,7 @@ export default [
               entity_module: 'Main',
               substate_type: 'NonFungibleVaultFieldBalance',
               entity_address:
-                'internal_vault_tdx_2_1npl742hkf0wz7z63sdtclhl3kemss46t88cnpqgka5angh79tqa00p',
+                'internal_vault_tdx_2_1nrcsvkwss79pp0crvfdlej425eqcy22dzxhy6l6htmt5q5tn3heftc',
               partition_kind: 'Field',
               partition_number: 64
             },
@@ -648,7 +648,7 @@ export default [
               substate_hex: null,
               substate_data: {
                 value: {
-                  amount: '8'
+                  amount: '3'
                 },
                 is_locked: false,
                 substate_type: 'NonFungibleVaultFieldBalance'
@@ -680,7 +680,7 @@ export default [
               substate_hex: null,
               substate_data: {
                 value: {
-                  amount: '4.777549396042662833'
+                  amount: '10.178156322071695882'
                 },
                 is_locked: false,
                 substate_type: 'FungibleVaultFieldBalance'
@@ -705,7 +705,7 @@ export default [
               substate_hex: null,
               substate_data: {
                 value: {
-                  amount: '4.196928275137662833'
+                  amount: '9.596673374576695882'
                 },
                 is_locked: false,
                 substate_type: 'FungibleVaultFieldBalance'
@@ -738,11 +738,11 @@ export default [
       },
       output: [
         {
-          hex: '5c90f863bdebe1ececdb5e2079b10c3223bad6288e0da73dd71892dac2bbd1b9',
+          hex: '5c90f8c7691cd53477d291b8d29e4cf2cd2d429aabd13491a7582ce0a64500f9',
           programmatic_json: null
         },
         {
-          hex: '5c90f83b8e88c4c25fb58682ee5ad4ac39734598dd8f3e91de7a889720d77af2',
+          hex: '5c90f8c3b364d028999b1b49f9073ff075611b46763dbe07ea56b9812dfae9ba',
           programmatic_json: null
         },
         {
@@ -750,7 +750,7 @@ export default [
           programmatic_json: null
         },
         {
-          hex: '5c90f8c1e265489f245d421483da6567bd13eb7f3871513a3b21091595588629',
+          hex: '5c90f8675d85a3eabffa976635c49a8d539865c32126616607b94444fb7df210',
           programmatic_json: null
         },
         {
@@ -791,7 +791,7 @@ export default [
               is_global: true,
               entity_type: 'GlobalNonFungibleResource',
               entity_address:
-                'resource_tdx_2_1nfynmdhcjftpgwepydpqv2hu68z2qwd4lng32swnf9z3f3zj73u7u0'
+                'resource_tdx_2_1ntwug8aft5zle35lwnap5q8fnak8w7s7jnc7vlh2xh5ltye9epfx7c'
             },
             object_module_id: 'Main'
           },
@@ -801,7 +801,7 @@ export default [
                 element_kind: 'NonFungibleLocalId',
                 elements: [
                   {
-                    value: '{2e79613d8b3d1007-296fdc7de6f37ea0-11a5ea94270c5df1-de73d62ed5bd8ab7}',
+                    value: '{f309b64620a1ea99-48a053483f54d608-15f86126235bb627-ca33a7779408cfcf}',
                     kind: 'NonFungibleLocalId'
                   }
                 ],
@@ -821,7 +821,7 @@ export default [
               is_global: false,
               entity_type: 'InternalNonFungibleVault',
               entity_address:
-                'internal_vault_tdx_2_1npl742hkf0wz7z63sdtclhl3kemss46t88cnpqgka5angh79tqa00p'
+                'internal_vault_tdx_2_1nrcsvkwss79pp0crvfdlej425eqcy22dzxhy6l6htmt5q5tn3heftc'
             },
             object_module_id: 'Main'
           },
@@ -831,7 +831,7 @@ export default [
                 element_kind: 'NonFungibleLocalId',
                 elements: [
                   {
-                    value: '{2e79613d8b3d1007-296fdc7de6f37ea0-11a5ea94270c5df1-de73d62ed5bd8ab7}',
+                    value: '{f309b64620a1ea99-48a053483f54d608-15f86126235bb627-ca33a7779408cfcf}',
                     kind: 'NonFungibleLocalId'
                   }
                 ],
@@ -857,13 +857,13 @@ export default [
           data: {
             fields: [
               {
-                value: 'dab326fead844766bbd9569bf46042de',
+                value: 'ea90cdb804e441ff8bf30c62e45ff99f',
                 kind: 'String',
                 type_name: 'UserId',
                 field_name: 'user_id'
               },
               {
-                value: '{2e79613d8b3d1007-296fdc7de6f37ea0-11a5ea94270c5df1-de73d62ed5bd8ab7}',
+                value: '{f309b64620a1ea99-48a053483f54d608-15f86126235bb627-ca33a7779408cfcf}',
                 kind: 'NonFungibleLocalId',
                 field_name: 'radgem_local_id'
               },
@@ -876,33 +876,33 @@ export default [
                     field_name: 'key_image_url'
                   },
                   {
-                    value: 'Metallic Sand RadGem {14/100}',
+                    value: 'Crystalline Coral RadGem {4/25}',
                     kind: 'String',
                     field_name: 'name'
                   },
                   {
                     value:
-                      'The Rare Metallic material of this Sand RadGem is graded at a quality of 14 out of a possible 25.',
+                      'The Common Crystalline material of this Coral RadGem is graded at a quality of 4 out of a possible 25.',
                     kind: 'String',
                     field_name: 'description'
                   },
                   {
-                    value: 'metallic',
+                    value: 'crystalline',
                     kind: 'String',
                     field_name: 'material'
                   },
                   {
-                    value: 'sand',
+                    value: 'coral',
                     kind: 'String',
                     field_name: 'color'
                   },
                   {
-                    value: 'rare',
+                    value: 'common',
                     kind: 'String',
                     field_name: 'rarity'
                   },
                   {
-                    value: '14',
+                    value: '4',
                     kind: 'Decimal',
                     field_name: 'quality'
                   }
@@ -931,7 +931,7 @@ export default [
           data: {
             fields: [
               {
-                value: '1.16124224181',
+                value: '1.16296589499',
                 kind: 'Decimal',
                 field_name: 'amount'
               }
@@ -955,7 +955,7 @@ export default [
           data: {
             fields: [
               {
-                value: '0.580621120905',
+                value: '0.581482947495',
                 kind: 'Decimal',
                 field_name: 'amount'
               }
@@ -979,7 +979,7 @@ export default [
           data: {
             fields: [
               {
-                value: '0.580621120905',
+                value: '0.581482947495',
                 kind: 'Decimal',
                 field_name: 'amount'
               }
@@ -998,7 +998,7 @@ export default [
           entity_address: 'account_tdx_2_12yytw8a6z570f43fecznvayhvfdmh5ctvpkft8pzsnjdqzdjt5azt0',
           resource_address:
             'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
-          balance_change: '-1.16124224181'
+          balance_change: '-1.16296589499'
         },
         {
           type: 'FeeDistributed',
@@ -1006,16 +1006,16 @@ export default [
             'consensusmanager_tdx_2_1scxxxxxxxxxxcnsmgrxxxxxxxxx000999665565xxxxxxxxxv6cg29',
           resource_address:
             'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
-          balance_change: '0.580621120905'
+          balance_change: '0.581482947495'
         }
       ],
       fungible_balance_changes: [],
       non_fungible_balance_changes: [
         {
-          entity_address: 'component_tdx_2_1czu5tzswgcp9qm64qm3du3v38uzmxl3uhpfs9tdzdztgf2yx6evmfg',
+          entity_address: 'component_tdx_2_1cq46e9fpa58a66us5h8eh2v5wz8ysmt7awgy0mq8nazpmu43dnqq9e',
           resource_address:
-            'resource_tdx_2_1nfynmdhcjftpgwepydpqv2hu68z2qwd4lng32swnf9z3f3zj73u7u0',
-          added: ['{2e79613d8b3d1007-296fdc7de6f37ea0-11a5ea94270c5df1-de73d62ed5bd8ab7}'],
+            'resource_tdx_2_1ntwug8aft5zle35lwnap5q8fnak8w7s7jnc7vlh2xh5ltye9epfx7c',
+          added: ['{f309b64620a1ea99-48a053483f54d608-15f86126235bb627-ca33a7779408cfcf}'],
           removed: []
         }
       ]

@@ -7,7 +7,16 @@ export type FilterTransactionsByAccountAddress = ReturnType<
 >
 export const FilterTransactionsByAccountAddress =
   (accountAddressModel: ReturnType<AccountAddressModel>) =>
-  (transaction: FilteredTransaction): ResultAsync<FilteredTransaction | undefined, any> => {
+  (
+    transaction: FilteredTransaction
+  ): ResultAsync<
+    FilteredTransaction | undefined,
+    {
+      jsError?: Error | undefined
+      httpResponseCode: NumericRange<400, 599>
+      reason: string
+    }
+  > => {
     if (transaction.userId) return okAsync(transaction)
 
     let result: ResultAsync<
@@ -20,15 +29,10 @@ export const FilterTransactionsByAccountAddress =
     >
 
     if (!transaction.accountAddress) {
-      console.log(transaction)
       throw new Error(`Expected account address not found for ${transaction.type}`)
     }
 
     switch (transaction.type) {
-      case EventId.AccountAllowedToForgeHeroBadge: {
-        return okAsync(undefined)
-      }
-
       case EventId.XrdStaked: {
         result = accountAddressModel.getTrackedAddressUserId(
           transaction.accountAddress,

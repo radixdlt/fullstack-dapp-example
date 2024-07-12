@@ -560,8 +560,7 @@ export default [
             entity: {
               is_global: true,
               entity_type: 'GlobalGenericComponent',
-              entity_address:
-                'component_tdx_2_1czu5tzswgcp9qm64qm3du3v38uzmxl3uhpfs9tdzdztgf2yx6evmfg'
+              entity_address: addresses.components.refinery
             },
             object_module_id: 'Main'
           },

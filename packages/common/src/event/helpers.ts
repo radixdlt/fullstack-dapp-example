@@ -41,7 +41,8 @@ const DataKind = {
   Reference: 'Reference',
   Decimal: 'Decimal',
   ResourceAddress: 'ResourceAddress',
-  Array: 'Array'
+  Array: 'Array',
+  NonFungibleLocalId: 'NonFungibleLocalId'
 } as const
 
 type DataKindTransform = {

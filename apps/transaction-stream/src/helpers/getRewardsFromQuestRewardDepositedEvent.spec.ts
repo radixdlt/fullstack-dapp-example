@@ -66,11 +66,13 @@ describe('getRewardsFromQuestRewardDepositedEvent', () => {
     expect(values).toEqual([
       {
         resourceAddress: 'resource_tdx_2_1th2zk6250rghhahxjkfl260tq28ay6skuffzr9hfmy9nuarwzucpqn',
-        amount: '1'
+        amount: '1',
+        name: 'Fancy'
       },
       {
         resourceAddress: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
-        amount: '20'
+        amount: '20',
+        name: 'xrd'
       }
     ])
   })

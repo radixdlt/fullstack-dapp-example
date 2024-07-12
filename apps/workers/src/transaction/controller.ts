@@ -476,7 +476,7 @@ export const TransactionWorkerController = ({
                 Address("${components.heroBadgeForge}")
                 "add_user_account"
                 Address("${user.accountAddress!}")
-                "${user.id}"
+                "${userId}"
               ;
 
               CALL_METHOD
@@ -608,6 +608,7 @@ export const TransactionWorkerController = ({
                 Address("${components.heroBadgeForge}")
                 "add_user_account"
                 Address("${user.accountAddress!}")
+                 "${userId}"
               ;`
           ].join('\n')
         )

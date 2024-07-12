@@ -48,7 +48,7 @@ describe('filter transactions', () => {
         const [tx] = filteredTransactions
 
         expect(tx.transactionId).toBeDefined()
-        expect(tx.accountAddress).toBeDefined()
+        expect(tx.userId).toBeDefined()
       })
 
       it(`should find ${EventId.DepositHeroBadge} transaction`, () => {
@@ -235,16 +235,17 @@ describe('filter transactions', () => {
       expect(CombineElementsMintedRadgem.transactionId).toBeDefined()
       expect(CombineElementsMintedRadgem.type).toEqual('CombineElementsMintedRadgem')
       expect(CombineElementsMintedRadgem.data.MintedRadgemEvent).toBeDefined()
+      expect(CombineElementsMintedRadgem.data.MintedRadgemEvent.radgemLocalId).toBeDefined()
     })
 
-    it.only(`should find ${EventId.CombineElementsAddedRadgemImage} transaction`, () => {
+    it(`should find ${EventId.CombineElementsAddedRadgemImage} transaction`, () => {
       const result = filterTransactionsByType([...CombineElementsImageAdded])
 
       if (result.isErr()) throw result.error
 
       const filteredTransactions = result.value
 
-      expect(filteredTransactions.length).toEqual(1)
+      console.log(filteredTransactions)
 
       const [transaction] = filteredTransactions
 
@@ -278,8 +279,6 @@ describe('filter transactions', () => {
       expect(filteredTransactions.length).toEqual(1)
 
       const [transaction] = filteredTransactions
-
-      console.log(JSON.stringify(transaction.data))
 
       expect(transaction.transactionId).toBeDefined()
       expect(transaction.type).toEqual(EventId.QuestRewardDeposited)

@@ -421,7 +421,7 @@ export const EventWorkerController = ({
           traceId
         })
       case EventId.CombineElementsMintedRadgem: {
-        const radGemId = job.data.data.MintedRadgemEvent.radgemId as string
+        const radGemId = job.data.data.MintedRadgemEvent.radgemLocalId as string
         if (!radGemId) return errAsync({ reason: 'RadgemIdNotFound' })
         return transactionIntent
           .add({
