@@ -195,16 +195,16 @@ export const trackedTransactionTypes: TrackedTransactions = {
   },
   [EventId.JettySwap]: {
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress),
-    JettySwapEvent: eventEmittedByComponent({
-      eventName: 'JettySwapEvent',
+    ClamSwapEvent: eventEmittedByComponent({
+      eventName: 'ClamSwapEvent',
       componentAddress: config.radQuest.components.jettySwap,
       keys: {}
     })
   },
   [EventId.LettySwap]: {
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress),
-    JettySwapEvent: eventEmittedByComponent({
-      eventName: 'JettySwapEvent',
+    ClamSwapEvent: eventEmittedByComponent({
+      eventName: 'ClamSwapEvent',
       componentAddress: config.radQuest.components.lettySwap,
       keys: {}
     })

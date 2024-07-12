@@ -2,7 +2,7 @@ use crate::clam_oracle::clam_oracle::ClamOracle;
 use scrypto::prelude::*;
 
 #[blueprint]
-#[events(JettySwapEvent)]
+#[events(ClamSwapEvent)]
 mod clam_dex {
 
     enable_method_auth! {
@@ -17,7 +17,6 @@ mod clam_dex {
 
     struct ClamDex {
         admin_badge: FungibleVault,
-        clams_address: ResourceAddress,
         ottercoin_manager: ResourceManager,
         collected_clams: FungibleVault,
         clam_oracle: Global<ClamOracle>,
@@ -43,7 +42,6 @@ mod clam_dex {
 
             Self {
                 admin_badge: FungibleVault::with_bucket(admin_badge_bucket.as_fungible()),
-                clams_address,
                 ottercoin_manager,
                 collected_clams: FungibleVault::new(clams_address),
                 clam_oracle,
@@ -65,7 +63,8 @@ mod clam_dex {
 
         pub fn swap(&mut self, clams: Bucket) -> Bucket {
             let price = self.get_price();
-            let ottercoin_amount = clams.amount().checked_mul(price).unwrap();
+            let clams_amount = clams.amount();
+            let ottercoin_amount = clams_amount.checked_mul(price).unwrap();
 
             self.collected_clams.put(clams.as_fungible());
 
@@ -73,7 +72,10 @@ mod clam_dex {
                 .admin_badge
                 .authorize_with_amount(1, || self.ottercoin_manager.mint(ottercoin_amount));
 
-            Runtime::emit_event(JettySwapEvent {});
+            Runtime::emit_event(ClamSwapEvent {
+                input: (self.collected_clams.resource_address(), clams_amount),
+                output: (self.ottercoin_manager.address(), ottercoin_amount),
+            });
 
             ottercoins
         }
@@ -81,4 +83,7 @@ mod clam_dex {
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
-pub struct JettySwapEvent {}
+pub struct ClamSwapEvent {
+    input: (ResourceAddress, Decimal),
+    output: (ResourceAddress, Decimal),
+}
