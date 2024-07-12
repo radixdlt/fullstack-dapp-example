@@ -1,21 +1,19 @@
 import { Addresses } from 'common'
-import { radixEngineClient } from '../../config'
+import { transactionBuilder } from '../../transaction/transactionBuilder'
+import { config } from '../../config'
 
 const addresses = Addresses(2)
 const userId = process.argv[2]
 
-radixEngineClient
-  .getManifestBuilder()
-  .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
-    const transactionManifest = `
+const transactionManifest = `
         CALL_METHOD 
-          Address("${wellKnownAddresses.accountAddress.payerAccount}") 
+          Address("${config.radQuest.accounts.payer.address}") 
           "lock_fee"
           Decimal("10")
         ;
 
         CALL_METHOD
-          Address("${wellKnownAddresses.accountAddress.systemAccount}")
+          Address("${config.radQuest.accounts.system.address}")
           "create_proof_of_amount"
           Address("${addresses.badges.adminBadgeAddress}")
           Decimal("1")
@@ -27,13 +25,7 @@ radixEngineClient
           "${userId}"
           true
         ;`
-    console.log(transactionManifest)
-    return convertStringManifest(transactionManifest)
-      .andThen((transactionManifest) =>
-        submitTransaction({ transactionManifest, signers: ['systemAccount'] })
-      )
-      .andThen(({ txId }) =>
-        radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-      )
-      .mapErr((e) => console.log(e))
-  })
+transactionBuilder({ transactionManifest, signers: ['payer', 'system'] })
+  .submit()
+  .map(({ transactionId }) => transactionId)
+  .mapErr((e) => console.log(e))

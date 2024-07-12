@@ -1,22 +1,19 @@
 import { config } from '../../config'
-import { radixEngineClient } from '../../config'
+import { transactionBuilder } from '../../transaction/transactionBuilder'
 
 export const registerGiftBoxResources = (giftBoxOpener: string) => {
-  return radixEngineClient
-    .getManifestBuilder()
-    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
-      const giftBoxResourcesAddresses = Object.values(config.radQuest.resources.giftBox)
-        .map((item) => `Address("${item}")`)
-        .join(', ')
+  const giftBoxResourcesAddresses = Object.values(config.radQuest.resources.giftBox)
+    .map((item) => `Address("${item}")`)
+    .join(', ')
 
-      return convertStringManifest(`
+  const transactionManifest = `
         CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress.payerAccount}")
+            Address("${config.radQuest.accounts.payer.address}")
             "lock_fee"
             Decimal("50")
         ;
         CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress.systemAccount}")
+            Address("${config.radQuest.accounts.system.address}")
             "create_proof_of_amount"
             Address("${config.radQuest.badges.adminBadgeAddress}")
             Decimal("1")
@@ -27,12 +24,8 @@ export const registerGiftBoxResources = (giftBoxOpener: string) => {
             Array<Address>(${giftBoxResourcesAddresses})
         ;
 
-        `)
-        .andThen((transactionManifest) =>
-          submitTransaction({ transactionManifest, signers: ['systemAccount'] })
-        )
-        .andThen(({ txId }) =>
-          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-        )
-    })
+        `
+  return transactionBuilder({ transactionManifest, signers: ['payer', 'system'] })
+    .submit()
+    .map(({ transactionId }) => transactionId)
 }

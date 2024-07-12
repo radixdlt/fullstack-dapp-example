@@ -33,7 +33,7 @@ export const Addresses = (networkId: number) => {
             Elite: 'resource_tdx_2_1t5ts7egnc8akwwa5uueq24nyyw7n2dnrs0cgfrhsywf0qcs8lja55c'
           }
         },
-        radQuestPackage: 'package_tdx_2_1p47g0ah5efzstj0ywcslylem62tne5eh05nu4jp7nnpjz4krl7prmf',
+        radQuestPackage: 'package_tdx_2_1p47pj8gly2xl7z4w527cuhj9ecdlljwrw6waqdhw0jnmpk0uyvauk2',
         clamDexPackage: 'package_tdx_2_1pkaz7qladfcj8ggam3cnxc0adfch39ezsv4qj5dh4p9qkqzs4n2w7h',
         components: {
           heroBadgeForge: 'component_tdx_2_1cz9hluu9fuemr2gpvq7henugcgfzqps46rrg6ts3p8fjtz5lthslg2',

@@ -1,23 +1,21 @@
-import { config, radixEngineClient } from '../../config'
+import { config } from '../../config'
+import { transactionBuilder } from '../../transaction/transactionBuilder'
 
 export const newClamDex = (name: string, dappDefinition: string, stablePrice: boolean) => {
-  return radixEngineClient
-    .getManifestBuilder()
-    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
-      convertStringManifest(`
+  const transactionManifest = `
     CALL_METHOD
-    Address("${wellKnownAddresses.accountAddress.payerAccount}")
+    Address("${config.radQuest.accounts.payer.address}")
     "lock_fee"
     Decimal("500")
 ;
 CALL_METHOD
-    Address("${wellKnownAddresses.accountAddress.ownerAccount}")
+    Address("${config.radQuest.accounts.owner.address}")
     "create_proof_of_amount"
     Address("${config.radQuest.badges.superAdminBadgeAddress}") 
     Decimal("1")
 ; 
 CALL_METHOD
-    Address("${wellKnownAddresses.accountAddress.systemAccount}")
+    Address("${config.radQuest.accounts.system.address}")
     "withdraw"
     Address("${config.radQuest.badges.adminBadgeAddress}")
     Decimal("1")
@@ -49,17 +47,13 @@ CALL_FUNCTION
     Address("${config.radQuest.resources.ottercoinAddress}")
     ${stablePrice}
 ;
-`)
-        .andThen((value) =>
-          submitTransaction({
-            transactionManifest: value,
-            signers: ['systemAccount', 'ownerAccount']
-          })
-        )
-        .andThen(({ txId }) =>
-          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-        )
-        .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
-        .map((details): string => details.createdEntities[0].entity_address!)
-    )
+`
+  const transaction = transactionBuilder({
+    transactionManifest,
+    signers: ['payer', 'owner', 'system']
+  })
+  return transaction
+    .submit()
+    .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
+    .map((createdEntities): string => createdEntities[0].entity_address!)
 }

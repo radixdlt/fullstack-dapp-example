@@ -1,25 +1,16 @@
-import { radixEngineClient } from '../config'
-import { logger } from './logger'
+import { config } from '../config'
+import { transactionBuilder } from '../transaction/transactionBuilder'
 
 export const sendTransactionManifest = (txManifest: string, lock_fee = 100) => {
-  return radixEngineClient
-    .getManifestBuilder()
-    .andThen(({ wellKnownAddresses, convertStringManifest }) => {
-      logger.debug(txManifest)
-      return convertStringManifest(`
+  const transactionManifest = `
           CALL_METHOD
-              Address("${wellKnownAddresses.accountAddress}")
+              Address("${config.radQuest.accounts.payer.address}")
               "lock_fee"
               Decimal("${lock_fee}")
           ;
           
           ${txManifest}
-    `)
-        .andThen((transactionManifest) =>
-          radixEngineClient.submitTransaction({ transactionManifest, signers: [] })
-        )
-        .andThen(({ txId }) =>
-          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-        )
-    })
+    `
+
+  return transactionBuilder({ transactionManifest, signers: ['payer'] }).submit()
 }

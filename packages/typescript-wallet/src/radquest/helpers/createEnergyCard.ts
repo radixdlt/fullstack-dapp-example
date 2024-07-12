@@ -1,4 +1,5 @@
-import { config, radixEngineClient } from '../../config'
+import { config } from '../../config'
+import { transactionBuilder } from '../../transaction/transactionBuilder'
 
 export const createEnergyCard = ({
   superAdminBadgeAddress,
@@ -7,12 +8,9 @@ export const createEnergyCard = ({
   superAdminBadgeAddress: string
   adminBadgeAddress: string
 }) => {
-  return radixEngineClient
-    .getManifestBuilder()
-    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
-      convertStringManifest(`
+  const transactionManifest = `
             CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress.payerAccount}")
+            Address("${config.radQuest.accounts.payer.address}")
             "lock_fee"
             Decimal("50")
         ;
@@ -189,14 +187,15 @@ export const createEnergyCard = ({
             )
             Enum<0u8>()
         ;
-        `)
-        .andThen((value) =>
-          submitTransaction({ transactionManifest: value, signers: ['systemAccount'] })
-        )
-        .andThen(({ txId }) =>
-          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-        )
-        .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
-        .map((details): string => details.createdEntities[0].entity_address!)
-    )
+        `
+
+  const transaction = transactionBuilder({
+    transactionManifest,
+    signers: ['payer']
+  })
+
+  return transaction
+    .submit()
+    .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
+    .map((createdEntities): string => createdEntities[0].entity_address!)
 }

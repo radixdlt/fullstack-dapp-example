@@ -1,5 +1,5 @@
 import { config } from '../../config'
-import { radixEngineClient } from '../../config'
+import { transactionBuilder } from '../../transaction/transactionBuilder'
 
 export const mintHeroBadge = (
   userId: string,
@@ -16,18 +16,15 @@ export const mintHeroBadge = (
     heroBadgeAddress = config.radQuest.badges.heroBadgeAddress,
     adminBadgeAddress = config.radQuest.badges.adminBadgeAddress
   } = badgeAddresses ?? {}
-  return radixEngineClient
-    .getManifestBuilder()
-    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
-      convertStringManifest(`
+  const transactionManifest = `
         CALL_METHOD 
-          Address("${wellKnownAddresses.accountAddress.payerAccount}") 
+          Address("${config.radQuest.accounts.payer.address}") 
           "lock_fee"
           Decimal("10")
         ;
 
         CALL_METHOD
-          Address("${wellKnownAddresses.accountAddress.systemAccount}")
+          Address("${config.radQuest.accounts.system.address}")
           "create_proof_of_amount"
           Address("${adminBadgeAddress}")
           Decimal("1")
@@ -49,13 +46,9 @@ export const mintHeroBadge = (
           "try_deposit_batch_or_abort"
           Expression("ENTIRE_WORKTOP")
           Enum<0u8>()
-        ;`)
-        .andThen((transactionManifest) =>
-          submitTransaction({ transactionManifest, signers: ['systemAccount'] })
-        )
-        .andThen(({ txId }) =>
-          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-        )
-        .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
-    )
+        ;`
+
+  return transactionBuilder({ transactionManifest, signers: ['payer', 'system'] })
+    .submit()
+    .map(({ transactionId }) => transactionId)
 }

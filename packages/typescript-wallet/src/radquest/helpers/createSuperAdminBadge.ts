@@ -1,18 +1,23 @@
-import { radixEngineClient } from '../../config'
+import { RadixEngineToolkit } from '@radixdlt/radix-engine-toolkit'
+import { config } from '../../config'
+import { transactionBuilder } from '../../transaction/transactionBuilder'
+import { ResultAsync } from 'neverthrow'
+import { typedError } from 'common'
 
-export const createSuperAdminBadge = () =>
-  radixEngineClient
-    .getManifestBuilder()
-    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
-      convertStringManifest(`
+export const createSuperAdminBadge = () => {
+  return ResultAsync.fromPromise(
+    RadixEngineToolkit.Utils.knownAddresses(config.network.networkId),
+    typedError
+  ).andThen((knownAddresses) => {
+    const transactionManifest = `
           CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress.payerAccount}")
+            Address("${config.radQuest.accounts.payer.address}")
             "lock_fee"
             Decimal("10")
           ;
 
           ALLOCATE_GLOBAL_ADDRESS
-              Address("${wellKnownAddresses.packageAddresses.resourcePackage}")
+              Address("${knownAddresses.packageAddresses.resourcePackage}")
               "FungibleResourceManager"
               AddressReservation("super_admin_badge")
               NamedAddress("super_admin_badge")
@@ -65,17 +70,16 @@ export const createSuperAdminBadge = () =>
           ;
 
           CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress.ownerAccount}")
+            Address("${config.radQuest.accounts.owner.address}")
             "try_deposit_batch_or_abort"
             Expression("ENTIRE_WORKTOP")
             Enum<0u8>()
-          ;`)
-        .andThen((transactionManifest) =>
-          submitTransaction({ transactionManifest, signers: ['ownerAccount'] })
-        )
-        .andThen(({ txId }) =>
-          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-        )
-        .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
-        .map((details): string => details.createdEntities[0].entity_address!)
-    )
+          ;`
+
+    const transaction = transactionBuilder({ transactionManifest, signers: ['payer', 'owner'] })
+    return transaction
+      .submit()
+      .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
+      .map((createdEntities): string => createdEntities[0].entity_address!)
+  })
+}

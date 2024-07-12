@@ -1,17 +1,15 @@
-import { radixEngineClient } from '../../config'
 import { logger } from '../../helpers/logger'
 import { createResources } from '../helpers/createResources'
 import { mintAdminBadge } from '../helpers/mintAdminBadge'
 import { createGiftBoxes } from './create-gift-boxes'
+import { config } from '../../config'
 
 const mintAdminBadgeToSystemAccount = (adminBadgeAddress: string, superAdminBadgeAddress: string) =>
-  radixEngineClient.getAddresses().andThen(({ accountAddress }) =>
-    mintAdminBadge({
-      adminBadgeAddress,
-      superAdminBadgeAddress,
-      accountAddress: accountAddress.systemAccount
-    })
-  )
+  mintAdminBadge({
+    adminBadgeAddress,
+    superAdminBadgeAddress,
+    accountAddress: config.radQuest.accounts.system.address
+  })
 
 createResources()
   .andThen((resources) =>

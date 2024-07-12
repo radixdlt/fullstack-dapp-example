@@ -1,19 +1,16 @@
 import { config } from '../../config'
-import { radixEngineClient } from '../../config'
+import { transactionBuilder } from '../../transaction/transactionBuilder'
 
 export const mintClams = (amount: number, accountAddress: string) => {
-  return radixEngineClient
-    .getManifestBuilder()
-    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
-      const transactionManifest = `
+  const transactionManifest = `
         CALL_METHOD 
-          Address("${wellKnownAddresses.accountAddress.payerAccount}") 
+          Address("${config.radQuest.accounts.payer.address}") 
           "lock_fee"
           Decimal("20")
         ;
 
         CALL_METHOD
-          Address("${wellKnownAddresses.accountAddress.systemAccount}")
+          Address("${config.radQuest.accounts.system.address}")
           "create_proof_of_amount"
           Address("${config.radQuest.badges.adminBadgeAddress}")
           Decimal("1")
@@ -30,13 +27,6 @@ export const mintClams = (amount: number, accountAddress: string) => {
           Expression("ENTIRE_WORKTOP")
           None
         ;`
-      console.log(transactionManifest)
-      return convertStringManifest(transactionManifest)
-        .andThen((transactionManifest) =>
-          submitTransaction({ transactionManifest, signers: ['systemAccount'] })
-        )
-        .andThen(({ txId }) =>
-          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-        )
-    })
+
+  return transactionBuilder({ transactionManifest, signers: ['payer', 'system'] }).submit()
 }

@@ -1,19 +1,16 @@
 import { config } from '../../config'
-import { radixEngineClient } from '../../config'
+import { transactionBuilder } from '../../transaction/transactionBuilder'
 
 export const mintThenCombineElementsDeposit = ({ userId }: { userId: string }) => {
-  return radixEngineClient
-    .getManifestBuilder()
-    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
-      const transactionManifest = `
+  const transactionManifest = `
         CALL_METHOD 
-          Address("${wellKnownAddresses.accountAddress.payerAccount}") 
+          Address("${config.radQuest.accounts.payer.address}") 
           "lock_fee"
           Decimal("10")
         ;
 
         CALL_METHOD
-          Address("${wellKnownAddresses.accountAddress.systemAccount}")
+          Address("${config.radQuest.accounts.system.address}")
           "create_proof_of_amount"
           Address("${config.radQuest.badges.adminBadgeAddress}")
           Decimal("1")
@@ -25,7 +22,7 @@ export const mintThenCombineElementsDeposit = ({ userId }: { userId: string }) =
         ;
         
         CALL_METHOD
-          Address("${wellKnownAddresses.accountAddress.systemAccount}")
+          Address("${config.radQuest.accounts.system.address}")
           "create_proof_of_non_fungibles"
           Address("${config.radQuest.badges.heroBadgeAddress}")
           Array<NonFungibleLocalId>(NonFungibleLocalId("<${userId}">))
@@ -47,13 +44,7 @@ export const mintThenCombineElementsDeposit = ({ userId }: { userId: string }) =
           Bucket("elements")
         ;
         `
-      console.log(transactionManifest)
-      return convertStringManifest(transactionManifest)
-        .andThen((transactionManifest) =>
-          submitTransaction({ transactionManifest, signers: ['systemAccount'] })
-        )
-        .andThen(({ txId }) =>
-          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-        )
-    })
+  return transactionBuilder({ transactionManifest, signers: ['payer', 'system'] })
+    .submit()
+    .map(({ transactionId }) => transactionId)
 }

@@ -16,7 +16,7 @@ mintAdminBadge({
   amount: 7
 })
   .andThen(() => newHeroBadgeForge())
-  .map(({ heroBadgeForgeAddress }) => {
+  .map((heroBadgeForgeAddress) => {
     result.heroBadgeForge = heroBadgeForgeAddress
   })
   .andThen(() => newQuestRewards())
@@ -25,12 +25,12 @@ mintAdminBadge({
     result.questRewards = questRewardsAddress
   })
   .andThen(() => newGiftBoxOpener())
-  .map(({ giftBoxOpenerAddress }) => {
+  .map((giftBoxOpenerAddress) => {
     result.giftBoxOpener = giftBoxOpenerAddress
   })
   .andThen(() => registerGiftBoxResources(result.giftBoxOpener))
   .andThen(() => newCardForge())
-  .map(({ cardForgeAddress }) => {
+  .map((cardForgeAddress) => {
     result.cardForge = cardForgeAddress
     return cardForgeAddress
   })
