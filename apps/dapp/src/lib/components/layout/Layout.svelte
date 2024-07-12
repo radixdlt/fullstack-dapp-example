@@ -14,6 +14,8 @@
   </div>
 
   <slot name="footer" />
+
+  <slot />
 </div>
 
 <style lang="scss">

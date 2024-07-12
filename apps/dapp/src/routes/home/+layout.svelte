@@ -149,9 +149,10 @@
 </script>
 
 <LandingPopup definitions={data.landingPopupDefinitions} />
-<Jetty />
 
 <Layout>
+  <Jetty />
+
   <Header slot="header" />
 
   <Tabs
