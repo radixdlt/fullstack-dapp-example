@@ -15,6 +15,7 @@
   import { userApi } from '$lib/api/user-api'
   import Checkbox from '$lib/components/checkbox/Checkbox.svelte'
   import { htmlReplace } from '$lib/helpers/html-replace'
+  import AppsFlyer from './AppsFlyer.svelte'
 
   export let data: PageData
 
@@ -271,7 +272,7 @@
   {#if render('9a')}
     {@html text['9a-1.md']}
 
-    <!-- TODO:  AppsFlyer link -->
+    <AppsFlyer />
 
     {@html text['9a-2.md']}
     <Checkbox bind:checked={$confirmedWalletInstall}>{@html text['9a-2-checkbox.md']}</Checkbox>
