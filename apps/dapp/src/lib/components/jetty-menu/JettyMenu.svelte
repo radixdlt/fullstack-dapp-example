@@ -19,7 +19,7 @@
   import { tweened } from 'svelte/motion'
   import { cubicOut } from 'svelte/easing'
   import { user, type JettyNotification, type jettyNotifications } from '../../../stores'
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher, onMount } from 'svelte'
   import Notification from './Notification.svelte'
   import { swipe } from 'svelte-gestures'
 
@@ -118,9 +118,27 @@
   $: if (!expanded) {
     setTimeout(() => (showMenuItemContent = false), 500)
   }
+
+  let jettyMenu: HTMLElement
+  let jettyMenuHeight: number
+
+  onMount(() => {
+    if (window.visualViewport) {
+      const vv = window.visualViewport
+
+      const fixPosition = () => {
+        jettyMenu.style.top = `${vv.height - jettyMenuHeight}px`
+      }
+
+      vv.addEventListener('resize', fixPosition)
+      fixPosition() // Make sure we call it once before resizing too
+    }
+  })
 </script>
 
 <div
+  bind:this={jettyMenu}
+  bind:clientHeight={jettyMenuHeight}
   class="jetty-menu"
   style:--menuPosition={`${$menuPositionFactor * 98}%`}
   use:swipe
@@ -230,9 +248,9 @@
     width: 25rem;
     max-height: 80%;
     border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
-    position: absolute;
-    bottom: 0;
+    position: fixed;
     z-index: 4;
+    bottom: 0;
     transform: translateY(var(--menuPosition));
 
     @include desktop {
