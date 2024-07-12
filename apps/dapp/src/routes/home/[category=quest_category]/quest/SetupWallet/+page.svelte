@@ -283,12 +283,13 @@
   {/if}
 
   {#if render('9b')}
-    {@html text['9b.md']}
+    {@html text['9b-1.md']}
     <div class="center">
-      <Button link="https://wallet.radixdlt.com" isExternal={true}
-        >{$i18n.t('quests:SetupWallet.walletDownloadPage')}</Button
-      >
+      <Button link="https://wallet.radixdlt.com" isExternal={true}>
+        {$i18n.t('quests:SetupWallet.walletDownloadPage')}
+      </Button>
     </div>
+    {@html text['9b-2.md']}
   {/if}
 
   {#if render('10')}
