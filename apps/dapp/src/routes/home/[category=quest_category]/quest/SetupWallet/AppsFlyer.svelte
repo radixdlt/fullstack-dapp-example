@@ -15,7 +15,7 @@
     btoa(text).replaceAll(/\+/g, '-').replaceAll(/\//g, '_').replaceAll(/=/g, '')
 </script>
 
-<a href={`${oneLinkUrl}?${paramName}=${encode(JSON.stringify(params))}`}>
+<a href={`${oneLinkUrl}?${paramName}=${encode(JSON.stringify(params))}`} class="skip-icon">
   {#if parsed.os.name === 'Android'}
     <img src="/quests-images/key/2-KeyImage_Button_GooglePlayStore.webp" alt="Play Store" />
   {:else if parsed.os.name === 'iOS'}
