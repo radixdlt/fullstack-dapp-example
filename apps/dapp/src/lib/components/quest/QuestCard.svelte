@@ -156,7 +156,34 @@
     }
 
     :global(a) {
-      text-decoration: underline;
+      color: var(--color-primary);
+      font-weight: var(--font-weight-bold);
+    }
+
+    :global(a)::after {
+      content: ' ';
+      width: 1rem;
+      height: 1rem;
+      margin-left: 2px;
+      transform: translateY(3px);
+      display: inline-block;
+
+      mask-size: contain;
+      mask-repeat: no-repeat;
+      background-color: var(--color-primary);
+    }
+
+    :global(a[href^='?glossaryAnchor'])::after {
+      mask-image: url('@images/book-open.svg');
+    }
+
+    :global(a[href^='https:'])::after {
+      mask-image: url('@images/external-link.svg');
+    }
+
+    :global(a:hover),
+    :global(a:hover::after) {
+      filter: brightness(0.8);
     }
 
     :global(blockquote) {
