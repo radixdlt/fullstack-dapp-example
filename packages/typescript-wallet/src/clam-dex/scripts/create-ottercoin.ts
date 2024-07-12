@@ -1,7 +1,7 @@
 import { config } from '../../config'
-import { createOtterCoin } from '../helpers/createOtterCoin'
+import { createOttercoin } from '../helpers/createOttercoin'
 
-createOtterCoin({
+createOttercoin({
   superAdminBadgeAddress: config.radQuest.badges.superAdminBadgeAddress,
   adminBadgeAddress: config.radQuest.badges.adminBadgeAddress
 })

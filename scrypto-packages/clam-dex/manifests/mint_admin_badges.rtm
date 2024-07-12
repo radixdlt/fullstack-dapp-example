@@ -5,68 +5,77 @@ CALL_METHOD
 ;
 
 CREATE_FUNGIBLE_RESOURCE_WITH_INITIAL_SUPPLY
-  None
-  true
-  0u8
-  Decimal("2")
-  Tuple(
-      Some(         
-        Tuple(
-          Some(Enum<AccessRule::DenyAll>()),  
-        Some(Enum<AccessRule::DenyAll>())
-      )
-    ),
-    Some(         
-        Tuple(
-          Some(Enum<AccessRule::DenyAll>()),  
-        Some(Enum<AccessRule::DenyAll>())
-      )
-    ),
-    Some(         
-        Tuple(
-          Some(Enum<AccessRule::DenyAll>()),  
-        Some(Enum<AccessRule::DenyAll>())
-      )
-    ),
-    Some(         
-        Tuple(
-          Some(Enum<AccessRule::DenyAll>()),  
-        Some(Enum<AccessRule::DenyAll>())
-      )
-    ),
-    Some(         
-        Tuple(
-          Some(Enum<AccessRule::AllowAll>()),  
-        Some(Enum<AccessRule::DenyAll>())
-      )
-    ),
-    Some(         
-        Tuple(
-          Some(Enum<AccessRule::AllowAll>()),  
-        Some(Enum<AccessRule::DenyAll>())
-      )
+    Enum<1u8>(
+        Enum<2u8>(
+            Enum<0u8>(
+                Enum<0u8>(
+                    Enum<1u8>(
+                        Address("${super_admin_badge}")
+                    )
+                )
+            )
+        )
     )
-  )
-  Tuple(
-    Map<String, Tuple>(
-      "name" => Tuple(
-        Some(
-          Enum<Metadata::String>("RadQuest Admin Badge")
-        ),                  
-        false                                                         
-      )
-    ),
-    Map<String, Enum>(
-      "metadata_setter" => None,
-      "metadata_setter_updater" => None,
-      "metadata_locker" => None,          
-      "metadata_locker_updater" => None
+    true
+    0u8
+    Decimal("2")
+    Tuple(
+        Enum<1u8>(
+            Tuple(
+                Enum<0u8>(),
+                Enum<0u8>()
+            )
+        ),
+        Enum<1u8>(
+            Tuple(
+                Enum<0u8>(),
+                Enum<0u8>()
+            )
+        ),
+        Enum<0u8>(),
+        Enum<1u8>(
+            Tuple(
+                Enum<0u8>(),
+                Enum<0u8>()
+            )
+        ),
+        Enum<1u8>(
+            Tuple(
+                Enum<0u8>(),
+                Enum<0u8>()
+            )
+        ),
+        Enum<0u8>()
     )
-  )
-  None
+    Tuple(
+        Map<String, Tuple>(
+            "name" => Tuple(
+                Enum<1u8>(
+                    Enum<0u8>(
+                        "RadQuest Admin Badge"
+                    )
+                ),
+                false
+            ),
+            "tags" => Tuple(
+                Enum<1u8>(
+                    Enum<128u8>(
+                        Array<String>(
+                            "radquest",
+                            "badge"
+                        )
+                    )
+                ),
+                false
+            )
+        ),
+        Map<String, Enum>()
+    )
+    Enum<0u8>()
 ;
+
 CALL_METHOD
-  Address("${account}")
-  "deposit_batch"
-  Expression("ENTIRE_WORKTOP")
+    Address("${account}")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
 ;

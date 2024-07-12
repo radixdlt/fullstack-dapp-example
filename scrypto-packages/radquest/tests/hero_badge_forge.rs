@@ -126,20 +126,20 @@ impl LedgerTestEnvironment {
             names,
         );
 
+        let user_id = "test_id_12345".to_string();
         let manifest = ManifestBuilder::new()
             .lock_fee_from_faucet()
             .create_proof_from_account_of_amount(account, admin_badge, 1)
             .call_method(
                 hero_badge_forge,
                 "add_user_account",
-                manifest_args!(account),
+                manifest_args!(account, user_id.clone()),
             );
 
         let names = manifest.object_names();
         let add_user_account_manifest = manifest.build();
         dump_manifest_to_file("add_user_account", &add_user_account_manifest, names);
 
-        let user_id = "test_id_12345".to_string();
         let manifest = ManifestBuilder::new()
             .lock_fee_from_faucet()
             .call_method(

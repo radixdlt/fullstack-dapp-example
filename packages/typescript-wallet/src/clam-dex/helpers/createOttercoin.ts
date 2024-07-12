@@ -1,6 +1,6 @@
 import { config, radixEngineClient } from '../../config'
 
-export const createOtterCoin = ({
+export const createOttercoin = ({
   superAdminBadgeAddress,
   adminBadgeAddress
 }: {
@@ -113,7 +113,7 @@ CREATE_FUNGIBLE_RESOURCE
                 Enum<1u8>(
                     Enum<128u8>(
                         Array<String>(
-                            "${config.radQuest.accounts.dAppDefinition.address}"
+                            "${config.radQuest.accounts.jetty.address}"
                         )
                     )
                 ),

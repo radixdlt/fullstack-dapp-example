@@ -75,12 +75,12 @@ mod hero_badge_forge {
             self.enabled = false;
         }
 
-        pub fn add_user_account(&mut self, account: Global<Account>) {
+        pub fn add_user_account(&mut self, account: Global<Account>, user_id: UserId) {
             assert!(self.enabled, "HeroBadgeForge disabled");
 
             self.user_accounts.insert(account, ());
 
-            Runtime::emit_event(AccountAddedEvent { account })
+            Runtime::emit_event(AccountAddedEvent { account, user_id })
         }
 
         pub fn claim_badge(&mut self, claimant: Global<Account>, user_id: UserId) -> Bucket {
@@ -152,6 +152,7 @@ mod hero_badge_forge {
 #[derive(ScryptoSbor, ScryptoEvent, Debug, Clone, PartialEq, Eq)]
 struct AccountAddedEvent {
     account: Global<Account>,
+    user_id: UserId,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]

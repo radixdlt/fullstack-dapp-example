@@ -1,8 +1,6 @@
 import { config, radixEngineClient } from '../../config'
 
-export const newClamDex = (name: string, description: string, price?: number) => {
-  const optionalPrice = price ? `Some(Decimal("${price}"))` : 'None'
-
+export const newClamDex = (name: string, dappDefinition: string, stablePrice: boolean) => {
   return radixEngineClient
     .getManifestBuilder()
     .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
@@ -27,14 +25,12 @@ CALL_METHOD
 TAKE_FROM_WORKTOP
     Address("${config.radQuest.badges.adminBadgeAddress}")
     Decimal("1")
-    Bucket("bucket1")
+    Bucket("admin_badge")
 ;
 CALL_FUNCTION
     Address("${config.radQuest.clamDexPackage}")
     "ClamDex"
     "new"
-    "${name}"
-    "${description}"
     Enum<OwnerRole::Fixed>(
         Enum<AccessRule::Protected>(
             Enum<AccessRuleNode::ProofRule>(
@@ -46,15 +42,12 @@ CALL_FUNCTION
             )
         )
     )
-    Bucket("bucket1")
+    Address("${dappDefinition}")
+    "${name}"
+    Bucket("admin_badge")
     Address("${config.radQuest.resources.clamAddress}")
-    Address("${config.radQuest.resources.otterCoinAddress}")
-    ${optionalPrice}
-;
-CALL_METHOD
-    Address("${wellKnownAddresses.accountAddress.systemAccount}")
-    "deposit_batch"
-    Expression("ENTIRE_WORKTOP")
+    Address("${config.radQuest.resources.ottercoinAddress}")
+    ${stablePrice}
 ;
 `)
         .andThen((value) =>
