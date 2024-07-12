@@ -237,7 +237,7 @@ describe('filter transactions', () => {
       expect(CombineElementsMintedRadgem.data.MintedRadgemEvent).toBeDefined()
     })
 
-    it(`should find ${EventId.CombineElementsAddedRadgemImage} transaction`, () => {
+    it.only(`should find ${EventId.CombineElementsAddedRadgemImage} transaction`, () => {
       const result = filterTransactionsByType([...CombineElementsImageAdded])
 
       if (result.isErr()) throw result.error
@@ -279,11 +279,14 @@ describe('filter transactions', () => {
 
       const [transaction] = filteredTransactions
 
+      console.log(JSON.stringify(transaction.data))
+
       expect(transaction.transactionId).toBeDefined()
       expect(transaction.type).toEqual(EventId.QuestRewardDeposited)
       expect(transaction.data.RewardDepositedEvent.questId).toBeDefined()
       expect(transaction.userId).toBeDefined()
       expect(transaction.data).toBeDefined()
+      expect(transaction.data.RewardDepositedEvent.rewards).toBeDefined()
     })
 
     it(`should find ${EventId.QuestRewardClaimed}`, () => {

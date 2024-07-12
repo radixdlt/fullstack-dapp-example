@@ -1,9 +1,11 @@
 import {
   EventsItem,
+  ProgrammaticScryptoSborValueArray,
   ProgrammaticScryptoSborValueReference
 } from '@radixdlt/babylon-gateway-api-sdk'
 import { config } from '../config'
 import { EventId, GetValuesFromEventInput, getValuesFromEvent } from 'common'
+import { getRewardsFromQuestRewardDepositedEvent } from '../helpers/getRewardsFromQuestRewardDepositedEvent'
 
 type EventEmitter = {
   entity: {
@@ -17,7 +19,7 @@ type EventEmitter = {
 
 export type TrackedTransactions = Record<
   EventId,
-  Record<string, (event: EventsItem) => Record<string, string> | undefined>
+  Record<string, (event: EventsItem) => Record<string, unknown> | undefined>
 >
 
 const eventEmittedByComponent =
@@ -103,7 +105,12 @@ export const trackedTransactionTypes: TrackedTransactions = {
       keys: {
         user_id: { kind: 'String', key: 'userId' },
         quest_id: { kind: 'String', key: 'questId' },
-        rewards: { kind: 'Array', key: 'rewards' }
+        rewards: {
+          kind: 'Array',
+          key: 'rewards',
+          transform: (value) =>
+            getRewardsFromQuestRewardDepositedEvent(value as ProgrammaticScryptoSborValueArray)
+        }
       }
     })
   },

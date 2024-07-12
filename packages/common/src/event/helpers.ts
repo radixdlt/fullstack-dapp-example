@@ -45,14 +45,18 @@ const DataKind = {
 } as const
 
 type DataKindTransform = {
-  [K in keyof typeof DataKind]: { key?: string; kind: (typeof DataKind)[K] }
+  [K in keyof typeof DataKind]: {
+    key?: string
+    kind: (typeof DataKind)[K]
+    transform?: (value: unknown) => unknown
+  }
 }
 type DataKindTransformValues = DataKindTransform[keyof DataKindTransform]
 
 export const getValuesFromEvent = (
   keys: Record<string, DataKindTransformValues>,
   event: EventsItem
-): Record<keyof typeof keys, string> => {
+): Record<keyof typeof keys, unknown> => {
   const getEventDataFields = (
     input: ProgrammaticScryptoSborValue
   ): ProgrammaticScryptoSborValue[] => {
@@ -61,10 +65,13 @@ export const getValuesFromEvent = (
     return []
   }
 
-  return getEventDataFields(event.data).reduce<Record<string, string>>((acc, field) => {
+  return getEventDataFields(event.data).reduce<Record<string, unknown>>((acc, field) => {
     if (field.field_name && field.kind === 'Array') {
       const key = keys[field.field_name]
-      if (key?.kind === field.kind) acc[key.key ?? field.field_name] = JSON.stringify(field)
+      if (key?.kind === field.kind)
+        acc[key.key ?? field.field_name] = key.transform
+          ? key.transform(field)
+          : JSON.stringify(field)
     } else if (field.field_name && field.kind !== 'Array') {
       const key = keys[field.field_name]
       if (key?.kind === field.kind) acc[key.key ?? field.field_name] = field.value

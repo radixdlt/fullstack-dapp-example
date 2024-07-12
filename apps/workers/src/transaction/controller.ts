@@ -279,46 +279,43 @@ export const TransactionWorkerController = ({
 
         const { elements: elementAmount, energyCard } = getGiftBoxRewards(giftBoxKind)
 
-
-
-
         return imageModel(logger)
-        .getUrl({ shape: energyCard.key })
-        .mapErr((error) => ({ reason: WorkerError.FailedToGetImageUrl, jsError: error }))
-        .andThen(key_image_url => {
-          const rewards: Parameters<typeof createRewardsDepositManifest>[0]['rewards'] = [
-            { name: 'elements', amount: elementAmount }
-          ]
-  
-          const card = {
-            ...energyCard,
-            key_image_url
-          }
-  
-          rewards.push({
-            name: 'energyCard',
-            card
-          })
-          return handleSubmitTransaction(
-            createRewardsDepositManifest({
-              userId,
-              rewards,
-              includeKycOracleUpdate: false,
-              depositRewardsTo: 'giftBoxOpener'
+          .getUrl({ shape: energyCard.key })
+          .mapErr((error) => ({ reason: WorkerError.FailedToGetImageUrl, jsError: error }))
+          .andThen((key_image_url) => {
+            const rewards: Parameters<typeof createRewardsDepositManifest>[0]['rewards'] = [
+              { name: 'elements', amount: elementAmount }
+            ]
+
+            const card = {
+              ...energyCard,
+              key_image_url
+            }
+
+            rewards.push({
+              name: 'energyCard',
+              card
             })
-          ).andThen(({ transactionId }) => addEntryToAuditTable({
-            userId,
-            transactionId,
-            xrdUsdValue: 0,
-            rewards: {
-              fungible: [{ name: 'elements', amount: elementAmount }],
-              nonFungible: [card]
-            },
-            type: AuditType.CLAIMBOX_DEPOSIT
+            return handleSubmitTransaction(
+              createRewardsDepositManifest({
+                userId,
+                rewards,
+                includeKycOracleUpdate: false,
+                depositRewardsTo: 'giftBoxOpener'
+              })
+            ).andThen(({ transactionId }) =>
+              addEntryToAuditTable({
+                userId,
+                transactionId,
+                xrdUsdValue: 0,
+                rewards: {
+                  fungible: [{ name: 'elements', amount: elementAmount }],
+                  nonFungible: [card]
+                },
+                type: AuditType.CLAIMBOX_DEPOSIT
+              })
+            )
           })
-          )
-        })
-        
       }
 
       case 'PopulateResources':
@@ -564,13 +561,6 @@ export const TransactionWorkerController = ({
             )
           )
           .andThen(({ transactionId }) =>
-<<<<<<< HEAD
-            dbTransactionBuilder.helpers.addXrdDepositToAuditTable({
-              transactionId,
-              userId: user.id,
-              xrdAmount: `${config.radQuest.directXrdDepositAmount} `
-            })
-=======
             getXrdPrice(`${config.radQuest.directXrdDepositAmount}`).andThen(({ xrdUsdValue }) =>
               addEntryToAuditTable({
                 transactionId,
@@ -583,7 +573,6 @@ export const TransactionWorkerController = ({
                 }
               })
             )
->>>>>>> c3024d68 (code: add rewards to audit table)
           )
           .andThen(() =>
             sendMessage(user.id, { type: 'XrdDepositedToAccount', traceId: job.data.traceId })

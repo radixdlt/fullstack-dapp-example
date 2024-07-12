@@ -6,7 +6,7 @@ import { EventId } from 'common'
 export type FilteredTransaction = {
   type: EventId
   transactionId: string
-  data: Record<string, Record<string, string>>
+  data: Record<string, Record<string, unknown>>
   userId?: string
   accountAddress?: string
   questId?: string
@@ -22,7 +22,7 @@ export const FilterTransactionsByType =
       const events = tx.receipt?.events
 
       let transactionType: EventId | undefined
-      let data: Record<string, Record<string, string>> = {}
+      let data: Record<string, Record<string, unknown>> = {}
       let userId: string | undefined
       let accountAddress: string | undefined
       let questId: string | undefined
@@ -53,9 +53,9 @@ export const FilterTransactionsByType =
                 {}
               )
 
-              userId = extractedData.userId
-              accountAddress = extractedData.accountAddress
-              questId = extractedData.questId
+              userId = extractedData.userId as string
+              accountAddress = extractedData.accountAddress as string
+              questId = extractedData.questId as string
 
               break
             }

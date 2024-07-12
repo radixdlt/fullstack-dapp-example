@@ -2,7 +2,13 @@ import { TokenPriceClient } from './../token-price-client'
 import { okAsync, errAsync, err, ok, ResultAsync } from 'neverthrow'
 import { EventJob, Job } from 'queues'
 import { QuestDefinitions, QuestId, Quests } from 'content'
-import { EventId, MailerLiteModel, MessageType, UserByReferralCode } from 'common'
+import {
+  EventId,
+  MailerLiteModel,
+  MessageType,
+  QuestTogetherConfig,
+  UserByReferralCode
+} from 'common'
 import { AppLogger, AccountAddressModel } from 'common'
 import { PrismaClient, QuestStatus, User } from 'database'
 import { databaseTransactions } from './helpers/databaseTransactions'
@@ -12,7 +18,6 @@ import { MessageHelper } from '../helpers/messageHelper'
 import { config } from '../config'
 import { TransactionIntentHelper } from '../helpers/transactionIntentHelper'
 import { ReferralRewardAction } from '../helpers/referalReward'
-import { completeQuestRequirements } from '../system/helpers/completeQuestRequirements'
 
 type EventEmitter = {
   entity: {
@@ -23,6 +28,8 @@ type EventEmitter = {
   type: string
   object_module_id: string
 }
+
+type Reward = { resourceAddress: string; amount: string; name: string }
 
 type GiftBoxKind = keyof typeof config.radQuest.resources.giftBox
 
@@ -285,13 +292,14 @@ export const EventWorkerController = ({
           : okAsync(value)
       )
 
-    // const updateMailerLiteFields = (
-    //   user: User & { email: { email: string; newsletter: boolean } }
-    // ) => {
-    //   return questId === 'TransferTokens'
-    //     ? mailerLiteModel(logger).addOrUpdate(user.email.email, { hasFinishedBasicQuests: true })
-    //     : okAsync(undefined)
-    // }
+    const handleMailerLiteBasicQuestFinished = (
+      questId: string,
+      user: User & { email: { email: string; newsletter: boolean } }
+    ) => {
+      return questId === 'TransferTokens' && user?.email?.email
+        ? mailerLiteModel(logger).addOrUpdate(user.email.email, { hasFinishedBasicQuests: true })
+        : okAsync(undefined)
+    }
 
     const handleQuestWithTrackedAccount = (
       questId: QuestId,
@@ -334,76 +342,72 @@ export const EventWorkerController = ({
 
     switch (type) {
       case EventId.QuestRewardDeposited:
+        const questId = job.data.data.RewardDepositedEvent.questId as string
         return dbTransactions
           .rewardsDeposited({
             userId,
-            questId: job.data.data.RewardDepositedEvent.questId
+            questId
           })
           .andThen(() =>
             sendMessage(userId, {
               type: 'QuestRewardsDeposited',
-              questId: job.data.data.RewardDepositedEvent.questId,
+              questId,
               traceId
             })
           )
           .map(() => undefined)
 
-      // case EventId.QuestRewardClaimed:
-      //   return getDataFromQuestRewardsEvent(job.data.relevantEvents.RewardClaimedEvent)
-      //     .asyncAndThen(({ userId, questId, xrdAmount }) =>
-      //       getUserById(userId, dbClient, { email: true }).andThen((user) =>
-      //         dbTransactions
-      //           .rewardsClaimed({ userId: user.id, questId })
-      //           .andThen(() =>
-      //             sendMessage(userId, {
-      //               type: 'QuestRewardsClaimed',
-      //               questId,
-      //               traceId
-      //             })
-      //           )
-      //           .andThen(() =>
-      //             handleMailerLiteBasicQuestFinished(
-      //               questId,
-      //               user as User & { email: { email: string } }
-      //             )
-      //           )
-      //           .andThen(() => {
-      //             const shouldTriggerReferralRewardFlow =
-      //               questId === QuestTogetherConfig.triggerRewardAfterQuest
+      case EventId.QuestRewardClaimed: {
+        const rewards = job.data.data.RewardDepositedEvent.reward as Reward[]
+        const xrdReward = rewards.find((reward) => reward.name === 'xrd')
+        const xrdAmount = xrdReward ? parseFloat(xrdReward.amount) : 0
+        const questId = job.data.data.RewardClaimedEvent.questId as QuestId
 
-      //             if (user.referredBy && shouldTriggerReferralRewardFlow)
-      //               return getUserByReferralCode(user.referredBy).andThen((refferingUser) => {
-      //                 const triggerRewardsForReferredUser = () =>
-      //                   addCompletedQuestRequirement({
-      //                     questId: 'JoinFriend',
-      //                     userId: user.id,
-      //                     requirementId: 'CompleteBasicQuests'
-      //                   }).andThen(() =>
-      //                     handleAllQuestRequirementCompleted({
-      //                       questId: 'JoinFriend',
-      //                       userId: user.id
-      //                     })
-      //                   )
+        return updateQuestProgressStatus({ questId, userId, status: 'REWARDS_CLAIMED' })
+          .andThen(() =>
+            sendMessage(userId, {
+              type: 'QuestRewardsClaimed',
+              questId,
+              traceId
+            })
+          )
+          .andThen(() => handleMailerLiteBasicQuestFinished(questId, user))
+          .andThen(() => {
+            const shouldTriggerReferralRewardFlow =
+              questId === QuestTogetherConfig.triggerRewardAfterQuest
 
-      //                 return refferingUser.referredUsers.length < QuestTogetherConfig.maxReferrals
-      //                   ? handleReferrerRewards(refferingUser).andThen(() =>
-      //                       triggerRewardsForReferredUser()
-      //                     )
-      //                   : triggerRewardsForReferredUser()
-      //               })
-      //             else if (questId === 'QuestTogether')
-      //               return referralRewardAction({
-      //                 transactionId,
-      //                 userId,
-      //                 xrdValue: -xrdAmount,
-      //                 action: 'DEC'
-      //               })
+            if (user.referredBy && shouldTriggerReferralRewardFlow)
+              return getUserByReferralCode(user.referredBy).andThen((referringUser) => {
+                const triggerRewardsForReferredUser = () =>
+                  addCompletedQuestRequirement({
+                    questId: 'JoinFriend',
+                    userId: user.id,
+                    requirementId: 'CompleteBasicQuests'
+                  }).andThen(() =>
+                    handleAllQuestRequirementCompleted({
+                      questId: 'JoinFriend',
+                      userId: user.id
+                    })
+                  )
 
-      //             return okAsync(undefined)
-      //           })
-      //       )
-      //     )
-      //     .map(() => undefined)
+                return referringUser.referredUsers.length < QuestTogetherConfig.maxReferrals
+                  ? handleReferrerRewards(referringUser).andThen(() =>
+                      triggerRewardsForReferredUser()
+                    )
+                  : triggerRewardsForReferredUser()
+              })
+            else if (questId === 'QuestTogether')
+              return referralRewardAction({
+                transactionId,
+                userId,
+                xrdValue: -xrdAmount,
+                action: 'DEC'
+              })
+
+            return okAsync(undefined)
+          })
+          .map(() => undefined)
+      }
 
       case EventId.CombineElementsDeposited:
         return transactionIntent.add({
@@ -413,7 +417,7 @@ export const EventWorkerController = ({
           traceId
         })
       case EventId.CombineElementsMintedRadgem: {
-        const radGemId = job.data.data.MintedRadgemEvent.radgemId!
+        const radGemId = job.data.data.MintedRadgemEvent.radgemId as string
         if (!radGemId) return errAsync({ reason: 'RadgemIdNotFound' })
         return transactionIntent
           .add({
@@ -503,9 +507,9 @@ export const EventWorkerController = ({
       }
 
       case EventId.GiftBoxOpened: {
-        return getGiftBoxKindByResourceAddress(
-          job.data.data.GiftBoxOpenedEvent.giftBoxResourceAddress
-        )
+        const giftBoxResourceAddress = job.data.data.GiftBoxOpenedEvent
+          .giftBoxResourceAddress as string
+        return getGiftBoxKindByResourceAddress(giftBoxResourceAddress)
           .asyncAndThen((giftBoxKind) =>
             transactionIntent.add({
               type: 'DepositGiftBoxReward',

@@ -21,7 +21,7 @@ export type EventJob = {
   questId?: string
   transactionId: string
   userId: string
-  data: Record<string, Record<string, string>>
+  data: Record<string, Record<string, unknown>>
 }
 
 export type DepositRewardTransactionJob = {

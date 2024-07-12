@@ -13,6 +13,7 @@ export const config = {
     fromStateVersion: parseInt(process.env.FROM_STATE_VERSION!, 10)
   },
   networkId,
+  addresses: Addresses(networkId),
   stream: {
     limitPerPage: 100
   },
