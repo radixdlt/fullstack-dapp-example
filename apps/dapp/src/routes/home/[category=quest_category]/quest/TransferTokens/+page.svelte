@@ -213,15 +213,17 @@
     {@const jettyAddress = Addresses(parseInt(PUBLIC_NETWORK_ID)).accounts.jetty}
 
     {#if isMobile()}
-      {@html text['6b.md']}
+      {@html text['6b-1.md']}
       <div class="copy-address">
         <CopyTextBox text={shortenAddress(jettyAddress.address)} value={jettyAddress.address} />
       </div>
+      {@html text['6b-2.md']}
     {:else}
-      {@html text['6a.md']}
+      {@html text['6a-1.md']}
       <div class="qr-code">
         <QR data={jettyAddress.address} />
       </div>
+      {@html text['6a-2.md']}
     {/if}
   {/if}
 

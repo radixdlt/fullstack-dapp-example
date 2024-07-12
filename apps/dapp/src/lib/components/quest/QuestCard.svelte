@@ -142,7 +142,7 @@
       font-weight: var(--font-weight-bold);
     }
 
-    :global(a)::after {
+    :global(a:not(.button):not(.skip-icon))::after {
       content: ' ';
       width: 1rem;
       height: 1rem;

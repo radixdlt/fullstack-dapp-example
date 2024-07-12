@@ -72,9 +72,9 @@
         {/each}
       </div>
     </div>
-    <div class="runs-on-radix mobile-link-margin">
+    <a href={radixDlt.url} class="runs-on-radix mobile-link-margin">
       <img src={RunsOnRadix} alt={$i18n.t('main:footer.runs-on-radix-alt')} />
-    </div>
+    </a>
   </div>
   <div class="lower-footer">
     <p class="copyright">
