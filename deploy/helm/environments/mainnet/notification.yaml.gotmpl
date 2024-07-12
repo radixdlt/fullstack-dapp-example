@@ -29,16 +29,16 @@ ingress:
           pathType: ImplementationSpecific
 
 autoscaling:
-  enabled: true
+  enabled: false
   minReplicas: 1
-  maxReplicas: 2
+  maxReplicas: 1
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 70
 
 resources:
   requests:
-    cpu: 50m
-    memory: 128Mi
+    cpu: 500m
+    memory: 1Gi
 
 pm2_metrics:
   enabled: true

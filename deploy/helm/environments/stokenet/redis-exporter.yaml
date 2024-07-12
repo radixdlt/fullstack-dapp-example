@@ -1,3 +1,0 @@
-redisAddress: radquest-stokenet-redis.rtlj-prod.internal
-rbac:
-  pspEnabled: false

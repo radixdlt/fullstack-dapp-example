@@ -4,7 +4,7 @@ image:
 params:
   PORT: 3000
   PUBLIC_NETWORK_ID: 2
-  PUBLIC_RADQUEST_API_URL: https://radquest-mainnet.rtlj-prod.extratools.works
+  PUBLIC_RADQUEST_API_URL: https://radquest.io
   PUBLIC_LOG_LEVEL: debug
   REDIS_HOST: radquest-mainnet-redis.rtlj-prod.internal
   REDIS_PORT: 6379
@@ -53,16 +53,16 @@ ingress:
 replicaCount: 1
 
 autoscaling:
-  enabled: false
+  enabled: true
   minReplicas: 1
-  maxReplicas: 2
+  maxReplicas: 3
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 70
 
 resources:
   requests:
     cpu: 50m
-    memory: 128Mi
+    memory: 256Mi
 
 pm2_metrics:
   enabled: true

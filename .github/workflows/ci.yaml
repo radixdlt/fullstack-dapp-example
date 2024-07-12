@@ -16,9 +16,6 @@ env:
   active_network: 'stokenet'
   active_public_network_id: '2'
   active_public_log_level: 'debug'
-  prerelease_network: 'stokenet'
-  prerelease_public_network_id: '2'
-  prerelease_public_log_level: 'debug'
   release_network: 'mainnet'
   release_public_network_id: '1'
   release_public_log_level: 'info'
@@ -132,10 +129,6 @@ jobs:
             echo "NETWORK_NAME=${{ env.release_network }}" >> $GITHUB_ENV
             echo "PUBLIC_NETWORK_ID=${{ env.release_public_network_id }}"  >> $GITHUB_OUTPUT
             echo "PUBLIC_LOG_LEVEL=${{ env.release_public_log_level }}"  >> $GITHUB_OUTPUT
-          elif [ "${{ github.event.action }}" = "prereleased" ]; then
-            echo "NETWORK_NAME=${{ env.prerelease_network }}" >> $GITHUB_ENV
-            echo "PUBLIC_NETWORK_ID=${{ env.prerelease_public_network_id }}"  >> $GITHUB_OUTPUT
-            echo "PUBLIC_LOG_LEVEL=${{ env.prerelease_public_log_level }}"  >> $GITHUB_OUTPUT
           elif [ "${{ github.ref }}" = "refs/heads/main" -a "${{ github.event_name }}" = 'push' ] || [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "NETWORK_NAME=${{ env.active_network }}" >> $GITHUB_ENV
             echo "PUBLIC_NETWORK_ID=${{ env.active_public_network_id }}"  >> $GITHUB_OUTPUT
@@ -491,32 +484,6 @@ jobs:
     secrets:
       aws_deployment_account_id: ${{ secrets.AWS_DEV_ACCOUNT_ID }}
       secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
-
-  deploy_stokenet:
-    if: github.event_name == 'release' && github.event.action == 'prereleased'
-    name: Deploy STOKENET
-    needs:
-      - push-dapp
-      - push-swap
-      - push-admin
-      - push-notification
-      - push-transaction-stream
-      - push-worker
-      - setup-tags
-    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
-    with:
-      github_environment: 'stokenet'
-      github_branch: '${{ github.ref }}'
-      jenkins_job_name: 'kubernetes-deployments/job/radquest'
-      application_name: 'radquest'
-      kubernetes_namespace: 'radquest-stokenet'
-      aws_eks_cluster: 'rtlj-prod'
-      aws_iam_role_name: 'jenkins-radquest-stokenet-deployer'
-      helmfile_environment: 'stokenet'
-      helmfile_extra_vars: 'ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}'
-    secrets:
-      secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
-      aws_deployment_account_id: ${{ secrets.AWS_PROD_ACCOUNT_ID }}
 
   deploy_mainnet:
     if: github.event_name == 'release' && github.event.action == 'released'

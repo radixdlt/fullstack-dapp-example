@@ -23,9 +23,13 @@ ingress:
           pathType: ImplementationSpecific
 
 autoscaling:
-  enabled: false
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
 
 resources:
   requests:
     cpu: 50m
-    memory: 128Mi
+    memory: 256Mi

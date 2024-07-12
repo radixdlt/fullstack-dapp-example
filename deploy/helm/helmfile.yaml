@@ -1,7 +1,6 @@
 environments:
   dev: {}
   pr: {}
-  stokenet: {}
   mainnet: {}
 ---
 helmDefaults:
