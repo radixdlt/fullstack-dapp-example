@@ -4,7 +4,7 @@ import { transactionBuilder } from '../../transaction/transactionBuilder'
 export const newQuestRewards = () => {
   const transactionManifest = `     
         CALL_METHOD
-            Address("${config.radQuest.accounts.payer.address}")
+            Address("${config.radQuest.accounts.system.address}")
             "lock_fee"
             Decimal("100")
         ;
@@ -48,7 +48,7 @@ export const newQuestRewards = () => {
        `
   const transaction = transactionBuilder({
     transactionManifest,
-    signers: ['payer', 'owner', 'system']
+    signers: ['owner', 'system']
   })
   return transaction
     .submit()

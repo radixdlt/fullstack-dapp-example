@@ -4,7 +4,7 @@ import { transactionBuilder } from '../../transaction/transactionBuilder'
 export const newClamDex = (name: string, dappDefinition: string, stablePrice: boolean) => {
   const transactionManifest = `
     CALL_METHOD
-    Address("${config.radQuest.accounts.payer.address}")
+    Address("${config.radQuest.accounts.system.address}")
     "lock_fee"
     Decimal("500")
 ;
@@ -50,7 +50,7 @@ CALL_FUNCTION
 `
   const transaction = transactionBuilder({
     transactionManifest,
-    signers: ['payer', 'owner', 'system']
+    signers: ['owner', 'system']
   })
   return transaction
     .submit()

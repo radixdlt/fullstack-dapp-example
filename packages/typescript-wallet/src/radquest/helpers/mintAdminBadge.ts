@@ -14,7 +14,7 @@ export const mintAdminBadge = ({
 }) => {
   const transactionManifest = `
         CALL_METHOD 
-          Address("${config.radQuest.accounts.payer.address}") 
+          Address("${config.radQuest.accounts.system.address}") 
           "lock_fee"
           Decimal("10")
         ;
@@ -38,5 +38,5 @@ export const mintAdminBadge = ({
           Enum<0u8>()
         ;
         `
-  return transactionBuilder({ transactionManifest, signers: ['payer', 'owner', 'system'] }).submit()
+  return transactionBuilder({ transactionManifest, signers: ['owner', 'system'] }).submit()
 }

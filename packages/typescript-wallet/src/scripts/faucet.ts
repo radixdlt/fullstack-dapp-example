@@ -5,10 +5,10 @@ import { TransactionHelper } from '../transaction'
 
 const transactionHelper = TransactionHelper({
   networkId: config.network.networkId,
-  onSignature: withSigners(config.network.networkId, 'payer')
+  onSignature: withSigners(config.network.networkId, 'system')
 })
 
 transactionHelper
-  .getXrdFromFaucet(config.radQuest.accounts.payer)
+  .getXrdFromFaucet(config.radQuest.accounts.system)
   .map((res) => logger.debug(res))
   .mapErr((err) => logger.error(err))

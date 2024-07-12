@@ -73,7 +73,10 @@ None
 ;
 `
 
-  const transaction = transactionBuilder({ transactionManifest, signers: ['payer'] })
+  const transaction = transactionBuilder({
+    transactionManifest,
+    signers: ['payer']
+  })
 
   return transaction
     .submit()
