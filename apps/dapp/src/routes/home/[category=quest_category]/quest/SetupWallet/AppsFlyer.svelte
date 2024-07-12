@@ -12,7 +12,7 @@
     method: parsed.platform.type === 'desktop' ? 'desktop' : 'mobile'
   }
   const encode = (text: string) =>
-    btoa(text).replaceAll(/\+/g, '-').replaceAll(/\//g, '_').replaceAll(/\=/g, '')
+    btoa(text).replaceAll(/\+/g, '-').replaceAll(/\//g, '_').replaceAll(/=/g, '')
 </script>
 
 <a href={`${oneLinkUrl}?${paramName}=${encode(JSON.stringify(params))}`}>
