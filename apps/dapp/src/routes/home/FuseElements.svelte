@@ -155,7 +155,7 @@
             Address("${$user?.accountAddress}")
             "withdraw" 
             Address("${publicConfig.resources.elementAddress}")
-            Decimal("10") 
+            Decimal("5") 
         ;
 
         TAKE_ALL_FROM_WORKTOP 

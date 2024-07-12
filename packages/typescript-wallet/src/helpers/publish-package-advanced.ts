@@ -1,5 +1,7 @@
 import { bufferToUint8Array, hash } from '.'
-import { radixEngineClient } from '..'
+import { config } from '../config'
+import { decodeSbor } from '../transaction/decodeSbor'
+import { transactionBuilder } from '../transaction/transactionBuilder'
 
 export const publishPackageAdvanced = ({
   rpd,
@@ -10,15 +12,12 @@ export const publishPackageAdvanced = ({
   wasm: Buffer
   adminBadge: string
 }) =>
-  radixEngineClient.decodeSbor(rpd).andThen((sborDecodedSchema) =>
-    radixEngineClient
-      .getManifestBuilder()
-      .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
-        const wasmHash = hash(wasm).toString('hex')
-        return convertStringManifest(
-          `     
+  decodeSbor(rpd)
+    .map((sborDecodedSchema) => {
+      const wasmHash = hash(wasm).toString('hex')
+      const transactionManifest = `
         CALL_METHOD
-          Address("${wellKnownAddresses.accountAddress.payerAccount}")
+          Address("${config.radQuest.accounts.payer.address}")
           "lock_fee"
           Decimal("500")
         ;
@@ -38,16 +37,19 @@ export const publishPackageAdvanced = ({
           Blob("${wasmHash}")
           Map<String, Tuple>()
           None;
-       `,
-          [bufferToUint8Array(wasm)]
-        )
-          .andThen((value) =>
-            submitTransaction({ transactionManifest: value, signers: ['systemAccount'] })
-          )
-          .andThen(({ txId }) =>
-            radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-          )
-          .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
-          .map((details): string => details.createdEntities[0].entity_address!)
+        `
+      const transaction = transactionBuilder({
+        transactionManifest,
+        signers: ['payer', 'system'],
+        optional: { blobs: [bufferToUint8Array(wasm)] }
       })
-  )
+
+      return transaction
+        .submit()
+        .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
+        .map((createdEntities): string => {
+          console.log(`\n`, JSON.stringify(createdEntities), `\n`)
+          return createdEntities[0].entity_address!
+        })
+    })
+    .andThen((res) => res)

@@ -166,6 +166,7 @@ export const TransactionHelper = ({
   const submitTransaction = (
     transactionManifest: TransactionManifest | string,
     optional?: Partial<{
+      blobs: Uint8Array[]
       message: Message
       onTransactionId: (transactionId: string) => ResultAsync<any, unknown>
     }>
@@ -178,7 +179,7 @@ export const TransactionHelper = ({
     if (typeof transactionManifest === 'string') console.log(transactionManifest)
     return (
       typeof transactionManifest === 'string'
-        ? transformStringManifest(transactionManifest)
+        ? transformStringManifest(transactionManifest, optional?.blobs)
         : okAsync(transactionManifest)
     ).andThen((transactionManifest) =>
       buildTransaction(transactionManifest, message).andThen(
@@ -274,11 +275,36 @@ export const TransactionHelper = ({
       })
       .andThen(submitTransaction)
 
+  const getCommittedDetails = (txId: string) =>
+    ResultAsync.fromPromise(
+      gatewayClient.gatewayApiClient.transaction.getCommittedDetails(txId),
+      (error) => error as Error
+    ).map((res) => ({
+      epoch: res.transaction.epoch,
+      round: res.transaction.round,
+      status: res.transaction.transaction_status,
+      date: res.transaction.confirmed_at,
+      fee: res.transaction.fee_paid,
+      message: (res.transaction.message as any)?.content?.value,
+      encodedManifest: res.transaction.raw_hex,
+      receipt: res.transaction.receipt,
+      events: res.transaction.receipt?.events,
+      affectedEntities: res.transaction.affected_global_entities || [],
+      createdEntities:
+        ((res.transaction.receipt?.state_updates as any)?.new_global_entities as any[]) || [],
+      stateVersion: res.transaction.state_version
+    }))
+
+  const getCreatedEntities = (txId: string) =>
+    getCommittedDetails(txId).map((res) => res.createdEntities)
+
   return {
     submitTransaction,
     getXrdFromFaucet,
     transformStringManifest,
     pollTransactionStatus,
-    getKnownAddresses
+    getKnownAddresses,
+    getCommittedDetails,
+    getCreatedEntities
   }
 }

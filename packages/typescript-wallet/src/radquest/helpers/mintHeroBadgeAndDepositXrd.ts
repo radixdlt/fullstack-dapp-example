@@ -1,5 +1,4 @@
 import { config } from '../../config'
-import { radixEngineClient } from '../../config'
 
 export const mintHeroBadgeAndDepositXrd = (
   userId: string,
@@ -16,18 +15,16 @@ export const mintHeroBadgeAndDepositXrd = (
     heroBadgeAddress = config.radQuest.badges.heroBadgeAddress,
     adminBadgeAddress = config.radQuest.badges.adminBadgeAddress
   } = badgeAddresses ?? {}
-  return radixEngineClient
-    .getManifestBuilder()
-    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
-      const transactionManifest = `
+
+  const transactionManifest = `
         CALL_METHOD 
-          Address("${wellKnownAddresses.accountAddress.payerAccount}") 
+          Address("${config.radQuest.accounts.payer.address}") 
           "lock_fee"
           Decimal("10")
         ;
 
         CALL_METHOD
-          Address("${wellKnownAddresses.accountAddress.systemAccount}")
+          Address("${config.radQuest.accounts.system.address}")
           "create_proof_of_amount"
           Address("${adminBadgeAddress}")
           Decimal("1")
@@ -43,7 +40,7 @@ export const mintHeroBadgeAndDepositXrd = (
         ;
 
         CALL_METHOD
-          Address("${wellKnownAddresses.accountAddress.payerAccount}")
+          Address("${config.radQuest.accounts.payer.address}")
           "withdraw"
           Address("${wellKnownAddresses.resourceAddresses.xrd}")
           Decimal("${config.directXrdDepositAmount}");
@@ -54,13 +51,7 @@ export const mintHeroBadgeAndDepositXrd = (
           Expression("ENTIRE_WORKTOP")
           Enum<0u8>()
         ;`
-      console.log(transactionManifest)
-      return convertStringManifest(transactionManifest)
-        .andThen((transactionManifest) =>
-          submitTransaction({ transactionManifest, signers: ['systemAccount'] })
-        )
-        .andThen(({ txId }) =>
-          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-        )
-    })
+  return transactionBuilder({ transactionManifest, signers: ['payer', 'system'] })
+    .submit()
+    .andThen(({ transactionId }) => transactionId)
 }

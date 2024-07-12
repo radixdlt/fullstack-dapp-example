@@ -1,23 +1,21 @@
-import { config, radixEngineClient } from '../../config'
+import { config } from '../../config'
+import { transactionBuilder } from '../../transaction/transactionBuilder'
 
 export const newRefinery = () => {
-  return radixEngineClient
-    .getManifestBuilder()
-    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
-      convertStringManifest(`
+  const transactionManifest = `
         CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress.payerAccount}")
+            Address("${config.radQuest.accounts.system.address}")
             "lock_fee"
             Decimal("500")
         ;
         CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress.ownerAccount}")
+            Address("${config.radQuest.accounts.owner.address}")
             "create_proof_of_amount"
             Address("${config.radQuest.badges.superAdminBadgeAddress}") 
             Decimal("1")
         ; 
         CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress.systemAccount}")
+            Address("${config.radQuest.accounts.system.address}")
             "withdraw"
             Address("${config.radQuest.badges.adminBadgeAddress}")
             Decimal("3")
@@ -50,24 +48,20 @@ export const newRefinery = () => {
             Address("${config.radQuest.resources.radgemAddress}")
             Address("${config.radQuest.resources.radmorphAddress}")
         ;
-        `)
-        .andThen((value) =>
-          submitTransaction({
-            transactionManifest: value,
-            signers: ['systemAccount', 'ownerAccount']
-          })
-        )
-        .andThen(({ txId }) =>
-          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-        )
-        .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
-        .map(
-          (details): Record<string, string> => ({
-            radgemForgeAddress: details.createdEntities[0].entity_address,
-            radmorphForgeAddress: details.createdEntities[1].entity_address,
-            imageOracleAddress: details.createdEntities[2].entity_address,
-            refineryAddress: details.createdEntities[3].entity_address
-          })
-        )
+        `
+  const transaction = transactionBuilder({
+    transactionManifest,
+    signers: ['owner', 'system']
+  })
+  return transaction
+    .submit()
+    .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
+    .map(
+      (createdEntities): Record<string, string> => ({
+        radgemForgeAddress: createdEntities[0].entity_address,
+        radmorphForgeAddress: createdEntities[1].entity_address,
+        imageOracleAddress: createdEntities[2].entity_address,
+        refineryAddress: createdEntities[3].entity_address
+      })
     )
 }

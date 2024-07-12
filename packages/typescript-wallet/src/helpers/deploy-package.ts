@@ -1,5 +1,6 @@
-import { radixEngineClient } from '../config'
-import { bufferToUint8Array } from './blake2b'
+import { config } from '../config'
+import { decodeSbor } from '../transaction/decodeSbor'
+import { transactionBuilder } from '../transaction/transactionBuilder'
 import { getOwnerBadge } from './getOwnerBadge'
 import { hash } from './hash'
 
@@ -12,59 +13,33 @@ export const deployPackage = ({
   rpdBuffer: Buffer
   lockFee: number
 }) =>
-  radixEngineClient
-    .getManifestBuilder()
-    .andThen((engineToolkit) =>
-      radixEngineClient.decodeSbor(rpdBuffer).map((rpdDecoded) => ({
-        wasmBuffer,
-        rpdBuffer,
-        rpdDecoded,
-        ...engineToolkit
-      }))
-    )
-    .andThen(
-      ({
-        wasmBuffer,
-        rpdDecoded,
-        convertStringManifest,
-        submitTransaction,
-        wellKnownAddresses
-      }) => {
-        const wasmHash = hash(wasmBuffer).toString('hex')
+  decodeSbor(rpdBuffer)
+    .map((rpdDecoded) => {
+      const wasmHash = hash(wasmBuffer).toString('hex')
+      const transactionManifest = `
+CALL_METHOD
+  Address("${config.radQuest.accounts.payer.address}")
+  "lock_fee"
+  Decimal("${lockFee}")
+;
+PUBLISH_PACKAGE
+  ${rpdDecoded}
+  Blob("${wasmHash}") 
+  Map<String, Tuple>()  
+;
+CALL_METHOD
+  Address("${config.radQuest.accounts.system.address}")
+  "deposit_batch"
+  Expression("ENTIRE_WORKTOP")
+;
+`
+      const transaction = transactionBuilder({ transactionManifest, signers: ['payer'] })
 
-        return convertStringManifest(`
-          CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress.payerAccount}")
-            "lock_fee"
-            Decimal("${lockFee}")
-          ;
-
-          PUBLISH_PACKAGE
-            ${rpdDecoded}
-            Blob("${wasmHash}") 
-            Map<String, Tuple>()  
-          ;
-          
-          CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress.systemAccount}")
-            "deposit_batch"
-            Expression("ENTIRE_WORKTOP")
-          ;
-    `)
-          .andThen(({ instructions }) =>
-            submitTransaction({
-              transactionManifest: { blobs: [bufferToUint8Array(wasmBuffer)], instructions },
-              signers: []
-            })
-          )
-          .andThen(({ txId }) =>
-            radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-          )
-          .andThen((txId) =>
-            radixEngineClient.gatewayClient.getCommittedDetails(txId).map((res) => ({
-              packageAddress: res.createdEntities[0].entity_address,
-              ...getOwnerBadge(res.events)
-            }))
-          )
-      }
-    )
+      return transaction.submit().andThen(({ transactionId }) =>
+        transaction.helper.getCommittedDetails(transactionId).map((res) => ({
+          packageAddress: res.createdEntities[0].entity_address,
+          ...getOwnerBadge(res.events)
+        }))
+      )
+    })
+    .andThen((res) => res)

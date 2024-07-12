@@ -1,24 +1,21 @@
-import { radixEngineClient } from '../..'
 import { config } from '../../config'
+import { transactionBuilder } from '../../transaction/transactionBuilder'
 
-export const newGiftBoxOpener = () =>
-  radixEngineClient
-    .getManifestBuilder()
-    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
-      convertStringManifest(`     
+export const newGiftBoxOpener = () => {
+  const transactionManifest = `     
         CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress.payerAccount}")
+            Address("${config.radQuest.accounts.system.address}")
             "lock_fee"
             Decimal("50")
         ;
         CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress.ownerAccount}")
+            Address("${config.radQuest.accounts.owner.address}")
             "create_proof_of_amount"
             Address("${config.radQuest.badges.superAdminBadgeAddress}") 
             Decimal("1")
         ;  
         CALL_METHOD
-            Address("${wellKnownAddresses.accountAddress.systemAccount}")
+            Address("${config.radQuest.accounts.system.address}")
             "withdraw"
             Address("${config.radQuest.badges.adminBadgeAddress}")
             Decimal("1")
@@ -47,20 +44,13 @@ export const newGiftBoxOpener = () =>
           Address("${config.radQuest.badges.heroBadgeAddress}")
           Bucket("admin_badge")
         ;
-       `)
-        .andThen((value) =>
-          submitTransaction({
-            transactionManifest: value,
-            signers: ['systemAccount', 'ownerAccount']
-          })
-        )
-        .andThen(({ txId }) =>
-          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-        )
-        .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
-        .map(
-          (details): Record<string, string> => ({
-            giftBoxOpenerAddress: details.createdEntities[0].entity_address
-          })
-        )
-    )
+       `
+  const transaction = transactionBuilder({
+    transactionManifest,
+    signers: ['owner', 'system']
+  })
+  return transaction
+    .submit()
+    .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
+    .map((createdEntities) => createdEntities[0].entity_address!)
+}

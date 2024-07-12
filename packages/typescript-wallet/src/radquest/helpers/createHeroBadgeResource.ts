@@ -1,4 +1,5 @@
-import { config, radixEngineClient } from '../../config'
+import { config } from '../../config'
+import { transactionBuilder } from '../../transaction/transactionBuilder'
 
 export const createHeroBadgeResource = ({
   superAdminBadgeAddress,
@@ -7,15 +8,12 @@ export const createHeroBadgeResource = ({
   superAdminBadgeAddress: string
   adminBadgeAddress: string
 }) => {
-  return radixEngineClient
-    .getManifestBuilder()
-    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) =>
-      convertStringManifest(`
-      CALL_METHOD
-        Address("${wellKnownAddresses.accountAddress.payerAccount}")
-        "lock_fee"
-        Decimal("50")
-      ;
+  const transactionManifest = `
+        CALL_METHOD
+            Address("${config.radQuest.accounts.payer.address}")
+            "lock_fee"
+            Decimal("50")
+        ;
 
         CREATE_NON_FUNGIBLE_RESOURCE
             Enum<1u8>(
@@ -180,14 +178,14 @@ export const createHeroBadgeResource = ({
             )
             Enum<0u8>()
         ;
-        `)
-        .andThen((transactionManifest) =>
-          submitTransaction({ transactionManifest, signers: ['systemAccount'] })
-        )
-        .andThen(({ txId }) =>
-          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-        )
-        .andThen((txId) => radixEngineClient.gatewayClient.getCommittedDetails(txId))
-        .map((details): string => details.createdEntities[0].entity_address!)
-    )
+        `
+  const transaction = transactionBuilder({
+    transactionManifest,
+    signers: ['payer']
+  })
+
+  return transaction
+    .submit()
+    .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
+    .map((createdEntities): string => createdEntities[0].entity_address!)
 }

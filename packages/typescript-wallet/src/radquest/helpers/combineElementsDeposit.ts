@@ -1,21 +1,16 @@
-import { RadixEngineClient } from '../../clients'
 import { config } from '../../config'
+import { transactionBuilder } from '../../transaction/transactionBuilder'
 
 export const combineElementsDeposit = ({
   accountAddress,
-  userId,
-  radixEngineClient
+  userId
 }: {
   accountAddress: string
   userId: string
-  radixEngineClient: ReturnType<typeof RadixEngineClient>
 }) => {
-  return radixEngineClient
-    .getManifestBuilder()
-    .andThen(({ wellKnownAddresses, convertStringManifest, submitTransaction }) => {
-      const transactionManifest = `
+  const transactionManifest = `
         CALL_METHOD 
-          Address("${wellKnownAddresses.accountAddress.testAccount}") 
+          Address("${config.radQuest.accounts.payer.address}") 
           "lock_fee"
           Decimal("10")
         ;
@@ -35,7 +30,7 @@ export const combineElementsDeposit = ({
           Address("${accountAddress}")
           "withdraw" 
           Address("${config.radQuest.resources.elementAddress}")
-          Decimal("10") 
+          Decimal("5") 
         ;
 
         TAKE_ALL_FROM_WORKTOP 
@@ -50,11 +45,6 @@ export const combineElementsDeposit = ({
           Bucket("elements")
         ;
         `
-      console.log(transactionManifest)
-      return convertStringManifest(transactionManifest)
-        .andThen((transactionManifest) => submitTransaction({ transactionManifest, signers: [] }))
-        .andThen(({ txId }) =>
-          radixEngineClient.gatewayClient.pollTransactionStatus(txId).map(() => txId)
-        )
-    })
+  const transaction = transactionBuilder({ transactionManifest, signers: ['payer'] })
+  return transaction.submit()
 }

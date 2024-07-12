@@ -8,48 +8,48 @@ export const Addresses = (networkId: number) => {
       Stokenet: {
         badges: {
           adminBadgeAddress:
-            'resource_tdx_2_1t4d7sy9f2hc3s9w38dlm36mnajxcj6wn6gvrlvrhhjc2peazy3agdl',
+            'resource_tdx_2_1t4ry29fem4mn7f3yertq29a0muyf2ktu559zkqa07hletu233zyarh',
           superAdminBadgeAddress:
-            'resource_tdx_2_1t5g979v3szdnzludtdl3j9zefu7zcyma55wg5hr7yvth8ela0wvfw4',
+            'resource_tdx_2_1tk0e4rusrhmv5t6zt0p9tt7lp4trgvtjhg0n7rlrzkvssqjngsnsdr',
           heroBadgeAddress:
-            'resource_tdx_2_1ntzzh6cw63az3p5g0ak97dkvahdgxvk38v07lnlcddjcw94kacj58l',
+            'resource_tdx_2_1nfl34mhrc37j4m2uug5h86dq37qz4vku4l64uy9nkqdqflhqe2ue98',
           kycBadgeAddress: 'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan',
           instapassBadgeAddress:
             'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan'
         },
         resources: {
-          elementAddress: 'resource_tdx_2_1tk0nyp9a6p6jwt90utsffxzf7vsyqa6re8lz68sswwl2zp7fc372pq',
-          clamAddress: 'resource_tdx_2_1t57xphjyq8hstxf776rlpmhm0dtk36hvvemk5ntkrnzvvfvkw0xh6m',
-          radgemAddress: 'resource_tdx_2_1nfynmdhcjftpgwepydpqv2hu68z2qwd4lng32swnf9z3f3zj73u7u0',
+          elementAddress: 'resource_tdx_2_1thn009juacw4rqqpmyjg94mn8xe4wggjhg24ywmy02hpejcvyf97md',
+          clamAddress: 'resource_tdx_2_1t4yzvlcpmylv7l793atjylp0ww7lkyxqhue7353exfrmy20dkhga39',
+          radgemAddress: 'resource_tdx_2_1ntwug8aft5zle35lwnap5q8fnak8w7s7jnc7vlh2xh5ltye9epfx7c',
           morphEnergyCardAddress:
-            'resource_tdx_2_1nfryxzu7y5xj3f296jjrpk3el7u97q9cf0l7ea89vsu3p6j6ua0nzz',
-          radmorphAddress: 'resource_tdx_2_1n2ywedpf6kd3e96khelvp6c05ykeuprmvaasm7c4qmwtumualq9vnh',
+            'resource_tdx_2_1ngeluhd5fkhxza03h08lmn2rlny5a6at07tm6ah4fr9kh97zwtcxa6',
+          radmorphAddress: 'resource_tdx_2_1nt6u2lduqqxv0ggldtl8e4s8sjwrhe4j8fpfelychevus72fsmw7ax',
           ottercoinAddress:
-            'resource_tdx_2_1t552ls9tn8p92452kx4wpd3qksg6mgm7mx74ekew09n2hkjv3qanfz',
+            'resource_tdx_2_1tksdkqmhgvn25g2hnupqvw28kmzdmpjv44h7h9a3kqpmwh5jzt9frx',
           giftBox: {
-            Starter: 'resource_tdx_2_1t5nswz4tv90cr67h5cn8hpw62zvs50u90s2hqayqjtw3s9x3t584k5',
-            Simple: 'resource_tdx_2_1th5ngrqy3xkl4ce90yqn74wqd4efucdcn3zaegcg8km5yg730ksq6k',
-            Fancy: 'resource_tdx_2_1tkkmfgyp8yjfd0h555hjc4n3358de62ftnv25akkfhfpy4vj77uw3e',
-            Elite: 'resource_tdx_2_1t5ts7egnc8akwwa5uueq24nyyw7n2dnrs0cgfrhsywf0qcs8lja55c'
+            Starter: 'resource_tdx_2_1th7fkf05693fvffunfqw4p8m84jxdeuwrfzt3hpnvmnq3una48eavj',
+            Simple: 'resource_tdx_2_1t4u5phyrtd4t8u9glt40fdl09yky9r57varfc5xy9nx4ukgultpphr',
+            Fancy: 'resource_tdx_2_1th2zk6250rghhahxjkfl260tq28ay6skuffzr9hfmy9nuarwzucpqn',
+            Elite: 'resource_tdx_2_1t5yqzdlmwkc3r8qctzuwr48cftvtlv4zu3vqnduuncf8ca8su8h04n'
           }
         },
-        radQuestPackage: 'package_tdx_2_1p47g0ah5efzstj0ywcslylem62tne5eh05nu4jp7nnpjz4krl7prmf',
+        radQuestPackage: 'package_tdx_2_1p47pj8gly2xl7z4w527cuhj9ecdlljwrw6waqdhw0jnmpk0uyvauk2',
         clamDexPackage: 'package_tdx_2_1pkaz7qladfcj8ggam3cnxc0adfch39ezsv4qj5dh4p9qkqzs4n2w7h',
         components: {
-          heroBadgeForge: 'component_tdx_2_1cz9hluu9fuemr2gpvq7henugcgfzqps46rrg6ts3p8fjtz5lthslg2',
-          kycOracle: 'component_tdx_2_1czqsa5axakx6ve740hxafuulef7a50u5hmc9kmcxjp3pj6lm37xnyp',
-          questRewards: 'component_tdx_2_1cr9h09w76m5p3ctgkpg7ynxvj2q5gral3uxsr3nl8valhsz8p7w6l0',
-          giftBoxOpener: 'component_tdx_2_1crjxe0rdx4yzgv28wk2l99t85ks4e5fqhxu29xuj2r2lczdjnumy5g',
-          cardForge: 'component_tdx_2_1cpzu3v723ezqm3vv9s25cprdhwpajds8ua5dd55j64xmdjlv96cst3',
-          radgemForge: 'component_tdx_2_1cpvurndgpyxqpd0tfccjjuruner04238k3mrtrevk2re3cuwjyxt7v',
-          radmorphForge: 'component_tdx_2_1cp0jsq5sxc66n94gycyvfhum7fn3ktkdaulssdcmya7877v9cz8lzz',
-          imageOracle: 'component_tdx_2_1cplvxrpam3m99n870yn5zdq09yza25v9ezju89u9xx9lq0tzdd750t',
-          refinery: 'component_tdx_2_1czu5tzswgcp9qm64qm3du3v38uzmxl3uhpfs9tdzdztgf2yx6evmfg',
+          heroBadgeForge: 'component_tdx_2_1cp2rp4zst3ut5uw2pc87ev0878084c5n44nanexx39u83hguy9lfkj',
+          kycOracle: 'component_tdx_2_1cpn35vds8t9993avky26zqvdcnteukmfk04uy65ld4flzdqly7fkme',
+          questRewards: 'component_tdx_2_1crfy3dnyptchaa9pterflzz7kyvewcwnf5eh95zztextmm8pf9wz8m',
+          giftBoxOpener: 'component_tdx_2_1cr78xq2prkdmx60zk7vfxecekr89l3aahgf65ldp64509t4ar5fhju',
+          cardForge: 'component_tdx_2_1cpym8shh85k8av5vex9fnvcxv4enppgvunuvm9png40tz53uf855s0',
+          radgemForge: 'component_tdx_2_1cpyc6yg9r7zvty89e6kyg5nvrxxpvpl697pypmt0gsn7usrllaypfs',
+          radmorphForge: 'component_tdx_2_1cqwvrfl0dsh52r2sm8d8edm3xv6tfgenfu322wpcw5jm2jmkxta02y',
+          imageOracle: 'component_tdx_2_1cpgr9jy2lpqt56780e83zg06z8z9fjsjmsup30cw5wdrygtw9eqnma',
+          refinery: 'component_tdx_2_1cq46e9fpa58a66us5h8eh2v5wz8ysmt7awgy0mq8nazpmu43dnqq9e',
           kycOracleKeyValueStore:
-            'internal_keyvaluestore_tdx_2_1kzugqdyae6me77ecyctcxaqqhcrrxn27a6q3g93v0mtweslswh99r6',
+            'internal_keyvaluestore_tdx_2_1kzuv77chh2xnkcwy80sng70dqdgqf0hvgfd02s7asz4xnflr4zn82r',
           mayaRouter: 'component_tdx_2_mock_maya_router_address',
-          jettySwap: 'component_tdx_2_1cze9r6jj40czllh7zufv37x7v3mr4tmsal9uapn9wq5vd928x0l62a',
-          lettySwap: 'component_tdx_2_1crave2l8r62245v2le8ksqvajsuaamksff32cmkrw2uz7wq9794yd0'
+          jettySwap: 'component_tdx_2_1cza82ye8fwj7qa9lytzpwtdh9v90l4n7v75f0w4hgh2srhuhd5jql3',
+          lettySwap: 'component_tdx_2_1cpl4zgfn52fqsv9y9qvqps8ttsd42kjfmk097rkfvuylh49c6g5j3k'
         },
         xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
         accounts: {
