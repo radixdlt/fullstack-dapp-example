@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-
   let item: HTMLElement
 
   let disabled = false

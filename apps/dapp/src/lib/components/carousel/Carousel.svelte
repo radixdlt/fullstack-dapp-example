@@ -9,8 +9,6 @@
   let isScrolledToStart: boolean
   let isScrolledToEnd: boolean
 
-  let observer: MutationObserver
-
   let items: HTMLElement[]
 
   export const scrollToNext = () => {
@@ -21,26 +19,23 @@
     })
   }
 
+  const detectScolledToStart = () => {
+    isScrolledToStart = carousel.scrollLeft === 0
+  }
+
+  const detectScolledToEnd = () => {
+    isScrolledToEnd = carousel.scrollLeft + carousel.offsetWidth === carousel.scrollWidth
+  }
+
   onMount(() => {
     setTimeout(() => {
       carousel.scrollTo({ left: 0, behavior: 'instant' })
     }, 0)
 
-    items = Array.from(carousel.querySelectorAll('.item')) as HTMLElement[]
-
-    if (items.length === 0) return
-
-    observer = new MutationObserver(() => {
-      isScrolledToEnd = !items[items.length - 1].classList.contains('disabled')
-      isScrolledToStart = !items[0].classList.contains('disabled')
+    carousel.addEventListener('scroll', () => {
+      detectScolledToStart()
+      detectScolledToEnd()
     })
-
-    observer.observe(items[0], { attributes: true })
-    observer.observe(items[items.length - 1], { attributes: true })
-
-    return () => {
-      observer.disconnect()
-    }
   })
 
   let canScroll = true
