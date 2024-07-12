@@ -68,9 +68,19 @@ const getReferrals = () =>
     })
   ).map(({ data }) => data)
 
+const getNameByRefferalCode = (referralCode: string) =>
+  fetchWrapper<{
+    name: string
+  }>(
+    fetch(`/api/referral/${referralCode}`, {
+      method: 'GET'
+    })
+  ).map(({ data }) => data)
+
 export const userApi = {
   me,
   getReferrals,
+  getNameByRefferalCode,
   allowAccountAddressToMintHeroBadge,
   hasReceivedXrd,
   setUserFields,

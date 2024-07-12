@@ -33,7 +33,8 @@ export const UserController = ({
   const getUser = (userId: string): ControllerMethodOutput<User | null> =>
     userModel
       .getById(userId, {
-        email: true
+        email: true,
+        referredByUser: true
       })
       .map((data) => ({ data, httpResponseCode: 200 }))
 
@@ -256,12 +257,18 @@ export const UserController = ({
       )
   }
 
+  const getNameByReferralCode = (referralCode: string) =>
+    userModel
+      .getByReferralCode(referralCode)
+      .map((data) => ({ data: { name: data.name }, httpResponseCode: 200 }))
+
   return {
     getUser,
     doesTransactionExist,
     allowAccountAddressToMintHeroBadge,
     setAccountAddress,
     populateResources,
+    getNameByReferralCode,
     setUserName,
     getReferrals,
     directDepositXrd,

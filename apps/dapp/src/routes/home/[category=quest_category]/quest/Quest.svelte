@@ -20,6 +20,7 @@
   import type { QuestRequirement } from '$lib/server/user-quest/controller'
   import QuizJettyPage from './QuizJettyPage.svelte'
   import { writable } from 'svelte/store'
+  import { htmlReplace } from '$lib/helpers/html-replace'
 
   type CompleteStep = _Step<'complete'> & { id: 'complete' }
 
@@ -249,7 +250,10 @@
     <ClaimRewards
       bind:this={claimRewards}
       questId={id}
-      text={$quests[id].text['claim.md']}
+      text={htmlReplace($quests[id].text?.['claim.md'], {
+        name: $user?.name,
+        inviter_name: $user?.referredByUser?.name
+      })}
       on:claimed={skip}
     />
   {/if}

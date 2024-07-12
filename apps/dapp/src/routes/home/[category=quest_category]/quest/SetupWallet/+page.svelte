@@ -14,6 +14,7 @@
   import SetUsername from './SetUsername.svelte'
   import { userApi } from '$lib/api/user-api'
   import Checkbox from '$lib/components/checkbox/Checkbox.svelte'
+  import { htmlReplace } from '$lib/helpers/html-replace'
 
   export let data: PageData
 
@@ -319,7 +320,7 @@
   {/if}
 
   {#if render('18')}
-    {@html text['18.md']}
+    {@html htmlReplace(text['18.md'], { name: $user?.name || '' })}
   {/if}
 
   {#if render('19')}

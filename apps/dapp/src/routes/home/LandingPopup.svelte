@@ -9,8 +9,25 @@
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import { onMount } from 'svelte'
   import { user } from '../../stores'
+  import { okAsync } from 'neverthrow'
+  import { userApi } from '$lib/api/user-api'
+  import { htmlReplace } from '$lib/helpers/html-replace'
 
-  type Popup = LandingPopupDefinition & { html: string; id: LandingPopupId }
+  type Replacer = (params: any) => (html: string) => Promise<string>
+  type Popup = LandingPopupDefinition & {
+    html: string
+    id: LandingPopupId
+    replacer?: ReturnType<Replacer>
+  }
+
+  const extensions: Partial<Record<LandingPopupId, Replacer>> = {
+    [LandingPopupId.UserReferral]: (params: URLSearchParams) => (html: string) =>
+      userApi
+        .getNameByRefferalCode(params.get('ref') || '')
+        .map(({ name }) => htmlReplace(html, { inviter_name: name }))
+        .orElse(() => okAsync(html))
+        .unwrapOr(html)
+  }
 
   export let definitions: Popup[]
 
@@ -20,14 +37,19 @@
   onMount(() => {
     seenLandingPopup = !!(useLocalStorage('seen-landing-popup').get() || $user)
     const searchParams = new URLSearchParams(window.location.search)
-    definitions.find((definition) => {
+    definitions.find(async (definition) => {
       if (
         (definition.queryParamValue &&
           searchParams.has(definition.queryParamName) &&
           searchParams.get(definition.queryParamName) === definition.queryParamValue) ||
         (searchParams.has(definition.queryParamName) && !definition.queryParamValue)
       ) {
+        const replacer = extensions[definition.id]
+        if (replacer) {
+          definition.replacer = replacer(searchParams)
+        }
         visibleLandingPopup = definition
+
         return true
       }
     })
@@ -57,7 +79,13 @@
       </div>
 
       <div class="landing-popup-content">
-        {@html visibleLandingPopup.html}
+        {#if visibleLandingPopup.replacer}
+          {#await visibleLandingPopup.replacer(visibleLandingPopup.html) then html}
+            {@html html}
+          {/await}
+        {:else}
+          {@html visibleLandingPopup.html}
+        {/if}
 
         <div class="image only-mobile">
           <img src={JettyImage} alt={$i18n.t('main:landingPagePopup.jetty-img-alt')} />
