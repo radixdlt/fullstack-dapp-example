@@ -238,6 +238,7 @@
     background-color: var(--color-background-dark);
     height: 34rem;
     width: 25rem;
+    max-height: 80%;
     border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
     position: absolute;
     bottom: 0;
