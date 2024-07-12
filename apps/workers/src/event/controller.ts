@@ -341,7 +341,10 @@ export const EventWorkerController = ({
     }
 
     switch (type) {
-      case EventId.QuestRewardDeposited:
+      case EventId.QuestRewardDeposited: {
+        const rewards = job.data.data.RewardDepositedEvent.rewards as Reward[]
+        const xrdReward = rewards.find((reward) => reward.name === 'xrd')
+        const xrdAmount = xrdReward ? parseFloat(xrdReward.amount) : 0
         const questId = job.data.data.RewardDepositedEvent.questId as string
         return dbTransactions
           .rewardsDeposited({
@@ -356,12 +359,13 @@ export const EventWorkerController = ({
             })
           )
           .map(() => undefined)
+      }
 
       case EventId.QuestRewardClaimed: {
-        const rewards = job.data.data.RewardDepositedEvent.reward as Reward[]
+        const questId = job.data.data.RewardClaimedEvent.questId as QuestId
+        const rewards = job.data.data.RewardClaimedEvent.rewards as Reward[]
         const xrdReward = rewards.find((reward) => reward.name === 'xrd')
         const xrdAmount = xrdReward ? parseFloat(xrdReward.amount) : 0
-        const questId = job.data.data.RewardClaimedEvent.questId as QuestId
 
         return updateQuestProgressStatus({ questId, userId, status: 'REWARDS_CLAIMED' })
           .andThen(() =>
