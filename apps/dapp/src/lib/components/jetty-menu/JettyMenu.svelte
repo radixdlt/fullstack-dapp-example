@@ -311,5 +311,7 @@
     width: 100%;
     background: var(--color-background-dark);
     z-index: 2;
+    overflow-y: scroll;
+    scrollbar-width: none;
   }
 </style>
