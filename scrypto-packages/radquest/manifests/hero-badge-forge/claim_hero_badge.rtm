@@ -7,7 +7,6 @@ CALL_METHOD
     Address("${hero_badge_forge}")
     "claim_badge"
     Address("${user_account}")
-    "${user_id}"
 ;
 CALL_METHOD
     Address("${user_account}")

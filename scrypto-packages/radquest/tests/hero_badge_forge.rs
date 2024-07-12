@@ -142,11 +142,7 @@ impl LedgerTestEnvironment {
 
         let manifest = ManifestBuilder::new()
             .lock_fee_from_faucet()
-            .call_method(
-                hero_badge_forge,
-                "claim_badge",
-                manifest_args!(account, user_id.clone()),
-            )
+            .call_method(hero_badge_forge, "claim_badge", manifest_args!(account))
             .call_method(
                 account,
                 "deposit_batch",

@@ -37,7 +37,6 @@
                   Address("${publicConfig.components.heroBadgeForge}")
                   "claim_badge"
                   Address("${$user?.accountAddress || ''}")
-                  "${$user?.id}"
               ;
               CALL_METHOD
                   Address("${$user?.accountAddress}")
