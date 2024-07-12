@@ -21,7 +21,7 @@
   import { user, type JettyNotification, type jettyNotifications } from '../../../stores'
   import { createEventDispatcher } from 'svelte'
   import Notification from './Notification.svelte'
-  import { swipe, type SwipeCustomEvent } from 'svelte-gestures'
+  import { swipe } from 'svelte-gestures'
 
   export let expanded = false
   export let poppedUp = true
@@ -97,16 +97,6 @@
 
   $: latestNotification = $notifications[$notifications.length - 1]
 
-  const handleSwipe = (event: SwipeCustomEvent) => {
-    if (event.detail.direction === 'top') {
-      expanded = true
-    }
-
-    if (event.detail.direction === 'bottom') {
-      expanded = false
-    }
-  }
-
   $: if (!showMenuItemContent) {
     $hideBackButton = false
     dispatch('item-content-closed')
@@ -134,7 +124,7 @@
   class="jetty-menu"
   style:--menuPosition={`${$menuPositionFactor * 98}%`}
   use:swipe
-  on:swipe={handleSwipe}
+  on:swipe={() => {}}
 >
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
