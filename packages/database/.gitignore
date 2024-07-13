@@ -1,1 +1,4 @@
 node_modules
+src/prisma/edge.js
+src/prisma/index.js
+src/prisma/libquery_*
