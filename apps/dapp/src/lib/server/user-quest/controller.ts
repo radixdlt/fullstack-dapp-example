@@ -6,7 +6,6 @@ import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId, Requirement } from 'content'
 import { config } from '$lib/config'
 import { hasAnyRewards } from '../helpers/has-any-rewards'
-import { logger } from '../../../../../../packages/typescript-wallet/src/helpers'
 export type QuestRequirement = { isHidden: boolean; isComplete: boolean }
 
 export type UserQuestController = ReturnType<typeof UserQuestController>
@@ -14,7 +13,8 @@ export const UserQuestController = ({
   userQuestModel,
   userModel,
   accountAddressModel,
-  transactionModel
+  transactionModel,
+  logger
 }: ControllerDependencies) => {
   const hasAllRequirementsCompleted = (questId: keyof Quests, userId: string) => {
     const questDefinition = QuestDefinitions()[questId]
