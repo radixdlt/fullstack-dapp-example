@@ -6,6 +6,7 @@ import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId, Requirement } from 'content'
 import { config } from '$lib/config'
 import { hasAnyRewards } from '../helpers/has-any-rewards'
+import { logger } from '../../../../../../packages/typescript-wallet/src/helpers'
 export type QuestRequirement = { isHidden: boolean; isComplete: boolean }
 
 export type UserQuestController = ReturnType<typeof UserQuestController>
@@ -118,9 +119,8 @@ export const UserQuestController = ({
           return okAsync(statusResult)
         })
         .andThen((statusResult) => {
-          const shouldTrackAccountAddress =
-            !statusResult && QuestDefinitions()[questId].trackedAccountAddress
-
+          const shouldTrackAccountAddress = !statusResult && questDefinition.trackedAccountAddress
+          logger.debug({ shouldTrackAccountAddress, statusResult, questDefinition })
           return shouldTrackAccountAddress
             ? userModel
                 .getById(userId, {})

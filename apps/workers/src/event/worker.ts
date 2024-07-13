@@ -36,24 +36,29 @@ export const EventWorker = (
         job: job.data
       })
 
-      const result = await getUserById(job.data.userId, dependencies.dbClient, {
-        email: true
-      }).andThen((user) => eventWorkerController.handler(job, user as UserExtended))
+      try {
+        const result = await getUserById(job.data.userId, dependencies.dbClient, {
+          email: true
+        }).andThen((user) => eventWorkerController.handler(job, user as UserExtended))
 
-      if (result.isErr()) {
-        logger.debug({
-          method: 'eventWorker.process.error',
-          id: job.id,
-          type: job.data.type,
-          transactionId: job.data.transactionId,
-          error: result.error
-        })
+        if (result.isErr()) {
+          logger.debug({
+            method: 'eventWorker.process.error',
+            id: job.id,
+            type: job.data.type,
+            transactionId: job.data.transactionId,
+            error: result.error
+          })
 
-        await eventModel(logger).update(job.data.transactionId, {
-          error: getReason(result.error) ?? 'UnknownError'
-        })
+          await eventModel(logger).update(job.data.transactionId, {
+            error: getReason(result.error) ?? 'UnknownError'
+          })
 
-        throw result.error
+          throw result.error
+        }
+      } catch (error) {
+        logger.error({ reason: 'unknown error', error })
+        throw error
       }
     },
     { connection }

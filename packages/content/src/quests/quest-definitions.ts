@@ -149,7 +149,7 @@ export const QuestDefinitions = () => {
     },
     TransferTokens: {
       id: 'TransferTokens',
-      trackedAccountAddress: false,
+      trackedAccountAddress: true,
       category: 'basic',
       rewards: [
         {
