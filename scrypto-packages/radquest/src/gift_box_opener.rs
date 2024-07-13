@@ -18,6 +18,7 @@ mod gift_box_opener {
         },
         methods {
             disable => restrict_to: [super_admin];
+            enable => restrict_to: [super_admin];
             open_gift_box => PUBLIC;
             claim_gift_box_rewards => PUBLIC;
             deposit_gift_box_rewards => restrict_to: [admin];
@@ -68,7 +69,10 @@ mod gift_box_opener {
 
         pub fn disable(&mut self) {
             assert!(self.enabled, "GiftBoxOpener already disabled");
-
+            self.enabled = false;
+        }
+        pub fn enable(&mut self) {
+            assert!(!self.enabled, "GiftBoxOpener already enabled");
             self.enabled = false;
         }
 

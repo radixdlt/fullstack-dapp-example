@@ -61,6 +61,7 @@ mod quest_rewards {
         },
         methods {
             disable => restrict_to: [super_admin];
+            enable => restrict_to: [super_admin];
             claim_reward => PUBLIC;
             deposit_reward => restrict_to: [admin];
         }
@@ -115,6 +116,10 @@ mod quest_rewards {
 
         pub fn disable(&mut self) {
             assert!(self.enabled, "QuestRewards component already disabled");
+            self.enabled = false;
+        }
+        pub fn enable(&mut self) {
+            assert!(!self.enabled, "QuestRewards already enabled");
             self.enabled = false;
         }
 

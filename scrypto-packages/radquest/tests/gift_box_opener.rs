@@ -261,6 +261,27 @@ fn can_disable_gift_box_opener() -> Result<(), RuntimeError> {
 }
 
 #[test]
+fn can_enable_disabled_gift_box_opener() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut gift_box_opener,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    gift_box_opener.disable(&mut env)?;
+
+    // Act
+    let result = gift_box_opener.enable(&mut env);
+
+    // Assert
+    assert!(result.is_ok());
+    Ok(())
+}
+
+#[test]
 fn cannot_open_gift_box_when_disabled() -> Result<(), RuntimeError> {
     // Arrange
     let Test {

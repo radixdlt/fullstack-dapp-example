@@ -24,6 +24,7 @@ mod morph_card_forge {
       },
       methods {
         disable => restrict_to: [super_admin];
+        enable => restrict_to: [super_admin];
         mint_card => restrict_to: [admin];
       }
     }
@@ -67,6 +68,10 @@ mod morph_card_forge {
 
         pub fn disable(&mut self) {
             assert!(self.enabled, "MorphCardForge component already disabled");
+            self.enabled = false;
+        }
+        pub fn enable(&mut self) {
+            assert!(!self.enabled, "MorphCardForge already enabled");
             self.enabled = false;
         }
 

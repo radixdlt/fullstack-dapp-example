@@ -31,6 +31,7 @@ mod refinery {
         },
         methods {
             disable => restrict_to: [super_admin];
+            enable => restrict_to: [super_admin];
             combine_elements_deposit => PUBLIC;
             combine_elements_mint_radgem => restrict_to: [admin];
             combine_elements_add_radgem_image => restrict_to: [admin];
@@ -114,6 +115,10 @@ mod refinery {
 
         pub fn disable(&mut self) {
             assert!(self.enabled, "Refinery component already disabled");
+            self.enabled = false;
+        }
+        pub fn enable(&mut self) {
+            assert!(!self.enabled, "Refinery  already enabled");
             self.enabled = false;
         }
 

@@ -24,6 +24,7 @@ mod hero_badge_forge {
       },
       methods {
         disable => restrict_to: [super_admin];
+        enable => restrict_to: [super_admin];
         add_user_account => restrict_to: [admin];
         claim_badge => PUBLIC;
         hero_completed_quest => restrict_to: [admin];
@@ -71,7 +72,10 @@ mod hero_badge_forge {
 
         pub fn disable(&mut self) {
             assert!(self.enabled, "HeroBadgeForge already disabled");
-
+            self.enabled = false;
+        }
+        pub fn enable(&mut self) {
+            assert!(!self.enabled, "HeroBadgeForge already enabled");
             self.enabled = false;
         }
 

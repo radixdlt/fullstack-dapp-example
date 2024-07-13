@@ -68,6 +68,7 @@ mod radgem_forge {
       },
       methods {
         disable => restrict_to: [super_admin];
+        enable => restrict_to: [super_admin];
         mint_radgem => restrict_to: [admin];
         update_key_image => restrict_to: [admin];
       }
@@ -109,6 +110,10 @@ mod radgem_forge {
 
         pub fn disable(&mut self) {
             assert!(self.enabled, "RadgemForge component already disabled");
+            self.enabled = false;
+        }
+        pub fn enable(&mut self) {
+            assert!(!self.enabled, "RadgemForge already enabled");
             self.enabled = false;
         }
 

@@ -31,6 +31,7 @@ mod radmorph_forge {
       },
       methods {
         disable => restrict_to: [super_admin];
+        enable => restrict_to: [super_admin];
         mint_radmorph => restrict_to: [admin];
       }
     }
@@ -72,6 +73,10 @@ mod radmorph_forge {
 
         pub fn disable(&mut self) {
             assert!(self.enabled, "RadmorphForge component already disabled");
+            self.enabled = false;
+        }
+        pub fn enable(&mut self) {
+            assert!(!self.enabled, "RadmorphForge already enabled");
             self.enabled = false;
         }
 
