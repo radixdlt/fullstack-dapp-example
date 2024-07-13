@@ -11,8 +11,6 @@
 
   let items: HTMLElement[]
 
-  $: console.log('is', isScrolledToStart)
-
   export const scrollToNext = () => {
     if (!carousel) return
     carousel.scrollBy({
@@ -34,10 +32,16 @@
       carousel.scrollTo({ left: 0, behavior: 'instant' })
     }, 0)
 
-    carousel.addEventListener('scroll', () => {
+    const eventCallback = () => {
       detectScolledToStart()
       detectScolledToEnd()
-    })
+    }
+
+    carousel.addEventListener('scroll', eventCallback)
+
+    return () => {
+      carousel.removeEventListener('scroll', eventCallback)
+    }
   })
 
   let canScroll = true
