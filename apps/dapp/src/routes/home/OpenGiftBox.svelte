@@ -19,6 +19,7 @@
   import TransformCard from '$lib/components/resource-card/TransformCard.svelte'
   import ElementCard from '$lib/components/resource-card/ElementCard.svelte'
   import { onMount } from 'svelte'
+  import ResourceCard from '$lib/components/resource-card/ResourceCard.svelte'
 
   const gateway = GatewayApi(publicConfig.networkId)
 
@@ -162,8 +163,6 @@
     (result) =>
       result.andThen((response) => {
         const entries = (response.entries[0]?.value.programmatic_json as any).elements[0]?.entries
-
-        console.log(entries)
 
         if (!entries) return errAsync(Error('Nothing to claim'))
 
@@ -378,18 +377,15 @@
         {#each Object.entries(ownedGiftBoxes) as [address, { amount, name, image }]}
           {#if amount > 0}
             <Item>
-              <button
-                class="gift-box"
-                on:click={() => {
+              <ResourceCard
+                selected={selectedGiftBox === address}
+                on:selected={() => {
                   selectedGiftBox = address
                 }}
               >
-                <div>
-                  <img src={image} alt="A gift box" />
-                </div>
-                <div>{$i18n.t('jetty:open-gift-box.gift-box-title', { name })}</div>
-                <SelectionIndicator selected={selectedGiftBox === address} />
-              </button>
+                <div class="gift-box" style:--image={`url(${image})`} />
+                <div slot="text">{$i18n.t('jetty:open-gift-box.gift-box-title', { name })}</div>
+              </ResourceCard>
             </Item>
           {/if}
         {/each}
@@ -414,7 +410,7 @@
   }
 
   .title {
-    font-size: var(--text-lg);
+    font-size: var(--text-md3);
     text-align: center;
   }
 
@@ -428,28 +424,23 @@
 
   .gift-box {
     position: relative;
-    margin: 0 var(--spacing-xl);
-    border: var(--border) var(--color-light);
-    border-radius: var(--border-radius-xl);
-    padding: var(--spacing-xl);
-
-    img {
-      width: 12rem;
-    }
+    width: 100%;
+    background: var(--image) center / 80% no-repeat;
   }
 
   .rewards-page {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    gap: var(--spacing-xl);
+    height: 100%;
+    gap: var(--spacing-md);
   }
 
   .rewards {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: var(--spacing-xl);
+    height: 100%;
+    padding-top: var(--spacing-lg);
   }
 </style>

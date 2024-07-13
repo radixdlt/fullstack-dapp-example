@@ -226,7 +226,7 @@
     display: grid;
     grid-template-rows: 4rem 1fr;
     background-color: var(--color-background-dark);
-    height: 34rem;
+    height: 35rem;
     width: 25rem;
     max-height: 80%;
     border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
@@ -299,6 +299,7 @@
   }
 
   .menu-item-page {
+    height: 100%;
     width: 100%;
     background: var(--color-background-dark);
     z-index: 2;
