@@ -1,57 +1,76 @@
-import { AccountAddressModel, EventId, getAccountFromMayaRouterWithdrawEvent } from 'common'
+import { AccountAddressModel, EventId, NumericRange } from 'common'
 import { FilteredTransaction } from './filter-transactions-by-type'
-
-type EventEmitter = {
-  entity: {
-    entity_address: string
-    entity_type: string
-    is_global: boolean
-  }
-  type: string
-  object_module_id: string
-}
+import { ResultAsync, okAsync } from 'neverthrow'
 
 export type FilterTransactionsByAccountAddress = ReturnType<
   typeof FilterTransactionsByAccountAddress
 >
 export const FilterTransactionsByAccountAddress =
-  (accountAddressModel: ReturnType<AccountAddressModel>) => async (tx: FilteredTransaction) => {
-    let userId
+  (accountAddressModel: ReturnType<AccountAddressModel>) =>
+  (
+    transaction: FilteredTransaction
+  ): ResultAsync<
+    FilteredTransaction | undefined,
+    {
+      jsError?: Error | undefined
+      httpResponseCode: NumericRange<400, 599>
+      reason: string
+    }
+  > => {
+    if (transaction.userId) return okAsync(transaction)
 
-    switch (tx.type) {
-      case EventId.XrdStaked:
-        userId = await accountAddressModel.getTrackedAddressUserId(
-          (tx.relevantEvents['WithdrawEvent'].emitter as any).entity.entity_address,
+    let result: ResultAsync<
+      string | null,
+      {
+        jsError?: Error | undefined
+        httpResponseCode: NumericRange<400, 599>
+        reason: string
+      }
+    >
+
+    if (!transaction.accountAddress) {
+      throw new Error(`Expected account address not found for ${transaction.type}`)
+    }
+
+    switch (transaction.type) {
+      case EventId.XrdStaked: {
+        result = accountAddressModel.getTrackedAddressUserId(
+          transaction.accountAddress,
           'NetworkStaking'
         )
+        break
+      }
 
-        return userId.isOk() && userId.value ? tx : undefined
-      case EventId.InstapassBadgeDeposited:
-        userId = await accountAddressModel.getTrackedAddressUserId(
-          (tx.relevantEvents.DepositedEvent.emitter as EventEmitter).entity.entity_address,
+      case EventId.InstapassBadgeDeposited: {
+        result = accountAddressModel.getTrackedAddressUserId(
+          transaction.accountAddress,
           'Instapass'
         )
+        break
+      }
 
-        return userId.isOk() && userId.value ? tx : undefined
+      case EventId.MayaRouterWithdrawEvent: {
+        result = accountAddressModel.getTrackedAddressUserId(transaction.accountAddress, 'Thorswap')
+        break
+      }
 
-      case EventId.MayaRouterWithdrawEvent:
-        const maybeAccountAddress = getAccountFromMayaRouterWithdrawEvent(
-          tx.relevantEvents.MayaRouterWithdrawEvent
+      case EventId.JettyReceivedClams: {
+        result = accountAddressModel.getTrackedAddressUserId(
+          transaction.accountAddress,
+          'TransferTokens'
         )
-
-        if (!maybeAccountAddress) return undefined
-
-        userId = await accountAddressModel.getTrackedAddressUserId(maybeAccountAddress, 'Thorswap')
-        return userId.isOk() && userId.value ? tx : undefined
+        break
+      }
 
       case EventId.JettySwap:
-        userId = await accountAddressModel.getTrackedAddressUserId(
-          (tx.relevantEvents['WithdrawEvent'].emitter as any).entity.entity_address,
-          'DEXSwaps'
-        )
+      case EventId.LettySwap: {
+        result = accountAddressModel.getTrackedAddressUserId(transaction.accountAddress, 'DEXSwaps')
+        break
+      }
 
-        return userId.isOk() && userId.value ? tx : undefined
       default:
-        return tx
+        throw new Error(`Unhandled transaction type: ${transaction.type}`)
     }
+
+    return result.map((userId) => (userId ? { ...transaction, userId } : undefined))
   }

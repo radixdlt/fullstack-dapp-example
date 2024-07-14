@@ -1,5 +1,4 @@
 // @ts-nocheck
-
 import { CommittedTransactionInfo } from '@radixdlt/babylon-gateway-api-sdk'
 import { Addresses } from 'common'
 
@@ -8,34 +7,33 @@ const addresses = Addresses(2)
 export default [
   {
     transaction_status: 'CommittedSuccess',
-    state_version: 20414991,
-    epoch: 10511,
-    round: 1083,
-    round_timestamp: '2024-06-20T10:29:14.27Z',
+    state_version: 32317246,
+    epoch: 16601,
+    round: 282,
+    round_timestamp: '2024-07-11T13:57:13.413Z',
     payload_hash:
-      'notarizedtransaction_tdx_2_1s3hc9jj234n5sqxfunf2na8n2q4r59urxllcjuvw77pydr7h5ngs9lrxlx',
-    intent_hash: 'txid_tdx_2_18kfw8zv95sypxyswx3gasss955h05utc0asv65qqhr7rgqamaheq6y6g3g',
-    fee_paid: '0.70296255352',
+      'notarizedtransaction_tdx_2_1ksjfyegy35xsh9lv2gehjn7lkkmvz2jdnhv9yc3xhnvlccgl5cusj6sv66',
+    intent_hash: 'txid_tdx_2_1augxp4pz89jfu5w7jeq08r0dpsudd97djv00j26ax392mn8ul8rqsdhqwd',
+    fee_paid: '0.7071559165',
     affected_global_entities: [
       'transactiontracker_tdx_2_1stxxxxxxxxxxtxtrakxxxxxxxxx006844685494xxxxxxxxxxzw7jp',
-      'account_tdx_2_12yxpde75024gjtstemmztl2tantmzw9xqc9ajeqa9kzzlxwvan58vq',
-      'resource_tdx_2_1ng4u8za72l24qfa0qqe9tdyumx0v5866uznrswemsky7jw9d6ehqr2',
+      'account_tdx_2_12xena8jgkayrlrv09a5tav0zqamngll90kuexu34jfdc7jjfexhhq7',
       'consensusmanager_tdx_2_1scxxxxxxxxxxcnsmgrxxxxxxxxx000999665565xxxxxxxxxv6cg29',
-      'component_tdx_2_1cr0aqcxlna320v2ywzfjatp3nwflrthkwm7m2zmfm0ll9c88y6mcpy'
+      'component_tdx_2_1czu5tzswgcp9qm64qm3du3v38uzmxl3uhpfs9tdzdztgf2yx6evmfg'
     ],
-    confirmed_at: '2024-06-20T10:29:14.27Z',
+    confirmed_at: '2024-07-11T13:57:13.413Z',
     raw_hex:
-      '4d22030221022104210707020a0f290000000000000a112900000000000009e7695c7d22010120072052ba430975d43bd39facf9406c5b5b29f16d204b46c151d8e8f4fd96f1ded0f0010108000020220341038000510c16e7d47aaa892e0bcef625fd4becd7b138a6060bd9641d2d842f99cc0c086c6f636b5f666565210185000088b116afe3b50200000000000000000000000000000041038000c0dfd060df9f62a7b14470932eac319b93f1aef676fdb50b69dbfff2e0e70c0b636c61696d5f626164676521028000510c16e7d47aaa892e0bcef625fd4becd7b138a6060bd9641d2d842f99cc0c20363831643137376566376235343833306164633163356137353731363536333641038000510c16e7d47aaa892e0bcef625fd4becd7b138a6060bd9641d2d842f99cc0c0d6465706f7369745f626174636821018300202000220000202201010220072052ba430975d43bd39facf9406c5b5b29f16d204b46c151d8e8f4fd96f1ded0f02101200740575314a5526eb61307aec76f9b1ce6a33bf600ba649197770001a89fb1a7251482fc607fcad5e69542b0145f90c871973a066d860ddfad8136d144057d84160c2201012101200740b6186086aeab43b4f94b94b9303077170f0098604d1e2d0e15cd29e3f3e3854fc64c7869ad67272eeb55d8742b577414110d8a0f1c467f29a3459ed90569ea0a',
+      '4d22030221022104210707020ad9400000000000000ae34000000000000009715bed322201012007203fb21e4e2c3fa08b72a2dad79ae93b440076796ad36fbb49b1cd1607ac4a23b101000800002022054103800051b33e9e48b7483f8d8f2f68beb1e20777347fe57db9937235925b8f4a490c086c6f636b5f666565210185001149897ff4d80b000000000000000000000000000000004103800051b33e9e48b7483f8d8f2f68beb1e20777347fe57db9937235925b8f4a490c1d6372656174655f70726f6f665f6f665f6e6f6e5f66756e6769626c6573210280009ac42beb0ed47a2886887f6c5f36ccedda8332d13b1fefcff86b658716b620870100206264393332666539643263383436616139353638663531306634626532643533100041038000c0b9458a0e4602506f5506e2de45913f05b37e3cb85302ada2689684a8860c16636f6d62696e655f656c656d656e74735f636c61696d210182000000004103800051b33e9e48b7483f8d8f2f68beb1e20777347fe57db9937235925b8f4a490c0d6465706f7369745f6261746368210183002020002200002022010102200720784e71e219ad04dd93d8dd39bc61c528baaf0f8e397fb331bb9f6cbb93361549210120074009ca909c7793d87cd03ddf0a7c5a1f6b5419366a6d728fd32fd2e6ad5add36a1c0f7dfd9e424b3a02303205fe78eeac37da27973772a44ed394ea215ddadd709220101210120074092705957b354a266dba052ab82ef69b8c2330ffbf3a88a0559b67358b6d016f3ff27c27ed4ff3c41ab033ab54cdc4333ef3db17c4b4cf924d3f73fd6b3924102',
     receipt: {
       status: 'CommittedSuccess',
       fee_summary: {
         xrd_total_royalty_cost: '0',
-        xrd_total_storage_cost: '0.15869140352',
+        xrd_total_storage_cost: '0.1478195165',
         xrd_total_tipping_cost: '0',
-        xrd_total_execution_cost: '0.4927611',
-        xrd_total_finalization_cost: '0.05151005',
-        execution_cost_units_consumed: 9855222,
-        finalization_cost_units_consumed: 1030201
+        xrd_total_execution_cost: '0.50282525',
+        xrd_total_finalization_cost: '0.05651115',
+        execution_cost_units_consumed: 10056505,
+        finalization_cost_units_consumed: 1130223
       },
       costing_parameters: {
         xrd_usd_price: '16.666666666666666666',
@@ -49,20 +47,20 @@ export default [
         finalization_cost_unit_price: '0.00000005'
       },
       fee_destination: {
-        to_burn: '0.35148127676',
-        to_proposer: '0.17574063838',
-        to_validator_set: '0.17574063838',
+        to_burn: '0.35357795825',
+        to_proposer: '0.176788979125',
+        to_validator_set: '0.176788979125',
         to_royalty_recipients: []
       },
       fee_source: {
         from_vaults: [
           {
-            xrd_amount: '0.70296255352',
+            xrd_amount: '0.7071559165',
             vault_entity: {
               is_global: false,
               entity_type: 'InternalFungibleVault',
               entity_address:
-                'internal_vault_tdx_2_1tqvm98ndflx8nqljwjfh06ztwtxglravuz6ukwqaapf9k3t4te4l5r'
+                'internal_vault_tdx_2_1tqvqrmzzwzyenkvczrulnaux5ehzrl7da5puuqad45qts45f5xze7k'
             }
           }
         ]
@@ -74,9 +72,9 @@ export default [
               substate_hex: null,
               substate_data: {
                 key: {
-                  intent_hash: '3d92e38985a40813120e3451d84205a52efa71787f60cd5000b8fc3403bbedf2',
+                  intent_hash: 'ef1060d42239649e51de9640f38ded0c38d697cd931ef92b5d344aadccfcf9c6',
                   intent_hash_bech32m:
-                    'txid_tdx_2_18kfw8zv95sypxyswx3gasss955h05utc0asv65qqhr7rgqamaheq6y6g3g'
+                    'txid_tdx_2_1augxp4pz89jfu5w7jeq08r0dpsudd97djv00j26ax392mn8ul8rqsdhqwd'
                 },
                 value: {
                   status: 'CommittedSuccess'
@@ -89,17 +87,17 @@ export default [
             substate_id: {
               entity_type: 'GlobalTransactionTracker',
               substate_key: {
-                key_hex: '5c2007203d92e38985a40813120e3451d84205a52efa71787f60cd5000b8fc3403bbedf2',
+                key_hex: '5c200720ef1060d42239649e51de9640f38ded0c38d697cd931ef92b5d344aadccfcf9c6',
                 key_type: 'Map',
                 db_sort_key_hex:
-                  'be063850319c6c787bd734ec770c69aabb43d26c5c2007203d92e38985a40813120e3451d84205a52efa71787f60cd5000b8fc3403bbedf2'
+                  '29df37d831d34d02860f7b1a7b8ea8d8677be3d45c200720ef1060d42239649e51de9640f38ded0c38d697cd931ef92b5d344aadccfcf9c6'
               },
               entity_module: 'Main',
               substate_type: 'TransactionTrackerCollectionEntry',
               entity_address:
                 'transactiontracker_tdx_2_1stxxxxxxxxxxtxtrakxxxxxxxxx006844685494xxxxxxxxxxzw7jp',
               partition_kind: 'KeyValue',
-              partition_number: 170
+              partition_number: 231
             },
             system_structure: {
               type: 'ObjectKeyValuePartitionEntry',
@@ -143,14 +141,14 @@ export default [
               substate_data: {
                 key: {
                   resource_address:
-                    'resource_tdx_2_1ng4u8za72l24qfa0qqe9tdyumx0v5866uznrswemsky7jw9d6ehqr2'
+                    'resource_tdx_2_1nfynmdhcjftpgwepydpqv2hu68z2qwd4lng32swnf9z3f3zj73u7u0'
                 },
                 value: {
                   vault: {
                     is_global: false,
                     entity_type: 'InternalNonFungibleVault',
                     entity_address:
-                      'internal_vault_tdx_2_1nzjcn280lm9a460yns0443lhg0luynyhjkds4xtjt6xp935v4hdm7w'
+                      'internal_vault_tdx_2_1nzvnph29xqd7gar8wjmh99gyfvqmg03sev3ak0zgyzvt0tccv3ga47'
                   }
                 },
                 is_locked: false,
@@ -161,15 +159,15 @@ export default [
             substate_id: {
               entity_type: 'GlobalVirtualEd25519Account',
               substate_key: {
-                key_hex: '5c809a2bc38bbe57d55027af003255b49cd99eca1f5ae0a6383b3b8589e938ad',
+                key_hex: '5c809a493db6f89256143b212342062afcd1c4a039b5fcd11541d3494514c452',
                 key_type: 'Map',
                 db_sort_key_hex:
-                  'dae500fcac8a00d8b03d4781c45291d0057bdc6d5c809a2bc38bbe57d55027af003255b49cd99eca1f5ae0a6383b3b8589e938ad'
+                  'c727830f9100d17a1ff343529a5b4ca29f98306a5c809a493db6f89256143b212342062afcd1c4a039b5fcd11541d3494514c452'
               },
               entity_module: 'Main',
               substate_type: 'AccountVaultEntry',
               entity_address:
-                'account_tdx_2_12yxpde75024gjtstemmztl2tantmzw9xqc9ajeqa9kzzlxwvan58vq',
+                'account_tdx_2_12xena8jgkayrlrv09a5tav0zqamngll90kuexu34jfdc7jjfexhhq7',
               partition_kind: 'KeyValue',
               partition_number: 65
             },
@@ -213,85 +211,6 @@ export default [
             value: {
               substate_hex: null,
               substate_data: {
-                key: {
-                  non_fungible_local_id: {
-                    id_type: 'String',
-                    sbor_hex:
-                      '5cc000203638316431373765663762353438333061646331633561373537313635363336',
-                    simple_rep: '<681d177ef7b54830adc1c5a757165636>'
-                  }
-                },
-                value: {
-                  data_struct: {
-                    struct_data: {
-                      hex: '5c21030c6668747470733a2f2f6173736574732d676c6f62616c2e776562736974652d66696c65732e636f6d2f3631383936326535663238356662336338373964383263612f3631623866343134643231336664373334396236353462395f69636f6e2d4445582e737667200c000900000000',
-                      programmatic_json: null
-                    },
-                    owned_entities: [],
-                    referenced_entities: []
-                  }
-                },
-                is_locked: false,
-                substate_type: 'NonFungibleResourceManagerDataEntry'
-              },
-              substate_data_hash: null
-            },
-            substate_id: {
-              entity_type: 'GlobalNonFungibleResource',
-              substate_key: {
-                key_hex: '5cc000203638316431373765663762353438333061646331633561373537313635363336',
-                key_type: 'Map',
-                db_sort_key_hex:
-                  'a2f8f242ebbfeed7fc47a4db50d6517cd5a85dfa5cc000203638316431373765663762353438333061646331633561373537313635363336'
-              },
-              entity_module: 'Main',
-              substate_type: 'NonFungibleResourceManagerDataEntry',
-              entity_address:
-                'resource_tdx_2_1ng4u8za72l24qfa0qqe9tdyumx0v5866uznrswemsky7jw9d6ehqr2',
-              partition_kind: 'KeyValue',
-              partition_number: 65
-            },
-            system_structure: {
-              type: 'ObjectKeyValuePartitionEntry',
-              key_schema: {
-                type: 'Package',
-                full_type_id: {
-                  schema_hash: '13bcc1e1d055e469936948b51d3621e05f8130901231a0847b8ff16eee058759',
-                  local_type_id: {
-                    id: 194,
-                    kind: 'WellKnown',
-                    as_sbor: {
-                      hex: '5c22000107c2',
-                      programmatic_json: null
-                    }
-                  },
-                  entity_address:
-                    'package_tdx_2_1pkgxxxxxxxxxresrcexxxxxxxxx000538436477xxxxxxxxxmn4mes'
-                }
-              },
-              value_schema: {
-                type: 'ObjectInstance',
-                generic_index: 0,
-                resolved_full_type_id: {
-                  schema_hash: '0765f8d1a0fbf9af6baae2f0e3debc0908edf483d9596be4eb0aac4e09171326',
-                  local_type_id: {
-                    id: 0,
-                    kind: 'SchemaLocal',
-                    as_sbor: {
-                      hex: '5c2201010a0000000000000000',
-                      programmatic_json: null
-                    }
-                  },
-                  entity_address:
-                    'resource_tdx_2_1ng4u8za72l24qfa0qqe9tdyumx0v5866uznrswemsky7jw9d6ehqr2'
-                }
-              }
-            }
-          },
-          {
-            value: {
-              substate_hex: null,
-              substate_data: {
                 value: {
                   details: {
                     type: 'Object',
@@ -299,7 +218,7 @@ export default [
                     blueprint_info: {
                       features: [],
                       outer_object:
-                        'resource_tdx_2_1ng4u8za72l24qfa0qqe9tdyumx0v5866uznrswemsky7jw9d6ehqr2',
+                        'resource_tdx_2_1nfynmdhcjftpgwepydpqv2hu68z2qwd4lng32swnf9z3f3zj73u7u0',
                       blueprint_name: 'NonFungibleVault',
                       package_address:
                         'package_tdx_2_1pkgxxxxxxxxxresrcexxxxxxxxx000538436477xxxxxxxxxmn4mes',
@@ -324,7 +243,7 @@ export default [
               entity_module: 'TypeInfo',
               substate_type: 'TypeInfoModuleFieldTypeInfo',
               entity_address:
-                'internal_vault_tdx_2_1nzjcn280lm9a460yns0443lhg0luynyhjkds4xtjt6xp935v4hdm7w',
+                'internal_vault_tdx_2_1nzvnph29xqd7gar8wjmh99gyfvqmg03sev3ak0zgyzvt0tccv3ga47',
               partition_kind: 'Field',
               partition_number: 0
             },
@@ -355,7 +274,7 @@ export default [
               entity_module: 'Main',
               substate_type: 'NonFungibleVaultFieldBalance',
               entity_address:
-                'internal_vault_tdx_2_1nzjcn280lm9a460yns0443lhg0luynyhjkds4xtjt6xp935v4hdm7w',
+                'internal_vault_tdx_2_1nzvnph29xqd7gar8wjmh99gyfvqmg03sev3ak0zgyzvt0tccv3ga47',
               partition_kind: 'Field',
               partition_number: 64
             },
@@ -385,10 +304,11 @@ export default [
               substate_data: {
                 key: {
                   non_fungible_local_id: {
-                    id_type: 'String',
+                    id_type: 'RUID',
                     sbor_hex:
-                      '5cc000203638316431373765663762353438333061646331633561373537313635363336',
-                    simple_rep: '<681d177ef7b54830adc1c5a757165636>'
+                      '5cc003b769730d39baaeab526f7248ed409791b73d31af05ff18aea8160502380c00a0',
+                    simple_rep:
+                      '{b769730d39baaeab-526f7248ed409791-b73d31af05ff18ae-a8160502380c00a0}'
                   }
                 },
                 value: {
@@ -402,15 +322,15 @@ export default [
             substate_id: {
               entity_type: 'InternalNonFungibleVault',
               substate_key: {
-                key_hex: '5cc000203638316431373765663762353438333061646331633561373537313635363336',
+                key_hex: '5cc003b769730d39baaeab526f7248ed409791b73d31af05ff18aea8160502380c00a0',
                 key_type: 'Map',
                 db_sort_key_hex:
-                  'a2f8f242ebbfeed7fc47a4db50d6517cd5a85dfa5cc000203638316431373765663762353438333061646331633561373537313635363336'
+                  '45519a55ab2c9d44d3fb2c60ec5aee94ca9386925cc003b769730d39baaeab526f7248ed409791b73d31af05ff18aea8160502380c00a0'
               },
               entity_module: 'Main',
               substate_type: 'NonFungibleVaultContentsIndexEntry',
               entity_address:
-                'internal_vault_tdx_2_1nzjcn280lm9a460yns0443lhg0luynyhjkds4xtjt6xp935v4hdm7w',
+                'internal_vault_tdx_2_1nzvnph29xqd7gar8wjmh99gyfvqmg03sev3ak0zgyzvt0tccv3ga47',
               partition_kind: 'Index',
               partition_number: 65
             },
@@ -451,7 +371,80 @@ export default [
             }
           }
         ],
-        deleted_substates: [],
+        deleted_substates: [
+          {
+            substate_id: {
+              entity_type: 'InternalNonFungibleVault',
+              substate_key: {
+                key_hex: '5cc003b769730d39baaeab526f7248ed409791b73d31af05ff18aea8160502380c00a0',
+                key_type: 'Map',
+                db_sort_key_hex:
+                  '45519a55ab2c9d44d3fb2c60ec5aee94ca9386925cc003b769730d39baaeab526f7248ed409791b73d31af05ff18aea8160502380c00a0'
+              },
+              entity_module: 'Main',
+              substate_type: 'NonFungibleVaultContentsIndexEntry',
+              entity_address:
+                'internal_vault_tdx_2_1npl742hkf0wz7z63sdtclhl3kemss46t88cnpqgka5angh79tqa00p',
+              partition_kind: 'Index',
+              partition_number: 65
+            },
+            previous_value: {
+              substate_hex: null,
+              substate_data: {
+                key: {
+                  non_fungible_local_id: {
+                    id_type: 'RUID',
+                    sbor_hex:
+                      '5cc003b769730d39baaeab526f7248ed409791b73d31af05ff18aea8160502380c00a0',
+                    simple_rep:
+                      '{b769730d39baaeab-526f7248ed409791-b73d31af05ff18ae-a8160502380c00a0}'
+                  }
+                },
+                value: {
+                  is_present: true
+                },
+                is_locked: false,
+                substate_type: 'NonFungibleVaultContentsIndexEntry'
+              },
+              substate_data_hash: null
+            },
+            system_structure: {
+              type: 'ObjectIndexPartitionEntry',
+              key_schema: {
+                type: 'Package',
+                full_type_id: {
+                  schema_hash: 'aa18e25a2222655fec8fdce11d9951f8258ce83b17e18cdfe52debea86b8419b',
+                  local_type_id: {
+                    id: 194,
+                    kind: 'WellKnown',
+                    as_sbor: {
+                      hex: '5c22000107c2',
+                      programmatic_json: null
+                    }
+                  },
+                  entity_address:
+                    'package_tdx_2_1pkgxxxxxxxxxresrcexxxxxxxxx000538436477xxxxxxxxxmn4mes'
+                }
+              },
+              value_schema: {
+                type: 'Package',
+                full_type_id: {
+                  schema_hash: 'aa18e25a2222655fec8fdce11d9951f8258ce83b17e18cdfe52debea86b8419b',
+                  local_type_id: {
+                    id: 7,
+                    kind: 'SchemaLocal',
+                    as_sbor: {
+                      hex: '5c2201010a0700000000000000',
+                      programmatic_json: null
+                    }
+                  },
+                  entity_address:
+                    'package_tdx_2_1pkgxxxxxxxxxresrcexxxxxxxxx000538436477xxxxxxxxxmn4mes'
+                }
+              }
+            }
+          }
+        ],
         updated_substates: [
           {
             new_value: {
@@ -466,31 +459,25 @@ export default [
                   },
                   proposer_rewards: [
                     {
-                      xrd_amount: '2.1015802556',
+                      xrd_amount: '0.3926967405725',
                       validator_index: {
                         index: 0
                       }
                     },
                     {
-                      xrd_amount: '0.83833225019',
-                      validator_index: {
-                        index: 3
-                      }
-                    },
-                    {
-                      xrd_amount: '0.81618968595',
+                      xrd_amount: '0.2901994555225',
                       validator_index: {
                         index: 1
                       }
                     },
                     {
-                      xrd_amount: '0.0986094351725',
+                      xrd_amount: '0.2525791177725',
                       validator_index: {
                         index: 5
                       }
                     },
                     {
-                      xrd_amount: '0.0986094351725',
+                      xrd_amount: '0.176788979125',
                       validator_index: {
                         index: 2
                       }
@@ -528,33 +515,21 @@ export default [
                   },
                   proposer_rewards: [
                     {
-                      xrd_amount: '2.1015802556',
+                      xrd_amount: '0.3926967405725',
                       validator_index: {
                         index: 0
                       }
                     },
                     {
-                      xrd_amount: '0.83833225019',
-                      validator_index: {
-                        index: 3
-                      }
-                    },
-                    {
-                      xrd_amount: '0.64044904757',
+                      xrd_amount: '0.2901994555225',
                       validator_index: {
                         index: 1
                       }
                     },
                     {
-                      xrd_amount: '0.0986094351725',
+                      xrd_amount: '0.2525791177725',
                       validator_index: {
                         index: 5
-                      }
-                    },
-                    {
-                      xrd_amount: '0.0986094351725',
-                      validator_index: {
-                        index: 2
                       }
                     }
                   ]
@@ -589,7 +564,7 @@ export default [
               substate_hex: null,
               substate_data: {
                 value: {
-                  amount: '10009.29703744648'
+                  amount: '30.17417069035'
                 },
                 is_locked: false,
                 substate_type: 'FungibleVaultFieldBalance'
@@ -606,7 +581,7 @@ export default [
               entity_module: 'Main',
               substate_type: 'FungibleVaultFieldBalance',
               entity_address:
-                'internal_vault_tdx_2_1tqvm98ndflx8nqljwjfh06ztwtxglravuz6ukwqaapf9k3t4te4l5r',
+                'internal_vault_tdx_2_1tqvqrmzzwzyenkvczrulnaux5ehzrl7da5puuqad45qts45f5xze7k',
               partition_kind: 'Field',
               partition_number: 64
             },
@@ -614,7 +589,7 @@ export default [
               substate_hex: null,
               substate_data: {
                 value: {
-                  amount: '10010'
+                  amount: '30.88132660685'
                 },
                 is_locked: false,
                 substate_type: 'FungibleVaultFieldBalance'
@@ -647,11 +622,20 @@ export default [
               substate_data: {
                 key: {
                   key_data: {
-                    hex: '5c80510c16e7d47aaa892e0bcef625fd4becd7b138a6060bd9641d2d842f99cc',
+                    hex: '5c0c206264393332666539643263383436616139353638663531306634626532643533',
                     programmatic_json: null
                   }
                 },
-                value: null,
+                value: {
+                  data: {
+                    struct_data: {
+                      hex: '5c220100',
+                      programmatic_json: null
+                    },
+                    owned_entities: [],
+                    referenced_entities: []
+                  }
+                },
                 is_locked: false,
                 substate_type: 'GenericKeyValueStoreEntry'
               },
@@ -660,15 +644,15 @@ export default [
             substate_id: {
               entity_type: 'InternalKeyValueStore',
               substate_key: {
-                key_hex: '5c80510c16e7d47aaa892e0bcef625fd4becd7b138a6060bd9641d2d842f99cc',
+                key_hex: '5c0c206264393332666539643263383436616139353638663531306634626532643533',
                 key_type: 'Map',
                 db_sort_key_hex:
-                  '8eff541fb59ce6462d8e1abcb4992eda7cec74815c80510c16e7d47aaa892e0bcef625fd4becd7b138a6060bd9641d2d842f99cc'
+                  'e8c374d4b97fc1871a8584e545ca379ddbaf2ea25c0c206264393332666539643263383436616139353638663531306634626532643533'
               },
               entity_module: 'Main',
               substate_type: 'GenericKeyValueStoreEntry',
               entity_address:
-                'internal_keyvaluestore_tdx_2_1kr2yp9qd0v04vt4vlvn5gt68vppflrzt6a0z23kwun9430vmfmapm3',
+                'internal_keyvaluestore_tdx_2_1kq3xxdunjl8phasuj7sjdyrteht37ync9uy2uuaff7lshv6d3u0sak',
               partition_kind: 'KeyValue',
               partition_number: 64
             },
@@ -677,14 +661,14 @@ export default [
               substate_data: {
                 key: {
                   key_data: {
-                    hex: '5c80510c16e7d47aaa892e0bcef625fd4becd7b138a6060bd9641d2d842f99cc',
+                    hex: '5c0c206264393332666539643263383436616139353638663531306634626532643533',
                     programmatic_json: null
                   }
                 },
                 value: {
                   data: {
                     struct_data: {
-                      hex: '5c2100',
+                      hex: '5c22000120c00103b769730d39baaeab526f7248ed409791b73d31af05ff18aea8160502380c00a0',
                       programmatic_json: null
                     },
                     owned_entities: [],
@@ -699,7 +683,7 @@ export default [
             system_structure: {
               type: 'KeyValueStoreEntry',
               key_full_type_id: {
-                schema_hash: '48c0276f495c0c40024dd418eeed7626a004aabd4e1fa639b6a07d1607bb038c',
+                schema_hash: '8b4b20d818d91d3884f195ccb3b1e65838cca6b654f11f63b40efeea28d8d226',
                 local_type_id: {
                   id: 0,
                   kind: 'SchemaLocal',
@@ -709,20 +693,20 @@ export default [
                   }
                 },
                 entity_address:
-                  'internal_keyvaluestore_tdx_2_1kr2yp9qd0v04vt4vlvn5gt68vppflrzt6a0z23kwun9430vmfmapm3'
+                  'internal_keyvaluestore_tdx_2_1kq3xxdunjl8phasuj7sjdyrteht37ync9uy2uuaff7lshv6d3u0sak'
               },
               value_full_type_id: {
-                schema_hash: '48c0276f495c0c40024dd418eeed7626a004aabd4e1fa639b6a07d1607bb038c',
+                schema_hash: '8b4b20d818d91d3884f195ccb3b1e65838cca6b654f11f63b40efeea28d8d226',
                 local_type_id: {
-                  id: 66,
-                  kind: 'WellKnown',
+                  id: 1,
+                  kind: 'SchemaLocal',
                   as_sbor: {
-                    hex: '5c2200010742',
+                    hex: '5c2201010a0100000000000000',
                     programmatic_json: null
                   }
                 },
                 entity_address:
-                  'internal_keyvaluestore_tdx_2_1kr2yp9qd0v04vt4vlvn5gt68vppflrzt6a0z23kwun9430vmfmapm3'
+                  'internal_keyvaluestore_tdx_2_1kq3xxdunjl8phasuj7sjdyrteht37ync9uy2uuaff7lshv6d3u0sak'
               }
             }
           },
@@ -731,24 +715,24 @@ export default [
               substate_hex: null,
               substate_data: {
                 value: {
-                  total_supply: '19'
+                  amount: '11'
                 },
                 is_locked: false,
-                substate_type: 'NonFungibleResourceManagerFieldTotalSupply'
+                substate_type: 'NonFungibleVaultFieldBalance'
               },
               substate_data_hash: null
             },
             substate_id: {
-              entity_type: 'GlobalNonFungibleResource',
+              entity_type: 'InternalNonFungibleVault',
               substate_key: {
-                id: 2,
+                id: 0,
                 key_type: 'Field',
-                db_sort_key_hex: '02'
+                db_sort_key_hex: '00'
               },
               entity_module: 'Main',
-              substate_type: 'NonFungibleResourceManagerFieldTotalSupply',
+              substate_type: 'NonFungibleVaultFieldBalance',
               entity_address:
-                'resource_tdx_2_1ng4u8za72l24qfa0qqe9tdyumx0v5866uznrswemsky7jw9d6ehqr2',
+                'internal_vault_tdx_2_1npl742hkf0wz7z63sdtclhl3kemss46t88cnpqgka5angh79tqa00p',
               partition_kind: 'Field',
               partition_number: 64
             },
@@ -756,10 +740,10 @@ export default [
               substate_hex: null,
               substate_data: {
                 value: {
-                  total_supply: '18'
+                  amount: '12'
                 },
                 is_locked: false,
-                substate_type: 'NonFungibleResourceManagerFieldTotalSupply'
+                substate_type: 'NonFungibleVaultFieldBalance'
               },
               substate_data_hash: null
             },
@@ -768,12 +752,12 @@ export default [
               value_schema: {
                 type: 'Package',
                 full_type_id: {
-                  schema_hash: '13bcc1e1d055e469936948b51d3621e05f8130901231a0847b8ff16eee058759',
+                  schema_hash: 'aa18e25a2222655fec8fdce11d9951f8258ce83b17e18cdfe52debea86b8419b',
                   local_type_id: {
-                    id: 5,
+                    id: 0,
                     kind: 'SchemaLocal',
                     as_sbor: {
-                      hex: '5c2201010a0500000000000000',
+                      hex: '5c2201010a0000000000000000',
                       programmatic_json: null
                     }
                   },
@@ -788,7 +772,7 @@ export default [
               substate_hex: null,
               substate_data: {
                 value: {
-                  amount: '7.906642124366820908'
+                  amount: '2.224528586307606125'
                 },
                 is_locked: false,
                 substate_type: 'FungibleVaultFieldBalance'
@@ -813,7 +797,7 @@ export default [
               substate_hex: null,
               substate_data: {
                 value: {
-                  amount: '7.555160847606820908'
+                  amount: '1.870950628057606125'
                 },
                 is_locked: false,
                 substate_type: 'FungibleVaultFieldBalance'
@@ -850,7 +834,15 @@ export default [
           programmatic_json: null
         },
         {
-          hex: '5c90f8e9145e45b926d0b1fb814ec0bf461cb92ec0cfe4f4e8fd1e862ba29f64',
+          hex: '5c90f82616458180520ebf929126ee707e320e5e28e000d144fe23707195e435',
+          programmatic_json: null
+        },
+        {
+          hex: '5c2100',
+          programmatic_json: null
+        },
+        {
+          hex: '5c90f85ddbbd7818898a7ec184d0f429e4bbd0a0693048729de0455e5dd5061b',
           programmatic_json: null
         },
         {
@@ -867,14 +859,14 @@ export default [
               is_global: false,
               entity_type: 'InternalFungibleVault',
               entity_address:
-                'internal_vault_tdx_2_1tqvm98ndflx8nqljwjfh06ztwtxglravuz6ukwqaapf9k3t4te4l5r'
+                'internal_vault_tdx_2_1tqvqrmzzwzyenkvczrulnaux5ehzrl7da5puuqad45qts45f5xze7k'
             },
             object_module_id: 'Main'
           },
           data: {
             fields: [
               {
-                value: '50',
+                value: '0.853700957988',
                 kind: 'Decimal',
                 field_name: 'amount'
               }
@@ -884,38 +876,14 @@ export default [
           }
         },
         {
-          name: 'BadgeClaimedEvent',
+          name: 'WithdrawEvent',
           emitter: {
             type: 'Method',
             entity: {
-              is_global: true,
-              entity_type: 'GlobalGenericComponent',
-              entity_address: addresses.components.heroBadgeForge
-            },
-            object_module_id: 'Main'
-          },
-          data: {
-            fields: [
-              {
-                value: '681d177ef7b54830adc1c5a757165636',
-                kind: 'String',
-                type_name: 'UserId',
-                field_name: 'user_id'
-              }
-            ],
-            kind: 'Tuple',
-            type_name: 'BadgeClaimedEvent'
-          }
-        },
-        {
-          name: 'MintNonFungibleResourceEvent',
-          emitter: {
-            type: 'Method',
-            entity: {
-              is_global: true,
-              entity_type: 'GlobalNonFungibleResource',
+              is_global: false,
+              entity_type: 'InternalNonFungibleVault',
               entity_address:
-                'resource_tdx_2_1ng4u8za72l24qfa0qqe9tdyumx0v5866uznrswemsky7jw9d6ehqr2'
+                'internal_vault_tdx_2_1npl742hkf0wz7z63sdtclhl3kemss46t88cnpqgka5angh79tqa00p'
             },
             object_module_id: 'Main'
           },
@@ -925,7 +893,7 @@ export default [
                 element_kind: 'NonFungibleLocalId',
                 elements: [
                   {
-                    value: '<681d177ef7b54830adc1c5a757165636>',
+                    value: '{b769730d39baaeab-526f7248ed409791-b73d31af05ff18ae-a8160502380c00a0}',
                     kind: 'NonFungibleLocalId'
                   }
                 ],
@@ -934,7 +902,31 @@ export default [
               }
             ],
             kind: 'Tuple',
-            type_name: 'MintNonFungibleResourceEvent'
+            type_name: 'WithdrawEvent'
+          }
+        },
+        {
+          name: 'CombineElementsClaimedEvent',
+          emitter: {
+            type: 'Method',
+            entity: {
+              is_global: true,
+              entity_type: 'GlobalGenericComponent',
+              entity_address: addresses.components.refinery
+            },
+            object_module_id: 'Main'
+          },
+          data: {
+            fields: [
+              {
+                value: 'bd932fe9d2c846aa9568f510f4be2d53',
+                kind: 'String',
+                type_name: 'UserId',
+                field_name: 'user_id'
+              }
+            ],
+            kind: 'Tuple',
+            type_name: 'CombineElementsClaimedEvent'
           }
         },
         {
@@ -945,7 +937,7 @@ export default [
               is_global: true,
               entity_type: 'GlobalNonFungibleResource',
               entity_address:
-                'resource_tdx_2_1ng4u8za72l24qfa0qqe9tdyumx0v5866uznrswemsky7jw9d6ehqr2'
+                'resource_tdx_2_1nfynmdhcjftpgwepydpqv2hu68z2qwd4lng32swnf9z3f3zj73u7u0'
             },
             object_module_id: 'Main'
           },
@@ -953,7 +945,7 @@ export default [
             fields: [
               {
                 element_kind: 'U8',
-                hex: '98a589a8effecbdae9e49c1f5ac7f743ffc24c97959b0a99725e8c12c68c',
+                hex: '989930dd45301be4746774b77295044b01b43e30cb23db3c482098b7af18',
                 kind: 'Bytes',
                 type_name: 'NodeId',
                 field_name: 'vault_id'
@@ -971,7 +963,7 @@ export default [
               is_global: false,
               entity_type: 'InternalNonFungibleVault',
               entity_address:
-                'internal_vault_tdx_2_1nzjcn280lm9a460yns0443lhg0luynyhjkds4xtjt6xp935v4hdm7w'
+                'internal_vault_tdx_2_1nzvnph29xqd7gar8wjmh99gyfvqmg03sev3ak0zgyzvt0tccv3ga47'
             },
             object_module_id: 'Main'
           },
@@ -981,7 +973,7 @@ export default [
                 element_kind: 'NonFungibleLocalId',
                 elements: [
                   {
-                    value: '<681d177ef7b54830adc1c5a757165636>',
+                    value: '{b769730d39baaeab-526f7248ed409791-b73d31af05ff18ae-a8160502380c00a0}',
                     kind: 'NonFungibleLocalId'
                   }
                 ],
@@ -1001,7 +993,7 @@ export default [
               is_global: true,
               entity_type: 'GlobalVirtualEd25519Account',
               entity_address:
-                'account_tdx_2_12yxpde75024gjtstemmztl2tantmzw9xqc9ajeqa9kzzlxwvan58vq'
+                'account_tdx_2_12xena8jgkayrlrv09a5tav0zqamngll90kuexu34jfdc7jjfexhhq7'
             },
             object_module_id: 'Main'
           },
@@ -1010,7 +1002,7 @@ export default [
             variant_name: 'NonFungible',
             fields: [
               {
-                value: addresses.badges.heroBadgeAddress,
+                value: 'resource_tdx_2_1nfynmdhcjftpgwepydpqv2hu68z2qwd4lng32swnf9z3f3zj73u7u0',
                 kind: 'Reference',
                 type_name: 'ResourceAddress'
               },
@@ -1018,7 +1010,7 @@ export default [
                 element_kind: 'NonFungibleLocalId',
                 elements: [
                   {
-                    value: '<681d177ef7b54830adc1c5a757165636>',
+                    value: '{b769730d39baaeab-526f7248ed409791-b73d31af05ff18ae-a8160502380c00a0}',
                     kind: 'NonFungibleLocalId'
                   }
                 ],
@@ -1037,14 +1029,14 @@ export default [
               is_global: false,
               entity_type: 'InternalFungibleVault',
               entity_address:
-                'internal_vault_tdx_2_1tqvm98ndflx8nqljwjfh06ztwtxglravuz6ukwqaapf9k3t4te4l5r'
+                'internal_vault_tdx_2_1tqvqrmzzwzyenkvczrulnaux5ehzrl7da5puuqad45qts45f5xze7k'
             },
             object_module_id: 'Main'
           },
           data: {
             fields: [
               {
-                value: '0.70296255352',
+                value: '0.7071559165',
                 kind: 'Decimal',
                 field_name: 'amount'
               }
@@ -1068,7 +1060,7 @@ export default [
           data: {
             fields: [
               {
-                value: '0.35148127676',
+                value: '0.35357795825',
                 kind: 'Decimal',
                 field_name: 'amount'
               }
@@ -1092,7 +1084,7 @@ export default [
           data: {
             fields: [
               {
-                value: '0.35148127676',
+                value: '0.35357795825',
                 kind: 'Decimal',
                 field_name: 'amount'
               }
@@ -1108,10 +1100,10 @@ export default [
       fungible_fee_balance_changes: [
         {
           type: 'FeePayment',
-          entity_address: 'account_tdx_2_12yxpde75024gjtstemmztl2tantmzw9xqc9ajeqa9kzzlxwvan58vq',
+          entity_address: 'account_tdx_2_12xena8jgkayrlrv09a5tav0zqamngll90kuexu34jfdc7jjfexhhq7',
           resource_address:
             'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
-          balance_change: '-0.70296255352'
+          balance_change: '-0.7071559165'
         },
         {
           type: 'FeeDistributed',
@@ -1119,17 +1111,24 @@ export default [
             'consensusmanager_tdx_2_1scxxxxxxxxxxcnsmgrxxxxxxxxx000999665565xxxxxxxxxv6cg29',
           resource_address:
             'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
-          balance_change: '0.35148127676'
+          balance_change: '0.35357795825'
         }
       ],
       fungible_balance_changes: [],
       non_fungible_balance_changes: [
         {
-          entity_address: 'account_tdx_2_12yxpde75024gjtstemmztl2tantmzw9xqc9ajeqa9kzzlxwvan58vq',
+          entity_address: 'account_tdx_2_12xena8jgkayrlrv09a5tav0zqamngll90kuexu34jfdc7jjfexhhq7',
           resource_address:
-            'resource_tdx_2_1ng4u8za72l24qfa0qqe9tdyumx0v5866uznrswemsky7jw9d6ehqr2',
-          added: ['<681d177ef7b54830adc1c5a757165636>'],
+            'resource_tdx_2_1nfynmdhcjftpgwepydpqv2hu68z2qwd4lng32swnf9z3f3zj73u7u0',
+          added: ['{b769730d39baaeab-526f7248ed409791-b73d31af05ff18ae-a8160502380c00a0}'],
           removed: []
+        },
+        {
+          entity_address: 'component_tdx_2_1czu5tzswgcp9qm64qm3du3v38uzmxl3uhpfs9tdzdztgf2yx6evmfg',
+          resource_address:
+            'resource_tdx_2_1nfynmdhcjftpgwepydpqv2hu68z2qwd4lng32swnf9z3f3zj73u7u0',
+          added: [],
+          removed: ['{b769730d39baaeab-526f7248ed409791-b73d31af05ff18ae-a8160502380c00a0}']
         }
       ]
     }

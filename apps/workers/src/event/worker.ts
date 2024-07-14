@@ -1,6 +1,8 @@
 import { Worker, ConnectionOptions, Queues, EventJob } from 'queues'
 import { AppLogger, EventModel } from 'common'
-import { EventWorkerController } from './controller'
+import { EventWorkerController, UserExtended } from './controller'
+import { getUserById } from '../helpers/getUserById'
+import { PrismaClient } from 'database'
 
 export const EventWorker = (
   connection: ConnectionOptions,
@@ -8,6 +10,7 @@ export const EventWorker = (
     eventModel: EventModel
     eventWorkerController: EventWorkerController
     logger: AppLogger
+    dbClient: PrismaClient
   }
 ) => {
   const { logger, eventWorkerController, eventModel } = dependencies
@@ -33,20 +36,29 @@ export const EventWorker = (
         job: job.data
       })
 
-      const result = await eventWorkerController.handler(job)
-      if (result.isErr()) {
-        logger.debug({
-          method: 'eventWorker.process.error',
-          id: job.id,
-          type: job.data.type,
-          transactionId: job.data.transactionId,
-          error: result.error
-        })
-        await eventModel(logger).update(job.data.transactionId, {
-          error: getReason(result.error) ?? 'UnknownError'
-        })
+      try {
+        const result = await getUserById(job.data.userId, dependencies.dbClient, {
+          email: true
+        }).andThen((user) => eventWorkerController.handler(job, user as UserExtended))
 
-        throw result.error
+        if (result.isErr()) {
+          logger.debug({
+            method: 'eventWorker.process.error',
+            id: job.id,
+            type: job.data.type,
+            transactionId: job.data.transactionId,
+            error: result.error
+          })
+
+          await eventModel(logger).update(job.data.transactionId, {
+            error: getReason(result.error) ?? 'UnknownError'
+          })
+
+          throw result.error
+        }
+      } catch (error) {
+        logger.error({ reason: 'unknown error', error })
+        throw error
       }
     },
     { connection }

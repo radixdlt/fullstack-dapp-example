@@ -33,7 +33,8 @@ export const WorkerError = {
   FailedToUpdateReferralReward: 'FailedToUpdateReferralReward',
   FailedToGetKeyPairs: 'FailedToGetKeyPairs',
   TransactionFailed: 'TransactionFailed',
-  FailedToUpdateSubmittedTransaction: 'FailedToUpdateSubmittedTransaction'
+  FailedToUpdateSubmittedTransaction: 'FailedToUpdateSubmittedTransaction',
+  CouldNotGetXrdCurrentPriceError: 'CouldNotGetXrdCurrentPriceError'
 } as const
 
 export type WorkerOutputError = { reason: WorkerError | TransactionHelperError; jsError?: unknown }

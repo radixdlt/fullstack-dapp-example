@@ -13,7 +13,8 @@ export const UserQuestController = ({
   userQuestModel,
   userModel,
   accountAddressModel,
-  transactionModel
+  transactionModel,
+  logger
 }: ControllerDependencies) => {
   const hasAllRequirementsCompleted = (questId: keyof Quests, userId: string) => {
     const questDefinition = QuestDefinitions()[questId]
@@ -118,9 +119,8 @@ export const UserQuestController = ({
           return okAsync(statusResult)
         })
         .andThen((statusResult) => {
-          const shouldTrackAccountAddress =
-            !statusResult && QuestDefinitions()[questId].trackedAccountAddress
-
+          const shouldTrackAccountAddress = !statusResult && questDefinition.trackedAccountAddress
+          logger.debug({ shouldTrackAccountAddress, statusResult, questDefinition })
           return shouldTrackAccountAddress
             ? userModel
                 .getById(userId, {})

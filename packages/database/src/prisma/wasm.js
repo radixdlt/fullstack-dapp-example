@@ -17,11 +17,11 @@ exports.$Enums = {}
 
 /**
  * Prisma Client JS version: 5.15.0
- * Query Engine version: 12e25d8d06f6ea5a0252864dd9a03b1bb51f3022
+ * Query Engine version: 34ace0eb2704183d2c05b60b52fba5c43c13f303
  */
 Prisma.prismaVersion = {
   client: "5.15.0",
-  engine: "12e25d8d06f6ea5a0252864dd9a03b1bb51f3022"
+  engine: "34ace0eb2704183d2c05b60b52fba5c43c13f303"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -164,11 +164,12 @@ exports.Prisma.ChallengeScalarFieldEnum = {
 exports.Prisma.EventScalarFieldEnum = {
   transactionId: 'transactionId',
   id: 'id',
-  questId: 'questId',
   userId: 'userId',
+  questId: 'questId',
   createdAt: 'createdAt',
   processedAt: 'processedAt',
-  error: 'error'
+  error: 'error',
+  data: 'data'
 };
 
 exports.Prisma.MessageScalarFieldEnum = {
@@ -209,7 +210,8 @@ exports.Prisma.AuditScalarFieldEnum = {
   userId: 'userId',
   date: 'date',
   type: 'type',
-  xrdUsdValue: 'xrdUsdValue'
+  xrdUsdValue: 'xrdUsdValue',
+  data: 'data'
 };
 
 exports.Prisma.TransactionIntentScalarFieldEnum = {

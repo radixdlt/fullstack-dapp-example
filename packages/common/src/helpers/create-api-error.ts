@@ -2,7 +2,7 @@ type LessThan<TNumber extends number, TArray extends any[] = []> = TNumber exten
   ? TArray[number]
   : LessThan<TNumber, [...TArray, TArray['length']]>
 
-type NumericRange<TStart extends number, TEnd extends number> = Exclude<
+export type NumericRange<TStart extends number, TEnd extends number> = Exclude<
   TEnd | LessThan<TEnd>,
   LessThan<TStart>
 >

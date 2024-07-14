@@ -11,7 +11,7 @@ import { HandleTransactions } from './helpers/handleTransactions'
 import { StateVersionModel } from './state-version/state-version.model'
 import { getLatestStateVersion } from './helpers/getLatestStateVersion'
 import { dbClient } from './db-client'
-import { getTrackedTransactionTypes } from './filter-transactions/tracked-transaction-types'
+import { trackedTransactionTypes } from './filter-transactions/tracked-transaction-types'
 import { FilterTransactionsByType } from './filter-transactions/filter-transactions-by-type'
 import { FilterTransactionsByAccountAddress } from './filter-transactions/filter-transactions-by-account-address'
 
@@ -92,7 +92,6 @@ const { eventQueue } = getQueues(config.redis)
 const redisConnection = new RedisConnection(config.redis)
 const stateVersionModel = StateVersionModel(redisConnection)
 const accountAddressModel = AccountAddressModel(redisConnection)(logger)
-const trackedTransactionTypes = getTrackedTransactionTypes()
 const filterTransactionsByType = FilterTransactionsByType(trackedTransactionTypes)
 const filterTransactionsByAccountAddress = FilterTransactionsByAccountAddress(accountAddressModel)
 

@@ -80,7 +80,8 @@ const app = async () => {
   EventWorker(connection, {
     eventWorkerController,
     eventModel,
-    logger
+    logger,
+    dbClient
   })
 
   SystemWorker(connection, {

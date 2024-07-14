@@ -2,6 +2,7 @@ import { ResultAsync, errAsync, okAsync, err, ok } from 'neverthrow'
 import { Job, TransactionJob } from 'queues'
 import { AuditType, User } from 'database'
 import {
+  AuditData,
   GatewayApi,
   GiftBoxReward,
   GiftBoxRewardConfig,
@@ -112,7 +113,48 @@ export const TransactionWorkerController = ({
           }).map(() => value)
         )
 
-    const handleDepositRewards = (rewards: QuestReward[], questId: string) => {
+    const addEntryToAuditTable = ({
+      userId,
+      transactionId,
+      xrdUsdValue,
+      rewards,
+      type
+    }: {
+      userId: string
+      transactionId: string
+      xrdUsdValue: number
+      rewards: AuditData
+      type: AuditType
+    }) =>
+      auditModel(logger)
+        .add({
+          transactionId,
+          userId,
+          type,
+          xrdUsdValue,
+          data: rewards
+        })
+        .mapErr(({ jsError }) => ({
+          reason: WorkerError.FailedToAddAuditEntry,
+          jsError
+        }))
+
+    const getXrdPrice = (value: string) => {
+      const xrdAmount = BigNumber(value)
+
+      return tokenPriceClient
+        .getXrdPrice()
+        .mapErr((error) => ({
+          reason: WorkerError.CouldNotGetXrdCurrentPriceError,
+          jsError: error
+        }))
+        .map((xrdPrice) => ({
+          xrdUsdValue: xrdAmount.multipliedBy(xrdPrice).toNumber(),
+          xrdAmount
+        }))
+    }
+
+    const depositQuestRewards = (rewards: QuestReward[], questId: string) => {
       const xrdReward = rewards.find((reward) => reward.name === 'xrd')?.amount ?? 0
       const hasXrdReward = xrdReward > 0
 
@@ -174,35 +216,21 @@ export const TransactionWorkerController = ({
 
       return triggerDepositRewardsTransaction(userId).andThen(
         ({ userId, transactionId, xrdRewardInUsd }) =>
-          auditModel(logger)
-            .add({
-              transactionId,
-              userId,
-              type: AuditType.CLAIMBOX_DEPOSIT,
-              xrdUsdValue: xrdRewardInUsd.toNumber()
-            })
-            .mapErr(({ jsError }) => ({
-              reason: WorkerError.FailedToAddAuditEntry,
-              jsError
-            }))
+          addEntryToAuditTable({
+            userId,
+            transactionId,
+            xrdUsdValue: xrdRewardInUsd.toNumber(),
+            rewards: { fungible: rewards, nonFungible: [] },
+            type: AuditType.CLAIMBOX_DEPOSIT
+          })
       )
-    }
-
-    const getPartialRewards = (questId: QuestId, requirement: string) => {
-      const questDefinition = QuestDefinitions()[questId as QuestId] as {
-        partialRewards: Record<string, QuestReward[]>
-      }
-
-      const rewards = questDefinition?.partialRewards?.[requirement]
-
-      return rewards ? ok(rewards) : err({ reason: WorkerError.FailedToGetPartialRewards })
     }
 
     switch (type) {
       case 'DepositXrdReward': {
         const { amount, transactionId } = job.data
 
-        return handleDepositRewards(
+        return depositQuestRewards(
           [
             {
               name: 'xrd',
@@ -223,17 +251,28 @@ export const TransactionWorkerController = ({
       case 'DepositPartialReward': {
         const { questId, requirement } = job.data
 
+        const getPartialRewards = (questId: QuestId, requirement: string) => {
+          const questDefinition = QuestDefinitions()[questId as QuestId] as {
+            partialRewards: Record<string, QuestReward[]>
+          }
+
+          const rewards = questDefinition?.partialRewards?.[requirement]
+
+          return rewards ? ok(rewards) : err({ reason: WorkerError.FailedToGetPartialRewards })
+        }
+
         return getPartialRewards(questId as QuestId, requirement).asyncAndThen((rewards) =>
-          handleDepositRewards(rewards, `${questId}:${requirement}`)
+          depositQuestRewards(rewards, `${questId}:${requirement}`)
         )
       }
+
       case 'DepositReward':
         const { questId } = job.data
 
         const questDefinition = QuestDefinitions()[questId as QuestId]
         const rewards = questDefinition.rewards
 
-        return handleDepositRewards(rewards as unknown as QuestReward[], questId)
+        return depositQuestRewards(rewards as unknown as QuestReward[], questId)
 
       case 'DepositGiftBoxReward': {
         const { giftBoxKind } = job.data
@@ -243,25 +282,40 @@ export const TransactionWorkerController = ({
         return imageModel(logger)
           .getUrl({ shape: energyCard.key })
           .mapErr((error) => ({ reason: WorkerError.FailedToGetImageUrl, jsError: error }))
-          .andThen((imageUrl) =>
-            handleSubmitTransaction(
+          .andThen((key_image_url) => {
+            const rewards: Parameters<typeof createRewardsDepositManifest>[0]['rewards'] = [
+              { name: 'elements', amount: elementAmount }
+            ]
+
+            const card = {
+              ...energyCard,
+              key_image_url
+            }
+
+            rewards.push({
+              name: 'energyCard',
+              card
+            })
+            return handleSubmitTransaction(
               createRewardsDepositManifest({
                 userId,
-                rewards: [
-                  { name: 'elements', amount: elementAmount },
-                  {
-                    name: 'energyCard',
-                    card: {
-                      ...energyCard,
-                      key_image_url: imageUrl
-                    }
-                  }
-                ],
+                rewards,
                 includeKycOracleUpdate: false,
                 depositRewardsTo: 'giftBoxOpener'
               })
+            ).andThen(({ transactionId }) =>
+              addEntryToAuditTable({
+                userId,
+                transactionId,
+                xrdUsdValue: 0,
+                rewards: {
+                  fungible: [{ name: 'elements', amount: elementAmount }],
+                  nonFungible: [card]
+                },
+                type: AuditType.CLAIMBOX_DEPOSIT
+              })
             )
-          )
+          })
       }
 
       case 'PopulateResources':
@@ -422,7 +476,7 @@ export const TransactionWorkerController = ({
                 Address("${components.heroBadgeForge}")
                 "add_user_account"
                 Address("${user.accountAddress!}")
-                "${user.id}"
+                "${userId}"
               ;
 
               CALL_METHOD
@@ -506,15 +560,20 @@ export const TransactionWorkerController = ({
               ].join('\n')
             )
           )
-
           .andThen(({ transactionId }) =>
-            dbTransactionBuilder.helpers.addXrdDepositToAuditTable({
-              transactionId,
-              userId: user.id,
-              xrdAmount: `${config.radQuest.directXrdDepositAmount} `
-            })
+            getXrdPrice(`${config.radQuest.directXrdDepositAmount}`).andThen(({ xrdUsdValue }) =>
+              addEntryToAuditTable({
+                transactionId,
+                userId: user.id,
+                xrdUsdValue,
+                type: 'DIRECT_DEPOSIT',
+                rewards: {
+                  fungible: [{ name: 'xrd', amount: config.radQuest.directXrdDepositAmount }],
+                  nonFungible: []
+                }
+              })
+            )
           )
-          .andThen((api) => api.exec())
           .andThen(() =>
             sendMessage(user.id, { type: 'XrdDepositedToAccount', traceId: job.data.traceId })
           )
@@ -549,6 +608,7 @@ export const TransactionWorkerController = ({
                 Address("${components.heroBadgeForge}")
                 "add_user_account"
                 Address("${user.accountAddress!}")
+                 "${userId}"
               ;`
           ].join('\n')
         )
