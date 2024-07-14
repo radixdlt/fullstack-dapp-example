@@ -15,10 +15,25 @@
     btoa(text).replaceAll(/\+/g, '-').replaceAll(/\//g, '_').replaceAll(/=/g, '')
 </script>
 
-<a href={`${oneLinkUrl}?${paramName}=${encode(JSON.stringify(params))}`} class="skip-icon">
+<a
+  href={`${oneLinkUrl}?${paramName}=${encode(JSON.stringify(params))}`}
+  target="_blank"
+  class="skip-icon"
+>
   {#if parsed.os.name === 'Android'}
     <img src="/quests-images/key/2-KeyImage_Button_GooglePlayStore.webp" alt="Play Store" />
   {:else if parsed.os.name === 'iOS'}
     <img src="/quests-images/key/2-KeyImage_Button_AppleAppStore.webp" alt="App Store" />
   {/if}
 </a>
+
+<style lang="scss">
+  .skip-icon {
+    display: flex;
+    justify-content: center;
+
+    img {
+      max-width: 70%;
+    }
+  }
+</style>
