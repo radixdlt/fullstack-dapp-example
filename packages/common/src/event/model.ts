@@ -1,6 +1,4 @@
 import { PrismaClient } from 'database'
-// @ts-ignore
-import Prisma from 'prisma'
 import { ResultAsync, okAsync } from 'neverthrow'
 import { type ApiError, createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers'
@@ -35,14 +33,14 @@ export const EventModel = (db: PrismaClient) => (logger?: AppLogger) => {
     const values = events
       .map(
         (item) =>
-          `('${item.eventId}', '${item.transactionId}', '${item.userId}', '${JSON.stringify(item.data)}'::jsonb)`
+          `('${item.eventId}', '${item.transactionId}', '${item.userId}', '${JSON.stringify(item.data)}'::jsonb, ${item.questId ? `'${item.questId}'` : 'NULL'})`
       )
       .join(', ')
 
     const query = [
-      `with data("id", "transactionId", "userId", "data") AS (VALUES ${values})`,
-      'insert into "Event" ("id", "transactionId", "userId", "data")',
-      'select d."id", d."transactionId", d."userId", d."data"',
+      `with data("id", "transactionId", "userId", "data", "questId") AS (VALUES ${values})`,
+      'insert into "Event" ("id", "transactionId", "userId", "data", "questId")',
+      'select d."id", d."transactionId", d."userId", d."data", d."questId"',
       'from data d',
       'where exists (select 1 from "User" u where u."id" = d."userId")',
       'AND not exists (select 1 from "Event" u where u."transactionId" = d."transactionId")',

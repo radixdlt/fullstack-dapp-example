@@ -72,7 +72,8 @@ export const FilterTransactionsByType =
             data: extractedData,
             transactionId: tx.intent_hash!,
             accountAddress,
-            userId
+            userId,
+            questId
           } satisfies FilteredTransaction)
         : undefined
     })
