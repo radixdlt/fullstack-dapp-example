@@ -26,7 +26,13 @@
 </script>
 
 <div class="menu-item-page">
-  <div class="content">
+  {#if $$slots.header}
+    <div>
+      <slot name="header" />
+    </div>
+  {/if}
+
+  <div>
     <slot />
   </div>
 
@@ -48,10 +54,6 @@
     justify-content: space-between;
     height: 100%;
     overflow-x: hidden;
-  }
-
-  .content {
-    height: 18.5rem;
   }
 
   .action {
