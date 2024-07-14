@@ -12,8 +12,6 @@
 
 <div class="container">
   <div class="phone-number">
-    <div class="text-faded">{$i18n.t('quests:GetStuff.phoneNumberInputTitle')}</div>
-
     <PhoneNumberInput bind:number={phoneNumber} />
 
     <VirtualSimWarning />

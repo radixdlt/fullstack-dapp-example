@@ -34,11 +34,11 @@
     },
     {
       id: '5',
-      type: 'jetty'
+      type: 'regular'
     },
     {
       id: '6',
-      type: 'regular'
+      type: 'jetty'
     },
     {
       id: '7',
