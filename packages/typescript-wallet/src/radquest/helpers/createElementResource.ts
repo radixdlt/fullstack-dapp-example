@@ -60,11 +60,7 @@ CREATE_FUNGIBLE_RESOURCE
     Tuple(
         Map<String, Tuple>(
             "name" => Tuple(
-            Enum<1u8>(
-            Enum<1u8>(
-              Enum<2u8>(
                 Enum<1u8>(
-              Enum<2u8>(
                     Enum<0u8>(
                         "Element"
                     )
