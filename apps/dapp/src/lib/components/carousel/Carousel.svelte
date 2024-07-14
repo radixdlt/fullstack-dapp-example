@@ -9,14 +9,9 @@
   let isScrolledToStart = true
   let isScrolledToEnd = false
 
-  let items: HTMLElement[]
-
   export const scrollToNext = () => {
     if (!carousel) return
-    carousel.scrollBy({
-      left: items[0].offsetWidth,
-      behavior: 'smooth'
-    })
+    // TODO
   }
 
   const detectScolledToStart = () => {
