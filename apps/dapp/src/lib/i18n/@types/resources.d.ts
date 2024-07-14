@@ -58,6 +58,7 @@ interface Resources {
     "open-gift-box": {
       "no-boxes": "Sorry, you don’t have any Gift Boxes in your registered Radix account to open right now.",
       "one-box-title": "Let's see what's in your Starter Gift Box!",
+      "multiple-boxes-title": "Pick a Gift Box to open",
       "open-gift-box-button": "Open Gift Box",
       "gift-box-title": "{{name}} Gift Box",
       "opening-gift-box": "Opening",
@@ -122,11 +123,11 @@ interface Resources {
       "hi": "Meet Jetty",
       "claim": "Claim",
       "requirements": {
-        "RadQuestQuiz": "Learn about RadQuest – and your guide, Jetty"
+        "RadQuestQuiz": "Learn about RadQuest… and your guide, Jetty"
       },
       "title": "Welcome to RadQuest",
       "description": "What’s this all about?",
-      "introDescription": "Let’s get started learning about web3 and Radix – and get some rewards!"
+      "introDescription": "Complete quests, learn about web3 and Radix, get some rewards!"
     },
     "JoinFriend": {
       "requirements": {
@@ -142,7 +143,7 @@ interface Resources {
       },
       "title": "The Radix Network",
       "description": "What is this Radix thing?",
-      "introDescription": "The Radix Network – a breakthrough “layer-1” network for mainstream-ready web3."
+      "introDescription": "The Radix Network: a breakthrough “layer-1” network for mainstream-ready web3."
     },
     "SetupWallet": {
       "requirements": {

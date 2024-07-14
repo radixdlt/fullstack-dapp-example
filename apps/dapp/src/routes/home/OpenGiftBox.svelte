@@ -12,7 +12,6 @@
     StateEntityDetailsResponseComponentDetails
   } from '@radixdlt/babylon-gateway-api-sdk'
   import Carousel from '$lib/components/carousel/Carousel.svelte'
-  import SelectionIndicator from '$lib/components/selection-indicator/SelectionIndicator.svelte'
   import { context } from '$lib/components/jetty-menu/JettyMenu.svelte'
   import { errAsync, okAsync, ResultAsync } from 'neverthrow'
   import { getStringDataValue } from './CreateRadMorphs.svelte'
@@ -306,14 +305,16 @@
       }}
       loading={waitingForClaimTransaction}
     >
-      <div class="rewards-page">
+      <div class="header-text" slot="header">
         <div class="title">
           {$i18n.t('jetty:open-gift-box.gift-box-opened-title')}
         </div>
         <div class="subtitle">
           {$i18n.t('jetty:open-gift-box.gift-box-opened-subtitle')}...
         </div>
-        <div class="rewards">
+      </div>
+      <div class="rewards-page">
+        <div class="cards">
           <div>
             <TransformCard
               disabled={false}
@@ -373,23 +374,28 @@
       }}
       disabled={!selectedGiftBox}
     >
-      <Carousel let:Item>
-        {#each Object.entries(ownedGiftBoxes) as [address, { amount, name, image }]}
-          {#if amount > 0}
-            <Item>
-              <ResourceCard
-                selected={selectedGiftBox === address}
-                on:selected={() => {
-                  selectedGiftBox = address
-                }}
-              >
-                <div class="gift-box" style:--image={`url(${image})`} />
-                <div slot="text">{$i18n.t('jetty:open-gift-box.gift-box-title', { name })}</div>
-              </ResourceCard>
-            </Item>
-          {/if}
-        {/each}
-      </Carousel>
+      <div class="title" slot="header">
+        {$i18n.t('jetty:open-gift-box.multiple-boxes-title')}
+      </div>
+      <div class="cards">
+        <Carousel let:Item>
+          {#each Object.entries(ownedGiftBoxes) as [address, { amount, name, image }]}
+            {#if amount > 0}
+              <Item>
+                <ResourceCard
+                  selected={selectedGiftBox === address}
+                  on:selected={() => {
+                    selectedGiftBox = address
+                  }}
+                >
+                  <div class="gift-box" style:--image={`url(${image})`} />
+                  <div slot="text">{$i18n.t('jetty:open-gift-box.gift-box-title', { name })}</div>
+                </ResourceCard>
+              </Item>
+            {/if}
+          {/each}
+        </Carousel>
+      </div>
     </JettyMenuItemPage>
   {/if}
 </div>
@@ -402,6 +408,13 @@
     height: 100%;
   }
 
+  .header-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    align-items: center;
+  }
+
   .loading {
     display: flex;
     justify-content: center;
@@ -412,6 +425,10 @@
   .title {
     font-size: var(--text-md3);
     text-align: center;
+  }
+
+  .subtitle {
+    font-weight: var(--font-weight-bold);
   }
 
   .gift-box-image {
@@ -432,15 +449,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100%;
     gap: var(--spacing-md);
   }
 
-  .rewards {
+  .cards {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    padding-top: var(--spacing-lg);
+    padding-bottom: 3rem;
   }
 </style>

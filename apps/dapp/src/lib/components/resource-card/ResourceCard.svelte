@@ -9,8 +9,6 @@
   export let disabled = false
 
   const dispatch = createEventDispatcher<{ selected: undefined; deselected: undefined }>()
-
-  let height: number
 </script>
 
 <div class="resource-card">
@@ -21,8 +19,6 @@
       selected = !selected
       selected ? dispatch('selected') : dispatch('deselected')
     }}
-    bind:clientHeight={height}
-    style:width={`${height * 0.6}px`}
   >
     <slot />
 
@@ -39,7 +35,8 @@
 <style lang="scss">
   button {
     position: relative;
-    height: 13rem;
+    height: 12rem;
+    aspect-ratio: 1/1.66;
     border: var(--border) var(--color-light);
     border-radius: var(--border-radius-xl);
     margin: 0 var(--spacing-xl);
