@@ -976,7 +976,7 @@ export default [
                     field_name: 'key_image_url'
                   },
                   {
-                    value: 'Whirlpool Spiral Card {16/50}',
+                    value: 'Whirlpool Spiral Card {16}',
                     kind: 'String',
                     field_name: 'name'
                   },

@@ -76,7 +76,7 @@ fn can_mint_morph_card() -> Result<(), RuntimeError> {
     let result = morph_card_forge.mint_card(
         UserId("<test_123>".to_string()),
         Url::of("https://www.example.com"),
-        "Molten Lava Morph Card {42/50} Limited".to_string(),
+        "Molten Lava Morph Card {42} Limited".to_string(),
         "Use this limited-edition Morph Energy Card to fuse 2 RadGems using the fiery flow of molten lava! The rare shape defined by this card is rated at a quality level of 42 out of a possible 50.".to_string(),
         "molten lava".to_string(),
         "the fiery flow of molten lava".to_string(),
@@ -134,7 +134,7 @@ pub fn cannot_mint_card_when_disabled() -> Result<(), RuntimeError> {
     let result = morph_card_forge.mint_card(
         UserId("<test_123>".to_string()),
         Url::of("https://www.example.com"),
-        "Molten Lava Morph Card {42/50} Limited".to_string(),
+        "Molten Lava Morph Card {42} Limited".to_string(),
         "Use this limited-edition Morph Energy Card to fuse 2 RadGems using the fiery flow of molten lava! The rare shape defined by this card is rated at a quality level of 42 out of a possible 50.".to_string(),
         "molten lava".to_string(),
         "the fiery flow of molten lava".to_string(),

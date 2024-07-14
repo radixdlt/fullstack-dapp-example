@@ -106,7 +106,7 @@ mod radmorph_forge {
             let radgem_2_material_text = Self::to_title_case(radgem_2_data.material.clone());
 
             let name = format!(
-                "{} {} {} and {} {} RadMorph {{{}/100}}{}",
+                "{} {} {} and {} {} RadMorph {{{}}}{}",
                 quality_text,
                 material_text,
                 color_1_text,

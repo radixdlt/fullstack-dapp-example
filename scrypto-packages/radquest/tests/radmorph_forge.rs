@@ -51,7 +51,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let card_data = 
         MorphEnergyCardData {
             key_image_url: UncheckedUrl("".to_string()),
-            name: "Molten Lava Morph Energy Card {42/50} Limited".to_string(),
+            name: "Molten Lava Morph Energy Card {42} Limited".to_string(),
             description: "".to_string(),
             quality: dec!(42),
             energy_type: "molten lava".to_string(),
@@ -191,7 +191,7 @@ fn can_mint_radmorph_with_correct_data() -> Result<(), RuntimeError> {
     assert_eq!(radmorph_data,
         RadmorphData {
             key_image_url: UncheckedUrl::of("https://www.example.url"),
-            name: "Excellent Metallic Blood and Smoke Molten Lava RadMorph {57/100} Limited".to_string(),
+            name: "Excellent Metallic Blood and Smoke Molten Lava RadMorph {57} Limited".to_string(),
             description: "A Crystalline Blood RadGem and Metallic Smoke RadGem were fused in the fiery flow of molten lava to produce this Metallic Molten Lava RadMorph. Its overall quality is rated as Excellent – 57 out of a possible 100.".to_string(),
             quality: dec!(57),
             material: "metallic".to_string(),
