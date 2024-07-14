@@ -6,7 +6,7 @@ import { EventId } from 'common'
 export type FilteredTransaction = {
   type: EventId
   transactionId: string
-  data: Record<string, Record<string, unknown>>
+  data: Record<string, unknown>
   userId?: string
   accountAddress?: string
   questId?: string
@@ -26,6 +26,7 @@ export const FilterTransactionsByType =
       let userId: string | undefined
       let accountAddress: string | undefined
       let questId: string | undefined
+      let extractedData: Record<string, unknown> = {}
 
       if (tx.transaction_status !== 'CommittedSuccess' || !events) return
       for (const event of events) {
@@ -48,10 +49,9 @@ export const FilterTransactionsByType =
                 dataEntries.filter(([key]) => eventKeysIntersection.includes(key))
               )
 
-              const extractedData = Object.values(data).reduce(
-                (acc, item) => ({ ...acc, ...item }),
-                {}
-              )
+              extractedData = Object.values(data).reduce((acc, item) => ({ ...acc, ...item }), {
+                eventId: trackedEventName
+              })
 
               userId = extractedData.userId as string
               accountAddress = extractedData.accountAddress as string
@@ -69,7 +69,7 @@ export const FilterTransactionsByType =
       return transactionType
         ? ({
             type: transactionType,
-            data,
+            data: extractedData,
             transactionId: tx.intent_hash!,
             accountAddress,
             userId

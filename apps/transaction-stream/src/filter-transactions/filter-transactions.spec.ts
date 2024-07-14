@@ -194,7 +194,7 @@ describe('filter transactions', () => {
 
       expect(transaction.type).toEqual(EventId.GiftBoxOpened)
       expect(transaction.userId).toBeDefined()
-      expect(transaction.data.GiftBoxOpenedEvent.giftBoxResourceAddress).toBeDefined()
+      expect(transaction.data.giftBoxResourceAddress).toBeDefined()
     })
   })
 
@@ -234,8 +234,7 @@ describe('filter transactions', () => {
 
       expect(CombineElementsMintedRadgem.transactionId).toBeDefined()
       expect(CombineElementsMintedRadgem.type).toEqual('CombineElementsMintedRadgem')
-      expect(CombineElementsMintedRadgem.data.MintedRadgemEvent).toBeDefined()
-      expect(CombineElementsMintedRadgem.data.MintedRadgemEvent.radgemLocalId).toBeDefined()
+      expect(CombineElementsMintedRadgem.data.radgemLocalId).toBeDefined()
     })
 
     it(`should find ${EventId.CombineElementsAddedRadgemImage} transaction`, () => {
@@ -282,10 +281,10 @@ describe('filter transactions', () => {
 
       expect(transaction.transactionId).toBeDefined()
       expect(transaction.type).toEqual(EventId.QuestRewardDeposited)
-      expect(transaction.data.RewardDepositedEvent.questId).toBeDefined()
+      expect(transaction.data.questId).toBeDefined()
       expect(transaction.userId).toBeDefined()
       expect(transaction.data).toBeDefined()
-      expect(transaction.data.RewardDepositedEvent.rewards).toBeDefined()
+      expect(transaction.data.rewards).toBeDefined()
     })
 
     it(`should find ${EventId.QuestRewardClaimed}`, () => {
@@ -301,7 +300,7 @@ describe('filter transactions', () => {
 
       expect(transaction.type).toEqual(EventId.QuestRewardClaimed)
       expect(transaction.userId).toBeDefined()
-      expect(transaction.data.RewardClaimedEvent.questId).toBeDefined()
+      expect(transaction.data.questId).toBeDefined()
     })
   })
 

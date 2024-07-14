@@ -27,7 +27,7 @@ export const EventModel = (db: PrismaClient) => (logger?: AppLogger) => {
       questId?: string
       transactionId: string
       userId: string
-      data: Record<string, Record<string, unknown>>
+      data: Record<string, unknown>
     }[]
   ) => {
     if (events.length === 0) return okAsync([])

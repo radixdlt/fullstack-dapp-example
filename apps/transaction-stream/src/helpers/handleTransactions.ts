@@ -61,7 +61,7 @@ export const HandleTransactions =
                 type: item.id as unknown as EventId,
                 transactionId: item.transactionId,
                 userId: item.userId!,
-                data: item.data as Record<string, Record<string, string>>
+                data: item.data as Record<string, unknown>
               }))
             )
           )
