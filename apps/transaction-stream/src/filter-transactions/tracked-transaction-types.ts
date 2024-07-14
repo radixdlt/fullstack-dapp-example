@@ -160,7 +160,8 @@ export const trackedTransactionTypes: TrackedTransactions = {
       eventName: 'CombineElementsMintedRadgemEvent',
       componentAddress: config.radQuest.components.refinery,
       keys: {
-        user_id: { kind: 'String', key: 'userId' }
+        user_id: { kind: 'String', key: 'userId' },
+        radgem_local_id: { kind: 'NonFungibleLocalId', key: 'radgemLocalId' }
       }
     })
   },
@@ -212,7 +213,10 @@ export const trackedTransactionTypes: TrackedTransactions = {
     AccountAddedEvent: eventEmittedByComponent({
       eventName: 'AccountAddedEvent',
       componentAddress: config.radQuest.components.heroBadgeForge,
-      keys: { account: { kind: 'Reference', key: 'accountAddress' } }
+      keys: {
+        account: { kind: 'Reference', key: 'accountAddress' },
+        user_id: { kind: 'String', key: 'userId' }
+      }
     })
   },
   [EventId.GiftBoxOpened]: {
