@@ -37,6 +37,8 @@
     position: relative;
     color: var(--color-light);
     margin-top: var(--spacing-3xl);
+    margin-left: calc(-1 * var(--spacing-md));
+    margin-right: calc(-1 * var(--spacing-md));
     z-index: 2;
   }
 

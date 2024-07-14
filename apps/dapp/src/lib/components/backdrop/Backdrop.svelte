@@ -18,7 +18,7 @@
   <slot />
 </div>
 
-<style>
+<style lang="scss">
   .fixed {
     position: fixed;
     top: 0;
@@ -35,6 +35,10 @@
   .content {
     height: fit-content;
     width: fit-content;
-    margin: auto;
+    margin: var(--spacing-lg) auto;
+
+    @include desktop {
+      margin: auto;
+    }
   }
 </style>

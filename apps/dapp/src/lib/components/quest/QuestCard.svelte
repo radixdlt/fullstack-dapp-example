@@ -118,6 +118,8 @@
 
   .card.content {
     border-radius: 0;
+
+    padding: 24px;
   }
 
   .content {
@@ -178,6 +180,27 @@
       :global(p) {
         margin: 0;
       }
+    }
+
+    :global(p:first-child) {
+      margin-top: 0;
+    }
+
+    :global(h2:first-of-type) {
+      margin-top: 0;
+    }
+
+    :global(h2) {
+      font-family: 'DM Sans';
+      font-weight: var(--font-weight-bold);
+    }
+
+    :global(p:last-child) {
+      margin-bottom: 0;
+    }
+
+    :global(p) {
+      line-height: 24px;
     }
   }
 

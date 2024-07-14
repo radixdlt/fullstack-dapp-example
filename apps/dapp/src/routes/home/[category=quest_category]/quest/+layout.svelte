@@ -53,7 +53,7 @@
     justify-content: center;
     align-items: center;
     height: 90dvh;
-    width: 90vw;
+    width: calc(100vw - 2 * var(--spacing-lg));
     max-width: 50rem;
     max-height: 50rem;
   }
