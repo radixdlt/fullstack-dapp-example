@@ -4,7 +4,7 @@ CALL_METHOD
     Decimal("50")
 ;
 
-CREATE_NON_FUNGIBLE_RESOURCE
+CREATE_FUNGIBLE_RESOURCE
     Enum<1u8>(
         Enum<2u8>(
             Enum<0u8>(
@@ -16,72 +16,8 @@ CREATE_NON_FUNGIBLE_RESOURCE
             )
         )
     )
-    Enum<3u8>()
     true
-    Enum<0u8>(
-        Enum<0u8>(
-            Tuple(
-                Array<Enum>(
-                    Enum<14u8>(
-                        Array<Enum>(
-                            Enum<0u8>(
-                                198u8
-                            ),
-                            Enum<0u8>(
-                                12u8
-                            ),
-                            Enum<0u8>(
-                                12u8
-                            ),
-                            Enum<0u8>(
-                                12u8
-                            ),
-                            Enum<0u8>(
-                                12u8
-                            ),
-                            Enum<0u8>(
-                                12u8
-                            ),
-                            Enum<0u8>(
-                                192u8
-                            ),
-                            Enum<0u8>(
-                                1u8
-                            )
-                        )
-                    )
-                ),
-                Array<Tuple>(
-                    Tuple(
-                        Enum<1u8>(
-                            "MorphEnergyCardData"
-                        ),
-                        Enum<1u8>(
-                            Enum<0u8>(
-                                Array<String>(
-                                    "key_image_url",
-                                    "name",
-                                    "description",
-                                    "energy_type",
-                                    "energy_description",
-                                    "rarity",
-                                    "quality",
-                                    "limited_edition"
-                                )
-                            )
-                        )
-                    )
-                ),
-                Array<Enum>(
-                    Enum<0u8>()
-                )
-            )
-        ),
-        Enum<1u8>(
-            0u64
-        ),
-        Array<String>()
-    )
+    0u8
     Tuple(
         Enum<1u8>(
             Tuple(
@@ -115,7 +51,6 @@ CREATE_NON_FUNGIBLE_RESOURCE
                 Enum<0u8>()
             )
         ),
-        Enum<0u8>(),
         Enum<0u8>(),
         Enum<0u8>(),
         Enum<0u8>(),
@@ -126,7 +61,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
             "name" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "Morph Energy Cards"
+                        "Elite Gift Box"
                     )
                 ),
                 false
@@ -134,7 +69,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
             "description" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "A Morph Energy Card can be combined with 2 RadGems by RadQuest’s Jetty to produce a beautiful RadMorph NFT. Higher quality Energy Cards will contribute to a higher quality RadMorph.\n\nMorph Energy Cards allow RadQuest’s Jetty to harness the primordial energies of the universe to morph two RadGems into different shapes to create intricate, beautiful, and collectible RadMorphs."
+                        "This truly elite Gift Box from RadQuest’s Jetty, reserved for only the most committed, contains only a rare or ultra-rare Morph Energy Card and a substantial quantity of Elements. Ask Jetty to open it!"
                     )
                 ),
                 false

@@ -10,14 +10,14 @@ CREATE_FUNGIBLE_RESOURCE
             Enum<0u8>(
                 Enum<0u8>(
                     Enum<1u8>(
-                        Address("${super_admin_badge}")
+                        Address("${admin_badge}")
                     )
                 )
             )
         )
     )
     true
-    18u8
+    0u8
     Tuple(
         Enum<1u8>(
             Tuple(
@@ -51,7 +51,7 @@ CREATE_FUNGIBLE_RESOURCE
             "name" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "Ottercoin"
+                        "Clam"
                     )
                 ),
                 true
@@ -59,7 +59,7 @@ CREATE_FUNGIBLE_RESOURCE
             "description" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "Ottercoin was created by RadQuest’s guide otter, Jetty. Maybe you can buy some with a few Clams?\n\nClams are a token that is fungible and highly divisible. That means every clam is worth just the same as another, and you can send and hold even tiny fractions of an ottercoin!"
+                        "Clams are a token that is fungible and non-divisible. That means every clam is worth just the same as another, and you can’t have a fractional clam!\n\nClams are a beloved currency of otters."
                     )
                 ),
                 true

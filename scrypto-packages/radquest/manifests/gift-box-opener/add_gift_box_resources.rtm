@@ -12,6 +12,11 @@ CALL_METHOD
 CALL_METHOD
     Address("${gift_box_opener}")
     "add_gift_box_resources"
-    Array<Address>(Address("${gift_box}"))
+    Array<Address>(
+        Address("${gift_box_starter}"),
+        Address("${gift_box_simple}"),
+        Address("${gift_box_fancy}"),
+        Address("${gift_box_elite}")
+    )
 ;
 

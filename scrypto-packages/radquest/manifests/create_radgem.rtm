@@ -1,7 +1,7 @@
 CALL_METHOD
     Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
     "lock_fee"
-    Decimal("5000")
+    Decimal("50")
 ;
 
 CREATE_NON_FUNGIBLE_RESOURCE
@@ -94,9 +94,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
                         )
                     )
                 ),
-                Enum<1u8>(
-                    Enum<1u8>()
-                )
+                Enum<0u8>()
             )
         ),
         Enum<1u8>(
@@ -112,9 +110,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
                         )
                     )
                 ),
-                Enum<1u8>(
-                    Enum<1u8>()
-                )
+                Enum<0u8>()
             )
         ),
         Enum<0u8>(),
@@ -134,9 +130,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
                         )
                     )
                 ),
-                Enum<1u8>(
-                    Enum<1u8>()
-                )
+                Enum<0u8>()
             )
         )
     )
@@ -180,7 +174,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
                 Enum<1u8>(
                     Enum<128u8>(
                         Array<String>(
-                            "dapp_definition_account_address"
+                            "${dapp_definition}"
                         )
                     )
                 ),

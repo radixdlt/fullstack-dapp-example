@@ -32,7 +32,12 @@ CREATE_FUNGIBLE_RESOURCE_WITH_INITIAL_SUPPLY
                 Enum<0u8>()
             )
         ),
-        Enum<0u8>(),
+        Enum<1u8>(
+            Tuple(
+                Enum<0u8>(),
+                Enum<0u8>()
+            )
+        ),
         Enum<1u8>(
             Tuple(
                 Enum<0u8>(),
@@ -63,6 +68,16 @@ CREATE_FUNGIBLE_RESOURCE_WITH_INITIAL_SUPPLY
                         Array<String>(
                             "radquest",
                             "badge"
+                        )
+                    )
+                ),
+                false
+            ),
+            "dapp_definitions" => Tuple(
+                Enum<1u8>(
+                    Enum<128u8>(
+                        Array<String>(
+                            "${dapp_definition}"
                         )
                     )
                 ),
