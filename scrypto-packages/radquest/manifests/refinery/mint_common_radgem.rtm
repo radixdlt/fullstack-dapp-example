@@ -1,7 +1,7 @@
 CALL_METHOD
     Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
     "lock_fee"
-    Decimal("5000")
+    Decimal("50")
 ;
 
 CALL_METHOD
@@ -16,7 +16,8 @@ CALL_METHOD
     "combine_elements_mint_radgem"
     "${user_id}"
     Decimal("0.65")
-    Decimal("0.3")
+    Decimal("0.33")
+    Decimal("0.05")
 ;
 
 CALL_METHOD
