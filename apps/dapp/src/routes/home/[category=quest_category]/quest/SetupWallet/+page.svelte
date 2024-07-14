@@ -40,7 +40,6 @@
       // @ts-ignore
       useCookies('requirement-SetupWallet-DownloadWallet').set(true)
       $walletIsLinked = true
-      quest.actions.next()
       return
     }
 
