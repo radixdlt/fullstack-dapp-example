@@ -213,123 +213,6 @@ export const QuestDefinitions = () => {
         }
       }
     },
-    JoinFriend: {
-      id: 'JoinFriend',
-      category: 'advanced',
-      trackedAccountAddress: false,
-      splashImage: '/quests-images/splash/QuestTogether.webp',
-      rewards: [
-        {
-          name: 'xrd',
-          amount: 25
-        }
-      ],
-      minutesToComplete: 1,
-      preRequisites: ['TransferTokens'],
-      requirements: {
-        CompleteBasicQuests: {
-          type: 'offLedger',
-          completedByUser: false
-        }
-      }
-    },
-    NetworkStaking: {
-      id: 'NetworkStaking',
-      category: 'advanced',
-      trackedAccountAddress: true,
-      rewards: [
-        {
-          name: 'xrd',
-          amount: 50
-        },
-        {
-          name: 'simpleGiftBox',
-          amount: 1
-        }
-      ],
-      minutesToComplete: 5,
-      preRequisites: ['TransferTokens'],
-      requirements: {
-        [EventId.XrdStaked]: {
-          eventName: 'StakedXrd',
-          type: 'event'
-        }
-      }
-    },
-    DEXSwaps: {
-      id: 'DEXSwaps',
-      category: 'advanced',
-      rewards: [
-        {
-          name: 'xrd',
-          amount: 10
-        },
-        {
-          name: 'fancyGiftBox',
-          amount: 1
-        }
-      ],
-      trackedAccountAddress: true,
-      minutesToComplete: 5,
-      preRequisites: ['TransferTokens'],
-      requirements: {
-        [EventId.JettySwap]: {
-          eventName: 'ClamSwapEvent',
-          type: 'event'
-        },
-        [EventId.LettySwap]: {
-          eventName: 'ClamSwapEvent',
-          type: 'event'
-        }
-      }
-    },
-    Instapass: {
-      id: 'Instapass',
-      category: 'advanced',
-      rewards: [
-        {
-          name: 'xrd',
-          amount: 50
-        },
-        {
-          name: 'simpleGiftBox',
-          amount: 1
-        }
-      ],
-      trackedAccountAddress: true,
-      minutesToComplete: 20,
-      preRequisites: ['TransferTokens'],
-      requirements: {
-        [EventId.InstapassBadgeDeposited]: {
-          eventName: 'InstapassBadgeDeposited',
-          type: 'event'
-        }
-      }
-    },
-    Thorswap: {
-      id: 'Thorswap',
-      category: 'advanced',
-      rewards: [
-        {
-          name: 'xrd',
-          amount: 250
-        },
-        {
-          name: 'eliteGiftBox',
-          amount: 1
-        }
-      ],
-      splashImage: '/quests-images/splash/Thorswap.webp',
-      trackedAccountAddress: true,
-      minutesToComplete: 10,
-      preRequisites: ['QuestTogether'],
-      requirements: {
-        [EventId.MayaRouterWithdrawEvent]: {
-          eventName: 'MayaRouterWithdrawEvent',
-          type: 'event'
-        }
-      }
-    },
     QuestTogether: {
       id: 'QuestTogether',
       category: 'advanced',
@@ -389,6 +272,123 @@ export const QuestDefinitions = () => {
         },
         SuperLevel: {
           type: 'offLedger'
+        }
+      }
+    },
+    JoinFriend: {
+      id: 'JoinFriend',
+      category: 'advanced',
+      trackedAccountAddress: false,
+      splashImage: '/quests-images/splash/QuestTogether.webp',
+      rewards: [
+        {
+          name: 'xrd',
+          amount: 25
+        }
+      ],
+      minutesToComplete: 1,
+      preRequisites: ['TransferTokens'],
+      requirements: {
+        CompleteBasicQuests: {
+          type: 'offLedger',
+          completedByUser: false
+        }
+      }
+    },
+    DEXSwaps: {
+      id: 'DEXSwaps',
+      category: 'advanced',
+      rewards: [
+        {
+          name: 'xrd',
+          amount: 10
+        },
+        {
+          name: 'fancyGiftBox',
+          amount: 1
+        }
+      ],
+      trackedAccountAddress: true,
+      minutesToComplete: 5,
+      preRequisites: ['TransferTokens'],
+      requirements: {
+        [EventId.JettySwap]: {
+          eventName: 'ClamSwapEvent',
+          type: 'event'
+        },
+        [EventId.LettySwap]: {
+          eventName: 'ClamSwapEvent',
+          type: 'event'
+        }
+      }
+    },
+    NetworkStaking: {
+      id: 'NetworkStaking',
+      category: 'advanced',
+      trackedAccountAddress: true,
+      rewards: [
+        {
+          name: 'xrd',
+          amount: 50
+        },
+        {
+          name: 'simpleGiftBox',
+          amount: 1
+        }
+      ],
+      minutesToComplete: 5,
+      preRequisites: ['TransferTokens'],
+      requirements: {
+        [EventId.XrdStaked]: {
+          eventName: 'StakedXrd',
+          type: 'event'
+        }
+      }
+    },
+    Instapass: {
+      id: 'Instapass',
+      category: 'advanced',
+      rewards: [
+        {
+          name: 'xrd',
+          amount: 50
+        },
+        {
+          name: 'simpleGiftBox',
+          amount: 1
+        }
+      ],
+      trackedAccountAddress: true,
+      minutesToComplete: 20,
+      preRequisites: ['TransferTokens'],
+      requirements: {
+        [EventId.InstapassBadgeDeposited]: {
+          eventName: 'InstapassBadgeDeposited',
+          type: 'event'
+        }
+      }
+    },
+    Thorswap: {
+      id: 'Thorswap',
+      category: 'advanced',
+      rewards: [
+        {
+          name: 'xrd',
+          amount: 250
+        },
+        {
+          name: 'eliteGiftBox',
+          amount: 1
+        }
+      ],
+      splashImage: '/quests-images/splash/Thorswap.webp',
+      trackedAccountAddress: true,
+      minutesToComplete: 10,
+      preRequisites: ['QuestTogether'],
+      requirements: {
+        [EventId.MayaRouterWithdrawEvent]: {
+          eventName: 'MayaRouterWithdrawEvent',
+          type: 'event'
         }
       }
     }
