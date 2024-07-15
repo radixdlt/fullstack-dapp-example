@@ -1,4 +1,4 @@
-import { PrismaClient } from 'database'
+import { ImageType, PrismaClient } from 'database'
 import { ResultAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers'
@@ -8,21 +8,20 @@ export type ImageModel = ReturnType<typeof ImageModel>
 export type ImageModelMethods = ReturnType<ImageModel>
 
 export const ImageModel = (db: PrismaClient) => (logger?: AppLogger) => {
-  const addMany = (data: { url: string; id: string }[]) =>
-    ResultAsync.fromPromise(
+  const addMany = (data: { url: string; id: string; type: ImageType }[]) => {
+    return ResultAsync.fromPromise(
       db.$transaction(async (transaction) => {
         await transaction.image.deleteMany({
           where: { id: { in: data.map((d) => d.id) } }
         })
-        await transaction.image.createMany({
-          data: data.map((item) => ({ ...item, type: 'RadMorph' }))
-        })
+        await transaction.image.createMany({ data })
       }),
       (error) => {
         logger?.error({ error, method: 'addMany', model: 'ImageModel' })
         return createApiError('failed to add many radmorphs images', 400)()
       }
     )
+  }
 
   const listRadmorphs = () =>
     ResultAsync.fromPromise(

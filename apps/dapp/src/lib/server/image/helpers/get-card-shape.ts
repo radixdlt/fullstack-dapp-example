@@ -13,7 +13,7 @@ export const getCardShape = (cardData: ProgrammaticScryptoSborValue | undefined)
   if (cardData.kind === 'Tuple') {
     for (const field of cardData.fields) {
       if (field.kind === 'String') {
-        if (field.field_name === 'energy') {
+        if (field.field_name === 'energy_type') {
           shapeCode = shapeToCode(field.value as Shape)
         }
       }
