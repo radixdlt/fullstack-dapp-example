@@ -1,7 +1,7 @@
 import type { QuestStatus } from 'database'
 import { type ControllerDependencies, type ControllerMethodContext } from '../_types'
 import { QuestDefinitions, type Quests } from 'content'
-import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
+import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId, Requirement } from 'content'
 import { config } from '$lib/config'
@@ -63,10 +63,12 @@ export const UserQuestController = ({
       httpResponseCode: 200
     }))
 
-  const saveProgress = (userId: string, questId: QuestId, progress: number) =>
-    userQuestModel
+  const saveProgress = (userId: string, questId: QuestId, progress: number) => {
+    logger.debug({ method: 'saveProgress', userId, questId, progress })
+    return userQuestModel
       .saveProgress(questId, userId, progress)
       .map((data) => ({ data, httpResponseCode: 200 }))
+  }
 
   const getSavedProgress = (userId: string) =>
     userQuestModel.getSavedProgress(userId).map((output) => ({
@@ -93,6 +95,7 @@ export const UserQuestController = ({
       .map(() => ({ httpResponseCode: 200, data: undefined }))
 
   const startQuest = (userId: string, questId: keyof Quests) => {
+    logger.debug({ method: 'startQuest', userId, questId })
     const questDefinition = QuestDefinitions()[questId]
 
     const preRequisites = questDefinition.preRequisites
@@ -103,11 +106,21 @@ export const UserQuestController = ({
         if (questStatus?.status === 'COMPLETED') {
           return errAsync(createApiError(ErrorReason.questAlreadyCompleted, 400)())
         }
-        return okAsync(questStatus)
+        const shouldTrackAccountAddress = !questStatus && questDefinition.trackedAccountAddress
+        return okAsync(shouldTrackAccountAddress)
       })
+      .andThen((shouldTrackAccountAddress) =>
+        shouldTrackAccountAddress
+          ? userModel
+              .getById(userId, {})
+              .andThen((user) =>
+                accountAddressModel.addTrackedAddress(user.accountAddress!, questId, userId)
+              )
+          : okAsync(undefined)
+      )
 
-    return questStatusResult.andThen((statusResult) =>
-      userQuestModel
+    return questStatusResult.andThen(() => {
+      return userQuestModel
         .findPrerequisites(userId, preRequisites as unknown as string[])
         .andThen((completedPrerequisites) => {
           if (
@@ -116,34 +129,10 @@ export const UserQuestController = ({
           ) {
             return errAsync(createApiError(ErrorReason.preRequisiteNotMet, 400)())
           }
-          return okAsync(statusResult)
-        })
-        .andThen((statusResult) => {
-          const shouldTrackAccountAddress = !statusResult && questDefinition.trackedAccountAddress
-          logger.debug({ shouldTrackAccountAddress, statusResult, questDefinition })
-          return shouldTrackAccountAddress
-            ? userModel
-                .getById(userId, {})
-                .andThen((user) =>
-                  user ? ok(user) : err(createApiError(ErrorReason.userNotFound, 404)())
-                )
-                .andThen(({ accountAddress }) => {
-                  if (!accountAddress) {
-                    return err(createApiError('accountAddressNotSet', 400)())
-                  }
-                  return accountAddressModel.addTrackedAddress(
-                    accountAddress as string,
-                    questId,
-                    userId
-                  )
-                })
-            : okAsync(undefined)
-        })
-        .andThen(() => {
           return userQuestModel.updateQuestStatus(questId, userId, 'IN_PROGRESS')
         })
         .map(() => ({ httpResponseCode: 200, data: undefined }))
-    )
+    })
   }
 
   const getQuestRequirements = (userId: string, questId: keyof Quests) =>

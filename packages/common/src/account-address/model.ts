@@ -15,6 +15,13 @@ export const AccountAddressModel = (redisClient: RedisConnection) => (logger?: A
   const addTrackedAddress = (accountAddress: string, questId: string, userId: string) =>
     getRedisClient()
       .andThen((client) => {
+        logger?.debug({
+          method: 'addTrackedAddress',
+          model: 'AccountAddressModel',
+          accountAddress,
+          questId,
+          userId
+        })
         return ResultAsync.fromPromise(
           client.setnx(`${RedisKeys.TrackedAccountAddresses}:${accountAddress}:${questId}`, userId),
           (error) => {
