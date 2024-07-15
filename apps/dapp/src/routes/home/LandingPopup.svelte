@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { LandingPopupId, type LandingPopupDefinition } from 'content'
+  import { LandingPopupSchema, UtmSourceLanding } from 'content'
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import JettyImage from '@images/landing-popup-jetty.webp'
@@ -13,46 +13,39 @@
   import { userApi } from '$lib/api/user-api'
   import { htmlReplace } from '$lib/helpers/html-replace'
 
-  type Replacer = (params: any) => (html: string) => Promise<string>
-  type Popup = LandingPopupDefinition & {
-    html: string
-    id: LandingPopupId
-    replacer?: ReturnType<Replacer>
-  }
+  type Replacer = (html: string) => Promise<string>
 
-  const extensions: Partial<Record<LandingPopupId, Replacer>> = {
-    [LandingPopupId.UserReferral]: (params: URLSearchParams) => (html: string) =>
-      userApi
-        .getNameByRefferalCode(params.get('ref') || '')
-        .map(({ name }) => htmlReplace(html, { inviter_name: name }))
-        .orElse(() => okAsync(html))
-        .unwrapOr(html)
-  }
-
-  export let definitions: Popup[]
+  export let definitions: Record<LandingPopupSchema, string>
 
   let seenLandingPopup: boolean
-  let visibleLandingPopup: Popup
+  let visibleLandingPopup: {
+    html: string
+    replacer: Replacer
+  }
 
   onMount(() => {
     seenLandingPopup = !!(useLocalStorage('seen-landing-popup').get() || $user)
     const searchParams = new URLSearchParams(window.location.search)
-    definitions.find(async (definition) => {
-      if (
-        (definition.queryParamValue &&
-          searchParams.has(definition.queryParamName) &&
-          searchParams.get(definition.queryParamName) === definition.queryParamValue) ||
-        (searchParams.has(definition.queryParamName) && !definition.queryParamValue)
-      ) {
-        const replacer = extensions[definition.id]
-        if (replacer) {
-          definition.replacer = replacer(searchParams)
-        }
-        visibleLandingPopup = definition
-
-        return true
+    if (searchParams.has('ref')) {
+      visibleLandingPopup = {
+        html: definitions[LandingPopupSchema.UserReferral],
+        replacer: (html: string) =>
+          userApi
+            .getNameByRefferalCode(searchParams.get('ref') || '')
+            .map(({ name }) => htmlReplace(html, { inviter_name: name }))
+            .orElse(() => okAsync(html))
+            .unwrapOr(html)
       }
-    })
+    }
+
+    if (searchParams.has('utm_source')) {
+      const utmSource = searchParams.get('utm_source') as keyof typeof UtmSourceLanding
+      visibleLandingPopup = {
+        html: definitions[UtmSourceLanding[utmSource].schema],
+        replacer: (html: string) =>
+          Promise.resolve(htmlReplace(html, UtmSourceLanding[utmSource].data))
+      }
+    }
 
     const unsubscribe = user.subscribe((value) => {
       if (value) {

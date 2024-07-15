@@ -1,12 +1,12 @@
 {
-  "m_testkol": {
+  "influencer": {
     "en": {
-      "0.md": "<h2>Welcome to RadQuest</h2>\n<p>The Crypto Banter team loves to send people to me! I will be your guide to Radix. Continue your adventure and claim your XRD onboarding bonus worth $20!</p>\n"
+      "0.md": "<h2>Welcome to RadQuest</h2>\n<p>Hey! {influencer} loves to send people to me! I will be your guide to Radix. Continue your adventure and start earning your $20 of XRD!\nTurn on screen reader support</p>\n"
     }
   },
-  "m_testpaidad": {
+  "paid": {
     "en": {
-      "0.md": "<h2>Welcome to RadQuest</h2>\n<p>Fantastic! Another visitor from X ready to dive into RadQuest. I will be your guide to Radix. Continue your adventure and claim your XRD onboarding bonus worth $20!</p>\n"
+      "0.md": "<h2>Welcome to RadQuest</h2>\n<p>Fantastic! Another visitor from {source} ready to dive into RadQuest. I will be your guide to Radix. Continue your adventure and start earning your $20 of XRD!</p>\n"
     }
   },
   "userreferral": {
