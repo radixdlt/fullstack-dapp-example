@@ -53,6 +53,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-2xl);
+    padding: var(--spacing-2xl);
   }
 
   .item {
@@ -64,6 +65,7 @@
     color: var(--color-light);
     background: var(--color-background-dark);
     width: 100%;
+    padding: var(--spacing-2xl);
 
     > :global(h2) {
       color: var(--color-light);

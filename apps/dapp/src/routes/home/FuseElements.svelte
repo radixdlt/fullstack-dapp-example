@@ -357,6 +357,7 @@
     justify-content: center;
     color: var(--color-light);
     height: 100%;
+    padding: var(--spacing-2xl);
   }
   .bold {
     font-weight: var(--font-weight-bold);
