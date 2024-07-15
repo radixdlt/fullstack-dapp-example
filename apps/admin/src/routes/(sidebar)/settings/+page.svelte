@@ -29,7 +29,9 @@
     .map((item) => ({ ...item, ...extendItem[item.key as ConfigKey] }))
     .reduce<ExtendedItem[]>((acc, item) => [...acc, item], [])
 
-  console.log(extendedItems)
+  extendedItems.forEach((item) => (values[item.key] = item.transformResponse(item.value)))
+
+  console.log(extendedItems, values)
 </script>
 
 <main class="p-4">
@@ -40,12 +42,7 @@
       </Heading>
     </div>
     <div class="col-span-full space-y-4">
-      <CardList
-        title="System Preferences"
-        subtitle="Global system settings"
-        {extendedItems}
-        let:item
-      >
+      {#each extendedItems as item}
         <div class="flex items-center justify-between">
           <div class="flex flex-grow flex-col">
             <div class="text-lg font-semibold text-gray-900 dark:text-white">{item.title}</div>
@@ -54,19 +51,19 @@
             </div>
           </div>
           <Toggle
-            checked={item.transformResponse(item.value)}
+            checked={values[item.key]}
             on:change={async () => {
-              // values[item.key] = !values[item.key]
-              // debugger
+              const nextValue = !values[item.key]
+              values[item.key] = nextValue
               await fetch('/settings', {
                 method: 'PUT',
-                body: JSON.stringify({ [item.key]: item.transformRequest(!item.value) })
+                body: JSON.stringify({ [item.key]: item.transformRequest(nextValue) })
               })
             }}
             classDiv="peer-focus:ring-0 me-0"
           />
         </div>
-      </CardList>
+      {/each}
     </div>
   </div>
 </main>
