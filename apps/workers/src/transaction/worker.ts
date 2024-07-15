@@ -6,6 +6,7 @@ import { getUserById } from '../helpers/getUserById'
 import { WorkerError, WorkerOutputError } from '../_types'
 import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 import { TokenPriceClient } from '../token-price-client'
+import { config } from '../config'
 
 export const TransactionWorker = (
   connection: ConnectionOptions,
@@ -94,7 +95,7 @@ export const TransactionWorker = (
         throw error
       }
     },
-    { connection }
+    { connection, concurrency: config.worker.transaction.concurrency }
   )
 
   return worker

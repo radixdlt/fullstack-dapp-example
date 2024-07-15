@@ -4,6 +4,7 @@ import { EventWorkerController, UserExtended } from './controller'
 import { getUserById } from '../helpers/getUserById'
 import { PrismaClient } from 'database'
 import { WorkerOutputError } from '../_types'
+import { config } from '../config'
 
 export const EventWorker = (
   connection: ConnectionOptions,
@@ -74,7 +75,7 @@ export const EventWorker = (
         throw error
       }
     },
-    { connection }
+    { connection, concurrency: config.worker.event.concurrency }
   )
 
   worker.on('completed', (job) => {

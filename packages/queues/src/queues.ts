@@ -109,13 +109,19 @@ export type TransactionQueue = TQueues['transactionQueue']
 export type EventQueue = TQueues['eventQueue']
 export type SystemQueue = TQueues['systemQueue']
 
+const defaultJobOptions = {
+  attempts: 10
+}
+
 export const getQueues = (connection: ConnectionOptions) => {
   const eventQueue = new Queue<EventJob>(Queues.EventQueue, {
-    connection
+    connection,
+    defaultJobOptions
   })
 
   const transactionQueue = new Queue<TransactionJob>(Queues.TransactionQueue, {
-    connection
+    connection,
+    defaultJobOptions
   })
 
   const systemQueue = new Queue<SystemJob>(Queues.SystemQueue, {

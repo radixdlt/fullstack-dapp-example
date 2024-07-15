@@ -31,5 +31,13 @@ export const config = {
   radQuest: {
     ...Addresses(networkId),
     directXrdDepositAmount: 5
+  },
+  worker: {
+    event: {
+      concurrency: 50
+    },
+    transaction: {
+      concurrency: 50
+    }
   }
 }

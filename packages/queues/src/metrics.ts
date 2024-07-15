@@ -7,19 +7,19 @@ import type { AppLogger } from 'common'
 export type QueueMetrics = ReturnType<typeof QueueMetrics>
 export const QueueMetrics = (name: string) => {
   return {
-    waitingJobs: new client.Gauge({
+    waitingJobs: new client.Counter({
       name: `${name}_queue_waiting_jobs`,
       help: `The number of waiting jobs in the ${name} queue`
     }),
-    completedJobs: new client.Gauge({
+    completedJobs: new client.Counter({
       name: `${name}_queue_completed_jobs`,
       help: `The number of completed jobs in the ${name} queue`
     }),
-    failedJobs: new client.Gauge({
+    failedJobs: new client.Counter({
       name: `${name}_queue_failed_jobs`,
       help: `The number of failed jobs in the ${name} queue`
     }),
-    activeJobs: new client.Gauge({
+    activeJobs: new client.Counter({
       name: `${name}_queue_active_jobs`,
       help: `The number of active jobs in the ${name} queue`
     })
@@ -36,48 +36,39 @@ const setupQueueEvents = (input: {
   const queueEvent = new QueueEvents(input.queueName, { connection: input.connection })
   const childLogger = input.logger?.child({ queue: input.queueName, method: 'queueMetrics' })
 
-  const setWaitingJobs = async () => {
-    const value = await input.queue.getJobCountByTypes('wait')
+  const setWaitingJobs = async (value: number) => {
     childLogger?.trace({ status: `waiting`, value })
-    input.trackMetricsFn.waitingJobs.set(value)
+    input.trackMetricsFn.waitingJobs.inc(value)
   }
-  const setProgressJobs = async () => {
-    const value = await input.queue.getJobCountByTypes('active')
+  const setProgressJobs = async (value: number) => {
     childLogger?.trace({ status: `active`, value })
-    input.trackMetricsFn.activeJobs.set(value)
+    input.trackMetricsFn.activeJobs.inc(value)
   }
-  const setFailedJobs = async () => {
-    const value = await input.queue.getJobCountByTypes('failed')
+  const setFailedJobs = async (value: number) => {
     childLogger?.trace({ status: 'failed', value })
-    input.trackMetricsFn.failedJobs.set(value)
+    input.trackMetricsFn.failedJobs.inc(value)
   }
 
-  const setCompletedJobs = async () => {
-    const value = await input.queue.getJobCountByTypes('completed')
+  const setCompletedJobs = async (value: number) => {
     childLogger?.trace({ status: 'completed', value })
-    input.trackMetricsFn.completedJobs.set(value)
+    input.trackMetricsFn.completedJobs.inc(value)
   }
 
   queueEvent.on('waiting', async () => {
-    await setWaitingJobs()
+    await setWaitingJobs(1)
   })
 
   queueEvent.on('progress', async () => {
-    await Promise.all([setWaitingJobs(), setProgressJobs()])
+    await Promise.all([setWaitingJobs(-1), setProgressJobs(1)])
   })
 
   queueEvent.on('failed', async () => {
-    await Promise.all([setWaitingJobs(), setProgressJobs(), setFailedJobs()])
+    await Promise.all([setProgressJobs(-1), setFailedJobs(1)])
   })
 
   queueEvent.on('completed', async () => {
-    await Promise.all([setWaitingJobs(), setProgressJobs(), setCompletedJobs()])
+    await Promise.all([setProgressJobs(-1), setCompletedJobs(1)])
   })
-
-  setWaitingJobs()
-  setProgressJobs()
-  setFailedJobs()
-  setCompletedJobs()
 }
 
 export const SetupQueueMetrics = ({
