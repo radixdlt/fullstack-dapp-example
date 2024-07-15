@@ -37,8 +37,8 @@
     position: relative;
     color: var(--color-light);
     margin-top: var(--spacing-3xl);
-    margin-left: calc(-1 * var(--spacing-md));
-    margin-right: calc(-1 * var(--spacing-md));
+    margin-left: calc(-1 * var(--spacing-lg));
+    margin-right: calc(-1 * var(--spacing-lg));
     z-index: 2;
   }
 
@@ -46,7 +46,7 @@
     width: 100%;
     height: 100%;
     z-index: 1;
-    padding: var(--spacing-2xl);
+    padding: 24px;
   }
 
   .jetty-image {

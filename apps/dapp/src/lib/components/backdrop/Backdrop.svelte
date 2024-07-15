@@ -35,10 +35,10 @@
   .content {
     height: fit-content;
     width: fit-content;
-    margin: var(--spacing-lg) auto;
+    margin: auto;
 
-    @include desktop {
-      margin: auto;
+    @include mobile {
+      transform: translateY(-16px);
     }
   }
 </style>

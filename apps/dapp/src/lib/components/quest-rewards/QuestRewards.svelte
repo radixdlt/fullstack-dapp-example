@@ -28,6 +28,7 @@
     flex-wrap: wrap;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: var(--rewards-gap, var(--spacing-lg));
   }
 
