@@ -7,7 +7,7 @@ struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,
     gift_box_opener: GiftBoxOpener,
     simple_gift_boxes: Bucket,
-    fine_gift_boxes: Bucket,
+    fancy_gift_boxes: Bucket,
     user_id: UserId,
     hero_badge_proof: Proof,
     admin_badge_proof: Proof,
@@ -35,7 +35,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
            burner_updater => rule!(deny_all);
     })
     .mint_initial_supply(2, &mut env)?;
-    let fine_gift_boxes = ResourceBuilder::new_fungible(OwnerRole::Fixed(rule!(require(
+    let fancy_gift_boxes = ResourceBuilder::new_fungible(OwnerRole::Fixed(rule!(require(
         admin_badge.resource_address(&mut env)?
     ))))
     .burn_roles(burn_roles! {
@@ -78,7 +78,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         env,
         gift_box_opener,
         simple_gift_boxes,
-        fine_gift_boxes,
+        fancy_gift_boxes,
         user_id: UserId(user_id_string),
         hero_badge_proof,
         admin_badge_proof,
@@ -102,7 +102,7 @@ fn can_add_gift_box_resources() -> Result<(), RuntimeError> {
         mut env,
         mut gift_box_opener,
         simple_gift_boxes,
-        fine_gift_boxes,
+        fancy_gift_boxes,
         admin_badge_proof,
         ..
     } = arrange_test_environment()?;
@@ -112,7 +112,7 @@ fn can_add_gift_box_resources() -> Result<(), RuntimeError> {
     let result = gift_box_opener.add_gift_box_resources(
         vec![
             simple_gift_boxes.resource_address(&mut env)?,
-            fine_gift_boxes.resource_address(&mut env)?,
+            fancy_gift_boxes.resource_address(&mut env)?,
         ],
         &mut env,
     );
@@ -129,7 +129,7 @@ fn can_remove_gift_box_resources() -> Result<(), RuntimeError> {
         mut env,
         mut gift_box_opener,
         simple_gift_boxes,
-        fine_gift_boxes,
+        fancy_gift_boxes,
         admin_badge_proof,
         ..
     } = arrange_test_environment()?;
@@ -138,7 +138,7 @@ fn can_remove_gift_box_resources() -> Result<(), RuntimeError> {
     gift_box_opener.add_gift_box_resources(
         vec![
             simple_gift_boxes.resource_address(&mut env)?,
-            fine_gift_boxes.resource_address(&mut env)?,
+            fancy_gift_boxes.resource_address(&mut env)?,
         ],
         &mut env,
     )?;
@@ -147,7 +147,7 @@ fn can_remove_gift_box_resources() -> Result<(), RuntimeError> {
     let result = gift_box_opener.remove_gift_box_resources(
         vec![
             simple_gift_boxes.resource_address(&mut env)?,
-            fine_gift_boxes.resource_address(&mut env)?,
+            fancy_gift_boxes.resource_address(&mut env)?,
         ],
         &mut env,
     );
