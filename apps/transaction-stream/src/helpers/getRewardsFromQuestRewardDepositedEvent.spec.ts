@@ -1,6 +1,9 @@
 import { ProgrammaticScryptoSborValueArray } from '@radixdlt/babylon-gateway-api-sdk'
 import { getRewardsFromQuestRewardDepositedEvent } from './getRewardsFromQuestRewardDepositedEvent'
 import { describe, it, expect } from 'vitest'
+import { Addresses } from 'common'
+
+const config = Addresses(2)
 
 const eventData = {
   element_kind: 'Tuple',
@@ -8,7 +11,7 @@ const eventData = {
     {
       fields: [
         {
-          value: 'resource_tdx_2_1th2zk6250rghhahxjkfl260tq28ay6skuffzr9hfmy9nuarwzucpqn',
+          value: config.resources.giftBox.Fancy,
           kind: 'Reference',
           type_name: 'ResourceAddress',
           field_name: 'resource_address'
@@ -65,7 +68,7 @@ describe('getRewardsFromQuestRewardDepositedEvent', () => {
     const values = getRewardsFromQuestRewardDepositedEvent(eventData)
     expect(values).toEqual([
       {
-        resourceAddress: 'resource_tdx_2_1th2zk6250rghhahxjkfl260tq28ay6skuffzr9hfmy9nuarwzucpqn',
+        resourceAddress: config.resources.giftBox.Fancy,
         amount: '1',
         name: 'Fancy'
       },
