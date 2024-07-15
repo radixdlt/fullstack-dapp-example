@@ -6,6 +6,7 @@ import { chunk } from '@radixdlt/babylon-gateway-api-sdk'
 import { Queue } from 'bullmq'
 import { SystemJobType, type SystemJob } from 'queues'
 import { validateRadmorphConfiguration } from './helpers/validate-radmorph-configuration'
+import type { ImageType } from 'database'
 
 const RADMORPH_CHUNK_SIZE = 350
 
@@ -51,7 +52,11 @@ export const ImageController = ({
   const uploadImagesJson = (requestBody: unknown) =>
     validateRadmorphConfiguration(requestBody).asyncAndThen(({ data, imageType }) => {
       const items = imageType === 'RadMorph' ? duplicateConfigurationWithReversedColors(data) : data
-      const chunks = Object.entries(items).map(([id, url]) => ({ id, url, imageType }))
+      const chunks = Object.entries(items).map(([id, url]) => ({
+        id,
+        url,
+        type: imageType as ImageType
+      }))
       return imageModel.addMany(chunks).map(() => ({ data: {}, httpResponseCode: 200 }))
     })
 

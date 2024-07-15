@@ -62,7 +62,7 @@
         class="my-5"
         disabled={!imageType}
         on:click={async () => {
-          http.post('/radmorphs/upload-json', { data: filesToBeUploaded, imageType })
+          http.post('/images/upload-json', { data: filesToBeUploaded, imageType })
         }}>Set in DB</Button
       >
     </div>

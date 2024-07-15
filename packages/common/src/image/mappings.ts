@@ -1,43 +1,43 @@
 export const shaderCodeDescription = {
-  Crystalline: 'REF',
-  Metallic: 'MET',
-  Radiant: 'GLO'
+  crystalline: 'REF',
+  metallic: 'MET',
+  radiant: 'GLO'
 } as const
 
 export const colorCodeDescription = {
-  Forest: 'LGN',
-  Sand: 'YEL',
-  Sky: 'LBL',
-  Coral: 'PNK',
-  Blood: 'RED',
-  Smoke: 'GRY',
-  Ocean: 'BLU',
-  Flame: 'ORN',
-  Glacier: 'MGN',
-  Dusk: 'PRP'
+  forest: 'LGN',
+  sand: 'YEL',
+  sky: 'LBL',
+  coral: 'PNK',
+  blood: 'RED',
+  smoke: 'GRY',
+  ocean: 'BLU',
+  flame: 'ORN',
+  glacier: 'MGN',
+  dusk: 'PRP'
 } as const
 
 export const shapeCodeDescription = {
-  'Whirlpool Spiral': 'S001',
-  'Earthquake Tremor': 'S002',
-  'Gamma Rays': 'S003',
-  'Molten Lava': 'S004',
-  'Tidal Wave': 'S005',
-  'Storm Cell': 'S006',
-  'Nuclear Fusion': 'S007',
-  'Pyroclastic Flow': 'S008',
-  'Polar Blizzard': 'S009',
-  'Gravity Force': 'S010',
-  'Rainbow Curve': 'S011',
-  'Magnetic Field': 'S012',
-  'Hydrothermal Vent': 'S013',
-  'Supernova Explosion': 'S014',
-  'Volanic Lightning': 'S015',
-  'Fire Tornado': 'S016',
-  'Tropical Cyclone': 'S017',
-  'Aurora Borealis': 'S018',
-  'Black Hole': 'S019',
-  'Solar Flare': 'S020'
+  'whirlpool spiral': 'S001',
+  'earthquake tremor': 'S002',
+  'gamma rays': 'S003',
+  'nolten lava': 'S004',
+  'tidal wave': 'S005',
+  'storm cell': 'S006',
+  'nuclear fusion': 'S007',
+  'pyroclastic flow': 'S008',
+  'polar blizzard': 'S009',
+  'gravity force': 'S010',
+  'rainbow curve': 'S011',
+  'magnetic field': 'S012',
+  'hydrothermal vent': 'S013',
+  'supernova explosion': 'S014',
+  'volcanic lightning': 'S015',
+  'fire tornado': 'S016',
+  'tropical cyclone': 'S017',
+  'aurora borealis': 'S018',
+  'black hole': 'S019',
+  'solar flare': 'S020'
 } as const
 
 const reverse = <T extends Record<any, any>>(obj: T): ReverseMap<T> =>
@@ -79,4 +79,6 @@ export const shapeToCode = (shape: Shape): ShapeCode => shapeCodeDescription[sha
 export const shaderToCode = (shader: Shader): ShaderCode => shaderCodeDescription[shader]
 
 export const rarityToNumber = (rarity: string): number =>
-  Number(Object.entries(rarityDescription).find(([_, value]) => value === rarity)?.[0] || 1)
+  Number(
+    Object.entries(rarityDescription).find(([_, value]) => value.toLowerCase() === rarity)?.[0] || 1
+  )
