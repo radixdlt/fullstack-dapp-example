@@ -61,9 +61,8 @@ body {
   --color-dark: #111f29;
   --color-nearly-black: #192d3a;
   background: var(--gradient-7);
-  background-color: var(
-    --color-background-dark
-  ); /* This color is visible inside safari status bar, gradient doesn't work here */
+  background-color: var(--color-background-dark);
+  /* This color is visible inside safari status bar, gradient doesn't work here */
 }
 
 /* ------------------ */
@@ -241,6 +240,18 @@ body {
   font-family: var(--font-main);
   margin: 0;
   padding: 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cac1c1;
+  background-clip: content-box;
+  border: 5px solid transparent;
+  border-radius: 10px;
 }
 
 // Prevent iOS overscroll

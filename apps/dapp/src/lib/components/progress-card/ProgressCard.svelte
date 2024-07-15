@@ -36,7 +36,6 @@
   bind:clientHeight={height}
   class="card progress-card"
   class:card-disabled={disabled}
-  class:hide-scrollbar={animating}
 >
   <slot name="header" {progress} />
 
