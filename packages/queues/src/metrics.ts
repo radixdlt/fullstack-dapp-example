@@ -59,15 +59,15 @@ const setupQueueEvents = (input: {
   })
 
   queueEvent.on('progress', async () => {
-    await Promise.all([setWaitingJobs(-1), setProgressJobs(1)])
+    await Promise.all([setProgressJobs(1)])
   })
 
   queueEvent.on('failed', async () => {
-    await Promise.all([setProgressJobs(-1), setFailedJobs(1)])
+    await Promise.all([setFailedJobs(1)])
   })
 
   queueEvent.on('completed', async () => {
-    await Promise.all([setProgressJobs(-1), setCompletedJobs(1)])
+    await Promise.all([setCompletedJobs(1)])
   })
 }
 
