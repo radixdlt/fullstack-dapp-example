@@ -147,6 +147,34 @@ export const QuestDefinitions = () => {
         }
       }
     },
+    CreatingRadMorphs: {
+      id: 'CreatingRadMorphs',
+      category: 'basic',
+      trackedAccountAddress: true,
+      splashImage: '/quests-images/splash/ConvertElementsQuest.webp',
+      rewards: [
+        {
+          amount: 1,
+          name: 'simpleGiftBox'
+        }
+      ],
+      minutesToComplete: 5,
+      preRequisites: ['GetStuff'],
+      requirements: {
+        [EventId.GiftBoxOpened]: {
+          type: 'event',
+          eventName: 'GiftBoxOpenedEvent'
+        },
+        MintRadgems: {
+          type: 'offLedger',
+          isHidden: true
+        },
+        CheckOutRadMorph: {
+          type: 'offLedger',
+          completedByUser: true
+        }
+      }
+    },
     TransferTokens: {
       id: 'TransferTokens',
       trackedAccountAddress: true,
@@ -161,7 +189,7 @@ export const QuestDefinitions = () => {
           amount: 1
         }
       ],
-      preRequisites: ['GetStuff'],
+      preRequisites: ['CreatingRadMorphs'],
       minutesToComplete: 3,
       requirements: {
         [EventId.JettyReceivedClams]: {

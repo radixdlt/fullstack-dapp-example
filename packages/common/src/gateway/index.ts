@@ -156,6 +156,14 @@ export const GatewayApi = (networkId: number) => {
       )
     )
 
+  const hasAtLeastTwoRadgems = (accountAddress: string) =>
+    callApi('getEntityDetailsVaultAggregated', [accountAddress]).map(([response]) => {
+      const radgemVault = response.non_fungible_resources.items.find(
+        (item) => item.resource_address === addresses.resources.radgemAddress
+      )
+      return radgemVault?.vaults.items.some((vault) => Number(vault.items?.length || 0) >= 2)
+    })
+
   const hasHeroBadgeAndXrd = (accountAddress: string) =>
     callApi('getEntityDetailsVaultAggregated', [accountAddress]).map(([response]) => {
       const hasHeroBadge = response.non_fungible_resources.items.some(
@@ -173,6 +181,7 @@ export const GatewayApi = (networkId: number) => {
 
   return {
     hasKycEntry,
+    hasAtLeastTwoRadgems,
     isDepositDisabledForResource,
     networkConfig,
     gatewayApiClient,

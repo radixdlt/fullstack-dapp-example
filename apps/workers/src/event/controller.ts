@@ -4,6 +4,7 @@ import { EventJob, Job } from 'queues'
 import { QuestDefinitions, QuestId, Quests } from 'content'
 import {
   EventId,
+  GatewayApi,
   MailerLiteModel,
   MessageType,
   QuestTogetherConfig,
@@ -12,22 +13,12 @@ import {
 import { AppLogger, AccountAddressModel } from 'common'
 import { PrismaClient, QuestStatus, User } from 'database'
 import { databaseTransactions } from './helpers/databaseTransactions'
-import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 import { WorkerError } from '../_types'
 import { MessageHelper } from '../helpers/messageHelper'
 import { config } from '../config'
 import { TransactionIntentHelper } from '../helpers/transactionIntentHelper'
 import { ReferralRewardAction } from '../helpers/referalReward'
-
-type EventEmitter = {
-  entity: {
-    entity_address: string
-    entity_type: string
-    is_global: boolean
-  }
-  type: string
-  object_module_id: string
-}
+import { getUserById } from '../helpers/getUserById'
 
 type Reward = { resourceAddress: string; amount: string; name: string }
 
@@ -48,8 +39,8 @@ export type UserExtended = User & { email: { email: string; newsletter: boolean 
 export type EventWorkerController = ReturnType<typeof EventWorkerController>
 export const EventWorkerController = ({
   dbClient,
-  tokenPriceClient,
   logger,
+  gatewayApi,
   AccountAddressModel,
   mailerLiteModel,
   sendMessage,
@@ -58,7 +49,7 @@ export const EventWorkerController = ({
 }: {
   dbClient: PrismaClient
   AccountAddressModel: AccountAddressModel
-  tokenPriceClient: TokenPriceClient
+  gatewayApi: GatewayApi
   mailerLiteModel: MailerLiteModel
   logger: AppLogger
   sendMessage: MessageHelper
@@ -453,6 +444,31 @@ export const EventWorkerController = ({
         )
       }
 
+      case EventId.CombineElementsClaimed: {
+        return gatewayApi
+          .hasAtLeastTwoRadgems(user.accountAddress!)
+          .andThen((hasAtLeastTwoRadgems) =>
+            hasAtLeastTwoRadgems
+              ? addCompletedQuestRequirement({
+                  questId: 'CreatingRadMorphs',
+                  userId,
+                  requirementId: 'MintRadgems'
+                })
+                  .andThen(() =>
+                    sendMessage(userId, {
+                      type: 'QuestRequirementCompleted',
+                      questId: 'CreatingRadMorphs',
+                      requirementId: 'MintRadgems',
+                      traceId
+                    })
+                  )
+                  .andThen(() =>
+                    handleAllQuestRequirementCompleted({ questId: 'CreatingRadMorphs', userId })
+                  )
+              : okAsync(undefined)
+          )
+      }
+
       case EventId.AccountAllowedToForgeHeroBadge:
         return sendMessage(user.id, {
           type: 'HeroBadgeReadyToBeClaimed',
@@ -488,13 +504,30 @@ export const EventWorkerController = ({
         const giftBoxResourceAddress = job.data.data.giftBoxResourceAddress as string
         return getGiftBoxKindByResourceAddress(giftBoxResourceAddress)
           .asyncAndThen((giftBoxKind) =>
-            transactionIntent.add({
-              type: 'DepositGiftBoxReward',
-              discriminator: `${EventId.GiftBoxOpened}:${job.data.transactionId}`,
-              userId: user.id,
-              traceId: job.data.traceId,
-              giftBoxKind
-            })
+            transactionIntent
+              .add({
+                type: 'DepositGiftBoxReward',
+                discriminator: `${EventId.GiftBoxOpened}:${job.data.transactionId}`,
+                userId: user.id,
+                traceId: job.data.traceId,
+                giftBoxKind
+              })
+              .andThen(() =>
+                giftBoxKind === 'Starter'
+                  ? addCompletedQuestRequirement({
+                      userId: user.id,
+                      requirementId: EventId.GiftBoxOpened,
+                      questId: 'CreatingRadMorphs'
+                    }).andThen(() =>
+                      sendMessage(userId, {
+                        type: 'QuestRequirementCompleted',
+                        questId: 'CreatingRadMorphs',
+                        requirementId: 'GiftBoxOpened',
+                        traceId
+                      })
+                    )
+                  : okAsync(undefined)
+              )
           )
           .map(() => undefined)
       }

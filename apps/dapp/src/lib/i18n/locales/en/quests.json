@@ -90,6 +90,15 @@
     "enterYourPhoneNumber": "Please enter your phone number to receive an SMS code for verification.",
     "weWillNotShare": "We will not share your phone number with anyone, and we will not send you any messages other than this verification."
   },
+  "CreatingRadMorphs": {
+    "title": "Creating RadMorphs",
+    "requirements": {
+      "GiftBoxOpened": "Learn about Gift Boxes, Elements, RadGems and RadMorphs",
+      "CheckOutRadMorph": "Check out what your first RadMorph might be"
+    },
+    "description": "How to collect and combine",
+    "introDescription": "How to collect and combine on RadQuest to make the best and most rare RadMorph NFTs"
+  },
   "TransferTokens": {
     "requirements": {
       "JettyReceivedClams": "Send some Clams to Jetty"

@@ -67,6 +67,7 @@
   import { ResultAsync } from 'neverthrow'
   import { getRadmorphImage } from '$lib/api/radmorph-api'
   import TransformGems from './TransformGems.svelte'
+  import { completeRequirement } from '$lib/helpers/complete-requirement.svelte'
 
   let loadingLedgerData = true
   let amountOfRadGems: number
@@ -123,7 +124,10 @@
       })
   )
 
-  onMount(getResources)
+  onMount(() => {
+    getResources()
+    completeRequirement('CreatingRadMorphs', 'CheckOutRadMorph')
+  })
 
   const back = context.get('back')
   const close = context.get('closeMenuItem')
