@@ -138,6 +138,8 @@
   let elementsDeposited = false
   let radgemClaimed = false
 
+  const elementsToCreateRadgem = 5
+
   const sendElements = async () => {
     const transactionManifest = `
         CALL_METHOD
@@ -295,13 +297,13 @@
   {:else}
     {#key rerender}
       <JettyMenuItemPage
-        action={noElements || parseInt(amountOfElements) < 10
+        action={noElements || parseInt(amountOfElements) < elementsToCreateRadgem
           ? {
               text: $i18n.t('jetty:close'),
               onClick: () => dispatch('cancel')
             }
           : undefined}
-        actions={parseInt(amountOfElements) >= 10
+        actions={parseInt(amountOfElements) >= elementsToCreateRadgem
           ? {
               left: {
                 text: $i18n.t('jetty:close'),
@@ -328,7 +330,7 @@
             <p class="bold">
               {$i18n.t('jetty:fuse-elements.no-elements')}
             </p>
-          {:else if parseInt(amountOfElements) < 10}
+          {:else if parseInt(amountOfElements) < elementsToCreateRadgem}
             <p>
               {$i18n.t('jetty:fuse-elements.not-enough-elements', {
                 count: parseInt(amountOfElements)

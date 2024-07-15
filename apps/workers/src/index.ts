@@ -50,7 +50,7 @@ const app = async () => {
   const eventWorkerController = EventWorkerController({
     logger,
     dbClient,
-    tokenPriceClient,
+    gatewayApi,
     mailerLiteModel: MailerLiteModel({
       apiKey: config.mailerLite.apiKey
     }),
