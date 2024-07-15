@@ -230,7 +230,7 @@
     width: 25rem;
     max-height: 80%;
     border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     z-index: 4;
     transform: translateY(var(--menuPosition));
