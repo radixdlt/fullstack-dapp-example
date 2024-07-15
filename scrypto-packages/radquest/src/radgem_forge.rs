@@ -114,7 +114,7 @@ mod radgem_forge {
         }
         pub fn enable(&mut self) {
             assert!(!self.enabled, "RadgemForge already enabled");
-            self.enabled = false;
+            self.enabled = true;
         }
 
         pub fn mint_radgem(

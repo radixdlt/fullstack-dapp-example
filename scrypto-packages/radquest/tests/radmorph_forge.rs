@@ -264,7 +264,7 @@ pub fn can_disable_radmorph_forge() -> Result<(), RuntimeError> {
 }
 
 #[test]
-pub fn can_not_mint_radmorphs_when_disabled() -> Result<(), RuntimeError> {
+pub fn cannot_mint_radmorphs_when_disabled() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,
@@ -292,6 +292,41 @@ pub fn can_not_mint_radmorphs_when_disabled() -> Result<(), RuntimeError> {
     // Assert
     println!("{:?}", result);
     assert!(result.is_err());
+
+    Ok(())
+}
+
+#[test]
+pub fn can_enable_then_mint_radmorphs_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut radmorph_forge,
+        card_data,
+        mut radgems_data,
+        admin_badge_proof,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    radmorph_forge.disable(&mut env)?;
+
+    // Act
+    radmorph_forge.enable(&mut env)?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    let result = radmorph_forge.mint_radmorph(
+      UncheckedUrl::of("https://www.example.url"),
+      card_data,
+      radgems_data.pop().unwrap(),
+      radgems_data.pop().unwrap(),
+      &mut env,
+    );
+
+    // Assert
+    println!("{:?}", result);
+    assert!(result.is_ok());
 
     Ok(())
 }

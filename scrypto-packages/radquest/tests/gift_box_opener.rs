@@ -261,27 +261,6 @@ fn can_disable_gift_box_opener() -> Result<(), RuntimeError> {
 }
 
 #[test]
-fn can_enable_disabled_gift_box_opener() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        mut gift_box_opener,
-        super_admin_badge_proof,
-        ..
-    } = arrange_test_environment()?;
-
-    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
-    gift_box_opener.disable(&mut env)?;
-
-    // Act
-    let result = gift_box_opener.enable(&mut env);
-
-    // Assert
-    assert!(result.is_ok());
-    Ok(())
-}
-
-#[test]
 fn cannot_open_gift_box_when_disabled() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
@@ -308,6 +287,38 @@ fn cannot_open_gift_box_when_disabled() -> Result<(), RuntimeError> {
 
     // Assert
     assert!(result.is_err());
+    Ok(())
+}
+
+#[test]
+fn can_enable_disabled_gift_box_opener_and_deposit() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut gift_box_opener,
+        super_admin_badge_proof,
+        admin_badge_proof,
+        hero_badge_proof,
+        simple_gift_boxes,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    gift_box_opener.add_gift_box_resources(
+        vec![simple_gift_boxes.resource_address(&mut env)?],
+        &mut env,
+    )?;
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    gift_box_opener.disable(&mut env)?;
+
+    // Act
+    gift_box_opener.enable(&mut env)?;
+    let result = gift_box_opener.open_gift_box(hero_badge_proof, simple_gift_boxes, &mut env);
+
+    // Assert
+    println!("{:?}", result);
+    assert!(result.is_ok());
     Ok(())
 }
 

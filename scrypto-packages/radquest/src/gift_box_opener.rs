@@ -73,7 +73,7 @@ mod gift_box_opener {
         }
         pub fn enable(&mut self) {
             assert!(!self.enabled, "GiftBoxOpener already enabled");
-            self.enabled = false;
+            self.enabled = true;
         }
 
         fn get_user_id_from_badge_proof(&self, hero_badge: Proof) -> UserId {

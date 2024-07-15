@@ -120,7 +120,7 @@ mod quest_rewards {
         }
         pub fn enable(&mut self) {
             assert!(!self.enabled, "QuestRewards already enabled");
-            self.enabled = false;
+            self.enabled = true;
         }
 
         fn get_user_id_from_badge_proof(&self, hero_badge: Proof) -> UserId {

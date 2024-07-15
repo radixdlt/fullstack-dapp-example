@@ -77,7 +77,7 @@ mod radmorph_forge {
         }
         pub fn enable(&mut self) {
             assert!(!self.enabled, "RadmorphForge already enabled");
-            self.enabled = false;
+            self.enabled = true;
         }
 
         pub fn mint_radmorph(

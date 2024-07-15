@@ -76,7 +76,7 @@ mod hero_badge_forge {
         }
         pub fn enable(&mut self) {
             assert!(!self.enabled, "HeroBadgeForge already enabled");
-            self.enabled = false;
+            self.enabled = true;
         }
 
         pub fn add_user_account(&mut self, account: Global<Account>, user_id: UserId) {

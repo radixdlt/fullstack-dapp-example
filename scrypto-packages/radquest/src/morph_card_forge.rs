@@ -72,7 +72,7 @@ mod morph_card_forge {
         }
         pub fn enable(&mut self) {
             assert!(!self.enabled, "MorphCardForge already enabled");
-            self.enabled = false;
+            self.enabled = true;
         }
 
         pub fn mint_card(

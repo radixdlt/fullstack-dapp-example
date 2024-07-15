@@ -507,6 +507,35 @@ pub fn cannot_combine_elements_deposit_when_disabled() -> Result<(), RuntimeErro
 }
 
 #[test]
+pub fn can_enable_then_combine_elements_deposit_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut refinery,
+        hero_badge_proof,
+        super_admin_badge_proof,
+        elements,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    refinery.disable(&mut env)?;
+
+    // Act
+    refinery.enable(&mut env)?;
+
+    let result = refinery.combine_elements_deposit(
+        hero_badge_proof,
+        elements.take(dec!(5), &mut env)?,
+        &mut env,
+    );
+
+    // Assert
+    assert!(result.is_ok());
+    Ok(())
+}
+
+#[test]
 pub fn cannot_create_radmorph_when_disabled() -> Result<(), RuntimeError> {
     // Arrange
     let Test {

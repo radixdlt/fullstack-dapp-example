@@ -267,7 +267,7 @@ pub fn can_disable_radgem_forge() -> Result<(), RuntimeError> {
 }
 
 #[test]
-pub fn can_not_mint_radgems_when_disabled() -> Result<(), RuntimeError> {
+pub fn cannot_mint_radgems_when_disabled() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,
@@ -287,6 +287,32 @@ pub fn can_not_mint_radgems_when_disabled() -> Result<(), RuntimeError> {
     // Assert
     println!("{:?}", result);
     assert!(result.is_err());
+
+    Ok(())
+}
+
+#[test]
+pub fn can_enable_then_mint_radgems_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut radgem_forge,
+        admin_badge_proof,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    radgem_forge.disable(&mut env)?;
+
+    // Act
+    radgem_forge.enable(&mut env)?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    let result = radgem_forge.mint_radgem(dec!(0.5), dec!(0.5), dec!(0.5), &mut env);
+
+    // Assert
+    assert!(result.is_ok());
 
     Ok(())
 }
