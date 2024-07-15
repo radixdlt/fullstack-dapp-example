@@ -3,12 +3,11 @@ import {
   FilteredTransaction,
   FilterTransactionsByType
 } from '../filter-transactions/filter-transactions-by-type'
-import { AppLogger, EventId, EventModelMethods, splitArrayIntoChunks, typedError } from 'common'
-import { getQueues } from 'queues'
-import { StateVersionModel } from '../state-version/state-version.model'
+import { AppLogger, EventId, EventModelMethods, TransactionStreamModel } from 'common'
+import { delay, getQueues } from 'queues'
 import crypto from 'node:crypto'
 import { FilterTransactionsByAccountAddress } from '../filter-transactions/filter-transactions-by-account-address'
-import { ResultAsync } from 'neverthrow'
+import { okAsync, ResultAsync } from 'neverthrow'
 
 export const HandleTransactions =
   ({
@@ -17,23 +16,25 @@ export const HandleTransactions =
     eventModel,
     eventQueue,
     logger,
-    stateVersionModel
+    transactionStreamModel
   }: {
     filterTransactionsByType: FilterTransactionsByType
     filterTransactionsByAccountAddress: FilterTransactionsByAccountAddress
     eventModel: EventModelMethods
     eventQueue: ReturnType<typeof getQueues>['eventQueue']
     logger: AppLogger
-    stateVersionModel: StateVersionModel
+    transactionStreamModel: TransactionStreamModel
   }) =>
   ({
     transactions,
     continueStream,
-    stateVersion
+    stateVersion,
+    retry
   }: {
     transactions: StreamTransactionsResponse['items']
     stateVersion: number
     continueStream: (delay: number) => void
+    retry: (value: { stateVersion?: number; delay: number }) => void
   }) =>
     filterTransactionsByType(transactions)
       .asyncAndThen((transactions) =>
@@ -43,38 +44,54 @@ export const HandleTransactions =
         )
       )
       .andThen((filteredTransactions) => {
-        return eventModel
-          .addMultiple(
-            filteredTransactions.map((transaction) => ({
-              eventId: transaction.type,
-              transactionId: transaction.transactionId,
-              userId: transaction.userId!,
-              data: transaction.data,
-              questId: transaction.questId
-            }))
-          )
-          .andThen((items) =>
-            eventQueue.addBulk(
-              items.map((item) => ({
-                traceId: crypto.randomUUID(),
-                eventId: item.id as unknown as EventId,
-                type: item.id as unknown as EventId,
-                transactionId: item.transactionId,
-                userId: item.userId!,
-                data: item.data as Record<string, unknown>
+        return transactionStreamModel.getTransactionStreamStatus().andThen((status) => {
+          if (status === 'Stop') {
+            return transactionStreamModel
+              .getLatestProcessedStateVersion()
+              .map((stateVersion) => {
+                const delayTime = 10_000
+                logger.debug({
+                  message: `Transaction stream status: '${status}', trying again in ${delayTime} ms`,
+                  stateVersion
+                })
+                retry({ delay: delayTime, stateVersion })
+              })
+              .map(() => undefined)
+          }
+
+          return eventModel
+            .addMultiple(
+              filteredTransactions.map((transaction) => ({
+                eventId: transaction.type,
+                transactionId: transaction.transactionId,
+                userId: transaction.userId!,
+                data: transaction.data,
+                questId: transaction.questId
               }))
             )
-          )
-          .andThen(() => {
-            if (filteredTransactions.length) {
-              logger.debug({
-                method: 'HandleTransactions',
-                stateVersion,
-                transactions: transactions.map((tx) => tx.intent_hash!)
-              })
-            }
+            .andThen((items) =>
+              eventQueue.addBulk(
+                items.map((item) => ({
+                  traceId: crypto.randomUUID(),
+                  eventId: item.id as unknown as EventId,
+                  type: item.id as unknown as EventId,
+                  transactionId: item.transactionId,
+                  userId: item.userId!,
+                  data: item.data as Record<string, unknown>
+                }))
+              )
+            )
+            .andThen(() => {
+              if (filteredTransactions.length) {
+                logger.debug({
+                  method: 'HandleTransactions',
+                  stateVersion,
+                  transactions: transactions.map((tx) => tx.intent_hash!)
+                })
+              }
 
-            continueStream(filteredTransactions.length ? 0 : 1000)
-            return stateVersionModel.setLatestStateVersion(stateVersion)
-          })
+              continueStream(filteredTransactions.length ? 0 : 1_000)
+              return transactionStreamModel.setLatestStateVersion(stateVersion)
+            })
+        })
       })

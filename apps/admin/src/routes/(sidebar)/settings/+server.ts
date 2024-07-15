@@ -2,12 +2,14 @@ import { json } from '@sveltejs/kit'
 import type { RequestHandler } from './$types'
 
 export const PUT: RequestHandler = async ({ locals, request }) => {
-  const { radGemMintingEnabled } = await request.json()
+  const body = await request.json()
+
+  const [key, value] = Object.entries(body)[0] as [string, string]
 
   await locals.dbClient.config.upsert({
-    create: { key: 'radGemMintingEnabled', value: radGemMintingEnabled },
-    update: { value: radGemMintingEnabled },
-    where: { key: 'radGemMintingEnabled' }
+    create: { key, value },
+    update: { value },
+    where: { key }
   })
 
   return json({}, { status: 200 })

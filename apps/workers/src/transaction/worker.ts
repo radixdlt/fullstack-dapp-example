@@ -35,44 +35,64 @@ export const TransactionWorker = (
 
       childLogger.debug({ method: 'transactionWorker.process', data: job.data })
 
-      const result = await getUserById(userId, dbClient)
-        .andThen((user) =>
-          dependencies.transactionWorkerController.handler({
-            job,
-            logger: childLogger,
-            user,
-            dbTransactionBuilder: DbTransactionBuilder({
-              dbClient,
-              tokenPriceClient: dependencies.tokenPriceClient
-            })
-          })
-        )
-        .andThen(() =>
-          transactionModel(childLogger)
-            .setStatus({ discriminator, userId }, TransactionIntentStatus.COMPLETED)
-            .mapErr(
-              (error): WorkerOutputError => ({
-                reason: WorkerError.FailedToSetCompletedStatus,
-                jsError: error
+      try {
+        const result = await getUserById(userId, dbClient)
+          .andThen((user) =>
+            dependencies.transactionWorkerController.handler({
+              job,
+              logger: childLogger,
+              user,
+              dbTransactionBuilder: DbTransactionBuilder({
+                dbClient,
+                tokenPriceClient: dependencies.tokenPriceClient
               })
-            )
-        )
-        .map(() => {
-          childLogger.debug({ method: 'transactionWorker.process.success', data: job.data })
-        })
-        .orElse((error) => {
-          childLogger.error({
-            method: 'transactionWorkerWorker.process.error',
-            data: job.data,
-            error
+            })
+          )
+          .andThen(() =>
+            transactionModel(childLogger)
+              .setStatus({ discriminator, userId }, TransactionIntentStatus.COMPLETED)
+              .mapErr(
+                (error): WorkerOutputError => ({
+                  reason: WorkerError.FailedToSetCompletedStatus,
+                  jsError: error
+                })
+              )
+          )
+          .map(() => {
+            childLogger.debug({ method: 'transactionWorker.process.success', data: job.data })
+          })
+          .orElse((error) => {
+            childLogger.error({
+              method: 'transactionWorkerWorker.process.error',
+              data: job.data,
+              error
+            })
+
+            return transactionModel(childLogger)
+              .setStatus({ discriminator, userId }, TransactionIntentStatus.ERROR, error.reason)
+              .map(() => undefined)
           })
 
-          return transactionModel(childLogger)
-            .setStatus({ discriminator, userId }, TransactionIntentStatus.ERROR, error.reason)
-            .map(() => undefined)
-        })
+        if (result.isErr()) throw { handled: true, error: result.error }
+      } catch (error) {
+        const isHandled = (error: unknown) =>
+          error && typeof error === 'object' && (error as any).handled ? true : false
 
-      if (result.isErr()) throw result.error
+        if (isHandled(error)) {
+          throw (error as { error: WorkerOutputError }).error
+        }
+
+        await transactionModel(childLogger).setStatus(
+          { discriminator, userId },
+          TransactionIntentStatus.ERROR,
+          'UnhandledError'
+        )
+        childLogger.error({
+          method: 'transactionWorker.process.error',
+          error
+        })
+        throw error
+      }
     },
     { connection }
   )

@@ -1,22 +1,32 @@
 <script lang="ts">
-  import CardList from '$lib/settings/CardList.svelte'
   import { Heading, Toggle } from 'flowbite-svelte'
 
   import type { PageData } from './$types'
 
   export let data: PageData
 
-  let values: Record<string, boolean> = {
-    radGemMintingEnabled: data.configMap.get('radGemMintingEnabled') || false
-  }
+  let values: Record<string, boolean> = {}
 
-  let items = [
-    {
-      title: 'RadGem minting',
-      subtitle: 'Allow minting of RadGems',
-      key: 'radGemMintingEnabled'
+  let items = data.items
+
+  const extendItem = {
+    transactionStreamStatus: {
+      title: 'Transaction Stream',
+      subtitle: 'Enable or disable the transaction stream',
+      transformResponse: (value: string) => value === 'Run',
+      transformRequest: (value: boolean) => (value ? 'Run' : 'Stop')
     }
-  ]
+  } as const
+
+  type ConfigKey = keyof typeof extendItem
+  type ExtendedItem = { key: string; value: string } & (typeof extendItem)[keyof typeof extendItem]
+
+  const extendedItems = items
+    .filter((item) => item.key in extendItem)
+    .map((item) => ({ ...item, ...extendItem[item.key as ConfigKey] }))
+    .reduce<ExtendedItem[]>((acc, item) => [...acc, item], [])
+
+  extendedItems.forEach((item) => (values[item.key] = item.transformResponse(item.value)))
 </script>
 
 <main class="p-4">
@@ -27,7 +37,7 @@
       </Heading>
     </div>
     <div class="col-span-full space-y-4">
-      <CardList title="System Preferences" subtitle="Global system settings" {items} let:item>
+      {#each extendedItems as item}
         <div class="flex items-center justify-between">
           <div class="flex flex-grow flex-col">
             <div class="text-lg font-semibold text-gray-900 dark:text-white">{item.title}</div>
@@ -36,18 +46,19 @@
             </div>
           </div>
           <Toggle
-            checked={values.radGemMintingEnabled}
+            checked={values[item.key]}
             on:change={async () => {
-              values[item.key] = !values[item.key]
+              const nextValue = !values[item.key]
+              values[item.key] = nextValue
               await fetch('/settings', {
                 method: 'PUT',
-                body: JSON.stringify({ [item.key]: values[item.key] === true ? 'true' : 'false' })
+                body: JSON.stringify({ [item.key]: item.transformRequest(nextValue) })
               })
             }}
             classDiv="peer-focus:ring-0 me-0"
           />
         </div>
-      </CardList>
+      {/each}
     </div>
   </div>
 </main>

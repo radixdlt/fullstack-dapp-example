@@ -2,13 +2,12 @@ import { config } from './config'
 import { GatewayApiClient } from './gateway'
 import { logger } from './helpers/logger'
 import { TransactionStream } from './transaction-stream/transaction-stream'
-import { AccountAddressModel, GatewayApi } from 'common'
+import { AccountAddressModel, GatewayApi, TransactionStreamModel } from 'common'
 import { PrismaClient } from 'database'
 import { getQueues, RedisConnection, SetupQueueMetrics } from 'queues'
 import { EventModel } from 'common'
 import { HandleStreamError } from './helpers/handleStreamError'
 import { HandleTransactions } from './helpers/handleTransactions'
-import { StateVersionModel } from './state-version/state-version.model'
 import { getLatestStateVersion } from './helpers/getLatestStateVersion'
 import { dbClient } from './db-client'
 import { trackedTransactionTypes } from './filter-transactions/tracked-transaction-types'
@@ -20,7 +19,7 @@ type Dependencies = {
   eventQueue: ReturnType<typeof getQueues>['eventQueue']
   filterTransactionsByType: FilterTransactionsByType
   filterTransactionsByAccountAddress: FilterTransactionsByAccountAddress
-  stateVersionModel: StateVersionModel
+  transactionStreamModel: TransactionStreamModel
   dbClient: PrismaClient
 }
 
@@ -36,11 +35,11 @@ const app = async (dependencies: Dependencies) => {
     gatewayApi,
     eventQueue,
     filterTransactionsByAccountAddress,
-    stateVersionModel,
+    transactionStreamModel,
     filterTransactionsByType
   } = dependencies
 
-  const result = await getLatestStateVersion({ eventModel, gatewayApi, stateVersionModel })
+  const result = await getLatestStateVersion({ eventModel, gatewayApi, transactionStreamModel })
 
   if (result.isErr()) throw new Error('Failed to get current ledger state')
 
@@ -61,7 +60,7 @@ const app = async (dependencies: Dependencies) => {
     eventModel,
     eventQueue,
     logger,
-    stateVersionModel
+    transactionStreamModel
   })
   const handleStreamError = HandleStreamError(logger, stream)
 
@@ -90,7 +89,7 @@ const app = async (dependencies: Dependencies) => {
 const gatewayApi = GatewayApi(config.networkId)
 const { eventQueue } = getQueues(config.redis)
 const redisConnection = new RedisConnection(config.redis)
-const stateVersionModel = StateVersionModel(redisConnection)
+const transactionStreamModel = TransactionStreamModel(dbClient)
 const accountAddressModel = AccountAddressModel(redisConnection)(logger)
 const filterTransactionsByType = FilterTransactionsByType(trackedTransactionTypes)
 const filterTransactionsByAccountAddress = FilterTransactionsByAccountAddress(accountAddressModel)
@@ -100,7 +99,7 @@ app({
   eventQueue,
   filterTransactionsByType,
   filterTransactionsByAccountAddress,
-  stateVersionModel,
+  transactionStreamModel,
   dbClient
 }).catch((error) => {
   logger.error({ reason: 'UnrecoverableError', error })

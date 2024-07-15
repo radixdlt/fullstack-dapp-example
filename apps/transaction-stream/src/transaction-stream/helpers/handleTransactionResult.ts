@@ -11,13 +11,17 @@ export type HandleTransactionResult = ReturnType<typeof handleTransactionResult>
 export const handleTransactionResult = (
   result: GetTransactionsAwaitedResult,
   stateVersion: number
-): Result<{ stateVersion: number; transactions: Transaction[] }, GetTransactionsErrorOutput> => {
+): Result<
+  { previousStateVersion: number; stateVersion: number; transactions: Transaction[] },
+  GetTransactionsErrorOutput
+> => {
   if (result.isErr()) return err(result.error)
 
   const { transactions, ledgerStateVersion } = result.value
 
   // no transactions found at current state version, try again with the same stateVersion we passed in
-  if (transactions.length === 0) return ok({ stateVersion, transactions })
+  if (transactions.length === 0)
+    return ok({ previousStateVersion: stateVersion, stateVersion, transactions })
 
   const firstTransaction = transactions[0]
   const lastTransaction = transactions.slice(-1)[0]
@@ -36,5 +40,5 @@ export const handleTransactionResult = (
     ledgerStateVersion
   })
 
-  return ok({ stateVersion: nextStateVersion, transactions })
+  return ok({ previousStateVersion: stateVersion, stateVersion: nextStateVersion, transactions })
 }
