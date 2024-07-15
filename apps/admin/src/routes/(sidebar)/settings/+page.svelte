@@ -27,8 +27,6 @@
     .reduce<ExtendedItem[]>((acc, item) => [...acc, item], [])
 
   extendedItems.forEach((item) => (values[item.key] = item.transformResponse(item.value)))
-
-  console.log(extendedItems, values)
 </script>
 
 <main class="p-4">
