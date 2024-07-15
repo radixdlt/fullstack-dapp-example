@@ -46,6 +46,10 @@
   class="card progress-card"
 >
   <div class="header">
+    <div />
+    <header class="title">
+      {title}
+    </header>
     <button
       class="icon"
       on:click={() => {
@@ -54,10 +58,6 @@
     >
       <Icon url={CrossIcon} />
     </button>
-    <header class="title">
-      {title}
-    </header>
-    <div />
   </div>
 
   <ProgressBar totalSteps={1} progress={0} />
@@ -89,36 +89,41 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-rows: 3rem auto 1fr;
+    grid-template-rows: auto auto 1fr;
     min-height: 28rem;
-    min-width: 20rem;
-    overflow: hidden;
+    width: 25rem;
+    overflow-y: hidden;
+    overflow-x: hidden;
   }
-
-  .footer {
-    padding: var(--spacing-xl) var(--spacing-2xl);
-    border-top: 1px solid rgba(0, 0, 0, 0.2);
-    display: flex;
-    justify-content: center;
-  }
-
   .title {
     font-size: var(--text-xs);
     font-weight: var(--font-weight-bold);
     color: var(--color-background-dark);
   }
 
-  .content {
-    grid-area: 3/1;
-    padding: var(--spacing-2xl);
-    overflow-y: auto;
-  }
-
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--spacing-xl);
+    padding: var(--spacing-2xl);
     border-bottom: 1px solid var(--color-light);
+    > *:first-child {
+      width: 1.5rem;
+    }
+    > *:last-child {
+      width: 1.5rem;
+    }
+  }
+
+  .footer {
+    padding: var(--spacing-xl) var(--spacing-2xl);
+    display: flex;
+    justify-content: center;
+  }
+
+  .content {
+    grid-area: 3/1;
+    padding: var(--spacing-2xl);
+    overflow-y: auto;
   }
 </style>

@@ -73,8 +73,8 @@
     color: var(--color-light);
     border: var(--border) var(--color-primary);
 
-    &:hover:not(.disabled) {
-      @media (hover: hover) {
+    @media (hover: hover) {
+      &:hover:not(.disabled) {
         filter: brightness(0.8);
       }
     }
@@ -92,8 +92,8 @@
     color: var(--color-dark);
     border: var(--border) var(--color-dark);
 
-    &:hover:not(.disabled) {
-      @media (hover: hover) {
+    @media (hover: hover) {
+      &:hover:not(.disabled) {
         color: var(--color-light);
         background: var(--color-dark);
       }
