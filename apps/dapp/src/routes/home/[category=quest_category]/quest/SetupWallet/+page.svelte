@@ -285,7 +285,15 @@
   {#if render('9b')}
     {@html text['9b-1.md']}
     <div class="center">
-      <Button link="https://wallet.radixdlt.com" isExternal={true}>
+      <!-- svelte-ignore missing-declaration -->
+      <Button
+        link="https://wallet.radixdlt.com"
+        isExternal={true}
+        on:click={() => {
+          // @ts-ignore
+          dataLayer.push({ event: 'dl_click_2_wallet_download' })
+        }}
+      >
         {$i18n.t('quests:SetupWallet.walletDownloadPage')}
       </Button>
     </div>

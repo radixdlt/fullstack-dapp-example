@@ -92,7 +92,13 @@
         </div>
 
         <div class="button">
-          <Button on:click={hideLandingPopup}>{$i18n.t('main:landingPagePopup.button')}</Button>
+          <Button
+            on:click={() => {
+              hideLandingPopup()
+              //@ts-ignore
+              dataLayer.push({ event: 'dl_click_1_lets_begin' })
+            }}>{$i18n.t('main:landingPagePopup.button')}</Button
+          >
         </div>
       </div>
     </div>
