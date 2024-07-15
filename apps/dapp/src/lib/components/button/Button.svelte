@@ -74,7 +74,9 @@
     border: var(--border) var(--color-primary);
 
     &:hover:not(.disabled) {
-      filter: brightness(0.8);
+      @media (hover: hover) {
+        filter: brightness(0.8);
+      }
     }
 
     transition: filter 0.2s ease-in-out;
@@ -91,8 +93,10 @@
     border: var(--border) var(--color-dark);
 
     &:hover:not(.disabled) {
-      color: var(--color-light);
-      background: var(--color-dark);
+      @media (hover: hover) {
+        color: var(--color-light);
+        background: var(--color-dark);
+      }
     }
 
     transition:
