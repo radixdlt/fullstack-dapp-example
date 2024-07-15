@@ -852,8 +852,7 @@ export default [
             entity: {
               is_global: true,
               entity_type: 'GlobalGenericComponent',
-              entity_address:
-                'component_tdx_2_1crfy3dnyptchaa9pterflzz7kyvewcwnf5eh95zztextmm8pf9wz8m'
+              entity_address: addresses.components.questRewards
             },
             object_module_id: 'Main'
           },

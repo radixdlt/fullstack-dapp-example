@@ -17,7 +17,7 @@ export default [
     fee_paid: '0.67420151893',
     affected_global_entities: [
       'transactiontracker_tdx_2_1stxxxxxxxxxxtxtrakxxxxxxxxx006844685494xxxxxxxxxxzw7jp',
-      'component_tdx_2_1cp2rp4zst3ut5uw2pc87ev0878084c5n44nanexx39u83hguy9lfkj',
+      addresses.components.heroBadgeForge,
       'consensusmanager_tdx_2_1scxxxxxxxxxxcnsmgrxxxxxxxxx000999665565xxxxxxxxxv6cg29',
       'account_tdx_2_12yytw8a6z570f43fecznvayhvfdmh5ctvpkft8pzsnjdqzdjt5azt0'
     ],
@@ -511,8 +511,7 @@ export default [
             entity: {
               is_global: true,
               entity_type: 'GlobalGenericComponent',
-              entity_address:
-                'component_tdx_2_1cp2rp4zst3ut5uw2pc87ev0878084c5n44nanexx39u83hguy9lfkj'
+              entity_address: addresses.components.heroBadgeForge
             },
             object_module_id: 'Main'
           },
