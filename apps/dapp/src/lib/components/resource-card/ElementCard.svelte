@@ -1,7 +1,7 @@
 <script lang="ts">
   import { i18n } from '$lib/i18n/i18n'
   import ResourceCard from './ResourceCard.svelte'
-  import ElementImage from '@images/fragment.png'
+  import ElementImage from '@images/rewards/Element.webp'
 
   export let quantity: number
 </script>
