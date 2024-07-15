@@ -31,6 +31,7 @@ mod radmorph_forge {
       },
       methods {
         disable => restrict_to: [super_admin];
+        enable => restrict_to: [super_admin];
         mint_radmorph => restrict_to: [admin];
       }
     }
@@ -74,6 +75,10 @@ mod radmorph_forge {
             assert!(self.enabled, "RadmorphForge component already disabled");
             self.enabled = false;
         }
+        pub fn enable(&mut self) {
+            assert!(!self.enabled, "RadmorphForge already enabled");
+            self.enabled = true;
+        }
 
         pub fn mint_radmorph(
             &mut self,
@@ -101,7 +106,7 @@ mod radmorph_forge {
             let radgem_2_material_text = Self::to_title_case(radgem_2_data.material.clone());
 
             let name = format!(
-                "{} {} {} and {} {} RadMorph {{{}/100}}{}",
+                "{} {} {} and {} {} RadMorph {{{}}}{}",
                 quality_text,
                 material_text,
                 color_1_text,

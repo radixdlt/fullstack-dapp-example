@@ -10,71 +10,87 @@ export const createSuperAdminBadge = () => {
     typedError
   ).andThen((knownAddresses) => {
     const transactionManifest = `
-          CALL_METHOD
-            Address("${config.radQuest.accounts.payer.address}")
-            "lock_fee"
-            Decimal("10")
-          ;
+CALL_METHOD
+  Address("${config.radQuest.accounts.payer.address}")
+  "lock_fee"
+  Decimal("10")
+;
 
-          ALLOCATE_GLOBAL_ADDRESS
-              Address("${knownAddresses.packageAddresses.resourcePackage}")
-              "FungibleResourceManager"
-              AddressReservation("super_admin_badge")
-              NamedAddress("super_admin_badge")
-          ;          
+ALLOCATE_GLOBAL_ADDRESS
+    Address("${knownAddresses.packageAddresses.resourcePackage}")
+    "FungibleResourceManager"
+    AddressReservation("super_admin_badge")
+    NamedAddress("super_admin_badge")
+;          
 
-          CREATE_FUNGIBLE_RESOURCE_WITH_INITIAL_SUPPLY
-            Enum<OwnerRole::Fixed>(
-                Enum<AccessRule::Protected>(
-                    Enum<AccessRuleNode::ProofRule>(
-                        Enum<ProofRule::Require>(
-                            Enum<ResourceOrNonFungible::Resource>(
-                                NamedAddress("super_admin_badge")
-                            )
-                        )
-                    )
-                )
-            )
-            true
-            0u8
-            Decimal("1")
-            Tuple(
-              None,
-              None,
-              None,
-              None,
-              None,
-              None
-            )
-            Tuple(
-              Map<String, Tuple>(
-                "name" => Tuple(
-                  Some(Enum<Metadata::String>("RadQuest Super Admin Badge")),                  
-                  false                                                         
-                ),
-                "tags" => Tuple(
-                  Some(Enum<Metadata::StringArray>(Array<String>("radquest", "badge"))),                  
-                  false                                                         
-                )
-              ),
-              Map<String, Enum>(
-                "metadata_setter" => None,
-                "metadata_setter_updater" => None,
-                "metadata_locker" => None,          
-                "metadata_locker_updater" => None
+CREATE_FUNGIBLE_RESOURCE_WITH_INITIAL_SUPPLY
+  Enum<OwnerRole::Fixed>(
+      Enum<AccessRule::Protected>(
+          Enum<AccessRuleNode::ProofRule>(
+              Enum<ProofRule::Require>(
+                  Enum<ResourceOrNonFungible::Resource>(
+                      NamedAddress("super_admin_badge")
+                  )
               )
+          )
+      )
+  )
+  true
+  0u8
+  Decimal("1")
+  Tuple(
+    None,
+    None,
+    None,
+    None,
+    None,
+    None
+  )
+  Tuple(
+    Map<String, Tuple>(
+      "name" => Tuple(
+        Some(
+          Enum<Metadata::String>(
+            "RadQuest Super Admin Badge"
+          )
+        ),
+        false
+      ),
+      "tags" => Tuple(
+        Some(
+          Enum<Metadata::StringArray>(
+            Array<String>(
+              "radquest",
+              "badge"
             )
-            Some(
-                AddressReservation("super_admin_badge")
+          )
+        ),
+        false
+      ),
+      "dapp_definitions" => Tuple(
+        Enum<1u8>(
+          Enum<128u8>(
+            Array<String>(
+              "${config.radQuest.accounts.dAppDefinition.address}"
             )
-          ;
+          )
+        ),
+        false
+      )
+    ),
+    Map<String, Enum>()
+  )
+  Some(
+      AddressReservation("super_admin_badge")
+  )
+;
 
-          CALL_METHOD
-            Address("${config.radQuest.accounts.owner.address}")
-            "try_deposit_batch_or_abort"
-            Expression("ENTIRE_WORKTOP")
-            Enum<0u8>()
-          ;`
+CALL_METHOD
+  Address("${config.radQuest.accounts.owner.address}")
+  "try_deposit_batch_or_abort"
+  Expression("ENTIRE_WORKTOP")
+  Enum<0u8>()
+;`
 
     const transaction = transactionBuilder({ transactionManifest, signers: ['payer', 'owner'] })
     return transaction

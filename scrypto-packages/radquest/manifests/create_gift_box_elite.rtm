@@ -1,18 +1,7 @@
-import { config } from '../../config'
-import { transactionBuilder } from '../../transaction/transactionBuilder'
-
-export const createElementResource = ({
-  superAdminBadgeAddress,
-  adminBadgeAddress
-}: {
-  superAdminBadgeAddress: string
-  adminBadgeAddress: string
-}) => {
-  const transactionManifest = `
 CALL_METHOD
-  Address("${config.radQuest.accounts.payer.address}")
-  "lock_fee"
-  Decimal("10")
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
 ;
 
 CREATE_FUNGIBLE_RESOURCE
@@ -21,7 +10,7 @@ CREATE_FUNGIBLE_RESOURCE
             Enum<0u8>(
                 Enum<0u8>(
                     Enum<1u8>(
-                        Address("${superAdminBadgeAddress}")
+                        Address("${super_admin_badge}")
                     )
                 )
             )
@@ -37,7 +26,7 @@ CREATE_FUNGIBLE_RESOURCE
                         Enum<0u8>(
                             Enum<0u8>(
                                 Enum<1u8>(
-                                    Address("${adminBadgeAddress}")
+                                    Address("${admin_badge}")
                                 )
                             )
                         )
@@ -48,7 +37,17 @@ CREATE_FUNGIBLE_RESOURCE
         ),
         Enum<1u8>(
             Tuple(
-                Enum<0u8>(),
+                Enum<1u8>(
+                    Enum<2u8>(
+                        Enum<0u8>(
+                            Enum<0u8>(
+                                Enum<1u8>(
+                                    Address("${admin_badge}")
+                                )
+                            )
+                        )
+                    )
+                ),
                 Enum<0u8>()
             )
         ),
@@ -62,7 +61,7 @@ CREATE_FUNGIBLE_RESOURCE
             "name" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "Element"
+                        "Elite Gift Box"
                     )
                 ),
                 false
@@ -70,7 +69,7 @@ CREATE_FUNGIBLE_RESOURCE
             "description" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "Elements are the common token of the RadQuest realm. They can be fused by RadQuest’s Jetty to produce RadGems that can be used for much more…"
+                        "This truly elite Gift Box from RadQuest’s Jetty, reserved for only the most committed, contains only a rare or ultra-rare Morph Energy Card and a substantial quantity of Elements. Ask Jetty to open it!"
                     )
                 ),
                 false
@@ -97,7 +96,7 @@ CREATE_FUNGIBLE_RESOURCE
                 Enum<1u8>(
                     Enum<128u8>(
                         Array<String>(
-                            "${config.radQuest.accounts.dAppDefinition.address}"
+                            "${dapp_definition}"
                         )
                     )
                 ),
@@ -107,15 +106,4 @@ CREATE_FUNGIBLE_RESOURCE
         Map<String, Enum>()
     )
     Enum<0u8>()
-;`
-
-  const transaction = transactionBuilder({
-    transactionManifest,
-    signers: ['payer']
-  })
-
-  return transaction
-    .submit()
-    .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
-    .map((createdEntities): string => createdEntities[0].entity_address!)
-}
+;

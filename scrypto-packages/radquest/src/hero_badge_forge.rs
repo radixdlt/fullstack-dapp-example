@@ -24,6 +24,7 @@ mod hero_badge_forge {
       },
       methods {
         disable => restrict_to: [super_admin];
+        enable => restrict_to: [super_admin];
         add_user_account => restrict_to: [admin];
         claim_badge => PUBLIC;
         hero_completed_quest => restrict_to: [admin];
@@ -35,7 +36,7 @@ mod hero_badge_forge {
         enabled: bool,
         admin_badge: Vault,
         hero_badge_manager: ResourceManager,
-        user_accounts: KeyValueStore<Global<Account>, ()>,
+        user_accounts: KeyValueStore<Global<Account>, UserId>,
     }
 
     impl HeroBadgeForge {
@@ -71,19 +72,22 @@ mod hero_badge_forge {
 
         pub fn disable(&mut self) {
             assert!(self.enabled, "HeroBadgeForge already disabled");
-
             self.enabled = false;
+        }
+        pub fn enable(&mut self) {
+            assert!(!self.enabled, "HeroBadgeForge already enabled");
+            self.enabled = true;
         }
 
         pub fn add_user_account(&mut self, account: Global<Account>, user_id: UserId) {
             assert!(self.enabled, "HeroBadgeForge disabled");
 
-            self.user_accounts.insert(account, ());
+            self.user_accounts.insert(account, user_id.clone());
 
             Runtime::emit_event(AccountAddedEvent { account, user_id })
         }
 
-        pub fn claim_badge(&mut self, claimant: Global<Account>, user_id: UserId) -> Bucket {
+        pub fn claim_badge(&mut self, claimant: Global<Account>) -> Bucket {
             assert!(self.enabled, "HeroBadgeForge disabled");
 
             // Getting the owner role of the account.
@@ -91,7 +95,8 @@ mod hero_badge_forge {
             // Assert against it to make sure the clamant account matches the method caller.
             Runtime::assert_access_rule(owner_role.rule);
 
-            self.user_accounts
+            let user_id = self
+                .user_accounts
                 .remove(&claimant)
                 .expect("This account is not listed");
 

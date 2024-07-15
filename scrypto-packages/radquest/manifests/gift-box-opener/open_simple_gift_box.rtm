@@ -17,17 +17,17 @@ POP_FROM_AUTH_ZONE
 CALL_METHOD
     Address("${account}")
     "withdraw"
-    Address("${gift_box}")
+    Address("${gift_box_simple}")
     Decimal("1")
 ;
 TAKE_ALL_FROM_WORKTOP
-    Address("${gift_box}")
-    Bucket("gift_box")
+    Address("${gift_box_simple}")
+    Bucket("gift_box_simple")
 ;
 CALL_METHOD
     Address("${gift_box_opener}")
     "open_gift_box"
     Proof("hero_badge_proof")
-    Bucket("gift_box")
+    Bucket("gift_box_simple")
 ;
 

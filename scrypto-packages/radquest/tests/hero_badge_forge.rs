@@ -21,6 +21,7 @@ struct LedgerTestEnvironment {
     ledger: DefaultLedgerSimulator,
     public_key: Secp256k1PublicKey,
     disable_hero_badge_forge_manifest: TransactionManifestV1,
+    enable_hero_badge_forge_manifest: TransactionManifestV1,
     add_user_account_manifest: TransactionManifestV1,
     claim_hero_badge_manifest: TransactionManifestV1,
     hero_completed_quest_manifest: TransactionManifestV1,
@@ -126,6 +127,23 @@ impl LedgerTestEnvironment {
             names,
         );
 
+        let enable_hero_badge_forge_manifest = ManifestBuilder::new()
+            .lock_fee_from_faucet()
+            .create_proof_from_account_of_non_fungible(
+                account,
+                NonFungibleGlobalId::new(super_admin_badge, NonFungibleLocalId::integer(1)),
+            )
+            .call_method(hero_badge_forge, "enable", ());
+
+        let names = enable_hero_badge_forge_manifest.object_names();
+        let enable_hero_badge_forge_manifest = enable_hero_badge_forge_manifest.build();
+
+        dump_manifest_to_file(
+            "enable_hero_badge_forge",
+            &enable_hero_badge_forge_manifest,
+            names,
+        );
+
         let user_id = "test_id_12345".to_string();
         let manifest = ManifestBuilder::new()
             .lock_fee_from_faucet()
@@ -142,11 +160,7 @@ impl LedgerTestEnvironment {
 
         let manifest = ManifestBuilder::new()
             .lock_fee_from_faucet()
-            .call_method(
-                hero_badge_forge,
-                "claim_badge",
-                manifest_args!(account, user_id.clone()),
-            )
+            .call_method(hero_badge_forge, "claim_badge", manifest_args!(account))
             .call_method(
                 account,
                 "deposit_batch",
@@ -195,6 +209,7 @@ impl LedgerTestEnvironment {
             ledger,
             public_key,
             disable_hero_badge_forge_manifest,
+            enable_hero_badge_forge_manifest,
             add_user_account_manifest,
             claim_hero_badge_manifest,
             hero_completed_quest_manifest,
@@ -344,6 +359,30 @@ fn cannot_add_user_account_when_disabled() -> Result<(), RuntimeError> {
 
     // Assert
     receipt.expect_commit_failure();
+    Ok(())
+}
+
+#[test]
+fn can_enable_then_add_user_account_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+    lte.ledger.execute_manifest(
+        lte.disable_hero_badge_forge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Act
+    lte.ledger.execute_manifest(
+        lte.enable_hero_badge_forge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    let receipt = lte.ledger.execute_manifest(
+        lte.add_user_account_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_success();
     Ok(())
 }
 

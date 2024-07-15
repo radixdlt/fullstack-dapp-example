@@ -146,7 +146,7 @@ export default [
           }
         },
         {
-          name: 'JettySwapEvent',
+          name: 'ClamSwapEvent',
           emitter: {
             type: 'Method',
             entity: {
@@ -158,7 +158,7 @@ export default [
           },
           data: {
             kind: 'Tuple',
-            type_name: 'JettySwapEvent',
+            type_name: 'ClamSwapEvent',
             fields: []
           }
         },

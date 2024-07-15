@@ -1,7 +1,7 @@
 CALL_METHOD
     Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
     "lock_fee"
-    Decimal("5000")
+    Decimal("50")
 ;
 
 CALL_METHOD
@@ -13,9 +13,16 @@ CALL_METHOD
 
 CALL_METHOD
     Address("${morph_card_forge}")
-    "mint_random_card"
-    Decimal("0.62")
-    "<example_user_id_123>"
+    "mint_card"
+    "${user_id}"
+    "${key_image_url}",
+    "${name}",
+    "${description}",
+    "${energy_type}",
+    "${energy_description}",
+    "${rarity}",
+    "${quality}",
+    "${limited_edition}",
 ;
 
 CALL_METHOD

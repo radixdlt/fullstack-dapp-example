@@ -31,6 +31,7 @@ mod refinery {
         },
         methods {
             disable => restrict_to: [super_admin];
+            enable => restrict_to: [super_admin];
             combine_elements_deposit => PUBLIC;
             combine_elements_mint_radgem => restrict_to: [admin];
             combine_elements_add_radgem_image => restrict_to: [admin];
@@ -116,6 +117,10 @@ mod refinery {
             assert!(self.enabled, "Refinery component already disabled");
             self.enabled = false;
         }
+        pub fn enable(&mut self) {
+            assert!(!self.enabled, "Refinery  already enabled");
+            self.enabled = true;
+        }
 
         fn get_user_id_from_badge_proof(&self, hero_badge: Proof) -> UserId {
             let local_id_string = match hero_badge
@@ -147,15 +152,15 @@ mod refinery {
         pub fn combine_elements_mint_radgem(
             &mut self,
             user_id: UserId,
-            seed_num_1: Decimal,
-            seed_num_2: Decimal,
-            seed_num_3: Decimal,
+            color_seed: Decimal,
+            material_seed: Decimal,
+            quality_seed: Decimal,
         ) -> () {
             assert!(self.enabled, "Refinery component disabled");
 
             let radgem_bucket = self.admin_badge.authorize_with_amount(1, || {
                 self.radgem_forge
-                    .mint_radgem(seed_num_1, seed_num_2, seed_num_3)
+                    .mint_radgem(color_seed, material_seed, quality_seed)
             });
 
             // Update the user's RadGem record

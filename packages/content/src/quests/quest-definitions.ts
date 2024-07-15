@@ -246,11 +246,11 @@ export const QuestDefinitions = () => {
       preRequisites: ['TransferTokens'],
       requirements: {
         [EventId.JettySwap]: {
-          eventName: 'JettySwapEvent',
+          eventName: 'ClamSwapEvent',
           type: 'event'
         },
         [EventId.LettySwap]: {
-          eventName: 'JettySwapEvent',
+          eventName: 'ClamSwapEvent',
           type: 'event'
         }
       }

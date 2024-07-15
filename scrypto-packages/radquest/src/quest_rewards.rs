@@ -61,6 +61,7 @@ mod quest_rewards {
         },
         methods {
             disable => restrict_to: [super_admin];
+            enable => restrict_to: [super_admin];
             claim_reward => PUBLIC;
             deposit_reward => restrict_to: [admin];
         }
@@ -116,6 +117,10 @@ mod quest_rewards {
         pub fn disable(&mut self) {
             assert!(self.enabled, "QuestRewards component already disabled");
             self.enabled = false;
+        }
+        pub fn enable(&mut self) {
+            assert!(!self.enabled, "QuestRewards already enabled");
+            self.enabled = true;
         }
 
         fn get_user_id_from_badge_proof(&self, hero_badge: Proof) -> UserId {

@@ -79,6 +79,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
             0u64
         ),
         Array<String>(
+            "description",
             "key_image_url",
             "quests_completed",
             "quest_counter"
@@ -101,9 +102,19 @@ CREATE_NON_FUNGIBLE_RESOURCE
                 Enum<0u8>()
             )
         ),
+        Enum<1u8>(
+            Tuple(
+                Enum<0u8>(),
+                Enum<0u8>()
+            )
+        ),
         Enum<0u8>(),
-        Enum<0u8>(),
-        Enum<0u8>(),
+        Enum<1u8>(
+            Tuple(
+                Enum<0u8>(),
+                Enum<0u8>()
+            )
+        ),
         Enum<1u8>(
             Tuple(
                 Enum<1u8>(
@@ -113,7 +124,22 @@ CREATE_NON_FUNGIBLE_RESOURCE
             )
         ),
         Enum<0u8>(),
-        Enum<0u8>()
+        Enum<1u8>(
+            Tuple(
+                Enum<1u8>(
+                    Enum<2u8>(
+                        Enum<0u8>(
+                            Enum<0u8>(
+                                Enum<1u8>(
+                                    Address("${admin_badge}")
+                                )
+                            )
+                        )
+                    )
+                ),
+                Enum<0u8>()
+            )
+        )
     )
     Tuple(
         Map<String, Tuple>(

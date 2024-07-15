@@ -181,7 +181,7 @@ fn can_combine_elements_deposit() -> Result<(), RuntimeError> {
     // Act
     refinery.combine_elements_deposit(
         hero_badge_proof,
-        elements.take(dec!(10), &mut env)?,
+        elements.take(dec!(5), &mut env)?,
         &mut env,
     )?;
 
@@ -205,12 +205,13 @@ fn cannot_combine_elements_deposit_with_other_non_fungible() -> Result<(), Runti
     // Act
     let result = refinery.combine_elements_deposit(
         nf_badge.create_proof_of_all(&mut env)?,
-        elements.take(dec!(10), &mut env)?,
+        elements.take(dec!(5), &mut env)?,
         &mut env,
     );
 
     // Assert
     assert!(result.is_err());
+    assert!(result.unwrap_err().to_string().contains("Invalid proof"));
     Ok(())
 }
 
@@ -285,7 +286,7 @@ fn can_combine_elements_add_radgem_image() -> Result<(), RuntimeError> {
         .get_non_fungible_data(radgem_local_id.unwrap(), &mut env)
         .unwrap();
 
-    assert_eq!(data.name, "Metallic Smoke RadGem {10/100}");
+    assert_eq!(data.name, "Metallic Smoke RadGem {10}");
     assert_eq!(data.key_image_url, UncheckedUrl::of("www.new_url.test"));
 
     Ok(())
@@ -425,7 +426,7 @@ fn can_create_radmorph() -> Result<(), RuntimeError> {
         ResourceManager(radmorph_address).get_non_fungible_data(radmorph_id, &mut env)?;
     assert_eq!(
         radmorph_data.name,
-        "Basic Metallic Blood and Forest Molten Lava RadMorph {20/100}".to_string(),
+        "Basic Metallic Blood and Forest Molten Lava RadMorph {20}".to_string(),
     );
 
     Ok(())
@@ -492,13 +493,45 @@ pub fn cannot_combine_elements_deposit_when_disabled() -> Result<(), RuntimeErro
     // Act
     let result = refinery.combine_elements_deposit(
         hero_badge_proof,
-        elements.take(dec!(10), &mut env)?,
+        elements.take(dec!(5), &mut env)?,
         &mut env,
     );
 
     // Assert
-    println!("{:?}", result);
     assert!(result.is_err());
+    assert!(result
+        .unwrap_err()
+        .to_string()
+        .contains("Refinery component disabled"));
+    Ok(())
+}
+
+#[test]
+pub fn can_enable_then_combine_elements_deposit_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut refinery,
+        hero_badge_proof,
+        super_admin_badge_proof,
+        elements,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    refinery.disable(&mut env)?;
+
+    // Act
+    refinery.enable(&mut env)?;
+
+    let result = refinery.combine_elements_deposit(
+        hero_badge_proof,
+        elements.take(dec!(5), &mut env)?,
+        &mut env,
+    );
+
+    // Assert
+    assert!(result.is_ok());
     Ok(())
 }
 

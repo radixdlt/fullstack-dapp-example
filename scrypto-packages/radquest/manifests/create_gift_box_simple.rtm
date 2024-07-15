@@ -3,6 +3,7 @@ CALL_METHOD
     "lock_fee"
     Decimal("50")
 ;
+
 CREATE_FUNGIBLE_RESOURCE
     Enum<1u8>(
         Enum<2u8>(
@@ -31,9 +32,7 @@ CREATE_FUNGIBLE_RESOURCE
                         )
                     )
                 ),
-                Enum<1u8>(
-                    Enum<1u8>()
-                )
+                Enum<0u8>()
             )
         ),
         Enum<1u8>(
@@ -49,9 +48,7 @@ CREATE_FUNGIBLE_RESOURCE
                         )
                     )
                 ),
-                Enum<1u8>(
-                    Enum<1u8>()
-                )
+                Enum<0u8>()
             )
         ),
         Enum<0u8>(),
@@ -64,7 +61,7 @@ CREATE_FUNGIBLE_RESOURCE
             "name" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "Gift Box"
+                        "Simple Gift Box"
                     )
                 ),
                 false
@@ -72,7 +69,7 @@ CREATE_FUNGIBLE_RESOURCE
             "description" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "Gift Boxes are filled with treasures and surprises, waiting to be opened."
+                        "This simple Gift Box from RadQuest’s Jetty contains a common or rare Morph Energy Card and a handful of Elements. Ask Jetty to open it!"
                     )
                 ),
                 false

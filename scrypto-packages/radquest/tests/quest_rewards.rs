@@ -450,3 +450,36 @@ pub fn cannot_deposit_rewards_when_disabled() -> Result<(), RuntimeError> {
 
     Ok(())
 }
+
+#[test]
+pub fn can_enable_then_deposit_rewards_when_disabled() -> Result<(), RuntimeError> {
+    let Test {
+        mut env,
+        mut quest_rewards,
+        user_id,
+        admin_badge_proof,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
+    let reward_2 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
+
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    quest_rewards.disable(&mut env)?;
+
+    quest_rewards.enable(&mut env)?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    let result = quest_rewards.deposit_reward(
+        user_id,
+        QuestId("1".into()),
+        vec![reward_1, reward_2],
+        &mut env,
+    );
+
+    assert!(result.is_ok());
+
+    Ok(())
+}

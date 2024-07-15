@@ -125,9 +125,7 @@ export const createClamResource = ({
                       )
                   )
               ),
-                # Metadata setter role
                 "metadata_setter_updater" => None,
-                # Metadata locker role
                 "metadata_locker" => None,          
                 "metadata_locker_updater" => None
               )
