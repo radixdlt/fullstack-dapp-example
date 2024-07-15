@@ -128,6 +128,9 @@ export const UserQuestController = ({
                   user ? ok(user) : err(createApiError(ErrorReason.userNotFound, 404)())
                 )
                 .andThen(({ accountAddress }) => {
+                  if (!accountAddress) {
+                    return err(createApiError('accountAddressNotSet', 400)())
+                  }
                   return accountAddressModel.addTrackedAddress(
                     accountAddress as string,
                     questId,

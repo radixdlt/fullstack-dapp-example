@@ -24,7 +24,8 @@ export const DBError = {
   requirementsNotMet: 'requirementsNotMet',
   preRequisiteNotMet: 'preRequisiteNotMet',
   questAlreadyCompleted: 'questAlreadyCompleted',
-  invalidRequirement: 'invalidRequirement'
+  invalidRequirement: 'invalidRequirement',
+  accountAddressNotSet: 'accountAddressNotSet'
 } as const
 
 export const ErrorReason = {
