@@ -72,6 +72,8 @@
       }
     }, 1000)
 
+    markNotificationAsSeen('loggedIn')
+
     return () => {
       window.removeEventListener('radix#chromeExtension#receive', callback)
       clearInterval(interval)
@@ -113,9 +115,6 @@
 <Quest
   bind:this={quest}
   bind:render
-  on:completed={() => {
-    markNotificationAsSeen('loggedIn')
-  }}
   id={data.id}
   requirements={data.requirements}
   steps={[
