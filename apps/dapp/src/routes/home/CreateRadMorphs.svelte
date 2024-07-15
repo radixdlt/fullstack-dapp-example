@@ -148,19 +148,10 @@
           Address("${publicConfig.resources.radgemAddress}")
           Array<NonFungibleLocalId>(
               NonFungibleLocalId("${selectedRadgems[0].id}"),
-          );
-
-      TAKE_ALL_FROM_WORKTOP Address("${publicConfig.resources.radgemAddress}") Bucket("radgem_1");
-
-      CALL_METHOD
-          Address("${$user!.accountAddress}")
-          "withdraw_non_fungibles"
-          Address("${publicConfig.resources.radgemAddress}")
-          Array<NonFungibleLocalId>(
               NonFungibleLocalId("${selectedRadgems[1].id}")
           );
 
-      TAKE_ALL_FROM_WORKTOP Address("${publicConfig.resources.radgemAddress}") Bucket("radgem_2");
+      TAKE_ALL_FROM_WORKTOP Address("${publicConfig.resources.radgemAddress}") Bucket("radgem");
 
       CALL_METHOD
           Address("${$user!.accountAddress}")
@@ -175,8 +166,7 @@
       CALL_METHOD
           Address("${publicConfig.components.refinery}")
           "create_radmorph"
-          Bucket("radgem_1")
-          Bucket("radgem_2")
+          Bucket("radgem")
           Bucket("morph_energy_card")
           "${response.imageUrl}";
 
