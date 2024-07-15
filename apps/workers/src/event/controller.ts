@@ -254,7 +254,11 @@ export const EventWorkerController = ({
         )
         .andThen(() => handleTiersRewards(user))
         .andThen(() =>
-          sendMessage(user.id, { type: MessageType.ReferralCompletedBasicQuests, traceId })
+          sendMessage(
+            user.id,
+            { type: MessageType.ReferralCompletedBasicQuests, traceId },
+            childLogger
+          )
         )
     }
 
@@ -325,12 +329,16 @@ export const EventWorkerController = ({
 
       return completeQuestRequirement(questId)
         .andThen(() =>
-          sendMessage(userId, {
-            type: 'QuestRequirementCompleted',
-            requirementId: values.requirementId,
-            questId,
-            traceId
-          })
+          sendMessage(
+            userId,
+            {
+              type: 'QuestRequirementCompleted',
+              requirementId: values.requirementId,
+              questId,
+              traceId
+            },
+            childLogger
+          )
         )
         .andThen(() => handleAllQuestRequirementCompleted(values))
         .andThen((value) =>
@@ -369,11 +377,15 @@ export const EventWorkerController = ({
 
         return updateQuestProgressStatus({ questId, userId, status: 'REWARDS_CLAIMED' })
           .andThen(() =>
-            sendMessage(userId, {
-              type: 'QuestRewardsClaimed',
-              questId,
-              traceId
-            })
+            sendMessage(
+              userId,
+              {
+                type: 'QuestRewardsClaimed',
+                questId,
+                traceId
+              },
+              childLogger
+            )
           )
           .andThen(() => handleMailerLiteBasicQuestFinished(questId, user))
           .andThen(() => {
@@ -431,10 +443,12 @@ export const EventWorkerController = ({
             radgemId: radGemId,
             traceId
           })
-          .andThen(() => sendMessage(userId!, { type: 'CombineElementsMintRadgem', traceId }))
+          .andThen(() =>
+            sendMessage(userId!, { type: 'CombineElementsMintRadgem', traceId }, childLogger)
+          )
       }
       case EventId.CombineElementsAddedRadgemImage:
-        return sendMessage(userId, { type: 'CombineElementsAddRadgemImage', traceId })
+        return sendMessage(userId, { type: 'CombineElementsAddRadgemImage', traceId }, childLogger)
       case EventId.DepositHeroBadge: {
         return completeQuestRequirement('GetStuff').andThen(() =>
           handleAllQuestRequirementCompleted({
@@ -455,12 +469,16 @@ export const EventWorkerController = ({
                   requirementId: 'MintRadgems'
                 })
                   .andThen(() =>
-                    sendMessage(userId, {
-                      type: 'QuestRequirementCompleted',
-                      questId: 'CreatingRadMorphs',
-                      requirementId: 'MintRadgems',
-                      traceId
-                    })
+                    sendMessage(
+                      userId,
+                      {
+                        type: 'QuestRequirementCompleted',
+                        questId: 'CreatingRadMorphs',
+                        requirementId: 'MintRadgems',
+                        traceId
+                      },
+                      childLogger
+                    )
                   )
                   .andThen(() =>
                     handleAllQuestRequirementCompleted({ questId: 'CreatingRadMorphs', userId })
@@ -470,13 +488,26 @@ export const EventWorkerController = ({
       }
 
       case EventId.AccountAllowedToForgeHeroBadge:
-        return sendMessage(user.id, {
-          type: 'HeroBadgeReadyToBeClaimed',
-          traceId: job.data.traceId
-        })
+        return sendMessage(
+          user.id,
+          {
+            type: 'HeroBadgeReadyToBeClaimed',
+            traceId: job.data.traceId
+          },
+          childLogger
+        )
 
       case EventId.JettyReceivedClams: {
-        return handleQuestWithTrackedAccount('TransferTokens')
+        return sendMessage(
+          user.id,
+          {
+            type: 'QuestRequirementCompleted',
+            requirementId: EventId.JettyReceivedClams,
+            questId: 'TransferTokens',
+            traceId: job.data.traceId
+          },
+          childLogger
+        ).andThen(() => handleQuestWithTrackedAccount('TransferTokens'))
       }
       case EventId.MayaRouterWithdrawEvent: {
         return handleQuestWithTrackedAccount('Thorswap')
@@ -519,12 +550,16 @@ export const EventWorkerController = ({
                       requirementId: EventId.GiftBoxOpened,
                       questId: 'CreatingRadMorphs'
                     }).andThen(() =>
-                      sendMessage(userId, {
-                        type: 'QuestRequirementCompleted',
-                        questId: 'CreatingRadMorphs',
-                        requirementId: 'GiftBoxOpened',
-                        traceId
-                      })
+                      sendMessage(
+                        userId,
+                        {
+                          type: 'QuestRequirementCompleted',
+                          questId: 'CreatingRadMorphs',
+                          requirementId: 'GiftBoxOpened',
+                          traceId
+                        },
+                        childLogger
+                      )
                     )
                   : okAsync(undefined)
               )
