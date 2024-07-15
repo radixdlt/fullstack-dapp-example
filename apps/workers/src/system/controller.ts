@@ -1,19 +1,26 @@
 import { ok } from 'neverthrow'
-import { Job, SystemJob, SystemJobType } from 'queues'
-import { AccountAddressModel, AppLogger, waitForMessage } from 'common'
+import { Job, RedisConnection, SystemJob, SystemJobType } from 'queues'
+import { AccountAddressModel, AppLogger, TransactionStreamModel, waitForMessage } from 'common'
 import { getImageOracleManifest } from './helpers/getImageOracleManifest'
 import { config } from '../config'
 import { AccountHelper, TransactionHelper, withSigners } from 'typescript-wallet'
 import { dbClient } from '../db-client'
 import { completeQuestRequirements } from './helpers/completeQuestRequirements'
+import { PrismaClient } from 'database'
 
 export type SystemWorkerController = ReturnType<typeof SystemWorkerController>
 export const SystemWorkerController = ({
   logger,
-  AccountAddressModel
+  AccountAddressModel,
+  dbClient,
+  redisClient,
+  transactionStreamModel
 }: {
   logger: AppLogger
   AccountAddressModel: AccountAddressModel
+  redisClient: Awaited<RedisConnection['client']>
+  transactionStreamModel: TransactionStreamModel
+  dbClient: PrismaClient
 }) => {
   const handler = async (job: Job<SystemJob>) => {
     const { traceId, type } = job.data

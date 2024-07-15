@@ -19,5 +19,6 @@ export const TransactionStreamSubjects = ({
     transactions: StreamTransactionsResponse['items']
     stateVersion: number
     continueStream: (delay: number) => void
+    retry: (value: { stateVersion?: number; delay: number }) => void
   }>()
 })

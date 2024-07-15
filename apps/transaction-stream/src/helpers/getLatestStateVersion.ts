@@ -1,18 +1,17 @@
 import { ok } from 'neverthrow'
-import { StateVersionModel } from '../state-version/state-version.model'
-import type { EventModelMethods } from 'common'
+import type { EventModelMethods, TransactionStreamModel } from 'common'
 import { GatewayApi } from 'common'
 
 export const getLatestStateVersion = ({
-  stateVersionModel,
+  transactionStreamModel,
   eventModel,
   gatewayApi
 }: {
-  stateVersionModel: StateVersionModel
+  transactionStreamModel: TransactionStreamModel
   eventModel: EventModelMethods
   gatewayApi: GatewayApi
 }) =>
-  stateVersionModel
+  transactionStreamModel
     .getLatestProcessedStateVersion()
     .andThen((value) =>
       value

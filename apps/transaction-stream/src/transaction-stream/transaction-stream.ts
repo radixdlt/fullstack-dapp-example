@@ -6,7 +6,10 @@ import { HandleTransactionResult, handleTransactionResult } from './helpers/hand
 export type TransactionStreamInput = {
   fromStateVersion?: number
   initialStatus?: 'run' | 'stop'
-  dependencies: { gatewayApiClient: GatewayApiClient; subjects?: TransactionStreamSubjects }
+  dependencies: {
+    gatewayApiClient: GatewayApiClient
+    subjects?: TransactionStreamSubjects
+  }
 }
 export type TransactionStream = ReturnType<typeof TransactionStream>
 export const TransactionStream = ({
@@ -31,9 +34,17 @@ export const TransactionStream = ({
       return subjects.errorSubject.next(result.error)
     }
 
-    const { transactions, stateVersion } = result.value
+    const { transactions, stateVersion, previousStateVersion } = result.value
     subjects.currentStateVersionSubject.next(stateVersion)
-    subjects.transactionsSubject.next({ transactions, continueStream, stateVersion })
+    subjects.transactionsSubject.next({
+      transactions,
+      continueStream,
+      retry: ({ stateVersion, delay }: { stateVersion?: number; delay: number }) => {
+        subjects.currentStateVersionSubject.next(stateVersion ?? previousStateVersion)
+        continueStream(delay)
+      },
+      stateVersion
+    })
   }
 
   const stateVersion$ = subjects.triggerSubject.pipe(
