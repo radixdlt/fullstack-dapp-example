@@ -66,6 +66,7 @@
           })
         })
         useLocalStorage('savedProgress').clear()
+        useLocalStorage('seen-landing-popup').clear()
 
         $user = undefined
 

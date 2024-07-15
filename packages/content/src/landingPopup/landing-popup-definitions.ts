@@ -94,10 +94,7 @@ export const UtmSourceLanding = {
   zeus: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Crypto Zeus' } },
   maria: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Crypto Maria' } },
   pushka: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Roman Pushka' } },
-  dad: {
-    schema: LandingPopupSchema.Influencer,
-    data: { influencer: 'Крипто Батя / Crypto Dad' }
-  },
+  dad: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Crypto Dad' } },
   leo: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Leonardo Vecchio' } },
   smartinvestor: {
     schema: LandingPopupSchema.Influencer,

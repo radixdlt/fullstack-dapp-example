@@ -17,17 +17,21 @@
 
   export let definitions: Record<LandingPopupSchema, string>
 
-  let seenLandingPopup: boolean
-  let visibleLandingPopup: {
-    html: string
-    replacer: Replacer
-  }
+  let seenLandingPopup: string | undefined
+  let visibleLandingPopup:
+    | {
+        id: string
+        html: string
+        replacer: Replacer
+      }
+    | undefined
 
   onMount(() => {
-    seenLandingPopup = !!(useLocalStorage('seen-landing-popup').get() || $user)
+    seenLandingPopup = useLocalStorage('seen-landing-popup').get()
     const searchParams = new URLSearchParams(window.location.search)
     if (searchParams.has('ref')) {
       visibleLandingPopup = {
+        id: `ref=${searchParams.get('ref')}`,
         html: definitions[LandingPopupSchema.UserReferral],
         replacer: (html: string) =>
           userApi
@@ -40,31 +44,28 @@
 
     if (searchParams.has('utm_source')) {
       const utmSource = searchParams.get('utm_source') as keyof typeof UtmSourceLanding
-      visibleLandingPopup = {
-        html: definitions[UtmSourceLanding[utmSource].schema],
-        replacer: (html: string) =>
-          Promise.resolve(htmlReplace(html, UtmSourceLanding[utmSource].data))
+      const landingConfig = UtmSourceLanding[utmSource]
+      if (landingConfig) {
+        visibleLandingPopup = {
+          id: `utm_source=${utmSource}`,
+          html: definitions[UtmSourceLanding[utmSource].schema],
+          replacer: (html: string) =>
+            Promise.resolve(htmlReplace(html, UtmSourceLanding[utmSource].data))
+        }
       }
-    }
-
-    const unsubscribe = user.subscribe((value) => {
-      if (value) {
-        useLocalStorage('seen-landing-popup').set(true)
-      }
-    })
-
-    return () => {
-      unsubscribe()
     }
   })
 
   const hideLandingPopup = () => {
-    useLocalStorage('seen-landing-popup').set(true)
-    seenLandingPopup = true
+    if (visibleLandingPopup) {
+      useLocalStorage('seen-landing-popup').set(visibleLandingPopup.id)
+      seenLandingPopup = visibleLandingPopup.id
+      visibleLandingPopup = undefined
+    }
   }
 </script>
 
-{#if !seenLandingPopup && visibleLandingPopup}
+{#if visibleLandingPopup && seenLandingPopup !== visibleLandingPopup.id && !$user}
   <Backdrop zIndex={5}>
     <div class="landing-popup card" transition:scale|local={{ easing: backOut }}>
       <div class="image only-desktop">
