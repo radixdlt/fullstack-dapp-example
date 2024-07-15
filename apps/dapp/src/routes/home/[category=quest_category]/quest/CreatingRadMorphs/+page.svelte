@@ -8,6 +8,7 @@
   import { writable } from 'svelte/store'
   import { WebSocketClient, webSocketClient } from '$lib/websocket-client'
   import { onDestroy } from 'svelte'
+  import { creatingRadMorphSeen } from '../../../../../stores'
 
   export let data: LayoutData
 
@@ -20,15 +21,18 @@
   const hadTwoRadgems = writable(data.requirements.MintRadgems.isComplete)
   const checkedOutRadMorphs = writable(data.requirements.CheckOutRadMorph.isComplete)
 
+  const unsubscribe = creatingRadMorphSeen.subscribe((seen) => {
+    if (seen) {
+      checkedOutRadMorphs.set(true)
+    }
+  })
+
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
     unsubscribeWebSocket = $webSocketClient.onMessage(async (message) => {
-      console.log(message)
       if (message.type === 'QuestRequirementCompleted' && message.questId === 'CreatingRadMorphs') {
         if (message.requirementId === 'GiftBoxOpened') {
           starterGiftBoxOpened.set(true)
-        } else if (message.requirementId === 'CheckOutRadMorph') {
-          checkedOutRadMorphs.set(true)
         } else if (message.requirementId === 'MintRadgems') {
           hadTwoRadgems.set(true)
         }
@@ -36,7 +40,10 @@
     })
   }
 
-  onDestroy(() => unsubscribeWebSocket?.())
+  onDestroy(() => {
+    unsubscribe()
+    unsubscribeWebSocket?.()
+  })
 </script>
 
 <Quest
