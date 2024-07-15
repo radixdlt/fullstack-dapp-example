@@ -66,7 +66,7 @@
               backgroundImage={quest.splashImage}
               state={questCardState[id] ?? 'locked'}
               link={`/home/${quest.category}/quest/${id}`}
-              isQuestTogether={id === 'QuestTogether'}
+              questId={id}
             />
           </Item>
         {/if}

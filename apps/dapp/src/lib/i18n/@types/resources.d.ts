@@ -115,6 +115,7 @@ interface Resources {
     "QuestOverviewButton": {
       "unlocked": "Start",
       "referralInProgress": "Check Status",
+      "comingSoon": "Coming Soon",
       "inProgress": "Continue",
       "claimRewards": "Claim Rewards",
       "complete": "View Again"
@@ -212,8 +213,8 @@ interface Resources {
       }
     },
     "Thorswap": {
-      "title": "Thorswap Quest",
-      "description": "Learn about Thorswap and how to bridge tokens",
+      "title": "Bridge Tokens with THORSwap",
+      "description": "Move assets in and out of Radix",
       "introDescription": "Thorswap is a decentralized exchange that allows you to swap tokens across different blockchains. Learn more about Thorswap and how to bridge tokens.",
       "requirements": {
         "MayaRouterWithdrawEvent": "Do at least one bridge/swap of >$50 value"

@@ -17,7 +17,7 @@
   export let backgroundImage: string | undefined = undefined
   export let rewards: Readonly<QuestReward[]> = []
   export let link: string | undefined = undefined
-  export let isQuestTogether = false
+  export let questId: string | undefined = undefined
 
   $: hovering = false
   $: greyOut = !hovering && state === 'completed'
@@ -72,12 +72,16 @@
         <div class="button-content">
           {#if state === 'unlocked'}
             {$i18n.t('quests:QuestOverviewButton.unlocked')}
-          {:else if state === 'in-progress' && isQuestTogether}
+          {:else if state === 'in-progress' && questId === 'QuestTogether'}
             {$i18n.t('quests:QuestOverviewButton.referralInProgress')}
           {:else if state === 'in-progress'}
             {$i18n.t('quests:QuestOverviewButton.inProgress')}
           {:else if state === 'locked'}
-            <img src={PadlockIcon} alt="Padlock icon" />
+            {#if questId === 'Thorswap'}
+              {$i18n.t('quests:QuestOverviewButton.comingSoon')}
+            {:else}
+              <img src={PadlockIcon} alt="Padlock icon" />
+            {/if}
           {:else if state === 'claim-rewards'}
             {$i18n.t('quests:QuestOverviewButton.claimRewards')}
           {:else}
