@@ -3,6 +3,7 @@ import { AppLogger, EventModel } from 'common'
 import { EventWorkerController, UserExtended } from './controller'
 import { getUserById } from '../helpers/getUserById'
 import { PrismaClient } from 'database'
+import { WorkerOutputError } from '../_types'
 
 export const EventWorker = (
   connection: ConnectionOptions,
@@ -54,10 +55,22 @@ export const EventWorker = (
             error: getReason(result.error) ?? 'UnknownError'
           })
 
-          throw result.error
+          throw { handled: true, error: result.error }
         }
       } catch (error) {
-        logger.error({ reason: 'unknown error', error })
+        const isHandled = (error: unknown) =>
+          error && typeof error === 'object' && (error as any).handled ? true : false
+
+        if (isHandled(error)) {
+          throw (error as { error: WorkerOutputError }).error
+        }
+
+        logger.error({ method: 'eventWorker.process.error', error })
+
+        await eventModel(logger).update(job.data.transactionId, {
+          error: 'UnhandledError'
+        })
+
         throw error
       }
     },
