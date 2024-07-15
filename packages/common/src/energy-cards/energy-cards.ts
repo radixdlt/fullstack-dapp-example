@@ -218,7 +218,7 @@ export const transformEnergyCardToNfData = (
   const rarity = card.rarity.toLowerCase()
   return {
     key: card.key,
-    name: `${card.energyType} Card {${quality}/${maxQuality}}${card.limitedEdition ? ' Limited' : ''}`,
+    name: `${card.energyType} Card {${quality}}${card.limitedEdition ? ' Limited' : ''}`,
     description: `Use this${card.limitedEdition ? ' limited-edition' : ''} Morph Energy Card to fuse 2 RadGems using ${card.energyDescription}! The ${rarity} shape defined by this card is rated at a quality level of ${quality} out of a possible ${maxQuality}.`,
     energy_description: card.energyDescription,
     energy_type: card.energyType.toLowerCase(),
