@@ -6,41 +6,54 @@
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import { onMount } from 'svelte'
-
+  import WhiteCheckmark from '@images/white-checkmark.svg'
   let nameInput = $user?.name || $user?.label || ''
-  let canSaveName = writable(true)
+  let status = writable<'pristine' | 'loading' | 'completed'>('pristine')
   let error = ''
 
   onMount(() => {
-    setUserName()
+    userApi.setUserFields({ fields: [{ name: nameInput, field: 'name' }] })
   })
 
-  const setUserName = async () => {
-    $canSaveName = false
-    const result = await userApi.setUserFields({ fields: [{ name: nameInput, field: 'name' }] })
-    $canSaveName = true
+  const setUserName = () => {
+    status.set('loading')
+    return userApi
+      .setUserFields({ fields: [{ name: nameInput, field: 'name' }] })
+      .map(() => {
+        if ($user) {
+          $user.name = nameInput
+        }
+        status.set('completed')
 
-    if (result.isErr()) error = (result.error.data as any).message
-    else {
-      if ($user) {
-        $user.name = nameInput
-      }
-
-      error = ''
-    }
+        error = ''
+      })
+      .mapErr((err) => {
+        status.set('pristine')
+        error = (err.data as any).message
+      })
   }
 </script>
 
-<Input bind:value={nameInput} />
+<Input bind:value={nameInput} fullWidth maxLength={25} />
 {error}
 
 <div class="center">
-  <Button on:click={setUserName}>{$i18n.t('quests:SetupWallet.confirmSetUsername')}</Button>
+  {#if $status === 'completed'}
+    <img src={WhiteCheckmark} alt="" />
+    {$i18n.t('quests:SetupWallet.usernameCompleted')}
+  {:else}
+    <Button on:click={setUserName} loading={$status === 'loading'}
+      >{$i18n.t('quests:SetupWallet.confirmSetUsername')}</Button
+    >
+  {/if}
 </div>
 
 <style lang="scss">
   .center {
+    margin-top: var(--spacing-xl);
     display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
     justify-content: center;
   }
 </style>
