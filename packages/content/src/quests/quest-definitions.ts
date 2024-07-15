@@ -150,7 +150,7 @@ export const QuestDefinitions = () => {
     CreatingRadMorphs: {
       id: 'CreatingRadMorphs',
       category: 'basic',
-      trackedAccountAddress: true,
+      trackedAccountAddress: false,
       splashImage: '/quests-images/splash/ConvertElementsQuest.webp',
       rewards: [
         {
