@@ -102,7 +102,7 @@
     </Heading>
     <Button
       on:click={async () => {
-        http.post('/radmorphs/populate-image-oracle')
+        http.post('/images/populate-image-oracle')
       }}>Populate image oracle</Button
     >
   </div>

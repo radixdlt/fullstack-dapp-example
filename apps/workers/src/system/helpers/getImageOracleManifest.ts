@@ -47,7 +47,7 @@ export const getImageOracleManifest = (radmorphs: { id: string; url: string }[])
   ;
 
   CALL_METHOD
-    Address("${accounts.payer}")
+    Address("${accounts.payer.address}")
     "lock_fee"
     Decimal("100")
   ;
