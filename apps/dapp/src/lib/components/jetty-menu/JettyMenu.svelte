@@ -285,7 +285,6 @@
   }
 
   .content {
-    padding: var(--spacing-2xl);
     scrollbar-width: none;
     overflow-y: scroll;
   }
@@ -296,6 +295,7 @@
     gap: var(--spacing-xl);
     color: var(--color-light);
     font-weight: var(--font-weight-bold);
+    padding: var(--spacing-2xl);
   }
 
   .menu-item-page {

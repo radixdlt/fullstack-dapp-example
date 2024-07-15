@@ -325,6 +325,7 @@
     flex-direction: column;
     gap: var(--spacing-2xl);
     height: 100%;
+    padding: var(--spacing-2xl);
   }
 
   .loading {
