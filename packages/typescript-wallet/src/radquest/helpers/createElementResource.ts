@@ -48,7 +48,17 @@ CREATE_FUNGIBLE_RESOURCE
         ),
         Enum<1u8>(
             Tuple(
-                Enum<0u8>(),
+                Enum<1u8>(
+                    Enum<2u8>(
+                        Enum<0u8>(
+                            Enum<0u8>(
+                                Enum<1u8>(
+                                    Address("${adminBadgeAddress}")
+                                )
+                            )
+                        )
+                    )
+                ),
                 Enum<0u8>()
             )
         ),
@@ -107,7 +117,8 @@ CREATE_FUNGIBLE_RESOURCE
         Map<String, Enum>()
     )
     Enum<0u8>()
-;`
+;
+`
 
   const transaction = transactionBuilder({
     transactionManifest,

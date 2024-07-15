@@ -237,7 +237,7 @@ fn create_element() {
                 minter_updater => OWNER;
             ),
             burn_roles: burn_roles!(
-                burner => OWNER;
+                burner => rule!(require(XRD));
                 burner_updater => OWNER;
             ),
             ..Default::default()
