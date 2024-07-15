@@ -176,12 +176,12 @@
       />
     </div>
   </div>
-  <div class="content">
-    {#if showMenuItemContent}
-      <div class="menu-item-page">
-        <slot {currentMenuItem} {back} />
-      </div>
-    {:else}
+  {#if showMenuItemContent}
+    <div class="menu-item-page">
+      <slot {currentMenuItem} {back} />
+    </div>
+  {:else}
+    <div class="content">
       <div class="main-menu-page">
         {#if $notifications.length > 0}
           <div transition:scale>
@@ -217,8 +217,8 @@
           {/each}
         {/if}
       </div>
-    {/if}
-  </div>
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">
@@ -230,7 +230,7 @@
     width: 25rem;
     max-height: 80%;
     border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     z-index: 4;
     transform: translateY(var(--menuPosition));
@@ -285,8 +285,7 @@
   }
 
   .content {
-    scrollbar-width: none;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   .main-menu-page {
@@ -296,6 +295,7 @@
     color: var(--color-light);
     font-weight: var(--font-weight-bold);
     padding: var(--spacing-2xl);
+    overflow-y: auto;
   }
 
   .menu-item-page {
@@ -303,7 +303,7 @@
     width: 100%;
     background: var(--color-background-dark);
     z-index: 2;
-    overflow-y: scroll;
-    scrollbar-width: none;
+    overflow-y: auto;
+    padding: var(--spacing-2xl);
   }
 </style>
