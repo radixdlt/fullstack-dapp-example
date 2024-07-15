@@ -6,7 +6,7 @@ import { MessageApi, Message, AppLogger } from 'common'
 export type MessageHelper = ReturnType<typeof MessageHelper>
 export const MessageHelper =
   ({ dbClient, messageApi }: { dbClient: PrismaClient; messageApi: MessageApi }) =>
-  (userId: string, message: Message) =>
+  (userId: string, message: Message, logger?: AppLogger) =>
     ResultAsync.fromPromise(
       dbClient.message.create({
         data: {
@@ -26,4 +26,9 @@ export const MessageHelper =
           }
         }
       }
-    ).andThen(({ id }) => messageApi.send(userId, message, id).orElse(() => ok(undefined)))
+    ).andThen(({ id }) =>
+      messageApi.send(userId, message, id).orElse((error) => {
+        logger?.error({ method: 'messageApi.send.error', error })
+        return ok(undefined)
+      })
+    )
