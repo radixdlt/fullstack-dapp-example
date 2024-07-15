@@ -40,7 +40,6 @@
       // @ts-ignore
       useCookies('requirement-SetupWallet-DownloadWallet').set(true)
       $walletIsLinked = true
-      quest.actions.next()
       return
     }
 
@@ -72,6 +71,8 @@
         )
       }
     }, 1000)
+
+    markNotificationAsSeen('loggedIn')
 
     return () => {
       window.removeEventListener('radix#chromeExtension#receive', callback)
@@ -114,9 +115,6 @@
 <Quest
   bind:this={quest}
   bind:render
-  on:completed={() => {
-    markNotificationAsSeen('loggedIn')
-  }}
   id={data.id}
   requirements={data.requirements}
   steps={[

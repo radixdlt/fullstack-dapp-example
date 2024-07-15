@@ -19,7 +19,7 @@
   import { derived, writable } from 'svelte/store'
   import MinimizeIcon from '@images/minimize.svg'
   import CreateRadMorphs from './CreateRadMorphs.svelte'
-  import OpenGiftBox from './OpenGiftBox.svelte'
+  import OpenGiftBox, { getRewards } from './OpenGiftBox.svelte'
   import { goto } from '$app/navigation'
 
   let poppedUp = false
@@ -51,6 +51,7 @@
   let hoveringOverJetty = false
 
   let claimAvailable = writable(false)
+  let giftBoxRewardsAvailable = writable(false)
 
   const checkClaimStatus = () => {
     checkClaimAvailable($user?.id!)
@@ -62,7 +63,20 @@
       })
   }
 
-  $: if (expanded) checkClaimStatus()
+  const checkGiftBoxStatus = () => {
+    getRewards($user?.id!)
+      .map(() => {
+        giftBoxRewardsAvailable.set(true)
+      })
+      .mapErr(() => {
+        giftBoxRewardsAvailable.set(false)
+      })
+  }
+
+  $: if (expanded) {
+    checkClaimStatus()
+    checkGiftBoxStatus()
+  }
 
   const undoGlossaryAnchor = () => {
     goto($page.url.href.split('?')[0])
@@ -93,6 +107,7 @@
         id: 'gift-box',
         text: 'Open Gift Box',
         icon: LightningIcon,
+        alert: giftBoxRewardsAvailable,
         disabled: derived(user, ($user) => !($user && $user.accountAddress && $user.id))
       },
       {

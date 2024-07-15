@@ -1,3 +1,80 @@
+<script lang="ts" context="module">
+  const gateway = GatewayApi(publicConfig.networkId)
+
+  export const getRewards = (userId: string) =>
+    pipe(
+      () =>
+        gateway.callApi('getEntityDetailsVaultAggregated', [publicConfig.components.giftBoxOpener]),
+      (result) =>
+        result.andThen(([response]) => {
+          const keyValueStoreAddress = (
+            (response.details as StateEntityDetailsResponseComponentDetails).state as any
+          ).fields.find((field: any) => field.field_name === 'rewards_record').value
+
+          return ResultAsync.fromPromise(
+            gateway.gatewayApiClient.state.innerClient.keyValueStoreData({
+              stateKeyValueStoreDataRequest: {
+                key_value_store_address: keyValueStoreAddress,
+                keys: [
+                  {
+                    key_json: {
+                      kind: 'String',
+                      value: userId
+                    }
+                  }
+                ]
+              }
+            }),
+            (e) => e as Error
+          )
+        }),
+      (result) =>
+        result.andThen((response) => {
+          const entries = (response.entries[0]?.value.programmatic_json as any).elements[0]?.entries
+
+          if (!entries) return errAsync(Error('Nothing to claim'))
+
+          const amountOfElements = entries
+            .find((entry: any) => entry.key.value === publicConfig.resources.elementAddress)
+            .value.fields.find((field: any) => field.kind === 'Decimal').value as string
+
+          const morphCardId = entries
+            .find((entry: any) => entry.key.value === publicConfig.resources.morphEnergyCardAddress)
+            .value.fields.find((field: any) => field.element_kind === 'NonFungibleLocalId')
+            .elements.find((element: any) => element.kind === 'NonFungibleLocalId').value as string
+
+          return okAsync({
+            amountOfElements: parseInt(amountOfElements),
+            morphCardId
+          })
+        }),
+      (result) =>
+        result.andThen(({ amountOfElements, morphCardId }) =>
+          gateway
+            .callApi('getNonFungibleData', publicConfig.resources.morphEnergyCardAddress, [
+              morphCardId
+            ])
+            .map(([response]) => {
+              const fields = (response.data!.programmatic_json as any).fields
+
+              const cardData = {
+                name: getStringDataValue('name')(fields),
+                energy: getStringDataValue('energy_type')(fields),
+                image: getStringDataValue('key_image_url')(fields),
+                rarity: getStringDataValue('rarity')(fields),
+                availability: getStringDataValue('availability')(fields),
+                quality: parseInt(getStringDataValue('quality')(fields))
+              }
+
+              return {
+                amountOfElements,
+                cardData
+              }
+            })
+        )
+    )()
+</script>
+
 <script lang="ts">
   import { publicConfig } from '$lib/public-config'
   import pipe from 'ramda/src/pipe'
@@ -19,8 +96,7 @@
   import ElementCard from '$lib/components/resource-card/ElementCard.svelte'
   import { onMount } from 'svelte'
   import ResourceCard from '$lib/components/resource-card/ResourceCard.svelte'
-
-  const gateway = GatewayApi(publicConfig.networkId)
+  import { webSocketClient } from '$lib/websocket-client'
 
   let loadingLedgerData = true
   let ownedGiftBoxes: {
@@ -133,95 +209,43 @@
       })
   )
 
-  const getRewards = pipe(
-    () =>
-      gateway.callApi('getEntityDetailsVaultAggregated', [publicConfig.components.giftBoxOpener]),
-    (result) =>
-      result.andThen(([response]) => {
-        const keyValueStoreAddress = (
-          (response.details as StateEntityDetailsResponseComponentDetails).state as any
-        ).fields.find((field: any) => field.field_name === 'rewards_record').value
-
-        return ResultAsync.fromPromise(
-          gateway.gatewayApiClient.state.innerClient.keyValueStoreData({
-            stateKeyValueStoreDataRequest: {
-              key_value_store_address: keyValueStoreAddress,
-              keys: [
-                {
-                  key_json: {
-                    kind: 'String',
-                    value: $user!.id
-                  }
-                }
-              ]
-            }
-          }),
-          (e) => e as Error
-        )
-      }),
-    (result) =>
-      result.andThen((response) => {
-        const entries = (response.entries[0]?.value.programmatic_json as any).elements[0]?.entries
-
-        if (!entries) return errAsync(Error('Nothing to claim'))
-
-        const amountOfElements = entries
-          .find((entry: any) => entry.key.value === publicConfig.resources.elementAddress)
-          .value.fields.find((field: any) => field.kind === 'Decimal').value as string
-
-        const morphCardId = entries
-          .find((entry: any) => entry.key.value === publicConfig.resources.morphEnergyCardAddress)
-          .value.fields.find((field: any) => field.element_kind === 'NonFungibleLocalId')
-          .elements.find((element: any) => element.kind === 'NonFungibleLocalId').value as string
-
-        return okAsync({
-          amountOfElements: parseInt(amountOfElements),
-          morphCardId
-        })
-      }),
-    (result) =>
-      result.andThen(({ amountOfElements, morphCardId }) =>
-        gateway
-          .callApi('getNonFungibleData', publicConfig.resources.morphEnergyCardAddress, [
-            morphCardId
-          ])
-          .map(([response]) => {
-            const fields = (response.data!.programmatic_json as any).fields
-
-            const cardData = {
-              name: getStringDataValue('name')(fields),
-              energy: getStringDataValue('energy_type')(fields),
-              image: getStringDataValue('key_image_url')(fields),
-              rarity: getStringDataValue('rarity')(fields),
-              availability: getStringDataValue('availability')(fields),
-              quality: parseInt(getStringDataValue('quality')(fields))
-            }
-
-            return {
-              amountOfElements,
-              cardData
-            }
-          })
-      )
-  )
-
   const openGiftBox = (giftBoxAddress: string) => {
     waitingForOpenTransaction = true
     sendTransaction({
       transactionManifest: openGiftBoxManifest(giftBoxAddress)
     })
-      .andThen(getRewards)
+      .andThen(() => {
+        waitingForOpenTransaction = false
+        waitingForDepositedRewards = true
+
+        let resolveDeposited: () => void
+
+        const promise = new Promise<void>((resolve) => {
+          resolveDeposited = resolve
+        })
+
+        const unsub = $webSocketClient!.onMessage((msg) => {
+          if (msg.type === 'GiftBoxDeposited') {
+            resolveDeposited()
+          }
+        })
+
+        return ResultAsync.fromSafePromise(promise).map(unsub)
+      })
+      .andThen(() => {
+        return getRewards($user!.id)
+      })
       .map(({ amountOfElements, cardData }) => {
         rewards = {
           amountOfElements,
           cardData
         }
 
-        waitingForOpenTransaction = false
+        waitingForDepositedRewards = false
         readyToClaim = true
       })
       .mapErr(() => {
-        waitingForOpenTransaction = false
+        waitingForDepositedRewards = false
       })
   }
 
@@ -260,7 +284,7 @@
   const close = context.get('closeMenuItem')
 
   onMount(() => {
-    getRewards()
+    getRewards($user!.id)
       .map(({ amountOfElements, cardData }) => {
         rewards = {
           amountOfElements,
@@ -278,6 +302,7 @@
   let loadingClaimStatus = true
   let waitingForOpenTransaction = false
   let waitingForClaimTransaction = false
+  let waitingForDepositedRewards = false
   let readyToClaim = false
   let claimed = false
 
@@ -291,7 +316,7 @@
     <div class="loading">
       <LoadingSpinner />
     </div>
-  {:else if waitingForOpenTransaction}
+  {:else if waitingForDepositedRewards}
     <div class="title">
       {$i18n.t('jetty:open-gift-box.opening-gift-box')}...
     </div>
@@ -373,6 +398,7 @@
         }
       }}
       disabled={!selectedGiftBox}
+      loading={waitingForOpenTransaction}
     >
       <div class="title" slot="header">
         {$i18n.t('jetty:open-gift-box.multiple-boxes-title')}
