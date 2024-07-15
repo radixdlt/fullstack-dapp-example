@@ -18,7 +18,7 @@ export default [
     fee_paid: '0.82804085212',
     affected_global_entities: [
       'transactiontracker_tdx_2_1stxxxxxxxxxxtxtrakxxxxxxxxx006844685494xxxxxxxxxxzw7jp',
-      'component_tdx_2_1cr9h09w76m5p3ctgkpg7ynxvj2q5gral3uxsr3nl8valhsz8p7w6l0',
+      addresses.components.questRewards,
       'consensusmanager_tdx_2_1scxxxxxxxxxxcnsmgrxxxxxxxxx000999665565xxxxxxxxxv6cg29',
       'account_tdx_2_12yytw8a6z570f43fecznvayhvfdmh5ctvpkft8pzsnjdqzdjt5azt0'
     ],
@@ -776,7 +776,7 @@ export default [
           balance_change: '-50'
         },
         {
-          entity_address: 'component_tdx_2_1cr9h09w76m5p3ctgkpg7ynxvj2q5gral3uxsr3nl8valhsz8p7w6l0',
+          entity_address: addresses.components.questRewards,
           resource_address:
             'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
           balance_change: '50'
