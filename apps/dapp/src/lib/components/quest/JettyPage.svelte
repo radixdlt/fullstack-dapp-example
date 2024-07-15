@@ -47,6 +47,11 @@
     height: 100%;
     z-index: 1;
     padding: 24px;
+
+    :global(p > img) {
+      max-width: calc(100% + 48px);
+      margin: 0 calc(-24px);
+    }
   }
 
   .jetty-image {

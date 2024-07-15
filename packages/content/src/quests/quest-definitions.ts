@@ -150,7 +150,7 @@ export const QuestDefinitions = () => {
     CreatingRadMorphs: {
       id: 'CreatingRadMorphs',
       category: 'basic',
-      trackedAccountAddress: true,
+      trackedAccountAddress: false,
       splashImage: '/quests-images/splash/ConvertElementsQuest.webp',
       rewards: [
         {
@@ -322,7 +322,7 @@ export const QuestDefinitions = () => {
       splashImage: '/quests-images/splash/Thorswap.webp',
       trackedAccountAddress: true,
       minutesToComplete: 10,
-      preRequisites: ['TransferTokens'],
+      preRequisites: ['QuestTogether'],
       requirements: {
         [EventId.MayaRouterWithdrawEvent]: {
           eventName: 'MayaRouterWithdrawEvent',

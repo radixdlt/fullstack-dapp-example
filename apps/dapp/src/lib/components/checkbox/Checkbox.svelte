@@ -37,6 +37,10 @@
     font-size: var(--text-sm);
     gap: var(--spacing-md);
     cursor: pointer;
+
+    :global(p) {
+      margin: 0;
+    }
   }
   .checkbox {
     cursor: pointer;

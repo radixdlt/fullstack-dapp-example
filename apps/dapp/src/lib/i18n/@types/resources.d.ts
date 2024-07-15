@@ -115,6 +115,7 @@ interface Resources {
     "QuestOverviewButton": {
       "unlocked": "Start",
       "referralInProgress": "Check Status",
+      "comingSoon": "Coming Soon",
       "inProgress": "Continue",
       "claimRewards": "Claim Rewards",
       "complete": "View Again"
@@ -150,6 +151,7 @@ interface Resources {
         "ConnectWallet": "Login to RadQuest with your Radix Wallet",
         "DownloadWallet": "Download the Radix Wallet mobile app, create your first Account"
       },
+      "usernameCompleted": "Completed",
       "walletDownloadPage": "Go to Wallet Download Page",
       "title": "Get the Radix Wallet",
       "description": "Your key to assets and dApps and assets on Radix",
@@ -186,7 +188,8 @@ interface Resources {
     "CreatingRadMorphs": {
       "title": "Creating RadMorphs",
       "requirements": {
-        "CreateRadMorph": "Learn about Gift Boxes, Elements, RadGems and RadMorphs Check out what your first RadMorph might be"
+        "GiftBoxOpened": "Learn about Gift Boxes, Elements, RadGems and RadMorphs",
+        "CheckOutRadMorph": "Check out what your first RadMorph might be"
       },
       "description": "How to collect and combine",
       "introDescription": "How to collect and combine on RadQuest to make the best and most rare RadMorph NFTs"
@@ -210,8 +213,8 @@ interface Resources {
       }
     },
     "Thorswap": {
-      "title": "Thorswap Quest",
-      "description": "Learn about Thorswap and how to bridge tokens",
+      "title": "Bridge Tokens with THORSwap",
+      "description": "Move assets in and out of Radix",
       "introDescription": "Thorswap is a decentralized exchange that allows you to swap tokens across different blockchains. Learn more about Thorswap and how to bridge tokens.",
       "requirements": {
         "MayaRouterWithdrawEvent": "Do at least one bridge/swap of >$50 value"
