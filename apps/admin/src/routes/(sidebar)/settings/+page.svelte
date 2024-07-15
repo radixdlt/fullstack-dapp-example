@@ -1,14 +1,11 @@
 <script lang="ts">
-  import CardList from '$lib/settings/CardList.svelte'
   import { Heading, Toggle } from 'flowbite-svelte'
 
   import type { PageData } from './$types'
 
   export let data: PageData
 
-  let values: Record<string, boolean> = {
-    // radGemMintingEnabled: data.configMap.get('radGemMintingEnabled') || false
-  }
+  let values: Record<string, boolean> = {}
 
   let items = data.items
 
