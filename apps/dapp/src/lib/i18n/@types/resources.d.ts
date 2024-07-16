@@ -175,7 +175,7 @@ interface Resources {
       "title": "Get Some (Web3) Stuff!",
       "description": "Claim your first quest rewards",
       "introDescription": "Learn about XRD and transactions – and use them to claim your first quest rewards right to your Radix Wallet.",
-      "failedToSendOtp": "Failed to send OTP",
+      "failedToSendOtp": "Failed to send SMS",
       "phoneNumberExists": "Phone number exists",
       "invalidPhoneNumber": "Invalid phone number",
       "invalidOtp": "Invalid code",

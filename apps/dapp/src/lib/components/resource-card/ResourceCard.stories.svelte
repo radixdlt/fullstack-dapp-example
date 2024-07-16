@@ -1,7 +1,6 @@
 <script lang="ts" context="module">
   import { Story, Template } from '@storybook/addon-svelte-csf'
   import ResourceCard from './ResourceCard.svelte'
-  import BackgroundImage from '@images/transform-card-background.svg'
 
   export const meta = {
     tags: ['autodocs']
@@ -16,12 +15,7 @@
   </ResourceCard>
 </Template>
 
-<Story
-  name="Primary"
-  args={{
-    image: BackgroundImage
-  }}
-/>
+<Story name="Primary" args={{}} />
 
 <style>
   .text {

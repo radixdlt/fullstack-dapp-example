@@ -15,9 +15,13 @@
 <Story
   name="Primary"
   args={{
-    energy: 'Molten Banana',
-    image: BackgroundImage,
-    rarity: 'common',
-    quality: 10
+    card: {
+      id: '1',
+      energy: 'Molten Banana',
+      imageUrl: BackgroundImage,
+      rarity: 'common',
+      quality: 10,
+      limitedEdition: true
+    }
   }}
 />
