@@ -7,6 +7,10 @@
   import { user } from '../../../../../stores'
   import { Addresses } from 'common'
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
+  import { writable } from 'svelte/store'
+  import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
+  import { messageApi } from '$lib/api/message-api'
+  import { onDestroy, onMount } from 'svelte'
 
   export let data: PageData
 
@@ -14,6 +18,23 @@
 
   let quest: Quest
   const { dapps } = Addresses(parseInt(PUBLIC_NETWORK_ID))
+  const instapassBadgeDeposited = writable(data.requirements.InstapassBadgeDeposited.isComplete)
+
+  let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
+
+  onMount(() => {
+    if ($webSocketClient && $user) {
+      unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
+        if (message.type === 'QuestRewardsDeposited' && message.questId === 'Instapass') {
+          messageApi.markAsSeen(message.id)
+        }
+      })
+    }
+  })
+
+  onDestroy(() => {
+    unsubscribeWebSocket?.()
+  })
 </script>
 
 <Quest
@@ -47,7 +68,12 @@
     },
     {
       id: '6',
-      type: 'jetty'
+      type: 'jetty',
+      footer: {
+        next: {
+          enabled: instapassBadgeDeposited
+        }
+      }
     },
     {
       type: 'claimRewards'
