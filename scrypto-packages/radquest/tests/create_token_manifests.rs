@@ -460,13 +460,13 @@ fn create_clam() {
         },
         metadata!(
           init {
-            "name" => "Clam", locked;
+            "name" => "Clam", updatable;
             "description" => 
 "Clams are a token that is fungible and non-divisible. That means every clam is worth just the same as another, and you can’t have a fractional clam!
 
-Clams are a beloved currency of otters.", locked;
+Clams are a beloved currency of otters.", updatable;
             "tags" => vec!["radquest"], updatable;
-            "icon_url" => Url::of("https://arweave.net/29jZfSeFeAZET3XfwNHDXycPskCpuyb5T40Ns-DKkXE"), locked;
+            "icon_url" => Url::of("https://arweave.net/29jZfSeFeAZET3XfwNHDXycPskCpuyb5T40Ns-DKkXE"), updatable;
             "dapp_definitions" => ["${dapp_definition}"], updatable;
           }
         ),
@@ -504,13 +504,13 @@ fn create_ottercoin() {
         },
         metadata!(
           init {
-            "name" => "Ottercoin", locked;
+            "name" => "Ottercoin", updatable;
             "description" => 
 "Ottercoin was created by RadQuest’s guide otter, Jetty. Maybe you can buy some with a few Clams?
 
-Clams are a token that is fungible and highly divisible. That means every clam is worth just the same as another, and you can send and hold even tiny fractions of an ottercoin!", locked;
+Clams are a token that is fungible and highly divisible. That means every clam is worth just the same as another, and you can send and hold even tiny fractions of an ottercoin!", updatable;
             "tags" => vec!["radquest"], updatable;
-            "icon_url" => Url::of("https://arweave.net/ySt0lTb_mH2nH38nyqI7iiUQXfNgph4v3lEMBYKCPKs"), locked;
+            "icon_url" => Url::of("https://arweave.net/ySt0lTb_mH2nH38nyqI7iiUQXfNgph4v3lEMBYKCPKs"), updatable;
             "dapp_definitions" => ["${dapp_definition}"], updatable;
           }
         ),

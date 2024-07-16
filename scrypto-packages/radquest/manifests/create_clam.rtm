@@ -54,7 +54,7 @@ CREATE_FUNGIBLE_RESOURCE
                         "Clam"
                     )
                 ),
-                true
+                false
             ),
             "description" => Tuple(
                 Enum<1u8>(
@@ -62,7 +62,7 @@ CREATE_FUNGIBLE_RESOURCE
                         "Clams are a token that is fungible and non-divisible. That means every clam is worth just the same as another, and you can’t have a fractional clam!\n\nClams are a beloved currency of otters."
                     )
                 ),
-                true
+                false
             ),
             "tags" => Tuple(
                 Enum<1u8>(
@@ -80,7 +80,7 @@ CREATE_FUNGIBLE_RESOURCE
                         "https://arweave.net/29jZfSeFeAZET3XfwNHDXycPskCpuyb5T40Ns-DKkXE"
                     )
                 ),
-                true
+                false
             ),
             "dapp_definitions" => Tuple(
                 Enum<1u8>(
