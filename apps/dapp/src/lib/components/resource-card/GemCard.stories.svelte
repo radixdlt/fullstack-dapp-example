@@ -14,8 +14,11 @@
 <Story
   name="Primary"
   args={{
-    image: 'https://via.placeholder.com/150',
-    rarity: 'common',
-    gemstone: 'Crystalline Glacier'
+    gem: {
+      imageUrl: 'https://via.placeholder.com/150',
+      material: 'Crystalline',
+      color: 'Glacier',
+      quality: '3'
+    }
   }}
 />

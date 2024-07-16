@@ -54,7 +54,7 @@ CREATE_FUNGIBLE_RESOURCE
                         "Ottercoin"
                     )
                 ),
-                true
+                false
             ),
             "description" => Tuple(
                 Enum<1u8>(
@@ -62,7 +62,7 @@ CREATE_FUNGIBLE_RESOURCE
                         "Ottercoin was created by RadQuest’s guide otter, Jetty. Maybe you can buy some with a few Clams?\n\nClams are a token that is fungible and highly divisible. That means every clam is worth just the same as another, and you can send and hold even tiny fractions of an ottercoin!"
                     )
                 ),
-                true
+                false
             ),
             "tags" => Tuple(
                 Enum<1u8>(
@@ -77,10 +77,10 @@ CREATE_FUNGIBLE_RESOURCE
             "icon_url" => Tuple(
                 Enum<1u8>(
                     Enum<13u8>(
-                        "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"
+                        "https://arweave.net/ySt0lTb_mH2nH38nyqI7iiUQXfNgph4v3lEMBYKCPKs"
                     )
                 ),
-                true
+                false
             ),
             "dapp_definitions" => Tuple(
                 Enum<1u8>(

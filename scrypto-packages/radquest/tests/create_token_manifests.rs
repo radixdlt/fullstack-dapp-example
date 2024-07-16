@@ -19,7 +19,7 @@ fn create_a_super_admin_badge() {
               "dapp_definitions" => ["${dapp_definition}"], updatable;
             }
         ),
-        Some(dec!(1)),
+        Some(dec!(2)),
     );
 
     dump_manifest_to_file_system(
@@ -131,7 +131,7 @@ fn create_hero_badge() {
               "name" => "RadQuest Hero Badges", updatable;
               "description" =>"A unique Hero Badge NFT is given to every RadQuest quester. It is presented whenever interacting with RadQuest, like claiming rewards or crafting RadMorphs.", updatable;
               "tags" => vec!["radquest", "badge"], updatable;
-              "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
+              "icon_url" => Url::of("https://arweave.net/TkgiEdjcsfohra5z1lRojXbujnLfHXqUticbAhr7yVw"), updatable;
               "dapp_definitions" => ["${dapp_definition}"], updatable;
             }
         ),
@@ -161,25 +161,25 @@ fn create_gift_box() {
         name: "Starter Gift Box".into(),
         manifest_name: "create_gift_box_starter".into(),
         description: "This Gift Box from RadQuest’s Jetty will get you started with a common Morph Energy Card and enough Elements to create a couple of RadGems. Ask Jetty to open it!".into(),
-        icon_url: Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"),
+        icon_url: Url::of("https://arweave.net/ykgYDzucDR-laXkFu-Mtb00sb_6jNq-VMKebHMAv32k"),
     },
     GiftBox {
         name: "Simple Gift Box".into(),
         manifest_name: "create_gift_box_simple".into(),
         description: "This simple Gift Box from RadQuest’s Jetty contains a common or rare Morph Energy Card and a handful of Elements. Ask Jetty to open it!".into(),
-        icon_url: Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"),
+        icon_url: Url::of("https://arweave.net/dh4CsYX8ZXBCZboy03TwvYdEdOk8D9iNHmIxMpM0UjM"),
     },
     GiftBox {
         name: "Fancy Gift Box".into(),
         manifest_name: "create_gift_box_fancy".into(),
         description: "This fancy Gift Box from RadQuest’s Jetty contains a common, rare, or sometimes even ultra-rare Morph Energy Card and a goodly quantity of Elements. Ask Jetty to open it!".into(),
-        icon_url: Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"),
+        icon_url: Url::of("https://arweave.net/Ba8bp5mqJYicUGvyEznwA63HF7DZevO_LyZEwAw9GWs"),
     },
     GiftBox {
         name: "Elite Gift Box".into(),
         manifest_name: "create_gift_box_elite".into(),
         description: "This truly elite Gift Box from RadQuest’s Jetty, reserved for only the most committed, contains only a rare or ultra-rare Morph Energy Card and a substantial quantity of Elements. Ask Jetty to open it!".into(),
-        icon_url: Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"),
+        icon_url: Url::of("https://arweave.net/vdrkR2hi0dII5R_GEWsshock2ER8EKLs93Qb_L___gA"),
     }];
 
     for gift_box in gift_boxes {
@@ -247,7 +247,7 @@ fn create_element() {
                 "name" => "Element", updatable;
                 "description" => "Elements are the common token of the RadQuest realm. They can be fused by RadQuest’s Jetty to produce RadGems that can be used for much more…", updatable;
                 "tags" => vec!["radquest"], updatable;
-                "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
+                "icon_url" => Url::of("https://arweave.net/vZ1h_-irsZf675M4b-FIAUnrsiPqzObbNzedxfbLh94"), updatable;
                 "dapp_definitions" => vec!["${dapp_definition}"], updatable;
             }
         ),
@@ -304,7 +304,7 @@ fn create_radgem() {
               "name" => "RadGems", updatable;
               "description" => "Two RadGems can be combined with a Morph Energy Card by RadQuest’s Jetty to produce a beautiful RadMorph NFT. Higher quality RadGems will contribute to a higher quality RadMorph.", updatable;
               "tags" => vec!["radquest"], updatable;
-              "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
+              "icon_url" => Url::of("https://arweave.net/FpzB4sovchNHrLw8tv87HYcIm89RXuwH0BS5uyypPCM"), updatable;
               "dapp_definitions" => ["${dapp_definition}"], updatable;
             }
         ),
@@ -360,7 +360,7 @@ fn create_morph_energy_card() {
 
 Morph Energy Cards allow RadQuest’s Jetty to harness the primordial energies of the universe to morph two RadGems into different shapes to create intricate, beautiful, and collectible RadMorphs.", updatable;
             "tags" => vec!["radquest"], updatable;
-            "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
+            "icon_url" => Url::of("https://arweave.net/7y9rpsafHpVU2sFE-VbtU5FE2UTjynRW7acTI7T1Dr8"), updatable;
             "dapp_definitions" => ["${dapp_definition}"], updatable;
           }
         ),
@@ -387,6 +387,7 @@ struct RadmorphData {
     card_type: String,
     card_rarity: String,
     card_quality: Decimal,
+    card_limited_edition: bool,
     radgem_1_color: String,
     radgem_1_material: String,
     radgem_1_rarity: String,
@@ -421,7 +422,7 @@ fn create_radmorph() {
             "name" => "RadMorphs", updatable;
             "description" => "Fused in the boundless energies of the RadQuest realm, RadMorphs are treasured by the dedicated and true of the Radix community.", updatable;
             "tags" => vec!["radquest"], updatable;
-            "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), updatable;
+            "icon_url" => Url::of("https://arweave.net/8-9CpBahyQm6IbNC6u4jb6TKyfEjaLIclc9FOcaVLII"), updatable;
             "dapp_definitions" => ["${dapp_definition}"], updatable;
           }
         ),
@@ -459,13 +460,13 @@ fn create_clam() {
         },
         metadata!(
           init {
-            "name" => "Clam", locked;
+            "name" => "Clam", updatable;
             "description" => 
 "Clams are a token that is fungible and non-divisible. That means every clam is worth just the same as another, and you can’t have a fractional clam!
 
-Clams are a beloved currency of otters.", locked;
+Clams are a beloved currency of otters.", updatable;
             "tags" => vec!["radquest"], updatable;
-            "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
+            "icon_url" => Url::of("https://arweave.net/29jZfSeFeAZET3XfwNHDXycPskCpuyb5T40Ns-DKkXE"), updatable;
             "dapp_definitions" => ["${dapp_definition}"], updatable;
           }
         ),
@@ -503,13 +504,13 @@ fn create_ottercoin() {
         },
         metadata!(
           init {
-            "name" => "Ottercoin", locked;
+            "name" => "Ottercoin", updatable;
             "description" => 
 "Ottercoin was created by RadQuest’s guide otter, Jetty. Maybe you can buy some with a few Clams?
 
-Clams are a token that is fungible and highly divisible. That means every clam is worth just the same as another, and you can send and hold even tiny fractions of an ottercoin!", locked;
+Clams are a token that is fungible and highly divisible. That means every clam is worth just the same as another, and you can send and hold even tiny fractions of an ottercoin!", updatable;
             "tags" => vec!["radquest"], updatable;
-            "icon_url" => Url::of("https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"), locked;
+            "icon_url" => Url::of("https://arweave.net/ySt0lTb_mH2nH38nyqI7iiUQXfNgph4v3lEMBYKCPKs"), updatable;
             "dapp_definitions" => ["${dapp_definition}"], updatable;
           }
         ),
