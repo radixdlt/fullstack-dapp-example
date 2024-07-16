@@ -40,7 +40,7 @@ export const config = {
       concurrency: parseInt(process.env.TRANSACTION_WORKER_CONCURRENCY ?? '5')
     },
     system: {
-      concurrency: parseInt(process.env.SYSTEM_WORKER_CONCURRENCY ?? '5')
+      concurrency: parseInt(process.env.SYSTEM_WORKER_CONCURRENCY ?? '1')
     }
   }
 }
