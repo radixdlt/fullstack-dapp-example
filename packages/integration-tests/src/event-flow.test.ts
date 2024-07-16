@@ -402,23 +402,20 @@ describe('Event flows', () => {
     })
   })
 
-  it.only(
-    'should send clams to jetty and claim rewards',
-    { timeout: 60_000, skip: false },
-    async () => {
-      const { submitTransaction, user } = await createAccount({
-        withXrd: true,
-        withHeroBadge: true
-      })
-      await accountAddressModel.addTrackedAddress(user.accountAddress!, 'TransferTokens', user.id)
+  it('should send clams to jetty and claim rewards', { timeout: 60_000, skip: false }, async () => {
+    const { submitTransaction, user } = await createAccount({
+      withXrd: true,
+      withHeroBadge: true
+    })
+    await accountAddressModel.addTrackedAddress(user.accountAddress!, 'TransferTokens', user.id)
 
-      await completeQuestRequirements(db)(user.id, 'TransferTokens', [
-        'PersonaQuiz',
-        'TransactionQuiz',
-        'XrdQuiz'
-      ])
+    await completeQuestRequirements(db)(user.id, 'TransferTokens', [
+      'PersonaQuiz',
+      'TransactionQuiz',
+      'XrdQuiz'
+    ])
 
-      const clamResult = await systemTransactionHelper.submitTransaction(`
+    const clamResult = await systemTransactionHelper.submitTransaction(`
       CALL_METHOD 
         Address("${payer.accessController}") 
         "create_proof"
@@ -454,9 +451,9 @@ describe('Event flows', () => {
         None
       ;`)
 
-      if (clamResult.isErr()) throw clamResult.error
+    if (clamResult.isErr()) throw clamResult.error
 
-      await submitTransaction(`
+    await submitTransaction(`
         CALL_METHOD
           Address("${user.accountAddress}")
           "lock_fee"
@@ -481,9 +478,9 @@ describe('Event flows', () => {
         ;
       `)
 
-      await waitForMessage(logger, db)(user.id, 'QuestRewardsDeposited')
+    await waitForMessage(logger, db)(user.id, 'QuestRewardsDeposited')
 
-      await submitTransaction(`
+    await submitTransaction(`
         CALL_METHOD
           Address("${user.accountAddress}")
           "lock_fee"
@@ -511,9 +508,8 @@ describe('Event flows', () => {
           Expression("ENTIRE_WORKTOP")
         ;
       `)
-      await waitForMessage(logger, db)(user.id, 'QuestRewardsClaimed')
-    }
-  )
+    await waitForMessage(logger, db)(user.id, 'QuestRewardsClaimed')
+  })
 
   describe('Referral flow', () => {
     it(

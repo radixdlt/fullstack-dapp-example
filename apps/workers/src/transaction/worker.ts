@@ -7,6 +7,7 @@ import { WorkerError, WorkerOutputError } from '../_types'
 import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 import { TokenPriceClient } from '../token-price-client'
 import { config } from '../config'
+import { okAsync } from 'neverthrow'
 
 export const TransactionWorker = (
   connection: ConnectionOptions,
@@ -37,9 +38,18 @@ export const TransactionWorker = (
       childLogger.debug({ method: 'transactionWorker.process', data: job.data })
 
       try {
+        const shouldProcessEvent = await dbClient.transactionIntent
+          .count({
+            where: { discriminator: job.data.discriminator, status: 'COMPLETED' }
+          })
+          .then((count) => count === 0)
+
+        if (!shouldProcessEvent) return
+
         const result = await getUserById(userId, dbClient)
-          .andThen((user) =>
-            dependencies.transactionWorkerController.handler({
+          .andThen((user) => {
+            if (user.blocked) return okAsync(undefined)
+            return dependencies.transactionWorkerController.handler({
               job,
               logger: childLogger,
               user,
@@ -48,7 +58,7 @@ export const TransactionWorker = (
                 tokenPriceClient: dependencies.tokenPriceClient
               })
             })
-          )
+          })
           .andThen(() =>
             transactionModel(childLogger)
               .setStatus({ discriminator, userId }, TransactionIntentStatus.COMPLETED)

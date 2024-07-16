@@ -128,6 +128,16 @@ export const ReferralAction: {
 export type ReferralAction = (typeof ReferralAction)[keyof typeof ReferralAction]
 
 
+export const EventStatus: {
+  WAITING: 'WAITING',
+  PENDING: 'PENDING',
+  ERROR: 'ERROR',
+  COMPLETED: 'COMPLETED'
+};
+
+export type EventStatus = (typeof EventStatus)[keyof typeof EventStatus]
+
+
 export const QuestStatus: {
   IN_PROGRESS: 'IN_PROGRESS',
   REWARDS_DEPOSITED: 'REWARDS_DEPOSITED',
@@ -168,6 +178,10 @@ export const ImageType: typeof $Enums.ImageType
 export type ReferralAction = $Enums.ReferralAction
 
 export const ReferralAction: typeof $Enums.ReferralAction
+
+export type EventStatus = $Enums.EventStatus
+
+export const EventStatus: typeof $Enums.EventStatus
 
 export type QuestStatus = $Enums.QuestStatus
 
@@ -2520,6 +2534,7 @@ export namespace Prisma {
     type: $Enums.UserType | null
     referralCode: string | null
     referredBy: string | null
+    blocked: boolean | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -2532,6 +2547,7 @@ export namespace Prisma {
     type: $Enums.UserType | null
     referralCode: string | null
     referredBy: string | null
+    blocked: boolean | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -2544,6 +2560,7 @@ export namespace Prisma {
     type: number
     referralCode: number
     referredBy: number
+    blocked: number
     _all: number
   }
 
@@ -2558,6 +2575,7 @@ export namespace Prisma {
     type?: true
     referralCode?: true
     referredBy?: true
+    blocked?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -2570,6 +2588,7 @@ export namespace Prisma {
     type?: true
     referralCode?: true
     referredBy?: true
+    blocked?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -2582,6 +2601,7 @@ export namespace Prisma {
     type?: true
     referralCode?: true
     referredBy?: true
+    blocked?: true
     _all?: true
   }
 
@@ -2667,6 +2687,7 @@ export namespace Prisma {
     type: $Enums.UserType
     referralCode: string
     referredBy: string | null
+    blocked: boolean
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -2696,6 +2717,7 @@ export namespace Prisma {
     type?: boolean
     referralCode?: boolean
     referredBy?: boolean
+    blocked?: boolean
     referredByUser?: boolean | User$referredByUserArgs<ExtArgs>
     events?: boolean | User$eventsArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
@@ -2722,6 +2744,7 @@ export namespace Prisma {
     type?: boolean
     referralCode?: boolean
     referredBy?: boolean
+    blocked?: boolean
     referredByUser?: boolean | User$referredByUserArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2735,6 +2758,7 @@ export namespace Prisma {
     type?: boolean
     referralCode?: boolean
     referredBy?: boolean
+    blocked?: boolean
   }
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2784,6 +2808,7 @@ export namespace Prisma {
       type: $Enums.UserType
       referralCode: string
       referredBy: string | null
+      blocked: boolean
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -3237,6 +3262,7 @@ export namespace Prisma {
     readonly type: FieldRef<"User", 'UserType'>
     readonly referralCode: FieldRef<"User", 'String'>
     readonly referredBy: FieldRef<"User", 'String'>
+    readonly blocked: FieldRef<"User", 'Boolean'>
   }
     
 
@@ -8430,8 +8456,8 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     questId: string | null
+    status: $Enums.EventStatus | null
     createdAt: Date | null
-    processedAt: Date | null
     error: string | null
   }
 
@@ -8440,8 +8466,8 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     questId: string | null
+    status: $Enums.EventStatus | null
     createdAt: Date | null
-    processedAt: Date | null
     error: string | null
   }
 
@@ -8450,8 +8476,8 @@ export namespace Prisma {
     id: number
     userId: number
     questId: number
+    status: number
     createdAt: number
-    processedAt: number
     error: number
     data: number
     _all: number
@@ -8463,8 +8489,8 @@ export namespace Prisma {
     id?: true
     userId?: true
     questId?: true
+    status?: true
     createdAt?: true
-    processedAt?: true
     error?: true
   }
 
@@ -8473,8 +8499,8 @@ export namespace Prisma {
     id?: true
     userId?: true
     questId?: true
+    status?: true
     createdAt?: true
-    processedAt?: true
     error?: true
   }
 
@@ -8483,8 +8509,8 @@ export namespace Prisma {
     id?: true
     userId?: true
     questId?: true
+    status?: true
     createdAt?: true
-    processedAt?: true
     error?: true
     data?: true
     _all?: true
@@ -8567,8 +8593,8 @@ export namespace Prisma {
     id: string
     userId: string
     questId: string | null
+    status: $Enums.EventStatus
     createdAt: Date
-    processedAt: Date | null
     error: string | null
     data: JsonValue
     _count: EventCountAggregateOutputType | null
@@ -8595,8 +8621,8 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     questId?: boolean
+    status?: boolean
     createdAt?: boolean
-    processedAt?: boolean
     error?: boolean
     data?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -8609,8 +8635,8 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     questId?: boolean
+    status?: boolean
     createdAt?: boolean
-    processedAt?: boolean
     error?: boolean
     data?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -8621,8 +8647,8 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     questId?: boolean
+    status?: boolean
     createdAt?: boolean
-    processedAt?: boolean
     error?: boolean
     data?: boolean
   }
@@ -8647,8 +8673,8 @@ export namespace Prisma {
       id: string
       userId: string
       questId: string | null
+      status: $Enums.EventStatus
       createdAt: Date
-      processedAt: Date | null
       error: string | null
       data: Prisma.JsonValue
     }, ExtArgs["result"]["event"]>
@@ -9077,8 +9103,8 @@ export namespace Prisma {
     readonly id: FieldRef<"Event", 'String'>
     readonly userId: FieldRef<"Event", 'String'>
     readonly questId: FieldRef<"Event", 'String'>
+    readonly status: FieldRef<"Event", 'EventStatus'>
     readonly createdAt: FieldRef<"Event", 'DateTime'>
-    readonly processedAt: FieldRef<"Event", 'DateTime'>
     readonly error: FieldRef<"Event", 'String'>
     readonly data: FieldRef<"Event", 'Json'>
   }
@@ -19015,7 +19041,8 @@ export namespace Prisma {
     country: 'country',
     type: 'type',
     referralCode: 'referralCode',
-    referredBy: 'referredBy'
+    referredBy: 'referredBy',
+    blocked: 'blocked'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -19071,8 +19098,8 @@ export namespace Prisma {
     id: 'id',
     userId: 'userId',
     questId: 'questId',
+    status: 'status',
     createdAt: 'createdAt',
-    processedAt: 'processedAt',
     error: 'error',
     data: 'data'
   };
@@ -19329,6 +19356,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'EventStatus'
+   */
+  export type EnumEventStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'EventStatus[]'
+   */
+  export type ListEnumEventStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EventStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -19421,6 +19462,7 @@ export namespace Prisma {
     type?: EnumUserTypeFilter<"User"> | $Enums.UserType
     referralCode?: StringFilter<"User"> | string
     referredBy?: StringNullableFilter<"User"> | string | null
+    blocked?: BoolFilter<"User"> | boolean
     referredByUser?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     events?: EventListRelationFilter
     messages?: MessageListRelationFilter
@@ -19446,6 +19488,7 @@ export namespace Prisma {
     type?: SortOrder
     referralCode?: SortOrder
     referredBy?: SortOrderInput | SortOrder
+    blocked?: SortOrder
     referredByUser?: UserOrderByWithRelationInput
     events?: EventOrderByRelationAggregateInput
     messages?: MessageOrderByRelationAggregateInput
@@ -19474,6 +19517,7 @@ export namespace Prisma {
     country?: StringNullableFilter<"User"> | string | null
     type?: EnumUserTypeFilter<"User"> | $Enums.UserType
     referredBy?: StringNullableFilter<"User"> | string | null
+    blocked?: BoolFilter<"User"> | boolean
     referredByUser?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     events?: EventListRelationFilter
     messages?: MessageListRelationFilter
@@ -19499,6 +19543,7 @@ export namespace Prisma {
     type?: SortOrder
     referralCode?: SortOrder
     referredBy?: SortOrderInput | SortOrder
+    blocked?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -19517,6 +19562,7 @@ export namespace Prisma {
     type?: EnumUserTypeWithAggregatesFilter<"User"> | $Enums.UserType
     referralCode?: StringWithAggregatesFilter<"User"> | string
     referredBy?: StringNullableWithAggregatesFilter<"User"> | string | null
+    blocked?: BoolWithAggregatesFilter<"User"> | boolean
   }
 
   export type UserEmailWhereInput = {
@@ -19751,8 +19797,8 @@ export namespace Prisma {
     id?: StringFilter<"Event"> | string
     userId?: StringFilter<"Event"> | string
     questId?: StringNullableFilter<"Event"> | string | null
+    status?: EnumEventStatusFilter<"Event"> | $Enums.EventStatus
     createdAt?: DateTimeFilter<"Event"> | Date | string
-    processedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     error?: StringNullableFilter<"Event"> | string | null
     data?: JsonFilter<"Event">
     user?: XOR<UserRelationFilter, UserWhereInput>
@@ -19764,8 +19810,8 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     questId?: SortOrderInput | SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
-    processedAt?: SortOrderInput | SortOrder
     error?: SortOrderInput | SortOrder
     data?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -19780,8 +19826,8 @@ export namespace Prisma {
     id?: StringFilter<"Event"> | string
     userId?: StringFilter<"Event"> | string
     questId?: StringNullableFilter<"Event"> | string | null
+    status?: EnumEventStatusFilter<"Event"> | $Enums.EventStatus
     createdAt?: DateTimeFilter<"Event"> | Date | string
-    processedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     error?: StringNullableFilter<"Event"> | string | null
     data?: JsonFilter<"Event">
     user?: XOR<UserRelationFilter, UserWhereInput>
@@ -19793,8 +19839,8 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     questId?: SortOrderInput | SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
-    processedAt?: SortOrderInput | SortOrder
     error?: SortOrderInput | SortOrder
     data?: SortOrder
     _count?: EventCountOrderByAggregateInput
@@ -19810,8 +19856,8 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Event"> | string
     userId?: StringWithAggregatesFilter<"Event"> | string
     questId?: StringNullableWithAggregatesFilter<"Event"> | string | null
+    status?: EnumEventStatusWithAggregatesFilter<"Event"> | $Enums.EventStatus
     createdAt?: DateTimeWithAggregatesFilter<"Event"> | Date | string
-    processedAt?: DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
     error?: StringNullableWithAggregatesFilter<"Event"> | string | null
     data?: JsonWithAggregatesFilter<"Event">
   }
@@ -20353,6 +20399,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -20378,6 +20425,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
+    blocked?: boolean
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -20401,6 +20449,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -20426,6 +20475,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -20450,6 +20500,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
+    blocked?: boolean
   }
 
   export type UserUpdateManyMutationInput = {
@@ -20461,6 +20512,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -20473,6 +20525,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserEmailCreateInput = {
@@ -20685,8 +20738,8 @@ export namespace Prisma {
     transactionId: string
     id: string
     questId?: string | null
+    status?: $Enums.EventStatus
     createdAt?: Date | string
-    processedAt?: Date | string | null
     error?: string | null
     data?: JsonNullValueInput | InputJsonValue
     user: UserCreateNestedOneWithoutEventsInput
@@ -20698,8 +20751,8 @@ export namespace Prisma {
     id: string
     userId: string
     questId?: string | null
+    status?: $Enums.EventStatus
     createdAt?: Date | string
-    processedAt?: Date | string | null
     error?: string | null
     data?: JsonNullValueInput | InputJsonValue
     referral?: ReferralUncheckedCreateNestedManyWithoutEventInput
@@ -20709,8 +20762,8 @@ export namespace Prisma {
     transactionId?: StringFieldUpdateOperationsInput | string
     id?: StringFieldUpdateOperationsInput | string
     questId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     user?: UserUpdateOneRequiredWithoutEventsNestedInput
@@ -20722,8 +20775,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     questId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     referral?: ReferralUncheckedUpdateManyWithoutEventNestedInput
@@ -20734,8 +20787,8 @@ export namespace Prisma {
     id: string
     userId: string
     questId?: string | null
+    status?: $Enums.EventStatus
     createdAt?: Date | string
-    processedAt?: Date | string | null
     error?: string | null
     data?: JsonNullValueInput | InputJsonValue
   }
@@ -20744,8 +20797,8 @@ export namespace Prisma {
     transactionId?: StringFieldUpdateOperationsInput | string
     id?: StringFieldUpdateOperationsInput | string
     questId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
   }
@@ -20755,8 +20808,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     questId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
   }
@@ -21317,6 +21370,11 @@ export namespace Prisma {
     not?: NestedEnumUserTypeFilter<$PrismaModel> | $Enums.UserType
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type UserNullableRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -21442,6 +21500,7 @@ export namespace Prisma {
     type?: SortOrder
     referralCode?: SortOrder
     referredBy?: SortOrder
+    blocked?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -21454,6 +21513,7 @@ export namespace Prisma {
     type?: SortOrder
     referralCode?: SortOrder
     referredBy?: SortOrder
+    blocked?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -21466,6 +21526,7 @@ export namespace Prisma {
     type?: SortOrder
     referralCode?: SortOrder
     referredBy?: SortOrder
+    blocked?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -21528,9 +21589,12 @@ export namespace Prisma {
     _max?: NestedEnumUserTypeFilter<$PrismaModel>
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type UserRelationFilter = {
@@ -21554,14 +21618,6 @@ export namespace Prisma {
     userId?: SortOrder
     email?: SortOrder
     newsletter?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type EnumImageTypeFilter<$PrismaModel = never> = {
@@ -21710,15 +21766,11 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  export type EnumEventStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.EventStatus | EnumEventStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.EventStatus[] | ListEnumEventStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EventStatus[] | ListEnumEventStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumEventStatusFilter<$PrismaModel> | $Enums.EventStatus
   }
   export type JsonFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -21748,8 +21800,8 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     questId?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
-    processedAt?: SortOrder
     error?: SortOrder
     data?: SortOrder
   }
@@ -21759,8 +21811,8 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     questId?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
-    processedAt?: SortOrder
     error?: SortOrder
   }
 
@@ -21769,23 +21821,19 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     questId?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
-    processedAt?: SortOrder
     error?: SortOrder
   }
 
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  export type EnumEventStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EventStatus | EnumEventStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.EventStatus[] | ListEnumEventStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EventStatus[] | ListEnumEventStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumEventStatusWithAggregatesFilter<$PrismaModel> | $Enums.EventStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEventStatusFilter<$PrismaModel>
+    _max?: NestedEnumEventStatusFilter<$PrismaModel>
   }
   export type JsonWithAggregatesFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -21822,6 +21870,17 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type MessageCountOrderByAggregateInput = {
@@ -21868,6 +21927,20 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NotificationNotificationIdUserIdCompoundUniqueInput = {
@@ -22401,6 +22474,10 @@ export namespace Prisma {
     set?: $Enums.UserType
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type UserUpdateOneWithoutReferredUsersNestedInput = {
     create?: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
     connectOrCreate?: UserCreateOrConnectWithoutReferredUsersInput
@@ -22729,10 +22806,6 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
   export type UserUpdateOneRequiredWithoutEmailNestedInput = {
     create?: XOR<UserCreateWithoutEmailInput, UserUncheckedCreateWithoutEmailInput>
     connectOrCreate?: UserCreateOrConnectWithoutEmailInput
@@ -22819,8 +22892,8 @@ export namespace Prisma {
     connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
   }
 
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
+  export type EnumEventStatusFieldUpdateOperationsInput = {
+    set?: $Enums.EventStatus
   }
 
   export type UserUpdateOneRequiredWithoutEventsNestedInput = {
@@ -22863,6 +22936,10 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutMessagesInput, UserUncheckedCreateWithoutMessagesInput>
     connectOrCreate?: UserCreateOrConnectWithoutMessagesInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type UserUpdateOneRequiredWithoutMessagesNestedInput = {
@@ -23079,6 +23156,11 @@ export namespace Prisma {
     not?: NestedEnumUserTypeFilter<$PrismaModel> | $Enums.UserType
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -23159,11 +23241,6 @@ export namespace Prisma {
     _max?: NestedEnumUserTypeFilter<$PrismaModel>
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -23233,29 +23310,21 @@ export namespace Prisma {
     _max?: NestedDecimalFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  export type NestedEnumEventStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.EventStatus | EnumEventStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.EventStatus[] | ListEnumEventStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EventStatus[] | ListEnumEventStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumEventStatusFilter<$PrismaModel> | $Enums.EventStatus
   }
 
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  export type NestedEnumEventStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EventStatus | EnumEventStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.EventStatus[] | ListEnumEventStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EventStatus[] | ListEnumEventStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumEventStatusWithAggregatesFilter<$PrismaModel> | $Enums.EventStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEventStatusFilter<$PrismaModel>
+    _max?: NestedEnumEventStatusFilter<$PrismaModel>
   }
   export type NestedJsonFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -23278,6 +23347,17 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -23305,6 +23385,20 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumQuestStatusFilter<$PrismaModel = never> = {
@@ -23389,6 +23483,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -23413,6 +23508,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
+    blocked?: boolean
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -23435,8 +23531,8 @@ export namespace Prisma {
     transactionId: string
     id: string
     questId?: string | null
+    status?: $Enums.EventStatus
     createdAt?: Date | string
-    processedAt?: Date | string | null
     error?: string | null
     data?: JsonNullValueInput | InputJsonValue
     referral?: ReferralCreateNestedManyWithoutEventInput
@@ -23446,8 +23542,8 @@ export namespace Prisma {
     transactionId: string
     id: string
     questId?: string | null
+    status?: $Enums.EventStatus
     createdAt?: Date | string
-    processedAt?: Date | string | null
     error?: string | null
     data?: JsonNullValueInput | InputJsonValue
     referral?: ReferralUncheckedCreateNestedManyWithoutEventInput
@@ -23608,6 +23704,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     email?: UserEmailCreateNestedOneWithoutUserInput
@@ -23631,6 +23728,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -23754,6 +23852,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -23778,6 +23877,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -23815,8 +23915,8 @@ export namespace Prisma {
     id?: StringFilter<"Event"> | string
     userId?: StringFilter<"Event"> | string
     questId?: StringNullableFilter<"Event"> | string | null
+    status?: EnumEventStatusFilter<"Event"> | $Enums.EventStatus
     createdAt?: DateTimeFilter<"Event"> | Date | string
-    processedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     error?: StringNullableFilter<"Event"> | string | null
     data?: JsonFilter<"Event">
   }
@@ -24019,6 +24119,7 @@ export namespace Prisma {
     type?: EnumUserTypeFilter<"User"> | $Enums.UserType
     referralCode?: StringFilter<"User"> | string
     referredBy?: StringNullableFilter<"User"> | string | null
+    blocked?: BoolFilter<"User"> | boolean
   }
 
   export type TransactionIntentUpsertWithWhereUniqueWithoutUserInput = {
@@ -24114,6 +24215,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -24138,6 +24240,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
+    blocked?: boolean
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
@@ -24176,6 +24279,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -24200,6 +24304,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
@@ -24222,6 +24327,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -24246,6 +24352,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
+    blocked?: boolean
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -24284,6 +24391,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -24308,6 +24416,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -24325,8 +24434,8 @@ export namespace Prisma {
     transactionId: string
     id: string
     questId?: string | null
+    status?: $Enums.EventStatus
     createdAt?: Date | string
-    processedAt?: Date | string | null
     error?: string | null
     data?: JsonNullValueInput | InputJsonValue
     user: UserCreateNestedOneWithoutEventsInput
@@ -24337,8 +24446,8 @@ export namespace Prisma {
     id: string
     userId: string
     questId?: string | null
+    status?: $Enums.EventStatus
     createdAt?: Date | string
-    processedAt?: Date | string | null
     error?: string | null
     data?: JsonNullValueInput | InputJsonValue
   }
@@ -24357,6 +24466,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -24381,6 +24491,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
+    blocked?: boolean
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -24414,8 +24525,8 @@ export namespace Prisma {
     transactionId?: StringFieldUpdateOperationsInput | string
     id?: StringFieldUpdateOperationsInput | string
     questId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     user?: UserUpdateOneRequiredWithoutEventsNestedInput
@@ -24426,8 +24537,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     questId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
   }
@@ -24452,6 +24563,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -24476,6 +24588,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -24498,6 +24611,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     email?: UserEmailCreateNestedOneWithoutUserInput
@@ -24522,6 +24636,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
+    blocked?: boolean
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
@@ -24582,6 +24697,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     email?: UserEmailUpdateOneWithoutUserNestedInput
@@ -24606,6 +24722,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
@@ -24644,6 +24761,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     email?: UserEmailCreateNestedOneWithoutUserInput
@@ -24668,6 +24786,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
+    blocked?: boolean
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
@@ -24706,6 +24825,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     email?: UserEmailUpdateOneWithoutUserNestedInput
@@ -24730,6 +24850,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
@@ -24752,6 +24873,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -24776,6 +24898,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
+    blocked?: boolean
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -24814,6 +24937,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -24838,6 +24962,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -24860,6 +24985,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -24884,6 +25010,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
+    blocked?: boolean
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -24922,6 +25049,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -24946,6 +25074,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -24968,6 +25097,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -24992,6 +25122,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
+    blocked?: boolean
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -25030,6 +25161,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -25054,6 +25186,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -25076,6 +25209,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -25100,6 +25234,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
+    blocked?: boolean
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -25138,6 +25273,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -25162,6 +25298,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -25206,6 +25343,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -25230,6 +25368,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
+    blocked?: boolean
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -25294,6 +25433,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -25318,6 +25458,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -25392,6 +25533,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -25416,6 +25558,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
+    blocked?: boolean
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -25454,6 +25597,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -25478,6 +25622,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -25495,8 +25640,8 @@ export namespace Prisma {
     transactionId: string
     id: string
     questId?: string | null
+    status?: $Enums.EventStatus
     createdAt?: Date | string
-    processedAt?: Date | string | null
     error?: string | null
     data?: JsonNullValueInput | InputJsonValue
   }
@@ -25536,6 +25681,7 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
+    blocked?: boolean
   }
 
   export type TransactionIntentCreateManyUserInput = {
@@ -25566,8 +25712,8 @@ export namespace Prisma {
     transactionId?: StringFieldUpdateOperationsInput | string
     id?: StringFieldUpdateOperationsInput | string
     questId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     referral?: ReferralUpdateManyWithoutEventNestedInput
@@ -25577,8 +25723,8 @@ export namespace Prisma {
     transactionId?: StringFieldUpdateOperationsInput | string
     id?: StringFieldUpdateOperationsInput | string
     questId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
     referral?: ReferralUncheckedUpdateManyWithoutEventNestedInput
@@ -25588,8 +25734,8 @@ export namespace Prisma {
     transactionId?: StringFieldUpdateOperationsInput | string
     id?: StringFieldUpdateOperationsInput | string
     questId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEventStatusFieldUpdateOperationsInput | $Enums.EventStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     error?: NullableStringFieldUpdateOperationsInput | string | null
     data?: JsonNullValueInput | InputJsonValue
   }
@@ -25680,6 +25826,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     email?: UserEmailUpdateOneWithoutUserNestedInput
@@ -25703,6 +25850,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -25726,6 +25874,7 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type TransactionIntentUpdateWithoutUserInput = {
