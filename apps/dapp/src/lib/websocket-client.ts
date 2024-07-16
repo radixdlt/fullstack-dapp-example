@@ -51,6 +51,14 @@ export const WebSocketClient = ({
       appLogger.error('🚩 WebSocket error', event)
     }
 
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        onClose()
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
     const onClose = async () => {
       appLogger.debug('🔴 WebSocket closed')
       webSocket.removeEventListener('message', onMessage)
@@ -75,6 +83,8 @@ export const WebSocketClient = ({
     ws.onopen = onOpen
     ws.onerror = onError
     ws.onclose = onClose
+
+    document.removeEventListener('visibilitychange', handleVisibilityChange)
 
     return ws
   }
