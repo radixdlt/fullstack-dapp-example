@@ -13,6 +13,9 @@
 
   onMount(() => {
     userApi.setUserFields({ fields: [{ name: nameInput, field: 'name' }] })
+    if ($user) {
+      $user.name = nameInput
+    }
   })
 
   const setUserName = () => {
