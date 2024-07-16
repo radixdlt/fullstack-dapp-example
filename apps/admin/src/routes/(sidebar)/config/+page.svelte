@@ -33,7 +33,7 @@
   <div class="grid grid-cols-1 space-y-2 dark:bg-gray-900 xl:grid-cols-3 xl:gap-3.5">
     <div class="col-span-full xl:mb-0">
       <Heading tag="h1" class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
-        Settings
+        Config
       </Heading>
     </div>
     <div class="col-span-full space-y-4">
@@ -50,7 +50,7 @@
             on:change={async () => {
               const nextValue = !values[item.key]
               values[item.key] = nextValue
-              await fetch('/settings', {
+              await fetch('/config', {
                 method: 'PUT',
                 body: JSON.stringify({ [item.key]: item.transformRequest(nextValue) })
               })
