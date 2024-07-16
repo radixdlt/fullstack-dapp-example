@@ -21,8 +21,13 @@
 <ResourceCard on:selected on:deselected {selectable} {disabled} bind:selected>
   <div class="transform-card" style:--background-image={`url(${card.imageUrl})`} class:selected>
     <div class="rarity-container">
-      {#if card.rarity === 'rare' || card.rarity === 'ultra-rare'}
-        <div class="rarity" class:rarity-selected={selected}>
+      {#if card.rarity === 'rare'}
+        <div class="rarity rare" class:rarity-selected={selected}>
+          {card.rarity.toUpperCase()}
+        </div>
+      {/if}
+      {#if card.rarity === 'ultra-rare'}
+        <div class="rarity ultra-rare" class:rarity-selected={selected}>
           {card.rarity.toUpperCase()}
         </div>
       {/if}
@@ -65,7 +70,6 @@
   }
 
   .rarity {
-    background: var(--gradient-6);
     color: $text-color;
     padding: 0.2rem;
     border-radius: var(--border-radius-xl);
@@ -73,10 +77,19 @@
     justify-content: center;
     align-items: center;
     height: 2rem;
-    width: 5rem;
     align-self: end;
     font-size: var(--text-xxs);
     font-weight: var(--font-weight-bold);
+    width: fit-content;
+    padding: 0 1rem;
+  }
+
+  .rare {
+    background: var(--gradient-6);
+  }
+
+  .ultra-rare {
+    background: var(--gradient-4);
   }
 
   .rarity-container {
