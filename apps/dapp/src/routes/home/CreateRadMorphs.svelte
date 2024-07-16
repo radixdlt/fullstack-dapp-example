@@ -19,14 +19,17 @@
   export const getStringDataValue = (name: string) => (fields: ProgrammaticScryptoSborValue[]) =>
     (fields.find((f) => f.field_name === name) as ProgrammaticScryptoSborValueString)?.value
 
+  export const getBoolDataValue = (name: string) => (fields: ProgrammaticScryptoSborValue[]) =>
+    (fields.find((f) => f.field_name === name) as ProgrammaticScryptoSborValueBool)?.value
+
   const getGemData = pipe(getNftData, (result) =>
     result.map((data) =>
       data.map(({ id, fields }) => ({
         id,
         name: getStringDataValue('name')(fields),
         material: getStringDataValue('material')(fields),
-        image: getStringDataValue('key_image_url')(fields),
-        rarity: getStringDataValue('rarity')(fields),
+        imageUrl: getStringDataValue('key_image_url')(fields),
+        quality: getStringDataValue('quality')(fields),
         color: getStringDataValue('color')(fields)
       }))
     )
@@ -38,10 +41,11 @@
         id,
         name: getStringDataValue('name')(fields),
         energy: getStringDataValue('energy_type')(fields),
-        image: getStringDataValue('key_image_url')(fields),
+        imageUrl: getStringDataValue('key_image_url')(fields),
         rarity: getStringDataValue('rarity')(fields),
         availability: getStringDataValue('availability')(fields),
-        quality: parseInt(getStringDataValue('quality')(fields))
+        quality: parseInt(getStringDataValue('quality')(fields)),
+        limitedEdition: getBoolDataValue('limited_edition')(fields)
       }))
     )
   )
@@ -58,9 +62,10 @@
   import { createEventDispatcher, onMount, type ComponentProps } from 'svelte'
   import { context } from '$lib/components/jetty-menu/JettyMenu.svelte'
   import type {
-    ProgrammaticScryptoSborValueTuple,
-    ProgrammaticScryptoSborValueString,
     ProgrammaticScryptoSborValue,
+    ProgrammaticScryptoSborValueBool,
+    ProgrammaticScryptoSborValueString,
+    ProgrammaticScryptoSborValueTuple,
     StateEntityDetailsVaultResponseItem
   } from '@radixdlt/babylon-gateway-api-sdk'
   import { sendTransaction } from '$lib/rdt'
@@ -77,17 +82,18 @@
     id: string
     name: string
     energy: string
-    image: string
+    imageUrl: string
     rarity: string
     availability: string
     quality: number
+    limitedEdition: boolean
   }[]
   let gemData: {
     id: string
     name: string
-    image: string
+    imageUrl: string
     color: string
-    rarity: string
+    quality: string
     material: string
   }[]
 
@@ -210,14 +216,14 @@
               ResultAsync.fromPromise(
                 gateway.gatewayApiClient.transaction.innerClient.transactionPreview({
                   transactionPreviewRequest: {
+                    manifest,
                     start_epoch_inclusive: epoch,
                     end_epoch_exclusive: epoch + 2,
-                    manifest,
                     tip_percentage: 0,
                     nonce: 1,
                     signer_public_keys: [],
                     flags: {
-                      skip_epoch_check: false,
+                      skip_epoch_check: true,
                       assume_all_signature_proofs: true,
                       use_free_credit: true
                     }
@@ -234,8 +240,9 @@
 
               return {
                 image: nftData[0].value as string,
-                firstRadmorph: `${nftData[3].value} ${nftData[4].value}`,
-                secondRadmorph: `${nftData[5].value} ${nftData[6].value}`
+                name: nftData[1].value as string,
+                quality: nftData[3].value as number,
+                limitedEdition: nftData[8].value as boolean
               }
             })
         )()
@@ -262,9 +269,9 @@
       getPreview={async () => {
         const preview = (await getPreview())._unsafeUnwrap()
         return {
-          firstRadmorph: preview.firstRadmorph,
-          secondRadmorph: preview.secondRadmorph,
-          quality: 10,
+          name: preview.name,
+          quality: preview.quality,
+          limitedEdition: preview.limitedEdition,
           image: preview.image
         }
       }}

@@ -276,7 +276,9 @@
       }}
     >
       <div>
-        {$i18n.t('jetty:fuse-elements.radgem-claimed')}
+        <p>
+          {$i18n.t('jetty:fuse-elements.radgem-claimed')}
+        </p>
 
         <p>
           {$i18n.t('jetty:fuse-elements.elements-left', {
@@ -320,30 +322,28 @@
         loading={waitingForSendElements}
       >
         <div>
-          {$i18n.t('jetty:fuse-elements.intro')}
-
           <p>
-            {$i18n.t('jetty:fuse-elements.intro2')}
+            {$i18n.t('jetty:fuse-elements.intro1')}
           </p>
 
-          {#if noElements}
-            <p class="bold">
-              {$i18n.t('jetty:fuse-elements.no-elements')}
-            </p>
-          {:else if parseInt(amountOfElements) < elementsToCreateRadgem}
+          {#if parseInt(amountOfElements) >= elementsToCreateRadgem}
             <p>
+              {$i18n.t('jetty:fuse-elements.intro2', { count: parseInt(amountOfElements) })}
+            </p>
+
+            <b>
+              {$i18n.t('jetty:fuse-elements.enough-elements')}
+            </b>
+          {:else if noElements}
+            <b class="bold">
+              {$i18n.t('jetty:fuse-elements.no-elements')}
+            </b>
+          {:else}
+            <b>
               {$i18n.t('jetty:fuse-elements.not-enough-elements', {
                 count: parseInt(amountOfElements)
               })}
-            </p>
-          {:else}
-            <p>
-              {$i18n.t('jetty:fuse-elements.text1', { count: parseInt(amountOfElements) })}
-            </p>
-
-            <p class="bold">
-              {$i18n.t('jetty:fuse-elements.text2', { count: 10 })}
-            </p>
+            </b>
           {/if}
         </div>
       </JettyMenuItemPage>

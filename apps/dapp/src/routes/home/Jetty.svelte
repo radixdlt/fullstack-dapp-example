@@ -3,6 +3,7 @@
   import JettyMenu from '$lib/components/jetty-menu/JettyMenu.svelte'
   import BookIcon from '@images/book-open.svg'
   import LightningIcon from '@images/lightning-icon.svg'
+  import ViewInARIcon from '@images/view-in-ar.svg'
   import { loadGlossary } from 'content'
   import FuseElements, { checkClaimAvailable } from './FuseElements.svelte'
   import { page } from '$app/stores'
@@ -21,6 +22,7 @@
   import CreateRadMorphs from './CreateRadMorphs.svelte'
   import OpenGiftBox, { getRewards } from './OpenGiftBox.svelte'
   import { goto } from '$app/navigation'
+  import { i18n } from '$lib/i18n/i18n'
 
   let poppedUp = false
   let expanded = false
@@ -100,26 +102,26 @@
     menuItems={[
       {
         id: 'glossary',
-        text: 'Glossary',
+        text: $i18n.t('jetty:menu-glossary'),
         icon: BookIcon
       },
       {
         id: 'gift-box',
-        text: 'Open Gift Box',
-        icon: LightningIcon,
+        text: $i18n.t('jetty:menu-giftBox'),
+        icon: ViewInARIcon,
         alert: giftBoxRewardsAvailable,
         disabled: derived(user, ($user) => !($user && $user.accountAddress && $user.id))
       },
       {
         id: 'fuse-elements',
-        text: 'Fuse Elements',
+        text: $i18n.t('jetty:menu-radgems'),
         icon: LightningIcon,
         alert: claimAvailable,
         disabled: derived(user, ($user) => !($user && $user.accountAddress && $user.id))
       },
       {
         id: 'radmorphs',
-        text: 'Create RadMorphs',
+        text: $i18n.t('jetty:menu-radmorphs'),
         icon: MinimizeIcon,
         disabled: derived(user, ($user) => !($user && $user.accountAddress && $user.id))
       }

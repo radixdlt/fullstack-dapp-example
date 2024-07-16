@@ -9,16 +9,18 @@
   export let cards: {
     id: string
     energy: string
-    image: string
+    imageUrl: string
     rarity: string
     quality: number
+    limitedEdition: boolean
   }[] = []
 
   export let gems: {
     id: string
     material: string
-    rarity: string
-    image: string
+    color: string
+    quality: string
+    imageUrl: string
   }[] = []
 
   export let getPreview: () => Promise<typeof preview>
@@ -37,14 +39,14 @@
   let selectedGems: number[] = []
 
   let preview: {
-    firstRadmorph: string
-    secondRadmorph: string
+    name: string
     quality: number
+    limitedEdition: boolean
     image: string
   } = {
-    firstRadmorph: 'Radiant Flame',
-    secondRadmorph: 'Molten Core',
+    name: '',
     quality: 0,
+    limitedEdition: true,
     image: ''
   }
 
@@ -116,15 +118,12 @@
       {$i18n.t('jetty:create-radmorphs.title-review')}
     {/if}
     {#if page === 3}
-      {$i18n.t('jetty:create-radmorphs.previewing-radmorph')}...
+      {$i18n.t('jetty:create-radmorphs.previewing-radmorph')}
     {/if}
 
     {#if page === 4}
       <div class="preview-title">
-        {$i18n.t('jetty:create-radmorphs.radmorph-preview-title', {
-          firstRadmorph: preview.firstRadmorph,
-          secondRadmorph: preview.secondRadmorph
-        })}
+        {preview.name.split('{')[0]}
       </div>
     {/if}
   </div>
@@ -150,10 +149,7 @@
           {#each cards as card, i}
             <Item>
               <TransformCard
-                image={card.image}
-                energy={card.energy}
-                rarity={card.rarity}
-                quality={card.quality}
+                {card}
                 selected={i === selectedTransformCard}
                 bind:this={transformCardComponents[i]}
                 on:selected={() => onTransformCardSelected(i)}
@@ -183,8 +179,7 @@
           {#each gems as gem, i}
             <Item>
               <GemCard
-                image={gem.image}
-                gemstone={gem.material}
+                {gem}
                 selected={selectedGems.includes(i)}
                 bind:this={gemCardComponents[i]}
                 on:selected={() => onGemCardSelected(i)}
@@ -218,24 +213,12 @@
         <Carousel let:Item>
           <Item>
             {#if selectedTransformCard !== undefined}
-              <TransformCard
-                disabled={true}
-                selected={true}
-                image={cards[selectedTransformCard].image}
-                energy={cards[selectedTransformCard].energy}
-                rarity={cards[selectedTransformCard].rarity}
-                quality={cards[selectedTransformCard].quality}
-              />
+              <TransformCard disabled={true} selected={true} card={cards[selectedTransformCard]} />
             {/if}
           </Item>
           {#each selectedGems as i}
             <Item>
-              <GemCard
-                disabled={true}
-                selected={true}
-                image={gems[i].image}
-                gemstone={gems[i].material}
-              />
+              <GemCard disabled={true} selected={true} gem={gems[i]} />
             </Item>
           {/each}
         </Carousel>
@@ -252,11 +235,17 @@
         loading={waitingForRadmorphTx}
       >
         <div class="preview">
-          <div>
+          <div class="quality">
             {$i18n.t('jetty:create-radmorphs.radmorph-quality', { quality: preview.quality })}
+            {#if preview.limitedEdition}
+              <i>{$i18n.t('jetty:create-radmorphs.limited-edition')}</i>
+            {/if}
           </div>
           <img src={preview.image} alt="A Radmorph" />
           {$i18n.t('jetty:create-radmorphs.radmorph-preview-text')}
+          <div class="footnote">
+            {$i18n.t('jetty:create-radmorphs.resources-sent-from-wallet')}
+          </div>
         </div>
       </JettyMenuItemPage>
     {/if}
@@ -305,6 +294,11 @@
   .preview-title {
     font-size: var(--text-md2);
     font-family: var(--font-headers);
+    text-align: center;
+  }
+
+  .quality {
+    font-family: var(--font-headers);
   }
 
   .preview {
@@ -315,8 +309,12 @@
     text-align: center;
 
     img {
-      height: 10rem;
+      height: 150px;
     }
+  }
+
+  .footnote {
+    font-size: var(--text-xs);
   }
 
   .success {
