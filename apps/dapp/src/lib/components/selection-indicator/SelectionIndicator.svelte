@@ -1,13 +1,8 @@
 <script lang="ts">
   export let selected: boolean
-  import SelectedIcon from '@images/selected.svg'
 </script>
 
-<div
-  class="selection-ring ring"
-  class:selected
-  style:--background={selected ? `url(${SelectedIcon})` : 'var(--color-dark)'}
-/>
+<div class="selection-ring ring" class:selected />
 
 <style lang="scss">
   .ring {
@@ -22,10 +17,11 @@
   .selection-ring {
     border: var(--border-lg) var(--color-light);
     border-radius: 50%;
-    background: var(--background) no-repeat center;
+    background: var(--color-dark) no-repeat center;
   }
 
   .selected {
     border: var(--border) var(--color-primary);
+    background: url('@images/selected.svg') no-repeat center;
   }
 </style>
