@@ -34,6 +34,7 @@
     "wallet:deploy:clam-dex": "npx tsx ./src/clam-dex/scripts/deploy-clam-dex.ts",
     "wallet:new:clam-dexs": "npx tsx ./src/clam-dex/scripts/new-clam-dexs.ts",
     "wallet:register:gift-boxes": "npx tsx ./src/radquest/scripts/register-gift-boxes.ts",
+    "wallet:set:radquest-dapp-data": "npx tsx ./src/radquest/scripts/set-radquest-dapp-data.ts",
     "gw:well-known": "npx tsx ./src/scripts/gw/well-known.ts",
     "gw:tx:lookup": "npx tsx ./src/scripts/gw/lookup-tx.ts",
     "gw:status": "npx tsx ./src/scripts/gw/status.ts",
