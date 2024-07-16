@@ -115,7 +115,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
     storeUtmValues(url.searchParams, cookies)
   }
 
-  locals.context.logger.debug({
+  locals.context.logger.trace({
     questStatus
   })
 
