@@ -131,6 +131,19 @@ export const SystemWorkerController = ({
               "create_proof"
             ;
 
+            CALL_METHOD 
+              Address("${payer.address}") 
+              "lock_fee"
+              Decimal("10")
+            ;
+
+            CALL_METHOD
+              Address("${system.address}")
+              "create_proof_of_amount"
+              Address("${adminBadgeAddress}")
+              Decimal("1")
+            ;
+
             CALL_METHOD
               Address("${config.radQuest.components.kycOracle}")
               "update_user_kyc_requirement"
