@@ -6,6 +6,7 @@ import { PrismaClient } from 'database'
 import { WorkerOutputError } from '../_types'
 import { config } from '../config'
 import { dbClient } from '../db-client'
+import { okAsync } from 'neverthrow'
 
 export const EventWorker = (
   connection: ConnectionOptions,
@@ -50,7 +51,10 @@ export const EventWorker = (
 
         const result = await getUserById(job.data.userId, dependencies.dbClient, {
           email: true
-        }).andThen((user) => eventWorkerController.handler(job, user as UserExtended))
+        }).andThen((user) => {
+          if (user.blocked) return okAsync(undefined)
+          return eventWorkerController.handler(job, user as UserExtended)
+        })
 
         if (result.isErr()) {
           logger.debug({
