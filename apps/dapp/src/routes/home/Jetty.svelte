@@ -3,7 +3,6 @@
   import JettyMenu from '$lib/components/jetty-menu/JettyMenu.svelte'
   import BookIcon from '@images/book-open.svg'
   import LightningIcon from '@images/lightning-icon.svg'
-  import ViewInARIcon from '@images/view-in-ar.svg'
   import { loadGlossary } from 'content'
   import FuseElements, { checkClaimAvailable } from './FuseElements.svelte'
   import { page } from '$app/stores'

@@ -11,6 +11,7 @@
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { messageApi } from '$lib/api/message-api'
   import { onDestroy, onMount } from 'svelte'
+  import { markNotificationAsSeen } from '$lib/notifications'
 
   export let data: PageData
 
@@ -23,6 +24,8 @@
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
 
   onMount(() => {
+    markNotificationAsSeen('instapassBadgeReceived')
+
     if ($webSocketClient && $user) {
       unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
         if (message.type === 'QuestRewardsDeposited' && message.questId === 'Instapass') {

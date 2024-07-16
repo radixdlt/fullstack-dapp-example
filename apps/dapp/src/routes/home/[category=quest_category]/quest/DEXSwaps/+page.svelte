@@ -2,7 +2,7 @@
   import type { Quests } from 'content'
   import Quest from '../Quest.svelte'
   import { writable } from 'svelte/store'
-  import { onDestroy } from 'svelte'
+  import { onDestroy, onMount } from 'svelte'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { messageApi } from '$lib/api/message-api'
   import Button from '$lib/components/button/Button.svelte'
@@ -11,6 +11,7 @@
   import { Addresses } from 'common'
   import { questApi } from '$lib/api/quest-api'
   import type { PageData } from '../DEXSwaps/$types'
+  import { markNotificationAsSeen } from '$lib/notifications'
 
   export let data: PageData
 
@@ -41,6 +42,11 @@
   const swappingLearnt = () => {
     questApi.completeContentRequirement(data.id)
   }
+
+  onMount(() => {
+    markNotificationAsSeen('jettySwapCompleted')
+    markNotificationAsSeen('lettySwapCompleted')
+  })
 </script>
 
 <Quest

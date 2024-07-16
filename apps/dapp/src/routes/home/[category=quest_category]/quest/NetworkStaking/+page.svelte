@@ -1,11 +1,12 @@
 <script lang="ts">
   import Quest from '../Quest.svelte'
   import type { PageData } from '../NetworkStaking/$types'
-  import { onDestroy } from 'svelte'
+  import { onDestroy, onMount } from 'svelte'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { writable } from 'svelte/store'
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
+  import { markNotificationAsSeen } from '$lib/notifications'
 
   export let data: PageData
   let quest: Quest
@@ -32,6 +33,10 @@
       }
     })
   }
+
+  onMount(() => {
+    markNotificationAsSeen('stakeCompleted')
+  })
 
   onDestroy(() => unsubscribeWebSocket?.())
 </script>

@@ -189,7 +189,7 @@
               on:dismiss={popNotification}
               on:goToQuest={() => {
                 popNotification()
-                latestNotification.onGoToQuest()
+                latestNotification.action()
               }}
             />
           </div>

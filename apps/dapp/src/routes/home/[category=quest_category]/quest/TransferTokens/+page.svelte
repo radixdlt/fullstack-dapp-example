@@ -3,7 +3,7 @@
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
-  import { onDestroy } from 'svelte'
+  import { onDestroy, onMount } from 'svelte'
   import { isMobile } from '$lib/utils/is-mobile'
   import CopyTextBox from '$lib/components/copy-text-box/CopyTextBox.svelte'
   import QR from '@svelte-put/qr/svg/QR.svelte'
@@ -12,6 +12,7 @@
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
+  import { markNotificationAsSeen, pushNotification } from '$lib/notifications'
 
   export let data: PageData
 
@@ -20,6 +21,10 @@
   let quest: Quest
 
   let receivedClams = writable(data.requirements?.JettyReceivedClams.isComplete)
+
+  onMount(() => {
+    markNotificationAsSeen('clamsReceived')
+  })
 
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
@@ -46,6 +51,7 @@
   on:completed={() => {
     //@ts-ignore
     dataLayer.push({ event: 'dl_click_5_basic_complete' })
+    pushNotification('basicQuestsComplete')
   }}
   steps={[
     {

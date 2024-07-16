@@ -11,6 +11,7 @@
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import type { QuestStatus } from 'database'
+  import { markNotificationAsSeen } from '$lib/notifications'
 
   let referralsData: {
     referrals: string[]
@@ -49,6 +50,11 @@
   })
 
   onMount(() => {
+    markNotificationAsSeen('reachedTierBronze')
+    markNotificationAsSeen('reachedTierSilver')
+    markNotificationAsSeen('reachedTierGold')
+    markNotificationAsSeen('reachedTierSuper')
+
     getReferralsState()
   })
 </script>
