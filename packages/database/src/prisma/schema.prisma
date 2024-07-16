@@ -28,6 +28,7 @@ model User {
   referralCode    String   @unique
   referredBy      String?
   referredByUser  User?    @relation("Referrer", fields: [referredBy], references: [referralCode])
+  blocked         Boolean  @default(false)
 
   events                     Event[]
   messages                   Message[]
@@ -92,15 +93,22 @@ model Challenge {
   createdAt DateTime @default(now())
 }
 
+enum EventStatus {
+  WAITING
+  PENDING
+  ERROR
+  COMPLETED
+}
+
 model Event {
-  transactionId String    @id
+  transactionId String      @id
   id            String
   userId        String
   questId       String?
-  createdAt     DateTime  @default(now())
-  processedAt   DateTime?
+  status        EventStatus @default(WAITING)
+  createdAt     DateTime    @default(now())
   error         String?
-  data          Json      @default("{}")
+  data          Json        @default("{}")
 
   user     User       @relation(fields: [userId], references: [id])
   referral Referral[]

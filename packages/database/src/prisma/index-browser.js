@@ -128,7 +128,8 @@ exports.Prisma.UserScalarFieldEnum = {
   country: 'country',
   type: 'type',
   referralCode: 'referralCode',
-  referredBy: 'referredBy'
+  referredBy: 'referredBy',
+  blocked: 'blocked'
 };
 
 exports.Prisma.UserEmailScalarFieldEnum = {
@@ -166,8 +167,8 @@ exports.Prisma.EventScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   questId: 'questId',
+  status: 'status',
   createdAt: 'createdAt',
-  processedAt: 'processedAt',
   error: 'error',
   data: 'data'
 };
@@ -289,6 +290,13 @@ exports.ImageType = exports.$Enums.ImageType = {
 exports.ReferralAction = exports.$Enums.ReferralAction = {
   INC: 'INC',
   DEC: 'DEC'
+};
+
+exports.EventStatus = exports.$Enums.EventStatus = {
+  WAITING: 'WAITING',
+  PENDING: 'PENDING',
+  ERROR: 'ERROR',
+  COMPLETED: 'COMPLETED'
 };
 
 exports.QuestStatus = exports.$Enums.QuestStatus = {
