@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { LandingPopupId, type LandingPopupDefinition } from 'content'
+  import { LandingPopupSchema, UtmSourceLanding } from 'content'
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import JettyImage from '@images/landing-popup-jetty.webp'
@@ -13,65 +13,59 @@
   import { userApi } from '$lib/api/user-api'
   import { htmlReplace } from '$lib/helpers/html-replace'
 
-  type Replacer = (params: any) => (html: string) => Promise<string>
-  type Popup = LandingPopupDefinition & {
-    html: string
-    id: LandingPopupId
-    replacer?: ReturnType<Replacer>
-  }
+  type Replacer = (html: string) => Promise<string>
 
-  const extensions: Partial<Record<LandingPopupId, Replacer>> = {
-    [LandingPopupId.UserReferral]: (params: URLSearchParams) => (html: string) =>
-      userApi
-        .getNameByRefferalCode(params.get('ref') || '')
-        .map(({ name }) => htmlReplace(html, { inviter_name: name }))
-        .orElse(() => okAsync(html))
-        .unwrapOr(html)
-  }
+  export let definitions: Record<LandingPopupSchema, string>
 
-  export let definitions: Popup[]
-
-  let seenLandingPopup: boolean
-  let visibleLandingPopup: Popup
+  let seenLandingPopup: string | undefined
+  let visibleLandingPopup:
+    | {
+        id: string
+        html: string
+        replacer: Replacer
+      }
+    | undefined
 
   onMount(() => {
-    seenLandingPopup = !!(useLocalStorage('seen-landing-popup').get() || $user)
+    seenLandingPopup = useLocalStorage('seen-landing-popup').get()
     const searchParams = new URLSearchParams(window.location.search)
-    definitions.find(async (definition) => {
-      if (
-        (definition.queryParamValue &&
-          searchParams.has(definition.queryParamName) &&
-          searchParams.get(definition.queryParamName) === definition.queryParamValue) ||
-        (searchParams.has(definition.queryParamName) && !definition.queryParamValue)
-      ) {
-        const replacer = extensions[definition.id]
-        if (replacer) {
-          definition.replacer = replacer(searchParams)
+    if (searchParams.has('ref')) {
+      visibleLandingPopup = {
+        id: `ref=${searchParams.get('ref')}`,
+        html: definitions[LandingPopupSchema.UserReferral],
+        replacer: (html: string) =>
+          userApi
+            .getNameByRefferalCode(searchParams.get('ref') || '')
+            .map(({ name }) => htmlReplace(html, { inviter_name: name }))
+            .orElse(() => okAsync(html))
+            .unwrapOr(html)
+      }
+    }
+
+    if (searchParams.has('utm_source')) {
+      const utmSource = searchParams.get('utm_source') as keyof typeof UtmSourceLanding
+      const landingConfig = UtmSourceLanding[utmSource]
+      if (landingConfig) {
+        visibleLandingPopup = {
+          id: `utm_source=${utmSource}`,
+          html: definitions[UtmSourceLanding[utmSource].schema],
+          replacer: (html: string) =>
+            Promise.resolve(htmlReplace(html, UtmSourceLanding[utmSource].data))
         }
-        visibleLandingPopup = definition
-
-        return true
       }
-    })
-
-    const unsubscribe = user.subscribe((value) => {
-      if (value) {
-        useLocalStorage('seen-landing-popup').set(true)
-      }
-    })
-
-    return () => {
-      unsubscribe()
     }
   })
 
   const hideLandingPopup = () => {
-    useLocalStorage('seen-landing-popup').set(true)
-    seenLandingPopup = true
+    if (visibleLandingPopup) {
+      useLocalStorage('seen-landing-popup').set(visibleLandingPopup.id)
+      seenLandingPopup = visibleLandingPopup.id
+      visibleLandingPopup = undefined
+    }
   }
 </script>
 
-{#if !seenLandingPopup && visibleLandingPopup}
+{#if visibleLandingPopup && seenLandingPopup !== visibleLandingPopup.id && !$user}
   <Backdrop zIndex={5}>
     <div class="landing-popup card" transition:scale|local={{ easing: backOut }}>
       <div class="image only-desktop">

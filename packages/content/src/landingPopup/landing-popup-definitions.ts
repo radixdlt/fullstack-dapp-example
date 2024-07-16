@@ -1,26 +1,110 @@
-export type LandingPopupDefinition = {
-  queryParamName: string
-  queryParamValue?: string
-}
+export const LandingPopupSchema = {
+  UserReferral: 'userreferral',
+  Influencer: 'influencer',
+  Paid: 'paid'
+} as const
 
-export enum LandingPopupId {
-  UserReferral = 'userreferral',
-  m_TestKOL = 'm_testkol',
-  m_TestPaidAd = 'm_testpaidad'
-}
+export type LandingPopupSchema = (typeof LandingPopupSchema)[keyof typeof LandingPopupSchema]
 
-export const LandingPopupDefinitions = {
-  [LandingPopupId.UserReferral]: {
-    queryParamName: 'ref'
+export const UtmSourceLanding = {
+  'Twitter-geo1a': { schema: LandingPopupSchema.Paid, data: { source: 'X' } },
+  'Twitter-geo1b': { schema: LandingPopupSchema.Paid, data: { source: 'X' } },
+  'Twitter-RT-geo1': { schema: LandingPopupSchema.Paid, data: { source: 'X' } },
+  'Twitter-geo2a': { schema: LandingPopupSchema.Paid, data: { source: 'X' } },
+  'Twitter-geo2b': { schema: LandingPopupSchema.Paid, data: { source: 'X' } },
+  'Twitter-RT-geo2': { schema: LandingPopupSchema.Paid, data: { source: 'X' } },
+  'Twitter-geo3a': { schema: LandingPopupSchema.Paid, data: { source: 'X' } },
+  'Twitter-geo3b': { schema: LandingPopupSchema.Paid, data: { source: 'X' } },
+  'Twitter-RT-geo3': { schema: LandingPopupSchema.Paid, data: { source: 'X' } },
+  'Reddit-geo1a': { schema: LandingPopupSchema.Paid, data: { source: 'Reddit' } },
+  'Reddit-RT-geo1': { schema: LandingPopupSchema.Paid, data: { source: 'Reddit' } },
+  'Reddit-geo2a': { schema: LandingPopupSchema.Paid, data: { source: 'Reddit' } },
+  'Reddit-RT-geo2': { schema: LandingPopupSchema.Paid, data: { source: 'Reddit' } },
+  'Reddit-geo3a': { schema: LandingPopupSchema.Paid, data: { source: 'Reddit' } },
+  'Reddit-RT-geo3': { schema: LandingPopupSchema.Paid, data: { source: 'Reddit' } },
+  'Meta-RT-geo1': { schema: LandingPopupSchema.Paid, data: { source: 'Facebook' } },
+  'Meta-RT-geo2': { schema: LandingPopupSchema.Paid, data: { source: 'Facebook' } },
+  'Meta-RT-geo3': { schema: LandingPopupSchema.Paid, data: { source: 'Facebook' } },
+  'Brave-Push-geo1-Desktop': { schema: LandingPopupSchema.Paid, data: { source: 'Brave' } },
+  'Brave-Push-geo1-Android': { schema: LandingPopupSchema.Paid, data: { source: 'Brave' } },
+  'Brave-Push-geo1-iOS': { schema: LandingPopupSchema.Paid, data: { source: 'Brave' } },
+  'Brave-Push-geo2-Desktop': { schema: LandingPopupSchema.Paid, data: { source: 'Brave' } },
+  'Brave-Push-geo2-Android': { schema: LandingPopupSchema.Paid, data: { source: 'Brave' } },
+  'Brave-Push-geo2-iOS': { schema: LandingPopupSchema.Paid, data: { source: 'Brave' } },
+  'Brave-Push-geo3-Desktop': { schema: LandingPopupSchema.Paid, data: { source: 'Brave' } },
+  'Brave-Push-geo3-Android': { schema: LandingPopupSchema.Paid, data: { source: 'Brave' } },
+  'Brave-Push-geo3-iOS': { schema: LandingPopupSchema.Paid, data: { source: 'Brave' } },
+  'CoinMarketCap-Banner-Website': {
+    schema: LandingPopupSchema.Paid,
+    data: { source: 'CoinMarketCap' }
   },
-  [LandingPopupId.m_TestKOL]: {
-    queryParamName: 'utm',
-    queryParamValue: 'testkol'
+  'CoinGecko-Banner-Website': { schema: LandingPopupSchema.Paid, data: { source: 'CoinGecko' } },
+  'CoinGecko-Banner-App': { schema: LandingPopupSchema.Paid, data: { source: 'CoinGecko' } },
+  'CoinDesk-Banner-Website': { schema: LandingPopupSchema.Paid, data: { source: 'CoinGecko' } },
+  CoinDesk: { schema: LandingPopupSchema.Paid, data: { source: 'CoinDesk' } },
+  CoinTelegraph: { schema: LandingPopupSchema.Paid, data: { source: 'CoinTelegraph' } },
+  DeCrypt: { schema: LandingPopupSchema.Paid, data: { source: 'DeCrypt' } },
+  BlockWorks: { schema: LandingPopupSchema.Paid, data: { source: 'BlockWorks' } },
+  BTCEcho: { schema: LandingPopupSchema.Paid, data: { source: 'BTCEcho' } },
+  CoinZilla: { schema: LandingPopupSchema.Paid, data: { source: 'CoinZilla' } },
+  Blockmates: { schema: LandingPopupSchema.Paid, data: { source: 'Blockmates' } },
+  CoinAcademy: { schema: LandingPopupSchema.Paid, data: { source: 'CoinAcademy' } },
+  JournalDuCoin: { schema: LandingPopupSchema.Paid, data: { source: 'JournalDuCoin' } },
+  Galxe: { schema: LandingPopupSchema.Paid, data: { source: 'Galxe' } },
+  Zealy: { schema: LandingPopupSchema.Paid, data: { source: 'Zealy' } },
+  TLDR: { schema: LandingPopupSchema.Paid, data: { source: 'TLDR' } },
+  Ethermail: { schema: LandingPopupSchema.Paid, data: { source: 'Ethermail' } },
+  Blocmates: { schema: LandingPopupSchema.Paid, data: { source: 'Blockmates' } },
+  altcoindaily: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Altcoin Daily' } },
+  datadash: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Data Dash' } },
+  larkdavis: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Lark Davis' } },
+  milesdeutscher: {
+    schema: LandingPopupSchema.Influencer,
+    data: { influencer: 'Miles Deutscher' }
   },
-  [LandingPopupId.m_TestPaidAd]: {
-    queryParamName: 'utm',
-    queryParamValue: 'm_testpaidad'
-  }
-}
-
-export const landingPopupIds = Object.keys(LandingPopupDefinitions) as LandingPopupId[]
+  ashcrypto: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Ash Crypto' } },
+  cryptocasey: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Crypto Casey' } },
+  sincity: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Sin City Crypto' } },
+  paulbarron: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Paul Barron' } },
+  voskcoin: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Vosk Coin' } },
+  conorkenny: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Conor Kenny' } },
+  nobs: { schema: LandingPopupSchema.Influencer, data: { influencer: 'No Bs Crypto' } },
+  catalinacastro: {
+    schema: LandingPopupSchema.Influencer,
+    data: { influencer: 'Catalina Castro' }
+  },
+  voepa: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Voepa Bitcoin' } },
+  academia: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Academia Cripto' } },
+  cryptotony: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Crypto Tony' } },
+  posty: { schema: LandingPopupSchema.Influencer, data: { influencer: 'PostyXBT' } },
+  backwards: { schema: LandingPopupSchema.Influencer, data: { influencer: '0xbackwards' } },
+  crg: { schema: LandingPopupSchema.Influencer, data: { influencer: 'CRG' } },
+  teddy: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Teddy' } },
+  kong: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Kong Trading' } },
+  monk: { schema: LandingPopupSchema.Influencer, data: { influencer: 'The Crypto Monk' } },
+  timeless: { schema: LandingPopupSchema.Influencer, data: { influencer: 'TimelessBeing' } },
+  rasgard: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Rasgard' } },
+  otsukimi: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Otsukimi' } },
+  groot: { schema: LandingPopupSchema.Influencer, data: { influencer: 'GROOT' } },
+  coinnews: { schema: LandingPopupSchema.Influencer, data: { influencer: 'iWantCoinNews' } },
+  murfski: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Murfski' } },
+  ladyofcrypto: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Lady of Crypto' } },
+  smartape: { schema: LandingPopupSchema.Influencer, data: { influencer: 'The Smart Ape' } },
+  aiden: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Aiden DeFi' } },
+  zeus: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Crypto Zeus' } },
+  maria: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Crypto Maria' } },
+  pushka: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Roman Pushka' } },
+  dad: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Crypto Dad' } },
+  leo: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Leonardo Vecchio' } },
+  smartinvestor: {
+    schema: LandingPopupSchema.Influencer,
+    data: { influencer: 'SMART INVESTOR' }
+  },
+  sozluk: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Kripto Sözlük' } },
+  atamert: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Atamert Uysaler' } },
+  hamed: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Amr Hamed' } },
+  crypto2go: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Bitcoin2Go' } },
+  hunter: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Coin Hunter' } },
+  arreat: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Arreat Summit' } },
+  mag: { schema: LandingPopupSchema.Influencer, data: { influencer: 'MAG COIN' } }
+} as const
