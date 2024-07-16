@@ -131,17 +131,32 @@ export const getQueues = (connection: ConnectionOptions) => {
   const addBulk = (items: EventJob[]) =>
     ResultAsync.fromPromise(
       eventQueue.addBulk(
-        items.map((item) => ({ name: item.traceId, data: item, opts: { jobId: item.traceId } }))
+        items.map((item) => ({
+          name: item.transactionId,
+          data: item,
+          opts: { jobId: item.transactionId, removeOnComplete: true, removeOnFail: 300 }
+        }))
       ),
       typedError
     )
 
   const addJob = (job: EventJob) =>
-    ResultAsync.fromPromise(eventQueue.add(job.transactionId, job), typedError)
+    ResultAsync.fromPromise(
+      eventQueue.add(job.transactionId, job, {
+        jobId: job.transactionId,
+        removeOnComplete: true,
+        removeOnFail: 300
+      }),
+      typedError
+    )
 
   const addTransactionJob = (item: TransactionJob) =>
     ResultAsync.fromPromise(
-      transactionQueue.add(item.discriminator, item, { jobId: item.discriminator }),
+      transactionQueue.add(item.discriminator, item, {
+        jobId: item.discriminator,
+        removeOnComplete: true,
+        removeOnFail: 300
+      }),
       typedError
     )
 

@@ -13,7 +13,8 @@ export const load: LayoutServerLoad = async ({ locals, params }) => {
       questProgress: true,
       referredByUser: true,
       savedProgress: true,
-      transactions: true
+      transactions: true,
+      marketing: true
     }
   })
 

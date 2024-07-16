@@ -38,6 +38,9 @@ export const config = {
     },
     transaction: {
       concurrency: 50
+    },
+    system: {
+      concurrency: 50
     }
   }
 }

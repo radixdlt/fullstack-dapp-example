@@ -44,7 +44,7 @@ export const TransactionWorker = (
           })
           .then((count) => count === 0)
 
-        if (!shouldProcessEvent) return
+        if (!shouldProcessEvent) return okAsync(undefined)
 
         const result = await getUserById(userId, dbClient)
           .andThen((user) => {
@@ -69,9 +69,7 @@ export const TransactionWorker = (
                 })
               )
           )
-          .map(() => {
-            childLogger.debug({ method: 'transactionWorker.process.success', data: job.data })
-          })
+          .map(() => undefined)
           .orElse((error) => {
             childLogger.error({
               method: 'transactionWorkerWorker.process.error',
@@ -104,9 +102,14 @@ export const TransactionWorker = (
         })
         throw error
       }
+      return okAsync(undefined)
     },
     { connection, concurrency: config.worker.transaction.concurrency }
   )
+
+  worker.on('completed', (job) => {
+    logger.debug({ method: 'transactionWorker.process.success', data: job.data })
+  })
 
   return worker
 }

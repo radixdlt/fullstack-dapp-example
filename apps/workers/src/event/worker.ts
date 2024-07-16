@@ -43,11 +43,11 @@ export const EventWorker = (
       try {
         const shouldProcessEvent = await dbClient.event
           .count({
-            where: { id: job.data.transactionId, status: 'COMPLETED' }
+            where: { transactionId: job.data.transactionId, status: 'COMPLETED' }
           })
           .then((count) => count === 0)
 
-        if (!shouldProcessEvent) return
+        if (!shouldProcessEvent) return okAsync(undefined)
 
         const result = await getUserById(job.data.userId, dependencies.dbClient, {
           email: true
@@ -87,6 +87,7 @@ export const EventWorker = (
 
         throw error
       }
+      return okAsync(undefined)
     },
     { connection, concurrency: config.worker.event.concurrency }
   )

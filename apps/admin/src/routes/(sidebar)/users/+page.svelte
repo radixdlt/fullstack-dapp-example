@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { Button, Heading } from 'flowbite-svelte'
+  import { Heading } from 'flowbite-svelte'
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead } from 'flowbite-svelte'
   import { TableHeadCell } from 'flowbite-svelte'
-  import { TrashBinSolid } from 'flowbite-svelte-icons'
 
   import Delete from './Delete.svelte'
   import type { PageData } from './$types'
@@ -16,9 +15,6 @@
   const Users = data.users
 
   const gateway = GatewayApi(publicConfig.networkId)
-
-  // eslint-disable-next-line
-  let current_user = {}
 </script>
 
 <main class="relative h-full w-full overflow-y-auto bg-white dark:bg-gray-800">
@@ -29,7 +25,7 @@
   </div>
   <Table>
     <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
-      {#each ['Id', 'identity Address', 'Created', 'Account address', 'Country', 'Actions'] as title}
+      {#each ['Id', 'Created', 'identity Address', 'Account address', 'Country'] as title}
         <TableHeadCell class="p-4 font-medium">{title}</TableHeadCell>
       {/each}
     </TableHead>
@@ -71,17 +67,6 @@
             {/if}
           </TableBodyCell>
           <TableBodyCell class="p-4">{user.country}</TableBodyCell>
-
-          <TableBodyCell class="space-x-2 p-4">
-            <Button
-              color="red"
-              size="sm"
-              class="gap-2 px-3"
-              on:click={() => ((current_user = user), (openDelete = true))}
-            >
-              <TrashBinSolid size="sm" /> Delete user
-            </Button>
-          </TableBodyCell>
         </TableBodyRow>
       {/each}
     </TableBody>

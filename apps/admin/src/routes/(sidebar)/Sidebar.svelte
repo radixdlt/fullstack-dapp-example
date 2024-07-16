@@ -6,8 +6,11 @@
   import {
     CogOutline,
     LayersSolid,
-    ChartPieOutline,
-    RectangleListSolid
+    BookOpenSolid,
+    AtomOutline,
+    ImageOutline,
+    UserOutline,
+    CodeOutline
   } from 'flowbite-svelte-icons'
 
   export let drawerHidden: boolean = false
@@ -34,13 +37,24 @@
   })
 
   let posts = [
-    { name: 'Images', icon: ChartPieOutline, href: '/images' },
+    { name: 'Images', icon: ImageOutline, href: '/images' },
     {
       name: 'Users',
-      icon: RectangleListSolid,
+      icon: UserOutline,
       href: '/users'
     },
-    { name: 'Settings', icon: CogOutline, href: '/settings' }
+    {
+      name: 'Events',
+      icon: AtomOutline,
+      href: '/events'
+    },
+    {
+      name: 'Transactions',
+      icon: BookOpenSolid,
+      href: '/transactions'
+    },
+    { name: 'Config', icon: CogOutline, href: '/config' },
+    { name: 'Scripts', icon: CodeOutline, href: '/scripts' }
   ]
 
   let links = [
