@@ -18,7 +18,7 @@
   import { useContext } from '$lib/utils/context'
   import { tweened } from 'svelte/motion'
   import { cubicOut } from 'svelte/easing'
-  import { user, type JettyNotification, type jettyNotifications } from '../../../stores'
+  import { type JettyNotification, type jettyNotifications } from '../../../stores'
   import { createEventDispatcher } from 'svelte'
   import Notification from './Notification.svelte'
   import { swipe } from 'svelte-gestures'
@@ -106,12 +106,10 @@
   let disabledItems: typeof menuItems
 
   $: {
-    $user
     enabledItems = menuItems.filter((item) => (item.disabled ? !get(item.disabled) : true))
   }
 
   $: {
-    $user
     disabledItems = menuItems.filter((item) => (item.disabled ? get(item.disabled) : false))
   }
 

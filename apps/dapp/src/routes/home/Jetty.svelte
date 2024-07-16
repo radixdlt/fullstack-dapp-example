@@ -17,12 +17,14 @@
   } from '../../stores'
   import { tick } from 'svelte'
   import { isMobile } from '$lib/utils/is-mobile'
-  import { derived, writable } from 'svelte/store'
+  import { writable } from 'svelte/store'
   import MinimizeIcon from '@images/minimize.svg'
   import CreateRadMorphs from './CreateRadMorphs.svelte'
   import OpenGiftBox, { getRewards } from './OpenGiftBox.svelte'
   import { goto } from '$app/navigation'
   import { i18n } from '$lib/i18n/i18n'
+  import { GatewayApi } from 'common'
+  import { publicConfig } from '$lib/public-config'
 
   let poppedUp = false
   let expanded = false
@@ -87,6 +89,57 @@
   $: if (!expanded && glossaryAnchor) {
     undoGlossaryAnchor()
   }
+
+  const userMissingHeroBadge = writable(true)
+
+  let menuItems = [
+    {
+      id: 'glossary',
+      text: $i18n.t('jetty:menu-glossary'),
+      icon: BookIcon
+    },
+    {
+      id: 'gift-box',
+      text: $i18n.t('jetty:menu-giftBox'),
+      icon: LightningIcon,
+      alert: giftBoxRewardsAvailable,
+      disabled: userMissingHeroBadge
+    },
+    {
+      id: 'fuse-elements',
+      text: $i18n.t('jetty:menu-radgems'),
+      icon: LightningIcon,
+      alert: claimAvailable,
+      disabled: userMissingHeroBadge
+    },
+    {
+      id: 'radmorphs',
+      text: $i18n.t('jetty:menu-radmorphs'),
+      icon: MinimizeIcon,
+      disabled: userMissingHeroBadge
+    }
+  ]
+
+  const checkHeroBadge = () =>
+    GatewayApi(publicConfig.networkId)
+      .hasHeroBadge($user!.accountAddress!)
+      .map((hasHeroBadge) => {
+        if (hasHeroBadge) {
+          $userMissingHeroBadge = false
+          menuItems = [...menuItems]
+        }
+      })
+
+  const setMissingHeroBadge = () => {
+    $userMissingHeroBadge = true
+    menuItems = [...menuItems]
+  }
+
+  $: if ($user?.accountAddress && expanded) {
+    checkHeroBadge()
+  } else {
+    setMissingHeroBadge()
+  }
 </script>
 
 {#if !$hideJettyMenu}
@@ -99,33 +152,7 @@
     on:item-content-closed={checkClaimStatus}
     hideJetty={$hideJetty}
     {poppedUp}
-    menuItems={[
-      {
-        id: 'glossary',
-        text: $i18n.t('jetty:menu-glossary'),
-        icon: BookIcon
-      },
-      {
-        id: 'gift-box',
-        text: $i18n.t('jetty:menu-giftBox'),
-        icon: ViewInARIcon,
-        alert: giftBoxRewardsAvailable,
-        disabled: derived(user, ($user) => !($user && $user.accountAddress && $user.id))
-      },
-      {
-        id: 'fuse-elements',
-        text: $i18n.t('jetty:menu-radgems'),
-        icon: LightningIcon,
-        alert: claimAvailable,
-        disabled: derived(user, ($user) => !($user && $user.accountAddress && $user.id))
-      },
-      {
-        id: 'radmorphs',
-        text: $i18n.t('jetty:menu-radmorphs'),
-        icon: MinimizeIcon,
-        disabled: derived(user, ($user) => !($user && $user.accountAddress && $user.id))
-      }
-    ]}
+    {menuItems}
     notifications={jettyNotifications}
     on:notification-opened={markLatestNotificationAsSeen}
     let:currentMenuItem
