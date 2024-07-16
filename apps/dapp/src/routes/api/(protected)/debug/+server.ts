@@ -56,6 +56,12 @@ export const POST: RequestHandler = async ({ locals, request }) => {
         referralCode: user.referralCode,
         traceId: locals.context.traceId
       })
+  } else if (type === 'updateKycOracle') {
+    await locals.dependencies.systemQueue.queue.add('updateKYCOracle', {
+      type: 'UpdateKycOracle',
+      userId,
+      traceId: locals.context.traceId
+    })
   }
 
   return json({}, { status: 200 })
