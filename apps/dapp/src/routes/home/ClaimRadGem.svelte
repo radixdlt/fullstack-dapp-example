@@ -18,6 +18,7 @@
   let preview: {
     image: string
     name: string
+    quality: string
   }
 
   $: manifest = `
@@ -64,6 +65,11 @@
             fields.find(
               (field) => field.field_name === 'name'
             ) as ProgrammaticScryptoSborValueString
+          ).value,
+          quality: (
+            fields.find(
+              (field) => field.field_name === 'quality'
+            ) as ProgrammaticScryptoSborValueString
           ).value
         }
       })
@@ -103,9 +109,17 @@
 >
   <div class="claim-radgem">
     {#if preview}
-      {$i18n.t('jetty:fuse-elements.new-radgem')}
+      <h2>
+        {$i18n.t('jetty:fuse-elements.success')}
+      </h2>
+      <b>
+        {$i18n.t('jetty:fuse-elements.new-radgem')}
+      </b>
       <img src={preview.image} alt="A Radgem" />
-      {preview.name}
+      <h3>
+        {preview.name.split('{')[0]}
+      </h3>
+      {$i18n.t('jetty:fuse-elements.quality', { quality: preview.quality })}
     {/if}
     {#if ids.length > 1}
       {$i18n.t('jetty:fuse-elements.multiple-radgems')}
@@ -119,11 +133,26 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-xl);
-    font-weight: var(--font-weight-bold);
+    gap: 0.5rem;
   }
+
+  h2 {
+    color: var(--color-light);
+    font-size: var(--text-md3);
+    font-weight: var(--font-weight-regular);
+    line-height: 0;
+  }
+
+  h3 {
+    color: var(--color-light);
+    font-size: var(--text-md2);
+    font-weight: var(--font-weight-regular);
+    line-height: 0;
+  }
+
   img {
-    width: 13rem;
-    height: 13rem;
+    width: 12rem;
+    height: 12rem;
+    margin-top: 1rem;
   }
 </style>

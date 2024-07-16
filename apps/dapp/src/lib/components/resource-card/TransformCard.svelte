@@ -2,10 +2,15 @@
   import { i18n } from '$lib/i18n/i18n'
   import ResourceCard from '../resource-card/ResourceCard.svelte'
 
-  export let energy: string
-  export let image: string
-  export let rarity: string
-  export let quality: number
+  export let card: {
+    id: string
+    energy: string
+    imageUrl: string
+    rarity: string
+    quality: number
+    limitedEdition: boolean
+  }
+  export let showClassName = false
   export const select = () => (selected = true)
   export const deselect = () => (selected = false)
   export let selected = false
@@ -14,23 +19,32 @@
 </script>
 
 <ResourceCard on:selected on:deselected {selectable} {disabled} bind:selected>
-  <div class="transform-card" style:--background-image={`url(${image})`} class:selected>
+  <div class="transform-card" style:--background-image={`url(${card.imageUrl})`} class:selected>
     <div class="rarity-container">
-      {#if rarity === 'rare'}
+      {#if card.rarity === 'rare' || card.rarity === 'ultra-rare'}
         <div class="rarity" class:rarity-selected={selected}>
-          {rarity.toUpperCase()}
+          {card.rarity.toUpperCase()}
         </div>
       {/if}
     </div>
 
     <div class="energy">
-      {energy}
+      {card.energy
+        .split(' ')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')}
     </div>
   </div>
 
-  <div slot="text" class="quality">
-    {$i18n.t('jetty:create-radmorphs.card-quality', { quality })}
-  </div>
+  <p slot="text" class="quality">
+    {#if showClassName}
+      {$i18n.t('jetty:morph-energy-card')}<br />
+    {/if}
+    {$i18n.t('jetty:create-radmorphs.card-quality', { quality: card.quality })}
+    {#if card.limitedEdition}
+      <br /><i>{$i18n.t('jetty:create-radmorphs.limited-edition')}</i>
+    {/if}
+  </p>
 </ResourceCard>
 
 <style lang="scss">
@@ -78,5 +92,13 @@
     font-family: var(--font-headers);
     text-align: center;
     margin: 0 var(--spacing-md);
+  }
+
+  .quality {
+    color: var(--color-light);
+    font-size: var(--text-xs);
+    font-family: var(--font-headers);
+    text-align: center;
+    margin: 0;
   }
 </style>

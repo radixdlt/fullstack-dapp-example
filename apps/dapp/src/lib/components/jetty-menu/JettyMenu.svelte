@@ -304,6 +304,5 @@
     background: var(--color-background-dark);
     z-index: 2;
     overflow-y: auto;
-    padding: var(--spacing-2xl);
   }
 </style>

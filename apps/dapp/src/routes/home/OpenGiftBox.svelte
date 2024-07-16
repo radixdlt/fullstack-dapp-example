@@ -58,12 +58,14 @@
               const fields = (response.data!.programmatic_json as any).fields
 
               const cardData = {
+                id: morphCardId,
                 name: getStringDataValue('name')(fields),
                 energy: getStringDataValue('energy_type')(fields),
-                image: getStringDataValue('key_image_url')(fields),
+                imageUrl: getStringDataValue('key_image_url')(fields),
                 rarity: getStringDataValue('rarity')(fields),
                 availability: getStringDataValue('availability')(fields),
-                quality: parseInt(getStringDataValue('quality')(fields))
+                quality: parseInt(getStringDataValue('quality')(fields)),
+                limitedEdition: getBoolDataValue('limited_edition')(fields)
               }
 
               return {
@@ -91,7 +93,7 @@
   import Carousel from '$lib/components/carousel/Carousel.svelte'
   import { context } from '$lib/components/jetty-menu/JettyMenu.svelte'
   import { errAsync, okAsync, ResultAsync } from 'neverthrow'
-  import { getStringDataValue } from './CreateRadMorphs.svelte'
+  import { getBoolDataValue, getStringDataValue } from './CreateRadMorphs.svelte'
   import TransformCard from '$lib/components/resource-card/TransformCard.svelte'
   import ElementCard from '$lib/components/resource-card/ElementCard.svelte'
   import { onMount } from 'svelte'
@@ -103,18 +105,21 @@
     [address: string]: {
       amount: number
       name: string
-      image: string
+      imageUrl: string
     }
   }
+  let giftBoxName: string
   let rewards: {
     amountOfElements: number
     cardData: {
+      id: string
       name: string
       energy: string
-      image: string
+      imageUrl: string
       rarity: string
       availability: string
       quality: number
+      limitedEdition: boolean
     }
   }
 
@@ -197,7 +202,7 @@
             acc[curr?.resource_address!] = {
               amount: curr ? getAmount(curr) : 0,
               name: types[i],
-              image: (
+              imageUrl: (
                 curr?.explicit_metadata?.items.find((item) => item.key === 'icon_url')!.value
                   .typed as any
               ).value as string
@@ -332,7 +337,7 @@
     >
       <div class="header-text" slot="header">
         <div class="title">
-          {$i18n.t('jetty:open-gift-box.gift-box-opened-title')}
+          {$i18n.t('jetty:open-gift-box.gift-box-opened-title', { name: giftBoxName })}
         </div>
         <div class="subtitle">
           {$i18n.t('jetty:open-gift-box.gift-box-opened-subtitle')}...
@@ -344,10 +349,8 @@
             <TransformCard
               disabled={false}
               selectable={false}
-              image={rewards.cardData.image}
-              energy={rewards.cardData.energy}
-              rarity={rewards.cardData.rarity}
-              quality={rewards.cardData.quality}
+              card={rewards.cardData}
+              showClassName
             />
           </div>
 
@@ -383,7 +386,7 @@
       <div class="title">
         {$i18n.t('jetty:open-gift-box.one-box-title')}
       </div>
-      <img class="gift-box-image" src={findOneGiftBox()[1].image} alt="A gift box" />
+      <img class="gift-box-image" src={findOneGiftBox()[1].imageUrl} alt="A gift box" />
     </JettyMenuItemPage>
   {:else}
     <JettyMenuItemPage
@@ -405,7 +408,7 @@
       </div>
       <div class="cards">
         <Carousel let:Item>
-          {#each Object.entries(ownedGiftBoxes) as [address, { amount, name, image }]}
+          {#each Object.entries(ownedGiftBoxes) as [address, { amount, name, imageUrl: image }]}
             {#if amount > 0}
               <Item>
                 <ResourceCard
@@ -415,7 +418,7 @@
                   }}
                 >
                   <div class="gift-box" style:--image={`url(${image})`} />
-                  <div slot="text">{$i18n.t('jetty:open-gift-box.gift-box-title', { name })}</div>
+                  <div slot="text">{giftBoxName || name}</div>
                 </ResourceCard>
               </Item>
             {/if}
