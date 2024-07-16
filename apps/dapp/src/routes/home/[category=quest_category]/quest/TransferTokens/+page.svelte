@@ -38,10 +38,15 @@
   onDestroy(() => unsubscribeWebSocket?.())
 </script>
 
+<!-- svelte-ignore missing-declaration -->
 <Quest
   id={data.id}
   requirements={data.requirements}
   bind:this={quest}
+  on:completed={() => {
+    //@ts-ignore
+    dataLayer.push({ event: 'dl_click_5_basic_complete' })
+  }}
   steps={[
     {
       id: '0',

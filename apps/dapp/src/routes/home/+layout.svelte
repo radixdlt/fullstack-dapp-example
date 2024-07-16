@@ -150,6 +150,9 @@
 
     const savedProgress = localStorage.getItem('savedProgress')
 
+    //@ts-ignore
+    dataLayer.push({ event: 'dl_click_4_wallet_connected' })
+
     if (savedProgress) {
       const { questId, progress } = JSON.parse(savedProgress)
       goto(
