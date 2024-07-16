@@ -195,7 +195,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
             "icon_url" => Tuple(
                 Enum<1u8>(
                     Enum<13u8>(
-                        "https://assets-global.website-files.com/618962e5f285fb3c879d82ca/61b8f414d213fd7349b654b9_icon-DEX.svg"
+                        "https://arweave.net/8-9CpBahyQm6IbNC6u4jb6TKyfEjaLIclc9FOcaVLII"
                     )
                 ),
                 false

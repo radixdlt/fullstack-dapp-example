@@ -37,7 +37,7 @@ CREATE_FUNGIBLE_RESOURCE_WITH_INITIAL_SUPPLY
   )
   true
   0u8
-  Decimal("1")
+  Decimal("2")
   Tuple(
     None,
     None,
