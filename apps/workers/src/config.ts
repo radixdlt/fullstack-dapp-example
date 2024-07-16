@@ -34,13 +34,13 @@ export const config = {
   },
   worker: {
     event: {
-      concurrency: 50
+      concurrency: parseInt(process.env.EVENT_WORKER_CONCURRENCY ?? '5')
     },
     transaction: {
-      concurrency: 50
+      concurrency: parseInt(process.env.TRANSACTION_WORKER_CONCURRENCY ?? '5')
     },
     system: {
-      concurrency: 50
+      concurrency: parseInt(process.env.SYSTEM_WORKER_CONCURRENCY ?? '5')
     }
   }
 }
