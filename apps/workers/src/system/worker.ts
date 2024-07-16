@@ -1,6 +1,7 @@
 import { Worker, ConnectionOptions, Queues, SystemJob } from 'queues'
 import { AppLogger } from 'common'
 import { SystemWorkerController } from './controller'
+import { config } from '../config'
 
 export const SystemWorker = (
   connection: ConnectionOptions,
@@ -33,7 +34,7 @@ export const SystemWorker = (
         throw result.error
       }
     },
-    { connection }
+    { connection, concurrency: config.worker.system.concurrency }
   )
 
   worker.on('completed', (job) => {

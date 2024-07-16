@@ -20,7 +20,7 @@ const dbClient = new PrismaClient({
   datasourceUrl: `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}?schema=public`
 })
 
-const { systemQueue } = getQueues(config.redis)
+const { systemQueue, eventQueue, transactionQueue } = getQueues(config.redis)
 const logger = appLogger
 
 const imageController = ImageController({
@@ -51,6 +51,9 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.userType = userType
     event.locals.dbClient = dbClient
     event.locals.imageController = imageController
+    event.locals.eventQueue = eventQueue
+    event.locals.transactionQueue = transactionQueue
+    event.locals.logger = logger
 
     return resolve(event, {})
   }
