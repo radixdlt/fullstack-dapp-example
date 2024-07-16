@@ -11,15 +11,16 @@
   export const closeQuest = async () => {
     if (loggedIn) {
       questApi.deleteSavedProgress()
-    } else if (localStorage.getItem('savedProgress')) {
+    } else {
       localStorage.removeItem('savedProgress')
     }
-    goto(`/home/${get(page).params.category}`)
+    await invalidateAll()
+    setTimeout(() => goto(`/home/${get(page).params.category}`), 0)
   }
 </script>
 
 <script lang="ts">
-  import { goto } from '$app/navigation'
+  import { goto, invalidateAll } from '$app/navigation'
   import { questApi } from '$lib/api/quest-api'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import { page } from '$app/stores'
