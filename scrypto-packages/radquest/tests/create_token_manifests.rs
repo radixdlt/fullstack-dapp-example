@@ -387,6 +387,7 @@ struct RadmorphData {
     card_type: String,
     card_rarity: String,
     card_quality: Decimal,
+    card_limited_edition: bool,
     radgem_1_color: String,
     radgem_1_material: String,
     radgem_1_rarity: String,
