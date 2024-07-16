@@ -5,6 +5,7 @@ import { getUserById } from '../helpers/getUserById'
 import { PrismaClient } from 'database'
 import { WorkerOutputError } from '../_types'
 import { config } from '../config'
+import { dbClient } from '../db-client'
 
 export const EventWorker = (
   connection: ConnectionOptions,
@@ -39,6 +40,14 @@ export const EventWorker = (
       })
 
       try {
+        const shouldProcessEvent = await dbClient.event
+          .count({
+            where: { id: job.data.transactionId, status: 'COMPLETED' }
+          })
+          .then((count) => count === 0)
+
+        if (!shouldProcessEvent) return
+
         const result = await getUserById(job.data.userId, dependencies.dbClient, {
           email: true
         }).andThen((user) => eventWorkerController.handler(job, user as UserExtended))

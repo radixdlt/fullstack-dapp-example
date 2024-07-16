@@ -1,4 +1,4 @@
-import { PrismaClient } from 'database'
+import { EventStatus, PrismaClient } from 'database'
 import { ResultAsync, okAsync } from 'neverthrow'
 import { type ApiError, createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers'
@@ -62,8 +62,8 @@ export const EventModel = (db: PrismaClient) => (logger?: AppLogger) => {
       questId,
       userId,
       error,
-      processedAt
-    }: Partial<{ questId: string; userId: string; error: string; processedAt: Date }>
+      status
+    }: Partial<{ questId: string; userId: string; error: string; status: EventStatus }>
   ) =>
     ResultAsync.fromPromise(
       db.event.update({
@@ -74,7 +74,7 @@ export const EventModel = (db: PrismaClient) => (logger?: AppLogger) => {
           questId,
           userId,
           error,
-          processedAt
+          status
         }
       }),
       (error) => {
@@ -87,7 +87,7 @@ export const EventModel = (db: PrismaClient) => (logger?: AppLogger) => {
     ResultAsync.fromPromise(
       db.event.update({
         where: { transactionId },
-        data: { processedAt: new Date() }
+        data: { status: 'COMPLETED' }
       }),
       (error) => {
         logger?.error({ error, method: 'markAsProcessed', model: 'EventModel' })

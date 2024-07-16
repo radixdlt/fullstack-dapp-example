@@ -37,6 +37,14 @@ export const TransactionWorker = (
       childLogger.debug({ method: 'transactionWorker.process', data: job.data })
 
       try {
+        const shouldProcessEvent = await dbClient.transactionIntent
+          .count({
+            where: { discriminator: job.data.discriminator, status: 'COMPLETED' }
+          })
+          .then((count) => count === 0)
+
+        if (!shouldProcessEvent) return
+
         const result = await getUserById(userId, dbClient)
           .andThen((user) =>
             dependencies.transactionWorkerController.handler({

@@ -84,34 +84,48 @@ export const TransactionWorkerController = ({
       GiftBoxRewardConfig({ getRandomFloat, getRandomIntInclusive })
     )
 
-    const handleSubmitTransaction = (manifest: string) =>
-      transactionHelper
-        .submitTransaction(manifest, {
-          onTransactionId: (transactionId) => {
-            transactionId = transactionId
-            return upsertSubmittedTransaction({ transactionId, status: 'PENDING' })
-          }
-        })
-        .orElse((error) => {
-          logger.error({
-            method: 'handleSubmitTransaction.err',
-            transactionId: error.transactionId,
-            status: 'FAILED'
-          })
+    const getCompletedTransactionId = () =>
+      ResultAsync.fromPromise(
+        dbClient.submittedTransaction
+          .findFirst({ where: { transactionIntent: job.data.discriminator, status: 'COMPLETED' } })
+          .then((value) => value?.transactionId),
+        (error) => ({ reason: WorkerError.FailedToQueryDb, jsError: error })
+      )
 
-          return error.transactionId
-            ? upsertSubmittedTransaction({
-                status: 'FAILED',
-                transactionId: error.transactionId
-              }).andThen(() => errAsync(error))
-            : errAsync(error)
-        })
-        .andThen((value) =>
-          upsertSubmittedTransaction({
-            transactionId: value.transactionId,
-            status: 'COMPLETED'
-          }).map(() => value)
-        )
+    const handleSubmitTransaction = (manifest: string) =>
+      getCompletedTransactionId().andThen((completedTransactionId) =>
+        completedTransactionId
+          ? transactionHelper
+              .pollTransactionStatus(completedTransactionId)
+              .map((response) => ({ response, transactionId: completedTransactionId }))
+          : transactionHelper
+              .submitTransaction(manifest, {
+                onTransactionId: (transactionId) => {
+                  transactionId = transactionId
+                  return upsertSubmittedTransaction({ transactionId, status: 'PENDING' })
+                }
+              })
+              .orElse((error) => {
+                logger.error({
+                  method: 'handleSubmitTransaction.err',
+                  transactionId: error.transactionId,
+                  status: 'FAILED'
+                })
+
+                return error.transactionId
+                  ? upsertSubmittedTransaction({
+                      status: 'FAILED',
+                      transactionId: error.transactionId
+                    }).andThen(() => errAsync(error))
+                  : errAsync(error)
+              })
+              .andThen((value) =>
+                upsertSubmittedTransaction({
+                  transactionId: value.transactionId,
+                  status: 'COMPLETED'
+                }).map(() => value)
+              )
+      )
 
     const addEntryToAuditTable = ({
       userId,
