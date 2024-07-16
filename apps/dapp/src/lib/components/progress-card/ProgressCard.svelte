@@ -9,20 +9,9 @@
   export let useAnimation = true
 
   export const getWidth = () => width
-  export const getAnimationDuration = () => animationDuration
 
   let width: number
   let height: number
-
-  const animationDuration = 800
-
-  let timeout: ReturnType<typeof setTimeout>
-
-  $: {
-    progress
-    clearTimeout(timeout)
-    timeout = setTimeout(() => {}, animationDuration)
-  }
 </script>
 
 <div
@@ -35,7 +24,7 @@
   <slot name="header" {progress} />
 
   <ProgressBar totalSteps={steps} bind:progress />
-  <slot name="content" {animationDuration} {width} {height} {progress} />
+  <slot name="content" {width} {height} {progress} />
 </div>
 
 <style lang="scss">
