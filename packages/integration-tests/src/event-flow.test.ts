@@ -689,4 +689,30 @@ describe('Event flows', () => {
       await claimGiftBoxReward()
     })
   })
+
+  describe('KYC', () => {
+    it(
+      'should prevent user from claiming rewards without KYC',
+      { timeout: 60_000, skip: false },
+      async () => {
+        const user = await createAccount({ withXrd: true, withHeroBadge: true })
+
+        await db.audit.create({
+          data: {
+            transactionId: crypto.randomUUID(),
+            userId: user.user.id,
+            xrdUsdValue: 100,
+            type: 'DIRECT_DEPOSIT'
+          }
+        })
+
+        try {
+          await executeUserReferralFlow(user)
+          throw new Error("User shouldn't be able to claim rewards without KYC")
+        } catch (error) {
+          expect(error).toBeDefined()
+        }
+      }
+    )
+  })
 })
