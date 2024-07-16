@@ -53,17 +53,18 @@
         requirementValueList.every(([_, { isComplete }]) => isComplete) &&
         ['REWARDS_DEPOSITED', 'REWARDS_CLAIMED', 'COMPLETED'].includes(status)
 
-      requirementsStatus = requirementValueList.map(([key, { isComplete }]) => {
-        return {
-          //@ts-ignore
-          text: $i18n.t(`quests:${questId}.requirements.${key}`),
-          complete: isComplete
-        }
-      })
+      requirementsStatus = requirementValueList
+        .filter(([, { isHidden }]) => !isHidden)
+        .map(([key, { isComplete }]) => {
+          return {
+            //@ts-ignore
+            text: $i18n.t(`quests:${questId}.requirements.${key}`),
+            complete: isComplete
+          }
+        })
 
       if (allRequirementsMet) {
         dispatch('all-requirements-met')
-        setLoading(false)
       } else {
         setLoading(false)
         dispatch('requirements-not-met')
