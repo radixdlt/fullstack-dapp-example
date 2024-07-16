@@ -267,7 +267,7 @@
     <!-- TODO handle error -->
     error loading elements
   {:else if waitingForElementsDeposited}
-    {$i18n.t('jetty:fuse-elements.fusing-elements')}...
+    {$i18n.t('jetty:fuse-elements.fusing-elements')}
   {:else if radgemClaimed}
     <JettyMenuItemPage
       action={{

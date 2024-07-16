@@ -16,17 +16,12 @@
 
   const animationDuration = 800
 
-  let animating = false
-
   let timeout: ReturnType<typeof setTimeout>
 
   $: {
     progress
-    animating = true
     clearTimeout(timeout)
-    timeout = setTimeout(() => {
-      animating = false
-    }, animationDuration)
+    timeout = setTimeout(() => {}, animationDuration)
   }
 </script>
 
