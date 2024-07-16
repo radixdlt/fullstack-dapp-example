@@ -150,9 +150,10 @@ export const EventWorkerController = ({
       )
 
     const handleTiersRewards = (
-      referrer: UserByReferralCode
+      referrer: UserByReferralCode,
+      count: number
     ): ResultAsync<undefined, { reason: string; jsError?: unknown }> => {
-      const currentReferralsAmount = referrer.referredUsers.length
+      const currentReferralsAmount = count + 1
       const userId = referrer.id
       const requirements = QuestDefinitions()['QuestTogether'].requirements
       const unlockedRewards = referrer.completedQuestRequirements
@@ -161,6 +162,19 @@ export const EventWorkerController = ({
           acc[requirement.requirementId] = true
           return acc
         }, {})
+      const progress = referrer.questProgress
+        .filter((progress) => progress.questId.includes('QuestTogether'))
+        .reduce<Record<string, QuestStatus | 'NOT_STARTED'>>(
+          (acc, progress) => {
+            acc[progress.questId] = progress.status
+            return acc
+          },
+          {
+            'QuestTogether:BronzeLevel': 'NOT_STARTED',
+            'QuestTogether:SilverLevel': 'NOT_STARTED',
+            'QuestTogether:GoldLevel': 'NOT_STARTED'
+          }
+        )
 
       const unlockReward = (tier: 'BronzeLevel' | 'SilverLevel' | 'GoldLevel') =>
         addCompletedQuestRequirement({
@@ -178,42 +192,37 @@ export const EventWorkerController = ({
           })
         )
 
-      const shouldUnlockBronzeLevel =
-        currentReferralsAmount === requirements.BronzeLevel.threshold &&
-        !unlockedRewards.BronzeLevel
+      const setTierInProgress = (tier: 'BronzeLevel' | 'SilverLevel' | 'GoldLevel') =>
+        updateQuestProgressStatus({
+          userId,
+          questId: `QuestTogether:${tier}`,
+          status: 'IN_PROGRESS'
+        })
 
-      const shouldUnlockSilverLevel =
-        currentReferralsAmount === requirements.SilverLevel.threshold &&
-        !unlockedRewards.SilverLevel
+      const bronzeLevelCompleted = currentReferralsAmount >= requirements.BronzeLevel.threshold
+      const silverLevelCompleted = currentReferralsAmount >= requirements.SilverLevel.threshold
+      const goldLevelCompleted = currentReferralsAmount >= requirements.GoldLevel.threshold
 
-      const shouldUnlockGoldLevel =
-        currentReferralsAmount === requirements.GoldLevel.threshold && !unlockedRewards.GoldLevel
-
-      if (shouldUnlockBronzeLevel) {
-        return unlockReward('BronzeLevel')
-          .andThen(() =>
-            updateQuestProgressStatus({
-              userId,
-              questId: `QuestTogether:SilverLevel`,
-              status: 'IN_PROGRESS'
-            })
-          )
-          .map(() => undefined)
-      } else if (shouldUnlockSilverLevel) {
-        return unlockReward('SilverLevel')
-          .andThen(() =>
-            updateQuestProgressStatus({
-              userId,
-              questId: `QuestTogether:GoldLevel`,
-              status: 'IN_PROGRESS'
-            })
-          )
-          .map(() => undefined)
-      } else if (shouldUnlockGoldLevel) {
-        return unlockReward('GoldLevel').map(() => undefined)
-      }
-
-      return okAsync(undefined)
+      return ResultAsync.combine([
+        progress['QuestTogether:BronzeLevel'] === 'NOT_STARTED'
+          ? setTierInProgress('BronzeLevel')
+          : okAsync(undefined),
+        bronzeLevelCompleted && progress['QuestTogether:SilverLevel'] === 'NOT_STARTED'
+          ? setTierInProgress('SilverLevel')
+          : okAsync(undefined),
+        silverLevelCompleted && progress['QuestTogether:GoldLevel'] === 'NOT_STARTED'
+          ? setTierInProgress('GoldLevel')
+          : okAsync(undefined),
+        bronzeLevelCompleted && !unlockedRewards['BronzeLevel']
+          ? unlockReward('BronzeLevel')
+          : okAsync(undefined),
+        silverLevelCompleted && !unlockedRewards['SilverLevel']
+          ? unlockReward('SilverLevel')
+          : okAsync(undefined),
+        goldLevelCompleted && !unlockedRewards['GoldLevel']
+          ? unlockReward('GoldLevel')
+          : okAsync(undefined)
+      ]).map(() => undefined)
     }
 
     const getUserByReferralCode = (referralCode: string) =>
@@ -228,39 +237,6 @@ export const EventWorkerController = ({
         }),
         (error) => ({ reason: WorkerError.FailedToGetUserFromDb, jsError: error })
       ).andThen((user) => (user ? ok(user) : err({ reason: WorkerError.UserNotFound })))
-
-    const handleReferrerRewards = (user: UserByReferralCode) => {
-      const questProgressResult = user.questProgress.some(
-        (quest) => quest.questId === 'QuestTogether:BronzeLevel'
-      )
-        ? okAsync(undefined)
-        : updateQuestProgressStatus({
-            userId: user.id,
-            questId: 'QuestTogether:BronzeLevel',
-            status: 'IN_PROGRESS'
-          }).map(() => undefined)
-
-      return questProgressResult
-        .andThen(() =>
-          transactionIntent.add({
-            questId: 'QuestTogether',
-            userId: user.id,
-            traceId,
-            type: 'DepositXrdReward',
-            amount: config.referralRewardXrdAmount,
-            discriminator: `QuestTogether:${user.id}:${transactionId}`,
-            transactionId
-          })
-        )
-        .andThen(() => handleTiersRewards(user))
-        .andThen(() =>
-          sendMessage(
-            user.id,
-            { type: MessageType.ReferralCompletedBasicQuests, traceId },
-            childLogger
-          )
-        )
-    }
 
     const handleAllQuestRequirementCompleted = ({
       questId,
@@ -348,11 +324,76 @@ export const EventWorkerController = ({
         )
     }
 
+    const triggerRewardsForReferredUser = () =>
+      addCompletedQuestRequirement({
+        questId: 'JoinFriend',
+        userId: user.id,
+        requirementId: 'CompleteBasicQuests'
+      }).andThen(() =>
+        handleAllQuestRequirementCompleted({
+          questId: 'JoinFriend',
+          userId: user.id
+        })
+      )
+
+    const handleQuestTogetherXrdReward = <T extends { id: string }>(
+      referringUser: T,
+      count: number
+    ) =>
+      count < QuestTogetherConfig.maxReferrals
+        ? transactionIntent.add({
+            questId: 'QuestTogether',
+            userId: referringUser.id,
+            traceId,
+            type: 'DepositXrdReward',
+            amount: config.referralRewardXrdAmount,
+            discriminator: `QuestTogether:${user.id}:${transactionId}`,
+            transactionId
+          })
+        : okAsync(undefined)
+
+    const handleQuestTogetherXrdClaimed = (questId: string, xrdAmount: number) =>
+      questId === 'QuestTogether'
+        ? referralRewardAction({
+            transactionId,
+            userId,
+            xrdValue: -xrdAmount,
+            action: 'DEC'
+          })
+        : okAsync(undefined)
+
+    const handleQuestTogetherRewards = (questId: string) => {
+      const shouldTriggerReferralRewardFlow =
+        questId === QuestTogetherConfig.triggerRewardAfterQuest
+      const referredBy = user.referredBy
+
+      if (referredBy && shouldTriggerReferralRewardFlow) {
+        return triggerRewardsForReferredUser()
+          .andThen(() => getUserByReferralCode(referredBy))
+          .andThen((referringUser) =>
+            transactionIntent
+              .countQuestTogetherXrdDeposits(referringUser.id)
+              .andThen((count) =>
+                ResultAsync.combine([
+                  handleQuestTogetherXrdReward(referringUser, count),
+                  handleTiersRewards(referringUser, count)
+                ])
+              )
+              .andThen(() =>
+                sendMessage(
+                  referringUser.id,
+                  { type: MessageType.ReferralCompletedBasicQuests, traceId },
+                  childLogger
+                )
+              )
+          )
+      }
+
+      return okAsync(undefined)
+    }
+
     switch (type) {
       case EventId.QuestRewardDeposited: {
-        const rewards = job.data.data.rewards as Reward[]
-        const xrdReward = rewards.find((reward) => reward.name === 'xrd')
-        const xrdAmount = xrdReward ? parseFloat(xrdReward.amount) : 0
         const questId = job.data.data.questId as string
         return dbTransactions
           .rewardsDeposited({
@@ -388,41 +429,8 @@ export const EventWorkerController = ({
             )
           )
           .andThen(() => handleMailerLiteBasicQuestFinished(questId, user))
-          .andThen(() => {
-            const shouldTriggerReferralRewardFlow =
-              questId === QuestTogetherConfig.triggerRewardAfterQuest
-
-            if (user.referredBy && shouldTriggerReferralRewardFlow)
-              return getUserByReferralCode(user.referredBy).andThen((referringUser) => {
-                const triggerRewardsForReferredUser = () =>
-                  addCompletedQuestRequirement({
-                    questId: 'JoinFriend',
-                    userId: user.id,
-                    requirementId: 'CompleteBasicQuests'
-                  }).andThen(() =>
-                    handleAllQuestRequirementCompleted({
-                      questId: 'JoinFriend',
-                      userId: user.id
-                    })
-                  )
-
-                return referringUser.referredUsers.length < QuestTogetherConfig.maxReferrals
-                  ? handleReferrerRewards(referringUser).andThen(() =>
-                      triggerRewardsForReferredUser()
-                    )
-                  : triggerRewardsForReferredUser()
-              })
-            else if (questId === 'QuestTogether')
-              return referralRewardAction({
-                transactionId,
-                userId,
-                xrdValue: -xrdAmount,
-                action: 'DEC'
-              })
-
-            return okAsync(undefined)
-          })
-          .map(() => undefined)
+          .andThen(() => handleQuestTogetherXrdClaimed(questId, xrdAmount))
+          .andThen(() => handleQuestTogetherRewards(questId))
       }
 
       case EventId.CombineElementsDeposited:
