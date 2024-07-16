@@ -7,7 +7,7 @@
   import { ResultAsync } from 'neverthrow'
   import { publicConfig } from '$lib/public-config'
   import { goto, invalidateAll } from '$app/navigation'
-  import { hideJettyMenu, quests, user } from '../../stores'
+  import { quests, user } from '../../stores'
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
@@ -128,23 +128,6 @@
         authApi.logout()
       }
     })
-
-    if ('visualViewport' in window) {
-      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-
-      if (isSafari) {
-        const VIEWPORT_VS_CLIENT_HEIGHT_RATIO = 0.75
-        window.visualViewport?.addEventListener('resize', function (event) {
-          if (
-            //@ts-ignore
-            (event.target.height * event.target.scale) / window.screen.height <
-            VIEWPORT_VS_CLIENT_HEIGHT_RATIO
-          )
-            $hideJettyMenu = true
-          else $hideJettyMenu = false
-        })
-      }
-    }
 
     resolveRDT(radixDappToolkit)
 
