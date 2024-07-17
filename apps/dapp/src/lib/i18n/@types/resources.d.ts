@@ -95,6 +95,15 @@ interface Resources {
       "jetty-img-alt": "Jetty",
       "button": "Let's begin"
     },
+    "errorPopup": {
+      "close": "Close",
+      "XrdRewardLimit": {
+        "title": "Raise Your XRD Reward Limit",
+        "content": "Before claiming more XRD, we’d appreciate answering a few quick questions in the quest:",
+        "questName": "Get Verified with Instapass",
+        "button": "Go to Instapass Quest"
+      }
+    },
     "footer": {
       "runs-on-radix-alt": "Runs on radix icon",
       "copyright-alt": "Copyright",

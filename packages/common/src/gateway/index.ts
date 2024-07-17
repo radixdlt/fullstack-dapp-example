@@ -89,7 +89,7 @@ export const GatewayApi = (networkId: number) => {
       return res
     })
 
-  const hasKycEntry = (address: string) => {
+  const hasKycEntry = (userId: string) => {
     return ResultAsync.fromPromise(
       gatewayApiClient.state.innerClient.keyValueStoreData({
         stateKeyValueStoreDataRequest: {
@@ -98,7 +98,7 @@ export const GatewayApi = (networkId: number) => {
             {
               key_json: {
                 kind: 'String',
-                value: address
+                value: userId
               }
             }
           ]
@@ -107,6 +107,16 @@ export const GatewayApi = (networkId: number) => {
       (jsError) => ({ reason: 'CouldNotGetKeyValueStoreDataFromGateway', jsError })
     ).map((response) => response.entries.length > 0)
   }
+
+  const getInstapassBadges = (accountAddress: string) =>
+    callApi('getEntityDetailsVaultAggregated', [accountAddress]).map(([response]) => {
+      const item = response.non_fungible_resources.items.find(
+        (item) => item.resource_address === addresses.badges.instapassBadgeAddress
+      )
+
+      const vault = item?.vaults?.items.find((vault) => (vault?.items?.length || 0) > 0)
+      return vault?.items || []
+    })
 
   const getDefaultDepositRule = (accountAddress: string) =>
     callApi('getEntityDetailsVaultAggregated', [accountAddress])
@@ -181,6 +191,7 @@ export const GatewayApi = (networkId: number) => {
 
   return {
     hasKycEntry,
+    getInstapassBadges,
     hasAtLeastTwoRadgems,
     isDepositDisabledForResource,
     networkConfig,

@@ -5,7 +5,10 @@
   import ShareBox from '$lib/components/referral/ShareBox.svelte'
 
   import FireIcon from '@images/fire.svg'
-  import { createClaimXRDRewardsTransaction } from '$lib/helpers/create-claim-rewards-transaction'
+  import {
+    createClaimXRDRewardsTransaction,
+    handleKycBadge
+  } from '$lib/helpers/create-claim-rewards-transaction'
   import { i18n } from '$lib/i18n/i18n'
   import { sendTransaction } from '$lib/rdt'
 
@@ -50,14 +53,20 @@
 
   const claimXrd = () => {
     loading = true
-    sendTransaction({
-      transactionManifest: createClaimXRDRewardsTransaction(
-        $user?.accountAddress!,
-        $user?.id!,
-        `QuestTogether`,
-        readyToClaim
-      )
-    })
+
+    const account = $user?.accountAddress!
+    const sendTx = (instapassBadge?: string) =>
+      sendTransaction({
+        transactionManifest: createClaimXRDRewardsTransaction(
+          $user?.accountAddress!,
+          $user?.id!,
+          `QuestTogether`,
+          readyToClaim,
+          instapassBadge
+        )
+      })
+
+    return handleKycBadge($user?.id!, account, sendTx)
       .map(() => {
         loading = false
         dispatch('refresh')

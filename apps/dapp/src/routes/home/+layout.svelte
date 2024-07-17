@@ -25,6 +25,7 @@
   import Jetty from './Jetty.svelte'
   import { loadUnseenNotifications, pushNotification } from '$lib/notifications'
   import Footer from '$lib/components/footer/footer.svelte'
+  import ErrorPopup from '$lib/components/error-popup/ErrorPopup.svelte'
 
   export let data: LayoutData
 
@@ -236,7 +237,7 @@
 </script>
 
 <LandingPopup definitions={data.landingPopupDefinitions} />
-
+<ErrorPopup />
 <Jetty />
 
 <Layout>
