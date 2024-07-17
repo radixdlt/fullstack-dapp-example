@@ -6,8 +6,8 @@ import type { RadixDappToolkit } from '@radixdlt/radix-dapp-toolkit'
 import { messageApi as messageApiFn, type MessageApi } from './api/message-api'
 import { writable } from 'svelte/store'
 
-export type WebSocketClient = ReturnType<typeof WebSocketClient>
-export const WebSocketClient = ({
+export type WebSocketClient = Awaited<ReturnType<typeof WebSocketClient>>
+export const WebSocketClient = async ({
   authToken,
   radixDappToolkit,
   restartTimeout = 1000,
@@ -31,6 +31,18 @@ export const WebSocketClient = ({
 
   const onMessageCallbacks: ((data: Message & { id: number }) => void)[] = []
 
+  const sendMessagesToListeners = async () =>
+    messageApi.getAll().map((messages) => {
+      onMessageCallbacks.forEach((callback) => {
+        messages.forEach(callback)
+      })
+    })
+
+  while (onMessageCallbacks.length > 0 && shouldReconnect) {
+    await sendMessagesToListeners()
+    await new Promise((resolve) => setTimeout(resolve, 5_000))
+  }
+
   const createWebSocket = (authToken: string) => {
     appLogger.debug({ method: 'webSocketClient.createWebSocket' })
     const ws = new WebSocket(notificationUrl, ['Authorization', authToken])
@@ -47,15 +59,11 @@ export const WebSocketClient = ({
       }
     }
 
-    const onOpen = () => {
+    const onOpen = async () => {
       currentRestartTimeout = restartTimeout
       appLogger.debug({ method: 'webSocketClient.onOpen' })
       document.addEventListener('visibilitychange', handleVisibilityChange)
-      messageApi.getAll().map((messages) => {
-        onMessageCallbacks.forEach((callback) => {
-          messages.forEach(callback)
-        })
-      })
+      await sendMessagesToListeners()
     }
 
     const onError = () => {
@@ -65,7 +73,7 @@ export const WebSocketClient = ({
     }
 
     const onClose = async () => {
-      appLogger.debug('🔴 WebSocket closed')
+      appLogger.debug({ method: 'webSocketClient.onClose', shouldReconnect })
       webSocket.removeEventListener('message', onMessage)
       webSocket.removeEventListener('close', onClose)
       webSocket.removeEventListener('error', onError)
