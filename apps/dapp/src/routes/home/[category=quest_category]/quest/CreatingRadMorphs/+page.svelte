@@ -110,6 +110,9 @@
       ]
     },
     {
+      type: 'requirements'
+    },
+    {
       type: 'claimRewards'
     },
     {
