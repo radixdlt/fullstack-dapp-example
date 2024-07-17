@@ -3,7 +3,6 @@ CALL_METHOD
     "lock_fee"
     Decimal("50")
 ;
-
 CALL_METHOD
     Address("${account}")
     "create_proof_of_non_fungibles"
@@ -13,28 +12,11 @@ CALL_METHOD
 POP_FROM_AUTH_ZONE
     Proof("hero_badge_proof")
 ;
-
-CALL_METHOD
-    Address("${account}")
-    "create_proof_of_non_fungibles"
-    Address("${kyc_badge}")
-    Array<NonFungibleLocalId>(NonFungibleLocalId("${kyc_badge_id}"))
-;
-POP_FROM_AUTH_ZONE
-    Proof("kyc_badge_proof")
-;
-
 CALL_METHOD
     Address("${quest_rewards}")
-    "claim_reward"
-    # Quest ID
-    "1"
-    # User badge
+    "get_clams"
     Proof("hero_badge_proof")
-    # KYC badge
-    Some(Proof("kyc_badge_proof"))
 ;
-
 CALL_METHOD
     Address("${account}")
     "deposit_batch"
