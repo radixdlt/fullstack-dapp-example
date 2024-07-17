@@ -107,8 +107,7 @@
             }
 
             if (authToken) {
-              const ws = WebSocketClient({ authToken, radixDappToolkit })
-              $webSocketClient = ws
+              $webSocketClient = WebSocketClient({ authToken, radixDappToolkit })
             }
 
             loadUnseenNotifications().mapErr((err) => {

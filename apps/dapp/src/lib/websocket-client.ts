@@ -24,12 +24,35 @@ export const WebSocketClient = ({
   notificationUrl?: string
   messageApi?: MessageApi
 }) => {
+  appLogger.debug({ method: 'webSocketClient.WebSocketClient', restartTimeout, maxRestartTimeout })
   let currentRestartTimeout = restartTimeout
   let currentTimeout: ReturnType<typeof setTimeout> | undefined
 
   let shouldReconnect = true
 
   const onMessageCallbacks: ((data: Message & { id: number }) => void)[] = []
+
+  const sendMessagesToListeners = async () => {
+    if (onMessageCallbacks.length)
+      await messageApi.getAll().map((messages) => {
+        appLogger.debug({
+          method: 'webSocketClient.sendMessagesToListeners',
+          listeners: onMessageCallbacks.length
+        })
+        onMessageCallbacks.forEach((callback) => {
+          messages.forEach(callback)
+        })
+      })
+  }
+
+  const runPolling = async () => {
+    while (shouldReconnect) {
+      if (onMessageCallbacks.length > 0) await sendMessagesToListeners()
+      await new Promise((resolve) => setTimeout(resolve, 10_000))
+    }
+  }
+
+  runPolling()
 
   const createWebSocket = (authToken: string) => {
     appLogger.debug({ method: 'webSocketClient.createWebSocket' })
@@ -42,20 +65,16 @@ export const WebSocketClient = ({
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        onClose()
-        appLogger.error({ method: 'webSocketClient.handleVisibilityChange' })
+        appLogger.debug({ method: 'webSocketClient.handleVisibilityChange' })
+        sendMessagesToListeners()
       }
     }
 
-    const onOpen = () => {
+    const onOpen = async () => {
       currentRestartTimeout = restartTimeout
       appLogger.debug({ method: 'webSocketClient.onOpen' })
       document.addEventListener('visibilitychange', handleVisibilityChange)
-      messageApi.getAll().map((messages) => {
-        onMessageCallbacks.forEach((callback) => {
-          messages.forEach(callback)
-        })
-      })
+      await sendMessagesToListeners()
     }
 
     const onError = () => {
@@ -65,7 +84,7 @@ export const WebSocketClient = ({
     }
 
     const onClose = async () => {
-      appLogger.debug('🔴 WebSocket closed')
+      appLogger.debug({ method: 'webSocketClient.onClose', shouldReconnect })
       webSocket.removeEventListener('message', onMessage)
       webSocket.removeEventListener('close', onClose)
       webSocket.removeEventListener('error', onError)
