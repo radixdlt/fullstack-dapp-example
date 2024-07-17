@@ -22,9 +22,11 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
       .map((data) => data.requirements)
 
     const failedToFetchRequirements = requirementsResult.isErr()
+
     const isInvalidRefreshToken =
       failedToFetchRequirements &&
       (requirementsResult.error.data as any).error === 'invalidRefreshToken'
+
     const hasCompletedFirstQuests =
       [
         questDefinitions['Welcome'].id,

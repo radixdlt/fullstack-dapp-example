@@ -7,7 +7,7 @@
   import { ResultAsync } from 'neverthrow'
   import { publicConfig } from '$lib/public-config'
   import { goto, invalidateAll } from '$app/navigation'
-  import { hideJettyMenu, quests, user } from '../../stores'
+  import { quests, user } from '../../stores'
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
@@ -117,9 +117,42 @@
 
             await invalidateAll()
 
-            if (data.questStatus['SetupWallet']?.status === 'IN_PROGRESS') {
+            if (data.questStatus['SetupWallet'].status === 'IN_PROGRESS') {
               pushNotification('loggedIn')
             }
+
+            if (data.questStatus['TransferTokens'].status === 'IN_PROGRESS') {
+              questApi
+                .getQuestInformation('TransferTokens', fetch)
+                .map((data) => data.requirements)
+                .map((requirements) => {
+                  if (requirements.JettyReceivedClams.isComplete) {
+                    pushNotification('clamsReceived')
+                  }
+                })
+            }
+
+            if (data.questStatus['TransferTokens'].status === 'COMPLETED' && $user.referredByUser) {
+              pushNotification('joinedFriend')
+            }
+
+            questApi.getQuestInformation('QuestTogether').map((data) => {
+              if (data.requirements.BronzeLevel.isComplete) {
+                pushNotification('reachedTierBronze')
+              }
+
+              if (data.requirements.SilverLevel.isComplete) {
+                pushNotification('reachedTierSilver')
+              }
+
+              if (data.requirements.GoldLevel.isComplete) {
+                pushNotification('reachedTierGold')
+              }
+
+              if (data.requirements.SuperLevel.isComplete) {
+                pushNotification('reachedTierSuper')
+              }
+            })
           })
           .mapErr(({ status }) => {
             if (status === 401) radixDappToolkit.disconnect()
@@ -128,23 +161,6 @@
         authApi.logout()
       }
     })
-
-    if ('visualViewport' in window) {
-      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-
-      if (isSafari) {
-        const VIEWPORT_VS_CLIENT_HEIGHT_RATIO = 0.75
-        window.visualViewport?.addEventListener('resize', function (event) {
-          if (
-            //@ts-ignore
-            (event.target.height * event.target.scale) / window.screen.height <
-            VIEWPORT_VS_CLIENT_HEIGHT_RATIO
-          )
-            $hideJettyMenu = true
-          else $hideJettyMenu = false
-        })
-      }
-    }
 
     resolveRDT(radixDappToolkit)
 
@@ -167,6 +183,57 @@
       })
     }
   })
+
+  const registerNotificationOnMessage = (
+    webSocketClient: WebSocketClient,
+    questId: QuestId,
+    requirementId: string,
+    notificationName: Parameters<typeof pushNotification>[0]
+  ) => {
+    if (!$page.url.href.includes(questId)) {
+      webSocketClient.onMessage((message) => {
+        if (
+          message.type === 'QuestRequirementCompleted' &&
+          message.requirementId === requirementId
+        ) {
+          pushNotification(notificationName)
+        }
+      })
+    }
+  }
+
+  $: if ($webSocketClient)
+    registerNotificationOnMessage(
+      $webSocketClient,
+      'TransferTokens',
+      'JettyReceivedClams',
+      'clamsReceived'
+    )
+
+  $: if ($webSocketClient)
+    registerNotificationOnMessage($webSocketClient, 'DEXSwaps', 'JettySwap', 'jettySwapCompleted')
+
+  $: if ($webSocketClient)
+    registerNotificationOnMessage($webSocketClient, 'DEXSwaps', 'LettySwap', 'lettySwapCompleted')
+
+  $: if ($webSocketClient)
+    registerNotificationOnMessage($webSocketClient, 'NetworkStaking', 'StakedXrd', 'stakeCompleted')
+
+  $: if ($webSocketClient)
+    registerNotificationOnMessage(
+      $webSocketClient,
+      'Instapass',
+      'InstapassBadgeDeposited',
+      'instapassBadgeReceived'
+    )
+
+  $: if ($webSocketClient)
+    registerNotificationOnMessage(
+      $webSocketClient,
+      'Thorswap',
+      'MayaRouterWithdrawEvent',
+      'thorswapSwapCompleted'
+    )
 </script>
 
 <LandingPopup definitions={data.landingPopupDefinitions} />

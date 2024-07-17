@@ -84,7 +84,67 @@ export const loadUnseenNotifications = () =>
 const notifications = {
   loggedIn: {
     id: 'loggedIn',
-    text: i18next.t('jetty:logged-in-with-wallet'),
-    onGoToQuest: () => goto(`/home/basic/quest/${QuestDefinitions().SetupWallet.id}#12 `)
+    text: i18next.t('jetty:notifications.logged-in-with-wallet'),
+    action: () => goto(`/home/basic/quest/${QuestDefinitions().SetupWallet.id}`)
+  },
+  clamsReceived: {
+    id: 'clamsReceived',
+    text: i18next.t('jetty:notifications.received-clams'),
+    action: () => goto(`/home/basic/quest/${QuestDefinitions().TransferTokens.id}`)
+  },
+  basicQuestsComplete: {
+    id: 'basicQuestsComplete',
+    text: i18next.t('jetty:notifications.basic-quests-complete'),
+    action: () => goto('/home/advanced')
+  },
+  joinedFriend: {
+    id: 'joinedFriend',
+    text: i18next.t('jetty:notifications.join-friend'),
+    action: () => goto(`/home/advanced/quest/${QuestDefinitions().JoinFriend.id}`)
+  },
+  reachedTierBronze: {
+    id: 'reachedTierBronze',
+    text: i18next.t('jetty:notifications.new-tier'),
+    action: () => goto(`/home/advanced/quest/${QuestDefinitions().QuestTogether.id}`)
+  },
+  reachedTierSilver: {
+    id: 'reachedTierSilver',
+    text: i18next.t('jetty:notifications.new-tier'),
+    action: () => goto(`/home/advanced/quest/${QuestDefinitions().QuestTogether.id}`)
+  },
+  reachedTierGold: {
+    id: 'reachedTierGold',
+    text: i18next.t('jetty:notifications.new-tier'),
+    action: () => goto(`/home/advanced/quest/${QuestDefinitions().QuestTogether.id}`)
+  },
+  reachedTierSuper: {
+    id: 'reachedTierSuper',
+    text: i18next.t('jetty:notifications.new-tier'),
+    action: () => goto(`/home/advanced/quest/${QuestDefinitions().QuestTogether.id}`)
+  },
+  jettySwapCompleted: {
+    id: 'jettySwapCompleted',
+    text: i18next.t('jetty:notifications.swap-completed'),
+    action: () => goto(`/home/advanced/quest/${QuestDefinitions().DEXSwaps.id}`)
+  },
+  lettySwapCompleted: {
+    id: 'lettySwapCompleted',
+    text: i18next.t('jetty:notifications.swap-completed'),
+    action: () => goto(`/home/advanced/quest/${QuestDefinitions().DEXSwaps.id}`)
+  },
+  stakeCompleted: {
+    id: 'stakeCompleted',
+    text: i18next.t('jetty:notifications.stake-completed'),
+    action: () => goto(`/home/advanced/quest/${QuestDefinitions().NetworkStaking.id}`)
+  },
+  instapassBadgeReceived: {
+    id: 'instapassBadgeReceived',
+    text: i18next.t('jetty:notifications.instapass-badge-received'),
+    action: () => goto(`/home/advanced/quest/${QuestDefinitions().Instapass.id}`)
+  },
+  thorswapSwapCompleted: {
+    id: 'thorswapSwapCompleted',
+    text: i18next.t('jetty:notifications.swap-completed'),
+    action: () => goto(`/home/advanced/quests/${QuestDefinitions().Thorswap.id}`)
   }
 } as const satisfies { [key: string]: JettyNotification }

@@ -15,7 +15,7 @@ export const user = writable<
 
 export type JettyNotification = {
   id: string
-  onGoToQuest: () => void
+  action: () => void
   text: string
 }
 

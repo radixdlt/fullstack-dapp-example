@@ -43,6 +43,10 @@ module.exports = {
         'code',
         'quest'
       ]
-    ]
-  }
+    ],
+  },
+  ignores: [
+    (message) => message.toLowerCase().includes('wip')
+  ],
+  defaultIgnores: true
 }

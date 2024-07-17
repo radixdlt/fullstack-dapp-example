@@ -34,6 +34,8 @@
     isMailEnabled.set(!hasError)
   }
   onMount(() => {
+    markNotificationAsSeen('loggedIn')
+
     if (isMobile()) {
       // @ts-ignore
       useCookies('requirement-SetupWallet-ConnectWallet').set(true)
@@ -71,8 +73,6 @@
         )
       }
     }, 1000)
-
-    markNotificationAsSeen('loggedIn')
 
     return () => {
       window.removeEventListener('radix#chromeExtension#receive', callback)

@@ -16,7 +16,7 @@
     {
       id: 'test',
       text: 'Some notification text',
-      onGoToQuest: () => {}
+      action: () => {}
     }
   ])
 </script>

@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { i18n } from '$lib/i18n/i18n'
   import { createEventDispatcher } from 'svelte'
-  import Button from '../button/Button.svelte'
   import Icon from '../icon/Icon.svelte'
   import CrossIcon from '@images/cross.svg'
 
@@ -14,7 +12,7 @@
   }>()
 </script>
 
-<div class="notification">
+<button class="notification" on:click={() => dispatch('goToQuest')}>
   <div class="red-dot" />
   <div class="info">
     <div class="header">
@@ -28,12 +26,8 @@
     <div class="content">
       {text}
     </div>
-
-    <Button on:click={() => dispatch('goToQuest')}>
-      {$i18n.t('jetty:notification-cta')}
-    </Button>
   </div>
-</div>
+</button>
 
 <style>
   .notification {

@@ -1,15 +1,21 @@
 <script lang="ts">
   import { htmlReplace } from '$lib/helpers/html-replace'
+  import { onMount } from 'svelte'
   import { user } from '../../../../../stores'
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
   import type { Quests } from 'content'
+  import { markNotificationAsSeen } from '$lib/notifications'
 
   export let data: PageData
 
   const text = data.text as Quests['JoinFriend']['text']
 
   let quest: Quest
+
+  onMount(() => {
+    markNotificationAsSeen('joinedFriend')
+  })
 </script>
 
 <Quest

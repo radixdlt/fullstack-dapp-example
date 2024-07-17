@@ -7,6 +7,7 @@
   import { quests, scrollToNextQuest, user } from '../../../stores'
   import { page } from '$app/stores'
   import { i18n } from '$lib/i18n/i18n'
+  import { markNotificationAsSeen } from '$lib/notifications'
 
   export let data: LayoutData
 
@@ -49,6 +50,10 @@
   $: if ($scrollToNextQuest && carousel) {
     carousel.scrollToNext()
     $scrollToNextQuest = false
+  }
+
+  if ($page.params.category === 'advanced') {
+    markNotificationAsSeen('basicQuestsComplete')
   }
 </script>
 
