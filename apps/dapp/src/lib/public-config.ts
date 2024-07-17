@@ -25,12 +25,12 @@ const NETWORK_CONFIG = {
   },
   [RadixNetwork.Stokenet]: {
     networkId: RadixNetwork.Stokenet,
-    dAppDefinitionAddress: 'account_tdx_2_12x3rn7tqqqm3wguz6kmg5fy7saf8v92lt5xuwgn6kgh8zaejlf80ce',
+    dAppDefinitionAddress: 'account_tdx_2_12ypap8t44k4pw9p0p56aqdp0ewexjcszzsj5suxduvsfnnmxpcj5qk',
     ...Addresses(RadixNetwork.Stokenet)
   },
   [RadixNetwork.Mainnet]: {
     networkId: RadixNetwork.Mainnet,
-    dAppDefinitionAddress: undefined,
+    dAppDefinitionAddress: 'account_rdx12xkqkcxqzkuc0xnsme9etvttmwfz8aqnhpwc0ygv8tnnpdw2v5cfzd',
     ...Addresses(RadixNetwork.Mainnet)
   },
   [RadixNetwork.Dumunet]: {
