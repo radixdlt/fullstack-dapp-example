@@ -117,9 +117,6 @@ export const WebSocketClient = ({
   return {
     onMessage: (callback: (data: Message & { id: number }) => void): (() => void) => {
       onMessageCallbacks.push(callback)
-      messageApi.getAll().map((messages) => {
-        messages.forEach(callback)
-      })
       return () => {
         const index = onMessageCallbacks.indexOf(callback)
         onMessageCallbacks.splice(index, 1)

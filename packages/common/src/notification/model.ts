@@ -10,10 +10,17 @@ export type NotificationModelMethods = ReturnType<NotificationModel>
 export const NotificationModel = (db: PrismaClient) => (logger?: AppLogger) => {
   const add = (userId: string, notificationId: string) => {
     return ResultAsync.fromPromise(
-      db.notification.create({
-        data: {
+      db.notification.upsert({
+        create: {
           userId,
           notificationId
+        },
+        update: {},
+        where: {
+          notificationId_userId: {
+            userId,
+            notificationId
+          }
         }
       }),
       (error) => {
@@ -45,18 +52,23 @@ export const NotificationModel = (db: PrismaClient) => (logger?: AppLogger) => {
       }
     )
 
-  const markAsSeen = (id: string, userId: string) =>
-    ResultAsync.fromPromise(
-      db.notification.update({
+  const markAsSeen = (notificationId: string, userId: string) => {
+    const seenAt = new Date()
+    return ResultAsync.fromPromise(
+      db.notification.upsert({
         where: {
           notificationId_userId: {
-            notificationId: id,
+            notificationId,
             userId
-          },
-          seenAt: null
+          }
         },
-        data: {
-          seenAt: new Date()
+        update: {
+          seenAt
+        },
+        create: {
+          notificationId,
+          userId,
+          seenAt
         }
       }),
       (error) => {
@@ -64,11 +76,12 @@ export const NotificationModel = (db: PrismaClient) => (logger?: AppLogger) => {
           error,
           method: 'markAsSeen',
           model: 'NotificationModel',
-          data: { id, userId }
+          data: { notificationId, userId }
         })
         return createApiError('failed to mark notification as seen', 400)()
       }
     )
+  }
 
   return {
     add,
