@@ -15,6 +15,7 @@
   import { OneTimeDataRequestBuilder, fetchWrapper } from '@radixdlt/radix-dapp-toolkit'
   import { publicConfig } from '$lib/public-config'
   import { user } from '../../../stores'
+  import { ErrorPopupId, errorPopupStore } from '$lib/components/error-popup/store'
 
   let open = false
 
@@ -167,6 +168,14 @@
           }}>Log User</Button
         >
       {/if}
+      <Button
+        on:click={() => {
+          errorPopupStore.set({
+            id: ErrorPopupId.XrdRewardLimit
+          })
+        }}>Show Error</Button
+      >
+
       <Button on:click={clearPhoneNumbers}>Clear phone numbers</Button>
       <Button on:click={clearLocalStorageAndCookies}>Clear Local Storage</Button>
 

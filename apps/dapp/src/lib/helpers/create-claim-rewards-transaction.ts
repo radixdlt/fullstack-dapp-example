@@ -1,21 +1,27 @@
+import { ErrorPopupId, errorPopupStore } from '$lib/components/error-popup/store'
 import { publicConfig } from '$lib/public-config'
 import type { sendTransaction } from '$lib/rdt'
 import { GatewayApi } from 'common'
-import type { ResultAsync } from 'neverthrow'
+import { okAsync } from 'neverthrow'
 
 const gatewayApi = GatewayApi(publicConfig.networkId)
 
 export const handleKycBadge = (
-  account: string,
-  sendTx: (instapassBadgeLocalId?: string) => ReturnType<typeof sendTransaction>,
-  showWarning: () => ResultAsync<undefined, never>
+  userId: string,
+  userAccountAddress: string,
+  sendTx: (instapassBadgeLocalId?: string) => ReturnType<typeof sendTransaction>
 ) => {
+  const showWarning = () => {
+    errorPopupStore.set({ id: ErrorPopupId.XrdRewardLimit })
+    return okAsync(undefined)
+  }
+
   return gatewayApi
-    .hasKycEntry(account)
+    .hasKycEntry(userId)
     .andThen((hasKycEntry) =>
       hasKycEntry
         ? gatewayApi
-            .getInstapassBadges(account)
+            .getInstapassBadges(userAccountAddress)
             .andThen((localIds) => (localIds.length ? sendTx(localIds[0]) : showWarning()))
         : sendTx()
     )

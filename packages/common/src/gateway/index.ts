@@ -89,7 +89,7 @@ export const GatewayApi = (networkId: number) => {
       return res
     })
 
-  const hasKycEntry = (address: string) => {
+  const hasKycEntry = (userId: string) => {
     return ResultAsync.fromPromise(
       gatewayApiClient.state.innerClient.keyValueStoreData({
         stateKeyValueStoreDataRequest: {
@@ -98,7 +98,7 @@ export const GatewayApi = (networkId: number) => {
             {
               key_json: {
                 kind: 'String',
-                value: address
+                value: userId
               }
             }
           ]

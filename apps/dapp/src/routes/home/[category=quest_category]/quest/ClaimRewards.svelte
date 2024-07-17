@@ -9,9 +9,6 @@
     createClaimRewardsTransaction,
     handleKycBadge
   } from '$lib/helpers/create-claim-rewards-transaction'
-  import { publicConfig } from '$lib/public-config'
-  import { GatewayApi } from 'common'
-  import { okAsync } from 'neverthrow'
 
   export let questId: keyof Quests
   export let text: string
@@ -42,12 +39,7 @@
         )
       })
 
-    const showWarning = () => {
-      // TODO: fill in when errors are ready
-      return okAsync(undefined)
-    }
-
-    return handleKycBadge($user?.accountAddress!, sendTx, showWarning)
+    return handleKycBadge($user?.id!, $user?.accountAddress!, sendTx)
   }
 </script>
 

@@ -16,9 +16,6 @@
   import { createEventDispatcher } from 'svelte'
   import { user } from '../../../../../stores'
   import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
-  import { GatewayApi } from 'common'
-  import { publicConfig } from '$lib/public-config'
-  import { okAsync } from 'neverthrow'
 
   type Level = 'BronzeLevel' | 'SilverLevel' | 'GoldLevel'
 
@@ -69,12 +66,7 @@
         )
       })
 
-    const showWarning = () => {
-      // TODO: fill in when errors are ready
-      return okAsync(undefined)
-    }
-
-    return handleKycBadge(account, sendTx, showWarning)
+    return handleKycBadge($user?.id!, account, sendTx)
       .map(() => {
         loading = false
         dispatch('refresh')
