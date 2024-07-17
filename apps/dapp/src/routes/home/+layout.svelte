@@ -122,11 +122,11 @@
 
             await invalidateAll()
 
-            if (data.questStatus['SetupWallet'].status === 'IN_PROGRESS') {
+            if (data.questStatus['SetupWallet']?.status === 'IN_PROGRESS') {
               pushNotification('loggedIn')
             }
 
-            if (data.questStatus['TransferTokens'].status === 'IN_PROGRESS') {
+            if (data.questStatus['TransferTokens']?.status === 'IN_PROGRESS') {
               questApi
                 .getQuestInformation('TransferTokens', fetch)
                 .map((data) => data.requirements)
@@ -137,7 +137,10 @@
                 })
             }
 
-            if (data.questStatus['TransferTokens'].status === 'COMPLETED' && $user.referredByUser) {
+            if (
+              data.questStatus['TransferTokens']?.status === 'COMPLETED' &&
+              $user.referredByUser
+            ) {
               pushNotification('joinedFriend')
             }
 
