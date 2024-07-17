@@ -1,10 +1,10 @@
 <script lang="ts">
-  import LoadingSpinner from '../loading-spinner/LoadingSpinner.svelte'
   import ExternalLink from '../externalLink/ExternalLink.svelte'
 
   export let disabled = false
-  export let secondary = false
   export let loading = false
+  export let secondary = false // corresponds to the light theme unless overridden
+  export let theme: 'primary' | 'secondary' | 'light' | 'dark' = secondary ? 'light' : 'primary'
   export let link: string | undefined = undefined
   export let isExternal: boolean = false
 </script>
@@ -12,42 +12,28 @@
 {#if link}
   <a
     href={link}
-    class="button"
+    class={theme}
     class:disabled
-    class:primary={!secondary}
-    class:secondary
     class:loading
     target={isExternal ? '_blank' : ''}
     data-sveltekit-preload-data
   >
-    {#if loading}
-      <LoadingSpinner />
-    {:else}
-      <slot />
-      {#if isExternal}
-        <ExternalLink --fill="white" />
-      {/if}
+    <slot />
+    {#if isExternal}
+      <ExternalLink --fill="white" />
     {/if}
   </a>
 {:else}
-  <button
-    on:click
-    class="button"
-    class:disabled
-    class:primary={!secondary}
-    class:secondary
-    class:loading
-  >
-    {#if loading}
-      <LoadingSpinner />
-    {:else}
+  <button on:click class={theme} class:disabled class:loading>
+    <div class:hide-content={loading}>
       <slot />
-    {/if}
+    </div>
   </button>
 {/if}
 
 <style lang="scss">
-  .button {
+  a,
+  button {
     cursor: pointer;
     display: flex;
     white-space: nowrap;
@@ -62,45 +48,82 @@
     height: 2.7rem;
     min-width: 7rem;
     width: fit-content;
-  }
-
-  .button > * {
-    width: fit-content;
+    @media (hover: hover) {
+      &:hover:not(.disabled) {
+        filter: brightness(0.8);
+      }
+    }
+    transition: filter 0.2s ease-in-out;
   }
 
   .primary {
     background: var(--color-primary);
     color: var(--color-light);
     border: var(--border) var(--color-primary);
+  }
 
-    @media (hover: hover) {
-      &:hover:not(.disabled) {
-        filter: brightness(0.8);
-      }
-    }
+  .secondary {
+    background: var(--color-secondary);
+    color: var(--color-dark);
+    border: var(--border) var(--color-secondary);
+  }
 
-    transition: filter 0.2s ease-in-out;
+  .light {
+    background: var(--color-background-light);
+    color: var(--color-dark);
+    border: var(--border) var(--color-dark);
+  }
+
+  .dark {
+    background: var(--color-background-dark);
+    color: var(--color-light);
+    border: var(--border) var(--color-light);
   }
 
   .loading {
     cursor: not-allowed;
     pointer-events: none;
+
+    &::after {
+      position: absolute;
+      content: '';
+      width: 1rem;
+      height: 1rem;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
   }
 
-  .secondary {
-    background: var(--color-light);
-    color: var(--color-dark);
-    border: var(--border) var(--color-dark);
+  .loading.primary::after {
+    border: 0.2rem solid var(--color-light);
+    border-top-color: var(--color-primary);
+  }
 
-    @media (hover: hover) {
-      &:hover:not(.disabled) {
-        color: var(--color-light);
-        background: var(--color-dark);
-      }
+  .loading.secondary::after {
+    border: 0.2rem solid var(--color-dark);
+    border-top-color: var(--color-secondary);
+  }
+
+  .loading.light::after {
+    border: 0.2rem solid var(--color-dark);
+    border-top-color: var(--color-background-light);
+  }
+
+  .loading.dark::after {
+    border: 0.2rem solid var(--color-light);
+    border-top-color: var(--color-background-dark);
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
     }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 
-    transition:
-      color 0.2s ease-in-out,
-      background 0.2s ease-in-out;
+  .hide-content {
+    visibility: hidden;
   }
 </style>
