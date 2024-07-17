@@ -13,7 +13,7 @@ export const transactionBuilder = ({
   optional
 }: {
   transactionManifest: string
-  signers: ('payer' | 'owner' | 'system')[]
+  signers: ('payer' | 'owner' | 'system' | 'dAppDefinition')[]
   optional?: Partial<{
     blobs: Uint8Array[]
     message: Message

@@ -59,14 +59,14 @@ describe('AuthController', () => {
 
   it('should successfully verify a valid challenge', async () => {
     const personaProof = {
-      challenge: '3e6a245dae8caac3e4e08439da4783521417cc4c5789dadaab62638fd91ecbb5',
+      challenge: '2cb6baa15621065d1fae03fe212f2a186aab0fbc5adb82b0f1f714c771b2defe',
       proof: {
-        publicKey: 'cf347ce43b40f4f79d2af4dbcf8f89fccd5b305e04dd8fb3a038201b97116b18',
+        publicKey: '4a19562b719389d11dc5b155f40efcafd1627f40cbd13a178a387881fa0f7589',
         signature:
-          '3030e3099f3f9415c548b899d25e416ae7bcab6a65609eb37179847a7ded118c616983f6e9e5dc67557ca452a56c0bf82adeb5bf2b6738d6a63ea5bf7d603100',
+          '7b849cbfcba80b8a97dd8be2cbc5b7e212832b67b9829774182e50a771ab26fdcd91d393aeaa8a5ad26de8a4fe53a8fa1c3fd855617c881a0646f66acd5c4102',
         curve: 'curve25519'
       },
-      address: 'identity_tdx_2_122vvjvggrz8es2gxl8lw02yvmmrw87fuxdy6elwffnl6guwhtqw75q',
+      address: 'identity_tdx_2_12fg45ggztzm2pe0y3qktnfdtqq7wa0mfu69j4ayt4x8mlz8crkdgp0',
       type: 'persona'
     } satisfies SignedChallenge
 
@@ -85,32 +85,12 @@ describe('AuthController', () => {
               key: 'owner_keys',
               value: {
                 raw_hex:
-                  '5c228f01202201010120071d98c93108188f982906f9fee7a88cdec6e3f93c3349acfdc94cffa471d7'
+                  '5c228f01202201010120071d515a210258b6a0e5e4882cb9a5ab003ceebf69e68b2af48ba98fbf88f8'
               }
             }
           ]
         }
       } as any
-    )
-
-    mockCtx.gatewayApi.gatewayApiClient.state.getEntityDetailsVaultAggregated.mockResolvedValueOnce(
-      {
-        metadata: {
-          items: [
-            {
-              key: 'owner_keys',
-              value: {
-                raw_hex:
-                  '5c228f01202201010120071d4039545198a67d5458f898afbe0c7ea91ceb5e9cf77b368a73b542be7d'
-              }
-            }
-          ]
-        }
-      } as any
-    )
-
-    mockCtx.prisma.user.upsert.mockResolvedValue(
-      Promise.resolve({ identityAddress: personaProof.address }) as any
     )
 
     mockCtx.prisma.user.findUnique.mockResolvedValue(

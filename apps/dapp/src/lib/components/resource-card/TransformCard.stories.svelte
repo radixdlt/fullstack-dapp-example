@@ -13,13 +13,41 @@
 </Template>
 
 <Story
-  name="Primary"
+  name="Common"
   args={{
     card: {
       id: '1',
       energy: 'Molten Banana',
       imageUrl: BackgroundImage,
       rarity: 'common',
+      quality: 10,
+      limitedEdition: true
+    }
+  }}
+/>
+
+<Story
+  name="Rare"
+  args={{
+    card: {
+      id: '1',
+      energy: 'Molten Banana',
+      imageUrl: BackgroundImage,
+      rarity: 'rare',
+      quality: 10,
+      limitedEdition: true
+    }
+  }}
+/>
+
+<Story
+  name="UltraRare"
+  args={{
+    card: {
+      id: '1',
+      energy: 'Molten Banana',
+      imageUrl: BackgroundImage,
+      rarity: 'ultra-rare',
       quality: 10,
       limitedEdition: true
     }
