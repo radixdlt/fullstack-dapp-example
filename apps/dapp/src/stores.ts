@@ -25,8 +25,6 @@ export const hideJettyMenu = writable(false)
 
 export const hideJetty = writable(false)
 
-export const creatingRadMorphSeen = writable(false)
-
 export const retractJettyMenu = writable(false)
 
 export const scrollToNextQuest = writable(false)

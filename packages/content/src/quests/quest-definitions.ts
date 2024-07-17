@@ -161,15 +161,7 @@ export const QuestDefinitions = () => {
       minutesToComplete: 5,
       preRequisites: ['GetStuff'],
       requirements: {
-        [EventId.GiftBoxOpened]: {
-          type: 'event',
-          eventName: 'GiftBoxOpenedEvent'
-        },
-        MintRadgems: {
-          type: 'offLedger',
-          isHidden: true
-        },
-        CheckOutRadMorph: {
+        RadMorphsQuiz: {
           type: 'offLedger',
           completedByUser: true
         }

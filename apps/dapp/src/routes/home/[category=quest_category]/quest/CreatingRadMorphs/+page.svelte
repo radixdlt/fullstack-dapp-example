@@ -5,45 +5,12 @@
   import Error from '$lib/components/error/Error.svelte'
 
   import type { Quests } from 'content'
-  import { writable } from 'svelte/store'
-  import { WebSocketClient, webSocketClient } from '$lib/websocket-client'
-  import { onDestroy } from 'svelte'
-  import { creatingRadMorphSeen } from '../../../../../stores'
-
   export let data: LayoutData
 
   let quest: Quest
   let error: boolean
 
   const text = data.text as Quests['CreatingRadMorphs']['text']
-
-  const starterGiftBoxOpened = writable(data.requirements.GiftBoxOpened.isComplete)
-  const hadTwoRadgems = writable(data.requirements.MintRadgems.isComplete)
-  const checkedOutRadMorphs = writable(data.requirements.CheckOutRadMorph.isComplete)
-
-  const unsubscribe = creatingRadMorphSeen.subscribe((seen) => {
-    if (seen) {
-      checkedOutRadMorphs.set(true)
-    }
-  })
-
-  let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
-  $: if ($webSocketClient) {
-    unsubscribeWebSocket = $webSocketClient.onMessage(async (message) => {
-      if (message.type === 'QuestRequirementCompleted' && message.questId === 'CreatingRadMorphs') {
-        if (message.requirementId === 'GiftBoxOpened') {
-          starterGiftBoxOpened.set(true)
-        } else if (message.requirementId === 'MintRadgems') {
-          hadTwoRadgems.set(true)
-        }
-      }
-    })
-  }
-
-  onDestroy(() => {
-    unsubscribe()
-    unsubscribeWebSocket?.()
-  })
 </script>
 
 <Quest
@@ -69,12 +36,7 @@
     },
     {
       id: '4',
-      type: 'jetty',
-      footer: {
-        next: {
-          enabled: starterGiftBoxOpened
-        }
-      }
+      type: 'jetty'
     },
     {
       id: '5',
@@ -114,12 +76,7 @@
     },
     {
       id: '14',
-      type: 'jetty',
-      footer: {
-        next: {
-          enabled: hadTwoRadgems
-        }
-      }
+      type: 'jetty'
     },
     {
       id: '15',
@@ -127,12 +84,30 @@
     },
     {
       id: '16',
-      type: 'jetty',
-      footer: {
-        next: {
-          enabled: checkedOutRadMorphs
+      type: 'jetty'
+    },
+    {
+      id: '17',
+      type: 'jettyQuiz',
+      text: text['17.md'],
+      quizRequirement: 'RadMorphsQuiz',
+      answers: [
+        {
+          text: text['17a-answer.md'],
+          info: text['17a-result.md'],
+          correct: false
+        },
+        {
+          text: text['17b-answer.md'],
+          info: text['17b-result.md'],
+          correct: true
+        },
+        {
+          text: text['17c-answer.md'],
+          info: text['17c-result.md'],
+          correct: false
         }
-      }
+      ]
     },
     {
       type: 'claimRewards'

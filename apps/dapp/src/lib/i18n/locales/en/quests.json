@@ -95,8 +95,7 @@
   "CreatingRadMorphs": {
     "title": "Creating RadMorphs",
     "requirements": {
-      "GiftBoxOpened": "Learn about Gift Boxes, Elements, RadGems and RadMorphs",
-      "CheckOutRadMorph": "Check out what your first RadMorph might be"
+      "RadMorphsQuiz": "Learn about rewards, from Gift Boxes to RadMorphs"
     },
     "description": "How to collect and combine",
     "introDescription": "How to collect and combine on RadQuest to make the best and most rare RadMorph NFTs"

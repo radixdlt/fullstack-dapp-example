@@ -53,7 +53,7 @@
 
 <script lang="ts">
   import pipe from 'ramda/src/pipe'
-  import { creatingRadMorphSeen, user } from '../../stores'
+  import { user } from '../../stores'
   import { publicConfig } from '$lib/public-config'
   import { GatewayApi } from 'common'
   import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
@@ -72,7 +72,6 @@
   import { ResultAsync } from 'neverthrow'
   import { getRadmorphImage } from '$lib/api/radmorph-api'
   import TransformGems from './TransformGems.svelte'
-  import { completeRequirement } from '$lib/helpers/complete-requirement.svelte'
 
   let loadingLedgerData = true
   let amountOfRadGems: number
@@ -132,8 +131,6 @@
 
   onMount(() => {
     getResources()
-    completeRequirement('CreatingRadMorphs', 'CheckOutRadMorph')
-    creatingRadMorphSeen.set(true)
   })
 
   const back = context.get('back')
