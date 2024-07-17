@@ -521,14 +521,12 @@ export const TransactionWorkerController = ({
         )
 
       case 'CombinedElementsAddRadgemImage':
-        const { radgemId } = job.data
+        const { radgemId, keyImageUrl } = job.data
         return handleSubmitTransaction(
           createCombinedElementsAddRadgemImageManifest({
             userId,
             radgemId,
-            // TODO: keyImageUrl should be fetched from the database
-            keyImageUrl:
-              'https://stokenet-dashboard.radixdlt.com/_app/immutable/assets/nft-placeholder.2eDdybqV.svg'
+            keyImageUrl
           })
         )
 

@@ -235,6 +235,7 @@ describe('filter transactions', () => {
       expect(CombineElementsMintedRadgem.transactionId).toBeDefined()
       expect(CombineElementsMintedRadgem.type).toEqual('CombineElementsMintedRadgem')
       expect(CombineElementsMintedRadgem.data.radgemLocalId).toBeDefined()
+      expect(CombineElementsMintedRadgem.data.radgemData).toBeDefined()
     })
 
     it(`should find ${EventId.CombineElementsAddedRadgemImage} transaction`, () => {

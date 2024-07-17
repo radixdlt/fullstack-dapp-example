@@ -2,6 +2,12 @@ import { ImageType, PrismaClient } from 'database'
 import { ResultAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers'
+import {
+  colorCodeDescription,
+  type ColorCodeDescription,
+  shaderCodeDescription,
+  type ShaderCodeDescription
+} from './mappings'
 
 export type ImageModel = ReturnType<typeof ImageModel>
 
@@ -35,6 +41,20 @@ export const ImageModel = (db: PrismaClient) => (logger?: AppLogger) => {
         return createApiError('failed to get radmorph images', 400)()
       }
     )
+
+  const getRadGemKeyImageUrl = (color: ColorCodeDescription, material: ShaderCodeDescription) =>
+    ResultAsync.fromPromise(
+      db.image.findFirst({
+        where: {
+          id: `${colorCodeDescription[color]}_${shaderCodeDescription[material]}`,
+          type: 'RadGem'
+        }
+      }),
+      (error) => {
+        logger?.error({ error, method: 'getUrl', model: 'ImageModel' })
+        return createApiError('failed to get image url', 400)()
+      }
+    ).map((image) => image?.url ?? '')
 
   const getUrl = ({
     shape,
@@ -72,6 +92,7 @@ export const ImageModel = (db: PrismaClient) => (logger?: AppLogger) => {
   return {
     getUrl,
     addMany,
-    listRadmorphs
+    listRadmorphs,
+    getRadGemKeyImageUrl
   }
 }

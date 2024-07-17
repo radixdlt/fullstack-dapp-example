@@ -398,6 +398,9 @@ describe('Event flows', () => {
         ;`)
 
       if (result.isErr()) throw result.error
+
+      await waitForMessage(logger, db)(user.id, 'CombineElementsAddRadgemImage')
+
       console.log('Transaction ID:', result.value)
     })
   })

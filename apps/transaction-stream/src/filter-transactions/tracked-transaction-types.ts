@@ -1,11 +1,13 @@
 import {
   EventsItem,
   ProgrammaticScryptoSborValueArray,
-  ProgrammaticScryptoSborValueReference
+  ProgrammaticScryptoSborValueReference,
+  ProgrammaticScryptoSborValueTuple
 } from '@radixdlt/babylon-gateway-api-sdk'
 import { config } from '../config'
 import { EventId, GetValuesFromEventInput, getValuesFromEvent } from 'common'
 import { getRewardsFromQuestRewardDepositedEvent } from '../helpers/getRewardsFromQuestRewardDepositedEvent'
+import { keysIn } from 'ramda'
 
 type EventEmitter = {
   entity: {
@@ -161,7 +163,38 @@ export const trackedTransactionTypes: TrackedTransactions = {
       componentAddress: config.radQuest.components.refinery,
       keys: {
         user_id: { kind: 'String', key: 'userId' },
-        radgem_local_id: { kind: 'NonFungibleLocalId', key: 'radgemLocalId' }
+        radgem_local_id: { kind: 'NonFungibleLocalId', key: 'radgemLocalId' },
+        radgem_data: {
+          kind: 'Tuple',
+          key: 'radgemData',
+          transform: (value) => {
+            const tupleValue = value as ProgrammaticScryptoSborValueTuple
+            const fieldNameToKey = new Map<string, string>([
+              ['key_image_url', 'keyImageUrl'],
+              ['name', 'name'],
+              ['description', 'description'],
+              ['material', 'material'],
+              ['color', 'color'],
+              ['rarity', 'rarity'],
+              ['quality', 'quality']
+            ])
+            const radGemData = tupleValue.fields.reduce<Record<string, unknown>>((acc, field) => {
+              field.type_name
+              const fieldName = typeof field.field_name === 'string' ? field.field_name : ''
+              const key = fieldNameToKey.get(fieldName)
+              const value =
+                field.kind === 'String'
+                  ? field.value
+                  : field.kind === 'Decimal'
+                    ? parseInt(field.value)
+                    : ''
+
+              return key ? { ...acc, [key]: value } : acc
+            }, {})
+
+            return radGemData
+          }
+        }
       }
     })
   },

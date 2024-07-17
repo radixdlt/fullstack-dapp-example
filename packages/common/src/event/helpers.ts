@@ -42,6 +42,7 @@ const DataKind = {
   Decimal: 'Decimal',
   ResourceAddress: 'ResourceAddress',
   Array: 'Array',
+  Tuple: 'Tuple',
   NonFungibleLocalId: 'NonFungibleLocalId'
 } as const
 
@@ -67,16 +68,16 @@ export const getValuesFromEvent = (
   }
 
   return getEventDataFields(event.data).reduce<Record<string, unknown>>((acc, field) => {
-    if (field.field_name && field.kind === 'Array') {
+    if (field.field_name && (field.kind === 'Array' || field.kind === 'Tuple')) {
       const key = keys[field.field_name]
       if (key?.kind === field.kind)
         acc[key.key ?? field.field_name] = key.transform
           ? key.transform(field)
           : JSON.stringify(field)
-    } else if (field.field_name && field.kind !== 'Array') {
+    } else if (field.field_name && field.kind !== 'Array' && field.kind !== 'Tuple') {
       const key = keys[field.field_name]
       if (key?.kind === field.kind) acc[key.key ?? field.field_name] = field.value
-    } else if (field.type_name && field.kind !== 'Array') {
+    } else if (field.type_name && field.kind !== 'Array' && field.kind !== 'Tuple') {
       const key = keys[field.type_name]
       if (key?.kind === field.kind) acc[key.key ?? field.type_name] = field.value
     }

@@ -3,11 +3,14 @@ import { okAsync, errAsync, err, ok, ResultAsync } from 'neverthrow'
 import { EventJob, Job } from 'queues'
 import { QuestDefinitions, QuestId, Quests } from 'content'
 import {
+  ColorCodeDescription,
   EventId,
   GatewayApi,
+  ImageModel,
   MailerLiteModel,
   MessageType,
   QuestTogetherConfig,
+  ShaderCodeDescription,
   UserByReferralCode
 } from 'common'
 import { AppLogger, AccountAddressModel } from 'common'
@@ -45,7 +48,8 @@ export const EventWorkerController = ({
   mailerLiteModel,
   sendMessage,
   transactionIntent,
-  referralRewardAction
+  referralRewardAction,
+  imageModel
 }: {
   dbClient: PrismaClient
   AccountAddressModel: AccountAddressModel
@@ -55,6 +59,7 @@ export const EventWorkerController = ({
   sendMessage: MessageHelper
   transactionIntent: TransactionIntentHelper
   referralRewardAction: ReferralRewardAction
+  imageModel: ImageModel
 }) => {
   const handler = (job: Job<EventJob>, user: UserExtended) => {
     const { traceId, type, transactionId, userId } = job.data
@@ -442,17 +447,26 @@ export const EventWorkerController = ({
         })
       case EventId.CombineElementsMintedRadgem: {
         const radGemId = job.data.data.radgemLocalId as string
+        const radGemData = job.data.data.radgemData as {
+          color: ColorCodeDescription
+          material: ShaderCodeDescription
+        }
         if (!radGemId) return errAsync({ reason: 'RadgemIdNotFound' })
-        return transactionIntent
-          .add({
-            discriminator: `CombinedElementsAddRadgemImage:${radGemId}`,
-            userId,
-            type: 'CombinedElementsAddRadgemImage',
-            radgemId: radGemId,
-            traceId
-          })
-          .andThen(() =>
-            sendMessage(userId!, { type: 'CombineElementsMintRadgem', traceId }, childLogger)
+        return imageModel(logger)
+          .getRadGemKeyImageUrl(radGemData.color, radGemData.material)
+          .andThen((keyImageUrl) =>
+            transactionIntent
+              .add({
+                discriminator: `CombinedElementsAddRadgemImage:${radGemId}`,
+                userId,
+                type: 'CombinedElementsAddRadgemImage',
+                radgemId: radGemId,
+                traceId,
+                keyImageUrl
+              })
+              .andThen(() =>
+                sendMessage(userId!, { type: 'CombineElementsMintRadgem', traceId }, childLogger)
+              )
           )
       }
       case EventId.CombineElementsAddedRadgemImage:
