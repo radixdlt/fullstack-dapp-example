@@ -220,6 +220,14 @@
 </div>
 
 <style lang="scss">
+  :global(.jetty-menu) {
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 251, 244, 0.6);
+      background-clip: content-box;
+      border: 5px solid transparent;
+      border-radius: 10px;
+    }
+  }
   .jetty-menu {
     display: grid;
     grid-template-rows: 4rem 1fr;
