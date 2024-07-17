@@ -184,7 +184,7 @@
         {#if $notifications.length > 0}
           <div transition:scale>
             <Notification
-              title="Notification title"
+              title={$i18n.t('jetty:notifications.title')}
               text={latestNotification.text}
               on:dismiss={popNotification}
               on:goToQuest={() => {

@@ -19,6 +19,7 @@ interface Resources {
     "elements": "Elements",
     "morph-energy-card": "Morph Energy Card",
     "notifications": {
+      "title": "Attenzione!",
       "logged-in-with-wallet": "I see you've logged in with your wallet!",
       "received-clams": "You're ready to continue your quest: Transfer Tokens.",
       "basic-quests-complete": "Now continue your journey with the Advanced Quests.",
