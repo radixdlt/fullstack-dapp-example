@@ -9,12 +9,6 @@ export const createOttercoin = ({
   adminBadgeAddress: string
 }) => {
   const transactionManifest = `
-CALL_METHOD
-    Address("${config.radQuest.accounts.payer.address}")
-    "lock_fee"
-    Decimal("50")
-;
-
 CREATE_FUNGIBLE_RESOURCE
     Enum<1u8>(
         Enum<2u8>(
@@ -112,7 +106,7 @@ CREATE_FUNGIBLE_RESOURCE
 
   const transaction = transactionBuilder({
     transactionManifest,
-    signers: ['payer', 'system']
+    signers: ['system']
   })
   return transaction
     .submit()

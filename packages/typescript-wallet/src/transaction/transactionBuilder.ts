@@ -10,13 +10,12 @@ const accounts = config.radQuest.accounts
 export const transactionBuilder = ({
   transactionManifest,
   signers,
-  lockFee,
   optional
 }: {
   transactionManifest: string
   signers: ('owner' | 'system' | 'dAppDefinition')[]
-  lockFee?: number
   optional?: Partial<{
+    lockFee: number
     blobs: Uint8Array[]
     message: Message
     onTransactionId: (transactionId: string) => ResultAsync<any, unknown>
@@ -31,7 +30,7 @@ CALL_METHOD
 CALL_METHOD
     Address("${config.radQuest.accounts.payer.address}")
     "lock_fee"
-    Decimal("${lockFee ?? 50}")
+    Decimal("${optional?.lockFee ?? 50}")
 ;` +
     signers
       .map(
