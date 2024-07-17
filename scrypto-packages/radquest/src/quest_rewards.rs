@@ -151,7 +151,12 @@ mod quest_rewards {
             let reward_state = self
                 .rewards_record
                 .get(&(user_id.clone(), quest_id.clone()))
-                .unwrap();
+                .unwrap_or_else(|| {
+                    panic!(
+                        "No reward record for user_id: {}, quest_id {}",
+                        user_id.0, quest_id.0
+                    )
+                });
 
             match *reward_state {
                 RewardState::Claimed => {
@@ -165,7 +170,9 @@ mod quest_rewards {
                     });
 
                     if resources_record.contains_key(&XRD) && kyc_required {
-                        kyc_badge.unwrap().check(self.kyc_badge_address);
+                        kyc_badge
+                            .expect("No KYC badge proof provided")
+                            .check(self.kyc_badge_address);
                     };
                 }
             }
@@ -204,7 +211,7 @@ mod quest_rewards {
                             .collect(),
                     });
 
-                    resources_record
+                    let rewards = resources_record
                         .iter_mut()
                         .map(|resource_record| match resource_record.1 {
                             RewardAmount::FungibleAmount(amount) => {
@@ -230,7 +237,11 @@ mod quest_rewards {
                                 bucket
                             }
                         })
-                        .collect()
+                        .collect();
+
+                    *reward_state = RewardState::Claimed;
+
+                    rewards
                 }
             }
         }

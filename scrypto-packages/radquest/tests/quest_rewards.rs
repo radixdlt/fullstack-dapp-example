@@ -8,6 +8,7 @@ struct Test {
     quest_rewards: QuestRewards,
     kyc_oracle: KycOracle,
     hero_badge: Bucket,
+    kyc_badge: Bucket,
     user_id: UserId,
     admin_badge_proof: Proof,
     super_admin_badge_proof: Proof,
@@ -74,6 +75,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         quest_rewards,
         kyc_oracle,
         hero_badge,
+        kyc_badge,
         user_id: UserId(user_id_string),
         admin_badge_proof,
         super_admin_badge_proof,
@@ -232,6 +234,89 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
 
     assert!(response_1 == reward_1_address || response_1 == reward_2_address);
     assert!(response_2 == reward_1_address || response_2 == reward_2_address);
+
+    Ok(())
+}
+
+#[test]
+fn cannot_claim_rewards_before_deposit() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut quest_rewards,
+        hero_badge,
+        ..
+    } = arrange_test_environment()?;
+
+    let quest_id = QuestId("1".into());
+
+    // Act
+    let result = quest_rewards.claim_reward(
+        quest_id,
+        hero_badge.create_proof_of_all(&mut env)?,
+        None,
+        &mut env,
+    );
+
+    // Assert
+    assert!(result.is_err());
+    println!("{:?}", result);
+    assert!(result
+        .unwrap_err()
+        .to_string()
+        .contains("No reward record for user_id:"));
+
+    Ok(())
+}
+
+#[test]
+fn cannot_claim_rewards_already_claimed() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut quest_rewards,
+        hero_badge,
+        user_id,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
+    let reward_2 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
+
+    let quest_id = QuestId("1".into());
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    quest_rewards.deposit_reward(
+        user_id,
+        quest_id.clone(),
+        vec![reward_1, reward_2],
+        &mut env,
+    )?;
+
+    quest_rewards.claim_reward(
+        quest_id.clone(),
+        hero_badge.create_proof_of_all(&mut env)?,
+        None,
+        &mut env,
+    )?;
+
+    // Act
+    let result = quest_rewards.claim_reward(
+        quest_id,
+        hero_badge.create_proof_of_all(&mut env)?,
+        None,
+        &mut env,
+    );
+
+    // Assert
+    assert!(result.is_err());
+    println!("{:?}", result);
+    assert!(result
+        .unwrap_err()
+        .to_string()
+        .contains("Reward already claimed"));
 
     Ok(())
 }
@@ -412,6 +497,57 @@ fn cannot_claim_rewards_when_kyc_required() -> Result<(), RuntimeError> {
 
     // Assert
     assert!(result.is_err());
+    assert!(result
+        .unwrap_err()
+        .to_string()
+        .contains("No KYC badge proof provided"));
+
+    Ok(())
+}
+
+#[test]
+fn can_claim_with_kyc_badge_when_required() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut quest_rewards,
+        mut kyc_oracle,
+        hero_badge,
+        user_id,
+        admin_badge_proof,
+        kyc_badge,
+        ..
+    } = arrange_test_environment()?;
+
+    let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
+    let reward_2 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
+
+    let quest_id = QuestId("1".into());
+
+    env.disable_auth_module();
+
+    kyc_oracle.update_user_kyc_requirement(user_id.clone(), true, &mut env)?;
+    env.enable_auth_module();
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    quest_rewards.deposit_reward(
+        user_id,
+        quest_id.clone(),
+        vec![reward_1, reward_2],
+        &mut env,
+    )?;
+
+    // Act
+    let result = quest_rewards.claim_reward(
+        quest_id,
+        hero_badge.create_proof_of_all(&mut env)?,
+        Some(kyc_badge.create_proof_of_all(&mut env)?),
+        &mut env,
+    );
+
+    // Assert
+    assert!(result.is_ok());
 
     Ok(())
 }
