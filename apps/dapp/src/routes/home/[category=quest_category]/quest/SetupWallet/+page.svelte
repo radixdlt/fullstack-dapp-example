@@ -27,12 +27,8 @@
   let email = $user?.email?.email || ''
   let hasError: boolean
   let confirmedWalletInstall = writable<boolean>(false)
-  let isMailEnabled = writable<boolean>(true)
   let walletIsLinked = writable(data.requirements.ConnectWallet?.isComplete)
 
-  $: {
-    isMailEnabled.set(!hasError)
-  }
   onMount(() => {
     markNotificationAsSeen('loggedIn')
 
@@ -100,7 +96,7 @@
         quest.actions.next()
       })
       .mapErr(() => {
-        hasError = true
+        quest.actions.next()
       })
   }
 
@@ -222,7 +218,6 @@
       skip: writable($user?.email?.newsletter || false),
       footer: {
         next: {
-          enabled: isMailEnabled,
           onClick: () => {
             submitEmailOrProceed()
           }
