@@ -39,6 +39,7 @@ CALL_FUNCTION
     Bucket("admin_badge")
     Address("${hero_badge}")
     Address("${kyc_badge}")
+    Address("${clam}")
 ;
 CALL_METHOD
     Address("${account}")

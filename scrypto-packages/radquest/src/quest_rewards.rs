@@ -64,6 +64,7 @@ mod quest_rewards {
             enable => restrict_to: [super_admin];
             claim_reward => PUBLIC;
             deposit_reward => restrict_to: [admin];
+            get_clams => PUBLIC;
         }
     }
     struct QuestRewards {
@@ -71,6 +72,7 @@ mod quest_rewards {
         admin_badge: FungibleVault,
         rewards: KeyValueStore<ResourceAddress, Vault>,
         rewards_record: KeyValueStore<(UserId, QuestId), RewardState>,
+        clam_manager: ResourceManager,
         hero_badge_address: ResourceAddress,
         kyc_badge_address: ResourceAddress,
         admin_badge_address: ResourceAddress,
@@ -85,6 +87,7 @@ mod quest_rewards {
             admin_badge: Bucket,
             hero_badge_address: ResourceAddress,
             kyc_badge_address: ResourceAddress,
+            clam_address: ResourceAddress,
         ) -> Global<QuestRewards> {
             let admin_badge_address = admin_badge.resource_address();
             let kyc_oracle =
@@ -95,6 +98,7 @@ mod quest_rewards {
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
                 rewards: KeyValueStore::new(),
                 rewards_record: KeyValueStore::new(),
+                clam_manager: ResourceManager::from_address(clam_address),
                 hero_badge_address,
                 kyc_badge_address,
                 admin_badge_address,
@@ -311,6 +315,13 @@ mod quest_rewards {
                 quest_id: quest_id.clone(),
                 rewards: rewards_info,
             });
+        }
+
+        pub fn get_clams(&self, hero_badge: Proof) -> Bucket {
+            hero_badge.check(self.hero_badge_address);
+
+            self.admin_badge
+                .authorize_with_amount(dec!(1), || self.clam_manager.mint(dec!(3)))
         }
     }
 }

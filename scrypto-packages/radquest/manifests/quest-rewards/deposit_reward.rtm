@@ -1,7 +1,7 @@
 CALL_METHOD
     Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
     "lock_fee"
-    Decimal("5000")
+    Decimal("50")
 ;
 CALL_METHOD
     Address("${account}")
@@ -24,7 +24,7 @@ CALL_METHOD
     Address("${quest_rewards}")
     "deposit_reward"
     # User ID
-    "<${user_id}>"
+    "${user_id}"
     # Quest ID
     "1"
     # Array of Buckets to deposit

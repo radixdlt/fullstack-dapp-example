@@ -35,6 +35,16 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let kyc_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
         .mint_initial_supply([()], &mut env)?;
 
+    let clam = ResourceBuilder::new_fungible(OwnerRole::None)
+        .divisibility(DIVISIBILITY_NONE)
+        .mint_roles(mint_roles!(
+            minter => rule!(require(
+                admin_badge.resource_address(&mut env)?
+            ));
+            minter_updater => OWNER;
+        ))
+        .mint_initial_supply(0, &mut env)?;
+
     let quest_rewards = QuestRewards::new(
         super_admin_badge.resource_address(&mut env)?,
         OwnerRole::Fixed(rule!(require(
@@ -44,6 +54,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         admin_badge.take(dec!(1), &mut env)?,
         hero_badge.resource_address(&mut env)?,
         kyc_badge.resource_address(&mut env)?,
+        clam.resource_address(&mut env)?,
         package_address,
         &mut env,
     )?;
@@ -481,5 +492,41 @@ pub fn can_enable_then_deposit_rewards_when_disabled() -> Result<(), RuntimeErro
 
     assert!(result.is_ok());
 
+    Ok(())
+}
+
+#[test]
+fn can_get_clams() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        quest_rewards,
+        hero_badge,
+        ..
+    } = arrange_test_environment()?;
+
+    // Act
+    let clams = quest_rewards.get_clams(hero_badge.create_proof_of_all(&mut env)?, &mut env)?;
+
+    // Assert
+    assert!(clams.amount(&mut env)? > dec!(0));
+    Ok(())
+}
+
+#[test]
+fn cannot_get_clams_without_hero_badge() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        quest_rewards,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    // Act
+    let result = quest_rewards.get_clams(admin_badge_proof, &mut env);
+
+    // Assert
+    assert!(result.is_err());
     Ok(())
 }

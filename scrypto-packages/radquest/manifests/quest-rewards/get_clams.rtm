@@ -14,13 +14,8 @@ POP_FROM_AUTH_ZONE
 ;
 CALL_METHOD
     Address("${quest_rewards}")
-    "claim_reward"
-    # Quest ID
-    "1"
-    # User badge
+    "get_clams"
     Proof("hero_badge_proof")
-    # KYC badge
-    None
 ;
 CALL_METHOD
     Address("${account}")

@@ -39,6 +39,7 @@ CALL_FUNCTION
   Bucket("admin_badges")
   Address("${config.radQuest.badges.heroBadgeAddress}")
   Address("${config.radQuest.badges.kycBadgeAddress}")
+  Address("${config.radQuest.resources.clamAddress}")
 ; 
 `
   const transaction = transactionBuilder({
