@@ -108,7 +108,7 @@
       imageUrl: string
     }
   }
-  let giftBoxName: string
+
   let rewards: {
     amountOfElements: number
     cardData: {
@@ -216,6 +216,7 @@
 
   const openGiftBox = (giftBoxAddress: string) => {
     waitingForOpenTransaction = true
+
     sendTransaction({
       transactionManifest: openGiftBoxManifest(giftBoxAddress)
     })
@@ -322,9 +323,13 @@
       <LoadingSpinner />
     </div>
   {:else if waitingForDepositedRewards}
-    <div class="title">
-      {$i18n.t('jetty:open-gift-box.opening-gift-box')}...
-    </div>
+    <JettyMenuItemPage>
+      <div class="title">
+        {$i18n.t('jetty:open-gift-box.opening-gift-box')}...
+      </div>
+
+      <lottie-player autoplay loop mode="normal" src="/lottie/loading.json" style="width: 320px" />
+    </JettyMenuItemPage>
   {:else if claimed}
     {$i18n.t('jetty:open-gift-box.claimed')}
   {:else if readyToClaim}
@@ -337,7 +342,7 @@
     >
       <div class="header-text" slot="header">
         <div class="title">
-          {$i18n.t('jetty:open-gift-box.gift-box-opened-title', { name: giftBoxName })}
+          {$i18n.t('jetty:open-gift-box.gift-box-opened-title')}
         </div>
         <div class="subtitle">
           {$i18n.t('jetty:open-gift-box.gift-box-opened-subtitle')}...
@@ -418,7 +423,7 @@
                   }}
                 >
                   <div class="gift-box" style:--image={`url(${image})`} />
-                  <div slot="text">{giftBoxName || name}</div>
+                  <div slot="text">{name}</div>
                 </ResourceCard>
               </Item>
             {/if}

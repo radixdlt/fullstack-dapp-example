@@ -110,7 +110,6 @@
   .quality {
     color: var(--color-light);
     font-size: var(--text-xs);
-    font-family: var(--font-headers);
     text-align: center;
     margin: 0;
   }

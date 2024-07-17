@@ -2,12 +2,13 @@
   import { onMount } from 'svelte'
   import Item from './Item.svelte'
   import NavigateButton from './NavigateButton.svelte'
-  import { isMobile } from '$lib/utils/is-mobile'
+
+  export let noButtons = false
 
   let carousel: HTMLElement
 
   let isScrolledToStart = true
-  let isScrolledToEnd = false
+  let isScrolledToEnd = true
 
   export const scrollToNext = () => {
     if (!carousel) return
@@ -23,6 +24,11 @@
   }
 
   onMount(() => {
+    if (noButtons) return
+
+    detectScolledToStart()
+    detectScolledToEnd()
+
     setTimeout(() => {
       carousel.scrollTo({ left: 0, behavior: 'instant' })
     }, 0)
@@ -61,33 +67,32 @@
   }}
 >
   <slot {Item} />
-  {#if !isMobile()}
-    {#if !isScrolledToStart}
-      <div class="navigate-button left">
-        <NavigateButton
-          direction="left"
-          on:click={() => {
-            carousel.scrollBy({
-              left: -400,
-              behavior: 'smooth'
-            })
-          }}
-        />
-      </div>
-    {/if}
-    {#if !isScrolledToEnd}
-      <div class="navigate-button right">
-        <NavigateButton
-          direction="right"
-          on:click={() => {
-            carousel.scrollBy({
-              left: 400,
-              behavior: 'smooth'
-            })
-          }}
-        />
-      </div>
-    {/if}
+
+  {#if !isScrolledToStart && !noButtons}
+    <div class="navigate-button left">
+      <NavigateButton
+        direction="left"
+        on:click={() => {
+          carousel.scrollBy({
+            left: -400,
+            behavior: 'smooth'
+          })
+        }}
+      />
+    </div>
+  {/if}
+  {#if !isScrolledToEnd && !noButtons}
+    <div class="navigate-button right">
+      <NavigateButton
+        direction="right"
+        on:click={() => {
+          carousel.scrollBy({
+            left: 400,
+            behavior: 'smooth'
+          })
+        }}
+      />
+    </div>
   {/if}
 </div>
 

@@ -5,7 +5,7 @@
   import { okAsync } from 'neverthrow'
   import { onDestroy } from 'svelte'
   import { createEventDispatcher } from 'svelte'
-  import { user } from '../../../../../stores'
+  import { hasHeroBadge, user } from '../../../../../stores'
   import Button from '$lib/components/button/Button.svelte'
   import { userApi } from '$lib/api/user-api'
   import type { Quests } from 'content'
@@ -86,9 +86,10 @@
 
   $: {
     if ($user?.accountAddress)
-      gatewayApi.hasHeroBadge($user?.accountAddress).map((hasHeroBadge) => {
-        if (hasHeroBadge) {
+      gatewayApi.hasHeroBadge($user?.accountAddress).map((hasBadge) => {
+        if (hasBadge) {
           state = 'hasHeroBadge'
+          $hasHeroBadge = true
           dispatch('deposited')
         }
       })

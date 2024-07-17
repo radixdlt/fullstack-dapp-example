@@ -28,6 +28,20 @@
 
 <Story name="Primary" />
 
+<Story name="No Buttons">
+  <div class="container">
+    <Carousel noButtons let:Item>
+      <Item>
+        <QuestOverviewCard
+          title="Introduction to Radar"
+          description="Get familiar with Radar, the radically better Web3 network."
+          minutesToComplete={1}
+        />
+      </Item>
+    </Carousel>
+  </div>
+</Story>
+
 <style lang="scss">
   .container {
     height: 80vh;

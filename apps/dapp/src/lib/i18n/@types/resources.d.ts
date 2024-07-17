@@ -75,7 +75,7 @@ interface Resources {
       "multiple-boxes-title": "Pick a Gift Box to open",
       "open-gift-box-button": "Open Gift Box",
       "opening-gift-box": "Opening...",
-      "gift-box-opened-title": "{{name}} opened!",
+      "gift-box-opened-title": "Gift Box opened!",
       "gift-box-opened-subtitle": "Here's what was inside",
       "quantity": "Quantity: {{count}}",
       "claimed": "You can now find the contents of your Gift Box in your account in your Radix Wallet."

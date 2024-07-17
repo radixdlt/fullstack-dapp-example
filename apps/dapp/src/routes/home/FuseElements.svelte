@@ -267,7 +267,21 @@
     <!-- TODO handle error -->
     error loading elements
   {:else if waitingForElementsDeposited}
-    {$i18n.t('jetty:fuse-elements.fusing-elements')}
+    <JettyMenuItemPage>
+      <div slot="header" class="title">
+        {$i18n.t('jetty:fuse-elements.fusing-elements')}
+      </div>
+
+      <div class="fusing-animation">
+        <lottie-player
+          autoplay
+          loop
+          mode="normal"
+          src="/lottie/loading.json"
+          style="width: 300px"
+        />
+      </div>
+    </JettyMenuItemPage>
   {:else if radgemClaimed}
     <JettyMenuItemPage
       action={{
@@ -361,6 +375,17 @@
   }
   .bold {
     font-weight: var(--font-weight-bold);
+  }
+
+  .title {
+    font-size: var(--text-md3);
+    text-align: center;
+  }
+
+  .fusing-animation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .loading {
