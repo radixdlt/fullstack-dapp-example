@@ -19,13 +19,13 @@ export const GiftBoxRewardConfig = ({
   const getQualityByRarity = (rarity: EnergyCardRarity) => {
     switch (rarity) {
       case 'Common':
-        return getRandomIntInclusive({ min: 15, max: 24 })
+        return getRandomIntInclusive({ min: 1, max: 10 })
 
       case 'Rare':
-        return getRandomIntInclusive({ min: 25, max: 34 })
+        return getRandomIntInclusive({ min: 11, max: 25 })
 
       case 'Ultra-rare':
-        return getRandomIntInclusive({ min: 35, max: 50 })
+        return getRandomIntInclusive({ min: 26, max: 50 })
     }
   }
 

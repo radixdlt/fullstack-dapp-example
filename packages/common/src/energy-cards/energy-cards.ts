@@ -80,7 +80,7 @@ const energyCardMap = {
     energyType: 'Volcanic Lightning',
     energyDescription: 'the high-altitude sparking of volcanic lightning',
     rarity: EnergyCardRarity.Common,
-    limitedEdition: false,
+    limitedEdition: true,
     currentlyAvailable: false,
     keyImageUrl: ''
   },
@@ -88,7 +88,7 @@ const energyCardMap = {
     energyType: 'Storm Cell',
     energyDescription: 'the churning rotations of a storm cell',
     rarity: EnergyCardRarity.Common,
-    limitedEdition: false,
+    limitedEdition: true,
     currentlyAvailable: false,
     keyImageUrl: ''
   },
