@@ -10,12 +10,6 @@ export const createSuperAdminBadge = () => {
     typedError
   ).andThen((knownAddresses) => {
     const transactionManifest = `
-CALL_METHOD
-  Address("${config.radQuest.accounts.payer.address}")
-  "lock_fee"
-  Decimal("10")
-;
-
 ALLOCATE_GLOBAL_ADDRESS
     Address("${knownAddresses.packageAddresses.resourcePackage}")
     "FungibleResourceManager"
@@ -92,7 +86,7 @@ CALL_METHOD
   Enum<0u8>()
 ;`
 
-    const transaction = transactionBuilder({ transactionManifest, signers: ['payer', 'owner'] })
+    const transaction = transactionBuilder({ transactionManifest, signers: ['owner'] })
     return transaction
       .submit()
       .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))

@@ -1,13 +1,9 @@
 import { config } from '../../config'
 import { transactionBuilder } from '../../transaction/transactionBuilder'
 
-export const setDappDefinitionMetadata = (dAppDefinition: string) => {
+export const setRadquestMetadata = () => {
+  const dAppDefinition = config.radQuest.accounts.dAppDefinition.address
   const transactionManifest = `
-CALL_METHOD
-    Address("${config.radQuest.accounts.payer.address}")
-    "lock_fee"
-    Decimal("50")
-;
 SET_METADATA
     Address("${dAppDefinition}")
     "account_type"
@@ -87,7 +83,7 @@ SET_METADATA
     )
 ;
 `
-  return transactionBuilder({ transactionManifest, signers: ['payer', 'dAppDefinition'] })
+  return transactionBuilder({ transactionManifest, signers: ['dAppDefinition'] })
     .submit()
     .map(({ transactionId }) => transactionId)
 }

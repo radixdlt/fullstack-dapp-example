@@ -3,12 +3,6 @@ import { transactionBuilder } from '../../transaction/transactionBuilder'
 
 export const createAdminBadgeResource = (superAdminBadgeAddress: string) => {
   const transactionManifest = `
-CALL_METHOD
-    Address("${config.radQuest.accounts.payer.address}")
-    "lock_fee"
-    Decimal("10")
-;
-
 CREATE_FUNGIBLE_RESOURCE
     Enum<1u8>(
         Enum<2u8>(
@@ -95,7 +89,7 @@ CREATE_FUNGIBLE_RESOURCE
 
   const transaction = transactionBuilder({
     transactionManifest,
-    signers: ['payer']
+    signers: []
   })
 
   return transaction

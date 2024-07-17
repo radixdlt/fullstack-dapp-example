@@ -7,25 +7,19 @@ export const registerGiftBoxResources = (giftBoxOpener: string) => {
     .join(', ')
 
   const transactionManifest = `
-        CALL_METHOD
-            Address("${config.radQuest.accounts.payer.address}")
-            "lock_fee"
-            Decimal("50")
-        ;
-        CALL_METHOD
-            Address("${config.radQuest.accounts.system.address}")
-            "create_proof_of_amount"
-            Address("${config.radQuest.badges.adminBadgeAddress}")
-            Decimal("1")
-        ;
-        CALL_METHOD
-            Address("${giftBoxOpener}")
-            "add_gift_box_resources"
-            Array<Address>(${giftBoxResourcesAddresses})
-        ;
-
-        `
-  return transactionBuilder({ transactionManifest, signers: ['payer', 'system'] })
+CALL_METHOD
+    Address("${config.radQuest.accounts.system.address}")
+    "create_proof_of_amount"
+    Address("${config.radQuest.badges.adminBadgeAddress}")
+    Decimal("1")
+;
+CALL_METHOD
+    Address("${giftBoxOpener}")
+    "add_gift_box_resources"
+    Array<Address>(${giftBoxResourcesAddresses})
+;
+`
+  return transactionBuilder({ transactionManifest, signers: ['system'] })
     .submit()
     .map(({ transactionId }) => transactionId)
 }
