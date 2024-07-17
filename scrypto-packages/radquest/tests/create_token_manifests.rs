@@ -244,7 +244,7 @@ fn create_element() {
         },
         metadata!(
             init {
-                "name" => "Element", updatable;
+                "name" => "Elements", updatable;
                 "description" => "Elements are the common token of the RadQuest realm. They can be fused by RadQuest’s Jetty to produce RadGems that can be used for much more…", updatable;
                 "tags" => vec!["radquest"], updatable;
                 "icon_url" => Url::of("https://arweave.net/vZ1h_-irsZf675M4b-FIAUnrsiPqzObbNzedxfbLh94"), updatable;
