@@ -108,6 +108,16 @@ export const GatewayApi = (networkId: number) => {
     ).map((response) => response.entries.length > 0)
   }
 
+  const getInstapassBadges = (accountAddress: string) =>
+    callApi('getEntityDetailsVaultAggregated', [accountAddress]).map(([response]) => {
+      const item = response.non_fungible_resources.items.find(
+        (item) => item.resource_address === addresses.badges.instapassBadgeAddress
+      )
+
+      const vault = item?.vaults?.items.find((vault) => (vault?.items?.length || 0) > 0)
+      return vault?.items || []
+    })
+
   const getDefaultDepositRule = (accountAddress: string) =>
     callApi('getEntityDetailsVaultAggregated', [accountAddress])
       .mapErr((error) => ({ reason: 'GatewayError', error }))
@@ -181,6 +191,7 @@ export const GatewayApi = (networkId: number) => {
 
   return {
     hasKycEntry,
+    getInstapassBadges,
     hasAtLeastTwoRadgems,
     isDepositDisabledForResource,
     networkConfig,

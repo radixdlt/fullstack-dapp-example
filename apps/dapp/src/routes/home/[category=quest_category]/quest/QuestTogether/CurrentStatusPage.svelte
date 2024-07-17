@@ -5,7 +5,10 @@
   import ShareBox from '$lib/components/referral/ShareBox.svelte'
 
   import FireIcon from '@images/fire.svg'
-  import { createClaimXRDRewardsTransaction } from '$lib/helpers/create-claim-rewards-transaction'
+  import {
+    createClaimXRDRewardsTransaction,
+    handleKycBadge
+  } from '$lib/helpers/create-claim-rewards-transaction'
   import { i18n } from '$lib/i18n/i18n'
   import { sendTransaction } from '$lib/rdt'
 
@@ -13,6 +16,9 @@
   import { createEventDispatcher } from 'svelte'
   import { user } from '../../../../../stores'
   import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
+  import { GatewayApi } from 'common'
+  import { publicConfig } from '$lib/public-config'
+  import { okAsync } from 'neverthrow'
 
   type Level = 'BronzeLevel' | 'SilverLevel' | 'GoldLevel'
 
@@ -50,14 +56,25 @@
 
   const claimXrd = () => {
     loading = true
-    sendTransaction({
-      transactionManifest: createClaimXRDRewardsTransaction(
-        $user?.accountAddress!,
-        $user?.id!,
-        `QuestTogether`,
-        readyToClaim
-      )
-    })
+
+    const account = $user?.accountAddress!
+    const sendTx = (instapassBadge?: string) =>
+      sendTransaction({
+        transactionManifest: createClaimXRDRewardsTransaction(
+          $user?.accountAddress!,
+          $user?.id!,
+          `QuestTogether`,
+          readyToClaim,
+          instapassBadge
+        )
+      })
+
+    const showWarning = () => {
+      // TODO: fill in when errors are ready
+      return okAsync(undefined)
+    }
+
+    return handleKycBadge(account, sendTx, showWarning)
       .map(() => {
         loading = false
         dispatch('refresh')
