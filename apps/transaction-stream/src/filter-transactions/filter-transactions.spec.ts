@@ -218,7 +218,7 @@ describe('filter transactions', () => {
       expect(transaction.userId).toBeDefined()
     })
 
-    it.only(`should find ${EventId.CombineElementsMintedRadgem} transaction`, () => {
+    it(`should find ${EventId.CombineElementsMintedRadgem} transaction`, () => {
       const result = filterTransactionsByType([
         ...CombineElementsMintedRadgemEvents,
         ...NotSupportedTx
