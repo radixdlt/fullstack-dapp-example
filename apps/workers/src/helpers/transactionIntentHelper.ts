@@ -45,7 +45,7 @@ export const TransactionIntentHelper = ({
 
   const countQuestTogetherXrdDeposits = (userId: string) =>
     ResultAsync.fromPromise(
-      dbClient.transactionIntent.findMany({
+      dbClient.transactionIntent.count({
         where: {
           AND: [
             {
@@ -66,7 +66,7 @@ export const TransactionIntentHelper = ({
         }
       }),
       (error) => ({ reason: 'FailedToCountQuestTogetherXrdDeposits', jsError: error })
-    ).map((transactions) => transactions.length)
+    )
 
   return { add, countQuestTogetherXrdDeposits }
 }
