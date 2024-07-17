@@ -50,5 +50,5 @@ CALL_FUNCTION
   return transaction
     .submit()
     .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
-    .map((createdEntities): string => createdEntities[0].entity_address!)
+    .map((createdEntities): string => createdEntities[1].entity_address!)
 }

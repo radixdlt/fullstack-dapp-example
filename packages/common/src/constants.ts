@@ -35,7 +35,7 @@ export const Addresses = (networkId: number) => {
           }
         },
         radQuestPackage: 'package_tdx_2_1p58nns2tfm70kxa7dvu9dxzhlhe8mueqdecxs7etxdd3nqzp7x476h',
-        clamDexPackage: 'package_tdx_2_1p4at9jfv6xxgrptvgdtlff2zcm6gezz4ffxld0sjugtv2atm49jtt5',
+        clamDexPackage: 'package_tdx_2_1p43p5xg233gvrkz6jdd5yvd52v0dxvy9905cpalztsws398phj5fs4',
         components: {
           heroBadgeForge: 'component_tdx_2_1cqfrzma6zeezxtrs963gp8gzphpthf4y9z34dupm53wwv77g8e0p2w',
           kycOracle: 'component_tdx_2_1cr8mhmkw53yhy0l94wj6mpdjyqmvfw3wtsrgm8jet7relqalgkd3l5',
@@ -49,8 +49,8 @@ export const Addresses = (networkId: number) => {
           kycOracleKeyValueStore:
             'internal_keyvaluestore_tdx_2_1kr8405fhhvhk3266zhwfypmgfwerj68slfr4qs3wx9spne8czt9mkf',
           mayaRouter: 'component_tdx_2_mock_maya_router_address',
-          jettySwap: 'component_tdx_2_1cpnhax5exyf35sytqltt22luc6ye93jfcc86a3tkmym2up0rf9076f',
-          lettySwap: 'component_tdx_2_1cpxr3ax5cky0nnyrvccl4ygp447jj9p7sylvzka6gsedqvau22yscw'
+          jettySwap: 'component_tdx_2_1crcn0nrfvawzahgg4sw9zeuzjnsj5msaaqk642frsydx4ju8l23hvc',
+          lettySwap: 'component_tdx_2_1czcps4zyx9cdtztsd69tp480l2h4ek9pu6vnu44jqh37vdw65mgmgs'
         },
         xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
         accounts: {
