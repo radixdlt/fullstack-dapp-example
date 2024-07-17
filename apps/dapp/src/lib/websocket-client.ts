@@ -31,12 +31,18 @@ export const WebSocketClient = async ({
 
   const onMessageCallbacks: ((data: Message & { id: number }) => void)[] = []
 
-  const sendMessagesToListeners = async () =>
-    messageApi.getAll().map((messages) => {
-      onMessageCallbacks.forEach((callback) => {
-        messages.forEach(callback)
+  const sendMessagesToListeners = async () => {
+    if (onMessageCallbacks.length)
+      await messageApi.getAll().map((messages) => {
+        appLogger.debug({
+          method: 'webSocketClient.sendMessagesToListeners',
+          listeners: onMessageCallbacks.length
+        })
+        onMessageCallbacks.forEach((callback) => {
+          messages.forEach(callback)
+        })
       })
-    })
+  }
 
   while (shouldReconnect) {
     if (onMessageCallbacks.length > 0) await sendMessagesToListeners()
@@ -54,14 +60,14 @@ export const WebSocketClient = async ({
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        onClose()
-        appLogger.error({ method: 'webSocketClient.handleVisibilityChange' })
+        sendMessagesToListeners()
+        appLogger.debug({ method: 'webSocketClient.handleVisibilityChange' })
       }
     }
 
     const onOpen = async () => {
       currentRestartTimeout = restartTimeout
-      appLogger.debug({ method: 'webSocketClient.onOpen' })
+      appLogger.debug({ method: 'webSocketClient.onOpen', restartTimeout })
       document.addEventListener('visibilitychange', handleVisibilityChange)
       await sendMessagesToListeners()
     }
