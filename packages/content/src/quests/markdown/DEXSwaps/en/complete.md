@@ -4,4 +4,4 @@ Now that you’ve experienced using some other dApps, explore the vibrant ecosys
 - [Ociswap](https://ociswap.com)
 - [Trove](https://swap.trove.tools)
 
-Or check out many more dApps on the community-run [radixecosystem.com](https://radixecosystem.com/projects)
+Or check out many more dApps on the [Radix dApp Ecosystem Page](https://www.radixdlt.com/ecosystem)

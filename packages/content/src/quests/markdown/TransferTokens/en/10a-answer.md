@@ -1,1 +1,1 @@
-An identity to login to Radix dApps without a password.
+An identity to log in to Radix dApps without a password.

@@ -55,7 +55,7 @@
   },
   "SetupWallet": {
     "requirements": {
-      "ConnectWallet": "Login to RadQuest with your Radix Wallet",
+      "ConnectWallet": "Log in to RadQuest with your Radix Wallet",
       "DownloadWallet": "Download the Radix Wallet mobile app, create your first Account"
     },
     "usernameCompleted": "Completed",
@@ -68,7 +68,7 @@
   "GetStuff": {
     "requirements": {
       "VerifyPhoneNumber": "Prove you’re not a robot",
-      "RegisterAccount": "Register an account with RadQuest",
+      "RegisterAccount": "Register an Account with RadQuest",
       "LearnAboutTransactions": "Learn about XRD and Transactions",
       "DepositHeroBadge": "Get your Hero’s Badge",
       "JettyReceivedClams": "Get your first XRD and NFT rewards"
@@ -78,7 +78,7 @@
     "registerAccount": "Register Account",
     "title": "Get Some (Web3) Stuff!",
     "description": "Claim your first quest rewards",
-    "introDescription": "Learn about XRD and transactions – and use them to claim your first quest rewards right to your Radix Wallet.",
+    "introDescription": "Do your first transactions to claim your first quest rewards right to your Radix Wallet.",
     "failedToSendOtp": "Failed to send SMS",
     "phoneNumberExists": "Phone number exists",
     "invalidPhoneNumber": "Invalid phone number",
@@ -95,8 +95,7 @@
   "CreatingRadMorphs": {
     "title": "Creating RadMorphs",
     "requirements": {
-      "GiftBoxOpened": "Learn about Gift Boxes, Elements, RadGems and RadMorphs",
-      "CheckOutRadMorph": "Check out what your first RadMorph might be"
+      "RadMorphsQuiz": "Learn about rewards, from Gift Boxes to RadMorphs"
     },
     "description": "How to collect and combine",
     "introDescription": "How to collect and combine on RadQuest to make the best and most rare RadMorph NFTs"
@@ -175,7 +174,7 @@
     "goToLettySwap": "Go to Letty Swap",
     "title": "Decentralized Exchange (DEX)",
     "description": "Learn how to swap one token for another at a changing market rate.",
-    "introDescription": "Learn about DEXes\nSwap one token for another kind of token"
+    "introDescription": "Learn how to safely swap tokens on Radix using a decentralized exchange (DEX)"
   },
   "Instapass": {
     "goToInstapass": "Instapass Lite Signup",

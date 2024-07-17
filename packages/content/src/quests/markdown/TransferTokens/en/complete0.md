@@ -2,7 +2,7 @@ You now have pretty much everything you need to go out into the wild and interac
 
 - You have your own **Radix Wallet**.
 - You’ve created your first **Account** and **Persona**.
-- You know how to **login to dApps** using a Persona.
+- You know how to **log in to dApps** using a Persona.
 - You can review and sign **transactions**.
 - You can **transfer assets** to other Accounts.
 - And you have **XRD**, so you can pay for transactions and more!
