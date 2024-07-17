@@ -1,36 +1,35 @@
 export type CreateSwapManifestProps = {
-  userAddress: string
+  userAccountAddress: string
   fromTokenAddress: string
-  toTokenAddress: string
   amount: string
   swapComponent: string
 }
 
 export const createSwapManifest = ({
-  userAddress,
+  userAccountAddress,
   fromTokenAddress,
   amount,
   swapComponent
 }: CreateSwapManifestProps) => `
   CALL_METHOD
-    Address("${userAddress}")
+    Address("${userAccountAddress}")
     "withdraw"
     Address("${fromTokenAddress}")
-    Decimal("${amount}");
-
+    Decimal("${amount}")
+    ;
   TAKE_FROM_WORKTOP
     Address("${fromTokenAddress}")
     Decimal("${amount}")
-    Bucket("bucket_of_clams");
-
+    Bucket("clams")
+    ;
   CALL_METHOD
     Address("${swapComponent}")
     "swap"
-    Bucket("bucket_of_clams");
-
+    Bucket("clams")
+    ;
   CALL_METHOD
-    Address("${userAddress}")
+    Address("${userAccountAddress}")
     "deposit_batch"
-    Expression("ENTIRE_WORKTOP");
-
+    Expression("ENTIRE_WORKTOP")
+    ;
 `

@@ -8,7 +8,7 @@
   export let conversionRateFrom: string
   export let conversionRateTo: string
   export let clamResourceIcon: string | undefined
-  export let elementResourceIcon: string | undefined
+  export let ottercoinResourceIcon: string | undefined
   export let isJetty: boolean
   export let isGoingUp: boolean
   export let priceChange: string
@@ -20,7 +20,7 @@
     <img src={logo} alt="swap-logo" />
     <div class={`market-price`}>
       <div>{@html $i18n.t('main:marketplace-estimates')}</div>
-      <Ratio {conversionRateFrom} {clamResourceIcon} {conversionRateTo} {elementResourceIcon} />
+      <Ratio {conversionRateFrom} {clamResourceIcon} {conversionRateTo} {ottercoinResourceIcon} />
     </div>
   </div>
 {/if}
@@ -37,7 +37,7 @@
               {conversionRateFrom}
               {clamResourceIcon}
               {conversionRateTo}
-              {elementResourceIcon}
+              {ottercoinResourceIcon}
             />
             <div class="market-estimate-graph-row">
               <div class:rotate-180={isGoingUp} class={'chevron'}>

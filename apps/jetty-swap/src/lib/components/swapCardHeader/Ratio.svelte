@@ -4,7 +4,7 @@
   export let conversionRateTo: string
   export let conversionRateFrom: string
   export let clamResourceIcon: string | undefined
-  export let elementResourceIcon: string | undefined
+  export let ottercoinResourceIcon: string | undefined
 </script>
 
 <div class="ratio row">
@@ -15,7 +15,7 @@
   =
   <span class="row">
     {conversionRateTo ?? 'N/A'}
-    <Icon --size="18px" url={elementResourceIcon} />
+    <Icon --size="18px" url={ottercoinResourceIcon} />
   </span>
 </div>
 
