@@ -12,7 +12,7 @@
   import { allowOnlyPositiveNumberInString } from '$lib/tools'
   import { entityToResource } from '$lib/utils/entityToResource'
   import { onMount } from 'svelte'
-  import { DataRequestBuilder, RadixDappToolkit } from '@radixdlt/radix-dapp-toolkit'
+  import { DataRequestBuilder, Logger, RadixDappToolkit } from '@radixdlt/radix-dapp-toolkit'
   import { jettySwapDefinitionAddress, lettySwapDefinitionAddress } from '$lib/constants'
   import { type FungibleResourcesCollectionItemVaultAggregated } from '@radixdlt/babylon-gateway-api-sdk'
   import { rdt, walletData, gatewayApi } from '$lib/stores'
@@ -96,7 +96,7 @@
         : lettySwapDefinitionAddress
     }
 
-    $rdt = RadixDappToolkit(swapConfig)
+    $rdt = RadixDappToolkit({ ...swapConfig, logger: Logger(1) })
     $rdt.buttonApi.setTheme(isJetty ? 'radix-blue' : 'white')
     $gatewayApi = GatewayApi(parseInt(env.PUBLIC_NETWORK_ID, 0))
     $rdt?.walletApi.setRequestData(DataRequestBuilder.accounts().exactly(1))
