@@ -51,6 +51,12 @@ struct RewardInfo {
     reward_amount: RewardAmount,
 }
 
+struct KycVerificationContext<'a> {
+    admin_badge: &'a FungibleVault,
+    kyc_badge_address: ResourceAddress,
+    kyc_oracle: &'a Global<KycOracle>,
+}
+
 #[blueprint]
 #[events(RewardClaimedEvent, RewardDepositedEvent)]
 mod quest_rewards {
@@ -140,20 +146,38 @@ mod quest_rewards {
             UserId(local_id_string)
         }
 
-        fn authorize_claim(
-            &self,
-            quest_id: &QuestId,
+        fn assert_kyc_authorization_passes_if_required(
+            context: KycVerificationContext,
+            user_id: &UserId,
+            resources_to_claim: &HashMap<ResourceAddress, RewardAmount>,
+            kyc_badge: Option<Proof>,
+        ) {
+            if resources_to_claim.contains_key(&XRD) {
+                let kyc_required = context.admin_badge.authorize_with_amount(1, || {
+                    context.kyc_oracle.get_user_kyc_requirement(user_id.clone())
+                });
+                if kyc_required {
+                    kyc_badge
+                        .expect("No KYC badge proof provided")
+                        .check(context.kyc_badge_address);
+                }
+            }
+        }
+
+        pub fn claim_reward(
+            &mut self,
+            quest_id: QuestId,
             hero_badge: Proof,
             kyc_badge: Option<Proof>,
-        ) -> UserId {
+        ) -> Vec<Bucket> {
             let user_id = self.get_user_id_from_badge_proof(hero_badge);
 
-            let reward_state = self
+            let mut reward_state = self
                 .rewards_record
-                .get(&(user_id.clone(), quest_id.clone()))
+                .get_mut(&(user_id.clone(), quest_id.clone()))
                 .unwrap_or_else(|| {
                     panic!(
-                        "No reward record for user_id: {}, quest_id {}",
+                        "No reward record for user_id: {}, quest_id: {}",
                         user_id.0, quest_id.0
                     )
                 });
@@ -163,42 +187,18 @@ mod quest_rewards {
                     panic!("Reward already claimed")
                 }
                 RewardState::Unclaimed {
-                    ref resources_record,
-                } => {
-                    let kyc_required = self.admin_badge.authorize_with_amount(1, || {
-                        self.kyc_oracle.get_user_kyc_requirement(user_id.clone())
-                    });
-
-                    if resources_record.contains_key(&XRD) && kyc_required {
-                        kyc_badge
-                            .expect("No KYC badge proof provided")
-                            .check(self.kyc_badge_address);
-                    };
-                }
-            }
-            user_id
-        }
-
-        pub fn claim_reward(
-            &mut self,
-            quest_id: QuestId,
-            hero_badge: Proof,
-            did_badge: Option<Proof>,
-        ) -> Vec<Bucket> {
-            let user_id = self.authorize_claim(&quest_id, hero_badge, did_badge);
-
-            let mut reward_state = self
-                .rewards_record
-                .get_mut(&(user_id.clone(), quest_id.clone()))
-                .unwrap();
-
-            match *reward_state {
-                RewardState::Claimed => {
-                    panic!("Reward already claimed")
-                }
-                RewardState::Unclaimed {
                     ref mut resources_record,
                 } => {
+                    Self::assert_kyc_authorization_passes_if_required(
+                        KycVerificationContext {
+                            admin_badge: &self.admin_badge,
+                            kyc_badge_address: self.kyc_badge_address,
+                            kyc_oracle: &self.kyc_oracle,
+                        },
+                        &user_id,
+                        &resources_record,
+                        kyc_badge,
+                    );
                     Runtime::emit_event(RewardClaimedEvent {
                         user_id,
                         quest_id,
@@ -222,7 +222,6 @@ mod quest_rewards {
                                     .as_fungible()
                                     .take(amount.clone())
                                     .into();
-                                *amount = Decimal::zero();
                                 bucket
                             }
                             RewardAmount::NonFungibleAmount(ids) => {
@@ -233,7 +232,6 @@ mod quest_rewards {
                                     .as_non_fungible()
                                     .take_non_fungibles(&ids.iter().cloned().collect())
                                     .into();
-                                ids.clear();
                                 bucket
                             }
                         })
