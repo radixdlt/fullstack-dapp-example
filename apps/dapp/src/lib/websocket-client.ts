@@ -38,8 +38,8 @@ export const WebSocketClient = async ({
       })
     })
 
-  while (onMessageCallbacks.length > 0 && shouldReconnect) {
-    await sendMessagesToListeners()
+  while (shouldReconnect) {
+    if (onMessageCallbacks.length > 0) await sendMessagesToListeners()
     await new Promise((resolve) => setTimeout(resolve, 5_000))
   }
 
