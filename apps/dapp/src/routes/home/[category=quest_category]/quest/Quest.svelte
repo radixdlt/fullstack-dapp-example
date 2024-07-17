@@ -214,6 +214,7 @@
 
   const dispatch = createEventDispatcher<{
     completed: undefined
+    render: string
   }>()
 </script>
 
@@ -235,6 +236,7 @@
   let:next
   let:render
   let:skip
+  on:render
   let:lastProgress
   let:progress
 >

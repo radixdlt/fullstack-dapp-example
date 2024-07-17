@@ -42,7 +42,7 @@
     }
 
     const callback = ({ detail }: any) => {
-      if (detail.eventType !== 'extensionStatus' || !render('9b')) return
+      if (detail.eventType !== 'extensionStatus') return
       const { isWalletLinked } = detail
 
       if (isWalletLinked) {
@@ -57,24 +57,21 @@
 
     window.addEventListener('radix#chromeExtension#receive', callback)
 
-    const interval = setInterval(() => {
-      if (render('9b')) {
-        window.dispatchEvent(
-          new CustomEvent('radix#chromeExtension#send', {
-            detail: {
-              interactionId: 'id',
-              discriminator: 'extensionStatus'
-            }
-          })
-        )
-      }
-    }, 1000)
-
     return () => {
       window.removeEventListener('radix#chromeExtension#receive', callback)
-      clearInterval(interval)
     }
   })
+
+  const on9bRender = () => {
+    window.dispatchEvent(
+      new CustomEvent('radix#chromeExtension#send', {
+        detail: {
+          interactionId: 'id',
+          discriminator: 'extensionStatus'
+        }
+      })
+    )
+  }
 
   const loggedIn = derived(user, ($user) => !!$user)
 
@@ -111,6 +108,11 @@
 <Quest
   bind:this={quest}
   bind:render
+  on:render={(e) => {
+    if (e.detail === '9b') {
+      on9bRender()
+    }
+  }}
   id={data.id}
   requirements={data.requirements}
   steps={[

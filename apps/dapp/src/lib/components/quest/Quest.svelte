@@ -54,6 +54,7 @@
     if (_progress < 0 || _progress >= _steps.length) return
 
     const step = _steps[_progress]
+    dispatch('render', step.id)
 
     let unsubscribe: Unsubscriber = () => {}
 
@@ -95,6 +96,7 @@
   const dispatch = createEventDispatcher<{
     progressUpdated: number
     next: undefined
+    render: string
   }>()
 
   let progress = 0
