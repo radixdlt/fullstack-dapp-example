@@ -4,10 +4,12 @@
   import NavigateButton from './NavigateButton.svelte'
   import { isMobile } from '$lib/utils/is-mobile'
 
+  export let noButtons = false
+
   let carousel: HTMLElement
 
   let isScrolledToStart = true
-  let isScrolledToEnd = false
+  let isScrolledToEnd = true
 
   export const scrollToNext = () => {
     if (!carousel) return
@@ -23,6 +25,11 @@
   }
 
   onMount(() => {
+    if (noButtons) return
+
+    detectScolledToStart()
+    detectScolledToEnd()
+
     setTimeout(() => {
       carousel.scrollTo({ left: 0, behavior: 'instant' })
     }, 0)
@@ -62,7 +69,7 @@
 >
   <slot {Item} />
   {#if !isMobile()}
-    {#if !isScrolledToStart}
+    {#if !isScrolledToStart && !noButtons}
       <div class="navigate-button left">
         <NavigateButton
           direction="left"
@@ -75,7 +82,7 @@
         />
       </div>
     {/if}
-    {#if !isScrolledToEnd}
+    {#if !isScrolledToEnd && !noButtons}
       <div class="navigate-button right">
         <NavigateButton
           direction="right"
