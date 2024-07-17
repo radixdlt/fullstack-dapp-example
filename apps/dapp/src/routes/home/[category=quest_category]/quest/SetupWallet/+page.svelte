@@ -22,7 +22,6 @@
 
   const text = data.text as Quests['SetupWallet']['text']
 
-  let render = (_: string) => false
   let marketingUpdatesCheckbox: boolean
   let email = $user?.email?.email || ''
   let hasError: boolean
@@ -107,7 +106,6 @@
 
 <Quest
   bind:this={quest}
-  bind:render
   on:render={(e) => {
     if (e.detail === '9b') {
       on9bRender()

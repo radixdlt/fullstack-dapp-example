@@ -3,6 +3,7 @@
   import JettyMenu from '$lib/components/jetty-menu/JettyMenu.svelte'
   import BookIcon from '@images/book-open.svg'
   import LightningIcon from '@images/lightning-icon.svg'
+  import BoxIcon from '@images/box.svg'
   import { loadGlossary } from 'content'
   import FuseElements, { checkClaimAvailable } from './FuseElements.svelte'
   import { page } from '$app/stores'
@@ -104,7 +105,7 @@
     {
       id: 'gift-box',
       text: $i18n.t('jetty:menu-giftBox'),
-      icon: LightningIcon,
+      icon: BoxIcon,
       alert: giftBoxRewardsAvailable,
       disabled: missingHeroBadge
     },
