@@ -44,7 +44,9 @@
 
   {@html privacyPolicyText}
 
-  <Checkbox bind:checked={sendNewsletter}>{@html marketingUpdatesText}</Checkbox>
+  <Checkbox bind:checked={sendNewsletter} disabled={!email || hasError}
+    >{@html marketingUpdatesText}</Checkbox
+  >
 </div>
 
 <style lang="scss">
