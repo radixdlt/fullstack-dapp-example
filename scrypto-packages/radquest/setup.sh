@@ -28,6 +28,7 @@ export element=`resim new-token-mutable $admin_badge | grep "Resource:" | grep -
 export radgem=`resim run manifests/create_radgem.rtm  | grep "Resource:" | grep -o "resource_.*"`
 export morph_card=`resim run manifests/create_morph_energy_card.rtm  | grep "Resource:" | grep -o "resource_.*"`
 export radmorph=`resim run manifests/create_radmorph.rtm  | grep "Resource:" | grep -o "resource_.*"`
+export clam=`resim new-token-mutable $admin_badge | grep "Resource:" | grep -o "resource_.*"`
 
 
 echo "\nGenerating Components..."
@@ -68,6 +69,7 @@ echo "element = $element"
 echo "radgem = $radgem"
 echo "morph_card = $morph_card"
 echo "radmorph = $radmorph"
+echo "clam = $clam"
 
 echo "\nComponent Addresses:"
 echo "hero_badge_forge = $hero_badge_forge"
