@@ -74,7 +74,7 @@ export const createClamResource = ({
           Tuple(
               Map<String, Tuple>(
                 "name" => Tuple(
-                  Some(Enum<Metadata::String>("Clam")),                  
+                  Some(Enum<Metadata::String>("Clams")),                  
                   false                                                         
                 ),
                 "tags" => Tuple(

@@ -158,25 +158,25 @@ struct GiftBox {
 #[test]
 fn create_gift_box() {
     let gift_boxes = [GiftBox {
-        name: "Starter Gift Box".into(),
+        name: "Starter Gift Boxes".into(),
         manifest_name: "create_gift_box_starter".into(),
         description: "This Gift Box from RadQuest’s Jetty will get you started with a common Morph Energy Card and enough Elements to create a couple of RadGems. Ask Jetty to open it!".into(),
         icon_url: Url::of("https://arweave.net/ykgYDzucDR-laXkFu-Mtb00sb_6jNq-VMKebHMAv32k"),
     },
     GiftBox {
-        name: "Simple Gift Box".into(),
+        name: "Simple Gift Boxes".into(),
         manifest_name: "create_gift_box_simple".into(),
         description: "This simple Gift Box from RadQuest’s Jetty contains a common or rare Morph Energy Card and a handful of Elements. Ask Jetty to open it!".into(),
         icon_url: Url::of("https://arweave.net/dh4CsYX8ZXBCZboy03TwvYdEdOk8D9iNHmIxMpM0UjM"),
     },
     GiftBox {
-        name: "Fancy Gift Box".into(),
+        name: "Fancy Gift Boxes".into(),
         manifest_name: "create_gift_box_fancy".into(),
         description: "This fancy Gift Box from RadQuest’s Jetty contains a common, rare, or sometimes even ultra-rare Morph Energy Card and a goodly quantity of Elements. Ask Jetty to open it!".into(),
         icon_url: Url::of("https://arweave.net/Ba8bp5mqJYicUGvyEznwA63HF7DZevO_LyZEwAw9GWs"),
     },
     GiftBox {
-        name: "Elite Gift Box".into(),
+        name: "Elite Gift Boxes".into(),
         manifest_name: "create_gift_box_elite".into(),
         description: "This truly elite Gift Box from RadQuest’s Jetty, reserved for only the most committed, contains only a rare or ultra-rare Morph Energy Card and a substantial quantity of Elements. Ask Jetty to open it!".into(),
         icon_url: Url::of("https://arweave.net/vdrkR2hi0dII5R_GEWsshock2ER8EKLs93Qb_L___gA"),
@@ -460,7 +460,7 @@ fn create_clam() {
         },
         metadata!(
           init {
-            "name" => "Clam", updatable;
+            "name" => "Clams", updatable;
             "description" => 
 "Clams are a token that is fungible and non-divisible. That means every clam is worth just the same as another, and you can’t have a fractional clam!
 
