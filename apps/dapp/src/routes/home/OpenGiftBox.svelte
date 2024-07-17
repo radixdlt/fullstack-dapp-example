@@ -322,9 +322,19 @@
       <LoadingSpinner />
     </div>
   {:else if waitingForDepositedRewards}
+    <JettyMenuItemPage>
     <div class="title">
       {$i18n.t('jetty:open-gift-box.opening-gift-box')}...
     </div>
+
+      <lottie-player
+        autoplay
+        loop
+        mode="normal"
+        src="/lottie/LoadingBar-Dust.json"
+        style="width: 320px"
+      />
+    </JettyMenuItemPage>
   {:else if claimed}
     {$i18n.t('jetty:open-gift-box.claimed')}
   {:else if readyToClaim}

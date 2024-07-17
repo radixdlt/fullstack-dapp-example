@@ -41,6 +41,8 @@
     useCookies('requirement-SetupWallet-DownloadWallet').set(true)
   }
   onMount(() => {
+    import('@lottiefiles/lottie-player')
+
     if (isMobile() && $page.url.searchParams.get('wallet') === 'true') {
       setGetWalletRequirementInStore()
     }

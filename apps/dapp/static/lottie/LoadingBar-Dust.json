@@ -1,0 +1,4383 @@
+{
+  "v": "4.8.0",
+  "meta": { "g": "LottieFiles AE 3.5.7", "a": "", "k": "", "d": "", "tc": "" },
+  "fr": 30,
+  "ip": 0,
+  "op": 90,
+  "w": 500,
+  "h": 500,
+  "nm": "Loading bar - slow - 2sec 2",
+  "ddd": 0,
+  "assets": [
+    {
+      "id": "image_0",
+      "w": 29,
+      "h": 29,
+      "u": "/images/",
+      "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAYAAABWk2cPAAAACXBIWXMAAAABAAAAAQBPJcTWAAAAJHpUWHRDcmVhdG9yAAAImXNMyU9KVXBMK0ktUnBNS0tNLikGAEF6Bs5qehXFAAACuUlEQVRIie2WsYtUVxTGv3Pue7Pj6qKiicJuowGJKaLRLWyEQAQF7ZaIWFioTRpJyqTaPyGkSqFrIbGwsxKstRBNkFkUUUENkiA7zOzMrjNv3rvnfCnebkg378lUwQO3PN/vnHu/c94DPkaFIKkrK5whKXXy9ENgjx4x/ett9sO7v0dPxPNXnXbxoNMZna+aX6tCACApr1+uXZ1qpheTRBGSUsKdzuiXP53dcn2cRu1OW632gVHOcwTAsgiAAB2aRyyQHKtZG5qtFkfp3GKRcHO4EWaERcKiH3r6dGV6nEZSF2qqTRJiTgQXgICow4yIOZNd8RNOHBqA/SEAuuEGAnAHSADK3p4vMRinUft6NdXPRASbZ5PsBMz8jYiM7bQWlKQ0QtitKhAIsKHvLA1F42qlwutAl+/9uUMC5kNQiJbzRmy612GO1sSh3Dp1ZKqRbtcgKG9WAC+7NHMK7eFEoSSl0WheShsiqgLV0jwE4EbEiNyjPJsodHm5ty+EcCYkCv1Plns5p7Gwh18c3fl2YtBbtxiaqX7XSHUmhA3XUuBOuBN5YSjyeEdEvIpepTmd/6r3DZh8r0EhAohsuNXLTZRnxRrcblbRAip0+uLFYE4lWUpSTVQ3geVxJ4rcMBzkdw8f2/tmIlCSiTDe0KCzpXkEgIAEYnQUhaHfz9aK3H+qshQqQVut7rd0+brcPv8WAotELByDQY5sOPz5+Im551WBY6HZ+uhw+SVxAARJuJVdZllEv5fdt9D+pQ4QGGOkTmcwTEICVcC9fFA3x2hk6Hbfr653hldOLcy3Jwpd6XaXYm6XzGbmppopggqiEev9LPZ664unFz7/oy4QqPC78tvS45NpA9emp5uzqincvR+t+PHxk4O/Li5Wm8vaUAC4ffvezKC97QQSD0HC72cvHHr1IbCP8f+NfwDd+nphbQPBVwAAAABJRU5ErkJggg==",
+      "e": 0
+    },
+    {
+      "id": "image_1",
+      "w": 78,
+      "h": 78,
+      "u": "/images/",
+      "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE4AAABOCAYAAACOqiAdAAAACXBIWXMAAAABAAAAAQBPJcTWAAAAJHpUWHRDcmVhdG9yAAAImXNMyU9KVXBMK0ktUnBNS0tNLikGAEF6Bs5qehXFAAAGRklEQVR4nO2ca4gVZRjHf8+cdb0WIhVbqJ3KSKI0KsJLJIVRdqGkNETQOUfZZKVIim5fOl2gor5EUKF5zqhR+EGC0NRuG5VtHxKMsrTSdlcorVCDstnjOfP0YT2wLu7ZmTnvO3uC+X1ZmHnn/7z8953nvc6BlJSUlJSUlJSUlJSU4ZCkAhUK2nLwIBeMc3BMa/cJ1QkT+P3VV6XPtPZQWDdu6VI9e/Qo1gAdwHkWQx0Vhy2ZCs+t3Si9FuMAlo3rcLXNh23A1TbjnIbyW6sw5w1Pum2GsWac6+pEB7qA6bZi1KG7BRas9WSfrQDG8w30t7QRNA0gW4Ht7a5ai2/cuA5X2/pgOyNnWo1sBbavcjVrQ9zoq1ozTeEqk7oNcrgVZpvOecZa3EOuTvShs8lMA2grQ6fp19ZIixvhjiAsRjuMhltch6ttGeikuU0DwzmvoRZ3apz2fzBtIEZyXuwW10S9Z1TaytDVaMuLZZwbviMoI3wXJ0YDdANHhynTcIcR2bgIg9uqCq7fxw2OsDFe9aKhsLcSMA+Hm0ToGaZ4QzkvknEdHTohbE4T2DNmDDvefluOTb6QnCrPA0GcSoZk04LbmLlxo/ROncq3CjtDPJMtQ1d7u54fNVgk4/wTrCFkTlO4ps9nPUChIEFpgzwZwDUIP0etZF2EIwEsLnqybPFiqQIc6uFFlPaQCm2VMpuihw1JoaAtvd30ApH+OyI8s74kTw28lsvpvaI8S2MdS48Kz6nylueJX7uYd9UFSlHFAjjf8+Rw2PKhjVu5UicHFQ5FrRBwEoc5xaJ8PfjG8uU6N+OwEGW2CNep0lJHpwr8BLyPw9YgoGugYQCrXM2W+/NvW9RKZoS560ryZdjy9Sp6GpUKLTHHLqNQXlfV60REB97YsEF2AbsA8nm9WCtcKqOYTMC5wBigDBxV4U9VvslmOVAoyJB5sgyPEMM0AFVao5QPbVxDKNfmcswHPhyqSLEoB4GDcUOsWKFXaJXVcZ+PipX1uDORgZetBqjysFX9QSRmnMKMfF6vt6G9cqVORrjDhvZQJGYcgCi32dCtVrlZlXNsaA9FosapMt+GrigLbOjWI1HjgBm5nE6xoWtBsy5JGzdahCtMCrqujgEuM6kZhqSNgypGW1wmwzSTemFJ3jhhkkk5rXCxSb2wJG9c/4zAGCKMM6kXlpEwrmxSTB0SO2gzkOSNU/4yKqfDLlhaIXHjMpn489EzoWpWLywj0asaPYLleXIcOGJSMwxJG7d73QbZa0G3y4JmXRI1zhF2WxFWvrCiW4ek56rvWtF12C7C3za0hyIx40TomZLlAxvapZJ8j/KxDe2hSG49TinUW/ZuWN/hFVvaZyKZpXPonprlreEKrVmjY48dY1oGsoEwwVH+DYTesWP58bXXpO6rWCxKZ97VLcA9xmpdh9DGtQYElbjt06GjUJDK4Mu5nJ7rwH2qzAKu/+sYUxxwFBCF2l//BORc7XVgX6Bskww7i0XZP1hPKjyuLdwKjI9Z09CE3h5sb9dxlTJ/QOS54bqiJ6dtDt+f15knA1YDi4CJEfUAfEd4rwqbSiXZOvCGu0wfcxxeiCrY0sq0tWvlQNjykY55rcjpi6o8GvoBYX+gzDo1SO0/FiY8gfJglLjDxNjaqjww8NhW3tWtwO0RNL4rluTKKGEjvXyZUbwEhN3t/lUcbqmZls/rUh/2GjUNQLmjDD+syOnTtUtTs9wtDp+FVPAD5c6oYSMfLHRdzTohdssFeqtwl+fJnnxOX0btb9+JsNkv0z4+w8SqwycKlwzzyPEAFnqefBo5VpwKnjKvE8jWFRd6VOkE3DhxYiF8JMpFYUwTWLLekx3xwsTEdXW6038iMxtXYwTxA1gQp6XVaOgMcNjXtsnwHbjxTU++akSkoZmD50l3ALMJ32GMNMcDA6aBgSnXAPO6G9WyzGGBJZ4B08DgJ0lNnvN8gYVxO4IzYfRbriY1zw/gRlMtrYbx71WbrMPwA5jtebLHtLDxZaUm6jCOS//g1rhpYGk9rgk6jIYGt2Gw+k3+COW8fwKYbzqnDcbqCrDnyb5KwDwRNtuMU0OEz09WudK2aZDg744sWqSTzjqLy53AyqqzTx+/vPmOJL6/mpKSkpKSkpKSkpKSkmKc/wAa5CzF5/lR5wAAAABJRU5ErkJggg==",
+      "e": 0
+    },
+    {
+      "id": "image_2",
+      "w": 29,
+      "h": 29,
+      "u": "/images/",
+      "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAYAAABWk2cPAAAACXBIWXMAAAABAAAAAQBPJcTWAAAAJHpUWHRDcmVhdG9yAAAImXNMyU9KVXBMK0ktUnBNS0tNLikGAEF6Bs5qehXFAAAEZ0lEQVRIie2VTYhlVxGAv6o6977Xk3QgY3qCIP4iSFyoSVZiiKJiENGAjAtRNy7EEMIoqCuTHgxEJIwwA/4EV+pCOotsRJCgUdFAwB8Eg5GgkQRMZiZOume6X7/77qmqLM7rMc5Pm5GImxQcuKe4p776PQdelf+hyJUeeGQ9y+pH2rmbbqKKAEi+4tDDhzfso7fc9m5D3icit4qwaqYqydxK/n5l0j903bw8dvPnZPaKQB+4/58fMrd70+VdpJiaYNaOmkHXCaoSWvjTpNMv//bpyc/W16X+V9D19cf76/u1ozmWLyrSmypiQimCFUENzATT9n+4kJELm+rRvmyf+Nhn185dzrZeSrlxeMMO2sFj87N8ZRyyjwRPGqi0VTroOrCu6cVAlN4Xca/7yt2PbjyzckXQp95685HZC3FHrUgsW0Q1EWm5UU3MQMsSWEAtQSA9ZZjJkdPb1348My+ZyYug3/jak28ZdvnSfECqQyZEQEbrUSHJhASyKVBZwhVAcM8yn+mxH33nuTe8LOhsa/bps5v1+nGEjCQjCU8iE88ksjmSAeEQkcTy+7wzmQxzXxNfPQwXR/tv0GNfeHRltu2fnO04XgOPwD2XC7wmtbZ9rUldJHXR9O5JRJIZzaGa1DHv/On3OXAhtLx0s331/M07p+xN4zil1qCOQdFAFdSh1uZjJpSg6ZcrE7wuo/cWvVbWTm2fex3wl8tC65g3zGdjyRhZ1MqkKrUE6oLWPF/PyGbYTP4FDfBlujOWpRll2g/x9n2h6rI61AF8hTpWFgtrc2mCyF5TaaujCaGta2U57hF7/ySZSSEFzX7f9Ir5lqfji4Gh7zE1VNuceEAxMEtKKG6JqSIKIstxCmnAZQ0ikjg37u4P7eLvkynDma3diVqHYIi2KDpPvDNMW6TFhLBEpGVBRMjM5WpQ1fTa+xP7QleuOfnEVVcdOnk6htfP5zOKGUICkzYykXRFyVC8KKbSnBIQ5PzlEREkgdR86q9nfvy3C6H20s3DDz80vvc9n1rb2Y5bhkUigOreVMnyklimLZJwqGMQ0RxqjgXuwaJWAv/m/d96/y/2jRRg9Wo2XnNI75w/vbhmqCALIUjcg650jFYo1hpMVRER1NoDUAokgYeTjM9fW3cfuND+RZECPPKbH5784Ac+MxtHuW2sLh4BJHXvVorl5eCJZxARBE6kM3plUUdqLEL7+V33fPudv74U9KJIAV77Rv+u6eRtzz27+PzZLcfrLrU6o48ULRTrKMUwBzNFfe/uDURrHlgdv3dm/OMPLmW7FeoysrGx0T/+u4P3bW7FkedPhw4zIUKRLIi0tJopVoRSlK4PpgdymPZ6bCibR0+c+PBwxVCAzJSv3/Pz21/Y1K9ubfo7dndSqwfhiipYMSa9MD0gdTrVP3SW6/cdv/Un+9n8j9A9OX78ycnms6du3NmJ2yO4wT0OiSad6RlVe6xo/vLPz/zjVw8++Al/OfauWDJT1tdTL/dAvyr/d3kRQxySKsGQcY4AAAAASUVORK5CYII=",
+      "e": 0
+    },
+    {
+      "id": "image_3",
+      "w": 29,
+      "h": 29,
+      "u": "/images/",
+      "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAYAAABWk2cPAAAACXBIWXMAAAABAAAAAQBPJcTWAAAAJHpUWHRDcmVhdG9yAAAImXNMyU9KVXBMK0ktUnBNS0tNLikGAEF6Bs5qehXFAAADx0lEQVRIie2Wz2sdVRTHv+fcO/MmyUvSV6UqpIsUbEUFf4BxIShu1OJSCK5cWv8BwV3yTwhuRBeuAi6t1E0oVkEp1lYrqYWCoSiBtE3z8725956vizvvJeiLfYJuSg8Mw8xczuf8+h4GeGD3m8k/fiWF++co0n/8X6CUlZX1dlVOvFeWOuc9KqH71RSfV9XuytTU1EY/CHJR19fff6TXc5OtljwP2Jpzut7plD8fFuRQ6JUrv3VKf+Sz9nh5Wr2Kd/mkcxphXIXoJRNeTsEqAecInABkRhVeRYSQW87rJ52j+oGI2EjQb87feG16+sgX7cnSF4WDcwLn8lFCcq1JEASZ3YgAqoAKYAaQsgWnbx875s/+1b8Og97e2D5Z92ofY0IMhpQIsz7gQMWIfZhmsDEHZGaTDGmO5N8SGwrd2eyFnd0eQzCEeBBKgMgZAoDkrEVyBDTAjEgRiIGIJkeH9dUPg9a73R+3tmpMtmsI+lkoigL9OQYGMMkVIJAsg1MiUiKk7l0f5n94phbXtjd2b3a7AXUdEeqIEAwxGixxUNZBlUkkIyw1lxlo6W5Q+3Jk6Nra+VWzerXXjQh1Ql0nhJAQI5tSG9iUm0ZYQgND/kaACb84d/vmyNCFhQU6rX5w3gPQ7DgmhNoQA5FS0+em13YggMHcOH47OzvbHRkqIhyfLJ33BZx3EFVABCQRkyHEPjjLA33ZqDT9FzjnvxvmGzhkkJaXlysN/tmq0kajCpGmd9FAU5gDvDeoZAgkDxwIqIgB2v5XUPSOz/iqetJ5bYCSRdJoMMYEVQGZA9JBhoDkuxLh8cOgQ8trTl8timJaoPsaZO5dSoYYEuo6oq4NIRhSzP3dXx4EKC9dvMhi5EwZeVpUBJInchBMI4uY+lNLsOWAEoAo1AyUnIdATp7o3BkHcPee0KtLV8sb3TQzaYaUFAChCpD7oo8xZ5ffM28lAgJFIZaHDuj0xtunAHx/T+iFOxf40MQLO9tbY3AqEFVIs9jN8nKI/UVhQIyW5UKC4gA4qANIhAnX3RipvGfOvBs//ejrr3w59opzIr4ZFBJIZqh7ESEk1LVBIHCFIoQEM6KVCGvlKSa42Q319khQQKg89/HmVveJva68VRZ+XJRRVXZSSNdo6ZIA12JECMneAPzTmy4c39vtuon2GKrKwTu3naJ9+OLLj/4+DHro78ry8rL/4/rEqQg87IuxsnJ2eQLYef2dZ3b6Z5aWltwUnppe38RzRSu96Qv/mPfulsLO7dlPZ+fn59Nh/v9TW1xcHCrDB3Z/259rb1R1Yg+lOwAAAABJRU5ErkJggg==",
+      "e": 0
+    },
+    {
+      "id": "comp_0",
+      "layers": [
+        {
+          "ddd": 0,
+          "ind": 2,
+          "ty": 2,
+          "nm": "Radquest-assets-long.png",
+          "cl": "png",
+          "refId": "image_0",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 29,
+                  "s": [100]
+                },
+                { "t": 31, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 31, "s": [84.5, 88, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [100, 100, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 26,
+                  "s": [100, 100, 100]
+                },
+                { "t": 31, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 3,
+          "ty": 2,
+          "nm": "Radquest-assets-logo.png",
+          "cl": "png",
+          "refId": "image_1",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 26,
+                  "s": [100]
+                },
+                { "t": 28, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [190, 107.5, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [39, 39, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [46, 46, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 23,
+                  "s": [46, 46, 100]
+                },
+                { "t": 28, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 4,
+          "ty": 2,
+          "nm": "Radquest-assets-dot.png",
+          "cl": "png",
+          "refId": "image_2",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 23,
+                  "s": [100]
+                },
+                { "t": 25, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [121, 196, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [100, 100, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 20,
+                  "s": [100, 100, 100]
+                },
+                { "t": 25, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 5,
+          "ty": 2,
+          "nm": "Radquest-assets-cross.png",
+          "cl": "png",
+          "refId": "image_3",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 28,
+                  "s": [100]
+                },
+                { "t": 30, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 32, "s": [23, 250, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [100, 100, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 25,
+                  "s": [100, 100, 100]
+                },
+                { "t": 30, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 6,
+          "ty": 2,
+          "nm": "Radquest-assets-long.png",
+          "cl": "png",
+          "refId": "image_0",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 26,
+                  "s": [100]
+                },
+                { "t": 28, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [137.5, 358, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [100, 100, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 23,
+                  "s": [100, 100, 100]
+                },
+                { "t": 28, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 7,
+          "ty": 2,
+          "nm": "Radquest-assets-logo.png",
+          "cl": "png",
+          "refId": "image_1",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 32,
+                  "s": [100]
+                },
+                { "t": 34, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 33, "s": [75, 322.5, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [39, 39, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [46, 46, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 29,
+                  "s": [46, 46, 100]
+                },
+                { "t": 34, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 8,
+          "ty": 2,
+          "nm": "Radquest-assets-dot.png",
+          "cl": "png",
+          "refId": "image_2",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 26,
+                  "s": [100]
+                },
+                { "t": 28, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [197, 378, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [100, 100, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 23,
+                  "s": [100, 100, 100]
+                },
+                { "t": 28, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 9,
+          "ty": 2,
+          "nm": "Radquest-assets-cross.png",
+          "cl": "png",
+          "refId": "image_3",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 23,
+                  "s": [100]
+                },
+                { "t": 25, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [249, 431, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [100, 100, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 20,
+                  "s": [100, 100, 100]
+                },
+                { "t": 25, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 10,
+          "ty": 2,
+          "nm": "Radquest-assets-long.png",
+          "cl": "png",
+          "refId": "image_0",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 26,
+                  "s": [100]
+                },
+                { "t": 28, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [353, 359.5, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [100, 100, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 23,
+                  "s": [100, 100, 100]
+                },
+                { "t": 28, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 11,
+          "ty": 2,
+          "nm": "Radquest-assets-logo.png",
+          "cl": "png",
+          "refId": "image_1",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 23,
+                  "s": [100]
+                },
+                { "t": 25, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [320.5, 423.5, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [39, 39, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [46, 46, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 20,
+                  "s": [46, 46, 100]
+                },
+                { "t": 25, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 12,
+          "ty": 2,
+          "nm": "Radquest-assets-dot.png",
+          "cl": "png",
+          "refId": "image_2",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 20,
+                  "s": [100]
+                },
+                { "t": 22, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [424, 324, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [100, 100, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 17,
+                  "s": [100, 100, 100]
+                },
+                { "t": 22, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 13,
+          "ty": 2,
+          "nm": "Radquest-assets-cross.png",
+          "cl": "png",
+          "refId": "image_3",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 23,
+                  "s": [100]
+                },
+                { "t": 25, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [476, 250, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [100, 100, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 20,
+                  "s": [100, 100, 100]
+                },
+                { "t": 25, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 14,
+          "ty": 2,
+          "nm": "Radquest-assets-long.png",
+          "cl": "png",
+          "refId": "image_0",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 31,
+                  "s": [100]
+                },
+                { "t": 33, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 31, "s": [409, 91, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [100, 100, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 28,
+                  "s": [100, 100, 100]
+                },
+                { "t": 33, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 15,
+          "ty": 2,
+          "nm": "Radquest-assets-logo.png",
+          "cl": "png",
+          "refId": "image_1",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 26,
+                  "s": [100]
+                },
+                { "t": 28, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [383, 191, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [39, 39, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [46, 46, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 23,
+                  "s": [46, 46, 100]
+                },
+                { "t": 28, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 16,
+          "ty": 2,
+          "nm": "Radquest-assets-dot.png",
+          "cl": "png",
+          "refId": "image_2",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 30,
+                  "s": [100]
+                },
+                { "t": 32, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 31, "s": [315, 104, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [100, 100, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 27,
+                  "s": [100, 100, 100]
+                },
+                { "t": 32, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 17,
+          "ty": 2,
+          "nm": "Radquest-assets-cross.png",
+          "cl": "png",
+          "refId": "image_3",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 26,
+                  "s": [100]
+                },
+                { "t": 28, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [250, 64, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 4,
+                  "s": [100, 100, 100]
+                },
+                {
+                  "i": { "x": [0.833, 0.833, 0.833], "y": [0.833, 0.833, 0.833] },
+                  "o": { "x": [0.167, 0.167, 0.167], "y": [0.167, 0.167, 0.167] },
+                  "t": 23,
+                  "s": [100, 100, 100]
+                },
+                { "t": 28, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        }
+      ]
+    },
+    {
+      "id": "comp_1",
+      "layers": [
+        {
+          "ddd": 0,
+          "ind": 2,
+          "ty": 2,
+          "nm": "Radquest-assets-dot.png",
+          "cl": "png",
+          "refId": "image_2",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 23,
+                  "s": [100]
+                },
+                { "t": 25, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [121, 196, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 4,
+                  "s": [80, 80, 100]
+                },
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 20,
+                  "s": [80, 80, 100]
+                },
+                { "t": 25, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 3,
+          "ty": 2,
+          "nm": "Radquest-assets-long.png",
+          "cl": "png",
+          "refId": "image_0",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 26,
+                  "s": [100]
+                },
+                { "t": 28, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [137.5, 358, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 4,
+                  "s": [80, 80, 100]
+                },
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 23,
+                  "s": [80, 80, 100]
+                },
+                { "t": 28, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 4,
+          "ty": 2,
+          "nm": "Radquest-assets-cross.png",
+          "cl": "png",
+          "refId": "image_3",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 23,
+                  "s": [100]
+                },
+                { "t": 25, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [249, 431, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 4,
+                  "s": [80, 80, 100]
+                },
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 20,
+                  "s": [80, 80, 100]
+                },
+                { "t": 25, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 6,
+          "ty": 2,
+          "nm": "Radquest-assets-dot.png",
+          "cl": "png",
+          "refId": "image_2",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 20,
+                  "s": [100]
+                },
+                { "t": 22, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [424, 324, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 4,
+                  "s": [80, 80, 100]
+                },
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 17,
+                  "s": [80, 80, 100]
+                },
+                { "t": 22, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 7,
+          "ty": 2,
+          "nm": "Radquest-assets-logo.png",
+          "cl": "png",
+          "refId": "image_1",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 26,
+                  "s": [100]
+                },
+                { "t": 28, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [383, 191, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [39, 39, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 4,
+                  "s": [29, 29, 100]
+                },
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 23,
+                  "s": [29, 29, 100]
+                },
+                { "t": 28, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        },
+        {
+          "ddd": 0,
+          "ind": 8,
+          "ty": 2,
+          "nm": "Radquest-assets-cross.png",
+          "cl": "png",
+          "refId": "image_3",
+          "sr": 1,
+          "ks": {
+            "o": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 2,
+                  "s": [100]
+                },
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 26,
+                  "s": [100]
+                },
+                { "t": 28, "s": [0] }
+              ],
+              "ix": 11
+            },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.79], "y": [1] },
+                  "o": { "x": [0.21], "y": [0] },
+                  "t": 0,
+                  "s": [0]
+                },
+                { "t": 25, "s": [360] }
+              ],
+              "ix": 10
+            },
+            "p": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": 0.833, "y": 0.833 },
+                  "o": { "x": 0.167, "y": 0.167 },
+                  "t": 0,
+                  "s": [250, 250, 0],
+                  "to": [0, 0, 0],
+                  "ti": [0, 0, 0]
+                },
+                { "t": 24, "s": [250, 64, 0] }
+              ],
+              "ix": 2
+            },
+            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "s": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 0,
+                  "s": [0, 0, 100]
+                },
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 4,
+                  "s": [80, 80, 100]
+                },
+                {
+                  "i": { "x": [0.82, 0.82, 0.82], "y": [1, 1, 1] },
+                  "o": { "x": [0.18, 0.18, 0.18], "y": [0, 0, 0] },
+                  "t": 23,
+                  "s": [80, 80, 100]
+                },
+                { "t": 28, "s": [0, 0, 100] }
+              ],
+              "ix": 6
+            }
+          },
+          "ao": 0,
+          "ip": 0,
+          "op": 90,
+          "st": 0,
+          "bm": 0
+        }
+      ]
+    }
+  ],
+  "layers": [
+    {
+      "ddd": 0,
+      "ind": 1,
+      "ty": 0,
+      "nm": "Loading bar-Precom-3",
+      "refId": "comp_0",
+      "sr": 1,
+      "ks": {
+        "o": { "a": 0, "k": 100, "ix": 11 },
+        "r": { "a": 0, "k": 79, "ix": 10 },
+        "p": { "a": 0, "k": [250, 250, 0], "ix": 2 },
+        "a": { "a": 0, "k": [250, 250, 0], "ix": 1 },
+        "s": { "a": 0, "k": [100, 100, 100], "ix": 6 }
+      },
+      "ao": 0,
+      "w": 500,
+      "h": 500,
+      "ip": 40,
+      "op": 130,
+      "st": 40,
+      "bm": 0
+    },
+    {
+      "ddd": 0,
+      "ind": 2,
+      "ty": 0,
+      "nm": "Loading bar-Precom-3",
+      "refId": "comp_0",
+      "sr": 1,
+      "ks": {
+        "o": { "a": 0, "k": 100, "ix": 11 },
+        "r": { "a": 0, "k": 0, "ix": 10 },
+        "p": { "a": 0, "k": [250, 250, 0], "ix": 2 },
+        "a": { "a": 0, "k": [250, 250, 0], "ix": 1 },
+        "s": { "a": 0, "k": [100, 100, 100], "ix": 6 }
+      },
+      "ao": 0,
+      "w": 500,
+      "h": 500,
+      "ip": 47,
+      "op": 137,
+      "st": 47,
+      "bm": 0
+    },
+    {
+      "ddd": 0,
+      "ind": 3,
+      "ty": 0,
+      "nm": "Loading bar-Precom-4",
+      "refId": "comp_1",
+      "sr": 1,
+      "ks": {
+        "o": { "a": 0, "k": 100, "ix": 11 },
+        "r": { "a": 0, "k": 34.6, "ix": 10 },
+        "p": { "a": 0, "k": [250, 250, 0], "ix": 2 },
+        "a": { "a": 0, "k": [250, 250, 0], "ix": 1 },
+        "s": { "a": 0, "k": [100, 100, 100], "ix": 6 }
+      },
+      "ao": 0,
+      "w": 500,
+      "h": 500,
+      "ip": 32,
+      "op": 122,
+      "st": 32,
+      "bm": 0
+    },
+    {
+      "ddd": 0,
+      "ind": 4,
+      "ty": 0,
+      "nm": "Loading bar-Precom-4",
+      "refId": "comp_1",
+      "sr": 1,
+      "ks": {
+        "o": { "a": 0, "k": 100, "ix": 11 },
+        "r": { "a": 0, "k": 84.029, "ix": 10 },
+        "p": { "a": 0, "k": [250, 250, 0], "ix": 2 },
+        "a": { "a": 0, "k": [250, 250, 0], "ix": 1 },
+        "s": { "a": 0, "k": [100, 100, 100], "ix": 6 }
+      },
+      "ao": 0,
+      "w": 500,
+      "h": 500,
+      "ip": 12,
+      "op": 102,
+      "st": 12,
+      "bm": 0
+    },
+    {
+      "ddd": 0,
+      "ind": 5,
+      "ty": 4,
+      "nm": "01",
+      "sr": 1,
+      "ks": {
+        "o": { "a": 0, "k": 100, "ix": 11 },
+        "r": { "a": 0, "k": 96.034, "ix": 10 },
+        "p": { "a": 0, "k": [249.528, 250.682, 0], "ix": 2 },
+        "a": { "a": 0, "k": [0, 0, 0], "ix": 1 },
+        "s": { "a": 0, "k": [38, 38, 100], "ix": 6 }
+      },
+      "ao": 0,
+      "shapes": [
+        {
+          "ty": "gr",
+          "it": [
+            {
+              "ind": 0,
+              "ty": "sh",
+              "ix": 1,
+              "ks": {
+                "a": 0,
+                "k": {
+                  "i": [
+                    [0, 0],
+                    [0, 0]
+                  ],
+                  "o": [
+                    [0, 0],
+                    [0, 0]
+                  ],
+                  "v": [
+                    [1, 0],
+                    [1, -501.938]
+                  ],
+                  "c": false
+                },
+                "ix": 2
+              },
+              "nm": "Path 1",
+              "mn": "ADBE Vector Shape - Group",
+              "hd": false
+            },
+            {
+              "ty": "st",
+              "c": { "a": 0, "k": [0.38431372549, 0.376470588235, 1, 1], "ix": 3 },
+              "o": { "a": 0, "k": 100, "ix": 4 },
+              "w": {
+                "a": 1,
+                "k": [
+                  {
+                    "i": { "x": [0.833], "y": [0.579] },
+                    "o": { "x": [0.167], "y": [0.167] },
+                    "t": 30.004,
+                    "s": [20]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.737] },
+                    "o": { "x": [0.167], "y": [0.104] },
+                    "t": 31.004,
+                    "s": [19.997]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.773] },
+                    "o": { "x": [0.167], "y": [0.122] },
+                    "t": 32.004,
+                    "s": [19.983]
+                  },
+                  {
+                    "i": { "x": [0.826], "y": [0.999] },
+                    "o": { "x": [0.166], "y": [0.001] },
+                    "t": 33.004,
+                    "s": [19.955]
+                  },
+                  {
+                    "i": { "x": [0.674], "y": [1] },
+                    "o": { "x": [0.341], "y": [0] },
+                    "t": 34,
+                    "s": [12]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.798] },
+                    "o": { "x": [0.167], "y": [0.138] },
+                    "t": 34.004,
+                    "s": [19.905]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.804] },
+                    "o": { "x": [0.167], "y": [0.142] },
+                    "t": 35.004,
+                    "s": [19.83]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.809] },
+                    "o": { "x": [0.167], "y": [0.145] },
+                    "t": 36.004,
+                    "s": [19.722]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.812] },
+                    "o": { "x": [0.167], "y": [0.148] },
+                    "t": 37.004,
+                    "s": [19.577]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.814] },
+                    "o": { "x": [0.167], "y": [0.15] },
+                    "t": 38.004,
+                    "s": [19.389]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.816] },
+                    "o": { "x": [0.167], "y": [0.151] },
+                    "t": 39.004,
+                    "s": [19.153]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.818] },
+                    "o": { "x": [0.167], "y": [0.153] },
+                    "t": 40.004,
+                    "s": [18.863]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.82] },
+                    "o": { "x": [0.167], "y": [0.154] },
+                    "t": 41.004,
+                    "s": [18.513]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.821] },
+                    "o": { "x": [0.167], "y": [0.155] },
+                    "t": 42.004,
+                    "s": [18.1]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.822] },
+                    "o": { "x": [0.167], "y": [0.156] },
+                    "t": 43.004,
+                    "s": [17.619]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.823] },
+                    "o": { "x": [0.167], "y": [0.157] },
+                    "t": 44.004,
+                    "s": [17.064]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.824] },
+                    "o": { "x": [0.167], "y": [0.157] },
+                    "t": 45.004,
+                    "s": [16.433]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.824] },
+                    "o": { "x": [0.167], "y": [0.158] },
+                    "t": 46.004,
+                    "s": [15.721]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.825] },
+                    "o": { "x": [0.167], "y": [0.158] },
+                    "t": 47.004,
+                    "s": [14.924]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.825] },
+                    "o": { "x": [0.167], "y": [0.159] },
+                    "t": 48.004,
+                    "s": [14.041]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.826] },
+                    "o": { "x": [0.167], "y": [0.159] },
+                    "t": 49.004,
+                    "s": [13.069]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.827] },
+                    "o": { "x": [0.167], "y": [0.16] },
+                    "t": 50.004,
+                    "s": [12.005]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.827] },
+                    "o": { "x": [0.167], "y": [0.16] },
+                    "t": 51.004,
+                    "s": [10.847]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.827] },
+                    "o": { "x": [0.167], "y": [0.161] },
+                    "t": 52.004,
+                    "s": [9.595]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.828] },
+                    "o": { "x": [0.167], "y": [0.161] },
+                    "t": 53.004,
+                    "s": [8.247]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.828] },
+                    "o": { "x": [0.167], "y": [0.161] },
+                    "t": 54.004,
+                    "s": [6.802]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.828] },
+                    "o": { "x": [0.167], "y": [0.162] },
+                    "t": 55.004,
+                    "s": [5.26]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.829] },
+                    "o": { "x": [0.167], "y": [0.162] },
+                    "t": 56.004,
+                    "s": [3.621]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.833] },
+                    "o": { "x": [0.167], "y": [0.162] },
+                    "t": 57.004,
+                    "s": [1.885]
+                  },
+                  { "t": 58.004004004004, "s": [0.053] }
+                ],
+                "ix": 5
+              },
+              "lc": 2,
+              "lj": 1,
+              "ml": 4,
+              "bm": 0,
+              "nm": "Stroke 1 - AC Color 1",
+              "mn": "ADBE Vector Graphic - Stroke",
+              "hd": false
+            },
+            {
+              "ty": "tr",
+              "p": { "a": 0, "k": [0, 0], "ix": 2 },
+              "a": { "a": 0, "k": [0, 0], "ix": 1 },
+              "s": { "a": 0, "k": [100, 100], "ix": 3 },
+              "r": { "a": 0, "k": 0, "ix": 6 },
+              "o": { "a": 0, "k": 100, "ix": 7 },
+              "sk": { "a": 0, "k": 0, "ix": 4 },
+              "sa": { "a": 0, "k": 0, "ix": 5 },
+              "nm": "Transform"
+            }
+          ],
+          "nm": "Shape 1",
+          "np": 3,
+          "cix": 2,
+          "bm": 0,
+          "ix": 1,
+          "mn": "ADBE Vector Group",
+          "hd": false
+        },
+        {
+          "ty": "tm",
+          "s": {
+            "a": 1,
+            "k": [
+              {
+                "i": { "x": [0.559], "y": [1] },
+                "o": { "x": [0.506], "y": [0.653] },
+                "t": 30.004,
+                "s": [0]
+              },
+              { "t": 58.032324316504, "s": [100] }
+            ],
+            "ix": 1
+          },
+          "e": {
+            "a": 1,
+            "k": [
+              {
+                "i": { "x": [0.593], "y": [0.991] },
+                "o": { "x": [0.463], "y": [0.8] },
+                "t": 30.004,
+                "s": [0]
+              },
+              { "t": 58.032324316504, "s": [100] }
+            ],
+            "ix": 2
+          },
+          "o": { "a": 0, "k": 0, "ix": 3 },
+          "m": 1,
+          "ix": 2,
+          "nm": "Trim Paths 1",
+          "mn": "ADBE Vector Filter - Trim",
+          "hd": false
+        },
+        {
+          "ty": "rp",
+          "c": {
+            "a": 1,
+            "k": [
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 30.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 31.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 32.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 33.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 34.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 35.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 36.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 37.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 38.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 39.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 40.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 41.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 42.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 43.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 44.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 45.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 46.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 47.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 48.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 49.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 50.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 51.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 52.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 53.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 54.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 55.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 56.004,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 57.004,
+                "s": [16]
+              },
+              { "t": 58.004004004004, "s": [16] }
+            ],
+            "ix": 1
+          },
+          "o": { "a": 0, "k": 0, "ix": 2 },
+          "m": 1,
+          "ix": 3,
+          "tr": {
+            "ty": "tr",
+            "p": { "a": 0, "k": [0, 0], "ix": 2 },
+            "a": { "a": 0, "k": [0, 0], "ix": 1 },
+            "s": { "a": 0, "k": [100, 100], "ix": 3 },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 30.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 31.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 32.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 33.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 34.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 35.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 36.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 37.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 38.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 39.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 40.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 41.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 42.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 43.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 44.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 45.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 46.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 47.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 48.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 49.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 50.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 51.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 52.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 53.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 54.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 55.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 56.004,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 57.004,
+                  "s": [22.5]
+                },
+                { "t": 58.004004004004, "s": [22.5] }
+              ],
+              "ix": 4
+            },
+            "so": { "a": 0, "k": 100, "ix": 5 },
+            "eo": { "a": 0, "k": 100, "ix": 6 },
+            "nm": "Transform"
+          },
+          "nm": "Repeater 1",
+          "mn": "ADBE Vector Filter - Repeater",
+          "hd": false
+        }
+      ],
+      "ip": 30.004004004004,
+      "op": 59,
+      "st": 30.004004004004,
+      "bm": 0
+    },
+    {
+      "ddd": 0,
+      "ind": 6,
+      "ty": 4,
+      "nm": "02",
+      "sr": 1,
+      "ks": {
+        "o": { "a": 0, "k": 100, "ix": 11 },
+        "r": { "a": 0, "k": -34.483, "ix": 10 },
+        "p": { "a": 0, "k": [249.3, 250.678, 0], "ix": 2 },
+        "a": { "a": 0, "k": [0, 0, 0], "ix": 1 },
+        "s": { "a": 0, "k": [38, 38, 100], "ix": 6 }
+      },
+      "ao": 0,
+      "shapes": [
+        {
+          "ty": "gr",
+          "it": [
+            {
+              "ind": 0,
+              "ty": "sh",
+              "ix": 1,
+              "ks": {
+                "a": 0,
+                "k": {
+                  "i": [
+                    [0, 0],
+                    [0, 0]
+                  ],
+                  "o": [
+                    [0, 0],
+                    [0, 0]
+                  ],
+                  "v": [
+                    [1, 0],
+                    [1, -501.938]
+                  ],
+                  "c": false
+                },
+                "ix": 2
+              },
+              "nm": "Path 1",
+              "mn": "ADBE Vector Shape - Group",
+              "hd": false
+            },
+            {
+              "ty": "gs",
+              "o": { "a": 0, "k": 100, "ix": 9 },
+              "w": {
+                "a": 1,
+                "k": [
+                  {
+                    "i": { "x": [0.833], "y": [0.579] },
+                    "o": { "x": [0.167], "y": [0.167] },
+                    "t": 23,
+                    "s": [20]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.737] },
+                    "o": { "x": [0.167], "y": [0.104] },
+                    "t": 24,
+                    "s": [19.997]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.773] },
+                    "o": { "x": [0.167], "y": [0.122] },
+                    "t": 25,
+                    "s": [19.983]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.789] },
+                    "o": { "x": [0.167], "y": [0.132] },
+                    "t": 26,
+                    "s": [19.955]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.798] },
+                    "o": { "x": [0.167], "y": [0.138] },
+                    "t": 27,
+                    "s": [19.905]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.804] },
+                    "o": { "x": [0.167], "y": [0.142] },
+                    "t": 28,
+                    "s": [19.83]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [-3.439] },
+                    "o": { "x": [0.167], "y": [0.145] },
+                    "t": 29,
+                    "s": [19.722]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.995] },
+                    "o": { "x": [0.167], "y": [0.085] },
+                    "t": 30,
+                    "s": [19.577]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.92] },
+                    "o": { "x": [0.167], "y": [-0.005] },
+                    "t": 31,
+                    "s": [12]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.816] },
+                    "o": { "x": [0.167], "y": [-1.97] },
+                    "t": 32,
+                    "s": [19.153]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.818] },
+                    "o": { "x": [0.167], "y": [0.153] },
+                    "t": 33,
+                    "s": [18.863]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.82] },
+                    "o": { "x": [0.167], "y": [0.154] },
+                    "t": 34,
+                    "s": [18.513]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.821] },
+                    "o": { "x": [0.167], "y": [0.155] },
+                    "t": 35,
+                    "s": [18.1]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.822] },
+                    "o": { "x": [0.167], "y": [0.156] },
+                    "t": 36,
+                    "s": [17.619]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.823] },
+                    "o": { "x": [0.167], "y": [0.157] },
+                    "t": 37,
+                    "s": [17.064]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.824] },
+                    "o": { "x": [0.167], "y": [0.157] },
+                    "t": 38,
+                    "s": [16.433]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.824] },
+                    "o": { "x": [0.167], "y": [0.158] },
+                    "t": 39,
+                    "s": [15.721]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.825] },
+                    "o": { "x": [0.167], "y": [0.158] },
+                    "t": 40,
+                    "s": [14.924]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.825] },
+                    "o": { "x": [0.167], "y": [0.159] },
+                    "t": 41,
+                    "s": [14.041]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.826] },
+                    "o": { "x": [0.167], "y": [0.159] },
+                    "t": 42,
+                    "s": [13.069]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.827] },
+                    "o": { "x": [0.167], "y": [0.16] },
+                    "t": 43,
+                    "s": [12.005]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.827] },
+                    "o": { "x": [0.167], "y": [0.16] },
+                    "t": 44,
+                    "s": [10.847]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.827] },
+                    "o": { "x": [0.167], "y": [0.161] },
+                    "t": 45,
+                    "s": [9.595]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.828] },
+                    "o": { "x": [0.167], "y": [0.161] },
+                    "t": 46,
+                    "s": [8.247]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.828] },
+                    "o": { "x": [0.167], "y": [0.161] },
+                    "t": 47,
+                    "s": [6.802]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.828] },
+                    "o": { "x": [0.167], "y": [0.162] },
+                    "t": 48,
+                    "s": [5.26]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.829] },
+                    "o": { "x": [0.167], "y": [0.162] },
+                    "t": 49,
+                    "s": [3.621]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.914] },
+                    "o": { "x": [0.167], "y": [0.162] },
+                    "t": 50,
+                    "s": [1.885]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.833] },
+                    "o": { "x": [0.167], "y": [2.949] },
+                    "t": 51,
+                    "s": [0.053]
+                  },
+                  { "t": 52, "s": [0] }
+                ],
+                "ix": 10
+              },
+              "g": {
+                "p": 3,
+                "k": {
+                  "a": 0,
+                  "k": [0, 0.902, 0.698, 0.733, 0.5, 0.643, 0.537, 0.867, 1, 0.384, 0.376, 1],
+                  "ix": 8
+                }
+              },
+              "s": { "a": 0, "k": [0, 0], "ix": 4 },
+              "e": { "a": 0, "k": [335.567, -287.089], "ix": 5 },
+              "t": 1,
+              "lc": 2,
+              "lj": 1,
+              "ml": 4,
+              "ml2": { "a": 0, "k": 4, "ix": 13 },
+              "bm": 0,
+              "nm": "Gradient Stroke 1",
+              "mn": "ADBE Vector Graphic - G-Stroke",
+              "hd": false
+            },
+            {
+              "ty": "tr",
+              "p": { "a": 0, "k": [0, 0], "ix": 2 },
+              "a": { "a": 0, "k": [0, 0], "ix": 1 },
+              "s": { "a": 0, "k": [100, 100], "ix": 3 },
+              "r": { "a": 0, "k": 0, "ix": 6 },
+              "o": { "a": 0, "k": 100, "ix": 7 },
+              "sk": { "a": 0, "k": 0, "ix": 4 },
+              "sa": { "a": 0, "k": 0, "ix": 5 },
+              "nm": "Transform"
+            }
+          ],
+          "nm": "Shape 1",
+          "np": 3,
+          "cix": 2,
+          "bm": 0,
+          "ix": 1,
+          "mn": "ADBE Vector Group",
+          "hd": false
+        },
+        {
+          "ty": "tm",
+          "s": {
+            "a": 1,
+            "k": [
+              {
+                "i": { "x": [0.559], "y": [1] },
+                "o": { "x": [0.506], "y": [0.653] },
+                "t": 23,
+                "s": [0]
+              },
+              { "t": 51.0283203125, "s": [100] }
+            ],
+            "ix": 1
+          },
+          "e": {
+            "a": 1,
+            "k": [
+              {
+                "i": { "x": [0.593], "y": [0.991] },
+                "o": { "x": [0.463], "y": [0.8] },
+                "t": 23,
+                "s": [0]
+              },
+              { "t": 51.0283203125, "s": [100] }
+            ],
+            "ix": 2
+          },
+          "o": { "a": 0, "k": 0, "ix": 3 },
+          "m": 1,
+          "ix": 2,
+          "nm": "Trim Paths 1",
+          "mn": "ADBE Vector Filter - Trim",
+          "hd": false
+        },
+        {
+          "ty": "rp",
+          "c": {
+            "a": 1,
+            "k": [
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 23,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 24,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 25,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 26,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 27,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 28,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 29,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 30,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 31,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 32,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 33,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 34,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 35,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 36,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 37,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 38,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 39,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 40,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 41,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 42,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 43,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 44,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 45,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 46,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 47,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 48,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 49,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 50,
+                "s": [16]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 51,
+                "s": [16]
+              },
+              { "t": 52, "s": [16] }
+            ],
+            "ix": 1
+          },
+          "o": { "a": 0, "k": 0, "ix": 2 },
+          "m": 1,
+          "ix": 3,
+          "tr": {
+            "ty": "tr",
+            "p": { "a": 0, "k": [0, 0], "ix": 2 },
+            "a": { "a": 0, "k": [0, 0], "ix": 1 },
+            "s": { "a": 0, "k": [100, 100], "ix": 3 },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 23,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 24,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 25,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 26,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 27,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 28,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 29,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 30,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 31,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 32,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 33,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 34,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 35,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 36,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 37,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 38,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 39,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 40,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 41,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 42,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 43,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 44,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 45,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 46,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 47,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 48,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 49,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 50,
+                  "s": [22.5]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 51,
+                  "s": [22.5]
+                },
+                { "t": 52, "s": [22.5] }
+              ],
+              "ix": 4
+            },
+            "so": { "a": 0, "k": 100, "ix": 5 },
+            "eo": { "a": 0, "k": 100, "ix": 6 },
+            "nm": "Transform"
+          },
+          "nm": "Repeater 1",
+          "mn": "ADBE Vector Filter - Repeater",
+          "hd": false
+        }
+      ],
+      "ip": 23,
+      "op": 52.029029029029,
+      "st": 23,
+      "bm": 0
+    },
+    {
+      "ddd": 0,
+      "ind": 7,
+      "ty": 4,
+      "nm": "03",
+      "sr": 1,
+      "ks": {
+        "o": { "a": 0, "k": 100, "ix": 11 },
+        "r": { "a": 0, "k": 49.048, "ix": 10 },
+        "p": { "a": 0, "k": [249.2, 249.775, 0], "ix": 2 },
+        "a": { "a": 0, "k": [0, 0, 0], "ix": 1 },
+        "s": { "a": 0, "k": [48, 48, 100], "ix": 6 }
+      },
+      "ao": 0,
+      "shapes": [
+        {
+          "ty": "gr",
+          "it": [
+            {
+              "ind": 0,
+              "ty": "sh",
+              "ix": 1,
+              "ks": {
+                "a": 0,
+                "k": {
+                  "i": [
+                    [0, 0],
+                    [0, 0]
+                  ],
+                  "o": [
+                    [0, 0],
+                    [0, 0]
+                  ],
+                  "v": [
+                    [1, 0],
+                    [1, -501.938]
+                  ],
+                  "c": false
+                },
+                "ix": 2
+              },
+              "nm": "Path 1",
+              "mn": "ADBE Vector Shape - Group",
+              "hd": false
+            },
+            {
+              "ty": "gs",
+              "o": { "a": 0, "k": 100, "ix": 9 },
+              "w": {
+                "a": 1,
+                "k": [
+                  {
+                    "i": { "x": [0.833], "y": [0.667] },
+                    "o": { "x": [0.167], "y": [0.167] },
+                    "t": 23,
+                    "s": [20]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.779] },
+                    "o": { "x": [0.167], "y": [0.111] },
+                    "t": 24,
+                    "s": [19.884]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.802] },
+                    "o": { "x": [0.167], "y": [0.134] },
+                    "t": 25,
+                    "s": [19.535]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.813] },
+                    "o": { "x": [0.167], "y": [0.144] },
+                    "t": 26,
+                    "s": [18.959]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.819] },
+                    "o": { "x": [0.167], "y": [0.15] },
+                    "t": 27,
+                    "s": [18.168]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.824] },
+                    "o": { "x": [0.167], "y": [0.155] },
+                    "t": 28,
+                    "s": [17.183]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.738] },
+                    "o": { "x": [0.167], "y": [0.158] },
+                    "t": 29,
+                    "s": [16.032]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.915] },
+                    "o": { "x": [0.167], "y": [0.122] },
+                    "t": 30,
+                    "s": [14.749]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [-0.985] },
+                    "o": { "x": [0.167], "y": [3.684] },
+                    "t": 31,
+                    "s": [12]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.834] },
+                    "o": { "x": [0.167], "y": [0.087] },
+                    "t": 32,
+                    "s": [11.936]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.836] },
+                    "o": { "x": [0.167], "y": [0.168] },
+                    "t": 33,
+                    "s": [10.485]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.838] },
+                    "o": { "x": [0.167], "y": [0.169] },
+                    "t": 34,
+                    "s": [9.049]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.839] },
+                    "o": { "x": [0.167], "y": [0.171] },
+                    "t": 35,
+                    "s": [7.66]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.84] },
+                    "o": { "x": [0.167], "y": [0.173] },
+                    "t": 36,
+                    "s": [6.34]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.841] },
+                    "o": { "x": [0.167], "y": [0.174] },
+                    "t": 37,
+                    "s": [5.107]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.843] },
+                    "o": { "x": [0.167], "y": [0.176] },
+                    "t": 38,
+                    "s": [3.975]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.844] },
+                    "o": { "x": [0.167], "y": [0.177] },
+                    "t": 39,
+                    "s": [2.952]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.846] },
+                    "o": { "x": [0.167], "y": [0.179] },
+                    "t": 40,
+                    "s": [2.043]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.847] },
+                    "o": { "x": [0.167], "y": [0.181] },
+                    "t": 41,
+                    "s": [1.25]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.915] },
+                    "o": { "x": [0.167], "y": [0.184] },
+                    "t": 42,
+                    "s": [0.573]
+                  },
+                  {
+                    "i": { "x": [0.833], "y": [0.833] },
+                    "o": { "x": [0.167], "y": [4.609] },
+                    "t": 43,
+                    "s": [0.01]
+                  },
+                  { "t": 44, "s": [0] }
+                ],
+                "ix": 10
+              },
+              "g": {
+                "p": 3,
+                "k": {
+                  "a": 0,
+                  "k": [0, 0.651, 0.376, 1, 0.5, 0.486, 0.345, 1, 0.999, 0.322, 0.314, 1],
+                  "ix": 8
+                }
+              },
+              "s": { "a": 0, "k": [0, 0], "ix": 4 },
+              "e": { "a": 0, "k": [230.339, -88.086], "ix": 5 },
+              "t": 1,
+              "lc": 2,
+              "lj": 1,
+              "ml": 4,
+              "ml2": { "a": 0, "k": 4, "ix": 13 },
+              "bm": 0,
+              "nm": "Gradient Stroke 1",
+              "mn": "ADBE Vector Graphic - G-Stroke",
+              "hd": false
+            },
+            {
+              "ty": "tr",
+              "p": { "a": 0, "k": [0, 0], "ix": 2 },
+              "a": { "a": 0, "k": [0, 0], "ix": 1 },
+              "s": { "a": 0, "k": [100, 100], "ix": 3 },
+              "r": { "a": 0, "k": 0, "ix": 6 },
+              "o": { "a": 0, "k": 100, "ix": 7 },
+              "sk": { "a": 0, "k": 0, "ix": 4 },
+              "sa": { "a": 0, "k": 0, "ix": 5 },
+              "nm": "Transform"
+            }
+          ],
+          "nm": "Shape 1",
+          "np": 3,
+          "cix": 2,
+          "bm": 0,
+          "ix": 1,
+          "mn": "ADBE Vector Group",
+          "hd": false
+        },
+        {
+          "ty": "tm",
+          "s": {
+            "a": 1,
+            "k": [
+              {
+                "i": { "x": [0.53], "y": [1] },
+                "o": { "x": [0.043], "y": [0.49] },
+                "t": 23,
+                "s": [0]
+              },
+              { "t": 43.0205078125, "s": [100] }
+            ],
+            "ix": 1
+          },
+          "e": {
+            "a": 1,
+            "k": [
+              {
+                "i": { "x": [0.53], "y": [1] },
+                "o": { "x": [0.351], "y": [0.494] },
+                "t": 23,
+                "s": [0]
+              },
+              { "t": 43.0205078125, "s": [100] }
+            ],
+            "ix": 2
+          },
+          "o": { "a": 0, "k": 0, "ix": 3 },
+          "m": 1,
+          "ix": 2,
+          "nm": "Trim Paths 1",
+          "mn": "ADBE Vector Filter - Trim",
+          "hd": false
+        },
+        {
+          "ty": "rp",
+          "c": {
+            "a": 1,
+            "k": [
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 23,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 24,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 25,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 26,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 27,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 28,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 29,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 30,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 31,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 32,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 33,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 34,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 35,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 36,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 37,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 38,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 39,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 40,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 41,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 42,
+                "s": [10]
+              },
+              {
+                "i": { "x": [0.833], "y": [1] },
+                "o": { "x": [0.167], "y": [0] },
+                "t": 43,
+                "s": [10]
+              },
+              { "t": 44, "s": [10] }
+            ],
+            "ix": 1
+          },
+          "o": { "a": 0, "k": 0, "ix": 2 },
+          "m": 1,
+          "ix": 3,
+          "tr": {
+            "ty": "tr",
+            "p": { "a": 0, "k": [0, 0], "ix": 2 },
+            "a": { "a": 0, "k": [0, 0], "ix": 1 },
+            "s": { "a": 0, "k": [100, 100], "ix": 3 },
+            "r": {
+              "a": 1,
+              "k": [
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 23,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 24,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 25,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 26,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 27,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 28,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 29,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 30,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 31,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 32,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 33,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 34,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 35,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 36,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 37,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 38,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 39,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 40,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 41,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 42,
+                  "s": [36]
+                },
+                {
+                  "i": { "x": [0.833], "y": [1] },
+                  "o": { "x": [0.167], "y": [0] },
+                  "t": 43,
+                  "s": [36]
+                },
+                { "t": 44, "s": [36] }
+              ],
+              "ix": 4
+            },
+            "so": { "a": 0, "k": 100, "ix": 5 },
+            "eo": { "a": 0, "k": 100, "ix": 6 },
+            "nm": "Transform"
+          },
+          "nm": "Repeater 1",
+          "mn": "ADBE Vector Filter - Repeater",
+          "hd": false
+        }
+      ],
+      "ip": 23,
+      "op": 44.021021021021,
+      "st": 23,
+      "bm": 0
+    },
+    {
+      "ddd": 0,
+      "ind": 8,
+      "ty": 4,
+      "nm": "loading 2",
+      "sr": 1,
+      "ks": {
+        "o": { "a": 0, "k": 100, "ix": 11 },
+        "r": {
+          "a": 1,
+          "k": [
+            {
+              "i": { "x": [0.79], "y": [1] },
+              "o": { "x": [0.21], "y": [0] },
+              "t": 5,
+              "s": [-76.475]
+            },
+            { "t": 27, "s": [153.525] }
+          ],
+          "ix": 10
+        },
+        "p": { "a": 0, "k": [250, 250, 0], "ix": 2 },
+        "a": { "a": 0, "k": [46, 32, 0], "ix": 1 },
+        "s": { "a": 0, "k": [45, 45, 100], "ix": 6 }
+      },
+      "ao": 0,
+      "shapes": [
+        {
+          "ty": "gr",
+          "it": [
+            {
+              "d": 1,
+              "ty": "el",
+              "s": { "a": 0, "k": [330, 330], "ix": 2 },
+              "p": { "a": 0, "k": [0, 0], "ix": 3 },
+              "nm": "Ellipse Path 1",
+              "mn": "ADBE Vector Shape - Ellipse",
+              "hd": false
+            },
+            {
+              "ty": "tm",
+              "s": {
+                "a": 1,
+                "k": [
+                  {
+                    "i": { "x": [0.79], "y": [1] },
+                    "o": { "x": [0.21], "y": [0] },
+                    "t": 11.16,
+                    "s": [0]
+                  },
+                  { "t": 27, "s": [100] }
+                ],
+                "ix": 1
+              },
+              "e": {
+                "a": 1,
+                "k": [
+                  {
+                    "i": { "x": [0.79], "y": [1] },
+                    "o": { "x": [0.21], "y": [0] },
+                    "t": 5,
+                    "s": [0]
+                  },
+                  { "t": 20.83984375, "s": [100] }
+                ],
+                "ix": 2
+              },
+              "o": { "a": 0, "k": 0, "ix": 3 },
+              "m": 1,
+              "ix": 2,
+              "nm": "Trim Paths 1",
+              "mn": "ADBE Vector Filter - Trim",
+              "hd": false
+            },
+            {
+              "ty": "gs",
+              "o": { "a": 0, "k": 100, "ix": 9 },
+              "w": { "a": 0, "k": 12, "ix": 10 },
+              "g": {
+                "p": 3,
+                "k": {
+                  "a": 0,
+                  "k": [0, 0.902, 0.698, 0.733, 0.5, 0.643, 0.537, 0.867, 1, 0.384, 0.376, 1],
+                  "ix": 8
+                }
+              },
+              "s": { "a": 0, "k": [98.2, -295.99], "ix": 4 },
+              "e": { "a": 0, "k": [-200.63, 339.206], "ix": 5 },
+              "t": 1,
+              "lc": 2,
+              "lj": 2,
+              "bm": 0,
+              "nm": "Gradient Stroke 1",
+              "mn": "ADBE Vector Graphic - G-Stroke",
+              "hd": false
+            },
+            {
+              "ty": "tr",
+              "p": { "a": 0, "k": [46, 32], "ix": 2 },
+              "a": { "a": 0, "k": [0, 0], "ix": 1 },
+              "s": { "a": 0, "k": [100, 100], "ix": 3 },
+              "r": { "a": 0, "k": 0, "ix": 6 },
+              "o": { "a": 0, "k": 100, "ix": 7 },
+              "sk": { "a": 0, "k": 0, "ix": 4 },
+              "sa": { "a": 0, "k": 0, "ix": 5 },
+              "nm": "Transform"
+            }
+          ],
+          "nm": "Ellipse 1",
+          "np": 3,
+          "cix": 2,
+          "bm": 0,
+          "ix": 1,
+          "mn": "ADBE Vector Group",
+          "hd": false
+        }
+      ],
+      "ip": 5,
+      "op": 1805,
+      "st": 5,
+      "bm": 0
+    },
+    {
+      "ddd": 0,
+      "ind": 9,
+      "ty": 4,
+      "nm": "loading",
+      "sr": 1,
+      "ks": {
+        "o": { "a": 0, "k": 100, "ix": 11 },
+        "r": {
+          "a": 1,
+          "k": [
+            {
+              "i": { "x": [0.79], "y": [1] },
+              "o": { "x": [0.333], "y": [0.029] },
+              "t": 0,
+              "s": [-76.475]
+            },
+            { "t": 27, "s": [247] }
+          ],
+          "ix": 10
+        },
+        "p": { "a": 0, "k": [250, 250, 0], "ix": 2 },
+        "a": { "a": 0, "k": [46, 32, 0], "ix": 1 },
+        "s": { "a": 0, "k": [85, 85, 100], "ix": 6 }
+      },
+      "ao": 0,
+      "shapes": [
+        {
+          "ty": "gr",
+          "it": [
+            {
+              "d": 1,
+              "ty": "el",
+              "s": { "a": 0, "k": [330, 330], "ix": 2 },
+              "p": { "a": 0, "k": [0, 0], "ix": 3 },
+              "nm": "Ellipse Path 1",
+              "mn": "ADBE Vector Shape - Ellipse",
+              "hd": false
+            },
+            {
+              "ty": "tm",
+              "s": {
+                "a": 1,
+                "k": [
+                  {
+                    "i": { "x": [0.79], "y": [1] },
+                    "o": { "x": [0.21], "y": [0] },
+                    "t": 6.097,
+                    "s": [0]
+                  },
+                  { "t": 27, "s": [100] }
+                ],
+                "ix": 1
+              },
+              "e": {
+                "a": 1,
+                "k": [
+                  {
+                    "i": { "x": [0.79], "y": [1] },
+                    "o": { "x": [0.333], "y": [0] },
+                    "t": 0,
+                    "s": [0]
+                  },
+                  { "t": 20.9033203125, "s": [100] }
+                ],
+                "ix": 2
+              },
+              "o": { "a": 0, "k": 0, "ix": 3 },
+              "m": 1,
+              "ix": 2,
+              "nm": "Trim Paths 1",
+              "mn": "ADBE Vector Filter - Trim",
+              "hd": false
+            },
+            {
+              "ty": "gs",
+              "o": { "a": 0, "k": 100, "ix": 9 },
+              "w": { "a": 0, "k": 12, "ix": 10 },
+              "g": {
+                "p": 3,
+                "k": {
+                  "a": 0,
+                  "k": [0, 0.902, 0.698, 0.733, 0.5, 0.643, 0.537, 0.867, 1, 0.384, 0.376, 1],
+                  "ix": 8
+                }
+              },
+              "s": { "a": 0, "k": [0, 0], "ix": 4 },
+              "e": { "a": 0, "k": [100, 0], "ix": 5 },
+              "t": 1,
+              "lc": 2,
+              "lj": 2,
+              "bm": 0,
+              "nm": "Gradient Stroke 1",
+              "mn": "ADBE Vector Graphic - G-Stroke",
+              "hd": false
+            },
+            {
+              "ty": "tr",
+              "p": { "a": 0, "k": [46, 32], "ix": 2 },
+              "a": { "a": 0, "k": [0, 0], "ix": 1 },
+              "s": { "a": 0, "k": [100, 100], "ix": 3 },
+              "r": { "a": 0, "k": 0, "ix": 6 },
+              "o": { "a": 0, "k": 100, "ix": 7 },
+              "sk": { "a": 0, "k": 0, "ix": 4 },
+              "sa": { "a": 0, "k": 0, "ix": 5 },
+              "nm": "Transform"
+            }
+          ],
+          "nm": "Ellipse 1",
+          "np": 3,
+          "cix": 2,
+          "bm": 0,
+          "ix": 1,
+          "mn": "ADBE Vector Group",
+          "hd": false
+        }
+      ],
+      "ip": 0,
+      "op": 1800,
+      "st": 0,
+      "bm": 0
+    }
+  ],
+  "markers": []
+}
