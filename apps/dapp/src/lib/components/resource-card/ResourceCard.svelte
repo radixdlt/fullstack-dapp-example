@@ -12,8 +12,11 @@
 </script>
 
 <div class="resource-card">
-  <button
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <svelte:element
+    this={selectable ? 'button' : 'div'}
     class:selected
+    class="main-card"
     on:click={() => {
       if (disabled) return
       selected = !selected
@@ -25,7 +28,7 @@
     {#if selectable}
       <SelectionIndicator {selected} />
     {/if}
-  </button>
+  </svelte:element>
 
   <div class="text">
     <slot name="text" />
@@ -33,7 +36,7 @@
 </div>
 
 <style lang="scss">
-  button {
+  .main-card {
     position: relative;
     height: 12rem;
     aspect-ratio: 1/1.66;
