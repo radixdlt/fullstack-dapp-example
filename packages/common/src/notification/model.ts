@@ -52,22 +52,21 @@ export const NotificationModel = (db: PrismaClient) => (logger?: AppLogger) => {
       }
     )
 
-  const markAsSeen = (id: string, userId: string) => {
+  const markAsSeen = (notificationId: string, userId: string) => {
     const seenAt = new Date()
     return ResultAsync.fromPromise(
       db.notification.upsert({
         where: {
           notificationId_userId: {
-            notificationId: id,
+            notificationId,
             userId
-          },
-          seenAt: null
+          }
         },
         update: {
           seenAt
         },
         create: {
-          notificationId: id,
+          notificationId,
           userId,
           seenAt
         }
@@ -77,7 +76,7 @@ export const NotificationModel = (db: PrismaClient) => (logger?: AppLogger) => {
           error,
           method: 'markAsSeen',
           model: 'NotificationModel',
-          data: { id, userId }
+          data: { notificationId, userId }
         })
         return createApiError('failed to mark notification as seen', 400)()
       }
