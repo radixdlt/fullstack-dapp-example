@@ -7,7 +7,7 @@
   import { ResultAsync } from 'neverthrow'
   import { publicConfig } from '$lib/public-config'
   import { goto, invalidateAll } from '$app/navigation'
-  import { quests, user } from '../../stores'
+  import { hasHeroBadge, quests, user } from '../../stores'
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
@@ -26,6 +26,7 @@
   import { loadUnseenNotifications, pushNotification } from '$lib/notifications'
   import Footer from '$lib/components/footer/footer.svelte'
   import ErrorPopup from '$lib/components/error-popup/ErrorPopup.svelte'
+  import { GatewayApi } from 'common'
 
   export let data: LayoutData
 
@@ -70,6 +71,8 @@
         })
         useLocalStorage('savedProgress').clear()
         useLocalStorage('seen-landing-popup').clear()
+
+        $hasHeroBadge = false
 
         $user = undefined
 
@@ -155,6 +158,16 @@
                 pushNotification('reachedTierSuper')
               }
             })
+
+            if (me.accountAddress) {
+              GatewayApi(publicConfig.networkId)
+                .hasHeroBadge(me.accountAddress)
+                .map((hasBadge) => {
+                  if (hasBadge) {
+                    $hasHeroBadge = true
+                  }
+                })
+            }
           })
           .mapErr(({ status }) => {
             if (status === 401) radixDappToolkit.disconnect()

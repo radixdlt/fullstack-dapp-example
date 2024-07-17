@@ -28,3 +28,5 @@ export const hideJetty = writable(false)
 export const retractJettyMenu = writable(false)
 
 export const scrollToNextQuest = writable(false)
+
+export const hasHeroBadge = writable(false)

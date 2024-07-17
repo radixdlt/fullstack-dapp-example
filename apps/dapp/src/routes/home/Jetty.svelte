@@ -8,6 +8,7 @@
   import { page } from '$app/stores'
   import { markLatestNotificationAsSeen } from '$lib/notifications'
   import {
+    hasHeroBadge,
     hideJetty,
     hideJettyMenu,
     jettyNotifications,
@@ -16,14 +17,12 @@
   } from '../../stores'
   import { tick } from 'svelte'
   import { isMobile } from '$lib/utils/is-mobile'
-  import { writable } from 'svelte/store'
+  import { derived, writable } from 'svelte/store'
   import MinimizeIcon from '@images/minimize.svg'
   import CreateRadMorphs from './CreateRadMorphs.svelte'
   import OpenGiftBox, { getRewards } from './OpenGiftBox.svelte'
   import { goto } from '$app/navigation'
   import { i18n } from '$lib/i18n/i18n'
-  import { GatewayApi } from 'common'
-  import { publicConfig } from '$lib/public-config'
 
   let poppedUp = false
   let expanded = false
@@ -89,7 +88,12 @@
     undoGlossaryAnchor()
   }
 
-  const userMissingHeroBadge = writable(true)
+  const missingHeroBadge = derived(hasHeroBadge, ($hasHeroBadge) => !$hasHeroBadge)
+
+  $: {
+    $missingHeroBadge
+    menuItems = [...menuItems]
+  }
 
   let menuItems = [
     {
@@ -102,43 +106,22 @@
       text: $i18n.t('jetty:menu-giftBox'),
       icon: LightningIcon,
       alert: giftBoxRewardsAvailable,
-      disabled: userMissingHeroBadge
+      disabled: missingHeroBadge
     },
     {
       id: 'fuse-elements',
       text: $i18n.t('jetty:menu-radgems'),
       icon: LightningIcon,
       alert: claimAvailable,
-      disabled: userMissingHeroBadge
+      disabled: missingHeroBadge
     },
     {
       id: 'radmorphs',
       text: $i18n.t('jetty:menu-radmorphs'),
       icon: MinimizeIcon,
-      disabled: userMissingHeroBadge
+      disabled: missingHeroBadge
     }
   ]
-
-  const checkHeroBadge = () =>
-    GatewayApi(publicConfig.networkId)
-      .hasHeroBadge($user!.accountAddress!)
-      .map((hasHeroBadge) => {
-        if (hasHeroBadge) {
-          $userMissingHeroBadge = false
-          menuItems = [...menuItems]
-        }
-      })
-
-  const setMissingHeroBadge = () => {
-    $userMissingHeroBadge = true
-    menuItems = [...menuItems]
-  }
-
-  $: if ($user?.accountAddress && expanded) {
-    checkHeroBadge()
-  } else {
-    setMissingHeroBadge()
-  }
 </script>
 
 {#if !$hideJettyMenu}

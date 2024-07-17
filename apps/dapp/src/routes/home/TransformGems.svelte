@@ -266,11 +266,6 @@
 {/if}
 
 <style lang="scss">
-  .content {
-    height: 100%;
-    color: var(--color-light);
-  }
-
   .title {
     font-size: var(--text-md3);
     text-align: center;
