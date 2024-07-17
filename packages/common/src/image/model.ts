@@ -4,9 +4,9 @@ import { createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers'
 import {
   colorCodeDescription,
-  ColorCodeDescription,
+  type ColorCodeDescription,
   shaderCodeDescription,
-  ShaderCodeDescription
+  type ShaderCodeDescription
 } from './mappings'
 
 export type ImageModel = ReturnType<typeof ImageModel>
