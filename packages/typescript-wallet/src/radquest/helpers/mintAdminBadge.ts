@@ -13,30 +13,24 @@ export const mintAdminBadge = ({
   amount?: number
 }) => {
   const transactionManifest = `
-        CALL_METHOD 
-          Address("${config.radQuest.accounts.system.address}") 
-          "lock_fee"
-          Decimal("10")
-        ;
+CALL_METHOD
+  Address("${config.radQuest.accounts.owner.address}")
+  "create_proof_of_amount"
+  Address("${superAdminBadgeAddress}")
+  Decimal("1")
+;
 
-        CALL_METHOD
-          Address("${config.radQuest.accounts.owner.address}")
-          "create_proof_of_amount"
-          Address("${superAdminBadgeAddress}")
-          Decimal("1")
-        ;
+MINT_FUNGIBLE 
+  Address("${adminBadgeAddress}")
+  Decimal("${amount}")
+;
 
-        MINT_FUNGIBLE 
-          Address("${adminBadgeAddress}")
-          Decimal("${amount}")
-        ;
-
-        CALL_METHOD
-          Address("${accountAddress ?? config.radQuest.accounts.system.address}")
-          "try_deposit_batch_or_abort"
-          Expression("ENTIRE_WORKTOP")
-          Enum<0u8>()
-        ;
-        `
+CALL_METHOD
+  Address("${accountAddress ?? config.radQuest.accounts.system.address}")
+  "try_deposit_batch_or_abort"
+  Expression("ENTIRE_WORKTOP")
+  Enum<0u8>()
+;
+`
   return transactionBuilder({ transactionManifest, signers: ['owner', 'system'] }).submit()
 }

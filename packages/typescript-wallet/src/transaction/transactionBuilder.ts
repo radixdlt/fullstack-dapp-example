@@ -10,10 +10,12 @@ const accounts = config.radQuest.accounts
 export const transactionBuilder = ({
   transactionManifest,
   signers,
+  lockFee,
   optional
 }: {
   transactionManifest: string
-  signers: ('payer' | 'owner' | 'system' | 'dAppDefinition')[]
+  signers: ('owner' | 'system' | 'dAppDefinition')[]
+  lockFee?: number
   optional?: Partial<{
     blobs: Uint8Array[]
     message: Message
@@ -21,6 +23,16 @@ export const transactionBuilder = ({
   }>
 }) => {
   const addManifestSignerProofs = (manifest: string) =>
+    `
+CALL_METHOD
+  Address("${accounts.payer.accessController}")
+  "create_proof"
+;
+CALL_METHOD
+    Address("${config.radQuest.accounts.payer.address}")
+    "lock_fee"
+    Decimal("${lockFee ?? 50}")
+;` +
     signers
       .map(
         (signer) => `
@@ -29,11 +41,12 @@ CALL_METHOD
   "create_proof"
 ;`
       )
-      .join('') + manifest
+      .join('') +
+    manifest
 
   const transactionHelper = TransactionHelper({
     networkId: config.network.networkId,
-    onSignature: withSigners(config.network.networkId, ...signers),
+    onSignature: withSigners(config.network.networkId, 'payer', ...signers),
     logger: appLogger
   })
 

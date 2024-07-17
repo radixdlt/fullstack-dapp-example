@@ -3,11 +3,6 @@ import { transactionBuilder } from '../../transaction/transactionBuilder'
 
 export const newClamDex = (name: string, dappDefinition: string, stablePrice: boolean) => {
   const transactionManifest = `
-    CALL_METHOD
-    Address("${config.radQuest.accounts.system.address}")
-    "lock_fee"
-    Decimal("500")
-;
 CALL_METHOD
     Address("${config.radQuest.accounts.owner.address}")
     "create_proof_of_amount"

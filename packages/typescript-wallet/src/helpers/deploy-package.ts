@@ -17,11 +17,6 @@ export const deployPackage = ({
     .map((rpdDecoded) => {
       const wasmHash = hash(wasmBuffer).toString('hex')
       const transactionManifest = `
-CALL_METHOD
-  Address("${config.radQuest.accounts.payer.address}")
-  "lock_fee"
-  Decimal("${lockFee}")
-;
 PUBLISH_PACKAGE
   ${rpdDecoded}
   Blob("${wasmHash}") 
@@ -33,7 +28,7 @@ CALL_METHOD
   Expression("ENTIRE_WORKTOP")
 ;
 `
-      const transaction = transactionBuilder({ transactionManifest, signers: ['payer'] })
+      const transaction = transactionBuilder({ transactionManifest, signers: [], lockFee })
 
       return transaction.submit().andThen(({ transactionId }) =>
         transaction.helper.getCommittedDetails(transactionId).map((res) => ({

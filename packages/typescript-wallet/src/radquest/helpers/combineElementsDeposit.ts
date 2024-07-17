@@ -9,12 +9,6 @@ export const combineElementsDeposit = ({
   userId: string
 }) => {
   const transactionManifest = `
-        CALL_METHOD 
-          Address("${config.radQuest.accounts.payer.address}") 
-          "lock_fee"
-          Decimal("10")
-        ;
-        
         CALL_METHOD
           Address("${accountAddress}")
           "create_proof_of_non_fungibles"
@@ -45,6 +39,6 @@ export const combineElementsDeposit = ({
           Bucket("elements")
         ;
         `
-  const transaction = transactionBuilder({ transactionManifest, signers: ['payer'] })
+  const transaction = transactionBuilder({ transactionManifest, signers: [] })
   return transaction.submit()
 }

@@ -1,9 +1,8 @@
-import { config } from '../../config'
 import { logger } from '../../helpers'
-import { setDappDefinitionMetadata } from '../helpers/setDappDefinitionMetadata'
+import { setRadquestMetadata } from '../helpers/setRadquestMetadata'
 
 const exec = async () => {
-  const result = await setDappDefinitionMetadata(config.radQuest.accounts.dAppDefinition.address)
+  const result = await setRadquestMetadata()
   if (result.isErr()) logger.error(result.error)
 }
 
