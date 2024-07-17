@@ -277,7 +277,7 @@
           autoplay
           loop
           mode="normal"
-          src="/lottie/LoadingBar-Dust.json"
+          src="/lottie/loading.json"
           style="width: 300px"
         />
       </div>

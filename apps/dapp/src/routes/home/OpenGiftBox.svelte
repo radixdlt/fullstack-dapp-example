@@ -328,13 +328,7 @@
         {$i18n.t('jetty:open-gift-box.opening-gift-box')}...
       </div>
 
-      <lottie-player
-        autoplay
-        loop
-        mode="normal"
-        src="/lottie/LoadingBar-Dust.json"
-        style="width: 320px"
-      />
+      <lottie-player autoplay loop mode="normal" src="/lottie/loading.json" style="width: 320px" />
     </JettyMenuItemPage>
   {:else if claimed}
     {$i18n.t('jetty:open-gift-box.claimed')}

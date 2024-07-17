@@ -96,16 +96,61 @@
   }
 </script>
 
-<div class="content" class:content-grid={page < 5}>
-  <div class="title">
-    {#if page === 0}
+{#if page === 0}
+  <JettyMenuItemPage
+    actions={{
+      left: {
+        text: $i18n.t('quests:backButton'),
+        onClick: () => dispatch('cancel')
+      },
+      right: {
+        text: $i18n.t('quests:continueButton'),
+        onClick: () => {
+          page++
+        }
+      }
+    }}
+    disabled={selectedTransformCard === undefined}
+  >
+    <div slot="header" class="title">
       {#if selectedTransformCard !== undefined}
         {$i18n.t('jetty:create-radmorphs.title-card-selected')}
       {:else}
         {$i18n.t('jetty:create-radmorphs.title-pick-card')}
       {/if}
-    {/if}
-    {#if page === 1}
+    </div>
+
+    <Carousel let:Item>
+      {#each cards as card, i}
+        <Item>
+          <TransformCard
+            {card}
+            selected={i === selectedTransformCard}
+            bind:this={transformCardComponents[i]}
+            on:selected={() => onTransformCardSelected(i)}
+            on:deselected={onTransformCardDeselected}
+          />
+        </Item>
+      {/each}
+    </Carousel>
+  </JettyMenuItemPage>
+{/if}
+
+{#if page === 1}
+  <JettyMenuItemPage
+    actions={{
+      left: {
+        text: $i18n.t('quests:backButton'),
+        onClick: () => page--
+      },
+      right: {
+        text: $i18n.t('quests:continueButton'),
+        onClick: () => page++
+      }
+    }}
+    disabled={selectedGems.length < 2}
+  >
+    <div slot="header" class="title">
       {#if selectedGems.length === 0}
         {$i18n.t('jetty:create-radmorphs.title-pick-2-gems')}
       {:else if selectedGems.length === 1}
@@ -113,182 +158,122 @@
       {:else}
         {$i18n.t('jetty:create-radmorphs.title-gems-selected')}
       {/if}
-    {/if}
-    {#if page === 2}
+    </div>
+    <Carousel let:Item>
+      {#each gems as gem, i}
+        <Item>
+          <GemCard
+            {gem}
+            selected={selectedGems.includes(i)}
+            bind:this={gemCardComponents[i]}
+            on:selected={() => onGemCardSelected(i)}
+            on:deselected={() => onGemCardDeselected(i)}
+          />
+        </Item>
+      {/each}
+    </Carousel>
+  </JettyMenuItemPage>
+{/if}
+
+{#if page === 2}
+  <JettyMenuItemPage
+    actions={{
+      left: {
+        text: $i18n.t('quests:backButton'),
+        onClick: () => page--
+      },
+      right: {
+        text: $i18n.t('jetty:create-radmorphs.generate-preview'),
+        onClick: () => {
+          page++
+          getPreview().then((_preview) => {
+            preview = _preview
+            page = 4
+          })
+        }
+      }
+    }}
+  >
+    <div slot="header" class="title">
       {$i18n.t('jetty:create-radmorphs.title-review')}
-    {/if}
-    {#if page === 3}
+    </div>
+    <Carousel let:Item>
+      <Item>
+        {#if selectedTransformCard !== undefined}
+          <TransformCard disabled={true} selected={true} card={cards[selectedTransformCard]} />
+        {/if}
+      </Item>
+      {#each selectedGems as i}
+        <Item>
+          <GemCard disabled={true} selected={true} gem={gems[i]} />
+        </Item>
+      {/each}
+    </Carousel>
+  </JettyMenuItemPage>
+{/if}
+
+{#if page === 3}
+  <JettyMenuItemPage>
+    <div slot="header" class="title">
       {$i18n.t('jetty:create-radmorphs.previewing-radmorph')}
-    {/if}
+    </div>
 
-    {#if page === 4}
-      <div class="preview-title">
-        {preview.name.split('{')[0]}
+    <div class="fusing-animation">
+      <lottie-player autoplay loop mode="normal" src="/lottie/loading.json" style="width: 300px" />
+    </div>
+  </JettyMenuItemPage>
+{/if}
+
+{#if page === 4}
+  <JettyMenuItemPage
+    action={{
+      text: $i18n.t('jetty:create-radmorphs.create-radmorph-button'),
+      onClick: () => createRadmorph(setWaitingForRadmorph, unsetWaitingForRadmorph, radmorphCreated)
+    }}
+    loading={waitingForRadmorphTx}
+  >
+    <div class="preview-title" slot="header">
+      {preview.name.split('{')[0]}
+    </div>
+    <div class="preview">
+      <div class="quality">
+        {$i18n.t('jetty:create-radmorphs.radmorph-quality', { quality: preview.quality })}
+        {#if preview.limitedEdition}
+          <i>{$i18n.t('jetty:create-radmorphs.limited-edition')}</i>
+        {/if}
       </div>
-    {/if}
-  </div>
+      <img src={preview.image} alt="A Radmorph" />
+      {$i18n.t('jetty:create-radmorphs.radmorph-preview-text')}
+      <div class="footnote">
+        {$i18n.t('jetty:create-radmorphs.resources-sent-from-wallet')}
+      </div>
+    </div>
+  </JettyMenuItemPage>
+{/if}
 
-  <div class="items">
-    {#if page === 0}
-      <JettyMenuItemPage
-        actions={{
-          left: {
-            text: $i18n.t('quests:backButton'),
-            onClick: () => dispatch('cancel')
-          },
-          right: {
-            text: $i18n.t('quests:continueButton'),
-            onClick: () => {
-              page++
-            }
-          }
-        }}
-        disabled={selectedTransformCard === undefined}
-      >
-        <Carousel let:Item>
-          {#each cards as card, i}
-            <Item>
-              <TransformCard
-                {card}
-                selected={i === selectedTransformCard}
-                bind:this={transformCardComponents[i]}
-                on:selected={() => onTransformCardSelected(i)}
-                on:deselected={onTransformCardDeselected}
-              />
-            </Item>
-          {/each}
-        </Carousel>
-      </JettyMenuItemPage>
-    {/if}
-
-    {#if page === 1}
-      <JettyMenuItemPage
-        actions={{
-          left: {
-            text: $i18n.t('quests:backButton'),
-            onClick: () => page--
-          },
-          right: {
-            text: $i18n.t('quests:continueButton'),
-            onClick: () => page++
-          }
-        }}
-        disabled={selectedGems.length < 2}
-      >
-        <Carousel let:Item>
-          {#each gems as gem, i}
-            <Item>
-              <GemCard
-                {gem}
-                selected={selectedGems.includes(i)}
-                bind:this={gemCardComponents[i]}
-                on:selected={() => onGemCardSelected(i)}
-                on:deselected={() => onGemCardDeselected(i)}
-              />
-            </Item>
-          {/each}
-        </Carousel>
-      </JettyMenuItemPage>
-    {/if}
-
-    {#if page === 2}
-      <JettyMenuItemPage
-        actions={{
-          left: {
-            text: $i18n.t('quests:backButton'),
-            onClick: () => page--
-          },
-          right: {
-            text: $i18n.t('jetty:create-radmorphs.generate-preview'),
-            onClick: () => {
-              page++
-              getPreview().then((_preview) => {
-                preview = _preview
-                page = 4
-              })
-            }
-          }
-        }}
-      >
-        <Carousel let:Item>
-          <Item>
-            {#if selectedTransformCard !== undefined}
-              <TransformCard disabled={true} selected={true} card={cards[selectedTransformCard]} />
-            {/if}
-          </Item>
-          {#each selectedGems as i}
-            <Item>
-              <GemCard disabled={true} selected={true} gem={gems[i]} />
-            </Item>
-          {/each}
-        </Carousel>
-      </JettyMenuItemPage>
-    {/if}
-
-    {#if page === 4}
-      <JettyMenuItemPage
-        action={{
-          text: $i18n.t('jetty:create-radmorphs.create-radmorph-button'),
-          onClick: () =>
-            createRadmorph(setWaitingForRadmorph, unsetWaitingForRadmorph, radmorphCreated)
-        }}
-        loading={waitingForRadmorphTx}
-      >
-        <div class="preview">
-          <div class="quality">
-            {$i18n.t('jetty:create-radmorphs.radmorph-quality', { quality: preview.quality })}
-            {#if preview.limitedEdition}
-              <i>{$i18n.t('jetty:create-radmorphs.limited-edition')}</i>
-            {/if}
-          </div>
-          <img src={preview.image} alt="A Radmorph" />
-          {$i18n.t('jetty:create-radmorphs.radmorph-preview-text')}
-          <div class="footnote">
-            {$i18n.t('jetty:create-radmorphs.resources-sent-from-wallet')}
-          </div>
-        </div>
-      </JettyMenuItemPage>
-    {/if}
-
-    {#if page === 5}
-      <JettyMenuItemPage
-        action={{
-          text: 'Close',
-          onClick: () => dispatch('complete')
-        }}
-      >
-        <div class="success">
-          <img src={preview.image} alt="A Radmorph" />
-          {$i18n.t('jetty:create-radmorphs.radmorph-created')}
-        </div>
-      </JettyMenuItemPage>
-    {/if}
-  </div>
-</div>
+{#if page === 5}
+  <JettyMenuItemPage
+    action={{
+      text: 'Close',
+      onClick: () => dispatch('complete')
+    }}
+  >
+    <div class="success">
+      <img src={preview.image} alt="A Radmorph" />
+      {$i18n.t('jetty:create-radmorphs.radmorph-created')}
+    </div>
+  </JettyMenuItemPage>
+{/if}
 
 <style lang="scss">
-  .title {
-    grid-area: 1 / 1;
-    font-size: 24px;
-    display: flex;
-    justify-content: center;
-    align-items: end;
-  }
-
   .content {
     height: 100%;
     color: var(--color-light);
   }
 
-  .content-grid {
-    gap: var(--spacing-xl);
-    display: grid;
-    grid-template-rows: 2rem auto;
-  }
-
-  .items {
-    overflow-x: hidden;
-    height: 100%;
+  .title {
+    font-size: var(--text-md3);
+    text-align: center;
   }
 
   .preview-title {
@@ -311,6 +296,12 @@
     img {
       height: 150px;
     }
+  }
+
+  .fusing-animation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .footnote {

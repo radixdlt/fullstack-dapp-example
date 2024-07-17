@@ -6,49 +6,47 @@
   "op": 90,
   "w": 500,
   "h": 500,
-  "nm": "Loading bar - slow - 2sec 2",
-  "ddd": 0,
+  "nm": "L",
   "assets": [
     {
       "id": "image_0",
       "w": 29,
       "h": 29,
-      "u": "/images/",
-      "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAYAAABWk2cPAAAACXBIWXMAAAABAAAAAQBPJcTWAAAAJHpUWHRDcmVhdG9yAAAImXNMyU9KVXBMK0ktUnBNS0tNLikGAEF6Bs5qehXFAAACuUlEQVRIie2WsYtUVxTGv3Pue7Pj6qKiicJuowGJKaLRLWyEQAQF7ZaIWFioTRpJyqTaPyGkSqFrIbGwsxKstRBNkFkUUUENkiA7zOzMrjNv3rvnfCnebkg378lUwQO3PN/vnHu/c94DPkaFIKkrK5whKXXy9ENgjx4x/ett9sO7v0dPxPNXnXbxoNMZna+aX6tCACApr1+uXZ1qpheTRBGSUsKdzuiXP53dcn2cRu1OW632gVHOcwTAsgiAAB2aRyyQHKtZG5qtFkfp3GKRcHO4EWaERcKiH3r6dGV6nEZSF2qqTRJiTgQXgICow4yIOZNd8RNOHBqA/SEAuuEGAnAHSADK3p4vMRinUft6NdXPRASbZ5PsBMz8jYiM7bQWlKQ0QtitKhAIsKHvLA1F42qlwutAl+/9uUMC5kNQiJbzRmy612GO1sSh3Dp1ZKqRbtcgKG9WAC+7NHMK7eFEoSSl0WheShsiqgLV0jwE4EbEiNyjPJsodHm5ty+EcCYkCv1Plns5p7Gwh18c3fl2YtBbtxiaqX7XSHUmhA3XUuBOuBN5YSjyeEdEvIpepTmd/6r3DZh8r0EhAohsuNXLTZRnxRrcblbRAip0+uLFYE4lWUpSTVQ3geVxJ4rcMBzkdw8f2/tmIlCSiTDe0KCzpXkEgIAEYnQUhaHfz9aK3H+qshQqQVut7rd0+brcPv8WAotELByDQY5sOPz5+Im551WBY6HZ+uhw+SVxAARJuJVdZllEv5fdt9D+pQ4QGGOkTmcwTEICVcC9fFA3x2hk6Hbfr653hldOLcy3Jwpd6XaXYm6XzGbmppopggqiEev9LPZ664unFz7/oy4QqPC78tvS45NpA9emp5uzqincvR+t+PHxk4O/Li5Wm8vaUAC4ffvezKC97QQSD0HC72cvHHr1IbCP8f+NfwDd+nphbQPBVwAAAABJRU5ErkJggg==",
-      "e": 0
+      "u": "",
+      "p": "data:image/webp;base64,UklGRooBAABXRUJQVlA4WAoAAAAQAAAAHAAAHAAAQUxQSK0AAAABgGLb2rLleX9JbtG9/1MQyG4NokN19zFQneiuiQlAd3e3z55/rYvmiJgA+j11FoEz1u+cb5eixJAkSdJHGSj+oJGmdJjST2bPjCmX2CMTpovbFZgRbp6gYpEbwziuuEZM8pP5zIKIYYl99kFCt9ymDqEflPgGQma9cbcBhGdf4icFwLAq8bcxApZIGTsI2Z9hyw1p464SBPXtad5qCZy9L0k3FToUWXLyg/QvBABWUDggtgAAAFAGAJ0BKh0AHQA+bTCSRqQjIaEoDVCADYljAC7/7JLvwD6ADFX+OC2ZdI03dRytxY+/I1qfwsB0DBAAAP5wCea+AHzjA/EkGzUkYB3ylLXho7irx/ONN3heFk06yUtcllVrQ3UH2SnM58DkkexWVGIzIDJmxP3668VLLtuQ+VX6Rub08jUs0f0zbY9IM+xAOOD/nkF3Mf4JgzvSxtFGMxYdTgUWGnkJT/4h2p6uNMk+1C/0AAAA",
+      "e": 1
     },
     {
       "id": "image_1",
       "w": 78,
       "h": 78,
-      "u": "/images/",
-      "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE4AAABOCAYAAACOqiAdAAAACXBIWXMAAAABAAAAAQBPJcTWAAAAJHpUWHRDcmVhdG9yAAAImXNMyU9KVXBMK0ktUnBNS0tNLikGAEF6Bs5qehXFAAAGRklEQVR4nO2ca4gVZRjHf8+cdb0WIhVbqJ3KSKI0KsJLJIVRdqGkNETQOUfZZKVIim5fOl2gor5EUKF5zqhR+EGC0NRuG5VtHxKMsrTSdlcorVCDstnjOfP0YT2wLu7ZmTnvO3uC+X1ZmHnn/7z8953nvc6BlJSUlJSUlJSUlJSU4ZCkAhUK2nLwIBeMc3BMa/cJ1QkT+P3VV6XPtPZQWDdu6VI9e/Qo1gAdwHkWQx0Vhy2ZCs+t3Si9FuMAlo3rcLXNh23A1TbjnIbyW6sw5w1Pum2GsWac6+pEB7qA6bZi1KG7BRas9WSfrQDG8w30t7QRNA0gW4Ht7a5ai2/cuA5X2/pgOyNnWo1sBbavcjVrQ9zoq1ozTeEqk7oNcrgVZpvOecZa3EOuTvShs8lMA2grQ6fp19ZIixvhjiAsRjuMhltch6ttGeikuU0DwzmvoRZ3apz2fzBtIEZyXuwW10S9Z1TaytDVaMuLZZwbviMoI3wXJ0YDdANHhynTcIcR2bgIg9uqCq7fxw2OsDFe9aKhsLcSMA+Hm0ToGaZ4QzkvknEdHTohbE4T2DNmDDvefluOTb6QnCrPA0GcSoZk04LbmLlxo/ROncq3CjtDPJMtQ1d7u54fNVgk4/wTrCFkTlO4ps9nPUChIEFpgzwZwDUIP0etZF2EIwEsLnqybPFiqQIc6uFFlPaQCm2VMpuihw1JoaAtvd30ApH+OyI8s74kTw28lsvpvaI8S2MdS48Kz6nylueJX7uYd9UFSlHFAjjf8+Rw2PKhjVu5UicHFQ5FrRBwEoc5xaJ8PfjG8uU6N+OwEGW2CNep0lJHpwr8BLyPw9YgoGugYQCrXM2W+/NvW9RKZoS560ryZdjy9Sp6GpUKLTHHLqNQXlfV60REB97YsEF2AbsA8nm9WCtcKqOYTMC5wBigDBxV4U9VvslmOVAoyJB5sgyPEMM0AFVao5QPbVxDKNfmcswHPhyqSLEoB4GDcUOsWKFXaJXVcZ+PipX1uDORgZetBqjysFX9QSRmnMKMfF6vt6G9cqVORrjDhvZQJGYcgCi32dCtVrlZlXNsaA9FosapMt+GrigLbOjWI1HjgBm5nE6xoWtBsy5JGzdahCtMCrqujgEuM6kZhqSNgypGW1wmwzSTemFJ3jhhkkk5rXCxSb2wJG9c/4zAGCKMM6kXlpEwrmxSTB0SO2gzkOSNU/4yKqfDLlhaIXHjMpn489EzoWpWLywj0asaPYLleXIcOGJSMwxJG7d73QbZa0G3y4JmXRI1zhF2WxFWvrCiW4ek56rvWtF12C7C3za0hyIx40TomZLlAxvapZJ8j/KxDe2hSG49TinUW/ZuWN/hFVvaZyKZpXPonprlreEKrVmjY48dY1oGsoEwwVH+DYTesWP58bXXpO6rWCxKZ97VLcA9xmpdh9DGtQYElbjt06GjUJDK4Mu5nJ7rwH2qzAKu/+sYUxxwFBCF2l//BORc7XVgX6Bskww7i0XZP1hPKjyuLdwKjI9Z09CE3h5sb9dxlTJ/QOS54bqiJ6dtDt+f15knA1YDi4CJEfUAfEd4rwqbSiXZOvCGu0wfcxxeiCrY0sq0tWvlQNjykY55rcjpi6o8GvoBYX+gzDo1SO0/FiY8gfJglLjDxNjaqjww8NhW3tWtwO0RNL4rluTKKGEjvXyZUbwEhN3t/lUcbqmZls/rUh/2GjUNQLmjDD+syOnTtUtTs9wtDp+FVPAD5c6oYSMfLHRdzTohdssFeqtwl+fJnnxOX0btb9+JsNkv0z4+w8SqwycKlwzzyPEAFnqefBo5VpwKnjKvE8jWFRd6VOkE3DhxYiF8JMpFYUwTWLLekx3xwsTEdXW6038iMxtXYwTxA1gQp6XVaOgMcNjXtsnwHbjxTU++akSkoZmD50l3ALMJ32GMNMcDA6aBgSnXAPO6G9WyzGGBJZ4B08DgJ0lNnvN8gYVxO4IzYfRbriY1zw/gRlMtrYbx71WbrMPwA5jtebLHtLDxZaUm6jCOS//g1rhpYGk9rgk6jIYGt2Gw+k3+COW8fwKYbzqnDcbqCrDnyb5KwDwRNtuMU0OEz09WudK2aZDg744sWqSTzjqLy53AyqqzTx+/vPmOJL6/mpKSkpKSkpKSkpKSkmKc/wAa5CzF5/lR5wAAAABJRU5ErkJggg==",
-      "e": 0
+      "u": "",
+      "p": "data:image/webp;base64,UklGRjYEAABXRUJQVlA4WAoAAAAQAAAATQAATQAAQUxQSC8CAAABkEVtmyE5X+xkbVRs27Zt27Zt27Zt2zZqwo5t/VH3/FV1mZuImAD8Jxk5TPCGRjMibt8nxP1iRph+AadJ5SOhm8dVUiuT6RVwlVTLZDoFnCX1UugTcJZ0tIQuHldJT5lMD4+rpKtMpkPAWdJXCnUBV0lnS6gKOEt6W0KNx1Wy/XJRiXxhQzKZioCrZPu9uud8BZfC0rpsSAq+2FfJ/pQnIg75wbUgEiJOtyMrkK03OV0DIN1NlseVAYwkp7u4Ij9yRP0BoNJVt1yNogOoR84DmELI+ddM+DvnqMPfbL5fHZ0/OgAIy40cTMINOhnhLwAJijbs1q9Hs0qJI+Lfk8jNfHpQYRv3U5EZ59nmGkK5mEKemTKEqT6ZcoJphTGfQ3muGUPFWaKTOU1YUhnUjaWMQf1YqhnUg6W8QS1ZMhhUnMXDoJQseGzMKfCuNWY6U0djijGleGeIKyIT1hlSD9z5zZCR7WKkLl29XIbYdlilR5g7xfG3b6tFrh/0z7vb2yT9R6L3WsT84GwGAKSd8Yqcf1peCgC6upGQCcMdXfMAAsYT50YBYJOji+D2sRw8DAdqviDeT/2ByPsdfBJsEJbd3XQYRfzL4obdsnuVDwqFtCHXXFK58xbZvioGpcmkja6f8kGxsLT6lA3KhaXRq2zQUEhtrGLQMpnU5FMxaJpMavEpG7QVlgaf0kFjYSl7VQxaC6noVTFonkwqeZ8N2octU3AgPkz0ypWPN5s//s8FAFZQOCDgAQAAsAsAnQEqTgBOAD5lLI5FpCKhGjoHjEAGRLUIoCVcD4zUfUuhX7h+OXQocSjiOlBtufMBugHSS+gB+s3pg+wd+4v7oe0OF4KCbPQ6HzfmTT+OJcRivsi5ipzy+V1jN28S3YONblIAAP7+Bul/1N1//+bhInsSwezkM/zYm3W/FDvvf7OSPNPgQIvn+hlPn//NCLp9yTA+PVhQBJ2/gkYBkCv9UJ//zbmA5rIMTkM/zYm3SfFhiF976A18+CNIb08vz8mTdv7n/xhIcvG60A6Y8AEW8L4K4kQ7eIIIRDf1/kBLRrx9Tf/nT++8cl66xwTu5R8oAH6OCqRjX/uI7FeN3d12wV2MUrjqBxAiZjsqdzsKMrC9CDysIw8eRBH3Y6717T4nB3zMxCMNTTBzcDBwnJGGN/kl7g0lbY1jjP78rPPP00dwAlP+RH242Jyt+PprG9gqAJscgGKamt7amX5Q73cy7wrsRIGCbc85vWfWOf6nH/8xNP03OLc58qV26ekq3pmZKKZ5wJSe5JgLjj30Hr7R/xE8h7eTfdyw75dLseow+/0N72n3Tk3TfpficMQIXxfcLYDEV9+0UMH0T0gS3iKXs6dkYALN8ANR5j/fWIGdd3DWt2rFzlRlHfvAAAAA",
+      "e": 1
     },
     {
       "id": "image_2",
       "w": 29,
       "h": 29,
-      "u": "/images/",
-      "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAYAAABWk2cPAAAACXBIWXMAAAABAAAAAQBPJcTWAAAAJHpUWHRDcmVhdG9yAAAImXNMyU9KVXBMK0ktUnBNS0tNLikGAEF6Bs5qehXFAAAEZ0lEQVRIie2VTYhlVxGAv6o6977Xk3QgY3qCIP4iSFyoSVZiiKJiENGAjAtRNy7EEMIoqCuTHgxEJIwwA/4EV+pCOotsRJCgUdFAwB8Eg5GgkQRMZiZOume6X7/77qmqLM7rMc5Pm5GImxQcuKe4p776PQdelf+hyJUeeGQ9y+pH2rmbbqKKAEi+4tDDhzfso7fc9m5D3icit4qwaqYqydxK/n5l0j903bw8dvPnZPaKQB+4/58fMrd70+VdpJiaYNaOmkHXCaoSWvjTpNMv//bpyc/W16X+V9D19cf76/u1ozmWLyrSmypiQimCFUENzATT9n+4kJELm+rRvmyf+Nhn185dzrZeSrlxeMMO2sFj87N8ZRyyjwRPGqi0VTroOrCu6cVAlN4Xca/7yt2PbjyzckXQp95685HZC3FHrUgsW0Q1EWm5UU3MQMsSWEAtQSA9ZZjJkdPb1348My+ZyYug3/jak28ZdvnSfECqQyZEQEbrUSHJhASyKVBZwhVAcM8yn+mxH33nuTe8LOhsa/bps5v1+nGEjCQjCU8iE88ksjmSAeEQkcTy+7wzmQxzXxNfPQwXR/tv0GNfeHRltu2fnO04XgOPwD2XC7wmtbZ9rUldJHXR9O5JRJIZzaGa1DHv/On3OXAhtLx0s331/M07p+xN4zil1qCOQdFAFdSh1uZjJpSg6ZcrE7wuo/cWvVbWTm2fex3wl8tC65g3zGdjyRhZ1MqkKrUE6oLWPF/PyGbYTP4FDfBlujOWpRll2g/x9n2h6rI61AF8hTpWFgtrc2mCyF5TaaujCaGta2U57hF7/ySZSSEFzX7f9Ir5lqfji4Gh7zE1VNuceEAxMEtKKG6JqSIKIstxCmnAZQ0ikjg37u4P7eLvkynDma3diVqHYIi2KDpPvDNMW6TFhLBEpGVBRMjM5WpQ1fTa+xP7QleuOfnEVVcdOnk6htfP5zOKGUICkzYykXRFyVC8KKbSnBIQ5PzlEREkgdR86q9nfvy3C6H20s3DDz80vvc9n1rb2Y5bhkUigOreVMnyklimLZJwqGMQ0RxqjgXuwaJWAv/m/d96/y/2jRRg9Wo2XnNI75w/vbhmqCALIUjcg650jFYo1hpMVRER1NoDUAokgYeTjM9fW3cfuND+RZECPPKbH5784Ac+MxtHuW2sLh4BJHXvVorl5eCJZxARBE6kM3plUUdqLEL7+V33fPudv74U9KJIAV77Rv+u6eRtzz27+PzZLcfrLrU6o48ULRTrKMUwBzNFfe/uDURrHlgdv3dm/OMPLmW7FeoysrGx0T/+u4P3bW7FkedPhw4zIUKRLIi0tJopVoRSlK4PpgdymPZ6bCibR0+c+PBwxVCAzJSv3/Pz21/Y1K9ubfo7dndSqwfhiipYMSa9MD0gdTrVP3SW6/cdv/Un+9n8j9A9OX78ycnms6du3NmJ2yO4wT0OiSad6RlVe6xo/vLPz/zjVw8++Al/OfauWDJT1tdTL/dAvyr/d3kRQxySKsGQcY4AAAAASUVORK5CYII=",
-      "e": 0
+      "u": "",
+      "p": "data:image/webp;base64,UklGRhYCAABXRUJQVlA4WAoAAAAQAAAAHAAAHAAAQUxQSMkAAAABgGttmwHnnzXbrRFblVHZVrUXENu2netglc5O2qTaLqjszPKfmaiPiAmA/1AmlxMiSBrbsXlwtDWTqBGRdPhpc/t1niTjUQy+2RjfWvRs0jlqY6ajaqZaauP8KCcMHlc27hsjQ5dNYD1B1BcirFok4EPEsw9SYBNJcxGLEFsxkicmC4l4FfHpg2itIi7lCPSLaAM85I7v1sAAFZTnywKsygUOuixnAsX4F8vrgBI4Sc7Jl7uPg1QQqIwcXtnf3+hKlIJgIiHwPwIAVlA4ICYBAAAwBwCdASodAB0APm0skkWkIqGYBABABsS2AFiKB37gOvVsivygLQzNnMbQlSkBAA4eGoz2znD09f1xjC+wT2rwBgAA9wgSxLUUiQEiUtkAdib5PNYKjtqP+tyI017YVxgCbicgv72fWURmv+zbWgGKTAES92v4B8JF7p7oPhDXcjoySHeto16Qf5vMIjgqIL2GyaOpKJRA7MY05f5f/5QG75PP4J6MKwCZs2fc3WdkRpFBH0N464aYE//9wP1c0uDz+ZRfb1X6PrnOX3wVPjJjYEJVdf/Re3+XVe7hz+F9isP/VH/luH9RIF8HfskM8fjP8IzGfTAAQ3aHA31YnY5iCVeh+/QL+K+9Eom/KHeWimNqum2PFfzreBSI/ez3U6mKKZkAAAA=",
+      "e": 1
     },
     {
       "id": "image_3",
       "w": 29,
       "h": 29,
-      "u": "/images/",
-      "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAYAAABWk2cPAAAACXBIWXMAAAABAAAAAQBPJcTWAAAAJHpUWHRDcmVhdG9yAAAImXNMyU9KVXBMK0ktUnBNS0tNLikGAEF6Bs5qehXFAAADx0lEQVRIie2Wz2sdVRTHv+fcO/MmyUvSV6UqpIsUbEUFf4BxIShu1OJSCK5cWv8BwV3yTwhuRBeuAi6t1E0oVkEp1lYrqYWCoSiBtE3z8725956vizvvJeiLfYJuSg8Mw8xczuf8+h4GeGD3m8k/fiWF++co0n/8X6CUlZX1dlVOvFeWOuc9KqH71RSfV9XuytTU1EY/CHJR19fff6TXc5OtljwP2Jpzut7plD8fFuRQ6JUrv3VKf+Sz9nh5Wr2Kd/mkcxphXIXoJRNeTsEqAecInABkRhVeRYSQW87rJ52j+oGI2EjQb87feG16+sgX7cnSF4WDcwLn8lFCcq1JEASZ3YgAqoAKYAaQsgWnbx875s/+1b8Og97e2D5Z92ofY0IMhpQIsz7gQMWIfZhmsDEHZGaTDGmO5N8SGwrd2eyFnd0eQzCEeBBKgMgZAoDkrEVyBDTAjEgRiIGIJkeH9dUPg9a73R+3tmpMtmsI+lkoigL9OQYGMMkVIJAsg1MiUiKk7l0f5n94phbXtjd2b3a7AXUdEeqIEAwxGixxUNZBlUkkIyw1lxlo6W5Q+3Jk6Nra+VWzerXXjQh1Ql0nhJAQI5tSG9iUm0ZYQgND/kaACb84d/vmyNCFhQU6rX5w3gPQ7DgmhNoQA5FS0+em13YggMHcOH47OzvbHRkqIhyfLJ33BZx3EFVABCQRkyHEPjjLA33ZqDT9FzjnvxvmGzhkkJaXlysN/tmq0kajCpGmd9FAU5gDvDeoZAgkDxwIqIgB2v5XUPSOz/iqetJ5bYCSRdJoMMYEVQGZA9JBhoDkuxLh8cOgQ8trTl8timJaoPsaZO5dSoYYEuo6oq4NIRhSzP3dXx4EKC9dvMhi5EwZeVpUBJInchBMI4uY+lNLsOWAEoAo1AyUnIdATp7o3BkHcPee0KtLV8sb3TQzaYaUFAChCpD7oo8xZ5ffM28lAgJFIZaHDuj0xtunAHx/T+iFOxf40MQLO9tbY3AqEFVIs9jN8nKI/UVhQIyW5UKC4gA4qANIhAnX3RipvGfOvBs//ejrr3w59opzIr4ZFBJIZqh7ESEk1LVBIHCFIoQEM6KVCGvlKSa42Q319khQQKg89/HmVveJva68VRZ+XJRRVXZSSNdo6ZIA12JECMneAPzTmy4c39vtuon2GKrKwTu3naJ9+OLLj/4+DHro78ry8rL/4/rEqQg87IuxsnJ2eQLYef2dZ3b6Z5aWltwUnppe38RzRSu96Qv/mPfulsLO7dlPZ+fn59Nh/v9TW1xcHCrDB3Z/259rb1R1Yg+lOwAAAABJRU5ErkJggg==",
-      "e": 0
+      "u": "",
+      "p": "data:image/webp;base64,UklGRqYBAABXRUJQVlA4WAoAAAAQAAAAHAAAHAAAQUxQSMkAAAABgHPbtqnn3u+LbVV20tp2qda2bdupU9mobP0H2zbe7c75oj4iJoD855TyqMCodHr/eL21Ao8Snrp+kJMZBclPcoyxj62B/PKprbcv7qKGB3H/YNh7b0gcwxdRQCSHayFACwHEQzT3Ube6EN4yalUMQltQdQTcjvIHia1gvoJBujcYVgEK51ALwpAhhj6RBYhs4l7NAcJzuAd9AM3mUEcaAKLS9ci936x3JsWO73wyxh5yCFjIxMFNRZIQwldwaehu8+PDsDzyrwMAVlA4ILYAAACQBQCdASodAB0APm0ukUWkIqGYDAYAQAbEsYAJkAAmX8OT8SF91MgRfj5172svpX0Cb1v7wAD+9NgONZXklgAb8NfzuP++8lWKfbJM5nuoVhNkmMVP4lxIa+Iedr+WljxGP4vE36v1/M9NLyHmAiDx//1rmRH+K/RAWxf+NWRshHyngG41l1Bf9Wac2M9pyrbMqlkR9/0Q3n+oPJ30Z28a/KOQ0zf6d2rHjGEPSY9Yi+wPpy04AA==",
+      "e": 1
     },
     {
       "id": "comp_0",
       "layers": [
         {
-          "ddd": 0,
           "ind": 2,
           "ty": 2,
-          "nm": "Radquest-assets-long.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_0",
           "sr": 1,
@@ -75,8 +73,7 @@
                   "s": [100]
                 },
                 { "t": 31, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -88,8 +85,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -103,10 +99,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 31, "s": [84.5, 88, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -129,21 +124,18 @@
                   "s": [100, 100, 100]
                 },
                 { "t": 31, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 3,
           "ty": 2,
-          "nm": "Radquest-assets-logo.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_1",
           "sr": 1,
@@ -170,8 +162,7 @@
                   "s": [100]
                 },
                 { "t": 28, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -183,8 +174,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -198,10 +188,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [190, 107.5, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [39, 39, 0], "ix": 1 },
+            "a": { "a": 0, "k": [39, 39, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -224,21 +213,18 @@
                   "s": [46, 46, 100]
                 },
                 { "t": 28, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 4,
           "ty": 2,
-          "nm": "Radquest-assets-dot.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_2",
           "sr": 1,
@@ -265,8 +251,7 @@
                   "s": [100]
                 },
                 { "t": 25, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -278,8 +263,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -293,10 +277,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [121, 196, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -319,21 +302,18 @@
                   "s": [100, 100, 100]
                 },
                 { "t": 25, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 5,
           "ty": 2,
-          "nm": "Radquest-assets-cross.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_3",
           "sr": 1,
@@ -360,8 +340,7 @@
                   "s": [100]
                 },
                 { "t": 30, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -373,8 +352,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -388,10 +366,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 32, "s": [23, 250, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -414,21 +391,18 @@
                   "s": [100, 100, 100]
                 },
                 { "t": 30, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 6,
           "ty": 2,
-          "nm": "Radquest-assets-long.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_0",
           "sr": 1,
@@ -455,8 +429,7 @@
                   "s": [100]
                 },
                 { "t": 28, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -468,8 +441,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -483,10 +455,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [137.5, 358, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -509,21 +480,18 @@
                   "s": [100, 100, 100]
                 },
                 { "t": 28, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 7,
           "ty": 2,
-          "nm": "Radquest-assets-logo.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_1",
           "sr": 1,
@@ -550,8 +518,7 @@
                   "s": [100]
                 },
                 { "t": 34, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -563,8 +530,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -578,10 +544,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 33, "s": [75, 322.5, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [39, 39, 0], "ix": 1 },
+            "a": { "a": 0, "k": [39, 39, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -604,21 +569,18 @@
                   "s": [46, 46, 100]
                 },
                 { "t": 34, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 8,
           "ty": 2,
-          "nm": "Radquest-assets-dot.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_2",
           "sr": 1,
@@ -645,8 +607,7 @@
                   "s": [100]
                 },
                 { "t": 28, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -658,8 +619,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -673,10 +633,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [197, 378, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -699,21 +658,18 @@
                   "s": [100, 100, 100]
                 },
                 { "t": 28, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 9,
           "ty": 2,
-          "nm": "Radquest-assets-cross.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_3",
           "sr": 1,
@@ -740,8 +696,7 @@
                   "s": [100]
                 },
                 { "t": 25, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -753,8 +708,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -768,10 +722,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [249, 431, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -794,21 +747,18 @@
                   "s": [100, 100, 100]
                 },
                 { "t": 25, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 10,
           "ty": 2,
-          "nm": "Radquest-assets-long.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_0",
           "sr": 1,
@@ -835,8 +785,7 @@
                   "s": [100]
                 },
                 { "t": 28, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -848,8 +797,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -863,10 +811,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [353, 359.5, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -889,21 +836,18 @@
                   "s": [100, 100, 100]
                 },
                 { "t": 28, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 11,
           "ty": 2,
-          "nm": "Radquest-assets-logo.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_1",
           "sr": 1,
@@ -930,8 +874,7 @@
                   "s": [100]
                 },
                 { "t": 25, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -943,8 +886,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -958,10 +900,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [320.5, 423.5, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [39, 39, 0], "ix": 1 },
+            "a": { "a": 0, "k": [39, 39, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -984,21 +925,18 @@
                   "s": [46, 46, 100]
                 },
                 { "t": 25, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 12,
           "ty": 2,
-          "nm": "Radquest-assets-dot.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_2",
           "sr": 1,
@@ -1025,8 +963,7 @@
                   "s": [100]
                 },
                 { "t": 22, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -1038,8 +975,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -1053,10 +989,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [424, 324, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -1079,21 +1014,18 @@
                   "s": [100, 100, 100]
                 },
                 { "t": 22, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 13,
           "ty": 2,
-          "nm": "Radquest-assets-cross.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_3",
           "sr": 1,
@@ -1120,8 +1052,7 @@
                   "s": [100]
                 },
                 { "t": 25, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -1133,8 +1064,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -1148,10 +1078,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [476, 250, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -1174,21 +1103,18 @@
                   "s": [100, 100, 100]
                 },
                 { "t": 25, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 14,
           "ty": 2,
-          "nm": "Radquest-assets-long.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_0",
           "sr": 1,
@@ -1215,8 +1141,7 @@
                   "s": [100]
                 },
                 { "t": 33, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -1228,8 +1153,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -1243,10 +1167,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 31, "s": [409, 91, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -1269,21 +1192,18 @@
                   "s": [100, 100, 100]
                 },
                 { "t": 33, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 15,
           "ty": 2,
-          "nm": "Radquest-assets-logo.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_1",
           "sr": 1,
@@ -1310,8 +1230,7 @@
                   "s": [100]
                 },
                 { "t": 28, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -1323,8 +1242,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -1338,10 +1256,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [383, 191, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [39, 39, 0], "ix": 1 },
+            "a": { "a": 0, "k": [39, 39, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -1364,21 +1281,18 @@
                   "s": [46, 46, 100]
                 },
                 { "t": 28, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 16,
           "ty": 2,
-          "nm": "Radquest-assets-dot.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_2",
           "sr": 1,
@@ -1405,8 +1319,7 @@
                   "s": [100]
                 },
                 { "t": 32, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -1418,8 +1331,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -1433,10 +1345,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 31, "s": [315, 104, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -1459,21 +1370,18 @@
                   "s": [100, 100, 100]
                 },
                 { "t": 32, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 17,
           "ty": 2,
-          "nm": "Radquest-assets-cross.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_3",
           "sr": 1,
@@ -1500,8 +1408,7 @@
                   "s": [100]
                 },
                 { "t": 28, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -1513,8 +1420,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -1528,10 +1434,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [250, 64, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -1554,15 +1459,13 @@
                   "s": [100, 100, 100]
                 },
                 { "t": 28, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         }
       ]
     },
@@ -1570,10 +1473,9 @@
       "id": "comp_1",
       "layers": [
         {
-          "ddd": 0,
           "ind": 2,
           "ty": 2,
-          "nm": "Radquest-assets-dot.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_2",
           "sr": 1,
@@ -1600,8 +1502,7 @@
                   "s": [100]
                 },
                 { "t": 25, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -1613,8 +1514,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -1628,10 +1528,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [121, 196, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -1654,21 +1553,18 @@
                   "s": [80, 80, 100]
                 },
                 { "t": 25, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 3,
           "ty": 2,
-          "nm": "Radquest-assets-long.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_0",
           "sr": 1,
@@ -1695,8 +1591,7 @@
                   "s": [100]
                 },
                 { "t": 28, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -1708,8 +1603,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -1723,10 +1617,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [137.5, 358, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -1749,21 +1642,18 @@
                   "s": [80, 80, 100]
                 },
                 { "t": 28, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 4,
           "ty": 2,
-          "nm": "Radquest-assets-cross.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_3",
           "sr": 1,
@@ -1790,8 +1680,7 @@
                   "s": [100]
                 },
                 { "t": 25, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -1803,8 +1692,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -1818,10 +1706,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [249, 431, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -1844,21 +1731,18 @@
                   "s": [80, 80, 100]
                 },
                 { "t": 25, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 6,
           "ty": 2,
-          "nm": "Radquest-assets-dot.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_2",
           "sr": 1,
@@ -1885,8 +1769,7 @@
                   "s": [100]
                 },
                 { "t": 22, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -1898,8 +1781,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -1913,10 +1795,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [424, 324, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -1939,21 +1820,18 @@
                   "s": [80, 80, 100]
                 },
                 { "t": 22, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 7,
           "ty": 2,
-          "nm": "Radquest-assets-logo.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_1",
           "sr": 1,
@@ -1980,8 +1858,7 @@
                   "s": [100]
                 },
                 { "t": 28, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -1993,8 +1870,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -2008,10 +1884,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [383, 191, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [39, 39, 0], "ix": 1 },
+            "a": { "a": 0, "k": [39, 39, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -2034,21 +1909,18 @@
                   "s": [29, 29, 100]
                 },
                 { "t": 28, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         },
         {
-          "ddd": 0,
           "ind": 8,
           "ty": 2,
-          "nm": "Radquest-assets-cross.png",
+          "nm": "R",
           "cl": "png",
           "refId": "image_3",
           "sr": 1,
@@ -2075,8 +1947,7 @@
                   "s": [100]
                 },
                 { "t": 28, "s": [0] }
-              ],
-              "ix": 11
+              ]
             },
             "r": {
               "a": 1,
@@ -2088,8 +1959,7 @@
                   "s": [0]
                 },
                 { "t": 25, "s": [360] }
-              ],
-              "ix": 10
+              ]
             },
             "p": {
               "a": 1,
@@ -2103,10 +1973,9 @@
                   "ti": [0, 0, 0]
                 },
                 { "t": 24, "s": [250, 64, 0] }
-              ],
-              "ix": 2
+              ]
             },
-            "a": { "a": 0, "k": [14.5, 14.5, 0], "ix": 1 },
+            "a": { "a": 0, "k": [14.5, 14.5, 0] },
             "s": {
               "a": 1,
               "k": [
@@ -2129,120 +1998,109 @@
                   "s": [80, 80, 100]
                 },
                 { "t": 28, "s": [0, 0, 100] }
-              ],
-              "ix": 6
+              ]
             }
           },
           "ao": 0,
           "ip": 0,
           "op": 90,
-          "st": 0,
-          "bm": 0
+          "st": 0
         }
       ]
     }
   ],
   "layers": [
     {
-      "ddd": 0,
       "ind": 1,
       "ty": 0,
-      "nm": "Loading bar-Precom-3",
+      "nm": "L",
       "refId": "comp_0",
       "sr": 1,
       "ks": {
-        "o": { "a": 0, "k": 100, "ix": 11 },
-        "r": { "a": 0, "k": 79, "ix": 10 },
-        "p": { "a": 0, "k": [250, 250, 0], "ix": 2 },
-        "a": { "a": 0, "k": [250, 250, 0], "ix": 1 },
-        "s": { "a": 0, "k": [100, 100, 100], "ix": 6 }
+        "o": { "a": 0, "k": 100 },
+        "r": { "a": 0, "k": 79 },
+        "p": { "a": 0, "k": [250, 250, 0] },
+        "a": { "a": 0, "k": [250, 250, 0] },
+        "s": { "a": 0, "k": [100, 100, 100] }
       },
       "ao": 0,
       "w": 500,
       "h": 500,
       "ip": 40,
       "op": 130,
-      "st": 40,
-      "bm": 0
+      "st": 40
     },
     {
-      "ddd": 0,
       "ind": 2,
       "ty": 0,
-      "nm": "Loading bar-Precom-3",
+      "nm": "L",
       "refId": "comp_0",
       "sr": 1,
       "ks": {
-        "o": { "a": 0, "k": 100, "ix": 11 },
-        "r": { "a": 0, "k": 0, "ix": 10 },
-        "p": { "a": 0, "k": [250, 250, 0], "ix": 2 },
-        "a": { "a": 0, "k": [250, 250, 0], "ix": 1 },
-        "s": { "a": 0, "k": [100, 100, 100], "ix": 6 }
+        "o": { "a": 0, "k": 100 },
+        "r": { "a": 0, "k": 0 },
+        "p": { "a": 0, "k": [250, 250, 0] },
+        "a": { "a": 0, "k": [250, 250, 0] },
+        "s": { "a": 0, "k": [100, 100, 100] }
       },
       "ao": 0,
       "w": 500,
       "h": 500,
       "ip": 47,
       "op": 137,
-      "st": 47,
-      "bm": 0
+      "st": 47
     },
     {
-      "ddd": 0,
       "ind": 3,
       "ty": 0,
-      "nm": "Loading bar-Precom-4",
+      "nm": "L",
       "refId": "comp_1",
       "sr": 1,
       "ks": {
-        "o": { "a": 0, "k": 100, "ix": 11 },
-        "r": { "a": 0, "k": 34.6, "ix": 10 },
-        "p": { "a": 0, "k": [250, 250, 0], "ix": 2 },
-        "a": { "a": 0, "k": [250, 250, 0], "ix": 1 },
-        "s": { "a": 0, "k": [100, 100, 100], "ix": 6 }
+        "o": { "a": 0, "k": 100 },
+        "r": { "a": 0, "k": 34.6 },
+        "p": { "a": 0, "k": [250, 250, 0] },
+        "a": { "a": 0, "k": [250, 250, 0] },
+        "s": { "a": 0, "k": [100, 100, 100] }
       },
       "ao": 0,
       "w": 500,
       "h": 500,
       "ip": 32,
       "op": 122,
-      "st": 32,
-      "bm": 0
+      "st": 32
     },
     {
-      "ddd": 0,
       "ind": 4,
       "ty": 0,
-      "nm": "Loading bar-Precom-4",
+      "nm": "L",
       "refId": "comp_1",
       "sr": 1,
       "ks": {
-        "o": { "a": 0, "k": 100, "ix": 11 },
-        "r": { "a": 0, "k": 84.029, "ix": 10 },
-        "p": { "a": 0, "k": [250, 250, 0], "ix": 2 },
-        "a": { "a": 0, "k": [250, 250, 0], "ix": 1 },
-        "s": { "a": 0, "k": [100, 100, 100], "ix": 6 }
+        "o": { "a": 0, "k": 100 },
+        "r": { "a": 0, "k": 84.029 },
+        "p": { "a": 0, "k": [250, 250, 0] },
+        "a": { "a": 0, "k": [250, 250, 0] },
+        "s": { "a": 0, "k": [100, 100, 100] }
       },
       "ao": 0,
       "w": 500,
       "h": 500,
       "ip": 12,
       "op": 102,
-      "st": 12,
-      "bm": 0
+      "st": 12
     },
     {
-      "ddd": 0,
       "ind": 5,
       "ty": 4,
-      "nm": "01",
+      "nm": "0",
       "sr": 1,
       "ks": {
-        "o": { "a": 0, "k": 100, "ix": 11 },
-        "r": { "a": 0, "k": 96.034, "ix": 10 },
-        "p": { "a": 0, "k": [249.528, 250.682, 0], "ix": 2 },
-        "a": { "a": 0, "k": [0, 0, 0], "ix": 1 },
-        "s": { "a": 0, "k": [38, 38, 100], "ix": 6 }
+        "o": { "a": 0, "k": 100 },
+        "r": { "a": 0, "k": 96.034 },
+        "p": { "a": 0, "k": [249.528, 250.682, 0] },
+        "a": { "a": 0, "k": [0, 0, 0] },
+        "s": { "a": 0, "k": [38, 38, 100] }
       },
       "ao": 0,
       "shapes": [
@@ -2252,7 +2110,6 @@
             {
               "ind": 0,
               "ty": "sh",
-              "ix": 1,
               "ks": {
                 "a": 0,
                 "k": {
@@ -2269,17 +2126,14 @@
                     [1, -501.938]
                   ],
                   "c": false
-                },
-                "ix": 2
+                }
               },
-              "nm": "Path 1",
-              "mn": "ADBE Vector Shape - Group",
-              "hd": false
+              "nm": "P"
             },
             {
               "ty": "st",
-              "c": { "a": 0, "k": [0.38431372549, 0.376470588235, 1, 1], "ix": 3 },
-              "o": { "a": 0, "k": 100, "ix": 4 },
+              "c": { "a": 0, "k": [0.384, 0.376, 1, 1] },
+              "o": { "a": 0, "k": 100 },
               "w": {
                 "a": 1,
                 "k": [
@@ -2457,37 +2311,27 @@
                     "t": 57.004,
                     "s": [1.885]
                   },
-                  { "t": 58.004004004004, "s": [0.053] }
-                ],
-                "ix": 5
+                  { "t": 58.004, "s": [0.053] }
+                ]
               },
               "lc": 2,
               "lj": 1,
               "ml": 4,
-              "bm": 0,
-              "nm": "Stroke 1 - AC Color 1",
-              "mn": "ADBE Vector Graphic - Stroke",
-              "hd": false
+              "nm": "S"
             },
             {
               "ty": "tr",
-              "p": { "a": 0, "k": [0, 0], "ix": 2 },
-              "a": { "a": 0, "k": [0, 0], "ix": 1 },
-              "s": { "a": 0, "k": [100, 100], "ix": 3 },
-              "r": { "a": 0, "k": 0, "ix": 6 },
-              "o": { "a": 0, "k": 100, "ix": 7 },
-              "sk": { "a": 0, "k": 0, "ix": 4 },
-              "sa": { "a": 0, "k": 0, "ix": 5 },
-              "nm": "Transform"
+              "p": { "a": 0, "k": [0, 0] },
+              "a": { "a": 0, "k": [0, 0] },
+              "s": { "a": 0, "k": [100, 100] },
+              "r": { "a": 0, "k": 0 },
+              "o": { "a": 0, "k": 100 },
+              "sk": { "a": 0, "k": 0 },
+              "sa": { "a": 0, "k": 0 },
+              "nm": "T"
             }
           ],
-          "nm": "Shape 1",
-          "np": 3,
-          "cix": 2,
-          "bm": 0,
-          "ix": 1,
-          "mn": "ADBE Vector Group",
-          "hd": false
+          "nm": "S"
         },
         {
           "ty": "tm",
@@ -2500,9 +2344,8 @@
                 "t": 30.004,
                 "s": [0]
               },
-              { "t": 58.032324316504, "s": [100] }
-            ],
-            "ix": 1
+              { "t": 58.032, "s": [100] }
+            ]
           },
           "e": {
             "a": 1,
@@ -2513,16 +2356,12 @@
                 "t": 30.004,
                 "s": [0]
               },
-              { "t": 58.032324316504, "s": [100] }
-            ],
-            "ix": 2
+              { "t": 58.032, "s": [100] }
+            ]
           },
-          "o": { "a": 0, "k": 0, "ix": 3 },
+          "o": { "a": 0, "k": 0 },
           "m": 1,
-          "ix": 2,
-          "nm": "Trim Paths 1",
-          "mn": "ADBE Vector Filter - Trim",
-          "hd": false
+          "nm": "T"
         },
         {
           "ty": "rp",
@@ -2697,18 +2536,15 @@
                 "t": 57.004,
                 "s": [16]
               },
-              { "t": 58.004004004004, "s": [16] }
-            ],
-            "ix": 1
+              { "t": 58.004, "s": [16] }
+            ]
           },
-          "o": { "a": 0, "k": 0, "ix": 2 },
+          "o": { "a": 0, "k": 0 },
           "m": 1,
-          "ix": 3,
           "tr": {
-            "ty": "tr",
-            "p": { "a": 0, "k": [0, 0], "ix": 2 },
-            "a": { "a": 0, "k": [0, 0], "ix": 1 },
-            "s": { "a": 0, "k": [100, 100], "ix": 3 },
+            "p": { "a": 0, "k": [0, 0] },
+            "a": { "a": 0, "k": [0, 0] },
+            "s": { "a": 0, "k": [100, 100] },
             "r": {
               "a": 1,
               "k": [
@@ -2880,36 +2716,31 @@
                   "t": 57.004,
                   "s": [22.5]
                 },
-                { "t": 58.004004004004, "s": [22.5] }
-              ],
-              "ix": 4
+                { "t": 58.004, "s": [22.5] }
+              ]
             },
-            "so": { "a": 0, "k": 100, "ix": 5 },
-            "eo": { "a": 0, "k": 100, "ix": 6 },
-            "nm": "Transform"
+            "so": { "a": 0, "k": 100 },
+            "eo": { "a": 0, "k": 100 },
+            "nm": "T"
           },
-          "nm": "Repeater 1",
-          "mn": "ADBE Vector Filter - Repeater",
-          "hd": false
+          "nm": "R"
         }
       ],
-      "ip": 30.004004004004,
+      "ip": 30.004,
       "op": 59,
-      "st": 30.004004004004,
-      "bm": 0
+      "st": 30.004
     },
     {
-      "ddd": 0,
       "ind": 6,
       "ty": 4,
-      "nm": "02",
+      "nm": "0",
       "sr": 1,
       "ks": {
-        "o": { "a": 0, "k": 100, "ix": 11 },
-        "r": { "a": 0, "k": -34.483, "ix": 10 },
-        "p": { "a": 0, "k": [249.3, 250.678, 0], "ix": 2 },
-        "a": { "a": 0, "k": [0, 0, 0], "ix": 1 },
-        "s": { "a": 0, "k": [38, 38, 100], "ix": 6 }
+        "o": { "a": 0, "k": 100 },
+        "r": { "a": 0, "k": -34.483 },
+        "p": { "a": 0, "k": [249.3, 250.678, 0] },
+        "a": { "a": 0, "k": [0, 0, 0] },
+        "s": { "a": 0, "k": [38, 38, 100] }
       },
       "ao": 0,
       "shapes": [
@@ -2919,7 +2750,6 @@
             {
               "ind": 0,
               "ty": "sh",
-              "ix": 1,
               "ks": {
                 "a": 0,
                 "k": {
@@ -2936,16 +2766,13 @@
                     [1, -501.938]
                   ],
                   "c": false
-                },
-                "ix": 2
+                }
               },
-              "nm": "Path 1",
-              "mn": "ADBE Vector Shape - Group",
-              "hd": false
+              "nm": "P"
             },
             {
               "ty": "gs",
-              "o": { "a": 0, "k": 100, "ix": 9 },
+              "o": { "a": 0, "k": 100 },
               "w": {
                 "a": 1,
                 "k": [
@@ -3124,48 +2951,37 @@
                     "s": [0.053]
                   },
                   { "t": 52, "s": [0] }
-                ],
-                "ix": 10
+                ]
               },
               "g": {
                 "p": 3,
                 "k": {
                   "a": 0,
-                  "k": [0, 0.902, 0.698, 0.733, 0.5, 0.643, 0.537, 0.867, 1, 0.384, 0.376, 1],
-                  "ix": 8
+                  "k": [0, 0.902, 0.698, 0.733, 0.5, 0.643, 0.537, 0.867, 1, 0.384, 0.376, 1]
                 }
               },
-              "s": { "a": 0, "k": [0, 0], "ix": 4 },
-              "e": { "a": 0, "k": [335.567, -287.089], "ix": 5 },
+              "s": { "a": 0, "k": [0, 0] },
+              "e": { "a": 0, "k": [335.567, -287.089] },
               "t": 1,
               "lc": 2,
               "lj": 1,
               "ml": 4,
-              "ml2": { "a": 0, "k": 4, "ix": 13 },
-              "bm": 0,
-              "nm": "Gradient Stroke 1",
-              "mn": "ADBE Vector Graphic - G-Stroke",
-              "hd": false
+              "ml2": { "a": 0, "k": 4 },
+              "nm": "G"
             },
             {
               "ty": "tr",
-              "p": { "a": 0, "k": [0, 0], "ix": 2 },
-              "a": { "a": 0, "k": [0, 0], "ix": 1 },
-              "s": { "a": 0, "k": [100, 100], "ix": 3 },
-              "r": { "a": 0, "k": 0, "ix": 6 },
-              "o": { "a": 0, "k": 100, "ix": 7 },
-              "sk": { "a": 0, "k": 0, "ix": 4 },
-              "sa": { "a": 0, "k": 0, "ix": 5 },
-              "nm": "Transform"
+              "p": { "a": 0, "k": [0, 0] },
+              "a": { "a": 0, "k": [0, 0] },
+              "s": { "a": 0, "k": [100, 100] },
+              "r": { "a": 0, "k": 0 },
+              "o": { "a": 0, "k": 100 },
+              "sk": { "a": 0, "k": 0 },
+              "sa": { "a": 0, "k": 0 },
+              "nm": "T"
             }
           ],
-          "nm": "Shape 1",
-          "np": 3,
-          "cix": 2,
-          "bm": 0,
-          "ix": 1,
-          "mn": "ADBE Vector Group",
-          "hd": false
+          "nm": "S"
         },
         {
           "ty": "tm",
@@ -3178,9 +2994,8 @@
                 "t": 23,
                 "s": [0]
               },
-              { "t": 51.0283203125, "s": [100] }
-            ],
-            "ix": 1
+              { "t": 51.028, "s": [100] }
+            ]
           },
           "e": {
             "a": 1,
@@ -3191,16 +3006,12 @@
                 "t": 23,
                 "s": [0]
               },
-              { "t": 51.0283203125, "s": [100] }
-            ],
-            "ix": 2
+              { "t": 51.028, "s": [100] }
+            ]
           },
-          "o": { "a": 0, "k": 0, "ix": 3 },
+          "o": { "a": 0, "k": 0 },
           "m": 1,
-          "ix": 2,
-          "nm": "Trim Paths 1",
-          "mn": "ADBE Vector Filter - Trim",
-          "hd": false
+          "nm": "T"
         },
         {
           "ty": "rp",
@@ -3382,17 +3193,14 @@
                 "s": [16]
               },
               { "t": 52, "s": [16] }
-            ],
-            "ix": 1
+            ]
           },
-          "o": { "a": 0, "k": 0, "ix": 2 },
+          "o": { "a": 0, "k": 0 },
           "m": 1,
-          "ix": 3,
           "tr": {
-            "ty": "tr",
-            "p": { "a": 0, "k": [0, 0], "ix": 2 },
-            "a": { "a": 0, "k": [0, 0], "ix": 1 },
-            "s": { "a": 0, "k": [100, 100], "ix": 3 },
+            "p": { "a": 0, "k": [0, 0] },
+            "a": { "a": 0, "k": [0, 0] },
+            "s": { "a": 0, "k": [100, 100] },
             "r": {
               "a": 1,
               "k": [
@@ -3571,35 +3379,30 @@
                   "s": [22.5]
                 },
                 { "t": 52, "s": [22.5] }
-              ],
-              "ix": 4
+              ]
             },
-            "so": { "a": 0, "k": 100, "ix": 5 },
-            "eo": { "a": 0, "k": 100, "ix": 6 },
-            "nm": "Transform"
+            "so": { "a": 0, "k": 100 },
+            "eo": { "a": 0, "k": 100 },
+            "nm": "T"
           },
-          "nm": "Repeater 1",
-          "mn": "ADBE Vector Filter - Repeater",
-          "hd": false
+          "nm": "R"
         }
       ],
       "ip": 23,
-      "op": 52.029029029029,
-      "st": 23,
-      "bm": 0
+      "op": 52.029,
+      "st": 23
     },
     {
-      "ddd": 0,
       "ind": 7,
       "ty": 4,
-      "nm": "03",
+      "nm": "0",
       "sr": 1,
       "ks": {
-        "o": { "a": 0, "k": 100, "ix": 11 },
-        "r": { "a": 0, "k": 49.048, "ix": 10 },
-        "p": { "a": 0, "k": [249.2, 249.775, 0], "ix": 2 },
-        "a": { "a": 0, "k": [0, 0, 0], "ix": 1 },
-        "s": { "a": 0, "k": [48, 48, 100], "ix": 6 }
+        "o": { "a": 0, "k": 100 },
+        "r": { "a": 0, "k": 49.048 },
+        "p": { "a": 0, "k": [249.2, 249.775, 0] },
+        "a": { "a": 0, "k": [0, 0, 0] },
+        "s": { "a": 0, "k": [48, 48, 100] }
       },
       "ao": 0,
       "shapes": [
@@ -3609,7 +3412,6 @@
             {
               "ind": 0,
               "ty": "sh",
-              "ix": 1,
               "ks": {
                 "a": 0,
                 "k": {
@@ -3626,16 +3428,13 @@
                     [1, -501.938]
                   ],
                   "c": false
-                },
-                "ix": 2
+                }
               },
-              "nm": "Path 1",
-              "mn": "ADBE Vector Shape - Group",
-              "hd": false
+              "nm": "P"
             },
             {
               "ty": "gs",
-              "o": { "a": 0, "k": 100, "ix": 9 },
+              "o": { "a": 0, "k": 100 },
               "w": {
                 "a": 1,
                 "k": [
@@ -3766,48 +3565,37 @@
                     "s": [0.01]
                   },
                   { "t": 44, "s": [0] }
-                ],
-                "ix": 10
+                ]
               },
               "g": {
                 "p": 3,
                 "k": {
                   "a": 0,
-                  "k": [0, 0.651, 0.376, 1, 0.5, 0.486, 0.345, 1, 0.999, 0.322, 0.314, 1],
-                  "ix": 8
+                  "k": [0, 0.651, 0.376, 1, 0.5, 0.486, 0.345, 1, 0.999, 0.322, 0.314, 1]
                 }
               },
-              "s": { "a": 0, "k": [0, 0], "ix": 4 },
-              "e": { "a": 0, "k": [230.339, -88.086], "ix": 5 },
+              "s": { "a": 0, "k": [0, 0] },
+              "e": { "a": 0, "k": [230.339, -88.086] },
               "t": 1,
               "lc": 2,
               "lj": 1,
               "ml": 4,
-              "ml2": { "a": 0, "k": 4, "ix": 13 },
-              "bm": 0,
-              "nm": "Gradient Stroke 1",
-              "mn": "ADBE Vector Graphic - G-Stroke",
-              "hd": false
+              "ml2": { "a": 0, "k": 4 },
+              "nm": "G"
             },
             {
               "ty": "tr",
-              "p": { "a": 0, "k": [0, 0], "ix": 2 },
-              "a": { "a": 0, "k": [0, 0], "ix": 1 },
-              "s": { "a": 0, "k": [100, 100], "ix": 3 },
-              "r": { "a": 0, "k": 0, "ix": 6 },
-              "o": { "a": 0, "k": 100, "ix": 7 },
-              "sk": { "a": 0, "k": 0, "ix": 4 },
-              "sa": { "a": 0, "k": 0, "ix": 5 },
-              "nm": "Transform"
+              "p": { "a": 0, "k": [0, 0] },
+              "a": { "a": 0, "k": [0, 0] },
+              "s": { "a": 0, "k": [100, 100] },
+              "r": { "a": 0, "k": 0 },
+              "o": { "a": 0, "k": 100 },
+              "sk": { "a": 0, "k": 0 },
+              "sa": { "a": 0, "k": 0 },
+              "nm": "T"
             }
           ],
-          "nm": "Shape 1",
-          "np": 3,
-          "cix": 2,
-          "bm": 0,
-          "ix": 1,
-          "mn": "ADBE Vector Group",
-          "hd": false
+          "nm": "S"
         },
         {
           "ty": "tm",
@@ -3820,9 +3608,8 @@
                 "t": 23,
                 "s": [0]
               },
-              { "t": 43.0205078125, "s": [100] }
-            ],
-            "ix": 1
+              { "t": 43.021, "s": [100] }
+            ]
           },
           "e": {
             "a": 1,
@@ -3833,16 +3620,12 @@
                 "t": 23,
                 "s": [0]
               },
-              { "t": 43.0205078125, "s": [100] }
-            ],
-            "ix": 2
+              { "t": 43.021, "s": [100] }
+            ]
           },
-          "o": { "a": 0, "k": 0, "ix": 3 },
+          "o": { "a": 0, "k": 0 },
           "m": 1,
-          "ix": 2,
-          "nm": "Trim Paths 1",
-          "mn": "ADBE Vector Filter - Trim",
-          "hd": false
+          "nm": "T"
         },
         {
           "ty": "rp",
@@ -3976,17 +3759,14 @@
                 "s": [10]
               },
               { "t": 44, "s": [10] }
-            ],
-            "ix": 1
+            ]
           },
-          "o": { "a": 0, "k": 0, "ix": 2 },
+          "o": { "a": 0, "k": 0 },
           "m": 1,
-          "ix": 3,
           "tr": {
-            "ty": "tr",
-            "p": { "a": 0, "k": [0, 0], "ix": 2 },
-            "a": { "a": 0, "k": [0, 0], "ix": 1 },
-            "s": { "a": 0, "k": [100, 100], "ix": 3 },
+            "p": { "a": 0, "k": [0, 0] },
+            "a": { "a": 0, "k": [0, 0] },
+            "s": { "a": 0, "k": [100, 100] },
             "r": {
               "a": 1,
               "k": [
@@ -4117,31 +3897,26 @@
                   "s": [36]
                 },
                 { "t": 44, "s": [36] }
-              ],
-              "ix": 4
+              ]
             },
-            "so": { "a": 0, "k": 100, "ix": 5 },
-            "eo": { "a": 0, "k": 100, "ix": 6 },
-            "nm": "Transform"
+            "so": { "a": 0, "k": 100 },
+            "eo": { "a": 0, "k": 100 },
+            "nm": "T"
           },
-          "nm": "Repeater 1",
-          "mn": "ADBE Vector Filter - Repeater",
-          "hd": false
+          "nm": "R"
         }
       ],
       "ip": 23,
-      "op": 44.021021021021,
-      "st": 23,
-      "bm": 0
+      "op": 44.021,
+      "st": 23
     },
     {
-      "ddd": 0,
       "ind": 8,
       "ty": 4,
-      "nm": "loading 2",
+      "nm": "l",
       "sr": 1,
       "ks": {
-        "o": { "a": 0, "k": 100, "ix": 11 },
+        "o": { "a": 0, "k": 100 },
         "r": {
           "a": 1,
           "k": [
@@ -4152,12 +3927,11 @@
               "s": [-76.475]
             },
             { "t": 27, "s": [153.525] }
-          ],
-          "ix": 10
+          ]
         },
-        "p": { "a": 0, "k": [250, 250, 0], "ix": 2 },
-        "a": { "a": 0, "k": [46, 32, 0], "ix": 1 },
-        "s": { "a": 0, "k": [45, 45, 100], "ix": 6 }
+        "p": { "a": 0, "k": [250, 250, 0] },
+        "a": { "a": 0, "k": [46, 32, 0] },
+        "s": { "a": 0, "k": [45, 45, 100] }
       },
       "ao": 0,
       "shapes": [
@@ -4167,11 +3941,9 @@
             {
               "d": 1,
               "ty": "el",
-              "s": { "a": 0, "k": [330, 330], "ix": 2 },
-              "p": { "a": 0, "k": [0, 0], "ix": 3 },
-              "nm": "Ellipse Path 1",
-              "mn": "ADBE Vector Shape - Ellipse",
-              "hd": false
+              "s": { "a": 0, "k": [330, 330] },
+              "p": { "a": 0, "k": [0, 0] },
+              "nm": "E"
             },
             {
               "ty": "tm",
@@ -4185,8 +3957,7 @@
                     "s": [0]
                   },
                   { "t": 27, "s": [100] }
-                ],
-                "ix": 1
+                ]
               },
               "e": {
                 "a": 1,
@@ -4197,73 +3968,57 @@
                     "t": 5,
                     "s": [0]
                   },
-                  { "t": 20.83984375, "s": [100] }
-                ],
-                "ix": 2
+                  { "t": 20.84, "s": [100] }
+                ]
               },
-              "o": { "a": 0, "k": 0, "ix": 3 },
+              "o": { "a": 0, "k": 0 },
               "m": 1,
-              "ix": 2,
-              "nm": "Trim Paths 1",
-              "mn": "ADBE Vector Filter - Trim",
-              "hd": false
+              "nm": "T"
             },
             {
               "ty": "gs",
-              "o": { "a": 0, "k": 100, "ix": 9 },
-              "w": { "a": 0, "k": 12, "ix": 10 },
+              "o": { "a": 0, "k": 100 },
+              "w": { "a": 0, "k": 12 },
               "g": {
                 "p": 3,
                 "k": {
                   "a": 0,
-                  "k": [0, 0.902, 0.698, 0.733, 0.5, 0.643, 0.537, 0.867, 1, 0.384, 0.376, 1],
-                  "ix": 8
+                  "k": [0, 0.902, 0.698, 0.733, 0.5, 0.643, 0.537, 0.867, 1, 0.384, 0.376, 1]
                 }
               },
-              "s": { "a": 0, "k": [98.2, -295.99], "ix": 4 },
-              "e": { "a": 0, "k": [-200.63, 339.206], "ix": 5 },
+              "s": { "a": 0, "k": [98.2, -295.99] },
+              "e": { "a": 0, "k": [-200.63, 339.206] },
               "t": 1,
               "lc": 2,
               "lj": 2,
-              "bm": 0,
-              "nm": "Gradient Stroke 1",
-              "mn": "ADBE Vector Graphic - G-Stroke",
-              "hd": false
+              "nm": "G"
             },
             {
               "ty": "tr",
-              "p": { "a": 0, "k": [46, 32], "ix": 2 },
-              "a": { "a": 0, "k": [0, 0], "ix": 1 },
-              "s": { "a": 0, "k": [100, 100], "ix": 3 },
-              "r": { "a": 0, "k": 0, "ix": 6 },
-              "o": { "a": 0, "k": 100, "ix": 7 },
-              "sk": { "a": 0, "k": 0, "ix": 4 },
-              "sa": { "a": 0, "k": 0, "ix": 5 },
-              "nm": "Transform"
+              "p": { "a": 0, "k": [46, 32] },
+              "a": { "a": 0, "k": [0, 0] },
+              "s": { "a": 0, "k": [100, 100] },
+              "r": { "a": 0, "k": 0 },
+              "o": { "a": 0, "k": 100 },
+              "sk": { "a": 0, "k": 0 },
+              "sa": { "a": 0, "k": 0 },
+              "nm": "T"
             }
           ],
-          "nm": "Ellipse 1",
-          "np": 3,
-          "cix": 2,
-          "bm": 0,
-          "ix": 1,
-          "mn": "ADBE Vector Group",
-          "hd": false
+          "nm": "E"
         }
       ],
       "ip": 5,
       "op": 1805,
-      "st": 5,
-      "bm": 0
+      "st": 5
     },
     {
-      "ddd": 0,
       "ind": 9,
       "ty": 4,
-      "nm": "loading",
+      "nm": "l",
       "sr": 1,
       "ks": {
-        "o": { "a": 0, "k": 100, "ix": 11 },
+        "o": { "a": 0, "k": 100 },
         "r": {
           "a": 1,
           "k": [
@@ -4274,12 +4029,11 @@
               "s": [-76.475]
             },
             { "t": 27, "s": [247] }
-          ],
-          "ix": 10
+          ]
         },
-        "p": { "a": 0, "k": [250, 250, 0], "ix": 2 },
-        "a": { "a": 0, "k": [46, 32, 0], "ix": 1 },
-        "s": { "a": 0, "k": [85, 85, 100], "ix": 6 }
+        "p": { "a": 0, "k": [250, 250, 0] },
+        "a": { "a": 0, "k": [46, 32, 0] },
+        "s": { "a": 0, "k": [85, 85, 100] }
       },
       "ao": 0,
       "shapes": [
@@ -4289,11 +4043,9 @@
             {
               "d": 1,
               "ty": "el",
-              "s": { "a": 0, "k": [330, 330], "ix": 2 },
-              "p": { "a": 0, "k": [0, 0], "ix": 3 },
-              "nm": "Ellipse Path 1",
-              "mn": "ADBE Vector Shape - Ellipse",
-              "hd": false
+              "s": { "a": 0, "k": [330, 330] },
+              "p": { "a": 0, "k": [0, 0] },
+              "nm": "E"
             },
             {
               "ty": "tm",
@@ -4307,8 +4059,7 @@
                     "s": [0]
                   },
                   { "t": 27, "s": [100] }
-                ],
-                "ix": 1
+                ]
               },
               "e": {
                 "a": 1,
@@ -4319,64 +4070,49 @@
                     "t": 0,
                     "s": [0]
                   },
-                  { "t": 20.9033203125, "s": [100] }
-                ],
-                "ix": 2
+                  { "t": 20.903, "s": [100] }
+                ]
               },
-              "o": { "a": 0, "k": 0, "ix": 3 },
+              "o": { "a": 0, "k": 0 },
               "m": 1,
-              "ix": 2,
-              "nm": "Trim Paths 1",
-              "mn": "ADBE Vector Filter - Trim",
-              "hd": false
+              "nm": "T"
             },
             {
               "ty": "gs",
-              "o": { "a": 0, "k": 100, "ix": 9 },
-              "w": { "a": 0, "k": 12, "ix": 10 },
+              "o": { "a": 0, "k": 100 },
+              "w": { "a": 0, "k": 12 },
               "g": {
                 "p": 3,
                 "k": {
                   "a": 0,
-                  "k": [0, 0.902, 0.698, 0.733, 0.5, 0.643, 0.537, 0.867, 1, 0.384, 0.376, 1],
-                  "ix": 8
+                  "k": [0, 0.902, 0.698, 0.733, 0.5, 0.643, 0.537, 0.867, 1, 0.384, 0.376, 1]
                 }
               },
-              "s": { "a": 0, "k": [0, 0], "ix": 4 },
-              "e": { "a": 0, "k": [100, 0], "ix": 5 },
+              "s": { "a": 0, "k": [0, 0] },
+              "e": { "a": 0, "k": [100, 0] },
               "t": 1,
               "lc": 2,
               "lj": 2,
-              "bm": 0,
-              "nm": "Gradient Stroke 1",
-              "mn": "ADBE Vector Graphic - G-Stroke",
-              "hd": false
+              "nm": "G"
             },
             {
               "ty": "tr",
-              "p": { "a": 0, "k": [46, 32], "ix": 2 },
-              "a": { "a": 0, "k": [0, 0], "ix": 1 },
-              "s": { "a": 0, "k": [100, 100], "ix": 3 },
-              "r": { "a": 0, "k": 0, "ix": 6 },
-              "o": { "a": 0, "k": 100, "ix": 7 },
-              "sk": { "a": 0, "k": 0, "ix": 4 },
-              "sa": { "a": 0, "k": 0, "ix": 5 },
-              "nm": "Transform"
+              "p": { "a": 0, "k": [46, 32] },
+              "a": { "a": 0, "k": [0, 0] },
+              "s": { "a": 0, "k": [100, 100] },
+              "r": { "a": 0, "k": 0 },
+              "o": { "a": 0, "k": 100 },
+              "sk": { "a": 0, "k": 0 },
+              "sa": { "a": 0, "k": 0 },
+              "nm": "T"
             }
           ],
-          "nm": "Ellipse 1",
-          "np": 3,
-          "cix": 2,
-          "bm": 0,
-          "ix": 1,
-          "mn": "ADBE Vector Group",
-          "hd": false
+          "nm": "E"
         }
       ],
       "ip": 0,
       "op": 1800,
-      "st": 0,
-      "bm": 0
+      "st": 0
     }
   ],
   "markers": []
