@@ -35,6 +35,8 @@
     }
   }) as { text: string; complete: boolean }[]
 
+  let loading = true
+
   const dispatch = createEventDispatcher<{
     'all-requirements-met': undefined
     'requirements-not-met': undefined
@@ -93,8 +95,6 @@
       checkRequirements()
     }
   })
-
-  let loading = false
 </script>
 
 <RequirementsPage requirements={requirementsStatus} {loading} />
