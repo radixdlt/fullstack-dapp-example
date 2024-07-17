@@ -1,4 +1,3 @@
-import { WellKnownAddresses } from 'common'
 import { config } from '../../config'
 
 export const createCombinedElementsAddRadgemImageManifest = ({

@@ -48,6 +48,7 @@ const app = async () => {
   const referralRewardAction = ReferralRewardAction(dbClient)
   const AccountAddressModel = AccountAddressModelFn(redisClient)
   const transactionStreamModel = TransactionStreamModel(dbClient)
+  const imageModel = ImageModel(dbClient)
 
   const eventWorkerController = EventWorkerController({
     logger,
@@ -59,13 +60,14 @@ const app = async () => {
     transactionIntent: TransactionIntentHelper({ dbClient, transactionQueue }),
     AccountAddressModel,
     sendMessage,
-    referralRewardAction
+    referralRewardAction,
+    imageModel
   })
 
   const transactionWorkerController = TransactionWorkerController({
     auditModel,
     gatewayApi,
-    imageModel: ImageModel(dbClient),
+    imageModel,
     tokenPriceClient,
     sendMessage,
     referralRewardAction

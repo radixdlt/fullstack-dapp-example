@@ -1,9 +1,11 @@
+export type ShaderCodeDescription = keyof typeof shaderCodeDescription
 export const shaderCodeDescription = {
   crystalline: 'REF',
   metallic: 'MET',
   radiant: 'GLO'
 } as const
 
+export type ColorCodeDescription = keyof typeof colorCodeDescription
 export const colorCodeDescription = {
   forest: 'LGN',
   sand: 'YEL',
