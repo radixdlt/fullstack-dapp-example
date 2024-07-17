@@ -2,7 +2,6 @@
   import { onMount } from 'svelte'
   import Item from './Item.svelte'
   import NavigateButton from './NavigateButton.svelte'
-  import { isMobile } from '$lib/utils/is-mobile'
 
   export let noButtons = false
 
@@ -68,33 +67,32 @@
   }}
 >
   <slot {Item} />
-  {#if !isMobile()}
-    {#if !isScrolledToStart && !noButtons}
-      <div class="navigate-button left">
-        <NavigateButton
-          direction="left"
-          on:click={() => {
-            carousel.scrollBy({
-              left: -400,
-              behavior: 'smooth'
-            })
-          }}
-        />
-      </div>
-    {/if}
-    {#if !isScrolledToEnd && !noButtons}
-      <div class="navigate-button right">
-        <NavigateButton
-          direction="right"
-          on:click={() => {
-            carousel.scrollBy({
-              left: 400,
-              behavior: 'smooth'
-            })
-          }}
-        />
-      </div>
-    {/if}
+
+  {#if !isScrolledToStart && !noButtons}
+    <div class="navigate-button left">
+      <NavigateButton
+        direction="left"
+        on:click={() => {
+          carousel.scrollBy({
+            left: -400,
+            behavior: 'smooth'
+          })
+        }}
+      />
+    </div>
+  {/if}
+  {#if !isScrolledToEnd && !noButtons}
+    <div class="navigate-button right">
+      <NavigateButton
+        direction="right"
+        on:click={() => {
+          carousel.scrollBy({
+            left: 400,
+            behavior: 'smooth'
+          })
+        }}
+      />
+    </div>
   {/if}
 </div>
 
