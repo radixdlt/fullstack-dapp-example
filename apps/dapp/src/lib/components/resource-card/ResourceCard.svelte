@@ -46,19 +46,19 @@
 
   .resource-card {
     display: flex;
-    flex-direction: column;
     width: fit-content;
-    gap: 1rem;
     position: relative;
   }
 
   .text {
+    position: absolute;
     text-align: center;
     opacity: 0.8;
     color: var(--color-light);
     font-size: var(--text-xs);
     bottom: 0;
     height: 2rem;
+    transform: translateY(3rem);
     display: flex;
     justify-content: center;
     align-items: flex-start;
