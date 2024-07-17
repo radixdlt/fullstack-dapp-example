@@ -6,8 +6,8 @@ import type { RadixDappToolkit } from '@radixdlt/radix-dapp-toolkit'
 import { messageApi as messageApiFn, type MessageApi } from './api/message-api'
 import { writable } from 'svelte/store'
 
-export type WebSocketClient = Awaited<ReturnType<typeof WebSocketClient>>
-export const WebSocketClient = async ({
+export type WebSocketClient = ReturnType<typeof WebSocketClient>
+export const WebSocketClient = ({
   authToken,
   radixDappToolkit,
   restartTimeout = 1000,
@@ -24,6 +24,7 @@ export const WebSocketClient = async ({
   notificationUrl?: string
   messageApi?: MessageApi
 }) => {
+  appLogger.debug({ method: 'webSocketClient.WebSocketClient', restartTimeout, maxRestartTimeout })
   let currentRestartTimeout = restartTimeout
   let currentTimeout: ReturnType<typeof setTimeout> | undefined
 
@@ -44,10 +45,14 @@ export const WebSocketClient = async ({
       })
   }
 
-  while (shouldReconnect) {
-    if (onMessageCallbacks.length > 0) await sendMessagesToListeners()
-    await new Promise((resolve) => setTimeout(resolve, 5_000))
+  const runPolling = async () => {
+    while (shouldReconnect) {
+      if (onMessageCallbacks.length > 0) await sendMessagesToListeners()
+      await new Promise((resolve) => setTimeout(resolve, 10_000))
+    }
   }
+
+  runPolling()
 
   const createWebSocket = (authToken: string) => {
     appLogger.debug({ method: 'webSocketClient.createWebSocket' })
@@ -60,14 +65,14 @@ export const WebSocketClient = async ({
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        sendMessagesToListeners()
         appLogger.debug({ method: 'webSocketClient.handleVisibilityChange' })
+        sendMessagesToListeners()
       }
     }
 
     const onOpen = async () => {
       currentRestartTimeout = restartTimeout
-      appLogger.debug({ method: 'webSocketClient.onOpen', restartTimeout })
+      appLogger.debug({ method: 'webSocketClient.onOpen' })
       document.addEventListener('visibilitychange', handleVisibilityChange)
       await sendMessagesToListeners()
     }
