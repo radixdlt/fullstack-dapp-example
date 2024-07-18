@@ -286,6 +286,7 @@
     gap: var(--spacing-xl);
     align-items: center;
     text-align: center;
+    margin-bottom: -3rem;
 
     img {
       height: 150px;

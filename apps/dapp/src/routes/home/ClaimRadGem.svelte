@@ -163,6 +163,5 @@
 
   img {
     height: 12rem;
-    margin-top: 1rem;
   }
 </style>

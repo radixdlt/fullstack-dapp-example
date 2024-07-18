@@ -32,7 +32,7 @@
     </div>
   {/if}
 
-  <div>
+  <div class="content">
     <slot />
   </div>
 
@@ -59,6 +59,10 @@
   .action {
     display: flex;
     justify-content: center;
+  }
+
+  .content {
+    padding-bottom: 3rem;
   }
 
   .actions {
