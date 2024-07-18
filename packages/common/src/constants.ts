@@ -76,7 +76,8 @@ export const Addresses = (networkId: number) => {
           },
           jetty: {
             address: 'account_tdx_2_1290rrczjj4gxh9k0w30ukywwhzm9ltrmkqk0jcfaj50t5f6n4xxezt',
-            accessController: ''
+            accessController:
+              'accesscontroller_tdx_2_1cv2thjxmyy8n7zs3jfcq8sd2x2cgyhcyj820528h5nsv0xcluw2r47'
           },
           jettySwapDappDefinition: {
             address: 'account_tdx_2_128e634vx9dfg0prxz2zwj8c7k48y28ftyggl52ppdk6qe9x7q3m2r9'
@@ -162,8 +163,9 @@ export const Addresses = (networkId: number) => {
               'accesscontroller_rdx1c0t7hcmt90htanr37s4vy0g6uqc0wgdvsq80n6mu5pjv2ecqgxmnhx'
           },
           jetty: {
-            address: '',
-            accessController: ''
+            address: 'account_rdx1cyeaxqkuaqcgj6fnq6eq9av6pxzsud38xhl4ar0hygep74r48mluht',
+            accessController:
+              'accesscontroller_rdx1cvmgr0rd8xqp28gg9sdx0klu20028gnuzp693yewazucrfy8kwqpkr'
           },
           jettySwapDappDefinition: {
             address: 'account_rdx12ywkj4hfy3gz0jc200xh8w7vpcg7fckc3295w3kkrjhhdmxc4cngqg'

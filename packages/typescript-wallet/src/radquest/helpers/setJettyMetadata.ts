@@ -1,39 +1,39 @@
 import { config } from '../../config'
 import { transactionBuilder } from '../../transaction/transactionBuilder'
 
-export const setRadquestMetadata = () => {
-  const radquestDppDefinition = config.radQuest.accounts.dAppDefinition.address
+export const setJettyMetadata = () => {
+  const jettyDppDefinition = config.radQuest.accounts.jetty.address
   const transactionManifest = `
 SET_METADATA
-    Address("${radquestDppDefinition}")
+    Address("${jettyDppDefinition}")
     "account_type"
     Enum<Metadata::String>(
         "dapp definition"
     )
 ;
 SET_METADATA
-    Address("${radquestDppDefinition}")
+    Address("${jettyDppDefinition}")
     "name"
     Enum<Metadata::String>(
-        "RadQuest"
+        "Jetty"
     )
 ;
 SET_METADATA
-    Address("${radquestDppDefinition}")
+    Address("${jettyDppDefinition}")
     "description"
     Enum<Metadata::String>(
-        "RadQuest is a dApp created by the creators of the Radix Network and Radix Wallet to help people get started on Radix and learn about web3, while having a little fun and earning some rewards."
+        "Jetty isn’t just a cute otter graphic on RadQuest; he also has a set of smart contracts running on the Radix Network, written in Radix’s own Scrypto smart contract language! That’s where Jetty gets his web3 powers to help you collect and combine various assets into RadMorph NFTs and more."
     )
 ;
 SET_METADATA
-    Address("${radquestDppDefinition}")
+    Address("${jettyDppDefinition}")
     "icon_url"
     Enum<Metadata::Url>(
-        "https://assets.radixdlt.com/icons/RadQuest.webp"
+        "https://assets.radixdlt.com/icons/Jetty.webp"
     )
 ;
 SET_METADATA
-    Address("${radquestDppDefinition}")
+    Address("${jettyDppDefinition}")
     "claimed_websites"
     Enum<Metadata::OriginArray>(
         Array<String>(
@@ -42,14 +42,11 @@ SET_METADATA
     )
 ;
 SET_METADATA
-    Address("${radquestDppDefinition}")
+    Address("${jettyDppDefinition}")
     "claimed_entities"
     Enum<Metadata::AddressArray>(
         Array<Address>(
-            Address("${config.radQuest.badges.superAdminBadgeAddress}"),
-            Address("${config.radQuest.badges.adminBadgeAddress}"),
             Address("${config.radQuest.badges.heroBadgeAddress}"),
-            Address("${config.radQuest.badges.kycBadgeAddress}"),
             Address("${config.radQuest.resources.clamAddress}"),
             Address("${config.radQuest.resources.elementAddress}"),
             Address("${config.radQuest.resources.giftBox.Starter}"),
@@ -60,30 +57,25 @@ SET_METADATA
             Address("${config.radQuest.resources.ottercoinAddress}"),
             Address("${config.radQuest.resources.radgemAddress}"),
             Address("${config.radQuest.resources.radmorphAddress}"),
-            Address("${config.radQuest.components.cardForge}"),
             Address("${config.radQuest.components.giftBoxOpener}"),
-            Address("${config.radQuest.components.heroBadgeForge}"),
-            Address("${config.radQuest.components.imageOracle}"),
-            Address("${config.radQuest.components.kycOracle}"),
             Address("${config.radQuest.components.questRewards}"),
-            Address("${config.radQuest.components.radgemForge}"),
             Address("${config.radQuest.components.refinery}")
         )
     )
 ;
 SET_METADATA
-    Address("${radquestDppDefinition}")
+    Address("${jettyDppDefinition}")
     "dapp_definitions"
     Enum<Metadata::AddressArray>(
         Array<Address>(
-            Address("${config.radQuest.accounts.jetty.address}"),
+            Address("${config.radQuest.accounts.dAppDefinition.address}"),
             Address("${config.radQuest.accounts.jettySwapDappDefinition.address}"),
             Address("${config.radQuest.accounts.lettySwapDappDefinition.address}")
         )
     )
 ;
 `
-  return transactionBuilder({ transactionManifest, signers: ['dAppDefinition'] })
+  return transactionBuilder({ transactionManifest, signers: ['jetty'] })
     .submit()
     .map(({ transactionId }) => transactionId)
 }

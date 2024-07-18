@@ -19,6 +19,10 @@ export const SignerConfig = (networkId: number) => ({
   dAppDefinition: mnemonicToKeyPair(
     process.env.DAPP_DEFINITION_MNEMONIC!,
     getDerivationPath(networkId, 'TRANSACTION_SIGNING', 'ACCOUNT', 0)
+  ),
+  jetty: mnemonicToKeyPair(
+    process.env.JETTY_MNEMONIC!,
+    getDerivationPath(networkId, 'TRANSACTION_SIGNING', 'ACCOUNT', 0)
   )
 })
 
