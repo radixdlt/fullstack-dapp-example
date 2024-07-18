@@ -87,6 +87,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     traceId,
     logger
   }
+  event.locals.clientIp = event.request.headers.get('x-forwarded-for') || event.getClientAddress()
 
   event.locals.dependencies = {
     userModel: userModel(logger),

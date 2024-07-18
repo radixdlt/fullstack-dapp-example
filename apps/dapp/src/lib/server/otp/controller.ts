@@ -68,7 +68,8 @@ export const OneTimePasswordController = ({
   const verifyOneTimePassword = (
     userId: string,
     phoneNumber: string,
-    oneTimePassword: string
+    oneTimePassword: string,
+    clientIp: string
   ): ControllerMethodOutput =>
     validateOtpInput(phoneNumber, oneTimePassword)
       .andThen(() =>
@@ -89,7 +90,7 @@ export const OneTimePasswordController = ({
       .mapErr(() => createApiError(ErrorReason.failedToHashPhoneNumber, 400)())
       .andThen(([country, hashOfPhoneNumber]) =>
         userQuestModel
-          .addVerifiedPhoneNumber(userId, country, hashOfPhoneNumber)
+          .addVerifiedPhoneNumber(userId, country, hashOfPhoneNumber, clientIp)
           .mapErr(() => createApiError(ErrorReason.failedToAddPhoneNumber, 400)())
       )
       .map(() => ({ data: { status: 'ok' }, httpResponseCode: 201 }))

@@ -39,6 +39,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
     await locals.dependencies.userQuestModel.addVerifiedPhoneNumber(
       userId,
       'GB',
+      crypto.randomUUID(),
       crypto.randomUUID()
     )
   } else if (type === 'clearPhoneNumbers') {

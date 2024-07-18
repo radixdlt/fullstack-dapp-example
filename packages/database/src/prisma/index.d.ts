@@ -5664,18 +5664,21 @@ export namespace Prisma {
     userId: string | null
     phoneNumber: string | null
     createdAt: Date | null
+    ip: string | null
   }
 
   export type UserPhoneNumberMaxAggregateOutputType = {
     userId: string | null
     phoneNumber: string | null
     createdAt: Date | null
+    ip: string | null
   }
 
   export type UserPhoneNumberCountAggregateOutputType = {
     userId: number
     phoneNumber: number
     createdAt: number
+    ip: number
     _all: number
   }
 
@@ -5684,18 +5687,21 @@ export namespace Prisma {
     userId?: true
     phoneNumber?: true
     createdAt?: true
+    ip?: true
   }
 
   export type UserPhoneNumberMaxAggregateInputType = {
     userId?: true
     phoneNumber?: true
     createdAt?: true
+    ip?: true
   }
 
   export type UserPhoneNumberCountAggregateInputType = {
     userId?: true
     phoneNumber?: true
     createdAt?: true
+    ip?: true
     _all?: true
   }
 
@@ -5775,6 +5781,7 @@ export namespace Prisma {
     userId: string
     phoneNumber: string
     createdAt: Date
+    ip: string
     _count: UserPhoneNumberCountAggregateOutputType | null
     _min: UserPhoneNumberMinAggregateOutputType | null
     _max: UserPhoneNumberMaxAggregateOutputType | null
@@ -5798,6 +5805,7 @@ export namespace Prisma {
     userId?: boolean
     phoneNumber?: boolean
     createdAt?: boolean
+    ip?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userPhoneNumber"]>
 
@@ -5805,6 +5813,7 @@ export namespace Prisma {
     userId?: boolean
     phoneNumber?: boolean
     createdAt?: boolean
+    ip?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userPhoneNumber"]>
 
@@ -5812,6 +5821,7 @@ export namespace Prisma {
     userId?: boolean
     phoneNumber?: boolean
     createdAt?: boolean
+    ip?: boolean
   }
 
   export type UserPhoneNumberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5830,6 +5840,7 @@ export namespace Prisma {
       userId: string
       phoneNumber: string
       createdAt: Date
+      ip: string
     }, ExtArgs["result"]["userPhoneNumber"]>
     composites: {}
   }
@@ -6253,6 +6264,7 @@ export namespace Prisma {
     readonly userId: FieldRef<"UserPhoneNumber", 'String'>
     readonly phoneNumber: FieldRef<"UserPhoneNumber", 'String'>
     readonly createdAt: FieldRef<"UserPhoneNumber", 'DateTime'>
+    readonly ip: FieldRef<"UserPhoneNumber", 'String'>
   }
     
 
@@ -19069,7 +19081,8 @@ export namespace Prisma {
   export const UserPhoneNumberScalarFieldEnum: {
     userId: 'userId',
     phoneNumber: 'phoneNumber',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    ip: 'ip'
   };
 
   export type UserPhoneNumberScalarFieldEnum = (typeof UserPhoneNumberScalarFieldEnum)[keyof typeof UserPhoneNumberScalarFieldEnum]
@@ -19659,6 +19672,7 @@ export namespace Prisma {
     userId?: StringFilter<"UserPhoneNumber"> | string
     phoneNumber?: StringFilter<"UserPhoneNumber"> | string
     createdAt?: DateTimeFilter<"UserPhoneNumber"> | Date | string
+    ip?: StringFilter<"UserPhoneNumber"> | string
     user?: XOR<UserRelationFilter, UserWhereInput>
   }
 
@@ -19666,6 +19680,7 @@ export namespace Prisma {
     userId?: SortOrder
     phoneNumber?: SortOrder
     createdAt?: SortOrder
+    ip?: SortOrder
     user?: UserOrderByWithRelationInput
   }
 
@@ -19676,6 +19691,7 @@ export namespace Prisma {
     OR?: UserPhoneNumberWhereInput[]
     NOT?: UserPhoneNumberWhereInput | UserPhoneNumberWhereInput[]
     createdAt?: DateTimeFilter<"UserPhoneNumber"> | Date | string
+    ip?: StringFilter<"UserPhoneNumber"> | string
     user?: XOR<UserRelationFilter, UserWhereInput>
   }, "phoneNumber" | "userId" | "phoneNumber">
 
@@ -19683,6 +19699,7 @@ export namespace Prisma {
     userId?: SortOrder
     phoneNumber?: SortOrder
     createdAt?: SortOrder
+    ip?: SortOrder
     _count?: UserPhoneNumberCountOrderByAggregateInput
     _max?: UserPhoneNumberMaxOrderByAggregateInput
     _min?: UserPhoneNumberMinOrderByAggregateInput
@@ -19695,6 +19712,7 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"UserPhoneNumber"> | string
     phoneNumber?: StringWithAggregatesFilter<"UserPhoneNumber"> | string
     createdAt?: DateTimeWithAggregatesFilter<"UserPhoneNumber"> | Date | string
+    ip?: StringWithAggregatesFilter<"UserPhoneNumber"> | string
   }
 
   export type ReferralWhereInput = {
@@ -20614,6 +20632,7 @@ export namespace Prisma {
   export type UserPhoneNumberCreateInput = {
     phoneNumber: string
     createdAt?: Date | string
+    ip?: string
     user: UserCreateNestedOneWithoutPhoneNumberInput
   }
 
@@ -20621,11 +20640,13 @@ export namespace Prisma {
     userId: string
     phoneNumber: string
     createdAt?: Date | string
+    ip?: string
   }
 
   export type UserPhoneNumberUpdateInput = {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ip?: StringFieldUpdateOperationsInput | string
     user?: UserUpdateOneRequiredWithoutPhoneNumberNestedInput
   }
 
@@ -20633,23 +20654,27 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ip?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserPhoneNumberCreateManyInput = {
     userId: string
     phoneNumber: string
     createdAt?: Date | string
+    ip?: string
   }
 
   export type UserPhoneNumberUpdateManyMutationInput = {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ip?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserPhoneNumberUncheckedUpdateManyInput = {
     userId?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ip?: StringFieldUpdateOperationsInput | string
   }
 
   export type ReferralCreateInput = {
@@ -21659,18 +21684,21 @@ export namespace Prisma {
     userId?: SortOrder
     phoneNumber?: SortOrder
     createdAt?: SortOrder
+    ip?: SortOrder
   }
 
   export type UserPhoneNumberMaxOrderByAggregateInput = {
     userId?: SortOrder
     phoneNumber?: SortOrder
     createdAt?: SortOrder
+    ip?: SortOrder
   }
 
   export type UserPhoneNumberMinOrderByAggregateInput = {
     userId?: SortOrder
     phoneNumber?: SortOrder
     createdAt?: SortOrder
+    ip?: SortOrder
   }
 
   export type EnumReferralActionFilter<$PrismaModel = never> = {
@@ -23600,11 +23628,13 @@ export namespace Prisma {
   export type UserPhoneNumberCreateWithoutUserInput = {
     phoneNumber: string
     createdAt?: Date | string
+    ip?: string
   }
 
   export type UserPhoneNumberUncheckedCreateWithoutUserInput = {
     phoneNumber: string
     createdAt?: Date | string
+    ip?: string
   }
 
   export type UserPhoneNumberCreateOrConnectWithoutUserInput = {
@@ -23983,11 +24013,13 @@ export namespace Prisma {
   export type UserPhoneNumberUpdateWithoutUserInput = {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ip?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserPhoneNumberUncheckedUpdateWithoutUserInput = {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ip?: StringFieldUpdateOperationsInput | string
   }
 
   export type CompletedQuestRequirementUpsertWithWhereUniqueWithoutUserInput = {
