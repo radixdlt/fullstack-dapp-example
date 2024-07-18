@@ -310,11 +310,8 @@
   let waitingForClaimTransaction = false
   let waitingForDepositedRewards = false
   let readyToClaim = false
+  let readyToOpen = false
   let claimed = false
-
-  const hideBackButton = context.get('hideBackButton')
-
-  $hideBackButton = true
 </script>
 
 <div class="open-gift-box">
@@ -331,7 +328,14 @@
       <lottie-player autoplay loop mode="normal" src="/lottie/loading.json" style="width: 320px" />
     </JettyMenuItemPage>
   {:else if claimed}
-    {$i18n.t('jetty:open-gift-box.claimed')}
+    <JettyMenuItemPage
+      action={{
+        text: $i18n.t('jetty:close'),
+        onClick: close
+      }}
+    >
+      {$i18n.t('jetty:open-gift-box.claimed')}
+    </JettyMenuItemPage>
   {:else if readyToClaim}
     <JettyMenuItemPage
       action={{
@@ -374,24 +378,39 @@
     >
       {$i18n.t('jetty:open-gift-box.no-boxes')}
     </JettyMenuItemPage>
-  {:else if totalGiftBoxes === 1}
+  {:else if readyToOpen || totalGiftBoxes === 1}
     <JettyMenuItemPage
       actions={{
         left: {
           text: $i18n.t('quests:backButton'),
-          onClick: close
+          onClick: () => {
+            readyToOpen = false
+          }
         },
         right: {
           text: $i18n.t('jetty:open-gift-box.open-gift-box-button'),
-          onClick: () => openGiftBox(findOneGiftBox()[0])
+          onClick: () => openGiftBox(totalGiftBoxes === 1 ? findOneGiftBox()[0] : selectedGiftBox)
         }
       }}
       loading={waitingForOpenTransaction}
     >
-      <div class="title">
-        {$i18n.t('jetty:open-gift-box.one-box-title')}
+      <div slot="header" class="title">
+        {$i18n.t('jetty:open-gift-box.one-box-title', {
+          giftBox:
+            totalGiftBoxes === 1 ? findOneGiftBox()[1].name : ownedGiftBoxes[selectedGiftBox].name
+        })}
       </div>
-      <img class="gift-box-image" src={findOneGiftBox()[1].imageUrl} alt="A gift box" />
+      <div class="gift-box-image">
+        <lottie-player
+          autoplay
+          loop
+          mode="normal"
+          src={`/lottie/GiftBox-${
+            totalGiftBoxes === 1 ? findOneGiftBox()[1].name : ownedGiftBoxes[selectedGiftBox].name
+          }.json`}
+          style="width: 320px"
+        />
+      </div>
     </JettyMenuItemPage>
   {:else}
     <JettyMenuItemPage
@@ -401,8 +420,8 @@
           onClick: close
         },
         right: {
-          text: $i18n.t('jetty:open-gift-box.open-gift-box-button'),
-          onClick: () => openGiftBox(selectedGiftBox)
+          text: $i18n.t('quests:continueButton'),
+          onClick: () => (readyToOpen = true)
         }
       }}
       disabled={!selectedGiftBox}
@@ -467,7 +486,6 @@
   }
 
   .gift-box-image {
-    height: 13rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -491,6 +509,5 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-bottom: 3rem;
   }
 </style>

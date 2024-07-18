@@ -5,7 +5,7 @@
   import LightningIcon from '@images/lightning-icon.svg'
   import BoxIcon from '@images/box.svg'
   import { loadGlossary } from 'content'
-  import FuseElements, { checkClaimAvailable } from './FuseElements.svelte'
+  import CreateRadGems, { checkClaimAvailable } from './CreateRadGems.svelte'
   import { page } from '$app/stores'
   import { markLatestNotificationAsSeen } from '$lib/notifications'
   import {
@@ -110,7 +110,7 @@
       disabled: missingHeroBadge
     },
     {
-      id: 'fuse-elements',
+      id: 'create-radgems',
       text: $i18n.t('jetty:menu-radgems'),
       icon: LightningIcon,
       alert: claimAvailable,
@@ -132,7 +132,10 @@
     on:hover-over-jetty={(e) => {
       hoveringOverJetty = e.detail
     }}
-    on:item-content-closed={checkClaimStatus}
+    on:item-content-closed={() => {
+      checkClaimStatus()
+      checkGiftBoxStatus()
+    }}
     hideJetty={$hideJetty}
     {poppedUp}
     {menuItems}
@@ -153,8 +156,8 @@
       />
     {/if}
 
-    {#if currentMenuItem.id === 'fuse-elements'}
-      <FuseElements
+    {#if currentMenuItem.id === 'create-radgems'}
+      <CreateRadGems
         on:cancel={() => {
           back.set(true)
         }}

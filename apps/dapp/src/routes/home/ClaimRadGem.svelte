@@ -3,22 +3,28 @@
   import { sendTransaction } from '$lib/rdt'
   import { createEventDispatcher, onMount } from 'svelte'
   import { user } from '../../stores'
-  import { GatewayApi } from 'common'
+  import {
+    GatewayApi,
+    gemImageMapping,
+    type ColorCodeDescription,
+    type ShaderCodeDescription
+  } from 'common'
   import type {
     ProgrammaticScryptoSborValueTuple,
     ProgrammaticScryptoSborValueString
   } from '@radixdlt/babylon-gateway-api-sdk'
   import pipe from 'ramda/src/pipe'
   import { i18n } from '$lib/i18n/i18n'
-  import FuseElementsPage from './JettyMenuItemPage.svelte'
+  import JettyMenuItemPage from './JettyMenuItemPage.svelte'
 
   export let ids: string[]
 
   let loading = false
   let preview: {
-    image: string
     name: string
     quality: string
+    material: ShaderCodeDescription
+    color: ColorCodeDescription
   }
 
   $: manifest = `
@@ -56,11 +62,6 @@
           .fields
 
         return {
-          image: (
-            fields.find(
-              (field) => field.field_name === 'key_image_url'
-            ) as ProgrammaticScryptoSborValueString
-          ).value,
           name: (
             fields.find(
               (field) => field.field_name === 'name'
@@ -70,7 +71,17 @@
             fields.find(
               (field) => field.field_name === 'quality'
             ) as ProgrammaticScryptoSborValueString
-          ).value
+          ).value,
+          material: (
+            fields.find(
+              (field) => field.field_name === 'material'
+            ) as ProgrammaticScryptoSborValueString
+          ).value as ShaderCodeDescription,
+          color: (
+            fields.find(
+              (field) => field.field_name === 'color'
+            ) as ProgrammaticScryptoSborValueString
+          ).value as ColorCodeDescription
         }
       })
   )
@@ -100,7 +111,7 @@
   }
 </script>
 
-<FuseElementsPage
+<JettyMenuItemPage
   action={{
     text: 'Claim',
     onClick
@@ -115,7 +126,7 @@
       <b>
         {$i18n.t('jetty:fuse-elements.new-radgem')}
       </b>
-      <img src={preview.image} alt="A Radgem" />
+      <img src={gemImageMapping(preview.color, preview.material)} alt="A Radgem" />
       <h3>
         {preview.name.split('{')[0]}
       </h3>
@@ -126,7 +137,7 @@
       <enhanced:img src="@images/multiple-gems.webp?enhanced" />
     {/if}
   </div>
-</FuseElementsPage>
+</JettyMenuItemPage>
 
 <style lang="scss">
   .claim-radgem {
@@ -151,8 +162,6 @@
   }
 
   img {
-    width: 12rem;
     height: 12rem;
-    margin-top: 1rem;
   }
 </style>

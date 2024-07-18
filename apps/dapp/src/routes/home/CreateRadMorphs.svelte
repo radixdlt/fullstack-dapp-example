@@ -27,10 +27,9 @@
       data.map(({ id, fields }) => ({
         id,
         name: getStringDataValue('name')(fields),
-        material: getStringDataValue('material')(fields),
-        imageUrl: getStringDataValue('key_image_url')(fields),
+        material: getStringDataValue('material')(fields) as ShaderCodeDescription,
         quality: getStringDataValue('quality')(fields),
-        color: getStringDataValue('color')(fields)
+        color: getStringDataValue('color')(fields) as ColorCodeDescription
       }))
     )
   )
@@ -41,7 +40,6 @@
         id,
         name: getStringDataValue('name')(fields),
         energy: getStringDataValue('energy_type')(fields),
-        imageUrl: getStringDataValue('key_image_url')(fields),
         rarity: getStringDataValue('rarity')(fields),
         availability: getStringDataValue('availability')(fields),
         quality: parseInt(getStringDataValue('quality')(fields)),
@@ -55,7 +53,7 @@
   import pipe from 'ramda/src/pipe'
   import { user } from '../../stores'
   import { publicConfig } from '$lib/public-config'
-  import { GatewayApi } from 'common'
+  import { GatewayApi, type ColorCodeDescription, type ShaderCodeDescription } from 'common'
   import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import JettyMenuItemPage from './JettyMenuItemPage.svelte'
@@ -81,7 +79,6 @@
     id: string
     name: string
     energy: string
-    imageUrl: string
     rarity: string
     availability: string
     quality: number
@@ -90,10 +87,9 @@
   let gemData: {
     id: string
     name: string
-    imageUrl: string
-    color: string
     quality: string
-    material: string
+    color: ColorCodeDescription
+    material: ShaderCodeDescription
   }[]
 
   const dispatch = createEventDispatcher<{ cancel: undefined }>()
@@ -284,23 +280,14 @@
   {:else}
     <JettyMenuItemPage
       action={hasEnoughResources
-        ? undefined
+        ? {
+            text: $i18n.t('jetty:create-radmorphs.get-started'),
+            onClick: () => (creatingRadmorphs = true)
+          }
         : {
             text: $i18n.t('jetty:close'),
             onClick: () => dispatch('cancel')
           }}
-      actions={hasEnoughResources
-        ? {
-            left: {
-              text: $i18n.t('jetty:close'),
-              onClick: () => dispatch('cancel')
-            },
-            right: {
-              text: $i18n.t('jetty:create-radmorphs.get-started'),
-              onClick: () => (creatingRadmorphs = true)
-            }
-          }
-        : undefined}
     >
       {$i18n.t('jetty:create-radmorphs.intro')}
       <p>

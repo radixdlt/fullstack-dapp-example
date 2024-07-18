@@ -254,8 +254,6 @@
     close()
     $back = false
   }
-
-  $: if (waitingForElementsDeposited || claimAvailable) context.get('hideBackButton').set(true)
 </script>
 
 <div class="fuse-elements">
@@ -318,21 +316,12 @@
               text: $i18n.t('jetty:close'),
               onClick: () => dispatch('cancel')
             }
-          : undefined}
-        actions={parseInt(amountOfElements) >= elementsToCreateRadgem
-          ? {
-              left: {
-                text: $i18n.t('jetty:close'),
-                onClick: () => dispatch('cancel')
-              },
-              right: {
-                text: $i18n.t('jetty:fuse-elements.send-button', {
-                  count: 10
-                }),
-                onClick: sendElements
-              }
-            }
-          : undefined}
+          : {
+              text: $i18n.t('jetty:fuse-elements.send-button', {
+                count: 10
+              }),
+              onClick: sendElements
+            }}
         loading={waitingForSendElements}
       >
         <div>

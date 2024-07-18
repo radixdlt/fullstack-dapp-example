@@ -1,11 +1,11 @@
 <script lang="ts">
   import { i18n } from '$lib/i18n/i18n'
+  import { energyCardMap, shapeCodeDescription } from 'common'
   import ResourceCard from '../resource-card/ResourceCard.svelte'
 
   export let card: {
     id: string
     energy: string
-    imageUrl: string
     rarity: string
     quality: number
     limitedEdition: boolean
@@ -16,30 +16,13 @@
   export let selected = false
   export let disabled = false
   export let selectable = true
+
+  //@ts-ignore
+  $: image = energyCardMap[shapeCodeDescription[card.energy.toLowerCase()]].keyImageUrl
 </script>
 
 <ResourceCard on:selected on:deselected {selectable} {disabled} bind:selected>
-  <div class="transform-card" style:--background-image={`url(${card.imageUrl})`} class:selected>
-    <div class="rarity-container">
-      {#if card.rarity === 'rare'}
-        <div class="rarity rare" class:rarity-selected={selected}>
-          {card.rarity.toUpperCase()}
-        </div>
-      {/if}
-      {#if card.rarity === 'ultra-rare'}
-        <div class="rarity ultra-rare" class:rarity-selected={selected}>
-          {card.rarity.toUpperCase()}
-        </div>
-      {/if}
-    </div>
-
-    <div class="energy">
-      {card.energy
-        .split(' ')
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ')}
-    </div>
-  </div>
+  <div class="transform-card" style:--background-image={`url(${image})`} class:selected />
 
   <p slot="text" class="quality">
     {#if showClassName}
@@ -53,7 +36,7 @@
 </ResourceCard>
 
 <style lang="scss">
-  $text-color: var(--color-light);
+  $text-color: var(--color-ligh t);
 
   .transform-card {
     display: grid;
@@ -63,48 +46,6 @@
     height: 100%;
     width: 100%;
     border-radius: var(--border-radius-xl);
-  }
-
-  .rarity-selected {
-    border: var(--border) var(--color-light);
-  }
-
-  .rarity {
-    color: $text-color;
-    padding: 0.2rem;
-    border-radius: var(--border-radius-xl);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 2rem;
-    align-self: end;
-    font-size: var(--text-xxs);
-    font-weight: var(--font-weight-bold);
-    width: fit-content;
-    padding: 0 1rem;
-  }
-
-  .rare {
-    background: var(--gradient-6);
-  }
-
-  .ultra-rare {
-    background: var(--gradient-4);
-  }
-
-  .rarity-container {
-    display: flex;
-    justify-content: center;
-  }
-
-  .energy {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(--color-light);
-    font-family: var(--font-headers);
-    text-align: center;
-    margin: 0 var(--spacing-md);
   }
 
   .quality {

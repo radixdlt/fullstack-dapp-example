@@ -391,7 +391,7 @@ export const TransactionWorkerController = ({
             ""
             "Test Card"
             "This is just a test card"
-            "Molten Banana"
+            "Tidal Wave"
             "Such amazing energy"
             "Common"
             Decimal("10")

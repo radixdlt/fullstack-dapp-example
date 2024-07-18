@@ -32,7 +32,7 @@
     </div>
   {/if}
 
-  <div>
+  <div class="content">
     <slot />
   </div>
 
@@ -40,7 +40,7 @@
     {#if action}
       <Button {loading} on:click={action.onClick}>{action.text}</Button>
     {:else if actions}
-      <Button secondary on:click={actions.left.onClick}>{actions.left.text}</Button>
+      <Button theme="dark" on:click={actions.left.onClick}>{actions.left.text}</Button>
       <Button {loading} {disabled} on:click={actions.right.onClick}>{actions.right.text}</Button>
     {/if}
   </div>
@@ -59,6 +59,10 @@
   .action {
     display: flex;
     justify-content: center;
+  }
+
+  .content {
+    padding-bottom: 3rem;
   }
 
   .actions {
