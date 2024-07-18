@@ -14,18 +14,38 @@
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { markNotificationAsSeen, pushNotification } from '$lib/notifications'
   import { htmlReplace } from '$lib/helpers/html-replace'
+  import Button from '$lib/components/button/Button.svelte'
+  import { i18n } from '$lib/i18n/i18n'
+  import { user } from '../../../../../stores'
+
+  import { checkAccountHasClams, getClams } from '$lib/helpers/get-clams'
 
   export let data: PageData
 
   const text = data.text as Quests['TransferTokens']['text']
 
   let quest: Quest
-
+  let loading = false
+  let accountHasClams = true
   let receivedClams = writable(data.requirements?.JettyReceivedClams.isComplete)
 
   onMount(() => {
     markNotificationAsSeen('clamsReceived')
+    checkAccountHasClams($user?.accountAddress!).map((hasClams) => {
+      accountHasClams = hasClams
+    })
   })
+
+  const handleClaimClams = () => {
+    loading = true
+    getClams($user?.accountAddress!, $user?.id!).finally(() => {
+      checkAccountHasClams($user?.accountAddress!).map((hasClams) => {
+        accountHasClams = hasClams
+        accountHasClams && quest.actions.next()
+        loading = false
+      })
+    })
+  }
 
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
@@ -213,9 +233,16 @@
   {/if}
 
   {#if render('4')}
-    {@html text['4a.md']}
-    <!-- TODO: Add Clams Faucet button -->
-    {@html text['4b.md']}
+    {#if accountHasClams}
+      {@html text['4a.md']}
+    {:else}
+      {@html text['4b.md']}
+      <div class="center">
+        <Button on:click={handleClaimClams} {loading}
+          >{$i18n.t('quests:TransferTokens.getClams')}</Button
+        >
+      </div>
+    {/if}
   {/if}
 
   {#if render('5')}
@@ -275,5 +302,10 @@
 
   .copy-address {
     max-width: 20rem;
+  }
+
+  .center {
+    display: flex;
+    justify-content: center;
   }
 </style>
