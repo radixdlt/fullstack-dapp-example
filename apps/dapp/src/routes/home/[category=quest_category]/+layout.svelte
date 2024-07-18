@@ -8,8 +8,16 @@
   import { page } from '$app/stores'
   import { i18n } from '$lib/i18n/i18n'
   import { markNotificationAsSeen } from '$lib/notifications'
+  import { useCookies } from '$lib/utils/cookies'
+  import { onMount } from 'svelte'
 
   export let data: LayoutData
+
+  let referredByCookie: string | undefined
+
+  onMount(() => {
+    referredByCookie = useCookies('referredBy').get()
+  })
 
   $: questCardState = Object.entries(data.questDefinitions).reduce(
     (prev, cur) => {
@@ -61,7 +69,7 @@
   <Carousel bind:this={carousel} let:Item>
     {#each _quests as [id, quest]}
       {#if quest.category === $page.params.category}
-        {#if id !== 'JoinFriend' || (id === 'JoinFriend' && $user?.referredBy)}
+        {#if id !== 'JoinFriend' || (id === 'JoinFriend' && ($user?.referredBy || (!$user && referredByCookie)))}
           <Item>
             <QuestOverview
               title={$i18n.t(`quests:${id}.title`)}
