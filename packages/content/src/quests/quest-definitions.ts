@@ -71,7 +71,7 @@ export const QuestDefinitions = () => {
       category: 'basic',
       rewards: [],
       preRequisites: [],
-      minutesToComplete: 3,
+      minutesToComplete: 2,
       requirements: {
         RadQuestQuiz: {
           type: 'offLedger',
@@ -100,7 +100,7 @@ export const QuestDefinitions = () => {
       trackedAccountAddress: false,
       rewards: [],
       preRequisites: ['WhatIsRadix'],
-      minutesToComplete: 3,
+      minutesToComplete: 5,
       requirements: {
         DownloadWallet: {
           type: 'offLedger',
@@ -131,7 +131,7 @@ export const QuestDefinitions = () => {
         }
       ],
       preRequisites: ['SetupWallet'],
-      minutesToComplete: 3,
+      minutesToComplete: 6,
       requirements: {
         VerifyPhoneNumber: {
           type: 'offLedger',
@@ -158,7 +158,7 @@ export const QuestDefinitions = () => {
           name: 'simpleGiftBox'
         }
       ],
-      minutesToComplete: 5,
+      minutesToComplete: 4,
       preRequisites: ['GetStuff'],
       requirements: {
         RadMorphsQuiz: {
@@ -182,7 +182,7 @@ export const QuestDefinitions = () => {
         }
       ],
       preRequisites: ['CreatingRadMorphs'],
-      minutesToComplete: 3,
+      minutesToComplete: 6,
       requirements: {
         [EventId.JettyReceivedClams]: {
           type: 'event',
@@ -247,7 +247,7 @@ export const QuestDefinitions = () => {
         }
       ],
       trackedAccountAddress: false,
-      minutesToComplete: 3,
+      minutesToComplete: 1,
       preRequisites: ['TransferTokens'],
       requirements: {
         BronzeLevel: {
@@ -301,7 +301,7 @@ export const QuestDefinitions = () => {
         }
       ],
       trackedAccountAddress: true,
-      minutesToComplete: 5,
+      minutesToComplete: 10,
       preRequisites: ['TransferTokens'],
       requirements: {
         [EventId.JettySwap]: {
@@ -351,7 +351,7 @@ export const QuestDefinitions = () => {
         }
       ],
       trackedAccountAddress: true,
-      minutesToComplete: 20,
+      minutesToComplete: 6,
       preRequisites: ['TransferTokens'],
       requirements: {
         [EventId.InstapassBadgeDeposited]: {
@@ -375,7 +375,7 @@ export const QuestDefinitions = () => {
       ],
       splashImage: '/quests-images/splash/Thorswap.webp',
       trackedAccountAddress: true,
-      minutesToComplete: 10,
+      minutesToComplete: 5,
       preRequisites: ['QuestTogether'],
       requirements: {
         [EventId.MayaRouterWithdrawEvent]: {
