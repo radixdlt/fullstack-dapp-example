@@ -26,11 +26,10 @@ export const previewTransaction = async (props: CreateSwapManifestProps) => {
   })
 }
 
-export const getBalanceChange = async (props: CreateSwapManifestProps) => {
+export const getBalanceChange = async (props: CreateSwapManifestProps, toTokenAddress: string) => {
   const tx = await previewTransaction(props)
-
   const balanceChange: any = tx.resource_changes.find(
-    (change: any) => change.resource_changes[0]?.resource_address === props.toTokenAddress
+    (change: any) => change.resource_changes[0]?.resource_address === toTokenAddress
   )
   return balanceChange?.resource_changes[0].amount as string
 }

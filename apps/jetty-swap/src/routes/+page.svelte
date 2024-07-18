@@ -122,12 +122,15 @@
 
       if (!ottercoinResource || !clamResource || !currentBalance) return
 
-      const receiveAmount = await getBalanceChange({
-        amount: conversionRateFrom,
-        fromTokenAddress: clamResource.id,
-        swapComponent,
-        userAccountAddress: $walletData?.accounts[0].address
-      })
+      const receiveAmount = await getBalanceChange(
+        {
+          amount: conversionRateFrom,
+          fromTokenAddress: clamResource.id,
+          swapComponent,
+          userAccountAddress: $walletData?.accounts[0].address
+        },
+        addresses.resources.ottercoinAddress
+      )
 
       conversionRateTo = receiveAmount
     } catch (error) {}
@@ -139,12 +142,15 @@
 
     clearTimeout(timer)
     timer = setTimeout(() => {
-      getBalanceChange({
-        amount,
-        fromTokenAddress: clamResource?.id as string,
-        swapComponent,
-        userAccountAddress: $walletData?.accounts[0].address as string
-      }).then((amount) => {
+      getBalanceChange(
+        {
+          amount,
+          fromTokenAddress: clamResource?.id as string,
+          swapComponent,
+          userAccountAddress: $walletData?.accounts[0].address as string
+        },
+        addresses.resources.ottercoinAddress
+      ).then((amount) => {
         toInput = amount
       })
     }, 750)
@@ -170,6 +176,8 @@
         swapResult = { ...(ottercoinResource as Resource), count: toInput }
         updateBalances($walletData?.accounts[0].address as string)
         swapButtonLoading = false
+        fromInput = ''
+        toInput = ''
       })
       .mapErr((err) => {
         console.error(err)
