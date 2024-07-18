@@ -1,13 +1,12 @@
 <script lang="ts">
   import { i18n } from '$lib/i18n/i18n'
+  import { gemImageMapping, type ColorCodeDescription, type ShaderCodeDescription } from 'common'
   import ResourceCard from '../resource-card/ResourceCard.svelte'
 
   export let gem: {
-    id: string
-    material: string
-    color: string
+    material: ShaderCodeDescription
+    color: ColorCodeDescription
     quality: string
-    imageUrl: string
   }
   export const select = () => (selected = true)
   export const deselect = () => (selected = false)
@@ -21,9 +20,10 @@
 </script>
 
 <ResourceCard on:selected on:deselected {disabled} bind:selected>
-  <div class="container" style:--background-image={`url(${gem.imageUrl})`}>
-    <div class="gemstone" class:selected />
-  </div>
+  <div
+    class="container"
+    style:--background-image={`url(${gemImageMapping(gem.color, gem.material)})`}
+  />
 
   <svelte:fragment slot="text">
     <div class="text">
@@ -43,15 +43,9 @@
     justify-content: center;
     align-items: center;
     background: var(--background-image) no-repeat center;
-    background-size: 80%;
+    background-size: cover;
     height: 100%;
     width: 100%;
-  }
-
-  .gemstone {
-    position: relative;
-    height: 80%;
-    width: 80%;
   }
 
   .text {

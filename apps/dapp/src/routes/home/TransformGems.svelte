@@ -5,11 +5,11 @@
   import { i18n } from '$lib/i18n/i18n'
   import { createEventDispatcher } from 'svelte'
   import JettyMenuItemPage from './JettyMenuItemPage.svelte'
+  import type { ColorCodeDescription, ShaderCodeDescription } from 'common'
 
   export let cards: {
     id: string
     energy: string
-    imageUrl: string
     rarity: string
     quality: number
     limitedEdition: boolean
@@ -17,10 +17,9 @@
 
   export let gems: {
     id: string
-    material: string
-    color: string
+    material: ShaderCodeDescription
+    color: ColorCodeDescription
     quality: string
-    imageUrl: string
   }[] = []
 
   export let getPreview: () => Promise<typeof preview>

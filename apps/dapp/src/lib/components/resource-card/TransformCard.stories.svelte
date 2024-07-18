@@ -17,7 +17,7 @@
   args={{
     card: {
       id: '1',
-      energy: 'Molten Banana',
+      energy: 'Tidal Wave',
       imageUrl: BackgroundImage,
       rarity: 'common',
       quality: 10,
@@ -31,7 +31,7 @@
   args={{
     card: {
       id: '1',
-      energy: 'Molten Banana',
+      energy: 'Tidal Wave',
       imageUrl: BackgroundImage,
       rarity: 'rare',
       quality: 10,
@@ -45,7 +45,7 @@
   args={{
     card: {
       id: '1',
-      energy: 'Molten Banana',
+      energy: 'Tidal Wave',
       imageUrl: BackgroundImage,
       rarity: 'ultra-rare',
       quality: 10,

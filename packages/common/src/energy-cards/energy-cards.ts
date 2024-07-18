@@ -19,14 +19,14 @@ type UltraRareEnergyCard = GenericEnergyCard<'Ultra-rare'>
 
 export type EnergyCard = GenericEnergyCard<EnergyCardRarity>
 
-const energyCardMap = {
+export const energyCardMap = {
   S001: {
     energyType: 'Whirlpool Spiral',
     energyDescription: 'the sinking gyre of a whirlpool spiral',
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: false,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S001.webp'
   },
   S005: {
     energyType: 'Tidal Wave',
@@ -34,7 +34,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S005.webp'
   },
   S004: {
     energyType: 'Molten Lava',
@@ -42,7 +42,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S004.webp'
   },
   S008: {
     energyType: 'Pyroclastic Flow',
@@ -50,7 +50,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S008.webp'
   },
   S011: {
     energyType: 'Rainbow Curve',
@@ -58,7 +58,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S011.webp'
   },
   S009: {
     energyType: 'Polar Blizzard',
@@ -66,7 +66,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: true,
     currentlyAvailable: true,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S009.webp'
   },
   S013: {
     energyType: 'Hydrothermal Vent',
@@ -74,7 +74,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: true,
     currentlyAvailable: true,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S013.webp'
   },
   S015: {
     energyType: 'Volcanic Lightning',
@@ -82,7 +82,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: true,
     currentlyAvailable: false,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S015.webp'
   },
   S006: {
     energyType: 'Storm Cell',
@@ -90,7 +90,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: true,
     currentlyAvailable: false,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S006.webp'
   },
   S018: {
     energyType: 'Aurora Borealis',
@@ -98,7 +98,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.Rare,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S018.webp'
   },
   S012: {
     energyType: 'Magnetic Field',
@@ -106,7 +106,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.Rare,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S012.webp'
   },
   S007: {
     energyType: 'Nuclear Fusion',
@@ -114,7 +114,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.Rare,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S007.webp'
   },
   S002: {
     energyType: 'Earthquake Tremor',
@@ -122,7 +122,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.Rare,
     limitedEdition: true,
     currentlyAvailable: true,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S002.webp'
   },
   S017: {
     energyType: 'Tropical Cyclone',
@@ -130,7 +130,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.Rare,
     limitedEdition: true,
     currentlyAvailable: true,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S017.webp'
   },
   S003: {
     energyType: 'Gamma Rays',
@@ -138,7 +138,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.Rare,
     limitedEdition: true,
     currentlyAvailable: false,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S003.webp'
   },
   S010: {
     energyType: 'Gravity Force',
@@ -146,7 +146,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.Rare,
     limitedEdition: true,
     currentlyAvailable: false,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S010.webp'
   },
   S014: {
     energyType: 'Supernova Explosion',
@@ -154,7 +154,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.UltraRare,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S014.webp'
   },
   S019: {
     energyType: 'Black Hole',
@@ -162,7 +162,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.UltraRare,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S019.webp'
   },
   S016: {
     energyType: 'Fire Tornado',
@@ -170,7 +170,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.UltraRare,
     limitedEdition: true,
     currentlyAvailable: true,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S016.webp'
   },
   S020: {
     energyType: 'Solar Flare',
@@ -178,7 +178,7 @@ const energyCardMap = {
     rarity: EnergyCardRarity.UltraRare,
     limitedEdition: true,
     currentlyAvailable: false,
-    keyImageUrl: ''
+    keyImageUrl: '/morph-cards/UI_S020.webp'
   }
 } as const
 
