@@ -312,10 +312,6 @@
   let readyToClaim = false
   let readyToOpen = false
   let claimed = false
-
-  const hideBackButton = context.get('hideBackButton')
-
-  $hideBackButton = true
 </script>
 
 <div class="open-gift-box">
@@ -332,7 +328,14 @@
       <lottie-player autoplay loop mode="normal" src="/lottie/loading.json" style="width: 320px" />
     </JettyMenuItemPage>
   {:else if claimed}
-    {$i18n.t('jetty:open-gift-box.claimed')}
+    <JettyMenuItemPage
+      action={{
+        text: $i18n.t('jetty:close'),
+        onClick: close
+      }}
+    >
+      {$i18n.t('jetty:open-gift-box.claimed')}
+    </JettyMenuItemPage>
   {:else if readyToClaim}
     <JettyMenuItemPage
       action={{
@@ -380,7 +383,9 @@
       actions={{
         left: {
           text: $i18n.t('quests:backButton'),
-          onClick: close
+          onClick: () => {
+            readyToOpen = false
+          }
         },
         right: {
           text: $i18n.t('jetty:open-gift-box.open-gift-box-button'),

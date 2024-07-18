@@ -132,7 +132,10 @@
     on:hover-over-jetty={(e) => {
       hoveringOverJetty = e.detail
     }}
-    on:item-content-closed={checkClaimStatus}
+    on:item-content-closed={() => {
+      checkClaimStatus()
+      checkGiftBoxStatus()
+    }}
     hideJetty={$hideJetty}
     {poppedUp}
     {menuItems}

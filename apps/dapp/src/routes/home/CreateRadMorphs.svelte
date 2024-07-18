@@ -284,23 +284,14 @@
   {:else}
     <JettyMenuItemPage
       action={hasEnoughResources
-        ? undefined
+        ? {
+            text: $i18n.t('jetty:create-radmorphs.get-started'),
+            onClick: () => (creatingRadmorphs = true)
+          }
         : {
             text: $i18n.t('jetty:close'),
             onClick: () => dispatch('cancel')
           }}
-      actions={hasEnoughResources
-        ? {
-            left: {
-              text: $i18n.t('jetty:close'),
-              onClick: () => dispatch('cancel')
-            },
-            right: {
-              text: $i18n.t('jetty:create-radmorphs.get-started'),
-              onClick: () => (creatingRadmorphs = true)
-            }
-          }
-        : undefined}
     >
       {$i18n.t('jetty:create-radmorphs.intro')}
       <p>

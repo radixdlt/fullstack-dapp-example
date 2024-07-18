@@ -116,6 +116,11 @@
   $: if (!expanded) {
     setTimeout(() => (showMenuItemContent = false), 500)
   }
+
+  $: if ($back) {
+    showMenuItemContent = false
+    back.set(false)
+  }
 </script>
 
 <div

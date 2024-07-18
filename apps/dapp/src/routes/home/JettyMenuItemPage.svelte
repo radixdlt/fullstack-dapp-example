@@ -40,7 +40,7 @@
     {#if action}
       <Button {loading} on:click={action.onClick}>{action.text}</Button>
     {:else if actions}
-      <Button secondary on:click={actions.left.onClick}>{actions.left.text}</Button>
+      <Button theme="dark" on:click={actions.left.onClick}>{actions.left.text}</Button>
       <Button {loading} {disabled} on:click={actions.right.onClick}>{actions.right.text}</Button>
     {/if}
   </div>
