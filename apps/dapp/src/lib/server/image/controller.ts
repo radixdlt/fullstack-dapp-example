@@ -10,7 +10,12 @@ import { confirmAccountHasLocalIds } from './helpers/confirm-account-has-local-i
 import { validateRadmorphImageBody } from './helpers/validate-radmorph-image-body'
 
 export type ImageController = ReturnType<typeof ImageController>
-export const ImageController = ({ imageModel, gatewayApi, userModel }: ControllerDependencies) => {
+export const ImageController = ({
+  imageModel,
+  gatewayApi,
+  userModel,
+  logger
+}: ControllerDependencies) => {
   const getKeyImageUrl = (radmorphAttributes: {
     shape: ShapeCode
     material: ShaderCode
@@ -45,13 +50,14 @@ export const ImageController = ({ imageModel, gatewayApi, userModel }: Controlle
       ]),
       gatewayApi.callApi('getNonFungibleData', addresses.resources.morphEnergyCardAddress, [card])
     ])
-      .andThen(([radgemData, cardData]) =>
-        Result.combine([
+      .andThen(([radgemData, cardData]) => {
+        logger.debug({ method: 'getRadMorphCodes.getNonFungibleData', radgemData, cardData })
+        return Result.combine([
           getRadgemCodes(radgemData[0].data?.programmatic_json),
           getRadgemCodes(radgemData[1].data?.programmatic_json),
           getCardShape(cardData[0].data?.programmatic_json)
         ])
-      )
+      })
       .mapErr((jsError) => createApiError('Failed to get radmorph codes', 400)(jsError))
 
   const getRadmorphImage = (ctx: ControllerMethodContext, userId: string, requestBody: unknown) =>
