@@ -18,6 +18,11 @@
       "content": "Before claiming more XRD, we’d appreciate answering a few quick questions in the quest:",
       "questName": "Get Verified with Instapass",
       "button": "Go to Instapass Quest"
+    },
+    "AccountAlreadyRegistered": {
+      "title": "Account Already Registered",
+      "content": "You seem to be already a RadQuest user - please log in with the Persona you originally used to continue.",
+      "button": "Close"
     }
   },
   "footer": {

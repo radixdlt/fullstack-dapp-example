@@ -103,6 +103,11 @@ interface Resources {
         "content": "Before claiming more XRD, we’d appreciate answering a few quick questions in the quest:",
         "questName": "Get Verified with Instapass",
         "button": "Go to Instapass Quest"
+      },
+      "AccountAlreadyRegistered": {
+        "title": "Account Already Registered",
+        "content": "You seem to be already a RadQuest user - please log in with the Persona you originally used to continue.",
+        "button": "Close"
       }
     },
     "footer": {
@@ -284,13 +289,13 @@ interface Resources {
     "DEXSwaps": {
       "requirements": {
         "LearnAboutDexes": "Learn about DEXes",
-        "JettySwap": "Swap tokens on Jetty Swap",
-        "LettySwap": "Swap tokens on Letty Swap"
+        "JettySwap": "Do a swap on Jetty DEX",
+        "LettySwap": "Do a swap on Letty DEX"
       },
       "goToJettySwap": "Go to Jetty Swap",
       "goToLettySwap": "Go to Letty Swap",
-      "title": "Decentralized Exchange (DEX)",
-      "description": "Learn how to swap one token for another at a changing market rate.",
+      "title": "Swap Tokens on a DEX",
+      "description": "Learn about Radix Wallet “guarantees”",
       "introDescription": "Learn how to safely swap tokens on Radix using a decentralized exchange (DEX)"
     },
     "Instapass": {

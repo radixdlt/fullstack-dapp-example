@@ -55,6 +55,21 @@
             >
           </div>
         {/if}
+
+        {#if visibleErrorPopup.id === ErrorPopupId.AccountAlreadyRegistered}
+          <div>
+            {$i18n.t('main:errorPopup.AccountAlreadyRegistered.content')}
+          </div>
+
+          <div class="button">
+            <Button
+              theme="light"
+              on:click={() => {
+                hide()
+              }}>{$i18n.t('main:errorPopup.AccountAlreadyRegistered.button')}</Button
+            >
+          </div>
+        {/if}
       </div>
     </div>
   </Backdrop>
@@ -86,6 +101,7 @@
 
   .error-popup-content {
     padding: var(--spacing-xl);
+    padding-bottom: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
