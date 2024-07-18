@@ -86,7 +86,7 @@ const app = async (dependencies: Dependencies) => {
   stream.error$.subscribe(handleStreamError)
 }
 
-const gatewayApi = GatewayApi(config.networkId)
+const gatewayApi = GatewayApi(config.networkId, process.env.GATEWAY_URL)
 const { eventQueue } = getQueues(config.redis)
 const redisConnection = new RedisConnection(config.redis)
 const transactionStreamModel = TransactionStreamModel(dbClient)
