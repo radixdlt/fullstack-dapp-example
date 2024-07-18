@@ -75,5 +75,8 @@
     @include markdownLinkStyles();
     @include markdownBlockquoteStyles();
     @include markdownTextStyles();
+    :global(p) > :global(img) {
+      max-width: 100%;
+    }
   }
 </style>
