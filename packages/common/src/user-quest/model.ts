@@ -32,13 +32,19 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
       }
     )
 
-  const addVerifiedPhoneNumber = (userId: string, country: string, hashOfPhoneNumber: string) =>
+  const addVerifiedPhoneNumber = (
+    userId: string,
+    country: string,
+    hashOfPhoneNumber: string,
+    clientIp: string
+  ) =>
     ResultAsync.fromPromise(
       db.$transaction([
         db.userPhoneNumber.create({
           data: {
             userId: userId,
-            phoneNumber: hashOfPhoneNumber
+            phoneNumber: hashOfPhoneNumber,
+            ip: clientIp
           }
         }),
         db.user.update({ data: { country }, where: { id: userId } }),

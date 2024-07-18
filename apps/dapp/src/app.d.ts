@@ -14,6 +14,7 @@ declare global {
       context: { traceId: string; logger: AppLogger }
       dependencies: ControllerDependencies
       controllers: Controllers
+      clientIp: string
     }
     // interface PageData {}
     // interface Platform {}

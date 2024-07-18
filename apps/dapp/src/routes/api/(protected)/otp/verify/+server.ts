@@ -9,7 +9,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     locals.controllers.oneTimePasswordController.verifyOneTimePassword(
       locals.userId,
       requestBody.phoneNumber,
-      requestBody.oneTimePassword
+      requestBody.oneTimePassword,
+      locals.clientIp
     )
   )
 }
