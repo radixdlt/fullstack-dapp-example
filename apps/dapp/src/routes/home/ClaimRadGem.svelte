@@ -10,7 +10,7 @@
   } from '@radixdlt/babylon-gateway-api-sdk'
   import pipe from 'ramda/src/pipe'
   import { i18n } from '$lib/i18n/i18n'
-  import FuseElementsPage from './JettyMenuItemPage.svelte'
+  import JettyMenuItemPage from './JettyMenuItemPage.svelte'
 
   export let ids: string[]
 
@@ -100,7 +100,7 @@
   }
 </script>
 
-<FuseElementsPage
+<JettyMenuItemPage
   action={{
     text: 'Claim',
     onClick
@@ -126,7 +126,7 @@
       <enhanced:img src="@images/multiple-gems.webp?enhanced" />
     {/if}
   </div>
-</FuseElementsPage>
+</JettyMenuItemPage>
 
 <style lang="scss">
   .claim-radgem {
