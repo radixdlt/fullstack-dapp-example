@@ -29,7 +29,7 @@ SET_METADATA
     Address("${dAppDefinition}")
     "icon_url"
     Enum<Metadata::Url>(
-        "https://placeholder.icon.address"
+        "${config.radQuest.dapps.radquest.url}/src/images/dapp-icons/RadQuest_icon.webp"
     )
 ;
 SET_METADATA

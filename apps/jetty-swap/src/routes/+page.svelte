@@ -17,7 +17,6 @@
   import { type FungibleResourcesCollectionItemVaultAggregated } from '@radixdlt/babylon-gateway-api-sdk'
   import { rdt, walletData, gatewayApi } from '$lib/stores'
   import { Addresses, GatewayApi } from 'common'
-  import { ok } from 'neverthrow'
   import { env } from '$env/dynamic/public'
   import type { Resource, SwappedResource } from '../types'
   import { getBalanceChange } from '$lib/utils/previewTranasction'
@@ -44,7 +43,7 @@
   const themedResources = ThemedResources[env.PUBLIC_SWAP_VARIATION as 'JETTY' | 'LETTY']
 
   let clamResource: Resource | undefined
-  let elementResource: Resource | undefined
+  let ottercoinResource: Resource | undefined
 
   $: swapButtonLoading = false
   let swapResult: SwappedResource | undefined = undefined
@@ -81,7 +80,7 @@
     ])
     if (details.isOk()) {
       balances = details.value[0].fungible_resources.items.filter((item) =>
-        [elementResource, clamResource].some((resource) => resource?.id === item.resource_address)
+        [ottercoinResource, clamResource].some((resource) => resource?.id === item.resource_address)
       )
     }
   }
@@ -106,13 +105,13 @@
     })
 
     try {
-      const [elementMetadataResult, clamMetadataResult] = await Promise.all([
-        $gatewayApi.callApi('getEntityMetadata', addresses.resources.elementAddress),
+      const [ottercoinMetadataResult, clamMetadataResult] = await Promise.all([
+        $gatewayApi.callApi('getEntityMetadata', addresses.resources.ottercoinAddress),
         $gatewayApi.callApi('getEntityMetadata', addresses.resources.clamAddress)
       ])
 
-      if (elementMetadataResult.isOk()) {
-        elementResource = turnEntityIntoObject(elementMetadataResult.value)
+      if (ottercoinMetadataResult.isOk()) {
+        ottercoinResource = turnEntityIntoObject(ottercoinMetadataResult.value)
       }
       if (clamMetadataResult.isOk()) {
         clamResource = turnEntityIntoObject(clamMetadataResult.value)
@@ -121,14 +120,13 @@
       if (!$walletData?.accounts[0]?.address) return
       await updateBalances($walletData?.accounts[0].address)
 
-      if (!elementResource || !clamResource || !currentBalance) return
+      if (!ottercoinResource || !clamResource || !currentBalance) return
 
       const receiveAmount = await getBalanceChange({
         amount: conversionRateFrom,
         fromTokenAddress: clamResource.id,
-        toTokenAddress: elementResource.id,
         swapComponent,
-        userAddress: $walletData?.accounts[0].address
+        userAccountAddress: $walletData?.accounts[0].address
       })
 
       conversionRateTo = receiveAmount
@@ -144,9 +142,8 @@
       getBalanceChange({
         amount,
         fromTokenAddress: clamResource?.id as string,
-        toTokenAddress: elementResource?.id as string,
         swapComponent,
-        userAddress: $walletData?.accounts[0].address as string
+        userAccountAddress: $walletData?.accounts[0].address as string
       }).then((amount) => {
         toInput = amount
       })
@@ -156,25 +153,28 @@
   $: debounce(fromInput)
 
   const onSwap = async () => {
-    if (!elementResource || !clamResource || !$walletData?.accounts[0]) return
+    if (!ottercoinResource || !clamResource || !$walletData?.accounts[0]) return
     swapButtonLoading = true
+    const transactionManifest = createSwapManifest({
+      amount: fromInput,
+      fromTokenAddress: clamResource.id,
+      swapComponent,
+      userAccountAddress: $walletData.accounts[0]?.address
+    })
     $rdt?.walletApi
       .sendTransaction({
-        transactionManifest: createSwapManifest({
-          amount: fromInput,
-          fromTokenAddress: clamResource.id,
-          toTokenAddress: elementResource.id,
-          swapComponent,
-          userAddress: $walletData.accounts[0]?.address
-        })
+        transactionManifest
       })
       .map(() => {
         modal = 'success'
-        swapResult = { ...(elementResource as Resource), count: toInput }
+        swapResult = { ...(ottercoinResource as Resource), count: toInput }
         updateBalances($walletData?.accounts[0].address as string)
         swapButtonLoading = false
       })
-      .mapErr(() => (swapButtonLoading = false))
+      .mapErr((err) => {
+        console.error(err)
+        swapButtonLoading = false
+      })
   }
 
   //todo to be replaced once we have oracle
@@ -223,7 +223,7 @@
       clamResourceIcon={clamResource?.icon}
       {conversionRateFrom}
       {conversionRateTo}
-      elementResourceIcon={elementResource?.icon}
+      ottercoinResourceIcon={ottercoinResource?.icon}
       {isGoingUp}
       {isJetty}
       logo={themedResources.logo}
@@ -260,7 +260,7 @@
           disabled
           bind:value={toInput}
           cardTitle={$i18n.t('main:to')}
-          resource={elementResource}
+          resource={ottercoinResource}
         >
           <p class="estimated-amount">
             <span class="estimated-amount-bold">{$i18n.t('main:estimated-amount-pt1')}</span>

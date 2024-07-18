@@ -1,5 +1,4 @@
 import { bufferToUint8Array, hash } from '.'
-import { config } from '../config'
 import { decodeSbor } from '../transaction/decodeSbor'
 import { transactionBuilder } from '../transaction/transactionBuilder'
 
@@ -16,11 +15,6 @@ export const publishPackageAdvanced = ({
     .map((sborDecodedSchema) => {
       const wasmHash = hash(wasm).toString('hex')
       const transactionManifest = `
-        CALL_METHOD
-          Address("${config.radQuest.accounts.payer.address}")
-          "lock_fee"
-          Decimal("500")
-        ;
         PUBLISH_PACKAGE_ADVANCED
           Enum<1u8>(
             Enum<2u8>(
@@ -40,8 +34,11 @@ export const publishPackageAdvanced = ({
         `
       const transaction = transactionBuilder({
         transactionManifest,
-        signers: ['payer', 'system'],
-        optional: { blobs: [bufferToUint8Array(wasm)] }
+        signers: ['system'],
+        optional: {
+          lockFee: 500,
+          blobs: [bufferToUint8Array(wasm)]
+        }
       })
 
       return transaction

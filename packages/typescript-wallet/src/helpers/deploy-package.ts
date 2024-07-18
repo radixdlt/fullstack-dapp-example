@@ -28,7 +28,11 @@ CALL_METHOD
   Expression("ENTIRE_WORKTOP")
 ;
 `
-      const transaction = transactionBuilder({ transactionManifest, signers: [], lockFee })
+      const transaction = transactionBuilder({
+        transactionManifest,
+        signers: [],
+        optional: { lockFee }
+      })
 
       return transaction.submit().andThen(({ transactionId }) =>
         transaction.helper.getCommittedDetails(transactionId).map((res) => ({

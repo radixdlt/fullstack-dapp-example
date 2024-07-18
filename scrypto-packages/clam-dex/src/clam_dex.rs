@@ -6,9 +6,6 @@ use scrypto::prelude::*;
 mod clam_dex {
 
     enable_method_auth! {
-        roles {
-            member => updatable_by: [SELF, OWNER];
-        },
         methods {
             swap => PUBLIC;
             get_price => PUBLIC;

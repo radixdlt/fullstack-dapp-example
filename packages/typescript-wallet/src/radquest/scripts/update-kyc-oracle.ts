@@ -6,12 +6,6 @@ const addresses = Addresses(2)
 const userId = process.argv[2]
 
 const transactionManifest = `
-        CALL_METHOD 
-          Address("${config.radQuest.accounts.payer.address}") 
-          "lock_fee"
-          Decimal("10")
-        ;
-
         CALL_METHOD
           Address("${config.radQuest.accounts.system.address}")
           "create_proof_of_amount"
@@ -25,7 +19,7 @@ const transactionManifest = `
           "${userId}"
           true
         ;`
-transactionBuilder({ transactionManifest, signers: ['payer', 'system'] })
+transactionBuilder({ transactionManifest, signers: ['system'] })
   .submit()
   .map(({ transactionId }) => transactionId)
   .mapErr((e) => console.log(e))
