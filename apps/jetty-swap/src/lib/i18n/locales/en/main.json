@@ -6,7 +6,7 @@
   "estimated-amount-pt1": "Estimated",
   "estimated-amount-pt2": "at market price",
   "balance-amount": "Balance: {{count}} {{resource}}",
-  "balance-amount_other": "Balance: {{count}} {{resource}}s",
+  "balance-amount_other": "Balance: {{count}} {{resource}}",
   "from": "from",
   "to": "to",
   "not-enough-resource": "Not enough {{resource}}s in your wallet",
