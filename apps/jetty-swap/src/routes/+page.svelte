@@ -50,7 +50,7 @@
   let modal: 'success' | 'failure' | undefined = undefined
 
   let conversionRateFrom = '1'
-  let conversionRateTo = '2'
+  let conversionRateTo = '10'
 
   let fromInput = ''
   let toInput = ''
@@ -97,6 +97,9 @@
 
     $rdt = RadixDappToolkit({ ...swapConfig, logger: Logger(1) })
     $rdt.buttonApi.setTheme(isJetty ? 'radix-blue' : 'white')
+    if (!isJetty) {
+      $rdt.buttonApi.setMode('dark')
+    }
     $gatewayApi = GatewayApi(parseInt(env.PUBLIC_NETWORK_ID, 0))
     $rdt?.walletApi.setRequestData(DataRequestBuilder.accounts().exactly(1))
     $rdt?.walletApi.walletData$.subscribe((data) => {

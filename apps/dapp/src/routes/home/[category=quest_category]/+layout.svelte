@@ -17,6 +17,10 @@
 
   onMount(() => {
     referredByCookie = useCookies('referredBy').get()
+
+    if ($page.params.category === 'advanced') {
+      markNotificationAsSeen('basicQuestsComplete')
+    }
   })
 
   $: questCardState = Object.entries(data.questDefinitions).reduce(
@@ -58,10 +62,6 @@
   $: if ($scrollToNextQuest && carousel) {
     carousel.scrollToNext()
     $scrollToNextQuest = false
-  }
-
-  if ($page.params.category === 'advanced') {
-    markNotificationAsSeen('basicQuestsComplete')
   }
 </script>
 

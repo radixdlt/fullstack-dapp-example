@@ -4,7 +4,7 @@ interface Resources {
     "definitionMissing": "Definition doesn't exist"
   },
   "jetty": {
-    "menu-glossary": "View the Glossary",
+    "menu-glossary": "Radix Glossary",
     "menu-radmorphs": "Create RadMorphs",
     "menu-radgems": "Create RadGems",
     "menu-giftBox": "Open Gift Box",
@@ -15,7 +15,7 @@ interface Resources {
     "go-back-to-quest": "Go back to quest",
     "cancel": "Cancel",
     "close": "Close",
-    "connect-your-wallet": "Once you connect your Radix Wallet, you can unlock these options",
+    "connect-your-wallet": "Once you get your RadQuest Hero Badge, you’ll unlock these other options:",
     "elements": "Elements",
     "morph-energy-card": "Morph Energy Card",
     "notifications": {
@@ -224,7 +224,8 @@ interface Resources {
       "description": "Transfer stuff using the Radix Wallet",
       "introDescription": "Use the Radix Wallet’s transfer feature to send tokens, NFTs, and any other kind of asset to different Accounts and other people.",
       "copyTextButton_copy": "Copy",
-      "copyTextButton_copied": "Copied!"
+      "copyTextButton_copied": "Copied!",
+      "getClams": "Claim Clams"
     },
     "NetworkStaking": {
       "title": "Radix Network Staking",
