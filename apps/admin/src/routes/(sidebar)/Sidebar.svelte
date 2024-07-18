@@ -10,7 +10,8 @@
     AtomOutline,
     ImageOutline,
     UserOutline,
-    CodeOutline
+    CodeOutline,
+    SalePercentOutline
   } from 'flowbite-svelte-icons'
 
   export let drawerHidden: boolean = false
@@ -52,6 +53,11 @@
       name: 'Transactions',
       icon: BookOpenSolid,
       href: '/transactions'
+    },
+    {
+      name: 'Marketing',
+      icon: SalePercentOutline,
+      href: '/marketing'
     },
     { name: 'Config', icon: CogOutline, href: '/config' },
     { name: 'Scripts', icon: CodeOutline, href: '/scripts' }
