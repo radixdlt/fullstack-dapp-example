@@ -19,7 +19,7 @@
   import { Addresses, GatewayApi } from 'common'
   import { env } from '$env/dynamic/public'
   import type { Resource, SwappedResource } from '../types'
-  import { getBalanceChange } from '$lib/utils/previewTranasction'
+  import { getBalanceChange, getTransactionResult } from '$lib/utils/previewTranasction'
   import { createSwapManifest } from '$lib/utils/createSwapManifest'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import SwapResult from '$lib/components/swapResult/SwapResult.svelte'
@@ -161,19 +161,23 @@
   const onSwap = async () => {
     if (!ottercoinResource || !clamResource || !$walletData?.accounts[0]) return
     swapButtonLoading = true
+    const address = $walletData.accounts[0]?.address!
     const transactionManifest = createSwapManifest({
       amount: fromInput,
       fromTokenAddress: clamResource.id,
       swapComponent,
-      userAccountAddress: $walletData.accounts[0]?.address
+      userAccountAddress: address
     })
     $rdt?.walletApi
       .sendTransaction({
         transactionManifest
       })
-      .map(() => {
+      .andThen(({ transactionIntentHash }) =>
+        getTransactionResult(transactionIntentHash, addresses.resources.ottercoinAddress, address)
+      )
+      .map((output) => {
         modal = 'success'
-        swapResult = { ...(ottercoinResource as Resource), count: toInput }
+        swapResult = { ...(ottercoinResource as Resource), count: output! }
         updateBalances($walletData?.accounts[0].address as string)
         swapButtonLoading = false
         fromInput = ''

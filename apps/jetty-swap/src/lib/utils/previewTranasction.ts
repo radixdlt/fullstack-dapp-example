@@ -26,6 +26,23 @@ export const previewTransaction = async (props: CreateSwapManifestProps) => {
   })
 }
 
+export const getTransactionResult = (
+  transactionId: string,
+  toTokenAddress: string,
+  toAddress: string
+) => {
+  const gatewayApi = get(GatewayAPI) as GatewayApi
+  return gatewayApi.callApi('getCommittedDetails', transactionId).map((response) => {
+    if (response?.transaction.balance_changes) {
+      const balanceChange = response?.transaction?.balance_changes.fungible_balance_changes.find(
+        (change) =>
+          change.resource_address === toTokenAddress && change.entity_address === toAddress
+      )
+      return balanceChange?.balance_change
+    }
+  })
+}
+
 export const getBalanceChange = async (props: CreateSwapManifestProps, toTokenAddress: string) => {
   const tx = await previewTransaction(props)
   const balanceChange: any = tx.resource_changes.find(
