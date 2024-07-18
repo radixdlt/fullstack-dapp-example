@@ -310,6 +310,7 @@
   let waitingForClaimTransaction = false
   let waitingForDepositedRewards = false
   let readyToClaim = false
+  let readyToOpen = false
   let claimed = false
 
   const hideBackButton = context.get('hideBackButton')
@@ -374,7 +375,7 @@
     >
       {$i18n.t('jetty:open-gift-box.no-boxes')}
     </JettyMenuItemPage>
-  {:else if totalGiftBoxes === 1}
+  {:else if readyToOpen || totalGiftBoxes === 1}
     <JettyMenuItemPage
       actions={{
         left: {
@@ -383,15 +384,20 @@
         },
         right: {
           text: $i18n.t('jetty:open-gift-box.open-gift-box-button'),
-          onClick: () => openGiftBox(findOneGiftBox()[0])
+          onClick: () => openGiftBox(totalGiftBoxes === 1 ? findOneGiftBox()[0] : selectedGiftBox)
         }
       }}
       loading={waitingForOpenTransaction}
     >
-      <div class="title">
-        {$i18n.t('jetty:open-gift-box.one-box-title')}
+      <div slot="header" class="title">
+        {$i18n.t('jetty:open-gift-box.one-box-title', {
+          giftBox:
+            totalGiftBoxes === 1 ? findOneGiftBox()[1].name : ownedGiftBoxes[selectedGiftBox].name
+        })}
       </div>
-      <img class="gift-box-image" src={findOneGiftBox()[1].imageUrl} alt="A gift box" />
+      <div class="gift-box-image">
+        <img src={findOneGiftBox()[1].imageUrl} alt="A gift box" />
+      </div>
     </JettyMenuItemPage>
   {:else}
     <JettyMenuItemPage
@@ -401,8 +407,8 @@
           onClick: close
         },
         right: {
-          text: $i18n.t('jetty:open-gift-box.open-gift-box-button'),
-          onClick: () => openGiftBox(selectedGiftBox)
+          text: $i18n.t('quests:continueButton'),
+          onClick: () => (readyToOpen = true)
         }
       }}
       disabled={!selectedGiftBox}
@@ -467,11 +473,14 @@
   }
 
   .gift-box-image {
-    height: 13rem;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
+
+    img {
+      height: 13rem;
+    }
   }
 
   .gift-box {

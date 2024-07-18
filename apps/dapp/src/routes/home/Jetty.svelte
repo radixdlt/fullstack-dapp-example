@@ -24,7 +24,6 @@
   import OpenGiftBox, { getRewards } from './OpenGiftBox.svelte'
   import { goto } from '$app/navigation'
   import { i18n } from '$lib/i18n/i18n'
-  import CreateRadGems from './CreateRadGems.svelte'
 
   let poppedUp = false
   let expanded = false

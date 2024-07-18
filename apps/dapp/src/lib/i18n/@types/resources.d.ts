@@ -72,7 +72,7 @@ interface Resources {
     },
     "open-gift-box": {
       "no-boxes": "Sorry, you don’t have any Gift Boxes in your registered Radix account to open right now.",
-      "one-box-title": "Let's see what's in your Starter Gift Box!",
+      "one-box-title": "Let's see what's in your {{giftBox}} Gift Box!",
       "multiple-boxes-title": "Pick a Gift Box to open",
       "open-gift-box-button": "Open Gift Box",
       "opening-gift-box": "Opening...",
