@@ -10,9 +10,18 @@
   let isScrolledToStart = true
   let isScrolledToEnd = true
 
-  export const scrollToNext = () => {
+  const stepSize = 400
+
+  const scrollToN = (i: number) => {
     if (!carousel) return
-    // TODO
+    carousel.scrollTo({
+      left: i * stepSize - carousel.offsetWidth / 2,
+      behavior: 'smooth'
+    })
+  }
+  const centreOnClicked = (e: CustomEvent) => {
+    const index = e.detail.index
+    scrollToN(index)
   }
 
   const detectScrolledToStart = () => {
@@ -60,7 +69,7 @@
       if (!canScroll) return
       canScroll = false
       e.currentTarget.scrollBy({
-        left: delta < 0 ? -400 : 400,
+        left: delta < 0 ? -stepSize : stepSize,
         behavior: 'smooth'
       })
       setTimeout(() => {
@@ -68,7 +77,7 @@
       }, 300)
     }}
   >
-    <slot {Item} />
+    <slot {Item} {centreOnClicked} />
   </div>
   {#if !isScrolledToStart && !noButtons}
     <div class="navigate-button left">
@@ -76,7 +85,7 @@
         direction="left"
         on:click={() => {
           carousel.scrollBy({
-            left: -400,
+            left: -stepSize,
             behavior: 'smooth'
           })
         }}
@@ -89,7 +98,7 @@
         direction="right"
         on:click={() => {
           carousel.scrollBy({
-            left: 400,
+            left: stepSize,
             behavior: 'smooth'
           })
         }}
