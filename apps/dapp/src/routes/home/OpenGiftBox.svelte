@@ -401,7 +401,15 @@
         })}
       </div>
       <div class="gift-box-image">
-        <img src={findOneGiftBox()[1].imageUrl} alt="A gift box" />
+        <lottie-player
+          autoplay
+          loop
+          mode="normal"
+          src={`/lottie/GiftBox-${
+            totalGiftBoxes === 1 ? findOneGiftBox()[1].name : ownedGiftBoxes[selectedGiftBox].name
+          }.json`}
+          style="width: 320px"
+        />
       </div>
     </JettyMenuItemPage>
   {:else}
@@ -482,10 +490,6 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-
-    img {
-      height: 13rem;
-    }
   }
 
   .gift-box {
