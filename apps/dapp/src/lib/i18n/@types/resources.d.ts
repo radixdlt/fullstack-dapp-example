@@ -141,7 +141,7 @@ interface Resources {
       "comingSoon": "Coming Soon",
       "inProgress": "Continue",
       "claimRewards": "Claim Rewards",
-      "complete": "View Again"
+      "complete": "Recap"
     },
     "Welcome": {
       "hi": "Meet Jetty",
