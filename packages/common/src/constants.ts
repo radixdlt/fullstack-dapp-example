@@ -99,6 +99,93 @@ export const Addresses = (networkId: number) => {
             url: 'https://radquest-dev.rdx-works-main.extratools.works'
           }
         }
+      },
+      Mainnet: {
+        badges: {
+          adminBadgeAddress: '',
+          superAdminBadgeAddress: '',
+          heroBadgeAddress: '',
+          kycBadgeAddress: '',
+          instapassBadgeAddress: ''
+        },
+        resources: {
+          elementAddress: '',
+          clamAddress: '',
+          radgemAddress: '',
+          morphEnergyCardAddress: '',
+          radmorphAddress: '',
+          ottercoinAddress: '',
+          giftBox: {
+            Starter: '',
+            Simple: '',
+            Fancy: '',
+            Elite: ''
+          }
+        },
+        radQuestPackage: '',
+        clamDexPackage: '',
+        components: {
+          heroBadgeForge: '',
+          kycOracle: '',
+          questRewards: '',
+          giftBoxOpener: '',
+          cardForge: '',
+          radgemForge: '',
+          radmorphForge: '',
+          imageOracle: '',
+          refinery: '',
+          kycOracleKeyValueStore: '',
+          mayaRouter: '',
+          jettySwap: '',
+          lettySwap: ''
+        },
+        xrd: 'resource_rdx1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxradxrd',
+        accounts: {
+          owner: {
+            address: 'account_rdx12y0v97zppwn8cx5fks8ap2hk6jshpjjx8mwzwn9tvymg2pyx0mv9nk',
+            accessController:
+              'accesscontroller_rdx1cwyyg3rlxrdpyzus2adrq9lnfexf8wgs4p6r8ugsgmdnu0g4utjqq4'
+          },
+          dAppDefinition: {
+            address: 'account_rdx12xkqkcxqzkuc0xnsme9etvttmwfz8aqnhpwc0ygv8tnnpdw2v5cfzd',
+            accessController:
+              'accesscontroller_rdx1c0dpryhtc9s7a5qymj2zrun6pj644r66n8at2r8q6k5ztwkr7s84hm'
+          },
+          payer: {
+            address: 'account_rdx12yvpng9r5u3ggqqfwva0u6vya3hjrd6jantdq72p0jm6qarg8lld2f',
+            accessController:
+              'accesscontroller_rdx1cdwhkag6gv2m4rfwdm57w44sffa8eufd0wvvu6d3atfcfv64y3t2qn'
+          },
+          system: {
+            address: 'account_rdx1287ttlwdj70l4qhe6hc6gcad5ltxahf0vrydqnhj7dvc8kyqp52x9t',
+            accessController:
+              'accesscontroller_rdx1c0t7hcmt90htanr37s4vy0g6uqc0wgdvsq80n6mu5pjv2ecqgxmnhx'
+          },
+          jetty: {
+            address: '',
+            accessController: ''
+          },
+          jettySwapDappDefinition: {
+            address: 'account_rdx12ywkj4hfy3gz0jc200xh8w7vpcg7fckc3295w3kkrjhhdmxc4cngqg'
+          },
+          lettySwapDappDefinition: {
+            address: 'account_rdx1289j5759c3z07gq9f6f3fn5ecg5fkl9vw2wukr0adlkjs8q03wsl8p'
+          }
+        },
+        dapps: {
+          instapass: {
+            url: ''
+          },
+          jettySwap: {
+            url: 'https://jettyswap.io'
+          },
+          lettySwap: {
+            url: 'https://lettyswap.io'
+          },
+          radquest: {
+            url: 'https://radquest.io'
+          }
+        }
       }
     } as const
   )[networkConfig.networkName]!
