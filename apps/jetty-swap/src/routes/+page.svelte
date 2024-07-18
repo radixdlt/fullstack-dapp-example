@@ -13,7 +13,6 @@
   import { entityToResource } from '$lib/utils/entityToResource'
   import { onMount } from 'svelte'
   import { DataRequestBuilder, Logger, RadixDappToolkit } from '@radixdlt/radix-dapp-toolkit'
-  import { jettySwapDefinitionAddress, lettySwapDefinitionAddress } from '$lib/constants'
   import { type FungibleResourcesCollectionItemVaultAggregated } from '@radixdlt/babylon-gateway-api-sdk'
   import { rdt, walletData, gatewayApi } from '$lib/stores'
   import { Addresses, GatewayApi } from 'common'
@@ -24,6 +23,7 @@
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import SwapResult from '$lib/components/swapResult/SwapResult.svelte'
   import SwapCardHeader from '$lib/components/swapCardHeader/SwapCardHeader.svelte'
+  import { publicConfig } from '$lib/utils/config'
 
   const ThemedResources = {
     JETTY: {
@@ -91,8 +91,8 @@
       applicationVersion: '1.0.0',
       applicationName: themedResources.applicationName,
       applicationDappDefinitionAddress: isJetty
-        ? jettySwapDefinitionAddress
-        : lettySwapDefinitionAddress
+        ? publicConfig.accounts.jettySwapDappDefinition.address
+        : publicConfig.accounts.lettySwapDappDefinition.address
     }
 
     $rdt = RadixDappToolkit({ ...swapConfig, logger: Logger(1) })
