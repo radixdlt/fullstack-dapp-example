@@ -31,7 +31,7 @@ export const GatewayApiClient = ({ dependencies }: GatewayApiClientInput) => {
     logger.trace({ method: 'getTransactions', event: 'start', fromStateVersion })
 
     return fetchWrapper<StreamTransactionsResponse, GatewayErrorResponse>(
-      fetch(`${dependencies.gatewayApi.networkConfig.gatewayUrl}/stream/transactions`, {
+      fetch(`${dependencies.gatewayApi.basePath}/stream/transactions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

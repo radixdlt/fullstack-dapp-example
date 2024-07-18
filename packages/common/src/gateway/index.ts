@@ -17,7 +17,7 @@ type MethodsOf<T> = {
 
 export type GatewayApi = ReturnType<typeof GatewayApi>
 
-export const GatewayApi = (networkId: number) => {
+export const GatewayApi = (networkId: number, basePath?: string) => {
   const networkConfig = RadixNetworkConfigById[networkId]
   const addresses = Addresses(networkId)
 
@@ -25,7 +25,7 @@ export const GatewayApi = (networkId: number) => {
 
   const gatewayApiClient = GatewayApiClient.initialize({
     applicationName: 'RadQuest',
-    basePath: networkConfig.gatewayUrl
+    basePath: basePath || networkConfig.gatewayUrl
   })
 
   const isGatewayError = (error: any): error is RawGatewayError =>
@@ -190,6 +190,7 @@ export const GatewayApi = (networkId: number) => {
     })
 
   return {
+    basePath: basePath || networkConfig.gatewayUrl,
     hasKycEntry,
     getInstapassBadges,
     hasAtLeastTwoRadgems,

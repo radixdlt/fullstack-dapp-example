@@ -38,7 +38,7 @@ const app = async () => {
     logger
   })
 
-  const gatewayApi = GatewayApi(config.networkId)
+  const gatewayApi = GatewayApi(config.networkId, process.env.GATEWAY_URL)
   const eventModel = EventModel(dbClient)
   const auditModel = AuditModel(dbClient)
   const transactionModel = TransactionModel(dbClient, transactionQueue)
