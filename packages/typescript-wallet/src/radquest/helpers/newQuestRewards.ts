@@ -35,7 +35,7 @@ CALL_FUNCTION
           )
       )
   )
-  Address("${config.radQuest.accounts.dAppDefinition.address}")
+  Address("${config.radQuest.accounts.jetty.address}")
   Bucket("admin_badges")
   Address("${config.radQuest.badges.heroBadgeAddress}")
   Address("${config.radQuest.badges.kycBadgeAddress}")
