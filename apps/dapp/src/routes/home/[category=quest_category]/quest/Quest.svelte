@@ -161,19 +161,7 @@
         id: 'claimRewards',
         footer: {
           next: {
-            text: $i18n.t('quests:claimButton'),
-            onClick: (next, $loading) => {
-              $loading.set(true)
-              claimRewards
-                .claim()
-                .map(() => {
-                  $loading.set(false)
-                  next()
-                })
-                .mapErr(() => {
-                  $loading.set(false)
-                })
-            }
+            enabled: writable(false)
           }
         }
       }
@@ -209,8 +197,6 @@
   $: if (currentStep) $hideJetty = currentStep.type === 'jetty'
 
   $: jettyQuizSteps = steps.filter((step) => step.type === 'jettyQuiz') as JettyQuizStep[]
-
-  let claimRewards: ClaimRewards
 
   const dispatch = createEventDispatcher<{
     completed: undefined
@@ -255,7 +241,6 @@
 
   {#if render('claimRewards')}
     <ClaimRewards
-      bind:this={claimRewards}
       questId={id}
       text={htmlReplace($quests[id].text?.['claim.md'], {
         name: $user?.name,

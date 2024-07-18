@@ -13,6 +13,7 @@
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { markNotificationAsSeen, pushNotification } from '$lib/notifications'
+  import { htmlReplace } from '$lib/helpers/html-replace'
 
   export let data: PageData
 
@@ -33,7 +34,6 @@
         message.type === 'QuestRequirementCompleted' &&
         message.requirementId === 'JettyReceivedClams'
       ) {
-        quest.actions.next()
         $receivedClams = true
         messageApi.markAsSeen(message.id)
       }
@@ -213,7 +213,9 @@
   {/if}
 
   {#if render('4')}
-    {@html text['4.md']}
+    {@html text['4a.md']}
+    <!-- TODO: Add Clams Faucet button -->
+    {@html text['4b.md']}
   {/if}
 
   {#if render('5')}
@@ -234,7 +236,7 @@
       <div class="qr-code">
         <QR data={jettyAddress.address} />
       </div>
-      {@html text['6a-2.md']}
+      {@html htmlReplace(text['6a-2.md'], { jettyAddress: shortenAddress(jettyAddress.address) })}
     {/if}
   {/if}
 
@@ -265,8 +267,10 @@
 
 <style>
   .qr-code {
-    width: 15rem;
-    height: 15rem;
+    width: 100%;
+    height: 12rem;
+    display: flex;
+    justify-content: center;
   }
 
   .copy-address {

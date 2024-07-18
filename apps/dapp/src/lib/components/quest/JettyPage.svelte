@@ -52,6 +52,10 @@
       max-width: calc(100% + 48px);
       margin: 0 calc(-24px);
     }
+
+    :global(h2) {
+      color: var(--color-light);
+    }
   }
 
   .jetty-image {

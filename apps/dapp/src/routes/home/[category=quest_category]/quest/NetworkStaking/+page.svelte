@@ -7,6 +7,7 @@
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
   import { markNotificationAsSeen } from '$lib/notifications'
+  import Button from '$lib/components/button/Button.svelte'
 
   export let data: PageData
   let quest: Quest
@@ -122,7 +123,13 @@
   {/if}
 
   {#if render('6')}
-    {@html text['6.md']}
+    {@html text['6a.md']}
+    <div class="center">
+      <Button isExternal={true} link="https://dashboard.radixdlt.com/network-staking">
+        Radix Dashboard
+      </Button>
+    </div>
+    {@html text['6b.md']}
   {/if}
 
   {#if render('7')}
@@ -138,5 +145,9 @@
   {/if}
 </Quest>
 
-<style>
+<style lang="scss">
+  .center {
+    display: flex;
+    justify-content: center;
+  }
 </style>

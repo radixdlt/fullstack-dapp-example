@@ -46,7 +46,7 @@
     font-weight: var(--font-weight-bold);
     font-size: var(--text-xs);
     height: 2.7rem;
-    min-width: 7rem;
+    min-width: var(--min-width, 7rem);
     width: fit-content;
     @media (hover: hover) {
       &:hover:not(.disabled) {

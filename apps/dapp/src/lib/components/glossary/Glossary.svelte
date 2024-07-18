@@ -71,5 +71,9 @@
       color: var(--color-light);
       margin-top: 0;
     }
+
+    @include markdownLinkStyles();
+    @include markdownBlockquoteStyles();
+    @include markdownTextStyles();
   }
 </style>
