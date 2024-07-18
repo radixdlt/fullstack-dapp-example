@@ -118,6 +118,12 @@ export const UserController = ({
             ) ?? false
       )
 
+    const isAccountInDb = userModel
+      .isAccountAddressUsed(accountAddress)
+      .andThen((isUsed) =>
+        isUsed ? errAsync(createApiError('AccountAddressAlreadyInUse', 400)()) : okAsync(undefined)
+      )
+
     const parsedAccountResult = parseSignedChallenge(proof)
 
     if (!parsedAccountResult.success || proof.address !== accountAddress) {
@@ -141,6 +147,7 @@ export const UserController = ({
             } satisfies ApiError)
           : okAsync(undefined)
       )
+      .andThen(() => isAccountInDb)
       .andThen(() => verifySignedChallenge(proof))
       .mapErr((error) => {
         return {

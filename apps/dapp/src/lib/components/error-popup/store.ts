@@ -1,7 +1,8 @@
 import { writable } from 'svelte/store'
 
 export const ErrorPopupId = {
-  XrdRewardLimit: 'XrdRewardLimit'
+  XrdRewardLimit: 'XrdRewardLimit',
+  AccountAlreadyRegistered: 'AccountAlreadyRegistered'
 } as const
 
 export type ErrorPopupId = (typeof ErrorPopupId)[keyof typeof ErrorPopupId]

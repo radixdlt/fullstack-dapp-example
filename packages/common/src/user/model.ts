@@ -45,6 +45,7 @@ type UserModelType = {
     accountAddress: string,
     include: T
   ) => ResultAsync<User | null, ApiError>
+  isAccountAddressUsed: (accountAddress: string) => ResultAsync<boolean, ApiError>
   getByReferralCode: (referralCode: string) => ResultAsync<UserByReferralCode, ApiError>
   getReferrals: (id: string) => ResultAsync<ReferralsState, ApiError>
   getPhoneNumber: (phoneNumber: string) => ResultAsync<UserPhoneNumber | null, ApiError>
@@ -162,6 +163,17 @@ export const UserModel =
           ? okAsync(data as unknown as GetByIdReturnType<T>)
           : errAsync(createApiError('user not found', 404)())
       )
+
+    const isAccountAddressUsed = (accountAddress: string) =>
+      ResultAsync.fromPromise(
+        db.user.count({
+          where: { accountAddress }
+        }),
+        (error) => {
+          logger?.error({ error, method: 'isAccountAddressUsed', model: 'UserModel' })
+          return createApiError('failed to check if account address is used', 400)()
+        }
+      ).map((count) => count > 0)
 
     const getByAccountAddress = <T extends Prisma.UserInclude<any>>(
       accountAddress: string,
@@ -356,6 +368,7 @@ export const UserModel =
       getPhoneNumber,
       addAccount,
       setUserName,
+      isAccountAddressUsed,
       getPhoneNumberByUserId,
       confirmReferralCode,
       setEmail

@@ -86,6 +86,7 @@
         </div>
 
         <div class="button">
+          <!-- svelte-ignore missing-declaration -->
           <Button
             on:click={() => {
               hideLandingPopup()

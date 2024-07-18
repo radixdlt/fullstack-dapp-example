@@ -22,6 +22,7 @@
   import { err, ok, ResultAsync } from 'neverthrow'
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
+  import { ErrorPopupId, errorPopupStore } from '$lib/components/error-popup/store'
 
   export let data: PageData
 
@@ -101,53 +102,67 @@
       .mapErr(() => (verifyOtpError = true))
   }
 
+  const setUserAccountAddress = (accountAddress: string, accountProof: SignedChallengeAccount) =>
+    userApi
+      .setUserFields({
+        fields: [
+          {
+            accountAddress,
+            proof: accountProof,
+            field: 'accountAddress'
+          }
+        ]
+      })
+      .mapErr(() => ({ reason: 'failedToAddAccountAddress' }))
+
+  const checkAccountStatus = (accountAddress: string) =>
+    gatewayApi
+      .hasHeroBadgeAndXrd(accountAddress)
+      .mapErr(() => ({ reason: 'failedToCheckAccountStatus' }))
+      .andThen(({ hasHeroBadge, hasXrd }) =>
+        hasHeroBadge ? err({ reason: 'UserHasHeroBadge' }) : ok(hasXrd)
+      )
+
+  const handleXrdDepositPossibility = (accountAddress: string) =>
+    gatewayApi
+      .isDepositDisabledForResource(accountAddress, publicConfig.xrd)
+      .mapErr(() => ({ reason: 'failedToCheckDepositStatus' }))
+      .map((disabled) => {
+        if (disabled) {
+          skipXrdDepositPage.set(true)
+        }
+      })
+
   const connectAccount = () => {
     waitingOnAccount = true
     rdt.then((rdt) => {
       rdt.walletApi
         .sendOneTimeRequest(OneTimeDataRequestBuilder.accounts().exactly(1).withProof())
+        .mapErr(() => ({ reason: 'failedToGetAccountFromWallet' }))
         .andThen(({ accounts, proofs }) => {
           waitingOnAccount = false
 
           const accountProof = proofs.find((proof) => proof.type === 'account')!
+          const accountAddress = accounts[0].address
 
-          return gatewayApi
-            .hasHeroBadgeAndXrd(accounts[0].address)
-            .andThen(({ hasHeroBadge, hasXrd }) =>
-              hasHeroBadge ? err({ reason: 'UserHasHeroBadge' }) : ok(hasXrd)
+          return checkAccountStatus(accountAddress).andThen((hasXrd) =>
+            setUserAccountAddress(accountAddress, accountProof as SignedChallengeAccount).andThen(
+              () =>
+                userApi
+                  .allowAccountAddressToMintHeroBadge()
+                  .map(() => {
+                    $user!.accountAddress = accounts[0].address
+                    quest.actions.next()
+                    chosenAccountHasXrd = hasXrd
+                  })
+                  .andThen(() => handleXrdDepositPossibility(accountAddress))
             )
-            .andThen((hasXrd) =>
-              userApi
-                .setUserFields({
-                  fields: [
-                    {
-                      accountAddress: accounts[0].address,
-                      proof: accountProof as SignedChallengeAccount,
-                      field: 'accountAddress'
-                    }
-                  ]
-                })
-                .andThen(() =>
-                  userApi
-                    .allowAccountAddressToMintHeroBadge()
-                    .map(() => {
-                      $user!.accountAddress = accounts[0].address
-                      quest.actions.next()
-                      chosenAccountHasXrd = hasXrd
-                    })
-                    .andThen(() =>
-                      gatewayApi
-                        .isDepositDisabledForResource(accounts[0].address, publicConfig.xrd)
-                        .map((disabled) => {
-                          if (disabled) {
-                            skipXrdDepositPage.set(true)
-                          }
-                        })
-                    )
-                )
-            )
+          )
         })
-        .mapErr(() => {
+        .mapErr((err) => {
+          if (err.reason === 'UserHasHeroBadge' || err.reason === 'failedToAddAccountAddress') {
+            errorPopupStore.set({ id: ErrorPopupId.AccountAlreadyRegistered })
+          }
           waitingOnAccount = false
         })
     })

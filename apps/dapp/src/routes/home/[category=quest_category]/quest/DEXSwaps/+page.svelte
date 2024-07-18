@@ -220,8 +220,6 @@
         >
       </div>
     {/if}
-    {@html text['6a.md']}
-    {@html text['6b.md']}
   {/if}
   {#if render('7')}
     {@html htmlReplace(text['7.md'], {
