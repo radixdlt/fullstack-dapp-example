@@ -1,5 +1,5 @@
 <script lang="ts">
-  import HappyJetty from '@images/jetty-happy.png'
+  import HappyJetty from '@images/jetty-happy.webp'
   import CrossIcon from '@images/cross.svg'
   import { cubicOut } from 'svelte/easing'
   import { tweened } from 'svelte/motion'
