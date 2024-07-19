@@ -10,7 +10,6 @@
   import { markNotificationAsSeen } from '$lib/notifications'
   import { useCookies } from '$lib/utils/cookies'
   import { onMount } from 'svelte'
-  import { filter } from 'ramda'
 
   export let data: LayoutData
 

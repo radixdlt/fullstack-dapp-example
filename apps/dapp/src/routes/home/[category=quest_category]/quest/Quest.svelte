@@ -89,9 +89,7 @@
     await completeQuest(id, !!$user)
     dispatch('completed')
     setTimeout(closeQuest, 0)
-    if (isMobile()) {
-      $scrollToNextQuest = true
-    }
+    $scrollToNextQuest = true
   }
 
   const progressUpdated = (e: CustomEvent<number>) => {

@@ -12,18 +12,6 @@
 
   const stepSize = 400
 
-  const scrollToN = (i: number) => {
-    if (!carousel) return
-    carousel.scrollTo({
-      left: i * stepSize - carousel.offsetWidth / 2,
-      behavior: 'smooth'
-    })
-  }
-  const centreOnClicked = (e: CustomEvent) => {
-    const index = e.detail.index
-    scrollToN(index)
-  }
-
   const detectScrolledToStart = () => {
     isScrolledToStart = carousel.scrollLeft <= 1
   }
@@ -31,6 +19,26 @@
   const detectScrolledToEnd = () => {
     isScrolledToEnd =
       Math.abs(carousel.scrollLeft + carousel.offsetWidth - carousel.scrollWidth) <= 1
+  }
+
+  export const scrollToNext = () => {
+    if (isScrolledToEnd) return
+    carousel.scrollTo({
+      left: carousel.scrollLeft + stepSize,
+      behavior: 'smooth'
+    })
+  }
+
+  export const scrollToNumber = (i: number) => {
+    carousel.scrollTo({
+      left: i * stepSize - carousel.offsetWidth / 2,
+      behavior: 'smooth'
+    })
+  }
+
+  const centreOnClicked = (e: CustomEvent) => {
+    const index = e.detail.index
+    scrollToNumber(index)
   }
 
   onMount(() => {
@@ -77,7 +85,7 @@
       }, 300)
     }}
   >
-    <slot {Item} {centreOnClicked} />
+    <slot {Item} {centreOnClicked} {scrollToNext} />
   </div>
   {#if !isScrolledToStart && !noButtons}
     <div class="navigate-button left">
