@@ -484,9 +484,7 @@ export const EventWorkerController = ({
         return sendMessage(
           userId,
           {
-            type: 'QuestRequirementCompleted',
-            questId: 'CreatingRadMorphs',
-            requirementId: 'MintRadgems',
+            type: 'CombineElementsClaimed',
             traceId
           },
           childLogger
