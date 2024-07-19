@@ -60,7 +60,7 @@
 
   let carousel: Carousel
 
-  $: if ($scrollToNextQuest && carousel) {
+  $: if ($scrollToNextQuest && carousel && $page.params.category === 'basic') {
     carousel.scrollToNext()
     $scrollToNextQuest = false
   }
