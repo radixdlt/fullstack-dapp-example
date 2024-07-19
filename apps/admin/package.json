@@ -53,9 +53,11 @@
   "dependencies": {
     "@radixdlt/radix-dapp-toolkit": "^2.0.0",
     "common": "*",
+    "content": "*",
     "database": "*",
     "flowbite-svelte": "^0.44.24",
     "flowbite-svelte-icons": "^1.6.1",
+    "json-2-csv": "^5.5.4",
     "jsonwebtoken": "^9.0.2",
     "queues": "*",
     "tailwind-merge": "^2.3.0"
