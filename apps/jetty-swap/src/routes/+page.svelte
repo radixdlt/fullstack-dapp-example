@@ -342,7 +342,7 @@
   .mascot-img {
     position: absolute;
     z-index: 0;
-    top: 1rem;
+    top: -2.5rem;
     width: 20rem;
 
     @include mobile {
