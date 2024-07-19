@@ -63,7 +63,6 @@
                 energy: getStringDataValue('energy_type')(fields),
                 imageUrl: getStringDataValue('key_image_url')(fields),
                 rarity: getStringDataValue('rarity')(fields),
-                availability: getStringDataValue('availability')(fields),
                 quality: parseInt(getStringDataValue('quality')(fields)),
                 limitedEdition: getBoolDataValue('limited_edition')(fields)
               }
@@ -80,7 +79,7 @@
 <script lang="ts">
   import { publicConfig } from '$lib/public-config'
   import pipe from 'ramda/src/pipe'
-  import { GatewayApi } from 'common'
+  import { GatewayApi, type Message, type Messages } from 'common'
   import { user } from '../../stores'
   import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
   import { i18n } from '$lib/i18n/i18n'
@@ -117,7 +116,6 @@
       energy: string
       imageUrl: string
       rarity: string
-      availability: string
       quality: number
       limitedEdition: boolean
     }
@@ -224,22 +222,29 @@
         waitingForOpenTransaction = false
         waitingForDepositedRewards = true
 
-        let resolveDeposited: () => void
+        let resolveDeposited: (message: Messages['GiftBoxDeposited']) => void
 
-        const promise = new Promise<void>((resolve) => {
+        const promise = new Promise<Messages['GiftBoxDeposited']>((resolve) => {
           resolveDeposited = resolve
         })
 
         const unsub = $webSocketClient!.onMessage((msg) => {
           if (msg.type === 'GiftBoxDeposited') {
-            resolveDeposited()
+            resolveDeposited(msg)
           }
         })
 
-        return ResultAsync.fromSafePromise(promise).map(unsub)
+        return ResultAsync.fromSafePromise(promise).map((data) => {
+          unsub()
+          return data
+        })
       })
-      .andThen(() => {
-        return getRewards($user!.id)
+      .map((data) => {
+        const amountOfElements = data.rewards.fungibles[0].amount
+        const [id] = data.rewards.nonFungibles[0].localIds
+        const { keyImageUrl: imageUrl, energyType: energy, ...energyCard } = data.energyCard
+        const cardData = { ...energyCard, imageUrl, energy, id }
+        return { amountOfElements, cardData }
       })
       .map(({ amountOfElements, cardData }) => {
         rewards = {
