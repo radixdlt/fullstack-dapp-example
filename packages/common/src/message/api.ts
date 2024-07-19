@@ -1,7 +1,7 @@
 import { err, ok } from 'neverthrow'
 import { fetchWrapper } from '../helpers/fetch-wrapper'
 import type { AppLogger } from '../helpers/logger'
-import { MorphCardMintedEventOutput } from '../event-data/event-data'
+import type { MorphCardMintedEventOutput } from '../event-data/event-data'
 
 export const MessageType = {
   QuestRequirementCompleted: 'QuestRequirementCompleted',
