@@ -79,7 +79,7 @@
 <script lang="ts">
   import { publicConfig } from '$lib/public-config'
   import pipe from 'ramda/src/pipe'
-  import { GatewayApi, type Message, type Messages } from 'common'
+  import { GatewayApi, type Messages } from 'common'
   import { user } from '../../stores'
   import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
   import { i18n } from '$lib/i18n/i18n'
