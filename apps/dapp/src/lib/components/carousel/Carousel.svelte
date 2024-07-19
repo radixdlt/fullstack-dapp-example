@@ -15,27 +15,28 @@
     // TODO
   }
 
-  const detectScolledToStart = () => {
-    isScrolledToStart = carousel.scrollLeft === 0
+  const detectScrolledToStart = () => {
+    isScrolledToStart = carousel.scrollLeft <= 1
   }
 
-  const detectScolledToEnd = () => {
-    isScrolledToEnd = carousel.scrollLeft + carousel.offsetWidth === carousel.scrollWidth
+  const detectScrolledToEnd = () => {
+    isScrolledToEnd =
+      Math.abs(carousel.scrollLeft + carousel.offsetWidth - carousel.scrollWidth) <= 1
   }
 
   onMount(() => {
     if (noButtons) return
 
-    detectScolledToStart()
-    detectScolledToEnd()
+    detectScrolledToStart()
+    detectScrolledToEnd()
 
     setTimeout(() => {
       carousel.scrollTo({ left: 0, behavior: 'instant' })
     }, 0)
 
     const eventCallback = () => {
-      detectScolledToStart()
-      detectScolledToEnd()
+      detectScrolledToStart()
+      detectScrolledToEnd()
     }
 
     carousel.addEventListener('scroll', eventCallback)
@@ -48,26 +49,27 @@
   let canScroll = true
 </script>
 
-<div
-  bind:this={carousel}
-  class="carousel"
-  on:wheel={(e) => {
-    const delta = e.deltaY || e.deltaX
-    e.preventDefault()
-    e.stopImmediatePropagation()
-    if (!canScroll) return
-    canScroll = false
-    e.currentTarget.scrollBy({
-      left: delta < 0 ? -400 : 400,
-      behavior: 'smooth'
-    })
-    setTimeout(() => {
-      canScroll = true
-    }, 300)
-  }}
->
-  <slot {Item} />
-
+<div class="container">
+  <div
+    bind:this={carousel}
+    class="carousel"
+    on:wheel={(e) => {
+      const delta = e.deltaY || e.deltaX
+      e.preventDefault()
+      e.stopImmediatePropagation()
+      if (!canScroll) return
+      canScroll = false
+      e.currentTarget.scrollBy({
+        left: delta < 0 ? -400 : 400,
+        behavior: 'smooth'
+      })
+      setTimeout(() => {
+        canScroll = true
+      }, 300)
+    }}
+  >
+    <slot {Item} />
+  </div>
   {#if !isScrolledToStart && !noButtons}
     <div class="navigate-button left">
       <NavigateButton
@@ -97,6 +99,13 @@
 </div>
 
 <style lang="scss">
+  .container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    height: 100%;
+  }
   .carousel {
     position: relative;
     display: flex;
@@ -112,7 +121,7 @@
   }
 
   .navigate-button {
-    position: fixed;
+    position: absolute;
     z-index: 1;
   }
 
