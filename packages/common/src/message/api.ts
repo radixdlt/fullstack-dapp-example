@@ -56,7 +56,19 @@ type Messages = {
     traceId: string
   }
   [MessageType.ReferralCompletedBasicQuests]: { traceId: string }
-  [MessageType.GiftBoxDeposited]: { traceId: string }
+  [MessageType.GiftBoxDeposited]: {
+    traceId: string
+    rewards: {
+      fungibles: {
+        amount: number
+        resourceAddress: string
+      }[]
+      nonFungibles: {
+        localIds: string[]
+        resourceAddress: string
+      }[]
+    }
+  }
 }
 
 export type Message = {

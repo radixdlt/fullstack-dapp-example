@@ -563,9 +563,20 @@ export const EventWorkerController = ({
       }
 
       case EventId.GiftBoxDeposited: {
+        const rewards = job.data.data.rewards as {
+          fungibles: {
+            amount: number
+            resourceAddress: string
+          }[]
+          nonFungibles: {
+            localIds: string[]
+            resourceAddress: string
+          }[]
+        }
         return sendMessage(user.id, {
           type: 'GiftBoxDeposited',
-          traceId
+          traceId,
+          rewards
         }).map(() => undefined)
       }
 
