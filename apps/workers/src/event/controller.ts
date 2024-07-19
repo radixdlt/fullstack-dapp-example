@@ -9,6 +9,7 @@ import {
   ImageModel,
   MailerLiteModel,
   MessageType,
+  MorphCardMintedEventOutput,
   QuestTogetherConfig,
   ShaderCodeDescription,
   UserByReferralCode
@@ -573,10 +574,12 @@ export const EventWorkerController = ({
             resourceAddress: string
           }[]
         }
+        const energyCard = job.data.data.energyCard as MorphCardMintedEventOutput
         return sendMessage(user.id, {
           type: 'GiftBoxDeposited',
           traceId,
-          rewards
+          rewards,
+          energyCard
         }).map(() => undefined)
       }
 

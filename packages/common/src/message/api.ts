@@ -1,6 +1,7 @@
 import { err, ok } from 'neverthrow'
 import { fetchWrapper } from '../helpers/fetch-wrapper'
 import type { AppLogger } from '../helpers/logger'
+import { MorphCardMintedEventOutput } from '../event-data/event-data'
 
 export const MessageType = {
   QuestRequirementCompleted: 'QuestRequirementCompleted',
@@ -58,6 +59,7 @@ type Messages = {
   [MessageType.ReferralCompletedBasicQuests]: { traceId: string }
   [MessageType.GiftBoxDeposited]: {
     traceId: string
+    energyCard: MorphCardMintedEventOutput
     rewards: {
       fungibles: {
         amount: number

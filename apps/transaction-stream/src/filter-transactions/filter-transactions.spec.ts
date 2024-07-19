@@ -177,9 +177,12 @@ describe('filter transactions', () => {
 
       const [transaction] = filteredTransactions
 
+      console.log(transaction)
+
       expect(transaction.type).toEqual(EventId.GiftBoxDeposited)
       expect(transaction.userId).toBeDefined()
       expect(transaction.data.rewards).toBeDefined()
+      expect(transaction.data.energyCard).toBeDefined()
     })
 
     it(`should find ${EventId.GiftBoxOpened} transaction`, () => {
