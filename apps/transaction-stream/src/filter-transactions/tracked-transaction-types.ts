@@ -292,7 +292,6 @@ export const trackedTransactionTypes: TrackedTransactions = {
                 else if (type === 'nonFungible' && resourceAddress)
                   acc.nonFungibles.push({ resourceAddress, localIds })
 
-                console.log(type, resourceAddress, amount)
                 return acc
               },
               {
