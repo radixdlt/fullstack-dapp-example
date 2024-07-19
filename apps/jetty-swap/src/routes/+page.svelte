@@ -87,7 +87,7 @@
 
   const getConversionRate = async () => {
     const fromTokenAddress = clamResource?.id
-    const userAccountAddress = $walletData?.accounts[0].address
+    const userAccountAddress = $walletData?.accounts[0]?.address
     if (!fromTokenAddress || !userAccountAddress) return
 
     const receiveAmount = await getBalanceChange(
@@ -294,10 +294,12 @@
         </TokenSwapInput>
       </div>
     </div>
-    <div class:guarantee-text-letty={!isJetty} class={`guarantee-text`}>
-      <p>{$i18n.t('main:guarantee-hint')}</p>
-      <p>{$i18n.t('main:guarantee-hint-part-2')}</p>
-    </div>
+    {#if !isJetty}
+      <div class:guarantee-text-letty={!isJetty} class={`guarantee-text`}>
+        <p>{$i18n.t('main:guarantee-hint')}</p>
+        <p>{$i18n.t('main:guarantee-hint-part-2')}</p>
+      </div>
+    {/if}
     <div class="swap-button">
       <Button
         --width="100%"
