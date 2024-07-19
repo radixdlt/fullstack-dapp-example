@@ -13,12 +13,12 @@
   const stepSize = 400
 
   const detectScrolledToStart = () => {
-    isScrolledToStart = carousel.scrollLeft <= 1
+    isScrolledToStart = carousel.scrollLeft <= 5
   }
 
   const detectScrolledToEnd = () => {
     isScrolledToEnd =
-      Math.abs(carousel.scrollLeft + carousel.offsetWidth - carousel.scrollWidth) <= 1
+      Math.abs(carousel.scrollLeft + carousel.offsetWidth - carousel.scrollWidth) <= 5
   }
 
   export const scrollToNext = () => {
