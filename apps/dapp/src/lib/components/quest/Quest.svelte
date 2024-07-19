@@ -127,6 +127,14 @@
   } else {
     currentStepEnabledStore = readable(true)
   }
+
+  $: if (currentStep.skip) {
+    currentStep.skip.subscribe((value) => {
+      if (value) {
+        next()
+      }
+    })
+  }
 </script>
 
 <QuestCard
