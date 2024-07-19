@@ -9,7 +9,6 @@ on:
       - main
   release:
     types:
-      - prereleased # A release was created and identified as a pre-release.
       - released # A release was published, or a pre-release was changed to a release.
 
 env:
@@ -146,8 +145,8 @@ jobs:
         run: |
           echo "network-name=${{ steps.network.outputs.network-name }}" >> $GITHUB_STEP_SUMMARY
           echo "docker-tag=${{ steps.tag-with-network.outputs.tag-with-network }}" >> $GITHUB_STEP_SUMMARY
-          echo "PUBLIC_NETWORK_ID=${{ env.active_public_network_id }}"  >> $GITHUB_STEP_SUMMARY
-          echo "PUBLIC_LOG_LEVEL=${{ env.active_public_log_level }}"  >> $GITHUB_STEP_SUMMARY
+          echo "PUBLIC_NETWORK_ID=${{ steps.build-args.output.PUBLIC_NETWORK_ID }}"  >> $GITHUB_STEP_SUMMARY
+          echo "PUBLIC_LOG_LEVEL=${{ steps.build-args.output.PUBLIC_LOG_LEVEL }}"  >> $GITHUB_STEP_SUMMARY
     outputs:
       dapp-tags: ${{ steps.dapp-tags.outputs.tags }}
       dapp-labels: ${{ steps.dapp-tags.outputs.labels }}
