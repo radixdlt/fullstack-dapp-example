@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit'
 import { loadQuests } from 'content'
 
 export const POST = async ({ locals, request }) => {
+  const questKeys = Object.keys(loadQuests('en'))
   const requestBody = await request.json()
 
   const { searchTerm }: { searchTerm: string } = requestBody
@@ -43,7 +44,7 @@ export const POST = async ({ locals, request }) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { id, ...withoutId } = item
 
-        const questStatus = Object.keys(loadQuests('en')).reduce((acc, curr) => {
+        const questStatus = questKeys.reduce((acc, curr) => {
           return { ...acc, [`questProgress:${curr}`]: userQuestProgress[curr] ?? 'NOT_STARTED' }
         }, {})
 
