@@ -144,7 +144,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
   }
 
   h2 {
@@ -163,5 +162,7 @@
 
   img {
     height: 12rem;
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
   }
 </style>

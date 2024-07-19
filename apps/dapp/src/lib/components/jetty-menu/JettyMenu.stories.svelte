@@ -15,6 +15,7 @@
   const notifications: Writable<JettyNotification[]> = writable([
     {
       id: 'test',
+      title: 'title',
       text: 'Some notification text',
       action: () => {}
     }

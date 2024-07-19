@@ -36,7 +36,7 @@
 </ResourceCard>
 
 <style lang="scss">
-  $text-color: var(--color-ligh t);
+  $text-color: var(--color-light);
 
   .transform-card {
     display: grid;
@@ -45,7 +45,8 @@
     background-size: cover;
     height: 100%;
     width: 100%;
-    border-radius: var(--border-radius-xl);
+    height: 12rem;
+    aspect-ratio: 1/1.66;
   }
 
   .quality {
