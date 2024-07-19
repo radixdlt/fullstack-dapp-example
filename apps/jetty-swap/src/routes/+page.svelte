@@ -85,6 +85,24 @@
     }
   }
 
+  const getConversionRate = async () => {
+    const fromTokenAddress = clamResource?.id
+    const userAccountAddress = $walletData?.accounts[0]?.address
+    if (!fromTokenAddress || !userAccountAddress) return
+
+    const receiveAmount = await getBalanceChange(
+      {
+        amount: conversionRateFrom,
+        fromTokenAddress,
+        swapComponent,
+        userAccountAddress
+      },
+      addresses.resources.ottercoinAddress
+    )
+
+    conversionRateTo = receiveAmount
+  }
+
   onMount(async () => {
     const swapConfig = {
       networkId: +env.PUBLIC_NETWORK_ID,
@@ -123,28 +141,20 @@
       if (!$walletData?.accounts[0]?.address) return
       await updateBalances($walletData?.accounts[0].address)
 
-      if (!ottercoinResource || !clamResource || !currentBalance) return
-
-      const receiveAmount = await getBalanceChange(
-        {
-          amount: conversionRateFrom,
-          fromTokenAddress: clamResource.id,
-          swapComponent,
-          userAccountAddress: $walletData?.accounts[0].address
-        },
-        addresses.resources.ottercoinAddress
-      )
-
-      conversionRateTo = receiveAmount
+      getConversionRate()
     } catch (error) {}
   })
+
+  setInterval(() => {
+    getConversionRate()
+  }, 1000)
 
   let timer: NodeJS.Timeout
   const debounce = (amount: string) => {
     if (fromInput === '') return
 
-    clearTimeout(timer)
-    timer = setTimeout(() => {
+    clearInterval(timer)
+    timer = setInterval(() => {
       getBalanceChange(
         {
           amount,
@@ -156,7 +166,7 @@
       ).then((amount) => {
         toInput = amount
       })
-    }, 750)
+    }, 1000)
   }
 
   $: debounce(fromInput)
@@ -284,10 +294,12 @@
         </TokenSwapInput>
       </div>
     </div>
-    <div class:guarantee-text-letty={!isJetty} class={`guarantee-text`}>
-      <p>{$i18n.t('main:guarantee-hint')}</p>
-      <p>{$i18n.t('main:guarantee-hint-part-2')}</p>
-    </div>
+    {#if !isJetty}
+      <div class:guarantee-text-letty={!isJetty} class={`guarantee-text`}>
+        <p>{$i18n.t('main:guarantee-hint')}</p>
+        <p>{$i18n.t('main:guarantee-hint-part-2')}</p>
+      </div>
+    {/if}
     <div class="swap-button">
       <Button
         --width="100%"
@@ -332,7 +344,7 @@
   .mascot-img {
     position: absolute;
     z-index: 0;
-    top: 1rem;
+    top: -2.5rem;
     width: 20rem;
 
     @include mobile {

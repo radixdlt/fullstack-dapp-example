@@ -48,9 +48,11 @@
     height: 2.7rem;
     min-width: var(--min-width, 7rem);
     width: fit-content;
-    @media (hover: hover) {
-      &:hover:not(.disabled) {
-        filter: brightness(0.8);
+    @include desktop {
+      @media (hover: hover) {
+        &:hover:not(.disabled) {
+          filter: brightness(0.8);
+        }
       }
     }
     transition: filter 0.2s ease-in-out;
