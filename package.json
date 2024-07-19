@@ -22,6 +22,7 @@
     "wallet:list:accounts": "npx --node-options='-r dotenv/config' turbo wallet:list:accounts --filter typescript-wallet",
     "wallet:mint-admin-badge": "npx --node-options='-r dotenv/config' turbo wallet:mint-admin-badge --filter typescript-wallet",
     "wallet:mint-hero-badge": "npx --node-options='-r dotenv/config' turbo wallet:mint-hero-badge --filter typescript-wallet",
+    "wallet:set-dapp-data": "npx --node-options='-r dotenv/config' turbo wallet:set-dapp-data:radquest --filter typescript-wallet && npx --node-options='-r dotenv/config' turbo wallet:set-dapp-data:clam-dex --filter typescript-wallet",
     "wallet:faucet": "npx --node-options='-r dotenv/config' turbo wallet:faucet --filter typescript-wallet",
     "wallet:build": "turbo wallet:build --filter typescript-wallet",
     "common:build": "turbo common:build --filter common",

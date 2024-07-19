@@ -52,38 +52,35 @@
     {} as { [key in QuestId]: QuestStatus }
   )
 
-  let _quests = Object.entries($quests) as [
-    keyof typeof $quests,
-    (typeof $quests)[keyof typeof $quests]
-  ][]
+  $: _quests = Object.entries($quests).filter(
+    ([id, quest]) =>
+      (quest.category === $page.params.category && id !== 'JoinFriend') ||
+      (id === 'JoinFriend' && ($user?.referredBy || (!$user && referredByCookie)))
+  ) as [keyof typeof $quests, (typeof $quests)[keyof typeof $quests]][]
 
   let carousel: Carousel
 
-  $: if ($scrollToNextQuest && carousel) {
+  $: if ($scrollToNextQuest && carousel && $page.params.category === 'basic') {
     carousel.scrollToNext()
     $scrollToNextQuest = false
   }
 </script>
 
 {#key $page.params.category}
-  <Carousel bind:this={carousel} let:Item>
-    {#each _quests as [id, quest]}
-      {#if quest.category === $page.params.category}
-        {#if id !== 'JoinFriend' || (id === 'JoinFriend' && ($user?.referredBy || (!$user && referredByCookie)))}
-          <Item>
-            <QuestOverview
-              title={$i18n.t(`quests:${id}.title`)}
-              description={$i18n.t(`quests:${id}.description`)}
-              minutesToComplete={quest.minutesToComplete}
-              rewards={quest.rewards}
-              backgroundImage={quest.splashImage}
-              state={questCardState[id] ?? 'locked'}
-              link={`/home/${quest.category}/quest/${id}`}
-              questId={id}
-            />
-          </Item>
-        {/if}
-      {/if}
+  <Carousel bind:this={carousel} let:Item let:centreOnClicked>
+    {#each _quests as [id, quest], i}
+      <Item {i} on:click={centreOnClicked}>
+        <QuestOverview
+          title={$i18n.t(`quests:${id}.title`)}
+          description={$i18n.t(`quests:${id}.description`)}
+          minutesToComplete={quest.minutesToComplete}
+          rewards={quest.rewards}
+          backgroundImage={quest.splashImage}
+          state={questCardState[id] ?? 'locked'}
+          link={`/home/${quest.category}/quest/${id}`}
+          questId={id}
+        />
+      </Item>
     {/each}
   </Carousel>
 {/key}
