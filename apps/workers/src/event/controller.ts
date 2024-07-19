@@ -481,32 +481,14 @@ export const EventWorkerController = ({
       }
 
       case EventId.CombineElementsClaimed: {
-        return gatewayApi
-          .hasAtLeastTwoRadgems(user.accountAddress!)
-          .andThen((hasAtLeastTwoRadgems) =>
-            hasAtLeastTwoRadgems
-              ? addCompletedQuestRequirement({
-                  questId: 'CreatingRadMorphs',
-                  userId,
-                  requirementId: 'MintRadgems'
-                })
-                  .andThen(() =>
-                    sendMessage(
-                      userId,
-                      {
-                        type: 'QuestRequirementCompleted',
-                        questId: 'CreatingRadMorphs',
-                        requirementId: 'MintRadgems',
-                        traceId
-                      },
-                      childLogger
-                    )
-                  )
-                  .andThen(() =>
-                    handleAllQuestRequirementCompleted({ questId: 'CreatingRadMorphs', userId })
-                  )
-              : okAsync(undefined)
-          )
+        return sendMessage(
+          userId,
+          {
+            type: 'CombineElementsClaimed',
+            traceId
+          },
+          childLogger
+        )
       }
 
       case EventId.AccountAllowedToForgeHeroBadge:
@@ -520,16 +502,7 @@ export const EventWorkerController = ({
         )
 
       case EventId.JettyReceivedClams: {
-        return sendMessage(
-          user.id,
-          {
-            type: 'QuestRequirementCompleted',
-            requirementId: EventId.JettyReceivedClams,
-            questId: 'TransferTokens',
-            traceId: job.data.traceId
-          },
-          childLogger
-        ).andThen(() => handleQuestWithTrackedAccount('TransferTokens'))
+        return handleQuestWithTrackedAccount('TransferTokens')
       }
       case EventId.MayaRouterWithdrawEvent: {
         return handleQuestWithTrackedAccount('Thorswap')
