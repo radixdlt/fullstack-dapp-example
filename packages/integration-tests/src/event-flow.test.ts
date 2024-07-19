@@ -1,7 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest'
 import {
-  RadixEngineClient,
-  generateMnemonic,
   mintElements,
   mintClams,
   AccountHelper,
@@ -18,8 +16,7 @@ import {
   TransactionModel,
   UserModel,
   UserQuestModel,
-  createAppLogger,
-  createUser
+  createAppLogger
 } from 'common'
 import { PrismaClient, User } from 'database'
 import { ResultAsync, errAsync } from 'neverthrow'
@@ -27,7 +24,6 @@ import { Queues, RedisConnection, getQueues } from 'queues'
 import { config } from './config'
 import { QueueEvents } from 'bullmq'
 import crypto from 'crypto'
-import { addVerifiedPhoneNumberRequirement } from './helpers/add-completed-requirement'
 import { completeQuestRequirements } from './helpers/complete-quest-requirements'
 import { waitForMessage } from './helpers/wait-for-message'
 
@@ -53,24 +49,21 @@ const gatewayApi = GatewayApi(2)
 
 const db = new PrismaClient()
 const redisClient = new RedisConnection(config.redis)
-const networkName = gatewayApi.networkConfig.networkName
 
 const accountHelper = AccountHelper(db)
 
 const logger = createAppLogger({ level: 'debug' })
 
-if (!networkName) throw new Error('PUBLIC_NETWORK_ID env var not set to a valid network')
+let account: Account
 
-const radixEngineClient = RadixEngineClient({
-  accounts: { testAccount: 1 },
-  gatewayApi,
-  mnemonic: generateMnemonic()
-})
+const getAccount = async () => {
+  if (!account) {
+    account = await createAccount({ withXrd: true, withHeroBadge: true })
+  }
+  return account
+}
 
 let accountAddress: string
-let identityAddress: string
-let user: User
-let queues: ReturnType<typeof getQueues>
 
 const transactionModel = TransactionModel(db, transactionQueue)
 const userQuestModel = UserQuestModel(db)(logger)
@@ -238,19 +231,6 @@ const createAccount = async (
 }
 
 describe('Event flows', () => {
-  beforeAll(async () => {
-    const result = await ResultAsync.combine([
-      radixEngineClient.getAccounts(),
-      radixEngineClient.getIdentityAddressAtDerivationIndex(0)
-    ])
-    if (result.isErr()) throw result.error
-    const value = result.value
-    accountAddress = value[0].testAccount
-    identityAddress = value[1]
-    user = (await createUser(db)({ identityAddress, accountAddress }))._unsafeUnwrap()
-    await addVerifiedPhoneNumberRequirement(db)(user.id)
-    queues = getQueues(config.redis)
-  })
   it(
     'should add account address, track event, send notification to user, and mint hero badge',
     { timeout: 60_000, skip: false },
@@ -579,21 +559,23 @@ describe('Event flows', () => {
   })
 
   describe('giftbox', async () => {
-    const { user, submitTransaction } = await createAccount({ withXrd: true, withHeroBadge: true })
+    beforeAll(async () => {
+      const { user } = await getAccount()
+      const mintGiftBoxes = async () =>
+        await ResultAsync.combine([
+          mintGiftBox('Starter', user.accountAddress!),
+          mintGiftBox('Simple', user.accountAddress!),
+          mintGiftBox('Fancy', user.accountAddress!),
+          mintGiftBox('Elite', user.accountAddress!)
+        ])
 
-    const mintGiftBoxes = async () =>
-      await ResultAsync.combine([
-        mintGiftBox('Starter', user.accountAddress!),
-        mintGiftBox('Simple', user.accountAddress!),
-        mintGiftBox('Fancy', user.accountAddress!),
-        mintGiftBox('Elite', user.accountAddress!)
-      ])
+      const mintGiftBoxesResult = await mintGiftBoxes()
 
-    const mintGiftBoxesResult = await mintGiftBoxes()
-
-    if (mintGiftBoxesResult.isErr()) throw mintGiftBoxesResult.error
+      if (mintGiftBoxesResult.isErr()) throw mintGiftBoxesResult.error
+    }, 60_000)
 
     const openGiftBox = async (kind: GiftBoxKind) => {
+      const { submitTransaction, user } = await getAccount()
       const openGiftBoxResult = await submitTransaction(`
         CALL_METHOD
           Address("${user.accountAddress}")
@@ -638,6 +620,7 @@ describe('Event flows', () => {
     }
 
     const claimGiftBoxReward = async () => {
+      const { submitTransaction, user } = await getAccount()
       const result = await submitTransaction(`
         CALL_METHOD
             Address("${user.accountAddress}")
@@ -669,24 +652,28 @@ describe('Event flows', () => {
     }
 
     it('open Starter gift box', { timeout: 60_000, skip: false }, async () => {
+      const { user } = await getAccount()
       await openGiftBox('Starter')
       await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
       await claimGiftBoxReward()
     })
 
     it('open Simple gift box', { timeout: 60_000, skip: false }, async () => {
+      const { user } = await getAccount()
       await openGiftBox('Simple')
       await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
       await claimGiftBoxReward()
     })
 
     it('open Fancy gift box', { timeout: 60_000, skip: false }, async () => {
+      const { user } = await getAccount()
       await openGiftBox('Fancy')
       await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
       await claimGiftBoxReward()
     })
 
     it('open Elite gift box', { timeout: 60_000, skip: false }, async () => {
+      const { user } = await getAccount()
       await openGiftBox('Elite')
       await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
       await claimGiftBoxReward()
@@ -705,6 +692,7 @@ describe('Event flows', () => {
             transactionId: crypto.randomUUID(),
             userId: user.user.id,
             xrdUsdValue: 100,
+            xrdPrice: 1,
             type: 'DIRECT_DEPOSIT'
           }
         })
@@ -717,5 +705,45 @@ describe('Event flows', () => {
         }
       }
     )
+  })
+
+  describe.skip('utm', () => {
+    it('should set users with utm', async () => {
+      const numberOfUsers = new Array(100).fill(0)
+
+      const country = ['us', 'ca', 'gb', 'se', 'ge', 'pl', 'fr', 'es', 'it', 'ru', 'jp', 'cn']
+
+      const utm_source = ['twitter', 'google', 'facebook', 'instagram', 'reddit']
+
+      const utm_medium = ['cpc', 'organic', 'referral', 'social']
+
+      const utm_campaign = ['radquest-launch', 'radquest-influencer', 'radquest-ads']
+
+      const utm_content = ['logolink', 'buttonlink', 'textlink']
+
+      const utm_term = ['web3', 'crypto', 'blockchain']
+
+      const getRandom = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)]
+
+      for (const _ of numberOfUsers) {
+        const { user } = (
+          await accountHelper.createAccount({ logger, networkId: 2 })
+        )._unsafeUnwrap()
+
+        await db.user.update({ data: { country: getRandom(country) }, where: { id: user.id } })
+
+        await db.marketing.create({
+          data: {
+            userId: user.id,
+            utm_id: crypto.randomUUID(),
+            utm_source: getRandom(utm_source),
+            utm_medium: getRandom(utm_medium),
+            utm_campaign: getRandom(utm_campaign),
+            utm_content: getRandom(utm_content),
+            utm_term: getRandom(utm_term)
+          }
+        })
+      }
+    })
   })
 })

@@ -18,6 +18,7 @@ export const AuditModel = (db: PrismaClient) => (logger?: AppLogger) => {
     type,
     userId,
     xrdUsdValue,
+    xrdPrice,
     transactionId,
     data
   }: {
@@ -25,6 +26,7 @@ export const AuditModel = (db: PrismaClient) => (logger?: AppLogger) => {
     userId: string
     type: AuditType
     xrdUsdValue: number
+    xrdPrice: number
     data: AuditData
   }) =>
     ResultAsync.fromPromise(
@@ -34,6 +36,7 @@ export const AuditModel = (db: PrismaClient) => (logger?: AppLogger) => {
           userId,
           type,
           xrdUsdValue,
+          xrdPrice,
           data
         }
       }),
