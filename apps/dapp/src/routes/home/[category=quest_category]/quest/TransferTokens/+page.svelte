@@ -264,7 +264,7 @@
       <div class="qr-code">
         <QR data={jettyAddress.address} />
       </div>
-      {@html htmlReplace(text['6a-2.md'], { jettyAddress: shortenAddress(jettyAddress.address) })}
+      {@html htmlReplace(text['6a-2.md'], { jettyAddress: jettyAddress.address })}
     {/if}
   {/if}
 
