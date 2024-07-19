@@ -15,27 +15,28 @@
     // TODO
   }
 
-  const detectScolledToStart = () => {
-    isScrolledToStart = carousel.scrollLeft === 0
+  const detectScrolledToStart = () => {
+    isScrolledToStart = carousel.scrollLeft <= 1
   }
 
-  const detectScolledToEnd = () => {
-    isScrolledToEnd = carousel.scrollLeft + carousel.offsetWidth === carousel.scrollWidth
+  const detectScrolledToEnd = () => {
+    isScrolledToEnd =
+      Math.abs(carousel.scrollLeft + carousel.offsetWidth - carousel.scrollWidth) <= 1
   }
 
   onMount(() => {
     if (noButtons) return
 
-    detectScolledToStart()
-    detectScolledToEnd()
+    detectScrolledToStart()
+    detectScrolledToEnd()
 
     setTimeout(() => {
       carousel.scrollTo({ left: 0, behavior: 'instant' })
     }, 0)
 
     const eventCallback = () => {
-      detectScolledToStart()
-      detectScolledToEnd()
+      detectScrolledToStart()
+      detectScrolledToEnd()
     }
 
     carousel.addEventListener('scroll', eventCallback)
