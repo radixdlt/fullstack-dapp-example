@@ -55,6 +55,7 @@
         message.requirementId === 'JettyReceivedClams'
       ) {
         $receivedClams = true
+        quest.actions.next()
         messageApi.markAsSeen(message.id)
       }
     })
