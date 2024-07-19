@@ -16,7 +16,6 @@
   import { useCookies, type RequirementCookieKey } from '$lib/utils/cookies'
   import { completeQuest } from '$lib/utils/complete-quest'
   import { useLocalStorage } from '$lib/utils/local-storage'
-  import { isMobile } from '$lib/utils/is-mobile'
   import type { QuestRequirement } from '$lib/server/user-quest/controller'
   import QuizJettyPage from './QuizJettyPage.svelte'
   import { writable } from 'svelte/store'

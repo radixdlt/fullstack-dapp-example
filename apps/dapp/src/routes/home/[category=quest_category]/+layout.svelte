@@ -52,7 +52,7 @@
     {} as { [key in QuestId]: QuestStatus }
   )
 
-  let _quests = Object.entries($quests).filter(
+  $: _quests = Object.entries($quests).filter(
     ([id, quest]) =>
       (quest.category === $page.params.category && id !== 'JoinFriend') ||
       (id === 'JoinFriend' && ($user?.referredBy || (!$user && referredByCookie)))

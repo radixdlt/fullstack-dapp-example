@@ -29,6 +29,14 @@
     })
   }
 
+  export const scrollToPrev = () => {
+    if (isScrolledToStart) return
+    carousel.scrollTo({
+      left: carousel.scrollLeft - stepSize,
+      behavior: 'smooth'
+    })
+  }
+
   export const scrollToNumber = (i: number) => {
     carousel.scrollTo({
       left: i * stepSize - carousel.offsetWidth / 2,
@@ -89,28 +97,12 @@
   </div>
   {#if !isScrolledToStart && !noButtons}
     <div class="navigate-button left">
-      <NavigateButton
-        direction="left"
-        on:click={() => {
-          carousel.scrollBy({
-            left: -stepSize,
-            behavior: 'smooth'
-          })
-        }}
-      />
+      <NavigateButton direction="left" on:click={scrollToPrev} />
     </div>
   {/if}
   {#if !isScrolledToEnd && !noButtons}
     <div class="navigate-button right">
-      <NavigateButton
-        direction="right"
-        on:click={() => {
-          carousel.scrollBy({
-            left: stepSize,
-            behavior: 'smooth'
-          })
-        }}
-      />
+      <NavigateButton direction="right" on:click={scrollToNext} />
     </div>
   {/if}
 </div>
