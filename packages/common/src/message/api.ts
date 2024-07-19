@@ -20,7 +20,7 @@ export const MessageType = {
 
 export type MessageType = (typeof MessageType)[keyof typeof MessageType]
 
-type Messages = {
+export type Messages = {
   [MessageType.QuestRequirementCompleted]: {
     questId: string
     requirementId: string
