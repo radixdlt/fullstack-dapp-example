@@ -520,16 +520,7 @@ export const EventWorkerController = ({
         )
 
       case EventId.JettyReceivedClams: {
-        return sendMessage(
-          user.id,
-          {
-            type: 'QuestRequirementCompleted',
-            requirementId: EventId.JettyReceivedClams,
-            questId: 'TransferTokens',
-            traceId: job.data.traceId
-          },
-          childLogger
-        ).andThen(() => handleQuestWithTrackedAccount('TransferTokens'))
+        return handleQuestWithTrackedAccount('TransferTokens')
       }
       case EventId.MayaRouterWithdrawEvent: {
         return handleQuestWithTrackedAccount('Thorswap')
