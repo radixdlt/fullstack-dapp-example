@@ -151,7 +151,6 @@ export const QuestDefinitions = () => {
       id: 'CreatingRadMorphs',
       category: 'basic',
       trackedAccountAddress: false,
-      splashImage: '/quests-images/splash/ConvertElementsQuest.webp',
       rewards: [
         {
           amount: 1,
@@ -271,7 +270,6 @@ export const QuestDefinitions = () => {
       id: 'JoinFriend',
       category: 'advanced',
       trackedAccountAddress: false,
-      splashImage: '/quests-images/splash/QuestTogether.webp',
       rewards: [
         {
           name: 'xrd',
@@ -373,7 +371,6 @@ export const QuestDefinitions = () => {
           amount: 1
         }
       ],
-      splashImage: '/quests-images/splash/Thorswap.webp',
       trackedAccountAddress: true,
       minutesToComplete: 5,
       preRequisites: ['QuestTogether'],
