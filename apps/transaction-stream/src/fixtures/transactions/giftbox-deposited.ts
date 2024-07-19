@@ -1041,8 +1041,7 @@ export default [
             entity: {
               is_global: true,
               entity_type: 'GlobalGenericComponent',
-              entity_address:
-                'component_tdx_2_1crvwvp83j96e3gerjexspqsw3r4wpqzsylcp7dn69pt4nh5knwxcw5'
+              entity_address: addresses.components.cardForge
             },
             object_module_id: 'Main'
           },

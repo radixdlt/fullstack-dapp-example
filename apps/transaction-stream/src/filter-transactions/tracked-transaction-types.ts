@@ -1,5 +1,6 @@
 import {
   EventsItem,
+  ProgrammaticScryptoSborValue,
   ProgrammaticScryptoSborValueArray,
   ProgrammaticScryptoSborValueDecimal,
   ProgrammaticScryptoSborValueMap,
@@ -7,7 +8,7 @@ import {
   ProgrammaticScryptoSborValueTuple
 } from '@radixdlt/babylon-gateway-api-sdk'
 import { config } from '../config'
-import { EventId, GetValuesFromEventInput, RadGem, getValuesFromEvent } from 'common'
+import { EventId, GetValuesFromEventInput, fromEventData, getValuesFromEvent } from 'common'
 import { getRewardsFromQuestRewardDepositedEvent } from '../helpers/getRewardsFromQuestRewardDepositedEvent'
 
 type EventEmitter = {
@@ -169,7 +170,7 @@ export const trackedTransactionTypes: TrackedTransactions = {
           kind: 'Tuple',
           key: 'radgemData',
           transform: (value) =>
-            RadGem.fromEventData('MintedRadgemEvent', value as ProgrammaticScryptoSborValueTuple)
+            fromEventData('MintedRadgemEvent', value as ProgrammaticScryptoSborValueTuple)
         }
       }
     })
@@ -300,6 +301,18 @@ export const trackedTransactionTypes: TrackedTransactions = {
               }
             )
           }
+        }
+      }
+    }),
+    MorphCardMintedEvent: eventEmittedByComponent({
+      eventName: 'MorphCardMintedEvent',
+      componentAddress: config.radQuest.components.cardForge,
+      keys: {
+        morph_card_data: {
+          kind: 'Tuple',
+          key: 'energyCard',
+          transform: (value) =>
+            fromEventData('MorphCardMintedEvent', value as ProgrammaticScryptoSborValue)
         }
       }
     })
