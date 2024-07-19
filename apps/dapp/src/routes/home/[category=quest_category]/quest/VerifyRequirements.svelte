@@ -51,9 +51,8 @@
   export const checkRequirements = () => {
     return questApi.getQuestInformation(questId).map(({ requirements, status }) => {
       const requirementValueList = Object.entries(requirements)
-      const allRequirementsMet =
-        requirementValueList.every(([_, { isComplete }]) => isComplete) &&
-        ['REWARDS_DEPOSITED', 'REWARDS_CLAIMED', 'COMPLETED'].includes(status)
+      const allRequirementsMet = requirementValueList.every(([_, { isComplete }]) => isComplete)
+      const isInProgress = status === 'IN_PROGRESS'
 
       requirementsStatus = requirementValueList
         .filter(([, { isHidden }]) => !isHidden)
@@ -65,10 +64,12 @@
           }
         })
 
-      if (allRequirementsMet) {
+      if (allRequirementsMet && !isInProgress) {
         dispatch('all-requirements-met')
       } else {
-        setLoading(false)
+        if (!allRequirementsMet) {
+          setLoading(false)
+        }
         dispatch('requirements-not-met')
       }
 
