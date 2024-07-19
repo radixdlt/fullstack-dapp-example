@@ -125,6 +125,15 @@ mod hero_badge_forge {
                     .hero_badge_manager
                     .get_non_fungible_data::<HeroBadgeData>(&badge_id);
 
+                assert!(
+                    non_fungible_data
+                        .quests_completed
+                        .iter()
+                        .find(|&id| id == &quest_id.0)
+                        .is_none(),
+                    "Quest already completed"
+                );
+
                 self.hero_badge_manager.update_non_fungible_data(
                     &badge_id,
                     "quest_counter",

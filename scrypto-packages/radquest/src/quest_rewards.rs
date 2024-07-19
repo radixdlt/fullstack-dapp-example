@@ -330,7 +330,7 @@ mod quest_rewards {
             hero_badge.check(self.hero_badge_address);
 
             self.admin_badge
-                .authorize_with_amount(dec!(1), || self.clam_manager.mint(dec!(3)))
+                .authorize_with_amount(dec!(1), || self.clam_manager.mint(dec!(10)))
         }
     }
 }
