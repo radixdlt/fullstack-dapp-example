@@ -6,7 +6,10 @@ export const POST = async ({ request, locals }) => {
 
   const { ids }: { ids: string[] } = requestBody
 
-  const events = await locals.dbClient.event.findMany({ where: { transactionId: { in: ids } } })
+  const events = await locals.dbClient.event.findMany({
+    orderBy: { createdAt: 'desc' },
+    where: { transactionId: { in: ids } }
+  })
 
   for (const event of events) {
     const data = event.data as Record<string, unknown>

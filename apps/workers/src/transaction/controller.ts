@@ -48,13 +48,11 @@ export const TransactionWorkerController = ({
   const handler = ({
     job,
     user,
-    logger,
-    dbTransactionBuilder
+    logger
   }: {
     job: Job<TransactionJob>
     user: User
     logger: AppLogger
-    dbTransactionBuilder: DbTransactionBuilder
   }): ResultAsync<any, WorkerOutputError> => {
     const { type, userId } = job.data
 
@@ -132,13 +130,15 @@ export const TransactionWorkerController = ({
       transactionId,
       xrdUsdValue,
       rewards,
-      type
+      type,
+      xrdPrice
     }: {
       userId: string
       transactionId: string
       xrdUsdValue: number
       rewards: AuditData
       type: AuditType
+      xrdPrice: number
     }) =>
       auditModel(logger)
         .add({
@@ -146,6 +146,7 @@ export const TransactionWorkerController = ({
           userId,
           type,
           xrdUsdValue,
+          xrdPrice,
           data: rewards
         })
         .mapErr(({ jsError }) => ({
@@ -153,8 +154,8 @@ export const TransactionWorkerController = ({
           jsError
         }))
 
-    const getXrdPrice = (value: string) => {
-      const xrdAmount = BigNumber(value)
+    const getXrdPrice = (value?: string) => {
+      const xrdAmount = BigNumber(value ?? 0)
 
       return tokenPriceClient
         .getXrdPrice()
@@ -163,8 +164,9 @@ export const TransactionWorkerController = ({
           jsError: error
         }))
         .map((xrdPrice) => ({
-          xrdUsdValue: xrdAmount.multipliedBy(xrdPrice).toNumber(),
-          xrdAmount
+          xrdUsdValue: xrdAmount.multipliedBy(xrdPrice).decimalPlaces(2).toNumber(),
+          xrdAmount,
+          xrdPrice: xrdPrice.decimalPlaces(3).toNumber()
         }))
     }
 
@@ -230,13 +232,16 @@ export const TransactionWorkerController = ({
 
       return triggerDepositRewardsTransaction(userId).andThen(
         ({ userId, transactionId, xrdRewardInUsd }) =>
-          addEntryToAuditTable({
-            userId,
-            transactionId,
-            xrdUsdValue: xrdRewardInUsd.toNumber(),
-            rewards: { fungible: rewards, nonFungible: [] },
-            type: AuditType.CLAIMBOX_DEPOSIT
-          })
+          getXrdPrice().andThen(({ xrdPrice }) =>
+            addEntryToAuditTable({
+              userId,
+              transactionId,
+              xrdPrice,
+              xrdUsdValue: xrdRewardInUsd.decimalPlaces(2).toNumber(),
+              rewards: { fungible: rewards, nonFungible: [] },
+              type: AuditType.CLAIMBOX_DEPOSIT
+            })
+          )
       )
     }
 
@@ -318,16 +323,19 @@ export const TransactionWorkerController = ({
                 depositRewardsTo: 'giftBoxOpener'
               })
             ).andThen(({ transactionId }) =>
-              addEntryToAuditTable({
-                userId,
-                transactionId,
-                xrdUsdValue: 0,
-                rewards: {
-                  fungible: [{ name: 'elements', amount: elementAmount }],
-                  nonFungible: [card]
-                },
-                type: AuditType.CLAIMBOX_DEPOSIT
-              })
+              getXrdPrice().andThen(({ xrdPrice }) =>
+                addEntryToAuditTable({
+                  userId,
+                  transactionId,
+                  xrdUsdValue: 0,
+                  xrdPrice,
+                  rewards: {
+                    fungible: [{ name: 'elements', amount: elementAmount }],
+                    nonFungible: [card]
+                  },
+                  type: AuditType.CLAIMBOX_DEPOSIT
+                })
+              )
             )
           })
       }
@@ -573,17 +581,19 @@ export const TransactionWorkerController = ({
             )
           )
           .andThen(({ transactionId }) =>
-            getXrdPrice(`${config.radQuest.directXrdDepositAmount}`).andThen(({ xrdUsdValue }) =>
-              addEntryToAuditTable({
-                transactionId,
-                userId: user.id,
-                xrdUsdValue,
-                type: 'DIRECT_DEPOSIT',
-                rewards: {
-                  fungible: [{ name: 'xrd', amount: config.radQuest.directXrdDepositAmount }],
-                  nonFungible: []
-                }
-              })
+            getXrdPrice(`${config.radQuest.directXrdDepositAmount}`).andThen(
+              ({ xrdUsdValue, xrdPrice }) =>
+                addEntryToAuditTable({
+                  transactionId,
+                  userId: user.id,
+                  xrdUsdValue,
+                  xrdPrice,
+                  type: 'DIRECT_DEPOSIT',
+                  rewards: {
+                    fungible: [{ name: 'xrd', amount: config.radQuest.directXrdDepositAmount }],
+                    nonFungible: []
+                  }
+                })
             )
           )
           .andThen(() =>

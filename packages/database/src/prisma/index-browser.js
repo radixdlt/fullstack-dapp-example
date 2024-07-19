@@ -213,6 +213,7 @@ exports.Prisma.AuditScalarFieldEnum = {
   date: 'date',
   type: 'type',
   xrdUsdValue: 'xrdUsdValue',
+  xrdPrice: 'xrdPrice',
   data: 'data'
 };
 

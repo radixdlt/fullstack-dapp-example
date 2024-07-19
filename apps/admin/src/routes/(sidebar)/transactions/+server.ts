@@ -8,6 +8,7 @@ export const POST = async ({ request, locals }) => {
 
   const transactions = await locals.dbClient.transactionIntent.findMany({
     take: 250,
+    orderBy: { createdAt: 'desc' },
     where: { discriminator: { in: ids } }
   })
 

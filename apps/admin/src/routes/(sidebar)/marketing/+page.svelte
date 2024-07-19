@@ -7,7 +7,7 @@
 
   let searchTerm = ''
 
-  let items = writable<(Marketing & { createdAt: string; country: string })[]>([])
+  let items = writable<(Marketing & { user: { createdAt: string; country: string } })[]>([])
   let mounted = false
 
   $: {
@@ -65,8 +65,11 @@
     <TableBody>
       {#each $items as item}
         <TableBodyRow class="text-base">
-          <TableBodyCell class="flex items-center space-x-6 whitespace-nowrap p-4"
-            >{item.userId}</TableBodyCell
+          <TableBodyCell
+            class="flex items-center space-x-6 whitespace-nowrap p-4 cursor-pointer"
+            on:click={() => {
+              window.location.href = `/users/${item.userId}`
+            }}>{item.userId}</TableBodyCell
           >
 
           <TableBodyCell
@@ -108,13 +111,13 @@
           <TableBodyCell
             class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
           >
-            {item.country}</TableBodyCell
+            {item.user.country}</TableBodyCell
           >
 
           <TableBodyCell
             class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
           >
-            {item.createdAt}</TableBodyCell
+            {item.user.createdAt}</TableBodyCell
           >
         </TableBodyRow>
       {/each}
