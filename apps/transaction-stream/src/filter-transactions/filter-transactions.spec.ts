@@ -179,6 +179,7 @@ describe('filter transactions', () => {
 
       expect(transaction.type).toEqual(EventId.GiftBoxDeposited)
       expect(transaction.userId).toBeDefined()
+      expect(transaction.data.rewards).toBeDefined()
     })
 
     it(`should find ${EventId.GiftBoxOpened} transaction`, () => {
