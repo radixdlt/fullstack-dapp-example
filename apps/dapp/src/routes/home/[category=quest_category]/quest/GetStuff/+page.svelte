@@ -200,6 +200,7 @@
 <Quest
   id={data.id}
   requirements={data.requirements}
+  nextQuestIndex={data.nextQuestIndex}
   bind:this={quest}
   let:next
   steps={[
