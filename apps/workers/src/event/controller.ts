@@ -481,32 +481,16 @@ export const EventWorkerController = ({
       }
 
       case EventId.CombineElementsClaimed: {
-        return gatewayApi
-          .hasAtLeastTwoRadgems(user.accountAddress!)
-          .andThen((hasAtLeastTwoRadgems) =>
-            hasAtLeastTwoRadgems
-              ? addCompletedQuestRequirement({
-                  questId: 'CreatingRadMorphs',
-                  userId,
-                  requirementId: 'MintRadgems'
-                })
-                  .andThen(() =>
-                    sendMessage(
-                      userId,
-                      {
-                        type: 'QuestRequirementCompleted',
-                        questId: 'CreatingRadMorphs',
-                        requirementId: 'MintRadgems',
-                        traceId
-                      },
-                      childLogger
-                    )
-                  )
-                  .andThen(() =>
-                    handleAllQuestRequirementCompleted({ questId: 'CreatingRadMorphs', userId })
-                  )
-              : okAsync(undefined)
-          )
+        return sendMessage(
+          userId,
+          {
+            type: 'QuestRequirementCompleted',
+            questId: 'CreatingRadMorphs',
+            requirementId: 'MintRadgems',
+            traceId
+          },
+          childLogger
+        )
       }
 
       case EventId.AccountAllowedToForgeHeroBadge:
