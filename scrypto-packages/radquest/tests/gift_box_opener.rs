@@ -10,6 +10,7 @@ struct Test {
     fancy_gift_boxes: Bucket,
     user_id: UserId,
     hero_badge_proof: Proof,
+    hero_badge: Bucket,
     admin_badge_proof: Proof,
     admin_badge: Bucket,
     super_admin_badge_proof: Proof,
@@ -81,6 +82,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         fancy_gift_boxes,
         user_id: UserId(user_id_string),
         hero_badge_proof,
+        hero_badge,
         admin_badge_proof,
         admin_badge,
         super_admin_badge_proof,
@@ -237,6 +239,38 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
 
     // Assert
     assert!(result.is_ok());
+    Ok(())
+}
+
+#[test]
+fn cannot_claim_rewards_twice() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut gift_box_opener,
+        simple_gift_boxes,
+        admin_badge_proof,
+        hero_badge,
+        user_id,
+        rewards,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    gift_box_opener.add_gift_box_resources(
+        vec![simple_gift_boxes.resource_address(&mut env)?],
+        &mut env,
+    )?;
+
+    gift_box_opener.deposit_gift_box_rewards(user_id, rewards, &mut env)?;
+    gift_box_opener.claim_gift_box_rewards(hero_badge.create_proof_of_all(&mut env)?, &mut env)?;
+
+    // Act
+    let result =
+        gift_box_opener.claim_gift_box_rewards(hero_badge.create_proof_of_all(&mut env)?, &mut env);
+
+    // Assert
+    assert!(result.is_err());
     Ok(())
 }
 
