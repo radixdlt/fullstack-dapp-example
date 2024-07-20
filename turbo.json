@@ -93,12 +93,6 @@
     "wallet:mint-hero-badge": {
       "cache": false
     },
-    "wallet:set-dapp-data:radquest": {
-      "cache": false
-    },
-    "wallet:set-dapp-data:clam-dex": {
-      "cache": false
-    },
     "build:storybook": {
       "cache": false
     },
