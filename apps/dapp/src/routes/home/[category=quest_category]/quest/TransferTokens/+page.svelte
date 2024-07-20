@@ -252,20 +252,23 @@
   {/if}
 
   {#if render('6')}
-    {@const jettyAddress = Addresses(parseInt(PUBLIC_NETWORK_ID)).accounts.jetty}
+    {@const jettyAddress = Addresses(parseInt(PUBLIC_NETWORK_ID)).accounts.jetty.address}
 
     {#if isMobile()}
       {@html text['6b-1.md']}
       <div class="copy-address">
-        <CopyTextBox text={shortenAddress(jettyAddress.address)} value={jettyAddress.address} />
+        <CopyTextBox text={shortenAddress(jettyAddress)} value={jettyAddress} />
       </div>
       {@html text['6b-2.md']}
     {:else}
       {@html text['6a-1.md']}
       <div class="qr-code">
-        <QR data={jettyAddress.address} />
+        <QR data={jettyAddress} />
       </div>
-      {@html htmlReplace(text['6a-2.md'], { jettyAddress: jettyAddress.address })}
+      {@html htmlReplace(text['6a-2.md'], {
+        jettyAddress:
+          jettyAddress.slice(0, 20) + '...' + jettyAddress.slice(-20, jettyAddress.length)
+      })}
     {/if}
   {/if}
 
