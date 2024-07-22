@@ -37,7 +37,7 @@
     })
   }
 
-  export const scrollToNumber = (i: number) => {
+  export const scrollToIndex = (i: number) => {
     carousel.scrollTo({
       left: i * stepSize - carousel.offsetWidth / 2,
       behavior: 'smooth'
@@ -46,7 +46,7 @@
 
   const centreOnClicked = (e: CustomEvent) => {
     const index = e.detail.index
-    scrollToNumber(index)
+    scrollToIndex(index)
   }
 
   onMount(() => {

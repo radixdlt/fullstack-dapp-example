@@ -28,8 +28,8 @@
 {#if !isJetty}
   <div class="swap-card-header">
     <img src={logo} alt="swap-logo" />
-    <div class={`market-price ${PUBLIC_SWAP_VARIATION.toLowerCase()}`}>
-      <div class="market-price-row">
+    <div class="market-price">
+      <div class={'market-price-row ' + PUBLIC_SWAP_VARIATION.toLowerCase()}>
         <div class="market-price-col">
           <div class="thin">{@html $i18n.t('main:marketplace-estimates')}</div>
           <div class="row">
@@ -91,11 +91,14 @@
     letter-spacing: 0.14px;
     color: var(--color-background-dark);
     text-align: center;
-    justify-content: center;
+    width: 100%;
   }
 
-  .market-price.letty {
-    align-items: flex-start;
+  .market-price-row.letty {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 2rem;
   }
 
   .row {
@@ -204,6 +207,7 @@
   .thin {
     font-weight: var(--font-weight-bold);
     font-size: var(--text-xs);
+    text-indent: 4px;
     text-align: left;
   }
 </style>

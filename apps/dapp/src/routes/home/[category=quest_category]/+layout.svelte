@@ -4,7 +4,7 @@
   import type { QuestId } from 'content'
   import type { LayoutData } from './$types'
   import type { QuestStatus } from '../../../types'
-  import { quests, scrollToNextQuest, user } from '../../../stores'
+  import { quests, scrollToQuestIndex, user } from '../../../stores'
   import { page } from '$app/stores'
   import { i18n } from '$lib/i18n/i18n'
   import { markNotificationAsSeen } from '$lib/notifications'
@@ -60,9 +60,9 @@
 
   let carousel: Carousel
 
-  $: if ($scrollToNextQuest && carousel && $page.params.category === 'basic') {
-    carousel.scrollToNext()
-    $scrollToNextQuest = false
+  $: if ($scrollToQuestIndex && carousel) {
+    carousel.scrollToIndex($scrollToQuestIndex)
+    $scrollToQuestIndex = null
   }
 </script>
 

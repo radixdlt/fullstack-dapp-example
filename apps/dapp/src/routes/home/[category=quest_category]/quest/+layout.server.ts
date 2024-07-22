@@ -92,6 +92,7 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
       id,
       requirements,
       text: questDefinitions[id].text,
-      rewards: questDefinitions[id].rewards
+      rewards: questDefinitions[id].rewards,
+      nextQuestIndex: questDefinitions[id].nextQuestIndex
     }
   })

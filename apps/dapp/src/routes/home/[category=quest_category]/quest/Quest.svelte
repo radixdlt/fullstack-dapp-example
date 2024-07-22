@@ -8,7 +8,7 @@
   } from '$lib/components/quest/Quest.svelte'
   import { createEventDispatcher, onMount, type ComponentProps } from 'svelte'
   import { closeQuest } from './+layout.svelte'
-  import { hideJetty, quests, retractJettyMenu, scrollToNextQuest, user } from '../../../../stores'
+  import { hideJetty, quests, retractJettyMenu, scrollToQuestIndex, user } from '../../../../stores'
   import ClaimRewards from './ClaimRewards.svelte'
   import VerifyRequirements from './VerifyRequirements.svelte'
   import { i18n } from '$lib/i18n/i18n'
@@ -34,6 +34,7 @@
   }
 
   export let id: QuestId
+  export let nextQuestIndex: number | null
   export let steps: (
     | RegularStep
     | JettyStep
@@ -88,7 +89,7 @@
     await completeQuest(id, !!$user)
     dispatch('completed')
     setTimeout(closeQuest, 0)
-    $scrollToNextQuest = true
+    $scrollToQuestIndex = nextQuestIndex
   }
 
   const progressUpdated = (e: CustomEvent<number>) => {

@@ -18,7 +18,7 @@
   import { Addresses, GatewayApi } from 'common'
   import { env } from '$env/dynamic/public'
   import type { Resource, SwappedResource } from '../types'
-  import { getBalanceChange, getTransactionResult } from '$lib/utils/previewTranasction'
+  import { getBalanceChange, getPrice, getTransactionResult } from '$lib/utils/previewTranasction'
   import { createSwapManifest } from '$lib/utils/createSwapManifest'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import SwapResult from '$lib/components/swapResult/SwapResult.svelte'
@@ -86,21 +86,7 @@
   }
 
   const getConversionRate = async () => {
-    const fromTokenAddress = clamResource?.id
-    const userAccountAddress = $walletData?.accounts[0]?.address
-    if (!fromTokenAddress || !userAccountAddress) return
-
-    const receiveAmount = await getBalanceChange(
-      {
-        amount: conversionRateFrom,
-        fromTokenAddress,
-        swapComponent,
-        userAccountAddress
-      },
-      addresses.resources.ottercoinAddress
-    )
-
-    conversionRateTo = receiveAmount
+    conversionRateTo = (await getPrice(swapComponent)) ?? '10'
   }
 
   onMount(async () => {
@@ -131,6 +117,8 @@
         $gatewayApi.callApi('getEntityMetadata', addresses.resources.clamAddress)
       ])
 
+      getConversionRate()
+
       if (ottercoinMetadataResult.isOk()) {
         ottercoinResource = turnEntityIntoObject(ottercoinMetadataResult.value)
       }
@@ -140,8 +128,6 @@
 
       if (!$walletData?.accounts[0]?.address) return
       await updateBalances($walletData?.accounts[0].address)
-
-      getConversionRate()
     } catch (error) {}
   })
 

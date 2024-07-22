@@ -17,6 +17,7 @@
   bind:this={quest}
   id={data.id}
   requirements={data.requirements}
+  nextQuestIndex={data.nextQuestIndex}
   steps={[
     {
       id: '0',
