@@ -76,6 +76,7 @@
         message.questId === questId &&
         message.requirementId === 'DepositHeroBadge'
       ) {
+        $hasHeroBadge = true
         messageApi.markAsSeen(message.id)
         dispatch('deposited')
       }
