@@ -4,7 +4,8 @@
   export let clickable = false
 </script>
 
-<svelte:element this={clickable ? 'button' : 'div'} class="icon" class:clickable>
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<svelte:element this={clickable ? 'button' : 'div'} class="icon" class:clickable on:click>
   <img class={size} src={url} alt="icon" />
   {#if $$slots['default']}
     <div class="text">
