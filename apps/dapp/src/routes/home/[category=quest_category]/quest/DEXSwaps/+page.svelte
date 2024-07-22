@@ -20,7 +20,7 @@
 
   let quest: Quest
   let loading = false
-  let accountHasClams = true
+  const accountHasClams = writable(true)
   const addresses = Addresses(publicConfig.networkId)
   const jettySwap = writable(data.requirements?.JettySwap.isComplete)
   const lettySwap = writable(data.requirements?.LettySwap.isComplete)
@@ -29,7 +29,7 @@
   $: {
     if ($user?.accountAddress! && mounted)
       checkAccountHasClams($user?.accountAddress!).map((hasClams) => {
-        accountHasClams = hasClams
+        $accountHasClams = hasClams
       })
   }
 
@@ -44,7 +44,7 @@
     loading = true
     getClams($user?.accountAddress!, $user?.id!).finally(() => {
       checkAccountHasClams($user?.accountAddress!).map((hasClams) => {
-        accountHasClams = hasClams
+        $accountHasClams = hasClams
         accountHasClams && quest.actions.next()
         loading = false
       })
@@ -77,32 +77,13 @@
   nextQuestIndex={data.nextQuestIndex}
   steps={[
     { id: '0', type: 'regular' },
-    {
-      id: '1',
-      type: 'regular'
-    },
-    {
-      id: '2',
-      type: 'jetty'
-    },
-    {
-      id: '3',
-      type: 'regular'
-    },
-    {
-      id: '4',
-      type: 'regular'
-    },
-    {
-      id: '5',
-      type: 'jetty'
-    },
+    { id: '1', type: 'regular' },
+    { id: '2', type: 'jetty' },
+    { id: '3', type: 'regular' },
+    { id: '4', type: 'jetty' },
+    { id: '5', type: 'regular' },
     {
       id: '6',
-      type: 'regular'
-    },
-    {
-      id: '7',
       type: 'regular',
       skip: jettySwap,
       footer: {
@@ -111,72 +92,20 @@
         }
       }
     },
-    {
-      id: '8',
-      type: 'jetty'
-    },
-    {
-      id: '9',
-      type: 'regular'
-    },
-    {
-      id: '10',
-      type: 'regular'
-    },
-    {
-      id: '11',
-      type: 'regular'
-    },
-    {
-      id: '12',
-      type: 'regular'
-    },
-    {
-      id: '13',
-      type: 'jetty'
-    },
-    {
-      id: '14',
-      type: 'regular'
-    },
-    {
-      id: '15',
-      type: 'jetty'
-    },
-    {
-      id: '16',
-      type: 'regular'
-    },
-    {
-      id: '17',
-      type: 'regular'
-    },
-    {
-      id: '18',
-      type: 'jetty'
-    },
+    { id: '7', type: 'jetty' },
+    { id: '8', type: 'regular' },
+    { id: '9', type: 'regular' },
+    { id: '10', type: 'jetty' },
+    { id: '11', type: 'regular' },
+    { id: '12', type: 'jetty' },
+    { id: '13', type: 'regular' },
+    { id: '14', type: 'jetty' },
+    { id: '15', type: 'regular' },
+    { id: '16', type: 'jetty' },
+    { id: '17', type: 'jetty' },
+    { id: '18', type: 'regular', skip: accountHasClams },
     {
       id: '19',
-      type: 'jetty'
-    },
-    {
-      id: '20',
-      type: 'regular'
-    },
-    {
-      id: '21',
-      type: 'jetty'
-    },
-    {
-      id: '22',
-      type: 'jetty'
-    },
-    {
-      id: '23',
-      type: 'jetty'
-    },
-    {
-      id: '24',
       type: 'regular',
       skip: lettySwap,
       footer: {
@@ -185,16 +114,9 @@
         }
       }
     },
-    {
-      id: '25',
-      type: 'regular'
-    },
-    {
-      type: 'claimRewards'
-    },
-    {
-      type: 'complete'
-    }
+    { id: '20', type: 'jetty' },
+    { type: 'claimRewards' },
+    { type: 'complete' }
   ]}
   let:render
 >
@@ -214,13 +136,10 @@
     {@html text['4.md']}
   {/if}
   {#if render('5')}
-    {@html text['5.md']}
-  {/if}
-  {#if render('6')}
-    {#if accountHasClams}
-      {@html text['6a.md']}
+    {#if $accountHasClams}
+      {@html text['5a.md']}
     {:else}
-      {@html text['6b.md']}
+      {@html text['5b.md']}
       <div class="center">
         <Button on:click={handleClaimClams} {loading}
           >{$i18n.t('quests:TransferTokens.getClams')}</Button
@@ -228,10 +147,13 @@
       </div>
     {/if}
   {/if}
-  {#if render('7')}
-    {@html htmlReplace(text['7.md'], {
-      jettySwap: `<a href="${addresses.dapps.jettySwap.url}" target="_blank">JettySwap</a>`
+  {#if render('6')}
+    {@html htmlReplace(text['6.md'], {
+      jettySwapLink: `<a href="${addresses.dapps.jettySwap.url}" target="_blank">JettySwap</a>`
     })}
+  {/if}
+  {#if render('7')}
+    {@html text['7.md']}
   {/if}
   {#if render('8')}
     {@html text['8.md']}
@@ -267,27 +189,12 @@
     {@html text['18.md']}
   {/if}
   {#if render('19')}
-    {@html text['19.md']}
+    {@html htmlReplace(text['19.md'], {
+      lettySwapLink: `<a href="${addresses.dapps.lettySwap.url}" target="_blank">LettySwap</a>`
+    })}
   {/if}
   {#if render('20')}
     {@html text['20.md']}
-  {/if}
-  {#if render('21')}
-    {@html text['21.md']}
-  {/if}
-  {#if render('22')}
-    {@html text['22.md']}
-  {/if}
-  {#if render('23')}
-    {@html text['23.md']}
-  {/if}
-  {#if render('24')}
-    {@html htmlReplace(text['24.md'], {
-      lettySwap: `<a href="${addresses.dapps.lettySwap.url}" target="_blank">LettySwap</a>`
-    })}
-  {/if}
-  {#if render('25')}
-    {@html text['25.md']}
   {/if}
 </Quest>
 
