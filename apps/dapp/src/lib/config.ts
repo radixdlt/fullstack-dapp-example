@@ -24,7 +24,8 @@ const {
 const { PUBLIC_LOG_LEVEL = 'debug' } = process.env
 
 const getDomain = () => {
-  const urlParts = new URL(EXPECTED_ORIGIN ?? '').hostname.split('.')
+  if (!EXPECTED_ORIGIN) return ''
+  const urlParts = new URL(EXPECTED_ORIGIN).hostname.split('.')
 
   return urlParts
     .slice(0)
