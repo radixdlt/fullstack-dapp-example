@@ -115,7 +115,7 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
     return getQuestStatus(userId, questId)
       .andThen((data) => {
         const currentStatus = data?.status
-        if (currentStatus && statuses.indexOf(currentStatus) >= statuses.indexOf(status)) {
+        if (currentStatus && statuses.indexOf(currentStatus) > statuses.indexOf(status)) {
           return errAsync(createApiError('cannot update to a previous status', 400)())
         }
         return okAsync(undefined)
