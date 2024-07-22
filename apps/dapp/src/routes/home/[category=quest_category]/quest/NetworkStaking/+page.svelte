@@ -20,7 +20,7 @@
       ? 'https://dashboard.radixdlt.com/network-staking'
       : 'https://stokenet-dashboard.radixdlt.com/network-staking'
 
-  const stakedXrd = writable(data.requirements?.StakedXrd?.isComplete)
+  const stakedXrd = writable(data.requirements?.XrdStaked?.isComplete)
   const rewardsDeposited = writable(
     data.questStatus.NetworkStaking?.status === 'REWARDS_DEPOSITED' ||
       data.questStatus.NetworkStaking?.status === 'COMPLETED'
@@ -29,7 +29,7 @@
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
     unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
-      if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'StakedXrd') {
+      if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'XrdStaked') {
         $stakedXrd = true
         messageApi.markAsSeen(message.id)
       }
