@@ -118,20 +118,21 @@
         {$i18n.t('jetty:create-radmorphs.title-pick-card')}
       {/if}
     </div>
-
-    <Carousel let:Item>
-      {#each cards as card, i}
-        <Item>
-          <TransformCard
-            {card}
-            selected={i === selectedTransformCard}
-            bind:this={transformCardComponents[i]}
-            on:selected={() => onTransformCardSelected(i)}
-            on:deselected={onTransformCardDeselected}
-          />
-        </Item>
-      {/each}
-    </Carousel>
+    <div class="cards">
+      <Carousel let:Item stepSize={100}>
+        {#each cards as card, i}
+          <Item>
+            <TransformCard
+              {card}
+              selected={i === selectedTransformCard}
+              bind:this={transformCardComponents[i]}
+              on:selected={() => onTransformCardSelected(i)}
+              on:deselected={onTransformCardDeselected}
+            />
+          </Item>
+        {/each}
+      </Carousel>
+    </div>
   </JettyMenuItemPage>
 {/if}
 
@@ -158,19 +159,21 @@
         {$i18n.t('jetty:create-radmorphs.title-gems-selected')}
       {/if}
     </div>
-    <Carousel let:Item>
-      {#each gems as gem, i}
-        <Item>
-          <GemCard
-            {gem}
-            selected={selectedGems.includes(i)}
-            bind:this={gemCardComponents[i]}
-            on:selected={() => onGemCardSelected(i)}
-            on:deselected={() => onGemCardDeselected(i)}
-          />
-        </Item>
-      {/each}
-    </Carousel>
+    <div class="cards">
+      <Carousel let:Item>
+        {#each gems as gem, i}
+          <Item>
+            <GemCard
+              {gem}
+              selected={selectedGems.includes(i)}
+              bind:this={gemCardComponents[i]}
+              on:selected={() => onGemCardSelected(i)}
+              on:deselected={() => onGemCardDeselected(i)}
+            />
+          </Item>
+        {/each}
+      </Carousel>
+    </div>
   </JettyMenuItemPage>
 {/if}
 
@@ -196,18 +199,16 @@
     <div slot="header" class="title">
       {$i18n.t('jetty:create-radmorphs.title-review')}
     </div>
-    <Carousel let:Item>
-      <Item>
-        {#if selectedTransformCard !== undefined}
-          <TransformCard disabled={true} selected={true} card={cards[selectedTransformCard]} />
-        {/if}
-      </Item>
+
+    <div class="chosen-cards cards">
+      {#if selectedTransformCard !== undefined}
+        <TransformCard disabled={true} selected={true} card={cards[selectedTransformCard]} />
+      {/if}
+
       {#each selectedGems as i}
-        <Item>
-          <GemCard disabled={true} selected={true} gem={gems[i]} />
-        </Item>
+        <GemCard disabled={true} selected={true} gem={gems[i]} />
       {/each}
-    </Carousel>
+    </div>
   </JettyMenuItemPage>
 {/if}
 
@@ -241,13 +242,18 @@
           <i>{$i18n.t('jetty:create-radmorphs.limited-edition')}</i>
         {/if}
       </div>
-      <img src={preview.image} alt="A Radmorph" />
-      {$i18n.t('jetty:create-radmorphs.radmorph-preview-text')}
-      <div class="footnote">
-        {$i18n.t('jetty:create-radmorphs.resources-sent-from-wallet')}
+      <div class="preview-image">
+        <img src={preview.image} alt="A Radmorph" />
+        <div class="preview-pill">
+          {$i18n.t('jetty:create-radmorphs.preview-pill-text')}
+        </div>
       </div>
+      {$i18n.t('jetty:create-radmorphs.radmorph-preview-text')}
     </div>
   </JettyMenuItemPage>
+  <div class="footnote">
+    {$i18n.t('jetty:create-radmorphs.resources-sent-from-wallet')}
+  </div>
 {/if}
 
 {#if page === 5}
@@ -287,9 +293,55 @@
     align-items: center;
     text-align: center;
     margin-bottom: -3rem;
+  }
 
-    img {
-      height: 150px;
+  .preview-image {
+    position: relative;
+    height: 150px;
+    border: var(--border-lg) var(--color-primary);
+  }
+
+  .preview-pill {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    padding: var(--spacing-xs) var(--spacing-lg);
+    font-size: var(--text-xxs);
+    font-weight: var(--font-weight-bold);
+    height: 1.7rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--color-primary);
+    border-radius: var(--border-radius-xl);
+  }
+
+  .cards {
+    margin-bottom: 3rem;
+  }
+
+  .chosen-cards {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+
+    :global(.main-card) {
+      @include mobile() {
+        margin: var(--spacing-sm);
+      }
+      height: 10rem;
+    }
+
+    :global(.transform-card) {
+      height: 10rem;
+    }
+
+    :global(.container) {
+      height: 10rem;
     }
   }
 
@@ -301,6 +353,8 @@
 
   .footnote {
     font-size: var(--text-xs);
+    color: var(--color-light);
+    text-align: center;
   }
 
   .success {

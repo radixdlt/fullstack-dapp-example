@@ -4,13 +4,12 @@
   import NavigateButton from './NavigateButton.svelte'
 
   export let noButtons = false
+  export let stepSize = 400
 
   let carousel: HTMLElement
 
   let isScrolledToStart = true
   let isScrolledToEnd = true
-
-  const stepSize = 400
 
   const detectScrolledToStart = () => {
     isScrolledToStart = carousel.scrollLeft <= 5
@@ -119,7 +118,8 @@
     position: relative;
     display: flex;
     align-items: center;
-    overflow: scroll;
+    overflow-x: scroll;
+    overflow-y: hidden;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     height: 100%;

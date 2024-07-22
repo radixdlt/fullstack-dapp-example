@@ -43,9 +43,9 @@
     justify-content: center;
     align-items: center;
     background: var(--background-image) no-repeat center;
-    background-size: cover;
-    height: 100%;
-    width: 100%;
+    background-size: 99%;
+    height: 12rem;
+    aspect-ratio: 1/1.66;
   }
 
   .text {

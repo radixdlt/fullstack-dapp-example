@@ -187,6 +187,7 @@
       })
       .mapErr(() => {
         waitingForSendElements = false
+        waitingForSendElements = false
       })
   }
 
@@ -276,7 +277,7 @@
           loop
           mode="normal"
           src="/lottie/loading.json"
-          style="width: 300px"
+          style="width: 250px"
         />
       </div>
     </JettyMenuItemPage>
@@ -288,9 +289,7 @@
       }}
     >
       <div>
-        <p>
-          {$i18n.t('jetty:fuse-elements.radgem-claimed')}
-        </p>
+        {$i18n.t('jetty:fuse-elements.radgem-claimed')}
 
         <p>
           {$i18n.t('jetty:fuse-elements.elements-left', {
@@ -325,9 +324,13 @@
         loading={waitingForSendElements}
       >
         <div>
-          <p>
-            {$i18n.t('jetty:fuse-elements.intro1')}
-          </p>
+          <img
+            style:width="100%"
+            src="/quests-images/key/JettyConversation_MultipleRadGems.webp"
+            alt="Radgems"
+          />
+
+          {$i18n.t('jetty:fuse-elements.intro1')}
 
           {#if parseInt(amountOfElements) >= elementsToCreateRadgem}
             <p>
@@ -338,15 +341,15 @@
               {$i18n.t('jetty:fuse-elements.enough-elements')}
             </b>
           {:else if noElements}
-            <b class="bold">
+            <p class="bold">
               {$i18n.t('jetty:fuse-elements.no-elements')}
-            </b>
+            </p>
           {:else}
-            <b>
+            <p class="bold">
               {$i18n.t('jetty:fuse-elements.not-enough-elements', {
                 count: parseInt(amountOfElements)
               })}
-            </b>
+            </p>
           {/if}
         </div>
       </JettyMenuItemPage>
@@ -361,6 +364,10 @@
     color: var(--color-light);
     height: 100%;
     padding: var(--spacing-2xl);
+
+    @include mobile {
+      padding: var(--spacing-xl);
+    }
   }
   .bold {
     font-weight: var(--font-weight-bold);

@@ -289,6 +289,12 @@
             onClick: () => dispatch('cancel')
           }}
     >
+      <img
+        class="radmorph-image"
+        src="/quests-images/key/JettyConversation_RadMorphCreation.webp"
+        alt="Radmorphs"
+      />
+
       {$i18n.t('jetty:create-radmorphs.intro')}
       <p>
         {$i18n.t('jetty:create-radmorphs.intro2')}
@@ -314,9 +320,13 @@
   .create-radmorphs {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-2xl);
+    gap: var(--spacing-md);
     height: 100%;
     padding: var(--spacing-2xl);
+
+    @include mobile {
+      padding: var(--spacing-xl);
+    }
   }
 
   .loading {
@@ -324,5 +334,9 @@
     justify-content: center;
     align-items: center;
     height: 100%;
+  }
+
+  .radmorph-image {
+    width: 100%;
   }
 </style>

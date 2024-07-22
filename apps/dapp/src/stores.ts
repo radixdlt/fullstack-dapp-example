@@ -15,6 +15,7 @@ export const user = writable<
 
 export type JettyNotification = {
   id: string
+  title: string
   action: () => void
   text: string
 }

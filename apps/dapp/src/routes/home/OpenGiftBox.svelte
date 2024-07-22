@@ -96,8 +96,8 @@
   import TransformCard from '$lib/components/resource-card/TransformCard.svelte'
   import ElementCard from '$lib/components/resource-card/ElementCard.svelte'
   import { onMount } from 'svelte'
-  import ResourceCard from '$lib/components/resource-card/ResourceCard.svelte'
   import { webSocketClient } from '$lib/websocket-client'
+  import BoxCard from '$lib/components/resource-card/BoxCard.svelte'
 
   let loadingLedgerData = true
   let ownedGiftBoxes: {
@@ -172,7 +172,6 @@
         "deposit_batch"
         Expression("ENTIRE_WORKTOP")
     ;
-
 `
 
   const getGiftBoxes = pipe(
@@ -251,11 +250,12 @@
           amountOfElements,
           cardData
         }
-
+        waitingForOpenTransaction = false
         waitingForDepositedRewards = false
         readyToClaim = true
       })
       .mapErr(() => {
+        waitingForOpenTransaction = false
         waitingForDepositedRewards = false
       })
   }
@@ -326,11 +326,18 @@
     </div>
   {:else if waitingForDepositedRewards}
     <JettyMenuItemPage>
-      <div class="title">
+      <div slot="header" class="title">
         {$i18n.t('jetty:open-gift-box.opening-gift-box')}...
       </div>
 
-      <lottie-player autoplay loop mode="normal" src="/lottie/loading.json" style="width: 320px" />
+      <lottie-player
+        autoplay
+        loop
+        mode="normal"
+        src="/lottie/loading.json"
+        style:width="250px"
+        style:height="250px"
+      />
     </JettyMenuItemPage>
   {:else if claimed}
     <JettyMenuItemPage
@@ -436,19 +443,18 @@
         {$i18n.t('jetty:open-gift-box.multiple-boxes-title')}
       </div>
       <div class="cards">
-        <Carousel let:Item>
+        <Carousel let:Item stepSize={200}>
           {#each Object.entries(ownedGiftBoxes) as [address, { amount, name, imageUrl: image }]}
             {#if amount > 0}
               <Item>
-                <ResourceCard
+                <BoxCard
+                  name={name + ' Gift Box'}
                   selected={selectedGiftBox === address}
                   on:selected={() => {
                     selectedGiftBox = address
                   }}
-                >
-                  <div class="gift-box" style:--image={`url(${image})`} />
-                  <div slot="text">{name}</div>
-                </ResourceCard>
+                  {image}
+                />
               </Item>
             {/if}
           {/each}
@@ -465,6 +471,10 @@
     color: var(--color-light);
     height: 100%;
     padding: var(--spacing-2xl);
+
+    @include mobile {
+      padding: var(--spacing-xl);
+    }
   }
 
   .header-text {
@@ -508,6 +518,7 @@
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-md);
+    margin-bottom: 2rem;
   }
 
   .cards {

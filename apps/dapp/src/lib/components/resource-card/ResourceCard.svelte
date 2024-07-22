@@ -38,13 +38,16 @@
 <style lang="scss">
   .main-card {
     position: relative;
-    height: 12rem;
-    aspect-ratio: 1/1.66;
-    border: var(--border) var(--color-light);
-    border-radius: var(--border-radius-xl);
-    margin: 0 var(--spacing-xl);
+    margin: 0 var(--spacing-lg);
     display: flex;
     justify-content: center;
+    border: var(--border) var(--color-light);
+    border-radius: var(--border-radius-xl);
+  }
+
+  .selected {
+    border: var(--border) var(--color-primary);
+    border-radius: var(--border-radius-xl);
   }
 
   .resource-card {
@@ -61,7 +64,7 @@
     font-size: var(--text-xs);
     bottom: 0;
     height: 2rem;
-    transform: translateY(3rem);
+    transform: translateY(2.5rem);
     display: flex;
     justify-content: center;
     align-items: flex-start;

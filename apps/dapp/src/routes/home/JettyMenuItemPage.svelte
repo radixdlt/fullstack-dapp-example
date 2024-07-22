@@ -25,15 +25,17 @@
   export let disabled: boolean | undefined = undefined
 </script>
 
-<div class="menu-item-page">
-  {#if $$slots.header}
-    <div>
-      <slot name="header" />
-    </div>
-  {/if}
-
+<div class="menu-item-page" class:without-header={!$$slots.header}>
   <div class="content">
-    <slot />
+    {#if $$slots.header}
+      <div>
+        <slot name="header" />
+      </div>
+    {/if}
+
+    <div>
+      <slot />
+    </div>
   </div>
 
   <div class:action class:actions>
@@ -46,23 +48,42 @@
   </div>
 </div>
 
-<style>
+<style lang="scss">
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 251, 244, 0.6);
+    background-clip: content-box;
+    border: 5px solid transparent;
+    border-radius: 10px;
+  }
+
   .menu-item-page {
     color: var(--color-light);
+    display: grid;
+    grid-template-rows: auto 3.5rem;
+    height: 100%;
+  }
+
+  .without-header {
+    grid-template-rows: auto 3.5rem;
+  }
+
+  .content {
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    overflow-x: hidden;
+    gap: var(--spacing-2xl);
+  }
+
+  .action,
+  .actions {
+    display: flex;
+    align-items: end;
+    gap: var(--spacing-2xl);
   }
 
   .action {
     display: flex;
     justify-content: center;
-  }
-
-  .content {
-    padding-bottom: 3rem;
   }
 
   .actions {

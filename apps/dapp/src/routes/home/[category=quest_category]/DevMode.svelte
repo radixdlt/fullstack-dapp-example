@@ -152,7 +152,7 @@
 
 {#if open}
   <Backdrop>
-    <div class="card buttons">
+    <div class="dev-mode-card card buttons">
       {#if $user}
         <Button on:click={unlockQuests}>Unlock All Quests</Button>
         <Button on:click={registerAccount}>Register and populate account</Button>
@@ -196,6 +196,11 @@
     left: 0;
     z-index: 4;
     padding: var(--spacing-xl);
+  }
+
+  .dev-mode-card {
+    height: 95vh;
+    overflow: auto;
   }
 
   .buttons {
