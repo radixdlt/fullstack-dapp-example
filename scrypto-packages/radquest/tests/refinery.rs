@@ -364,6 +364,44 @@ fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
 }
 
 #[test]
+fn can_combine_elements_mint_mint_claim() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut refinery,
+        hero_badge,
+        user_id,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    // Act
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    refinery.combine_elements_mint_radgem(
+        user_id.clone(),
+        dec!(0.97),
+        dec!(0.87),
+        dec!(0.43),
+        &mut env,
+    )?;
+
+    refinery.combine_elements_mint_radgem(
+        user_id.clone(),
+        dec!(0.16),
+        dec!(0.64),
+        dec!(0.29),
+        &mut env,
+    )?;
+
+    let result =
+        refinery.combine_elements_claim(hero_badge.create_proof_of_all(&mut env)?, &mut env)?;
+
+    // Assert
+    assert_eq!(result.amount(&mut env)?, dec!(2));
+    Ok(())
+}
+
+#[test]
 fn can_create_radmorph() -> Result<(), RuntimeError> {
     // Arrange
     let Test {

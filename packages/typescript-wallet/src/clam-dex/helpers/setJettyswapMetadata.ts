@@ -49,6 +49,7 @@ SET_METADATA
             Address("${config.radQuest.resources.clamAddress}"),
             Address("${config.radQuest.resources.ottercoinAddress}"),
             Address("${config.radQuest.components.jettySwap}"),
+            Address("${config.radQuest.components.jettySwapPriceOracle}"),
         )
     )
 ;
@@ -58,12 +59,12 @@ SET_METADATA
     Enum<Metadata::AddressArray>(
         Array<Address>(
             Address("${config.radQuest.accounts.dAppDefinition.address}"),
-            Address("${config.radQuest.accounts.jettySwapDappDefinition.address}"),
+            Address("${config.radQuest.accounts.lettySwapDappDefinition.address}"),
         )
     )
 ;
 `
-  return transactionBuilder({ transactionManifest, signers: [] })
+  return transactionBuilder({ transactionManifest, signers: ['jettySwapDappDefinition'] })
     .submit()
     .map(({ transactionId }) => transactionId)
 }

@@ -34,23 +34,27 @@ export const Addresses = (networkId: number) => {
             Elite: 'resource_tdx_2_1t4esvjqcjr8l4fpuurg0un9lesmfa8mdv85dc34qmxg7xhpwwntcx6'
           }
         },
-        radQuestPackage: 'package_tdx_2_1p4ttuuq58zk2lrm77488rfhdattf0r47e7q3wxsk3lmrc9vwduheyk',
+        radQuestPackage: 'package_tdx_2_1pkm7nefwzks03wept9nq9ckq3llzrfef837c8q76cl6u03stygcx73',
         clamDexPackage: 'package_tdx_2_1pk54w09fwqv9resal68ee43y2gzjm3m0kfw0sjhnhrpw5w8kzxgvc6',
         components: {
-          heroBadgeForge: 'component_tdx_2_1cpgw99fcjsd74tdyleeh5q6agn80muxd3zcwxemaqnvjlgtqhqkg3e',
-          kycOracle: 'component_tdx_2_1cp84fkgrlexaanaclrf5dd5agc0vss7pktvru83nyutlel4fcf3a85',
-          questRewards: 'component_tdx_2_1cqq4p4uqeersge776r2rdlgujwk2vt3dgtz0yuhjw0ruq92960jj8d',
-          giftBoxOpener: 'component_tdx_2_1cpjrdsfu8hgkrasulzgucqmu0kzdh7sxp8lfg4h87wqvw9funz6j9y',
-          cardForge: 'component_tdx_2_1cz076mclrappmt0ah0hu5fstpj8ychvdk49v48s6dglxhuxj7pcfrz',
-          radgemForge: 'component_tdx_2_1czr60gtxm3wkqe83m8z6e3d847nc3xl52tlje6v4z6tl6l6g96p5mr',
-          radmorphForge: 'component_tdx_2_1cpvqkthu2etgjaearwfa0l0h8j5lkcrjv5hqw0vyp2uq5hrht8v3we',
-          imageOracle: 'component_tdx_2_1cpu0rw2yxtd57g8ganduded3gx4tgxvmqxg7wguz9ccuyy7xrev8sr',
-          refinery: 'component_tdx_2_1cqd3lwkveky3uxex492ekkkj4nwu6t7ndqyzavljnym3e88rvt0qjk',
+          heroBadgeForge: 'component_tdx_2_1cqp7xt08k9quly3exurtjf92kpgs8s4f2krz056jpuxfpug0xxx4hr',
+          kycOracle: 'component_tdx_2_1cz8x9vrfskxhw5j4g0gzxjw4q4qkza6vw0q7w84x4nxj3qped7uy26',
+          questRewards: 'component_tdx_2_1czqs9u5dhttj8xjyzyz49hh9v0fqlkyruvx85yxmz3sw6ty9hkm9l8',
+          giftBoxOpener: 'component_tdx_2_1cqaafl64jjk6y4qnge4sh45hyfwurt0nhk9qjtphwgy6rdaucu767l',
+          cardForge: 'component_tdx_2_1czfm7tr5x27ah5qff7v5e6tkf938vmkrcerryfqd80a0txaexs5z0q',
+          radgemForge: 'component_tdx_2_1cpax80w8cjemptzr2yxzpjtdn0xxpq2tv4au67w75nt9wsnzqmhpeh',
+          radmorphForge: 'component_tdx_2_1crqpvv52thzk304lqmwmrn9xp39deeft3cts0n498an2kkmg7hhwtq',
+          imageOracle: 'component_tdx_2_1cqs7aee4mjprwzjct30zycq0dhecre7ygrcfn8thnd2xs5nh8tmjew',
+          refinery: 'component_tdx_2_1crywd7jyzks32awkswtmgd4dfj83wcgdf2ecwwgpxnhpnqzplwwkd7',
           kycOracleKeyValueStore:
-            'internal_keyvaluestore_tdx_2_1kq47p43qn68apz5hm7sq5ugpqcamlwxw20yacv0d5l7gwgeuetj9r4',
+            'internal_keyvaluestore_tdx_2_1kry6mpdkgydn899cvkt6jcmax6zrgwff8zxj4h5tc6fdmt0y25hxv2',
           mayaRouter: 'component_tdx_2_mock_maya_router_address',
-          jettySwap: 'component_tdx_2_1cqkfz08n6hf3upsxwmmum2jur5uzdrqyg3cj7wer0j5enkx09vf8aj',
-          lettySwap: 'component_tdx_2_1cprs50nccw9mxy3ycaws8whdjhglszl36n5qrxmt334sj54cn8fsl9'
+          jettySwap: 'component_tdx_2_1czu6r9zpgsuylret7jfswwlzfgxp39spvd6wh72waqy30sd55gwz4y',
+          jettySwapPriceOracle:
+            'component_tdx_2_1cqcsfhgk8k8kuknmk7cmvkfu2whrz0ysd3swxggdu3lreu3lh7hyhq',
+          lettySwap: 'component_tdx_2_1crzgytxmmpee8n79ehlhkgvqzza6utcqv0e3jh9fatqwjc4r7kwm4s',
+          lettySwapPriceOracle:
+            'component_tdx_2_1cqwgc8ppm4ahxpdc4lepm77vz7vwzrp30hz0ukr0mfu5r07w9jydtf'
         },
         xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
         accounts: {
@@ -80,10 +84,14 @@ export const Addresses = (networkId: number) => {
               'accesscontroller_tdx_2_1cv2thjxmyy8n7zs3jfcq8sd2x2cgyhcyj820528h5nsv0xcluw2r47'
           },
           jettySwapDappDefinition: {
-            address: 'account_tdx_2_128e634vx9dfg0prxz2zwj8c7k48y28ftyggl52ppdk6qe9x7q3m2r9'
+            address: 'account_tdx_2_1cxzl72tc7llpkjxngy9red5gthvrcwuzy3negu83wwh5rj4wvve8hl',
+            accessController:
+              'accesscontroller_tdx_2_1cvuswukv7nvrk6ax4k75k8zaypzmy0c5yv6ek8j46nhs4ll7d5rpls'
           },
           lettySwapDappDefinition: {
-            address: 'account_tdx_2_1299hh40njlhtn54n0kllj2ldxq32asfsp3apvfvqwp775wh50yslp6'
+            address: 'account_tdx_2_1cx93lagvxjky7g32v4jlhup7sy96qxvcahephuteukxuzv06jqv63u',
+            accessController:
+              'accesscontroller_tdx_2_1c0ahm9p2dhk233yaptfaupzklh8dkzht3etpy874fudl5n3y84p7cf'
           }
         },
         dapps: {
@@ -138,7 +146,9 @@ export const Addresses = (networkId: number) => {
           kycOracleKeyValueStore: '',
           mayaRouter: '',
           jettySwap: '',
-          lettySwap: ''
+          jettySwapPriceOracle: '',
+          lettySwap: '',
+          lettySwapPriceOracle: ''
         },
         xrd: 'resource_rdx1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxradxrd',
         accounts: {
@@ -168,10 +178,14 @@ export const Addresses = (networkId: number) => {
               'accesscontroller_rdx1cvmgr0rd8xqp28gg9sdx0klu20028gnuzp693yewazucrfy8kwqpkr'
           },
           jettySwapDappDefinition: {
-            address: 'account_rdx12ywkj4hfy3gz0jc200xh8w7vpcg7fckc3295w3kkrjhhdmxc4cngqg'
+            address: 'account_rdx1c82zl0gkcjscuzneg6nxttpw2qtechdn3zvakn50c5g5gtlvas37rw',
+            accessController:
+              'accesscontroller_rdx1cwaamc2szup7rz3elqmz0f7hsezr9uhnpvjunxva5q2px09jd4cfmx'
           },
           lettySwapDappDefinition: {
-            address: 'account_rdx1289j5759c3z07gq9f6f3fn5ecg5fkl9vw2wukr0adlkjs8q03wsl8p'
+            address: 'account_rdx1cx8gjj0gaa6vge4cxr47gkd2dwp2gyxtnsmp0zssg3dp044qe5zhzn',
+            accessController:
+              'accesscontroller_rdx1cdtp8nst2lx2jvpkz07kk4dchtt3jfmnpaxdv5h802725kq8u9mmwg'
           }
         },
         dapps: {
