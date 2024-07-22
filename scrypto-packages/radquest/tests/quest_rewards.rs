@@ -195,6 +195,40 @@ fn can_aggregate_rewards_nonfungible_with_another_deposit() -> Result<(), Runtim
 }
 
 #[test]
+fn can_view_rewards() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut quest_rewards,
+        user_id,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
+    let reward_2 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
+
+    let quest_id = QuestId("1".into());
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    quest_rewards.deposit_reward(
+        user_id.clone(),
+        quest_id.clone(),
+        vec![reward_1, reward_2],
+        &mut env,
+    )?;
+
+    // Act
+    let rewards = quest_rewards.view_rewards(user_id, quest_id, &mut env)?;
+
+    // Assert
+    assert_eq!(rewards.len(), 2);
+
+    Ok(())
+}
+
+#[test]
 fn can_claim_rewards() -> Result<(), RuntimeError> {
     let Test {
         mut env,
@@ -234,6 +268,48 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
 
     assert!(response_1 == reward_1_address || response_1 == reward_2_address);
     assert!(response_2 == reward_1_address || response_2 == reward_2_address);
+
+    Ok(())
+}
+
+#[test]
+fn can_view_claimed_rewards() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut quest_rewards,
+        user_id,
+        admin_badge_proof,
+        hero_badge,
+        ..
+    } = arrange_test_environment()?;
+
+    let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
+    let reward_2 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
+
+    let quest_id = QuestId("1".into());
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    quest_rewards.deposit_reward(
+        user_id.clone(),
+        quest_id.clone(),
+        vec![reward_1, reward_2],
+        &mut env,
+    )?;
+
+    quest_rewards.claim_reward(
+        quest_id.clone(),
+        hero_badge.create_proof_of_all(&mut env)?,
+        None,
+        &mut env,
+    )?;
+
+    // Act
+    let rewards = quest_rewards.view_rewards(user_id, quest_id, &mut env)?;
+
+    // Assert
+    assert_eq!(rewards.len(), 0);
 
     Ok(())
 }
