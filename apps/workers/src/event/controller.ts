@@ -1,4 +1,3 @@
-import { TokenPriceClient } from './../token-price-client'
 import { okAsync, errAsync, err, ok, ResultAsync } from 'neverthrow'
 import { EventJob, Job } from 'queues'
 import { QuestDefinitions, QuestId, Quests } from 'content'
@@ -22,7 +21,6 @@ import { MessageHelper } from '../helpers/messageHelper'
 import { config } from '../config'
 import { TransactionIntentHelper } from '../helpers/transactionIntentHelper'
 import { ReferralRewardAction } from '../helpers/referalReward'
-import { getUserById } from '../helpers/getUserById'
 
 type Reward = { resourceAddress: string; amount: string; name: string }
 
@@ -473,10 +471,24 @@ export const EventWorkerController = ({
       case EventId.CombineElementsAddedRadgemImage:
         return sendMessage(userId, { type: 'CombineElementsAddRadgemImage', traceId }, childLogger)
       case EventId.DepositHeroBadge: {
+        const updateHeroBadge = (questId: string) =>
+          transactionIntent.add({
+            userId,
+            discriminator: `${questId}:QuestCompleted:${userId}`,
+            type: 'QuestCompleted',
+            questId,
+            traceId
+          })
         return completeQuestRequirement('GetStuff').andThen(() =>
           handleAllQuestRequirementCompleted({
             questId: 'GetStuff',
             userId
+          }).andThen(() => {
+            return ResultAsync.combineWithAllErrors([
+              updateHeroBadge('Welcome'),
+              updateHeroBadge('WhatIsRadix'),
+              updateHeroBadge('SetupWallet')
+            ])
           })
         )
       }

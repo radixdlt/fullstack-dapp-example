@@ -92,15 +92,18 @@ export const UserQuestController = ({
 
         return userQuestModel.updateQuestStatus(questId, userId, 'COMPLETED')
       })
-      .andThen(() =>
-        transactionModel.add({
+      .andThen(() => {
+        if (['Welcome', 'WhatIsRadix', 'SetupWallet'].includes(questId)) {
+          return okAsync(undefined)
+        }
+        return transactionModel.add({
           userId,
           discriminator: `${questId}:QuestCompleted:${userId}`,
           type: 'QuestCompleted',
           questId,
           traceId
         })
-      )
+      })
       .map(() => ({ httpResponseCode: 200, data: undefined }))
 
   const startQuest = (userId: string, questId: keyof Quests) => {
