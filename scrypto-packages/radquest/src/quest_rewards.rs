@@ -72,6 +72,7 @@ mod quest_rewards {
             claim_reward => PUBLIC;
             deposit_reward => restrict_to: [admin];
             get_clams => PUBLIC;
+            set_kyc_badge_address => restrict_to: [super_admin];
         }
     }
     struct QuestRewards {
@@ -357,6 +358,10 @@ mod quest_rewards {
 
             self.admin_badge
                 .authorize_with_amount(dec!(1), || self.clam_manager.mint(dec!(10)))
+        }
+
+        pub fn set_kyc_badge_address(&mut self, kyc_badge_address: ResourceAddress) {
+            self.kyc_badge_address = kyc_badge_address;
         }
     }
 }
