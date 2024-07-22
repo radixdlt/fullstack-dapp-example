@@ -742,3 +742,56 @@ fn cannot_get_clams_without_hero_badge() -> Result<(), RuntimeError> {
     assert!(result.is_err());
     Ok(())
 }
+
+#[test]
+fn can_set_kyc_badge_address() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut quest_rewards,
+        super_admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    let new_kyc_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
+    let new_kyc_badge_address = new_kyc_badge.resource_address(&mut env)?;
+
+    // Act
+    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
+    quest_rewards.set_kyc_badge_address(new_kyc_badge_address, &mut env)?;
+
+    // Assert
+    env.with_component_state(
+        quest_rewards,
+        |quest_rewards_state: &mut QuestRewardsState, _| {
+            assert_eq!(quest_rewards_state.kyc_badge_address, new_kyc_badge_address)
+        },
+    )?;
+
+    Ok(())
+}
+
+#[test]
+fn cannot_set_kyc_badge_address_if_not_super_admin() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut quest_rewards,
+        admin_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    let new_kyc_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
+        .mint_initial_supply([()], &mut env)?;
+
+    // Act
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    let result =
+        quest_rewards.set_kyc_badge_address(new_kyc_badge.resource_address(&mut env)?, &mut env);
+
+    // Assert
+    assert!(result.is_err());
+
+    Ok(())
+}

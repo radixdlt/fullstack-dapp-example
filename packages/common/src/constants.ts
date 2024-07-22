@@ -34,20 +34,20 @@ export const Addresses = (networkId: number) => {
             Elite: 'resource_tdx_2_1t4esvjqcjr8l4fpuurg0un9lesmfa8mdv85dc34qmxg7xhpwwntcx6'
           }
         },
-        radQuestPackage: 'package_tdx_2_1pkm7nefwzks03wept9nq9ckq3llzrfef837c8q76cl6u03stygcx73',
+        radQuestPackage: 'package_tdx_2_1phu0zmcx0s92ha5rgnjruysq58kr48qpf8cqgk3y2rmxhhke7jgtqw',
         clamDexPackage: 'package_tdx_2_1pk54w09fwqv9resal68ee43y2gzjm3m0kfw0sjhnhrpw5w8kzxgvc6',
         components: {
-          heroBadgeForge: 'component_tdx_2_1cqp7xt08k9quly3exurtjf92kpgs8s4f2krz056jpuxfpug0xxx4hr',
-          kycOracle: 'component_tdx_2_1cz8x9vrfskxhw5j4g0gzxjw4q4qkza6vw0q7w84x4nxj3qped7uy26',
-          questRewards: 'component_tdx_2_1czqs9u5dhttj8xjyzyz49hh9v0fqlkyruvx85yxmz3sw6ty9hkm9l8',
-          giftBoxOpener: 'component_tdx_2_1cqaafl64jjk6y4qnge4sh45hyfwurt0nhk9qjtphwgy6rdaucu767l',
-          cardForge: 'component_tdx_2_1czfm7tr5x27ah5qff7v5e6tkf938vmkrcerryfqd80a0txaexs5z0q',
-          radgemForge: 'component_tdx_2_1cpax80w8cjemptzr2yxzpjtdn0xxpq2tv4au67w75nt9wsnzqmhpeh',
-          radmorphForge: 'component_tdx_2_1crqpvv52thzk304lqmwmrn9xp39deeft3cts0n498an2kkmg7hhwtq',
-          imageOracle: 'component_tdx_2_1cqs7aee4mjprwzjct30zycq0dhecre7ygrcfn8thnd2xs5nh8tmjew',
-          refinery: 'component_tdx_2_1crywd7jyzks32awkswtmgd4dfj83wcgdf2ecwwgpxnhpnqzplwwkd7',
+          heroBadgeForge: 'component_tdx_2_1czggp0fz9pcarmhp8uxpy9qr8ysz46qkpr49t3jdrn8zzanujj8fpy',
+          kycOracle: 'component_tdx_2_1cqgu87tk0sx6ldn7x0heev0vgc6jq4uu0tahkfumfpgmw7acxtgqd3',
+          questRewards: 'component_tdx_2_1czukjx0y294tgzz2w236je8sv8pr4mrz3p566rm6vlq4nfr2w2punu',
+          giftBoxOpener: 'component_tdx_2_1crsll3wjqke9detnpr8r0t0ls6m5kd57fu2jr5r20qfauuy575rh5p',
+          cardForge: 'component_tdx_2_1cp2r0wrszxf0qj9hqykm6nv6avzweqazxp2yu43zemp5q0prpl0rfw',
+          radgemForge: 'component_tdx_2_1cp64ncg6ghglxup5fmyxlwzasa7hcrhxwuxptwxuuja7cuhg9fyhzq',
+          radmorphForge: 'component_tdx_2_1cqtjvvpwhjvdzwc6gp43hz5q5g0v2ulqvmgp52cx0gz2nnrjez2nch',
+          imageOracle: 'component_tdx_2_1cqc8z3t3jtn9ryrztfw59klnxwt2lfwmwvfc7r485uq7qulwxq7pkd',
+          refinery: 'component_tdx_2_1cp4dw84qxcncwncg5mkkht2cqg2906kpy2wx76xa8720pxy2js0ggh',
           kycOracleKeyValueStore:
-            'internal_keyvaluestore_tdx_2_1kry6mpdkgydn899cvkt6jcmax6zrgwff8zxj4h5tc6fdmt0y25hxv2',
+            'internal_keyvaluestore_tdx_2_1kq4cuyae3uuw9ss06an9cdhd577p7gjnkfqm7mwqvsdyecqe4syxql',
           mayaRouter: 'component_tdx_2_mock_maya_router_address',
           jettySwap: 'component_tdx_2_1czu6r9zpgsuylret7jfswwlzfgxp39spvd6wh72waqy30sd55gwz4y',
           jettySwapPriceOracle:
