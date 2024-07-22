@@ -1,11 +1,11 @@
 import { newRefinery } from '../helpers/newRefinery'
 import { mintAdminBadge } from '../helpers/mintAdminBadge'
-import { Addresses } from 'common'
 import { logger } from '../../helpers'
+import { config } from '../../config'
 
 mintAdminBadge({
-  adminBadgeAddress: Addresses(2).badges.adminBadgeAddress,
-  superAdminBadgeAddress: Addresses(2).badges.superAdminBadgeAddress,
+  adminBadgeAddress: config.radQuest.badges.adminBadgeAddress,
+  superAdminBadgeAddress: config.radQuest.badges.superAdminBadgeAddress,
   amount: 3
 }).then(() =>
   newRefinery().map(
