@@ -80,10 +80,14 @@ export const Addresses = (networkId: number) => {
               'accesscontroller_tdx_2_1cv2thjxmyy8n7zs3jfcq8sd2x2cgyhcyj820528h5nsv0xcluw2r47'
           },
           jettySwapDappDefinition: {
-            address: 'account_tdx_2_128e634vx9dfg0prxz2zwj8c7k48y28ftyggl52ppdk6qe9x7q3m2r9'
+            address: 'account_tdx_2_1cx3enkwl3f4aj43qg7jjwnla2a6qr8gjz4lceuydht3aetpjrgj9fy',
+            accessController:
+              'accesscontroller_tdx_2_1c0u7zzep03fxn555e4m34zsxlw8aspvywrkgj3vtdpa0mcrdphv7ws'
           },
           lettySwapDappDefinition: {
-            address: 'account_tdx_2_1299hh40njlhtn54n0kllj2ldxq32asfsp3apvfvqwp775wh50yslp6'
+            address: 'account_tdx_2_1c8vwnt9q992vqd2dhdrz7rqxmq4sfsxqj5zqcpzyev4s9y3ars4s64',
+            accessController:
+              'accesscontroller_tdx_2_1cwla73jqd97sf8qpzsfcg0mtr8fqnwgg27zwp7eepl86es7kqxatnz'
           }
         },
         dapps: {
@@ -168,10 +172,12 @@ export const Addresses = (networkId: number) => {
               'accesscontroller_rdx1cvmgr0rd8xqp28gg9sdx0klu20028gnuzp693yewazucrfy8kwqpkr'
           },
           jettySwapDappDefinition: {
-            address: 'account_rdx12ywkj4hfy3gz0jc200xh8w7vpcg7fckc3295w3kkrjhhdmxc4cngqg'
+            address: '',
+            accessController: ''
           },
           lettySwapDappDefinition: {
-            address: 'account_rdx1289j5759c3z07gq9f6f3fn5ecg5fkl9vw2wukr0adlkjs8q03wsl8p'
+            address: '',
+            accessController: ''
           }
         },
         dapps: {

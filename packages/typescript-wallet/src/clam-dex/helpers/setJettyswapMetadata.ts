@@ -63,7 +63,7 @@ SET_METADATA
     )
 ;
 `
-  return transactionBuilder({ transactionManifest, signers: [] })
+  return transactionBuilder({ transactionManifest, signers: ['jettySwapDappDefinition'] })
     .submit()
     .map(({ transactionId }) => transactionId)
 }
