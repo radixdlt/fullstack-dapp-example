@@ -80,14 +80,14 @@ export const Addresses = (networkId: number) => {
               'accesscontroller_tdx_2_1cv2thjxmyy8n7zs3jfcq8sd2x2cgyhcyj820528h5nsv0xcluw2r47'
           },
           jettySwapDappDefinition: {
-            address: 'account_tdx_2_1cx3enkwl3f4aj43qg7jjwnla2a6qr8gjz4lceuydht3aetpjrgj9fy',
+            address: 'account_tdx_2_1cxzl72tc7llpkjxngy9red5gthvrcwuzy3negu83wwh5rj4wvve8hl',
             accessController:
-              'accesscontroller_tdx_2_1c0u7zzep03fxn555e4m34zsxlw8aspvywrkgj3vtdpa0mcrdphv7ws'
+              'accesscontroller_tdx_2_1cvuswukv7nvrk6ax4k75k8zaypzmy0c5yv6ek8j46nhs4ll7d5rpls'
           },
           lettySwapDappDefinition: {
-            address: 'account_tdx_2_1c8vwnt9q992vqd2dhdrz7rqxmq4sfsxqj5zqcpzyev4s9y3ars4s64',
+            address: 'account_tdx_2_1cx93lagvxjky7g32v4jlhup7sy96qxvcahephuteukxuzv06jqv63u',
             accessController:
-              'accesscontroller_tdx_2_1cwla73jqd97sf8qpzsfcg0mtr8fqnwgg27zwp7eepl86es7kqxatnz'
+              'accesscontroller_tdx_2_1c0ahm9p2dhk233yaptfaupzklh8dkzht3etpy874fudl5n3y84p7cf'
           }
         },
         dapps: {
@@ -172,12 +172,14 @@ export const Addresses = (networkId: number) => {
               'accesscontroller_rdx1cvmgr0rd8xqp28gg9sdx0klu20028gnuzp693yewazucrfy8kwqpkr'
           },
           jettySwapDappDefinition: {
-            address: '',
-            accessController: ''
+            address: 'account_rdx1c82zl0gkcjscuzneg6nxttpw2qtechdn3zvakn50c5g5gtlvas37rw',
+            accessController:
+              'accesscontroller_rdx1cwaamc2szup7rz3elqmz0f7hsezr9uhnpvjunxva5q2px09jd4cfmx'
           },
           lettySwapDappDefinition: {
-            address: '',
-            accessController: ''
+            address: 'account_rdx1cx8gjj0gaa6vge4cxr47gkd2dwp2gyxtnsmp0zssg3dp044qe5zhzn',
+            accessController:
+              'accesscontroller_rdx1cdtp8nst2lx2jvpkz07kk4dchtt3jfmnpaxdv5h802725kq8u9mmwg'
           }
         },
         dapps: {
