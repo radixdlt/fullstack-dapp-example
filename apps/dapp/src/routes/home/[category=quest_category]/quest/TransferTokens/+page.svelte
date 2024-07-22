@@ -24,16 +24,22 @@
 
   const text = data.text as Quests['TransferTokens']['text']
 
+  let mounted: boolean
   let quest: Quest
   let loading = false
   let accountHasClams = true
   let receivedClams = writable(data.requirements?.JettyReceivedClams.isComplete)
 
+  $: {
+    if ($user?.accountAddress! && mounted)
+      checkAccountHasClams($user?.accountAddress!).map((hasClams) => {
+        accountHasClams = hasClams
+      })
+  }
+
   onMount(() => {
     markNotificationAsSeen('clamsReceived')
-    checkAccountHasClams($user?.accountAddress!).map((hasClams) => {
-      accountHasClams = hasClams
-    })
+    mounted = true
   })
 
   const handleClaimClams = () => {

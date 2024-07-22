@@ -24,14 +24,20 @@
   const addresses = Addresses(publicConfig.networkId)
   const jettySwap = writable(data.requirements?.JettySwap.isComplete)
   const lettySwap = writable(data.requirements?.LettySwap.isComplete)
+  let mounted = false
+
+  $: {
+    if ($user?.accountAddress! && mounted)
+      checkAccountHasClams($user?.accountAddress!).map((hasClams) => {
+        accountHasClams = hasClams
+      })
+  }
 
   onMount(() => {
     markNotificationAsSeen('jettySwapCompleted')
     markNotificationAsSeen('lettySwapCompleted')
     markNotificationAsSeen('clamsReceived')
-    checkAccountHasClams($user?.accountAddress!).map((hasClams) => {
-      accountHasClams = hasClams
-    })
+    mounted = true
   })
 
   const handleClaimClams = () => {
