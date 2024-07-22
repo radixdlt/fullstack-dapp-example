@@ -122,11 +122,17 @@
 
             await invalidateAll()
 
-            if (data.questStatus['SetupWallet']?.status === 'IN_PROGRESS') {
+            if (
+              data.questStatus['SetupWallet']?.status === 'IN_PROGRESS' &&
+              !$page.url.href.includes('SetupWallet')
+            ) {
               pushNotification('loggedIn')
             }
 
-            if (data.questStatus['TransferTokens']?.status === 'IN_PROGRESS') {
+            if (
+              data.questStatus['TransferTokens']?.status === 'IN_PROGRESS' &&
+              !$page.url.href.includes('TransferTokens')
+            ) {
               questApi
                 .getQuestInformation('TransferTokens', fetch)
                 .map((data) => data.requirements)
@@ -144,7 +150,69 @@
               pushNotification('joinedFriend')
             }
 
+            if (
+              data.questStatus['DEXSwaps']?.status === 'IN_PROGRESS' &&
+              !$page.url.href.includes('DEXSwaps')
+            ) {
+              questApi
+                .getQuestInformation('DEXSwaps', fetch)
+                .map((data) => data.requirements)
+                .map((requirements) => {
+                  if (requirements.JettySwap.isComplete) {
+                    pushNotification('jettySwapCompleted')
+                  }
+
+                  if (requirements.LettySwap.isComplete) {
+                    pushNotification('lettySwapCompleted')
+                  }
+                })
+            }
+
+            if (
+              data.questStatus['NetworkStaking']?.status === 'IN_PROGRESS' &&
+              !$page.url.href.includes('NetworkStaking')
+            ) {
+              questApi
+                .getQuestInformation('NetworkStaking', fetch)
+                .map((data) => data.requirements)
+                .map((requirements) => {
+                  if (requirements.StakedXrd.isComplete) {
+                    pushNotification('stakeCompleted')
+                  }
+                })
+            }
+
+            if (
+              data.questStatus['Instapass']?.status === 'IN_PROGRESS' &&
+              !$page.url.href.includes('Instapass')
+            ) {
+              questApi
+                .getQuestInformation('Instapass', fetch)
+                .map((data) => data.requirements)
+                .map((requirements) => {
+                  if (requirements.InstapassBadgeDeposited.isComplete) {
+                    pushNotification('instapassBadgeReceived')
+                  }
+                })
+            }
+
+            if (
+              data.questStatus['Thorswap']?.status === 'IN_PROGRESS' &&
+              !$page.url.href.includes('Thorswap')
+            ) {
+              questApi
+                .getQuestInformation('Thorswap', fetch)
+                .map((data) => data.requirements)
+                .map((requirements) => {
+                  if (requirements.MayaRouterWithdrawEvent.isComplete) {
+                    pushNotification('thorswapSwapCompleted')
+                  }
+                })
+            }
+
             questApi.getQuestInformation('QuestTogether').map((data) => {
+              if ($page.url.href.includes('QuestTogether')) return
+
               if (data.requirements.BronzeLevel.isComplete) {
                 pushNotification('reachedTierBronze')
               }
@@ -208,16 +276,16 @@
     requirementId: string,
     notificationName: Parameters<typeof pushNotification>[0]
   ) => {
-    if (!$page.url.href.includes(questId)) {
-      webSocketClient.onMessage((message) => {
+    webSocketClient.onMessage((message) => {
+      if (!$page.url.href.includes(questId)) {
         if (
           message.type === 'QuestRequirementCompleted' &&
           message.requirementId === requirementId
         ) {
           pushNotification(notificationName)
         }
-      })
-    }
+      }
+    })
   }
 
   $: if ($webSocketClient)

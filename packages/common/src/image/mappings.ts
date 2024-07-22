@@ -19,7 +19,8 @@ export const colorCodeDescription = {
   dusk: 'PRP'
 } as const
 
-export const gemImageMapping = (color: ColorCodeDescription, shader: ShaderCodeDescription) => `/gems/UI_${colorCodeDescription[color]}_${shaderCodeDescription[shader]}.webp`
+export const gemImageMapping = (color: ColorCodeDescription, shader: ShaderCodeDescription) =>
+  `/gems/UI_${colorCodeDescription[color]}_${shaderCodeDescription[shader]}.webp`
 
 export const shapeCodeDescription = {
   'whirlpool spiral': 'S001',
