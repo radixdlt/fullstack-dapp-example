@@ -48,19 +48,14 @@ export const NotificationModel = (db: PrismaClient) => (logger?: AppLogger) => {
   const markAsSeen = (notificationId: string, userId: string) => {
     const seenAt = new Date()
     return ResultAsync.fromPromise(
-      db.notification.upsert({
+      db.notification.update({
         where: {
           notificationId_userId: {
             notificationId,
             userId
           }
         },
-        update: {
-          seenAt
-        },
-        create: {
-          notificationId,
-          userId,
+        data: {
           seenAt
         }
       }),
