@@ -1,4 +1,3 @@
-import { Addresses } from 'common'
 import { mintAdminBadge } from '../helpers/mintAdminBadge'
 import { newHeroBadgeForge } from '../helpers/newHeroBadgeForge'
 import { newQuestRewards } from '../helpers/newQuestRewards'
@@ -7,12 +6,13 @@ import { newRefinery } from '../helpers/newRefinery'
 import { newCardForge } from '../helpers/newCardForge'
 import { logger } from '../../helpers'
 import { registerGiftBoxResources } from '../helpers/registerGiftBoxResources'
+import { config } from '../../config'
 
 let result: Record<string, string> = {}
 
 mintAdminBadge({
-  adminBadgeAddress: Addresses(2).badges.adminBadgeAddress,
-  superAdminBadgeAddress: Addresses(2).badges.superAdminBadgeAddress,
+  adminBadgeAddress: config.radQuest.badges.adminBadgeAddress,
+  superAdminBadgeAddress: config.radQuest.badges.superAdminBadgeAddress,
   amount: 7
 })
   .andThen(() => newHeroBadgeForge())
