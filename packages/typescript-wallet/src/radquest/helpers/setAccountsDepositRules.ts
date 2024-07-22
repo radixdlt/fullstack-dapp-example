@@ -29,6 +29,12 @@ CALL_METHOD
     Enum<DefaultDepositRule::Reject>()
 ;
 CALL_METHOD
+    Address("${config.radQuest.accounts.system.address}")
+    "set_resource_preference"
+    Address("${config.radQuest.badges.adminBadgeAddress}")
+    Enum<ResourcePreference::Allowed>()
+;
+CALL_METHOD
     Address("${config.radQuest.accounts.payer.address}")
     "set_resource_preference"
     Address("${config.radQuest.xrd}")

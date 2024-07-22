@@ -49,8 +49,12 @@ export const Addresses = (networkId: number) => {
           kycOracleKeyValueStore:
             'internal_keyvaluestore_tdx_2_1kq47p43qn68apz5hm7sq5ugpqcamlwxw20yacv0d5l7gwgeuetj9r4',
           mayaRouter: 'component_tdx_2_mock_maya_router_address',
-          jettySwap: 'component_tdx_2_1cqkfz08n6hf3upsxwmmum2jur5uzdrqyg3cj7wer0j5enkx09vf8aj',
-          lettySwap: 'component_tdx_2_1cprs50nccw9mxy3ycaws8whdjhglszl36n5qrxmt334sj54cn8fsl9'
+          jettySwap: 'component_tdx_2_1czu6r9zpgsuylret7jfswwlzfgxp39spvd6wh72waqy30sd55gwz4y',
+          jettySwapPriceOracle:
+            'component_tdx_2_1cqcsfhgk8k8kuknmk7cmvkfu2whrz0ysd3swxggdu3lreu3lh7hyhq',
+          lettySwap: 'component_tdx_2_1crzgytxmmpee8n79ehlhkgvqzza6utcqv0e3jh9fatqwjc4r7kwm4s',
+          lettySwapPriceOracle:
+            'component_tdx_2_1cqwgc8ppm4ahxpdc4lepm77vz7vwzrp30hz0ukr0mfu5r07w9jydtf'
         },
         xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
         accounts: {
