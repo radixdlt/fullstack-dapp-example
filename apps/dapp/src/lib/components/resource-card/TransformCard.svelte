@@ -42,7 +42,7 @@
     display: grid;
     grid-template-rows: 60% auto;
     background: var(--background-image) no-repeat center;
-    background-size: cover;
+    background-size: 99%;
     height: 100%;
     width: 100%;
     height: 12rem;

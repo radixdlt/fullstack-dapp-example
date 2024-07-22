@@ -28,7 +28,7 @@
 <div class="menu-item-page" class:without-header={!$$slots.header}>
   <div class="content">
     {#if $$slots.header}
-      <div>
+      <div class="header">
         <slot name="header" />
       </div>
     {/if}
@@ -59,12 +59,21 @@
   .menu-item-page {
     color: var(--color-light);
     display: grid;
-    grid-template-rows: auto 3.5rem;
+    grid-template-rows: auto 5rem;
     height: 100%;
   }
 
   .without-header {
-    grid-template-rows: auto 3.5rem;
+    grid-template-rows: auto 5rem;
+  }
+
+  .header {
+    padding: var(--spacing-xl) var(--spacing-2xl);
+    padding-bottom: 0;
+
+    @include mobile {
+      padding: var(--spacing-lg) var(--spacing-xl);
+    }
   }
 
   .content {
@@ -79,6 +88,8 @@
     display: flex;
     align-items: end;
     gap: var(--spacing-2xl);
+    padding: var(--spacing-xl) var(--spacing-2xl);
+    overflow: hidden;
   }
 
   .action {

@@ -63,8 +63,8 @@
     color: var(--color-light);
     font-size: var(--text-xs);
     bottom: 0;
-    height: 2rem;
-    transform: translateY(2.5rem);
+    height: 3rem;
+    transform: translateY(3.5rem);
     display: flex;
     justify-content: center;
     align-items: flex-start;

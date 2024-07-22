@@ -326,7 +326,7 @@
     </div>
   {:else if waitingForDepositedRewards}
     <JettyMenuItemPage>
-      <div slot="header" class="title">
+      <div slot="header" class="title padding">
         {$i18n.t('jetty:open-gift-box.opening-gift-box')}...
       </div>
 
@@ -346,7 +346,9 @@
         onClick: close
       }}
     >
-      {$i18n.t('jetty:open-gift-box.claimed')}
+      <div slot="header">
+        {$i18n.t('jetty:open-gift-box.claimed')}
+      </div>
     </JettyMenuItemPage>
   {:else if readyToClaim}
     <JettyMenuItemPage
@@ -391,39 +393,44 @@
       {$i18n.t('jetty:open-gift-box.no-boxes')}
     </JettyMenuItemPage>
   {:else if readyToOpen || totalGiftBoxes === 1}
-    <JettyMenuItemPage
-      actions={{
-        left: {
-          text: $i18n.t('quests:backButton'),
-          onClick: () => {
-            readyToOpen = false
+    <div class="page-with-subtitle">
+      <JettyMenuItemPage
+        actions={{
+          left: {
+            text: $i18n.t('quests:backButton'),
+            onClick: () => {
+              readyToOpen = false
+            }
+          },
+          right: {
+            text: $i18n.t('jetty:open-gift-box.open-gift-box-button'),
+            onClick: () => openGiftBox(totalGiftBoxes === 1 ? findOneGiftBox()[0] : selectedGiftBox)
           }
-        },
-        right: {
-          text: $i18n.t('jetty:open-gift-box.open-gift-box-button'),
-          onClick: () => openGiftBox(totalGiftBoxes === 1 ? findOneGiftBox()[0] : selectedGiftBox)
-        }
-      }}
-      loading={waitingForOpenTransaction}
-    >
-      <div slot="header" class="title">
-        {$i18n.t('jetty:open-gift-box.one-box-title', {
-          giftBox:
-            totalGiftBoxes === 1 ? findOneGiftBox()[1].name : ownedGiftBoxes[selectedGiftBox].name
-        })}
+        }}
+        loading={waitingForOpenTransaction}
+      >
+        <div slot="header" class="title">
+          {$i18n.t('jetty:open-gift-box.one-box-title', {
+            giftBox:
+              totalGiftBoxes === 1 ? findOneGiftBox()[1].name : ownedGiftBoxes[selectedGiftBox].name
+          })}
+        </div>
+        <div class="gift-box-image">
+          <lottie-player
+            autoplay
+            loop
+            mode="normal"
+            src={`/lottie/GiftBox-${
+              totalGiftBoxes === 1 ? findOneGiftBox()[1].name : ownedGiftBoxes[selectedGiftBox].name
+            }.json`}
+            style="width: 320px"
+          />
+        </div>
+      </JettyMenuItemPage>
+      <div class="sub">
+        {$i18n.t('jetty:create-radmorphs.open-gift-box-subtitles')}
       </div>
-      <div class="gift-box-image">
-        <lottie-player
-          autoplay
-          loop
-          mode="normal"
-          src={`/lottie/GiftBox-${
-            totalGiftBoxes === 1 ? findOneGiftBox()[1].name : ownedGiftBoxes[selectedGiftBox].name
-          }.json`}
-          style="width: 320px"
-        />
-      </div>
-    </JettyMenuItemPage>
+    </div>
   {:else}
     <JettyMenuItemPage
       actions={{
@@ -470,11 +477,6 @@
     justify-content: center;
     color: var(--color-light);
     height: 100%;
-    padding: var(--spacing-2xl);
-
-    @include mobile {
-      padding: var(--spacing-xl);
-    }
   }
 
   .header-text {
@@ -507,18 +509,25 @@
     width: 100%;
   }
 
-  .gift-box {
-    position: relative;
-    width: 100%;
-    background: var(--image) center / 80% no-repeat;
-  }
-
   .rewards-page {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-md);
     margin-bottom: 2rem;
+  }
+
+  .page-with-subtitle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .sub {
+      padding: 0 var(--spacing-xl);
+      padding-bottom: var(--spacing-xl);
+      text-align: center;
+      font-size: var(--text-xs);
+    }
   }
 
   .cards {
