@@ -69,6 +69,9 @@
 
   .content {
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2xl);
   }
 
   .action,
