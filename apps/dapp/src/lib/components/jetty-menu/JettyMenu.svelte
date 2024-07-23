@@ -41,6 +41,11 @@
     currentMenuItem = menuItems.find((item) => item.id === id)!
   }
 
+  let div: HTMLDivElement
+  export const scrollToTop = () => {
+    div.scrollTop = 0
+  }
+
   let headerText: string
   let showMenuItemContent = false
   let currentMenuItem: (typeof menuItems)[number]
@@ -180,7 +185,7 @@
     </div>
   </div>
   {#if showMenuItemContent}
-    <div class="menu-item-page">
+    <div bind:this={div} class="menu-item-page">
       <slot {currentMenuItem} {back} />
     </div>
   {:else}
