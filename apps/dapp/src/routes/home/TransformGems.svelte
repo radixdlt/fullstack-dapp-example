@@ -234,16 +234,16 @@
   >
     <div class="preview-title" slot="header">
       {preview.name.split('{')[0]}
-    </div>
-    <div class="preview">
       <div class="quality">
         {$i18n.t('jetty:create-radmorphs.radmorph-quality', { quality: preview.quality })}
         {#if preview.limitedEdition}
           <i>{$i18n.t('jetty:create-radmorphs.limited-edition')}</i>
         {/if}
       </div>
+    </div>
+    <div class="preview content">
       <div class="preview-image">
-        <img src={preview.image} alt="A Radmorph" />
+        <img style:width="100%" src={preview.image} alt="A Radmorph" />
         <div class="preview-pill">
           {$i18n.t('jetty:create-radmorphs.preview-pill-text')}
         </div>
@@ -263,7 +263,7 @@
       onClick: () => dispatch('complete')
     }}
   >
-    <div class="success">
+    <div class="success content">
       <img src={preview.image} alt="A Radmorph" />
       {$i18n.t('jetty:create-radmorphs.radmorph-created')}
     </div>
@@ -284,6 +284,8 @@
 
   .quality {
     font-family: var(--font-headers);
+    margin-top: var(--spacing-md);
+    font-size: var(--text-sm);
   }
 
   .preview {
@@ -298,7 +300,16 @@
   .preview-image {
     position: relative;
     height: 150px;
+    width: 150px;
     border: var(--border-lg) var(--color-primary);
+  }
+
+  .content {
+    padding: 0 var(--spacing-2xl);
+
+    @include mobile {
+      padding: 0 var(--spacing-xl);
+    }
   }
 
   .preview-pill {
@@ -355,6 +366,7 @@
     font-size: var(--text-xs);
     color: var(--color-light);
     text-align: center;
+    padding-bottom: var(--spacing-xl);
   }
 
   .success {
@@ -363,6 +375,7 @@
     gap: var(--spacing-xl);
     align-items: center;
     text-align: center;
+    padding-top: var(--spacing-2xl);
 
     img {
       height: 250px;

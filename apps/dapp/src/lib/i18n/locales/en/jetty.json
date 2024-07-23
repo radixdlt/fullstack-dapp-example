@@ -64,7 +64,8 @@
     "start-again-button": "Start Again",
     "resources-sent-from-wallet": "Your card and gems will be sent from your Radix Wallet",
     "radmorph-created": "You can now find your RadMorph under NFTs in your registered Radix account.\nTreasure it – or trade it with friends if you like!",
-    "preview-pill-text": "PREVIEW"
+    "preview-pill-text": "PREVIEW",
+    "open-gift-box-subtitles": "The Gift Box will be sent to Jetty via your Radix Wallet"
   },
   "open-gift-box": {
     "no-boxes": "Sorry, you don’t have any Gift Boxes in your registered Radix account to open right now.",

@@ -69,7 +69,8 @@ interface Resources {
       "start-again-button": "Start Again",
       "resources-sent-from-wallet": "Your card and gems will be sent from your Radix Wallet",
       "radmorph-created": "You can now find your RadMorph under NFTs in your registered Radix account.\nTreasure it – or trade it with friends if you like!",
-      "preview-pill-text": "PREVIEW"
+      "preview-pill-text": "PREVIEW",
+      "open-gift-box-subtitles": "The Gift Box will be sent to Jetty via your Radix Wallet"
     },
     "open-gift-box": {
       "no-boxes": "Sorry, you don’t have any Gift Boxes in your registered Radix account to open right now.",
@@ -180,12 +181,12 @@ interface Resources {
         "ConnectWallet": "Log in to RadQuest with your Radix Wallet",
         "DownloadWallet": "Download the Radix Wallet mobile app, create your first Account"
       },
-      "usernameCompleted": "Completed",
+      "usernameCompleted": "Updated!",
       "walletDownloadPage": "Go to Wallet Download Page",
       "title": "Get the Radix Wallet",
       "description": "Your key to assets and dApps and assets on Radix",
       "introDescription": "Get the Radix Wallet to use with RadQuest or any other dApp built on Radix.",
-      "confirmSetUsername": "Confirm"
+      "confirmSetUsername": "Update"
     },
     "GetStuff": {
       "requirements": {

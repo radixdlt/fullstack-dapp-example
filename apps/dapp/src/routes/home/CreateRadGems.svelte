@@ -271,7 +271,7 @@
         {$i18n.t('jetty:fuse-elements.fusing-elements')}
       </div>
 
-      <div class="fusing-animation">
+      <div class="fusing-animation content">
         <lottie-player
           autoplay
           loop
@@ -288,7 +288,7 @@
         onClick: () => dispatch('cancel')
       }}
     >
-      <div>
+      <div slot="header">
         {$i18n.t('jetty:fuse-elements.radgem-claimed')}
 
         <p>
@@ -323,7 +323,7 @@
             }}
         loading={waitingForSendElements}
       >
-        <div>
+        <div class="content">
           <img
             style:width="100%"
             src="/quests-images/key/JettyConversation_MultipleRadGems.webp"
@@ -363,14 +363,17 @@
     justify-content: center;
     color: var(--color-light);
     height: 100%;
-    padding: var(--spacing-2xl);
-
-    @include mobile {
-      padding: var(--spacing-xl);
-    }
   }
   .bold {
     font-weight: var(--font-weight-bold);
+  }
+
+  .content {
+    padding: 0 var(--spacing-2xl);
+
+    @include mobile {
+      padding: 0 var(--spacing-xl);
+    }
   }
 
   .title {

@@ -318,7 +318,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/alex/Projects/radquest/packages/database/src/prisma",
+      "value": "/home/abstractfruitfactory/radquest/packages/database/src/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -327,7 +327,7 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin-arm64",
+        "value": "debian-openssl-3.0.x",
         "native": true
       },
       {
@@ -340,12 +340,12 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/alex/Projects/radquest/packages/database/prisma/schema.prisma",
+    "sourceFilePath": "/home/abstractfruitfactory/radquest/packages/database/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
     "rootEnvPath": null,
-    "schemaEnvPath": "../../../../.env"
+    "schemaEnvPath": "../../.env"
   },
   "relativePath": "../../prisma",
   "clientVersion": "5.15.0",

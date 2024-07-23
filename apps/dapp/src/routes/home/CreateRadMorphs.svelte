@@ -289,29 +289,31 @@
             onClick: () => dispatch('cancel')
           }}
     >
-      <img
-        class="radmorph-image"
-        src="/quests-images/key/JettyConversation_RadMorphCreation.webp"
-        alt="Radmorphs"
-      />
+      <div class="content">
+        <img
+          class="radmorph-image"
+          src="/quests-images/key/JettyConversation_RadMorphCreation.webp"
+          alt="Radmorphs"
+        />
 
-      {$i18n.t('jetty:create-radmorphs.intro')}
-      <p>
-        {$i18n.t('jetty:create-radmorphs.intro2')}
-      </p>
-
-      {#if hasEnoughResources}
+        {$i18n.t('jetty:create-radmorphs.intro')}
         <p>
-          {$i18n.t('jetty:create-radmorphs.intro3-success')}
+          {$i18n.t('jetty:create-radmorphs.intro2')}
         </p>
-      {:else}
-        <p class="text-bold">
-          {$i18n.t('jetty:create-radmorphs.intro3-fail', {
-            radgems: amountOfRadGems,
-            energyCards: amountOfEnergyCards
-          })}
-        </p>
-      {/if}
+
+        {#if hasEnoughResources}
+          <p>
+            {$i18n.t('jetty:create-radmorphs.intro3-success')}
+          </p>
+        {:else}
+          <p class="text-bold">
+            {$i18n.t('jetty:create-radmorphs.intro3-fail', {
+              radgems: amountOfRadGems,
+              energyCards: amountOfEnergyCards
+            })}
+          </p>
+        {/if}
+      </div>
     </JettyMenuItemPage>
   {/if}
 </div>
@@ -322,10 +324,13 @@
     flex-direction: column;
     gap: var(--spacing-md);
     height: 100%;
-    padding: var(--spacing-2xl);
+  }
+
+  .content {
+    padding: 0 var(--spacing-2xl);
 
     @include mobile {
-      padding: var(--spacing-xl);
+      padding: 0 var(--spacing-xl);
     }
   }
 

@@ -144,6 +144,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top: var(--spacing-lg);
   }
 
   h2 {

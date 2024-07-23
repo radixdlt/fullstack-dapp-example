@@ -176,7 +176,7 @@
                 .getQuestInformation('NetworkStaking', fetch)
                 .map((data) => data.requirements)
                 .map((requirements) => {
-                  if (requirements.StakedXrd.isComplete) {
+                  if (requirements.XrdStaked.isComplete) {
                     pushNotification('stakeCompleted')
                   }
                 })
@@ -303,7 +303,7 @@
     registerNotificationOnMessage($webSocketClient, 'DEXSwaps', 'LettySwap', 'lettySwapCompleted')
 
   $: if ($webSocketClient)
-    registerNotificationOnMessage($webSocketClient, 'NetworkStaking', 'StakedXrd', 'stakeCompleted')
+    registerNotificationOnMessage($webSocketClient, 'NetworkStaking', 'XrdStaked', 'stakeCompleted')
 
   $: if ($webSocketClient)
     registerNotificationOnMessage(
