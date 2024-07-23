@@ -4,9 +4,9 @@ import { AccountAddressModel, AppLogger, TransactionStreamModel, waitForMessage 
 import { getImageOracleManifest } from './helpers/getImageOracleManifest'
 import { config } from '../config'
 import { AccountHelper, TransactionHelper, withSigners } from 'typescript-wallet'
-import { dbClient } from '../db-client'
 import { completeQuestRequirements } from './helpers/completeQuestRequirements'
 import { PrismaClient } from 'database'
+import { lettySwapDappDefinitionTransactionManifest } from './helpers/setLettySwapDappDefintion'
 
 export type SystemWorkerController = ReturnType<typeof SystemWorkerController>
 export const SystemWorkerController = ({
@@ -115,6 +115,15 @@ export const SystemWorkerController = ({
       case SystemJobType.PopulateRadmorphs:
         return transactionHelper
           .submitTransaction(getImageOracleManifest(job.data.data))
+          .map(() => undefined)
+
+      case SystemJobType.UpdateLettySwapDappDefinition:
+        return TransactionHelper({
+          networkId: config.networkId,
+          onSignature: withSigners(config.networkId, 'lettySwapDappDefinition', 'payer'),
+          logger
+        })
+          .submitTransaction(lettySwapDappDefinitionTransactionManifest)
           .map(() => undefined)
 
       case SystemJobType.UpdateKycOracle: {

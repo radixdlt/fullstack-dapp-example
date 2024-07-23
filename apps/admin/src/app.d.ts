@@ -19,6 +19,7 @@ declare global {
       imageController: ImageController
       transactionQueue: Queue['transactionQueue']
       eventQueue: Queue['eventQueue']
+      systemQueue: Queue['systemQueue']
       logger: AppLogger
     }
   }
