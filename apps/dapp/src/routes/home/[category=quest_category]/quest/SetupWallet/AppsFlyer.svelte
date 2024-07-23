@@ -1,14 +1,10 @@
 <script lang="ts">
-  import { publicConfig } from '$lib/public-config'
   import { useCookies } from '$lib/utils/cookies'
   import Bowser from 'bowser'
 
   const parsed = Bowser.parse(window.navigator.userAgent)
   const dapp_referrer = useCookies(`dapp_referrer`).get()
-  const oneLinkUrl =
-    publicConfig.networkId === 1
-      ? `https://radixdlt.onelink.me/2p25/s2xnylgt`
-      : `https://radixdlt.onelink.me/WAKF/eun9mos3`
+  const oneLinkUrl = `https://radixdlt.onelink.me/2p25/s2xnylgt`
   const paramName = `deep_link_value`
   const params = {
     special_dapp: 'radquest',
