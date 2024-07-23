@@ -7,6 +7,7 @@ export const GET: RequestHandler = async ({ params, locals }) =>
   routeHandler(() =>
     locals.controllers.userQuestController.completeQuest(
       locals.userId,
-      params.questId as keyof Quests
+      params.questId as keyof Quests,
+      locals.context.traceId
     )
   )

@@ -72,6 +72,11 @@ export type DepositGiftBoxRewardTransactionJob = {
   giftBoxKind: GiftBoxKind
 }
 
+export type QuestCompletedTransactionJob = {
+  type: 'QuestCompleted'
+  questId: string
+}
+
 export type TransactionJob = {
   userId: string
   discriminator: string
@@ -85,6 +90,7 @@ export type TransactionJob = {
   | PopulateResourcesTransactionJob
   | AddAccountAddressToHeroBadgeForgeJob
   | DepositXrdToAccount
+  | QuestCompletedTransactionJob
   | DepositGiftBoxRewardTransactionJob
 )
 

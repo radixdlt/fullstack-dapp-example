@@ -81,7 +81,7 @@ export const UserQuestController = ({
       .deleteSavedProgress(userId)
       .map(() => ({ httpResponseCode: 200, data: undefined }))
 
-  const completeQuest = (userId: string, questId: QuestId) =>
+  const completeQuest = (userId: string, questId: QuestId, traceId: string) =>
     userQuestModel
       .findCompletedRequirements(userId, questId)
       .andThen((completedRequirements) => {
@@ -91,6 +91,18 @@ export const UserQuestController = ({
         }
 
         return userQuestModel.updateQuestStatus(questId, userId, 'COMPLETED')
+      })
+      .andThen(() => {
+        if (['Welcome', 'WhatIsRadix', 'SetupWallet'].includes(questId)) {
+          return okAsync(undefined)
+        }
+        return transactionModel.add({
+          userId,
+          discriminator: `${questId}:QuestCompleted:${userId}`,
+          type: 'QuestCompleted',
+          questId,
+          traceId
+        })
       })
       .map(() => ({ httpResponseCode: 200, data: undefined }))
 
