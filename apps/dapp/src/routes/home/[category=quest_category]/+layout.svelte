@@ -55,7 +55,9 @@
   $: _quests = Object.entries($quests).filter(
     ([id, quest]) =>
       (quest.category === $page.params.category && id !== 'JoinFriend') ||
-      (id === 'JoinFriend' && ($user?.referredBy || (!$user && referredByCookie)))
+      (id === 'JoinFriend' &&
+        $page.params.category === 'advanced' &&
+        ($user?.referredBy || (!$user && referredByCookie)))
   ) as [keyof typeof $quests, (typeof $quests)[keyof typeof $quests]][]
 
   let carousel: Carousel
