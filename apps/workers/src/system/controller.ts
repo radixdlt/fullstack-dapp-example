@@ -39,8 +39,9 @@ export const SystemWorkerController = ({
       logger
     })
 
-    const { payer, system, jetty } = config.radQuest.accounts
-    const { adminBadgeAddress, heroBadgeAddress } = config.radQuest.badges
+    const { payer, system, jetty, owner } = config.radQuest.accounts
+    const { superAdminBadgeAddress, adminBadgeAddress, heroBadgeAddress, kycBadgeAddress } =
+      config.radQuest.badges
     const { clamAddress } = config.radQuest.resources
     const { questRewards } = config.radQuest.components
 
@@ -115,6 +116,45 @@ export const SystemWorkerController = ({
       case SystemJobType.PopulateRadmorphs:
         return transactionHelper
           .submitTransaction(getImageOracleManifest(job.data.data))
+          .map(() => undefined)
+
+      case SystemJobType.UpdateKycBadgeAddress:
+        return TransactionHelper({
+          networkId: config.networkId,
+          onSignature: withSigners(config.networkId, 'owner', 'payer'),
+          logger
+        })
+          .submitTransaction(
+            `
+            CALL_METHOD 
+              Address("${payer.accessController}") 
+              "create_proof"
+            ;
+
+            CALL_METHOD 
+              Address("${payer.address}") 
+              "lock_fee"
+              Decimal("10")
+            ;
+
+            CALL_METHOD 
+              Address("${owner.accessController}") 
+              "create_proof"
+            ;
+            
+            CALL_METHOD
+              Address("${owner.address}")
+              "create_proof_of_amount"
+              Address("${superAdminBadgeAddress}")
+              Decimal("1")
+            ;
+            
+            CALL_METHOD
+              Address("${questRewards}")
+              "set_kyc_badge_address"
+              Address("${kycBadgeAddress}")
+            ;`
+          )
           .map(() => undefined)
 
       case SystemJobType.UpdateLettySwapDappDefinition:

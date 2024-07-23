@@ -10,6 +10,11 @@
     fetch(`/scripts/letty-swap`, {
       method: 'POST'
     })
+
+  const updateKycBadge = () =>
+    fetch(`/scripts/kyc-badge`, {
+      method: 'POST'
+    })
 </script>
 
 <Heading class="p-4 text-lg font-semibold text-gray-900 dark:text-white">Scripts</Heading>
@@ -18,5 +23,7 @@
     >Retry failed jobs in message queues</Button
   >
 
-  <Button class="block" on:click={() => lettySwap()}>Update Letty swap dApp Definition</Button>
+  <Button class="block mb-5" on:click={() => lettySwap()}>Update Letty swap dApp Definition</Button>
+
+  <Button class="block" on:click={() => updateKycBadge()}>Update KYC badge address</Button>
 </div>

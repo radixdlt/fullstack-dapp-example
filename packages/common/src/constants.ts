@@ -115,10 +115,9 @@ export const Addresses = (networkId: number) => {
           superAdminBadgeAddress:
             'resource_rdx1tkpeanv6tr8pyke0hccz6llrml0f2y7vl4qfr25j6zecmtynns5rec',
           heroBadgeAddress: 'resource_rdx1n2mvky7na57d832lypd9xy5ftxt7lynu3flyn084gfncayshmmdwga',
-          // TODO: replace with actual kyc badge address
-          kycBadgeAddress: 'resource_rdx1t5fces2e0g7wywymygxnn3c642efwr35hwcm5gqtlsdmvewjpgd3f9',
+          kycBadgeAddress: 'resource_rdx1ng0efwfwnkp32t29eju0t0qm4m29385p9m7u5gfuatvz2fk3unjpd0',
           instapassBadgeAddress:
-            'resource_rdx1t5fces2e0g7wywymygxnn3c642efwr35hwcm5gqtlsdmvewjpgd3f9'
+            'resource_rdx1ng0efwfwnkp32t29eju0t0qm4m29385p9m7u5gfuatvz2fk3unjpd0'
         },
         resources: {
           elementAddress: 'resource_rdx1t46p7mnc9kg4mq4tk2sdtp5f0gp5mscpjruethv3xxtx9z6xz23u56',
@@ -197,7 +196,7 @@ export const Addresses = (networkId: number) => {
         },
         dapps: {
           instapass: {
-            url: ''
+            url: 'https://instapass-lite.instapass.io'
           },
           jettySwap: {
             url: 'https://jettyswap.io'

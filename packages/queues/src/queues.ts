@@ -13,7 +13,8 @@ export const SystemJobType = {
   PopulateRadmorphs: 'PopulateRadmorphs',
   AddReferral: 'AddReferral',
   UpdateKycOracle: 'UpdateKycOracle',
-  UpdateLettySwapDappDefinition: 'UpdateLettySwapDappDefinition'
+  UpdateLettySwapDappDefinition: 'UpdateLettySwapDappDefinition',
+  UpdateKycBadgeAddress: 'UpdateKycBadgeAddress'
 } as const
 
 export type EventJob = {
@@ -122,11 +123,17 @@ export type UpdateLettySwapDappDefinitionSystemJob = {
   traceId: string
 }
 
+export type UpdateKycBadgeAddressSystemJob = {
+  type: (typeof SystemJobType)['UpdateKycBadgeAddress']
+  traceId: string
+}
+
 export type SystemJob =
   | RadmorphSystemJob
   | AddReferralSystemJob
   | UpdateKycOracleSystemJob
   | UpdateLettySwapDappDefinitionSystemJob
+  | UpdateKycBadgeAddressSystemJob
 
 export type TQueues = ReturnType<typeof getQueues>
 export type TransactionQueue = TQueues['transactionQueue']
