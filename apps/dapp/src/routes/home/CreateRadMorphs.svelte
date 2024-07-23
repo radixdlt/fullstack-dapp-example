@@ -326,6 +326,10 @@
     height: 100%;
   }
 
+  img {
+    margin-bottom: -2rem;
+  }
+
   .content {
     padding: 0 var(--spacing-2xl);
 
