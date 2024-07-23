@@ -32,6 +32,26 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
       }
     )
 
+  const getDepositedRewards = (userId: string, questId: string) => {
+    console.log(userId, questId)
+    return ResultAsync.fromPromise(
+      db.event.findFirst({
+        where: {
+          questId,
+          id: 'QuestRewardDeposited',
+          userId
+        }
+      }),
+      (error) => {
+        logger?.error({ error, method: 'getDepositedRewards', model: 'UserQuestModel' })
+        return createApiError('failed to get deposited rewards', 400)()
+      }
+    ).map(
+      (data) =>
+        (data?.data as { rewards?: { amount: string; resourceAddress: string }[] })?.rewards || []
+    )
+  }
+
   const addVerifiedPhoneNumber = (
     userId: string,
     country: string,
@@ -207,6 +227,7 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
     getQuestsStatus,
     updateQuestStatus,
     findPrerequisites,
+    getDepositedRewards,
     addVerifiedPhoneNumber,
     addCompletedRequirement,
     findCompletedRequirements,

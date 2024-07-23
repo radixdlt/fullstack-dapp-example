@@ -8,4 +8,8 @@ export const createInvalidQuestIdResponse = () =>
     status: 400
   })
 
-export const isValidQuestId = (questId: string) => Object.keys(QuestDefinitions()).includes(questId)
+export const isValidQuestId = (questId: string) =>
+  Object.keys(QuestDefinitions()).includes(questId) ||
+  ['ReferralQuest:BronzeLevel', 'ReferralQuest:SilverLevel', 'ReferralQuest:GoldLevel'].includes(
+    questId
+  )
