@@ -543,34 +543,13 @@ export const EventWorkerController = ({
         const giftBoxResourceAddress = job.data.data.giftBoxResourceAddress as string
         return getGiftBoxKindByResourceAddress(giftBoxResourceAddress)
           .asyncAndThen((giftBoxKind) =>
-            transactionIntent
-              .add({
-                type: 'DepositGiftBoxReward',
-                discriminator: `${EventId.GiftBoxOpened}:${job.data.transactionId}`,
-                userId: user.id,
-                traceId: job.data.traceId,
-                giftBoxKind
-              })
-              .andThen(() =>
-                giftBoxKind === 'Starter'
-                  ? addCompletedQuestRequirement({
-                      userId: user.id,
-                      requirementId: EventId.GiftBoxOpened,
-                      questId: 'CreatingRadMorphs'
-                    }).andThen(() =>
-                      sendMessage(
-                        userId,
-                        {
-                          type: 'QuestRequirementCompleted',
-                          questId: 'CreatingRadMorphs',
-                          requirementId: 'GiftBoxOpened',
-                          traceId
-                        },
-                        childLogger
-                      )
-                    )
-                  : okAsync(undefined)
-              )
+            transactionIntent.add({
+              type: 'DepositGiftBoxReward',
+              discriminator: `${EventId.GiftBoxOpened}:${job.data.transactionId}`,
+              userId: user.id,
+              traceId: job.data.traceId,
+              giftBoxKind
+            })
           )
           .map(() => undefined)
       }
