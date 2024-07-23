@@ -122,7 +122,7 @@
     setTimeout(() => (showMenuItemContent = false), 500)
   }
 
-  $: if ($back) {
+  $: if ($back && currentMenuItem.id !== 'glossary') {
     showMenuItemContent = false
     back.set(false)
   }
