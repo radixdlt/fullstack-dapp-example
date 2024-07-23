@@ -346,6 +346,7 @@
     overflow: hidden;
     display: flex;
     justify-content: center;
+    transform: translateY(-2rem);
   }
 
   .chosen-cards {

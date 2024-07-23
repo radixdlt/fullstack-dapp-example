@@ -309,50 +309,55 @@
     />
   {:else}
     {#key rerender}
-      <JettyMenuItemPage
-        action={noElements || parseInt(amountOfElements) < elementsToCreateRadgem
-          ? {
-              text: $i18n.t('jetty:close'),
-              onClick: () => dispatch('cancel')
-            }
-          : {
-              text: $i18n.t('jetty:fuse-elements.send-button', {
-                count: 10
-              }),
-              onClick: sendElements
-            }}
-        loading={waitingForSendElements}
-      >
-        <div class="content">
-          <img
-            style:width="100%"
-            src="/quests-images/key/JettyConversation_MultipleRadGems.webp"
-            alt="Radgems"
-          />
+      <div class="page-with-subtitle">
+        <JettyMenuItemPage
+          action={noElements || parseInt(amountOfElements) < elementsToCreateRadgem
+            ? {
+                text: $i18n.t('jetty:close'),
+                onClick: () => dispatch('cancel')
+              }
+            : {
+                text: $i18n.t('jetty:fuse-elements.send-button', {
+                  count: 10
+                }),
+                onClick: sendElements
+              }}
+          loading={waitingForSendElements}
+        >
+          <div class="content">
+            <img
+              style:width="100%"
+              src="/quests-images/key/JettyConversation_MultipleRadGems.webp"
+              alt="Radgems"
+            />
 
-          {$i18n.t('jetty:fuse-elements.intro1')}
+            {$i18n.t('jetty:fuse-elements.intro1')}
 
-          {#if parseInt(amountOfElements) >= elementsToCreateRadgem}
-            <p>
-              {$i18n.t('jetty:fuse-elements.intro2', { count: parseInt(amountOfElements) })}
-            </p>
+            {#if parseInt(amountOfElements) >= elementsToCreateRadgem}
+              <p>
+                {$i18n.t('jetty:fuse-elements.intro2', { count: parseInt(amountOfElements) })}
+              </p>
 
-            <b>
-              {$i18n.t('jetty:fuse-elements.enough-elements')}
-            </b>
-          {:else if noElements}
-            <p class="bold">
-              {$i18n.t('jetty:fuse-elements.no-elements')}
-            </p>
-          {:else}
-            <p class="bold">
-              {$i18n.t('jetty:fuse-elements.not-enough-elements', {
-                count: parseInt(amountOfElements)
-              })}
-            </p>
-          {/if}
+              <b>
+                {$i18n.t('jetty:fuse-elements.enough-elements')}
+              </b>
+            {:else if noElements}
+              <p class="bold">
+                {$i18n.t('jetty:fuse-elements.no-elements')}
+              </p>
+            {:else}
+              <p class="bold">
+                {$i18n.t('jetty:fuse-elements.not-enough-elements', {
+                  count: parseInt(amountOfElements)
+                })}
+              </p>
+            {/if}
+          </div>
+        </JettyMenuItemPage>
+        <div class="sub">
+          {$i18n.t('jetty:fuse-elements.send-elements-subtitle')}
         </div>
-      </JettyMenuItemPage>
+      </div>
     {/key}
   {/if}
 </div>
@@ -393,5 +398,19 @@
     justify-content: center;
     align-items: center;
     height: 100%;
+  }
+
+  .page-with-subtitle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+
+    .sub {
+      padding: 0 var(--spacing-xl);
+      padding-bottom: var(--spacing-xl);
+      text-align: center;
+      font-size: var(--text-xs);
+    }
   }
 </style>
