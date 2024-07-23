@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  import { get } from 'svelte/store'
+  import { get, writable } from 'svelte/store'
   import { user } from '../../../../stores'
 
   let loggedIn = false
@@ -8,14 +8,22 @@
     loggedIn = !!value
   })
 
+  let closingQuest = writable(false)
+
   export const closeQuest = async () => {
+    const timeout = setTimeout(() => closingQuest.set(true), 200)
     if (loggedIn) {
       questApi.deleteSavedProgress()
     } else {
       localStorage.removeItem('savedProgress')
     }
     await invalidateAll()
-    setTimeout(() => goto(`/home/${get(page).params.category}`), 0)
+    setTimeout(() => {
+      goto(`/home/${get(page).params.category}`).then(() => {
+        closingQuest.set(false)
+        clearTimeout(timeout)
+      })
+    }, 0)
   }
 </script>
 
@@ -24,6 +32,7 @@
   import { questApi } from '$lib/api/quest-api'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import { page } from '$app/stores'
+  import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
 
   const handleKeydown = (event: KeyboardEvent) => {
     if (event.key === 'Escape') closeQuest()
@@ -38,6 +47,17 @@
       <slot />
     </div>
   </div>
+  {#if $closingQuest}
+    <Backdrop>
+      <div class="container">
+        <div class="quest">
+          <div class="text-center">
+            <LoadingSpinner />
+          </div>
+        </div>
+      </div>
+    </Backdrop>
+  {/if}
 </Backdrop>
 
 <style>

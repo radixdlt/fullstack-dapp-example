@@ -17,11 +17,14 @@
     class:loading
     target={isExternal ? '_blank' : ''}
     data-sveltekit-preload-data
+    on:click
   >
-    <slot />
-    {#if isExternal}
-      <ExternalLink --fill="white" />
-    {/if}
+    <div class:hide-content={loading}>
+      <slot />
+      {#if isExternal}
+        <ExternalLink --fill="white" />
+      {/if}
+    </div>
   </a>
 {:else}
   <button on:click class={theme} class:disabled class:loading>
