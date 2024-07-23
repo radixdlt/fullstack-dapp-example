@@ -55,7 +55,9 @@
   $: _quests = Object.entries($quests).filter(
     ([id, quest]) =>
       (quest.category === $page.params.category && id !== 'JoinFriend') ||
-      (id === 'JoinFriend' && ($user?.referredBy || (!$user && referredByCookie)))
+      (id === 'JoinFriend' &&
+        $page.params.category === 'advanced' &&
+        ($user?.referredBy || (!$user && referredByCookie)))
   ) as [keyof typeof $quests, (typeof $quests)[keyof typeof $quests]][]
 
   let carousel: Carousel
@@ -64,32 +66,23 @@
     carousel.scrollToIndex($scrollToQuestIndex)
     $scrollToQuestIndex = null
   }
-
-  const isNotExcludedQuest = (questId: string) => {
-    return (
-      questId !== 'JoinFriend' ||
-      (questId === 'JoinFriend' && ($user?.referredBy || (!$user && referredByCookie)))
-    )
-  }
 </script>
 
 {#key $page.params.category}
   <Carousel bind:this={carousel} let:Item let:centreOnClicked>
     {#each _quests as [id, quest], i}
-      {#if isNotExcludedQuest(id)}
-        <Item {i} on:click={centreOnClicked}>
-          <QuestOverview
-            title={$i18n.t(`quests:${id}.title`)}
-            description={$i18n.t(`quests:${id}.description`)}
-            minutesToComplete={quest.minutesToComplete}
-            rewards={quest.rewards}
-            backgroundImage={quest.splashImage}
-            state={questCardState[id] ?? 'locked'}
-            link={`/home/${quest.category}/quest/${id}`}
-            questId={id}
-          />
-        </Item>
-      {/if}
+      <Item {i} on:click={centreOnClicked}>
+        <QuestOverview
+          title={$i18n.t(`quests:${id}.title`)}
+          description={$i18n.t(`quests:${id}.description`)}
+          minutesToComplete={quest.minutesToComplete}
+          rewards={quest.rewards}
+          backgroundImage={quest.splashImage}
+          state={questCardState[id] ?? 'locked'}
+          link={`/home/${quest.category}/quest/${id}`}
+          questId={id}
+        />
+      </Item>
     {/each}
   </Carousel>
 {/key}

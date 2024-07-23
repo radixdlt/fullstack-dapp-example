@@ -22,7 +22,10 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
       utmKeys.map((key) => [key, searchParamsFormatted.get(key)]).filter(([, value]) => value)
     )
 
-    if (referredBy) utmValues.utm_medium = referredBy
+    if (referredBy) {
+      utmValues.utm_medium = 'Referral'
+      utmValues.utm_source = referredBy
+    }
 
     if (Object.keys(utmValues).length) {
       encodeBase64(JSON.stringify(utmValues)).map((base64Encoded) => {
