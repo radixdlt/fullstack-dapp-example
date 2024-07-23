@@ -107,6 +107,9 @@
       if (persona?.identityAddress) {
         ResultAsync.combine([userApi.me(), authApi.authToken()])
           .map(async ([me, authToken]) => {
+            //@ts-ignore
+            dataLayer.push({ event: 'dl_click_4_wallet_connected' })
+
             $user = {
               ...me,
               label: persona.label
@@ -251,9 +254,6 @@
     resolveRDT(radixDappToolkit)
 
     const savedProgress = localStorage.getItem('savedProgress')
-
-    //@ts-ignore
-    dataLayer.push({ event: 'dl_click_4_wallet_connected' })
 
     if (savedProgress) {
       const { questId, progress } = JSON.parse(savedProgress)

@@ -50,7 +50,6 @@
         // @ts-ignore
         useCookies('requirement-SetupWallet-DownloadWallet').set(true)
         $walletIsLinked = true
-        quest.actions.next()
       }
     }
 
@@ -278,16 +277,17 @@
 
   {#if render('9b')}
     {@html text['9b-1.md']}
-    <div class="center">
-      <!-- svelte-ignore missing-declaration -->
-      <Button
-        link="https://wallet.radixdlt.com"
-        isExternal={true}
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div
+      class="center"
         on:click={() => {
           // @ts-ignore
           dataLayer.push({ event: 'dl_click_2_wallet_download' })
         }}
       >
+      <!-- svelte-ignore missing-declaration -->
+      <Button link="https://wallet.radixdlt.com" isExternal={true}>
         {$i18n.t('quests:SetupWallet.walletDownloadPage')}
       </Button>
     </div>
