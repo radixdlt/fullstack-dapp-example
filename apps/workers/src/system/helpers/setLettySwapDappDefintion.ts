@@ -73,7 +73,7 @@ SET_METADATA
   Enum<Metadata::AddressArray>(
       Array<Address>(
           Address("${config.radQuest.accounts.dAppDefinition.address}"),
-          Address("${config.radQuest.accounts.lettySwapDappDefinition.address}"),
+          Address("${config.radQuest.accounts.jettySwapDappDefinition.address}"),
       )
   )
 ;`
