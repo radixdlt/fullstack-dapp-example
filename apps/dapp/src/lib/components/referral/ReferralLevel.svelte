@@ -13,7 +13,6 @@
   import { createClaimRewardsTransaction } from '$lib/helpers/create-claim-rewards-transaction'
   import { user } from '../../../stores'
   import { createEventDispatcher } from 'svelte'
-  import LoadingSpinner from '../loading-spinner/LoadingSpinner.svelte'
   import { questApi } from '$lib/api/quest-api'
 
   type Level = keyof ReturnType<typeof QuestDefinitions>['QuestTogether']['partialRewards']
@@ -95,12 +94,8 @@
 
   <svelte:fragment slot="action-button">
     {#if status === 'REWARDS_DEPOSITED'}
-      <Button on:click={claimRewards} disabled={loading}>
-        {#if loading}
-          <LoadingSpinner />
-        {:else}
-          {$i18n.t('quests:claimButton')}
-        {/if}
+      <Button on:click={claimRewards} disabled={loading} {loading}>
+        {$i18n.t('quests:claimButton')}
       </Button>
     {:else if status === 'IN_PROGRESS'}
       <Button disabled>

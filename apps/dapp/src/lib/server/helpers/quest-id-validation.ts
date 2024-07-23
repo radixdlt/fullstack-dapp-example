@@ -10,6 +10,6 @@ export const createInvalidQuestIdResponse = () =>
 
 export const isValidQuestId = (questId: string) =>
   Object.keys(QuestDefinitions()).includes(questId) ||
-  ['ReferralQuest:BronzeLevel', 'ReferralQuest:SilverLevel', 'ReferralQuest:GoldLevel'].includes(
+  ['QuestTogether:BronzeLevel', 'QuestTogether:SilverLevel', 'QuestTogether:GoldLevel'].includes(
     questId
   )
