@@ -6,6 +6,7 @@ master:
     enabled: false
   extraFlags: 
   - "--maxmemory-policy noeviction"
+  - "--maxmemory 250mb"
   resources:
     requests:
       cpu: 0.5
