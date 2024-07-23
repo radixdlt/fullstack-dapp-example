@@ -196,7 +196,7 @@ export const Addresses = (networkId: number) => {
         },
         dapps: {
           instapass: {
-            url: 'https://instapass-lite.instapass.io'
+            url: 'https://lite.instapass.io/RadQuest/'
           },
           jettySwap: {
             url: 'https://jettyswap.io'
