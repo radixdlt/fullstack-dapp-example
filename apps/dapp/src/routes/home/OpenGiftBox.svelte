@@ -403,7 +403,8 @@
           left: {
             text: $i18n.t('quests:backButton'),
             onClick: () => {
-              readyToOpen = false
+              if (totalGiftBoxes === 1) close()
+              else readyToOpen = false
             }
           },
           right: {
