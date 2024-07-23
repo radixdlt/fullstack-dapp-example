@@ -15,14 +15,14 @@ SET_METADATA
     Address("${lettySwapDappDefinition}")
     "name"
     Enum<Metadata::String>(
-        "JettySwap"
+        "LettySwap"
     )
 ;
 SET_METADATA
     Address("${lettySwapDappDefinition}")
     "description"
     Enum<Metadata::String>(
-        "A just-for-fun DEX for those learning to use Radix – and lovers of Clams. JettySwap provides a… not-so-stable swapping price."
+        "A just-for-fun DEX for those learning to use Radix – and lovers of Clams. LettySwap provides a… not-so-stable swapping price."
     )
 ;
 SET_METADATA
