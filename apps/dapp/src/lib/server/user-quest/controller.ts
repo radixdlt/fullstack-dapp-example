@@ -244,12 +244,18 @@ export const UserQuestController = ({
     )
   }
 
+  const depositedRewards = (userId: string, questId: string) =>
+    userQuestModel
+      .getDepositedRewards(userId, questId)
+      .map((data) => ({ httpResponseCode: 200, data }))
+
   return {
     getQuestsProgress,
     completeQuest,
     startQuest,
     getQuestRequirements,
     saveProgress,
+    depositedRewards,
     getSavedProgress,
     deleteSavedProgress,
     completeRequirement,

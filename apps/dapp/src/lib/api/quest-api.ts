@@ -70,9 +70,15 @@ const completeRequirement = (questId: QuestId, requirementId: string, serverFetc
     })
   )
 
+const getDepositedRewards = (questId: QuestId) =>
+  fetchWrapper<{ amount: string; resourceAddress: string }[]>(
+    fetch(`/api/quest/${questId}/deposited-rewards`)
+  ).map(({ data }) => data)
+
 export const questApi = {
   getQuestsInformation,
   getQuestInformation,
+  getDepositedRewards,
   startQuest,
   completeQuest,
   saveProgress,

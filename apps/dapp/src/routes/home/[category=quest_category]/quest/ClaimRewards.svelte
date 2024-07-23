@@ -35,14 +35,17 @@
 
   export const claim = () => {
     const sendTx = (instapassBadge?: string) =>
-      sendTransaction({
-        transactionManifest: createClaimRewardsTransaction(
-          $user?.accountAddress!,
-          $user?.id!,
-          questId,
-          instapassBadge
-        )
-      })
+      questApi.getDepositedRewards(questId).andThen((rewards) =>
+        sendTransaction({
+          transactionManifest: createClaimRewardsTransaction(
+            $user?.accountAddress!,
+            $user?.id!,
+            questId,
+            rewards,
+            instapassBadge
+          )
+        })
+      )
 
     loading.set(true)
 
