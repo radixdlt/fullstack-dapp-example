@@ -113,6 +113,7 @@
     align-items: center;
     overflow: hidden;
     height: 100%;
+    justify-content: center;
   }
   .carousel {
     position: relative;

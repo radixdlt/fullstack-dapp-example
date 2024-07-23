@@ -252,7 +252,7 @@
 <div class="create-radmorphs">
   {#if loadingLedgerData}
     <div class="loading">
-      <LoadingSpinner />
+      <LoadingSpinner dark />
     </div>
   {:else if creatingRadmorphs && energyCardData && gemData}
     <TransformGems
@@ -324,6 +324,10 @@
     flex-direction: column;
     gap: var(--spacing-md);
     height: 100%;
+  }
+
+  img {
+    margin-bottom: -2rem;
   }
 
   .content {

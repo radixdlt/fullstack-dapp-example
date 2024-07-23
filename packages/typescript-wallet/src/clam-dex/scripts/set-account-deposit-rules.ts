@@ -3,7 +3,7 @@ import { setAccountsDepositRules } from '../helpers/setAccountsDepositRules'
 
 setAccountsDepositRules()
   .map(({ response }) => {
-    logger.info(response)
+    logger.debug(response)
   })
   .mapErr((error) => {
     logger.error(error)

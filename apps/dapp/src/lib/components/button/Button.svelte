@@ -97,23 +97,23 @@
   }
 
   .loading.primary::after {
-    border: 0.2rem solid var(--color-light);
-    border-top-color: var(--color-primary);
+    border: 0.2rem solid var(--color-light-translucent);
+    border-top-color: var(--color-light);
   }
 
   .loading.secondary::after {
-    border: 0.2rem solid var(--color-dark);
-    border-top-color: var(--color-secondary);
+    border: 0.2rem solid var(--color-dark-translucent);
+    border-top-color: var(--color-dark);
   }
 
   .loading.light::after {
-    border: 0.2rem solid var(--color-dark);
-    border-top-color: var(--color-background-light);
+    border: 0.2rem solid var(--color-dark-translucent);
+    border-top-color: var(--color-dark);
   }
 
   .loading.dark::after {
-    border: 0.2rem solid var(--color-light);
-    border-top-color: var(--color-background-dark);
+    border: 0.2rem solid var(--color-light-translucent);
+    border-top-color: var(--color-light);
   }
 
   @keyframes spin {

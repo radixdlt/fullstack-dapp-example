@@ -260,7 +260,7 @@
 <div class="fuse-elements">
   {#if loadingLedgerData}
     <div class="loading">
-      <LoadingSpinner />
+      <LoadingSpinner dark />
     </div>
   {:else if errorLoadingElements}
     <!-- TODO handle error -->

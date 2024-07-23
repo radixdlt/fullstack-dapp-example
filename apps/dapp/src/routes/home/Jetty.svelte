@@ -145,7 +145,11 @@
     let:back
   >
     {#if currentMenuItem.id === 'glossary'}
-      <Glossary bind:this={glossary} glossary={loadGlossary('en')} />
+      <Glossary
+        bind:this={glossary}
+        glossary={loadGlossary('en')}
+        on:open-item={jettyMenu.scrollToTop}
+      />
     {/if}
 
     {#if currentMenuItem.id === 'gift-box'}
