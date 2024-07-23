@@ -322,7 +322,7 @@
 <div class="open-gift-box">
   {#if loadingLedgerData || loadingClaimStatus}
     <div class="loading">
-      <LoadingSpinner />
+      <LoadingSpinner dark />
     </div>
   {:else if waitingForDepositedRewards}
     <JettyMenuItemPage>

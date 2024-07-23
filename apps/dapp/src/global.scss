@@ -38,6 +38,7 @@
 body {
   /* Core colors */
   --color-primary: #6260ff;
+  --color-primary-translucent: #6260ff66;
   --color-secondary: #faeae1;
   --color-tertiary: #faeae1;
   --color-neutral: #dfdbd5;
@@ -58,7 +59,9 @@ body {
 
   /* Light and Dark */
   --color-light: #fffbf4;
+  --color-light-translucent: #fffbf566;
   --color-dark: #111f29;
+  --color-dark-translucent: #111f2966;
   --color-nearly-black: #192d3a;
   background: var(--gradient-7);
   background-color: var(--color-background-dark);
@@ -104,6 +107,7 @@ body {
   --spacing-2xl: calc(3.25 * var(--spacing-unit));
   --spacing-3xl: calc(5.25 * var(--spacing-unit));
   --spacing-4xl: calc(8.5 * var(--spacing-unit));
+  --spacing-5xl: calc(13.75 * var(--spacing-unit));
 }
 
 /* ------------------ */

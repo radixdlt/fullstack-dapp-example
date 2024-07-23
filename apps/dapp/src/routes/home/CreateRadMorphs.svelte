@@ -252,7 +252,7 @@
 <div class="create-radmorphs">
   {#if loadingLedgerData}
     <div class="loading">
-      <LoadingSpinner />
+      <LoadingSpinner dark />
     </div>
   {:else if creatingRadmorphs && energyCardData && gemData}
     <TransformGems
