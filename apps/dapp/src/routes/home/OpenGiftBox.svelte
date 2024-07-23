@@ -98,6 +98,7 @@
   import { onMount } from 'svelte'
   import { webSocketClient } from '$lib/websocket-client'
   import BoxCard from '$lib/components/resource-card/BoxCard.svelte'
+  import { messageApi } from '$lib/api/message-api'
 
   let loadingLedgerData = true
   let ownedGiftBoxes: {
@@ -230,6 +231,7 @@
         const unsub = $webSocketClient!.onMessage((msg) => {
           if (msg.type === 'GiftBoxDeposited') {
             resolveDeposited(msg)
+            messageApi.markAsSeen([msg.id])
           }
         })
 
