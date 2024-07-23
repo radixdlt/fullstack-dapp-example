@@ -3,9 +3,10 @@ import { json } from '@sveltejs/kit'
 export const POST = async ({ locals, params }) => {
   const userId = params.userId
 
-  const user = await locals.dbClient.phoneNumber.remove({
-    where: { id: userId }
-  })
+  if ((await locals.dbClient.userPhoneNumber.count({ where: { userId } })) === 1)
+    await locals.dbClient.userPhoneNumber.delete({
+      where: { userId }
+    })
 
-  return json({ user }, { status: 200 })
+  return json({}, { status: 200 })
 }
