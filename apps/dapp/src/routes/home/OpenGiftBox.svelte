@@ -475,10 +475,9 @@
 
 <style lang="scss">
   .open-gift-box {
-    display: flex;
-    justify-content: center;
     color: var(--color-light);
     height: 100%;
+    width: 100%;
   }
 
   .header-text {
@@ -524,6 +523,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
 
     .sub {
       padding: 0 var(--spacing-xl);
@@ -538,5 +538,6 @@
     justify-content: center;
     align-items: center;
     height: 100%;
+    transform: translateY(-2rem);
   }
 </style>

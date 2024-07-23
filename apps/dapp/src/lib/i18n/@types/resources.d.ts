@@ -43,7 +43,8 @@ interface Resources {
       "quality": "Quality: {{quality}}/25",
       "radgem-claimed": "You can find your new RadGem with the NFTs in your registered account in your Radix Wallet.",
       "elements-left": "You have {{count}} Elements left.",
-      "multiple-radgems": "You have multiple RadGems ready to be claimed."
+      "multiple-radgems": "You have multiple RadGems ready to be claimed.",
+      "send-elements-subtitle": "The Elements will be sent to Jetty via your Radix Wallet"
     },
     "create-radmorphs": {
       "intro": "Harnessing the power of a Morph Energy Card, I can help combine 2 RadGems into a beautiful and unique RadMorph!",
