@@ -226,9 +226,20 @@
 
 {#if page === 4}
   <JettyMenuItemPage
-    action={{
-      text: $i18n.t('jetty:create-radmorphs.create-radmorph-button'),
-      onClick: () => createRadmorph(setWaitingForRadmorph, unsetWaitingForRadmorph, radmorphCreated)
+    actions={{
+      left: {
+        text: $i18n.t('jetty:create-radmorphs.start-again-button'),
+        onClick: () => {
+          page = 0
+          selectedTransformCard = undefined
+          selectedGems = []
+        }
+      },
+      right: {
+        text: $i18n.t('jetty:create-radmorphs.create-radmorph-button'),
+        onClick: () =>
+          createRadmorph(setWaitingForRadmorph, unsetWaitingForRadmorph, radmorphCreated)
+      }
     }}
     loading={waitingForRadmorphTx}
   >
@@ -274,6 +285,7 @@
   .title {
     font-size: var(--text-md3);
     text-align: center;
+    white-space: nowrap;
   }
 
   .preview-title {
@@ -294,7 +306,8 @@
     gap: var(--spacing-xl);
     align-items: center;
     text-align: center;
-    margin-bottom: -3rem;
+    height: 100%;
+    justify-content: center;
   }
 
   .preview-image {
@@ -329,22 +342,22 @@
   }
 
   .cards {
-    margin-bottom: 3rem;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
   }
 
   .chosen-cards {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     display: flex;
+    align-items: center;
     justify-content: center;
+    width: 100%;
 
     :global(.main-card) {
       @include mobile() {
         margin: var(--spacing-sm);
       }
-      height: 10rem;
     }
 
     :global(.transform-card) {
@@ -360,6 +373,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    height: 100%;
   }
 
   .footnote {

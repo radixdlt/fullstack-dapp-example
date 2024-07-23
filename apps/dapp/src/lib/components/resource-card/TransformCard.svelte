@@ -21,7 +21,14 @@
   $: image = energyCardMap[shapeCodeDescription[card.energy.toLowerCase()]].keyImageUrl
 </script>
 
-<ResourceCard on:selected on:deselected {selectable} {disabled} bind:selected>
+<ResourceCard
+  on:selected
+  on:deselected
+  {selectable}
+  {disabled}
+  bind:selected
+  goldBorder={card.limitedEdition}
+>
   <div class="transform-card" style:--background-image={`url(${image})`} class:selected />
 
   <p slot="text" class="quality">

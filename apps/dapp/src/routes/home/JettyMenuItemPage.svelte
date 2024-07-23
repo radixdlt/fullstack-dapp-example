@@ -25,7 +25,7 @@
   export let disabled: boolean | undefined = undefined
 </script>
 
-<div class="menu-item-page" class:without-header={!$$slots.header}>
+<div class="menu-item-page">
   <div class="content">
     {#if $$slots.header}
       <div class="header">
@@ -33,7 +33,7 @@
       </div>
     {/if}
 
-    <div>
+    <div class="main-content">
       <slot />
     </div>
   </div>
@@ -61,15 +61,11 @@
     display: grid;
     grid-template-rows: auto 5rem;
     height: 100%;
-  }
-
-  .without-header {
-    grid-template-rows: auto 5rem;
+    overflow: hidden;
   }
 
   .header {
     padding: var(--spacing-xl) var(--spacing-2xl);
-    padding-bottom: 0;
 
     @include mobile {
       padding: var(--spacing-lg) var(--spacing-xl);
@@ -80,7 +76,10 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-2xl);
+  }
+
+  .main-content {
+    flex-basis: 100%;
   }
 
   .action,

@@ -7,6 +7,7 @@
   export let selectable = true
   export let selected = false
   export let disabled = false
+  export let goldBorder = false
 
   const dispatch = createEventDispatcher<{ selected: undefined; deselected: undefined }>()
 </script>
@@ -17,6 +18,7 @@
     this={selectable ? 'button' : 'div'}
     class:selected
     class="main-card"
+    class:gold-border={goldBorder}
     on:click={() => {
       if (disabled) return
       selected = !selected
@@ -41,13 +43,19 @@
     margin: 0 var(--spacing-lg);
     display: flex;
     justify-content: center;
-    border: var(--border) var(--color-light);
+    border: var(--border-xl) var(--color-light);
     border-radius: var(--border-radius-xl);
   }
 
+  .gold-border {
+    background:
+      linear-gradient(var(--color-dark), var(--color-dark)) padding-box,
+      linear-gradient(#ae8625, #f7ef8a, #d2ac47, #edc967) border-box;
+    border: var(--border-xl) transparent;
+  }
+
   .selected {
-    border: var(--border) var(--color-primary);
-    border-radius: var(--border-radius-xl);
+    border-color: var(--color-primary);
   }
 
   .resource-card {

@@ -330,14 +330,16 @@
         {$i18n.t('jetty:open-gift-box.opening-gift-box')}...
       </div>
 
-      <lottie-player
-        autoplay
-        loop
-        mode="normal"
-        src="/lottie/loading.json"
-        style:width="250px"
-        style:height="250px"
-      />
+      <div class="loading">
+        <lottie-player
+          autoplay
+          loop
+          mode="normal"
+          src="/lottie/loading.json"
+          style:width="250px"
+          style:height="250px"
+        />
+      </div>
     </JettyMenuItemPage>
   {:else if claimed}
     <JettyMenuItemPage
@@ -507,6 +509,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+    height: 100%;
   }
 
   .rewards-page {
@@ -514,7 +517,7 @@
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-md);
-    margin-bottom: 2rem;
+    height: 100%;
   }
 
   .page-with-subtitle {
@@ -534,5 +537,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
   }
 </style>
