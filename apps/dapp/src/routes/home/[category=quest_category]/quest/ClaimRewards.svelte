@@ -50,9 +50,9 @@
     loading.set(true)
 
     return handleKycBadge($user?.id!, $user?.accountAddress!, sendTx)
-      .map(() => {
+      .map((txResult) => {
         loading.set(false)
-        dispatch('claimed')
+        if (txResult) dispatch('claimed')
       })
       .mapErr(() => {
         loading.set(false)

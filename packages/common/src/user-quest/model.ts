@@ -130,13 +130,20 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
     )
 
   const updateQuestStatus = (questId: string, userId: string, status: QuestStatus) => {
-    const statuses = ['IN_PROGRESS', 'REWARDS_DEPOSITED', 'REWARDS_CLAIMED', 'COMPLETED']
+    const transitions = {
+      IN_PROGRESS: ['REWARDS_DEPOSITED', 'COMPLETED'],
+      REWARDS_DEPOSITED: ['REWARDS_CLAIMED'],
+      REWARDS_CLAIMED: ['COMPLETED'],
+      COMPLETED: ['COMPLETED'] as string[]
+    }
 
     return getQuestStatus(userId, questId)
       .andThen((data) => {
         const currentStatus = data?.status
-        if (currentStatus && statuses.indexOf(currentStatus) > statuses.indexOf(status)) {
-          return errAsync(createApiError('cannot update to a previous status', 400)())
+        if (currentStatus && !transitions[currentStatus].includes(status)) {
+          return errAsync(
+            createApiError(`cannot update from '${currentStatus}' to '${status}'`, 400)()
+          )
         }
         return okAsync(undefined)
       })
