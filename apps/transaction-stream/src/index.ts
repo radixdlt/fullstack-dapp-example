@@ -72,8 +72,6 @@ const app = async (dependencies: Dependencies) => {
   stream.transactions$.subscribe(async (transactions) => {
     const result = await handleTransactions(transactions)
 
-    processedStateVersionMetric.set(transactions.stateVersion)
-
     if (result.isErr()) {
       logger.error({
         method: 'handleTransactions',
@@ -81,6 +79,8 @@ const app = async (dependencies: Dependencies) => {
       })
       throw result.error
     }
+
+    processedStateVersionMetric.set(transactions.stateVersion)
   })
 
   stream.error$.subscribe(handleStreamError)

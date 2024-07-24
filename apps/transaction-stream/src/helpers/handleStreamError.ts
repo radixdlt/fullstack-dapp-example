@@ -1,6 +1,7 @@
 import { GetTransactionsErrorOutput } from '../gateway'
 import { TransactionStream } from '../transaction-stream/transaction-stream'
 import { AppLogger } from 'common'
+import { gatewayStatusGauge } from '../metrics'
 
 export const HandleStreamError =
   (logger: AppLogger, stream: TransactionStream) => (error: GetTransactionsErrorOutput) => {
@@ -33,6 +34,7 @@ export const HandleStreamError =
       stream.setStatus('run', THREE_SECONDS)
     } else {
       logger.error({ method: 'stream.error$', errorType: 'UnhandledError', ...error })
+      gatewayStatusGauge.set(0)
       // TODO: implement handler of different errors types
       // NotSynced - error might need to wait for a while before restarting the stream
       // InternalError, InvalidRequest, UnknownError  - might need to alert the team
