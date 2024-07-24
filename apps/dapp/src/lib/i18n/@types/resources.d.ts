@@ -124,6 +124,7 @@ interface Resources {
   },
   "quests": {
     "copy": "Copy",
+    "copied": "Copied!",
     "rewards": "Rewards",
     "requirementsDescription": "Complete the tasks below to claim your rewards. You can always go back and check the information if you’re not sure how.",
     "requirementsTitle": "What you'll do",
