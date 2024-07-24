@@ -134,7 +134,9 @@
     {/if}
     {#if ids.length > 1}
       {$i18n.t('jetty:fuse-elements.multiple-radgems')}
-      <enhanced:img src="@images/multiple-gems.webp?enhanced" />
+      <div class="multiple-gems-img">
+        <enhanced:img src="@images/multiple-gems.webp?enhanced" />
+      </div>
     {/if}
   </div>
 </JettyMenuItemPage>
@@ -165,5 +167,14 @@
     height: 12rem;
     margin-top: var(--spacing-xl);
     margin-bottom: var(--spacing-lg);
+  }
+
+  .multiple-gems-img {
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
+
+    :global(img) {
+      width: 100%;
+    }
   }
 </style>
