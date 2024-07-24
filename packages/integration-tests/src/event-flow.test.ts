@@ -707,6 +707,40 @@ describe('Event flows', () => {
     )
   })
 
+  describe('tracked accounts', () => {
+    it('should work for transfer tokens', { timeout: 60_000, skip: false }, async () => {
+      const { user } = await createAccount({ withXrd: true, withHeroBadge: true })
+      await startQuestAndAddTrackedAccount(user.id, 'TransferTokens')
+      const data = await userQuestModel.getQuestsWithTrackedAccounts(100, 0)
+      expect(data.isOk()).toBe(true)
+      if (data.isOk()) {
+        const userTracked = data.value.filter((el) => el.accountAddress === user.accountAddress)
+        expect(userTracked.length).toBe(1)
+      }
+    })
+
+    it('should work for advanced quests', { timeout: 60_000, skip: false }, async () => {
+      const { user } = await createAccount({
+        withXrd: true,
+        withHeroBadge: true
+      })
+      await completeTransferTokensQuest(user)
+      await userQuestModel.updateQuestStatus('TransferTokens', user.id, 'COMPLETED')
+
+      await startQuestAndAddTrackedAccount(user.id, 'Instapass')
+      await startQuestAndAddTrackedAccount(user.id, 'NetworkStaking')
+      await startQuestAndAddTrackedAccount(user.id, 'DEXSwaps')
+
+      const data = await userQuestModel.getQuestsWithTrackedAccounts(100, 0)
+      expect(data.isOk()).toBe(true)
+      if (data.isOk()) {
+        const userTracked = data.value.filter((el) => el.accountAddress === user.accountAddress)
+        console.log(userTracked)
+        expect(userTracked.length).toBe(3)
+      }
+    })
+  })
+
   describe.skip('utm', () => {
     it('should set users with utm', async () => {
       const numberOfUsers = new Array(100).fill(0)
