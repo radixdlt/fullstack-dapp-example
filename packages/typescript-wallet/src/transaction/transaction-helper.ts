@@ -176,7 +176,7 @@ export const TransactionHelper = ({
   > => {
     const message = optional?.message
     const onTransactionId = optional?.onTransactionId ?? (() => okAsync(undefined))
-    if (typeof transactionManifest === 'string') console.log(transactionManifest)
+    if (typeof transactionManifest === 'string') logger?.debug({ transactionManifest })
     return (
       typeof transactionManifest === 'string'
         ? transformStringManifest(transactionManifest, optional?.blobs)
