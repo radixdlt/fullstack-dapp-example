@@ -2,6 +2,7 @@ import { GatewayApiClient } from '../gateway'
 import { concatMap, from, tap, map, withLatestFrom, filter, switchMap, timer } from 'rxjs'
 import { TransactionStreamSubjects } from './subjects'
 import { HandleTransactionResult, handleTransactionResult } from './helpers/handleTransactionResult'
+import { gatewayStatusGauge } from '../metrics'
 
 export type TransactionStreamInput = {
   fromStateVersion?: number
@@ -23,7 +24,10 @@ export const TransactionStream = ({
 
   const fetchAndProcessTransactions = (stateVersion: number) =>
     from(getTransactions(stateVersion)).pipe(
-      map((result) => handleTransactionResult(result, stateVersion!))
+      map((result) => {
+        gatewayStatusGauge.set(1)
+        return handleTransactionResult(result, stateVersion!)
+      })
     )
 
   const continueStream = (delay: number) => subjects.triggerSubject.next(delay)
