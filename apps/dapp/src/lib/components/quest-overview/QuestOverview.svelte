@@ -191,6 +191,9 @@
 
   .status-icon-with-background {
     background: var(--gradient-6);
+    &.disabled {
+      background: var(--color-primary);
+    }
   }
 
   .status-icon-in-progress {

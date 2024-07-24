@@ -22,6 +22,7 @@
   import { createEventDispatcher } from 'svelte'
   import Notification from './Notification.svelte'
   import { swipe } from 'svelte-gestures'
+  import { clickOutside } from '$lib/utils/click-outside'
 
   export let expanded = false
   export let poppedUp = true
@@ -133,6 +134,8 @@
   style:--menuPosition={`${$menuPositionFactor * 98}%`}
   use:swipe
   on:swipe={() => {}}
+  use:clickOutside
+  on:clickOutside={() => (expanded = false)}
 >
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
