@@ -129,7 +129,6 @@
   }
 </script>
 
-<!-- <div class="jetty-menu-background" class:not-expanded={!expanded} on:click={onClickOutside} aria> -->
 <div
   class="jetty-menu"
   style:--menuPosition={`${$menuPositionFactor * 98}%`}
