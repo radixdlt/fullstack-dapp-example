@@ -13,7 +13,6 @@
 
   <p class="info">
     {#if referralsCount < 10}
-      {referralsCount}
       {@html $i18n.t('quests:QuestTogether.info_2')}
     {:else}
       <strong>{$i18n.t('quests:QuestTogether.unlockedSuperLevel')}</strong><br />
