@@ -402,14 +402,16 @@
         </div>
       </div>
     </JettyMenuItemPage>
-  {:else if totalGiftBoxes === 0}
+  {:else if true}
     <JettyMenuItemPage
       action={{
         text: $i18n.t('jetty:close'),
         onClick: close
       }}
     >
-      {$i18n.t('jetty:open-gift-box.no-boxes')}
+      <div class="padding">
+        {$i18n.t('jetty:open-gift-box.no-boxes')}
+      </div>
     </JettyMenuItemPage>
   {:else if readyToOpen || totalGiftBoxes === 1}
     <div class="page-with-subtitle">
@@ -503,6 +505,14 @@
     flex-direction: column;
     gap: var(--spacing-md);
     align-items: center;
+  }
+
+  .padding {
+    padding: var(--spacing-2xl);
+
+    @include mobile {
+      padding: var(--spacing-xl);
+    }
   }
 
   .loading {
