@@ -149,7 +149,7 @@ interface Resources {
       "comingSoon": "Coming Soon",
       "inProgress": "Continue",
       "claimRewards": "Claim Rewards",
-      "complete": "View Again"
+      "complete": "Recap"
     },
     "Welcome": {
       "hi": "Meet Jetty",
@@ -222,7 +222,7 @@ interface Resources {
         "RadMorphsQuiz": "Learn about rewards, from Gift Boxes to RadMorphs"
       },
       "description": "How to collect and combine",
-      "introDescription": "How to collect and combine on RadQuest to make the best and most rare RadMorph NFTs"
+      "introDescription": "How to collect and combine on RadQuest to make the best and most rare RadMorph NFTs."
     },
     "TransferTokens": {
       "requirements": {
