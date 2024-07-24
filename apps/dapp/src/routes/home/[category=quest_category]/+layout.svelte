@@ -10,6 +10,7 @@
   import { markNotificationAsSeen } from '$lib/notifications'
   import { useCookies } from '$lib/utils/cookies'
   import { onMount } from 'svelte'
+  import { derived } from 'svelte/store'
 
   export let data: LayoutData
 
@@ -21,6 +22,10 @@
     if ($page.params.category === 'advanced') {
       markNotificationAsSeen('basicQuestsComplete')
     }
+
+    setTimeout(() => {
+      scrollToEarliestQuest()
+    }, 0)
   })
 
   $: questCardState = Object.entries(data.questDefinitions).reduce(
@@ -62,30 +67,44 @@
 
   let carousel: Carousel
 
+  const scrollToEarliestQuest = () => {
+    const earliestUnlockedQuest = _quests.find(([id, _]) => questCardState[id] !== 'locked')?.[0]
+
+    if (earliestUnlockedQuest)
+      carousel.scrollToIndex(Object.keys($quests).indexOf(earliestUnlockedQuest))
+    else carousel.scrollToIndex(0)
+  }
+
+  const category = derived(page, ($page) => $page.params.category)
+
+  $: {
+    if (carousel && $category) {
+      scrollToEarliestQuest()
+    }
+  }
+
   $: if ($scrollToQuestIndex && carousel) {
     carousel.scrollToIndex($scrollToQuestIndex)
     $scrollToQuestIndex = null
   }
 </script>
 
-{#key $page.params.category}
-  <Carousel bind:this={carousel} let:Item let:centreOnClicked>
-    {#each _quests as [id, quest], i}
-      <Item {i} on:click={centreOnClicked}>
-        <QuestOverview
-          title={$i18n.t(`quests:${id}.title`)}
-          description={$i18n.t(`quests:${id}.description`)}
-          minutesToComplete={quest.minutesToComplete}
-          rewards={quest.rewards}
-          backgroundImage={quest.splashImage}
-          state={questCardState[id] ?? 'locked'}
-          link={`/home/${quest.category}/quest/${id}`}
-          questId={id}
-        />
-      </Item>
-    {/each}
-  </Carousel>
-{/key}
+<Carousel bind:this={carousel} let:Item let:centreOnClicked>
+  {#each _quests as [id, quest], i}
+    <Item {i} on:click={centreOnClicked}>
+      <QuestOverview
+        title={$i18n.t(`quests:${id}.title`)}
+        description={$i18n.t(`quests:${id}.description`)}
+        minutesToComplete={quest.minutesToComplete}
+        rewards={quest.rewards}
+        backgroundImage={quest.splashImage}
+        state={questCardState[id] ?? 'locked'}
+        link={`/home/${quest.category}/quest/${id}`}
+        questId={id}
+      />
+    </Item>
+  {/each}
+</Carousel>
 
 <slot />
 
