@@ -22,6 +22,7 @@
   import { createEventDispatcher } from 'svelte'
   import Notification from './Notification.svelte'
   import { swipe } from 'svelte-gestures'
+  import { clickOutside } from '$lib/utils/click-outside'
 
   export let expanded = false
   export let poppedUp = true
@@ -128,11 +129,14 @@
   }
 </script>
 
+<!-- <div class="jetty-menu-background" class:not-expanded={!expanded} on:click={onClickOutside} aria> -->
 <div
   class="jetty-menu"
   style:--menuPosition={`${$menuPositionFactor * 98}%`}
   use:swipe
   on:swipe={() => {}}
+  use:clickOutside
+  on:clickOutside={() => (expanded = false)}
 >
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
@@ -229,6 +233,8 @@
     </div>
   {/if}
 </div>
+
+<!-- </div> -->
 
 <style lang="scss">
   :global(.jetty-menu) {
