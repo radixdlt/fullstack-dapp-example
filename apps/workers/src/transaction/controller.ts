@@ -82,16 +82,22 @@ export const TransactionWorkerController = ({
       GiftBoxRewardConfig({ getRandomFloat, getRandomIntInclusive })
     )
 
-    const getCompletedTransactionId = () =>
+    const getCompletedOrPendingTransactionId = () =>
       ResultAsync.fromPromise(
         dbClient.submittedTransaction
-          .findFirst({ where: { transactionIntent: job.data.discriminator, status: 'COMPLETED' } })
+          .findFirst({
+            select: { transactionId: true },
+            where: {
+              transactionIntent: job.data.discriminator,
+              status: { in: ['PENDING', 'COMPLETED'] }
+            }
+          })
           .then((value) => value?.transactionId),
         (error) => ({ reason: WorkerError.FailedToQueryDb, jsError: error })
       )
 
     const handleSubmitTransaction = (manifest: string) =>
-      getCompletedTransactionId().andThen((completedTransactionId) =>
+      getCompletedOrPendingTransactionId().andThen((completedTransactionId) =>
         completedTransactionId
           ? transactionHelper
               .pollTransactionStatus(completedTransactionId)
