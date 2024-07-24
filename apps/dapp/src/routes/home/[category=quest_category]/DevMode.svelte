@@ -199,7 +199,7 @@
   }
 
   .dev-mode-card {
-    height: 95vh;
+    max-height: 95dvh;
     overflow: auto;
   }
 
