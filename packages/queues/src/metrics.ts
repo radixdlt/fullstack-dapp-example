@@ -7,7 +7,7 @@ import type { AppLogger } from 'common'
 export type QueueMetrics = ReturnType<typeof QueueMetrics>
 export const QueueMetrics = (name: string) => {
   return {
-    waitingJobs: new client.Counter({
+    waitingJobs: new client.Gauge({
       name: `${name}_queue_waiting_jobs`,
       help: `The number of waiting jobs in the ${name} queue`
     }),
@@ -36,9 +36,10 @@ const setupQueueEvents = (input: {
   const queueEvent = new QueueEvents(input.queueName, { connection: input.connection })
   const childLogger = input.logger?.child({ queue: input.queueName, method: 'queueMetrics' })
 
-  const setWaitingJobs = async (value: number) => {
+  const setWaitingJobs = async () => {
+    const value = await input.queue.getWaitingCount()
     childLogger?.trace({ status: `waiting`, value })
-    input.trackMetricsFn.waitingJobs.inc(value)
+    input.trackMetricsFn.waitingJobs.set(value)
   }
   const setProgressJobs = async (value: number) => {
     childLogger?.trace({ status: `active`, value })
@@ -55,11 +56,11 @@ const setupQueueEvents = (input: {
   }
 
   queueEvent.on('waiting', async () => {
-    await setWaitingJobs(1)
+    await setWaitingJobs()
   })
 
   queueEvent.on('progress', async () => {
-    await Promise.all([setProgressJobs(1)])
+    await Promise.all([setWaitingJobs(), setProgressJobs(1)])
   })
 
   queueEvent.on('failed', async () => {
