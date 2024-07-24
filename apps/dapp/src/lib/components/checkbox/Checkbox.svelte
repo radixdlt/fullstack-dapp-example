@@ -17,7 +17,9 @@
 <button {disabled} on:click|stopPropagation={handleOnClick} class="wrapper">
   <label class="label">
     <input {disabled} class="checkbox" type="checkbox" class:checked class:disabled bind:checked />
-    <slot />
+    <span class:disabled>
+      <slot />
+    </span>
   </label>
 </button>
 
