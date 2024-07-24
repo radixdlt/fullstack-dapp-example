@@ -234,8 +234,6 @@
   {/if}
 </div>
 
-<!-- </div> -->
-
 <style lang="scss">
   :global(.jetty-menu) {
     ::-webkit-scrollbar-thumb {
