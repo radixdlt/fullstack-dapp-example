@@ -24,20 +24,11 @@
   const addresses = Addresses(publicConfig.networkId)
   const jettySwap = writable(data.requirements?.JettySwap.isComplete)
   const lettySwap = writable(data.requirements?.LettySwap.isComplete)
-  let mounted = false
-
-  $: {
-    if ($user?.accountAddress! && mounted)
-      checkAccountHasClams($user?.accountAddress!).map((hasClams) => {
-        $accountHasClams = hasClams
-      })
-  }
 
   onMount(() => {
     markNotificationAsSeen('jettySwapCompleted')
     markNotificationAsSeen('lettySwapCompleted')
     markNotificationAsSeen('clamsReceived')
-    mounted = true
   })
 
   const handleClaimClams = () => {
@@ -45,7 +36,9 @@
     getClams($user?.accountAddress!, $user?.id!).finally(() => {
       checkAccountHasClams($user?.accountAddress!).map((hasClams) => {
         $accountHasClams = hasClams
-        accountHasClams && quest.actions.next()
+        if (accountHasClams && (quest.render('5') || quest.render('18'))) {
+          quest.actions.next()
+        }
         loading = false
       })
     })
@@ -73,6 +66,16 @@
 <Quest
   bind:this={quest}
   id={data.id}
+  on:render={({ detail }) => {
+    if (detail === '18' || detail === '5') {
+      if ($user?.accountAddress) {
+        checkAccountHasClams($user?.accountAddress).map((hasClams) => {
+          $accountHasClams = hasClams
+          loading = false
+        })
+      }
+    }
+  }}
   requirements={data.requirements}
   nextQuestIndex={data.nextQuestIndex}
   steps={[
@@ -187,6 +190,11 @@
   {/if}
   {#if render('18')}
     {@html text['18.md']}
+    <div class="center">
+      <Button on:click={handleClaimClams} {loading}
+        >{$i18n.t('quests:TransferTokens.getClams')}</Button
+      >
+    </div>
   {/if}
   {#if render('19')}
     {@html htmlReplace(text['19.md'], {
