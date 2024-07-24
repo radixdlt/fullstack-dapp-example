@@ -24,20 +24,11 @@
   const addresses = Addresses(publicConfig.networkId)
   const jettySwap = writable(data.requirements?.JettySwap.isComplete)
   const lettySwap = writable(data.requirements?.LettySwap.isComplete)
-  let mounted = false
-
-  $: {
-    if ($user?.accountAddress! && mounted)
-      checkAccountHasClams($user?.accountAddress!).map((hasClams) => {
-        $accountHasClams = hasClams
-      })
-  }
 
   onMount(() => {
     markNotificationAsSeen('jettySwapCompleted')
     markNotificationAsSeen('lettySwapCompleted')
     markNotificationAsSeen('clamsReceived')
-    mounted = true
   })
 
   const handleClaimClams = () => {
@@ -56,11 +47,17 @@
     unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'JettySwap') {
         $jettySwap = true
+        if (quest.render('6')) {
+          quest.actions.next()
+        }
         messageApi.markAsSeen(message.id)
       }
 
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'LettySwap') {
         $lettySwap = true
+        if (quest.render('19')) {
+          quest.actions.next()
+        }
         messageApi.markAsSeen(message.id)
       }
     })
@@ -73,6 +70,16 @@
 <Quest
   bind:this={quest}
   id={data.id}
+  on:render={({ detail }) => {
+    if (detail === '18' || detail === '5') {
+      if ($user?.accountAddress) {
+        checkAccountHasClams($user?.accountAddress).map((hasClams) => {
+          $accountHasClams = hasClams
+          loading = false
+        })
+      }
+    }
+  }}
   requirements={data.requirements}
   nextQuestIndex={data.nextQuestIndex}
   steps={[
@@ -85,7 +92,6 @@
     {
       id: '6',
       type: 'regular',
-      skip: jettySwap,
       footer: {
         next: {
           enabled: jettySwap
@@ -107,7 +113,6 @@
     {
       id: '19',
       type: 'regular',
-      skip: lettySwap,
       footer: {
         next: {
           enabled: lettySwap
@@ -187,6 +192,11 @@
   {/if}
   {#if render('18')}
     {@html text['18.md']}
+    <div class="center">
+      <Button on:click={handleClaimClams} {loading}
+        >{$i18n.t('quests:TransferTokens.getClams')}</Button
+      >
+    </div>
   {/if}
   {#if render('19')}
     {@html htmlReplace(text['19.md'], {
