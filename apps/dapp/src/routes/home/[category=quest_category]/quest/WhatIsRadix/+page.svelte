@@ -11,7 +11,7 @@
 <Quest
   id={data.id}
   requirements={data.requirements}
-  nextQuestIndex={data.nextQuestIndex}
+  nextQuest={data.nextQuest}
   steps={[
     {
       id: '0',

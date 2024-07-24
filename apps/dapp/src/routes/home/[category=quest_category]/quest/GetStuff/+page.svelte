@@ -211,7 +211,7 @@
     }
   }}
   requirements={data.requirements}
-  nextQuestIndex={data.nextQuestIndex}
+  nextQuest={data.nextQuest}
   bind:this={quest}
   let:next
   steps={[

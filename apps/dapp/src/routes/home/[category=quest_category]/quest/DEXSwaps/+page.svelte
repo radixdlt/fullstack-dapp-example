@@ -77,7 +77,7 @@
     }
   }}
   requirements={data.requirements}
-  nextQuestIndex={data.nextQuestIndex}
+  nextQuest={data.nextQuest}
   steps={[
     { id: '0', type: 'regular' },
     { id: '1', type: 'regular' },

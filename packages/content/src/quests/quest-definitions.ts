@@ -57,7 +57,7 @@ export type QuestDefinition = {
   requirements: Requirements
   splashImage?: string
   minutesToComplete: number
-  nextQuestIndex: number | null
+  nextQuest?: string
 }
 
 export type QuestId = ReturnType<typeof QuestDefinitions>[keyof ReturnType<
@@ -79,7 +79,7 @@ export const QuestDefinitions = () => {
           completedByUser: true
         }
       },
-      nextQuestIndex: 1
+      nextQuest: 'WhatIsRadix'
     },
     WhatIsRadix: {
       id: 'WhatIsRadix',
@@ -95,7 +95,7 @@ export const QuestDefinitions = () => {
           isHidden: false
         }
       },
-      nextQuestIndex: 2
+      nextQuest: 'SetupWallet'
     },
     SetupWallet: {
       id: 'SetupWallet',
@@ -114,7 +114,7 @@ export const QuestDefinitions = () => {
           completedByUser: true
         }
       },
-      nextQuestIndex: 3
+      nextQuest: 'GetStuff'
     },
     GetStuff: {
       id: 'GetStuff',
@@ -150,7 +150,7 @@ export const QuestDefinitions = () => {
           eventName: 'DepositEvent'
         }
       },
-      nextQuestIndex: 4
+      nextQuest: 'CreatingRadMorphs'
     },
     CreatingRadMorphs: {
       id: 'CreatingRadMorphs',
@@ -170,7 +170,7 @@ export const QuestDefinitions = () => {
           completedByUser: true
         }
       },
-      nextQuestIndex: 5
+      nextQuest: 'TransferTokens'
     },
     TransferTokens: {
       id: 'TransferTokens',
@@ -208,8 +208,7 @@ export const QuestDefinitions = () => {
           completedByUser: true,
           isHidden: true
         }
-      },
-      nextQuestIndex: null
+      }
     },
     QuestTogether: {
       id: 'QuestTogether',
@@ -271,8 +270,7 @@ export const QuestDefinitions = () => {
         SuperLevel: {
           type: 'offLedger'
         }
-      },
-      nextQuestIndex: null
+      }
     },
     JoinFriend: {
       id: 'JoinFriend',
@@ -291,8 +289,7 @@ export const QuestDefinitions = () => {
           type: 'offLedger',
           completedByUser: false
         }
-      },
-      nextQuestIndex: null
+      }
     },
     DEXSwaps: {
       id: 'DEXSwaps',
@@ -319,8 +316,7 @@ export const QuestDefinitions = () => {
           eventName: 'ClamSwapEvent',
           type: 'event'
         }
-      },
-      nextQuestIndex: null
+      }
     },
     NetworkStaking: {
       id: 'NetworkStaking',
@@ -343,8 +339,7 @@ export const QuestDefinitions = () => {
           eventName: 'StakedXrd',
           type: 'event'
         }
-      },
-      nextQuestIndex: null
+      }
     },
     Instapass: {
       id: 'Instapass',
@@ -367,8 +362,7 @@ export const QuestDefinitions = () => {
           eventName: 'InstapassBadgeDeposited',
           type: 'event'
         }
-      },
-      nextQuestIndex: null
+      }
     },
     Thorswap: {
       id: 'Thorswap',
@@ -391,8 +385,7 @@ export const QuestDefinitions = () => {
           eventName: 'MayaRouterWithdrawEvent',
           type: 'event'
         }
-      },
-      nextQuestIndex: null
+      }
     }
   } as const satisfies { [key: string]: QuestDefinition }
 }
