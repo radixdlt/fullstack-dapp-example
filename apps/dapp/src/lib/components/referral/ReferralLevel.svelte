@@ -1,6 +1,5 @@
 <script lang="ts">
   import { i18n } from '$lib/i18n/i18n'
-  import FireIcon from '@images/fire.svg'
   import { sendTransaction } from '$lib/rdt'
   import { QuestDefinitions, type QuestId } from 'content'
   import Button from '../button/Button.svelte'
@@ -30,13 +29,11 @@
   $: rewards = questDefinition.partialRewards?.[level as Level] || []
   $: requirement = questDefinition.requirements?.[level as Level]
   $: icon =
-    level === 'SuperLevel'
-      ? FireIcon
-      : status === '' || !status
-        ? LockedLevelIcon
-        : status === 'REWARDS_CLAIMED'
-          ? CompletedGradientIcon
-          : HourGlassIcon
+    status === '' || !status
+      ? LockedLevelIcon
+      : status === 'REWARDS_CLAIMED'
+        ? CompletedGradientIcon
+        : HourGlassIcon
   $: referredCount = Math.min(maximum, referred)
 
   const claimRewards = () => {
@@ -63,33 +60,17 @@
   }
 </script>
 
-<ReferralLevelUI
-  title={name}
-  {icon}
-  progress={level === 'SuperLevel' ? 1 : referred}
-  totalSteps={level === 'SuperLevel' ? 1 : requirement.threshold}
->
+<ReferralLevelUI title={name} {icon} progress={referred} totalSteps={requirement.threshold}>
   <svelte:fragment slot="referrals">
-    {#if level === 'SuperLevel'}
-      {$i18n.t('quests:QuestTogether.progressSuperLevel', {
-        count: questDefinition.requirements.GoldLevel.threshold
-      })}
-    {:else}
-      {$i18n.t('quests:QuestTogether.referralsProgress', {
-        referred: referredCount,
-        maximum: requirement.threshold
-      })}
-    {/if}
+    {$i18n.t('quests:QuestTogether.referralsProgress', {
+      referred: referredCount,
+      maximum: requirement.threshold
+    })}
   </svelte:fragment>
 
   <svelte:fragment slot="content">
-    {#if level === 'SuperLevel'}
-      <p>{$i18n.t('quests:QuestTogether.SuperLevelInfo')}</p>
-      <Button>{$i18n.t('quests:QuestTogether.SuperLevelButton')}</Button>
-    {:else}
-      <div class="rewards">{$i18n.t('quests:rewards')}:</div>
-      <QuestRewards {rewards} displayName vertical --rewards-gap="0.5rem" />
-    {/if}
+    <div class="rewards">{$i18n.t('quests:rewards')}:</div>
+    <QuestRewards {rewards} displayName vertical --rewards-gap="0.5rem" />
   </svelte:fragment>
 
   <svelte:fragment slot="action-button">
