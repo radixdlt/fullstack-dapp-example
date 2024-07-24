@@ -36,7 +36,9 @@
     getClams($user?.accountAddress!, $user?.id!).finally(() => {
       checkAccountHasClams($user?.accountAddress!).map((hasClams) => {
         $accountHasClams = hasClams
-        accountHasClams && quest.actions.next()
+        if (accountHasClams && (quest.render('5') || quest.render('18'))) {
+          quest.actions.next()
+        }
         loading = false
       })
     })
@@ -47,17 +49,11 @@
     unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'JettySwap') {
         $jettySwap = true
-        if (quest.render('6')) {
-          quest.actions.next()
-        }
         messageApi.markAsSeen(message.id)
       }
 
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'LettySwap') {
         $lettySwap = true
-        if (quest.render('19')) {
-          quest.actions.next()
-        }
         messageApi.markAsSeen(message.id)
       }
     })
@@ -92,6 +88,7 @@
     {
       id: '6',
       type: 'regular',
+      skip: jettySwap,
       footer: {
         next: {
           enabled: jettySwap
@@ -113,6 +110,7 @@
     {
       id: '19',
       type: 'regular',
+      skip: lettySwap,
       footer: {
         next: {
           enabled: lettySwap
