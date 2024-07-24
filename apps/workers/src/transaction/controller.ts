@@ -97,39 +97,39 @@ export const TransactionWorkerController = ({
       )
 
     const handleSubmitTransaction = (manifest: string) =>
-      getCompletedOrPendingTransactionId().andThen((completedTransactionId) =>
-        completedTransactionId
+      getCompletedOrPendingTransactionId().andThen((pendingOrCompletedTransactionId) => {
+        const result = pendingOrCompletedTransactionId
           ? transactionHelper
-              .pollTransactionStatus(completedTransactionId)
-              .map((response) => ({ response, transactionId: completedTransactionId }))
-          : transactionHelper
-              .submitTransaction(manifest, {
-                onTransactionId: (transactionId) => {
-                  transactionId = transactionId
-                  return upsertSubmittedTransaction({ transactionId, status: 'PENDING' })
-                }
-              })
-              .orElse((error) => {
-                logger.error({
-                  method: 'handleSubmitTransaction.err',
-                  transactionId: error.transactionId,
-                  status: 'FAILED'
-                })
+              .pollTransactionStatus(pendingOrCompletedTransactionId)
+              .map((response) => ({ response, transactionId: pendingOrCompletedTransactionId }))
+          : transactionHelper.submitTransaction(manifest, {
+              onTransactionId: (transactionId) => {
+                transactionId = transactionId
+                return upsertSubmittedTransaction({ transactionId, status: 'PENDING' })
+              }
+            })
+        return result
+          .orElse((error) => {
+            logger.error({
+              method: 'handleSubmitTransaction.err',
+              transactionId: error.transactionId,
+              status: 'FAILED'
+            })
 
-                return error.transactionId
-                  ? upsertSubmittedTransaction({
-                      status: 'FAILED',
-                      transactionId: error.transactionId
-                    }).andThen(() => errAsync(error))
-                  : errAsync(error)
-              })
-              .andThen((value) =>
-                upsertSubmittedTransaction({
-                  transactionId: value.transactionId,
-                  status: 'COMPLETED'
-                }).map(() => value)
-              )
-      )
+            return error.transactionId
+              ? upsertSubmittedTransaction({
+                  status: 'FAILED',
+                  transactionId: error.transactionId
+                }).andThen(() => errAsync(error))
+              : errAsync(error)
+          })
+          .andThen((value) =>
+            upsertSubmittedTransaction({
+              transactionId: value.transactionId,
+              status: 'COMPLETED'
+            }).map(() => value)
+          )
+      })
 
     const addEntryToAuditTable = ({
       userId,
