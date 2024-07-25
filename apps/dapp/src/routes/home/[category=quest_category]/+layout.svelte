@@ -87,6 +87,10 @@
     carousel.scrollToIndex($scrollToQuestIndex)
     $scrollToQuestIndex = null
   }
+
+  $: if ($category === 'advanced') {
+    markNotificationAsSeen('basicQuestsComplete')
+  }
 </script>
 
 <Carousel bind:this={carousel} let:Item let:centreOnClicked>

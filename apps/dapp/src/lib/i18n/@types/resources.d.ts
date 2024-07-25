@@ -23,7 +23,7 @@ interface Resources {
       "logged-in-with-wallet": "Now that you're logged in, continue your quest: Get the Radix Wallet",
       "received-clams": "You're ready to continue your quest: Transfer Tokens.",
       "basic-quests-complete": "Now continue your journey with the Advanced Quests.",
-      "join-friend": "You're now ready to join {{ referrer }} and claim your XRD reward!",
+      "join-friend": "You're now ready to join {{referrer}} and claim your XRD reward!",
       "new-tier": "You just leveled up with more friends! Now go claim your rewards.",
       "swap-completed": "Continue your quest: Swap Tokens on a DEX.",
       "stake-completed": "Continue your quest: Radix Network Staking.",
