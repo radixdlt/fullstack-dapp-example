@@ -1,31 +1,26 @@
 import { json } from '@sveltejs/kit'
-import { EventId } from 'common'
+import type { EventStatus } from 'database'
 
 export const POST = async ({ request, locals }) => {
-  const requestBody = await request.json()
+  const { status, userId } = await request.json()
 
-  const { ids }: { ids: string[] } = requestBody
+  const statuses = Object.entries(status)
+    .filter(([_, value]) => value)
+    .map(([key]) => key.toUpperCase() as EventStatus)
 
-  const events = await locals.dbClient.event.findMany({
-    orderBy: { createdAt: 'desc' },
-    where: { transactionId: { in: ids } }
-  })
+  const [events, count] = await Promise.all([
+    locals.dbClient.event.findMany({
+      take: 250,
+      orderBy: { createdAt: 'desc' },
+      where: {
+        status: {
+          in: statuses
+        },
+        userId: userId ? { equals: userId } : undefined
+      }
+    }),
+    await locals.dbClient.event.count()
+  ])
 
-  for (const event of events) {
-    const data = event.data as Record<string, unknown>
-    const type = event.id as EventId
-    const jobData = {
-      data,
-      eventId: event.id,
-      type,
-      transactionId: event.transactionId,
-      userId: event.userId,
-      traceId: crypto.randomUUID()
-    }
-    locals.logger.debug({ method: 'retryingEventJob', jobData })
-    await locals.eventQueue.queue.remove(jobData.transactionId)
-    await locals.eventQueue.addJob(jobData)
-  }
-
-  return json({}, { status: 200 })
+  return json({ data: events, count }, { status: 200 })
 }
