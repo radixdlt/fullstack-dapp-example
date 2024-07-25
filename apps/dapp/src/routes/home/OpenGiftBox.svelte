@@ -30,7 +30,8 @@
         }),
       (result) =>
         result.andThen((response) => {
-          const entries = (response.entries[0]?.value.programmatic_json as any).elements[0]?.entries
+          const openedBoxes = (response.entries[0]?.value.programmatic_json as any).elements
+          const entries = openedBoxes[openedBoxes.length - 1]?.entries
 
           if (!entries) return errAsync(Error('Nothing to claim'))
 
