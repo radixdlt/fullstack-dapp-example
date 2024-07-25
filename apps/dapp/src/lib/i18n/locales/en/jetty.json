@@ -30,6 +30,7 @@
     "intro2": "It looks like you have {{count}} Element(s) in your registered Radix account.",
     "enough-elements": "Give me 5 Elements and I’ll get started with fusing them into 1 RadGem...",
     "send-button": "Send 5 Elements",
+    "create-another": "Create Another",
     "not-enough-elements": "Oops! You currently only have {{count}} Element(s) in your registered Radix Account.",
     "no-elements": "You don't have any Elements in your wallet. Get at least 5 Elements by completing quests, and then come back!",
     "fusing-elements": "Fusing Elements into a RadGem...",

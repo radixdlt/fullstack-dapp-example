@@ -140,6 +140,8 @@
 
   const elementsToCreateRadgem = 5
 
+  $: enoughElementsForRadgems = parseInt(amountOfElements) >= elementsToCreateRadgem
+
   const sendElements = async () => {
     const transactionManifest = `
         CALL_METHOD
@@ -283,10 +285,26 @@
     </JettyMenuItemPage>
   {:else if radgemClaimed}
     <JettyMenuItemPage
-      action={{
-        text: $i18n.t('jetty:close'),
-        onClick: () => dispatch('cancel')
-      }}
+      action={!enoughElementsForRadgems
+        ? {
+            text: $i18n.t('jetty:close'),
+            onClick: () => dispatch('cancel')
+          }
+        : undefined}
+      actions={enoughElementsForRadgems
+        ? {
+            left: {
+              text: $i18n.t('jetty:close'),
+              onClick: () => dispatch('cancel')
+            },
+            right: {
+              text: $i18n.t('jetty:fuse-elements.create-another'),
+              onClick: () => {
+                radgemClaimed = false
+              }
+            }
+          }
+        : undefined}
     >
       <div slot="header">
         {$i18n.t('jetty:fuse-elements.radgem-claimed')}
@@ -304,6 +322,8 @@
       on:claimed={() => {
         checkAmountOfElements().map(() => {
           radgemClaimed = true
+          elementsDeposited = false
+          claimAvailable = false
         })
       }}
     />
@@ -311,15 +331,13 @@
     {#key rerender}
       <div class="page-with-subtitle">
         <JettyMenuItemPage
-          action={noElements || parseInt(amountOfElements) < elementsToCreateRadgem
+          action={noElements || !enoughElementsForRadgems
             ? {
                 text: $i18n.t('jetty:close'),
                 onClick: () => dispatch('cancel')
               }
             : {
-                text: $i18n.t('jetty:fuse-elements.send-button', {
-                  count: 10
-                }),
+                text: $i18n.t('jetty:fuse-elements.send-button'),
                 onClick: sendElements
               }}
           loading={waitingForSendElements}
@@ -333,7 +351,7 @@
 
             {$i18n.t('jetty:fuse-elements.intro1')}
 
-            {#if parseInt(amountOfElements) >= elementsToCreateRadgem}
+            {#if enoughElementsForRadgems}
               <p>
                 {$i18n.t('jetty:fuse-elements.intro2', { count: parseInt(amountOfElements) })}
               </p>

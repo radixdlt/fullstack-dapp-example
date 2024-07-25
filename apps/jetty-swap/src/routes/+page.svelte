@@ -330,12 +330,13 @@
   .mascot-img {
     position: absolute;
     z-index: 0;
-    top: -2.5rem;
+    top: -2.8rem;
     width: 20rem;
 
     @include mobile {
       width: 15.25rem;
       left: 0rem;
+      top: -2.2rem;
     }
 
     @media (max-width: 400px) {
