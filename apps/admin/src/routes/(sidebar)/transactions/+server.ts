@@ -1,29 +1,24 @@
 import { json } from '@sveltejs/kit'
-import type { TransactionJob } from 'queues'
+import type { EventStatus } from 'database'
 
 export const POST = async ({ request, locals }) => {
-  const requestBody = await request.json()
+  const { status, userId } = await request.json()
 
-  const { ids }: { ids: string[] } = requestBody
+  const statuses = Object.entries(status)
+    .filter(([_, value]) => value)
+    .map(([key]) => key.toUpperCase() as EventStatus)
 
-  const transactions = await locals.dbClient.transactionIntent.findMany({
+  const data = await locals.dbClient.transactionIntent.findMany({
     take: 250,
     orderBy: { createdAt: 'desc' },
-    where: { discriminator: { in: ids } }
+    include: { transactions: true, user: true },
+    where: {
+      status: {
+        in: statuses
+      },
+      userId: userId ? { equals: userId } : undefined
+    }
   })
 
-  for (const transaction of transactions) {
-    const data = transaction.data as TransactionJob
-    const jobData = {
-      ...data,
-      discriminator: transaction.discriminator,
-      userId: transaction.userId,
-      traceId: crypto.randomUUID()
-    }
-    locals.logger.debug({ method: 'retryingTransactionJob', jobData })
-    await locals.eventQueue.queue.remove(jobData.discriminator)
-    await locals.transactionQueue.add(jobData)
-  }
-
-  return json({}, { status: 200 })
+  return json({ data }, { status: 200 })
 }

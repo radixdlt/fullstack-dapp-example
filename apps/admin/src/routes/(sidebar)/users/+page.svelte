@@ -30,7 +30,6 @@
       .then((res) => res.json())
       .then((res) => {
         $users = res.users
-        console.log(res.users.length)
       })
   }
 

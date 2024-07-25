@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { Button, Checkbox, Heading, TableHeadCell, TableSearch } from 'flowbite-svelte'
+  import { Heading, TableHeadCell, TableSearch } from 'flowbite-svelte'
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead } from 'flowbite-svelte'
-  import { GatewayApi, type Event } from 'common'
+  import { GatewayApi } from 'common'
   import { publicConfig } from '$lib/public-config'
   import { onMount } from 'svelte'
+  import type { Audit } from 'database'
 
-  let events: Event[] = []
+  let data: Audit[] = []
 
   const gateway = GatewayApi(publicConfig.networkId)
 
@@ -22,10 +23,10 @@
   }
 
   const getEvents = () => {
-    fetch(`/events`, { method: 'POST', body: JSON.stringify(filters) })
+    fetch(`/audit`, { method: 'POST', body: JSON.stringify(filters) })
       .then((res) => res.json())
       .then((res) => {
-        events = res.data
+        data = res.data
       })
   }
 
@@ -38,51 +39,41 @@
     getEvents()
   })
 
-  const retryJob = (id: string) =>
-    fetch(`/events/retry`, {
-      method: 'POST',
-      body: JSON.stringify({ ids: [id] })
-    })
+  const getIterable = (data: unknown, key: string) => {
+    if (data && typeof data === 'object' && key in data) {
+      if (Array.isArray((data as any)[key])) {
+        return (data as any)[key]
+      } else {
+        return []
+      }
+    } else {
+      return []
+    }
+  }
 </script>
 
 <main class="relative h-full w-full overflow-y-auto bg-white dark:bg-gray-800">
   <div class="p-4">
     <Heading tag="h1" class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
-      Events
+      Audit
     </Heading>
     <TableSearch placeholder="Find user by id" hoverable={true} bind:inputValue={filters.userId}
     ></TableSearch>
-    <div>
-      <div class="text-gray-900 dark:text-white">Status:</div>
-      <Checkbox bind:checked={filters.status.completed}>Completed</Checkbox>
-      <Checkbox bind:checked={filters.status.error}>Error</Checkbox>
-      <Checkbox bind:checked={filters.status.pending}>Pending</Checkbox>
-      <Checkbox bind:checked={filters.status.waiting}>Waiting</Checkbox>
-    </div>
   </div>
 
   <Table>
     <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
-      {#each ['eventId', 'userId', 'created', 'transactionId', 'status', 'Action'] as title}
+      {#each ['userId', 'transactionId', 'type', 'data', 'USD value', 'xrd price'] as title}
         <TableHeadCell class="p-4 font-medium">{title}</TableHeadCell>
       {/each}
     </TableHead>
     <TableBody>
-      {#each events as event}
+      {#each data as event}
         <TableBodyRow class="text-base">
-          <TableBodyCell class="flex items-center space-x-6 whitespace-nowrap p-4"
-            >{event.id}</TableBodyCell
-          >
-
           <TableBodyCell
             class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
           >
             <a target="_blank" href={`/users/${event.userId}`}>{event.userId}</a></TableBodyCell
-          >
-
-          <TableBodyCell
-            class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
-            >{event.createdAt}</TableBodyCell
           >
 
           <TableBodyCell
@@ -94,15 +85,37 @@
               >{event.transactionId}</a
             >
           </TableBodyCell>
+
           <TableBodyCell
             class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
           >
-            {event.status}
+            {event.type}
           </TableBodyCell>
+
           <TableBodyCell
             class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
-            ><Button on:click={() => retryJob(event.transactionId)}>Retry</Button></TableBodyCell
           >
+            <div>
+              {#each getIterable(event?.data, 'fungible') as item}
+                <div>{item.name}: {item.amount}</div>
+              {/each}
+              {#each getIterable(event?.data, 'nonFungible') as item}
+                <div>{item.name}</div>
+              {/each}
+            </div>
+          </TableBodyCell>
+
+          <TableBodyCell
+            class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
+          >
+            {event.xrdUsdValue}
+          </TableBodyCell>
+
+          <TableBodyCell
+            class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
+          >
+            {event.xrdPrice}
+          </TableBodyCell>
         </TableBodyRow>
       {/each}
     </TableBody>
