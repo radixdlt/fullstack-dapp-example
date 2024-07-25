@@ -59,6 +59,24 @@ spec:
         runbook_url: "https://runbooks.extratools.works"
 {{- end }}
 
+  - name: RadquestDependentServices
+    rules:
+    - alert: GatewayStatusAsSeenByRadquest
+      expr: >
+        (gateway_status{namespace="{{ $ns }}"})  == 0
+      for: 5m
+      labels:
+        severity: critical
+        tier: application
+        application: radquest
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: "Radquest is not able to reach Gateway"
+        description: "Gateway used by Transaction stream to inject network transaction is not reachable"
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
+
   - name: RadquestRedis
     rules:
     - alert: RadquestRedisMemoryCritical
