@@ -14,6 +14,9 @@ params:
   PUBLIC_NETWORK_ID: 1
   NOTIFICATION_INTERNAL_API_URL: http://notification-http-internal:3001
   GATEWAY_URL: "http://babylon-mainnet-active-ng.internal-dns:8080"
+  EVENT_WORKER_CONCURRENCY: 20
+  TRANSACTION_WORKER_CONCURRENCY: 20
+
 
 secrets:
   - external_secret_name: worker-postgres-user
