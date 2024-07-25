@@ -119,7 +119,12 @@
   {loading}
 >
   <div class="claim-radgem">
-    {#if preview}
+    {#if ids.length > 1}
+      {$i18n.t('jetty:fuse-elements.multiple-radgems')}
+      <div class="multiple-gems-img">
+        <enhanced:img src="@images/multiple-gems.webp?enhanced" />
+      </div>
+    {:else if preview}
       <h2>
         {$i18n.t('jetty:fuse-elements.success')}
       </h2>
@@ -131,12 +136,6 @@
         {preview.name.split('{')[0]}
       </h3>
       {$i18n.t('jetty:fuse-elements.quality', { quality: preview.quality })}
-    {/if}
-    {#if ids.length > 1}
-      {$i18n.t('jetty:fuse-elements.multiple-radgems')}
-      <div class="multiple-gems-img">
-        <enhanced:img src="@images/multiple-gems.webp?enhanced" />
-      </div>
     {/if}
   </div>
 </JettyMenuItemPage>
