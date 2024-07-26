@@ -30,7 +30,8 @@
         }),
       (result) =>
         result.andThen((response) => {
-          const entries = (response.entries[0]?.value.programmatic_json as any).elements[0]?.entries
+          const openedBoxes = (response.entries[0]?.value.programmatic_json as any).elements
+          const entries = openedBoxes[openedBoxes.length - 1]?.entries
 
           if (!entries) return errAsync(Error('Nothing to claim'))
 
@@ -151,7 +152,10 @@
         Bucket("gift_box");
   `
 
-  const claimItemsManifest = `
+  const getClaimItemsManifest = (rewards: {
+    amountOfElements: number
+    cardData: { id: string }
+  }) => `
     CALL_METHOD
       Address("${$user!.accountAddress!}")
       "create_proof_of_non_fungibles"
@@ -166,8 +170,19 @@
     CALL_METHOD
         Address("${publicConfig.components.giftBoxOpener}")
         "claim_gift_box_rewards"
-        Proof("hero_badge_proof")
-    ;
+        Proof("hero_badge_proof");
+
+    TAKE_FROM_WORKTOP
+        Address("${publicConfig.resources.elementAddress}")
+        Decimal("${rewards.amountOfElements}")
+        Bucket("bucket1");
+
+      CALL_METHOD
+        Address("${$user!.accountAddress!}")
+        "try_deposit_or_abort"
+        Bucket("bucket1")
+        Enum<0u8>();
+
     CALL_METHOD
         Address("${$user!.accountAddress!}")
         "deposit_batch"
@@ -265,7 +280,7 @@
   const claimItems = () => {
     waitingForClaimTransaction = true
     sendTransaction({
-      transactionManifest: claimItemsManifest
+      transactionManifest: getClaimItemsManifest(rewards)
     })
       .map(() => {
         waitingForClaimTransaction = false
