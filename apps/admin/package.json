@@ -51,7 +51,7 @@
     "svelte": "^4.0.0"
   },
   "dependencies": {
-    "@radixdlt/radix-dapp-toolkit": "^2.0.0",
+    "@radixdlt/radix-dapp-toolkit": "^2.0.3",
     "common": "*",
     "content": "*",
     "database": "*",
