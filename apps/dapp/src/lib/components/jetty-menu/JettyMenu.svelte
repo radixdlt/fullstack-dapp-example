@@ -17,7 +17,7 @@
   import { get, writable, type Readable, type Writable } from 'svelte/store'
   import { useContext } from '$lib/utils/context'
   import { tweened } from 'svelte/motion'
-  import { cubicOut } from 'svelte/easing'
+  import { bounceOut, cubicOut } from 'svelte/easing'
   import { type JettyNotification, type jettyNotifications } from '../../../stores'
   import { createEventDispatcher } from 'svelte'
   import Notification from './Notification.svelte'
@@ -90,14 +90,24 @@
     easing: cubicOut
   })
 
-  const jettyPositionFactor = tweened<number>(undefined, {
+  const jettyCubicPositionFactor = tweened<number>(undefined, {
     duration: 500,
     easing: cubicOut
+  })
+  const jettyBouncePositionFactor = tweened<number>(undefined, {
+    duration: 500,
+    easing: bounceOut
   })
 
   $: expanded ? ($menuPositionFactor = 0) : ($menuPositionFactor = 1)
 
-  $: poppedUp ? ($jettyPositionFactor = 0) : ($jettyPositionFactor = 1)
+  $: if (poppedUp) {
+    $jettyCubicPositionFactor = 0
+    $jettyBouncePositionFactor = 0
+  } else {
+    $jettyCubicPositionFactor = 1
+    $jettyBouncePositionFactor = 1
+  }
 
   $: if (!expanded) dispatch('close')
 
@@ -140,7 +150,7 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
     class="jetty-icon"
-    style:--iconPosition={`${$jettyPositionFactor * 30 - 88}%`}
+    style:--iconPosition={`${($notifications.length > 0 ? $jettyBouncePositionFactor : $jettyCubicPositionFactor) * 30 - 88}%`}
     on:mouseenter={() => {
       dispatch('hover-over-jetty', true)
     }}
