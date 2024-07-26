@@ -4,6 +4,7 @@
   import { fly, scale } from 'svelte/transition'
   import Icon from '../icon/Icon.svelte'
   import CrossIcon from '@images/cross.svg'
+  import ChevronLeft from '@images/chevron-left.svg'
   import { goto } from '$app/navigation'
   import { writable } from 'svelte/store'
   import { get } from 'svelte/store'
@@ -46,7 +47,13 @@
   class="card progress-card"
 >
   <div class="header">
-    <div />
+    {#if progress > 0}
+      <button class="icon" on:click={() => back()}>
+        <Icon url={ChevronLeft} />
+      </button>
+    {:else}
+      <div></div>
+    {/if}
     <header class="title">
       {title}
     </header>
