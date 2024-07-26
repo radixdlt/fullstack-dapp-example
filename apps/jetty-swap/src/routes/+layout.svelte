@@ -16,9 +16,24 @@
 <svelte:head>
   {#if env.PUBLIC_SWAP_VARIATION === 'JETTY'}
     <title>Jetty Swap</title>
+    <meta property="og:title" content="Jetty Swap" />
+    <meta
+      property="og:image"
+      content="https://assets.radixdlt.com/images/dApps/og-jettyswap.webp"
+    />
   {:else}
     <title>Letty Swap</title>
+    <meta property="og:title" content="Letty Swap" />
+    <meta
+      property="og:image"
+      content="https://assets.radixdlt.com/images/dApps/og-lettyswap.webp"
+    />
   {/if}
+
+  <meta property="og:type" content="website" />
+  <meta property="og:image:type" content="image/webp" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
 </svelte:head>
 
 <Nav />
