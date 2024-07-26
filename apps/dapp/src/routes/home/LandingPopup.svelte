@@ -96,6 +96,7 @@
 <style lang="scss">
   div.landing-popup-content :global(p) {
     opacity: 0.6;
+    line-height: 24px;
   }
 
   .landing-popup {
