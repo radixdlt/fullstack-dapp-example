@@ -199,9 +199,15 @@
   on:render={(ev) => {
     xrdDepositLoading = true
     if (ev.detail === '15' && !$skipXrdDepositPage) {
-      userApi.hasReceivedXrd().map((received) => {
-        skipXrdDepositPage.set(received)
-      })
+      userApi
+        .hasReceivedXrd()
+        .map((received) => {
+          xrdDepositLoading = false
+          skipXrdDepositPage.set(received)
+        })
+        .mapErr(() => {
+          xrdDepositLoading = false
+        })
     }
   }}
   requirements={data.requirements}
