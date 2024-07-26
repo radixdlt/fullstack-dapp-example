@@ -2,7 +2,7 @@
 </script>
 
 <nav>
-  <div class="navbar"></div>
+  <div class="navbar" />
   <div class="connect-btn">
     <radix-connect-button />
   </div>
@@ -27,12 +27,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    --radix-connect-button-width: 130px;
-    --radix-connect-button-height: 40px;
+    --radix-connect-button-width: 140px;
 
     @include desktop {
       --radix-connect-button-border-radius: var(--border-radius-2xl);
-      --radix-connect-button-width: 140px;
     }
   }
 

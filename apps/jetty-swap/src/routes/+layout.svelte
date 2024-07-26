@@ -36,13 +36,18 @@
   <meta property="og:image:height" content="630" />
 </svelte:head>
 
-<Nav />
+<div>
+  <Nav />
 
-<main>
-  <slot />
-</main>
+  <main>
+    <slot />
+  </main>
+</div>
 
 <style>
+  div {
+    position: relative;
+  }
   main {
     display: flex;
     flex-direction: column;
