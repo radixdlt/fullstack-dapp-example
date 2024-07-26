@@ -369,5 +369,5 @@
     <slot />
   </svelte:fragment>
 
-  <Footer slot="footer" />
+  <Footer slot="footer" userId={$user?.id} />
 </Layout>

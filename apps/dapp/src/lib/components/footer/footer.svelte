@@ -4,15 +4,17 @@
   import Xcom from '$lib/components/social-icons/Xcom.svelte'
   import Discord from '$lib/components/social-icons/Discord.svelte'
   import Telegram from '$lib/components/social-icons/Telegram.svelte'
-  import ExternalLink from '$lib/components/externalLink/ExternalLink.svelte'
   import RunsOnRadix from '@images/runs-on-radix.svg'
   import Facebook from '../social-icons/Facebook.svelte'
   import Reddit from '../social-icons/Reddit.svelte'
   import Github from '../social-icons/Github.svelte'
   import Medium from '../social-icons/Medium.svelte'
   import Linkedin from '../social-icons/Linkedin.svelte'
+  import LinkWithLinkIcon from './linkWithLinkIcon.svelte'
 
-  const { social, radixDlt } = {
+  export let userId = ''
+
+  const { social, links } = {
     social: {
       discord: 'https://discord.com/invite/radixdlt',
       facebook: 'https://www.facebook.com/RadixDLT/',
@@ -24,13 +26,14 @@
       youtube: 'https://www.youtube.com/c/radixdlt',
       linkedin: 'https://www.linkedin.com/company/radixdlt'
     },
-    radixDlt: {
-      url: 'https://www.radixdlt.com'
+    links: {
+      radixdlt: 'https://www.radixdlt.com',
+      buildOnRadix: 'https://developers.radixdlt.com/',
+      helpEmail: 'mailto:hello@radixdlt.com'
     }
   }
 
   const iconHoverColor = 'var(--color-primary)'
-  $: radixDltHover = false
 
   const socials = [
     { link: social.discord, Icon: Discord },
@@ -49,20 +52,17 @@
   <div class="links-footer">
     <div class="links-col">
       <p class="text-bold learn-more">{$i18n.t('main:footer.learn-more')}</p>
-      <a
-        on:mouseenter={() => (radixDltHover = true)}
-        on:mouseleave={() => (radixDltHover = false)}
-        class="radix-dlt-link"
-        target="_blank"
-        href={radixDlt.url}
+      <LinkWithLinkIcon href={links.radixdlt}>Radix DLT</LinkWithLinkIcon>
+      <LinkWithLinkIcon href={links.buildOnRadix}>
+        {$i18n.t('main:footer.build-on-radix')}
+      </LinkWithLinkIcon>
+      <LinkWithLinkIcon
+        href={`${links.helpEmail}?subject=RadQuest support request${userId ? ` - user ID: ${userId}` : ''}`}
       >
-        Radix DLT
-        <ExternalLink
-          --fill={radixDltHover ? 'var(--color-primary)' : 'var(--color-background-dark)'}
-        />
-      </a>
+        {$i18n.t('main:footer.get-help')}
+      </LinkWithLinkIcon>
     </div>
-    <div class="links-col mobile-link-margin">
+    <div class="socials links-col mobile-link-margin">
       <p class="text-bold">{$i18n.t('main:footer.join-radix')}</p>
       <div class="icon-links">
         {#each socials as { Icon, link }}
@@ -72,7 +72,7 @@
         {/each}
       </div>
     </div>
-    <a href={radixDlt.url} class="runs-on-radix mobile-link-margin">
+    <a href={links.radixdlt} class="runs-on-radix mobile-link-margin">
       <img src={RunsOnRadix} alt={$i18n.t('main:footer.runs-on-radix-alt')} />
     </a>
   </div>
@@ -81,18 +81,17 @@
       &#9426;
       {$i18n.t('main:footer.all-rights')}
     </p>
-    <a class="privacy-notice" target="_blank" href={`${radixDlt.url}/privacy-policy`}
+    <a class="privacy-notice" target="_blank" href={`${links.radixdlt}/privacy-policy`}
       >{$i18n.t('main:footer.privacy-notice')}</a
     >
   </div>
 </footer>
 
 <style lang="scss">
-  a {
-    &:hover {
-      color: var(--color-primary);
-    }
+  a:hover {
+    color: var(--color-primary);
   }
+
   p {
     padding: 0;
     margin: 0;
@@ -130,9 +129,10 @@
   .links-col {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 0.938rem;
-
+  }
+  .socials {
+    align-items: center;
     @media (max-width: 880px) {
       align-items: flex-start;
     }
@@ -159,13 +159,6 @@
   .learn-more {
     text-align: left;
     width: 100%;
-  }
-
-  .radix-dlt-link {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
-    font-size: var(--text-md);
   }
 
   .privacy-notice {
