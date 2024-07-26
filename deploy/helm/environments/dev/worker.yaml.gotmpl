@@ -79,3 +79,16 @@ resources:
 pm2_metrics:
   enabled: true
   port: 9209
+
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - radquest-worker
+          topologyKey: "kubernetes.io/hostname"

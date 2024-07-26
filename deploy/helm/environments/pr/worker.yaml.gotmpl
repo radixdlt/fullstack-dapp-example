@@ -62,3 +62,15 @@ resources:
     cpu: 50m
     memory: 128Mi
 
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - radquest-worker
+          topologyKey: "kubernetes.io/hostname"
