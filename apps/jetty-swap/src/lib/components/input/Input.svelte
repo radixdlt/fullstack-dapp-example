@@ -13,6 +13,8 @@
 
 <input
   {disabled}
+  type="number"
+  inputmode="numeric"
   bind:this={ref}
   class={`text-title ${state}`}
   {placeholder}

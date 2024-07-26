@@ -28,10 +28,7 @@
     justify-content: center;
     align-items: center;
     --radix-connect-button-width: 140px;
-
-    @include desktop {
-      --radix-connect-button-border-radius: var(--border-radius-2xl);
-    }
+    --radix-connect-button-border-radius: var(--border-radius-2xl);
   }
 
   .navbar {
