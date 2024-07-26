@@ -1,4 +1,4 @@
-import type { QuestId } from 'content'
+import type { QuestDefinition, QuestId } from 'content'
 import type { LayoutServerLoad } from './$types'
 import { questApi } from '$lib/api/quest-api'
 import { error, redirect } from '@sveltejs/kit'
@@ -11,6 +11,8 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
     const id = url.pathname.split('/')[4] as QuestId
 
     const requiresLogin = !['Welcome', 'WhatIsRadix', 'SetupWallet'].includes(id)
+
+    const quest = questDefinitions[id]
 
     if (requiresLogin) {
       const user = await userApi.me(fetch)
@@ -34,9 +36,7 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
         questDefinitions['SetupWallet'].id
         // @ts-ignore
       ].includes(id) &&
-      questDefinitions[id].preRequisites.every(
-        (preReq) => questStatus[preReq]?.status === 'COMPLETED'
-      )
+      quest.preRequisites.every((preReq) => questStatus[preReq]?.status === 'COMPLETED')
 
     let requirements: Record<string, QuestRequirement> = {}
 
@@ -53,7 +53,7 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
 
       requirements = requirementsResult.value
     } else if (failedToFetchRequirements && isInvalidRefreshToken && hasCompletedFirstQuests) {
-      Object.entries(questDefinitions[id].requirements).forEach(([key, requirement]) => {
+      Object.entries(quest.requirements).forEach(([key, requirement]) => {
         const cachedRequirement = cookies.get(`requirement-${id}-${key}`) as boolean | undefined
 
         if (!requirements[key]) {
@@ -91,8 +91,8 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
     return {
       id,
       requirements,
-      text: questDefinitions[id].text,
-      rewards: questDefinitions[id].rewards,
-      nextQuestIndex: questDefinitions[id].nextQuestIndex
+      text: quest.text,
+      rewards: quest.rewards,
+      nextQuest: (quest as QuestDefinition).nextQuest
     }
   })

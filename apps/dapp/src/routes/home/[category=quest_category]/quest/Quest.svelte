@@ -34,7 +34,7 @@
   }
 
   export let id: QuestId
-  export let nextQuestIndex: number | null
+  export let nextQuest: string | undefined = undefined
   export let steps: (
     | RegularStep
     | JettyStep
@@ -89,7 +89,8 @@
     await completeQuest(id, !!$user)
     dispatch('completed')
     setTimeout(closeQuest, 0)
-    $scrollToQuestIndex = nextQuestIndex
+
+    if (nextQuest) $scrollToQuestIndex = Object.keys($quests).indexOf(nextQuest)
   }
 
   const progressUpdated = (e: CustomEvent<number>) => {

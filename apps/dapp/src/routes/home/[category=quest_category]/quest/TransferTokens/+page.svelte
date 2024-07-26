@@ -73,7 +73,7 @@
 <Quest
   id={data.id}
   requirements={data.requirements}
-  nextQuestIndex={data.nextQuestIndex}
+  nextQuest={data.nextQuest}
   bind:this={quest}
   on:completed={() => {
     //@ts-ignore

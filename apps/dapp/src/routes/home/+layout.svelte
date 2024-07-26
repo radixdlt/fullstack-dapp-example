@@ -147,13 +147,6 @@
             }
 
             if (
-              data.questStatus['TransferTokens']?.status === 'COMPLETED' &&
-              $user.referredByUser
-            ) {
-              pushNotification('joinedFriend')
-            }
-
-            if (
               data.questStatus['DEXSwaps']?.status === 'IN_PROGRESS' &&
               !$page.url.href.includes('DEXSwaps')
             ) {
@@ -320,6 +313,37 @@
       'MayaRouterWithdrawEvent',
       'thorswapSwapCompleted'
     )
+
+  $: if ($webSocketClient)
+    registerNotificationOnMessage(
+      $webSocketClient,
+      'QuestTogether',
+      'BronzeLevel',
+      'reachedTierBronze'
+    )
+
+  $: if ($webSocketClient)
+    registerNotificationOnMessage(
+      $webSocketClient,
+      'QuestTogether',
+      'SilverLevel',
+      'reachedTierSilver'
+    )
+
+  $: if ($webSocketClient)
+    registerNotificationOnMessage($webSocketClient, 'QuestTogether', 'GoldLevel', 'reachedTierGold')
+
+  $: if ($webSocketClient)
+    registerNotificationOnMessage(
+      $webSocketClient,
+      'QuestTogether',
+      'SuperLevel',
+      'reachedTierSuper'
+    )
+
+  if (data.questStatus['TransferTokens']?.status === 'COMPLETED' && $user?.referredByUser) {
+    pushNotification('joinedFriend')
+  }
 </script>
 
 <LandingPopup definitions={data.landingPopupDefinitions} />
