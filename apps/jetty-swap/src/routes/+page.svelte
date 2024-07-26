@@ -89,7 +89,7 @@
     conversionRateTo = (await getPrice(swapComponent)) ?? '10'
   }
 
-  onMount(async () => {
+  onMount(() => {
     const swapConfig = {
       networkId: +env.PUBLIC_NETWORK_ID,
       applicationVersion: '1.0.0',
@@ -111,29 +111,41 @@
       updateBalances(data?.accounts[0]?.address)
     })
 
-    try {
-      const [ottercoinMetadataResult, clamMetadataResult] = await Promise.all([
-        $gatewayApi.callApi('getEntityMetadata', addresses.resources.ottercoinAddress),
-        $gatewayApi.callApi('getEntityMetadata', addresses.resources.clamAddress)
-      ])
-
-      getConversionRate()
-
+    Promise.all([
+      $gatewayApi.callApi('getEntityMetadata', addresses.resources.ottercoinAddress),
+      $gatewayApi.callApi('getEntityMetadata', addresses.resources.clamAddress)
+    ]).then(([ottercoinMetadataResult, clamMetadataResult]) => {
       if (ottercoinMetadataResult.isOk()) {
         ottercoinResource = turnEntityIntoObject(ottercoinMetadataResult.value)
       }
       if (clamMetadataResult.isOk()) {
         clamResource = turnEntityIntoObject(clamMetadataResult.value)
       }
+    })
 
-      if (!$walletData?.accounts[0]?.address) return
-      await updateBalances($walletData?.accounts[0].address)
-    } catch (error) {}
+    if ($walletData?.accounts[0]?.address) {
+      updateBalances($walletData?.accounts[0].address)
+    }
+
+    const intervals = [
+      setInterval(() => {
+        priceChange = parseFloat((Math.random() * 200 - 100).toFixed(1)).toString()
+        isGoingUp = Number(priceChange) > 0
+      }, 1000),
+
+      setInterval(() => {
+        priceChange = parseFloat((Math.random() * 200 - 100).toFixed(1)).toString()
+        isGoingUp = Number(priceChange) > 0
+      }, 1000),
+
+      setInterval(() => {
+        getConversionRate()
+      }, 1000)
+    ]
+    return () => {
+      intervals.forEach(clearInterval)
+    }
   })
-
-  setInterval(() => {
-    getConversionRate()
-  }, 1000)
 
   let timer: NodeJS.Timeout
   const debounce = (amount: string) => {
@@ -189,17 +201,8 @@
   }
 
   //todo to be replaced once we have oracle
-  $: isGoingUp = true
-  $: priceChange = '0'
-
-  const rotateMarketEstimate = () => {
-    setInterval(() => {
-      priceChange = parseFloat((Math.random() * 200 - 100).toFixed(1)).toString()
-      isGoingUp = Number(priceChange) > 0
-    }, 1000)
-  }
-
-  rotateMarketEstimate()
+  let isGoingUp = true
+  let priceChange = '0'
 </script>
 
 {#if modal === 'failure'}
