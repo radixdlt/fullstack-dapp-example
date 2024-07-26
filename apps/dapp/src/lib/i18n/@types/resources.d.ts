@@ -120,7 +120,9 @@ interface Resources {
       "join-radix": "Join the Radix Community",
       "learn-more": "Learn more",
       "all-rights": "Radix Publishing Ltd, 2024. All rights reserved. Radix Publishing Ltd. ",
-      "privacy-notice": "Privacy Notice"
+      "privacy-notice": "Privacy Notice",
+      "build-on-radix": "Build on Radix",
+      "get-help": "Get help with RadQuest"
     }
   },
   "quests": {
