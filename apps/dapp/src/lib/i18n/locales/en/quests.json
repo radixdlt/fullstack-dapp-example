@@ -62,7 +62,7 @@
     "usernameCompleted": "Updated!",
     "walletDownloadPage": "Go to Wallet Download Page",
     "title": "Get the Radix Wallet",
-    "description": "Your key to assets and dApps and assets on Radix",
+    "description": "Your key to assets and dApps on Radix",
     "introDescription": "Get the Radix Wallet to use with RadQuest or any other dApp built on Radix.",
     "confirmSetUsername": "Update"
   },
@@ -117,7 +117,7 @@
     "description": "Help the network, earn APY",
     "introDescription": "Put your XRD to work helping secure the Radix Network – and earning you some yield",
     "requirements": {
-      "XrdStaked": "Stake your XRD on dashboard"
+      "XrdStaked": "Stake XRD using the Radix Dashboard"
     }
   },
   "Thorswap": {
