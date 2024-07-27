@@ -90,23 +90,38 @@
     easing: cubicOut
   })
 
-  const jettyCubicPositionFactor = tweened<number>(undefined, {
+  const cubicPositionFactor = tweened<number>(undefined, {
     duration: 500,
     easing: cubicOut
   })
-  const jettyBouncePositionFactor = tweened<number>(undefined, {
-    duration: 500,
+  const bouncePositionFactor = tweened<number>(0, {
+    duration: 400,
     easing: bounceOut
   })
 
   $: expanded ? ($menuPositionFactor = 0) : ($menuPositionFactor = 1)
 
-  $: if (poppedUp) {
-    $jettyCubicPositionFactor = 0
-    $jettyBouncePositionFactor = 0
+  $: poppedUp ? ($cubicPositionFactor = 0) : ($cubicPositionFactor = 1)
+
+  $: stateModifiedBounceFactor = $bouncePositionFactor * (expanded ? 0 : 1) * (poppedUp ? -1 : 1)
+  $: jettyPositionFactor = $cubicPositionFactor + stateModifiedBounceFactor
+
+  const notificationBounce = () => {
+    $bouncePositionFactor = -0.5
+    setTimeout(() => {
+      $bouncePositionFactor = 0
+    }, 200)
+  }
+
+  let timer: NodeJS.Timeout
+  $: hasNotifications = $notifications.length > 0
+  $: if (hasNotifications) {
+    notificationBounce()
+    timer = setInterval(() => {
+      notificationBounce()
+    }, 8_000)
   } else {
-    $jettyCubicPositionFactor = 1
-    $jettyBouncePositionFactor = 1
+    clearInterval(timer)
   }
 
   $: if (!expanded) dispatch('close')
@@ -150,7 +165,7 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
     class="jetty-icon"
-    style:--iconPosition={`${($notifications.length > 0 ? $jettyBouncePositionFactor : $jettyCubicPositionFactor) * 30 - 88}%`}
+    style:--iconPosition={`${jettyPositionFactor * 30 - 88}%`}
     on:mouseenter={() => {
       dispatch('hover-over-jetty', true)
     }}

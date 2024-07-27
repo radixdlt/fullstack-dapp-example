@@ -23,7 +23,7 @@ interface Resources {
       "logged-in-with-wallet": "Now that you're logged in, continue your quest: Get the Radix Wallet",
       "received-clams": "You're ready to continue your quest: Transfer Tokens.",
       "basic-quests-complete": "Now continue your journey with the Advanced Quests.",
-      "join-friend": "You're now ready to join {{referrer}} and claim your XRD reward!",
+      "join-friend": "You're now ready to join your friend and claim your XRD reward!",
       "new-tier": "You just leveled up with more friends! Now go claim your rewards.",
       "swap-completed": "Continue your quest: Swap Tokens on a DEX.",
       "stake-completed": "Continue your quest: Radix Network Staking.",
@@ -189,7 +189,7 @@ interface Resources {
       "usernameCompleted": "Updated!",
       "walletDownloadPage": "Go to Wallet Download Page",
       "title": "Get the Radix Wallet",
-      "description": "Your key to assets and dApps and assets on Radix",
+      "description": "Your key to assets and dApps on Radix",
       "introDescription": "Get the Radix Wallet to use with RadQuest or any other dApp built on Radix.",
       "confirmSetUsername": "Update"
     },
@@ -244,7 +244,7 @@ interface Resources {
       "description": "Help the network, earn APY",
       "introDescription": "Put your XRD to work helping secure the Radix Network – and earning you some yield",
       "requirements": {
-        "XrdStaked": "Stake your XRD on dashboard"
+        "XrdStaked": "Stake XRD using the Radix Dashboard"
       }
     },
     "Thorswap": {
@@ -256,7 +256,7 @@ interface Resources {
       }
     },
     "QuestTogether": {
-      "title": "Invite Your Friends Quest",
+      "title": "Invite Your Friends",
       "description": "Invite your friends to give them XRD tokens and earn rewards!",
       "rewardsTitle": "Party rewards Status",
       "rewardTiersTab": "Reward Tiers",

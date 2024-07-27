@@ -27,7 +27,7 @@
   let poppedUp = false
   let expanded = false
 
-  $: poppedUp = expanded || hoveringOverJetty || $jettyNotifications.length > 0
+  $: poppedUp = expanded || hoveringOverJetty //|| $jettyNotifications.length > 0
 
   $: glossaryAnchor = $page.url.href.includes('glossaryAnchor')
     ? $page.url.href.split('glossaryAnchor=')[1]
