@@ -405,7 +405,7 @@
         </div>
       </div>
     </JettyMenuItemPage>
-  {:else if true}
+  {:else if totalGiftBoxes === 0}
     <JettyMenuItemPage
       action={{
         text: $i18n.t('jetty:close'),
