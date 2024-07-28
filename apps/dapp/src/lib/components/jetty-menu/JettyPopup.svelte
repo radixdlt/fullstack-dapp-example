@@ -28,7 +28,7 @@
     on:click
   >
     {#if notification}
-      <div class="notification" transition:scale={{ delay: 500 }} />
+      <div class="notification" transition:scale={{ delay: 1_000 }} />
     {/if}
 
     <div class="up-arrow" class:down-arrow={showDownArrow} transition:fade>

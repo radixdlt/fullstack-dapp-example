@@ -106,22 +106,28 @@
   $: stateModifiedBounceFactor = $bouncePositionFactor * (expanded ? 0 : 1) * (poppedUp ? -1 : 1)
   $: jettyPositionFactor = $cubicPositionFactor + stateModifiedBounceFactor
 
-  const notificationBounce = () => {
+  const jettyBounce = () => {
     $bouncePositionFactor = -0.5
     setTimeout(() => {
       $bouncePositionFactor = 0
     }, 200)
   }
 
-  let timer: NodeJS.Timeout
   $: hasNotifications = $notifications.length > 0
+  const setJettyBounceInterval = () => {
+    if (hasNotifications) {
+      jettyBounce()
+      setTimeout(() => {
+        setJettyBounceInterval()
+      }, 8_000)
+    }
+  }
+
   $: if (hasNotifications) {
-    notificationBounce()
-    timer = setInterval(() => {
-      notificationBounce()
-    }, 8_000)
-  } else {
-    clearInterval(timer)
+    setJettyBounceInterval()
+    setTimeout(() => {
+      jettyBounce()
+    }, 300)
   }
 
   $: if (!expanded) dispatch('close')
@@ -179,7 +185,7 @@
       }}
       {hideJetty}
       showDownArrow={expanded}
-      notification={$notifications.length > 0}
+      notification={hasNotifications}
     />
   </div>
   <div class="header">
@@ -219,7 +225,7 @@
   {:else}
     <div class="content">
       <div class="main-menu-page">
-        {#if $notifications.length > 0}
+        {#if hasNotifications}
           <div transition:scale>
             <Notification
               title={latestNotification.title}
