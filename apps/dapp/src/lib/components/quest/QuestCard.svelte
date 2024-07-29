@@ -52,7 +52,7 @@
 
   const canScrollDown = () => {
     if (content) {
-      if (content.scrollHeight - content.scrollTop > content.clientHeight) return true
+      if (content.scrollHeight - content.scrollTop > content.clientHeight + 5) return true
     }
     return false
   }
