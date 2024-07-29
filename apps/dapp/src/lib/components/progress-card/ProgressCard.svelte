@@ -35,7 +35,7 @@
     display: grid;
     grid-template-rows: auto auto 1fr;
     min-height: 28rem;
-    width: 25rem;
+    max-width: 25rem;
     overflow-y: hidden;
   }
 </style>

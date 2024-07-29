@@ -10,8 +10,13 @@
   }
 }
 
-/* Markdown Styles */
+@mixin smallMobile {
+  @media (max-width: 400px) and (max-height: 500px) {
+    @content;
+  }
+}
 
+/* Markdown Styles */
 @mixin markdownLinkStyles {
   :global(a:not(.primary)) {
     color: var(--color-primary);

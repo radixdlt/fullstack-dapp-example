@@ -62,6 +62,9 @@
     grid-template-rows: auto 5rem;
     height: 100%;
     overflow: hidden;
+    @include smallMobile {
+      grid-template-rows: auto 4rem;
+    }
   }
 
   .header {
@@ -89,6 +92,11 @@
     gap: var(--spacing-2xl);
     padding: var(--spacing-xl) var(--spacing-2xl);
     overflow: hidden;
+    @include smallMobile {
+      border-top: 1px solid var(--color-light-translucent);
+      gap: var(--spacing-xl);
+      padding: var(--spacing-lg) var(--spacing-2xl);
+    }
   }
 
   .action {

@@ -502,5 +502,8 @@
     align-items: center;
     height: 100%;
     transform: translateY(-2rem);
+    @include smallMobile {
+      transform: translateY(-1rem);
+    }
   }
 </style>

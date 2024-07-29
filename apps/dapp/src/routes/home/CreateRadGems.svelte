@@ -349,6 +349,7 @@
       padding-bottom: var(--spacing-xl);
       text-align: center;
       font-size: var(--text-xs);
+      text-wrap: pretty;
     }
   }
 </style>

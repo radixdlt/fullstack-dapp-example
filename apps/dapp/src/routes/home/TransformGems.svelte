@@ -351,10 +351,15 @@
 
   .cards {
     height: 100%;
-    overflow: hidden;
     display: flex;
     justify-content: center;
     transform: translateY(-2rem);
+    @include smallMobile {
+      :global(.carousel .item) {
+        padding-bottom: 3rem;
+      }
+      transform: translateY(-1.6rem);
+    }
   }
 
   .chosen-cards {
@@ -369,12 +374,12 @@
       }
     }
 
-    :global(.transform-card) {
-      height: 10rem;
-    }
-
+    :global(.transform-card),
     :global(.container) {
       height: 10rem;
+      @include smallMobile {
+        height: 8rem;
+      }
     }
   }
 

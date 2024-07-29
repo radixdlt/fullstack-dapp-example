@@ -41,6 +41,9 @@
     gap: var(--spacing-lg);
     text-align: center;
     overflow: hidden;
+    @include smallMobile {
+      gap: var(--spacing-md);
+    }
   }
 
   .title {

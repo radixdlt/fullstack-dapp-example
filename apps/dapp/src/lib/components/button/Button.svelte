@@ -64,6 +64,11 @@
         }
       }
     }
+    @include smallMobile {
+      min-width: 6rem;
+      padding: 0.5rem 1rem;
+      height: 2.5rem;
+    }
     transition: filter 0.2s ease-in-out;
   }
 

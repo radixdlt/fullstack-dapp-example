@@ -35,6 +35,11 @@
     padding: 0 var(--spacing-2xl);
     color: var(--color-light);
     font-weight: var(--font-weight-bold);
+    @include smallMobile {
+      border-radius: var(--border-radius-xl);
+      height: 3rem;
+      padding: 0 var(--spacing-xl);
+    }
   }
 
   .icon-and-text {

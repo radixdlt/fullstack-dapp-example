@@ -26,9 +26,12 @@
   </div>
 </div>
 
-<style>
+<style lang="scss">
   .footer {
     padding: var(--spacing-xl);
+    @include smallMobile {
+      padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-xl);
+    }
   }
 
   .footer-container {
@@ -38,6 +41,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    max-width: calc(100vw - 1rem);
   }
 
   .quest-footer {

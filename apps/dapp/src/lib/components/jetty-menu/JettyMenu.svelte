@@ -303,6 +303,10 @@
     right: 1.5rem;
     z-index: 1;
     transform: translateY(var(--iconPosition));
+    @include smallMobile {
+      right: 1rem;
+      transform: translateY(calc(var(--iconPosition) * 0.85));
+    }
   }
 
   .header {
