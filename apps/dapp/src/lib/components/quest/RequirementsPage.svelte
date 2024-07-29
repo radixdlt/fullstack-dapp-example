@@ -10,7 +10,7 @@
   export let loading = false
 </script>
 
-<div class="requirements-page">
+<div class="requirements-page" class:loading>
   {#if loading}
     <LoadingSpinner />
   {:else}
@@ -27,5 +27,9 @@
     flex-direction: column;
     gap: var(--spacing-2xl);
     align-items: center;
+    height: 100%;
+    &.loading {
+      justify-content: center;
+    }
   }
 </style>
