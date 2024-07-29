@@ -1,4 +1,103 @@
 /* Typography */
+@font-face {
+  font-family: 'PP Fragment';
+  src: url('/fonts/PPFragment-SerifLight.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/DMSans_18pt-ExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/DMSans_18pt-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/DMSans_18pt-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/DMSans_24pt-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Jost';
+  src: url('/fonts/Jost-Regular.ttf') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'Jost';
+  src: url('/fonts/Jost-Bold.ttf') format('truetype');
+}
+
+[theme='jetty'] {
+  --color-primary: #6260ff;
+  --color-background-dark: #192d3a;
+  --color-linen: #fbeee9;
+
+  --color-error: #d92761;
+  --color-disabled: #dbd4d1;
+
+  --gradient-2: linear-gradient(67deg, #f9dfcf 0%, #e6b2bb 102.4%);
+  --gradient-5: linear-gradient(66.61deg, #f9dfcf 0%, #e6b2bb 102.4%);
+
+  --color-light: #fffbf4;
+  --color-dark: #000000;
+  --color-white: #fffffff2;
+
+  --backdrop: rgba(0, 0, 0, 0.5);
+
+  --border-radius-xl: 16px;
+  --border-radius-2xl: 20px;
+  --border-radius-3xl: 40px;
+  --border: 1.5px solid;
+  --border-lg: 2px solid;
+
+  --font-main: 'DM Sans', sans-serif;
+  --font-headers: 'PP Fragment';
+}
+
+[theme='letty'] {
+  --color-primary: #ff33de;
+  --color-inchworm: #9cff6d;
+  --color-background-dark: #ffffff80;
+  --color-linen: #000000;
+
+  --color-error: #d92761;
+  --color-disabled: #6a6a6a;
+
+  --gradient-2: linear-gradient(4.06deg, #0e2130 5.91%, #091a26 91.69%);
+  --gradient-5: linear-gradient(66.61deg, #f9dfcf 0%, #e6b2bb 102.4%);
+
+  --color-light: #fffbf4;
+  --color-dark: #ffffff;
+  --color-white: #ffffff20;
+
+  --backdrop: #313131e5;
+
+  --border-radius-xl: 0px;
+  --border-radius-2xl: 0px;
+  --border-radius-3xl: 0px;
+  --border: 1.5px solid;
+  --border-lg: 2px solid;
+
+  --font-main: 'Jost', sans-serif;
+  --font-headers: 'Jost';
+}
+
 body {
   --text-xxs: 12px;
   --text-xs: 14px;
