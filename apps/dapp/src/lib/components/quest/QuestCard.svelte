@@ -77,7 +77,7 @@
 
   $: {
     progress
-    tick().then(checkScroll)
+    if (isMobile()) tick().then(checkScroll)
   }
 </script>
 
