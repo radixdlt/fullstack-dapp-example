@@ -44,8 +44,6 @@
     if (content) content.scrollTop = 0
   }
 
-  let card: ProgressCard
-
   let direction = writable<'right' | 'left'>()
 
   let footerNextLoading = writable(false)
@@ -63,7 +61,10 @@
     canScroll = canScrollDown()
   }
 
+  let mounted = false
+
   onMount(() => {
+    mounted = true
     if (!isMobile()) return
 
     checkScroll()
@@ -75,13 +76,13 @@
     }
   })
 
-  $: {
+  $: if (mounted) {
     progress
     if (isMobile()) tick().then(checkScroll)
   }
 </script>
 
-<ProgressCard bind:this={card} {steps} bind:progress disabled={cardDisabled}>
+<ProgressCard {steps} bind:progress disabled={cardDisabled}>
   <div slot="header" class="header">
     <div />
     <header class="title">
