@@ -39,14 +39,7 @@
 
   const dispatch = createEventDispatcher<{
     'all-requirements-met': undefined
-    'requirements-not-met': undefined
-    loading: boolean
   }>()
-
-  const setLoading = (isLoading: boolean) => {
-    dispatch('loading', isLoading)
-    loading = isLoading
-  }
 
   export const checkRequirements = () => {
     return questApi.getQuestInformation(questId).map(({ requirements, status }) => {
@@ -68,9 +61,8 @@
         dispatch('all-requirements-met')
       } else {
         if (!allRequirementsMet) {
-          setLoading(false)
+          loading = false
         }
-        dispatch('requirements-not-met')
       }
 
       return allRequirementsMet
@@ -91,7 +83,6 @@
   })
 
   onMount(() => {
-    setLoading(true)
     if ($user) {
       checkRequirements()
     }

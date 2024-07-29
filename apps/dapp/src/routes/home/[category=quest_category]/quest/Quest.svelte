@@ -20,6 +20,7 @@
   import QuizJettyPage from './QuizJettyPage.svelte'
   import { writable } from 'svelte/store'
   import { htmlReplace } from '$lib/helpers/html-replace'
+  import type { $Enums } from 'database'
 
   type CompleteStep = _Step<'complete'> & { id: 'complete' }
 
@@ -51,6 +52,7 @@
     back: () => {},
     goToStep: (_id: string) => {}
   }
+  export let status: $Enums.QuestStatus
 
   const saveProgress = (progress: number) => {
     if ($user) {
@@ -134,9 +136,16 @@
 
   let nextDisabled = false
 
-  let requirementsNextEnabled = writable(false)
+  const requirementsNextEnabled = writable(false)
 
   let _steps: (RegularStep | JettyStep)[]
+
+  const skipRequirements = writable(
+    Object.values(requirements).every((requirement) => requirement.isComplete) &&
+      status !== 'IN_PROGRESS'
+  )
+
+  const skipClaimRewards = writable(status === 'REWARDS_CLAIMED')
 
   $: _steps = steps.map((step) => {
     if (step.type === 'requirements') {
@@ -150,7 +159,8 @@
               next()
             }
           }
-        }
+        },
+        skip: skipRequirements
       }
     }
 
@@ -162,7 +172,8 @@
           next: {
             enabled: writable(false)
           }
-        }
+        },
+        skip: skipClaimRewards
       }
     }
 
@@ -220,10 +231,7 @@
   let:back
   let:next
   let:render
-  let:skip
   on:render
-  let:lastProgress
-  let:progress
 >
   <slot {back} {next} {render} completeQuest={_completeQuest} />
 
@@ -233,7 +241,7 @@
       {requirements}
       on:all-requirements-met|once={() => {
         $requirementsNextEnabled = true
-        if (lastProgress < progress) next()
+        $skipRequirements = true
       }}
     />
   {/if}
@@ -245,7 +253,9 @@
         name: $user?.name,
         inviter_name: $user?.referredByUser?.name
       })}
-      on:claimed={skip}
+      on:claimed={() => {
+        $skipClaimRewards = true
+      }}
     />
   {/if}
 
