@@ -123,7 +123,7 @@ export const QuestDefinitions = () => {
       rewards: [
         {
           name: 'xrd',
-          amount: 25
+          amount: 30
         },
         {
           name: 'starterGiftBox',
@@ -179,7 +179,7 @@ export const QuestDefinitions = () => {
       rewards: [
         {
           name: 'xrd',
-          amount: 20
+          amount: 30
         },
         {
           name: 'fancyGiftBox',
@@ -236,7 +236,7 @@ export const QuestDefinitions = () => {
       rewards: [
         {
           name: 'xrd',
-          amount: 500
+          amount: 300
         },
         {
           name: 'simpleGiftBox',
@@ -279,7 +279,7 @@ export const QuestDefinitions = () => {
       rewards: [
         {
           name: 'xrd',
-          amount: 25
+          amount: 30
         }
       ],
       minutesToComplete: 1,
@@ -297,7 +297,7 @@ export const QuestDefinitions = () => {
       rewards: [
         {
           name: 'xrd',
-          amount: 10
+          amount: 20
         },
         {
           name: 'fancyGiftBox',
@@ -325,7 +325,7 @@ export const QuestDefinitions = () => {
       rewards: [
         {
           name: 'xrd',
-          amount: 50
+          amount: 60
         },
         {
           name: 'simpleGiftBox',
@@ -347,7 +347,7 @@ export const QuestDefinitions = () => {
       rewards: [
         {
           name: 'xrd',
-          amount: 50
+          amount: 20
         },
         {
           name: 'simpleGiftBox',
@@ -370,7 +370,7 @@ export const QuestDefinitions = () => {
       rewards: [
         {
           name: 'xrd',
-          amount: 250
+          amount: 300
         },
         {
           name: 'eliteGiftBox',
