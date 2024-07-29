@@ -26,6 +26,9 @@ export const handle: Handle = async ({ event, resolve }) => {
     )
   }
 
-  const response = await resolve(event, {})
+  const response = await resolve(event, {
+    transformPageChunk: ({ html }) =>
+      html.replace('theme="jetty"', `theme='${isJetty ? 'jetty' : 'letty'}'`)
+  })
   return response
 }
