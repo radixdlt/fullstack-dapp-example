@@ -171,6 +171,8 @@
     overflow-y: auto;
     overflow-x: hidden;
 
+    overscroll-behavior: none;
+
     :global(p) > :global(img) {
       max-width: calc(100% + 2 * var(--spacing-2xl));
       margin: 0 calc(-1 * var(--spacing-2xl));
