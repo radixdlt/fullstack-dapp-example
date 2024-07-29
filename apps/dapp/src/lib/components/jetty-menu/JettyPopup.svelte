@@ -4,7 +4,7 @@
   import { cubicOut } from 'svelte/easing'
   import { tweened } from 'svelte/motion'
   import ChevronIcon from '@images/chevron-left.svg'
-  import { fade } from 'svelte/transition'
+  import { fade, scale } from 'svelte/transition'
 
   export let notification = false
   export let hideJetty = false
@@ -27,7 +27,9 @@
     style:--cross={`url(${CrossIcon})`}
     on:click
   >
-    <div class:notification />
+    {#if notification}
+      <div class="notification" transition:scale={{ delay: 1_000 }} />
+    {/if}
 
     <div class="up-arrow" class:down-arrow={showDownArrow} transition:fade>
       <img src={ChevronIcon} alt="Arrow pointing up" />
@@ -49,7 +51,7 @@
   .jetty-popup {
     position: relative;
 
-    &.gradient-border::before {
+    &::before {
       content: '';
       position: absolute;
       top: 0;
@@ -59,6 +61,10 @@
       z-index: -1;
       margin: -3px;
       border-radius: 50% 50% 0 0;
+      background: none;
+      transition: all 0.3s;
+    }
+    &.gradient-border::before {
       background: var(--gradient-6);
     }
   }

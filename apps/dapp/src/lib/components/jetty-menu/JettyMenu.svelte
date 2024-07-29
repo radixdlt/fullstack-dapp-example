@@ -17,7 +17,7 @@
   import { get, writable, type Readable, type Writable } from 'svelte/store'
   import { useContext } from '$lib/utils/context'
   import { tweened } from 'svelte/motion'
-  import { cubicOut } from 'svelte/easing'
+  import { bounceOut, cubicOut } from 'svelte/easing'
   import { type JettyNotification, type jettyNotifications } from '../../../stores'
   import { createEventDispatcher } from 'svelte'
   import Notification from './Notification.svelte'
@@ -90,14 +90,45 @@
     easing: cubicOut
   })
 
-  const jettyPositionFactor = tweened<number>(undefined, {
+  const cubicPositionFactor = tweened<number>(undefined, {
     duration: 500,
     easing: cubicOut
+  })
+  const bouncePositionFactor = tweened<number>(0, {
+    duration: 400,
+    easing: bounceOut
   })
 
   $: expanded ? ($menuPositionFactor = 0) : ($menuPositionFactor = 1)
 
-  $: poppedUp ? ($jettyPositionFactor = 0) : ($jettyPositionFactor = 1)
+  $: poppedUp ? ($cubicPositionFactor = 0) : ($cubicPositionFactor = 1)
+
+  $: stateModifiedBounceFactor = $bouncePositionFactor * (expanded ? 0 : 1) * (poppedUp ? -1 : 1)
+  $: jettyPositionFactor = $cubicPositionFactor + stateModifiedBounceFactor
+
+  const jettyBounce = () => {
+    $bouncePositionFactor = -0.5
+    setTimeout(() => {
+      $bouncePositionFactor = 0
+    }, 200)
+  }
+
+  $: hasNotifications = $notifications.length > 0
+  const setJettyBounceInterval = () => {
+    if (hasNotifications) {
+      jettyBounce()
+      setTimeout(() => {
+        setJettyBounceInterval()
+      }, 8_000)
+    }
+  }
+
+  $: if (hasNotifications) {
+    setJettyBounceInterval()
+    setTimeout(() => {
+      jettyBounce()
+    }, 300)
+  }
 
   $: if (!expanded) dispatch('close')
 
@@ -140,7 +171,7 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
     class="jetty-icon"
-    style:--iconPosition={`${$jettyPositionFactor * 30 - 88}%`}
+    style:--iconPosition={`${jettyPositionFactor * 30 - 88}%`}
     on:mouseenter={() => {
       dispatch('hover-over-jetty', true)
     }}
@@ -154,7 +185,7 @@
       }}
       {hideJetty}
       showDownArrow={expanded}
-      notification={$notifications.length > 0}
+      notification={hasNotifications}
     />
   </div>
   <div class="header">
@@ -194,7 +225,7 @@
   {:else}
     <div class="content">
       <div class="main-menu-page">
-        {#if $notifications.length > 0}
+        {#if hasNotifications}
           <div transition:scale>
             <Notification
               title={latestNotification.title}
