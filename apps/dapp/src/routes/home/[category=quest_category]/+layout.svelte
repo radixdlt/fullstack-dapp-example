@@ -68,7 +68,9 @@
   let carousel: Carousel
 
   const scrollToEarliestQuest = () => {
-    const earliestUnlockedQuest = _quests.find(([id, _]) => questCardState[id] !== 'locked')?.[0]
+    const earliestUnlockedQuest = _quests.find(
+      ([id, _]) => questCardState[id] !== 'locked' && questCardState[id] !== 'completed'
+    )?.[0]
 
     if (earliestUnlockedQuest)
       carousel.scrollToIndex(Object.keys($quests).indexOf(earliestUnlockedQuest))
