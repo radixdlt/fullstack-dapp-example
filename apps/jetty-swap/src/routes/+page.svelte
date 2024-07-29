@@ -55,7 +55,7 @@
   let fromInput = ''
   let toInput = ''
 
-  $: fromInput = allowOnlyPositiveNumberInString(fromInput.toString())
+  $: fromInput = allowOnlyPositiveNumberInString(fromInput?.toString() || '')
   $: connected = !!$walletData?.accounts[0]
 
   let balances: FungibleResourcesCollectionItemVaultAggregated[] = []
@@ -149,22 +149,23 @@
 
   let timer: NodeJS.Timeout
   const debounce = (amount: string) => {
-    if (fromInput === '') return
-
     clearInterval(timer)
-    timer = setInterval(() => {
-      getBalanceChange(
-        {
-          amount,
-          fromTokenAddress: clamResource?.id as string,
-          swapComponent,
-          userAccountAddress: $walletData?.accounts[0].address as string
-        },
-        addresses.resources.ottercoinAddress
-      ).then((amount) => {
-        toInput = amount
-      })
-    }, 1000)
+    if (fromInput === '') toInput = ''
+    else {
+      timer = setInterval(() => {
+        getBalanceChange(
+          {
+            amount,
+            fromTokenAddress: clamResource?.id as string,
+            swapComponent,
+            userAccountAddress: $walletData?.accounts[0].address as string
+          },
+          addresses.resources.ottercoinAddress
+        ).then((amount) => {
+          toInput = amount
+        })
+      }, 1000)
+    }
   }
 
   $: debounce(fromInput)
