@@ -57,6 +57,7 @@ export type QuestDefinition = {
   requirements: Requirements
   splashImage?: string
   minutesToComplete: number
+  nextQuest?: string
 }
 
 export type QuestId = ReturnType<typeof QuestDefinitions>[keyof ReturnType<
@@ -77,7 +78,8 @@ export const QuestDefinitions = () => {
           type: 'offLedger',
           completedByUser: true
         }
-      }
+      },
+      nextQuest: 'WhatIsRadix'
     },
     WhatIsRadix: {
       id: 'WhatIsRadix',
@@ -92,7 +94,8 @@ export const QuestDefinitions = () => {
           completedByUser: true,
           isHidden: false
         }
-      }
+      },
+      nextQuest: 'SetupWallet'
     },
     SetupWallet: {
       id: 'SetupWallet',
@@ -110,7 +113,8 @@ export const QuestDefinitions = () => {
           type: 'offLedger',
           completedByUser: true
         }
-      }
+      },
+      nextQuest: 'GetStuff'
     },
     GetStuff: {
       id: 'GetStuff',
@@ -145,13 +149,13 @@ export const QuestDefinitions = () => {
           type: 'event',
           eventName: 'DepositEvent'
         }
-      }
+      },
+      nextQuest: 'CreatingRadMorphs'
     },
     CreatingRadMorphs: {
       id: 'CreatingRadMorphs',
       category: 'basic',
       trackedAccountAddress: false,
-      splashImage: '/quests-images/splash/ConvertElementsQuest.webp',
       rewards: [
         {
           amount: 1,
@@ -165,7 +169,8 @@ export const QuestDefinitions = () => {
           type: 'offLedger',
           completedByUser: true
         }
-      }
+      },
+      nextQuest: 'TransferTokens'
     },
     TransferTokens: {
       id: 'TransferTokens',
@@ -271,7 +276,6 @@ export const QuestDefinitions = () => {
       id: 'JoinFriend',
       category: 'advanced',
       trackedAccountAddress: false,
-      splashImage: '/quests-images/splash/QuestTogether.webp',
       rewards: [
         {
           name: 'xrd',
@@ -373,7 +377,6 @@ export const QuestDefinitions = () => {
           amount: 1
         }
       ],
-      splashImage: '/quests-images/splash/Thorswap.webp',
       trackedAccountAddress: true,
       minutesToComplete: 5,
       preRequisites: ['QuestTogether'],

@@ -77,8 +77,7 @@ const app = async () => {
     logger,
     transactionModel,
     dbClient,
-    transactionWorkerController,
-    tokenPriceClient
+    transactionWorkerController
   })
 
   EventWorker(connection, {

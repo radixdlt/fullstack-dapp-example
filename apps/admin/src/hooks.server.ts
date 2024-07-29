@@ -53,6 +53,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.imageController = imageController
     event.locals.eventQueue = eventQueue
     event.locals.transactionQueue = transactionQueue
+    event.locals.systemQueue = systemQueue
     event.locals.logger = logger
 
     return resolve(event, {})

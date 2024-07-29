@@ -20,7 +20,11 @@
         {title}
       </div>
 
-      <Icon clickable on:click={() => dispatch('dismiss')} url={CrossIcon} />
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
+      <div on:click|stopPropagation={() => dispatch('dismiss')}>
+        <Icon clickable url={CrossIcon} />
+      </div>
     </div>
 
     <div class="content">

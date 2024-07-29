@@ -2,7 +2,6 @@
   import { LandingPopupSchema, UtmSourceLanding } from 'content'
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
-  import JettyImage from '@images/landing-popup-jetty.webp'
   import { backOut } from 'svelte/easing'
   import { scale } from 'svelte/transition'
   import { useLocalStorage } from '$lib/utils/local-storage'
@@ -68,8 +67,8 @@
 {#if visibleLandingPopup && seenLandingPopup !== visibleLandingPopup.id && !$user}
   <Backdrop zIndex={5}>
     <div class="landing-popup card" transition:scale|local={{ easing: backOut }}>
-      <div class="image only-desktop">
-        <img src={JettyImage} alt={$i18n.t('main:landingPagePopup.jetty-img-alt')} />
+      <div class="image">
+        <lottie-player autoplay loop mode="normal" src="/lottie/LandingCard.json" />
       </div>
 
       <div class="landing-popup-content">
@@ -81,17 +80,11 @@
           {@html visibleLandingPopup.html}
         {/if}
 
-        <div class="image only-mobile">
-          <img src={JettyImage} alt={$i18n.t('main:landingPagePopup.jetty-img-alt')} />
-        </div>
-
         <div class="button">
           <!-- svelte-ignore missing-declaration -->
           <Button
             on:click={() => {
               hideLandingPopup()
-              //@ts-ignore
-              dataLayer.push({ event: 'dl_click_1_lets_begin' })
             }}>{$i18n.t('main:landingPagePopup.button')}</Button
           >
         </div>
@@ -103,14 +96,17 @@
 <style lang="scss">
   div.landing-popup-content :global(p) {
     opacity: 0.6;
+    line-height: 24px;
   }
 
   .landing-popup {
+    padding-top: 0;
     margin: var(--spacing-xl);
     max-height: 90vh;
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 2fr 3fr;
     max-width: 50rem;
+    overflow-y: scroll;
 
     @include mobile {
       grid-template-columns: 1fr;
@@ -130,16 +126,27 @@
 
     @include mobile {
       margin-top: var(--spacing-xl);
+      grid-row-start: 2;
     }
   }
 
   .image {
-    img {
-      width: 100%;
+    position: relative;
+    justify-self: center;
+    &::after {
+      content: ' ';
+      background-image: linear-gradient(transparent 80%, var(--color-light) 100%);
+      display: block;
+      top: 0;
 
-      @include mobile {
-        width: 8rem;
-      }
+      width: 100%;
+      height: 100%;
+      position: absolute;
+    }
+
+    @include mobile {
+      width: 15rem;
+      max-width: 100%;
     }
   }
 

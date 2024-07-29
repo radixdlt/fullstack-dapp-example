@@ -41,6 +41,22 @@
       reader.readAsText(file)
     }
   }
+
+  const {
+    RadMorph,
+    RadGem,
+    Card: EnergyCard
+  } = data.images.reduce<{
+    RadMorph: any[]
+    RadGem: any[]
+    Card: any[]
+  }>(
+    (acc, image) => {
+      acc[image.type].push(image)
+      return acc
+    },
+    { RadMorph: [], RadGem: [], Card: [] }
+  )
 </script>
 
 <div class="mt-px space-y-4">
@@ -97,14 +113,29 @@
 
 <main class="mt-10 relative h-full w-full overflow-y-auto bg-white dark:bg-gray-800">
   <div class="p-4 grid gap-4 align-center grid-cols-2">
-    <Heading tag="h1" class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
-      Images
-    </Heading>
-    <Button
-      on:click={async () => {
-        http.post('/images/populate-image-oracle')
-      }}>Populate image oracle</Button
-    >
+    <div>
+      <Heading tag="h1" class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
+        Images
+      </Heading>
+      <div>
+        <div class="text-white">
+          RadMorphs: {RadMorph.length}
+        </div>
+        <div class="text-white">
+          RadGems: {RadGem.length}
+        </div>
+        <div class="text-white">
+          Cards: {EnergyCard.length}
+        </div>
+      </div>
+    </div>
+    <div>
+      <Button
+        on:click={async () => {
+          http.post('/images/populate-image-oracle')
+        }}>Populate image oracle</Button
+      >
+    </div>
   </div>
   <Table>
     <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">

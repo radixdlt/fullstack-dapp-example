@@ -118,20 +118,21 @@
         {$i18n.t('jetty:create-radmorphs.title-pick-card')}
       {/if}
     </div>
-
-    <Carousel let:Item>
-      {#each cards as card, i}
-        <Item>
-          <TransformCard
-            {card}
-            selected={i === selectedTransformCard}
-            bind:this={transformCardComponents[i]}
-            on:selected={() => onTransformCardSelected(i)}
-            on:deselected={onTransformCardDeselected}
-          />
-        </Item>
-      {/each}
-    </Carousel>
+    <div class="cards">
+      <Carousel let:Item stepSize={100}>
+        {#each cards as card, i}
+          <Item>
+            <TransformCard
+              {card}
+              selected={i === selectedTransformCard}
+              bind:this={transformCardComponents[i]}
+              on:selected={() => onTransformCardSelected(i)}
+              on:deselected={onTransformCardDeselected}
+            />
+          </Item>
+        {/each}
+      </Carousel>
+    </div>
   </JettyMenuItemPage>
 {/if}
 
@@ -158,19 +159,21 @@
         {$i18n.t('jetty:create-radmorphs.title-gems-selected')}
       {/if}
     </div>
-    <Carousel let:Item>
-      {#each gems as gem, i}
-        <Item>
-          <GemCard
-            {gem}
-            selected={selectedGems.includes(i)}
-            bind:this={gemCardComponents[i]}
-            on:selected={() => onGemCardSelected(i)}
-            on:deselected={() => onGemCardDeselected(i)}
-          />
-        </Item>
-      {/each}
-    </Carousel>
+    <div class="cards">
+      <Carousel let:Item>
+        {#each gems as gem, i}
+          <Item>
+            <GemCard
+              {gem}
+              selected={selectedGems.includes(i)}
+              bind:this={gemCardComponents[i]}
+              on:selected={() => onGemCardSelected(i)}
+              on:deselected={() => onGemCardDeselected(i)}
+            />
+          </Item>
+        {/each}
+      </Carousel>
+    </div>
   </JettyMenuItemPage>
 {/if}
 
@@ -196,18 +199,16 @@
     <div slot="header" class="title">
       {$i18n.t('jetty:create-radmorphs.title-review')}
     </div>
-    <Carousel let:Item>
-      <Item>
-        {#if selectedTransformCard !== undefined}
-          <TransformCard disabled={true} selected={true} card={cards[selectedTransformCard]} />
-        {/if}
-      </Item>
+
+    <div class="chosen-cards cards">
+      {#if selectedTransformCard !== undefined}
+        <TransformCard disabled={true} selected={true} card={cards[selectedTransformCard]} />
+      {/if}
+
       {#each selectedGems as i}
-        <Item>
-          <GemCard disabled={true} selected={true} gem={gems[i]} />
-        </Item>
+        <GemCard disabled={true} selected={true} gem={gems[i]} />
       {/each}
-    </Carousel>
+    </div>
   </JettyMenuItemPage>
 {/if}
 
@@ -225,29 +226,45 @@
 
 {#if page === 4}
   <JettyMenuItemPage
-    action={{
-      text: $i18n.t('jetty:create-radmorphs.create-radmorph-button'),
-      onClick: () => createRadmorph(setWaitingForRadmorph, unsetWaitingForRadmorph, radmorphCreated)
+    actions={{
+      left: {
+        text: $i18n.t('jetty:create-radmorphs.start-again-button'),
+        onClick: () => {
+          page = 0
+          selectedTransformCard = undefined
+          selectedGems = []
+        }
+      },
+      right: {
+        text: $i18n.t('jetty:create-radmorphs.create-radmorph-button'),
+        onClick: () =>
+          createRadmorph(setWaitingForRadmorph, unsetWaitingForRadmorph, radmorphCreated)
+      }
     }}
     loading={waitingForRadmorphTx}
   >
     <div class="preview-title" slot="header">
       {preview.name.split('{')[0]}
-    </div>
-    <div class="preview">
       <div class="quality">
         {$i18n.t('jetty:create-radmorphs.radmorph-quality', { quality: preview.quality })}
         {#if preview.limitedEdition}
           <i>{$i18n.t('jetty:create-radmorphs.limited-edition')}</i>
         {/if}
       </div>
-      <img src={preview.image} alt="A Radmorph" />
-      {$i18n.t('jetty:create-radmorphs.radmorph-preview-text')}
-      <div class="footnote">
-        {$i18n.t('jetty:create-radmorphs.resources-sent-from-wallet')}
+    </div>
+    <div class="preview content">
+      <div class="preview-image">
+        <img style:width="100%" src={preview.image} alt="A Radmorph" />
+        <div class="preview-pill">
+          {$i18n.t('jetty:create-radmorphs.preview-pill-text')}
+        </div>
       </div>
+      {$i18n.t('jetty:create-radmorphs.radmorph-preview-text')}
     </div>
   </JettyMenuItemPage>
+  <div class="footnote">
+    {$i18n.t('jetty:create-radmorphs.resources-sent-from-wallet')}
+  </div>
 {/if}
 
 {#if page === 5}
@@ -257,7 +274,7 @@
       onClick: () => dispatch('complete')
     }}
   >
-    <div class="success">
+    <div class="success content">
       <img src={preview.image} alt="A Radmorph" />
       {$i18n.t('jetty:create-radmorphs.radmorph-created')}
     </div>
@@ -268,6 +285,7 @@
   .title {
     font-size: var(--text-md3);
     text-align: center;
+    white-space: nowrap;
   }
 
   .preview-title {
@@ -278,6 +296,8 @@
 
   .quality {
     font-family: var(--font-headers);
+    margin-top: var(--spacing-md);
+    font-size: var(--text-sm);
   }
 
   .preview {
@@ -286,10 +306,67 @@
     gap: var(--spacing-xl);
     align-items: center;
     text-align: center;
-    margin-bottom: -3rem;
+    height: 100%;
+    justify-content: center;
+  }
 
-    img {
-      height: 150px;
+  .preview-image {
+    position: relative;
+    height: 150px;
+    width: 150px;
+    border: var(--border-lg) var(--color-primary);
+  }
+
+  .content {
+    padding: 0 var(--spacing-2xl);
+
+    @include mobile {
+      padding: 0 var(--spacing-xl);
+    }
+  }
+
+  .preview-pill {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    padding: var(--spacing-xs) var(--spacing-lg);
+    font-size: var(--text-xxs);
+    font-weight: var(--font-weight-bold);
+    height: 1.7rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--color-primary);
+    border-radius: var(--border-radius-xl);
+  }
+
+  .cards {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    transform: translateY(-2rem);
+  }
+
+  .chosen-cards {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+
+    :global(.main-card) {
+      @include mobile() {
+        margin: var(--spacing-sm);
+      }
+    }
+
+    :global(.transform-card) {
+      height: 10rem;
+    }
+
+    :global(.container) {
+      height: 10rem;
     }
   }
 
@@ -297,10 +374,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    height: 100%;
   }
 
   .footnote {
     font-size: var(--text-xs);
+    color: var(--color-light);
+    text-align: center;
+    padding-bottom: var(--spacing-xl);
   }
 
   .success {
@@ -309,6 +391,7 @@
     gap: var(--spacing-xl);
     align-items: center;
     text-align: center;
+    padding-top: var(--spacing-2xl);
 
     img {
       height: 250px;

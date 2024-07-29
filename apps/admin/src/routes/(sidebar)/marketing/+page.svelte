@@ -4,10 +4,19 @@
   import { writable } from 'svelte/store'
   import type { Marketing } from 'database'
   import { onMount } from 'svelte'
+  import { json2csv } from 'json-2-csv'
 
   let searchTerm = ''
 
-  let items = writable<(Marketing & { createdAt: string; country: string })[]>([])
+  let items = writable<
+    (Marketing & {
+      user: {
+        createdAt: string
+        country: string
+        questProgress: { questId: string; status: string }[]
+      }
+    })[]
+  >([])
   let mounted = false
 
   $: {
@@ -28,8 +37,8 @@
       .then(({ items }) => {
         const a = document.createElement('a')
         a.href = URL.createObjectURL(
-          new Blob([JSON.stringify(items, null, 2)], {
-            type: 'text/plain'
+          new Blob([json2csv(items)], {
+            type: 'text/csv;charset=utf-8'
           })
         )
         a.setAttribute('download', `radquest_marketing ${new Date().toDateString()}`)
@@ -58,16 +67,30 @@
   <div class="text-white p-4">Showing 250 items</div>
   <Table>
     <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
-      {#each ['user Id', 'utm_campaign', 'utm_medium', 'utm_source', 'utm_id', 'utm_content', 'utm_term', 'country', 'created At'] as title}
+      {#each ['user Id', 'quest progress', 'utm_campaign', 'utm_medium', 'utm_source', 'utm_id', 'utm_content', 'utm_term', 'country', 'created At'] as title}
         <TableHeadCell class="p-4 font-medium">{title}</TableHeadCell>
       {/each}
     </TableHead>
     <TableBody>
       {#each $items as item}
         <TableBodyRow class="text-base">
-          <TableBodyCell class="flex items-center space-x-6 whitespace-nowrap p-4"
-            >{item.userId}</TableBodyCell
+          <TableBodyCell
+            class="flex items-center space-x-6 whitespace-nowrap p-4 cursor-pointer"
+            on:click={() => {
+              window.location.href = `/users/${item.userId}`
+            }}>{item.userId}</TableBodyCell
           >
+
+          <TableBodyCell
+            class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
+          >
+            {#each item.user.questProgress as questProgress}
+              <div class="flex items-center space-x-2">
+                <span>{questProgress.questId}</span>
+                <span class="text-gray-400 dark:text-gray-500">{questProgress.status}</span>
+              </div>
+            {/each}
+          </TableBodyCell>
 
           <TableBodyCell
             class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
@@ -108,13 +131,13 @@
           <TableBodyCell
             class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
           >
-            {item.country}</TableBodyCell
+            {item.user.country}</TableBodyCell
           >
 
           <TableBodyCell
             class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
           >
-            {item.createdAt}</TableBodyCell
+            {item.user.createdAt}</TableBodyCell
           >
         </TableBodyRow>
       {/each}

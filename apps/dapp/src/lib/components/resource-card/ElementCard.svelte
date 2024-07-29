@@ -27,9 +27,11 @@
     justify-content: center;
     align-items: center;
     background: var(--background-image) no-repeat center;
-    background-size: 80%;
+    background-size: 65%;
     height: 100%;
     width: 100%;
+    height: 12rem;
+    aspect-ratio: 1/1.66;
   }
   .text {
     display: flex;

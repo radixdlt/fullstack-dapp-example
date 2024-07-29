@@ -19,13 +19,14 @@ export const colorCodeDescription = {
   dusk: 'PRP'
 } as const
 
-export const gemImageMapping = (color: ColorCodeDescription, shader: ShaderCodeDescription) => `/gems/UI_${colorCodeDescription[color]}_${shaderCodeDescription[shader]}.webp`
+export const gemImageMapping = (color: ColorCodeDescription, shader: ShaderCodeDescription) =>
+  `/gems/UI_${colorCodeDescription[color]}_${shaderCodeDescription[shader]}.webp`
 
 export const shapeCodeDescription = {
   'whirlpool spiral': 'S001',
   'earthquake tremor': 'S002',
   'gamma rays': 'S003',
-  'nolten lava': 'S004',
+  'molten lava': 'S004',
   'tidal wave': 'S005',
   'storm cell': 'S006',
   'nuclear fusion': 'S007',
@@ -58,13 +59,9 @@ export const shapeDescription = reverse(shapeCodeDescription)
 export const colorDescription = reverse(colorCodeDescription)
 
 export const rarityDescription = {
-  1: 'Common',
-  2: 'Uncommon',
-  3: 'Rare',
-  4: 'Fine',
-  5: 'Precious',
-  6: 'Superb',
-  7: 'Magnificent'
+  1: 'common',
+  2: 'rare',
+  3: 'ultra-rare'
 } as const
 
 export type Color = keyof typeof colorCodeDescription
@@ -82,7 +79,8 @@ export const shapeToCode = (shape: Shape): ShapeCode => shapeCodeDescription[sha
 
 export const shaderToCode = (shader: Shader): ShaderCode => shaderCodeDescription[shader]
 
-export const rarityToNumber = (rarity: string): number =>
-  Number(
+export const rarityToNumber = (rarity: string): number => {
+  return Number(
     Object.entries(rarityDescription).find(([_, value]) => value.toLowerCase() === rarity)?.[0] || 1
   )
+}

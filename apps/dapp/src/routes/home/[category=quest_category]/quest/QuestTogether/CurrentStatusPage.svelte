@@ -120,7 +120,7 @@
         <img src={FireIcon} alt="" />
         <strong>{$i18n.t('quests:QuestTogether.unlockedSuperLevel')}</strong>
         <p>
-          {$i18n.t('quests:QuestTogether.unlockedSuperLevelInfo', { mail: 'hello@radixdlt.com' })}
+          {@html $i18n.t('quests:QuestTogether.unlockedSuperLevelInfo')}
         </p>
       </div>
     {:else}
@@ -164,10 +164,6 @@
       referred={referrals.length}
       status={progress.GoldLevel}
     ></ReferralLevel>
-
-    {#if unlockedSuperLevel}
-      <ReferralLevel level="SuperLevel" status=""></ReferralLevel>
-    {/if}
   </div>
 </div>
 
@@ -202,6 +198,10 @@
   .your-level {
     margin: 0.5rem 1rem;
     line-height: var(--line-height-lg);
+  }
+
+  .super-level > p > :global(a) {
+    text-decoration: underline;
   }
 
   .claim-button-text {

@@ -1,7 +1,7 @@
 import { QuestStatus } from 'database'
 import type { PrismaClient } from 'database'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
-import { createApiError } from '../helpers/create-api-error'
+import { type ApiError, createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers/logger'
 
 export type UserQuestModel = ReturnType<typeof UserQuestModel>
@@ -31,6 +31,25 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
         return createApiError('failed to create completed requirement', 400)()
       }
     )
+
+  const getDepositedRewards = (userId: string, questId: string) => {
+    return ResultAsync.fromPromise(
+      db.event.findFirst({
+        where: {
+          questId,
+          id: 'QuestRewardDeposited',
+          userId
+        }
+      }),
+      (error) => {
+        logger?.error({ error, method: 'getDepositedRewards', model: 'UserQuestModel' })
+        return createApiError('failed to get deposited rewards', 400)()
+      }
+    ).map(
+      (data) =>
+        (data?.data as { rewards?: { amount: string; resourceAddress: string }[] })?.rewards || []
+    )
+  }
 
   const addVerifiedPhoneNumber = (
     userId: string,
@@ -110,13 +129,20 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
     )
 
   const updateQuestStatus = (questId: string, userId: string, status: QuestStatus) => {
-    const statuses = ['IN_PROGRESS', 'REWARDS_DEPOSITED', 'REWARDS_CLAIMED', 'COMPLETED']
+    const transitions = {
+      IN_PROGRESS: ['REWARDS_DEPOSITED', 'COMPLETED'],
+      REWARDS_DEPOSITED: ['REWARDS_CLAIMED'],
+      REWARDS_CLAIMED: ['COMPLETED'],
+      COMPLETED: ['COMPLETED'] as string[]
+    }
 
     return getQuestStatus(userId, questId)
       .andThen((data) => {
         const currentStatus = data?.status
-        if (currentStatus && statuses.indexOf(currentStatus) >= statuses.indexOf(status)) {
-          return errAsync(createApiError('cannot update to a previous status', 400)())
+        if (currentStatus && !transitions[currentStatus].includes(status)) {
+          return errAsync(
+            createApiError(`cannot update from '${currentStatus}' to '${status}'`, 400)()
+          )
         }
         return okAsync(undefined)
       })
@@ -187,6 +213,36 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
       }
     )
 
+  const getQuestsWithTrackedAccounts = (limit: number, offset: number) =>
+    ResultAsync.fromPromise<{ accountAddress: string; questId: string; id: string }[], ApiError>(
+      db.$queryRaw`
+        SELECT u."accountAddress", qp."questId", u."id"
+          FROM "User" u
+          JOIN "QuestProgress" qp ON u."id" = qp."userId"
+          LEFT JOIN "CompletedQuestRequirement" cqr1 ON u."id" = cqr1."userId" AND cqr1."requirementId" = 'JettyReceivedClams'
+          LEFT JOIN "CompletedQuestRequirement" cqr2 ON u."id" = cqr2."userId" AND cqr2."requirementId" = 'InstapassBadgeDeposited'
+          LEFT JOIN "CompletedQuestRequirement" cqr3 ON u."id" = cqr3."userId" AND cqr3."requirementId" = 'XrdStaked'
+          LEFT JOIN "CompletedQuestRequirement" cqr4 ON u."id" = cqr4."userId" AND cqr4."requirementId" = 'JettySwap'
+          LEFT JOIN "CompletedQuestRequirement" cqr5 ON u."id" = cqr5."userId" AND cqr5."requirementId" = 'LettySwap'
+          LEFT JOIN "CompletedQuestRequirement" cqr6 ON u."id" = cqr5."userId" AND cqr5."requirementId" = 'MayaRouterWithdrawEvent'
+          WHERE 
+              (qp."questId" = 'TransferTokens' AND qp."status" = 'IN_PROGRESS' AND cqr1."requirementId" IS NULL)
+              OR
+              (qp."questId" = 'Instapass' AND qp."status" = 'IN_PROGRESS' AND cqr2."requirementId" IS NULL)
+              OR
+              (qp."questId" = 'NetworkStaking' AND qp."status" = 'IN_PROGRESS' AND cqr3."requirementId" IS NULL)
+              OR
+              (qp."questId" = 'ThorSwap' AND qp."status" = 'IN_PROGRESS' AND cqr6."requirementId" IS NULL)
+              OR
+              (qp."questId" = 'DEXSwaps' AND qp."status" = 'IN_PROGRESS' AND (cqr4."requirementId" IS NULL OR cqr5."requirementId" IS NULL))
+        LIMIT ${limit}
+        OFFSET ${offset};`,
+      (error) => {
+        logger?.error({ error, method: 'getQuestsWithTrackedAccounts', model: 'UserQuestModel' })
+        return createApiError('failed to getQuestsWithTrackedAccounts', 400)()
+      }
+    )
+
   const findPrerequisites = (userId: string, preRequisites: string[]) =>
     ResultAsync.fromPromise(
       db.questProgress.findMany({
@@ -207,6 +263,8 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
     getQuestsStatus,
     updateQuestStatus,
     findPrerequisites,
+    getQuestsWithTrackedAccounts,
+    getDepositedRewards,
     addVerifiedPhoneNumber,
     addCompletedRequirement,
     findCompletedRequirements,

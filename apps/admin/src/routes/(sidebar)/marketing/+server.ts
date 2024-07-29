@@ -8,7 +8,9 @@ export const POST = async ({ request, locals }) => {
   const items = await locals.dbClient.marketing.findMany({
     take: 250,
     orderBy: { user: { createdAt: 'desc' } },
-    include: { user: { select: { createdAt: true, country: true } } },
+    include: {
+      user: { select: { createdAt: true, country: true, questProgress: true } }
+    },
     where: searchTerm
       ? {
           OR: [

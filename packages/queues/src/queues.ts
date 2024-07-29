@@ -12,7 +12,9 @@ export type SystemJobType = (typeof SystemJobType)[keyof typeof SystemJobType]
 export const SystemJobType = {
   PopulateRadmorphs: 'PopulateRadmorphs',
   AddReferral: 'AddReferral',
-  UpdateKycOracle: 'UpdateKycOracle'
+  UpdateKycOracle: 'UpdateKycOracle',
+  UpdateLettySwapDappDefinition: 'UpdateLettySwapDappDefinition',
+  UpdateKycBadgeAddress: 'UpdateKycBadgeAddress'
 } as const
 
 export type EventJob = {
@@ -72,6 +74,11 @@ export type DepositGiftBoxRewardTransactionJob = {
   giftBoxKind: GiftBoxKind
 }
 
+export type QuestCompletedTransactionJob = {
+  type: 'QuestCompleted'
+  questId: string
+}
+
 export type TransactionJob = {
   userId: string
   discriminator: string
@@ -85,6 +92,7 @@ export type TransactionJob = {
   | PopulateResourcesTransactionJob
   | AddAccountAddressToHeroBadgeForgeJob
   | DepositXrdToAccount
+  | QuestCompletedTransactionJob
   | DepositGiftBoxRewardTransactionJob
 )
 
@@ -110,7 +118,22 @@ export type UpdateKycOracleSystemJob = {
   traceId: string
 }
 
-export type SystemJob = RadmorphSystemJob | AddReferralSystemJob | UpdateKycOracleSystemJob
+export type UpdateLettySwapDappDefinitionSystemJob = {
+  type: (typeof SystemJobType)['UpdateLettySwapDappDefinition']
+  traceId: string
+}
+
+export type UpdateKycBadgeAddressSystemJob = {
+  type: (typeof SystemJobType)['UpdateKycBadgeAddress']
+  traceId: string
+}
+
+export type SystemJob =
+  | RadmorphSystemJob
+  | AddReferralSystemJob
+  | UpdateKycOracleSystemJob
+  | UpdateLettySwapDappDefinitionSystemJob
+  | UpdateKycBadgeAddressSystemJob
 
 export type TQueues = ReturnType<typeof getQueues>
 export type TransactionQueue = TQueues['transactionQueue']

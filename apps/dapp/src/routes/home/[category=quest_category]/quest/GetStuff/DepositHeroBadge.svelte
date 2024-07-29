@@ -49,6 +49,7 @@
       .andThen(() => messageApi.markAsSeen(messageId))
       .map(() => {
         mintingInProgress = false
+        $hasHeroBadge = true
         state = 'hasHeroBadge'
         dispatch('deposited')
       })
@@ -76,6 +77,7 @@
         message.questId === questId &&
         message.requirementId === 'DepositHeroBadge'
       ) {
+        $hasHeroBadge = true
         messageApi.markAsSeen(message.id)
         dispatch('deposited')
       }

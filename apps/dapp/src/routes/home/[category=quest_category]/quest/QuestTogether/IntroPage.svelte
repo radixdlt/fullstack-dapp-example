@@ -1,6 +1,8 @@
 <script lang="ts">
   import ShareBox from '$lib/components/referral/ShareBox.svelte'
   import { i18n } from '$lib/i18n/i18n'
+
+  export let referralsCount: number
 </script>
 
 <div class="wrapper">
@@ -8,7 +10,15 @@
   <p class="header">{$i18n.t('quests:QuestTogether.copyReferral')}</p>
   <ShareBox />
   <p class="info">{@html $i18n.t('quests:QuestTogether.info_1')}</p>
-  <p class="info">{@html $i18n.t('quests:QuestTogether.info_2')}</p>
+
+  <p class="info">
+    {#if referralsCount < 10}
+      {@html $i18n.t('quests:QuestTogether.info_2')}
+    {:else}
+      <strong>{$i18n.t('quests:QuestTogether.unlockedSuperLevel')}</strong><br />
+      {@html $i18n.t('quests:QuestTogether.unlockedSuperLevelInfo')}
+    {/if}
+  </p>
 </div>
 
 <style lang="scss">
@@ -33,6 +43,10 @@
 
     &:last-child {
       margin-top: 1.5rem;
+    }
+
+    :global(a) {
+      text-decoration: underline;
     }
   }
 </style>

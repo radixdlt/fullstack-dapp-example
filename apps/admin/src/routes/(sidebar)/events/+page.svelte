@@ -1,17 +1,45 @@
 <script lang="ts">
-  import { Button, Heading, TableHeadCell } from 'flowbite-svelte'
+  import { Button, Checkbox, Heading, TableHeadCell, TableSearch } from 'flowbite-svelte'
   import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead } from 'flowbite-svelte'
-  import type { PageData } from './$types'
-  import { GatewayApi } from 'common'
+  import { GatewayApi, type Event } from 'common'
   import { publicConfig } from '$lib/public-config'
+  import { onMount } from 'svelte'
 
-  export let data: PageData
-  const events = data.events
+  let events: Event[] = []
 
   const gateway = GatewayApi(publicConfig.networkId)
 
+  let mounted = false
+
+  let filters = {
+    status: {
+      completed: true,
+      error: true,
+      waiting: true,
+      pending: true
+    },
+    userId: ''
+  }
+
+  const getEvents = () => {
+    fetch(`/events`, { method: 'POST', body: JSON.stringify(filters) })
+      .then((res) => res.json())
+      .then((res) => {
+        events = res.data
+      })
+  }
+
+  $: {
+    if (mounted && filters) getEvents()
+  }
+
+  onMount(() => {
+    mounted = true
+    getEvents()
+  })
+
   const retryJob = (id: string) =>
-    fetch(`/events`, {
+    fetch(`/events/retry`, {
       method: 'POST',
       body: JSON.stringify({ ids: [id] })
     })
@@ -22,6 +50,15 @@
     <Heading tag="h1" class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
       Events
     </Heading>
+    <TableSearch placeholder="Find user by id" hoverable={true} bind:inputValue={filters.userId}
+    ></TableSearch>
+    <div>
+      <div class="text-gray-900 dark:text-white">Status:</div>
+      <Checkbox bind:checked={filters.status.completed}>Completed</Checkbox>
+      <Checkbox bind:checked={filters.status.error}>Error</Checkbox>
+      <Checkbox bind:checked={filters.status.pending}>Pending</Checkbox>
+      <Checkbox bind:checked={filters.status.waiting}>Waiting</Checkbox>
+    </div>
   </div>
 
   <Table>

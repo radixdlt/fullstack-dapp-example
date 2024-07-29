@@ -1,17 +1,17 @@
 {
   "influencer": {
     "en": {
-      "0.md": "<h2>Welcome to RadQuest</h2>\n<p>Hey! {influencer} loves to send people to me! I will be your guide to Radix. Continue your adventure and start earning your $20 of XRD!\nTurn on screen reader support</p>\n"
+      "0.md": "<h2>Welcome to RadQuest</h2>\n<p><strong>Hey there!</strong> <strong>{influencer}</strong> loves to send people to me. I'll be your guide to Radix!</p>\n<p>Begin your adventure and start earning your <strong>$20 of XRD</strong>!</p>\n"
     }
   },
   "paid": {
     "en": {
-      "0.md": "<h2>Welcome to RadQuest</h2>\n<p>Fantastic! Another visitor from {source} ready to dive into RadQuest. I will be your guide to Radix. Continue your adventure and start earning your $20 of XRD!</p>\n"
+      "0.md": "<h2>Welcome to RadQuest</h2>\n<p><strong>Fantastic!</strong> Another visitor from <strong>{source}</strong> ready to dive into RadQuest. I'll be your guide!</p>\n<p>Begin your adventure and start earning your <strong>$20 of XRD</strong>!</p>\n"
     }
   },
   "userreferral": {
     "en": {
-      "0.md": "<h2>Welcome to RadQuest</h2>\n<p><strong>”{inviter_name}”</strong> has invited you to join them on RadQuest! Complete the “Basics” quests and you’ll <em>both</em> be able to claim a reward in real <strong>XRD tokens</strong>!</p>\n"
+      "0.md": "<h2>Welcome to RadQuest</h2>\n<p><strong>”{inviter_name}”</strong> has invited you to join them here on RadQuest!</p>\n<p>Complete the <strong>Basics</strong> quests and you’ll <em>both</em> be able to claim a reward in real <strong>XRD tokens</strong>!</p>\n"
     }
   }
 }

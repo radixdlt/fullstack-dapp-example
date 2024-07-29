@@ -3,6 +3,7 @@
   import { i18n } from '$lib/i18n/i18n'
   import { user } from '../../../stores'
 
+  let copied = false
   const url =
     typeof window === 'undefined' ? '' : `${window.location.origin}/?ref=${$user?.referralCode}`
   const isSharingSupported = typeof navigator !== 'undefined' && !!navigator.share
@@ -15,6 +16,10 @@
       })
     } else {
       navigator.clipboard.writeText(url)
+      copied = true
+      setTimeout(() => {
+        copied = false
+      }, 3000)
     }
   }
 </script>
@@ -25,9 +30,12 @@
   </span>
 
   <button class="button" on:click={share}>
-    <img src={Share} alt={$i18n.t('quests:shareButton')} />
-
-    {$i18n.t(isSharingSupported ? 'quests:shareButton' : 'quests:copy')}
+    {#if !copied}
+      <img src={Share} alt={$i18n.t('quests:shareButton')} />
+    {/if}
+    {isSharingSupported ? $i18n.t('quests:shareButton') : ''}
+    {!isSharingSupported && !copied ? $i18n.t('quests:copy') : ''}
+    {!isSharingSupported && copied ? $i18n.t('quests:copied') : ''}
   </button>
 </div>
 
@@ -44,13 +52,11 @@
 
   .url {
     background: #fff;
-    margin: 0 20px;
+    margin: 0 0.5rem 0 1rem;
     font-size: var(--text-xs);
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    display: flex;
-    align-items: center;
   }
 
   .button {
@@ -63,5 +69,15 @@
     align-items: center;
     margin-left: auto;
     flex-shrink: 0;
+    justify-content: center;
+    width: 6rem;
+    @include desktop {
+      @media (hover: hover) {
+        &:hover:not(.disabled) {
+          filter: brightness(0.8);
+        }
+      }
+    }
+    transition: filter 0.2s ease-in-out;
   }
 </style>

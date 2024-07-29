@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte'
   import { context } from '../jetty-menu/JettyMenu.svelte'
 
   export let glossary: {
@@ -7,9 +8,11 @@
     html: string
   }[]
 
+  const dispatch = createEventDispatcher()
   export const openGlossaryItem = (id: string) => {
     page = 'item'
     selectedItem = id
+    dispatch('open-item', { id })
   }
 
   let page: 'glossary' | 'item' = 'glossary'
@@ -35,13 +38,7 @@
 {:else}
   <div class="glossary">
     {#each glossary as { title, id }}
-      <button
-        class="item"
-        on:click={() => {
-          page = 'item'
-          selectedItem = id
-        }}
-      >
+      <button class="item" on:click={() => openGlossaryItem(id)}>
         {title}
       </button>
     {/each}

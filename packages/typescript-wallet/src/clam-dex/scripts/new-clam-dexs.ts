@@ -17,7 +17,10 @@ mintAdminBadge({
       true
     )
   )
-  .map((component) => (result.jettySwap = component))
+  .map((components) => {
+    result.jettySwap = components.dex
+    result.jettySwapPriceOracle = components.priceOracle
+  })
   .andThen(() =>
     newClamDex(
       'LettySwap Component',
@@ -25,6 +28,9 @@ mintAdminBadge({
       false
     )
   )
-  .map((component) => (result.lettySwap = component))
+  .map((components) => {
+    result.lettySwap = components.dex
+    result.lettySwapPriceOracle = components.priceOracle
+  })
   .mapErr((err) => logger.error(err, '\n\nDid you forget to rebuild the Scrypto package?'))
   .map(() => logger.debug('\nNew ClamDex component addresses:', result))

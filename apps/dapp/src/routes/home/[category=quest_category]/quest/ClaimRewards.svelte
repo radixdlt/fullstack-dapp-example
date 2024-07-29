@@ -35,21 +35,24 @@
 
   export const claim = () => {
     const sendTx = (instapassBadge?: string) =>
-      sendTransaction({
-        transactionManifest: createClaimRewardsTransaction(
-          $user?.accountAddress!,
-          $user?.id!,
-          questId,
-          instapassBadge
-        )
-      })
+      questApi.getDepositedRewards(questId).andThen((rewards) =>
+        sendTransaction({
+          transactionManifest: createClaimRewardsTransaction(
+            $user?.accountAddress!,
+            $user?.id!,
+            questId,
+            rewards,
+            instapassBadge
+          )
+        })
+      )
 
     loading.set(true)
 
     return handleKycBadge($user?.id!, $user?.accountAddress!, sendTx)
-      .map(() => {
+      .map((txResult) => {
         loading.set(false)
-        dispatch('claimed')
+        if (txResult) dispatch('claimed')
       })
       .mapErr(() => {
         loading.set(false)

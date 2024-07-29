@@ -107,6 +107,9 @@
       if (persona?.identityAddress) {
         ResultAsync.combine([userApi.me(), authApi.authToken()])
           .map(async ([me, authToken]) => {
+            //@ts-ignore
+            dataLayer.push({ event: 'dl_click_4_wallet_connected' })
+
             $user = {
               ...me,
               label: persona.label
@@ -122,11 +125,17 @@
 
             await invalidateAll()
 
-            if (data.questStatus['SetupWallet']?.status === 'IN_PROGRESS') {
+            if (
+              data.questStatus['SetupWallet']?.status === 'IN_PROGRESS' &&
+              !$page.url.href.includes('SetupWallet')
+            ) {
               pushNotification('loggedIn')
             }
 
-            if (data.questStatus['TransferTokens']?.status === 'IN_PROGRESS') {
+            if (
+              data.questStatus['TransferTokens']?.status === 'IN_PROGRESS' &&
+              !$page.url.href.includes('TransferTokens')
+            ) {
               questApi
                 .getQuestInformation('TransferTokens', fetch)
                 .map((data) => data.requirements)
@@ -138,13 +147,68 @@
             }
 
             if (
-              data.questStatus['TransferTokens']?.status === 'COMPLETED' &&
-              $user.referredByUser
+              data.questStatus['DEXSwaps']?.status === 'IN_PROGRESS' &&
+              !$page.url.href.includes('DEXSwaps')
             ) {
-              pushNotification('joinedFriend')
+              questApi
+                .getQuestInformation('DEXSwaps', fetch)
+                .map((data) => data.requirements)
+                .map((requirements) => {
+                  if (requirements.JettySwap.isComplete) {
+                    pushNotification('jettySwapCompleted')
+                  }
+
+                  if (requirements.LettySwap.isComplete) {
+                    pushNotification('lettySwapCompleted')
+                  }
+                })
+            }
+
+            if (
+              data.questStatus['NetworkStaking']?.status === 'IN_PROGRESS' &&
+              !$page.url.href.includes('NetworkStaking')
+            ) {
+              questApi
+                .getQuestInformation('NetworkStaking', fetch)
+                .map((data) => data.requirements)
+                .map((requirements) => {
+                  if (requirements.XrdStaked.isComplete) {
+                    pushNotification('stakeCompleted')
+                  }
+                })
+            }
+
+            if (
+              data.questStatus['Instapass']?.status === 'IN_PROGRESS' &&
+              !$page.url.href.includes('Instapass')
+            ) {
+              questApi
+                .getQuestInformation('Instapass', fetch)
+                .map((data) => data.requirements)
+                .map((requirements) => {
+                  if (requirements.InstapassBadgeDeposited.isComplete) {
+                    pushNotification('instapassBadgeReceived')
+                  }
+                })
+            }
+
+            if (
+              data.questStatus['Thorswap']?.status === 'IN_PROGRESS' &&
+              !$page.url.href.includes('Thorswap')
+            ) {
+              questApi
+                .getQuestInformation('Thorswap', fetch)
+                .map((data) => data.requirements)
+                .map((requirements) => {
+                  if (requirements.MayaRouterWithdrawEvent.isComplete) {
+                    pushNotification('thorswapSwapCompleted')
+                  }
+                })
             }
 
             questApi.getQuestInformation('QuestTogether').map((data) => {
+              if ($page.url.href.includes('QuestTogether')) return
+
               if (data.requirements.BronzeLevel.isComplete) {
                 pushNotification('reachedTierBronze')
               }
@@ -184,9 +248,6 @@
 
     const savedProgress = localStorage.getItem('savedProgress')
 
-    //@ts-ignore
-    dataLayer.push({ event: 'dl_click_4_wallet_connected' })
-
     if (savedProgress) {
       const { questId, progress } = JSON.parse(savedProgress)
       goto(
@@ -208,16 +269,16 @@
     requirementId: string,
     notificationName: Parameters<typeof pushNotification>[0]
   ) => {
-    if (!$page.url.href.includes(questId)) {
-      webSocketClient.onMessage((message) => {
+    webSocketClient.onMessage((message) => {
+      if (!$page.url.href.includes(questId)) {
         if (
           message.type === 'QuestRequirementCompleted' &&
           message.requirementId === requirementId
         ) {
           pushNotification(notificationName)
         }
-      })
-    }
+      }
+    })
   }
 
   $: if ($webSocketClient)
@@ -235,7 +296,7 @@
     registerNotificationOnMessage($webSocketClient, 'DEXSwaps', 'LettySwap', 'lettySwapCompleted')
 
   $: if ($webSocketClient)
-    registerNotificationOnMessage($webSocketClient, 'NetworkStaking', 'StakedXrd', 'stakeCompleted')
+    registerNotificationOnMessage($webSocketClient, 'NetworkStaking', 'XrdStaked', 'stakeCompleted')
 
   $: if ($webSocketClient)
     registerNotificationOnMessage(
@@ -252,6 +313,37 @@
       'MayaRouterWithdrawEvent',
       'thorswapSwapCompleted'
     )
+
+  $: if ($webSocketClient)
+    registerNotificationOnMessage(
+      $webSocketClient,
+      'QuestTogether',
+      'BronzeLevel',
+      'reachedTierBronze'
+    )
+
+  $: if ($webSocketClient)
+    registerNotificationOnMessage(
+      $webSocketClient,
+      'QuestTogether',
+      'SilverLevel',
+      'reachedTierSilver'
+    )
+
+  $: if ($webSocketClient)
+    registerNotificationOnMessage($webSocketClient, 'QuestTogether', 'GoldLevel', 'reachedTierGold')
+
+  $: if ($webSocketClient)
+    registerNotificationOnMessage(
+      $webSocketClient,
+      'QuestTogether',
+      'SuperLevel',
+      'reachedTierSuper'
+    )
+
+  if (data.questStatus['TransferTokens']?.status === 'COMPLETED' && $user?.referredByUser) {
+    pushNotification('joinedFriend')
+  }
 </script>
 
 <LandingPopup definitions={data.landingPopupDefinitions} />
@@ -277,5 +369,5 @@
     <slot />
   </svelte:fragment>
 
-  <Footer slot="footer" />
+  <Footer slot="footer" userId={$user?.id} />
 </Layout>

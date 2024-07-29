@@ -30,7 +30,11 @@
         }),
       (result) =>
         result.andThen((response) => {
-          const entries = (response.entries[0]?.value.programmatic_json as any).elements[0]?.entries
+          const openedBoxes = (response.entries[0]?.value.programmatic_json as any)?.elements
+
+          if (!openedBoxes) return errAsync(Error('Nothing to claim'))
+
+          const entries = openedBoxes[openedBoxes.length - 1]?.entries
 
           if (!entries) return errAsync(Error('Nothing to claim'))
 
@@ -63,7 +67,6 @@
                 energy: getStringDataValue('energy_type')(fields),
                 imageUrl: getStringDataValue('key_image_url')(fields),
                 rarity: getStringDataValue('rarity')(fields),
-                availability: getStringDataValue('availability')(fields),
                 quality: parseInt(getStringDataValue('quality')(fields)),
                 limitedEdition: getBoolDataValue('limited_edition')(fields)
               }
@@ -80,7 +83,7 @@
 <script lang="ts">
   import { publicConfig } from '$lib/public-config'
   import pipe from 'ramda/src/pipe'
-  import { GatewayApi } from 'common'
+  import { GatewayApi, type Messages } from 'common'
   import { user } from '../../stores'
   import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
   import { i18n } from '$lib/i18n/i18n'
@@ -97,8 +100,9 @@
   import TransformCard from '$lib/components/resource-card/TransformCard.svelte'
   import ElementCard from '$lib/components/resource-card/ElementCard.svelte'
   import { onMount } from 'svelte'
-  import ResourceCard from '$lib/components/resource-card/ResourceCard.svelte'
   import { webSocketClient } from '$lib/websocket-client'
+  import BoxCard from '$lib/components/resource-card/BoxCard.svelte'
+  import { messageApi } from '$lib/api/message-api'
 
   let loadingLedgerData = true
   let ownedGiftBoxes: {
@@ -117,7 +121,6 @@
       energy: string
       imageUrl: string
       rarity: string
-      availability: string
       quality: number
       limitedEdition: boolean
     }
@@ -152,7 +155,10 @@
         Bucket("gift_box");
   `
 
-  const claimItemsManifest = `
+  const getClaimItemsManifest = (rewards: {
+    amountOfElements: number
+    cardData: { id: string }
+  }) => `
     CALL_METHOD
       Address("${$user!.accountAddress!}")
       "create_proof_of_non_fungibles"
@@ -167,14 +173,24 @@
     CALL_METHOD
         Address("${publicConfig.components.giftBoxOpener}")
         "claim_gift_box_rewards"
-        Proof("hero_badge_proof")
-    ;
+        Proof("hero_badge_proof");
+
+    TAKE_FROM_WORKTOP
+        Address("${publicConfig.resources.elementAddress}")
+        Decimal("${rewards.amountOfElements}")
+        Bucket("bucket1");
+
+      CALL_METHOD
+        Address("${$user!.accountAddress!}")
+        "try_deposit_or_abort"
+        Bucket("bucket1")
+        Enum<0u8>();
+
     CALL_METHOD
         Address("${$user!.accountAddress!}")
         "deposit_batch"
         Expression("ENTIRE_WORKTOP")
     ;
-
 `
 
   const getGiftBoxes = pipe(
@@ -224,33 +240,42 @@
         waitingForOpenTransaction = false
         waitingForDepositedRewards = true
 
-        let resolveDeposited: () => void
+        let resolveDeposited: (message: Messages['GiftBoxDeposited']) => void
 
-        const promise = new Promise<void>((resolve) => {
+        const promise = new Promise<Messages['GiftBoxDeposited']>((resolve) => {
           resolveDeposited = resolve
         })
 
         const unsub = $webSocketClient!.onMessage((msg) => {
           if (msg.type === 'GiftBoxDeposited') {
-            resolveDeposited()
+            resolveDeposited(msg)
+            messageApi.markAsSeen([msg.id])
           }
         })
 
-        return ResultAsync.fromSafePromise(promise).map(unsub)
+        return ResultAsync.fromSafePromise(promise).map((data) => {
+          unsub()
+          return data
+        })
       })
-      .andThen(() => {
-        return getRewards($user!.id)
+      .map((data) => {
+        const amountOfElements = data.rewards.fungibles[0].amount
+        const [id] = data.rewards.nonFungibles[0].localIds
+        const { keyImageUrl: imageUrl, energyType: energy, ...energyCard } = data.energyCard
+        const cardData = { ...energyCard, imageUrl, energy, id }
+        return { amountOfElements, cardData }
       })
       .map(({ amountOfElements, cardData }) => {
         rewards = {
           amountOfElements,
           cardData
         }
-
+        waitingForOpenTransaction = false
         waitingForDepositedRewards = false
         readyToClaim = true
       })
       .mapErr(() => {
+        waitingForOpenTransaction = false
         waitingForDepositedRewards = false
       })
   }
@@ -258,7 +283,7 @@
   const claimItems = () => {
     waitingForClaimTransaction = true
     sendTransaction({
-      transactionManifest: claimItemsManifest
+      transactionManifest: getClaimItemsManifest(rewards)
     })
       .map(() => {
         waitingForClaimTransaction = false
@@ -317,15 +342,24 @@
 <div class="open-gift-box">
   {#if loadingLedgerData || loadingClaimStatus}
     <div class="loading">
-      <LoadingSpinner />
+      <LoadingSpinner dark />
     </div>
   {:else if waitingForDepositedRewards}
     <JettyMenuItemPage>
-      <div class="title">
+      <div slot="header" class="title padding">
         {$i18n.t('jetty:open-gift-box.opening-gift-box')}...
       </div>
 
-      <lottie-player autoplay loop mode="normal" src="/lottie/loading.json" style="width: 320px" />
+      <div class="loading">
+        <lottie-player
+          autoplay
+          loop
+          mode="normal"
+          src="/lottie/loading.json"
+          style:width="250px"
+          style:height="250px"
+        />
+      </div>
     </JettyMenuItemPage>
   {:else if claimed}
     <JettyMenuItemPage
@@ -334,7 +368,9 @@
         onClick: close
       }}
     >
-      {$i18n.t('jetty:open-gift-box.claimed')}
+      <div slot="header">
+        {$i18n.t('jetty:open-gift-box.claimed')}
+      </div>
     </JettyMenuItemPage>
   {:else if readyToClaim}
     <JettyMenuItemPage
@@ -376,42 +412,50 @@
         onClick: close
       }}
     >
-      {$i18n.t('jetty:open-gift-box.no-boxes')}
+      <div class="padding">
+        {$i18n.t('jetty:open-gift-box.no-boxes')}
+      </div>
     </JettyMenuItemPage>
   {:else if readyToOpen || totalGiftBoxes === 1}
-    <JettyMenuItemPage
-      actions={{
-        left: {
-          text: $i18n.t('quests:backButton'),
-          onClick: () => {
-            readyToOpen = false
+    <div class="page-with-subtitle">
+      <JettyMenuItemPage
+        actions={{
+          left: {
+            text: $i18n.t('quests:backButton'),
+            onClick: () => {
+              if (totalGiftBoxes === 1) close()
+              else readyToOpen = false
+            }
+          },
+          right: {
+            text: $i18n.t('jetty:open-gift-box.open-gift-box-button'),
+            onClick: () => openGiftBox(totalGiftBoxes === 1 ? findOneGiftBox()[0] : selectedGiftBox)
           }
-        },
-        right: {
-          text: $i18n.t('jetty:open-gift-box.open-gift-box-button'),
-          onClick: () => openGiftBox(totalGiftBoxes === 1 ? findOneGiftBox()[0] : selectedGiftBox)
-        }
-      }}
-      loading={waitingForOpenTransaction}
-    >
-      <div slot="header" class="title">
-        {$i18n.t('jetty:open-gift-box.one-box-title', {
-          giftBox:
-            totalGiftBoxes === 1 ? findOneGiftBox()[1].name : ownedGiftBoxes[selectedGiftBox].name
-        })}
+        }}
+        loading={waitingForOpenTransaction}
+      >
+        <div slot="header" class="title">
+          {$i18n.t('jetty:open-gift-box.one-box-title', {
+            giftBox:
+              totalGiftBoxes === 1 ? findOneGiftBox()[1].name : ownedGiftBoxes[selectedGiftBox].name
+          })}
+        </div>
+        <div class="gift-box-image">
+          <lottie-player
+            autoplay
+            loop
+            mode="normal"
+            src={`/lottie/GiftBox-${
+              totalGiftBoxes === 1 ? findOneGiftBox()[1].name : ownedGiftBoxes[selectedGiftBox].name
+            }.json`}
+            style="width: 320px"
+          />
+        </div>
+      </JettyMenuItemPage>
+      <div class="sub">
+        {$i18n.t('jetty:create-radmorphs.open-gift-box-subtitles')}
       </div>
-      <div class="gift-box-image">
-        <lottie-player
-          autoplay
-          loop
-          mode="normal"
-          src={`/lottie/GiftBox-${
-            totalGiftBoxes === 1 ? findOneGiftBox()[1].name : ownedGiftBoxes[selectedGiftBox].name
-          }.json`}
-          style="width: 320px"
-        />
-      </div>
-    </JettyMenuItemPage>
+    </div>
   {:else}
     <JettyMenuItemPage
       actions={{
@@ -431,19 +475,18 @@
         {$i18n.t('jetty:open-gift-box.multiple-boxes-title')}
       </div>
       <div class="cards">
-        <Carousel let:Item>
+        <Carousel let:Item stepSize={200}>
           {#each Object.entries(ownedGiftBoxes) as [address, { amount, name, imageUrl: image }]}
             {#if amount > 0}
               <Item>
-                <ResourceCard
+                <BoxCard
+                  name={name + ' Gift Box'}
                   selected={selectedGiftBox === address}
                   on:selected={() => {
                     selectedGiftBox = address
                   }}
-                >
-                  <div class="gift-box" style:--image={`url(${image})`} />
-                  <div slot="text">{name}</div>
-                </ResourceCard>
+                  {image}
+                />
               </Item>
             {/if}
           {/each}
@@ -455,11 +498,9 @@
 
 <style lang="scss">
   .open-gift-box {
-    display: flex;
-    justify-content: center;
     color: var(--color-light);
     height: 100%;
-    padding: var(--spacing-2xl);
+    width: 100%;
   }
 
   .header-text {
@@ -467,6 +508,14 @@
     flex-direction: column;
     gap: var(--spacing-md);
     align-items: center;
+  }
+
+  .padding {
+    padding: var(--spacing-2xl);
+
+    @include mobile {
+      padding: var(--spacing-xl);
+    }
   }
 
   .loading {
@@ -490,12 +539,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-  }
-
-  .gift-box {
-    position: relative;
-    width: 100%;
-    background: var(--image) center / 80% no-repeat;
+    height: 100%;
   }
 
   .rewards-page {
@@ -503,11 +547,28 @@
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-md);
+    height: 100%;
+  }
+
+  .page-with-subtitle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+
+    .sub {
+      padding: 0 var(--spacing-xl);
+      padding-bottom: var(--spacing-xl);
+      text-align: center;
+      font-size: var(--text-xs);
+    }
   }
 
   .cards {
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
+    transform: translateY(-2rem);
   }
 </style>

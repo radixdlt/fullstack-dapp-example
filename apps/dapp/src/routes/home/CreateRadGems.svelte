@@ -140,6 +140,8 @@
 
   const elementsToCreateRadgem = 5
 
+  $: enoughElementsForRadgems = parseInt(amountOfElements) >= elementsToCreateRadgem
+
   const sendElements = async () => {
     const transactionManifest = `
         CALL_METHOD
@@ -186,6 +188,7 @@
         waitingForElementsDeposited = true
       })
       .mapErr(() => {
+        waitingForSendElements = false
         waitingForSendElements = false
       })
   }
@@ -259,7 +262,7 @@
 <div class="fuse-elements">
   {#if loadingLedgerData}
     <div class="loading">
-      <LoadingSpinner />
+      <LoadingSpinner dark />
     </div>
   {:else if errorLoadingElements}
     <!-- TODO handle error -->
@@ -270,27 +273,41 @@
         {$i18n.t('jetty:fuse-elements.fusing-elements')}
       </div>
 
-      <div class="fusing-animation">
+      <div class="fusing-animation content">
         <lottie-player
           autoplay
           loop
           mode="normal"
           src="/lottie/loading.json"
-          style="width: 300px"
+          style="width: 250px"
         />
       </div>
     </JettyMenuItemPage>
   {:else if radgemClaimed}
     <JettyMenuItemPage
-      action={{
-        text: $i18n.t('jetty:close'),
-        onClick: () => dispatch('cancel')
-      }}
+      action={!enoughElementsForRadgems
+        ? {
+            text: $i18n.t('jetty:close'),
+            onClick: () => dispatch('cancel')
+          }
+        : undefined}
+      actions={enoughElementsForRadgems
+        ? {
+            left: {
+              text: $i18n.t('jetty:close'),
+              onClick: () => dispatch('cancel')
+            },
+            right: {
+              text: $i18n.t('jetty:fuse-elements.create-another'),
+              onClick: () => {
+                radgemClaimed = false
+              }
+            }
+          }
+        : undefined}
     >
-      <div>
-        <p>
-          {$i18n.t('jetty:fuse-elements.radgem-claimed')}
-        </p>
+      <div slot="header">
+        {$i18n.t('jetty:fuse-elements.radgem-claimed')}
 
         <p>
           {$i18n.t('jetty:fuse-elements.elements-left', {
@@ -305,51 +322,60 @@
       on:claimed={() => {
         checkAmountOfElements().map(() => {
           radgemClaimed = true
+          elementsDeposited = false
+          claimAvailable = false
         })
       }}
     />
   {:else}
     {#key rerender}
-      <JettyMenuItemPage
-        action={noElements || parseInt(amountOfElements) < elementsToCreateRadgem
-          ? {
-              text: $i18n.t('jetty:close'),
-              onClick: () => dispatch('cancel')
-            }
-          : {
-              text: $i18n.t('jetty:fuse-elements.send-button', {
-                count: 10
-              }),
-              onClick: sendElements
-            }}
-        loading={waitingForSendElements}
-      >
-        <div>
-          <p>
+      <div class="page-with-subtitle">
+        <JettyMenuItemPage
+          action={noElements || !enoughElementsForRadgems
+            ? {
+                text: $i18n.t('jetty:close'),
+                onClick: () => dispatch('cancel')
+              }
+            : {
+                text: $i18n.t('jetty:fuse-elements.send-button'),
+                onClick: sendElements
+              }}
+          loading={waitingForSendElements}
+        >
+          <div class="content">
+            <img
+              style:width="100%"
+              src="/quests-images/key/JettyConversation_MultipleRadGems.webp"
+              alt="Radgems"
+            />
+
             {$i18n.t('jetty:fuse-elements.intro1')}
-          </p>
 
-          {#if parseInt(amountOfElements) >= elementsToCreateRadgem}
-            <p>
-              {$i18n.t('jetty:fuse-elements.intro2', { count: parseInt(amountOfElements) })}
-            </p>
+            {#if enoughElementsForRadgems}
+              <p>
+                {$i18n.t('jetty:fuse-elements.intro2', { count: parseInt(amountOfElements) })}
+              </p>
 
-            <b>
-              {$i18n.t('jetty:fuse-elements.enough-elements')}
-            </b>
-          {:else if noElements}
-            <b class="bold">
-              {$i18n.t('jetty:fuse-elements.no-elements')}
-            </b>
-          {:else}
-            <b>
-              {$i18n.t('jetty:fuse-elements.not-enough-elements', {
-                count: parseInt(amountOfElements)
-              })}
-            </b>
-          {/if}
+              <b>
+                {$i18n.t('jetty:fuse-elements.enough-elements')}
+              </b>
+            {:else if noElements}
+              <p class="bold">
+                {$i18n.t('jetty:fuse-elements.no-elements')}
+              </p>
+            {:else}
+              <p class="bold">
+                {$i18n.t('jetty:fuse-elements.not-enough-elements', {
+                  count: parseInt(amountOfElements)
+                })}
+              </p>
+            {/if}
+          </div>
+        </JettyMenuItemPage>
+        <div class="sub">
+          {$i18n.t('jetty:fuse-elements.send-elements-subtitle')}
         </div>
-      </JettyMenuItemPage>
+      </div>
     {/key}
   {/if}
 </div>
@@ -360,10 +386,17 @@
     justify-content: center;
     color: var(--color-light);
     height: 100%;
-    padding: var(--spacing-2xl);
   }
   .bold {
     font-weight: var(--font-weight-bold);
+  }
+
+  .content {
+    padding: 0 var(--spacing-2xl);
+
+    @include mobile {
+      padding: 0 var(--spacing-xl);
+    }
   }
 
   .title {
@@ -375,6 +408,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
   }
 
   .loading {
@@ -382,5 +416,19 @@
     justify-content: center;
     align-items: center;
     height: 100%;
+  }
+
+  .page-with-subtitle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+
+    .sub {
+      padding: 0 var(--spacing-xl);
+      padding-bottom: var(--spacing-xl);
+      text-align: center;
+      font-size: var(--text-xs);
+    }
   }
 </style>

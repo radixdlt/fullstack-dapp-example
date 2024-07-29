@@ -18,11 +18,17 @@ CALL_METHOD
   "get_clams"
   Proof("hero_badge")
 ;
+
+TAKE_FROM_WORKTOP
+  Address("${publicConfig.resources.clamAddress}")
+  Decimal("10")
+  Bucket("bucket");
+
 CALL_METHOD
   Address("${accountAddress}")
-  "deposit_batch"
-  Expression("ENTIRE_WORKTOP")
-;`
+  "try_deposit_or_abort"
+  Bucket("bucket")
+  Enum<0u8>();`
 }
 
 export const checkAccountHasClams = (accountAddress: string) => {

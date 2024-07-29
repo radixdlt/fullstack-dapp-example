@@ -23,6 +23,14 @@ export const SignerConfig = (networkId: number) => ({
   jetty: mnemonicToKeyPair(
     process.env.JETTY_MNEMONIC!,
     getDerivationPath(networkId, 'TRANSACTION_SIGNING', 'ACCOUNT', 0)
+  ),
+  jettySwapDappDefinition: mnemonicToKeyPair(
+    process.env.JETTYSWAP_DAPP_DEFINITION_MNEMONIC!,
+    getDerivationPath(networkId, 'TRANSACTION_SIGNING', 'ACCOUNT', 0)
+  ),
+  lettySwapDappDefinition: mnemonicToKeyPair(
+    process.env.LETTYSWAP_DAPP_DEFINITION_MNEMONIC!,
+    getDerivationPath(networkId, 'TRANSACTION_SIGNING', 'ACCOUNT', 0)
   )
 })
 

@@ -1,15 +1,14 @@
 import { ErrorPopupId, errorPopupStore } from '$lib/components/error-popup/store'
 import { publicConfig } from '$lib/public-config'
-import type { sendTransaction } from '$lib/rdt'
 import { GatewayApi } from 'common'
-import { okAsync } from 'neverthrow'
+import { okAsync, ResultAsync } from 'neverthrow'
 
 const gatewayApi = GatewayApi(publicConfig.networkId)
 
 export const handleKycBadge = (
   userId: string,
   userAccountAddress: string,
-  sendTx: (instapassBadgeLocalId?: string) => ReturnType<typeof sendTransaction>
+  sendTx: (instapassBadgeLocalId?: string) => ResultAsync<unknown, unknown>
 ) => {
   const showWarning = () => {
     errorPopupStore.set({ id: ErrorPopupId.XrdRewardLimit })
@@ -84,6 +83,7 @@ export const createClaimRewardsTransaction = (
   accountAddress: string,
   userId: string,
   questId: string,
+  rewards: { amount: string; resourceAddress: string }[],
   instapassBadge?: string
 ) => {
   return `
@@ -116,13 +116,24 @@ export const createClaimRewardsTransaction = (
           "claim_reward"
           "${questId}"
           Proof("hero_badge_proof")
-          ${instapassBadge ? `Some(Proof("kyc_badge_proof"))` : 'None'}
-        ;
+          ${instapassBadge ? `Some(Proof("kyc_badge_proof"))` : 'None'};
 
-        CALL_METHOD
-          Address("${accountAddress}")
-          "deposit_batch"
-          Expression("ENTIRE_WORKTOP")
-        ;
+         ${rewards
+           .map(
+             (reward, index) =>
+               `
+             TAKE_FROM_WORKTOP
+              Address("${reward.resourceAddress}")
+              Decimal("${reward.amount}")
+              Bucket("bucket${index}");
+
+            CALL_METHOD
+              Address("${accountAddress}")
+              "try_deposit_or_abort"
+              Bucket("bucket${index}")
+              Enum<0u8>();`
+           )
+           .join('')}            
+        
       `
 }

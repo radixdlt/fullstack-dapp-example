@@ -4,8 +4,6 @@ import { TransactionWorkerController } from './controller'
 import { PrismaClient, TransactionIntentStatus } from 'database'
 import { getUserById } from '../helpers/getUserById'
 import { WorkerError, WorkerOutputError } from '../_types'
-import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
-import { TokenPriceClient } from '../token-price-client'
 import { config } from '../config'
 import { okAsync } from 'neverthrow'
 
@@ -16,7 +14,6 @@ export const TransactionWorker = (
     transactionModel: TransactionModel
     transactionWorkerController: TransactionWorkerController
     dbClient: PrismaClient
-    tokenPriceClient: TokenPriceClient
   }
 ) => {
   const { logger, transactionModel, dbClient } = dependencies
@@ -52,11 +49,7 @@ export const TransactionWorker = (
             return dependencies.transactionWorkerController.handler({
               job,
               logger: childLogger,
-              user,
-              dbTransactionBuilder: DbTransactionBuilder({
-                dbClient,
-                tokenPriceClient: dependencies.tokenPriceClient
-              })
+              user
             })
           })
           .andThen(() =>

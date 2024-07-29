@@ -1,8 +1,9 @@
+import { ResultAsync } from 'neverthrow'
 import { config } from './config'
 import { GatewayApiClient } from './gateway'
 import { logger } from './helpers/logger'
 import { TransactionStream } from './transaction-stream/transaction-stream'
-import { AccountAddressModel, GatewayApi, TransactionStreamModel } from 'common'
+import { AccountAddressModel, GatewayApi, TransactionStreamModel, UserQuestModel } from 'common'
 import { PrismaClient } from 'database'
 import { getQueues, RedisConnection, SetupQueueMetrics } from 'queues'
 import { EventModel } from 'common'
@@ -23,12 +24,45 @@ type Dependencies = {
   dbClient: PrismaClient
 }
 
+const initTrackedAddresses = async ({ dbClient }: Dependencies) => {
+  const userQuestModel = UserQuestModel(dbClient)(logger)
+  const limit = 50
+  let offset = 0
+  let shouldContinue = true
+  do {
+    const result = await userQuestModel
+      .getQuestsWithTrackedAccounts(limit, offset)
+      .andThen((entries) =>
+        ResultAsync.combine(
+          entries.map((entry) =>
+            accountAddressModel.addTrackedAddress(entry.accountAddress, entry.questId, entry.id)
+          )
+        )
+      )
+      .map((results) => {
+        if (results.length < limit) {
+          shouldContinue = false
+        }
+        offset += limit
+      })
+
+    if (result.isErr()) {
+      throw result.error
+    }
+  } while (shouldContinue)
+}
+
 const app = async (dependencies: Dependencies) => {
   const dbClient = dependencies.dbClient
 
   const metricsClient = SetupQueueMetrics({ connection: config.redis, logger })
 
-  await dbClient.event.findFirst()
+  try {
+    await initTrackedAddresses(dependencies)
+  } catch (e) {
+    logger.error({ method: 'initTrackedAddresses', error: e })
+    throw new Error('Failed to initialize tracked addresses')
+  }
 
   const eventModel = EventModel(dbClient)(logger)
   const {
@@ -72,8 +106,6 @@ const app = async (dependencies: Dependencies) => {
   stream.transactions$.subscribe(async (transactions) => {
     const result = await handleTransactions(transactions)
 
-    processedStateVersionMetric.set(transactions.stateVersion)
-
     if (result.isErr()) {
       logger.error({
         method: 'handleTransactions',
@@ -81,6 +113,8 @@ const app = async (dependencies: Dependencies) => {
       })
       throw result.error
     }
+
+    processedStateVersionMetric.set(transactions.stateVersion)
   })
 
   stream.error$.subscribe(handleStreamError)

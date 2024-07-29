@@ -7,7 +7,7 @@ import type { AppLogger } from 'common'
 export type QueueMetrics = ReturnType<typeof QueueMetrics>
 export const QueueMetrics = (name: string) => {
   return {
-    waitingJobs: new client.Counter({
+    waitingJobs: new client.Gauge({
       name: `${name}_queue_waiting_jobs`,
       help: `The number of waiting jobs in the ${name} queue`
     }),
@@ -19,7 +19,7 @@ export const QueueMetrics = (name: string) => {
       name: `${name}_queue_failed_jobs`,
       help: `The number of failed jobs in the ${name} queue`
     }),
-    activeJobs: new client.Counter({
+    activeJobs: new client.Gauge({
       name: `${name}_queue_active_jobs`,
       help: `The number of active jobs in the ${name} queue`
     })
@@ -36,13 +36,15 @@ const setupQueueEvents = (input: {
   const queueEvent = new QueueEvents(input.queueName, { connection: input.connection })
   const childLogger = input.logger?.child({ queue: input.queueName, method: 'queueMetrics' })
 
-  const setWaitingJobs = async (value: number) => {
+  const setWaitingJobs = async () => {
+    const value = await input.queue.getWaitingCount()
     childLogger?.trace({ status: `waiting`, value })
-    input.trackMetricsFn.waitingJobs.inc(value)
+    input.trackMetricsFn.waitingJobs.set(value)
   }
-  const setProgressJobs = async (value: number) => {
+  const setProgressJobs = async () => {
+    const value = await input.queue.getActiveCount()
     childLogger?.trace({ status: `active`, value })
-    input.trackMetricsFn.activeJobs.inc(value)
+    input.trackMetricsFn.activeJobs.set(value)
   }
   const setFailedJobs = async (value: number) => {
     childLogger?.trace({ status: 'failed', value })
@@ -55,19 +57,19 @@ const setupQueueEvents = (input: {
   }
 
   queueEvent.on('waiting', async () => {
-    await setWaitingJobs(1)
+    await setWaitingJobs()
   })
 
   queueEvent.on('progress', async () => {
-    await Promise.all([setProgressJobs(1)])
+    await Promise.all([setWaitingJobs(), setProgressJobs()])
   })
 
   queueEvent.on('failed', async () => {
-    await Promise.all([setFailedJobs(1)])
+    await Promise.all([setFailedJobs(1), setProgressJobs()])
   })
 
   queueEvent.on('completed', async () => {
-    await Promise.all([setCompletedJobs(1)])
+    await Promise.all([setCompletedJobs(1), setProgressJobs()])
   })
 }
 

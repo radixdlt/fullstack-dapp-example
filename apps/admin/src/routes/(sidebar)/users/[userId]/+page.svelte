@@ -28,6 +28,12 @@
       body: JSON.stringify({ block: !$user!.blocked })
     }).then(() => fetchUser())
   }
+
+  const removePhoneNumber = () => {
+    fetch(`/users/${userId}/phone`, {
+      method: 'POST'
+    }).then(() => fetchUser())
+  }
 </script>
 
 {#if $user}
@@ -40,6 +46,8 @@
     <Button color={'red'} on:click={() => blockUser()}>
       {$user.blocked ? 'Unblock user' : 'Block user'}
     </Button>
+
+    <Button color={'red'} on:click={() => removePhoneNumber()}>Remove phone number</Button>
 
     <div class="p-4">
       <pre class="text-white">{JSON.stringify($user, null, 2)}</pre>

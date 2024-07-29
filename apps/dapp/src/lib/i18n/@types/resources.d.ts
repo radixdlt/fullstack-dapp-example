@@ -20,10 +20,10 @@ interface Resources {
     "morph-energy-card": "Morph Energy Card",
     "notifications": {
       "title": "Attenzione!",
-      "logged-in-with-wallet": "I see you've logged in with your wallet!",
+      "logged-in-with-wallet": "Now that you're logged in, continue your quest: Get the Radix Wallet",
       "received-clams": "You're ready to continue your quest: Transfer Tokens.",
       "basic-quests-complete": "Now continue your journey with the Advanced Quests.",
-      "join-friend": "You're now ready to join {{ referrer }} and claim your XRD reward!",
+      "join-friend": "You're now ready to join your friend and claim your XRD reward!",
       "new-tier": "You just leveled up with more friends! Now go claim your rewards.",
       "swap-completed": "Continue your quest: Swap Tokens on a DEX.",
       "stake-completed": "Continue your quest: Radix Network Staking.",
@@ -32,24 +32,26 @@ interface Resources {
     },
     "fuse-elements": {
       "intro1": "Using my Web3 powers, I can fuse 5 Elements into a RadGem. Who knows what color or material it will be!",
-      "intro2": "It looks like you have {{count}} Elements in your registered Radix account.",
-      "enough-elements": "Give me 5 Elements and I’ll get started with fusing them into a RadGem...",
+      "intro2": "It looks like you have {{count}} Element(s) in your registered Radix account.",
+      "enough-elements": "Give me 5 Elements and I’ll get started with fusing them into 1 RadGem...",
       "send-button": "Send 5 Elements",
-      "not-enough-elements": "Oops! You currently only have {{count}} Elements in your registered Radix account.",
-      "no-elements": "You don't have any Elements in your wallet. Claim at least 5 Elements by completing quests, and then come back!",
+      "create-another": "Create Another",
+      "not-enough-elements": "Oops! You currently only have {{count}} Element(s) in your registered Radix Account.",
+      "no-elements": "You don't have any Elements in your wallet. Get at least 5 Elements by completing quests, and then come back!",
       "fusing-elements": "Fusing Elements into a RadGem...",
       "success": "Success!",
       "new-radgem": "Here’s your RadGem!",
       "quality": "Quality: {{quality}}/25",
-      "radgem-claimed": "You can find your new RadGem with the NFTs in your registered account in your Radix Wallet.",
-      "elements-left": "You have {{count}} Elements left.",
-      "multiple-radgems": "You have multiple RadGems ready to be claimed."
+      "radgem-claimed": "You can find your new RadGem with the NFTs in your registered Account in your Radix Wallet.",
+      "elements-left": "You have {{count}} Element(s) left.",
+      "multiple-radgems": "You have multiple RadGems ready to be claimed.",
+      "send-elements-subtitle": "Elements will be sent to Jetty via your Radix Wallet"
     },
     "create-radmorphs": {
-      "intro": "Harnessing the power of a Morph Energy Card, I can help combine 2 RadGems into a beautiful and unique RadMorph!",
+      "intro": "Using the power of a Morph Energy Card, I can combine 2 RadGems into 1 beautiful and unique RadMorph!",
       "intro2": "The colors, materials, and quality of the Card and RadGems you choose will decide what your RadMorph looks like, as well as its ultimate quality.",
-      "intro3-success": "To get started, you’ll choose a card and 2 RadGems and see a preview of what the resulting RadMorph will be...",
-      "intro3-fail": "Oops! You only have {{radgems}} RadGems and {{energyCards}} Morph Energy Cards right now.",
+      "intro3-success": "To get started, you’ll choose 1 Card and 2 RadGems and see a preview of what the resulting RadMorph will be...",
+      "intro3-fail": "Oops! You only have {{radgems}} RadGem(s) and {{energyCards}} Morph Energy Card(s) right now.",
       "get-started": "Get Started",
       "back": "Back",
       "title-pick-card": "Pick a Morph Energy Card",
@@ -67,19 +69,21 @@ interface Resources {
       "radmorph-preview-text": "Ready to create this RadMorph? Continue to give Jetty the Card and RadGems, and receive back the RadMorph.",
       "create-radmorph-button": "Create RadMorph",
       "start-again-button": "Start Again",
-      "resources-sent-from-wallet": "Your card and gems will be sent from your Radix Wallet",
-      "radmorph-created": "You can now find your RadMorph under NFTs in your registered Radix account.\nTreasure it – or trade it with friends if you like!"
+      "resources-sent-from-wallet": "Card and gems will be sent from your Radix Wallet",
+      "radmorph-created": "You can now find your RadMorph under NFTs in your registered Radix Account.\nTreasure it – or trade it with friends if you like!",
+      "preview-pill-text": "PREVIEW",
+      "open-gift-box-subtitles": "Gift Box will be sent to Jetty via your Radix Wallet"
     },
     "open-gift-box": {
-      "no-boxes": "Sorry, you don’t have any Gift Boxes in your registered Radix account to open right now.",
+      "no-boxes": "Sorry, you don’t have any Gift Boxes in your registered Radix Account to open right now.",
       "one-box-title": "Let's see what's in your {{giftBox}} Gift Box!",
       "multiple-boxes-title": "Pick a Gift Box to open",
       "open-gift-box-button": "Open Gift Box",
-      "opening-gift-box": "Opening...",
+      "opening-gift-box": "Opening",
       "gift-box-opened-title": "Gift Box opened!",
       "gift-box-opened-subtitle": "Here's what was inside",
       "quantity": "Quantity: {{count}}",
-      "claimed": "You can now find the contents of your Gift Box in your account in your Radix Wallet."
+      "claimed": "You can now find the contents of your Gift Box in your Account in your Radix Wallet."
     },
     "notification-cta": "Go to Quest"
   },
@@ -116,11 +120,14 @@ interface Resources {
       "join-radix": "Join the Radix Community",
       "learn-more": "Learn more",
       "all-rights": "Radix Publishing Ltd, 2024. All rights reserved. Radix Publishing Ltd. ",
-      "privacy-notice": "Privacy Notice"
+      "privacy-notice": "Privacy Notice",
+      "build-on-radix": "Build on Radix",
+      "get-help": "Get help with RadQuest"
     }
   },
   "quests": {
     "copy": "Copy",
+    "copied": "Copied!",
     "rewards": "Rewards",
     "requirementsDescription": "Complete the tasks below to claim your rewards. You can always go back and check the information if you’re not sure how.",
     "requirementsTitle": "What you'll do",
@@ -179,12 +186,12 @@ interface Resources {
         "ConnectWallet": "Log in to RadQuest with your Radix Wallet",
         "DownloadWallet": "Download the Radix Wallet mobile app, create your first Account"
       },
-      "usernameCompleted": "Completed",
+      "usernameCompleted": "Updated!",
       "walletDownloadPage": "Go to Wallet Download Page",
       "title": "Get the Radix Wallet",
-      "description": "Your key to assets and dApps and assets on Radix",
+      "description": "Your key to assets and dApps on Radix",
       "introDescription": "Get the Radix Wallet to use with RadQuest or any other dApp built on Radix.",
-      "confirmSetUsername": "Confirm"
+      "confirmSetUsername": "Update"
     },
     "GetStuff": {
       "requirements": {
@@ -219,7 +226,7 @@ interface Resources {
         "RadMorphsQuiz": "Learn about rewards, from Gift Boxes to RadMorphs"
       },
       "description": "How to collect and combine",
-      "introDescription": "How to collect and combine on RadQuest to make the best and most rare RadMorph NFTs"
+      "introDescription": "How to collect and combine on RadQuest to make the best and most rare RadMorph NFTs."
     },
     "TransferTokens": {
       "requirements": {
@@ -237,7 +244,7 @@ interface Resources {
       "description": "Help the network, earn APY",
       "introDescription": "Put your XRD to work helping secure the Radix Network – and earning you some yield",
       "requirements": {
-        "XrdStaked": "Stake your XRD on dashboard"
+        "XrdStaked": "Stake XRD using the Radix Dashboard"
       }
     },
     "Thorswap": {
@@ -249,7 +256,7 @@ interface Resources {
       }
     },
     "QuestTogether": {
-      "title": "Invite Your Friends Quest",
+      "title": "Invite Your Friends",
       "description": "Invite your friends to give them XRD tokens and earn rewards!",
       "rewardsTitle": "Party rewards Status",
       "rewardTiersTab": "Reward Tiers",
@@ -262,10 +269,10 @@ interface Resources {
       "referralsSoFar": "Referrals so far!",
       "referralsSoFarHeader": "You have {{count}} referrals so far!",
       "referralsSoFarHeader_one": "You have {{count}} referral so far!",
-      "referralsSoFarDescription": "These friends have signed up using your link and completed the basic quests. You each get 10 XRD!",
+      "referralsSoFarDescription": "These friends have signed up using your link and completed the basic quests. You each get 25 XRD!",
       "alreadyClaimed": "Already claimed: {{amount}} XRD",
-      "info_1": "<strong>Your friends will get 10 XRD</strong> when they use your referral link and complete all basic quests.",
-      "info_2": "<strong>You’ll also receive 10 XRD</strong> for each referral and you’ll win <strong>extra rewards</strong> at each milestone (5, 10, 15 and 20 referrals)!",
+      "info_1": "<strong>Your friends will get 25 XRD</strong> when they use your referral link and complete all basic quests.",
+      "info_2": "<strong>You’ll also receive 25 XRD</strong> for each referral and you’ll win <strong>extra rewards</strong> at each milestone (1, 5 and 10 referrals)!",
       "shareYourLink": "Share Your Referral Link:",
       "yourLevel": "You are at {{level}} Level!",
       "referMore": "Refer {{count}} more friends to claim your rewards and progress to {{nextLevel}}!",
@@ -274,9 +281,9 @@ interface Resources {
       "GoldLevel": "Gold",
       "SuperLevel": "Super",
       "rewardsClaimed": "REWARDS CLAIMED",
-      "unlockedSuperLevel": "You have unlocked the secret tier!",
+      "unlockedSuperLevel": "Wow! Referral limit reached!",
       "rewardsWaiting": "You have rewards waiting for you! Don’t forget to claim!",
-      "unlockedSuperLevelInfo": "Please email {{mail}} to claim your XRD tokens.",
+      "unlockedSuperLevelInfo": "If you would like to apply for an invite-only referral program, please email <a href=\"mailto: hello@radixdlt.com\">hello@radixdlt.com</a>",
       "SuperLevelInfo": "Want to keep referring? Contact Radix to find out about our influencer reward scheme!",
       "SuperLevelButton": "Want to keep referring? Contact Radix to find out about our influencer reward scheme!",
       "progressSuperLevel": "{{count}}+ referrals",

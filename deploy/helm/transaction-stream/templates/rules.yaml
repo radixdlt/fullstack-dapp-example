@@ -1,0 +1,148 @@
+{{- $subsystem := list "transaction" "event" "system" -}}
+{{- $ns := .Release.Namespace -}}
+{{- $metrics := .Values.metrics -}}
+
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "radquest-transaction-stream.fullname" . }}
+  labels:
+    {{- include "radquest-transaction-stream.labels" . | nindent 4 }}
+spec:
+  groups:
+  - name: RadquestTransactionStream
+    rules:
+{{- range $subsystem }}
+    - alert: Critical{{ title .}}QueueFailedJobs
+      expr: sum(increase({{ . }}_queue_failed_jobs{namespace="{{ $ns }}"}[5m])) > 100
+      for: 5m
+      labels:
+        severity: critical
+        tier: application
+        application: radquest
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: "Critical number of failed jobs in {{ . }} queue"
+        description: "The {{ . }} queue has seen more than 100 failed jobs in the last 5 minutes."
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
+
+    - alert: High{{ title . }}QueueFailedJobs
+      expr: sum(increase({{ . }}_queue_failed_jobs{namespace="{{ $ns }}"}[5m])) > 50
+      for: 5m
+      labels:
+        severity: warning
+        tier: application
+        application: radquest
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: "High number of failed jobs in {{ . }} queue"
+        description: "The {{ . }} queue has seen more than 50 failed jobs in the last 5 minutes."
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
+
+    - alert: High{{ title . }}QueueWaitingJobs
+      expr: sum(increase({{ . }}_queue_waiting_jobs{namespace="{{ $ns }}"}[5m])) > 20
+      for: 5m
+      labels:
+        tier: application
+        application: radquest
+        severity: critical
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: "High number of waiting jobs in {{ . }} queue"
+        description: "The {{ . }} queue has seen more than 10 waiting jobs in the last 5 minutes."
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
+{{- end }}
+
+  - name: RadquestDependentServices
+    rules:
+    - alert: GatewayStatusAsSeenByRadquest
+      expr: >
+        (gateway_status{namespace="{{ $ns }}"})  == 0
+      for: 5m
+      labels:
+        severity: critical
+        tier: application
+        application: radquest
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: "Radquest is not able to reach Gateway"
+        description: "Gateway used by Transaction stream to inject network transaction is not reachable"
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
+
+  - name: RadquestRedis
+    rules:
+    - alert: RadquestRedisMemoryCritical
+      expr: >
+        redis_memory_used_bytes{namespace="{{ $ns }}", service="redis-exporter"} * 100
+        /
+        redis_memory_max_bytes{namespace="{{ $ns }}", service="redis-exporter"}
+        > 90 <= 100
+      for: 5m
+      labels:
+        severity: critical
+        tier: application
+        application: radquest
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: "Critical memory usage on the Redis instance"
+        description: "The memory utilization on the Redis instance is over 90%"
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
+
+    - alert: RadquestRedisMemoryHigh
+      expr: >
+        redis_memory_used_bytes{namespace="{{ $ns }}", service="redis-exporter"} * 100
+        /
+        redis_memory_max_bytes{namespace="{{ $ns }}", service="redis-exporter"}
+        > 70 <= 100
+      for: 5m
+      labels:
+        severity: warning
+        tier: application
+        application: radquest
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: "High memory usage on the Redis instance"
+        description: "The memory utilization on the Redis instance is over 70%"
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
+
+    - alert: RadquestRedisHighLatency
+      expr: histogram_quantile(0.95, sum(rate(redis_commands_latencies_usec_bucket{namespace="{{ $ns }}"}[2m])) by (le, cmd)) > 500 * 1000
+      for: 2m
+      labels:
+        severity: warning
+        tier: application
+        application: radquest
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: "High latency on the Redis commands"
+        description: "There is over 500ms latency for the p95 for some Redis commands"
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
+
+    - alert: RadquestRedisCriticalLatency
+      expr: histogram_quantile(0.95, sum(rate(redis_commands_latencies_usec_bucket{namespace="{{ $ns }}"}[2m])) by (le, cmd)) > 1000 * 1000
+      for: 2m
+      labels:
+        severity: critical
+        tier: application
+        application: radquest
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: "High latency on the Redis commands"
+        description: "There is over 1s latency for the p95 for some Redis commands"
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"

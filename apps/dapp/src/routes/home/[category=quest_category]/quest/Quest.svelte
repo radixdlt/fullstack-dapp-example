@@ -8,7 +8,7 @@
   } from '$lib/components/quest/Quest.svelte'
   import { createEventDispatcher, onMount, type ComponentProps } from 'svelte'
   import { closeQuest } from './+layout.svelte'
-  import { hideJetty, quests, retractJettyMenu, scrollToNextQuest, user } from '../../../../stores'
+  import { hideJetty, quests, retractJettyMenu, scrollToQuestIndex, user } from '../../../../stores'
   import ClaimRewards from './ClaimRewards.svelte'
   import VerifyRequirements from './VerifyRequirements.svelte'
   import { i18n } from '$lib/i18n/i18n'
@@ -16,7 +16,6 @@
   import { useCookies, type RequirementCookieKey } from '$lib/utils/cookies'
   import { completeQuest } from '$lib/utils/complete-quest'
   import { useLocalStorage } from '$lib/utils/local-storage'
-  import { isMobile } from '$lib/utils/is-mobile'
   import type { QuestRequirement } from '$lib/server/user-quest/controller'
   import QuizJettyPage from './QuizJettyPage.svelte'
   import { writable } from 'svelte/store'
@@ -35,6 +34,7 @@
   }
 
   export let id: QuestId
+  export let nextQuest: string | undefined = undefined
   export let steps: (
     | RegularStep
     | JettyStep
@@ -89,9 +89,8 @@
     await completeQuest(id, !!$user)
     dispatch('completed')
     setTimeout(closeQuest, 0)
-    if (isMobile()) {
-      $scrollToNextQuest = true
-    }
+
+    if (nextQuest) $scrollToQuestIndex = Object.keys($quests).indexOf(nextQuest)
   }
 
   const progressUpdated = (e: CustomEvent<number>) => {

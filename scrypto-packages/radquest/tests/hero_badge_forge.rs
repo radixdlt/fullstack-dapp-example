@@ -303,6 +303,35 @@ fn can_hero_complete_quest() -> Result<(), RuntimeError> {
 }
 
 #[test]
+fn cannot_hero_complete_quest_twice_for_same_quest() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+    lte.ledger.execute_manifest(
+        lte.add_user_account_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    lte.ledger.execute_manifest(
+        lte.claim_hero_badge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    lte.ledger.execute_manifest(
+        lte.hero_completed_quest_manifest.clone(),
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.hero_completed_quest_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_failure();
+    Ok(())
+}
+
+#[test]
 fn can_update_key_image_url() -> Result<(), RuntimeError> {
     // Arrange
     let mut lte = LedgerTestEnvironment::new()?;

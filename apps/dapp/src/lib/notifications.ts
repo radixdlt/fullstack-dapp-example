@@ -84,66 +84,79 @@ export const loadUnseenNotifications = () =>
 const notifications = {
   loggedIn: {
     id: 'loggedIn',
+    title: 'Wallet Connected!',
     text: i18next.t('jetty:notifications.logged-in-with-wallet'),
     action: () => goto(`/home/basic/quest/${QuestDefinitions().SetupWallet.id}`)
   },
   clamsReceived: {
     id: 'clamsReceived',
+    title: 'Clams Received!',
     text: i18next.t('jetty:notifications.received-clams'),
     action: () => goto(`/home/basic/quest/${QuestDefinitions().TransferTokens.id}`)
   },
   basicQuestsComplete: {
     id: 'basicQuestsComplete',
+    title: 'Basic Quests Complete!',
     text: i18next.t('jetty:notifications.basic-quests-complete'),
     action: () => goto('/home/advanced')
   },
   joinedFriend: {
     id: 'joinedFriend',
+    title: 'Join Your Friend!',
     text: i18next.t('jetty:notifications.join-friend'),
     action: () => goto(`/home/advanced/quest/${QuestDefinitions().JoinFriend.id}`)
   },
   reachedTierBronze: {
     id: 'reachedTierBronze',
+    title: 'More Quest Friends!',
     text: i18next.t('jetty:notifications.new-tier'),
     action: () => goto(`/home/advanced/quest/${QuestDefinitions().QuestTogether.id}`)
   },
   reachedTierSilver: {
     id: 'reachedTierSilver',
+    title: 'More Quest Friends!',
     text: i18next.t('jetty:notifications.new-tier'),
     action: () => goto(`/home/advanced/quest/${QuestDefinitions().QuestTogether.id}`)
   },
   reachedTierGold: {
     id: 'reachedTierGold',
+    title: 'More Quest Friends!',
     text: i18next.t('jetty:notifications.new-tier'),
     action: () => goto(`/home/advanced/quest/${QuestDefinitions().QuestTogether.id}`)
   },
   reachedTierSuper: {
     id: 'reachedTierSuper',
+    title: 'More Quest Friends!',
     text: i18next.t('jetty:notifications.new-tier'),
     action: () => goto(`/home/advanced/quest/${QuestDefinitions().QuestTogether.id}`)
   },
   jettySwapCompleted: {
     id: 'jettySwapCompleted',
+    title: 'JettySwap Completed!',
     text: i18next.t('jetty:notifications.swap-completed'),
     action: () => goto(`/home/advanced/quest/${QuestDefinitions().DEXSwaps.id}`)
   },
   lettySwapCompleted: {
     id: 'lettySwapCompleted',
+    title: 'LettySwap Completed!',
     text: i18next.t('jetty:notifications.swap-completed'),
     action: () => goto(`/home/advanced/quest/${QuestDefinitions().DEXSwaps.id}`)
   },
   stakeCompleted: {
     id: 'stakeCompleted',
+    title: 'Stake Complete!',
     text: i18next.t('jetty:notifications.stake-completed'),
     action: () => goto(`/home/advanced/quest/${QuestDefinitions().NetworkStaking.id}`)
   },
   instapassBadgeReceived: {
     id: 'instapassBadgeReceived',
+    title: 'Instapass Verification Complete!',
     text: i18next.t('jetty:notifications.instapass-badge-received'),
     action: () => goto(`/home/advanced/quest/${QuestDefinitions().Instapass.id}`)
   },
   thorswapSwapCompleted: {
     id: 'thorswapSwapCompleted',
+    title: 'Bridge Transaction Complete!',
     text: i18next.t('jetty:notifications.swap-completed'),
     action: () => goto(`/home/advanced/quests/${QuestDefinitions().Thorswap.id}`)
   }

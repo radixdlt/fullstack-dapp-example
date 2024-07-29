@@ -18,7 +18,7 @@
   import { Addresses, GatewayApi } from 'common'
   import { env } from '$env/dynamic/public'
   import type { Resource, SwappedResource } from '../types'
-  import { getBalanceChange, getTransactionResult } from '$lib/utils/previewTranasction'
+  import { getBalanceChange, getPrice, getTransactionResult } from '$lib/utils/previewTranasction'
   import { createSwapManifest } from '$lib/utils/createSwapManifest'
   import Backdrop from '$lib/components/backdrop/Backdrop.svelte'
   import SwapResult from '$lib/components/swapResult/SwapResult.svelte'
@@ -55,7 +55,7 @@
   let fromInput = ''
   let toInput = ''
 
-  $: fromInput = allowOnlyPositiveNumberInString(fromInput.toString())
+  $: fromInput = allowOnlyPositiveNumberInString(fromInput?.toString() || '')
   $: connected = !!$walletData?.accounts[0]
 
   let balances: FungibleResourcesCollectionItemVaultAggregated[] = []
@@ -85,7 +85,11 @@
     }
   }
 
-  onMount(async () => {
+  const getConversionRate = async () => {
+    conversionRateTo = (await getPrice(swapComponent)) ?? '10'
+  }
+
+  onMount(() => {
     const swapConfig = {
       networkId: +env.PUBLIC_NETWORK_ID,
       applicationVersion: '1.0.0',
@@ -107,56 +111,61 @@
       updateBalances(data?.accounts[0]?.address)
     })
 
-    try {
-      const [ottercoinMetadataResult, clamMetadataResult] = await Promise.all([
-        $gatewayApi.callApi('getEntityMetadata', addresses.resources.ottercoinAddress),
-        $gatewayApi.callApi('getEntityMetadata', addresses.resources.clamAddress)
-      ])
-
+    Promise.all([
+      $gatewayApi.callApi('getEntityMetadata', addresses.resources.ottercoinAddress),
+      $gatewayApi.callApi('getEntityMetadata', addresses.resources.clamAddress)
+    ]).then(([ottercoinMetadataResult, clamMetadataResult]) => {
       if (ottercoinMetadataResult.isOk()) {
         ottercoinResource = turnEntityIntoObject(ottercoinMetadataResult.value)
       }
       if (clamMetadataResult.isOk()) {
         clamResource = turnEntityIntoObject(clamMetadataResult.value)
       }
+    })
 
-      if (!$walletData?.accounts[0]?.address) return
-      await updateBalances($walletData?.accounts[0].address)
+    if ($walletData?.accounts[0]?.address) {
+      updateBalances($walletData?.accounts[0].address)
+    }
 
-      if (!ottercoinResource || !clamResource || !currentBalance) return
+    const intervals = [
+      setInterval(() => {
+        priceChange = parseFloat((Math.random() * 200 - 100).toFixed(1)).toString()
+        isGoingUp = Number(priceChange) > 0
+      }, 1000),
 
-      const receiveAmount = await getBalanceChange(
-        {
-          amount: conversionRateFrom,
-          fromTokenAddress: clamResource.id,
-          swapComponent,
-          userAccountAddress: $walletData?.accounts[0].address
-        },
-        addresses.resources.ottercoinAddress
-      )
+      setInterval(() => {
+        priceChange = parseFloat((Math.random() * 200 - 100).toFixed(1)).toString()
+        isGoingUp = Number(priceChange) > 0
+      }, 1000),
 
-      conversionRateTo = receiveAmount
-    } catch (error) {}
+      setInterval(() => {
+        getConversionRate()
+      }, 1000)
+    ]
+    return () => {
+      intervals.forEach(clearInterval)
+    }
   })
 
   let timer: NodeJS.Timeout
   const debounce = (amount: string) => {
-    if (fromInput === '') return
-
-    clearTimeout(timer)
-    timer = setTimeout(() => {
-      getBalanceChange(
-        {
-          amount,
-          fromTokenAddress: clamResource?.id as string,
-          swapComponent,
-          userAccountAddress: $walletData?.accounts[0].address as string
-        },
-        addresses.resources.ottercoinAddress
-      ).then((amount) => {
-        toInput = amount
-      })
-    }, 750)
+    clearInterval(timer)
+    if (fromInput === '') toInput = ''
+    else {
+      timer = setInterval(() => {
+        getBalanceChange(
+          {
+            amount,
+            fromTokenAddress: clamResource?.id as string,
+            swapComponent,
+            userAccountAddress: $walletData?.accounts[0].address as string
+          },
+          addresses.resources.ottercoinAddress
+        ).then((amount) => {
+          toInput = amount
+        })
+      }, 1000)
+    }
   }
 
   $: debounce(fromInput)
@@ -193,17 +202,8 @@
   }
 
   //todo to be replaced once we have oracle
-  $: isGoingUp = true
-  $: priceChange = '0'
-
-  const rotateMarketEstimate = () => {
-    setInterval(() => {
-      priceChange = parseFloat((Math.random() * 200 - 100).toFixed(1)).toString()
-      isGoingUp = Number(priceChange) > 0
-    }, 1000)
-  }
-
-  rotateMarketEstimate()
+  let isGoingUp = true
+  let priceChange = '0'
 </script>
 
 {#if modal === 'failure'}
@@ -284,10 +284,12 @@
         </TokenSwapInput>
       </div>
     </div>
-    <div class:guarantee-text-letty={!isJetty} class={`guarantee-text`}>
-      <p>{$i18n.t('main:guarantee-hint')}</p>
-      <p>{$i18n.t('main:guarantee-hint-part-2')}</p>
-    </div>
+    {#if !isJetty}
+      <div class:guarantee-text-letty={!isJetty} class={`guarantee-text`}>
+        <p>{$i18n.t('main:guarantee-hint')}</p>
+        <p>{$i18n.t('main:guarantee-hint-part-2')}</p>
+      </div>
+    {/if}
     <div class="swap-button">
       <Button
         --width="100%"
@@ -332,7 +334,7 @@
   .mascot-img {
     position: absolute;
     z-index: 0;
-    top: 1rem;
+    top: -3rem;
     width: 20rem;
 
     @include mobile {
@@ -362,10 +364,10 @@
     width: 100%;
     justify-content: end;
     position: relative;
-    height: 6.813rem;
+    height: 6rem;
 
     @include desktop {
-      height: 8.063rem;
+      height: 8rem;
       justify-content: center;
     }
   }

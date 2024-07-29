@@ -9,48 +9,52 @@ export const Addresses = (networkId: number) => {
       Stokenet: {
         badges: {
           adminBadgeAddress:
-            'resource_tdx_2_1thfrdywckjhdvztdfapr3dnnluha2tjnafjuczc9j90seretayhcr4',
+            'resource_tdx_2_1tkewy5e4cgwr6qztyum8zch85fgccfjpujkp3jx45ag9qzwev3ud49',
           superAdminBadgeAddress:
-            'resource_tdx_2_1tk2w3qw806qz0e3flue0jut2wxp9gvjtlawj5wj7cjv0z7mdtmr57r',
+            'resource_tdx_2_1thwucrt37ajfknluwmj9s483qxz7cqcwlvf9xaun9wx5yxn3r8zh7v',
           heroBadgeAddress:
-            'resource_tdx_2_1n2859tekly0ed2n606fwtw924drp5rzwhmx7hmmf3attuh202vkjd3',
+            'resource_tdx_2_1nt72qwswkjkaayfwgyy0d2un8wvpjlq2dg5lq54382wlmf6yly8vz5',
           kycBadgeAddress: 'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan',
           instapassBadgeAddress:
             'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan'
         },
         resources: {
-          elementAddress: 'resource_tdx_2_1thlugvu3456d4mcxpz6hznd3z0v5s5up84zga6n09neupvg9v7nl25',
-          clamAddress: 'resource_tdx_2_1th9nmjzvtun2gzgmv9arza56vv9q66gpy2lrfud989hmfz86z7ylru',
-          radgemAddress: 'resource_tdx_2_1ntlvekwwg6v50xn63yhxjhe8zlfhjz9a4y6380wlmm9le5eugu5khj',
+          elementAddress: 'resource_tdx_2_1tkr6hagjleqa60d63y3v479mhhxpnf3zqv0qlttj4gaw22ltvfw7rf',
+          clamAddress: 'resource_tdx_2_1t5m454mwsa54u8hmlzfxl474vsynf8nm0htzhw6kkh7ksr0xkcxdrc',
+          radgemAddress: 'resource_tdx_2_1n2jghc498cp8grdesad8dd6qhq6fsr6znsgljm06r6q3zwe3vw2s3d',
           morphEnergyCardAddress:
-            'resource_tdx_2_1nftz09s4wtsjw0rp94srjwlu455w2pj6gta24tr02dnlsm8q6ceuks',
-          radmorphAddress: 'resource_tdx_2_1nfmw0rxyfxhmma6dafgkuh4wqvxklduveuh9e5lauve6pan0ah3v3p',
+            'resource_tdx_2_1nfx424emh9lzwvv6lq3jh266yktfzx6pwlwjrn5xll5e5ympw0f07q',
+          radmorphAddress: 'resource_tdx_2_1ngx0pn9efnwt4xx2jkrx4dq55dwnv0g2tr8uyn3wenc9u32dpp4mpn',
           ottercoinAddress:
-            'resource_tdx_2_1tkeldqqkz6605zx0jkuvtf0ufvzq5sd7m6gctjm7jzdpnk53dlrqp7',
+            'resource_tdx_2_1t5t6t93ngy442dr2aarqvsrk6vdqxs70m6yeepfudhnfzxpfzxsvsd',
           giftBox: {
-            Starter: 'resource_tdx_2_1t4evzm73cvm0a8kp3ues3vf336skwwg53vkyuku0fn8gkhrjafj4cy',
-            Simple: 'resource_tdx_2_1t4gcczqylywrc7d3e98m809l49e8huf9dmgap6kpx4sxzk8qsch3xs',
-            Fancy: 'resource_tdx_2_1ths56khu9ca3s8xru352sdakklqjwxpgucu9uxp7l7hjdq03x7ugv5',
-            Elite: 'resource_tdx_2_1t42ne24zypwwfznpumdg2ss46rtra8k7qr9nhhpjxr7l72q6u3zdp9'
+            Starter: 'resource_tdx_2_1t568knmvq09c366vgqxx2v8wu0nfag2q8m4smrtmza0etnys90p9qn',
+            Simple: 'resource_tdx_2_1th69mu7mhq5rse8k5p48du3kw5gzf0nwu2tjry3ttqpz240c0sjdf5',
+            Fancy: 'resource_tdx_2_1tkascuq3lwejkem0lw4zhep34w6pwx4rehyajt47ta83egwchrw5cj',
+            Elite: 'resource_tdx_2_1t4esvjqcjr8l4fpuurg0un9lesmfa8mdv85dc34qmxg7xhpwwntcx6'
           }
         },
-        radQuestPackage: 'package_tdx_2_1p58nns2tfm70kxa7dvu9dxzhlhe8mueqdecxs7etxdd3nqzp7x476h',
-        clamDexPackage: 'package_tdx_2_1p43p5xg233gvrkz6jdd5yvd52v0dxvy9905cpalztsws398phj5fs4',
+        radQuestPackage: 'package_tdx_2_1phu0zmcx0s92ha5rgnjruysq58kr48qpf8cqgk3y2rmxhhke7jgtqw',
+        clamDexPackage: 'package_tdx_2_1pk54w09fwqv9resal68ee43y2gzjm3m0kfw0sjhnhrpw5w8kzxgvc6',
         components: {
-          heroBadgeForge: 'component_tdx_2_1cpvky640kmm79geqvvadhxek6prvs8lt0vpza732x85dzdzkmm5swm',
-          kycOracle: 'component_tdx_2_1cq6gc05mxnw4jhqr5xx0a6pee0dvzlx0prtp8xkyd8u6vx8kv0n69a',
-          questRewards: 'component_tdx_2_1cqf2nhfzdhfp8grkjxtt6gkt82d0q57nps8cmpj4wzk72vfku4wh6n',
-          giftBoxOpener: 'component_tdx_2_1crflnq2jxcelz6fkpp48rw950qlnkezxh68t3qmcxntc09tghgzq3g',
-          cardForge: 'component_tdx_2_1crvwvp83j96e3gerjexspqsw3r4wpqzsylcp7dn69pt4nh5knwxcw5',
-          radgemForge: 'component_tdx_2_1cpsfezm3gggpw3gk9ln4uftcthpsn0w8jhdkl8dxnzeql5rxsx95sr',
-          radmorphForge: 'component_tdx_2_1cpw7atp6ndjew929yry9j7vwwuncurdc877vevk60yaexfe0mqdmkt',
-          imageOracle: 'component_tdx_2_1crhm6546wkcfdmsk7st52m9jxh0lt0u5jmepzk7xamq0yvuwhvppwg',
-          refinery: 'component_tdx_2_1cz0avpsd2cwmd9q4ukqux2zrkxmfemysxk5mdwlvh09euyr75raqpx',
+          heroBadgeForge: 'component_tdx_2_1czggp0fz9pcarmhp8uxpy9qr8ysz46qkpr49t3jdrn8zzanujj8fpy',
+          kycOracle: 'component_tdx_2_1cqgu87tk0sx6ldn7x0heev0vgc6jq4uu0tahkfumfpgmw7acxtgqd3',
+          questRewards: 'component_tdx_2_1czukjx0y294tgzz2w236je8sv8pr4mrz3p566rm6vlq4nfr2w2punu',
+          giftBoxOpener: 'component_tdx_2_1crsll3wjqke9detnpr8r0t0ls6m5kd57fu2jr5r20qfauuy575rh5p',
+          cardForge: 'component_tdx_2_1cp2r0wrszxf0qj9hqykm6nv6avzweqazxp2yu43zemp5q0prpl0rfw',
+          radgemForge: 'component_tdx_2_1cp64ncg6ghglxup5fmyxlwzasa7hcrhxwuxptwxuuja7cuhg9fyhzq',
+          radmorphForge: 'component_tdx_2_1cqtjvvpwhjvdzwc6gp43hz5q5g0v2ulqvmgp52cx0gz2nnrjez2nch',
+          imageOracle: 'component_tdx_2_1cqc8z3t3jtn9ryrztfw59klnxwt2lfwmwvfc7r485uq7qulwxq7pkd',
+          refinery: 'component_tdx_2_1cp4dw84qxcncwncg5mkkht2cqg2906kpy2wx76xa8720pxy2js0ggh',
           kycOracleKeyValueStore:
-            'internal_keyvaluestore_tdx_2_1krc2j8s8e362yxtgqwncwxqvffwnx6ggrnkaccahzcn04xul9w7sxe',
+            'internal_keyvaluestore_tdx_2_1kq4cuyae3uuw9ss06an9cdhd577p7gjnkfqm7mwqvsdyecqe4syxql',
           mayaRouter: 'component_tdx_2_mock_maya_router_address',
-          jettySwap: 'component_tdx_2_1cplnxfup3aua9f7733hhreg8jydaspme8w9fs0eks9j9fss532z6q0',
-          lettySwap: 'component_tdx_2_1cra28au5hy2kd748am8zlaawwncqq3chfnnqngv9g6u5g68x0hh8lk'
+          jettySwap: 'component_tdx_2_1czu6r9zpgsuylret7jfswwlzfgxp39spvd6wh72waqy30sd55gwz4y',
+          jettySwapPriceOracle:
+            'component_tdx_2_1cqcsfhgk8k8kuknmk7cmvkfu2whrz0ysd3swxggdu3lreu3lh7hyhq',
+          lettySwap: 'component_tdx_2_1crzgytxmmpee8n79ehlhkgvqzza6utcqv0e3jh9fatqwjc4r7kwm4s',
+          lettySwapPriceOracle:
+            'component_tdx_2_1cqwgc8ppm4ahxpdc4lepm77vz7vwzrp30hz0ukr0mfu5r07w9jydtf'
         },
         xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
         accounts: {
@@ -75,15 +79,19 @@ export const Addresses = (networkId: number) => {
               'accesscontroller_tdx_2_1cdmny6m5jcsrq8wajjd7x8v0k0x464xmxq8m4tqae0z9ycxl7zyvg9'
           },
           jetty: {
-            address: 'account_tdx_2_1290rrczjj4gxh9k0w30ukywwhzm9ltrmkqk0jcfaj50t5f6n4xxezt',
+            address: 'account_tdx_2_1c9ypvf4v950yellpnkteuxk2lf8vj62dcqpgakt3wxeduck8t3ksl3',
             accessController:
               'accesscontroller_tdx_2_1cv2thjxmyy8n7zs3jfcq8sd2x2cgyhcyj820528h5nsv0xcluw2r47'
           },
           jettySwapDappDefinition: {
-            address: 'account_tdx_2_128e634vx9dfg0prxz2zwj8c7k48y28ftyggl52ppdk6qe9x7q3m2r9'
+            address: 'account_tdx_2_1cxzl72tc7llpkjxngy9red5gthvrcwuzy3negu83wwh5rj4wvve8hl',
+            accessController:
+              'accesscontroller_tdx_2_1cvuswukv7nvrk6ax4k75k8zaypzmy0c5yv6ek8j46nhs4ll7d5rpls'
           },
           lettySwapDappDefinition: {
-            address: 'account_tdx_2_1299hh40njlhtn54n0kllj2ldxq32asfsp3apvfvqwp775wh50yslp6'
+            address: 'account_tdx_2_1cx93lagvxjky7g32v4jlhup7sy96qxvcahephuteukxuzv06jqv63u',
+            accessController:
+              'accesscontroller_tdx_2_1c0ahm9p2dhk233yaptfaupzklh8dkzht3etpy874fudl5n3y84p7cf'
           }
         },
         dapps: {
@@ -103,42 +111,50 @@ export const Addresses = (networkId: number) => {
       },
       Mainnet: {
         badges: {
-          adminBadgeAddress: '',
-          superAdminBadgeAddress: '',
-          heroBadgeAddress: '',
-          kycBadgeAddress: '',
-          instapassBadgeAddress: ''
+          adminBadgeAddress: 'resource_rdx1t5fces2e0g7wywymygxnn3c642efwr35hwcm5gqtlsdmvewjpgd3f9',
+          superAdminBadgeAddress:
+            'resource_rdx1tkpeanv6tr8pyke0hccz6llrml0f2y7vl4qfr25j6zecmtynns5rec',
+          heroBadgeAddress: 'resource_rdx1n2mvky7na57d832lypd9xy5ftxt7lynu3flyn084gfncayshmmdwga',
+          kycBadgeAddress: 'resource_rdx1ng0efwfwnkp32t29eju0t0qm4m29385p9m7u5gfuatvz2fk3unjpd0',
+          instapassBadgeAddress:
+            'resource_rdx1ng0efwfwnkp32t29eju0t0qm4m29385p9m7u5gfuatvz2fk3unjpd0'
         },
         resources: {
-          elementAddress: '',
-          clamAddress: '',
-          radgemAddress: '',
-          morphEnergyCardAddress: '',
-          radmorphAddress: '',
-          ottercoinAddress: '',
+          elementAddress: 'resource_rdx1t46p7mnc9kg4mq4tk2sdtp5f0gp5mscpjruethv3xxtx9z6xz23u56',
+          clamAddress: 'resource_rdx1t5cg8avk6x2qvnmc6e45mw3eadax90cfy862vp7m7qvcv70459lh3s',
+          radgemAddress: 'resource_rdx1ntr6s37qnrjw8eu04l2ejxfg6y067qzs87zde6ljfp9u63tj87jmxu',
+          morphEnergyCardAddress:
+            'resource_rdx1nfe53zgumd2vak2f7gv0jjn6erlnghtahequkt8n69cdymwj38kz90',
+          radmorphAddress: 'resource_rdx1nt2q2rks2xgus6etcpeq4c8ysuj0l5pwhs9r3cxw6qtly5kxqddp2e',
+          ottercoinAddress: 'resource_rdx1t5mcwtclmntvapyfnw4xcqwxzgtnfcywk55xm9dp6cwh8atzfnyt36',
           giftBox: {
-            Starter: '',
-            Simple: '',
-            Fancy: '',
-            Elite: ''
+            Starter: 'resource_rdx1tk3ggfq3mysdqcj5cmeuw7p4fhclnkrlaard6nudjkvn373503km2m',
+            Simple: 'resource_rdx1t5kgrlsxumc5waamn8sdh8pw77q8mn2f7nlwclgdjmaw6xw39zla8a',
+            Fancy: 'resource_rdx1thz0j3dl0yrhf2tv5q9j6aks9hqkz4p77n59zlucul3rughktyj5ml',
+            Elite: 'resource_rdx1t4nyqfs9vkf80ctrn3h0rfq6dptjwcm7zygecxn3u9djrurmv25gvf'
           }
         },
-        radQuestPackage: '',
-        clamDexPackage: '',
+        radQuestPackage: 'package_rdx1p4l4fcfctjfgj9avqzrunn42rfk84kfktrtz3wypf3a37jfwlprdxn',
+        clamDexPackage: 'package_rdx1p47qnlxgwnrggs38ea7n35y0zkyr2c65ftre6vlafw096u7gygq0y6',
         components: {
-          heroBadgeForge: '',
-          kycOracle: '',
-          questRewards: '',
-          giftBoxOpener: '',
-          cardForge: '',
-          radgemForge: '',
-          radmorphForge: '',
-          imageOracle: '',
-          refinery: '',
-          kycOracleKeyValueStore: '',
+          heroBadgeForge: 'component_rdx1cra2j3w7cv9zkrv4jehjz0qn3xffxdkstucxar4xy9kyu0tpxsvya6',
+          kycOracle: 'component_rdx1cr89pe8pz7c3fhuxf4tpw309cmuqtwg6tw2pkjl574hg3slp9v4gt9',
+          questRewards: 'component_rdx1czaulwngn258tkk5xpvhgsyrfx5e4f7eu4pafhxe0hpkvafndtmwnk',
+          giftBoxOpener: 'component_rdx1cr3vkd0qx0dxqcd0epy3pdxk34ej09ryzfv30e3n5w3wv8r70nn797',
+          cardForge: 'component_rdx1cqdh7qd2wj9rpsh3yl2urytdlp7as03uzy4hmr8a4xxwaz7hkwvqxe',
+          radgemForge: 'component_rdx1cr9eml30wd28fzx4z3uuh7lhyeq6na59vcltv32j3v03m8acrsc0tp',
+          radmorphForge: 'component_rdx1cz36kgpr72804j265rvz0lkgf9en2wneq2gqyk925g6umgv3dt57q7',
+          imageOracle: 'component_rdx1cp6z7vhz3sg53qwz8y462kupm89j230hxn35pkpetdfjkhyc6dkhr9',
+          refinery: 'component_rdx1crh0h7kc9e9s0607exe864uszpu5cpptjn2a605szneswhzw6nawzd',
+          kycOracleKeyValueStore:
+            'internal_keyvaluestore_rdx1kry2g9s07tm26js7e9uy8rztpg5htfd3auandaqgu7nvc6psvnasge',
           mayaRouter: '',
-          jettySwap: '',
-          lettySwap: ''
+          jettySwap: 'component_rdx1cp3he5qrfq92y9j7cpjpfm6uqvurvgyradtgltcn2qaq6pygu4lmp6',
+          jettySwapPriceOracle:
+            'component_rdx1czdm8csjmrcnv9d4fuhw3g5c2yzhga59xf3464nfy4egmedv2srlnh',
+          lettySwap: 'component_rdx1czzpnfsc62dpy7zjw4kxznuepv3ya6u7urpptlgamwrg2w4t993uvg',
+          lettySwapPriceOracle:
+            'component_rdx1cqdqpvrsrgx84ay0g82ek9jlmkmqkws4k2sdugwg69y6dy3nrg3ku6'
         },
         xrd: 'resource_rdx1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxradxrd',
         accounts: {
@@ -168,15 +184,19 @@ export const Addresses = (networkId: number) => {
               'accesscontroller_rdx1cvmgr0rd8xqp28gg9sdx0klu20028gnuzp693yewazucrfy8kwqpkr'
           },
           jettySwapDappDefinition: {
-            address: 'account_rdx12ywkj4hfy3gz0jc200xh8w7vpcg7fckc3295w3kkrjhhdmxc4cngqg'
+            address: 'account_rdx1c82zl0gkcjscuzneg6nxttpw2qtechdn3zvakn50c5g5gtlvas37rw',
+            accessController:
+              'accesscontroller_rdx1cwaamc2szup7rz3elqmz0f7hsezr9uhnpvjunxva5q2px09jd4cfmx'
           },
           lettySwapDappDefinition: {
-            address: 'account_rdx1289j5759c3z07gq9f6f3fn5ecg5fkl9vw2wukr0adlkjs8q03wsl8p'
+            address: 'account_rdx1cx8gjj0gaa6vge4cxr47gkd2dwp2gyxtnsmp0zssg3dp044qe5zhzn',
+            accessController:
+              'accesscontroller_rdx1cdtp8nst2lx2jvpkz07kk4dchtt3jfmnpaxdv5h802725kq8u9mmwg'
           }
         },
         dapps: {
           instapass: {
-            url: ''
+            url: 'https://lite.instapass.io/RadQuest/'
           },
           jettySwap: {
             url: 'https://jettyswap.io'

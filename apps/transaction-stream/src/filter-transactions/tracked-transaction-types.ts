@@ -1,13 +1,15 @@
 import {
   EventsItem,
+  ProgrammaticScryptoSborValue,
   ProgrammaticScryptoSborValueArray,
+  ProgrammaticScryptoSborValueDecimal,
+  ProgrammaticScryptoSborValueMap,
   ProgrammaticScryptoSborValueReference,
   ProgrammaticScryptoSborValueTuple
 } from '@radixdlt/babylon-gateway-api-sdk'
 import { config } from '../config'
-import { EventId, GetValuesFromEventInput, getValuesFromEvent } from 'common'
+import { EventId, GetValuesFromEventInput, fromEventData, getValuesFromEvent } from 'common'
 import { getRewardsFromQuestRewardDepositedEvent } from '../helpers/getRewardsFromQuestRewardDepositedEvent'
-import { keysIn } from 'ramda'
 
 type EventEmitter = {
   entity: {
@@ -167,33 +169,8 @@ export const trackedTransactionTypes: TrackedTransactions = {
         radgem_data: {
           kind: 'Tuple',
           key: 'radgemData',
-          transform: (value) => {
-            const tupleValue = value as ProgrammaticScryptoSborValueTuple
-            const fieldNameToKey = new Map<string, string>([
-              ['key_image_url', 'keyImageUrl'],
-              ['name', 'name'],
-              ['description', 'description'],
-              ['material', 'material'],
-              ['color', 'color'],
-              ['rarity', 'rarity'],
-              ['quality', 'quality']
-            ])
-            const radGemData = tupleValue.fields.reduce<Record<string, unknown>>((acc, field) => {
-              field.type_name
-              const fieldName = typeof field.field_name === 'string' ? field.field_name : ''
-              const key = fieldNameToKey.get(fieldName)
-              const value =
-                field.kind === 'String'
-                  ? field.value
-                  : field.kind === 'Decimal'
-                    ? parseInt(field.value)
-                    : ''
-
-              return key ? { ...acc, [key]: value } : acc
-            }, {})
-
-            return radGemData
-          }
+          transform: (value) =>
+            fromEventData('MintedRadgemEvent', value as ProgrammaticScryptoSborValueTuple)
         }
       }
     })
@@ -266,7 +243,78 @@ export const trackedTransactionTypes: TrackedTransactions = {
     GiftBoxDepositedEvent: eventEmittedByComponent({
       eventName: 'GiftBoxDepositedEvent',
       componentAddress: config.radQuest.components.giftBoxOpener,
-      keys: { user_id: { kind: 'String', key: 'userId' } }
+      keys: {
+        user_id: { kind: 'String', key: 'userId' },
+        rewards: {
+          kind: 'Map',
+          key: 'rewards',
+          transform: (value) => {
+            const mapData = value as ProgrammaticScryptoSborValueMap
+
+            return mapData.entries.reduce<{
+              fungibles: { amount: number; resourceAddress: string }[]
+              nonFungibles: { localIds: string[]; resourceAddress: string }[]
+            }>(
+              (acc, entry) => {
+                let resourceAddress: string | undefined = undefined
+                let amount: number | undefined = undefined
+                let type: 'fungible' | 'nonFungible' | undefined = undefined
+                let localIds: string[] = []
+
+                if (entry.key.kind === 'Reference') {
+                  resourceAddress = entry.key.value
+                }
+
+                if (entry.value.kind === 'Enum' && entry.value.variant_name === 'FungibleAmount') {
+                  const maybeValue = entry.value.fields.find(
+                    (field): field is ProgrammaticScryptoSborValueDecimal =>
+                      field.kind === 'Decimal'
+                  )?.value
+                  if (maybeValue) amount = parseInt(maybeValue)
+                  type = 'fungible'
+                }
+
+                if (
+                  entry.value.kind === 'Enum' &&
+                  entry.value.variant_name === 'NonFungibleAmount'
+                ) {
+                  type = 'nonFungible'
+                  const [field] = entry.value.fields
+                  if (field.kind === 'Array') {
+                    const [element] = field.elements
+                    if (element.kind === 'NonFungibleLocalId') {
+                      localIds = [element.value]
+                    }
+                  }
+                }
+
+                if (type === 'fungible' && resourceAddress && amount)
+                  acc.fungibles.push({ resourceAddress, amount })
+                else if (type === 'nonFungible' && resourceAddress)
+                  acc.nonFungibles.push({ resourceAddress, localIds })
+
+                return acc
+              },
+              {
+                fungibles: [],
+                nonFungibles: []
+              }
+            )
+          }
+        }
+      }
+    }),
+    MorphCardMintedEvent: eventEmittedByComponent({
+      eventName: 'MorphCardMintedEvent',
+      componentAddress: config.radQuest.components.cardForge,
+      keys: {
+        morph_card_data: {
+          kind: 'Tuple',
+          key: 'energyCard',
+          transform: (value) =>
+            fromEventData('MorphCardMintedEvent', value as ProgrammaticScryptoSborValue)
+        }
+      }
     })
   }
 } as const

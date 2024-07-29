@@ -21,7 +21,14 @@
   $: image = energyCardMap[shapeCodeDescription[card.energy.toLowerCase()]].keyImageUrl
 </script>
 
-<ResourceCard on:selected on:deselected {selectable} {disabled} bind:selected>
+<ResourceCard
+  on:selected
+  on:deselected
+  {selectable}
+  {disabled}
+  bind:selected
+  goldBorder={card.limitedEdition}
+>
   <div class="transform-card" style:--background-image={`url(${image})`} class:selected />
 
   <p slot="text" class="quality">
@@ -36,16 +43,17 @@
 </ResourceCard>
 
 <style lang="scss">
-  $text-color: var(--color-ligh t);
+  $text-color: var(--color-light);
 
   .transform-card {
     display: grid;
     grid-template-rows: 60% auto;
     background: var(--background-image) no-repeat center;
-    background-size: cover;
+    background-size: 99%;
     height: 100%;
     width: 100%;
-    border-radius: var(--border-radius-xl);
+    height: 12rem;
+    aspect-ratio: 1/1.66;
   }
 
   .quality {

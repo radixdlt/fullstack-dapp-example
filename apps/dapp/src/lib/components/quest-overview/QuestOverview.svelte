@@ -9,6 +9,7 @@
   import type { QuestReward } from 'content'
   import type { QuestStatus } from '../../../types'
   import { i18n } from '$lib/i18n/i18n'
+  import { onNavigate } from '$app/navigation'
 
   export let title: string
   export let description: string
@@ -21,6 +22,14 @@
 
   $: hovering = false
   $: greyOut = !hovering && state === 'completed'
+
+  let openingQuest = false
+
+  $: onNavigate(() => {
+    if (openingQuest) {
+      openingQuest = false
+    }
+  })
 </script>
 
 <div
@@ -68,7 +77,14 @@
     <QuestOverviewText {greyOut} {title} {description} {minutesToComplete} />
 
     <div class="start-button">
-      <Button {link} disabled={state === 'locked'}>
+      <Button
+        {link}
+        disabled={state === 'locked'}
+        on:click={() => {
+          openingQuest = true
+        }}
+        loading={openingQuest}
+      >
         <div class="button-content">
           {#if state === 'unlocked'}
             {$i18n.t('quests:QuestOverviewButton.unlocked')}
@@ -175,6 +191,9 @@
 
   .status-icon-with-background {
     background: var(--gradient-6);
+    &.disabled {
+      background: var(--color-primary);
+    }
   }
 
   .status-icon-in-progress {

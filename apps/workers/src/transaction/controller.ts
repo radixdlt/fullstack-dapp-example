@@ -48,13 +48,11 @@ export const TransactionWorkerController = ({
   const handler = ({
     job,
     user,
-    logger,
-    dbTransactionBuilder
+    logger
   }: {
     job: Job<TransactionJob>
     user: User
     logger: AppLogger
-    dbTransactionBuilder: DbTransactionBuilder
   }): ResultAsync<any, WorkerOutputError> => {
     const { type, userId } = job.data
 
@@ -84,61 +82,69 @@ export const TransactionWorkerController = ({
       GiftBoxRewardConfig({ getRandomFloat, getRandomIntInclusive })
     )
 
-    const getCompletedTransactionId = () =>
+    const getCompletedOrPendingTransactionId = () =>
       ResultAsync.fromPromise(
         dbClient.submittedTransaction
-          .findFirst({ where: { transactionIntent: job.data.discriminator, status: 'COMPLETED' } })
+          .findFirst({
+            select: { transactionId: true },
+            where: {
+              transactionIntent: job.data.discriminator,
+              status: { in: ['PENDING', 'COMPLETED'] }
+            }
+          })
           .then((value) => value?.transactionId),
         (error) => ({ reason: WorkerError.FailedToQueryDb, jsError: error })
       )
 
     const handleSubmitTransaction = (manifest: string) =>
-      getCompletedTransactionId().andThen((completedTransactionId) =>
-        completedTransactionId
+      getCompletedOrPendingTransactionId().andThen((pendingOrCompletedTransactionId) => {
+        const result = pendingOrCompletedTransactionId
           ? transactionHelper
-              .pollTransactionStatus(completedTransactionId)
-              .map((response) => ({ response, transactionId: completedTransactionId }))
-          : transactionHelper
-              .submitTransaction(manifest, {
-                onTransactionId: (transactionId) => {
-                  transactionId = transactionId
-                  return upsertSubmittedTransaction({ transactionId, status: 'PENDING' })
-                }
-              })
-              .orElse((error) => {
-                logger.error({
-                  method: 'handleSubmitTransaction.err',
-                  transactionId: error.transactionId,
-                  status: 'FAILED'
-                })
+              .pollTransactionStatus(pendingOrCompletedTransactionId)
+              .map((response) => ({ response, transactionId: pendingOrCompletedTransactionId }))
+          : transactionHelper.submitTransaction(manifest, {
+              onTransactionId: (transactionId) => {
+                transactionId = transactionId
+                return upsertSubmittedTransaction({ transactionId, status: 'PENDING' })
+              }
+            })
+        return result
+          .orElse((error) => {
+            logger.error({
+              method: 'handleSubmitTransaction.err',
+              transactionId: error.transactionId,
+              status: 'FAILED'
+            })
 
-                return error.transactionId
-                  ? upsertSubmittedTransaction({
-                      status: 'FAILED',
-                      transactionId: error.transactionId
-                    }).andThen(() => errAsync(error))
-                  : errAsync(error)
-              })
-              .andThen((value) =>
-                upsertSubmittedTransaction({
-                  transactionId: value.transactionId,
-                  status: 'COMPLETED'
-                }).map(() => value)
-              )
-      )
+            return error.transactionId
+              ? upsertSubmittedTransaction({
+                  status: 'FAILED',
+                  transactionId: error.transactionId
+                }).andThen(() => errAsync(error))
+              : errAsync(error)
+          })
+          .andThen((value) =>
+            upsertSubmittedTransaction({
+              transactionId: value.transactionId,
+              status: 'COMPLETED'
+            }).map(() => value)
+          )
+      })
 
     const addEntryToAuditTable = ({
       userId,
       transactionId,
       xrdUsdValue,
       rewards,
-      type
+      type,
+      xrdPrice
     }: {
       userId: string
       transactionId: string
       xrdUsdValue: number
       rewards: AuditData
       type: AuditType
+      xrdPrice: number
     }) =>
       auditModel(logger)
         .add({
@@ -146,6 +152,7 @@ export const TransactionWorkerController = ({
           userId,
           type,
           xrdUsdValue,
+          xrdPrice,
           data: rewards
         })
         .mapErr(({ jsError }) => ({
@@ -153,8 +160,8 @@ export const TransactionWorkerController = ({
           jsError
         }))
 
-    const getXrdPrice = (value: string) => {
-      const xrdAmount = BigNumber(value)
+    const getXrdPrice = (value?: string) => {
+      const xrdAmount = BigNumber(value ?? 0)
 
       return tokenPriceClient
         .getXrdPrice()
@@ -163,8 +170,9 @@ export const TransactionWorkerController = ({
           jsError: error
         }))
         .map((xrdPrice) => ({
-          xrdUsdValue: xrdAmount.multipliedBy(xrdPrice).toNumber(),
-          xrdAmount
+          xrdUsdValue: xrdAmount.multipliedBy(xrdPrice).decimalPlaces(2).toNumber(),
+          xrdAmount,
+          xrdPrice: xrdPrice.decimalPlaces(3).toNumber()
         }))
     }
 
@@ -230,13 +238,16 @@ export const TransactionWorkerController = ({
 
       return triggerDepositRewardsTransaction(userId).andThen(
         ({ userId, transactionId, xrdRewardInUsd }) =>
-          addEntryToAuditTable({
-            userId,
-            transactionId,
-            xrdUsdValue: xrdRewardInUsd.toNumber(),
-            rewards: { fungible: rewards, nonFungible: [] },
-            type: AuditType.CLAIMBOX_DEPOSIT
-          })
+          getXrdPrice().andThen(({ xrdPrice }) =>
+            addEntryToAuditTable({
+              userId,
+              transactionId,
+              xrdPrice,
+              xrdUsdValue: xrdRewardInUsd.decimalPlaces(2).toNumber(),
+              rewards: { fungible: rewards, nonFungible: [] },
+              type: AuditType.CLAIMBOX_DEPOSIT
+            })
+          )
       )
     }
 
@@ -280,6 +291,34 @@ export const TransactionWorkerController = ({
         )
       }
 
+      case 'QuestCompleted': {
+        const { questId } = job.data
+        return handleSubmitTransaction(
+          `
+            CALL_METHOD
+              Address("${payer.accessController}")
+              "create_proof";
+            CALL_METHOD
+              Address("${system.accessController}")
+              "create_proof";
+            CALL_METHOD
+              Address("${payer.address}")
+              "lock_fee"
+              Decimal("100");
+          CALL_METHOD
+              Address("${system.address}")
+              "create_proof_of_amount"
+              Address("${badges.adminBadgeAddress}") 
+              Decimal("1");  
+           CALL_METHOD
+                Address("${components.heroBadgeForge}")
+                "hero_completed_quest"
+                "${userId}"
+                "${questId}"
+          ;`
+        )
+      }
+
       case 'DepositReward':
         const { questId } = job.data
 
@@ -318,16 +357,19 @@ export const TransactionWorkerController = ({
                 depositRewardsTo: 'giftBoxOpener'
               })
             ).andThen(({ transactionId }) =>
-              addEntryToAuditTable({
-                userId,
-                transactionId,
-                xrdUsdValue: 0,
-                rewards: {
-                  fungible: [{ name: 'elements', amount: elementAmount }],
-                  nonFungible: [card]
-                },
-                type: AuditType.CLAIMBOX_DEPOSIT
-              })
+              getXrdPrice().andThen(({ xrdPrice }) =>
+                addEntryToAuditTable({
+                  userId,
+                  transactionId,
+                  xrdUsdValue: 0,
+                  xrdPrice,
+                  rewards: {
+                    fungible: [{ name: 'elements', amount: elementAmount }],
+                    nonFungible: [card]
+                  },
+                  type: AuditType.CLAIMBOX_DEPOSIT
+                })
+              )
             )
           })
       }
@@ -573,17 +615,19 @@ export const TransactionWorkerController = ({
             )
           )
           .andThen(({ transactionId }) =>
-            getXrdPrice(`${config.radQuest.directXrdDepositAmount}`).andThen(({ xrdUsdValue }) =>
-              addEntryToAuditTable({
-                transactionId,
-                userId: user.id,
-                xrdUsdValue,
-                type: 'DIRECT_DEPOSIT',
-                rewards: {
-                  fungible: [{ name: 'xrd', amount: config.radQuest.directXrdDepositAmount }],
-                  nonFungible: []
-                }
-              })
+            getXrdPrice(`${config.radQuest.directXrdDepositAmount}`).andThen(
+              ({ xrdUsdValue, xrdPrice }) =>
+                addEntryToAuditTable({
+                  transactionId,
+                  userId: user.id,
+                  xrdUsdValue,
+                  xrdPrice,
+                  type: 'DIRECT_DEPOSIT',
+                  rewards: {
+                    fungible: [{ name: 'xrd', amount: config.radQuest.directXrdDepositAmount }],
+                    nonFungible: []
+                  }
+                })
             )
           )
           .andThen(() =>

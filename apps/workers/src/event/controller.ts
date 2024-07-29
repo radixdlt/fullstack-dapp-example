@@ -1,4 +1,3 @@
-import { TokenPriceClient } from './../token-price-client'
 import { okAsync, errAsync, err, ok, ResultAsync } from 'neverthrow'
 import { EventJob, Job } from 'queues'
 import { QuestDefinitions, QuestId, Quests } from 'content'
@@ -9,6 +8,7 @@ import {
   ImageModel,
   MailerLiteModel,
   MessageType,
+  MorphCardMintedEventOutput,
   QuestTogetherConfig,
   ShaderCodeDescription,
   UserByReferralCode
@@ -21,7 +21,6 @@ import { MessageHelper } from '../helpers/messageHelper'
 import { config } from '../config'
 import { TransactionIntentHelper } from '../helpers/transactionIntentHelper'
 import { ReferralRewardAction } from '../helpers/referalReward'
-import { getUserById } from '../helpers/getUserById'
 
 type Reward = { resourceAddress: string; amount: string; name: string }
 
@@ -472,41 +471,37 @@ export const EventWorkerController = ({
       case EventId.CombineElementsAddedRadgemImage:
         return sendMessage(userId, { type: 'CombineElementsAddRadgemImage', traceId }, childLogger)
       case EventId.DepositHeroBadge: {
+        const updateHeroBadge = (questId: string) =>
+          transactionIntent.add({
+            userId,
+            discriminator: `${questId}:QuestCompleted:${userId}`,
+            type: 'QuestCompleted',
+            questId,
+            traceId
+          })
         return completeQuestRequirement('GetStuff').andThen(() =>
           handleAllQuestRequirementCompleted({
             questId: 'GetStuff',
             userId
+          }).andThen(() => {
+            return ResultAsync.combineWithAllErrors([
+              updateHeroBadge('Welcome'),
+              updateHeroBadge('WhatIsRadix'),
+              updateHeroBadge('SetupWallet')
+            ])
           })
         )
       }
 
       case EventId.CombineElementsClaimed: {
-        return gatewayApi
-          .hasAtLeastTwoRadgems(user.accountAddress!)
-          .andThen((hasAtLeastTwoRadgems) =>
-            hasAtLeastTwoRadgems
-              ? addCompletedQuestRequirement({
-                  questId: 'CreatingRadMorphs',
-                  userId,
-                  requirementId: 'MintRadgems'
-                })
-                  .andThen(() =>
-                    sendMessage(
-                      userId,
-                      {
-                        type: 'QuestRequirementCompleted',
-                        questId: 'CreatingRadMorphs',
-                        requirementId: 'MintRadgems',
-                        traceId
-                      },
-                      childLogger
-                    )
-                  )
-                  .andThen(() =>
-                    handleAllQuestRequirementCompleted({ questId: 'CreatingRadMorphs', userId })
-                  )
-              : okAsync(undefined)
-          )
+        return sendMessage(
+          userId,
+          {
+            type: 'CombineElementsClaimed',
+            traceId
+          },
+          childLogger
+        )
       }
 
       case EventId.AccountAllowedToForgeHeroBadge:
@@ -520,16 +515,7 @@ export const EventWorkerController = ({
         )
 
       case EventId.JettyReceivedClams: {
-        return sendMessage(
-          user.id,
-          {
-            type: 'QuestRequirementCompleted',
-            requirementId: EventId.JettyReceivedClams,
-            questId: 'TransferTokens',
-            traceId: job.data.traceId
-          },
-          childLogger
-        ).andThen(() => handleQuestWithTrackedAccount('TransferTokens'))
+        return handleQuestWithTrackedAccount('TransferTokens')
       }
       case EventId.MayaRouterWithdrawEvent: {
         return handleQuestWithTrackedAccount('Thorswap')
@@ -557,42 +543,34 @@ export const EventWorkerController = ({
         const giftBoxResourceAddress = job.data.data.giftBoxResourceAddress as string
         return getGiftBoxKindByResourceAddress(giftBoxResourceAddress)
           .asyncAndThen((giftBoxKind) =>
-            transactionIntent
-              .add({
-                type: 'DepositGiftBoxReward',
-                discriminator: `${EventId.GiftBoxOpened}:${job.data.transactionId}`,
-                userId: user.id,
-                traceId: job.data.traceId,
-                giftBoxKind
-              })
-              .andThen(() =>
-                giftBoxKind === 'Starter'
-                  ? addCompletedQuestRequirement({
-                      userId: user.id,
-                      requirementId: EventId.GiftBoxOpened,
-                      questId: 'CreatingRadMorphs'
-                    }).andThen(() =>
-                      sendMessage(
-                        userId,
-                        {
-                          type: 'QuestRequirementCompleted',
-                          questId: 'CreatingRadMorphs',
-                          requirementId: 'GiftBoxOpened',
-                          traceId
-                        },
-                        childLogger
-                      )
-                    )
-                  : okAsync(undefined)
-              )
+            transactionIntent.add({
+              type: 'DepositGiftBoxReward',
+              discriminator: `${EventId.GiftBoxOpened}:${job.data.transactionId}`,
+              userId: user.id,
+              traceId: job.data.traceId,
+              giftBoxKind
+            })
           )
           .map(() => undefined)
       }
 
       case EventId.GiftBoxDeposited: {
+        const rewards = job.data.data.rewards as {
+          fungibles: {
+            amount: number
+            resourceAddress: string
+          }[]
+          nonFungibles: {
+            localIds: string[]
+            resourceAddress: string
+          }[]
+        }
+        const energyCard = job.data.data.energyCard as MorphCardMintedEventOutput
         return sendMessage(user.id, {
           type: 'GiftBoxDeposited',
-          traceId
+          traceId,
+          rewards,
+          energyCard
         }).map(() => undefined)
       }
 

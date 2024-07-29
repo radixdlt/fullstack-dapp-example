@@ -3,12 +3,11 @@
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import '../global.scss'
-  import JettyWorried from '@images/jetty-worried.png'
 </script>
 
 <div class="error-page">
   <div class="centered">
-    <img src={JettyWorried} alt="worried jetty" />
+    <img src="/jetty-worried.png" alt="worried jetty" />
     <div class="text">
       <h1>{$i18n.t('main:error-page.something-went-wrong')}</h1>
       {#if $page.status == 404}

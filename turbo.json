@@ -33,7 +33,8 @@
     "MAILER_LITE_API_KEY",
     "OWNER_MNEMONIC",
     "SYSTEM_MNEMONIC",
-    "PAYER_MNEMONIC"
+    "PAYER_MNEMONIC",
+    "LETTYSWAP_DAPP_DEFINITION_MNEMONIC"
   ],
   "tasks": {
     "build": {

@@ -11,7 +11,7 @@ pub struct UserId(pub String);
 pub struct QuestId(pub String);
 
 #[derive(ScryptoSbor, PartialEq, Eq, Debug, Clone)]
-enum RewardState {
+pub enum RewardState {
     Unclaimed {
         resources_record: HashMap<ResourceAddress, RewardAmount>,
     },
@@ -19,7 +19,7 @@ enum RewardState {
 }
 
 #[derive(ScryptoSbor, PartialEq, Eq, Debug, Clone)]
-enum RewardAmount {
+pub enum RewardAmount {
     FungibleAmount(Decimal),
     NonFungibleAmount(IndexSet<NonFungibleLocalId>),
 }
@@ -46,7 +46,7 @@ impl RewardAmount {
 }
 
 #[derive(ScryptoSbor, PartialEq, Eq, Debug, Clone)]
-struct RewardInfo {
+pub struct RewardInfo {
     resource_address: ResourceAddress,
     reward_amount: RewardAmount,
 }
@@ -68,9 +68,11 @@ mod quest_rewards {
         methods {
             disable => restrict_to: [super_admin];
             enable => restrict_to: [super_admin];
+            view_rewards => PUBLIC;
             claim_reward => PUBLIC;
             deposit_reward => restrict_to: [admin];
             get_clams => PUBLIC;
+            set_kyc_badge_address => restrict_to: [super_admin];
         }
     }
     struct QuestRewards {
@@ -161,6 +163,31 @@ mod quest_rewards {
                         .expect("No KYC badge proof provided")
                         .check(context.kyc_badge_address);
                 }
+            }
+        }
+
+        pub fn view_rewards(&self, user_id: UserId, quest_id: QuestId) -> Vec<RewardInfo> {
+            let reward_state = self
+                .rewards_record
+                .get(&(user_id.clone(), quest_id.clone()))
+                .unwrap_or_else(|| {
+                    panic!(
+                        "No reward record for user_id: {}, quest_id: {}",
+                        user_id.0, quest_id.0
+                    )
+                });
+
+            match *reward_state {
+                RewardState::Unclaimed {
+                    ref resources_record,
+                } => resources_record
+                    .iter()
+                    .map(|resource_record| RewardInfo {
+                        resource_address: resource_record.0.clone(),
+                        reward_amount: resource_record.1.clone(),
+                    })
+                    .collect(),
+                RewardState::Claimed => vec![],
             }
         }
 
@@ -330,7 +357,11 @@ mod quest_rewards {
             hero_badge.check(self.hero_badge_address);
 
             self.admin_badge
-                .authorize_with_amount(dec!(1), || self.clam_manager.mint(dec!(3)))
+                .authorize_with_amount(dec!(1), || self.clam_manager.mint(dec!(10)))
+        }
+
+        pub fn set_kyc_badge_address(&mut self, kyc_badge_address: ResourceAddress) {
+            self.kyc_badge_address = kyc_badge_address;
         }
     }
 }

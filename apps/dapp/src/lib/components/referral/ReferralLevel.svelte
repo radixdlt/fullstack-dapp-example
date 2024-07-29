@@ -1,8 +1,7 @@
 <script lang="ts">
   import { i18n } from '$lib/i18n/i18n'
-  import FireIcon from '@images/fire.svg'
   import { sendTransaction } from '$lib/rdt'
-  import { QuestDefinitions } from 'content'
+  import { QuestDefinitions, type QuestId } from 'content'
   import Button from '../button/Button.svelte'
   import PadlockIcon from '@images/padlock.svg'
   import HourGlassIcon from '@images/hourglass.svg'
@@ -13,7 +12,7 @@
   import { createClaimRewardsTransaction } from '$lib/helpers/create-claim-rewards-transaction'
   import { user } from '../../../stores'
   import { createEventDispatcher } from 'svelte'
-  import LoadingSpinner from '../loading-spinner/LoadingSpinner.svelte'
+  import { questApi } from '$lib/api/quest-api'
 
   type Level = keyof ReturnType<typeof QuestDefinitions>['QuestTogether']['partialRewards']
 
@@ -30,24 +29,27 @@
   $: rewards = questDefinition.partialRewards?.[level as Level] || []
   $: requirement = questDefinition.requirements?.[level as Level]
   $: icon =
-    level === 'SuperLevel'
-      ? FireIcon
-      : status === '' || !status
-        ? LockedLevelIcon
-        : status === 'REWARDS_CLAIMED'
-          ? CompletedGradientIcon
-          : HourGlassIcon
+    status === '' || !status
+      ? LockedLevelIcon
+      : status === 'REWARDS_CLAIMED'
+        ? CompletedGradientIcon
+        : HourGlassIcon
   $: referredCount = Math.min(maximum, referred)
 
   const claimRewards = () => {
     loading = true
-    sendTransaction({
-      transactionManifest: createClaimRewardsTransaction(
-        $user?.accountAddress!,
-        $user?.id!,
-        `QuestTogether:${level}`
+    questApi
+      .getDepositedRewards(`QuestTogether:${level}` as QuestId)
+      .andThen((rewards) =>
+        sendTransaction({
+          transactionManifest: createClaimRewardsTransaction(
+            $user?.accountAddress!,
+            $user?.id!,
+            `QuestTogether:${level}`,
+            rewards
+          )
+        })
       )
-    })
       .map(() => {
         loading = false
         dispatch('refresh')
@@ -58,43 +60,23 @@
   }
 </script>
 
-<ReferralLevelUI
-  title={name}
-  {icon}
-  progress={level === 'SuperLevel' ? 1 : referred}
-  totalSteps={level === 'SuperLevel' ? 1 : requirement.threshold}
->
+<ReferralLevelUI title={name} {icon} progress={referred} totalSteps={requirement.threshold}>
   <svelte:fragment slot="referrals">
-    {#if level === 'SuperLevel'}
-      {$i18n.t('quests:QuestTogether.progressSuperLevel', {
-        count: questDefinition.requirements.GoldLevel.threshold
-      })}
-    {:else}
-      {$i18n.t('quests:QuestTogether.referralsProgress', {
-        referred: referredCount,
-        maximum: requirement.threshold
-      })}
-    {/if}
+    {$i18n.t('quests:QuestTogether.referralsProgress', {
+      referred: referredCount,
+      maximum: requirement.threshold
+    })}
   </svelte:fragment>
 
   <svelte:fragment slot="content">
-    {#if level === 'SuperLevel'}
-      <p>{$i18n.t('quests:QuestTogether.SuperLevelInfo')}</p>
-      <Button>{$i18n.t('quests:QuestTogether.SuperLevelButton')}</Button>
-    {:else}
-      <div class="rewards">{$i18n.t('quests:rewards')}:</div>
-      <QuestRewards {rewards} displayName vertical --rewards-gap="0.5rem" />
-    {/if}
+    <div class="rewards">{$i18n.t('quests:rewards')}:</div>
+    <QuestRewards {rewards} displayName vertical --rewards-gap="0.5rem" />
   </svelte:fragment>
 
   <svelte:fragment slot="action-button">
     {#if status === 'REWARDS_DEPOSITED'}
-      <Button on:click={claimRewards} disabled={loading}>
-        {#if loading}
-          <LoadingSpinner />
-        {:else}
-          {$i18n.t('quests:claimButton')}
-        {/if}
+      <Button on:click={claimRewards} disabled={loading} {loading}>
+        {$i18n.t('quests:claimButton')}
       </Button>
     {:else if status === 'IN_PROGRESS'}
       <Button disabled>

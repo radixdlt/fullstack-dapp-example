@@ -252,7 +252,7 @@
 <div class="create-radmorphs">
   {#if loadingLedgerData}
     <div class="loading">
-      <LoadingSpinner />
+      <LoadingSpinner dark />
     </div>
   {:else if creatingRadmorphs && energyCardData && gemData}
     <TransformGems
@@ -289,23 +289,31 @@
             onClick: () => dispatch('cancel')
           }}
     >
-      {$i18n.t('jetty:create-radmorphs.intro')}
-      <p>
-        {$i18n.t('jetty:create-radmorphs.intro2')}
-      </p>
+      <div class="content">
+        <img
+          class="radmorph-image"
+          src="/quests-images/key/JettyConversation_RadMorphCreation.webp"
+          alt="Radmorphs"
+        />
 
-      {#if hasEnoughResources}
+        {$i18n.t('jetty:create-radmorphs.intro')}
         <p>
-          {$i18n.t('jetty:create-radmorphs.intro3-success')}
+          {$i18n.t('jetty:create-radmorphs.intro2')}
         </p>
-      {:else}
-        <p class="text-bold">
-          {$i18n.t('jetty:create-radmorphs.intro3-fail', {
-            radgems: amountOfRadGems,
-            energyCards: amountOfEnergyCards
-          })}
-        </p>
-      {/if}
+
+        {#if hasEnoughResources}
+          <p>
+            {$i18n.t('jetty:create-radmorphs.intro3-success')}
+          </p>
+        {:else}
+          <p class="text-bold">
+            {$i18n.t('jetty:create-radmorphs.intro3-fail', {
+              radgems: amountOfRadGems,
+              energyCards: amountOfEnergyCards
+            })}
+          </p>
+        {/if}
+      </div>
     </JettyMenuItemPage>
   {/if}
 </div>
@@ -314,9 +322,20 @@
   .create-radmorphs {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-2xl);
+    gap: var(--spacing-md);
     height: 100%;
-    padding: var(--spacing-2xl);
+  }
+
+  img {
+    margin-bottom: -2rem;
+  }
+
+  .content {
+    padding: 0 var(--spacing-2xl);
+
+    @include mobile {
+      padding: 0 var(--spacing-xl);
+    }
   }
 
   .loading {
@@ -324,5 +343,9 @@
     justify-content: center;
     align-items: center;
     height: 100%;
+  }
+
+  .radmorph-image {
+    width: 100%;
   }
 </style>

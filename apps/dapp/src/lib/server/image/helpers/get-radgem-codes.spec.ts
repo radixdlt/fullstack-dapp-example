@@ -96,7 +96,7 @@ describe('getRadGem codes', () => {
     const actual = values.map(getRadgemCodes).map((result) => result._unsafeUnwrap())
     expect(actual).toEqual([
       { color: 'ORN', material: 'REF', rarity: 1 },
-      { color: 'LBL', material: 'MET', rarity: 3 }
+      { color: 'LBL', material: 'MET', rarity: 2 }
     ])
   })
 })

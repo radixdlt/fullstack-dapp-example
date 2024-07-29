@@ -25,3 +25,5 @@ vitest.config.ts.timestamp*
 /packages/database/src/prisma/**/*
 landing-popup-index.json
 resources.d.ts
+apps/dapp/static/quests-images/**/*.json
+packages/content/**/*.md

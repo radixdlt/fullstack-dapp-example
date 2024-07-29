@@ -17,7 +17,6 @@
     user
   } from '../../stores'
   import { tick } from 'svelte'
-  import { isMobile } from '$lib/utils/is-mobile'
   import { derived, writable } from 'svelte/store'
   import MinimizeIcon from '@images/minimize.svg'
   import CreateRadMorphs from './CreateRadMorphs.svelte'
@@ -28,7 +27,7 @@
   let poppedUp = false
   let expanded = false
 
-  $: poppedUp = isMobile() ? expanded : expanded || hoveringOverJetty
+  $: poppedUp = expanded || hoveringOverJetty //|| $jettyNotifications.length > 0
 
   $: glossaryAnchor = $page.url.href.includes('glossaryAnchor')
     ? $page.url.href.split('glossaryAnchor=')[1]
@@ -145,7 +144,11 @@
     let:back
   >
     {#if currentMenuItem.id === 'glossary'}
-      <Glossary bind:this={glossary} glossary={loadGlossary('en')} />
+      <Glossary
+        bind:this={glossary}
+        glossary={loadGlossary('en')}
+        on:open-item={jettyMenu.scrollToTop}
+      />
     {/if}
 
     {#if currentMenuItem.id === 'gift-box'}

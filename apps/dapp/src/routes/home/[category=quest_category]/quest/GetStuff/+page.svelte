@@ -62,10 +62,7 @@
     unsubscribeWebSocket = $webSocketClient.onMessage(async (message) => {
       if (message.type === 'XrdDepositedToAccount') {
         messageApi.markAsSeen(message.id)
-        if (xrdDepositLoading) {
-          xrdDepositLoading = false
-          quest.actions.next()
-        }
+        skipXrdDepositPage.set(true)
       }
     })
   }
@@ -199,7 +196,22 @@
 
 <Quest
   id={data.id}
+  on:render={(ev) => {
+    xrdDepositLoading = true
+    if (ev.detail === '15' && !$skipXrdDepositPage) {
+      userApi
+        .hasReceivedXrd()
+        .map((received) => {
+          xrdDepositLoading = false
+          skipXrdDepositPage.set(received)
+        })
+        .mapErr(() => {
+          xrdDepositLoading = false
+        })
+    }
+  }}
   requirements={data.requirements}
+  nextQuest={data.nextQuest}
   bind:this={quest}
   let:next
   steps={[
@@ -449,7 +461,7 @@
     {/if}
 
     <div class="center">
-      <Button on:click={directDepositXrd} loading={xrdDepositLoading}>
+      <Button on:click={directDepositXrd} loading={xrdDepositLoading} disabled={xrdDepositLoading}>
         {$i18n.t('quests:GetStuff.getXrd')}
       </Button>
     </div>

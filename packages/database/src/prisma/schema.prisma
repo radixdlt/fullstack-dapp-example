@@ -175,6 +175,7 @@ model Audit {
   date        DateTime  @default(now())
   type        AuditType
   xrdUsdValue Decimal
+  xrdPrice    Decimal   @default(1)
   data        Json      @default("{}")
 
   user User @relation(fields: [userId], references: [id])

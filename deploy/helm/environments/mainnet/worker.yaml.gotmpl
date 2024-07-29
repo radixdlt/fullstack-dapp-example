@@ -14,6 +14,9 @@ params:
   PUBLIC_NETWORK_ID: 1
   NOTIFICATION_INTERNAL_API_URL: http://notification-http-internal:3001
   GATEWAY_URL: "http://babylon-mainnet-active-ng.internal-dns:8080"
+  EVENT_WORKER_CONCURRENCY: 20
+  TRANSACTION_WORKER_CONCURRENCY: 20
+
 
 secrets:
   - external_secret_name: worker-postgres-user
@@ -45,6 +48,12 @@ secrets:
     aws_secret_name: "rtlj-prod/eks/radquest/mainnet/worker-owner-primary"
     aws_secret_key: "mnemonic"
     secret_key: "mnemonic"
+  
+  - external_secret_name: worker-letty-dapp-mnemonic
+    env_variable: "LETTYSWAP_DAPP_DEFINITION_MNEMONIC"
+    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/worker-letty-dapp-definition-primary"
+    aws_secret_key: "mnemonic"
+    secret_key: "mnemonic"
 
   - external_secret_name: worker-mailer-lite-api-key
     env_variable: "MAILER_LITE_API_KEY"
@@ -64,9 +73,22 @@ autoscaling:
 
 resources:
   requests:
-    cpu: 100m
+    cpu: 500m
     memory: 1Gi
 
 pm2_metrics:
   enabled: true
   port: 9209
+
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - radquest-worker
+          topologyKey: "kubernetes.io/hostname"

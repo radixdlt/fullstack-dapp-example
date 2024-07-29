@@ -1,21 +1,13 @@
-import BigNumber from 'bignumber.js'
 import { QuestId } from 'content'
-import { EventId, MessageApi } from 'common'
-import { AuditType, Prisma, PrismaClient } from 'database'
-import { ResultAsync, ok, err } from 'neverthrow'
-import { TokenPriceClient } from '../token-price-client'
+import { EventId } from 'common'
+import { Prisma, PrismaClient } from 'database'
+import { ResultAsync } from 'neverthrow'
 import { WorkerError, WorkerOutputError } from '../_types'
 
 export type DbOperation = () => Prisma.PrismaPromise<any>
 
 export type DbTransactionBuilder = ReturnType<typeof DbTransactionBuilder>
-export const DbTransactionBuilder = ({
-  dbClient,
-  tokenPriceClient
-}: {
-  dbClient: PrismaClient
-  tokenPriceClient: TokenPriceClient
-}) => {
+export const DbTransactionBuilder = ({ dbClient }: { dbClient: PrismaClient }) => {
   const operations: DbOperation[] = []
 
   const add = (...values: DbOperation[]) => {

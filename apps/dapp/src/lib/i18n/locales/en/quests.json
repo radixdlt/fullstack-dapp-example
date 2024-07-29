@@ -1,5 +1,6 @@
 {
   "copy": "Copy",
+  "copied": "Copied!",
   "rewards": "Rewards",
   "requirementsDescription": "Complete the tasks below to claim your rewards. You can always go back and check the information if you’re not sure how.",
   "requirementsTitle": "What you'll do",
@@ -25,7 +26,7 @@
     "comingSoon": "Coming Soon",
     "inProgress": "Continue",
     "claimRewards": "Claim Rewards",
-    "complete": "View Again"
+    "complete": "Recap"
   },
   "Welcome": {
     "hi": "Meet Jetty",
@@ -58,12 +59,12 @@
       "ConnectWallet": "Log in to RadQuest with your Radix Wallet",
       "DownloadWallet": "Download the Radix Wallet mobile app, create your first Account"
     },
-    "usernameCompleted": "Completed",
+    "usernameCompleted": "Updated!",
     "walletDownloadPage": "Go to Wallet Download Page",
     "title": "Get the Radix Wallet",
-    "description": "Your key to assets and dApps and assets on Radix",
+    "description": "Your key to assets and dApps on Radix",
     "introDescription": "Get the Radix Wallet to use with RadQuest or any other dApp built on Radix.",
-    "confirmSetUsername": "Confirm"
+    "confirmSetUsername": "Update"
   },
   "GetStuff": {
     "requirements": {
@@ -98,7 +99,7 @@
       "RadMorphsQuiz": "Learn about rewards, from Gift Boxes to RadMorphs"
     },
     "description": "How to collect and combine",
-    "introDescription": "How to collect and combine on RadQuest to make the best and most rare RadMorph NFTs"
+    "introDescription": "How to collect and combine on RadQuest to make the best and most rare RadMorph NFTs."
   },
   "TransferTokens": {
     "requirements": {
@@ -116,7 +117,7 @@
     "description": "Help the network, earn APY",
     "introDescription": "Put your XRD to work helping secure the Radix Network – and earning you some yield",
     "requirements": {
-      "XrdStaked": "Stake your XRD on dashboard"
+      "XrdStaked": "Stake XRD using the Radix Dashboard"
     }
   },
   "Thorswap": {
@@ -128,7 +129,7 @@
     }
   },
   "QuestTogether": {
-    "title": "Invite Your Friends Quest",
+    "title": "Invite Your Friends",
     "description": "Invite your friends to give them XRD tokens and earn rewards!",
     "rewardsTitle": "Party rewards Status",
     "rewardTiersTab": "Reward Tiers",
@@ -141,10 +142,10 @@
     "referralsSoFar": "Referrals so far!",
     "referralsSoFarHeader": "You have {{count}} referrals so far!",
     "referralsSoFarHeader_one": "You have {{count}} referral so far!",
-    "referralsSoFarDescription": "These friends have signed up using your link and completed the basic quests. You each get 10 XRD!",
+    "referralsSoFarDescription": "These friends have signed up using your link and completed the basic quests. You each get 25 XRD!",
     "alreadyClaimed": "Already claimed: {{amount}} XRD",
-    "info_1": "<strong>Your friends will get 10 XRD</strong> when they use your referral link and complete all basic quests.",
-    "info_2": "<strong>You’ll also receive 10 XRD</strong> for each referral and you’ll win <strong>extra rewards</strong> at each milestone (5, 10, 15 and 20 referrals)!",
+    "info_1": "<strong>Your friends will get 25 XRD</strong> when they use your referral link and complete all basic quests.",
+    "info_2": "<strong>You’ll also receive 25 XRD</strong> for each referral and you’ll win <strong>extra rewards</strong> at each milestone (1, 5 and 10 referrals)!",
     "shareYourLink": "Share Your Referral Link:",
     "yourLevel": "You are at {{level}} Level!",
     "referMore": "Refer {{count}} more friends to claim your rewards and progress to {{nextLevel}}!",
@@ -153,9 +154,9 @@
     "GoldLevel": "Gold",
     "SuperLevel": "Super",
     "rewardsClaimed": "REWARDS CLAIMED",
-    "unlockedSuperLevel": "You have unlocked the secret tier!",
+    "unlockedSuperLevel": "Wow! Referral limit reached!",
     "rewardsWaiting": "You have rewards waiting for you! Don’t forget to claim!",
-    "unlockedSuperLevelInfo": "Please email {{mail}} to claim your XRD tokens.",
+    "unlockedSuperLevelInfo": "If you would like to apply for an invite-only referral program, please email <a href=\"mailto: hello@radixdlt.com\">hello@radixdlt.com</a>",
     "SuperLevelInfo": "Want to keep referring? Contact Radix to find out about our influencer reward scheme!",
     "SuperLevelButton": "Want to keep referring? Contact Radix to find out about our influencer reward scheme!",
     "progressSuperLevel": "{{count}}+ referrals",

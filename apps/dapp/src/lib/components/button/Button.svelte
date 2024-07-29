@@ -17,11 +17,14 @@
     class:loading
     target={isExternal ? '_blank' : ''}
     data-sveltekit-preload-data
+    on:click
   >
-    <slot />
-    {#if isExternal}
-      <ExternalLink --fill="white" />
-    {/if}
+    <div class:hide-content={loading}>
+      <slot />
+      {#if isExternal}
+        <ExternalLink --fill="white" />
+      {/if}
+    </div>
   </a>
 {:else}
   <button on:click class={theme} class:disabled class:loading>
@@ -48,9 +51,11 @@
     height: 2.7rem;
     min-width: var(--min-width, 7rem);
     width: fit-content;
-    @media (hover: hover) {
-      &:hover:not(.disabled) {
-        filter: brightness(0.8);
+    @include desktop {
+      @media (hover: hover) {
+        &:hover:not(.disabled) {
+          filter: brightness(0.8);
+        }
       }
     }
     transition: filter 0.2s ease-in-out;
@@ -95,23 +100,23 @@
   }
 
   .loading.primary::after {
-    border: 0.2rem solid var(--color-light);
-    border-top-color: var(--color-primary);
+    border: 0.2rem solid var(--color-light-translucent);
+    border-top-color: var(--color-light);
   }
 
   .loading.secondary::after {
-    border: 0.2rem solid var(--color-dark);
-    border-top-color: var(--color-secondary);
+    border: 0.2rem solid var(--color-dark-translucent);
+    border-top-color: var(--color-dark);
   }
 
   .loading.light::after {
-    border: 0.2rem solid var(--color-dark);
-    border-top-color: var(--color-background-light);
+    border: 0.2rem solid var(--color-dark-translucent);
+    border-top-color: var(--color-dark);
   }
 
   .loading.dark::after {
-    border: 0.2rem solid var(--color-light);
-    border-top-color: var(--color-background-dark);
+    border: 0.2rem solid var(--color-light-translucent);
+    border-top-color: var(--color-light);
   }
 
   @keyframes spin {

@@ -4,9 +4,11 @@
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import ProgressCard from '../progress-card/ProgressCard.svelte'
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher, onMount, tick } from 'svelte'
   import NavigationFooter from './NavigationFooter.svelte'
   import { writable, type Writable } from 'svelte/store'
+  import ScrollIndicator from '../scroll-indicator/ScrollIndicator.svelte'
+  import { isMobile } from '@radixdlt/radix-dapp-toolkit'
 
   export let title: string
   export let steps: number
@@ -47,6 +49,36 @@
   let direction = writable<'right' | 'left'>()
 
   let footerNextLoading = writable(false)
+
+  const canScrollDown = () => {
+    if (content) {
+      if (content.scrollHeight - content.scrollTop > content.clientHeight) return true
+    }
+    return false
+  }
+
+  let canScroll = false
+
+  const checkScroll = () => {
+    canScroll = canScrollDown()
+  }
+
+  onMount(() => {
+    if (!isMobile()) return
+
+    checkScroll()
+
+    content.addEventListener('scroll', checkScroll)
+
+    return () => {
+      content.removeEventListener('scroll', checkScroll)
+    }
+  })
+
+  $: {
+    progress
+    if (isMobile()) tick().then(checkScroll)
+  }
 </script>
 
 <ProgressCard bind:this={card} {steps} bind:progress disabled={cardDisabled}>
@@ -61,12 +93,17 @@
   </div>
 
   <svelte:fragment slot="content">
-    <div bind:this={content} class="card content">
-      {#key progress}
-        <div>
-          <slot {progress} />
-        </div>
-      {/key}
+    <div class="content-wrapper">
+      {#if canScroll}
+        <ScrollIndicator />
+      {/if}
+      <div class="card content" bind:this={content}>
+        {#key progress}
+          <div>
+            <slot {progress} />
+          </div>
+        {/key}
+      </div>
     </div>
 
     {#if progress === 0}
@@ -116,23 +153,25 @@
     }
   }
 
-  .card.content {
-    border-radius: 0;
-
-    padding: 24px;
-  }
-
-  .content {
-    box-shadow: none;
+  .content-wrapper {
     display: grid;
-    grid-area: 3 / 1;
-
+    position: relative;
     > * {
       grid-area: 1 / 1;
     }
+    grid-area: 3 / 1;
+    overflow: hidden;
+  }
+
+  .content {
+    border-radius: 0;
+    padding: 24px;
+    box-shadow: none;
 
     overflow-y: auto;
     overflow-x: hidden;
+
+    overscroll-behavior: none;
 
     :global(p) > :global(img) {
       max-width: calc(100% + 2 * var(--spacing-2xl));
