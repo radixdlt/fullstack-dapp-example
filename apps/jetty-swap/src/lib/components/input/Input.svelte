@@ -13,6 +13,8 @@
 
 <input
   {disabled}
+  type="number"
+  inputmode="numeric"
   bind:this={ref}
   class={`text-title ${state}`}
   {placeholder}
@@ -20,11 +22,18 @@
   bind:value
 />
 
-<style>
+<style lang="scss">
   input {
     width: var(--width, 100%);
     height: 40px;
     color: var(--color-dark);
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    &:focus::placeholder {
+      color: transparent;
+    }
   }
 
   .error {
