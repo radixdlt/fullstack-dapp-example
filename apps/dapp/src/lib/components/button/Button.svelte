@@ -19,7 +19,7 @@
     data-sveltekit-preload-data
     on:click
   >
-    <div class:hide-content={loading}>
+    <div class:hide-content={loading} class="link-content">
       <slot />
       {#if isExternal}
         <ExternalLink --fill="white" />
@@ -35,6 +35,11 @@
 {/if}
 
 <style lang="scss">
+  .link-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
   a,
   button {
     cursor: pointer;
