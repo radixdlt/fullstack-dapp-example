@@ -15,8 +15,10 @@
   export let data: LayoutData
 
   let referredByCookie: string | undefined
+  let mounted = false
 
   onMount(() => {
+    mounted = true
     referredByCookie = useCookies('referredBy').get()
 
     if ($page.params.category === 'advanced') {
@@ -72,6 +74,9 @@
       ([id, _]) => questCardState[id] !== 'locked' && questCardState[id] !== 'completed'
     )?.[0]
 
+    console.log(_quests)
+    console.log(earliestUnlockedQuest)
+
     if (earliestUnlockedQuest)
       carousel.scrollToIndex(_quests.findIndex(([id, _]) => id === earliestUnlockedQuest))
     else carousel.scrollToIndex(0)
@@ -90,7 +95,7 @@
     $scrollToQuestIndex = null
   }
 
-  $: if ($category === 'advanced') {
+  $: if ($category === 'advanced' && mounted) {
     markNotificationAsSeen('basicQuestsComplete')
   }
 </script>
