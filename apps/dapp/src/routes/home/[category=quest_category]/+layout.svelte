@@ -9,14 +9,16 @@
   import { i18n } from '$lib/i18n/i18n'
   import { markNotificationAsSeen } from '$lib/notifications'
   import { useCookies } from '$lib/utils/cookies'
-  import { onMount } from 'svelte'
+  import { onMount, tick } from 'svelte'
   import { derived } from 'svelte/store'
 
   export let data: LayoutData
 
   let referredByCookie: string | undefined
+  let mounted = false
 
   onMount(() => {
+    mounted = true
     referredByCookie = useCookies('referredBy').get()
 
     if ($page.params.category === 'advanced') {
@@ -81,7 +83,7 @@
 
   $: {
     if (carousel && $category) {
-      scrollToEarliestQuest()
+      tick().then(scrollToEarliestQuest)
     }
   }
 
@@ -90,7 +92,7 @@
     $scrollToQuestIndex = null
   }
 
-  $: if ($category === 'advanced') {
+  $: if ($category === 'advanced' && mounted) {
     markNotificationAsSeen('basicQuestsComplete')
   }
 </script>
