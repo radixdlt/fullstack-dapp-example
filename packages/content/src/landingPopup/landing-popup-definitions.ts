@@ -42,8 +42,16 @@ export const UtmSourceLanding = {
   'CoinGecko-Banner-Website': { schema: LandingPopupSchema.Paid, data: { source: 'CoinGecko' } },
   'CoinGecko-Banner-App': { schema: LandingPopupSchema.Paid, data: { source: 'CoinGecko' } },
   'CoinDesk-Banner-Website': { schema: LandingPopupSchema.Paid, data: { source: 'CoinGecko' } },
+  'CoinTelegraph-Sidebar': { schema: LandingPopupSchema.Paid, data: { source: 'CoinTelegraph' } },
+  'CoinTelegraph-Leaderboard': {
+    schema: LandingPopupSchema.Paid,
+    data: { source: 'CoinTelegraph' }
+  },
+  'CoinTelegraph-Between': { schema: LandingPopupSchema.Paid, data: { source: 'CoinTelegraph' } },
+  'CoinTelegraph-Mainpage': { schema: LandingPopupSchema.Paid, data: { source: 'CoinTelegraph' } },
   'DeCrypt-Banner-Website': { schema: LandingPopupSchema.Paid, data: { source: 'DeCrypt' } },
   'CryptoRank-Banner-Website': { schema: LandingPopupSchema.Paid, data: { source: 'CryptoRank' } },
+  'CryptoRank-Native-Banner': { schema: LandingPopupSchema.Paid, data: { source: 'CryptoRank' } },
   'BTCEcho-Banner-Website': { schema: LandingPopupSchema.Paid, data: { source: 'BTCEcho' } },
   CoinDesk: { schema: LandingPopupSchema.Paid, data: { source: 'CoinDesk' } },
   CoinTelegraph: { schema: LandingPopupSchema.Paid, data: { source: 'CoinTelegraph' } },
@@ -54,11 +62,21 @@ export const UtmSourceLanding = {
   Blockmates: { schema: LandingPopupSchema.Paid, data: { source: 'Blockmates' } },
   CoinAcademy: { schema: LandingPopupSchema.Paid, data: { source: 'CoinAcademy' } },
   JournalDuCoin: { schema: LandingPopupSchema.Paid, data: { source: 'JournalDuCoin' } },
+  CoinGape: { schema: LandingPopupSchema.Paid, data: { source: 'CoinGape' } },
+  CryptoPotato: { schema: LandingPopupSchema.Paid, data: { source: 'CryptoPotato' } },
+  CryptoNews: { schema: LandingPopupSchema.Paid, data: { source: 'CryptoNews' } },
+  Techtimes: { schema: LandingPopupSchema.Paid, data: { source: 'Techtimes' } },
+  CryptoDaily: { schema: LandingPopupSchema.Paid, data: { source: 'CryptoDaily' } },
   Galxe: { schema: LandingPopupSchema.Paid, data: { source: 'Galxe' } },
   Zealy: { schema: LandingPopupSchema.Paid, data: { source: 'Zealy' } },
+  Announcement: { schema: LandingPopupSchema.Paid, data: { source: 'Radix' } },
+  BlockWorks2: { schema: LandingPopupSchema.Paid, data: { source: 'BlockWorks' } },
   TLDR: { schema: LandingPopupSchema.Paid, data: { source: 'TLDR' } },
   Ethermail: { schema: LandingPopupSchema.Paid, data: { source: 'Ethermail' } },
-  Blocmates: { schema: LandingPopupSchema.Paid, data: { source: 'Blockmates' } },
+  Blocmates: { schema: LandingPopupSchema.Paid, data: { source: 'Blocmates' } },
+  CryptoRank: { schema: LandingPopupSchema.Paid, data: { source: 'CryptoRank' } },
+  BeInCrypto: { schema: LandingPopupSchema.Paid, data: { source: 'BeInCrypto' } },
+  Mycelium: { schema: LandingPopupSchema.Paid, data: { source: 'Mycelium' } },
   altcoindaily: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Altcoin Daily' } },
   datadash: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Data Dash' } },
   larkdavis: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Lark Davis' } },
@@ -110,5 +128,12 @@ export const UtmSourceLanding = {
   crypto2go: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Bitcoin2Go' } },
   hunter: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Coin Hunter' } },
   arreat: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Arreat Summit' } },
-  mag: { schema: LandingPopupSchema.Influencer, data: { influencer: 'MAG COIN' } }
+  andrew: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Andrew Moh' } },
+  wrubel: { schema: LandingPopupSchema.Influencer, data: { influencer: 'Michael Wrubel' } },
+  magcoin: { schema: LandingPopupSchema.Influencer, data: { influencer: 'BMS' } },
+  digitalassetnews: {
+    schema: LandingPopupSchema.Influencer,
+    data: { influencer: 'Digital Asset News' }
+  },
+  wendy: { schema: LandingPopupSchema.Influencer, data: { influencer: 'WendyO' } }
 } as const
