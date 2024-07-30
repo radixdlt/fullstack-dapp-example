@@ -6,10 +6,10 @@ export const createWellKnownResponse = () =>
       callbackPath: '/connect',
       dApps: [
         {
-          dAppDefinitionAddress: config.dapp.accounts.dAppDefinition
+          dAppDefinitionAddress: config.dapp.accounts.dAppDefinition.address
         },
         {
-          dAppDefinitionAddress: config.dapp.accounts.jetty
+          dAppDefinitionAddress: config.dapp.accounts.jetty.address
         }
       ]
     }),
