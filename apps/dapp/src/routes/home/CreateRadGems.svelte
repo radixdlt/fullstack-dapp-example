@@ -1,64 +1,22 @@
 <script lang="ts" context="module">
-  const getRadgemKeystoreAddress = (details: StateEntityDetailsResponseItemDetails) => {
-    if (details!.type === 'Component') {
-      return (details!.state! as any).fields.find(
-        (field: any) => field.field_name === 'radgem_records'
-      )!.value as string
-    }
-  }
-
-  const getKeyValueStoreKeys = (keyStoreAddress: string) =>
-    ResultAsync.fromPromise(
-      GatewayApi(publicConfig.networkId).gatewayApiClient.state.innerClient.keyValueStoreKeys({
-        stateKeyValueStoreKeysRequest: {
-          key_value_store_address: keyStoreAddress!
+  const getKeyValueStoreData = (userId: string) => {
+    return ResultAsync.fromPromise(
+      GatewayApi(publicConfig.networkId).gatewayApiClient.state.innerClient.keyValueStoreData({
+        stateKeyValueStoreDataRequest: {
+          key_value_store_address: publicConfig.components.radgemRecordsKeyValueStore,
+          keys: [
+            {
+              key_json: {
+                value: userId,
+                kind: 'String',
+                type_name: 'UserId'
+              }
+            }
+          ]
         }
       }),
       (e) => e as Error
     )
-
-  const getRawHexFromKeyValueStoreKeys =
-    (userId: string) =>
-    (keys: StateKeyValueStoreKeysResponse): ResultAsync<string, string> => {
-      const userKey = keys.items.find(
-        ({ key }) =>
-          key.programmatic_json.type_name === 'UserId' &&
-          key.programmatic_json.kind === 'String' &&
-          key.programmatic_json.value === userId
-      )
-
-      return userKey ? okAsync(userKey.key.raw_hex) : errAsync('No claim available')
-    }
-
-  const getKeyValueStoreData = (keyStoreAddress: string) => (rawHex: string) => {
-    if (!rawHex) {
-      return errAsync('No claim available')
-    } else {
-      return ResultAsync.fromPromise(
-        GatewayApi(publicConfig.networkId).gatewayApiClient.state.innerClient.keyValueStoreData({
-          stateKeyValueStoreDataRequest: {
-            key_value_store_address: keyStoreAddress,
-            keys: [
-              {
-                key_hex: rawHex
-              },
-              {
-                key_json: {
-                  kind: 'Tuple',
-                  fields: [
-                    {
-                      kind: 'U32',
-                      value: '1'
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        }),
-        (e) => e as Error
-      )
-    }
   }
 
   const claimAvailableInKeyValueStore = (
@@ -82,22 +40,7 @@
   }
 
   export const checkClaimAvailable = (userId: string) =>
-    pipe(
-      () =>
-        GatewayApi(publicConfig.networkId).callApi('getEntityDetailsVaultAggregated', [
-          publicConfig.components.refinery
-        ]),
-      (result) => result.map(([{ details }]) => getRadgemKeystoreAddress(details!)),
-      (result) =>
-        result.andThen((keyStoreAddress) =>
-          pipe(
-            () => getKeyValueStoreKeys(keyStoreAddress!),
-            (result) => result.andThen(getRawHexFromKeyValueStoreKeys(userId)),
-            (result) => result.andThen(getKeyValueStoreData(keyStoreAddress!)),
-            (result) => result.andThen(claimAvailableInKeyValueStore)
-          )()
-        )
-    )()
+    getKeyValueStoreData(userId).andThen(claimAvailableInKeyValueStore)
 </script>
 
 <script lang="ts">
@@ -111,8 +54,6 @@
   import { createEventDispatcher, onMount } from 'svelte'
   import { ResultAsync, errAsync, okAsync } from 'neverthrow'
   import type {
-    StateEntityDetailsResponseItemDetails,
-    StateKeyValueStoreKeysResponse,
     StateKeyValueStoreDataResponse,
     ProgrammaticScryptoSborValueTuple
   } from '@radixdlt/babylon-gateway-api-sdk'
