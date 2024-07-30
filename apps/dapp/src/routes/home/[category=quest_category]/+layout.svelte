@@ -9,7 +9,7 @@
   import { i18n } from '$lib/i18n/i18n'
   import { markNotificationAsSeen } from '$lib/notifications'
   import { useCookies } from '$lib/utils/cookies'
-  import { onMount } from 'svelte'
+  import { onMount, tick } from 'svelte'
   import { derived } from 'svelte/store'
 
   export let data: LayoutData
@@ -74,9 +74,6 @@
       ([id, _]) => questCardState[id] !== 'locked' && questCardState[id] !== 'completed'
     )?.[0]
 
-    console.log(_quests)
-    console.log(earliestUnlockedQuest)
-
     if (earliestUnlockedQuest)
       carousel.scrollToIndex(_quests.findIndex(([id, _]) => id === earliestUnlockedQuest))
     else carousel.scrollToIndex(0)
@@ -86,7 +83,7 @@
 
   $: {
     if (carousel && $category) {
-      scrollToEarliestQuest()
+      tick().then(scrollToEarliestQuest)
     }
   }
 
