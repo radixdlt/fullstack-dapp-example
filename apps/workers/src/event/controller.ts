@@ -277,8 +277,16 @@ export const EventWorkerController = ({
 
     const completeQuestRequirement = (questId: QuestId) =>
       ResultAsync.fromPromise(
-        dbClient.completedQuestRequirement.create({
-          data: {
+        dbClient.completedQuestRequirement.upsert({
+          where: {
+            questId_userId_requirementId: {
+              userId,
+              questId,
+              requirementId: type
+            }
+          },
+          update: {},
+          create: {
             userId,
             questId,
             requirementId: type
