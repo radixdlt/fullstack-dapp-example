@@ -20,9 +20,7 @@
 
 <Quest
   bind:this={quest}
-  id={data.id}
-  requirements={data.requirements}
-  nextQuest={data.nextQuest}
+  {...data.questProps}
   steps={[
     {
       id: '0',

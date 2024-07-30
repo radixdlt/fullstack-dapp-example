@@ -49,7 +49,7 @@
 </script>
 
 <Quest
-  {...data}
+  {...data.questProps}
   bind:this={quest}
   steps={[
     { id: '0', type: 'regular' },

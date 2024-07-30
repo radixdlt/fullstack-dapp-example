@@ -71,9 +71,7 @@
 
 <!-- svelte-ignore missing-declaration -->
 <Quest
-  id={data.id}
-  requirements={data.requirements}
-  nextQuest={data.nextQuest}
+  {...data.questProps}
   bind:this={quest}
   on:completed={() => {
     //@ts-ignore

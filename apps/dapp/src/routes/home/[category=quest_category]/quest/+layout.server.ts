@@ -93,6 +93,12 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
       requirements,
       text: quest.text,
       rewards: quest.rewards,
-      nextQuest: (quest as QuestDefinition).nextQuest
+      nextQuest: (quest as QuestDefinition).nextQuest,
+      questProps: {
+        id,
+        requirements,
+        nextQuest: (quest as QuestDefinition).nextQuest,
+        status: questStatus[id]?.status ?? $Enums.QuestStatus['IN_PROGRESS']
+      }
     }
   })

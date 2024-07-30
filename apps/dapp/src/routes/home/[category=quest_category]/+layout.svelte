@@ -73,7 +73,7 @@
     )?.[0]
 
     if (earliestUnlockedQuest)
-      carousel.scrollToIndex(Object.keys($quests).indexOf(earliestUnlockedQuest))
+      carousel.scrollToIndex(_quests.findIndex(([id, _]) => id === earliestUnlockedQuest))
     else carousel.scrollToIndex(0)
   }
 

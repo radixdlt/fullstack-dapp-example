@@ -115,9 +115,9 @@ export const Addresses = (networkId: number) => {
           superAdminBadgeAddress:
             'resource_rdx1tkpeanv6tr8pyke0hccz6llrml0f2y7vl4qfr25j6zecmtynns5rec',
           heroBadgeAddress: 'resource_rdx1n2mvky7na57d832lypd9xy5ftxt7lynu3flyn084gfncayshmmdwga',
-          kycBadgeAddress: 'resource_rdx1ng0efwfwnkp32t29eju0t0qm4m29385p9m7u5gfuatvz2fk3unjpd0',
+          kycBadgeAddress: 'resource_rdx1n2ymmpx7xtjl9ttk9ltzx5c642neyknkajcsmxc5sdnm6h300atx5m',
           instapassBadgeAddress:
-            'resource_rdx1ng0efwfwnkp32t29eju0t0qm4m29385p9m7u5gfuatvz2fk3unjpd0'
+            'resource_rdx1n2ymmpx7xtjl9ttk9ltzx5c642neyknkajcsmxc5sdnm6h300atx5m'
         },
         resources: {
           elementAddress: 'resource_rdx1t46p7mnc9kg4mq4tk2sdtp5f0gp5mscpjruethv3xxtx9z6xz23u56',

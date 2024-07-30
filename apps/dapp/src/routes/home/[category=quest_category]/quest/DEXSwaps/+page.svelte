@@ -65,7 +65,6 @@
 
 <Quest
   bind:this={quest}
-  id={data.id}
   on:render={({ detail }) => {
     if (detail === '18' || detail === '5') {
       if ($user?.accountAddress) {
@@ -76,8 +75,7 @@
       }
     }
   }}
-  requirements={data.requirements}
-  nextQuest={data.nextQuest}
+  {...data.questProps}
   steps={[
     { id: '0', type: 'regular' },
     { id: '1', type: 'regular' },

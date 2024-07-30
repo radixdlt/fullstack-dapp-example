@@ -195,7 +195,6 @@
 </script>
 
 <Quest
-  id={data.id}
   on:render={(ev) => {
     xrdDepositLoading = true
     if (ev.detail === '15' && !$skipXrdDepositPage) {
@@ -210,8 +209,7 @@
         })
     }
   }}
-  requirements={data.requirements}
-  nextQuest={data.nextQuest}
+  {...data.questProps}
   bind:this={quest}
   let:next
   steps={[

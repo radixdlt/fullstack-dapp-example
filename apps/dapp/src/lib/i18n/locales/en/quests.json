@@ -107,7 +107,7 @@
     },
     "title": "Transfer Tokens",
     "description": "Transfer stuff using the Radix Wallet",
-    "introDescription": "Use the Radix Wallet’s transfer feature to send tokens, NFTs, and any other kind of asset to different Accounts and other people.",
+    "introDescription": "Use the Radix Wallet’s transfer feature to send assets to other people's Accounts.",
     "copyTextButton_copy": "Copy",
     "copyTextButton_copied": "Copied!",
     "getClams": "Claim Clams"
@@ -123,7 +123,7 @@
   "Thorswap": {
     "title": "Bridge Tokens with THORSwap",
     "description": "Move assets in and out of Radix",
-    "introDescription": "Thorswap is a decentralized exchange that allows you to swap tokens across different blockchains. Learn more about Thorswap and how to bridge tokens.",
+    "introDescription": "Learn more about THORSwap and how to bridge assets to and from Radix.",
     "requirements": {
       "MayaRouterWithdrawEvent": "Do at least one bridge/swap of >$50 value"
     }
@@ -142,10 +142,10 @@
     "referralsSoFar": "Referrals so far!",
     "referralsSoFarHeader": "You have {{count}} referrals so far!",
     "referralsSoFarHeader_one": "You have {{count}} referral so far!",
-    "referralsSoFarDescription": "These friends have signed up using your link and completed the basic quests. You each get 25 XRD!",
+    "referralsSoFarDescription": "These friends have signed up using your link and completed the basic quests. You each get 30 XRD!",
     "alreadyClaimed": "Already claimed: {{amount}} XRD",
-    "info_1": "<strong>Your friends will get 25 XRD</strong> when they use your referral link and complete all basic quests.",
-    "info_2": "<strong>You’ll also receive 25 XRD</strong> for each referral and you’ll win <strong>extra rewards</strong> at each milestone (1, 5 and 10 referrals)!",
+    "info_1": "<strong>Your friends will get 30 XRD</strong> when they use your referral link and complete all basic quests.",
+    "info_2": "<strong>You’ll also receive 30 XRD</strong> for each referral and you’ll win <strong>extra rewards</strong> at each milestone (1, 5 and 10 referrals)!",
     "shareYourLink": "Share Your Referral Link:",
     "yourLevel": "You are at {{level}} Level!",
     "referMore": "Refer {{count}} more friends to claim your rewards and progress to {{nextLevel}}!",

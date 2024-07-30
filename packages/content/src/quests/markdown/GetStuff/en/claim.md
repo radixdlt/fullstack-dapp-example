@@ -1,4 +1,4 @@
-You already know how to handle a transaction to claim your rewards, right?
+You already know how to handle a **transaction** to claim your rewards!
 
 Just tap the **Claim** button below and you’ll see a transaction in your Radix Wallet to deposit these rewards to your Account.
 
