@@ -1,6 +1,6 @@
 import MailerLite from '@mailerlite/mailerlite-nodejs'
-import { type AppLogger, createApiError } from '../helpers'
-import { ResultAsync } from 'neverthrow'
+import { type AppLogger } from '../helpers'
+import { ok, ResultAsync } from 'neverthrow'
 
 export type MailerLiteModel = ReturnType<typeof MailerLiteModel>
 export const MailerLiteModel =
@@ -19,7 +19,7 @@ export const MailerLiteModel =
         hasFinishedBasicQuests,
         newsletter
       }: { hasFinishedBasicQuests?: boolean; newsletter?: boolean } = {}
-    ) => {
+    ): ResultAsync<undefined, never> => {
       const groups = [groupId]
       if (newsletter) {
         groups.push(generalListGroupId)
@@ -34,16 +34,26 @@ export const MailerLiteModel =
             : {},
           groups
         }),
-        createApiError('failed to add subscriber to mailerlite', 500)
-      ).map((data) => {
-        logger.debug({
-          method: 'MailerLiteModel.addOrUpdate',
-          email,
-          newsletter,
-          hasFinishedBasicQuests
+        (jsError) => {
+          logger.error({
+            method: 'MailerLiteModel.addOrUpdate',
+            email,
+            newsletter,
+            jsError,
+            hasFinishedBasicQuests
+          })
+        }
+      )
+        .map(() => {
+          logger.debug({
+            method: 'MailerLiteModel.addOrUpdate',
+            email,
+            newsletter,
+            hasFinishedBasicQuests
+          })
+          return undefined
         })
-        return data
-      })
+        .orElse(() => ok(undefined))
     }
 
     return { addOrUpdate, mailerlite }
