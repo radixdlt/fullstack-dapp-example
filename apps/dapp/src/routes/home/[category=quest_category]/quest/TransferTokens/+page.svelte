@@ -4,7 +4,6 @@
   import type { PageData } from './$types'
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
   import { onDestroy, onMount } from 'svelte'
-  import { isMobile } from '$lib/utils/is-mobile'
   import CopyTextBox from '$lib/components/copy-text-box/CopyTextBox.svelte'
   import QR from '@svelte-put/qr/svg/QR.svelte'
   import { shortenAddress } from '$lib/utils/shorten-address'
@@ -19,6 +18,7 @@
   import { user } from '../../../../../stores'
 
   import { checkAccountHasClams, getClams } from '$lib/helpers/get-clams'
+  import { isMobile } from '@radixdlt/radix-dapp-toolkit'
 
   export let data: PageData
 

@@ -3,7 +3,6 @@ import { config } from '$lib/config'
 export const createWellKnownResponse = () =>
   new Response(
     JSON.stringify({
-      callbackPath: '/connect',
       dApps: [
         {
           dAppDefinitionAddress: config.dapp.accounts.dAppDefinition.address

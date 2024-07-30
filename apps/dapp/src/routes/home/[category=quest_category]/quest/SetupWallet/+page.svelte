@@ -2,7 +2,6 @@
   import { onMount } from 'svelte'
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
-  import { isMobile } from '$lib/utils/is-mobile'
   import { useCookies } from '$lib/utils/cookies'
   import { derived, writable } from 'svelte/store'
   import type { Quests } from 'content'
@@ -17,6 +16,7 @@
   import { htmlReplace } from '$lib/helpers/html-replace'
   import AppsFlyer from './AppsFlyer.svelte'
   import { markNotificationAsSeen } from '$lib/notifications'
+  import { isMobile } from '@radixdlt/radix-dapp-toolkit'
 
   export let data: PageData
 

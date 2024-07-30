@@ -1,7 +1,12 @@
 <script lang="ts">
   import '../../global.scss'
   import { onMount } from 'svelte'
-  import { DataRequestBuilder, RadixDappToolkit, Logger } from '@radixdlt/radix-dapp-toolkit'
+  import {
+    DataRequestBuilder,
+    RadixDappToolkit,
+    Logger,
+    isMobile
+  } from '@radixdlt/radix-dapp-toolkit'
   import { authApi } from '$lib/api/auth-api'
   import { userApi } from '$lib/api/user-api'
   import { ResultAsync } from 'neverthrow'
@@ -19,7 +24,6 @@
   import { useLocalStorage } from '$lib/utils/local-storage'
   import LandingPopup from './LandingPopup.svelte'
   import { page } from '$app/stores'
-  import { isMobile } from '$lib/utils/is-mobile'
   import type { LayoutData } from './$types'
   import { useCookies } from '$lib/utils/cookies'
   import Jetty from './Jetty.svelte'
