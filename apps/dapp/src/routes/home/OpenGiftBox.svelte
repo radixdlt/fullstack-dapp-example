@@ -4,30 +4,23 @@
   export const getRewards = (userId: string) =>
     pipe(
       () =>
-        gateway.callApi('getEntityDetailsVaultAggregated', [publicConfig.components.giftBoxOpener]),
-      (result) =>
-        result.andThen(([response]) => {
-          const keyValueStoreAddress = (
-            (response.details as StateEntityDetailsResponseComponentDetails).state as any
-          ).fields.find((field: any) => field.field_name === 'rewards_record').value
-
-          return ResultAsync.fromPromise(
-            gateway.gatewayApiClient.state.innerClient.keyValueStoreData({
-              stateKeyValueStoreDataRequest: {
-                key_value_store_address: keyValueStoreAddress,
-                keys: [
-                  {
-                    key_json: {
-                      kind: 'String',
-                      value: userId
-                    }
+        ResultAsync.fromPromise(
+          gateway.gatewayApiClient.state.innerClient.keyValueStoreData({
+            stateKeyValueStoreDataRequest: {
+              key_value_store_address: publicConfig.components.giftBoxRecordsKeyValueStore,
+              keys: [
+                {
+                  key_json: {
+                    kind: 'String',
+                    value: userId,
+                    type_name: 'UserId'
                   }
-                ]
-              }
-            }),
-            (e) => e as Error
-          )
-        }),
+                }
+              ]
+            }
+          }),
+          (e) => e as Error
+        ),
       (result) =>
         result.andThen((response) => {
           const openedBoxes = (response.entries[0]?.value.programmatic_json as any)?.elements
@@ -89,10 +82,7 @@
   import { i18n } from '$lib/i18n/i18n'
   import JettyMenuItemPage from './JettyMenuItemPage.svelte'
   import { sendTransaction } from '$lib/rdt'
-  import type {
-    FungibleResourcesCollectionItemVaultAggregated,
-    StateEntityDetailsResponseComponentDetails
-  } from '@radixdlt/babylon-gateway-api-sdk'
+  import type { FungibleResourcesCollectionItemVaultAggregated } from '@radixdlt/babylon-gateway-api-sdk'
   import Carousel from '$lib/components/carousel/Carousel.svelte'
   import { context } from '$lib/components/jetty-menu/JettyMenu.svelte'
   import { errAsync, okAsync, ResultAsync } from 'neverthrow'
