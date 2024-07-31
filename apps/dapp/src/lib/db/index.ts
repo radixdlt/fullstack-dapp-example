@@ -8,22 +8,20 @@ export type DbClient = typeof dbClient
 export const dbClient = new PrismaClient({
   datasourceUrl: `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`
 })
+  .$extends({
+    query: {
+      $allModels: {
+        async upsert({ args, query, model }) {
+          if (model === 'User')
+            args.create = {
+              ...args.create,
+              // String NonFungibleLocalId does not allow hyphens
+              id: crypto.randomUUID().replace(/-/g, '')
+            }
 
-dbClient.$extends({
-  query: {
-    $allModels: {
-      async upsert({ args, query, model }) {
-        if (model === 'User')
-          args.create = {
-            ...args.create,
-            // String NonFungibleLocalId does not allow hyphens
-            id: crypto.randomUUID().replace(/-/g, '')
-          }
-
-        return query(args)
+          return query(args)
+        }
       }
     }
-  }
-}) as PrismaClient
-
-if (readUrl) dbClient.$extends(readReplicas({ url: readUrl }))
+  })
+  .$extends(readReplicas({ url: readUrl })) as unknown as PrismaClient

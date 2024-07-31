@@ -22,9 +22,7 @@ const readUrl = POSTGRES_READ
 
 const dbClient = new PrismaClient({
   datasourceUrl: `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}?schema=public`
-})
-
-if (readUrl) dbClient.$extends(readReplicas({ url: readUrl }))
+}).$extends(readReplicas({ url: readUrl })) as unknown as PrismaClient
 
 const { systemQueue, eventQueue, transactionQueue } = getQueues(config.redis)
 const logger = appLogger
