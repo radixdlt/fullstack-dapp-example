@@ -27,8 +27,10 @@
   let hasError: boolean
   let confirmedWalletInstall = writable<boolean>(false)
   let walletIsLinked = writable(data.requirements.ConnectWallet?.isComplete)
+  const skipMobileWalletInstall = writable<boolean>(false)
 
   onMount(() => {
+    skipMobileWalletInstall.set(!isMobile())
     markNotificationAsSeen('loggedIn')
 
     if (isMobile()) {
@@ -151,7 +153,7 @@
     {
       id: '9a',
       type: 'regular',
-      skip: writable(!isMobile()),
+      skip: skipMobileWalletInstall,
       footer: {
         next: {
           enabled: confirmedWalletInstall
