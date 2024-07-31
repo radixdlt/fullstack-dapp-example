@@ -12,6 +12,7 @@
   },
   "license": "SEE LICENSE",
   "dependencies": {
+    "@prisma/extension-read-replicas": "^0.4.0",
     "bignumber.js": "^9.1.2",
     "content": "*",
     "database": "*",

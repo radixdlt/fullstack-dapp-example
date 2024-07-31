@@ -64,6 +64,7 @@
   "type": "module",
   "dependencies": {
     "@lottiefiles/lottie-player": "^2.0.4",
+    "@prisma/extension-read-replicas": "^0.4.0",
     "@radixdlt/radix-dapp-toolkit": "^2.0.3",
     "@radixdlt/rola": "^1.0.2",
     "@svelte-put/qr": "^1.2.0",

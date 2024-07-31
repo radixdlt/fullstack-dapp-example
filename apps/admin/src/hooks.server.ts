@@ -6,6 +6,7 @@ import { ImageController } from '$lib/server/image/controller'
 import { ImageModel, appLogger } from 'common'
 import { getQueues } from 'queues'
 import { config } from '$lib/config'
+import { readReplicas } from '@prisma/extension-read-replicas'
 
 const {
   JWT_SECRET,
@@ -13,12 +14,17 @@ const {
   POSTGRES_HOST,
   POSTGRES_PASSWORD,
   POSTGRES_PORT,
-  POSTGRES_USER
+  POSTGRES_USER,
+  POSTGRES_READ
 } = privateEnv
+
+const readUrl = POSTGRES_READ
 
 const dbClient = new PrismaClient({
   datasourceUrl: `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}?schema=public`
 })
+
+if (readUrl) dbClient.$extends(readReplicas({ url: readUrl }))
 
 const { systemQueue, eventQueue, transactionQueue } = getQueues(config.redis)
 const logger = appLogger
