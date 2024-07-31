@@ -44,18 +44,31 @@
       method: 'POST',
       body: JSON.stringify({ ids: [id] })
     })
+
+  const retryAll = () => {
+    fetch(`/transactions/retry`, {
+      method: 'POST',
+      body: JSON.stringify({ all: true })
+    })
+  }
 </script>
 
-<Heading class="py-4 text-lg font-semibold text-gray-900 dark:text-white">Transactions</Heading>
-<TableSearch placeholder="Find user by id" hoverable={true} bind:inputValue={filters.userId}
-></TableSearch>
-<div>
+<Heading class="py-4 pl-5 text-lg font-semibold text-gray-900 dark:text-white">Transactions</Heading
+>
+<div class="flex items-center gap-5">
+  <TableSearch placeholder="Find user by id" hoverable={true} bind:inputValue={filters.userId} />
+
   <div class="text-gray-900 dark:text-white">Status:</div>
   <Checkbox bind:checked={filters.status.completed}>Completed</Checkbox>
   <Checkbox bind:checked={filters.status.error}>Error</Checkbox>
   <Checkbox bind:checked={filters.status.pending}>Pending</Checkbox>
   <Checkbox bind:checked={filters.status.waiting}>Waiting</Checkbox>
+  <div class="ml-auto mr-10 flex gap-5">
+    <Button color="red" on:click={retryAll}>Retry All</Button><Button on:click={getTransactions}>Refresh</Button
+    >
+  </div>
 </div>
+
 <Table>
   <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
     {#each ['discriminator', 'userId', 'created', 'transactions', 'Status', 'Actions'] as title}
