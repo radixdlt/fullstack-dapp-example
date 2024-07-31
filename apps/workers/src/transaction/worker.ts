@@ -9,7 +9,10 @@ import { okAsync } from 'neverthrow'
 
 const gatewayApi = GatewayApi(config.networkId)
 
-const verifyFailedTransactions = async (discriminator: string, dbClient: PrismaClient) => {
+const determineWhetherToSubmitNewTransaction = async (
+  discriminator: string,
+  dbClient: PrismaClient
+) => {
   const transactionIntent = await dbClient.transactionIntent.findFirst({
     include: { transactions: true },
     where: { discriminator }
@@ -31,6 +34,7 @@ const verifyFailedTransactions = async (discriminator: string, dbClient: PrismaC
       })
       .then(() => false)
 
+  // We had an incident that caused some transactions to be stuck in a failed state although they were successful
   const failedSubmittedTransactions = transactionIntent.transactions.filter(
     (tx) => tx.status === 'FAILED'
   )
@@ -42,23 +46,31 @@ const verifyFailedTransactions = async (discriminator: string, dbClient: PrismaC
       if (errorDetails?.type === 'NotSyncedUpError' || errorDetails?.type === 'InternalServerError')
         throw new Error('GatewayError')
     } else if (statusResult.isOk()) {
-      const isSuccessful = statusResult.value.status === 'CommittedSuccess'
-      const isPermanentlyFailed = statusResult.value.status === 'CommittedFailure'
+      switch (statusResult.value.intent_status) {
+        case 'CommittedSuccess':
+          return dbClient.transactionIntent
+            .update({
+              where: { discriminator },
+              data: { status: 'COMPLETED' }
+            })
+            .then(() => false)
 
-      if (isSuccessful) {
-        return dbClient.transactionIntent
-          .update({
-            where: { discriminator },
-            data: { status: 'COMPLETED' }
-          })
-          .then(() => false)
-      } else if (isPermanentlyFailed) {
-        return dbClient.transactionIntent
-          .update({
-            where: { discriminator },
-            data: { status: 'COMPLETED', error: 'PermanentlyFailed' }
-          })
-          .then(() => false)
+        case 'CommittedFailure': {
+          const isTryingToSetImageOnBurntRadGem =
+            statusResult.value?.error_message === 'SystemError(KeyValueEntryLocked)' &&
+            discriminator.startsWith('CombinedElementsAddRadgemImage')
+
+          if (isTryingToSetImageOnBurntRadGem)
+            return dbClient.transactionIntent
+              .update({
+                where: { discriminator },
+                data: { status: 'COMPLETED', error: 'CompletedWithError' }
+              })
+              .then(() => false)
+        }
+
+        default:
+          break
       }
     }
   }
@@ -94,7 +106,7 @@ export const TransactionWorker = (
       childLogger.debug({ method: 'transactionWorker.process', data: job.data })
 
       try {
-        const shouldProceed = await verifyFailedTransactions(discriminator, dbClient)
+        const shouldProceed = await determineWhetherToSubmitNewTransaction(discriminator, dbClient)
 
         if (!shouldProceed) return
 

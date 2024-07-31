@@ -17,7 +17,7 @@ export const FilterTransactionsByAccountAddress =
       reason: string
     }
   > => {
-    if (transaction.userId) return okAsync(transaction)
+    if (transaction.userId != null) return okAsync(transaction)
 
     let result: ResultAsync<
       string | null,
@@ -68,8 +68,9 @@ export const FilterTransactionsByAccountAddress =
         break
       }
 
-      default:
+      default: {
         throw new Error(`Unhandled transaction type: ${transaction.type}`)
+      }
     }
 
     return result.map((userId) => (userId ? { ...transaction, userId } : undefined))
