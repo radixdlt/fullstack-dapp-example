@@ -31,3 +31,16 @@ export const retractJettyMenu = writable(false)
 export const scrollToQuestIndex = writable<number | null>(null)
 
 export const hasHeroBadge = writable(false)
+
+export const ErrorPopupId = {
+  XrdRewardLimit: 'XrdRewardLimit',
+  AccountAlreadyRegistered: 'AccountAlreadyRegistered'
+} as const
+
+export type ErrorPopupId = (typeof ErrorPopupId)[keyof typeof ErrorPopupId]
+
+export type ErrorPopup = {
+  id: ErrorPopupId
+}
+
+export const errorPopupStore = writable<ErrorPopup | undefined>(undefined)

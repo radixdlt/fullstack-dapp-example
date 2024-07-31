@@ -17,12 +17,11 @@
   import { OneTimeDataRequestBuilder, SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
   import { rdt } from '$lib/rdt'
   import { userApi } from '$lib/api/user-api'
-  import { user } from '../../../../../stores'
+  import { user, ErrorPopupId, errorPopupStore } from '../../../../../stores'
   import Button from '$lib/components/button/Button.svelte'
   import { err, ok, ResultAsync } from 'neverthrow'
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
-  import { ErrorPopupId, errorPopupStore } from '$lib/components/error-popup/store'
 
   export let data: PageData
 
