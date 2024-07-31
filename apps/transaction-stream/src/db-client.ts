@@ -4,8 +4,6 @@ import { readReplicas } from '@prisma/extension-read-replicas'
 
 const { user, password, host, port, database, readUrl } = config.postgres
 
-export const dbClient: PrismaClient = new PrismaClient({
+export const dbClient = new PrismaClient({
   datasourceUrl: `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`
-})
-
-if (readUrl) dbClient.$extends(readReplicas({ url: readUrl }))
+}).$extends(readReplicas({ url: readUrl! })) as unknown as PrismaClient
