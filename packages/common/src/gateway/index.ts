@@ -176,9 +176,9 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
 
   const hasHeroBadgeAndXrd = (accountAddress: string) =>
     callApi('getEntityDetailsVaultAggregated', [accountAddress]).map(([response]) => {
-      const hasHeroBadge = response.non_fungible_resources.items.some(
-        (item) => item.resource_address === addresses.badges.heroBadgeAddress
-      )
+      const hasHeroBadge = response.non_fungible_resources.items
+        .find((item) => item.resource_address === addresses.badges.heroBadgeAddress)
+        ?.vaults.items.some((vault) => Number(vault.items?.length || 0) >= 1)
 
       const hasXrd = response.fungible_resources.items.some(
         (item) =>
