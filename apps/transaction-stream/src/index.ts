@@ -58,10 +58,13 @@ const app = async (dependencies: Dependencies) => {
   const metricsClient = SetupQueueMetrics({ connection: config.redis, logger })
 
   try {
-    await initTrackedAddresses(dependencies)
+    // await initTrackedAddresses(dependencies)
+    await dbClient.event.findFirst()
   } catch (e) {
     logger.error({ method: 'initTrackedAddresses', error: e })
     throw new Error('Failed to initialize tracked addresses')
+    // logger.error({ method: 'initTrackedAddresses', error: e })
+    // throw new Error('Failed to initialize tracked addresses')
   }
 
   const eventModel = EventModel(dbClient)(logger)
