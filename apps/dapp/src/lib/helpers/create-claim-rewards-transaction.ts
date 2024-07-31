@@ -1,4 +1,4 @@
-import { ErrorPopupId, errorPopupStore } from '$lib/components/error-popup/store'
+import { ErrorPopupId, errorPopupStore } from '../../stores'
 import { publicConfig } from '$lib/public-config'
 import { GatewayApi } from 'common'
 import { okAsync, ResultAsync } from 'neverthrow'

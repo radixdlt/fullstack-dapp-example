@@ -29,8 +29,9 @@
   import Jetty from './Jetty.svelte'
   import { loadUnseenNotifications, pushNotification } from '$lib/notifications'
   import Footer from '$lib/components/footer/footer.svelte'
-  import ErrorPopup from '$lib/components/error-popup/ErrorPopup.svelte'
+  import ErrorPopup from './ErrorPopup.svelte'
   import { GatewayApi } from 'common'
+  import NetworkCongestedBanner from './NetworkCongestedBanner.svelte'
 
   export let data: LayoutData
 
@@ -375,3 +376,5 @@
 
   <Footer slot="footer" userId={$user?.id} />
 </Layout>
+
+<NetworkCongestedBanner />
