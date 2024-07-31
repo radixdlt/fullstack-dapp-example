@@ -14,8 +14,7 @@
   import { rdt } from '$lib/rdt'
   import { OneTimeDataRequestBuilder, fetchWrapper } from '@radixdlt/radix-dapp-toolkit'
   import { publicConfig } from '$lib/public-config'
-  import { user } from '../../../stores'
-  import { ErrorPopupId, errorPopupStore } from '$lib/components/error-popup/store'
+  import { user, ErrorPopupId, errorPopupStore } from '../../../stores'
 
   let open = false
 

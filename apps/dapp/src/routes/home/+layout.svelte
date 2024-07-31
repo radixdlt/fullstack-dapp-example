@@ -29,7 +29,7 @@
   import Jetty from './Jetty.svelte'
   import { loadUnseenNotifications, pushNotification } from '$lib/notifications'
   import Footer from '$lib/components/footer/footer.svelte'
-  import ErrorPopup from '$lib/components/error-popup/ErrorPopup.svelte'
+  import ErrorPopup from './ErrorPopup.svelte'
   import { GatewayApi } from 'common'
 
   export let data: LayoutData
