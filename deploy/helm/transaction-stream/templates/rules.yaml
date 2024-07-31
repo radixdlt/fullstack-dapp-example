@@ -76,6 +76,22 @@ spec:
         description: "Gateway used by Transaction stream to inject network transaction is not reachable"
         dashboard: {{ $metrics.dashboard_url }}
         runbook_url: "https://runbooks.extratools.works"
+    
+    - alert: GatewayVersionNotIncreasing
+      expr: >
+        rate(transaction_stream_processed_state_version{}[$__rate_interval]) == 0
+      for: 2m
+      labels:
+        severity: critical
+        tier: application
+        application: radquest
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: "GatewayVersionStagnant"
+        description: "Gateway version read by Transaction stream is stagnant"
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
 
   - name: RadquestRedis
     rules:
