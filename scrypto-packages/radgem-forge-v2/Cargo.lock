@@ -776,6 +776,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "radgem_forge_v2"
+version = "1.0.0"
+dependencies = [
+ "radix-transactions",
+ "scrypto",
+ "scrypto-test",
+]
+
+[[package]]
 name = "radix-blueprint-schema-init"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1028,15 +1037,6 @@ name = "radix-wasmi-arena"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1a03d7e7816ade40c6ecedff7515198906d644527771bd8fb5a335094353a15a"
-
-[[package]]
-name = "radquest"
-version = "1.0.0"
-dependencies = [
- "radix-transactions",
- "scrypto",
- "scrypto-test",
-]
 
 [[package]]
 name = "rand"
