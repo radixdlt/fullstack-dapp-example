@@ -15,7 +15,7 @@
 </script>
 
 <Backdrop zIndex={5}>
-  <div class="error-popup card" transition:scale|local={{ easing: backOut }}>
+  <div class="card error-popup" transition:scale|local={{ easing: backOut }}>
     <div class="close-button">
       <button on:click={() => dispatch('close')}>
         <img src={CrossIcon} alt={$i18n.t('main:errorPopup.close')} />

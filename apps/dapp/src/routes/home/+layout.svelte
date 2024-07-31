@@ -31,6 +31,7 @@
   import Footer from '$lib/components/footer/footer.svelte'
   import ErrorPopup from './ErrorPopup.svelte'
   import { GatewayApi } from 'common'
+  import NetworkCongestedBanner from './NetworkCongestedBanner.svelte'
 
   export let data: LayoutData
 
@@ -375,3 +376,5 @@
 
   <Footer slot="footer" userId={$user?.id} />
 </Layout>
+
+<NetworkCongestedBanner />
