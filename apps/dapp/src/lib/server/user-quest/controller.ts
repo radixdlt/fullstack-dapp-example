@@ -64,7 +64,7 @@ export const UserQuestController = ({
     }))
 
   const saveProgress = (userId: string, questId: QuestId, progress: number) => {
-    logger.debug({ method: 'saveProgress', userId, questId, progress })
+    logger.trace({ method: 'saveProgress', userId, questId, progress })
     return userQuestModel
       .saveProgress(questId, userId, progress)
       .map((data) => ({ data, httpResponseCode: 200 }))
@@ -107,7 +107,7 @@ export const UserQuestController = ({
       .map(() => ({ httpResponseCode: 200, data: undefined }))
 
   const startQuest = (userId: string, questId: keyof Quests) => {
-    logger.debug({ method: 'startQuest', userId, questId })
+    logger.trace({ method: 'startQuest', userId, questId })
     const questDefinition = QuestDefinitions()[questId]
 
     const preRequisites = questDefinition.preRequisites
@@ -192,7 +192,7 @@ export const UserQuestController = ({
     requirementId: string,
     userId: string
   ) => {
-    ctx.logger.debug({
+    ctx.logger.trace({
       method: 'completeRequirement',
       questId,
       requirementId,

@@ -48,11 +48,11 @@ export const AuthController = ({
     authModel(ctx.logger)
       .createChallenge()
       .map((challenge) => {
-        ctx.logger.debug({ method: 'createChallenge', event: 'success', challenge })
+        ctx.logger.trace({ method: 'createChallenge', event: 'success', challenge })
         return { data: { challenge }, httpResponseCode: 201 }
       })
       .mapErr((error) => {
-        ctx.logger.debug({ method: 'createChallenge.error', error })
+        ctx.logger.error({ method: 'createChallenge.error', error })
         return error
       })
 
@@ -70,7 +70,7 @@ export const AuthController = ({
     return decodeBase64(maybeValue)
       .andThen(parseJSON<MarketingUtmValues>)
       .orElse((error) => {
-        logger.debug({ method: 'getUtmValues.error', error })
+        logger.error({ method: 'getUtmValues.error', error })
         return ok(undefined)
       })
   }
@@ -141,7 +141,7 @@ export const AuthController = ({
     headers: { ['Set-Cookie']: string }
   }> => {
     const { personaProof } = proofs
-    ctx.logger.debug({ method: 'login', personaProof })
+    ctx.logger.trace({ method: 'login', personaProof })
     const parsedPersonaResult = parseSignedChallenge(personaProof)
     if (!parsedPersonaResult.success) {
       if (!parsedPersonaResult.success) {
