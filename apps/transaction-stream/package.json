@@ -12,6 +12,7 @@
   },
   "license": "SEE LICENSE",
   "dependencies": {
+    "@prisma/extension-read-replicas": "^0.4.0",
     "@radixdlt/babylon-gateway-api-sdk": "^1.2.4",
     "@types/ramda": "^0.29.9",
     "bignumber.js": "^9.1.2",

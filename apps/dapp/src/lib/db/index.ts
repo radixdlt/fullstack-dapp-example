@@ -1,12 +1,15 @@
 import { PrismaClient } from 'database'
+import { readReplicas } from '@prisma/extension-read-replicas'
 import { config } from '$lib/config'
 
-const { user, password, host, port, database } = config.postgres
+const { user, password, host, port, database, readUrl } = config.postgres
 
 export type DbClient = typeof dbClient
 export const dbClient = new PrismaClient({
   datasourceUrl: `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`
-}).$extends({
+})
+
+dbClient.$extends({
   query: {
     $allModels: {
       async upsert({ args, query, model }) {
@@ -22,3 +25,5 @@ export const dbClient = new PrismaClient({
     }
   }
 }) as PrismaClient
+
+if (readUrl) dbClient.$extends(readReplicas({ url: readUrl }))

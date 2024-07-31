@@ -11,6 +11,7 @@ const {
   POSTGRES_PASSWORD,
   POSTGRES_PORT,
   POSTGRES_USER,
+  POSTGRES_READ,
   REDIS_HOST,
   REDIS_PORT,
   REDIS_PASSWORD,
@@ -46,7 +47,8 @@ export const config = {
     host: POSTGRES_HOST,
     user: POSTGRES_USER,
     password: POSTGRES_PASSWORD,
-    port: parseInt(POSTGRES_PORT, 10)
+    port: parseInt(POSTGRES_PORT, 10),
+    readUrl: POSTGRES_READ
   },
   redis: {
     host: REDIS_HOST,
