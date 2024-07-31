@@ -433,6 +433,10 @@
     color: var(--color-light);
     height: 100%;
     width: 100%;
+
+    :global(.carousel > .item) {
+      padding-bottom: var(--spacing-2xl);
+    }
   }
 
   .header-text {
@@ -448,6 +452,9 @@
     @include mobile {
       padding: var(--spacing-xl);
     }
+    @include smallMobile {
+      padding: var(--spacing-sm);
+    }
   }
 
   .loading {
@@ -460,6 +467,7 @@
   .title {
     font-size: var(--text-md3);
     text-align: center;
+    text-wrap: pretty;
   }
 
   .subtitle {
@@ -472,6 +480,10 @@
     align-items: center;
     width: 100%;
     height: 100%;
+    @include smallMobile {
+      width: 70%;
+      margin: auto;
+    }
   }
 
   .rewards-page {

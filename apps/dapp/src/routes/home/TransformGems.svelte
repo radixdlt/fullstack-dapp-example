@@ -355,10 +355,12 @@
     justify-content: center;
     transform: translateY(-2rem);
     @include smallMobile {
-      :global(.carousel .item) {
-        padding-bottom: 3rem;
+      :global(.carousel) {
+        transform: translateY(1rem);
       }
-      transform: translateY(-1.6rem);
+      :global(.carousel > .item) {
+        padding-bottom: 4rem;
+      }
     }
   }
 
@@ -408,6 +410,9 @@
 
     img {
       height: 250px;
+      @include smallMobile {
+        height: 200px;
+      }
     }
   }
 </style>

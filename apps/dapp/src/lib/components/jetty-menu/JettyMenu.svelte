@@ -280,19 +280,18 @@
     grid-template-rows: 4rem 1fr;
     background-color: var(--color-background-dark);
     height: 35rem;
-    width: 25rem;
+    width: 100%;
+    max-width: 25rem;
     max-height: 90%;
     border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
     position: fixed;
     bottom: 0;
     z-index: 4;
     transform: translateY(var(--menuPosition));
-
-    @include desktop {
-      right: 1rem;
-    }
+    right: 1rem;
 
     @include mobile {
+      right: 0;
       width: 100vw;
     }
   }

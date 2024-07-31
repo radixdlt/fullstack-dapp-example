@@ -30,7 +30,7 @@
   .footer {
     padding: var(--spacing-xl);
     @include smallMobile {
-      padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-xl);
+      padding: var(--spacing-lg) var(--spacing-xl) calc(var(--spacing-lg) + var(--spacing-xs));
     }
   }
 

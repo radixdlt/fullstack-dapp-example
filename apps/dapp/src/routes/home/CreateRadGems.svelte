@@ -302,8 +302,6 @@
 
 <style lang="scss">
   .fuse-elements {
-    display: flex;
-    justify-content: center;
     color: var(--color-light);
     height: 100%;
   }

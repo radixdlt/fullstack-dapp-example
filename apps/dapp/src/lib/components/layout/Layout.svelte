@@ -30,16 +30,14 @@
     justify-content: center;
     align-items: center;
     @include smallMobile {
-      transform: translateY(calc(var(--spacing-xl) / 3));
+      transform: translateY(var(--spacing-xs));
     }
   }
 
   .header {
     height: 10dvh;
     @include smallMobile {
-      height: 10dvh;
       position: absolute;
-      margin-left: auto;
       width: 100%;
     }
   }

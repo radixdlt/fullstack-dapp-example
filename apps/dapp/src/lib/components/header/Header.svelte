@@ -19,6 +19,7 @@
     height: 4rem;
     padding: 0 1.4rem;
     @include smallMobile {
+      height: 3rem;
       padding: 0 1rem;
     }
   }
