@@ -1,0 +1,37 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+CALL_METHOD
+    Address("${account}")
+    "create_proof_of_amount"
+    Address("${admin_badge}")
+    Decimal("1")
+;
+
+CALL_METHOD
+    Address("${radgem_forge_v2}")
+    "mint_radgems"
+    "${user_id}"
+    Array<Tuple>(
+        Tuple(
+            "https://example.com",
+            "name",
+            "description",
+            "material",
+            "color",
+            "rarity",
+            Decimal("1"),
+        ),
+        Tuple(
+            "https://example.com",
+            "name",
+            "description",
+            "material",
+            "color",
+            "rarity",
+            Decimal("2"),
+        )
+    )
+;

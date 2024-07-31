@@ -1,0 +1,43 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+CALL_METHOD
+    Address("${account}")
+    "create_proof_of_amount"
+    Address("${super_admin_badge}")
+    Decimal("1")
+;
+CALL_METHOD
+    Address("${account}")
+    "withdraw"
+    Address("${admin_badge}")
+    Decimal("1")
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("${admin_badge}")
+    Bucket("admin_badge")
+;
+CALL_FUNCTION
+    Address("${package}")
+    "RadgemForgeV2"
+    "new"
+    Address("${super_admin_badge}")
+    Enum<OwnerRole::Fixed>(
+        Enum<AccessRule::Protected>(
+            Enum<AccessRuleNode::ProofRule>(
+                Enum<ProofRule::Require>(
+                    Enum<ResourceOrNonFungible::Resource>(
+                        Address("${super_admin_badge}")
+                    )
+                )
+            )
+        )
+    )
+    Address("${dapp_definition}")
+    Bucket("admin_badge")
+    Address("${hero_badge}")
+    Address("${element}")
+    Address("${radgem}")
+;
