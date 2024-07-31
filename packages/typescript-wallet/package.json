@@ -34,6 +34,8 @@
     "wallet:deploy:clam-dex": "npx tsx ./src/clam-dex/scripts/deploy-clam-dex.ts",
     "wallet:new:clam-dexs": "npx tsx ./src/clam-dex/scripts/new-clam-dexs.ts",
     "wallet:register:gift-boxes": "npx tsx ./src/radquest/scripts/register-gift-boxes.ts",
+    "wallet:deploy:radgem-forge-v2": "npx tsx ./src/radgem-forge-v2/scripts/deploy-radgem-forge-v2.ts",
+    "wallet:new:radgem-forge-v2": "npx tsx ./src/radgem-forge-v2/scripts/new-radgem-forge-v2.ts",
     "wallet:set:dapp-data:radquest": "npx tsx ./src/radquest/scripts/set-dapp-data.ts",
     "wallet:set:dapp-data:clam-dexs": "npx tsx ./src/clam-dex/scripts/set-dapp-data.ts",
     "wallet:set:dapp-data": "npx tsx ./src/radquest/scripts/set-dapp-data.ts && npx tsx ./src/clam-dex/scripts/set-dapp-data.ts",
