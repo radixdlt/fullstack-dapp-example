@@ -1,6 +1,6 @@
 <script lang="ts">
   import '../../global.scss'
-  import { onMount } from 'svelte'
+  import { onMount, onDestroy } from 'svelte'
   import {
     DataRequestBuilder,
     RadixDappToolkit,
@@ -34,6 +34,7 @@
 
   export let data: LayoutData
 
+  const callbacks: (() => void)[] = []
   $quests = data.questDefinitions
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
@@ -267,22 +268,30 @@
     }
   })
 
+  onDestroy(() => {
+    callbacks.forEach((cb) => {
+      cb()
+    })
+  })
+
   const registerNotificationOnMessage = (
     webSocketClient: WebSocketClient,
     questId: QuestId,
     requirementId: string,
     notificationName: Parameters<typeof pushNotification>[0]
   ) => {
-    webSocketClient.onMessage((message) => {
-      if (!$page.url.href.includes(questId)) {
-        if (
-          message.type === 'QuestRequirementCompleted' &&
-          message.requirementId === requirementId
-        ) {
-          pushNotification(notificationName)
+    callbacks.push(
+      webSocketClient.onMessage((message) => {
+        if (!$page.url.href.includes(questId)) {
+          if (
+            message.type === 'QuestRequirementCompleted' &&
+            message.requirementId === requirementId
+          ) {
+            pushNotification(notificationName)
+          }
         }
-      }
-    })
+      })
+    )
   }
 
   $: if ($webSocketClient)
