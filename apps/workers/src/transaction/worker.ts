@@ -1,11 +1,70 @@
 import { Worker, ConnectionOptions, Queues, TransactionJob, getQueues } from 'queues'
-import { AppLogger, type TransactionModel } from 'common'
+import { AppLogger, GatewayApi, type TransactionModel } from 'common'
 import { TransactionWorkerController } from './controller'
 import { PrismaClient, TransactionIntentStatus } from 'database'
 import { getUserById } from '../helpers/getUserById'
 import { WorkerError, WorkerOutputError } from '../_types'
 import { config } from '../config'
 import { okAsync } from 'neverthrow'
+
+const gatewayApi = GatewayApi(config.networkId)
+
+const verifyFailedTransactions = async (discriminator: string, dbClient: PrismaClient) => {
+  const transactionIntent = await dbClient.transactionIntent.findFirst({
+    include: { transactions: true },
+    where: { discriminator }
+  })
+
+  if (!transactionIntent) throw new Error('TransactionIntent not found')
+
+  const submittedTransactions = transactionIntent.transactions || []
+
+  const hasBeenProcessed = transactionIntent?.status === TransactionIntentStatus.COMPLETED
+
+  const hasSuccessTransaction = submittedTransactions.some((item) => item.status === 'SUCCESS')
+
+  if (hasBeenProcessed || hasSuccessTransaction)
+    return dbClient.transactionIntent
+      .update({
+        where: { discriminator },
+        data: { status: 'COMPLETED' }
+      })
+      .then(() => false)
+
+  const failedSubmittedTransactions = transactionIntent.transactions.filter(
+    (tx) => tx.status === 'FAILED'
+  )
+
+  for (const failedTransaction of failedSubmittedTransactions) {
+    const statusResult = await gatewayApi.callApi('getStatus', failedTransaction.transactionId)
+    if (statusResult.isErr()) {
+      const errorDetails = statusResult.error.details
+      if (errorDetails?.type === 'NotSyncedUpError' || errorDetails?.type === 'InternalServerError')
+        throw new Error('GatewayError')
+    } else if (statusResult.isOk()) {
+      const isSuccessful = statusResult.value.status === 'CommittedSuccess'
+      const isPermanentlyFailed = statusResult.value.status === 'CommittedFailure'
+
+      if (isSuccessful) {
+        return dbClient.transactionIntent
+          .update({
+            where: { discriminator },
+            data: { status: 'COMPLETED' }
+          })
+          .then(() => false)
+      } else if (isPermanentlyFailed) {
+        return dbClient.transactionIntent
+          .update({
+            where: { discriminator },
+            data: { status: 'COMPLETED', error: 'PermanentlyFailed' }
+          })
+          .then(() => false)
+      }
+    }
+  }
+
+  return true
+}
 
 export const TransactionWorker = (
   connection: ConnectionOptions,
@@ -35,13 +94,9 @@ export const TransactionWorker = (
       childLogger.debug({ method: 'transactionWorker.process', data: job.data })
 
       try {
-        const shouldProcessEvent = await dbClient.transactionIntent
-          .count({
-            where: { discriminator: job.data.discriminator, status: 'COMPLETED' }
-          })
-          .then((count) => count === 0)
+        const shouldProceed = await verifyFailedTransactions(discriminator, dbClient)
 
-        if (!shouldProcessEvent) return okAsync(undefined)
+        if (!shouldProceed) return
 
         const result = await getUserById(userId, dbClient)
           .andThen((user) => {
