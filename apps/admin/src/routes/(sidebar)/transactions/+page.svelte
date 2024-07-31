@@ -64,7 +64,8 @@
   <Checkbox bind:checked={filters.status.pending}>Pending</Checkbox>
   <Checkbox bind:checked={filters.status.waiting}>Waiting</Checkbox>
   <div class="ml-auto mr-10 flex gap-5">
-    <Button color="red" on:click={retryAll}>Retry All</Button><Button on:click={getTransactions}>Refresh</Button
+    <Button color="red" on:click={retryAll}>Retry All</Button><Button on:click={getTransactions}
+      >Refresh</Button
     >
   </div>
 </div>
