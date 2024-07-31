@@ -23,4 +23,4 @@ export const dbClient = new PrismaClient({
       }
     }
   }
-})
+}) as unknown as PrismaClient
