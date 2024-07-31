@@ -14,6 +14,13 @@ params:
   GATEWAY_URL: "http://babylon-mainnet-active-ng.internal-dns:8080"
 
 secrets:
+
+  - external_secret_name: ro-transaction-database-url
+    env_variable: "RO_DATABASE_URL"
+    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/postgres"
+    aws_secret_key: "ro-database-url"
+    secret_key: "ro-database-url"
+
   - external_secret_name: transaction-stream-postgres-user
     env_variable: "POSTGRES_USER"
     aws_secret_name: "rtlj-prod/eks/radquest/mainnet/postgres"

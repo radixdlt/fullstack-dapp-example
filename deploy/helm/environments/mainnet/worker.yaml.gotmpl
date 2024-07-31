@@ -20,6 +20,12 @@ params:
 
 
 secrets:
+  - external_secret_name: ro-worker-database-url
+    env_variable: "RO_DATABASE_URL"
+    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/postgres"
+    aws_secret_key: "ro-database-url"
+    secret_key: "ro-database-url"
+
   - external_secret_name: worker-postgres-user
     env_variable: "POSTGRES_USER"
     aws_secret_name: "rtlj-prod/eks/radquest/mainnet/postgres"
