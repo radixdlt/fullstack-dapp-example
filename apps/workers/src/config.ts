@@ -16,7 +16,7 @@ export const config = {
     user: process.env.POSTGRES_USER ?? 'user',
     password: process.env.POSTGRES_PASSWORD ?? 'password',
     port: parseInt(process.env.POSTGRES_PORT ?? '5433', 10),
-    readUrl: process.env.POSTGRES_READ
+    readUrl: process.env.RO_DATABASE_URL
   },
   logLevel: process.env.LOG_LEVEL!,
   notification: {

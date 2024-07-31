@@ -15,10 +15,10 @@ const {
   POSTGRES_PASSWORD,
   POSTGRES_PORT,
   POSTGRES_USER,
-  POSTGRES_READ
+  RO_DATABASE_URL
 } = privateEnv
 
-const readUrl = POSTGRES_READ
+const readUrl = RO_DATABASE_URL
 
 const dbClient = new PrismaClient({
   datasourceUrl: `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}?schema=public`
