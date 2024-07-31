@@ -23,6 +23,18 @@
       "title": "Account Already Registered",
       "content": "You seem to be already a RadQuest user - please log in with the Persona you originally used to continue.",
       "button": "Close"
+    },
+    "HighDemand": {
+      "title": "RadQuest is experiencing very high demand.",
+      "content": "Your request is still in progress, but you may need to come back later.",
+      "link": "Learn more on X @radixdlt",
+      "button": "Close"
+    },
+    "NetworkCongestion": {
+      "title": "RadQuest is experiencing very high demand.",
+      "content": "If you have problems completing quests or making claims, please try again later.",
+      "link": "Learn more on X @radixdlt",
+      "button": "Close"
     }
   },
   "footer": {
