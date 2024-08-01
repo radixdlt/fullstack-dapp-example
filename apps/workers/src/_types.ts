@@ -35,7 +35,8 @@ export const WorkerError = {
   TransactionFailed: 'TransactionFailed',
   FailedToUpdateSubmittedTransaction: 'FailedToUpdateSubmittedTransaction',
   CouldNotGetXrdCurrentPriceError: 'CouldNotGetXrdCurrentPriceError',
-  FailedToQueryDb: 'FailedToQueryDb'
+  FailedToQueryDb: 'FailedToQueryDb',
+  TemporarySkip: 'TemporarySkip'
 } as const
 
 export type WorkerOutputError = { reason: WorkerError | TransactionHelperError; jsError?: unknown }

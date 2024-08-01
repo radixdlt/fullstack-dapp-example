@@ -104,7 +104,6 @@ export const TransactionWorkerController = ({
               .map((response) => ({ response, transactionId: pendingOrCompletedTransactionId }))
           : transactionHelper.submitTransaction(manifest, {
               onTransactionId: (transactionId) => {
-                transactionId = transactionId
                 return upsertSubmittedTransaction({ transactionId, status: 'PENDING' })
               }
             })
@@ -293,30 +292,35 @@ export const TransactionWorkerController = ({
 
       case 'QuestCompleted': {
         const { questId } = job.data
-        return handleSubmitTransaction(
-          `
-            CALL_METHOD
-              Address("${payer.accessController}")
-              "create_proof";
-            CALL_METHOD
-              Address("${system.accessController}")
-              "create_proof";
-            CALL_METHOD
-              Address("${payer.address}")
-              "lock_fee"
-              Decimal("100");
-          CALL_METHOD
-              Address("${system.address}")
-              "create_proof_of_amount"
-              Address("${badges.adminBadgeAddress}") 
-              Decimal("1");  
-           CALL_METHOD
-                Address("${components.heroBadgeForge}")
-                "hero_completed_quest"
-                "${userId}"
-                "${questId}"
-          ;`
-        )
+
+        return errAsync({
+          reason: WorkerError.TemporarySkip
+        })
+
+        // return handleSubmitTransaction(
+        //   `
+        //     CALL_METHOD
+        //       Address("${payer.accessController}")
+        //       "create_proof";
+        //     CALL_METHOD
+        //       Address("${system.accessController}")
+        //       "create_proof";
+        //     CALL_METHOD
+        //       Address("${payer.address}")
+        //       "lock_fee"
+        //       Decimal("100");
+        //   CALL_METHOD
+        //       Address("${system.address}")
+        //       "create_proof_of_amount"
+        //       Address("${badges.adminBadgeAddress}")
+        //       Decimal("1");
+        //    CALL_METHOD
+        //         Address("${components.heroBadgeForge}")
+        //         "hero_completed_quest"
+        //         "${userId}"
+        //         "${questId}"
+        //   ;`
+        // )
       }
 
       case 'DepositReward':
