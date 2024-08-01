@@ -62,7 +62,8 @@
       </div>
 
       <div class="button">
-        <Button theme="light">{$i18n.t('main:errorPopup.HighDemand.button')}</Button>
+        <Button theme="light" on:click={hide}>{$i18n.t('main:errorPopup.HighDemand.button')}</Button
+        >
       </div>
     {/if}
   </ErrorPopup>
