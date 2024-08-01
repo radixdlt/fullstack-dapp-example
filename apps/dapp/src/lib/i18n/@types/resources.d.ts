@@ -112,6 +112,18 @@ interface Resources {
         "title": "Account Already Registered",
         "content": "You seem to be already a RadQuest user - please log in with the Persona you originally used to continue.",
         "button": "Close"
+      },
+      "HighDemand": {
+        "title": "RadQuest is experiencing very high demand.",
+        "content": "Your request is still in progress, but you may need to come back later.",
+        "link": "Learn more on X @radixdlt",
+        "button": "Close"
+      },
+      "NetworkCongestion": {
+        "title": "RadQuest is experiencing very high demand.",
+        "content": "If you have problems completing quests or making claims, please try again later.",
+        "link": "Learn more on X @radixdlt",
+        "button": "Close"
       }
     },
     "footer": {
@@ -234,7 +246,7 @@ interface Resources {
       },
       "title": "Transfer Tokens",
       "description": "Transfer stuff using the Radix Wallet",
-      "introDescription": "Use the Radix Wallet’s transfer feature to send tokens, NFTs, and any other kind of asset to different Accounts and other people.",
+      "introDescription": "Use the Radix Wallet’s transfer feature to send assets to other people's Accounts.",
       "copyTextButton_copy": "Copy",
       "copyTextButton_copied": "Copied!",
       "getClams": "Claim Clams"
@@ -250,7 +262,7 @@ interface Resources {
     "Thorswap": {
       "title": "Bridge Tokens with THORSwap",
       "description": "Move assets in and out of Radix",
-      "introDescription": "Thorswap is a decentralized exchange that allows you to swap tokens across different blockchains. Learn more about Thorswap and how to bridge tokens.",
+      "introDescription": "Learn more about THORSwap and how to bridge assets to and from Radix.",
       "requirements": {
         "MayaRouterWithdrawEvent": "Do at least one bridge/swap of >$50 value"
       }

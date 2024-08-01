@@ -19,8 +19,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(---image) no-repeat center;
     width: 13rem;
+    height: 13rem;
     background: rgba(255, 255, 255, 0.1);
     border-radius: var(--border-radius-xl);
   }

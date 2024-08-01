@@ -6,6 +6,8 @@
   import { createEventDispatcher } from 'svelte'
   import JettyMenuItemPage from './JettyMenuItemPage.svelte'
   import type { ColorCodeDescription, ShaderCodeDescription } from 'common'
+  import { onDestroy } from 'svelte'
+  import { waitingWarning } from '$lib/utils/waiting-warning'
 
   export let cards: {
     id: string
@@ -93,6 +95,12 @@
   const radmorphCreated = () => {
     page = 5
   }
+
+  $: waitingWarning(page === 3)
+
+  onDestroy(() => {
+    waitingWarning(false)
+  })
 </script>
 
 {#if page === 0}

@@ -55,6 +55,16 @@
         >
       </div>
     {/if}
+
+    {#if visibleErrorPopup.id === ErrorPopupId.HighDemand}
+      <div>
+        {$i18n.t('main:errorPopup.HighDemand.content')}
+      </div>
+
+      <div class="button">
+        <Button theme="light">{$i18n.t('main:errorPopup.HighDemand.button')}</Button>
+      </div>
+    {/if}
   </ErrorPopup>
 {/if}
 

@@ -34,7 +34,8 @@ export const hasHeroBadge = writable(false)
 
 export const ErrorPopupId = {
   XrdRewardLimit: 'XrdRewardLimit',
-  AccountAlreadyRegistered: 'AccountAlreadyRegistered'
+  AccountAlreadyRegistered: 'AccountAlreadyRegistered',
+  HighDemand: 'HighDemand'
 } as const
 
 export type ErrorPopupId = (typeof ErrorPopupId)[keyof typeof ErrorPopupId]

@@ -22,6 +22,7 @@
   import { err, ok, ResultAsync } from 'neverthrow'
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
+  import { waitingWarning } from '$lib/utils/waiting-warning'
 
   export let data: PageData
 
@@ -60,6 +61,7 @@
   $: if ($webSocketClient) {
     unsubscribeWebSocket = $webSocketClient.onMessage(async (message) => {
       if (message.type === 'XrdDepositedToAccount') {
+        xrdDepositLoading = false
         messageApi.markAsSeen(message.id)
         skipXrdDepositPage.set(true)
       }
@@ -190,7 +192,26 @@
     })
   })
 
-  onDestroy(() => unsubscribeWebSocket?.())
+  onDestroy(() => {
+    unsubscribeWebSocket?.()
+    waitingWarning(false)
+  })
+
+  let errorTimeout: NodeJS.Timeout
+
+  $: if (xrdDepositLoading) {
+    errorTimeout = setTimeout(() => {
+      $errorPopupStore = {
+        id: ErrorPopupId.HighDemand
+      }
+    }, 30_000)
+  }
+
+  $: if (!xrdDepositLoading) {
+    clearTimeout(errorTimeout)
+  }
+
+  $: waitingWarning(xrdDepositLoading)
 </script>
 
 <Quest
