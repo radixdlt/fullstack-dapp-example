@@ -351,7 +351,7 @@ export const EventWorkerController = ({
             userId: referringUser.id,
             traceId,
             type: 'DepositXrdReward',
-            amount: config.referralRewardXrdAmount,
+            amount: QuestTogetherConfig.referralRewardXrdAmount,
             discriminator: `QuestTogether:${user.id}:${transactionId}`,
             transactionId
           })
