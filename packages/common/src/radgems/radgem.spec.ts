@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { getRandomFloat } from '../helpers/random'
-import { genRadgem, RadgemColor } from './radgems'
+import { genRadgem, RadgemColor, transformRadgemToNfData } from './radgems'
 
 const newRadgem = () => genRadgem(getRandomFloat(), getRandomFloat(), getRandomFloat())
 
@@ -8,6 +8,19 @@ describe('RadGems', () => {
   it('should generate a new Radgem', () => {
     const actual = newRadgem()
     expect(actual).toBeDefined()
+  })
+  it('should generate a Radgem with correct data', () => {
+    const actual = transformRadgemToNfData(genRadgem(0.5, 0.75, 0.5))
+    expect(actual).toMatchObject({
+      key_image_url: '',
+      name: 'Metallic Glacier RadGem {11}',
+      description:
+        'The Rare Metallic material of this Glacier RadGem is graded at a quality of 11 out of a possible 25.',
+      color: 'glacier',
+      material: 'metallic',
+      rarity: 'rare',
+      quality: 11
+    })
   })
   it('should generate Radgems with correct distribution', () => {
     const colorDistribution = {
