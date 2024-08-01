@@ -25,7 +25,7 @@ export const HandleStreamError =
       // rate limit hit, wait 60 seconds before restarting the stream
       stream.setStatus('run', SIXTY_SECONDS)
     } else if (isBeyondTheEndOfKnownLedgerError) {
-      logger.error({
+      logger.trace({
         method: 'stream.error$',
         errorType: 'StateVersionBeyondEndOfKnownLedgerError',
         ...error
