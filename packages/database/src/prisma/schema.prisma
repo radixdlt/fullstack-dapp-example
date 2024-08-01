@@ -123,6 +123,8 @@ model Message {
   data      Json
 
   user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, seenAt])
 }
 
 model Notification {
