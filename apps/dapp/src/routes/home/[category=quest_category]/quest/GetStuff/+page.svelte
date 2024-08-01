@@ -197,36 +197,24 @@
     waitingWarning(false)
   })
 
-  let errorTimeout: NodeJS.Timeout
-
-  $: if (xrdDepositLoading) {
-    errorTimeout = setTimeout(() => {
-      $errorPopupStore = {
-        id: ErrorPopupId.HighDemand
-      }
-    }, 30_000)
-  }
-
-  $: if (!xrdDepositLoading) {
-    clearTimeout(errorTimeout)
-  }
-
   $: waitingWarning(xrdDepositLoading)
 </script>
 
 <Quest
   on:render={(ev) => {
-    xrdDepositLoading = true
-    if (ev.detail === '15' && !$skipXrdDepositPage) {
-      userApi
-        .hasReceivedXrd()
-        .map((received) => {
-          xrdDepositLoading = false
-          skipXrdDepositPage.set(received)
-        })
-        .mapErr(() => {
-          xrdDepositLoading = false
-        })
+    if (ev.detail === '15') {
+      xrdDepositLoading = true
+      if (!$skipXrdDepositPage) {
+        userApi
+          .hasReceivedXrd()
+          .map((received) => {
+            xrdDepositLoading = false
+            skipXrdDepositPage.set(received)
+          })
+          .mapErr(() => {
+            xrdDepositLoading = false
+          })
+      }
     }
   }}
   {...data.questProps}
