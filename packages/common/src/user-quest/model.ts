@@ -1,5 +1,5 @@
 import { QuestStatus } from 'database'
-import type { PrismaClient } from 'database'
+import type { CompletedQuestRequirement, PrismaClient } from 'database'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
 import { type ApiError, createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers/logger'
@@ -172,9 +172,12 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
       )
   }
 
-  const findCompletedRequirements = (userId: string, questId: string) =>
+  const findCompletedRequirements = (
+    userId: string,
+    questId: string
+  ): ResultAsync<CompletedQuestRequirement[], ApiError> =>
     ResultAsync.fromPromise(
-      db.completedQuestRequirement.findMany({
+      (db as any).$primary().completedQuestRequirement.findMany({
         where: {
           userId,
           questId
