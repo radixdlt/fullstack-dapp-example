@@ -48,7 +48,7 @@ export const WebSocketClient = ({
   const runPolling = async () => {
     while (shouldReconnect) {
       if (onMessageCallbacks.length > 0) await sendMessagesToListeners()
-      await new Promise((resolve) => setTimeout(resolve, 30_000))
+      await new Promise((resolve) => setTimeout(resolve, 15_000))
     }
   }
 
