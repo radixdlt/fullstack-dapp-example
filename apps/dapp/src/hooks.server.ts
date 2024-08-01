@@ -87,7 +87,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     traceId,
     logger
   }
-  event.locals.clientIp = event.request.headers.get('x-forwarded-for') || event.getClientAddress()
+  event.locals.clientIp = event.request.headers.get('True-Client-IP') || event.getClientAddress()
 
   event.locals.dependencies = {
     userModel: userModel(logger),
@@ -142,7 +142,13 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.userType = result.value.userType
     event.locals.authToken = result.value.authToken
 
-    appLogger.setBindings({ userId: event.locals.userId })
+    const loggerWithUserId = appLogger.child({
+      traceId,
+      path: event.url.pathname,
+      httpMethod: event.request.method,
+      userId: event.locals.userId
+    })
+    event.locals.context.logger = loggerWithUserId
 
     const userExists = await dbClient.user
       .count({ where: { id: result.value.userId } })
