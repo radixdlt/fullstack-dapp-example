@@ -65,8 +65,15 @@ export const genRadgem = (colorSeed: number, materialSeed: number, qualitySeed: 
 
   let material: RadgemMaterial
   if (materialSeed < RadgemMaterial[0].rarity.occurrence) material = RadgemMaterial[0]
-  else if (materialSeed < RadgemMaterial[1].rarity.occurrence) material = RadgemMaterial[1]
-  else if (materialSeed < RadgemMaterial[2].rarity.occurrence) material = RadgemMaterial[2]
+  else if (materialSeed < RadgemMaterial[0].rarity.occurrence + RadgemMaterial[1].rarity.occurrence)
+    material = RadgemMaterial[1]
+  else if (
+    materialSeed <
+    RadgemMaterial[0].rarity.occurrence +
+      RadgemMaterial[1].rarity.occurrence +
+      RadgemMaterial[2].rarity.occurrence
+  )
+    material = RadgemMaterial[2]
   else throw new Error('Invalid material seed')
 
   const quality =
