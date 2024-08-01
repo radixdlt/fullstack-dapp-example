@@ -176,9 +176,11 @@
         if (_errorLoadingElements) errorLoadingElements = true
       })
 
+    let onMessageUnsubscribe: (() => void) | undefined
     const unsub = webSocketClient.subscribe((ws) => {
+      onMessageUnsubscribe?.()
       if (ws)
-        ws.onMessage((msg) => {
+        onMessageUnsubscribe = ws.onMessage((msg) => {
           if (msg.type === 'CombineElementsAddRadgemImage') {
             checkClaimAvailable($user?.id!).map((radGemId) => {
               claimAvailable = true
