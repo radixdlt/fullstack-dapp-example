@@ -93,6 +93,7 @@
   import { webSocketClient } from '$lib/websocket-client'
   import BoxCard from '$lib/components/resource-card/BoxCard.svelte'
   import { messageApi } from '$lib/api/message-api'
+  import { waitingWarning } from '$lib/utils/waiting-warning'
 
   let loadingLedgerData = true
   let ownedGiftBoxes: {
@@ -318,6 +319,10 @@
       .mapErr(() => {
         loadingClaimStatus = false
       })
+
+    return () => {
+      waitingWarning(false)
+    }
   })
 
   let loadingClaimStatus = true
@@ -327,6 +332,8 @@
   let readyToClaim = false
   let readyToOpen = false
   let claimed = false
+
+  $: waitingWarning(waitingForDepositedRewards)
 </script>
 
 <div class="open-gift-box">
@@ -336,7 +343,7 @@
     </div>
   {:else if waitingForDepositedRewards}
     <JettyMenuItemPage>
-      <div slot="header" class="title padding">
+      <div slot="header" class="title">
         {$i18n.t('jetty:open-gift-box.opening-gift-box')}...
       </div>
 

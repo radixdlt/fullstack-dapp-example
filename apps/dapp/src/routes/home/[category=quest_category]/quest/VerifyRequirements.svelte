@@ -9,6 +9,7 @@
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import type { QuestRequirement } from '$lib/server/user-quest/controller'
+  import { waitingWarning } from '$lib/utils/waiting-warning'
 
   export let questId: keyof Quests
   export let requirements: Record<string, { isComplete: QuestRequirement['isComplete'] }>
@@ -80,6 +81,7 @@
 
   onDestroy(() => {
     unsubscribeWebSocket?.()
+    waitingWarning(false)
   })
 
   onMount(() => {
@@ -87,6 +89,8 @@
       checkRequirements()
     }
   })
+
+  $: waitingWarning(loading)
 </script>
 
 <RequirementsPage requirements={requirementsStatus} {loading} />

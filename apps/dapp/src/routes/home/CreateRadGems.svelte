@@ -62,6 +62,7 @@
   import { context } from '$lib/components/jetty-menu/JettyMenu.svelte'
   import { webSocketClient } from '$lib/websocket-client'
   import JettyMenuItemPage from './JettyMenuItemPage.svelte'
+  import { waitingWarning } from '$lib/utils/waiting-warning'
 
   let rerender = false
 
@@ -130,7 +131,7 @@
       })
       .mapErr(() => {
         waitingForSendElements = false
-        waitingForSendElements = false
+        waitingForElementsDeposited = false
       })
   }
 
@@ -184,7 +185,10 @@
         })
     })
 
-    return unsub
+    return () => {
+      unsub()
+      waitingWarning(false)
+    }
   })
 
   const dispatch = createEventDispatcher<{
@@ -198,6 +202,8 @@
     close()
     $back = false
   }
+
+  $: waitingWarning(waitingForElementsDeposited)
 </script>
 
 <div class="fuse-elements">
