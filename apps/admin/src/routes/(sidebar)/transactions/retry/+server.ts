@@ -1,4 +1,5 @@
 import { json } from '@sveltejs/kit'
+import { TransactionIntentStatus } from 'database'
 import type { TransactionJob } from 'queues'
 
 export const POST = async ({ request, locals }) => {
@@ -9,7 +10,7 @@ export const POST = async ({ request, locals }) => {
   let skip = 0
   let completed = false
 
-  const where = all ? { status: 'ERROR' } : { discriminator: { in: ids } }
+  const where = all ? { status: TransactionIntentStatus.ERROR } : { discriminator: { in: ids } }
 
   while (!completed) {
     const transactions = await locals.dbClient.transactionIntent.findMany({
