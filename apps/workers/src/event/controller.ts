@@ -180,7 +180,7 @@ export const EventWorkerController = ({
           }
         )
 
-      const unlockReward = (tier: 'BronzeLevel' | 'SilverLevel' | 'GoldLevel') =>
+      const unlockReward = (tier: 'BronzeLevel' | 'SilverLevel') =>
         addCompletedQuestRequirement({
           questId: 'QuestTogether',
           userId,
@@ -196,7 +196,7 @@ export const EventWorkerController = ({
           })
         )
 
-      const setTierInProgress = (tier: 'BronzeLevel' | 'SilverLevel' | 'GoldLevel') =>
+      const setTierInProgress = (tier: 'BronzeLevel' | 'SilverLevel') =>
         updateQuestProgressStatus({
           userId,
           questId: `QuestTogether:${tier}`,
@@ -205,7 +205,6 @@ export const EventWorkerController = ({
 
       const bronzeLevelCompleted = currentReferralsAmount >= requirements.BronzeLevel.threshold
       const silverLevelCompleted = currentReferralsAmount >= requirements.SilverLevel.threshold
-      const goldLevelCompleted = currentReferralsAmount >= requirements.GoldLevel.threshold
 
       return ResultAsync.combine([
         progress['QuestTogether:BronzeLevel'] === 'NOT_STARTED'
@@ -214,17 +213,11 @@ export const EventWorkerController = ({
         bronzeLevelCompleted && progress['QuestTogether:SilverLevel'] === 'NOT_STARTED'
           ? setTierInProgress('SilverLevel')
           : okAsync(undefined),
-        silverLevelCompleted && progress['QuestTogether:GoldLevel'] === 'NOT_STARTED'
-          ? setTierInProgress('GoldLevel')
-          : okAsync(undefined),
         bronzeLevelCompleted && !unlockedRewards['BronzeLevel']
           ? unlockReward('BronzeLevel')
           : okAsync(undefined),
         silverLevelCompleted && !unlockedRewards['SilverLevel']
           ? unlockReward('SilverLevel')
-          : okAsync(undefined),
-        goldLevelCompleted && !unlockedRewards['GoldLevel']
-          ? unlockReward('GoldLevel')
           : okAsync(undefined)
       ]).map(() => undefined)
     }
