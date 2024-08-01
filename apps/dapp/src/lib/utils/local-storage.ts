@@ -10,7 +10,9 @@ export const useLocalStorage = <
     | LocalStorageEntry<'savedProgress', { questId: QuestId; progress: number }>
     | LocalStorageEntry<'seen-landing-popup', string>
     | LocalStorageEntry<'seen-fuse-elements-intro', boolean>
-    | LocalStorageEntry<'seen-fuse-elements-outro', boolean>,
+    | LocalStorageEntry<'seen-fuse-elements-outro', boolean>
+    | LocalStorageEntry<'waiting-for-giftbox', boolean>
+    | LocalStorageEntry<'waiting-for-radgems', boolean>,
   V extends T['key']
 >(
   item: V

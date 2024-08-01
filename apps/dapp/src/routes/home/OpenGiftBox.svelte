@@ -94,6 +94,7 @@
   import BoxCard from '$lib/components/resource-card/BoxCard.svelte'
   import { messageApi } from '$lib/api/message-api'
   import { waitingWarning } from '$lib/utils/waiting-warning'
+  import { useLocalStorage } from '$lib/utils/local-storage'
 
   let loadingLedgerData = true
   let ownedGiftBoxes: {
@@ -221,6 +222,21 @@
       })
   )
 
+  const handleDepositData = (data: Messages['GiftBoxDeposited']) => {
+    const amountOfElements = data.rewards.fungibles[0].amount
+    const [id] = data.rewards.nonFungibles[0].localIds
+    const { keyImageUrl: imageUrl, energyType: energy, ...energyCard } = data.energyCard
+    const cardData = { ...energyCard, imageUrl, energy, id }
+    rewards = {
+      amountOfElements,
+      cardData
+    }
+    waitingForOpenTransaction = false
+    waitingForDepositedRewards = false
+    useLocalStorage('waiting-for-giftbox').set(false)
+    readyToClaim = true
+  }
+
   const openGiftBox = (giftBoxAddress: string) => {
     waitingForOpenTransaction = true
 
@@ -228,6 +244,7 @@
       transactionManifest: openGiftBoxManifest(giftBoxAddress)
     })
       .andThen(() => {
+        useLocalStorage('waiting-for-giftbox').set(true)
         waitingForOpenTransaction = false
         waitingForDepositedRewards = true
 
@@ -249,25 +266,11 @@
           return data
         })
       })
-      .map((data) => {
-        const amountOfElements = data.rewards.fungibles[0].amount
-        const [id] = data.rewards.nonFungibles[0].localIds
-        const { keyImageUrl: imageUrl, energyType: energy, ...energyCard } = data.energyCard
-        const cardData = { ...energyCard, imageUrl, energy, id }
-        return { amountOfElements, cardData }
-      })
-      .map(({ amountOfElements, cardData }) => {
-        rewards = {
-          amountOfElements,
-          cardData
-        }
-        waitingForOpenTransaction = false
-        waitingForDepositedRewards = false
-        readyToClaim = true
-      })
+      .map(handleDepositData)
       .mapErr(() => {
         waitingForOpenTransaction = false
         waitingForDepositedRewards = false
+        useLocalStorage('waiting-for-giftbox').set(false)
       })
   }
 
@@ -306,22 +309,40 @@
   const close = context.get('closeMenuItem')
 
   onMount(() => {
-    getRewards($user!.id)
-      .map(({ amountOfElements, cardData }) => {
-        rewards = {
-          amountOfElements,
-          cardData
-        }
+    let unsub: () => void
 
-        readyToClaim = true
-        loadingClaimStatus = false
+    if (useLocalStorage('waiting-for-giftbox').get()) {
+      waitingForDepositedRewards = true
+      loadingLedgerData = false
+      loadingClaimStatus = false
+
+      unsub = $webSocketClient!.onMessage((msg) => {
+        if (msg.type === 'GiftBoxDeposited') {
+          waitingForDepositedRewards = false
+          useLocalStorage('waiting-for-giftbox').set(false)
+          messageApi.markAsSeen([msg.id])
+          handleDepositData(msg)
+        }
       })
-      .mapErr(() => {
-        loadingClaimStatus = false
-      })
+    } else {
+      getRewards($user!.id)
+        .map(({ amountOfElements, cardData }) => {
+          rewards = {
+            amountOfElements,
+            cardData
+          }
+
+          readyToClaim = true
+          loadingClaimStatus = false
+        })
+        .mapErr(() => {
+          loadingClaimStatus = false
+        })
+    }
 
     return () => {
       waitingWarning(false)
+      if (unsub) unsub()
     }
   })
 

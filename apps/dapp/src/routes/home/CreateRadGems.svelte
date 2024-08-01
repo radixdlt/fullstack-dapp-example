@@ -63,6 +63,7 @@
   import { webSocketClient } from '$lib/websocket-client'
   import JettyMenuItemPage from './JettyMenuItemPage.svelte'
   import { waitingWarning } from '$lib/utils/waiting-warning'
+  import { useLocalStorage } from '$lib/utils/local-storage'
 
   let rerender = false
 
@@ -127,9 +128,11 @@
     return sendTransaction({ transactionManifest })
       .map(() => {
         waitingForSendElements = false
+        useLocalStorage('waiting-for-radgems').set(true)
         waitingForElementsDeposited = true
       })
       .mapErr(() => {
+        useLocalStorage('waiting-for-radgems').set(false)
         waitingForSendElements = false
         waitingForElementsDeposited = false
       })
@@ -159,6 +162,9 @@
   )
 
   onMount(() => {
+    if (useLocalStorage('waiting-for-radgems').get()) {
+      waitingForElementsDeposited = true
+    }
     ResultAsync.combineWithAllErrors([checkAmountOfElements(), checkClaimAvailable($user?.id!)])
       .map(([_, radGemIds]) => {
         loadingLedgerData = false
@@ -177,6 +183,7 @@
             checkClaimAvailable($user?.id!).map((radGemId) => {
               claimAvailable = true
               claimableRadGemIds = radGemId
+              useLocalStorage('waiting-for-radgems').set(false)
               waitingForElementsDeposited = false
               elementsDeposited = true
             })
