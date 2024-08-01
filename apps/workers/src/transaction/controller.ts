@@ -699,7 +699,7 @@ export const TransactionWorkerController = ({
               .map(
                 ({ key_image_url, name, description, material, color, rarity, quality }) =>
                   `Tuple(
-                    Url("${key_image_url}"), 
+                    "${key_image_url}", 
                     "${name}", 
                     "${description}", 
                     "${material}", 
