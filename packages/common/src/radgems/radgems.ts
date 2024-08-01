@@ -1,3 +1,5 @@
+import { getRandomFloat } from '../helpers'
+
 export type RadgemColor = (typeof RadgemColor)[keyof typeof RadgemColor]
 export const RadgemColor = {
   Blood: 'Blood',
@@ -55,6 +57,8 @@ type Radgem = {
   material: RadgemMaterial
   quality: number
 }
+
+export const newRadgem = () => genRadgem(getRandomFloat(), getRandomFloat(), getRandomFloat())
 
 export const genRadgem = (colorSeed: number, materialSeed: number, qualitySeed: number): Radgem => {
   if (colorSeed < 0 || colorSeed >= 1) throw new Error('Invalid color seed')

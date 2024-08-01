@@ -383,6 +383,52 @@ describe('Event flows', () => {
 
       console.log('Transaction ID:', result.value)
     })
+
+    it('should deposit elements to RadGemForgeV2', { timeout: 30_000, skip: false }, async () => {
+      const { user, submitTransaction } = await getAccount()
+
+      await mintElements(1000, user.accountAddress!)
+
+      const result = await submitTransaction(`
+          CALL_METHOD
+            Address("${user.accountAddress}")
+            "lock_fee"
+            Decimal("50")
+          ;
+
+          CALL_METHOD
+            Address("${user.accountAddress}")
+            "create_proof_of_non_fungibles"
+            Address("${addresses.badges.heroBadgeAddress}")
+            Array<NonFungibleLocalId>(NonFungibleLocalId("<${user.id}>"))
+          ;
+
+          POP_FROM_AUTH_ZONE
+            Proof("hero_badge")
+          ;
+
+          CALL_METHOD
+            Address("${user.accountAddress}")
+            "withdraw" 
+            Address("${addresses.resources.elementAddress}")
+            Decimal("50") 
+          ;
+
+          TAKE_ALL_FROM_WORKTOP 
+            Address("${addresses.resources.elementAddress}") 
+            Bucket("elements")
+          ;
+
+          CALL_METHOD
+            Address("${addresses.components.radgemForgeV2}")
+            "deposit_elements"
+            Proof("hero_badge")
+            Bucket("elements")
+          ;
+          `)
+
+      expect(result.isOk()).toBe(true)
+    })
   })
 
   it('should send clams to jetty and claim rewards', { timeout: 60_000, skip: false }, async () => {

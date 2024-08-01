@@ -30,7 +30,8 @@ export const config = {
   networkId,
   radQuest: {
     ...Addresses(networkId),
-    directXrdDepositAmount: 5
+    directXrdDepositAmount: 5,
+    elementsPerRadgem: 5
   },
   worker: {
     event: {
