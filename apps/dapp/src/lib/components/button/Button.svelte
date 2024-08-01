@@ -56,6 +56,7 @@
     height: 2.7rem;
     min-width: var(--min-width, 7rem);
     width: fit-content;
+    -webkit-tap-highlight-color: transparent;
     @include desktop {
       @media (hover: hover) {
         &:hover:not(.disabled) {
