@@ -29,13 +29,7 @@ TAKE_ALL_FROM_WORKTOP
 
 CALL_METHOD
   Address("${radgem_forge_v2}")
-  "deposit_element"
+  "deposit_elements"
   Proof("hero_badge")
   Bucket("elements")
-;
-
-CALL_METHOD
-    Address("${account}")
-    "deposit_batch"
-    Expression("ENTIRE_WORKTOP")
 ;
