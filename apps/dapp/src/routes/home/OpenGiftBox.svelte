@@ -343,7 +343,7 @@
     </div>
   {:else if waitingForDepositedRewards}
     <JettyMenuItemPage>
-      <div slot="header" class="title padding">
+      <div slot="header" class="title">
         {$i18n.t('jetty:open-gift-box.opening-gift-box')}...
       </div>
 
