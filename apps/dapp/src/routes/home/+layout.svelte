@@ -222,10 +222,6 @@
                 pushNotification('reachedTierSilver')
               }
 
-              if (data.requirements.GoldLevel.isComplete) {
-                pushNotification('reachedTierGold')
-              }
-
               if (data.requirements.SuperLevel.isComplete) {
                 pushNotification('reachedTierSuper')
               }
@@ -334,9 +330,6 @@
       'SilverLevel',
       'reachedTierSilver'
     )
-
-  $: if ($webSocketClient)
-    registerNotificationOnMessage($webSocketClient, 'QuestTogether', 'GoldLevel', 'reachedTierGold')
 
   $: if ($webSocketClient)
     registerNotificationOnMessage(

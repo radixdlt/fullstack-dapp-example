@@ -39,17 +39,13 @@
     (Object.entries(progress).find(([_, status]) => status === 'IN_PROGRESS')?.[0] as Level) ||
     ('BronzeLevel' as Level)
   $: nextLevel =
-    currentLevel === 'BronzeLevel'
-      ? 'SilverLevel'
-      : currentLevel === 'SilverLevel'
-        ? 'GoldLevel'
-        : ('SuperLevel' as Level | 'SuperLevel')
+    currentLevel === 'BronzeLevel' ? 'SilverLevel' : ('SuperLevel' as Level | 'SuperLevel')
   $: nextLevelIn =
     nextLevel === 'SuperLevel' ? -1 : threshold[currentLevel as Level] - referrals.length
   $: hasWaitingRewards = Object.entries(progress).some(
     ([_, status]) => status === 'REWARDS_DEPOSITED'
   )
-  $: unlockedSuperLevel = referrals.length >= threshold.GoldLevel
+  $: unlockedSuperLevel = referrals.length >= threshold.SilverLevel
 
   const claimXrd = () => {
     loading = true
@@ -155,14 +151,6 @@
       maximum={threshold.SilverLevel}
       referred={referrals.length}
       status={progress.SilverLevel}
-    ></ReferralLevel>
-
-    <ReferralLevel
-      level="GoldLevel"
-      on:refresh={refresh}
-      maximum={threshold.GoldLevel}
-      referred={referrals.length}
-      status={progress.GoldLevel}
     ></ReferralLevel>
   </div>
 </div>

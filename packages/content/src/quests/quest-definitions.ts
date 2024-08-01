@@ -236,7 +236,7 @@ export const QuestDefinitions = () => {
       rewards: [
         {
           name: 'xrd',
-          amount: 300
+          amount: 25
         },
         {
           name: 'simpleGiftBox',
@@ -244,10 +244,6 @@ export const QuestDefinitions = () => {
         },
         {
           name: 'fancyGiftBox',
-          amount: 1
-        },
-        {
-          name: 'eliteGiftBox',
           amount: 1
         }
       ],
@@ -279,7 +275,7 @@ export const QuestDefinitions = () => {
       rewards: [
         {
           name: 'xrd',
-          amount: 30
+          amount: 5
         }
       ],
       minutesToComplete: 1,

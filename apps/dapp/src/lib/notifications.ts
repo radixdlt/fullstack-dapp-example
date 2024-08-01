@@ -118,12 +118,6 @@ const notifications = {
     text: i18next.t('jetty:notifications.new-tier'),
     action: () => goto(`/home/advanced/quest/${QuestDefinitions().QuestTogether.id}`)
   },
-  reachedTierGold: {
-    id: 'reachedTierGold',
-    title: 'More Quest Friends!',
-    text: i18next.t('jetty:notifications.new-tier'),
-    action: () => goto(`/home/advanced/quest/${QuestDefinitions().QuestTogether.id}`)
-  },
   reachedTierSuper: {
     id: 'reachedTierSuper',
     title: 'More Quest Friends!',
