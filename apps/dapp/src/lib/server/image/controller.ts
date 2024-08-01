@@ -51,7 +51,7 @@ export const ImageController = ({
       gatewayApi.callApi('getNonFungibleData', addresses.resources.morphEnergyCardAddress, [card])
     ])
       .andThen(([radgemData, cardData]) => {
-        logger.debug({ method: 'getRadMorphCodes.getNonFungibleData', radgemData, cardData })
+        logger.trace({ method: 'getRadMorphCodes.getNonFungibleData', radgemData, cardData })
         return Result.combine([
           getRadgemCodes(radgemData[0].data?.programmatic_json),
           getRadgemCodes(radgemData[1].data?.programmatic_json),

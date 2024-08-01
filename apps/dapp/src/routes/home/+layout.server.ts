@@ -34,7 +34,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
           expires: new Date('9999-12-31'),
           httpOnly: false
         })
-        locals.context.logger.debug({ utmValues, base64Encoded, method: 'storeUtmValues' })
+        locals.context.logger.trace({ utmValues, base64Encoded, method: 'storeUtmValues' })
       })
     }
   }
