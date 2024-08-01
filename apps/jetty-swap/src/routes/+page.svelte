@@ -56,7 +56,7 @@
   let toInput = ''
 
   $: fromInput = allowOnlyPositiveNumberInString(fromInput?.toString() || '')
-  $: connected = !!$walletData?.accounts[0]
+  let connected = false
 
   let balances: FungibleResourcesCollectionItemVaultAggregated[] = []
   $: currentBalance =
@@ -89,6 +89,8 @@
     conversionRateTo = (await getPrice(swapComponent)) ?? '10'
   }
 
+  let radixDappToolkit: RadixDappToolkit
+
   onMount(() => {
     const swapConfig = {
       networkId: +env.PUBLIC_NETWORK_ID,
@@ -99,17 +101,29 @@
         : publicConfig.accounts.lettySwapDappDefinition.address
     }
 
-    $rdt = RadixDappToolkit({ ...swapConfig, logger: Logger(1) })
-    $rdt.buttonApi.setTheme(isJetty ? 'radix-blue' : 'white')
+    radixDappToolkit = RadixDappToolkit({
+      ...swapConfig,
+      logger: Logger(1),
+      onDisconnect: () => {
+        connected = false
+      }
+    })
+
+    radixDappToolkit.buttonApi.setTheme(isJetty ? 'radix-blue' : 'white')
     if (!isJetty) {
-      $rdt.buttonApi.setMode('dark')
+      radixDappToolkit.buttonApi.setMode('dark')
     }
     $gatewayApi = GatewayApi(parseInt(env.PUBLIC_NETWORK_ID, 0))
-    $rdt?.walletApi.setRequestData(DataRequestBuilder.accounts().exactly(1))
-    $rdt?.walletApi.walletData$.subscribe((data) => {
-      $walletData = data
-      updateBalances(data?.accounts[0]?.address)
+    radixDappToolkit.walletApi.setRequestData(DataRequestBuilder.accounts().exactly(1))
+    radixDappToolkit.walletApi.walletData$.subscribe((data) => {
+      if (data.persona?.identityAddress) {
+        connected = true
+        $walletData = data
+        updateBalances(data?.accounts[0]?.address)
+      }
     })
+
+    $rdt = radixDappToolkit
 
     Promise.all([
       $gatewayApi.callApi('getEntityMetadata', addresses.resources.ottercoinAddress),
