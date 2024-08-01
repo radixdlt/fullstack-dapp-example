@@ -32,6 +32,7 @@
   import ErrorPopup from './ErrorPopup.svelte'
   import { GatewayApi } from 'common'
   import NetworkCongestedBanner from './NetworkCongestedBanner.svelte'
+  import { PUBLIC_NETWORK_ID } from '$env/static/public'
 
   export let data: LayoutData
 
@@ -377,4 +378,6 @@
   <Footer slot="footer" userId={$user?.id} />
 </Layout>
 
-<NetworkCongestedBanner />
+{#if PUBLIC_NETWORK_ID === '1'}
+  <NetworkCongestedBanner />
+{/if}
