@@ -175,6 +175,16 @@ export const trackedTransactionTypes: TrackedTransactions = {
       }
     })
   },
+  [EventId.DepositedElements]: {
+    AddedRadgemImageEvent: eventEmittedByComponent({
+      eventName: 'DepositedElementsEvent',
+      componentAddress: config.radQuest.components.radgemForgeV2,
+      keys: {
+        user_id: { kind: 'String', key: 'userId' },
+        elements_count: { kind: 'Decimal', key: 'elementsCount' }
+      }
+    })
+  },
   [EventId.CombineElementsAddedRadgemImage]: {
     AddedRadgemImageEvent: eventEmittedByComponent({
       eventName: 'CombineElementsAddedRadgemImageEvent',

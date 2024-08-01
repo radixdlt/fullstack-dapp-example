@@ -263,7 +263,8 @@ export const EventId = {
   CombineElementsClaimed: 'CombineElementsClaimed',
   AccountAllowedToForgeHeroBadge: 'AccountAllowedToForgeHeroBadge',
   GiftBoxOpened: 'GiftBoxOpened',
-  GiftBoxDeposited: 'GiftBoxDeposited'
+  GiftBoxDeposited: 'GiftBoxDeposited',
+  DepositedElements: 'DepositedElements'
 } as const
 
 export type EventId = keyof typeof EventId
