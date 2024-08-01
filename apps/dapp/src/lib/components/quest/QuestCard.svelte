@@ -100,9 +100,7 @@
       {/if}
       <div class="card content" bind:this={content}>
         {#key progress}
-          <div>
-            <slot {progress} />
-          </div>
+          <slot {progress} />
         {/key}
       </div>
     </div>
