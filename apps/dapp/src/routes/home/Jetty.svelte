@@ -23,6 +23,7 @@
   import OpenGiftBox, { getRewards } from './OpenGiftBox.svelte'
   import { goto } from '$app/navigation'
   import { i18n } from '$lib/i18n/i18n'
+  import { useLocalStorage } from '$lib/utils/local-storage'
 
   let poppedUp = false
   let expanded = false
@@ -75,10 +76,15 @@
       })
   }
 
-  $: if (expanded) {
+  $: if (expanded && !showMenuItemContent) {
     checkClaimStatus()
     checkGiftBoxStatus()
+
+    $waitingForGiftBox = useLocalStorage('waiting-for-giftbox').get() ?? false
+    $waitingForRadgems = useLocalStorage('waiting-for-radgems').get() ?? false
   }
+
+  let showMenuItemContent: boolean
 
   const undoGlossaryAnchor = () => {
     goto($page.url.href.split('?')[0])
@@ -89,6 +95,19 @@
   }
 
   const missingHeroBadge = derived(hasHeroBadge, ($hasHeroBadge) => !$hasHeroBadge)
+
+  const waitingForGiftBox = writable(false)
+  const waitingForRadgems = writable(false)
+
+  $: if ($giftBoxRewardsAvailable) {
+    $waitingForGiftBox = false
+    useLocalStorage('waiting-for-giftbox').set(false)
+  }
+
+  $: if ($claimAvailable) {
+    $waitingForRadgems = false
+    useLocalStorage('waiting-for-radgems').set(false)
+  }
 
   $: {
     $missingHeroBadge
@@ -106,14 +125,16 @@
       text: $i18n.t('jetty:menu-giftBox'),
       icon: BoxIcon,
       alert: giftBoxRewardsAvailable,
-      disabled: missingHeroBadge
+      disabled: missingHeroBadge,
+      loading: waitingForGiftBox
     },
     {
       id: 'create-radgems',
       text: $i18n.t('jetty:menu-radgems'),
       icon: LightningIcon,
       alert: claimAvailable,
-      disabled: missingHeroBadge
+      disabled: missingHeroBadge,
+      loading: waitingForRadgems
     },
     {
       id: 'radmorphs',
@@ -126,6 +147,7 @@
 
 {#if !$hideJettyMenu}
   <JettyMenu
+    bind:showMenuItemContent
     bind:expanded
     bind:this={jettyMenu}
     on:hover-over-jetty={(e) => {

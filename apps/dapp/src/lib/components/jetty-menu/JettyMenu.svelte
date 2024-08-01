@@ -32,9 +32,11 @@
     icon: string
     disabled?: Readable<boolean>
     alert?: Writable<boolean>
+    loading?: Writable<boolean>
   }[]
   export let notifications: typeof jettyNotifications = writable([])
   export let hideJetty = false
+  export let showMenuItemContent = false
 
   export const openMenuItem = (id: string) => {
     expanded = true
@@ -48,7 +50,6 @@
   }
 
   let headerText: string
-  let showMenuItemContent = false
   let currentMenuItem: (typeof menuItems)[number]
 
   $: if (currentMenuItem && showMenuItemContent) {
@@ -245,6 +246,7 @@
             text={item.text}
             icon={item.icon}
             alert={item.alert}
+            loading={item.loading}
             on:click={() => {
               showMenuItemContent = true
               currentMenuItem = item

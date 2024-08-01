@@ -1,11 +1,13 @@
 <script lang="ts">
   import { writable } from 'svelte/store'
   import Icon from '../icon/Icon.svelte'
+  import LoadingSpinner from '../loading-spinner/LoadingSpinner.svelte'
 
   export let text: string
   export let icon: string
   export let alert = writable(false)
   export let disabled = false
+  export let loading = writable(false)
 </script>
 
 <button class="jetty-menu-button" class:disabled on:click>
@@ -15,6 +17,8 @@
   </div>
   {#if $alert}
     <div class="alert" />
+  {:else if $loading}
+    <LoadingSpinner dark />
   {/if}
 </button>
 
