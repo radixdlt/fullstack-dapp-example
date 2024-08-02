@@ -342,10 +342,6 @@ export const QuestDefinitions = () => {
       category: 'advanced',
       rewards: [
         {
-          name: 'xrd',
-          amount: 20
-        },
-        {
           name: 'simpleGiftBox',
           amount: 1
         }
