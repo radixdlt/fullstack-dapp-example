@@ -22,6 +22,7 @@ nameOverride: "dapp"
 fullnameOverride: "dapp"
 
 params:
+  MAX_USER_PER_IP: 4
 
 secrets: {}
 

@@ -18,6 +18,7 @@ const {
   TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN,
   TWILIO_SERVICE_SID,
+  MAX_USER_PER_IP,
   MAILER_LITE_API_KEY
 } = privateEnv
 
@@ -62,7 +63,7 @@ export const config = {
   },
   dapp: {
     expectedOrigin: EXPECTED_ORIGIN,
-
+    maxUserPerIp: parseInt(MAX_USER_PER_IP || '4', 10),
     networkId: publicConfig.networkId,
     dAppDefinitionAddress: publicConfig.dAppDefinitionAddress ?? '',
     ...Addresses(publicConfig.networkId)

@@ -130,6 +130,24 @@ export const AuthController = ({
       }
     )
 
+  const preventFraud = (clientIp: string) =>
+    userModel.getUserIdsByIp(clientIp).andThen((ids) =>
+      ids.length > config.dapp.maxUserPerIp
+        ? userModel.blockUsers(ids).andThen(() => {
+            logger.info({
+              method: 'preventFraud',
+              clientIp,
+              ids
+            })
+            return err({
+              reason: 'tooManyUsers',
+              jsError: undefined,
+              httpResponseCode: 400
+            } satisfies ApiError)
+          })
+        : ok(undefined)
+    )
+
   const login = (
     ctx: ControllerMethodContext,
     proofs: {
@@ -237,6 +255,7 @@ export const AuthController = ({
     createChallenge,
     createRefreshTokenCookie,
     login,
+    preventFraud,
     renewAuthToken,
     verifyAuthToken,
     verifyAuthHeader
