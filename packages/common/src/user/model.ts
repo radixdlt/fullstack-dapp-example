@@ -104,10 +104,18 @@ export const UserModel =
     }
 
     const getUserIdsByIp = (ip: string) => {
-      return ResultAsync.fromPromise(db.userPhoneNumber.findMany({ where: { ip } }), (error) => {
-        logger?.error({ error, method: 'countByIp', model: 'UserModel' })
-        return createApiError('failed to count by ip', 400)(error)
-      }).map((data) => data.map((user) => user.userId))
+      return ResultAsync.fromPromise(
+        db.userPhoneNumber.findMany({
+          where: { ip },
+          select: {
+            userId: true
+          }
+        }),
+        (error) => {
+          logger?.error({ error, method: 'countByIp', model: 'UserModel' })
+          return createApiError('failed to count by ip', 400)(error)
+        }
+      ).map((data) => data.map((user) => user.userId))
     }
 
     const blockUsers = (userIds: string[]) =>
