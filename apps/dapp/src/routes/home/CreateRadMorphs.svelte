@@ -28,7 +28,7 @@
         id,
         name: getStringDataValue('name')(fields),
         material: getStringDataValue('material')(fields) as ShaderCodeDescription,
-        quality: getStringDataValue('quality')(fields),
+        quality: parseInt(getStringDataValue('quality')(fields)),
         color: getStringDataValue('color')(fields) as ColorCodeDescription
       }))
     )
@@ -87,7 +87,7 @@
   let gemData: {
     id: string
     name: string
-    quality: string
+    quality: number
     color: ColorCodeDescription
     material: ShaderCodeDescription
   }[]

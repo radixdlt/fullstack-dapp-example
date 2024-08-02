@@ -57,7 +57,8 @@
   let giftBoxRewardsAvailable = writable(false)
 
   const checkClaimStatus = () => {
-    checkClaimAvailable($user?.id!)
+    checkClaimAvailable($user?.id!, false)
+      .orElse(() => checkClaimAvailable($user?.id!, true))
       .map(() => {
         claimAvailable.set(true)
       })

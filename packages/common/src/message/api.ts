@@ -11,7 +11,6 @@ export const MessageType = {
   QuestRewardsClaimed: 'QuestRewardsClaimed',
   CombineElementsDeposited: 'CombineElementsDeposited',
   CombineElementsMintRadgem: 'CombineElementsMintRadgem',
-  CombineElementsAddRadgemImage: 'CombineElementsAddRadgemImage',
   CombineElementsClaimed: 'CombineElementsClaimed',
   HeroBadgeReadyToBeClaimed: 'HeroBadgeReadyToBeClaimed',
   ReferralCompletedBasicQuests: 'ReferralCompletedBasicQuests',
@@ -45,10 +44,7 @@ export type Messages = {
   }
   [MessageType.CombineElementsMintRadgem]: {
     traceId: string
-  }
-  [MessageType.CombineElementsAddRadgemImage]: {
-    traceId: string
-  }
+  },
   [MessageType.CombineElementsClaimed]: {
     traceId: string
   }

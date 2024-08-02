@@ -20,7 +20,7 @@
     class="main-card"
     class:gold-border={goldBorder}
     on:click={() => {
-      if (disabled) return
+      if (disabled || !selectable) return
       selected = !selected
       selected ? dispatch('selected') : dispatch('deselected')
     }}
