@@ -41,9 +41,9 @@
       </div>
     {/if}
 
-    {#if visibleErrorPopup.id === ErrorPopupId.AccountAlreadyRegistered}
+    {#if visibleErrorPopup.id === ErrorPopupId.AccountAlreadyRegistered || visibleErrorPopup.id === ErrorPopupId.AccountLocked}
       <div>
-        {$i18n.t('main:errorPopup.AccountAlreadyRegistered.content')}
+        {$i18n.t(`main:errorPopup.${visibleErrorPopup.id}.content`)}
       </div>
 
       <div class="button">
@@ -51,7 +51,7 @@
           theme="light"
           on:click={() => {
             hide()
-          }}>{$i18n.t('main:errorPopup.AccountAlreadyRegistered.button')}</Button
+          }}>{$i18n.t(`main:errorPopup.${visibleErrorPopup.id}.button`)}</Button
         >
       </div>
     {/if}
