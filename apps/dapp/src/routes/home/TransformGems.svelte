@@ -21,7 +21,7 @@
     id: string
     material: ShaderCodeDescription
     color: ColorCodeDescription
-    quality: string
+    quality: number
   }[] = []
 
   export let getPreview: () => Promise<typeof preview>

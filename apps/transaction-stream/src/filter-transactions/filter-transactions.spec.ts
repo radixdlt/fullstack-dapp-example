@@ -21,6 +21,7 @@ import { RedisConnection } from 'queues'
 import CombineElementsDepositedEvents from '../fixtures/transactions/combine-elements-deposited-events'
 import CombineElementsMintedRadgemEvents from '../fixtures/transactions/combine-elements-minted-radgem-events'
 import CombineElementsClaimed from '../fixtures/transactions/combine-elements-claimed'
+import DepositElementsToRadGemv2 from '../fixtures/transactions/radgem-forgev2'
 
 let accountAddressModel: ReturnType<AccountAddressModel>
 let filterTransactionsByType = FilterTransactionsByType(trackedTransactionTypes)
@@ -269,6 +270,21 @@ describe('filter transactions', () => {
       const [transaction] = filteredTransactions
       expect(transaction.type).toEqual(EventId.CombineElementsClaimed)
       expect(transaction.userId).toBeDefined()
+    })
+
+    it(`should find ${EventId.DepositedElements} transaction`, () => {
+      const result = filterTransactionsByType([...DepositElementsToRadGemv2])
+
+      if (result.isErr()) throw result.error
+
+      const filteredTransactions = result.value
+
+      expect(filteredTransactions.length).toEqual(1)
+
+      const [transaction] = filteredTransactions
+      expect(transaction.type).toEqual(EventId.DepositedElements)
+      expect(transaction.userId).toBeDefined()
+      expect(transaction.data.elementsCount).toBe('5')
     })
   })
 

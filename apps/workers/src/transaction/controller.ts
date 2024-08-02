@@ -10,7 +10,11 @@ import {
   getRandomFloat,
   getRandomIntInclusive,
   type AppLogger,
-  type AuditModel
+  type AuditModel,
+  newRadgem,
+  ColorCodeDescription,
+  ShaderCodeDescription,
+  transformRadgemToNfData
 } from 'common'
 import { TransactionHelper, TransactionHelperError, withSigners } from 'typescript-wallet'
 import { createRewardsDepositManifest } from './helpers/createRewardsDepositManifest'
@@ -20,7 +24,6 @@ import { createCombinedElementsMintRadgemManifest } from './helpers/createCombin
 import { TokenPriceClient } from '../token-price-client'
 import BigNumber from 'bignumber.js'
 import { createCombinedElementsAddRadgemImageManifest } from './helpers/createCombinedElementsAddRadgemImageManifest'
-import { DbTransactionBuilder } from '../helpers/dbTransactionBuilder'
 import { WorkerOutputError, WorkerError } from '../_types'
 import { MessageHelper } from '../helpers/messageHelper'
 import { ReferralRewardAction } from '../helpers/referalReward'
@@ -672,6 +675,91 @@ export const TransactionWorkerController = ({
               ;`
           ].join('\n')
         )
+
+      case 'ElementsDeposited': {
+        const { elementsCount, userId } = job.data
+        const numberOfRadgems = elementsCount / config.radQuest.elementsPerRadgem
+        const radGems = Array(numberOfRadgems)
+          .fill(null)
+          .map(newRadgem)
+          .map(transformRadgemToNfData)
+
+        return ResultAsync.combine(
+          radGems.map((radGem) =>
+            imageModel(logger)
+              .getRadGemKeyImageUrl(
+                radGem.color as ColorCodeDescription,
+                radGem.material as ShaderCodeDescription
+              )
+              .map((key_image_url) => ({ ...radGem, key_image_url }))
+          )
+        )
+          .andThen((radgems) => {
+            const radgemTuples = radgems
+              .map(
+                ({ key_image_url, name, description, material, color, rarity, quality }) =>
+                  `Tuple(
+                    "${key_image_url}", 
+                    "${name}", 
+                    "${description}", 
+                    "${material}", 
+                    "${color}", 
+                    "${rarity}", 
+                    Decimal("${quality}")
+                  )
+                  `
+              )
+              .join(', ')
+
+            return handleSubmitTransaction(
+              [
+                `
+              CALL_METHOD
+                Address("${payer.accessController}")
+                "create_proof"
+              ;`,
+
+                `
+              CALL_METHOD
+                Address("${system.accessController}")
+                "create_proof"
+              ;`,
+
+                `
+              CALL_METHOD
+                Address("${payer.address}")
+                "lock_fee"
+                Decimal("50")
+              ;`,
+
+                `
+              CALL_METHOD
+                Address("${system.address}")
+                "create_proof_of_amount"
+                Address("${badges.adminBadgeAddress}")
+                Decimal("1")
+              ;`,
+
+                `
+              CALL_METHOD
+                Address("${components.radgemForgeV2}")
+                "mint_radgems"
+                "${userId}"
+                Array<Tuple>(
+                  ${radgemTuples}
+                )
+              ;`
+              ].join('\n')
+            ).andThen(() =>
+              sendMessage(userId, {
+                type: 'RadgemsMinted',
+                radgemData: radgems,
+                traceId: job.data.traceId
+              })
+            )
+          })
+          .mapErr((error) => ({ reason: WorkerError.FailedToCreateRadGem, jsError: error }))
+      }
 
       default:
         return errAsync({

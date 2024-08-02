@@ -1,7 +1,8 @@
 {
   "rust-analyzer.linkedProjects": [
     "./scrypto-packages/radquest/Cargo.toml",
-    "./scrypto-packages/clam-dex/Cargo.toml"
+    "./scrypto-packages/clam-dex/Cargo.toml",
+    "./scrypto-packages/radgem-forge-v2/Cargo.toml"
   ],
   "cSpell.words": [
     "Ottercoin",

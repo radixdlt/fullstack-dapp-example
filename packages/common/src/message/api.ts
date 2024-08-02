@@ -2,6 +2,7 @@ import { err, ok } from 'neverthrow'
 import { fetchWrapper } from '../helpers/fetch-wrapper'
 import type { AppLogger } from '../helpers/logger'
 import type { MorphCardMintedEventOutput } from '../event-data/event-data'
+import type { RadgemNfData } from '../radgems'
 
 export const MessageType = {
   QuestRequirementCompleted: 'QuestRequirementCompleted',
@@ -10,12 +11,13 @@ export const MessageType = {
   QuestRewardsClaimed: 'QuestRewardsClaimed',
   CombineElementsDeposited: 'CombineElementsDeposited',
   CombineElementsMintRadgem: 'CombineElementsMintRadgem',
-  CombineElementsAddRadgemImage: 'CombineElementsAddRadgemImage',
   CombineElementsClaimed: 'CombineElementsClaimed',
   HeroBadgeReadyToBeClaimed: 'HeroBadgeReadyToBeClaimed',
   ReferralCompletedBasicQuests: 'ReferralCompletedBasicQuests',
   XrdDepositedToAccount: 'XrdDepositedToAccount',
-  GiftBoxDeposited: 'GiftBoxDeposited'
+  GiftBoxDeposited: 'GiftBoxDeposited',
+  RadgemsMinted: 'RadgemsMinted',
+  CombineElementsAddRadgemImage: 'CombineElementsAddRadgemImage'
 } as const
 
 export type MessageType = (typeof MessageType)[keyof typeof MessageType]
@@ -44,9 +46,6 @@ export type Messages = {
   [MessageType.CombineElementsMintRadgem]: {
     traceId: string
   }
-  [MessageType.CombineElementsAddRadgemImage]: {
-    traceId: string
-  }
   [MessageType.CombineElementsClaimed]: {
     traceId: string
   }
@@ -70,6 +69,13 @@ export type Messages = {
         resourceAddress: string
       }[]
     }
+  }
+  [MessageType.RadgemsMinted]: {
+    radgemData: RadgemNfData[]
+    traceId: string
+  }
+  [MessageType.CombineElementsAddRadgemImage]: {
+    traceId: string
   }
 }
 

@@ -575,6 +575,19 @@ export const EventWorkerController = ({
         }).map(() => undefined)
       }
 
+      case EventId.DepositedElements: {
+        const elementsCount = parseInt((job.data.data.elementsCount as string) ?? '0')
+        if (elementsCount)
+          return transactionIntent.add({
+            userId,
+            discriminator: `${EventId.DepositedElements}:RadGem:${transactionId}`,
+            type: 'ElementsDeposited',
+            traceId,
+            elementsCount
+          })
+        return okAsync(undefined)
+      }
+
       default:
         childLogger.error({
           message: 'Unhandled Event'

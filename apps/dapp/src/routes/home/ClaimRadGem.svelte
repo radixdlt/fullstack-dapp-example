@@ -3,12 +3,7 @@
   import { sendTransaction } from '$lib/rdt'
   import { createEventDispatcher, onMount } from 'svelte'
   import { user } from '../../stores'
-  import {
-    GatewayApi,
-    gemImageMapping,
-    type ColorCodeDescription,
-    type ShaderCodeDescription
-  } from 'common'
+  import { GatewayApi, type ColorCodeDescription, type ShaderCodeDescription } from 'common'
   import type {
     ProgrammaticScryptoSborValueTuple,
     ProgrammaticScryptoSborValueString
@@ -16,19 +11,47 @@
   import pipe from 'ramda/src/pipe'
   import { i18n } from '$lib/i18n/i18n'
   import JettyMenuItemPage from './JettyMenuItemPage.svelte'
+  import GemCard from '$lib/components/resource-card/GemCard.svelte'
+  import Carousel from '$lib/components/carousel/Carousel.svelte'
+  import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
 
+  export let useV2 = true
+  export let data:
+    | {
+        name: string
+        quality: number
+        material: ShaderCodeDescription
+        color: ColorCodeDescription
+      }[]
+    | undefined
   export let ids: string[]
 
   let loading = false
-  let preview: {
-    name: string
-    quality: string
-    material: ShaderCodeDescription
-    color: ColorCodeDescription
-  }
 
-  $: manifest = `
+  const manifest = `
       CALL_METHOD
+        Address("${$user?.accountAddress}")
+        "create_proof_of_non_fungibles"
+        Address("${publicConfig.badges.heroBadgeAddress}")
+        Array<NonFungibleLocalId>(NonFungibleLocalId("<${$user?.id}>"))
+      ;
+      POP_FROM_AUTH_ZONE
+          Proof("hero_badge_proof")
+      ;
+      CALL_METHOD
+          Address("${publicConfig.components.radgemForgeV2}")
+          "claim_radgems"
+          Proof("hero_badge_proof")
+      ;
+      CALL_METHOD
+          Address("${$user?.accountAddress}")
+          "deposit_batch"
+          Expression("ENTIRE_WORKTOP")
+      ;
+    `
+
+  const manifestOld = `
+  CALL_METHOD
         Address("${$user?.accountAddress}")
         "create_proof_of_non_fungibles"
         Address("${publicConfig.badges.heroBadgeAddress}")
@@ -46,8 +69,7 @@
         Address("${$user?.accountAddress}")
         "deposit_batch"
         Expression("ENTIRE_WORKTOP")
-    ;
-      `
+    ;`
 
   const getRadgemPreview = pipe(
     () =>
@@ -57,21 +79,24 @@
         ids
       ),
     (result) =>
-      result.map(([response]) => {
-        const fields = (response.data?.programmatic_json as ProgrammaticScryptoSborValueTuple)
-          .fields
+      result.map((response) => {
+        const fields = response.map(
+          (items) => (items.data?.programmatic_json as ProgrammaticScryptoSborValueTuple).fields
+        )
 
-        return {
+        return fields.map((fields) => ({
           name: (
             fields.find(
               (field) => field.field_name === 'name'
             ) as ProgrammaticScryptoSborValueString
           ).value,
-          quality: (
-            fields.find(
-              (field) => field.field_name === 'quality'
-            ) as ProgrammaticScryptoSborValueString
-          ).value,
+          quality: parseInt(
+            (
+              fields.find(
+                (field) => field.field_name === 'quality'
+              ) as ProgrammaticScryptoSborValueString
+            ).value
+          ),
           material: (
             fields.find(
               (field) => field.field_name === 'material'
@@ -82,14 +107,14 @@
               (field) => field.field_name === 'color'
             ) as ProgrammaticScryptoSborValueString
           ).value as ColorCodeDescription
-        }
+        }))
       })
   )
 
   onMount(() => {
-    if (ids.length === 1) {
+    if (!data) {
       getRadgemPreview().map((_preview) => {
-        preview = _preview
+        data = _preview
       })
     }
   })
@@ -100,7 +125,7 @@
 
   const onClick = () => {
     loading = true
-    sendTransaction({ transactionManifest: manifest })
+    sendTransaction({ transactionManifest: useV2 ? manifest : manifestOld })
       .map(() => {
         loading = false
         dispatch('claimed')
@@ -119,23 +144,30 @@
   {loading}
 >
   <div class="claim-radgem">
-    {#if ids.length > 1}
-      {$i18n.t('jetty:fuse-elements.multiple-radgems')}
-      <div class="multiple-gems-img">
-        <enhanced:img src="@images/multiple-gems.webp?enhanced" />
+    {#if !data}
+      <div class="loading">
+        <LoadingSpinner dark />
       </div>
-    {:else if preview}
+    {:else}
       <h2>
         {$i18n.t('jetty:fuse-elements.success')}
       </h2>
+
       <b>
-        {$i18n.t('jetty:fuse-elements.new-radgem')}
+        {data.length === 1
+          ? $i18n.t('jetty:fuse-elements.new-radgem')
+          : $i18n.t('jetty:fuse-elements.new-radgems')}
       </b>
-      <img src={gemImageMapping(preview.color, preview.material)} alt="A Radgem" />
-      <h3>
-        {preview.name.split('{')[0]}
-      </h3>
-      {$i18n.t('jetty:fuse-elements.quality', { quality: preview.quality })}
+
+      <div class="cards">
+        <Carousel let:Item>
+          {#each data as gem}
+            <Item>
+              <GemCard {gem} selectable={false} />
+            </Item>
+          {/each}
+        </Carousel>
+      </div>
     {/if}
   </div>
 </JettyMenuItemPage>
@@ -146,6 +178,7 @@
     flex-direction: column;
     align-items: center;
     padding-top: var(--spacing-lg);
+    overflow: hidden;
   }
 
   h2 {
@@ -155,25 +188,17 @@
     line-height: 0;
   }
 
-  h3 {
-    color: var(--color-light);
-    font-size: var(--text-md2);
-    font-weight: var(--font-weight-regular);
-    line-height: 0;
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
   }
 
-  img {
-    height: 12rem;
-    margin-top: var(--spacing-xl);
-    margin-bottom: var(--spacing-lg);
-  }
-
-  .multiple-gems-img {
-    margin-top: var(--spacing-xl);
-    margin-bottom: var(--spacing-lg);
-
-    :global(img) {
-      width: 100%;
-    }
+  .cards {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
   }
 </style>

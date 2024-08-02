@@ -79,6 +79,11 @@ export type QuestCompletedTransactionJob = {
   questId: string
 }
 
+export type ElementsDepositedTransactionJob = {
+  type: 'ElementsDeposited'
+  elementsCount: number
+}
+
 export type TransactionJob = {
   userId: string
   discriminator: string
@@ -94,6 +99,7 @@ export type TransactionJob = {
   | DepositXrdToAccount
   | QuestCompletedTransactionJob
   | DepositGiftBoxRewardTransactionJob
+  | ElementsDepositedTransactionJob
 )
 
 export type RadmorphSystemJob = {
