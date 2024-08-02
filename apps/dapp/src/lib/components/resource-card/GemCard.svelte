@@ -6,12 +6,13 @@
   export let gem: {
     material: ShaderCodeDescription
     color: ColorCodeDescription
-    quality: string
+    quality: number
   }
   export const select = () => (selected = true)
   export const deselect = () => (selected = false)
   export let disabled = false
   export let selected = false
+  export let selectable = true
 
   let title = `${gem.material} ${gem.color}`
     .split(' ')
@@ -19,7 +20,7 @@
     .join(' ')
 </script>
 
-<ResourceCard on:selected on:deselected {disabled} bind:selected>
+<ResourceCard on:selected on:deselected {disabled} bind:selected {selectable}>
   <div
     class="container"
     style:--background-image={`url(${gemImageMapping(gem.color, gem.material)})`}

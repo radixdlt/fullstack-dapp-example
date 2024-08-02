@@ -1,9 +1,12 @@
 <script lang="ts" context="module">
-  const getKeyValueStoreData = (userId: string) => {
+  const getKeyValueStoreData = (userId: string, v2: boolean) => {
     return ResultAsync.fromPromise(
       GatewayApi(publicConfig.networkId).gatewayApiClient.state.innerClient.keyValueStoreData({
         stateKeyValueStoreDataRequest: {
-          key_value_store_address: publicConfig.components.radgemRecordsKeyValueStore,
+          key_value_store_address:
+            publicConfig.components[
+              v2 ? 'radgemRecordsV2KeyValueStore' : 'radgemRecordsKeyValueStore'
+            ],
           keys: [
             {
               key_json: {
@@ -39,14 +42,14 @@
     return errAsync('No claim available')
   }
 
-  export const checkClaimAvailable = (userId: string) =>
-    getKeyValueStoreData(userId).andThen(claimAvailableInKeyValueStore)
+  export const checkClaimAvailable = (userId: string, v2: boolean) =>
+    getKeyValueStoreData(userId, v2).andThen(claimAvailableInKeyValueStore)
 </script>
 
 <script lang="ts">
   import { i18n } from '$lib/i18n/i18n'
   import { publicConfig } from '$lib/public-config'
-  import { GatewayApi } from 'common'
+  import { GatewayApi, type ColorCodeDescription, type ShaderCodeDescription } from 'common'
   import { user } from '../../stores'
   import pipe from 'ramda/src/pipe'
   import { sendTransaction } from '$lib/rdt'
@@ -75,15 +78,29 @@
   let noElements = false
   let amountOfElements: string
   let errorLoadingElements = false
-  let claimAvailable: boolean
+  let claimAvailable = false
   let claimableRadGemIds: string[]
   let waitingForElementsDeposited = false
   let elementsDeposited = false
   let radgemClaimed = false
+  let radgemData: {
+    name: string
+    quality: number
+    material: ShaderCodeDescription
+    color: ColorCodeDescription
+  }[]
+
+  let useV2 = true
+
+  $: hasOverMaxElements = parseInt(amountOfElements) > 100
 
   const elementsToCreateRadgem = 5
 
   $: enoughElementsForRadgems = parseInt(amountOfElements) >= elementsToCreateRadgem
+
+  $: elementsAbleToSend = hasOverMaxElements
+    ? 100
+    : Math.floor(parseInt(amountOfElements) / elementsToCreateRadgem) * elementsToCreateRadgem
 
   const sendElements = async () => {
     const transactionManifest = `
@@ -95,14 +112,14 @@
         ;
 
         POP_FROM_AUTH_ZONE
-            Proof("userBadge")
+            Proof("hero_badge")
         ;
 
         CALL_METHOD
             Address("${$user?.accountAddress}")
             "withdraw" 
             Address("${publicConfig.resources.elementAddress}")
-            Decimal("5") 
+            Decimal("${elementsAbleToSend}") 
         ;
 
         TAKE_ALL_FROM_WORKTOP 
@@ -111,10 +128,10 @@
         ;
 
         CALL_METHOD
-            Address("${publicConfig.components.refinery}")
-            "combine_elements_deposit"
-            Proof("userBadge")
-            Bucket("elements")
+          Address("${publicConfig.components.radgemForgeV2}")
+          "deposit_elements"
+          Proof("hero_badge")
+          Bucket("elements")
         ;
 
         CALL_METHOD
@@ -165,7 +182,15 @@
     if (useLocalStorage('waiting-for-radgems').get()) {
       waitingForElementsDeposited = true
     }
-    ResultAsync.combineWithAllErrors([checkAmountOfElements(), checkClaimAvailable($user?.id!)])
+    ResultAsync.combineWithAllErrors([
+      checkAmountOfElements(),
+      checkClaimAvailable($user?.id!, false)
+        .map((data) => {
+          useV2 = false
+          return data
+        })
+        .orElse(() => checkClaimAvailable($user?.id!, true))
+    ])
       .map(([_, radGemIds]) => {
         loadingLedgerData = false
         claimAvailable = true
@@ -177,24 +202,22 @@
       })
 
     let onMessageUnsubscribe: (() => void) | undefined
+
     const unsub = webSocketClient.subscribe((ws) => {
-      onMessageUnsubscribe?.()
       if (ws)
         onMessageUnsubscribe = ws.onMessage((msg) => {
-          if (msg.type === 'CombineElementsAddRadgemImage') {
-            checkClaimAvailable($user?.id!).map((radGemId) => {
-              claimAvailable = true
-              claimableRadGemIds = radGemId
-              useLocalStorage('waiting-for-radgems').set(false)
-              waitingForElementsDeposited = false
-              elementsDeposited = true
-            })
+          if (msg.type === 'RadgemsMinted') {
+            radgemData = msg.radgemData as typeof radgemData
+            claimAvailable = true
+            waitingForElementsDeposited = false
+            elementsDeposited = true
             messageApi.markAsSeen([msg.id])
           }
         })
     })
 
     return () => {
+      onMessageUnsubscribe?.()
       unsub()
       waitingWarning(false)
     }
@@ -274,6 +297,8 @@
     </JettyMenuItemPage>
   {:else if claimAvailable || elementsDeposited}
     <ClaimRadGem
+      {useV2}
+      data={radgemData}
       ids={claimableRadGemIds}
       on:claimed={() => {
         checkAmountOfElements().map(() => {
@@ -293,7 +318,9 @@
                 onClick: () => dispatch('cancel')
               }
             : {
-                text: $i18n.t('jetty:fuse-elements.send-button'),
+                text: $i18n.t('jetty:fuse-elements.send-button', {
+                  count: elementsAbleToSend
+                }),
                 onClick: sendElements
               }}
           loading={waitingForSendElements}
@@ -308,9 +335,17 @@
             {$i18n.t('jetty:fuse-elements.intro1')}
 
             {#if enoughElementsForRadgems}
-              <p>
-                {$i18n.t('jetty:fuse-elements.intro2', { count: parseInt(amountOfElements) })}
-              </p>
+              {#if hasOverMaxElements}
+                <p>
+                  {$i18n.t('jetty:fuse-elements.more-than-max-elements', {
+                    count: parseInt(amountOfElements)
+                  })}
+                </p>
+              {:else}
+                <p>
+                  {$i18n.t('jetty:fuse-elements.intro2', { count: parseInt(amountOfElements) })}
+                </p>
+              {/if}
 
               <b>
                 {$i18n.t('jetty:fuse-elements.enough-elements')}
