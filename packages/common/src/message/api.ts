@@ -2,7 +2,7 @@ import { err, ok } from 'neverthrow'
 import { fetchWrapper } from '../helpers/fetch-wrapper'
 import type { AppLogger } from '../helpers/logger'
 import type { MorphCardMintedEventOutput } from '../event-data/event-data'
-import { RadgemNfData } from '../radgems'
+import type { RadgemNfData } from '../radgems'
 
 export const MessageType = {
   QuestRequirementCompleted: 'QuestRequirementCompleted',
