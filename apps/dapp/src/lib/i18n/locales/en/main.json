@@ -30,6 +30,11 @@
       "link": "Learn more on X @radixdlt",
       "button": "Close"
     },
+    "AccountLocked": {
+      "title": "Account Suspended",
+      "content": "There was suspicious activity on this account. Feel free to keep looking around RadQuest, but you can no longer receive rewards and certain features may not work.",
+      "button": "Close"
+    },
     "NetworkCongestion": {
       "title": "RadQuest is experiencing very high demand.",
       "content": "If you have problems completing quests or making claims, please try again later.",

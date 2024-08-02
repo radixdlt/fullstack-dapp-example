@@ -119,6 +119,11 @@ interface Resources {
         "link": "Learn more on X @radixdlt",
         "button": "Close"
       },
+      "AccountLocked": {
+        "title": "Account Suspended",
+        "content": "There was suspicious activity on this account. Feel free to keep looking around RadQuest, but you can no longer receive rewards and certain features may not work.",
+        "button": "Close"
+      },
       "NetworkCongestion": {
         "title": "RadQuest is experiencing very high demand.",
         "content": "If you have problems completing quests or making claims, please try again later.",
@@ -284,7 +289,7 @@ interface Resources {
       "referralsSoFarDescription": "These friends have signed up using your link and completed the basic quests. You each get 5 XRD!",
       "alreadyClaimed": "Already claimed: {{amount}} XRD",
       "info_1": "<strong>Your friends will get 5 XRD</strong> when they use your referral link and complete all basic quests.",
-      "info_2": "<strong>You’ll also receive 5 XRD</strong> for each referral and you’ll win <strong>extra rewards</strong> at each milestone (1, 5 and 10 referrals)!",
+      "info_2": "<strong>You’ll also receive 5 XRD</strong> for each referral and you’ll win <strong>extra rewards</strong> at each milestone (1 and 5 referrals)!",
       "shareYourLink": "Share Your Referral Link:",
       "yourLevel": "You are at {{level}} Level!",
       "referMore": "Refer {{count}} more friends to claim your rewards and progress to {{nextLevel}}!",

@@ -34,6 +34,7 @@ export const hasHeroBadge = writable(false)
 
 export const ErrorPopupId = {
   XrdRewardLimit: 'XrdRewardLimit',
+  AccountLocked: 'AccountLocked',
   AccountAlreadyRegistered: 'AccountAlreadyRegistered',
   HighDemand: 'HighDemand'
 } as const
