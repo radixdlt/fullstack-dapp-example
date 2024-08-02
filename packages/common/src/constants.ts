@@ -37,7 +37,7 @@ export const Addresses = (networkId: number) => {
         radQuestPackage: 'package_tdx_2_1phu0zmcx0s92ha5rgnjruysq58kr48qpf8cqgk3y2rmxhhke7jgtqw',
         clamDexPackage: 'package_tdx_2_1pk54w09fwqv9resal68ee43y2gzjm3m0kfw0sjhnhrpw5w8kzxgvc6',
         radgemForgeV2Package:
-          'package_tdx_2_1phnupfe2ulpk4w8ekdnqgfu6ujxplmc2g90e2d5f6werhexj7x40n6',
+          'package_tdx_2_1p4p33jnqt5hx9p7qp38hev3extfqpnxjxcnuw9q6pz653t8jfzrllf',
         components: {
           heroBadgeForge: 'component_tdx_2_1czggp0fz9pcarmhp8uxpy9qr8ysz46qkpr49t3jdrn8zzanujj8fpy',
           kycOracle: 'component_tdx_2_1cqgu87tk0sx6ldn7x0heev0vgc6jq4uu0tahkfumfpgmw7acxtgqd3',
@@ -48,7 +48,7 @@ export const Addresses = (networkId: number) => {
           radmorphForge: 'component_tdx_2_1cqtjvvpwhjvdzwc6gp43hz5q5g0v2ulqvmgp52cx0gz2nnrjez2nch',
           imageOracle: 'component_tdx_2_1cqc8z3t3jtn9ryrztfw59klnxwt2lfwmwvfc7r485uq7qulwxq7pkd',
           refinery: 'component_tdx_2_1cp4dw84qxcncwncg5mkkht2cqg2906kpy2wx76xa8720pxy2js0ggh',
-          radgemForgeV2: 'component_tdx_2_1crmnf6fmhf4kdva6zaddvx9ea4m3u6k3mk9dkfmgk2357af7ry9yrr',
+          radgemForgeV2: 'component_tdx_2_1cr9sd3lfaxw679879lnp0zs08de4leakfqgxdvmjnve8zpcgh9dtlm',
           kycOracleKeyValueStore:
             'internal_keyvaluestore_tdx_2_1kq4cuyae3uuw9ss06an9cdhd577p7gjnkfqm7mwqvsdyecqe4syxql',
           radgemRecordsKeyValueStore:
