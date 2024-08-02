@@ -1,12 +1,12 @@
 use scrypto::prelude::FungibleBucket;
 use scrypto_test::prelude::*;
 
-use radquest::radgem_forge_v2::{radgem_forge_v2_test::RadgemForgeV2, RadgemData, UserId};
+use radgem_forge_v2::radgem_forge_v2::{radgem_forge_v2_test::RadgemForgeV2, RadgemData, UserId};
 
 struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,
     radgem_forge_v2: RadgemForgeV2,
-    radgem_address: ResourceAddress,
+    _radgem_address: ResourceAddress,
     radgems_data: Vec<RadgemData>,
     elements: Bucket,
     hero_badge: Bucket,
@@ -99,7 +99,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     Ok(Test {
         env,
         radgem_forge_v2,
-        radgem_address,
+        _radgem_address: radgem_address,
         radgems_data,
         elements,
         hero_badge,
