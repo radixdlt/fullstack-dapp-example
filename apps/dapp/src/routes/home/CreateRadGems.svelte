@@ -207,6 +207,7 @@
       if (ws)
         onMessageUnsubscribe = ws.onMessage((msg) => {
           if (msg.type === 'RadgemsMinted') {
+            useLocalStorage('waiting-for-radgems').set(false)
             radgemData = msg.radgemData as typeof radgemData
             claimAvailable = true
             waitingForElementsDeposited = false
