@@ -70,6 +70,8 @@ model UserPhoneNumber {
   ip          String   @default("")
 
   user User @relation(fields: [userId], references: [id])
+
+  @@index([ip])
 }
 
 enum ReferralAction {

@@ -69,6 +69,8 @@ model UserPhoneNumber {
   createdAt       DateTime  @default(now())
   ip              String    @default("")
 
+  @@index([ip])
+
   user            User      @relation(fields: [userId], references: [id])
 }
 

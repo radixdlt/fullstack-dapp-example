@@ -54,6 +54,8 @@ type UserModelType = {
   getPhoneNumberByUserId: (userId: string) => ResultAsync<string | undefined, ApiError>
   confirmReferralCode: (referralCode: string) => ResultAsync<string | undefined, ApiError>
   setEmail: (userId: string, email: string, newsletter: boolean) => ResultAsync<UserEmail, ApiError>
+  getUserIdsByIp: (ip: string) => ResultAsync<string[], ApiError>
+  blockUsers: (userIds: string[]) => ResultAsync<undefined, ApiError>
 }
 
 export type UserModel = ReturnType<typeof UserModel>
@@ -100,6 +102,35 @@ export const UserModel =
         return err(data)
       })
     }
+
+    const getUserIdsByIp = (ip: string) => {
+      return ResultAsync.fromPromise(
+        db.userPhoneNumber.findMany({
+          where: { ip },
+          select: {
+            userId: true
+          }
+        }),
+        (error) => {
+          logger?.error({ error, method: 'countByIp', model: 'UserModel' })
+          return createApiError('failed to count by ip', 400)(error)
+        }
+      ).map((data) => data.map((user) => user.userId))
+    }
+
+    const blockUsers = (userIds: string[]) =>
+      ResultAsync.fromPromise(
+        db.user.updateMany({
+          where: { id: { in: userIds } },
+          data: {
+            blocked: true
+          }
+        }),
+        (error) => {
+          logger?.error({ error, method: 'blockUsers', model: 'UserModel' })
+          return createApiError('failed to block users', 400)()
+        }
+      ).map(() => undefined)
 
     const addAccount = (userId: string, accountAddress: string) =>
       ResultAsync.fromPromise(
@@ -365,6 +396,8 @@ export const UserModel =
       getByAccountAddress,
       getByReferralCode,
       getReferrals,
+      blockUsers,
+      getUserIdsByIp,
       getPhoneNumber,
       addAccount,
       setUserName,
