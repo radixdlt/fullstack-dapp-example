@@ -195,6 +195,12 @@
     height: 100%;
   }
 
+  .claim-radgem {
+    :global(.carousel > .item) {
+      padding: var(--spacing-2xl) 0 50px;
+    }
+  }
+
   .cards {
     width: 100%;
     overflow: hidden;
