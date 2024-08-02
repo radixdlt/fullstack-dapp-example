@@ -145,7 +145,7 @@ export const Addresses = (networkId: number) => {
         },
         radQuestPackage: 'package_rdx1p4l4fcfctjfgj9avqzrunn42rfk84kfktrtz3wypf3a37jfwlprdxn',
         clamDexPackage: 'package_rdx1p47qnlxgwnrggs38ea7n35y0zkyr2c65ftre6vlafw096u7gygq0y6',
-        radgemForgeV2Package: '',
+        radgemForgeV2Package: 'package_rdx1p4gtpzf4t6jsa56us38mt0uazt8ydu93t3tmhea7whkxf8zqswsnv7',
         components: {
           heroBadgeForge: 'component_rdx1cra2j3w7cv9zkrv4jehjz0qn3xffxdkstucxar4xy9kyu0tpxsvya6',
           kycOracle: 'component_rdx1cr89pe8pz7c3fhuxf4tpw309cmuqtwg6tw2pkjl574hg3slp9v4gt9',
@@ -156,12 +156,12 @@ export const Addresses = (networkId: number) => {
           radmorphForge: 'component_rdx1cz36kgpr72804j265rvz0lkgf9en2wneq2gqyk925g6umgv3dt57q7',
           imageOracle: 'component_rdx1cp6z7vhz3sg53qwz8y462kupm89j230hxn35pkpetdfjkhyc6dkhr9',
           refinery: 'component_rdx1crh0h7kc9e9s0607exe864uszpu5cpptjn2a605szneswhzw6nawzd',
-          radgemForgeV2: '',
+          radgemForgeV2: 'component_rdx1czv5pypn3u44yut3mqt5fxqnwphjec56j9rhn7mp74nl0tj2xytf8y',
           kycOracleKeyValueStore:
             'internal_keyvaluestore_rdx1kry2g9s07tm26js7e9uy8rztpg5htfd3auandaqgu7nvc6psvnasge',
           radgemRecordsKeyValueStore:
             'internal_keyvaluestore_rdx1kqt4uy6tf9pat5zgnta873mwhu8xg3ezhhfvvns7e990qx3e3jvyr8',
-          radgemRecordsV2KeyValueStore: '',
+          radgemRecordsV2KeyValueStore: 'internal_keyvaluestore_rdx1krzqx8jyqr4fk6qj9sflr9merf5xsvys9s3mur9ggwsma7pktaemts',
           giftBoxRecordsKeyValueStore:
             'internal_keyvaluestore_rdx1kqxjftv92utms3l3rh9z6crqe7kavj9sdelddd75dsdlxjffqfluzg',
           mayaRouter: '',
