@@ -23,6 +23,7 @@ enum RadgemClaim {
 }
 
 #[blueprint]
+#[types(UserId, RadgemClaim)]
 #[events(DepositedElementsEvent, MintedRadgemsEvent, ClaimedRadgemsEvent)]
 mod radgem_forge_v2 {
     enable_method_auth! {
@@ -65,7 +66,7 @@ mod radgem_forge_v2 {
             Self {
                 enabled: true,
                 admin_badge: FungibleVault::with_bucket(admin_badge),
-                radgem_records: KeyValueStore::new(),
+                radgem_records: KeyValueStore::<UserId, RadgemClaim>::new_with_registered_type(),
                 radgem_vault: NonFungibleVault::new(radgem_resource_manager.address()),
                 hero_badge_address,
                 element_address,
