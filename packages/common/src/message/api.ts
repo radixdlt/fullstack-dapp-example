@@ -16,7 +16,8 @@ export const MessageType = {
   ReferralCompletedBasicQuests: 'ReferralCompletedBasicQuests',
   XrdDepositedToAccount: 'XrdDepositedToAccount',
   GiftBoxDeposited: 'GiftBoxDeposited',
-  RadgemsMinted: 'RadgemsMinted'
+  RadgemsMinted: 'RadgemsMinted',
+  CombineElementsAddRadgemImage: 'CombineElementsAddRadgemImage'
 } as const
 
 export type MessageType = (typeof MessageType)[keyof typeof MessageType]
@@ -44,7 +45,7 @@ export type Messages = {
   }
   [MessageType.CombineElementsMintRadgem]: {
     traceId: string
-  },
+  }
   [MessageType.CombineElementsClaimed]: {
     traceId: string
   }
@@ -71,6 +72,9 @@ export type Messages = {
   }
   [MessageType.RadgemsMinted]: {
     radgemData: RadgemNfData[]
+    traceId: string
+  }
+  [MessageType.CombineElementsAddRadgemImage]: {
     traceId: string
   }
 }
