@@ -60,6 +60,7 @@ SET_METADATA
             Address("${config.radQuest.components.giftBoxOpener}"),
             Address("${config.radQuest.components.questRewards}"),
             Address("${config.radQuest.components.refinery}")
+            Address("${config.radQuest.components.radgemForgeV2})
         )
     )
 ;
