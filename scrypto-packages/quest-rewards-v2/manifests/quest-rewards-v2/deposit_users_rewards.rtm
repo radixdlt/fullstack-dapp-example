@@ -1,0 +1,62 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+CALL_METHOD
+    Address("${account}")
+    "create_proof_of_amount"
+    Address("${admin_badge}")
+    Decimal("1")
+;
+
+CALL_METHOD
+    Address("${account}")
+    "withdraw"
+    Address("${xrd}")
+    Decimal("1")
+;
+TAKE_FROM_WORKTOP
+    Address("${xrd}")
+    Decimal("1")
+    Bucket("bucket1")
+;
+CALL_METHOD
+    Address("${account}")
+    "withdraw"
+    Address("${xrd}")
+    Decimal("2")
+;
+TAKE_FROM_WORKTOP
+    Address("${xrd}")
+    Decimal("2")
+    Bucket("bucket2")
+;
+CALL_METHOD
+    Address("${account}")
+    "withdraw"
+    Address("${xrd}")
+    Decimal("3")
+;
+TAKE_FROM_WORKTOP
+    Address("${xrd}")
+    Decimal("3")
+    Bucket("bucket3")
+;
+
+CALL_METHOD
+    Address("${quest_rewards_v2}")
+    "deposit_users_rewards"
+    Array<Tuple>(
+        Tuple(
+            "${user_id_1}",
+            "${quest_id_1}",
+            Array<Bucket>(Bucket("bucket1"))
+        ),
+        Tuple(
+            "${user_id_2}",
+            "${quest_id_2}",
+            Array<Bucket>(Bucket("bucket2"), Bucket("bucket3"))
+        )
+    )
+;
