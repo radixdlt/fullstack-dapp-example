@@ -269,7 +269,7 @@ mod quest_rewards_v2 {
                     .get_mut(&RewardId(user_id.clone(), quest_id.clone()))
                     .unwrap();
 
-                let mut rewards_deposited = ResourcesRecord(HashMap::new());
+                let mut rewards_deposited = Vec::<RewardInfo>::new();
 
                 for reward in rewards {
                     // Update the reward record
@@ -297,10 +297,6 @@ mod quest_rewards_v2 {
                                     existing_reward_amount.add_rewards(&reward_amount)
                                 })
                                 .or_insert(reward_amount.clone());
-
-                            rewards_deposited
-                                .0
-                                .insert(reward.resource_address(), reward_amount.clone());
                         }
                         RewardState::Claimed => {
                             let mut resources_record = ResourcesRecord(HashMap::new());
@@ -310,6 +306,11 @@ mod quest_rewards_v2 {
                             *reward_state = RewardState::Unclaimed(resources_record);
                         }
                     };
+
+                    rewards_deposited.push(RewardInfo {
+                        resource_address: reward.resource_address(),
+                        reward_amount,
+                    });
 
                     // If missing, add the reward resource vault to rewards
                     if self.rewards.get(&reward.resource_address()).is_none() {
@@ -327,14 +328,7 @@ mod quest_rewards_v2 {
                 user_quest_rewards.push(UserQuestReward {
                     user_id,
                     quest_id,
-                    rewards: rewards_deposited
-                        .0
-                        .into_iter()
-                        .map(|(address, amount)| RewardInfo {
-                            resource_address: address,
-                            reward_amount: amount,
-                        })
-                        .collect(),
+                    rewards: rewards_deposited,
                 });
             }
 
