@@ -1,5 +1,5 @@
 import { AuthController } from '$lib/server/auth/controller'
-import type { Handle } from '@sveltejs/kit'
+import { type Handle } from '@sveltejs/kit'
 import { config } from '$lib/config'
 import {
   AuditModel,
@@ -63,6 +63,8 @@ const marketingModel = MarketingModel(dbClient)
 const imageModel = ImageModel(dbClient)
 
 export const handle: Handle = async ({ event, resolve }) => {
+  event.locals.maintenanceMode = config.maintenanceMode
+
   const origin = event.request.headers.get('origin')
 
   if (event.request.method === 'OPTIONS') {

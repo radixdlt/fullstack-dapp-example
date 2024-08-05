@@ -19,7 +19,8 @@ const {
   TWILIO_AUTH_TOKEN,
   TWILIO_SERVICE_SID,
   MAX_USER_PER_IP,
-  MAILER_LITE_API_KEY
+  MAILER_LITE_API_KEY,
+  MAINTENANCE_MODE
 } = privateEnv
 
 // $env/dynamic/public does not work in CI build
@@ -71,5 +72,6 @@ export const config = {
   mailerLite: {
     apiKey: MAILER_LITE_API_KEY ?? ''
   },
-  logLevel: PUBLIC_LOG_LEVEL
+  logLevel: PUBLIC_LOG_LEVEL,
+  maintenanceMode: MAINTENANCE_MODE === 'true'
 }

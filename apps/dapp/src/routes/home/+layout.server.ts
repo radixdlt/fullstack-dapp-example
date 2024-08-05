@@ -4,9 +4,10 @@ import type { LayoutServerLoad } from './$types'
 import { loadLandingPopup, loadQuests, type QuestId } from 'content'
 import type { $Enums } from 'database'
 import { CookieKeys, encodeBase64, utmKeys, type MarketingUtmValues } from 'common'
-import type { Cookies } from '@sveltejs/kit'
+import { error, type Cookies } from '@sveltejs/kit'
 
 export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) => {
+  if (locals.maintenanceMode) return error(503, 'Site unavailable')
   const questStatusResult = await questApi.getQuestsInformation(fetch)
   const questDefinitions = loadQuests('en')
   const landingPopupDefinitions = loadLandingPopup('en')
