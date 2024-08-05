@@ -56,6 +56,7 @@ type UserModelType = {
   setEmail: (userId: string, email: string, newsletter: boolean) => ResultAsync<UserEmail, ApiError>
   getUserIdsByIp: (ip: string) => ResultAsync<string[], ApiError>
   blockUsers: (userIds: string[]) => ResultAsync<undefined, ApiError>
+  isPhoneNumberUsed: (userId: string) => ResultAsync<boolean, ApiError>
 }
 
 export type UserModel = ReturnType<typeof UserModel>
@@ -203,6 +204,17 @@ export const UserModel =
         (error) => {
           logger?.error({ error, method: 'isAccountAddressUsed', model: 'UserModel' })
           return createApiError('failed to check if account address is used', 400)()
+        }
+      ).map((count) => count > 0)
+
+    const isPhoneNumberUsed = (userId: string) =>
+      ResultAsync.fromPromise(
+        db.userPhoneNumber.count({
+          where: { userId }
+        }),
+        (error) => {
+          logger?.error({ error, method: 'isPhoneNumberUsed', model: 'UserModel' })
+          return createApiError('failed to check if phone number is used', 400)()
         }
       ).map((count) => count > 0)
 
@@ -404,6 +416,7 @@ export const UserModel =
       isAccountAddressUsed,
       getPhoneNumberByUserId,
       confirmReferralCode,
-      setEmail
+      setEmail,
+      isPhoneNumberUsed
     }
   }
