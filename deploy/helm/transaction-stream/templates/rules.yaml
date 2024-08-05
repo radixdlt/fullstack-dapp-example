@@ -20,6 +20,8 @@ spec:
         severity: critical
         tier: application
         application: radquest
+        component: transaction-stream
+        namespace: {{ $ns }}
         cluster: {{ $metrics.alert_labels.cluster }}
         env: {{ $metrics.alert_labels.env }}
       annotations:
@@ -35,6 +37,8 @@ spec:
         severity: warning
         tier: application
         application: radquest
+        component: transaction-stream
+        namespace: {{ $ns }}
         cluster: {{ $metrics.alert_labels.cluster }}
         env: {{ $metrics.alert_labels.env }}
       annotations:
@@ -50,6 +54,8 @@ spec:
         tier: application
         application: radquest
         severity: critical
+        component: transaction-stream
+        namespace: {{ $ns }}
         cluster: {{ $metrics.alert_labels.cluster }}
         env: {{ $metrics.alert_labels.env }}
       annotations:
@@ -69,6 +75,8 @@ spec:
         severity: critical
         tier: application
         application: radquest
+        component: transaction-stream
+        namespace: {{ $ns }}
         cluster: {{ $metrics.alert_labels.cluster }}
         env: {{ $metrics.alert_labels.env }}
       annotations:
@@ -85,6 +93,8 @@ spec:
         severity: critical
         tier: application
         application: radquest
+        component: transaction-stream
+        namespace: {{ $ns }}
         cluster: {{ $metrics.alert_labels.cluster }}
         env: {{ $metrics.alert_labels.env }}
       annotations:
@@ -106,6 +116,8 @@ spec:
         severity: critical
         tier: application
         application: radquest
+        component: transaction-stream
+        namespace: {{ $ns }}
         cluster: {{ $metrics.alert_labels.cluster }}
         env: {{ $metrics.alert_labels.env }}
       annotations:
@@ -125,6 +137,8 @@ spec:
         severity: warning
         tier: application
         application: radquest
+        component: transaction-stream
+        namespace: {{ $ns }}
         cluster: {{ $metrics.alert_labels.cluster }}
         env: {{ $metrics.alert_labels.env }}
       annotations:
@@ -140,6 +154,8 @@ spec:
         severity: warning
         tier: application
         application: radquest
+        component: transaction-stream
+        namespace: {{ $ns }}
         cluster: {{ $metrics.alert_labels.cluster }}
         env: {{ $metrics.alert_labels.env }}
       annotations:
@@ -155,6 +171,8 @@ spec:
         severity: critical
         tier: application
         application: radquest
+        component: transaction-stream
+        namespace: {{ $ns }}
         cluster: {{ $metrics.alert_labels.cluster }}
         env: {{ $metrics.alert_labels.env }}
       annotations:
