@@ -1,0 +1,504 @@
+use scrypto_test::{prelude::*, utils::dump_manifest_to_file_system};
+
+use hero_badge_forge_v2::hero_badge_forge_v2::HeroBadgeData;
+use radix_transactions::manifest::decompiler::ManifestObjectNames;
+
+fn dump_manifest_to_file(
+    file_name: &str,
+    manifest: &TransactionManifestV1,
+    names: ManifestObjectNames,
+) {
+    dump_manifest_to_file_system(
+        names,
+        manifest,
+        "manifests/test-generated/",
+        Some(file_name),
+        &NetworkDefinition::simulator(),
+    )
+    .err();
+}
+
+struct LedgerTestEnvironment {
+    ledger: DefaultLedgerSimulator,
+    public_key: Secp256k1PublicKey,
+    disable_component_manifest: TransactionManifestV1,
+    enable_component_manifest: TransactionManifestV1,
+    add_user_accounts_manifest: TransactionManifestV1,
+    claim_hero_badge_manifest: TransactionManifestV1,
+    heroes_completed_quests_manifest: TransactionManifestV1,
+    update_key_image_urls_manifest: TransactionManifestV1,
+}
+
+impl LedgerTestEnvironment {
+    fn new() -> Result<LedgerTestEnvironment, RuntimeError> {
+        // Setup the environment
+        let mut ledger = LedgerSimulatorBuilder::new().build();
+
+        // Create accounts
+        let (public_key, _private_key, account_1) = ledger.new_allocated_account();
+        let (_, _, account_2) = ledger.new_allocated_account();
+
+        // Publish package
+        let package_address = ledger.compile_and_publish(this_package!());
+
+        // Create resources
+        let super_admin_badge = ledger.create_non_fungible_resource_advanced(
+            NonFungibleResourceRoles::default(),
+            account_1,
+            1,
+        );
+        let admin_badge = ledger.create_fungible_resource(dec!(3), 0, account_1);
+        let hero_badge = {
+            let resource_roles = NonFungibleResourceRoles {
+                mint_roles: mint_roles!(
+                    minter => rule!(require(admin_badge));
+                    minter_updater => OWNER;
+                ),
+                non_fungible_data_update_roles: non_fungible_data_update_roles!(
+                    non_fungible_data_updater => rule!(require(admin_badge));
+                    non_fungible_data_updater_updater => OWNER;
+                ),
+                ..Default::default()
+            };
+
+            let manifest = ManifestBuilder::new()
+                .lock_fee_from_faucet()
+                .create_non_fungible_resource(
+                    OwnerRole::None,
+                    NonFungibleIdType::String,
+                    true,
+                    resource_roles,
+                    metadata!(),
+                    None::<Vec<(NonFungibleLocalId, HeroBadgeData)>>,
+                )
+                .try_deposit_entire_worktop_or_abort(account_1, None)
+                .build();
+
+            let receipt = ledger.execute_manifest(manifest, vec![]);
+            receipt.expect_commit(true).new_resource_addresses()[0]
+        };
+
+        // Create component
+        let hero_badge_forge_v2 = {
+            let manifest = ManifestBuilder::new()
+                .lock_fee_from_faucet()
+                .withdraw_from_account(account_1, admin_badge, 1)
+                .take_all_from_worktop(admin_badge, "admin_badge")
+                .call_function_with_name_lookup(
+                    package_address,
+                    "HeroBadgeForgeV2",
+                    "new",
+                    |lookup| {
+                        (
+                            super_admin_badge,
+                            OwnerRole::Fixed(rule!(require(super_admin_badge))),
+                            FAUCET, // used as dapp_definition for testing
+                            lookup.bucket("admin_badge"),
+                            hero_badge,
+                        )
+                    },
+                );
+
+            let names = manifest.object_names();
+            let manifest = manifest.build();
+
+            dump_manifest_to_file("new_hero_badge_forge_v2", &manifest, names);
+
+            let receipt = ledger.execute_manifest(
+                manifest,
+                vec![NonFungibleGlobalId::from_public_key(&public_key)],
+            );
+
+            receipt.expect_commit(true).new_component_addresses()[0]
+        };
+
+        // Disable component
+        let disable_hero_badge_forge_manifest = ManifestBuilder::new()
+            .lock_fee_from_faucet()
+            .create_proof_from_account_of_non_fungible(
+                account_1,
+                NonFungibleGlobalId::new(super_admin_badge, NonFungibleLocalId::integer(1)),
+            )
+            .call_method(hero_badge_forge_v2, "disable", ());
+
+        let names = disable_hero_badge_forge_manifest.object_names();
+        let disable_component_manifest = disable_hero_badge_forge_manifest.build();
+
+        dump_manifest_to_file("disable", &disable_component_manifest, names);
+
+        // Enable component
+        let enable_hero_badge_forge_manifest = ManifestBuilder::new()
+            .lock_fee_from_faucet()
+            .create_proof_from_account_of_non_fungible(
+                account_1,
+                NonFungibleGlobalId::new(super_admin_badge, NonFungibleLocalId::integer(1)),
+            )
+            .call_method(hero_badge_forge_v2, "enable", ());
+
+        let names = enable_hero_badge_forge_manifest.object_names();
+        let enable_component_manifest = enable_hero_badge_forge_manifest.build();
+
+        dump_manifest_to_file("enable", &enable_component_manifest, names);
+
+        // Add account that can claim a badge to the component
+        let user_id_1 = "test_id_12345".to_string();
+        let user_id_2 = "test_id_54321".to_string();
+        let manifest = ManifestBuilder::new()
+            .lock_fee_from_faucet()
+            .create_proof_from_account_of_amount(account_1, admin_badge, 1)
+            .call_method(
+                hero_badge_forge_v2,
+                "add_user_accounts",
+                manifest_args!([
+                    (user_id_1.clone(), account_1),
+                    (user_id_2.clone(), account_2),
+                ]),
+            );
+
+        let names = manifest.object_names();
+        let add_user_accounts_manifest = manifest.build();
+        dump_manifest_to_file("add_user_accounts", &add_user_accounts_manifest, names);
+
+        // Mint and claim badge
+        let manifest = ManifestBuilder::new()
+            .lock_fee_from_faucet()
+            .call_method(
+                hero_badge_forge_v2,
+                "claim_badge",
+                manifest_args!(account_1),
+            )
+            .call_method(
+                account_1,
+                "deposit_batch",
+                (ManifestExpression::EntireWorktop,),
+            );
+
+        let names = manifest.object_names();
+        let claim_hero_badge_manifest = manifest.build();
+        dump_manifest_to_file("claim_hero_badge", &claim_hero_badge_manifest, names);
+
+        // Update user badge with quest completion data
+        let manifest = ManifestBuilder::new()
+            .lock_fee_from_faucet()
+            .create_proof_from_account_of_amount(account_1, admin_badge, 1)
+            .call_method(
+                hero_badge_forge_v2,
+                "heroes_completed_quests",
+                manifest_args!([(user_id_1.clone(), "Quest_Name_1".to_string())]),
+            );
+
+        let names = manifest.object_names();
+        let heroes_completed_quests_manifest = manifest.build();
+        dump_manifest_to_file(
+            "heroes_completed_quests",
+            &heroes_completed_quests_manifest,
+            names,
+        );
+
+        // Update hero badge image url
+        let manifest = ManifestBuilder::new()
+            .lock_fee_from_faucet()
+            .create_proof_from_account_of_amount(account_1, admin_badge, 1)
+            .call_method(
+                hero_badge_forge_v2,
+                "update_key_image_urls",
+                manifest_args!([(user_id_1.clone(), "https://example.com/image1.png"),]),
+            );
+
+        let names = manifest.object_names();
+        let update_key_image_urls_manifest = manifest.build();
+        dump_manifest_to_file(
+            "update_hero_badge_key_image_urls",
+            &update_key_image_urls_manifest,
+            names,
+        );
+
+        Ok(Self {
+            ledger,
+            public_key,
+            disable_component_manifest,
+            enable_component_manifest,
+            add_user_accounts_manifest,
+            claim_hero_badge_manifest,
+            heroes_completed_quests_manifest,
+            update_key_image_urls_manifest,
+        })
+    }
+}
+
+#[test]
+fn can_instantiate_hero_badge_forge() -> Result<(), RuntimeError> {
+    let _ = LedgerTestEnvironment::new()?;
+
+    Ok(())
+}
+
+#[test]
+fn can_add_user_accounts() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.add_user_accounts_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_success();
+    Ok(())
+}
+
+#[test]
+fn user_can_claim_own_badge() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+
+    lte.ledger.execute_manifest(
+        lte.add_user_accounts_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.claim_hero_badge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_success();
+    Ok(())
+}
+
+#[test]
+fn non_user_cannot_claim_badge() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.claim_hero_badge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_failure();
+    Ok(())
+}
+
+#[test]
+fn can_heroes_complete_quests() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+    lte.ledger.execute_manifest(
+        lte.add_user_accounts_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    lte.ledger.execute_manifest(
+        lte.claim_hero_badge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.heroes_completed_quests_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_success();
+    Ok(())
+}
+
+#[test]
+fn cannot_hero_complete_quest_twice_for_same_quest() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+    lte.ledger.execute_manifest(
+        lte.add_user_accounts_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    lte.ledger.execute_manifest(
+        lte.claim_hero_badge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    lte.ledger.execute_manifest(
+        lte.heroes_completed_quests_manifest.clone(),
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.heroes_completed_quests_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_failure();
+    Ok(())
+}
+
+#[test]
+fn can_update_key_image_urls() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+    lte.ledger.execute_manifest(
+        lte.add_user_accounts_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    lte.ledger.execute_manifest(
+        lte.claim_hero_badge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.update_key_image_urls_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_success();
+    Ok(())
+}
+
+#[test]
+fn can_disable_hero_badge_forge_v2() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.disable_component_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_success();
+    Ok(())
+}
+
+#[test]
+fn cannot_add_user_accounts_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+    lte.ledger.execute_manifest(
+        lte.disable_component_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.add_user_accounts_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_failure();
+    Ok(())
+}
+
+#[test]
+fn can_enable_then_add_user_accounts_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+    lte.ledger.execute_manifest(
+        lte.disable_component_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Act
+    lte.ledger.execute_manifest(
+        lte.enable_component_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    let receipt = lte.ledger.execute_manifest(
+        lte.add_user_accounts_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_success();
+    Ok(())
+}
+
+#[test]
+fn cannot_claim_badge_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+    lte.ledger.execute_manifest(
+        lte.disable_component_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    lte.ledger.execute_manifest(
+        lte.add_user_accounts_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.claim_hero_badge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_failure();
+    Ok(())
+}
+
+#[test]
+fn cannot_complete_quests_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+    lte.ledger.execute_manifest(
+        lte.add_user_accounts_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    lte.ledger.execute_manifest(
+        lte.claim_hero_badge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    lte.ledger.execute_manifest(
+        lte.disable_component_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.heroes_completed_quests_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_failure();
+    Ok(())
+}
+
+#[test]
+fn cannot_update_key_image_urls_when_disabled() -> Result<(), RuntimeError> {
+    // Arrange
+    let mut lte = LedgerTestEnvironment::new()?;
+    lte.ledger.execute_manifest(
+        lte.add_user_accounts_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    lte.ledger.execute_manifest(
+        lte.claim_hero_badge_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+    lte.ledger.execute_manifest(
+        lte.disable_component_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Act
+    let receipt = lte.ledger.execute_manifest(
+        lte.update_key_image_urls_manifest,
+        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
+    );
+
+    // Assert
+    receipt.expect_commit_failure();
+    Ok(())
+}
