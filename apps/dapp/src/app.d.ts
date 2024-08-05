@@ -8,6 +8,7 @@ declare global {
   namespace App {
     // interface Error {}
     interface Locals {
+      maintenanceMode: boolean
       userId: string
       userType: UserType
       authToken: string
