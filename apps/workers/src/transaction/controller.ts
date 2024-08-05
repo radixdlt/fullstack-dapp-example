@@ -588,13 +588,15 @@ export const TransactionWorkerController = ({
         )
 
       case 'DepositXrdToAccount':
-        return gatewayApi
-          .isDepositDisabledForResource(user.accountAddress!, xrd)
-          .mapErr((error) => ({ reason: WorkerError.GatewayError, jsError: error }))
-          .andThen((isDisabled) =>
-            isDisabled ? err({ reason: WorkerError.UserDisabledXrdDeposit }) : ok(undefined)
+        return hasPhoneNumber()
+          .andThen(() =>
+            gatewayApi
+              .isDepositDisabledForResource(user.accountAddress!, xrd)
+              .mapErr((error) => ({ reason: WorkerError.GatewayError, jsError: error }))
+              .andThen((isDisabled) =>
+                isDisabled ? err({ reason: WorkerError.UserDisabledXrdDeposit }) : ok(undefined)
+              )
           )
-          .andThen(() => hasPhoneNumber())
           .andThen(() =>
             handleSubmitTransaction(
               [
