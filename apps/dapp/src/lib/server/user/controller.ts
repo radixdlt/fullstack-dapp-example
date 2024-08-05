@@ -124,6 +124,12 @@ export const UserController = ({
         isUsed ? errAsync(createApiError('AccountAddressAlreadyInUse', 400)()) : okAsync(undefined)
       )
 
+    const isPhoneNumberInDb = userModel
+      .isPhoneNumberUsed(accountAddress)
+      .andThen((exists) =>
+        exists ? okAsync(undefined) : errAsync(createApiError('PhoneNumberNotSet', 400)())
+      )
+
     const parsedAccountResult = parseSignedChallenge(proof)
 
     if (!parsedAccountResult.success || proof.address !== accountAddress) {
@@ -147,7 +153,7 @@ export const UserController = ({
             } satisfies ApiError)
           : okAsync(undefined)
       )
-      .andThen(() => isAccountInDb)
+      .andThen(() => ResultAsync.combine([isAccountInDb, isPhoneNumberInDb]))
       .andThen(() => verifySignedChallenge(proof))
       .mapErr((error) => {
         return {
