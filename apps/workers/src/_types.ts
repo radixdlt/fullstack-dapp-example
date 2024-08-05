@@ -37,7 +37,8 @@ export const WorkerError = {
   CouldNotGetXrdCurrentPriceError: 'CouldNotGetXrdCurrentPriceError',
   FailedToQueryDb: 'FailedToQueryDb',
   TemporarySkip: 'TemporarySkip',
-  FailedToCreateRadGem: 'FailedToCreateRadGem'
+  FailedToCreateRadGem: 'FailedToCreateRadGem',
+  MissingPhoneNumber: 'MissingPhoneNumber'
 } as const
 
 export type WorkerOutputError = { reason: WorkerError | TransactionHelperError; jsError?: unknown }

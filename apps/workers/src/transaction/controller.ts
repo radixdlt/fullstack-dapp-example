@@ -65,6 +65,14 @@ export const TransactionWorkerController = ({
       logger
     })
 
+    const hasPhoneNumber = () =>
+      ResultAsync.fromPromise(
+        dbClient.userPhoneNumber.count({ where: { userId: user.id } }).then((count) => count > 0),
+        (error) => ({ reason: WorkerError.FailedToQueryDb, jsError: error })
+      ).andThen((hasPhoneNumber) =>
+        hasPhoneNumber ? ok(undefined) : err({ reason: WorkerError.MissingPhoneNumber })
+      )
+
     const upsertSubmittedTransaction = ({
       transactionId,
       status
@@ -586,6 +594,7 @@ export const TransactionWorkerController = ({
           .andThen((isDisabled) =>
             isDisabled ? err({ reason: WorkerError.UserDisabledXrdDeposit }) : ok(undefined)
           )
+          .andThen(() => hasPhoneNumber())
           .andThen(() =>
             handleSubmitTransaction(
               [
