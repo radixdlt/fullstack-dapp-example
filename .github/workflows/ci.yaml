@@ -510,6 +510,18 @@ jobs:
       secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
       aws_deployment_account_id: ${{ secrets.AWS_PROD_ACCOUNT_ID }}
 
+  purge_cloudflare_cache:
+    if: github.event_name == 'release' && github.event.action == 'released'
+    name: Purge Cloudflare Cache
+    needs:
+      - deploy_mainnet
+    uses: RDXWorks-actions/actions-cloudflare-purge@master
+    with:
+      cf_zone: ${{ secrets.RADQUEST_CLOUDFLARE_ZONE }}
+      cf_auth: ${{ secrets.RADQUEST_CLOUDFLARE_AUTH_KEY }}
+      hosts: |
+        radquest.io
+
   snyk-monitor:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
