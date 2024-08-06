@@ -248,10 +248,11 @@ mod quest_rewards_v2 {
             &mut self,
             users_rewards: Vec<(UserId, QuestId, Vec<Bucket>)>,
         ) {
+            assert!(self.enabled, "Component disabled");
+
             let mut user_quest_rewards: Vec<UserQuestReward> = vec![];
 
             for (user_id, quest_id, rewards) in users_rewards {
-                assert!(self.enabled, "Component disabled");
                 // If missing, add the reward to the rewards record
                 if self
                     .rewards_record
