@@ -11,6 +11,7 @@
   import { useCookies } from '$lib/utils/cookies'
   import { onMount, tick } from 'svelte'
   import { derived } from 'svelte/store'
+  import { PUBLIC_NETWORK_ID } from '$env/static/public'
 
   export let data: LayoutData
 
@@ -32,6 +33,12 @@
 
   $: questCardState = Object.entries(data.questDefinitions).reduce(
     (prev, cur) => {
+      if (PUBLIC_NETWORK_ID === '1') {
+        // temporarily lock all quests
+        prev[cur[0] as QuestId] = 'locked'
+        return prev
+      }
+
       const [id, quest] = cur
 
       if (data.questStatus[id as QuestId]?.status === 'COMPLETED') {
