@@ -9,11 +9,11 @@
 
 {#if show}
   <div class="error-congestion-banner">
-    <ErrorPopup
-      title={$i18n.t('main:errorPopup.NetworkCongestion.title')}
-      on:close={() => (show = false)}
-    >
-      <div>{$i18n.t('main:errorPopup.NetworkCongestion.content')}</div>
+    <ErrorPopup title="RadQuest quests are currently disabled." on:close={() => (show = false)}>
+      <div>
+        Until RadQuest is back, you can use Jetty's menu tab to open Gift Boxes and create RadGems
+        and RadMorphs.
+      </div>
 
       <div class="link">
         <LinkWithLinkIcon href="https://x.com/radixdlt"
