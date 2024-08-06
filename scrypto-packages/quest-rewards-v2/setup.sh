@@ -25,8 +25,7 @@ export clam=`resim new-token-mutable $admin_badge | grep "Resource:" | grep -o "
 
 
 echo "\nGenerating Components..."
-
-quest_rewards_v2=`resim run manifests/quest-rewards-v2/new_quest_rewards_v2.rtm | grep "Component:" | grep -o "component_.*"`
+export quest_rewards_v2=`resim run manifests/quest-rewards-v2/new_quest_rewards_v2.rtm | grep "Component:" | grep -o "component_.*"`
 
 echo "\nSetup Complete & Environment Variables Set"
 echo "------------------------------------------"
@@ -49,9 +48,7 @@ echo "clam = $clam"
 echo "\nComponent Addresses:"
 echo "quest_rewards_v2 = $quest_rewards_v2"
 
-export super_admin_badge_id="1"
-export user_id="test_user_id_12345"
-export user_id_1=$user_id
+export user_id_1="test_user_id_12345"
 export user_id_2="test_user_id_23456"
 export quest_id_1="RadixIntro"
 export quest_id_2="GetStuff"
