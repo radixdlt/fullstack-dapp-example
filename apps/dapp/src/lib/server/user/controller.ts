@@ -125,7 +125,7 @@ export const UserController = ({
       )
 
     const isPhoneNumberInDb = userModel
-      .isPhoneNumberUsed(accountAddress)
+      .isPhoneNumberUsed(userId)
       .andThen((exists) =>
         exists ? okAsync(undefined) : errAsync(createApiError('PhoneNumberNotSet', 400)())
       )
