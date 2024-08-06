@@ -202,6 +202,8 @@ model TransactionIntent {
   transactions  SubmittedTransaction[]
 
   user User @relation(fields: [userId], references: [id])
+
+  @@index([status, createdAt])
 }
 
 enum TransactionIntentStatus {
@@ -209,6 +211,10 @@ enum TransactionIntentStatus {
   PENDING
   ERROR
   COMPLETED
+  FAILED_RETRY
+  FAILED_PERMANENT
+  PAUSED
+  CANCELLED
 }
 
 model SubmittedTransaction {
