@@ -17,6 +17,7 @@ params:
   PUBLIC_NETWORK_ID: 2
   PUBLIC_NOTIFICATION_URL: wss://radquest-notification-dev.rdx-works-main.extratools.works
   MAINTENANCE_MODE: false
+  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_READ):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?schema=public
 
 secrets:
   - external_secret_name: dapp-postgres-user
@@ -36,12 +37,6 @@ secrets:
     aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
     aws_secret_key: "database-url"
     secret_key: "database-url"
-
-  - external_secret_name: ro-dapp-database-url
-    env_variable: "RO_DATABASE_URL"
-    aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
-    aws_secret_key: "ro-database-url"
-    secret_key: "ro-database-url"
 
   - external_secret_name: dapp-jwt-secret
     env_variable: "JWT_SECRET"

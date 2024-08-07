@@ -12,14 +12,8 @@ params:
   LOG_LEVEL: debug
   PUBLIC_NETWORK_ID: 1
   GATEWAY_URL: "http://babylon-mainnet-active-ng.internal-dns:8080"
-
+  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_READ):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?schema=public
 secrets:
-
-  - external_secret_name: ro-transaction-database-url
-    env_variable: "RO_DATABASE_URL"
-    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/postgres"
-    aws_secret_key: "ro-database-url"
-    secret_key: "ro-database-url"
 
   - external_secret_name: transaction-stream-postgres-user
     env_variable: "POSTGRES_USER"

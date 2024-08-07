@@ -17,14 +17,9 @@ params:
   GATEWAY_URL: "http://babylon-mainnet-active-ng.internal-dns:8080"
   EVENT_WORKER_CONCURRENCY: 5
   TRANSACTION_WORKER_CONCURRENCY: 5
-
+  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_READ):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?schema=public
 
 secrets:
-  - external_secret_name: ro-worker-database-url
-    env_variable: "RO_DATABASE_URL"
-    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/postgres"
-    aws_secret_key: "ro-database-url"
-    secret_key: "ro-database-url"
 
   - external_secret_name: worker-postgres-user
     env_variable: "POSTGRES_USER"

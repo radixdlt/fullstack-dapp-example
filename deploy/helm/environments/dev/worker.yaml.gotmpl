@@ -18,14 +18,9 @@ params:
   GATEWAY_URL: https://stokenet.radixdlt.com
   EVENT_WORKER_CONCURRENCY: 20
   TRANSACTION_WORKER_CONCURRENCY: 20
-
+  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_READ):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?schema=public
+  
 secrets:
-  - external_secret_name: ro-worker-database-url
-    env_variable: "RO_DATABASE_URL"
-    aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
-    aws_secret_key: "ro-database-url"
-    secret_key: "ro-database-url"
-
   - external_secret_name: worker-postgres-user
     env_variable: "POSTGRES_USER"
     aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
