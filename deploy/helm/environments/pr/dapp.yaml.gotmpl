@@ -15,7 +15,7 @@ params:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: secretString123
   DATABASE_URL: "postgresql://postgres:secretString123@postgres-postgresql:5432/radquest?schema=public"
-  RO_DATABASE_URL: "postgresql://postgres:secretString123@postgres-postgresql:5432/radquest?schema=public"
+  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_READ):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?schema=public
   EXPECTED_ORIGIN: https://radquest-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
   PUBLIC_DAPP_DEFINITION_ADDRESS: account_tdx_2_12ypap8t44k4pw9p0p56aqdp0ewexjcszzsj5suxduvsfnnmxpcj5qk
   PUBLIC_NETWORK_ID: 2
