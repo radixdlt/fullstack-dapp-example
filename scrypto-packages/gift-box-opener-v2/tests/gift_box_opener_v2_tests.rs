@@ -1,6 +1,6 @@
 use scrypto_test::prelude::*;
 
-use gift_box_opener_v2::gift_box_opener_v2::{gift_box_opener_v2_test::*, UserId};
+use gift_box_opener_v2::gift_box_opener_v2::{gift_box_opener_v2_test::*, RewardDeposit, UserId};
 
 struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,
@@ -177,7 +177,7 @@ fn can_open_gift_box() -> Result<(), RuntimeError> {
     )?;
 
     // Act
-    let result = gift_box_opener_v2.open_gift_box(hero_badge_proof, simple_gift_boxes, &mut env);
+    let result = gift_box_opener_v2.open_gift_boxes(hero_badge_proof, simple_gift_boxes, &mut env);
 
     // Assert
     assert!(result.is_ok());
@@ -204,7 +204,14 @@ fn can_deposit_rewards() -> Result<(), RuntimeError> {
     )?;
 
     // Act
-    let result = gift_box_opener_v2.deposit_gift_box_rewards(vec![(user_id, rewards)], &mut env);
+    let result = gift_box_opener_v2.deposit_gift_box_rewards(
+        vec![RewardDeposit {
+            user_id,
+            gift_box_count: dec!(2),
+            rewards,
+        }],
+        &mut env,
+    );
 
     // Assert
     assert!(result.is_ok());
@@ -230,12 +237,19 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
         vec![simple_gift_boxes.resource_address(&mut env)?],
         &mut env,
     )?;
-    gift_box_opener_v2.open_gift_box(
+    gift_box_opener_v2.open_gift_boxes(
         hero_badge.create_proof_of_all(&mut env)?,
         simple_gift_boxes,
         &mut env,
     )?;
-    gift_box_opener_v2.deposit_gift_box_rewards(vec![(user_id, rewards)], &mut env)?;
+    gift_box_opener_v2.deposit_gift_box_rewards(
+        vec![RewardDeposit {
+            user_id,
+            gift_box_count: dec!(2),
+            rewards,
+        }],
+        &mut env,
+    )?;
 
     // Act
     let result = gift_box_opener_v2.claim_gift_box_rewards(
@@ -268,12 +282,19 @@ fn cannot_claim_rewards_twice() -> Result<(), RuntimeError> {
         vec![simple_gift_boxes.resource_address(&mut env)?],
         &mut env,
     )?;
-    gift_box_opener_v2.open_gift_box(
+    gift_box_opener_v2.open_gift_boxes(
         hero_badge.create_proof_of_all(&mut env)?,
         simple_gift_boxes,
         &mut env,
     )?;
-    gift_box_opener_v2.deposit_gift_box_rewards(vec![(user_id, rewards)], &mut env)?;
+    gift_box_opener_v2.deposit_gift_box_rewards(
+        vec![RewardDeposit {
+            user_id,
+            gift_box_count: dec!(2),
+            rewards,
+        }],
+        &mut env,
+    )?;
     gift_box_opener_v2.claim_gift_box_rewards(
         hero_badge.create_proof_of_all(&mut env)?,
         10,
@@ -288,7 +309,6 @@ fn cannot_claim_rewards_twice() -> Result<(), RuntimeError> {
     );
 
     // Assert
-    println!("{:?}", result);
     assert!(result.is_err());
     assert!(result
         .unwrap_err()
@@ -340,7 +360,7 @@ fn cannot_open_gift_box_when_disabled() -> Result<(), RuntimeError> {
     gift_box_opener_v2.disable(&mut env)?;
 
     // Act
-    let result = gift_box_opener_v2.open_gift_box(hero_badge_proof, simple_gift_boxes, &mut env);
+    let result = gift_box_opener_v2.open_gift_boxes(hero_badge_proof, simple_gift_boxes, &mut env);
 
     // Assert
     assert!(result.is_err());
@@ -371,11 +391,59 @@ fn can_enable_disabled_gift_box_opener_and_deposit() -> Result<(), RuntimeError>
 
     // Act
     gift_box_opener_v2.enable(&mut env)?;
-    let result = gift_box_opener_v2.open_gift_box(hero_badge_proof, simple_gift_boxes, &mut env);
+    let result = gift_box_opener_v2.open_gift_boxes(hero_badge_proof, simple_gift_boxes, &mut env);
 
     // Assert
     println!("{:?}", result);
     assert!(result.is_ok());
+    Ok(())
+}
+
+#[test]
+fn cannot_open_more_that_max_number_of_gift_boxes() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut gift_box_opener_v2,
+        admin_badge,
+        hero_badge,
+        simple_gift_boxes,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge.create_proof_of_all(&mut env)?, &mut env)?;
+    gift_box_opener_v2.add_gift_box_resources(
+        vec![simple_gift_boxes.resource_address(&mut env)?],
+        &mut env,
+    )?;
+
+    let gift_boxes = BucketFactory::create_fungible_bucket(
+        simple_gift_boxes.resource_address(&mut env)?,
+        31.into(),
+        CreationStrategy::Mock,
+        &mut env,
+    )?;
+
+    gift_box_opener_v2.open_gift_boxes(
+        hero_badge.create_proof_of_all(&mut env)?,
+        gift_boxes.take(dec!(30), &mut env)?,
+        &mut env,
+    )?;
+
+    // Act
+    let result = gift_box_opener_v2.open_gift_boxes(
+        hero_badge.create_proof_of_all(&mut env)?,
+        gift_boxes,
+        &mut env,
+    );
+
+    // Assert
+    assert!(result.is_err());
+    assert!(result
+        .unwrap_err()
+        .to_string()
+        .contains("User has reached the max count of opened but unclaimed gift boxes"));
+
     Ok(())
 }
 
@@ -390,12 +458,19 @@ fn cannot_deposit_more_that_max_number_of_rewards() -> Result<(), RuntimeError> 
         ..
     } = arrange_test_environment()?;
 
-    for _ in 0..=30 {
+    for _ in 0..30 {
         let rewards =
             vec![ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(10, &mut env)?];
 
         LocalAuthZone::push(admin_badge.create_proof_of_all(&mut env)?, &mut env)?;
-        gift_box_opener_v2.deposit_gift_box_rewards(vec![(user_id.clone(), rewards)], &mut env)?;
+        gift_box_opener_v2.deposit_gift_box_rewards(
+            vec![RewardDeposit {
+                user_id: user_id.clone(),
+                gift_box_count: dec!(1),
+                rewards,
+            }],
+            &mut env,
+        )?;
     }
 
     let rewards = vec![ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
@@ -403,7 +478,14 @@ fn cannot_deposit_more_that_max_number_of_rewards() -> Result<(), RuntimeError> 
     LocalAuthZone::push(admin_badge.create_proof_of_all(&mut env)?, &mut env)?;
 
     // Act
-    let result = gift_box_opener_v2.deposit_gift_box_rewards(vec![(user_id, rewards)], &mut env);
+    let result = gift_box_opener_v2.deposit_gift_box_rewards(
+        vec![RewardDeposit {
+            user_id,
+            gift_box_count: dec!(1),
+            rewards,
+        }],
+        &mut env,
+    );
 
     // Assert
     assert!(result.is_err());
@@ -416,7 +498,7 @@ fn cannot_deposit_more_that_max_number_of_rewards() -> Result<(), RuntimeError> 
 }
 
 #[test]
-fn cannot_open_when_deposited_the_max_number_of_rewards() -> Result<(), RuntimeError> {
+fn cannot_open_when_deposited_over_the_max_number_of_rewards() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,
@@ -428,16 +510,23 @@ fn cannot_open_when_deposited_the_max_number_of_rewards() -> Result<(), RuntimeE
         ..
     } = arrange_test_environment()?;
 
-    for _ in 0..=30 {
+    for _ in 0..30 {
         let rewards =
             vec![ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(10, &mut env)?];
 
         LocalAuthZone::push(admin_badge.create_proof_of_all(&mut env)?, &mut env)?;
-        gift_box_opener_v2.deposit_gift_box_rewards(vec![(user_id.clone(), rewards)], &mut env)?;
+        gift_box_opener_v2.deposit_gift_box_rewards(
+            vec![RewardDeposit {
+                user_id: user_id.clone(),
+                gift_box_count: dec!(1),
+                rewards,
+            }],
+            &mut env,
+        )?;
     }
 
     // Act
-    let result = gift_box_opener_v2.open_gift_box(hero_badge_proof, simple_gift_boxes, &mut env);
+    let result = gift_box_opener_v2.open_gift_boxes(hero_badge_proof, simple_gift_boxes, &mut env);
 
     // Assert
     assert!(result.is_err());
@@ -445,6 +534,96 @@ fn cannot_open_when_deposited_the_max_number_of_rewards() -> Result<(), RuntimeE
         .unwrap_err()
         .to_string()
         .contains("User has reached the maximum number of rewards records"));
+
+    Ok(())
+}
+
+#[test]
+fn test_open_deposit_and_claim_in_batch() -> Result<(), RuntimeError> {
+    let Test {
+        mut env,
+        mut gift_box_opener_v2,
+        simple_gift_boxes,
+        admin_badge_proof,
+        hero_badge_proof,
+        user_id,
+        rewards,
+        ..
+    } = arrange_test_environment()?;
+
+    let simple_gift_boxes2 = simple_gift_boxes.take(dec!(0.5), &mut env)?;
+    let simple_gift_boxes3 = simple_gift_boxes.take(dec!(0.5), &mut env)?;
+    let simple_gift_boxes4 = simple_gift_boxes.take(dec!(0.5), &mut env)?;
+
+    // Add gift box resource manager
+    LocalAuthZone::push(admin_badge_proof.clone(&mut env)?, &mut env)?;
+    gift_box_opener_v2.add_gift_box_resources(
+        vec![simple_gift_boxes.resource_address(&mut env)?],
+        &mut env,
+    )?;
+    LocalAuthZone::pop(&mut env)?.unwrap().drop(&mut env)?;
+
+    // User tries to open three gift boxes
+    gift_box_opener_v2.open_gift_boxes(
+        hero_badge_proof.clone(&mut env)?,
+        simple_gift_boxes,
+        &mut env,
+    )?;
+    gift_box_opener_v2.open_gift_boxes(
+        hero_badge_proof.clone(&mut env)?,
+        simple_gift_boxes2,
+        &mut env,
+    )?;
+    gift_box_opener_v2.open_gift_boxes(
+        hero_badge_proof.clone(&mut env)?,
+        simple_gift_boxes3,
+        &mut env,
+    )?;
+
+    // Backend tries to deposit rewards in batch of size 2
+    LocalAuthZone::push(admin_badge_proof.clone(&mut env)?, &mut env)?;
+    let rewards2 = vec![rewards[0].take(dec!(3), &mut env)?];
+    gift_box_opener_v2.deposit_gift_box_rewards(
+        vec![
+            RewardDeposit {
+                user_id: user_id.clone(),
+                gift_box_count: dec!(1.5),
+                rewards,
+            },
+            RewardDeposit {
+                user_id: user_id.clone(),
+                gift_box_count: dec!(0.5),
+                rewards: rewards2,
+            },
+        ],
+        &mut env,
+    )?;
+    LocalAuthZone::pop(&mut env)?.unwrap().drop(&mut env)?;
+
+    // Backend recalls 1 reward
+    LocalAuthZone::push(admin_badge_proof.clone(&mut env)?, &mut env)?;
+    gift_box_opener_v2.retract_gift_box_rewards(vec![user_id.clone()], 1, &mut env)?;
+    LocalAuthZone::pop(&mut env)?.unwrap().drop(&mut env)?;
+
+    // User claim in batch of size 2
+    gift_box_opener_v2.claim_gift_box_rewards(hero_badge_proof.clone(&mut env)?, 2, &mut env)?;
+
+    // Open the 4th gift box
+    gift_box_opener_v2.open_gift_boxes(
+        hero_badge_proof.clone(&mut env)?,
+        simple_gift_boxes4,
+        &mut env,
+    )?;
+
+    let counts = gift_box_opener_v2.get_user_gift_box_counts(user_id, &mut env)?;
+    assert_eq!(counts.opened, dec!(2));
+    assert_eq!(counts.claimed, dec!(1.5));
+    assert_eq!(counts.recalled, dec!(0.5));
+
+    // Further claim should fail
+    gift_box_opener_v2
+        .claim_gift_box_rewards(hero_badge_proof.clone(&mut env)?, 1, &mut env)
+        .expect_err("There should be nothing to claim");
 
     Ok(())
 }

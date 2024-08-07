@@ -11,8 +11,10 @@ pub enum RewardAmount {
 }
 
 #[derive(ScryptoSbor, Debug, Clone, PartialEq, Eq)]
-#[sbor(transparent)]
-pub struct RewardRecord(pub HashMap<ResourceAddress, RewardAmount>);
+pub struct RewardRecord {
+    gift_box_count: Decimal,
+    rewards: HashMap<ResourceAddress, RewardAmount>,
+}
 
 #[derive(ScryptoSbor, Debug, Clone, PartialEq, Eq)]
 struct UserRewardRecord {
@@ -22,9 +24,16 @@ struct UserRewardRecord {
 
 #[derive(ScryptoSbor, Debug, Clone, PartialEq, Eq)]
 pub struct GiftBoxCounts {
-    opened: Decimal,
-    claimed: Decimal,
-    recalled: Decimal,
+    pub opened: Decimal,
+    pub claimed: Decimal,
+    pub recalled: Decimal,
+}
+
+#[derive(ScryptoSbor, Debug, PartialEq, Eq)]
+pub struct RewardDeposit {
+    pub user_id: UserId,
+    pub gift_box_count: Decimal,
+    pub rewards: Vec<Bucket>,
 }
 
 type Unit = ();
@@ -41,12 +50,12 @@ mod gift_box_opener_v2 {
         methods {
             disable => restrict_to: [super_admin];
             enable => restrict_to: [super_admin];
-            open_gift_box => PUBLIC;
+            open_gift_boxes => PUBLIC;
             claim_gift_box_rewards => PUBLIC;
             get_user_reward_records => PUBLIC;
             get_user_gift_box_counts => PUBLIC;
             deposit_gift_box_rewards => restrict_to: [admin];
-            recall_gift_box_rewards => restrict_to: [admin];
+            retract_gift_box_rewards => restrict_to: [admin];
             add_gift_box_resources => restrict_to: [admin];
             remove_gift_box_resources => restrict_to: [admin];
         }
@@ -121,7 +130,7 @@ mod gift_box_opener_v2 {
         fn assert_users_claimable_rewards_bellow_max(&self, user_id: &UserId) {
             if let Some(reward_record) = self.user_reward_records.get(user_id) {
                 assert!(
-                    (*reward_record).len() <= 30,
+                    (*reward_record).len() < 30,
                     "User has reached the maximum number of rewards records"
                 );
             }
@@ -142,48 +151,52 @@ mod gift_box_opener_v2 {
             }
         }
 
-        pub fn open_gift_box(&mut self, hero_badge: Proof, gift_box: Bucket) {
+        pub fn open_gift_boxes(&mut self, hero_badge: Proof, gift_boxes: Bucket) {
             assert!(self.enabled, "GiftBoxOpenerV2 disabled");
 
             // Check and get user id from hero badge proof
             let user_id = self.get_user_id_from_badge_proof(hero_badge);
 
-            self.assert_user_gift_box_count_difference_below_max(&user_id);
             self.assert_users_claimable_rewards_bellow_max(&user_id);
 
             // Check gift box address
             self.gift_box_managers
-                .get(&gift_box.resource_manager())
+                .get(&gift_boxes.resource_manager())
                 .unwrap();
 
-            let counts = self.user_gift_box_counts.get_mut(&user_id);
-            match counts {
-                Some(mut counts) => {
-                    counts.opened += gift_box.amount();
-                }
-                None => {
-                    drop(counts);
-                    self.user_gift_box_counts.insert(
-                        user_id.clone(),
-                        GiftBoxCounts {
-                            opened: gift_box.amount(),
-                            claimed: dec!(0),
-                            recalled: dec!(0),
-                        },
-                    );
-                }
-            };
+            {
+                let counts = self.user_gift_box_counts.get_mut(&user_id);
+                match counts {
+                    Some(mut counts) => {
+                        counts.opened += gift_boxes.amount();
+                    }
+                    None => {
+                        drop(counts);
+                        self.user_gift_box_counts.insert(
+                            user_id.clone(),
+                            GiftBoxCounts {
+                                opened: gift_boxes.amount(),
+                                claimed: dec!(0),
+                                recalled: dec!(0),
+                            },
+                        );
+                    }
+                };
+            }
+
+            // Check if user has now opened too many gift boxes
+            self.assert_user_gift_box_count_difference_below_max(&user_id);
 
             Runtime::emit_event(GiftBoxOpenedEvent {
                 user_id,
-                resource_address: gift_box.resource_address(),
-                quantity: gift_box.amount(),
+                resource_address: gift_boxes.resource_address(),
+                quantity: gift_boxes.amount(),
             });
 
             // Burn the gift box
             self.admin_badge
                 .as_fungible()
-                .authorize_with_amount(1, || gift_box.resource_manager().burn(gift_box));
+                .authorize_with_amount(1, || gift_boxes.resource_manager().burn(gift_boxes));
         }
 
         fn take_users_n_latest_reward_records(
@@ -204,7 +217,7 @@ mod gift_box_opener_v2 {
 
         fn retrieve_reward_from_vaults(&mut self, reward_record: RewardRecord) -> Vec<Bucket> {
             reward_record
-                .0
+                .rewards
                 .iter()
                 .map(|(resource_address, reward_amount)| match reward_amount {
                     RewardAmount::FungibleAmount(amount) => {
@@ -242,10 +255,9 @@ mod gift_box_opener_v2 {
             let latest_reward_records =
                 self.take_users_n_latest_reward_records(&user_id, max_reward_count);
 
-            self.user_gift_box_counts.get_mut(&user_id).unwrap().claimed +=
-                latest_reward_records.len();
-
             for reward_record in latest_reward_records {
+                self.user_gift_box_counts.get_mut(&user_id).unwrap().claimed +=
+                    reward_record.gift_box_count;
                 claimed_reward_record.push(reward_record.clone());
 
                 reward.extend(self.retrieve_reward_from_vaults(reward_record));
@@ -268,16 +280,25 @@ mod gift_box_opener_v2 {
             self.user_gift_box_counts.get(&user_id).unwrap().clone()
         }
 
-        pub fn deposit_gift_box_rewards(&mut self, user_rewards: Vec<(UserId, Vec<Bucket>)>) {
+        pub fn deposit_gift_box_rewards(&mut self, reward_deposits: Vec<RewardDeposit>) {
             assert!(self.enabled, "GiftBoxOpenerV2 disabled");
 
             let mut deposited_user_rewards = Vec::<UserRewardRecord>::new();
 
-            for (user_id, rewards) in user_rewards {
+            for RewardDeposit {
+                user_id,
+                gift_box_count,
+                rewards,
+            } in reward_deposits
+            {
+                // Check if user has too many rewards records
                 self.assert_users_claimable_rewards_bellow_max(&user_id);
 
                 // Create a new rewards record
-                let mut new_reward_record = RewardRecord(HashMap::new());
+                let mut new_reward_record = RewardRecord {
+                    gift_box_count,
+                    rewards: HashMap::new(),
+                };
                 for reward in &rewards {
                     let reward_amount = match reward.resource_manager().resource_type() {
                         ResourceType::Fungible { divisibility: _ } => {
@@ -294,7 +315,7 @@ mod gift_box_opener_v2 {
                         }
                     };
                     new_reward_record
-                        .0
+                        .rewards
                         .insert(reward.resource_address(), reward_amount);
                 }
 
@@ -336,26 +357,26 @@ mod gift_box_opener_v2 {
             Runtime::emit_event(GiftBoxDepositedEvent(deposited_user_rewards));
         }
 
-        pub fn recall_gift_box_rewards(
+        pub fn retract_gift_box_rewards(
             &mut self,
             user_ids: Vec<UserId>,
             max_reward_per_user_count: usize,
         ) -> Vec<Bucket> {
-            let mut revoked_rewards = Vec::<Bucket>::new();
+            let mut retracted_rewards = Vec::<Bucket>::new();
             for user_id in user_ids {
                 let reward_records_to_revoke =
                     self.take_users_n_latest_reward_records(&user_id, max_reward_per_user_count);
 
-                self.user_gift_box_counts
-                    .get_mut(&user_id)
-                    .unwrap()
-                    .recalled += reward_records_to_revoke.len();
-
                 for reward_record in reward_records_to_revoke {
-                    revoked_rewards.extend(self.retrieve_reward_from_vaults(reward_record));
+                    self.user_gift_box_counts
+                        .get_mut(&user_id)
+                        .unwrap()
+                        .recalled += reward_record.gift_box_count;
+
+                    retracted_rewards.extend(self.retrieve_reward_from_vaults(reward_record));
                 }
             }
-            revoked_rewards
+            retracted_rewards
         }
 
         pub fn add_gift_box_resources(&mut self, resource_addresses: Vec<ResourceAddress>) {
