@@ -1,0 +1,10 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("5")
+;
+CALL_METHOD
+    Address("${gift_box_opener_v2}")
+    "get_user_gift_box_counts"
+    "${user_id}"
+;

@@ -1,7 +1,7 @@
 CALL_METHOD
     Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
     "lock_fee"
-    Decimal("500")
+    Decimal("50")
 ;
 CALL_METHOD
     Address("${account}")
@@ -21,7 +21,7 @@ TAKE_ALL_FROM_WORKTOP
 ;
 CALL_FUNCTION
     Address("${package}")
-    "GiftBoxOpener"
+    "GiftBoxOpenerV2"
     "new"
     Address("${super_admin_badge}")
     Enum<OwnerRole::Fixed>(

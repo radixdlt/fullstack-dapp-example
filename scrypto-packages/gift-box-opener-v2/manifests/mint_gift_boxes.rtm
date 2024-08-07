@@ -10,7 +10,7 @@ CALL_METHOD
     Decimal("1")
 ;
 MINT_FUNGIBLE
-    Address("${gift_box}")
+    Address("${gift_box_simple}")
     Decimal("5")
 ;
 CALL_METHOD

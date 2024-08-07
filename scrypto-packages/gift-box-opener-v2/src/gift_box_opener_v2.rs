@@ -40,7 +40,11 @@ type Unit = ();
 
 #[blueprint]
 #[types(Unit, ResourceManager, UserId, GiftBoxCounts, ResourceAddress, Vault, Vec<RewardRecord>)]
-#[events(GiftBoxOpenedEvent, GiftBoxRewardsClaimedEvent, GiftBoxDepositedEvent)]
+#[events(
+    GiftBoxesOpenedEvent,
+    GiftBoxRewardsClaimedEvent,
+    GiftBoxesDepositedEvent
+)]
 mod gift_box_opener_v2 {
     enable_method_auth! {
         roles {
@@ -187,7 +191,7 @@ mod gift_box_opener_v2 {
             // Check if user has now opened too many gift boxes
             self.assert_user_gift_box_count_difference_below_max(&user_id);
 
-            Runtime::emit_event(GiftBoxOpenedEvent {
+            Runtime::emit_event(GiftBoxesOpenedEvent {
                 user_id,
                 resource_address: gift_boxes.resource_address(),
                 quantity: gift_boxes.amount(),
@@ -314,9 +318,13 @@ mod gift_box_opener_v2 {
                             )
                         }
                     };
-                    new_reward_record
-                        .rewards
-                        .insert(reward.resource_address(), reward_amount);
+
+                    match new_reward_record.rewards.get(&reward.resource_address()) {
+                        None => new_reward_record
+                            .rewards
+                            .insert(reward.resource_address(), reward_amount),
+                        Some(_) => panic!("Duplicate reward resource address"),
+                    };
                 }
 
                 // Add the rewards record to the users other rewards records
@@ -354,7 +362,7 @@ mod gift_box_opener_v2 {
                 });
             }
 
-            Runtime::emit_event(GiftBoxDepositedEvent(deposited_user_rewards));
+            Runtime::emit_event(GiftBoxesDepositedEvent(deposited_user_rewards));
         }
 
         pub fn retract_gift_box_rewards(
@@ -400,7 +408,7 @@ mod gift_box_opener_v2 {
 }
 
 #[derive(Debug, ScryptoSbor, ScryptoEvent)]
-struct GiftBoxOpenedEvent {
+struct GiftBoxesOpenedEvent {
     user_id: UserId,
     resource_address: ResourceAddress,
     quantity: Decimal,
@@ -413,4 +421,4 @@ struct GiftBoxRewardsClaimedEvent {
 }
 
 #[derive(Debug, ScryptoSbor, ScryptoEvent)]
-struct GiftBoxDepositedEvent(Vec<UserRewardRecord>);
+struct GiftBoxesDepositedEvent(Vec<UserRewardRecord>);

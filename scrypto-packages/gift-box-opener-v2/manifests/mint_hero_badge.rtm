@@ -14,7 +14,7 @@ CALL_METHOD
 MINT_NON_FUNGIBLE
   Address("${hero_badge}")
   Map<NonFungibleLocalId, Tuple>(
-    NonFungibleLocalId("<${userId}>") => Tuple(
+    NonFungibleLocalId("<${user_id}>") => Tuple(
       Tuple(
         "${hero_badge_name}",
         "${hero_badge_description}",

@@ -1,7 +1,7 @@
 CALL_METHOD
     Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
     "lock_fee"
-    Decimal("50")
+    Decimal("5")
 ;
 CALL_METHOD
     Address("${account}")
@@ -15,9 +15,10 @@ POP_FROM_AUTH_ZONE
     Proof("hero_badge_proof")
 ;
 CALL_METHOD
-    Address("${gift_box_opener}")
+    Address("${gift_box_opener_v2}")
     "claim_gift_box_rewards"
     Proof("hero_badge_proof")
+    10u64 # max number of gift box contents to claim
 ;
 CALL_METHOD
     Address("${account}")
