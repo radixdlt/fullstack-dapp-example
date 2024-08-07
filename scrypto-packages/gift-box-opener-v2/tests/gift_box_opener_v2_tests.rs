@@ -219,7 +219,7 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
         mut gift_box_opener_v2,
         simple_gift_boxes,
         admin_badge_proof,
-        hero_badge_proof,
+        hero_badge,
         user_id,
         rewards,
         ..
@@ -230,14 +230,21 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
         vec![simple_gift_boxes.resource_address(&mut env)?],
         &mut env,
     )?;
-
+    gift_box_opener_v2.open_gift_box(
+        hero_badge.create_proof_of_all(&mut env)?,
+        simple_gift_boxes,
+        &mut env,
+    )?;
     gift_box_opener_v2.deposit_gift_box_rewards(vec![(user_id, rewards)], &mut env)?;
 
     // Act
-    let result = gift_box_opener_v2.claim_gift_box_rewards(hero_badge_proof, 10, &mut env);
+    let result = gift_box_opener_v2.claim_gift_box_rewards(
+        hero_badge.create_proof_of_all(&mut env)?,
+        10,
+        &mut env,
+    );
 
     // Assert
-    println!("{:?}", result);
     assert!(result.is_ok());
     Ok(())
 }
@@ -261,7 +268,11 @@ fn cannot_claim_rewards_twice() -> Result<(), RuntimeError> {
         vec![simple_gift_boxes.resource_address(&mut env)?],
         &mut env,
     )?;
-
+    gift_box_opener_v2.open_gift_box(
+        hero_badge.create_proof_of_all(&mut env)?,
+        simple_gift_boxes,
+        &mut env,
+    )?;
     gift_box_opener_v2.deposit_gift_box_rewards(vec![(user_id, rewards)], &mut env)?;
     gift_box_opener_v2.claim_gift_box_rewards(
         hero_badge.create_proof_of_all(&mut env)?,
@@ -277,7 +288,12 @@ fn cannot_claim_rewards_twice() -> Result<(), RuntimeError> {
     );
 
     // Assert
+    println!("{:?}", result);
     assert!(result.is_err());
+    assert!(result
+        .unwrap_err()
+        .to_string()
+        .contains("No rewards to claim"));
     Ok(())
 }
 

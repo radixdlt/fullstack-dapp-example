@@ -237,7 +237,7 @@ mod gift_box_opener_v2 {
             let user_id = self.get_user_id_from_badge_proof(hero_badge);
 
             let mut claimed_reward_record = Vec::<RewardRecord>::new();
-            let mut rewards = Vec::<Bucket>::new();
+            let mut reward = Vec::<Bucket>::new();
 
             let latest_reward_records =
                 self.take_users_n_latest_reward_records(&user_id, max_reward_count);
@@ -248,7 +248,7 @@ mod gift_box_opener_v2 {
             for reward_record in latest_reward_records {
                 claimed_reward_record.push(reward_record.clone());
 
-                rewards.extend(self.retrieve_reward_from_vaults(reward_record));
+                reward.extend(self.retrieve_reward_from_vaults(reward_record));
             }
 
             Runtime::emit_event(GiftBoxRewardsClaimedEvent {
@@ -256,7 +256,8 @@ mod gift_box_opener_v2 {
                 rewards: claimed_reward_record,
             });
 
-            rewards
+            assert!(!reward.is_empty(), "No rewards to claim");
+            reward
         }
 
         pub fn get_user_reward_records(&self, user_id: UserId) -> Vec<RewardRecord> {
