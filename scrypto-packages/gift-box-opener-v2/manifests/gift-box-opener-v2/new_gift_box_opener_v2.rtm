@@ -39,4 +39,3 @@ CALL_FUNCTION
     Address("${hero_badge}")
     Bucket("admin_badge")
 ;
-
