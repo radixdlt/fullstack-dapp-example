@@ -39,7 +39,7 @@ export const TransactionIntentHelper = ({
       (error) => ({ reason: 'FailedToAddTransactionIntentInDb', jsError: error })
     )
       .andThen(() => {
-        if (data.type === 'DepositGiftBoxReward') {
+        if (data.type === 'DepositGiftBoxesReward') {
           return DepositGiftBoxRewardBufferQueue.addBulk([
             { ...data, discriminator, userId }
           ]).mapErr((error) => ({

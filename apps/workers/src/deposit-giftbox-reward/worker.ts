@@ -1,4 +1,4 @@
-import { Worker, ConnectionOptions, Queues, BatchedDepositGiftBoxRewardJob } from 'queues'
+import { Worker, ConnectionOptions, Queues, BatchedDepositGiftBoxesRewardJob } from 'queues'
 import { AppLogger } from 'common'
 import { BatchedDepositGiftBoxRewardController } from './controller'
 import { PrismaClient, TransactionIntentStatus } from 'database'
@@ -55,12 +55,12 @@ export const BatchedDepositGiftBoxRewardWorker = async (
         )
       )
 
-  const withoutBlockedUsers = (items: BatchedDepositGiftBoxRewardJob['items']) =>
+  const withoutBlockedUsers = (items: BatchedDepositGiftBoxesRewardJob['items']) =>
     getUserIds(items.map((item) => item.userId)).map((userIds) =>
       items.filter((item) => userIds.includes(item.userId))
     )
 
-  const worker = new Worker<BatchedDepositGiftBoxRewardJob>(
+  const worker = new Worker<BatchedDepositGiftBoxesRewardJob>(
     Queues.DepositGiftBoxRewardQueue,
     async (job) => {
       const transactionIntentDiscriminators = job.data.items.map((item) => item.discriminator)

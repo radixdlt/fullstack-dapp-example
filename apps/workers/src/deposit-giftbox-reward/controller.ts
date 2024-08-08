@@ -1,5 +1,5 @@
 import { ResultAsync, okAsync, ok, errAsync, err } from 'neverthrow'
-import { DepositGiftBoxRewardJob } from 'queues'
+import { DepositGiftBoxesRewardJob } from 'queues'
 import {
   GatewayApi,
   getRandomFloat,
@@ -26,7 +26,7 @@ export const BatchedDepositGiftBoxRewardController = ({
     items,
     logger
   }: {
-    items: DepositGiftBoxRewardJob[]
+    items: DepositGiftBoxesRewardJob[]
     logger: AppLogger
   }): ResultAsync<any, WorkerOutputError> => {
     const transactionHelper = TransactionHelper({
@@ -76,9 +76,11 @@ export const BatchedDepositGiftBoxRewardController = ({
       GiftBoxRewardConfig({ getRandomFloat, getRandomIntInclusive })
     )
 
-    const addRewardsToItem = (job: DepositGiftBoxRewardJob) => {
-      const { elements: elementAmount, energyCard } = getGiftBoxRewards(job.giftBoxKind)
-      return { ...job, elementAmount, energyCard }
+    const addRewardsToItem = (job: DepositGiftBoxesRewardJob) => {
+      const rewards = new Array(job.amount).fill(null).map(() => getGiftBoxRewards(job.giftBoxKind))
+      const elementAmount = rewards.reduce((acc, { elements }) => acc + elements, 0)
+      const energyCards = rewards.map(({ energyCard }) => energyCard)
+      return { ...job, elementAmount, energyCards }
     }
 
     const getCardImages = (keys: string[]) => {
@@ -99,12 +101,16 @@ export const BatchedDepositGiftBoxRewardController = ({
     const createManifest = () =>
       ok(items.map(addRewardsToItem))
         .asyncAndThen((items) => {
-          const cardImageKeys = items.map((item) => item.energyCard.key)
+          const cardImageKeys = items.map((item) => item.energyCards.map(({ key }) => key)).flat()
           return getCardImages(cardImageKeys).map((cardImages) =>
             items.map((item) => ({
               userId: item.userId,
               elementsAmount: item.elementAmount,
-              energyCard: { ...item.energyCard, key_image_url: cardImages[item.energyCard.key] }
+              energyCards: item.energyCards.map((item) => ({
+                ...item,
+                key_image_url: cardImages[item.key]
+              })),
+              numberOfGiftBoxes: item.amount
             }))
           )
         })

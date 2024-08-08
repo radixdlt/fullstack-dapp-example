@@ -4,7 +4,7 @@ import {
   Queues,
   Job,
   DepositGiftBoxRewardQueue,
-  DepositGiftBoxRewardJob
+  DepositGiftBoxesRewardJob
 } from 'queues'
 import { AppLogger } from 'common'
 import { config } from '../config'
@@ -21,10 +21,14 @@ export const DepositGiftBoxRewardBufferWorker = async (
 ) => {
   const { logger, DepositGiftBoxRewardQueue } = dependencies
 
-  const worker = new Worker<DepositGiftBoxRewardJob>(Queues.DepositGiftBoxRewardBufferQueue, null, {
-    connection,
-    concurrency: config.worker.depositGiftBoxRewardBuffer.concurrency
-  })
+  const worker = new Worker<DepositGiftBoxesRewardJob>(
+    Queues.DepositGiftBoxRewardBufferQueue,
+    null,
+    {
+      connection,
+      concurrency: config.worker.depositGiftBoxRewardBuffer.concurrency
+    }
+  )
 
   const token = crypto.randomUUID()
 
@@ -38,19 +42,19 @@ export const DepositGiftBoxRewardBufferWorker = async (
         .map(() => worker.getNextJob(token))
     ).then((jobs) => jobs.filter((job) => job))
 
-  const markJobsAsFailed = (input: Job<DepositGiftBoxRewardJob>[], error: Error) =>
+  const markJobsAsFailed = (input: Job<DepositGiftBoxesRewardJob>[], error: Error) =>
     ResultAsync.fromPromise(
       Promise.all(input.map((job) => job.moveToFailed(error, token, false))),
       (error) => ({ reason: 'FailedToMarkJobsAsFailed', jsError: error })
     )
 
-  const markJobsAsCompleted = (input: Job<DepositGiftBoxRewardJob>[]) =>
+  const markJobsAsCompleted = (input: Job<DepositGiftBoxesRewardJob>[]) =>
     ResultAsync.fromPromise(
       Promise.all(input.map((job) => job.moveToCompleted(undefined, token, false))),
       (error) => ({ reason: 'FailedToMarkJobsAsCompleted', jsError: error })
     )
 
-  let jobs: Job<DepositGiftBoxRewardJob>[] = []
+  let jobs: Job<DepositGiftBoxesRewardJob>[] = []
 
   while (1) {
     if (jobs.length) {

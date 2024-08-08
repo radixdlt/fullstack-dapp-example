@@ -3,8 +3,9 @@ import { config } from '../config'
 
 export type CreateBatchDepositGiftBoxRewardManifest = {
   userId: string
-  energyCard: EnergyCardNfData
+  energyCards: EnergyCardNfData[]
   elementsAmount: number
+  numberOfGiftBoxes: number
 }
 
 export const createBatchDepositGiftBoxRewardManifest = (
@@ -14,6 +15,7 @@ export const createBatchDepositGiftBoxRewardManifest = (
   const { payer, system } = addresses.accounts
   const { adminBadgeAddress } = addresses.badges
   const { elementAddress, morphEnergyCardAddress } = addresses.resources
+  const { giftBoxOpenerV2 } = addresses.components
 
   const manifest: string[] = []
 
@@ -33,7 +35,7 @@ export const createBatchDepositGiftBoxRewardManifest = (
     `CALL_METHOD
       Address("${payer.address}")
       "lock_fee"
-      Decimal("50")
+      Decimal("100")
     ;
     `,
     `CALL_METHOD
@@ -53,74 +55,96 @@ export const createBatchDepositGiftBoxRewardManifest = (
     ;`
   )
 
-  for (const [index, { userId, energyCard, elementsAmount }] of Object.entries(input)) {
-    const buckets: string[] = []
+  const rewards = Object.entries(input).map(
+    ([index, { userId, energyCards, elementsAmount, numberOfGiftBoxes }]) => {
+      const buckets: string[] = []
 
-    const createBucket = (name: string) => {
-      const bucketName = `${name}_${userId}_bucket_${buckets.length + 1}_${index}`
-      buckets.push(bucketName)
-      return bucketName
-    }
+      const createBucket = (name: string) => {
+        const bucketName = `${name}_${userId}_bucket_${buckets.length + 1}_${index}`
+        buckets.push(bucketName)
+        return bucketName
+      }
 
-    const {
-      key_image_url,
-      description,
-      name,
-      energy_type,
-      rarity,
-      quality,
-      limited_edition,
-      energy_description
-    } = energyCard
+      const mintEnergyCard = (energyCard: EnergyCardNfData) => {
+        const {
+          key_image_url,
+          description,
+          name,
+          energy_type,
+          rarity,
+          quality,
+          limited_edition,
+          energy_description
+        } = energyCard
 
-    addToManifest(
-      `CALL_METHOD
-        Address("${config.radQuest.components.cardForge}")
-        "mint_card"
-        "${userId}"
-        "${key_image_url}"
-        "${name}"
-        "${description}"
-        "${energy_type}"
-        "${energy_description}"
-        "${rarity}"
-        Decimal("${quality}")
-        ${limited_edition}
-      ;`,
+        addToManifest(
+          `CALL_METHOD
+            Address("${config.radQuest.components.cardForge}")
+            "mint_card"
+            "${userId}"
+            "${key_image_url}"
+            "${name}"
+            "${description}"
+            "${energy_type}"
+            "${energy_description}"
+            "${rarity}"
+            Decimal("${quality}")
+            ${limited_edition}
+          ;`,
 
-      `TAKE_ALL_FROM_WORKTOP
-        Address("${morphEnergyCardAddress}")
-        Bucket("${createBucket('card')}")
-      ;`
-    )
+          `TAKE_ALL_FROM_WORKTOP
+            Address("${morphEnergyCardAddress}")
+            Bucket("${createBucket('card')}")
+          ;`
+        )
+      }
 
-    addToManifest(
-      `TAKE_FROM_WORKTOP
+      energyCards.forEach(mintEnergyCard)
+
+      addToManifest(
+        `TAKE_FROM_WORKTOP
           Address("${elementAddress}")
           Decimal("${elementsAmount}")
           Bucket("${createBucket('elements')}")
         ;`
-    )
+      )
 
-    const rewardBuckets = buckets.map((name) => `Bucket("${name}")`)
+      const rewardBuckets = buckets.map((name) => `Bucket("${name}")`)
 
-    addToManifest(
-      `CALL_METHOD
-        Address("${system.address}")
-        "create_proof_of_amount"
-        Address("${adminBadgeAddress}")
-        Decimal("1")
-      ;`,
+      return {
+        userId,
+        rewardBuckets,
+        numberOfGiftBoxes
+      }
+    }
+  )
 
-      `CALL_METHOD
-        Address("${addresses.components.giftBoxOpener}")
-        "deposit_gift_box_rewards"
-        "${userId}"
-        # Array of Buckets to deposit
-        Array<Bucket>(${rewardBuckets.join(', ')})
-      ;`
-    )
-  }
+  const manifestInput = rewards.map(({ userId, rewardBuckets, numberOfGiftBoxes }) => {
+    return `Tuple(
+      "${userId}",
+      Decimal("${numberOfGiftBoxes}"),
+      Array<Bucket>(
+        ${rewardBuckets.join(', ')}
+      ),
+    )`
+  })
+
+  addToManifest(
+    `CALL_METHOD
+      Address("${system.address}")
+      "create_proof_of_amount"
+      Address("${adminBadgeAddress}")
+      Decimal("1")
+    ;`,
+
+    `CALL_METHOD
+      Address("${giftBoxOpenerV2}")
+      "deposit_gift_box_rewards"
+      Array<Tuple>(
+        ${manifestInput.join(', ')}
+      )
+    ;`
+  )
 
   return manifest.map((line) => line.trim()).join('\n')
 }

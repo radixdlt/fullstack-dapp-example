@@ -33,13 +33,13 @@ export type EventJob = {
   data: Record<string, unknown>
 }
 
-export type DepositGiftBoxRewardJob = GenericJob<
-  TransactionJob & DepositGiftBoxRewardTransactionJob,
+export type DepositGiftBoxesRewardJob = GenericJob<
+  TransactionJob & DepositGiftBoxesRewardTransactionJob,
   'discriminator'
 >
 
-export type BatchedDepositGiftBoxRewardJob = GenericJob<
-  { id: string; items: DepositGiftBoxRewardJob[] },
+export type BatchedDepositGiftBoxesRewardJob = GenericJob<
+  { id: string; items: DepositGiftBoxesRewardJob[] },
   'id'
 >
 
@@ -90,6 +90,12 @@ export type DepositGiftBoxRewardTransactionJob = {
   giftBoxKind: GiftBoxKind
 }
 
+export type DepositGiftBoxesRewardTransactionJob = {
+  type: 'DepositGiftBoxesReward'
+  giftBoxKind: GiftBoxKind
+  amount: number
+}
+
 export type QuestCompletedTransactionJob = {
   type: 'QuestCompleted'
   questId: string
@@ -115,6 +121,7 @@ export type TransactionJob = {
   | DepositXrdToAccount
   | QuestCompletedTransactionJob
   | DepositGiftBoxRewardTransactionJob
+  | DepositGiftBoxesRewardTransactionJob
   | ElementsDepositedTransactionJob
 )
 
@@ -269,12 +276,12 @@ export const getQueues = (connection: ConnectionOptions) => {
         ),
       queue: systemQueue
     },
-    [Queues.DepositGiftBoxRewardQueue]: createQueue<BatchedDepositGiftBoxRewardJob>(
+    [Queues.DepositGiftBoxRewardQueue]: createQueue<BatchedDepositGiftBoxesRewardJob>(
       'DepositGiftBoxRewardQueue',
       'id',
       connection
     ),
-    [Queues.DepositGiftBoxRewardBufferQueue]: createQueue<DepositGiftBoxRewardJob>(
+    [Queues.DepositGiftBoxRewardBufferQueue]: createQueue<DepositGiftBoxesRewardJob>(
       'DepositGiftBoxRewardBufferQueue',
       'discriminator',
       connection

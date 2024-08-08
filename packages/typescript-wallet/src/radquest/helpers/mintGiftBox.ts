@@ -3,7 +3,8 @@ import { transactionBuilder } from '../../transaction/transactionBuilder'
 
 export const mintGiftBox = (
   giftBoxKind: keyof typeof config.radQuest.resources.giftBox,
-  accountAddress: string
+  accountAddress: string,
+  amount = 1
 ) => {
   const transactionManifest = `
 CALL_METHOD
@@ -15,7 +16,7 @@ CALL_METHOD
   
 MINT_FUNGIBLE
   Address("${config.radQuest.resources.giftBox[giftBoxKind]}")
-  Decimal("1")
+  Decimal("${amount}")
 ;
 
 CALL_METHOD

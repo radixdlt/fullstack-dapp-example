@@ -45,9 +45,9 @@ export const config = {
     },
     depositGiftBoxRewardBuffer: {
       concurrency: parseInt(process.env.DEPOSIT_GIFT_BOX_REWARD_BUFFER_WORKER_CONCURRENCY ?? '1'),
-      batchSize: parseInt(process.env.DEPOSIT_GIFT_BOX_REWARD_BUFFER_WORKER_BATCH_SIZE ?? '5'),
+      batchSize: parseInt(process.env.DEPOSIT_GIFT_BOX_REWARD_BUFFER_WORKER_BATCH_SIZE ?? '10'),
       batchInterval: parseInt(
-        process.env.DEPOSIT_GIFT_BOX_REWARD_BUFFER_WORKER_BATCH_INTERVAL ?? '1000'
+        process.env.DEPOSIT_GIFT_BOX_REWARD_BUFFER_WORKER_BATCH_INTERVAL ?? '100'
       )
     },
     depositGiftBoxReward: {

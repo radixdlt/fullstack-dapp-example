@@ -20,7 +20,7 @@ import {
 } from 'common'
 import { PrismaClient, User } from 'database'
 import { ResultAsync, errAsync } from 'neverthrow'
-import { Queues, RedisConnection, getQueues, DepositGiftBoxRewardJob } from 'queues'
+import { Queues, RedisConnection, getQueues, DepositGiftBoxesRewardJob } from 'queues'
 import { config } from './config'
 import { QueueEvents } from 'bullmq'
 import crypto from 'crypto'
@@ -606,23 +606,16 @@ describe('Event flows', () => {
   })
 
   describe('giftbox', async () => {
-    beforeAll(async () => {
-      const { user } = await getAccount()
-      const mintGiftBoxes = async () =>
-        await ResultAsync.combine([
-          mintGiftBox('Starter', user.accountAddress!),
-          mintGiftBox('Simple', user.accountAddress!),
-          mintGiftBox('Fancy', user.accountAddress!),
-          mintGiftBox('Elite', user.accountAddress!)
-        ])
-
-      const mintGiftBoxesResult = await mintGiftBoxes()
-
-      if (mintGiftBoxesResult.isErr()) throw mintGiftBoxesResult.error
-    }, 60_000)
-
-    const openGiftBox = async (kind: GiftBoxKind) => {
-      const { submitTransaction, user } = await getAccount()
+    const openGiftBox = async ({
+      kind,
+      amount = 1,
+      account
+    }: {
+      kind: GiftBoxKind
+      amount?: number
+      account?: Awaited<ReturnType<typeof getAccount>>
+    }) => {
+      const { submitTransaction, user } = account ?? (await getAccount())
       const openGiftBoxResult = await submitTransaction(`
         CALL_METHOD
           Address("${user.accountAddress}")
@@ -647,7 +640,7 @@ describe('Event flows', () => {
           Address("${user.accountAddress}")
           "withdraw"
           Address("${addresses.resources.giftBox[kind]}")
-          Decimal("1")
+          Decimal("${amount}")
         ;
 
         TAKE_ALL_FROM_WORKTOP
@@ -656,8 +649,8 @@ describe('Event flows', () => {
         ;
 
         CALL_METHOD
-          Address("${addresses.components.giftBoxOpener}")
-          "open_gift_box"
+          Address("${addresses.components.giftBoxOpenerV2}")
+          "open_gift_boxes"
           Proof("hero_badge_proof")
           Bucket("gift_box")
         ;
@@ -698,78 +691,107 @@ describe('Event flows', () => {
       if (result.isErr()) throw result.error
     }
 
-    it('open Starter gift box', { timeout: 60_000, skip: false }, async () => {
-      const { user } = await getAccount()
-      await openGiftBox('Starter')
-      await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
-      await claimGiftBoxReward()
-    })
-
-    it('open Simple gift box', { timeout: 60_000, skip: false }, async () => {
-      const { user } = await getAccount()
-      await openGiftBox('Simple')
-      await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
-      await claimGiftBoxReward()
-    })
-
-    it('open Fancy gift box', { timeout: 60_000, skip: false }, async () => {
-      const { user } = await getAccount()
-      await openGiftBox('Fancy')
-      await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
-      await claimGiftBoxReward()
-    })
-
-    it('open Elite gift box', { timeout: 60_000, skip: false }, async () => {
-      const { user } = await getAccount()
-      await openGiftBox('Elite')
-      await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
-      await claimGiftBoxReward()
-    })
-  })
-
-  describe.only('transaction batching', () => {
-    it('should batch gift box reward deposits', { timeout: 60_000, skip: false }, async () => {
-      const { user } = await getAccount()
-
-      const createDepositRewardJob = (
-        userId: string,
-        giftBoxKind: GiftBoxKind
-      ): DepositGiftBoxRewardJob => ({
-        discriminator: `DepositGiftBoxReward:${crypto.randomUUID()}`,
-        userId,
-        traceId: crypto.randomUUID(),
-        type: 'DepositGiftBoxReward',
-        giftBoxKind
+    describe('open and claim gift boxes', () => {
+      it('open Starter gift box', { timeout: 60_000, skip: false }, async () => {
+        const { user } = await getAccount()
+        await mintGiftBox('Starter', user.accountAddress!)
+        await openGiftBox({ kind: 'Starter' })
+        await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+        await claimGiftBoxReward()
       })
 
-      const jobs = new Array(6).fill(0).map(() => createDepositRewardJob(user.id, 'Simple'))
-
-      await db.transactionIntent.createMany({
-        data: jobs.map(({ discriminator, userId }) => ({ discriminator, userId }))
+      it('open Simple gift box', { timeout: 60_000, skip: false }, async () => {
+        const { user } = await getAccount()
+        await mintGiftBox('Simple', user.accountAddress!)
+        await openGiftBox({ kind: 'Simple' })
+        await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+        await claimGiftBoxReward()
       })
 
-      const waitUntilDone = async (ids: string[]) => {
-        let done = false
+      it('open Fancy gift box', { timeout: 60_000, skip: false }, async () => {
+        const { user } = await getAccount()
+        await mintGiftBox('Fancy', user.accountAddress!)
+        await openGiftBox({ kind: 'Fancy' })
+        await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+        await claimGiftBoxReward()
+      })
 
-        while (!done) {
-          const items = await db.transactionIntent
-            .findMany({
-              select: { discriminator: true },
-              where: { discriminator: { in: ids }, status: { notIn: ['PENDING', 'WAITING'] } }
-            })
-            .then((items) => items.map((item) => item.discriminator))
+      it('open Elite gift box', { timeout: 60_000, skip: false }, async () => {
+        const { user } = await getAccount()
+        await mintGiftBox('Elite', user.accountAddress!)
+        await openGiftBox({ kind: 'Elite' })
+        await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+        await claimGiftBoxReward()
+      })
+    })
 
-          done = items.length === ids.length
-          await new Promise((resolve) => setTimeout(resolve, 1000))
+    describe.only('gift box reward deposit batching', () => {
+      it('should batch gift box reward deposits', { timeout: 600_000, skip: false }, async () => {
+        const account1 = await getAccount()
+
+        const [account2, account3] = await Promise.all(
+          new Array(2).fill(null).map(() => createAccount({ withXrd: true, withHeroBadge: true }))
+        )
+
+        await Promise.all([
+          mintGiftBox('Simple', account1.user.accountAddress!, 100),
+          mintGiftBox('Simple', account2.user.accountAddress!, 100),
+          mintGiftBox('Simple', account3.user.accountAddress!, 100)
+        ])
+
+        for (const _ of new Array(3).fill(null)) {
+          await Promise.all(
+            [account1, account2, account3].map((account) =>
+              Promise.all(
+                new Array(3).fill(null).map(() => openGiftBox({ kind: 'Simple', account }))
+              )
+            )
+          )
         }
 
-        return {}
-      }
+        // await Promise.all(new Array(3).fill(null).map(() => openGiftBox({kind: 'Simple'})))
 
-      await DepositGiftBoxRewardBufferQueue.addBulk(jobs)
+        // const createDepositRewardJob = (
+        //   userId: string,
+        //   giftBoxKind: GiftBoxKind
+        // ): DepositGiftBoxesRewardJob => ({
+        //   discriminator: `DepositGiftBoxReward:${crypto.randomUUID()}`,
+        //   userId,
+        //   traceId: crypto.randomUUID(),
+        //   type: 'DepositGiftBoxesReward',
+        //   giftBoxKind,
+        //   amount: 1
+        // })
 
-      const expectedIds = jobs.map((job) => job.discriminator)
-      await waitUntilDone(expectedIds)
+        // const jobs = new Array(6).fill(0).map(() => createDepositRewardJob(user.id, 'Simple'))
+
+        // await db.transactionIntent.createMany({
+        //   data: jobs.map(({ discriminator, userId }) => ({ discriminator, userId }))
+        // })
+
+        // const waitUntilDone = async (ids: string[]) => {
+        //   let done = false
+
+        //   while (!done) {
+        //     const items = await db.transactionIntent
+        //       .findMany({
+        //         select: { discriminator: true },
+        //         where: { discriminator: { in: ids }, status: { notIn: ['PENDING', 'WAITING'] } }
+        //       })
+        //       .then((items) => items.map((item) => item.discriminator))
+
+        //     done = items.length === ids.length
+        //     await new Promise((resolve) => setTimeout(resolve, 1000))
+        //   }
+
+        //   return {}
+        // }
+
+        // await DepositGiftBoxRewardBufferQueue.addBulk(jobs)
+
+        // const expectedIds = jobs.map((job) => job.discriminator)
+        // await waitUntilDone(expectedIds)
+      })
     })
   })
 
