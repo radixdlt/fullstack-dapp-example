@@ -18,7 +18,7 @@ CREATE_FUNGIBLE_RESOURCE_WITH_INITIAL_SUPPLY
     )
     true
     0u8
-    Decimal("2")
+    Decimal("3")
     Tuple(
         Enum<1u8>(
             Tuple(

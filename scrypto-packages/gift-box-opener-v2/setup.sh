@@ -23,11 +23,11 @@ export gift_box_starter=`resim run manifests/create_gift_box_starter.rtm | grep 
 export gift_box_simple=`resim run manifests/create_gift_box_simple.rtm | grep "Resource:" | grep -o "resource_.*"`
 export gift_box_fancy=`resim run manifests/create_gift_box_fancy.rtm | grep "Resource:" | grep -o "resource_.*"`
 export gift_box_elite=`resim run manifests/create_gift_box_elite.rtm | grep "Resource:" | grep -o "resource_.*"`
-
+export morph_card=`resim run manifests/create_morph_energy_card.rtm  | grep "Resource:" | grep -o "resource_.*"`
 
 echo "\nGenerating Components..."
 export gift_box_opener_v2=`resim run manifests/gift-box-opener-v2/new_gift_box_opener_v2.rtm | grep "Component:" | grep -o "component_.*"`
-
+export morph_card_forge_v2=`resim run manifests/morph-card-forge-v2/new_card_forge_v2.rtm | grep "Component:" | grep -o "component_.*"`
 
 echo "\nSetup Complete & Environment Variables Set"
 echo "------------------------------------------"
@@ -47,12 +47,30 @@ echo "gift_box_starter = $gift_box_starter"
 echo "gift_box_simple = $gift_box_simple"
 echo "gift_box_fancy = $gift_box_fancy"
 echo "gift_box_elite = $gift_box_elite"
+echo "morph_card = $morph_card"
 
 echo "\nComponent Addresses:"
 echo "gift_box_opener_v2" = $gift_box_opener_v2
+echo "morph_card_forge_v2 = $morph_card_forge_v2"
 
 export user_id="test_user_id_12345"
+export key_image_url="www.example.com/image.webp"
+export name="Name"
+export description="Description"
+export energy_type="energy"
+export energy_description="Energy description"
+export rarity="rare"
+export quality=5
+export limited_edition=false
 
 echo "\nAdditional Environment Variables Set:"
 echo "user_id = $user_id"
 echo "dapp_definition (set to match \$account) = $dapp_definition"
+echo "key_image_url = $key_image_url"
+echo "name = $name"
+echo "description = $description"
+echo "energy_type = $energy_type"
+echo "energy_description = $energy_description"
+echo "rarity = $rarity"
+echo "quality = $quality"
+echo "limited_edition = $limited_edition"

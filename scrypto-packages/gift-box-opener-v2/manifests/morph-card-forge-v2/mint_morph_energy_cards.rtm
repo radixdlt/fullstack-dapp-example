@@ -1,0 +1,51 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("5")
+;
+
+CALL_METHOD
+    Address("${account}")
+    "create_proof_of_amount"
+    Address("${admin_badge}")
+    Decimal("1")
+;
+
+CALL_METHOD
+    Address("${morph_card_forge_v2}")
+    "mint_cards"
+    Array<Tuple>(
+        Tuple(
+            "${user_id}",
+            Tuple(
+                "${key_image_url}",
+                "${name}",
+                "${description}",
+                "${energy_type}",
+                "${energy_description}",
+                "${rarity}",
+                Decimal("${quality}"),
+                ${limited_edition},
+            )
+        ),
+        Tuple(
+            "${user_id}",
+            Tuple(
+                "${key_image_url}",
+                "${name}",
+                "${description}",
+                "${energy_type}",
+                "${energy_description}",
+                "${rarity}",
+                Decimal("${quality}"),
+                ${limited_edition},
+            )
+        ),
+    )
+;
+
+CALL_METHOD
+    Address("${account}")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;
