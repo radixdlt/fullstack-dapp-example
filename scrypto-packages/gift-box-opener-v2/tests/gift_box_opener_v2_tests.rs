@@ -196,6 +196,7 @@ fn can_deposit_rewards() -> Result<(), RuntimeError> {
         mut gift_box_opener_v2,
         simple_gift_boxes,
         admin_badge_proof,
+        hero_badge_proof,
         user_id,
         rewards,
         ..
@@ -206,6 +207,8 @@ fn can_deposit_rewards() -> Result<(), RuntimeError> {
         vec![simple_gift_boxes.resource_address(&mut env)?],
         &mut env,
     )?;
+
+    gift_box_opener_v2.open_gift_boxes(hero_badge_proof, simple_gift_boxes, &mut env)?;
 
     // Act
     let result = gift_box_opener_v2.deposit_gift_box_rewards(
@@ -218,6 +221,7 @@ fn can_deposit_rewards() -> Result<(), RuntimeError> {
     );
 
     // Assert
+    println!("{:?}", result);
     assert!(result.is_ok());
     Ok(())
 }
@@ -459,14 +463,23 @@ fn cannot_deposit_more_that_max_number_of_rewards() -> Result<(), RuntimeError> 
         mut gift_box_opener_v2,
         admin_badge,
         user_id,
+        hero_badge_proof,
+        simple_gift_boxes,
         ..
     } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge.create_proof_of_all(&mut env)?, &mut env)?;
+    gift_box_opener_v2.add_gift_box_resources(
+        vec![simple_gift_boxes.resource_address(&mut env)?],
+        &mut env,
+    )?;
+
+    gift_box_opener_v2.open_gift_boxes(hero_badge_proof, simple_gift_boxes, &mut env)?;
 
     for _ in 0..30 {
         let rewards =
             vec![ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(10, &mut env)?];
 
-        LocalAuthZone::push(admin_badge.create_proof_of_all(&mut env)?, &mut env)?;
         gift_box_opener_v2.deposit_gift_box_rewards(
             vec![RewardDeposit {
                 user_id: user_id.clone(),
@@ -492,6 +505,7 @@ fn cannot_deposit_more_that_max_number_of_rewards() -> Result<(), RuntimeError> 
     );
 
     // Assert
+    println!("{:?}", result);
     assert!(result.is_err());
     assert!(result
         .unwrap_err()
@@ -509,16 +523,28 @@ fn cannot_open_when_deposited_the_max_number_of_rewards() -> Result<(), RuntimeE
         mut gift_box_opener_v2,
         admin_badge,
         user_id,
+        hero_badge,
         hero_badge_proof,
         simple_gift_boxes,
         ..
     } = arrange_test_environment()?;
 
+    LocalAuthZone::push(admin_badge.create_proof_of_all(&mut env)?, &mut env)?;
+    gift_box_opener_v2.add_gift_box_resources(
+        vec![simple_gift_boxes.resource_address(&mut env)?],
+        &mut env,
+    )?;
+
+    gift_box_opener_v2.open_gift_boxes(
+        hero_badge_proof,
+        simple_gift_boxes.take(dec!(1), &mut env)?,
+        &mut env,
+    )?;
+
     for _ in 0..30 {
         let rewards =
             vec![ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(10, &mut env)?];
 
-        LocalAuthZone::push(admin_badge.create_proof_of_all(&mut env)?, &mut env)?;
         gift_box_opener_v2.deposit_gift_box_rewards(
             vec![RewardDeposit {
                 user_id: user_id.clone(),
@@ -530,7 +556,11 @@ fn cannot_open_when_deposited_the_max_number_of_rewards() -> Result<(), RuntimeE
     }
 
     // Act
-    let result = gift_box_opener_v2.open_gift_boxes(hero_badge_proof, simple_gift_boxes, &mut env);
+    let result = gift_box_opener_v2.open_gift_boxes(
+        hero_badge.create_proof_of_all(&mut env)?,
+        simple_gift_boxes,
+        &mut env,
+    );
 
     // Assert
     assert!(result.is_err());
@@ -698,8 +728,9 @@ fn can_get_user_gift_box_counts() -> Result<(), RuntimeError> {
         result.unwrap(),
         GiftBoxCounts {
             opened: dec!(2),
-            claimed: dec!(2),
-            recalled: dec!(0)
+            deposited_rewards: dec!(2),
+            claimed_rewards: dec!(2),
+            recalled_rewards: dec!(0)
         }
     );
     Ok(())
@@ -783,8 +814,9 @@ fn test_open_deposit_and_claim_in_batch() -> Result<(), RuntimeError> {
 
     let counts = gift_box_opener_v2.get_user_gift_box_counts(user_id, &mut env)?;
     assert_eq!(counts.opened, dec!(10));
-    assert_eq!(counts.claimed, dec!(1));
-    assert_eq!(counts.recalled, dec!(2));
+    assert_eq!(counts.deposited_rewards, dec!(3));
+    assert_eq!(counts.claimed_rewards, dec!(1));
+    assert_eq!(counts.recalled_rewards, dec!(2));
 
     // Further claim should fail
     gift_box_opener_v2

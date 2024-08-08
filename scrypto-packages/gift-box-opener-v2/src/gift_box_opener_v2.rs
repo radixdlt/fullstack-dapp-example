@@ -25,8 +25,9 @@ struct UserRewardRecord {
 #[derive(ScryptoSbor, Debug, Clone, PartialEq, Eq)]
 pub struct GiftBoxCounts {
     pub opened: Decimal,
-    pub claimed: Decimal,
-    pub recalled: Decimal,
+    pub deposited_rewards: Decimal,
+    pub claimed_rewards: Decimal,
+    pub recalled_rewards: Decimal,
 }
 
 #[derive(ScryptoSbor, Debug, PartialEq, Eq)]
@@ -145,9 +146,9 @@ mod gift_box_opener_v2 {
                 assert!(
                     counts
                         .opened
-                        .checked_sub(counts.claimed)
+                        .checked_sub(counts.claimed_rewards)
                         .unwrap()
-                        .checked_sub(counts.recalled)
+                        .checked_sub(counts.recalled_rewards)
                         .unwrap()
                         <= dec!(30),
                     "User has reached the max count of opened but unclaimed gift boxes"
@@ -180,8 +181,9 @@ mod gift_box_opener_v2 {
                             user_id.clone(),
                             GiftBoxCounts {
                                 opened: gift_boxes.amount(),
-                                claimed: dec!(0),
-                                recalled: dec!(0),
+                                deposited_rewards: dec!(0),
+                                claimed_rewards: dec!(0),
+                                recalled_rewards: dec!(0),
                             },
                         );
                     }
@@ -260,8 +262,10 @@ mod gift_box_opener_v2 {
                 self.take_users_n_latest_reward_records(&user_id, max_reward_count);
 
             for reward_record in latest_reward_records {
-                self.user_gift_box_counts.get_mut(&user_id).unwrap().claimed +=
-                    reward_record.gift_box_count;
+                self.user_gift_box_counts
+                    .get_mut(&user_id)
+                    .unwrap()
+                    .claimed_rewards += reward_record.gift_box_count;
                 claimed_reward_record.push(reward_record.clone());
 
                 reward.extend(self.retrieve_reward_from_vaults(reward_record));
@@ -297,6 +301,11 @@ mod gift_box_opener_v2 {
             {
                 // Check if user has too many rewards records
                 self.assert_users_claimable_rewards_bellow_max(&user_id);
+
+                self.user_gift_box_counts
+                    .get_mut(&user_id)
+                    .unwrap()
+                    .deposited_rewards += gift_box_count;
 
                 // Create a new rewards record
                 let mut new_reward_record = RewardRecord {
@@ -379,7 +388,7 @@ mod gift_box_opener_v2 {
                     self.user_gift_box_counts
                         .get_mut(&user_id)
                         .unwrap()
-                        .recalled += reward_record.gift_box_count;
+                        .recalled_rewards += reward_record.gift_box_count;
 
                     retracted_rewards.extend(self.retrieve_reward_from_vaults(reward_record));
                 }
