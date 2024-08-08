@@ -36,6 +36,7 @@
     "wallet:register:gift-boxes": "npx tsx ./src/radquest/scripts/register-gift-boxes.ts",
     "wallet:deploy:gift-box-opener-v2": "npx tsx ./src/gift-box-opener-v2/scripts/deploy-gift-box-opener-v2.ts",
     "wallet:new:gift-box-opener-v2": "npx tsx ./src/gift-box-opener-v2/scripts/new-gift-box-opener-v2.ts",
+    "wallet:register-gift-boxes": "npx tsx ./src/gift-box-opener-v2/scripts/register-gift-boxes.ts",
     "wallet:deploy:radgem-forge-v2": "npx tsx ./src/radgem-forge-v2/scripts/deploy-radgem-forge-v2.ts",
     "wallet:new:radgem-forge-v2": "npx tsx ./src/radgem-forge-v2/scripts/new-radgem-forge-v2.ts",
     "wallet:set:dapp-data:radquest": "npx tsx ./src/radquest/scripts/set-dapp-data.ts",
