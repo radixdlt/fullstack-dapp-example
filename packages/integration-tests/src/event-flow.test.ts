@@ -20,7 +20,7 @@ import {
 } from 'common'
 import { PrismaClient, User } from 'database'
 import { ResultAsync, errAsync } from 'neverthrow'
-import { Queues, RedisConnection, getQueues } from 'queues'
+import { Queues, RedisConnection, getQueues, DepositGiftBoxRewardJob } from 'queues'
 import { config } from './config'
 import { QueueEvents } from 'bullmq'
 import crypto from 'crypto'
@@ -69,6 +69,7 @@ const transactionModel = TransactionModel(db, transactionQueue)
 const userQuestModel = UserQuestModel(db)(logger)
 const userModel = UserModel(db)(logger)
 const accountAddressModel = AccountAddressModel(redisClient)(logger)
+const { DepositGiftBoxRewardBufferQueue, DepositGiftBoxRewardQueue } = getQueues(config.redis)
 
 const addresses = Addresses(2)
 
@@ -723,6 +724,52 @@ describe('Event flows', () => {
       await openGiftBox('Elite')
       await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
       await claimGiftBoxReward()
+    })
+  })
+
+  describe.only('transaction batching', () => {
+    it('should batch gift box reward deposits', { timeout: 60_000, skip: false }, async () => {
+      const { user } = await getAccount()
+
+      const createDepositRewardJob = (
+        userId: string,
+        giftBoxKind: GiftBoxKind
+      ): DepositGiftBoxRewardJob => ({
+        discriminator: `DepositGiftBoxReward:${crypto.randomUUID()}`,
+        userId,
+        traceId: crypto.randomUUID(),
+        type: 'DepositGiftBoxReward',
+        giftBoxKind
+      })
+
+      const jobs = new Array(6).fill(0).map(() => createDepositRewardJob(user.id, 'Simple'))
+
+      await db.transactionIntent.createMany({
+        data: jobs.map(({ discriminator, userId }) => ({ discriminator, userId }))
+      })
+
+      const waitUntilDone = async (ids: string[]) => {
+        let done = false
+
+        while (!done) {
+          const items = await db.transactionIntent
+            .findMany({
+              select: { discriminator: true },
+              where: { discriminator: { in: ids }, status: { notIn: ['PENDING', 'WAITING'] } }
+            })
+            .then((items) => items.map((item) => item.discriminator))
+
+          done = items.length === ids.length
+          await new Promise((resolve) => setTimeout(resolve, 1000))
+        }
+
+        return {}
+      }
+
+      await DepositGiftBoxRewardBufferQueue.addBulk(jobs)
+
+      const expectedIds = jobs.map((job) => job.discriminator)
+      await waitUntilDone(expectedIds)
     })
   })
 

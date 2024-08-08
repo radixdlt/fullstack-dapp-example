@@ -223,7 +223,15 @@ exports.Prisma.TransactionIntentScalarFieldEnum = {
   createdAt: 'createdAt',
   error: 'error',
   userId: 'userId',
-  data: 'data'
+  data: 'data',
+  batchId: 'batchId'
+};
+
+exports.Prisma.BatchedTransactionIntentScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  createdAt: 'createdAt',
+  error: 'error'
 };
 
 exports.Prisma.SubmittedTransactionScalarFieldEnum = {
@@ -339,6 +347,7 @@ exports.Prisma.ModelName = {
   SavedProgress: 'SavedProgress',
   Audit: 'Audit',
   TransactionIntent: 'TransactionIntent',
+  BatchedTransactionIntent: 'BatchedTransactionIntent',
   SubmittedTransaction: 'SubmittedTransaction',
   Config: 'Config',
   Marketing: 'Marketing'

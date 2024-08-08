@@ -1,14 +1,16 @@
-import { TransactionJob, TransactionQueue } from 'queues'
+import { DepositGiftBoxRewardBufferQueue, TransactionJob, TransactionQueue } from 'queues'
 import { ResultAsync } from 'neverthrow'
 import { PrismaClient } from 'database'
 
 export type TransactionIntentHelper = ReturnType<typeof TransactionIntentHelper>
 export const TransactionIntentHelper = ({
   dbClient,
-  transactionQueue
+  transactionQueue,
+  DepositGiftBoxRewardBufferQueue
 }: {
   dbClient: PrismaClient
   transactionQueue: TransactionQueue
+  DepositGiftBoxRewardBufferQueue: DepositGiftBoxRewardBufferQueue
 }) => {
   const add = ({
     discriminator,
@@ -36,11 +38,20 @@ export const TransactionIntentHelper = ({
       }),
       (error) => ({ reason: 'FailedToAddTransactionIntentInDb', jsError: error })
     )
-      .andThen(() =>
-        transactionQueue
+      .andThen(() => {
+        if (data.type === 'DepositGiftBoxReward') {
+          return DepositGiftBoxRewardBufferQueue.addBulk([
+            { ...data, discriminator, userId }
+          ]).mapErr((error) => ({
+            reason: 'FailedToAddJobToDepositGiftBoxRewardBufferQueue',
+            jsError: error
+          }))
+        }
+
+        return transactionQueue
           .add({ ...data, discriminator, userId })
           .mapErr((error) => ({ reason: 'FailedToAddJobToTransactionQueue', jsError: error }))
-      )
+      })
       .map(() => undefined)
 
   const countQuestTogetherXrdDeposits = (userId: string) =>

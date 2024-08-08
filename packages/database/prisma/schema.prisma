@@ -200,8 +200,20 @@ model TransactionIntent {
   userId                    String
   data                      Json?
   transactions              SubmittedTransaction[]
+  batchId                   String?
 
-  user                      User                      @relation(fields: [userId], references: [id])
+  user                      User                       @relation(fields: [userId], references: [id])
+  batch                     BatchedTransactionIntent?  @relation(fields: [batchId], references: [id])
+
+  @@index([status, createdAt])
+}
+
+model BatchedTransactionIntent {
+  id                        String                    @id                  
+  status                    TransactionIntentStatus   @default(WAITING)
+  createdAt                 DateTime                  @default(now())
+  error                     String?
+  transactionIntents        TransactionIntent[]
 
   @@index([status, createdAt])
 }

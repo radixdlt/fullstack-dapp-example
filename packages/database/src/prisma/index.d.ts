@@ -84,6 +84,11 @@ export type Audit = $Result.DefaultSelection<Prisma.$AuditPayload>
  */
 export type TransactionIntent = $Result.DefaultSelection<Prisma.$TransactionIntentPayload>
 /**
+ * Model BatchedTransactionIntent
+ * 
+ */
+export type BatchedTransactionIntent = $Result.DefaultSelection<Prisma.$BatchedTransactionIntentPayload>
+/**
  * Model SubmittedTransaction
  * 
  */
@@ -460,6 +465,16 @@ export class PrismaClient<
     * ```
     */
   get transactionIntent(): Prisma.TransactionIntentDelegate<ExtArgs>;
+
+  /**
+   * `prisma.batchedTransactionIntent`: Exposes CRUD operations for the **BatchedTransactionIntent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BatchedTransactionIntents
+    * const batchedTransactionIntents = await prisma.batchedTransactionIntent.findMany()
+    * ```
+    */
+  get batchedTransactionIntent(): Prisma.BatchedTransactionIntentDelegate<ExtArgs>;
 
   /**
    * `prisma.submittedTransaction`: Exposes CRUD operations for the **SubmittedTransaction** model.
@@ -981,6 +996,7 @@ export namespace Prisma {
     SavedProgress: 'SavedProgress',
     Audit: 'Audit',
     TransactionIntent: 'TransactionIntent',
+    BatchedTransactionIntent: 'BatchedTransactionIntent',
     SubmittedTransaction: 'SubmittedTransaction',
     Config: 'Config',
     Marketing: 'Marketing'
@@ -1000,7 +1016,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'user' | 'userEmail' | 'image' | 'userPhoneNumber' | 'referral' | 'challenge' | 'event' | 'message' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'transactionIntent' | 'submittedTransaction' | 'config' | 'marketing'
+      modelProps: 'user' | 'userEmail' | 'image' | 'userPhoneNumber' | 'referral' | 'challenge' | 'event' | 'message' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'transactionIntent' | 'batchedTransactionIntent' | 'submittedTransaction' | 'config' | 'marketing'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1984,6 +2000,76 @@ export namespace Prisma {
           }
         }
       }
+      BatchedTransactionIntent: {
+        payload: Prisma.$BatchedTransactionIntentPayload<ExtArgs>
+        fields: Prisma.BatchedTransactionIntentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BatchedTransactionIntentFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BatchedTransactionIntentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BatchedTransactionIntentFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BatchedTransactionIntentPayload>
+          }
+          findFirst: {
+            args: Prisma.BatchedTransactionIntentFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BatchedTransactionIntentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BatchedTransactionIntentFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BatchedTransactionIntentPayload>
+          }
+          findMany: {
+            args: Prisma.BatchedTransactionIntentFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BatchedTransactionIntentPayload>[]
+          }
+          create: {
+            args: Prisma.BatchedTransactionIntentCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BatchedTransactionIntentPayload>
+          }
+          createMany: {
+            args: Prisma.BatchedTransactionIntentCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BatchedTransactionIntentCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BatchedTransactionIntentPayload>[]
+          }
+          delete: {
+            args: Prisma.BatchedTransactionIntentDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BatchedTransactionIntentPayload>
+          }
+          update: {
+            args: Prisma.BatchedTransactionIntentUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BatchedTransactionIntentPayload>
+          }
+          deleteMany: {
+            args: Prisma.BatchedTransactionIntentDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BatchedTransactionIntentUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.BatchedTransactionIntentUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BatchedTransactionIntentPayload>
+          }
+          aggregate: {
+            args: Prisma.BatchedTransactionIntentAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateBatchedTransactionIntent>
+          }
+          groupBy: {
+            args: Prisma.BatchedTransactionIntentGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<BatchedTransactionIntentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BatchedTransactionIntentCountArgs<ExtArgs>,
+            result: $Utils.Optional<BatchedTransactionIntentCountAggregateOutputType> | number
+          }
+        }
+      }
       SubmittedTransaction: {
         payload: Prisma.$SubmittedTransactionPayload<ExtArgs>
         fields: Prisma.SubmittedTransactionFieldRefs
@@ -2511,6 +2597,37 @@ export namespace Prisma {
    */
   export type TransactionIntentCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SubmittedTransactionWhereInput
+  }
+
+
+  /**
+   * Count Type BatchedTransactionIntentCountOutputType
+   */
+
+  export type BatchedTransactionIntentCountOutputType = {
+    transactionIntents: number
+  }
+
+  export type BatchedTransactionIntentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    transactionIntents?: boolean | BatchedTransactionIntentCountOutputTypeCountTransactionIntentsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * BatchedTransactionIntentCountOutputType without action
+   */
+  export type BatchedTransactionIntentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BatchedTransactionIntentCountOutputType
+     */
+    select?: BatchedTransactionIntentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * BatchedTransactionIntentCountOutputType without action
+   */
+  export type BatchedTransactionIntentCountOutputTypeCountTransactionIntentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TransactionIntentWhereInput
   }
 
 
@@ -15228,6 +15345,7 @@ export namespace Prisma {
     createdAt: Date | null
     error: string | null
     userId: string | null
+    batchId: string | null
   }
 
   export type TransactionIntentMaxAggregateOutputType = {
@@ -15236,6 +15354,7 @@ export namespace Prisma {
     createdAt: Date | null
     error: string | null
     userId: string | null
+    batchId: string | null
   }
 
   export type TransactionIntentCountAggregateOutputType = {
@@ -15245,6 +15364,7 @@ export namespace Prisma {
     error: number
     userId: number
     data: number
+    batchId: number
     _all: number
   }
 
@@ -15255,6 +15375,7 @@ export namespace Prisma {
     createdAt?: true
     error?: true
     userId?: true
+    batchId?: true
   }
 
   export type TransactionIntentMaxAggregateInputType = {
@@ -15263,6 +15384,7 @@ export namespace Prisma {
     createdAt?: true
     error?: true
     userId?: true
+    batchId?: true
   }
 
   export type TransactionIntentCountAggregateInputType = {
@@ -15272,6 +15394,7 @@ export namespace Prisma {
     error?: true
     userId?: true
     data?: true
+    batchId?: true
     _all?: true
   }
 
@@ -15354,6 +15477,7 @@ export namespace Prisma {
     error: string | null
     userId: string
     data: JsonValue | null
+    batchId: string | null
     _count: TransactionIntentCountAggregateOutputType | null
     _min: TransactionIntentMinAggregateOutputType | null
     _max: TransactionIntentMaxAggregateOutputType | null
@@ -15380,8 +15504,10 @@ export namespace Prisma {
     error?: boolean
     userId?: boolean
     data?: boolean
+    batchId?: boolean
     transactions?: boolean | TransactionIntent$transactionsArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    batch?: boolean | TransactionIntent$batchArgs<ExtArgs>
     _count?: boolean | TransactionIntentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["transactionIntent"]>
 
@@ -15392,7 +15518,9 @@ export namespace Prisma {
     error?: boolean
     userId?: boolean
     data?: boolean
+    batchId?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    batch?: boolean | TransactionIntent$batchArgs<ExtArgs>
   }, ExtArgs["result"]["transactionIntent"]>
 
   export type TransactionIntentSelectScalar = {
@@ -15402,15 +15530,18 @@ export namespace Prisma {
     error?: boolean
     userId?: boolean
     data?: boolean
+    batchId?: boolean
   }
 
   export type TransactionIntentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     transactions?: boolean | TransactionIntent$transactionsArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    batch?: boolean | TransactionIntent$batchArgs<ExtArgs>
     _count?: boolean | TransactionIntentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TransactionIntentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    batch?: boolean | TransactionIntent$batchArgs<ExtArgs>
   }
 
   export type $TransactionIntentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15418,6 +15549,7 @@ export namespace Prisma {
     objects: {
       transactions: Prisma.$SubmittedTransactionPayload<ExtArgs>[]
       user: Prisma.$UserPayload<ExtArgs>
+      batch: Prisma.$BatchedTransactionIntentPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       discriminator: string
@@ -15426,6 +15558,7 @@ export namespace Prisma {
       error: string | null
       userId: string
       data: Prisma.JsonValue | null
+      batchId: string | null
     }, ExtArgs["result"]["transactionIntent"]>
     composites: {}
   }
@@ -15820,6 +15953,8 @@ export namespace Prisma {
 
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
 
+    batch<T extends TransactionIntent$batchArgs<ExtArgs> = {}>(args?: Subset<T, TransactionIntent$batchArgs<ExtArgs>>): Prisma__BatchedTransactionIntentClient<$Result.GetResult<Prisma.$BatchedTransactionIntentPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
+
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15854,6 +15989,7 @@ export namespace Prisma {
     readonly error: FieldRef<"TransactionIntent", 'String'>
     readonly userId: FieldRef<"TransactionIntent", 'String'>
     readonly data: FieldRef<"TransactionIntent", 'Json'>
+    readonly batchId: FieldRef<"TransactionIntent", 'String'>
   }
     
 
@@ -16192,6 +16328,21 @@ export namespace Prisma {
   }
 
   /**
+   * TransactionIntent.batch
+   */
+  export type TransactionIntent$batchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BatchedTransactionIntent
+     */
+    select?: BatchedTransactionIntentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BatchedTransactionIntentInclude<ExtArgs> | null
+    where?: BatchedTransactionIntentWhereInput
+  }
+
+  /**
    * TransactionIntent without action
    */
   export type TransactionIntentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16203,6 +16354,968 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: TransactionIntentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model BatchedTransactionIntent
+   */
+
+  export type AggregateBatchedTransactionIntent = {
+    _count: BatchedTransactionIntentCountAggregateOutputType | null
+    _min: BatchedTransactionIntentMinAggregateOutputType | null
+    _max: BatchedTransactionIntentMaxAggregateOutputType | null
+  }
+
+  export type BatchedTransactionIntentMinAggregateOutputType = {
+    id: string | null
+    status: $Enums.TransactionIntentStatus | null
+    createdAt: Date | null
+    error: string | null
+  }
+
+  export type BatchedTransactionIntentMaxAggregateOutputType = {
+    id: string | null
+    status: $Enums.TransactionIntentStatus | null
+    createdAt: Date | null
+    error: string | null
+  }
+
+  export type BatchedTransactionIntentCountAggregateOutputType = {
+    id: number
+    status: number
+    createdAt: number
+    error: number
+    _all: number
+  }
+
+
+  export type BatchedTransactionIntentMinAggregateInputType = {
+    id?: true
+    status?: true
+    createdAt?: true
+    error?: true
+  }
+
+  export type BatchedTransactionIntentMaxAggregateInputType = {
+    id?: true
+    status?: true
+    createdAt?: true
+    error?: true
+  }
+
+  export type BatchedTransactionIntentCountAggregateInputType = {
+    id?: true
+    status?: true
+    createdAt?: true
+    error?: true
+    _all?: true
+  }
+
+  export type BatchedTransactionIntentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BatchedTransactionIntent to aggregate.
+     */
+    where?: BatchedTransactionIntentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BatchedTransactionIntents to fetch.
+     */
+    orderBy?: BatchedTransactionIntentOrderByWithRelationInput | BatchedTransactionIntentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BatchedTransactionIntentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BatchedTransactionIntents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BatchedTransactionIntents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BatchedTransactionIntents
+    **/
+    _count?: true | BatchedTransactionIntentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BatchedTransactionIntentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BatchedTransactionIntentMaxAggregateInputType
+  }
+
+  export type GetBatchedTransactionIntentAggregateType<T extends BatchedTransactionIntentAggregateArgs> = {
+        [P in keyof T & keyof AggregateBatchedTransactionIntent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBatchedTransactionIntent[P]>
+      : GetScalarType<T[P], AggregateBatchedTransactionIntent[P]>
+  }
+
+
+
+
+  export type BatchedTransactionIntentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BatchedTransactionIntentWhereInput
+    orderBy?: BatchedTransactionIntentOrderByWithAggregationInput | BatchedTransactionIntentOrderByWithAggregationInput[]
+    by: BatchedTransactionIntentScalarFieldEnum[] | BatchedTransactionIntentScalarFieldEnum
+    having?: BatchedTransactionIntentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BatchedTransactionIntentCountAggregateInputType | true
+    _min?: BatchedTransactionIntentMinAggregateInputType
+    _max?: BatchedTransactionIntentMaxAggregateInputType
+  }
+
+  export type BatchedTransactionIntentGroupByOutputType = {
+    id: string
+    status: $Enums.TransactionIntentStatus
+    createdAt: Date
+    error: string | null
+    _count: BatchedTransactionIntentCountAggregateOutputType | null
+    _min: BatchedTransactionIntentMinAggregateOutputType | null
+    _max: BatchedTransactionIntentMaxAggregateOutputType | null
+  }
+
+  type GetBatchedTransactionIntentGroupByPayload<T extends BatchedTransactionIntentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BatchedTransactionIntentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BatchedTransactionIntentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BatchedTransactionIntentGroupByOutputType[P]>
+            : GetScalarType<T[P], BatchedTransactionIntentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BatchedTransactionIntentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    status?: boolean
+    createdAt?: boolean
+    error?: boolean
+    transactionIntents?: boolean | BatchedTransactionIntent$transactionIntentsArgs<ExtArgs>
+    _count?: boolean | BatchedTransactionIntentCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["batchedTransactionIntent"]>
+
+  export type BatchedTransactionIntentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    status?: boolean
+    createdAt?: boolean
+    error?: boolean
+  }, ExtArgs["result"]["batchedTransactionIntent"]>
+
+  export type BatchedTransactionIntentSelectScalar = {
+    id?: boolean
+    status?: boolean
+    createdAt?: boolean
+    error?: boolean
+  }
+
+  export type BatchedTransactionIntentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    transactionIntents?: boolean | BatchedTransactionIntent$transactionIntentsArgs<ExtArgs>
+    _count?: boolean | BatchedTransactionIntentCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type BatchedTransactionIntentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $BatchedTransactionIntentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BatchedTransactionIntent"
+    objects: {
+      transactionIntents: Prisma.$TransactionIntentPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      status: $Enums.TransactionIntentStatus
+      createdAt: Date
+      error: string | null
+    }, ExtArgs["result"]["batchedTransactionIntent"]>
+    composites: {}
+  }
+
+  type BatchedTransactionIntentGetPayload<S extends boolean | null | undefined | BatchedTransactionIntentDefaultArgs> = $Result.GetResult<Prisma.$BatchedTransactionIntentPayload, S>
+
+  type BatchedTransactionIntentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<BatchedTransactionIntentFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: BatchedTransactionIntentCountAggregateInputType | true
+    }
+
+  export interface BatchedTransactionIntentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BatchedTransactionIntent'], meta: { name: 'BatchedTransactionIntent' } }
+    /**
+     * Find zero or one BatchedTransactionIntent that matches the filter.
+     * @param {BatchedTransactionIntentFindUniqueArgs} args - Arguments to find a BatchedTransactionIntent
+     * @example
+     * // Get one BatchedTransactionIntent
+     * const batchedTransactionIntent = await prisma.batchedTransactionIntent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends BatchedTransactionIntentFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, BatchedTransactionIntentFindUniqueArgs<ExtArgs>>
+    ): Prisma__BatchedTransactionIntentClient<$Result.GetResult<Prisma.$BatchedTransactionIntentPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one BatchedTransactionIntent that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {BatchedTransactionIntentFindUniqueOrThrowArgs} args - Arguments to find a BatchedTransactionIntent
+     * @example
+     * // Get one BatchedTransactionIntent
+     * const batchedTransactionIntent = await prisma.batchedTransactionIntent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends BatchedTransactionIntentFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, BatchedTransactionIntentFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__BatchedTransactionIntentClient<$Result.GetResult<Prisma.$BatchedTransactionIntentPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first BatchedTransactionIntent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BatchedTransactionIntentFindFirstArgs} args - Arguments to find a BatchedTransactionIntent
+     * @example
+     * // Get one BatchedTransactionIntent
+     * const batchedTransactionIntent = await prisma.batchedTransactionIntent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends BatchedTransactionIntentFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, BatchedTransactionIntentFindFirstArgs<ExtArgs>>
+    ): Prisma__BatchedTransactionIntentClient<$Result.GetResult<Prisma.$BatchedTransactionIntentPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first BatchedTransactionIntent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BatchedTransactionIntentFindFirstOrThrowArgs} args - Arguments to find a BatchedTransactionIntent
+     * @example
+     * // Get one BatchedTransactionIntent
+     * const batchedTransactionIntent = await prisma.batchedTransactionIntent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends BatchedTransactionIntentFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, BatchedTransactionIntentFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__BatchedTransactionIntentClient<$Result.GetResult<Prisma.$BatchedTransactionIntentPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more BatchedTransactionIntents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BatchedTransactionIntentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BatchedTransactionIntents
+     * const batchedTransactionIntents = await prisma.batchedTransactionIntent.findMany()
+     * 
+     * // Get first 10 BatchedTransactionIntents
+     * const batchedTransactionIntents = await prisma.batchedTransactionIntent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const batchedTransactionIntentWithIdOnly = await prisma.batchedTransactionIntent.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends BatchedTransactionIntentFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, BatchedTransactionIntentFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BatchedTransactionIntentPayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a BatchedTransactionIntent.
+     * @param {BatchedTransactionIntentCreateArgs} args - Arguments to create a BatchedTransactionIntent.
+     * @example
+     * // Create one BatchedTransactionIntent
+     * const BatchedTransactionIntent = await prisma.batchedTransactionIntent.create({
+     *   data: {
+     *     // ... data to create a BatchedTransactionIntent
+     *   }
+     * })
+     * 
+    **/
+    create<T extends BatchedTransactionIntentCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, BatchedTransactionIntentCreateArgs<ExtArgs>>
+    ): Prisma__BatchedTransactionIntentClient<$Result.GetResult<Prisma.$BatchedTransactionIntentPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many BatchedTransactionIntents.
+     * @param {BatchedTransactionIntentCreateManyArgs} args - Arguments to create many BatchedTransactionIntents.
+     * @example
+     * // Create many BatchedTransactionIntents
+     * const batchedTransactionIntent = await prisma.batchedTransactionIntent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+    **/
+    createMany<T extends BatchedTransactionIntentCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, BatchedTransactionIntentCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BatchedTransactionIntents and returns the data saved in the database.
+     * @param {BatchedTransactionIntentCreateManyAndReturnArgs} args - Arguments to create many BatchedTransactionIntents.
+     * @example
+     * // Create many BatchedTransactionIntents
+     * const batchedTransactionIntent = await prisma.batchedTransactionIntent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BatchedTransactionIntents and only return the `id`
+     * const batchedTransactionIntentWithIdOnly = await prisma.batchedTransactionIntent.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends BatchedTransactionIntentCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, BatchedTransactionIntentCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BatchedTransactionIntentPayload<ExtArgs>, T, 'createManyAndReturn'>>
+
+    /**
+     * Delete a BatchedTransactionIntent.
+     * @param {BatchedTransactionIntentDeleteArgs} args - Arguments to delete one BatchedTransactionIntent.
+     * @example
+     * // Delete one BatchedTransactionIntent
+     * const BatchedTransactionIntent = await prisma.batchedTransactionIntent.delete({
+     *   where: {
+     *     // ... filter to delete one BatchedTransactionIntent
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends BatchedTransactionIntentDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, BatchedTransactionIntentDeleteArgs<ExtArgs>>
+    ): Prisma__BatchedTransactionIntentClient<$Result.GetResult<Prisma.$BatchedTransactionIntentPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one BatchedTransactionIntent.
+     * @param {BatchedTransactionIntentUpdateArgs} args - Arguments to update one BatchedTransactionIntent.
+     * @example
+     * // Update one BatchedTransactionIntent
+     * const batchedTransactionIntent = await prisma.batchedTransactionIntent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends BatchedTransactionIntentUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, BatchedTransactionIntentUpdateArgs<ExtArgs>>
+    ): Prisma__BatchedTransactionIntentClient<$Result.GetResult<Prisma.$BatchedTransactionIntentPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more BatchedTransactionIntents.
+     * @param {BatchedTransactionIntentDeleteManyArgs} args - Arguments to filter BatchedTransactionIntents to delete.
+     * @example
+     * // Delete a few BatchedTransactionIntents
+     * const { count } = await prisma.batchedTransactionIntent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends BatchedTransactionIntentDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, BatchedTransactionIntentDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BatchedTransactionIntents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BatchedTransactionIntentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BatchedTransactionIntents
+     * const batchedTransactionIntent = await prisma.batchedTransactionIntent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends BatchedTransactionIntentUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, BatchedTransactionIntentUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one BatchedTransactionIntent.
+     * @param {BatchedTransactionIntentUpsertArgs} args - Arguments to update or create a BatchedTransactionIntent.
+     * @example
+     * // Update or create a BatchedTransactionIntent
+     * const batchedTransactionIntent = await prisma.batchedTransactionIntent.upsert({
+     *   create: {
+     *     // ... data to create a BatchedTransactionIntent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BatchedTransactionIntent we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends BatchedTransactionIntentUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, BatchedTransactionIntentUpsertArgs<ExtArgs>>
+    ): Prisma__BatchedTransactionIntentClient<$Result.GetResult<Prisma.$BatchedTransactionIntentPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of BatchedTransactionIntents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BatchedTransactionIntentCountArgs} args - Arguments to filter BatchedTransactionIntents to count.
+     * @example
+     * // Count the number of BatchedTransactionIntents
+     * const count = await prisma.batchedTransactionIntent.count({
+     *   where: {
+     *     // ... the filter for the BatchedTransactionIntents we want to count
+     *   }
+     * })
+    **/
+    count<T extends BatchedTransactionIntentCountArgs>(
+      args?: Subset<T, BatchedTransactionIntentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BatchedTransactionIntentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BatchedTransactionIntent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BatchedTransactionIntentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BatchedTransactionIntentAggregateArgs>(args: Subset<T, BatchedTransactionIntentAggregateArgs>): Prisma.PrismaPromise<GetBatchedTransactionIntentAggregateType<T>>
+
+    /**
+     * Group by BatchedTransactionIntent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BatchedTransactionIntentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BatchedTransactionIntentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BatchedTransactionIntentGroupByArgs['orderBy'] }
+        : { orderBy?: BatchedTransactionIntentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BatchedTransactionIntentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBatchedTransactionIntentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BatchedTransactionIntent model
+   */
+  readonly fields: BatchedTransactionIntentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BatchedTransactionIntent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BatchedTransactionIntentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+    transactionIntents<T extends BatchedTransactionIntent$transactionIntentsArgs<ExtArgs> = {}>(args?: Subset<T, BatchedTransactionIntent$transactionIntentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionIntentPayload<ExtArgs>, T, 'findMany'> | Null>;
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the BatchedTransactionIntent model
+   */ 
+  interface BatchedTransactionIntentFieldRefs {
+    readonly id: FieldRef<"BatchedTransactionIntent", 'String'>
+    readonly status: FieldRef<"BatchedTransactionIntent", 'TransactionIntentStatus'>
+    readonly createdAt: FieldRef<"BatchedTransactionIntent", 'DateTime'>
+    readonly error: FieldRef<"BatchedTransactionIntent", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BatchedTransactionIntent findUnique
+   */
+  export type BatchedTransactionIntentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BatchedTransactionIntent
+     */
+    select?: BatchedTransactionIntentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BatchedTransactionIntentInclude<ExtArgs> | null
+    /**
+     * Filter, which BatchedTransactionIntent to fetch.
+     */
+    where: BatchedTransactionIntentWhereUniqueInput
+  }
+
+  /**
+   * BatchedTransactionIntent findUniqueOrThrow
+   */
+  export type BatchedTransactionIntentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BatchedTransactionIntent
+     */
+    select?: BatchedTransactionIntentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BatchedTransactionIntentInclude<ExtArgs> | null
+    /**
+     * Filter, which BatchedTransactionIntent to fetch.
+     */
+    where: BatchedTransactionIntentWhereUniqueInput
+  }
+
+  /**
+   * BatchedTransactionIntent findFirst
+   */
+  export type BatchedTransactionIntentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BatchedTransactionIntent
+     */
+    select?: BatchedTransactionIntentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BatchedTransactionIntentInclude<ExtArgs> | null
+    /**
+     * Filter, which BatchedTransactionIntent to fetch.
+     */
+    where?: BatchedTransactionIntentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BatchedTransactionIntents to fetch.
+     */
+    orderBy?: BatchedTransactionIntentOrderByWithRelationInput | BatchedTransactionIntentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BatchedTransactionIntents.
+     */
+    cursor?: BatchedTransactionIntentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BatchedTransactionIntents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BatchedTransactionIntents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BatchedTransactionIntents.
+     */
+    distinct?: BatchedTransactionIntentScalarFieldEnum | BatchedTransactionIntentScalarFieldEnum[]
+  }
+
+  /**
+   * BatchedTransactionIntent findFirstOrThrow
+   */
+  export type BatchedTransactionIntentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BatchedTransactionIntent
+     */
+    select?: BatchedTransactionIntentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BatchedTransactionIntentInclude<ExtArgs> | null
+    /**
+     * Filter, which BatchedTransactionIntent to fetch.
+     */
+    where?: BatchedTransactionIntentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BatchedTransactionIntents to fetch.
+     */
+    orderBy?: BatchedTransactionIntentOrderByWithRelationInput | BatchedTransactionIntentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BatchedTransactionIntents.
+     */
+    cursor?: BatchedTransactionIntentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BatchedTransactionIntents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BatchedTransactionIntents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BatchedTransactionIntents.
+     */
+    distinct?: BatchedTransactionIntentScalarFieldEnum | BatchedTransactionIntentScalarFieldEnum[]
+  }
+
+  /**
+   * BatchedTransactionIntent findMany
+   */
+  export type BatchedTransactionIntentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BatchedTransactionIntent
+     */
+    select?: BatchedTransactionIntentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BatchedTransactionIntentInclude<ExtArgs> | null
+    /**
+     * Filter, which BatchedTransactionIntents to fetch.
+     */
+    where?: BatchedTransactionIntentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BatchedTransactionIntents to fetch.
+     */
+    orderBy?: BatchedTransactionIntentOrderByWithRelationInput | BatchedTransactionIntentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BatchedTransactionIntents.
+     */
+    cursor?: BatchedTransactionIntentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BatchedTransactionIntents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BatchedTransactionIntents.
+     */
+    skip?: number
+    distinct?: BatchedTransactionIntentScalarFieldEnum | BatchedTransactionIntentScalarFieldEnum[]
+  }
+
+  /**
+   * BatchedTransactionIntent create
+   */
+  export type BatchedTransactionIntentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BatchedTransactionIntent
+     */
+    select?: BatchedTransactionIntentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BatchedTransactionIntentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a BatchedTransactionIntent.
+     */
+    data: XOR<BatchedTransactionIntentCreateInput, BatchedTransactionIntentUncheckedCreateInput>
+  }
+
+  /**
+   * BatchedTransactionIntent createMany
+   */
+  export type BatchedTransactionIntentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BatchedTransactionIntents.
+     */
+    data: BatchedTransactionIntentCreateManyInput | BatchedTransactionIntentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BatchedTransactionIntent createManyAndReturn
+   */
+  export type BatchedTransactionIntentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BatchedTransactionIntent
+     */
+    select?: BatchedTransactionIntentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many BatchedTransactionIntents.
+     */
+    data: BatchedTransactionIntentCreateManyInput | BatchedTransactionIntentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BatchedTransactionIntent update
+   */
+  export type BatchedTransactionIntentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BatchedTransactionIntent
+     */
+    select?: BatchedTransactionIntentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BatchedTransactionIntentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a BatchedTransactionIntent.
+     */
+    data: XOR<BatchedTransactionIntentUpdateInput, BatchedTransactionIntentUncheckedUpdateInput>
+    /**
+     * Choose, which BatchedTransactionIntent to update.
+     */
+    where: BatchedTransactionIntentWhereUniqueInput
+  }
+
+  /**
+   * BatchedTransactionIntent updateMany
+   */
+  export type BatchedTransactionIntentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BatchedTransactionIntents.
+     */
+    data: XOR<BatchedTransactionIntentUpdateManyMutationInput, BatchedTransactionIntentUncheckedUpdateManyInput>
+    /**
+     * Filter which BatchedTransactionIntents to update
+     */
+    where?: BatchedTransactionIntentWhereInput
+  }
+
+  /**
+   * BatchedTransactionIntent upsert
+   */
+  export type BatchedTransactionIntentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BatchedTransactionIntent
+     */
+    select?: BatchedTransactionIntentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BatchedTransactionIntentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the BatchedTransactionIntent to update in case it exists.
+     */
+    where: BatchedTransactionIntentWhereUniqueInput
+    /**
+     * In case the BatchedTransactionIntent found by the `where` argument doesn't exist, create a new BatchedTransactionIntent with this data.
+     */
+    create: XOR<BatchedTransactionIntentCreateInput, BatchedTransactionIntentUncheckedCreateInput>
+    /**
+     * In case the BatchedTransactionIntent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BatchedTransactionIntentUpdateInput, BatchedTransactionIntentUncheckedUpdateInput>
+  }
+
+  /**
+   * BatchedTransactionIntent delete
+   */
+  export type BatchedTransactionIntentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BatchedTransactionIntent
+     */
+    select?: BatchedTransactionIntentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BatchedTransactionIntentInclude<ExtArgs> | null
+    /**
+     * Filter which BatchedTransactionIntent to delete.
+     */
+    where: BatchedTransactionIntentWhereUniqueInput
+  }
+
+  /**
+   * BatchedTransactionIntent deleteMany
+   */
+  export type BatchedTransactionIntentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BatchedTransactionIntents to delete
+     */
+    where?: BatchedTransactionIntentWhereInput
+  }
+
+  /**
+   * BatchedTransactionIntent.transactionIntents
+   */
+  export type BatchedTransactionIntent$transactionIntentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TransactionIntent
+     */
+    select?: TransactionIntentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TransactionIntentInclude<ExtArgs> | null
+    where?: TransactionIntentWhereInput
+    orderBy?: TransactionIntentOrderByWithRelationInput | TransactionIntentOrderByWithRelationInput[]
+    cursor?: TransactionIntentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TransactionIntentScalarFieldEnum | TransactionIntentScalarFieldEnum[]
+  }
+
+  /**
+   * BatchedTransactionIntent without action
+   */
+  export type BatchedTransactionIntentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BatchedTransactionIntent
+     */
+    select?: BatchedTransactionIntentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BatchedTransactionIntentInclude<ExtArgs> | null
   }
 
 
@@ -19207,10 +20320,21 @@ export namespace Prisma {
     createdAt: 'createdAt',
     error: 'error',
     userId: 'userId',
-    data: 'data'
+    data: 'data',
+    batchId: 'batchId'
   };
 
   export type TransactionIntentScalarFieldEnum = (typeof TransactionIntentScalarFieldEnum)[keyof typeof TransactionIntentScalarFieldEnum]
+
+
+  export const BatchedTransactionIntentScalarFieldEnum: {
+    id: 'id',
+    status: 'status',
+    createdAt: 'createdAt',
+    error: 'error'
+  };
+
+  export type BatchedTransactionIntentScalarFieldEnum = (typeof BatchedTransactionIntentScalarFieldEnum)[keyof typeof BatchedTransactionIntentScalarFieldEnum]
 
 
   export const SubmittedTransactionScalarFieldEnum: {
@@ -20222,8 +21346,10 @@ export namespace Prisma {
     error?: StringNullableFilter<"TransactionIntent"> | string | null
     userId?: StringFilter<"TransactionIntent"> | string
     data?: JsonNullableFilter<"TransactionIntent">
+    batchId?: StringNullableFilter<"TransactionIntent"> | string | null
     transactions?: SubmittedTransactionListRelationFilter
     user?: XOR<UserRelationFilter, UserWhereInput>
+    batch?: XOR<BatchedTransactionIntentNullableRelationFilter, BatchedTransactionIntentWhereInput> | null
   }
 
   export type TransactionIntentOrderByWithRelationInput = {
@@ -20233,8 +21359,10 @@ export namespace Prisma {
     error?: SortOrderInput | SortOrder
     userId?: SortOrder
     data?: SortOrderInput | SortOrder
+    batchId?: SortOrderInput | SortOrder
     transactions?: SubmittedTransactionOrderByRelationAggregateInput
     user?: UserOrderByWithRelationInput
+    batch?: BatchedTransactionIntentOrderByWithRelationInput
   }
 
   export type TransactionIntentWhereUniqueInput = Prisma.AtLeast<{
@@ -20247,8 +21375,10 @@ export namespace Prisma {
     error?: StringNullableFilter<"TransactionIntent"> | string | null
     userId?: StringFilter<"TransactionIntent"> | string
     data?: JsonNullableFilter<"TransactionIntent">
+    batchId?: StringNullableFilter<"TransactionIntent"> | string | null
     transactions?: SubmittedTransactionListRelationFilter
     user?: XOR<UserRelationFilter, UserWhereInput>
+    batch?: XOR<BatchedTransactionIntentNullableRelationFilter, BatchedTransactionIntentWhereInput> | null
   }, "discriminator">
 
   export type TransactionIntentOrderByWithAggregationInput = {
@@ -20258,6 +21388,7 @@ export namespace Prisma {
     error?: SortOrderInput | SortOrder
     userId?: SortOrder
     data?: SortOrderInput | SortOrder
+    batchId?: SortOrderInput | SortOrder
     _count?: TransactionIntentCountOrderByAggregateInput
     _max?: TransactionIntentMaxOrderByAggregateInput
     _min?: TransactionIntentMinOrderByAggregateInput
@@ -20273,6 +21404,57 @@ export namespace Prisma {
     error?: StringNullableWithAggregatesFilter<"TransactionIntent"> | string | null
     userId?: StringWithAggregatesFilter<"TransactionIntent"> | string
     data?: JsonNullableWithAggregatesFilter<"TransactionIntent">
+    batchId?: StringNullableWithAggregatesFilter<"TransactionIntent"> | string | null
+  }
+
+  export type BatchedTransactionIntentWhereInput = {
+    AND?: BatchedTransactionIntentWhereInput | BatchedTransactionIntentWhereInput[]
+    OR?: BatchedTransactionIntentWhereInput[]
+    NOT?: BatchedTransactionIntentWhereInput | BatchedTransactionIntentWhereInput[]
+    id?: StringFilter<"BatchedTransactionIntent"> | string
+    status?: EnumTransactionIntentStatusFilter<"BatchedTransactionIntent"> | $Enums.TransactionIntentStatus
+    createdAt?: DateTimeFilter<"BatchedTransactionIntent"> | Date | string
+    error?: StringNullableFilter<"BatchedTransactionIntent"> | string | null
+    transactionIntents?: TransactionIntentListRelationFilter
+  }
+
+  export type BatchedTransactionIntentOrderByWithRelationInput = {
+    id?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    error?: SortOrderInput | SortOrder
+    transactionIntents?: TransactionIntentOrderByRelationAggregateInput
+  }
+
+  export type BatchedTransactionIntentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: BatchedTransactionIntentWhereInput | BatchedTransactionIntentWhereInput[]
+    OR?: BatchedTransactionIntentWhereInput[]
+    NOT?: BatchedTransactionIntentWhereInput | BatchedTransactionIntentWhereInput[]
+    status?: EnumTransactionIntentStatusFilter<"BatchedTransactionIntent"> | $Enums.TransactionIntentStatus
+    createdAt?: DateTimeFilter<"BatchedTransactionIntent"> | Date | string
+    error?: StringNullableFilter<"BatchedTransactionIntent"> | string | null
+    transactionIntents?: TransactionIntentListRelationFilter
+  }, "id">
+
+  export type BatchedTransactionIntentOrderByWithAggregationInput = {
+    id?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    error?: SortOrderInput | SortOrder
+    _count?: BatchedTransactionIntentCountOrderByAggregateInput
+    _max?: BatchedTransactionIntentMaxOrderByAggregateInput
+    _min?: BatchedTransactionIntentMinOrderByAggregateInput
+  }
+
+  export type BatchedTransactionIntentScalarWhereWithAggregatesInput = {
+    AND?: BatchedTransactionIntentScalarWhereWithAggregatesInput | BatchedTransactionIntentScalarWhereWithAggregatesInput[]
+    OR?: BatchedTransactionIntentScalarWhereWithAggregatesInput[]
+    NOT?: BatchedTransactionIntentScalarWhereWithAggregatesInput | BatchedTransactionIntentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"BatchedTransactionIntent"> | string
+    status?: EnumTransactionIntentStatusWithAggregatesFilter<"BatchedTransactionIntent"> | $Enums.TransactionIntentStatus
+    createdAt?: DateTimeWithAggregatesFilter<"BatchedTransactionIntent"> | Date | string
+    error?: StringNullableWithAggregatesFilter<"BatchedTransactionIntent"> | string | null
   }
 
   export type SubmittedTransactionWhereInput = {
@@ -21166,6 +22348,7 @@ export namespace Prisma {
     data?: NullableJsonNullValueInput | InputJsonValue
     transactions?: SubmittedTransactionCreateNestedManyWithoutTransactionInput
     user: UserCreateNestedOneWithoutTransactionsInput
+    batch?: BatchedTransactionIntentCreateNestedOneWithoutTransactionIntentsInput
   }
 
   export type TransactionIntentUncheckedCreateInput = {
@@ -21175,6 +22358,7 @@ export namespace Prisma {
     error?: string | null
     userId: string
     data?: NullableJsonNullValueInput | InputJsonValue
+    batchId?: string | null
     transactions?: SubmittedTransactionUncheckedCreateNestedManyWithoutTransactionInput
   }
 
@@ -21186,6 +22370,7 @@ export namespace Prisma {
     data?: NullableJsonNullValueInput | InputJsonValue
     transactions?: SubmittedTransactionUpdateManyWithoutTransactionNestedInput
     user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
+    batch?: BatchedTransactionIntentUpdateOneWithoutTransactionIntentsNestedInput
   }
 
   export type TransactionIntentUncheckedUpdateInput = {
@@ -21195,6 +22380,7 @@ export namespace Prisma {
     error?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     data?: NullableJsonNullValueInput | InputJsonValue
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
     transactions?: SubmittedTransactionUncheckedUpdateManyWithoutTransactionNestedInput
   }
 
@@ -21205,6 +22391,7 @@ export namespace Prisma {
     error?: string | null
     userId: string
     data?: NullableJsonNullValueInput | InputJsonValue
+    batchId?: string | null
   }
 
   export type TransactionIntentUpdateManyMutationInput = {
@@ -21222,6 +22409,60 @@ export namespace Prisma {
     error?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     data?: NullableJsonNullValueInput | InputJsonValue
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type BatchedTransactionIntentCreateInput = {
+    id: string
+    status?: $Enums.TransactionIntentStatus
+    createdAt?: Date | string
+    error?: string | null
+    transactionIntents?: TransactionIntentCreateNestedManyWithoutBatchInput
+  }
+
+  export type BatchedTransactionIntentUncheckedCreateInput = {
+    id: string
+    status?: $Enums.TransactionIntentStatus
+    createdAt?: Date | string
+    error?: string | null
+    transactionIntents?: TransactionIntentUncheckedCreateNestedManyWithoutBatchInput
+  }
+
+  export type BatchedTransactionIntentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumTransactionIntentStatusFieldUpdateOperationsInput | $Enums.TransactionIntentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionIntents?: TransactionIntentUpdateManyWithoutBatchNestedInput
+  }
+
+  export type BatchedTransactionIntentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumTransactionIntentStatusFieldUpdateOperationsInput | $Enums.TransactionIntentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionIntents?: TransactionIntentUncheckedUpdateManyWithoutBatchNestedInput
+  }
+
+  export type BatchedTransactionIntentCreateManyInput = {
+    id: string
+    status?: $Enums.TransactionIntentStatus
+    createdAt?: Date | string
+    error?: string | null
+  }
+
+  export type BatchedTransactionIntentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumTransactionIntentStatusFieldUpdateOperationsInput | $Enums.TransactionIntentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type BatchedTransactionIntentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumTransactionIntentStatusFieldUpdateOperationsInput | $Enums.TransactionIntentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SubmittedTransactionCreateInput = {
@@ -22210,6 +23451,11 @@ export namespace Prisma {
     none?: SubmittedTransactionWhereInput
   }
 
+  export type BatchedTransactionIntentNullableRelationFilter = {
+    is?: BatchedTransactionIntentWhereInput | null
+    isNot?: BatchedTransactionIntentWhereInput | null
+  }
+
   export type SubmittedTransactionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -22221,6 +23467,7 @@ export namespace Prisma {
     error?: SortOrder
     userId?: SortOrder
     data?: SortOrder
+    batchId?: SortOrder
   }
 
   export type TransactionIntentMaxOrderByAggregateInput = {
@@ -22229,6 +23476,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     error?: SortOrder
     userId?: SortOrder
+    batchId?: SortOrder
   }
 
   export type TransactionIntentMinOrderByAggregateInput = {
@@ -22237,6 +23485,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     error?: SortOrder
     userId?: SortOrder
+    batchId?: SortOrder
   }
 
   export type EnumTransactionIntentStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -22272,6 +23521,27 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedJsonNullableFilter<$PrismaModel>
     _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type BatchedTransactionIntentCountOrderByAggregateInput = {
+    id?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    error?: SortOrder
+  }
+
+  export type BatchedTransactionIntentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    error?: SortOrder
+  }
+
+  export type BatchedTransactionIntentMinOrderByAggregateInput = {
+    id?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    error?: SortOrder
   }
 
   export type TransactionIntentRelationFilter = {
@@ -23101,6 +24371,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type BatchedTransactionIntentCreateNestedOneWithoutTransactionIntentsInput = {
+    create?: XOR<BatchedTransactionIntentCreateWithoutTransactionIntentsInput, BatchedTransactionIntentUncheckedCreateWithoutTransactionIntentsInput>
+    connectOrCreate?: BatchedTransactionIntentCreateOrConnectWithoutTransactionIntentsInput
+    connect?: BatchedTransactionIntentWhereUniqueInput
+  }
+
   export type SubmittedTransactionUncheckedCreateNestedManyWithoutTransactionInput = {
     create?: XOR<SubmittedTransactionCreateWithoutTransactionInput, SubmittedTransactionUncheckedCreateWithoutTransactionInput> | SubmittedTransactionCreateWithoutTransactionInput[] | SubmittedTransactionUncheckedCreateWithoutTransactionInput[]
     connectOrCreate?: SubmittedTransactionCreateOrConnectWithoutTransactionInput | SubmittedTransactionCreateOrConnectWithoutTransactionInput[]
@@ -23134,6 +24410,16 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTransactionsInput, UserUpdateWithoutTransactionsInput>, UserUncheckedUpdateWithoutTransactionsInput>
   }
 
+  export type BatchedTransactionIntentUpdateOneWithoutTransactionIntentsNestedInput = {
+    create?: XOR<BatchedTransactionIntentCreateWithoutTransactionIntentsInput, BatchedTransactionIntentUncheckedCreateWithoutTransactionIntentsInput>
+    connectOrCreate?: BatchedTransactionIntentCreateOrConnectWithoutTransactionIntentsInput
+    upsert?: BatchedTransactionIntentUpsertWithoutTransactionIntentsInput
+    disconnect?: BatchedTransactionIntentWhereInput | boolean
+    delete?: BatchedTransactionIntentWhereInput | boolean
+    connect?: BatchedTransactionIntentWhereUniqueInput
+    update?: XOR<XOR<BatchedTransactionIntentUpdateToOneWithWhereWithoutTransactionIntentsInput, BatchedTransactionIntentUpdateWithoutTransactionIntentsInput>, BatchedTransactionIntentUncheckedUpdateWithoutTransactionIntentsInput>
+  }
+
   export type SubmittedTransactionUncheckedUpdateManyWithoutTransactionNestedInput = {
     create?: XOR<SubmittedTransactionCreateWithoutTransactionInput, SubmittedTransactionUncheckedCreateWithoutTransactionInput> | SubmittedTransactionCreateWithoutTransactionInput[] | SubmittedTransactionUncheckedCreateWithoutTransactionInput[]
     connectOrCreate?: SubmittedTransactionCreateOrConnectWithoutTransactionInput | SubmittedTransactionCreateOrConnectWithoutTransactionInput[]
@@ -23146,6 +24432,48 @@ export namespace Prisma {
     update?: SubmittedTransactionUpdateWithWhereUniqueWithoutTransactionInput | SubmittedTransactionUpdateWithWhereUniqueWithoutTransactionInput[]
     updateMany?: SubmittedTransactionUpdateManyWithWhereWithoutTransactionInput | SubmittedTransactionUpdateManyWithWhereWithoutTransactionInput[]
     deleteMany?: SubmittedTransactionScalarWhereInput | SubmittedTransactionScalarWhereInput[]
+  }
+
+  export type TransactionIntentCreateNestedManyWithoutBatchInput = {
+    create?: XOR<TransactionIntentCreateWithoutBatchInput, TransactionIntentUncheckedCreateWithoutBatchInput> | TransactionIntentCreateWithoutBatchInput[] | TransactionIntentUncheckedCreateWithoutBatchInput[]
+    connectOrCreate?: TransactionIntentCreateOrConnectWithoutBatchInput | TransactionIntentCreateOrConnectWithoutBatchInput[]
+    createMany?: TransactionIntentCreateManyBatchInputEnvelope
+    connect?: TransactionIntentWhereUniqueInput | TransactionIntentWhereUniqueInput[]
+  }
+
+  export type TransactionIntentUncheckedCreateNestedManyWithoutBatchInput = {
+    create?: XOR<TransactionIntentCreateWithoutBatchInput, TransactionIntentUncheckedCreateWithoutBatchInput> | TransactionIntentCreateWithoutBatchInput[] | TransactionIntentUncheckedCreateWithoutBatchInput[]
+    connectOrCreate?: TransactionIntentCreateOrConnectWithoutBatchInput | TransactionIntentCreateOrConnectWithoutBatchInput[]
+    createMany?: TransactionIntentCreateManyBatchInputEnvelope
+    connect?: TransactionIntentWhereUniqueInput | TransactionIntentWhereUniqueInput[]
+  }
+
+  export type TransactionIntentUpdateManyWithoutBatchNestedInput = {
+    create?: XOR<TransactionIntentCreateWithoutBatchInput, TransactionIntentUncheckedCreateWithoutBatchInput> | TransactionIntentCreateWithoutBatchInput[] | TransactionIntentUncheckedCreateWithoutBatchInput[]
+    connectOrCreate?: TransactionIntentCreateOrConnectWithoutBatchInput | TransactionIntentCreateOrConnectWithoutBatchInput[]
+    upsert?: TransactionIntentUpsertWithWhereUniqueWithoutBatchInput | TransactionIntentUpsertWithWhereUniqueWithoutBatchInput[]
+    createMany?: TransactionIntentCreateManyBatchInputEnvelope
+    set?: TransactionIntentWhereUniqueInput | TransactionIntentWhereUniqueInput[]
+    disconnect?: TransactionIntentWhereUniqueInput | TransactionIntentWhereUniqueInput[]
+    delete?: TransactionIntentWhereUniqueInput | TransactionIntentWhereUniqueInput[]
+    connect?: TransactionIntentWhereUniqueInput | TransactionIntentWhereUniqueInput[]
+    update?: TransactionIntentUpdateWithWhereUniqueWithoutBatchInput | TransactionIntentUpdateWithWhereUniqueWithoutBatchInput[]
+    updateMany?: TransactionIntentUpdateManyWithWhereWithoutBatchInput | TransactionIntentUpdateManyWithWhereWithoutBatchInput[]
+    deleteMany?: TransactionIntentScalarWhereInput | TransactionIntentScalarWhereInput[]
+  }
+
+  export type TransactionIntentUncheckedUpdateManyWithoutBatchNestedInput = {
+    create?: XOR<TransactionIntentCreateWithoutBatchInput, TransactionIntentUncheckedCreateWithoutBatchInput> | TransactionIntentCreateWithoutBatchInput[] | TransactionIntentUncheckedCreateWithoutBatchInput[]
+    connectOrCreate?: TransactionIntentCreateOrConnectWithoutBatchInput | TransactionIntentCreateOrConnectWithoutBatchInput[]
+    upsert?: TransactionIntentUpsertWithWhereUniqueWithoutBatchInput | TransactionIntentUpsertWithWhereUniqueWithoutBatchInput[]
+    createMany?: TransactionIntentCreateManyBatchInputEnvelope
+    set?: TransactionIntentWhereUniqueInput | TransactionIntentWhereUniqueInput[]
+    disconnect?: TransactionIntentWhereUniqueInput | TransactionIntentWhereUniqueInput[]
+    delete?: TransactionIntentWhereUniqueInput | TransactionIntentWhereUniqueInput[]
+    connect?: TransactionIntentWhereUniqueInput | TransactionIntentWhereUniqueInput[]
+    update?: TransactionIntentUpdateWithWhereUniqueWithoutBatchInput | TransactionIntentUpdateWithWhereUniqueWithoutBatchInput[]
+    updateMany?: TransactionIntentUpdateManyWithWhereWithoutBatchInput | TransactionIntentUpdateManyWithWhereWithoutBatchInput[]
+    deleteMany?: TransactionIntentScalarWhereInput | TransactionIntentScalarWhereInput[]
   }
 
   export type TransactionIntentCreateNestedOneWithoutTransactionsInput = {
@@ -23830,6 +25158,7 @@ export namespace Prisma {
     error?: string | null
     data?: NullableJsonNullValueInput | InputJsonValue
     transactions?: SubmittedTransactionCreateNestedManyWithoutTransactionInput
+    batch?: BatchedTransactionIntentCreateNestedOneWithoutTransactionIntentsInput
   }
 
   export type TransactionIntentUncheckedCreateWithoutUserInput = {
@@ -23838,6 +25167,7 @@ export namespace Prisma {
     createdAt?: Date | string
     error?: string | null
     data?: NullableJsonNullValueInput | InputJsonValue
+    batchId?: string | null
     transactions?: SubmittedTransactionUncheckedCreateNestedManyWithoutTransactionInput
   }
 
@@ -24221,6 +25551,7 @@ export namespace Prisma {
     error?: StringNullableFilter<"TransactionIntent"> | string | null
     userId?: StringFilter<"TransactionIntent"> | string
     data?: JsonNullableFilter<"TransactionIntent">
+    batchId?: StringNullableFilter<"TransactionIntent"> | string | null
   }
 
   export type MarketingUpsertWithWhereUniqueWithoutUserInput = {
@@ -25460,6 +26791,25 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutTransactionsInput, UserUncheckedCreateWithoutTransactionsInput>
   }
 
+  export type BatchedTransactionIntentCreateWithoutTransactionIntentsInput = {
+    id: string
+    status?: $Enums.TransactionIntentStatus
+    createdAt?: Date | string
+    error?: string | null
+  }
+
+  export type BatchedTransactionIntentUncheckedCreateWithoutTransactionIntentsInput = {
+    id: string
+    status?: $Enums.TransactionIntentStatus
+    createdAt?: Date | string
+    error?: string | null
+  }
+
+  export type BatchedTransactionIntentCreateOrConnectWithoutTransactionIntentsInput = {
+    where: BatchedTransactionIntentWhereUniqueInput
+    create: XOR<BatchedTransactionIntentCreateWithoutTransactionIntentsInput, BatchedTransactionIntentUncheckedCreateWithoutTransactionIntentsInput>
+  }
+
   export type SubmittedTransactionUpsertWithWhereUniqueWithoutTransactionInput = {
     where: SubmittedTransactionWhereUniqueInput
     update: XOR<SubmittedTransactionUpdateWithoutTransactionInput, SubmittedTransactionUncheckedUpdateWithoutTransactionInput>
@@ -25545,6 +26895,77 @@ export namespace Prisma {
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type BatchedTransactionIntentUpsertWithoutTransactionIntentsInput = {
+    update: XOR<BatchedTransactionIntentUpdateWithoutTransactionIntentsInput, BatchedTransactionIntentUncheckedUpdateWithoutTransactionIntentsInput>
+    create: XOR<BatchedTransactionIntentCreateWithoutTransactionIntentsInput, BatchedTransactionIntentUncheckedCreateWithoutTransactionIntentsInput>
+    where?: BatchedTransactionIntentWhereInput
+  }
+
+  export type BatchedTransactionIntentUpdateToOneWithWhereWithoutTransactionIntentsInput = {
+    where?: BatchedTransactionIntentWhereInput
+    data: XOR<BatchedTransactionIntentUpdateWithoutTransactionIntentsInput, BatchedTransactionIntentUncheckedUpdateWithoutTransactionIntentsInput>
+  }
+
+  export type BatchedTransactionIntentUpdateWithoutTransactionIntentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumTransactionIntentStatusFieldUpdateOperationsInput | $Enums.TransactionIntentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type BatchedTransactionIntentUncheckedUpdateWithoutTransactionIntentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumTransactionIntentStatusFieldUpdateOperationsInput | $Enums.TransactionIntentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type TransactionIntentCreateWithoutBatchInput = {
+    discriminator: string
+    status?: $Enums.TransactionIntentStatus
+    createdAt?: Date | string
+    error?: string | null
+    data?: NullableJsonNullValueInput | InputJsonValue
+    transactions?: SubmittedTransactionCreateNestedManyWithoutTransactionInput
+    user: UserCreateNestedOneWithoutTransactionsInput
+  }
+
+  export type TransactionIntentUncheckedCreateWithoutBatchInput = {
+    discriminator: string
+    status?: $Enums.TransactionIntentStatus
+    createdAt?: Date | string
+    error?: string | null
+    userId: string
+    data?: NullableJsonNullValueInput | InputJsonValue
+    transactions?: SubmittedTransactionUncheckedCreateNestedManyWithoutTransactionInput
+  }
+
+  export type TransactionIntentCreateOrConnectWithoutBatchInput = {
+    where: TransactionIntentWhereUniqueInput
+    create: XOR<TransactionIntentCreateWithoutBatchInput, TransactionIntentUncheckedCreateWithoutBatchInput>
+  }
+
+  export type TransactionIntentCreateManyBatchInputEnvelope = {
+    data: TransactionIntentCreateManyBatchInput | TransactionIntentCreateManyBatchInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TransactionIntentUpsertWithWhereUniqueWithoutBatchInput = {
+    where: TransactionIntentWhereUniqueInput
+    update: XOR<TransactionIntentUpdateWithoutBatchInput, TransactionIntentUncheckedUpdateWithoutBatchInput>
+    create: XOR<TransactionIntentCreateWithoutBatchInput, TransactionIntentUncheckedCreateWithoutBatchInput>
+  }
+
+  export type TransactionIntentUpdateWithWhereUniqueWithoutBatchInput = {
+    where: TransactionIntentWhereUniqueInput
+    data: XOR<TransactionIntentUpdateWithoutBatchInput, TransactionIntentUncheckedUpdateWithoutBatchInput>
+  }
+
+  export type TransactionIntentUpdateManyWithWhereWithoutBatchInput = {
+    where: TransactionIntentScalarWhereInput
+    data: XOR<TransactionIntentUpdateManyMutationInput, TransactionIntentUncheckedUpdateManyWithoutBatchInput>
+  }
+
   export type TransactionIntentCreateWithoutTransactionsInput = {
     discriminator: string
     status?: $Enums.TransactionIntentStatus
@@ -25552,6 +26973,7 @@ export namespace Prisma {
     error?: string | null
     data?: NullableJsonNullValueInput | InputJsonValue
     user: UserCreateNestedOneWithoutTransactionsInput
+    batch?: BatchedTransactionIntentCreateNestedOneWithoutTransactionIntentsInput
   }
 
   export type TransactionIntentUncheckedCreateWithoutTransactionsInput = {
@@ -25561,6 +26983,7 @@ export namespace Prisma {
     error?: string | null
     userId: string
     data?: NullableJsonNullValueInput | InputJsonValue
+    batchId?: string | null
   }
 
   export type TransactionIntentCreateOrConnectWithoutTransactionsInput = {
@@ -25586,6 +27009,7 @@ export namespace Prisma {
     error?: NullableStringFieldUpdateOperationsInput | string | null
     data?: NullableJsonNullValueInput | InputJsonValue
     user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
+    batch?: BatchedTransactionIntentUpdateOneWithoutTransactionIntentsNestedInput
   }
 
   export type TransactionIntentUncheckedUpdateWithoutTransactionsInput = {
@@ -25595,6 +27019,7 @@ export namespace Prisma {
     error?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: StringFieldUpdateOperationsInput | string
     data?: NullableJsonNullValueInput | InputJsonValue
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserCreateWithoutMarketingInput = {
@@ -25764,6 +27189,7 @@ export namespace Prisma {
     createdAt?: Date | string
     error?: string | null
     data?: NullableJsonNullValueInput | InputJsonValue
+    batchId?: string | null
   }
 
   export type MarketingCreateManyUserInput = {
@@ -25961,6 +27387,7 @@ export namespace Prisma {
     error?: NullableStringFieldUpdateOperationsInput | string | null
     data?: NullableJsonNullValueInput | InputJsonValue
     transactions?: SubmittedTransactionUpdateManyWithoutTransactionNestedInput
+    batch?: BatchedTransactionIntentUpdateOneWithoutTransactionIntentsNestedInput
   }
 
   export type TransactionIntentUncheckedUpdateWithoutUserInput = {
@@ -25969,6 +27396,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     error?: NullableStringFieldUpdateOperationsInput | string | null
     data?: NullableJsonNullValueInput | InputJsonValue
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
     transactions?: SubmittedTransactionUncheckedUpdateManyWithoutTransactionNestedInput
   }
 
@@ -25978,6 +27406,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     error?: NullableStringFieldUpdateOperationsInput | string | null
     data?: NullableJsonNullValueInput | InputJsonValue
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MarketingUpdateWithoutUserInput = {
@@ -26075,6 +27504,44 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TransactionIntentCreateManyBatchInput = {
+    discriminator: string
+    status?: $Enums.TransactionIntentStatus
+    createdAt?: Date | string
+    error?: string | null
+    userId: string
+    data?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type TransactionIntentUpdateWithoutBatchInput = {
+    discriminator?: StringFieldUpdateOperationsInput | string
+    status?: EnumTransactionIntentStatusFieldUpdateOperationsInput | $Enums.TransactionIntentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: NullableJsonNullValueInput | InputJsonValue
+    transactions?: SubmittedTransactionUpdateManyWithoutTransactionNestedInput
+    user?: UserUpdateOneRequiredWithoutTransactionsNestedInput
+  }
+
+  export type TransactionIntentUncheckedUpdateWithoutBatchInput = {
+    discriminator?: StringFieldUpdateOperationsInput | string
+    status?: EnumTransactionIntentStatusFieldUpdateOperationsInput | $Enums.TransactionIntentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    data?: NullableJsonNullValueInput | InputJsonValue
+    transactions?: SubmittedTransactionUncheckedUpdateManyWithoutTransactionNestedInput
+  }
+
+  export type TransactionIntentUncheckedUpdateManyWithoutBatchInput = {
+    discriminator?: StringFieldUpdateOperationsInput | string
+    status?: EnumTransactionIntentStatusFieldUpdateOperationsInput | $Enums.TransactionIntentStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    data?: NullableJsonNullValueInput | InputJsonValue
+  }
+
 
 
   /**
@@ -26092,6 +27559,10 @@ export namespace Prisma {
      * @deprecated Use TransactionIntentCountOutputTypeDefaultArgs instead
      */
     export type TransactionIntentCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TransactionIntentCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use BatchedTransactionIntentCountOutputTypeDefaultArgs instead
+     */
+    export type BatchedTransactionIntentCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BatchedTransactionIntentCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use UserDefaultArgs instead
      */
@@ -26148,6 +27619,10 @@ export namespace Prisma {
      * @deprecated Use TransactionIntentDefaultArgs instead
      */
     export type TransactionIntentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TransactionIntentDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use BatchedTransactionIntentDefaultArgs instead
+     */
+    export type BatchedTransactionIntentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BatchedTransactionIntentDefaultArgs<ExtArgs>
     /**
      * @deprecated Use SubmittedTransactionDefaultArgs instead
      */

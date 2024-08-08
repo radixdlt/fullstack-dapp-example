@@ -24,6 +24,9 @@ import { SystemWorkerController } from './system/controller'
 import { MessageHelper } from './helpers/messageHelper'
 import { TransactionIntentHelper } from './helpers/transactionIntentHelper'
 import { ReferralRewardAction } from './helpers/referalReward'
+import { DepositGiftBoxRewardBufferWorker } from './deposit-giftbox-reward/buffer-worker'
+import { BatchedDepositGiftBoxRewardWorker } from './deposit-giftbox-reward/worker'
+import { BatchedDepositGiftBoxRewardController } from './deposit-giftbox-reward/controller'
 
 const app = async () => {
   // test db connection
@@ -31,7 +34,8 @@ const app = async () => {
 
   const connection: ConnectionOptions = config.redis
 
-  const { transactionQueue } = getQueues(config.redis)
+  const { transactionQueue, DepositGiftBoxRewardBufferQueue, DepositGiftBoxRewardQueue } =
+    getQueues(config.redis)
 
   const messageApi = MessageApi({
     baseUrl: config.notification.baseUrl,
@@ -57,7 +61,11 @@ const app = async () => {
     mailerLiteModel: MailerLiteModel({
       apiKey: config.mailerLite.apiKey
     }),
-    transactionIntent: TransactionIntentHelper({ dbClient, transactionQueue }),
+    transactionIntent: TransactionIntentHelper({
+      dbClient,
+      transactionQueue,
+      DepositGiftBoxRewardBufferQueue
+    }),
     AccountAddressModel,
     sendMessage,
     referralRewardAction,
@@ -96,6 +104,17 @@ const app = async () => {
       dbClient,
       transactionStreamModel
     })
+  })
+
+  DepositGiftBoxRewardBufferWorker(connection, {
+    logger,
+    DepositGiftBoxRewardQueue
+  })
+
+  BatchedDepositGiftBoxRewardWorker(connection, {
+    logger,
+    controller: BatchedDepositGiftBoxRewardController({ gatewayApi }),
+    dbClient
   })
 
   logger.debug({ message: 'workers running' })

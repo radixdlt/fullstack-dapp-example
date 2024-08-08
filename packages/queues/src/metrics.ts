@@ -82,12 +82,20 @@ export const SetupQueueMetrics = ({
   port?: number
   logger?: AppLogger
 }) => {
-  const { transactionQueue, eventQueue, systemQueue } = getQueues(connection)
+  const {
+    transactionQueue,
+    eventQueue,
+    systemQueue,
+    DepositGiftBoxRewardBufferQueue,
+    DepositGiftBoxRewardQueue
+  } = getQueues(connection)
 
   const queueMetrics = {
     eventQueue: QueueMetrics('event'),
     transactionQueue: QueueMetrics('transaction'),
-    systemQueue: QueueMetrics('system')
+    systemQueue: QueueMetrics('system'),
+    DepositGiftBoxRewardBufferQueue: QueueMetrics('DepositGiftBoxRewardBuffer'),
+    DepositGiftBoxRewardQueue: QueueMetrics('DepositGiftBoxReward')
   } as const
 
   setupQueueEvents({
@@ -109,6 +117,20 @@ export const SetupQueueMetrics = ({
     connection,
     queue: systemQueue.queue,
     trackMetricsFn: queueMetrics.systemQueue,
+    logger
+  })
+  setupQueueEvents({
+    queueName: Queues.DepositGiftBoxRewardBufferQueue,
+    connection,
+    queue: DepositGiftBoxRewardBufferQueue.queue,
+    trackMetricsFn: queueMetrics.DepositGiftBoxRewardBufferQueue,
+    logger
+  })
+  setupQueueEvents({
+    queueName: Queues.DepositGiftBoxRewardQueue,
+    connection,
+    queue: DepositGiftBoxRewardQueue.queue,
+    trackMetricsFn: queueMetrics.DepositGiftBoxRewardQueue,
     logger
   })
 

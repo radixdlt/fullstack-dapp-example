@@ -69,6 +69,7 @@ export const TransactionHelper = ({
       .map((instructions) => ({ instructions, blobs }))
       .mapErr((error) => {
         logger?.error(stringManifest)
+
         return {
           reason: TransactionHelperError.FailedToConvertStringManifest,
           jsError: error
@@ -176,7 +177,7 @@ export const TransactionHelper = ({
   > => {
     const message = optional?.message
     const onTransactionId = optional?.onTransactionId ?? (() => okAsync(undefined))
-    if (typeof transactionManifest === 'string') logger?.debug({ transactionManifest })
+    if (typeof transactionManifest === 'string') logger?.trace({ transactionManifest })
     return (
       typeof transactionManifest === 'string'
         ? transformStringManifest(transactionManifest, optional?.blobs)
@@ -217,12 +218,17 @@ export const TransactionHelper = ({
         let response: TransactionStatusResponse | undefined
         let retry = 0
 
+        logger?.info({
+          method: 'pollTransactionStatus',
+          transactionId
+        })
+
         while (!response) {
           const result = await getTransactionStatus(transactionId)
 
           if (result.isErr()) return reject(result.error)
 
-          logger?.debug({
+          logger?.trace({
             method: 'pollTransactionStatus',
             transactionId,
             retry,
