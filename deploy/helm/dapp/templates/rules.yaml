@@ -25,6 +25,6 @@ spec:
         env: {{ $metrics.alert_labels.env }}
       annotations:
         summary: "Radquest dapp HPA is running at max replicas"
-        description: "Radquest dapps has been running at max replicas for longer than 5 minutes"
+        description: "Radquest dapps has been running at max replicas for longer than 15 minutes"
         dashboard: {{ $metrics.dashboard_url }}
         runbook_url: "https://runbooks.extratools.works"
