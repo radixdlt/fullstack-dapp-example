@@ -1,4 +1,4 @@
-import { Worker, ConnectionOptions, Queues, TransactionJob, getQueues } from 'queues'
+import { Worker, ConnectionOptions, Queues, TransactionJob } from 'queues'
 import { AppLogger, GatewayApi, type TransactionModel } from 'common'
 import { TransactionWorkerController } from './controller'
 import { PrismaClient, TransactionIntentStatus } from 'database'
@@ -54,20 +54,29 @@ const determineWhetherToSubmitNewTransaction = async (
               data: { status: 'COMPLETED' }
             })
             .then(() => false)
-
-        case 'CommittedFailure': {
+        case 'CommittedFailure':
+        case 'PermanentlyRejected':
           const isTryingToSetImageOnBurntRadGem =
             statusResult.value?.error_message === 'SystemError(KeyValueEntryLocked)' &&
             discriminator.startsWith('CombinedElementsAddRadgemImage')
 
-          if (isTryingToSetImageOnBurntRadGem)
+          const reachedMaxOpenedGiftBoxes = statusResult.value?.error_message?.includes(
+            'User has reached the maximum number of rewards records'
+          )
+
+          const questAlreadyCompleted =
+            statusResult.value?.error_message?.includes('Quest already completed')
+
+          if (isTryingToSetImageOnBurntRadGem || reachedMaxOpenedGiftBoxes || questAlreadyCompleted)
             return dbClient.transactionIntent
               .update({
                 where: { discriminator },
-                data: { status: 'COMPLETED', error: 'CompletedWithError' }
+                data: {
+                  status: reachedMaxOpenedGiftBoxes ? 'FAILED_RETRY' : 'FAILED_PERMANENT',
+                  error: 'CompletedWithError'
+                }
               })
               .then(() => false)
-        }
 
         default:
           break
