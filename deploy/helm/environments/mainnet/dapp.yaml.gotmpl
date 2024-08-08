@@ -98,3 +98,10 @@ resources:
 pm2_metrics:
   enabled: true
   port: 9209
+
+metrics:
+  enabled: true
+  port: 9210
+  alert_labels:
+    cluster: rtlj-prod
+    env: mainnet
