@@ -16,6 +16,10 @@ pm2_metrics:
 metrics:
   enabled: false
   port: 9210
+  dashboard_url: https://radixdlt.grafana.net/d/radquest/radquest-overview
+  alert_labels:
+    cluster: to-be-updated
+    env: to-be-updated
 
 nameOverride: "dapp"
 
