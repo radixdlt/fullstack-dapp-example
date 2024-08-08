@@ -1,0 +1,65 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("5")
+;
+
+CALL_METHOD
+    Address("${account}")
+    "withdraw"
+    Address("${xrd}")
+    Decimal("10")
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("${xrd}")
+    Bucket("reward1")
+;
+
+CALL_METHOD
+    Address("${account}")
+    "withdraw"
+    Address("${xrd}")
+    Decimal("5")
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("${xrd}")
+    Bucket("reward2")
+;
+
+CALL_METHOD
+    Address("${account}")
+    "withdraw"
+    Address("${gift_box_simple}")
+    Decimal("1")
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("${gift_box_simple}")
+    Bucket("reward3")
+;
+
+CALL_METHOD
+    Address("${account}")
+    "create_proof_of_amount"
+    Address("${admin_badge}")
+    Decimal("1")
+;
+CALL_METHOD
+    Address("${gift_box_opener_v2}")
+    "deposit_gift_box_rewards"
+    Array<Tuple>(
+        Tuple(
+            "${user_id}",
+            Decimal("1"), # number of gift boxes this reward comes from
+            Array<Bucket>(Bucket("reward1")),
+        ),
+        Tuple(
+            "${user_id}",
+            Decimal("3"), # number of gift boxes this reward comes from
+            Array<Bucket>(
+                Bucket("reward2"),
+                Bucket("reward3"),
+            ),
+        )
+    )
+;
+

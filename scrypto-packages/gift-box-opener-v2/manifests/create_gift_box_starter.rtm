@@ -1,0 +1,109 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+
+CREATE_FUNGIBLE_RESOURCE
+    Enum<1u8>(
+        Enum<2u8>(
+            Enum<0u8>(
+                Enum<0u8>(
+                    Enum<1u8>(
+                        Address("${super_admin_badge}")
+                    )
+                )
+            )
+        )
+    )
+    true
+    0u8
+    Tuple(
+        Enum<1u8>(
+            Tuple(
+                Enum<1u8>(
+                    Enum<2u8>(
+                        Enum<0u8>(
+                            Enum<0u8>(
+                                Enum<1u8>(
+                                    Address("${admin_badge}")
+                                )
+                            )
+                        )
+                    )
+                ),
+                Enum<0u8>()
+            )
+        ),
+        Enum<1u8>(
+            Tuple(
+                Enum<1u8>(
+                    Enum<2u8>(
+                        Enum<0u8>(
+                            Enum<0u8>(
+                                Enum<1u8>(
+                                    Address("${admin_badge}")
+                                )
+                            )
+                        )
+                    )
+                ),
+                Enum<0u8>()
+            )
+        ),
+        Enum<0u8>(),
+        Enum<0u8>(),
+        Enum<0u8>(),
+        Enum<0u8>()
+    )
+    Tuple(
+        Map<String, Tuple>(
+            "name" => Tuple(
+                Enum<1u8>(
+                    Enum<0u8>(
+                        "Starter Gift Boxes"
+                    )
+                ),
+                false
+            ),
+            "description" => Tuple(
+                Enum<1u8>(
+                    Enum<0u8>(
+                        "This Gift Box from RadQuest’s Jetty will get you started with a common Morph Energy Card and enough Elements to create a couple of RadGems. Ask Jetty to open it!"
+                    )
+                ),
+                false
+            ),
+            "tags" => Tuple(
+                Enum<1u8>(
+                    Enum<128u8>(
+                        Array<String>(
+                            "radquest"
+                        )
+                    )
+                ),
+                false
+            ),
+            "icon_url" => Tuple(
+                Enum<1u8>(
+                    Enum<13u8>(
+                        "https://arweave.net/ykgYDzucDR-laXkFu-Mtb00sb_6jNq-VMKebHMAv32k"
+                    )
+                ),
+                false
+            ),
+            "dapp_definitions" => Tuple(
+                Enum<1u8>(
+                    Enum<128u8>(
+                        Array<String>(
+                            "${dapp_definition}"
+                        )
+                    )
+                ),
+                false
+            )
+        ),
+        Map<String, Enum>()
+    )
+    Enum<0u8>()
+;

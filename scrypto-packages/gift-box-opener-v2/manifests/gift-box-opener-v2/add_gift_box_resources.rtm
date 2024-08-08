@@ -1,0 +1,22 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+CALL_METHOD
+    Address("${account}")
+    "create_proof_of_amount"
+    Address("${admin_badge}")
+    Decimal("1")
+;
+CALL_METHOD
+    Address("${gift_box_opener_v2}")
+    "add_gift_box_resources"
+    Array<Address>(
+        Address("${gift_box_starter}"),
+        Address("${gift_box_simple}"),
+        Address("${gift_box_fancy}"),
+        Address("${gift_box_elite}")
+    )
+;
+

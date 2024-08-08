@@ -1,0 +1,109 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+
+CREATE_FUNGIBLE_RESOURCE
+    Enum<1u8>(
+        Enum<2u8>(
+            Enum<0u8>(
+                Enum<0u8>(
+                    Enum<1u8>(
+                        Address("${super_admin_badge}")
+                    )
+                )
+            )
+        )
+    )
+    true
+    0u8
+    Tuple(
+        Enum<1u8>(
+            Tuple(
+                Enum<1u8>(
+                    Enum<2u8>(
+                        Enum<0u8>(
+                            Enum<0u8>(
+                                Enum<1u8>(
+                                    Address("${admin_badge}")
+                                )
+                            )
+                        )
+                    )
+                ),
+                Enum<0u8>()
+            )
+        ),
+        Enum<1u8>(
+            Tuple(
+                Enum<1u8>(
+                    Enum<2u8>(
+                        Enum<0u8>(
+                            Enum<0u8>(
+                                Enum<1u8>(
+                                    Address("${admin_badge}")
+                                )
+                            )
+                        )
+                    )
+                ),
+                Enum<0u8>()
+            )
+        ),
+        Enum<0u8>(),
+        Enum<0u8>(),
+        Enum<0u8>(),
+        Enum<0u8>()
+    )
+    Tuple(
+        Map<String, Tuple>(
+            "name" => Tuple(
+                Enum<1u8>(
+                    Enum<0u8>(
+                        "Elite Gift Boxes"
+                    )
+                ),
+                false
+            ),
+            "description" => Tuple(
+                Enum<1u8>(
+                    Enum<0u8>(
+                        "This truly elite Gift Box from RadQuest’s Jetty, reserved for only the most committed, contains only a rare or ultra-rare Morph Energy Card and a substantial quantity of Elements. Ask Jetty to open it!"
+                    )
+                ),
+                false
+            ),
+            "tags" => Tuple(
+                Enum<1u8>(
+                    Enum<128u8>(
+                        Array<String>(
+                            "radquest"
+                        )
+                    )
+                ),
+                false
+            ),
+            "icon_url" => Tuple(
+                Enum<1u8>(
+                    Enum<13u8>(
+                        "https://arweave.net/vdrkR2hi0dII5R_GEWsshock2ER8EKLs93Qb_L___gA"
+                    )
+                ),
+                false
+            ),
+            "dapp_definitions" => Tuple(
+                Enum<1u8>(
+                    Enum<128u8>(
+                        Array<String>(
+                            "${dapp_definition}"
+                        )
+                    )
+                ),
+                false
+            )
+        ),
+        Map<String, Enum>()
+    )
+    Enum<0u8>()
+;

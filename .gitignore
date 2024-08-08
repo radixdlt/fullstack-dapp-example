@@ -33,7 +33,7 @@ yarn-error.log*
 .DS_Store
 *.pem
 
-scrypto*/target/
+scrypto-packages/**/target/
 
 **/*/build
 **/*/.svelte-kit

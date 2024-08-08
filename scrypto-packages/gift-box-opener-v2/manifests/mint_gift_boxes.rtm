@@ -1,0 +1,20 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+CALL_METHOD
+    Address("${account}")
+    "create_proof_of_amount"
+    Address("${admin_badge}")
+    Decimal("1")
+;
+MINT_FUNGIBLE
+    Address("${gift_box_simple}")
+    Decimal("5")
+;
+CALL_METHOD
+    Address("${account}")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;

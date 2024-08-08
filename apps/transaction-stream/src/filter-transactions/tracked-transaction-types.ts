@@ -249,6 +249,17 @@ export const trackedTransactionTypes: TrackedTransactions = {
       }
     })
   },
+  [EventId.GiftBoxesOpenedEvent]: {
+    GiftBoxesOpenedEvent: eventEmittedByComponent({
+      eventName: 'GiftBoxesOpenedEvent',
+      componentAddress: config.radQuest.components.giftBoxOpenerV2,
+      keys: {
+        user_id: { kind: 'String', key: 'userId' },
+        resource_address: { kind: 'Reference', key: 'giftBoxResourceAddress' },
+        quantity: { kind: 'Decimal', key: 'quantity' }
+      }
+    })
+  },
   [EventId.GiftBoxDeposited]: {
     GiftBoxDepositedEvent: eventEmittedByComponent({
       eventName: 'GiftBoxDepositedEvent',
