@@ -12,6 +12,7 @@ import JettyReceivedClams from '../fixtures/transactions/jetty-recevied-clams'
 import MayaRouterWithdraw from '../fixtures/transactions/maya-router-withdraw'
 import GiftBoxDeposited from '../fixtures/transactions/giftbox-deposited'
 import GiftBoxOpened from '../fixtures/transactions/open-giftbox'
+import GiftBoxesOpened from '../fixtures/transactions/gift-boxes-opened'
 import AccountAddedTransaction from '../fixtures/transactions/allow-user-to-forge-hero-badge'
 import { trackedTransactionTypes } from './tracked-transaction-types'
 import { AccountAddressModel, EventId } from 'common'
@@ -200,6 +201,23 @@ describe('filter transactions', () => {
       expect(transaction.type).toEqual(EventId.GiftBoxOpened)
       expect(transaction.userId).toBeDefined()
       expect(transaction.data.giftBoxResourceAddress).toBeDefined()
+    })
+
+    it(`should find ${EventId.GiftBoxesOpenedEvent} transaction`, () => {
+      const result = filterTransactionsByType([...GiftBoxesOpened])
+
+      if (result.isErr()) throw result.error
+
+      const filteredTransactions = result.value
+
+      expect(filteredTransactions.length).toEqual(1)
+
+      const [transaction] = filteredTransactions
+
+      expect(transaction.type).toEqual(EventId.GiftBoxesOpenedEvent)
+      expect(transaction.userId).toBeDefined()
+      expect(transaction.data.giftBoxResourceAddress).toBeDefined()
+      expect(transaction.data.quantity).toBeDefined()
     })
   })
 

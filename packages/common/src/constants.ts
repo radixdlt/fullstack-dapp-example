@@ -274,6 +274,7 @@ export const EventId = {
   AccountAllowedToForgeHeroBadge: 'AccountAllowedToForgeHeroBadge',
   GiftBoxOpened: 'GiftBoxOpened',
   GiftBoxDeposited: 'GiftBoxDeposited',
+  GiftBoxesOpenedEvent: 'GiftBoxesOpenedEvent',
   DepositedElements: 'DepositedElements'
 } as const
 
