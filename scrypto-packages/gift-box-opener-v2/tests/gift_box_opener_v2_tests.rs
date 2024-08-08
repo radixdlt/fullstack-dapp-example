@@ -1,6 +1,8 @@
 use scrypto_test::prelude::*;
 
-use gift_box_opener_v2::gift_box_opener_v2::{gift_box_opener_v2_test::*, RewardDeposit, UserId};
+use gift_box_opener_v2::gift_box_opener_v2::{
+    gift_box_opener_v2_test::*, GiftBoxCounts, RewardDeposit, UserId,
+};
 
 struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,
@@ -30,6 +32,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let simple_gift_boxes = ResourceBuilder::new_fungible(OwnerRole::Fixed(rule!(require(
         admin_badge.resource_address(&mut env)?
     ))))
+    .divisibility(DIVISIBILITY_NONE)
     .burn_roles(burn_roles! {
            burner => OWNER;
            burner_updater => rule!(deny_all);
@@ -38,11 +41,12 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let fancy_gift_boxes = ResourceBuilder::new_fungible(OwnerRole::Fixed(rule!(require(
         admin_badge.resource_address(&mut env)?
     ))))
+    .divisibility(DIVISIBILITY_NONE)
     .burn_roles(burn_roles! {
            burner => OWNER;
            burner_updater => rule!(deny_all);
     })
-    .mint_initial_supply(2, &mut env)?;
+    .mint_initial_supply(40, &mut env)?;
     let hero_badge = ResourceBuilder::new_string_non_fungible(OwnerRole::None)
         .mint_initial_supply(
             [(
@@ -498,7 +502,7 @@ fn cannot_deposit_more_that_max_number_of_rewards() -> Result<(), RuntimeError> 
 }
 
 #[test]
-fn cannot_open_when_deposited_over_the_max_number_of_rewards() -> Result<(), RuntimeError> {
+fn cannot_open_when_deposited_the_max_number_of_rewards() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,
@@ -539,7 +543,80 @@ fn cannot_open_when_deposited_over_the_max_number_of_rewards() -> Result<(), Run
 }
 
 #[test]
-fn test_open_deposit_and_claim_in_batch() -> Result<(), RuntimeError> {
+fn can_open_gift_box_after_claiming_rewards_at_max() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut gift_box_opener_v2,
+        admin_badge,
+        user_id,
+        hero_badge,
+        fancy_gift_boxes,
+        rewards,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge.create_proof_of_all(&mut env)?, &mut env)?;
+    gift_box_opener_v2
+        .add_gift_box_resources(vec![fancy_gift_boxes.resource_address(&mut env)?], &mut env)?;
+
+    for _ in 0..30 {
+        let reward =
+            vec![ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(10, &mut env)?];
+
+        gift_box_opener_v2.open_gift_boxes(
+            hero_badge.create_proof_of_all(&mut env)?,
+            fancy_gift_boxes.take(dec!(1), &mut env)?,
+            &mut env,
+        )?;
+
+        gift_box_opener_v2.deposit_gift_box_rewards(
+            vec![RewardDeposit {
+                user_id: user_id.clone(),
+                gift_box_count: dec!(1),
+                rewards: reward,
+            }],
+            &mut env,
+        )?;
+    }
+
+    gift_box_opener_v2.claim_gift_box_rewards(
+        hero_badge.create_proof_of_all(&mut env)?,
+        10,
+        &mut env,
+    )?;
+
+    // Act
+    let result_1 = gift_box_opener_v2.open_gift_boxes(
+        hero_badge.create_proof_of_all(&mut env)?,
+        fancy_gift_boxes,
+        &mut env,
+    );
+    gift_box_opener_v2.deposit_gift_box_rewards(
+        vec![RewardDeposit {
+            user_id: user_id.clone(),
+            gift_box_count: dec!(1),
+            rewards,
+        }],
+        &mut env,
+    )?;
+    let result_2 = gift_box_opener_v2.claim_gift_box_rewards(
+        hero_badge.create_proof_of_all(&mut env)?,
+        30,
+        &mut env,
+    );
+
+    // Assert
+    println!("{:?}", result_1);
+    println!("{:?}", result_2);
+    assert!(result_1.is_ok());
+    assert!(result_2.is_ok());
+    Ok(())
+}
+
+#[test]
+fn can_get_user_reward_records() -> Result<(), RuntimeError> {
+    // Arrange
     let Test {
         mut env,
         mut gift_box_opener_v2,
@@ -551,32 +628,121 @@ fn test_open_deposit_and_claim_in_batch() -> Result<(), RuntimeError> {
         ..
     } = arrange_test_environment()?;
 
-    let simple_gift_boxes2 = simple_gift_boxes.take(dec!(0.5), &mut env)?;
-    let simple_gift_boxes3 = simple_gift_boxes.take(dec!(0.5), &mut env)?;
-    let simple_gift_boxes4 = simple_gift_boxes.take(dec!(0.5), &mut env)?;
-
-    // Add gift box resource manager
-    LocalAuthZone::push(admin_badge_proof.clone(&mut env)?, &mut env)?;
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
     gift_box_opener_v2.add_gift_box_resources(
         vec![simple_gift_boxes.resource_address(&mut env)?],
         &mut env,
     )?;
-    LocalAuthZone::pop(&mut env)?.unwrap().drop(&mut env)?;
+    gift_box_opener_v2.open_gift_boxes(hero_badge_proof, simple_gift_boxes, &mut env)?;
+    gift_box_opener_v2.deposit_gift_box_rewards(
+        vec![RewardDeposit {
+            user_id: user_id.clone(),
+            gift_box_count: dec!(2),
+            rewards,
+        }],
+        &mut env,
+    )?;
 
-    // User tries to open three gift boxes
+    // Act
+    let result = gift_box_opener_v2.get_user_reward_records(user_id, &mut env);
+
+    // Assert
+    assert!(result.is_ok());
+    Ok(())
+}
+
+#[test]
+fn can_get_user_gift_box_counts() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut gift_box_opener_v2,
+        simple_gift_boxes,
+        admin_badge_proof,
+        hero_badge,
+        user_id,
+        rewards,
+        ..
+    } = arrange_test_environment()?;
+
+    LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    gift_box_opener_v2.add_gift_box_resources(
+        vec![simple_gift_boxes.resource_address(&mut env)?],
+        &mut env,
+    )?;
     gift_box_opener_v2.open_gift_boxes(
-        hero_badge_proof.clone(&mut env)?,
+        hero_badge.create_proof_of_all(&mut env)?,
         simple_gift_boxes,
         &mut env,
     )?;
+    gift_box_opener_v2.deposit_gift_box_rewards(
+        vec![RewardDeposit {
+            user_id: user_id.clone(),
+            gift_box_count: dec!(2),
+            rewards,
+        }],
+        &mut env,
+    )?;
+    gift_box_opener_v2.claim_gift_box_rewards(
+        hero_badge.create_proof_of_all(&mut env)?,
+        10,
+        &mut env,
+    )?;
+
+    // Act
+    let result = gift_box_opener_v2.get_user_gift_box_counts(user_id, &mut env);
+
+    // Assert
+    assert!(result.is_ok());
+    assert_eq!(
+        result.unwrap(),
+        GiftBoxCounts {
+            opened: dec!(2),
+            claimed: dec!(2),
+            recalled: dec!(0)
+        }
+    );
+    Ok(())
+}
+
+#[test]
+fn test_open_deposit_and_claim_in_batch() -> Result<(), RuntimeError> {
+    let Test {
+        mut env,
+        mut gift_box_opener_v2,
+        fancy_gift_boxes,
+        admin_badge_proof,
+        hero_badge_proof,
+        user_id,
+        rewards,
+        ..
+    } = arrange_test_environment()?;
+
+    let fancy_gift_boxes1 = fancy_gift_boxes.take(dec!(1), &mut env)?;
+    let fancy_gift_boxes2 = fancy_gift_boxes.take(dec!(2), &mut env)?;
+    let fancy_gift_boxes3 = fancy_gift_boxes.take(dec!(3), &mut env)?;
+    let fancy_gift_boxes4 = fancy_gift_boxes.take(dec!(4), &mut env)?;
+
+    // Add gift box resource manager
+    LocalAuthZone::push(admin_badge_proof.clone(&mut env)?, &mut env)?;
+    gift_box_opener_v2
+        .add_gift_box_resources(vec![fancy_gift_boxes.resource_address(&mut env)?], &mut env)?;
+    LocalAuthZone::pop(&mut env)?.unwrap().drop(&mut env)?;
+
+    // User tries to open 6 gift boxes
     gift_box_opener_v2.open_gift_boxes(
         hero_badge_proof.clone(&mut env)?,
-        simple_gift_boxes2,
+        fancy_gift_boxes1,
         &mut env,
     )?;
     gift_box_opener_v2.open_gift_boxes(
         hero_badge_proof.clone(&mut env)?,
-        simple_gift_boxes3,
+        fancy_gift_boxes2,
+        &mut env,
+    )?;
+    gift_box_opener_v2.open_gift_boxes(
+        hero_badge_proof.clone(&mut env)?,
+        fancy_gift_boxes3,
         &mut env,
     )?;
 
@@ -587,12 +753,12 @@ fn test_open_deposit_and_claim_in_batch() -> Result<(), RuntimeError> {
         vec![
             RewardDeposit {
                 user_id: user_id.clone(),
-                gift_box_count: dec!(1.5),
+                gift_box_count: dec!(1),
                 rewards,
             },
             RewardDeposit {
                 user_id: user_id.clone(),
-                gift_box_count: dec!(0.5),
+                gift_box_count: dec!(2),
                 rewards: rewards2,
             },
         ],
@@ -608,17 +774,17 @@ fn test_open_deposit_and_claim_in_batch() -> Result<(), RuntimeError> {
     // User claim in batch of size 2
     gift_box_opener_v2.claim_gift_box_rewards(hero_badge_proof.clone(&mut env)?, 2, &mut env)?;
 
-    // Open the 4th gift box
+    // Open the gift boxes in the 4th bucket
     gift_box_opener_v2.open_gift_boxes(
         hero_badge_proof.clone(&mut env)?,
-        simple_gift_boxes4,
+        fancy_gift_boxes4,
         &mut env,
     )?;
 
     let counts = gift_box_opener_v2.get_user_gift_box_counts(user_id, &mut env)?;
-    assert_eq!(counts.opened, dec!(2));
-    assert_eq!(counts.claimed, dec!(1.5));
-    assert_eq!(counts.recalled, dec!(0.5));
+    assert_eq!(counts.opened, dec!(10));
+    assert_eq!(counts.claimed, dec!(1));
+    assert_eq!(counts.recalled, dec!(2));
 
     // Further claim should fail
     gift_box_opener_v2

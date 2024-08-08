@@ -368,12 +368,12 @@ mod gift_box_opener_v2 {
         pub fn retract_gift_box_rewards(
             &mut self,
             user_ids: Vec<UserId>,
-            max_reward_per_user_count: usize,
+            max_reward_count_per_user: usize,
         ) -> Vec<Bucket> {
             let mut retracted_rewards = Vec::<Bucket>::new();
             for user_id in user_ids {
                 let reward_records_to_revoke =
-                    self.take_users_n_latest_reward_records(&user_id, max_reward_per_user_count);
+                    self.take_users_n_latest_reward_records(&user_id, max_reward_count_per_user);
 
                 for reward_record in reward_records_to_revoke {
                     self.user_gift_box_counts
