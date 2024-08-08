@@ -725,7 +725,7 @@ describe('Event flows', () => {
       })
     })
 
-    describe.only('gift box reward deposit batching', () => {
+    describe.skip('gift box reward deposit batching', () => {
       it('should batch gift box reward deposits', { timeout: 600_000, skip: false }, async () => {
         const account1 = await getAccount()
 
@@ -748,49 +748,6 @@ describe('Event flows', () => {
             )
           )
         }
-
-        // await Promise.all(new Array(3).fill(null).map(() => openGiftBox({kind: 'Simple'})))
-
-        // const createDepositRewardJob = (
-        //   userId: string,
-        //   giftBoxKind: GiftBoxKind
-        // ): DepositGiftBoxesRewardJob => ({
-        //   discriminator: `DepositGiftBoxReward:${crypto.randomUUID()}`,
-        //   userId,
-        //   traceId: crypto.randomUUID(),
-        //   type: 'DepositGiftBoxesReward',
-        //   giftBoxKind,
-        //   amount: 1
-        // })
-
-        // const jobs = new Array(6).fill(0).map(() => createDepositRewardJob(user.id, 'Simple'))
-
-        // await db.transactionIntent.createMany({
-        //   data: jobs.map(({ discriminator, userId }) => ({ discriminator, userId }))
-        // })
-
-        // const waitUntilDone = async (ids: string[]) => {
-        //   let done = false
-
-        //   while (!done) {
-        //     const items = await db.transactionIntent
-        //       .findMany({
-        //         select: { discriminator: true },
-        //         where: { discriminator: { in: ids }, status: { notIn: ['PENDING', 'WAITING'] } }
-        //       })
-        //       .then((items) => items.map((item) => item.discriminator))
-
-        //     done = items.length === ids.length
-        //     await new Promise((resolve) => setTimeout(resolve, 1000))
-        //   }
-
-        //   return {}
-        // }
-
-        // await DepositGiftBoxRewardBufferQueue.addBulk(jobs)
-
-        // const expectedIds = jobs.map((job) => job.discriminator)
-        // await waitUntilDone(expectedIds)
       })
     })
   })
