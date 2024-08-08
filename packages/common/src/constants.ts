@@ -37,7 +37,7 @@ export const Addresses = (networkId: number) => {
         radQuestPackage: 'package_tdx_2_1phu0zmcx0s92ha5rgnjruysq58kr48qpf8cqgk3y2rmxhhke7jgtqw',
         clamDexPackage: 'package_tdx_2_1pk54w09fwqv9resal68ee43y2gzjm3m0kfw0sjhnhrpw5w8kzxgvc6',
         giftBoxOpenerV2Package:
-          'package_tdx_2_1phw4hejk4tjrha08edrvmv45v6ud7r2t5n2hark2mtr59la9v6u32m',
+          'package_tdx_2_1p55l3syf2lukjyy6srelrq6mpd5vf3u7lqy77wtnp6n2zvku8xf3d6',
         radgemForgeV2Package:
           'package_tdx_2_1p4p33jnqt5hx9p7qp38hev3extfqpnxjxcnuw9q6pz653t8jfzrllf',
         components: {
@@ -51,7 +51,7 @@ export const Addresses = (networkId: number) => {
           imageOracle: 'component_tdx_2_1cqc8z3t3jtn9ryrztfw59klnxwt2lfwmwvfc7r485uq7qulwxq7pkd',
           refinery: 'component_tdx_2_1cp4dw84qxcncwncg5mkkht2cqg2906kpy2wx76xa8720pxy2js0ggh',
           giftBoxOpenerV2:
-            'component_tdx_2_1cznntlcv6me5664z4l56afuu984cmcncwnyfhv97mmalm42rd7nn7l',
+            'component_tdx_2_1czvfn7wtgensyfwjn729n3mkxl83e8848uw50aar796us6pcd333mw',
           radgemForgeV2: 'component_tdx_2_1cr9sd3lfaxw679879lnp0zs08de4leakfqgxdvmjnve8zpcgh9dtlm',
           kycOracleKeyValueStore:
             'internal_keyvaluestore_tdx_2_1kq4cuyae3uuw9ss06an9cdhd577p7gjnkfqm7mwqvsdyecqe4syxql',
