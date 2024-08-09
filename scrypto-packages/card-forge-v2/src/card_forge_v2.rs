@@ -20,7 +20,7 @@ pub struct MorphEnergyCardData {
 struct MintedCard {
     user_id: UserId,
     local_id: NonFungibleLocalId,
-    morph_card_data: MorphEnergyCardData,
+    card_data: MorphEnergyCardData,
 }
 
 #[blueprint]
@@ -42,7 +42,7 @@ mod card_forge_v2 {
         enabled: bool,
         super_admin_badge_address: ResourceAddress,
         admin_badge: FungibleVault,
-        morph_card_resource_manager: ResourceManager,
+        card_resource_manager: ResourceManager,
     }
 
     impl CardForgeV2 {
@@ -51,7 +51,7 @@ mod card_forge_v2 {
             owner_role: OwnerRole,
             dapp_definition: ComponentAddress,
             admin_badge: Bucket,
-            morph_card_address: ResourceAddress,
+            card_address: ResourceAddress,
         ) -> Global<CardForgeV2> {
             let admin_badge_address = admin_badge.resource_address();
 
@@ -59,7 +59,7 @@ mod card_forge_v2 {
                 enabled: true,
                 super_admin_badge_address,
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
-                morph_card_resource_manager: ResourceManager::from(morph_card_address),
+                card_resource_manager: ResourceManager::from(card_address),
             }
             .instantiate()
             .prepare_to_globalize(owner_role)
@@ -84,33 +84,32 @@ mod card_forge_v2 {
             self.enabled = true;
         }
 
-        fn mint_card(&mut self, morph_card_data: MorphEnergyCardData) -> Bucket {
+        fn mint_card(&mut self, card_data: MorphEnergyCardData) -> Bucket {
             self.admin_badge.authorize_with_amount(1, || {
-                self.morph_card_resource_manager
-                    .mint_ruid_non_fungible(morph_card_data)
+                self.card_resource_manager.mint_ruid_non_fungible(card_data)
             })
         }
 
         pub fn mint_cards(
             &mut self,
-            user_morph_card_data: Vec<(UserId, MorphEnergyCardData)>,
+            user_card_data: Vec<(UserId, MorphEnergyCardData)>,
         ) -> Vec<Bucket> {
             assert!(self.enabled, "MorphCard component disabled");
 
-            let cards: Vec<Bucket> = user_morph_card_data
+            let cards: Vec<Bucket> = user_card_data
                 .clone()
                 .into_iter()
-                .map(|(_, morph_card_data)| self.mint_card(morph_card_data))
+                .map(|(_, card_data)| self.mint_card(card_data))
                 .collect();
 
             Runtime::emit_event(MorphEnergyCardsMintedEvent(
-                user_morph_card_data
+                user_card_data
                     .into_iter()
                     .enumerate()
-                    .map(|(i, (user_id, morph_card_data))| MintedCard {
+                    .map(|(i, (user_id, card_data))| MintedCard {
                         user_id,
                         local_id: cards[i].as_non_fungible().non_fungible_local_id(),
-                        morph_card_data,
+                        card_data,
                     })
                     .collect(),
             ));
