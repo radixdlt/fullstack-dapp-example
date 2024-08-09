@@ -1,9 +1,52 @@
 <script lang="ts">
-  import { Button, Heading } from 'flowbite-svelte'
+  import { Heading, Dropdown, Button, Checkbox } from 'flowbite-svelte'
+  import { ChevronDownOutline } from 'flowbite-svelte-icons'
 
-  const rehydrate = () =>
+  type WorkerError = (typeof WorkerError)[keyof typeof WorkerError]
+  const WorkerError = {
+    FailedToGetUserFromDb: 'FailedToGetUserFromDb',
+    FailedToSubmitToRadixNetwork: 'FailedToSubmitToRadixNetwork',
+    FailedToPollTransactionStatus: 'FailedToPollTransactionStatus',
+    FailedToGetManifestBuilder: 'FailedToGetManifestBuilder',
+    FailedToGetPartialRewards: 'FailedToGetPartialRewards',
+    FailedToSendReferralRewards: 'FailedToSendReferralRewards',
+    FailedToConvertStringManifest: 'FailedToConvertStringManifest',
+    FailedToSetTransactionId: 'FailedToSetTransactionId',
+    FailedToGetImageUrl: 'FailedToGetImageUrl',
+    FailedToGetTotalRewardedUsdAmount: 'FailedToGetTotalRewardedUsdAmount',
+    FailedToSetPendingStatus: 'FailedToSetPendingStatus',
+    FailedToSetCompletedStatus: 'FailedToSetCompletedStatus',
+    FailedToGetUserIdFromBadgeId: 'FailedToGetUserIdFromBadgeId',
+    FailedToGetXrdPrice: 'FailedToGetXrdPrice',
+    FailedToAddAuditEntry: 'FailedToAddAuditEntry',
+    FailedToGetTransactionFromDb: 'FailedToGetTransactionFromDb',
+    MissingTransactionInDb: 'MissingTransactionInDb',
+    UnhandledJob: 'UnhandledJob',
+    FeatureDisabled: 'FeatureDisabled',
+    FailedToSendMessage: 'FailedToSendMessage',
+    GatewayError: 'GatewayError',
+    HeroBadgeAlreadyClaimed: 'HeroBadgeAlreadyClaimed',
+    FailedToExecuteDbTransaction: 'FailedToExecuteDbTransaction',
+    FailedToDeriveUserIdFromBadgeId: 'FailedToDeriveUserIdFromBadgeId',
+    UserNotFound: 'UserNotFound',
+    UserDisabledXrdDeposit: 'UserDisabledXrdDeposit',
+    FailedToCreateMessageInDb: 'FailedToCreateMessageInDb',
+    FailedToUpdateTransactionIntentStatus: 'FailedToUpdateTransactionIntentStatus',
+    FailedToUpdateReferralReward: 'FailedToUpdateReferralReward',
+    FailedToGetKeyPairs: 'FailedToGetKeyPairs',
+    TransactionFailed: 'TransactionFailed',
+    FailedToUpdateSubmittedTransaction: 'FailedToUpdateSubmittedTransaction',
+    CouldNotGetXrdCurrentPriceError: 'CouldNotGetXrdCurrentPriceError',
+    FailedToQueryDb: 'FailedToQueryDb',
+    TemporarySkip: 'TemporarySkip',
+    FailedToCreateRadGem: 'FailedToCreateRadGem',
+    MissingPhoneNumber: 'MissingPhoneNumber'
+  } as const
+
+  const rehydrate = (errors?: WorkerError[]) =>
     fetch(`/scripts/rehydrate`, {
-      method: 'POST'
+      method: 'POST',
+      body: JSON.stringify({ errors })
     })
 
   const lettySwap = () =>
@@ -15,12 +58,32 @@
     fetch(`/scripts/kyc-badge`, {
       method: 'POST'
     })
+
+  let checkedErrors: boolean[] = Array(Object.keys(WorkerError).length).fill(false)
+
+  $: checkedErrorsMapping = Object.keys(WorkerError).filter(
+    (_, i) => checkedErrors[i]
+  ) as WorkerError[]
 </script>
 
 <Heading class="p-4 text-lg font-semibold text-gray-900 dark:text-white">Scripts</Heading>
 <div class="p-4">
+  <Button
+    >Select errors to retry<ChevronDownOutline
+      class="w-6 h-4 ms-2 text-white dark:text-white"
+    /></Button
+  >
+  <Dropdown class="p-3 space-y-3 text-sm overflow-y-auto h-48">
+    {#each Object.keys(WorkerError) as error, i}
+      <Checkbox bind:checked={checkedErrors[i]}>{error}</Checkbox>
+    {/each}
+  </Dropdown>
+  <Button class="block mb-5 mt-5 inline" on:click={() => rehydrate(checkedErrorsMapping)}
+    >Retry failed jobs with errors in message queues</Button
+  >
+
   <Button class="block mb-5" on:click={() => rehydrate()}
-    >Retry failed jobs in message queues</Button
+    >Retry all failed jobs in message queues</Button
   >
 
   <Button class="block mb-5" on:click={() => lettySwap()}>Update Letty swap dApp Definition</Button>

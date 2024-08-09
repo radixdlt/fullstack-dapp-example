@@ -1,13 +1,24 @@
 import { json } from '@sveltejs/kit'
 import { EventId } from 'common'
+import type { TransactionIntent } from 'database'
 import type { TransactionJob } from 'queues'
 
-export const POST = async ({ locals }) => {
+export const POST = async ({ locals, request }) => {
   const events = await locals.dbClient.event.findMany({ where: { status: { not: 'COMPLETED' } } })
 
-  const transactions = await locals.dbClient.transactionIntent.findMany({
-    where: { status: { not: 'COMPLETED' } }
-  })
+  const errors = await request.json().then((data) => data.errors)
+
+  let transactions: TransactionIntent[]
+
+  if (errors) {
+    transactions = await locals.dbClient.transactionIntent.findMany({
+      where: { status: { not: 'COMPLETED' }, error: { in: errors } }
+    })
+  } else {
+    transactions = await locals.dbClient.transactionIntent.findMany({
+      where: { status: { not: 'COMPLETED' } }
+    })
+  }
 
   for (const event of events) {
     const data = event.data as Record<string, unknown>
@@ -34,7 +45,7 @@ export const POST = async ({ locals }) => {
       traceId: crypto.randomUUID()
     }
     locals.logger.debug({ method: 'retryingTransactionJob', jobData })
-    await locals.eventQueue.queue.remove(jobData.discriminator)
+    await locals.transactionQueue.queue.remove(jobData.discriminator)
     await locals.transactionQueue.add(jobData)
   }
 
