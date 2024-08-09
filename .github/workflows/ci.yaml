@@ -316,6 +316,7 @@ jobs:
       context: '.'
       dockerfile: './dockerfiles/dapp.Dockerfile'
       platforms: 'linux/amd64'
+      use_gh_remote_cache: true
       scan_image: true
       provenance: false
       snyk_target_ref: ${{ github.ref_name }}
@@ -342,6 +343,7 @@ jobs:
       context: '.'
       dockerfile: './dockerfiles/jetty-swap.Dockerfile'
       platforms: 'linux/amd64'
+      use_gh_remote_cache: true
       scan_image: true
       provenance: false
       snyk_target_ref: ${{ github.ref_name }}
@@ -367,6 +369,7 @@ jobs:
       context: '.'
       dockerfile: './dockerfiles/admin.Dockerfile'
       platforms: 'linux/amd64'
+      use_gh_remote_cache: true
       scan_image: true
       provenance: false
       snyk_target_ref: ${{ github.ref_name }}
@@ -392,6 +395,7 @@ jobs:
       context: '.'
       dockerfile: './dockerfiles/notification.Dockerfile'
       platforms: 'linux/amd64'
+      use_gh_remote_cache: true
       scan_image: true
       provenance: false
       snyk_target_ref: ${{ github.ref_name }}
@@ -414,6 +418,7 @@ jobs:
       context: '.'
       dockerfile: './dockerfiles/transaction-stream.Dockerfile'
       platforms: 'linux/amd64'
+      use_gh_remote_cache: true
       scan_image: true
       provenance: false
       snyk_target_ref: ${{ github.ref_name }}
@@ -436,6 +441,7 @@ jobs:
       context: '.'
       dockerfile: './dockerfiles/workers.Dockerfile'
       platforms: 'linux/amd64'
+      use_gh_remote_cache: true
       scan_image: true
       provenance: false
       snyk_target_ref: ${{ github.ref_name }}
