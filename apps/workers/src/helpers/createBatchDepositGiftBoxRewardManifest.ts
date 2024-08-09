@@ -65,41 +65,46 @@ export const createBatchDepositGiftBoxRewardManifest = (
         return bucketName
       }
 
-      const mintEnergyCard = (energyCard: EnergyCardNfData) => {
-        const {
-          key_image_url,
-          description,
-          name,
-          energy_type,
-          rarity,
-          quality,
-          limited_edition,
-          energy_description
-        } = energyCard
-
-        addToManifest(
-          `CALL_METHOD
-            Address("${config.radQuest.components.cardForge}")
-            "mint_card"
-            "${userId}"
-            "${key_image_url}"
-            "${name}"
-            "${description}"
-            "${energy_type}"
-            "${energy_description}"
-            "${rarity}"
-            Decimal("${quality}")
-            ${limited_edition}
-          ;`,
-
-          `TAKE_ALL_FROM_WORKTOP
-            Address("${morphEnergyCardAddress}")
-            Bucket("${createBucket('card')}")
-          ;`
+      const mintCardInput = energyCards
+        .map(
+          ({
+            key_image_url,
+            description,
+            name,
+            energy_type,
+            rarity,
+            quality,
+            limited_edition,
+            energy_description
+          }) =>
+            `Tuple(
+            "${userId}",
+            Tuple(
+              "${key_image_url}",
+              "${name}",
+              "${description}",
+              "${energy_type}",
+              "${energy_description}",
+              "${rarity}",
+              Decimal("${quality}"),
+              ${limited_edition},
+            )
+          )`
         )
-      }
+        .join(', ')
 
-      energyCards.forEach(mintEnergyCard)
+      addToManifest(
+        `CALL_METHOD
+          Address("${config.radQuest.components.cardForgeV2}")
+          "mint_cards"
+          Array<Tuple>(${mintCardInput})
+        ;`,
+
+        `TAKE_ALL_FROM_WORKTOP
+          Address("${morphEnergyCardAddress}")
+          Bucket("${createBucket('card')}")
+        ;`
+      )
 
       addToManifest(
         `TAKE_FROM_WORKTOP
