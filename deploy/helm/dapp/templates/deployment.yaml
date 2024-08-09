@@ -38,16 +38,16 @@ spec:
           args:
             - npx prisma migrate deploy --schema packages/database/prisma/schema.prisma
           env:
-          {{- range $key, $value := .Values.params }}
-          - name: {{ $key }}
-            value: {{ $value | quote }}
-          {{- end }}
           {{- range $secret := .Values.secrets }}
           - name: {{ $secret.env_variable }}
             valueFrom:
               secretKeyRef:
                 name: {{ $secret.external_secret_name }}
                 key: {{ $secret.secret_key }}
+          {{- end }}
+          {{- range $key, $value := .Values.params }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
           {{- end }}
       {{- end }}
       containers:
