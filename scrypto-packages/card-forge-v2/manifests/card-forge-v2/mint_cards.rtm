@@ -12,7 +12,7 @@ CALL_METHOD
 ;
 
 CALL_METHOD
-    Address("${morph_card_forge_v2}")
+    Address("${card_forge_v2}")
     "mint_cards"
     Array<Tuple>(
         Tuple(

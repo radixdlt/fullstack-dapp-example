@@ -1,12 +1,12 @@
 use scrypto::prelude::Url;
 use scrypto_test::prelude::*;
 
-use gift_box_opener_v2::morph_card_forge_v2::morph_card_forge_v2_test::*;
-use gift_box_opener_v2::morph_card_forge_v2::{MorphEnergyCardData, UserId};
+use card_forge_v2::card_forge_v2::card_forge_v2_test::*;
+use card_forge_v2::card_forge_v2::{MorphEnergyCardData, UserId};
 
 struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,
-    morph_card_forge_v2: MorphCardForgeV2,
+    card_forge_v2: CardForgeV2,
     super_admin_badge_proof: Proof,
     admin_badge_proof: Proof,
 }
@@ -32,7 +32,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         })
         .mint_initial_supply([], &mut env)?;
 
-    let morph_card_forge_v2 = MorphCardForgeV2::new(
+    let card_forge_v2 = CardForgeV2::new(
         super_admin_badge.resource_address(&mut env)?,
         OwnerRole::Fixed(rule!(require(
             super_admin_badge.resource_address(&mut env)?
@@ -49,7 +49,7 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
 
     Ok(Test {
         env,
-        morph_card_forge_v2,
+        card_forge_v2,
         super_admin_badge_proof,
         admin_badge_proof,
     })
@@ -66,13 +66,13 @@ fn can_instantiate_morph_card_forge() -> Result<(), RuntimeError> {
 fn can_mint_morph_cards() -> Result<(), RuntimeError> {
     let Test {
         mut env,
-        mut morph_card_forge_v2,
+        mut card_forge_v2,
         admin_badge_proof,
         ..
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    let result = morph_card_forge_v2.mint_cards(
+    let result = card_forge_v2.mint_cards(
         vec![(
             UserId("<test_123>".to_string()),
             MorphEnergyCardData {
@@ -111,19 +111,19 @@ pub fn can_disable_morph_card_forge() -> Result<(), RuntimeError> {
     //Arrange
     let Test {
         mut env,
-        mut morph_card_forge_v2,
+        mut card_forge_v2,
         super_admin_badge_proof,
         ..
     } = arrange_test_environment()?;
 
     //Act
     LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
-    morph_card_forge_v2.disable(&mut env)?;
+    card_forge_v2.disable(&mut env)?;
 
     //Assert
     env.with_component_state(
-        morph_card_forge_v2,
-        |card_forge_state: &mut MorphCardForgeV2State, _| {
+        card_forge_v2,
+        |card_forge_state: &mut CardForgeV2State, _| {
             assert!(!card_forge_state.enabled);
         },
     )?;
@@ -136,18 +136,18 @@ pub fn cannot_mint_card_when_disabled() -> Result<(), RuntimeError> {
     //Arrange
     let Test {
         mut env,
-        mut morph_card_forge_v2,
+        mut card_forge_v2,
         super_admin_badge_proof,
         admin_badge_proof,
         ..
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
-    morph_card_forge_v2.disable(&mut env)?;
+    card_forge_v2.disable(&mut env)?;
 
     //Act
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    let result = morph_card_forge_v2.mint_cards(
+    let result = card_forge_v2.mint_cards(
         vec![(
             UserId("<test_123>".to_string()),
             MorphEnergyCardData {
@@ -179,19 +179,19 @@ pub fn can_enable_then_mint_card_when_disabled() -> Result<(), RuntimeError> {
     //Arrange
     let Test {
         mut env,
-        mut morph_card_forge_v2,
+        mut card_forge_v2,
         super_admin_badge_proof,
         admin_badge_proof,
         ..
     } = arrange_test_environment()?;
 
     LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
-    morph_card_forge_v2.disable(&mut env)?;
+    card_forge_v2.disable(&mut env)?;
 
     //Act
-    morph_card_forge_v2.enable(&mut env)?;
+    card_forge_v2.enable(&mut env)?;
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    let result = morph_card_forge_v2.mint_cards(
+    let result = card_forge_v2.mint_cards(
         vec![(
             UserId("<test_123>".to_string()),
             MorphEnergyCardData {

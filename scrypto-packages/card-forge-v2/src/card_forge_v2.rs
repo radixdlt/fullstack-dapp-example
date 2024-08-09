@@ -17,15 +17,15 @@ pub struct MorphEnergyCardData {
 }
 
 #[derive(ScryptoSbor, PartialEq, Eq, Debug, Clone)]
-struct MintedMorphCard {
+struct MintedCard {
     user_id: UserId,
     local_id: NonFungibleLocalId,
     morph_card_data: MorphEnergyCardData,
 }
 
 #[blueprint]
-#[events(MorphCardsMintedEvent)]
-mod morph_card_forge_v2 {
+#[events(MorphEnergyCardsMintedEvent)]
+mod card_forge_v2 {
     enable_method_auth! {
       roles {
         admin => updatable_by: [OWNER];
@@ -38,21 +38,21 @@ mod morph_card_forge_v2 {
       }
     }
 
-    struct MorphCardForgeV2 {
+    struct CardForgeV2 {
         enabled: bool,
         super_admin_badge_address: ResourceAddress,
         admin_badge: FungibleVault,
         morph_card_resource_manager: ResourceManager,
     }
 
-    impl MorphCardForgeV2 {
+    impl CardForgeV2 {
         pub fn new(
             super_admin_badge_address: ResourceAddress,
             owner_role: OwnerRole,
             dapp_definition: ComponentAddress,
             admin_badge: Bucket,
             morph_card_address: ResourceAddress,
-        ) -> Global<MorphCardForgeV2> {
+        ) -> Global<CardForgeV2> {
             let admin_badge_address = admin_badge.resource_address();
 
             Self {
@@ -103,11 +103,11 @@ mod morph_card_forge_v2 {
                 .map(|(_, morph_card_data)| self.mint_card(morph_card_data))
                 .collect();
 
-            Runtime::emit_event(MorphCardsMintedEvent(
+            Runtime::emit_event(MorphEnergyCardsMintedEvent(
                 user_morph_card_data
                     .into_iter()
                     .enumerate()
-                    .map(|(i, (user_id, morph_card_data))| MintedMorphCard {
+                    .map(|(i, (user_id, morph_card_data))| MintedCard {
                         user_id,
                         local_id: cards[i].as_non_fungible().non_fungible_local_id(),
                         morph_card_data,
@@ -121,4 +121,4 @@ mod morph_card_forge_v2 {
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
-pub struct MorphCardsMintedEvent(Vec<MintedMorphCard>);
+pub struct MorphEnergyCardsMintedEvent(Vec<MintedCard>);
