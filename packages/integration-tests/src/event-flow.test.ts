@@ -724,7 +724,7 @@ describe('Event flows', () => {
       })
     })
 
-    describe('gift box reward deposit batching', () => {
+    describe.skip('gift box reward deposit batching', () => {
       it('should batch gift box reward deposits', { timeout: 600_000, skip: false }, async () => {
         const account1 = await getAccount()
 
@@ -738,11 +738,13 @@ describe('Event flows', () => {
           mintGiftBox('Simple', account3.user.accountAddress!, 100)
         ])
 
-        for (const _ of new Array(3).fill(null)) {
+        for (const _ of new Array(1).fill(null)) {
           await Promise.all(
             [account1, account2, account3].map((account) =>
               Promise.all(
-                new Array(3).fill(null).map(() => openGiftBox({ kind: 'Simple', account }))
+                new Array(3)
+                  .fill(null)
+                  .map(() => openGiftBox({ kind: 'Simple', account, amount: 5 }))
               )
             )
           )

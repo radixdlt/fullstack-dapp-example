@@ -65,18 +65,19 @@ export const createBatchDepositGiftBoxRewardManifest = (
         return bucketName
       }
 
-      const mintCardInput = energyCards.map(
-        ({
-          key_image_url,
-          description,
-          name,
-          energy_type,
-          rarity,
-          quality,
-          limited_edition,
-          energy_description
-        }) =>
-          `Tuple(
+      const mintCardInput = energyCards
+        .map(
+          ({
+            key_image_url,
+            description,
+            name,
+            energy_type,
+            rarity,
+            quality,
+            limited_edition,
+            energy_description
+          }) =>
+            `Tuple(
             "${userId}",
             Tuple(
               "${key_image_url}",
@@ -89,7 +90,8 @@ export const createBatchDepositGiftBoxRewardManifest = (
               ${limited_edition},
             )
           )`
-      )
+        )
+        .join(', ')
 
       addToManifest(
         `CALL_METHOD

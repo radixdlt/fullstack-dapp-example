@@ -557,7 +557,7 @@ export const EventWorkerController = ({
 
       case EventId.GiftBoxesOpenedEvent: {
         const giftBoxResourceAddress = job.data.data.giftBoxResourceAddress as string
-        const amount = job.data.data.quantity as number
+        const amount = parseInt(job.data.data.quantity as string)
         return getGiftBoxKindByResourceAddress(giftBoxResourceAddress)
           .asyncAndThen((giftBoxKind) =>
             transactionIntent.add({
