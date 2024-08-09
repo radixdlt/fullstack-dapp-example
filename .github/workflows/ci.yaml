@@ -305,7 +305,7 @@ jobs:
       - setup-tags
       - snyk-scan-deps-licences
       - snyk-scan-code
-    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@test-cache
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
     with:
       runs_on: ubuntu-latest
       image_registry: 'docker.io'
@@ -332,7 +332,7 @@ jobs:
       - setup-tags
       - snyk-scan-deps-licences
       - snyk-scan-code
-    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@test-cache
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
     with:
       runs_on: ubuntu-latest
       image_registry: 'docker.io'
@@ -358,7 +358,7 @@ jobs:
       - setup-tags
       - snyk-scan-deps-licences
       - snyk-scan-code
-    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@test-cache
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
     with:
       runs_on: ubuntu-latest
       image_registry: 'docker.io'
@@ -384,7 +384,7 @@ jobs:
       - setup-tags
       - snyk-scan-deps-licences
       - snyk-scan-code
-    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@test-cache
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
     with:
       runs_on: ubuntu-latest
       image_registry: 'docker.io'
@@ -407,7 +407,7 @@ jobs:
       - setup-tags
       - snyk-scan-deps-licences
       - snyk-scan-code
-    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@test-cache
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
     with:
       runs_on: ubuntu-latest
       image_registry: 'docker.io'
@@ -430,7 +430,7 @@ jobs:
       - setup-tags
       - snyk-scan-deps-licences
       - snyk-scan-code
-    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@test-cache
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
     with:
       runs_on: ubuntu-latest
       image_registry: 'docker.io'
