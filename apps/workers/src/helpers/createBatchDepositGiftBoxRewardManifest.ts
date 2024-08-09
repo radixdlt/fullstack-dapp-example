@@ -65,8 +65,8 @@ export const createBatchDepositGiftBoxRewardManifest = (
         return bucketName
       }
 
-      const mintEnergyCard = (energyCard: EnergyCardNfData) => {
-        const {
+      const mintCardInput = energyCards.map(
+        ({
           key_image_url,
           description,
           name,
@@ -75,31 +75,34 @@ export const createBatchDepositGiftBoxRewardManifest = (
           quality,
           limited_edition,
           energy_description
-        } = energyCard
+        }) =>
+          `Tuple(
+            "${userId}",
+            Tuple(
+              "${key_image_url}",
+              "${name}",
+              "${description}",
+              "${energy_type}",
+              "${energy_description}",
+              "${rarity}",
+              Decimal("${quality}"),
+              ${limited_edition},
+            )
+          )`
+      )
 
-        addToManifest(
-          `CALL_METHOD
-            Address("${config.radQuest.components.cardForge}")
-            "mint_card"
-            "${userId}"
-            "${key_image_url}"
-            "${name}"
-            "${description}"
-            "${energy_type}"
-            "${energy_description}"
-            "${rarity}"
-            Decimal("${quality}")
-            ${limited_edition}
-          ;`,
+      addToManifest(
+        `CALL_METHOD
+          Address("${config.radQuest.components.cardForgeV2}")
+          "mint_cards"
+          Array<Tuple>(${mintCardInput})
+        ;`,
 
-          `TAKE_ALL_FROM_WORKTOP
-            Address("${morphEnergyCardAddress}")
-            Bucket("${createBucket('card')}")
-          ;`
-        )
-      }
-
-      energyCards.forEach(mintEnergyCard)
+        `TAKE_ALL_FROM_WORKTOP
+          Address("${morphEnergyCardAddress}")
+          Bucket("${createBucket('card')}")
+        ;`
+      )
 
       addToManifest(
         `TAKE_FROM_WORKTOP
