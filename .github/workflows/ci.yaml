@@ -180,6 +180,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Cache Node.js modules
+        uses: RDXWorks-actions/cache@main
+        with:
+          path: |
+            node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
       - name: Get changed svelte files
         id: changed-svelte-files
         uses: RDXWorks-actions/changed-files@main
@@ -306,7 +316,8 @@ jobs:
       context: '.'
       dockerfile: './dockerfiles/dapp.Dockerfile'
       platforms: 'linux/amd64'
-      scan_image: true
+      use_gh_remote_cache: true
+      scan_image: false
       provenance: false
       snyk_target_ref: ${{ github.ref_name }}
       with_sbom: false
@@ -332,7 +343,8 @@ jobs:
       context: '.'
       dockerfile: './dockerfiles/jetty-swap.Dockerfile'
       platforms: 'linux/amd64'
-      scan_image: true
+      use_gh_remote_cache: true
+      scan_image: false
       provenance: false
       snyk_target_ref: ${{ github.ref_name }}
       with_sbom: false
@@ -357,7 +369,8 @@ jobs:
       context: '.'
       dockerfile: './dockerfiles/admin.Dockerfile'
       platforms: 'linux/amd64'
-      scan_image: true
+      use_gh_remote_cache: true
+      scan_image: false
       provenance: false
       snyk_target_ref: ${{ github.ref_name }}
       with_sbom: false
@@ -382,7 +395,8 @@ jobs:
       context: '.'
       dockerfile: './dockerfiles/notification.Dockerfile'
       platforms: 'linux/amd64'
-      scan_image: true
+      use_gh_remote_cache: true
+      scan_image: false
       provenance: false
       snyk_target_ref: ${{ github.ref_name }}
       with_sbom: false
@@ -404,7 +418,8 @@ jobs:
       context: '.'
       dockerfile: './dockerfiles/transaction-stream.Dockerfile'
       platforms: 'linux/amd64'
-      scan_image: true
+      use_gh_remote_cache: true
+      scan_image: false
       provenance: false
       snyk_target_ref: ${{ github.ref_name }}
       with_sbom: false
@@ -426,7 +441,8 @@ jobs:
       context: '.'
       dockerfile: './dockerfiles/workers.Dockerfile'
       platforms: 'linux/amd64'
-      scan_image: true
+      use_gh_remote_cache: true
+      scan_image: false
       provenance: false
       snyk_target_ref: ${{ github.ref_name }}
       with_sbom: false
