@@ -12,14 +12,9 @@ params:
   LOG_LEVEL: debug
   PUBLIC_NETWORK_ID: 2
   GATEWAY_URL: https://stokenet.radixdlt.com
+  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_READ):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?schema=public
 
 secrets:
-
-  - external_secret_name: ro-transaction-database-url
-    env_variable: "RO_DATABASE_URL"
-    aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
-    aws_secret_key: "ro-database-url"
-    secret_key: "ro-database-url"
 
   - external_secret_name: transaction-stream-postgres-user
     env_variable: "POSTGRES_USER"
