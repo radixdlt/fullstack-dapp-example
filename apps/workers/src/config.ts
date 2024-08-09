@@ -42,6 +42,16 @@ export const config = {
     },
     system: {
       concurrency: parseInt(process.env.SYSTEM_WORKER_CONCURRENCY ?? '1')
+    },
+    depositGiftBoxRewardBuffer: {
+      concurrency: parseInt(process.env.DEPOSIT_GIFT_BOX_REWARD_BUFFER_WORKER_CONCURRENCY ?? '1'),
+      batchSize: parseInt(process.env.DEPOSIT_GIFT_BOX_REWARD_BUFFER_WORKER_BATCH_SIZE ?? '10'),
+      batchInterval: parseInt(
+        process.env.DEPOSIT_GIFT_BOX_REWARD_BUFFER_WORKER_BATCH_INTERVAL ?? '100'
+      )
+    },
+    depositGiftBoxReward: {
+      concurrency: parseInt(process.env.DEPOSIT_GIFT_BOX_REWARD_WORKER_CONCURRENCY ?? '2')
     }
   }
 }

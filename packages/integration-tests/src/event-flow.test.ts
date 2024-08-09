@@ -19,7 +19,7 @@ import {
   createAppLogger
 } from 'common'
 import { PrismaClient, User } from 'database'
-import { ResultAsync, errAsync } from 'neverthrow'
+import { errAsync } from 'neverthrow'
 import { Queues, RedisConnection, getQueues } from 'queues'
 import { config } from './config'
 import { QueueEvents } from 'bullmq'
@@ -605,23 +605,16 @@ describe('Event flows', () => {
   })
 
   describe('giftbox', async () => {
-    beforeAll(async () => {
-      const { user } = await getAccount()
-      const mintGiftBoxes = async () =>
-        await ResultAsync.combine([
-          mintGiftBox('Starter', user.accountAddress!),
-          mintGiftBox('Simple', user.accountAddress!),
-          mintGiftBox('Fancy', user.accountAddress!),
-          mintGiftBox('Elite', user.accountAddress!)
-        ])
-
-      const mintGiftBoxesResult = await mintGiftBoxes()
-
-      if (mintGiftBoxesResult.isErr()) throw mintGiftBoxesResult.error
-    }, 60_000)
-
-    const openGiftBox = async (kind: GiftBoxKind) => {
-      const { submitTransaction, user } = await getAccount()
+    const openGiftBox = async ({
+      kind,
+      amount = 1,
+      account
+    }: {
+      kind: GiftBoxKind
+      amount?: number
+      account?: Awaited<ReturnType<typeof getAccount>>
+    }) => {
+      const { submitTransaction, user } = account ?? (await getAccount())
       const openGiftBoxResult = await submitTransaction(`
         CALL_METHOD
           Address("${user.accountAddress}")
@@ -646,7 +639,7 @@ describe('Event flows', () => {
           Address("${user.accountAddress}")
           "withdraw"
           Address("${addresses.resources.giftBox[kind]}")
-          Decimal("1")
+          Decimal("${amount}")
         ;
 
         TAKE_ALL_FROM_WORKTOP
@@ -655,8 +648,8 @@ describe('Event flows', () => {
         ;
 
         CALL_METHOD
-          Address("${addresses.components.giftBoxOpener}")
-          "open_gift_box"
+          Address("${addresses.components.giftBoxOpenerV2}")
+          "open_gift_boxes"
           Proof("hero_badge_proof")
           Bucket("gift_box")
         ;
@@ -685,7 +678,7 @@ describe('Event flows', () => {
             Proof("hero_badge_proof")
         ;
         CALL_METHOD
-            Address("${addresses.components.giftBoxOpener}")
+            Address("${addresses.components.giftBoxOpenerV2}")
             "claim_gift_box_rewards"
             Proof("hero_badge_proof")
         ;
@@ -697,32 +690,64 @@ describe('Event flows', () => {
       if (result.isErr()) throw result.error
     }
 
-    it('open Starter gift box', { timeout: 60_000, skip: false }, async () => {
-      const { user } = await getAccount()
-      await openGiftBox('Starter')
-      await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
-      await claimGiftBoxReward()
+    describe('open and claim gift boxes', () => {
+      it('open Starter gift box', { timeout: 120_000, skip: false }, async () => {
+        const { user } = await getAccount()
+        await mintGiftBox('Starter', user.accountAddress!)
+        await openGiftBox({ kind: 'Starter' })
+        await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+        await claimGiftBoxReward()
+      })
+
+      it('open Simple gift box', { timeout: 60_000, skip: false }, async () => {
+        const { user } = await getAccount()
+        await mintGiftBox('Simple', user.accountAddress!)
+        await openGiftBox({ kind: 'Simple' })
+        await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+        await claimGiftBoxReward()
+      })
+
+      it('open Fancy gift box', { timeout: 60_000, skip: false }, async () => {
+        const { user } = await getAccount()
+        await mintGiftBox('Fancy', user.accountAddress!)
+        await openGiftBox({ kind: 'Fancy' })
+        await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+        await claimGiftBoxReward()
+      })
+
+      it('open Elite gift box', { timeout: 60_000, skip: false }, async () => {
+        const { user } = await getAccount()
+        await mintGiftBox('Elite', user.accountAddress!)
+        await openGiftBox({ kind: 'Elite' })
+        await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+        await claimGiftBoxReward()
+      })
     })
 
-    it('open Simple gift box', { timeout: 60_000, skip: false }, async () => {
-      const { user } = await getAccount()
-      await openGiftBox('Simple')
-      await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
-      await claimGiftBoxReward()
-    })
+    describe('gift box reward deposit batching', () => {
+      it('should batch gift box reward deposits', { timeout: 600_000, skip: false }, async () => {
+        const account1 = await getAccount()
 
-    it('open Fancy gift box', { timeout: 60_000, skip: false }, async () => {
-      const { user } = await getAccount()
-      await openGiftBox('Fancy')
-      await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
-      await claimGiftBoxReward()
-    })
+        const [account2, account3] = await Promise.all(
+          new Array(2).fill(null).map(() => createAccount({ withXrd: true, withHeroBadge: true }))
+        )
 
-    it('open Elite gift box', { timeout: 60_000, skip: false }, async () => {
-      const { user } = await getAccount()
-      await openGiftBox('Elite')
-      await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
-      await claimGiftBoxReward()
+        await Promise.all([
+          mintGiftBox('Simple', account1.user.accountAddress!, 100),
+          mintGiftBox('Simple', account2.user.accountAddress!, 100),
+          mintGiftBox('Simple', account3.user.accountAddress!, 100)
+        ])
+
+        for (const _ of new Array(3).fill(null)) {
+          await Promise.all(
+            [account1, account2, account3].map((account) =>
+              Promise.all(
+                new Array(3).fill(null).map(() => openGiftBox({ kind: 'Simple', account }))
+              )
+            )
+          )
+        }
+      })
     })
   })
 

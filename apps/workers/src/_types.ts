@@ -38,7 +38,9 @@ export const WorkerError = {
   FailedToQueryDb: 'FailedToQueryDb',
   TemporarySkip: 'TemporarySkip',
   FailedToCreateRadGem: 'FailedToCreateRadGem',
-  MissingPhoneNumber: 'MissingPhoneNumber'
+  MissingPhoneNumber: 'MissingPhoneNumber',
+  FailedToGetSubmittedTransactions: 'FailedToGetSubmittedTransactions',
+  UnhandledTransactionState: 'UnhandledTransactionState'
 } as const
 
 export type WorkerOutputError = { reason: WorkerError | TransactionHelperError; jsError?: unknown }

@@ -87,7 +87,7 @@ export type MessageApi = ReturnType<typeof MessageApi>
 export const MessageApi = ({ baseUrl, logger }: { baseUrl: string; logger?: AppLogger }) => {
   return {
     send: (userId: string, data: Message, id: number) => {
-      logger?.debug({ method: 'messageApi.send', userId, data, id })
+      logger?.trace({ method: 'messageApi.send', userId, data, id })
       return fetchWrapper<undefined>(
         fetch(`${baseUrl}/api/send`, {
           method: 'POST',
@@ -96,7 +96,7 @@ export const MessageApi = ({ baseUrl, logger }: { baseUrl: string; logger?: AppL
         })
       )
         .map(({ status }) => {
-          logger?.debug({ method: 'messageApi.send.response', data, status })
+          logger?.trace({ method: 'messageApi.send.response', data, status })
         })
         .orElse((error) => {
           if (error.status === 404) return ok(undefined)

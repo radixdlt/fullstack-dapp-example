@@ -555,6 +555,23 @@ export const EventWorkerController = ({
           .map(() => undefined)
       }
 
+      case EventId.GiftBoxesOpenedEvent: {
+        const giftBoxResourceAddress = job.data.data.giftBoxResourceAddress as string
+        const amount = job.data.data.quantity as number
+        return getGiftBoxKindByResourceAddress(giftBoxResourceAddress)
+          .asyncAndThen((giftBoxKind) =>
+            transactionIntent.add({
+              type: 'DepositGiftBoxesReward',
+              discriminator: `${EventId.GiftBoxesOpenedEvent}:${job.data.transactionId}`,
+              userId: user.id,
+              traceId: job.data.traceId,
+              giftBoxKind,
+              amount
+            })
+          )
+          .map(() => undefined)
+      }
+
       case EventId.GiftBoxDeposited: {
         const rewards = job.data.data.rewards as {
           fungibles: {

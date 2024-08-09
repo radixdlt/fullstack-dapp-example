@@ -2,10 +2,16 @@ import { type ConnectionOptions, Queue } from 'bullmq'
 import { ResultAsync } from 'neverthrow'
 import { EventId, GiftBoxKind, typedError } from 'common'
 
+type GenericJob<J = Record<string, any>, I extends keyof J = keyof J> = J & {
+  [key in I]: unknown
+}
+
 export const Queues = {
   EventQueue: 'EventQueue',
   SystemQueue: 'SystemQueue',
-  TransactionQueue: 'TransactionQueue'
+  TransactionQueue: 'TransactionQueue',
+  DepositGiftBoxRewardQueue: 'DepositGiftBoxRewardQueue',
+  DepositGiftBoxRewardBufferQueue: 'DepositGiftBoxRewardBufferQueue'
 } as const
 
 export type SystemJobType = (typeof SystemJobType)[keyof typeof SystemJobType]
@@ -26,6 +32,16 @@ export type EventJob = {
   userId: string
   data: Record<string, unknown>
 }
+
+export type DepositGiftBoxesRewardJob = GenericJob<
+  TransactionJob & DepositGiftBoxesRewardTransactionJob,
+  'discriminator'
+>
+
+export type BatchedDepositGiftBoxesRewardJob = GenericJob<
+  { id: string; items: DepositGiftBoxesRewardJob[] },
+  'id'
+>
 
 export type DepositRewardTransactionJob = {
   type: 'DepositReward'
@@ -74,6 +90,12 @@ export type DepositGiftBoxRewardTransactionJob = {
   giftBoxKind: GiftBoxKind
 }
 
+export type DepositGiftBoxesRewardTransactionJob = {
+  type: 'DepositGiftBoxesReward'
+  giftBoxKind: GiftBoxKind
+  amount: number
+}
+
 export type QuestCompletedTransactionJob = {
   type: 'QuestCompleted'
   questId: string
@@ -99,6 +121,7 @@ export type TransactionJob = {
   | DepositXrdToAccount
   | QuestCompletedTransactionJob
   | DepositGiftBoxRewardTransactionJob
+  | DepositGiftBoxesRewardTransactionJob
   | ElementsDepositedTransactionJob
 )
 
@@ -141,13 +164,56 @@ export type SystemJob =
   | UpdateLettySwapDappDefinitionSystemJob
   | UpdateKycBadgeAddressSystemJob
 
+export type DepositXrdJob = GenericJob<{
+  userId: string
+  accountAddress: string
+  traceId: string
+}>
+
 export type TQueues = ReturnType<typeof getQueues>
 export type TransactionQueue = TQueues['transactionQueue']
 export type EventQueue = TQueues['eventQueue']
 export type SystemQueue = TQueues['systemQueue']
+export type DepositGiftBoxRewardQueue = TQueues['DepositGiftBoxRewardQueue']
+export type DepositGiftBoxRewardBufferQueue = TQueues['DepositGiftBoxRewardBufferQueue']
 
 const defaultJobOptions = {
   attempts: 10
+}
+
+const createQueue = <J extends GenericJob>(
+  name: keyof typeof Queues,
+  jobIdKey: keyof J,
+  connection: ConnectionOptions
+) => {
+  const queue = new Queue<J>(name, {
+    connection,
+    defaultJobOptions
+  })
+
+  const add = (job: J) =>
+    ResultAsync.fromPromise(
+      queue.add(job[jobIdKey], job, {
+        jobId: job[jobIdKey],
+        removeOnComplete: true,
+        removeOnFail: 300
+      }),
+      typedError
+    )
+
+  const addBulk = (items: J[]) =>
+    ResultAsync.fromPromise(
+      queue.addBulk(
+        items.map((item) => ({
+          name: item[jobIdKey],
+          data: item,
+          opts: { jobId: item[jobIdKey], removeOnComplete: 100, removeOnFail: 300 }
+        }))
+      ),
+      typedError
+    )
+
+  return { queue, addBulk, add }
 }
 
 export const getQueues = (connection: ConnectionOptions) => {
@@ -209,6 +275,16 @@ export const getQueues = (connection: ConnectionOptions) => {
           typedError
         ),
       queue: systemQueue
-    }
+    },
+    [Queues.DepositGiftBoxRewardQueue]: createQueue<BatchedDepositGiftBoxesRewardJob>(
+      'DepositGiftBoxRewardQueue',
+      'id',
+      connection
+    ),
+    [Queues.DepositGiftBoxRewardBufferQueue]: createQueue<DepositGiftBoxesRewardJob>(
+      'DepositGiftBoxRewardBufferQueue',
+      'discriminator',
+      connection
+    )
   }
 }
