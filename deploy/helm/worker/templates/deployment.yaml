@@ -34,16 +34,16 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          {{- range $key, $value := .Values.params }}
-          - name: {{ $key }}
-            value: {{ $value | quote }}
-          {{- end }}
           {{- range $secret := .Values.secrets }}
           - name: {{ $secret.env_variable }}
             valueFrom:
               secretKeyRef:
                 name: {{ $secret.external_secret_name }}
                 key: {{ $secret.secret_key }}
+          {{- end }}
+          {{- range $key, $value := .Values.params }}
+          - name: {{ $key }}
+            value: {{ $value | quote }}
           {{- end }}
           ports:
             - name: http

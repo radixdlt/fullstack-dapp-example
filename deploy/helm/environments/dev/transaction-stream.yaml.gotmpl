@@ -13,6 +13,7 @@ params:
   PUBLIC_NETWORK_ID: 2
   GATEWAY_URL: https://stokenet.radixdlt.com
   RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_READ):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?schema=public
+  DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?schema=public
 
 secrets:
 
