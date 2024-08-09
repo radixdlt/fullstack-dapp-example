@@ -562,7 +562,7 @@ export const EventWorkerController = ({
           .asyncAndThen((giftBoxKind) =>
             transactionIntent.add({
               type: 'DepositGiftBoxesReward',
-              discriminator: `${EventId.GiftBoxOpened}:${job.data.transactionId}`,
+              discriminator: `${EventId.GiftBoxesOpenedEvent}:${job.data.transactionId}`,
               userId: user.id,
               traceId: job.data.traceId,
               giftBoxKind,
