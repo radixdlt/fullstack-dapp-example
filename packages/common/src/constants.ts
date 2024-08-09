@@ -38,7 +38,7 @@ export const Addresses = (networkId: number) => {
         clamDexPackage: 'package_tdx_2_1pk54w09fwqv9resal68ee43y2gzjm3m0kfw0sjhnhrpw5w8kzxgvc6',
         giftBoxOpenerV2Package:
           'package_tdx_2_1p55l3syf2lukjyy6srelrq6mpd5vf3u7lqy77wtnp6n2zvku8xf3d6',
-        cardForgeV2Package: 'package_tdx_2_1phdyvdpep6vyu4dujpxj6hdpss4rklcqg2xzmtmeyqdxvj5mavqmzu',
+        cardForgeV2Package: 'package_tdx_2_1p56v3qtg9na4tu7vu3tkcsz0yae3f9utlacjyfswkvvl96t0tj50zy',
         radgemForgeV2Package:
           'package_tdx_2_1p4p33jnqt5hx9p7qp38hev3extfqpnxjxcnuw9q6pz653t8jfzrllf',
         components: {
@@ -53,7 +53,7 @@ export const Addresses = (networkId: number) => {
           refinery: 'component_tdx_2_1cp4dw84qxcncwncg5mkkht2cqg2906kpy2wx76xa8720pxy2js0ggh',
           giftBoxOpenerV2:
             'component_tdx_2_1czvfn7wtgensyfwjn729n3mkxl83e8848uw50aar796us6pcd333mw',
-          cardForgeV2: 'component_tdx_2_1cqd53j58jzw7jm4wz203hna90hfeu8s5zrdax0pgs6kfyv6lshj0m7',
+          cardForgeV2: 'component_tdx_2_1crcrpc5ql7q3jf6zhnz0lksfuja3cqfpt0er4srks4xggg70kyzwd5',
           radgemForgeV2: 'component_tdx_2_1cr9sd3lfaxw679879lnp0zs08de4leakfqgxdvmjnve8zpcgh9dtlm',
           kycOracleKeyValueStore:
             'internal_keyvaluestore_tdx_2_1kq4cuyae3uuw9ss06an9cdhd577p7gjnkfqm7mwqvsdyecqe4syxql',
