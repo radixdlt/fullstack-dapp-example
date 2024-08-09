@@ -19,7 +19,7 @@ echo "\nGenerating Resources..."
 export super_admin_badge=`resim run manifests/create_a_super_admin_badge.rtm | grep "Resource:" | grep -o "resource_.*"`
 export admin_badge=`resim run manifests/create_admin_badges.rtm | grep "Resource:" | grep -o "resource_.*"`
 export hero_badge=`resim run manifests/create_hero_badge.rtm | grep "Resource:" | grep -o "resource_.*"`
-export morph_card=`resim run manifests/create_morph_energy_card.rtm  | grep "Resource:" | grep -o "resource_.*"`
+export morph_energy_card=`resim run manifests/create_morph_energy_card.rtm  | grep "Resource:" | grep -o "resource_.*"`
 
 echo "\nGenerating Components..."
 export card_forge_v2=`resim run manifests/card-forge-v2/new_card_forge_v2.rtm | grep "Component:" | grep -o "component_.*"`
@@ -38,7 +38,7 @@ echo "package = $package"
 echo "super_admin_badge = $super_admin_badge"
 echo "admin_badge = $admin_badge"
 echo "hero_badge = $hero_badge"
-echo "morph_card = $morph_card"
+echo "morph_energy_card = $morph_energy_card"
 
 echo "\nComponent Addresses:"
 echo "card_forge_v2 = $card_forge_v2"

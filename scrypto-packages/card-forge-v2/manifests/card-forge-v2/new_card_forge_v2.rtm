@@ -37,5 +37,5 @@ CALL_FUNCTION
     )
     Address("${dapp_definition}")
     Bucket("admin_badge")
-    Address("${morph_card}")
+    Address("${morph_energy_card}")
 ;
