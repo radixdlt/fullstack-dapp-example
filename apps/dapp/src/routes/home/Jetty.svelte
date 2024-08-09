@@ -20,7 +20,7 @@
   import { derived, writable } from 'svelte/store'
   import MinimizeIcon from '@images/minimize.svg'
   import CreateRadMorphs from './CreateRadMorphs.svelte'
-  import OpenGiftBox, { getRewards } from './OpenGiftBox.svelte'
+  import OpenGiftBox, { getGiftBoxStatus } from './OpenGiftBox.svelte'
   import { goto } from '$app/navigation'
   import { i18n } from '$lib/i18n/i18n'
   import { useLocalStorage } from '$lib/utils/local-storage'
@@ -68,20 +68,16 @@
   }
 
   const checkGiftBoxStatus = () => {
-    getRewards($user?.id!)
-      .map(() => {
-        giftBoxRewardsAvailable.set(true)
-      })
-      .mapErr(() => {
-        giftBoxRewardsAvailable.set(false)
-      })
+    getGiftBoxStatus($user?.id!).map((data) => {
+      waitingForGiftBox.set(data.waitingForGiftBox)
+      giftBoxRewardsAvailable.set(data.giftBoxRewardsAvailable)
+    })
   }
 
   $: if (expanded && !showMenuItemContent) {
     checkClaimStatus()
     checkGiftBoxStatus()
 
-    $waitingForGiftBox = useLocalStorage('waiting-for-giftbox').get() ?? false
     $waitingForRadgems = useLocalStorage('waiting-for-radgems').get() ?? false
   }
 
@@ -99,11 +95,6 @@
 
   const waitingForGiftBox = writable(false)
   const waitingForRadgems = writable(false)
-
-  $: if ($giftBoxRewardsAvailable) {
-    $waitingForGiftBox = false
-    useLocalStorage('waiting-for-giftbox').set(false)
-  }
 
   $: if ($claimAvailable) {
     $waitingForRadgems = false

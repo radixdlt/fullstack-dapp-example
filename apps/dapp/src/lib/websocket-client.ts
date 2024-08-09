@@ -114,14 +114,26 @@ export const WebSocketClient = ({
 
   let webSocket = createWebSocket(authToken)
 
+  const onMessage = (callback: (data: Message & { id: number }) => void): (() => void) => {
+    onMessageCallbacks.push(callback)
+    return () => {
+      const index = onMessageCallbacks.indexOf(callback)
+      onMessageCallbacks.splice(index, 1)
+    }
+  }
+
   return {
-    onMessage: (callback: (data: Message & { id: number }) => void): (() => void) => {
-      onMessageCallbacks.push(callback)
-      return () => {
-        const index = onMessageCallbacks.indexOf(callback)
-        onMessageCallbacks.splice(index, 1)
+    onMessageType: (
+      type: string,
+      callback: (data: Message & { id: number }) => void
+    ): (() => void) => {
+      const filteredCallback = (message: Message & { id: number }) => {
+        if (message.type === type) callback(message)
       }
+
+      return onMessage(filteredCallback)
     },
+    onMessage,
     close: () => {
       clearTimeout(currentTimeout)
       shouldReconnect = false

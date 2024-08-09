@@ -13,14 +13,17 @@ import { config } from '../config'
 import { WorkerError, WorkerOutputError } from '../_types'
 import { dbClient } from '../db-client'
 import { createBatchDepositGiftBoxRewardManifest } from '../helpers/createBatchDepositGiftBoxRewardManifest'
+import { MessageHelper } from '../helpers/messageHelper'
 
 export type BatchedDepositGiftBoxRewardController = ReturnType<
   typeof BatchedDepositGiftBoxRewardController
 >
 export const BatchedDepositGiftBoxRewardController = ({
-  gatewayApi
+  gatewayApi,
+  sendMessage
 }: {
   gatewayApi: GatewayApi
+  sendMessage: MessageHelper
 }) => {
   const handler = ({
     items,
@@ -263,8 +266,8 @@ export const BatchedDepositGiftBoxRewardController = ({
           })
         )
 
-    return determineIfTransactionShouldBeSubmitted(transactionIntentDiscriminators[0]).andThen(
-      ({ shouldSubmitTransaction, shouldPollTransaction, transactionId }) => {
+    return determineIfTransactionShouldBeSubmitted(transactionIntentDiscriminators[0])
+      .andThen(({ shouldSubmitTransaction, shouldPollTransaction, transactionId }) => {
         if (shouldSubmitTransaction) return submitTransaction()
         else if (transactionId)
           return shouldPollTransaction
@@ -274,8 +277,14 @@ export const BatchedDepositGiftBoxRewardController = ({
                 status: 'COMPLETED'
               })
         else return errAsync({ reason: WorkerError.UnhandledTransactionState })
-      }
-    )
+      })
+      .andThen((txId) =>
+        ResultAsync.combineWithAllErrors(
+          items.map((item) =>
+            sendMessage(item.userId, { type: 'GiftBoxesDeposited', traceId: item.traceId }, logger)
+          )
+        ).mapErr((errors) => ({ reason: WorkerError.FailedToSendMessage, jsError: errors }))
+      )
   }
 
   return {

@@ -11,7 +11,6 @@ export const useLocalStorage = <
     | LocalStorageEntry<'seen-landing-popup', string>
     | LocalStorageEntry<'seen-fuse-elements-intro', boolean>
     | LocalStorageEntry<'seen-fuse-elements-outro', boolean>
-    | LocalStorageEntry<'waiting-for-giftbox', boolean>
     | LocalStorageEntry<'waiting-for-radgems', boolean>,
   V extends T['key']
 >(

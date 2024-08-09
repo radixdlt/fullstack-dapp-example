@@ -1,26 +1,11 @@
 <script lang="ts" context="module">
-  const getKeyValueStoreData = (userId: string, v2: boolean) => {
-    return ResultAsync.fromPromise(
-      GatewayApi(publicConfig.networkId).gatewayApiClient.state.innerClient.keyValueStoreData({
-        stateKeyValueStoreDataRequest: {
-          key_value_store_address:
-            publicConfig.components[
-              v2 ? 'radgemRecordsV2KeyValueStore' : 'radgemRecordsKeyValueStore'
-            ],
-          keys: [
-            {
-              key_json: {
-                value: userId,
-                kind: 'String',
-                type_name: 'UserId'
-              }
-            }
-          ]
-        }
-      }),
-      (e) => e as Error
+  const gatewayApi = GatewayApi(publicConfig.networkId)
+
+  const getKeyValueStoreData = (userId: string, v2: boolean) =>
+    gatewayApi.getKeyValueStoreDataForUser(
+      publicConfig.components[v2 ? 'radgemRecordsV2KeyValueStore' : 'radgemRecordsKeyValueStore'],
+      userId
     )
-  }
 
   const claimAvailableInKeyValueStore = (
     storeData: StateKeyValueStoreDataResponse

@@ -8,41 +8,20 @@ import {
   ProgrammaticScryptoSborValueTuple
 } from '@radixdlt/babylon-gateway-api-sdk'
 import { config } from '../config'
-import { EventId, GetValuesFromEventInput, fromEventData, getValuesFromEvent } from 'common'
+import {
+  EventId,
+  GetValuesFromEventInput,
+  fromEventData,
+  getValuesFromEvent,
+  EventEmitter,
+  getGiftBoxRewardsFromMapSbor
+} from 'common'
 import { getRewardsFromQuestRewardDepositedEvent } from '../helpers/getRewardsFromQuestRewardDepositedEvent'
-
-type EventEmitter = {
-  entity: {
-    entity_address: string
-    entity_type: string
-    is_global: boolean
-  }
-  type: string
-  object_module_id: string
-}
 
 export type TrackedTransactions = Record<
   EventId,
   Record<string, (event: EventsItem) => Record<string, unknown> | undefined>
 >
-
-const eventEmittedByComponent =
-  ({
-    eventName,
-    componentAddress,
-    keys
-  }: {
-    eventName: string
-    componentAddress: string
-    keys: GetValuesFromEventInput
-  }) =>
-  (event: EventsItem) => {
-    const isMatch =
-      event.name === eventName &&
-      (event.emitter as EventEmitter).entity.entity_address === componentAddress
-
-    return isMatch ? getValuesFromEvent(keys, event) : undefined
-  }
 
 const resourceDeposited =
   ({
@@ -92,6 +71,24 @@ const xrdStaked = (event: EventsItem) => {
     (event.emitter as EventEmitter)?.entity.entity_type === 'GlobalValidator'
   return isMatch ? {} : undefined
 }
+
+const eventEmittedByComponent =
+  ({
+    eventName,
+    componentAddress,
+    keys
+  }: {
+    eventName: string
+    componentAddress: string
+    keys: GetValuesFromEventInput
+  }) =>
+  (event: EventsItem) => {
+    const isMatch =
+      event.name === eventName &&
+      (event.emitter as EventEmitter).entity.entity_address === componentAddress
+
+    return isMatch ? getValuesFromEvent(keys, event) : undefined
+  }
 
 const nonFungibleMinted =
   (resource: string, keys: GetValuesFromEventInput) => (event: EventsItem) => {
@@ -269,59 +266,8 @@ export const trackedTransactionTypes: TrackedTransactions = {
         rewards: {
           kind: 'Map',
           key: 'rewards',
-          transform: (value) => {
-            const mapData = value as ProgrammaticScryptoSborValueMap
-
-            return mapData.entries.reduce<{
-              fungibles: { amount: number; resourceAddress: string }[]
-              nonFungibles: { localIds: string[]; resourceAddress: string }[]
-            }>(
-              (acc, entry) => {
-                let resourceAddress: string | undefined = undefined
-                let amount: number | undefined = undefined
-                let type: 'fungible' | 'nonFungible' | undefined = undefined
-                let localIds: string[] = []
-
-                if (entry.key.kind === 'Reference') {
-                  resourceAddress = entry.key.value
-                }
-
-                if (entry.value.kind === 'Enum' && entry.value.variant_name === 'FungibleAmount') {
-                  const maybeValue = entry.value.fields.find(
-                    (field): field is ProgrammaticScryptoSborValueDecimal =>
-                      field.kind === 'Decimal'
-                  )?.value
-                  if (maybeValue) amount = parseInt(maybeValue)
-                  type = 'fungible'
-                }
-
-                if (
-                  entry.value.kind === 'Enum' &&
-                  entry.value.variant_name === 'NonFungibleAmount'
-                ) {
-                  type = 'nonFungible'
-                  const [field] = entry.value.fields
-                  if (field.kind === 'Array') {
-                    const [element] = field.elements
-                    if (element.kind === 'NonFungibleLocalId') {
-                      localIds = [element.value]
-                    }
-                  }
-                }
-
-                if (type === 'fungible' && resourceAddress && amount)
-                  acc.fungibles.push({ resourceAddress, amount })
-                else if (type === 'nonFungible' && resourceAddress)
-                  acc.nonFungibles.push({ resourceAddress, localIds })
-
-                return acc
-              },
-              {
-                fungibles: [],
-                nonFungibles: []
-              }
-            )
-          }
+          transform: (value) =>
+            getGiftBoxRewardsFromMapSbor(value as ProgrammaticScryptoSborValueMap)
         }
       }
     }),

@@ -1,91 +1,106 @@
 <script lang="ts" context="module">
+  import type { StateKeyValueStoreDataResponse } from '@radixdlt/babylon-gateway-api-sdk'
   const gateway = GatewayApi(publicConfig.networkId)
+  export type GiftBoxV2Status = {
+    depositedRewards: number
+    claimedRewards: number
+    recalledRewards: number
+    openedGiftBoxes: number
+  }
 
-  export const getRewards = (userId: string) =>
-    pipe(
-      () =>
-        ResultAsync.fromPromise(
-          gateway.gatewayApiClient.state.innerClient.keyValueStoreData({
-            stateKeyValueStoreDataRequest: {
-              key_value_store_address: publicConfig.components.giftBoxRecordsKeyValueStore,
-              keys: [
-                {
-                  key_json: {
-                    kind: 'String',
-                    value: userId,
-                    type_name: 'UserId'
-                  }
-                }
-              ]
+  const getLastGiftBoxContent = (data: StateKeyValueStoreDataResponse) => {
+    const openedBoxes = (data.entries[0]?.value.programmatic_json as any)?.elements
+
+    if (!openedBoxes) return okAsync(undefined)
+
+    const entries = openedBoxes[openedBoxes.length - 1]?.entries
+
+    if (!entries) return okAsync(undefined)
+
+    const amountOfElements = entries
+      .find((entry: any) => entry.key.value === publicConfig.resources.elementAddress)
+      .value.fields.find((field: any) => field.kind === 'Decimal').value as string
+
+    const morphCardId = entries
+      .find((entry: any) => entry.key.value === publicConfig.resources.morphEnergyCardAddress)
+      .value.fields.find((field: any) => field.element_kind === 'NonFungibleLocalId')
+      .elements.find((element: any) => element.kind === 'NonFungibleLocalId').value as string
+
+    return okAsync({
+      amountOfElements: parseInt(amountOfElements),
+      morphCardId
+    })
+  }
+
+  const getCardData = (morphCardId: string) =>
+    gateway
+      .callApi('getNonFungibleData', publicConfig.resources.morphEnergyCardAddress, [morphCardId])
+      .map(([response]) => {
+        const fields = (response.data!.programmatic_json as any).fields
+
+        const cardData = {
+          id: morphCardId,
+          name: getStringDataValue('name')(fields),
+          energy: getStringDataValue('energy_type')(fields),
+          imageUrl: getStringDataValue('key_image_url')(fields),
+          rarity: getStringDataValue('rarity')(fields),
+          quality: parseInt(getStringDataValue('quality')(fields)),
+          limitedEdition: getBoolDataValue('limited_edition')(fields)
+        }
+
+        return {
+          cardData
+        }
+      })
+
+  export const getV1Rewards = (userId: string) =>
+    gateway
+      .getKeyValueStoreDataForUser(publicConfig.components.giftBoxRecordsKeyValueStore, userId)
+      .andThen((data) => getLastGiftBoxContent(data))
+      .andThen((data) => {
+        if (!data) return okAsync(undefined)
+        const { amountOfElements, morphCardId } = data
+        return getCardData(morphCardId).map((cardData) => ({
+          amountOfElements,
+          ...cardData
+        }))
+      })
+
+  export const getGiftBoxV2RewardsStatus = (userId: string) =>
+    gateway.getGiftBoxV2RewardsStatus(userId)
+
+  export const isV2ReadyToClaim = (data: GiftBoxV2Status) =>
+    data.depositedRewards - data.claimedRewards - data.recalledRewards > 0
+
+  export const isV2PendingDeposit = (data: GiftBoxV2Status) =>
+    data.openedGiftBoxes - data.depositedRewards > 0
+
+  export const getGiftBoxStatus = (userId: string) =>
+    ResultAsync.combineWithAllErrors([getV1Rewards(userId), getGiftBoxV2RewardsStatus(userId)]).map(
+      ([v1, v2]) =>
+        v1
+          ? { version: 'v1' as const, giftBoxRewardsAvailable: true, waitingForGiftBox: false }
+          : {
+              version: 'v2' as const,
+              giftBoxRewardsAvailable: isV2ReadyToClaim(v2),
+              waitingForGiftBox: isV2PendingDeposit(v2)
             }
-          }),
-          (e) => e as Error
-        ),
-      (result) =>
-        result.andThen((response) => {
-          const openedBoxes = (response.entries[0]?.value.programmatic_json as any)?.elements
-
-          if (!openedBoxes) return errAsync(Error('Nothing to claim'))
-
-          const entries = openedBoxes[openedBoxes.length - 1]?.entries
-
-          if (!entries) return errAsync(Error('Nothing to claim'))
-
-          const amountOfElements = entries
-            .find((entry: any) => entry.key.value === publicConfig.resources.elementAddress)
-            .value.fields.find((field: any) => field.kind === 'Decimal').value as string
-
-          const morphCardId = entries
-            .find((entry: any) => entry.key.value === publicConfig.resources.morphEnergyCardAddress)
-            .value.fields.find((field: any) => field.element_kind === 'NonFungibleLocalId')
-            .elements.find((element: any) => element.kind === 'NonFungibleLocalId').value as string
-
-          return okAsync({
-            amountOfElements: parseInt(amountOfElements),
-            morphCardId
-          })
-        }),
-      (result) =>
-        result.andThen(({ amountOfElements, morphCardId }) =>
-          gateway
-            .callApi('getNonFungibleData', publicConfig.resources.morphEnergyCardAddress, [
-              morphCardId
-            ])
-            .map(([response]) => {
-              const fields = (response.data!.programmatic_json as any).fields
-
-              const cardData = {
-                id: morphCardId,
-                name: getStringDataValue('name')(fields),
-                energy: getStringDataValue('energy_type')(fields),
-                imageUrl: getStringDataValue('key_image_url')(fields),
-                rarity: getStringDataValue('rarity')(fields),
-                quality: parseInt(getStringDataValue('quality')(fields)),
-                limitedEdition: getBoolDataValue('limited_edition')(fields)
-              }
-
-              return {
-                amountOfElements,
-                cardData
-              }
-            })
-        )
-    )()
+    )
 </script>
 
 <script lang="ts">
   import { publicConfig } from '$lib/public-config'
-  import pipe from 'ramda/src/pipe'
-  import { GatewayApi, type Messages } from 'common'
+  import { GatewayApi, getGiftBoxRewardsFromMapSbor } from 'common'
   import { user } from '../../stores'
+  import type { TransactionReceipt } from '@radixdlt/babylon-core-api-sdk'
+  import type { ProgrammaticScryptoSborValueTuple } from '@radixdlt/babylon-gateway-api-sdk'
   import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import JettyMenuItemPage from './JettyMenuItemPage.svelte'
   import { sendTransaction } from '$lib/rdt'
-  import type { FungibleResourcesCollectionItemVaultAggregated } from '@radixdlt/babylon-gateway-api-sdk'
   import Carousel from '$lib/components/carousel/Carousel.svelte'
   import { context } from '$lib/components/jetty-menu/JettyMenu.svelte'
-  import { errAsync, okAsync, ResultAsync } from 'neverthrow'
+  import { okAsync, ResultAsync } from 'neverthrow'
   import { getBoolDataValue, getStringDataValue } from './CreateRadMorphs.svelte'
   import TransformCard from '$lib/components/resource-card/TransformCard.svelte'
   import ElementCard from '$lib/components/resource-card/ElementCard.svelte'
@@ -94,7 +109,7 @@
   import BoxCard from '$lib/components/resource-card/BoxCard.svelte'
   import { messageApi } from '$lib/api/message-api'
   import { waitingWarning } from '$lib/utils/waiting-warning'
-  import { useLocalStorage } from '$lib/utils/local-storage'
+  import { GiftBoxManifests } from '$lib/helpers/giftbox-manifests'
 
   let loadingLedgerData = true
   let ownedGiftBoxes: {
@@ -118,166 +133,54 @@
     }
   }
 
-  const openGiftBoxManifest = (giftBoxAddress: string) => `
-    CALL_METHOD
-      Address("${$user!.accountAddress!}")
-      "create_proof_of_non_fungibles"
-      Address("${publicConfig.badges.heroBadgeAddress}")
-      Array<NonFungibleLocalId>(
-          NonFungibleLocalId("<${$user!.id}>")
-      );
+  $: manifests = GiftBoxManifests($user!.id, $user!.accountAddress!)
 
-    POP_FROM_AUTH_ZONE
-        Proof("hero_badge_proof");
-
-    CALL_METHOD
-        Address("${$user!.accountAddress!}")
-        "withdraw"
-        Address("${giftBoxAddress}")
-        Decimal("1");
-
-    TAKE_ALL_FROM_WORKTOP
-        Address("${giftBoxAddress}")
-        Bucket("gift_box");
-
-    CALL_METHOD
-        Address("${publicConfig.components.giftBoxOpener}")
-        "open_gift_box"
-        Proof("hero_badge_proof")
-        Bucket("gift_box");
-  `
-
-  const getClaimItemsManifest = (rewards: {
-    amountOfElements: number
-    cardData: { id: string }
-  }) => `
-    CALL_METHOD
-      Address("${$user!.accountAddress!}")
-      "create_proof_of_non_fungibles"
-      Address("${publicConfig.badges.heroBadgeAddress}")
-      Array<NonFungibleLocalId>(
-        NonFungibleLocalId("<${$user!.id}>")
+  const getV2Rewards = () =>
+    gateway.preview(manifests.claimItemsV2()).andThen((data) => {
+      const receipt = data.receipt as TransactionReceipt
+      const event = receipt.events?.find(
+        ({ type }) =>
+          type.name === 'GiftBoxRewardsClaimedEvent' &&
+          type.emitter.type === 'Method' &&
+          type.emitter.entity.entity_address === publicConfig.components.giftBoxOpenerV2
       )
-    ;
-    POP_FROM_AUTH_ZONE
-        Proof("hero_badge_proof")
-    ;
-    CALL_METHOD
-        Address("${publicConfig.components.giftBoxOpener}")
-        "claim_gift_box_rewards"
-        Proof("hero_badge_proof");
-
-    TAKE_FROM_WORKTOP
-        Address("${publicConfig.resources.elementAddress}")
-        Decimal("${rewards.amountOfElements}")
-        Bucket("bucket1");
-
-      CALL_METHOD
-        Address("${$user!.accountAddress!}")
-        "try_deposit_or_abort"
-        Bucket("bucket1")
-        Enum<0u8>();
-
-    CALL_METHOD
-        Address("${$user!.accountAddress!}")
-        "deposit_batch"
-        Expression("ENTIRE_WORKTOP")
-    ;
-`
-
-  const getGiftBoxes = pipe(
-    () =>
-      gateway.callApi('getEntityDetailsVaultAggregated', [$user!.accountAddress!], {
-        explicitMetadata: ['icon_url']
-      }),
-    (result) =>
-      result.map(([{ fungible_resources }]) => {
-        const types = ['Starter', 'Simple', 'Fancy', 'Elite'] as const
-
-        const [starter, simple, fancy, elite] = types.map((type) =>
-          fungible_resources.items.find(
-            (item) => item.resource_address === publicConfig.resources.giftBox[type]
-          )
-        )
-
-        const getAmount = (collection: FungibleResourcesCollectionItemVaultAggregated) =>
-          collection.vaults.items
-            .map((item) => item.amount)
-            .reduce((acc, curr) => acc + parseInt(curr), 0)
-
-        return [starter, simple, fancy, elite].reduce(
-          (acc, curr, i) => {
-            acc[curr?.resource_address!] = {
-              amount: curr ? getAmount(curr) : 0,
-              name: types[i],
-              imageUrl: (
-                curr?.explicit_metadata?.items.find((item) => item.key === 'icon_url')!.value
-                  .typed as any
-              ).value as string
-            }
-            return acc
-          },
-          {} as typeof ownedGiftBoxes
-        )
-      })
-  )
-
-  const handleDepositData = (data: Messages['GiftBoxDeposited']) => {
-    const amountOfElements = data.rewards.fungibles[0].amount
-    const [id] = data.rewards.nonFungibles[0].localIds
-    const { keyImageUrl: imageUrl, energyType: energy, ...energyCard } = data.energyCard
-    const cardData = { ...energyCard, imageUrl, energy, id }
-    rewards = {
-      amountOfElements,
-      cardData
-    }
-    waitingForOpenTransaction = false
-    waitingForDepositedRewards = false
-    useLocalStorage('waiting-for-giftbox').set(false)
-    readyToClaim = true
-  }
+      if (!event) return okAsync(undefined)
+      const sborJson = event?.data.programmatic_json as ProgrammaticScryptoSborValueTuple
+      const arrayValue = (sborJson.fields.find((field) => field.kind === 'Array') as any)
+        ?.elements[0] as ProgrammaticScryptoSborValueTuple
+      const targetMapSbor = arrayValue?.fields[1]
+      const extractedValues = getGiftBoxRewardsFromMapSbor(targetMapSbor)
+      const amountOfElements = extractedValues.fungibles[0].amount
+      const morphCardId = extractedValues.nonFungibles[0].localIds[0]
+      return getCardData(morphCardId).map((cardData) => ({
+        amountOfElements,
+        ...cardData
+      }))
+    })
 
   const openGiftBox = (giftBoxAddress: string) => {
     waitingForOpenTransaction = true
 
     sendTransaction({
-      transactionManifest: openGiftBoxManifest(giftBoxAddress)
+      transactionManifest: manifests.openGiftBoxV2(giftBoxAddress)
     })
-      .andThen(() => {
-        useLocalStorage('waiting-for-giftbox').set(true)
+      .map(() => {
         waitingForOpenTransaction = false
         waitingForDepositedRewards = true
-
-        let resolveDeposited: (message: Messages['GiftBoxDeposited']) => void
-
-        const promise = new Promise<Messages['GiftBoxDeposited']>((resolve) => {
-          resolveDeposited = resolve
-        })
-
-        const unsub = $webSocketClient!.onMessage((msg) => {
-          if (msg.type === 'GiftBoxDeposited') {
-            resolveDeposited(msg)
-            messageApi.markAsSeen([msg.id])
-          }
-        })
-
-        return ResultAsync.fromSafePromise(promise).map((data) => {
-          unsub()
-          return data
-        })
       })
-      .map(handleDepositData)
       .mapErr(() => {
         waitingForOpenTransaction = false
         waitingForDepositedRewards = false
-        useLocalStorage('waiting-for-giftbox').set(false)
       })
   }
 
   const claimItems = () => {
     waitingForClaimTransaction = true
     sendTransaction({
-      transactionManifest: getClaimItemsManifest(rewards)
+      transactionManifest:
+        readyToClaim === 'v1'
+          ? manifests.claimItemsV1(rewards.amountOfElements)
+          : manifests.claimItemsV2(rewards.amountOfElements)
     })
       .map(() => {
         waitingForClaimTransaction = false
@@ -289,15 +192,6 @@
       })
   }
 
-  getGiftBoxes()
-    .map((amount) => {
-      ownedGiftBoxes = amount
-      loadingLedgerData = false
-    })
-    .mapErr(() => {
-      loadingLedgerData = false
-    })
-
   const findOneGiftBox = () => Object.entries(ownedGiftBoxes).find(([, { amount }]) => amount > 0)!
 
   $: totalGiftBoxes = ownedGiftBoxes
@@ -305,44 +199,64 @@
     : undefined
 
   let selectedGiftBox: string
+  let timeoutId: ReturnType<typeof setTimeout>
 
   const close = context.get('closeMenuItem')
 
-  onMount(() => {
-    let unsub: () => void
-
-    if (useLocalStorage('waiting-for-giftbox').get()) {
-      waitingForDepositedRewards = true
-      loadingLedgerData = false
+  const updatePendingV2Rewards = () => {
+    getV2Rewards().map((rewardsData) => {
+      if (!rewardsData) {
+        clearTimeout(timeoutId)
+        timeoutId = setTimeout(() => updatePendingV2Rewards(), 700)
+        return
+      }
+      waitingForDepositedRewards = false
+      rewards = rewardsData
+      readyToClaim = 'v2'
       loadingClaimStatus = false
+    })
+  }
 
-      unsub = $webSocketClient!.onMessage((msg) => {
-        if (msg.type === 'GiftBoxDeposited') {
-          waitingForDepositedRewards = false
-          useLocalStorage('waiting-for-giftbox').set(false)
-          messageApi.markAsSeen([msg.id])
-          handleDepositData(msg)
+  onMount(() => {
+    const gateway = GatewayApi(publicConfig.networkId)
+
+    const unsubscribe = $webSocketClient!.onMessageType('GiftBoxesDeposited', (msg) => {
+      updatePendingV2Rewards()
+      messageApi.markAsSeen([msg.id])
+    })
+
+    ResultAsync.combineWithAllErrors([
+      gateway.getAccountGiftBoxes($user?.accountAddress!),
+      getGiftBoxStatus($user?.id!)
+    ])
+      .map(([data, status]) => {
+        ownedGiftBoxes = data
+        loadingLedgerData = false
+        waitingForDepositedRewards = status.waitingForGiftBox
+        if (status.giftBoxRewardsAvailable) {
+          ;(status.version === 'v1' ? getV1Rewards($user!.id) : getV2Rewards()).map(
+            (rewardsData) => {
+              if (!rewardsData) {
+                loadingClaimStatus = false
+                return
+              }
+              rewards = rewardsData
+              readyToClaim = status.version
+              loadingClaimStatus = false
+            }
+          )
+        } else {
+          loadingClaimStatus = false
         }
       })
-    } else {
-      getRewards($user!.id)
-        .map(({ amountOfElements, cardData }) => {
-          rewards = {
-            amountOfElements,
-            cardData
-          }
-
-          readyToClaim = true
-          loadingClaimStatus = false
-        })
-        .mapErr(() => {
-          loadingClaimStatus = false
-        })
-    }
+      .mapErr(() => {
+        loadingLedgerData = false
+      })
 
     return () => {
       waitingWarning(false)
-      if (unsub) unsub()
+      clearTimeout(timeoutId)
+      unsubscribe?.()
     }
   })
 
@@ -350,7 +264,7 @@
   let waitingForOpenTransaction = false
   let waitingForClaimTransaction = false
   let waitingForDepositedRewards = false
-  let readyToClaim = false
+  let readyToClaim: false | 'v1' | 'v2' = false
   let readyToOpen = false
   let claimed = false
 
@@ -365,7 +279,7 @@
   {:else if waitingForDepositedRewards}
     <JettyMenuItemPage>
       <div slot="header" class="title">
-        {$i18n.t('jetty:open-gift-box.opening-gift-box')}...
+        {$i18n.t('jetty:open-gift-box.opening-gift-box')}
       </div>
 
       <div class="loading">
@@ -403,7 +317,7 @@
           {$i18n.t('jetty:open-gift-box.gift-box-opened-title')}
         </div>
         <div class="subtitle">
-          {$i18n.t('jetty:open-gift-box.gift-box-opened-subtitle')}...
+          {$i18n.t('jetty:open-gift-box.gift-box-opened-subtitle')}
         </div>
       </div>
       <div class="rewards-page">
