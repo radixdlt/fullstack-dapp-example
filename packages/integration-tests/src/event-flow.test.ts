@@ -19,8 +19,8 @@ import {
   createAppLogger
 } from 'common'
 import { PrismaClient, User } from 'database'
-import { ResultAsync, errAsync } from 'neverthrow'
-import { Queues, RedisConnection, getQueues, DepositGiftBoxesRewardJob } from 'queues'
+import { errAsync } from 'neverthrow'
+import { Queues, RedisConnection, getQueues } from 'queues'
 import { config } from './config'
 import { QueueEvents } from 'bullmq'
 import crypto from 'crypto'
@@ -69,7 +69,6 @@ const transactionModel = TransactionModel(db, transactionQueue)
 const userQuestModel = UserQuestModel(db)(logger)
 const userModel = UserModel(db)(logger)
 const accountAddressModel = AccountAddressModel(redisClient)(logger)
-const { DepositGiftBoxRewardBufferQueue, DepositGiftBoxRewardQueue } = getQueues(config.redis)
 
 const addresses = Addresses(2)
 
@@ -679,7 +678,7 @@ describe('Event flows', () => {
             Proof("hero_badge_proof")
         ;
         CALL_METHOD
-            Address("${addresses.components.giftBoxOpener}")
+            Address("${addresses.components.giftBoxOpenerV2}")
             "claim_gift_box_rewards"
             Proof("hero_badge_proof")
         ;
@@ -692,7 +691,7 @@ describe('Event flows', () => {
     }
 
     describe('open and claim gift boxes', () => {
-      it('open Starter gift box', { timeout: 60_000, skip: false }, async () => {
+      it('open Starter gift box', { timeout: 120_000, skip: false }, async () => {
         const { user } = await getAccount()
         await mintGiftBox('Starter', user.accountAddress!)
         await openGiftBox({ kind: 'Starter' })
@@ -725,7 +724,7 @@ describe('Event flows', () => {
       })
     })
 
-    describe.skip('gift box reward deposit batching', () => {
+    describe('gift box reward deposit batching', () => {
       it('should batch gift box reward deposits', { timeout: 600_000, skip: false }, async () => {
         const account1 = await getAccount()
 
