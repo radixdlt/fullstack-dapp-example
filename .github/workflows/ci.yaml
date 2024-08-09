@@ -180,6 +180,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Cache Node.js modules
+        uses: RDXWorks-actions/cache@main
+        with:
+          path: |
+            node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Get changed svelte files
         id: changed-svelte-files
         uses: RDXWorks-actions/changed-files@main
