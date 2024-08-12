@@ -2,18 +2,14 @@ image:
     tag: {{ .StateValues.ci.tag }}
 
 params:
-  POSTGRES_DATABASE: radquest
-  POSTGRES_HOST: radquest-mainnet-rds.rtlj-prod.internal
-  POSTGRES_READ: radquest-mainnet-rds-ro.rtlj-prod.internal
-  POSTGRES_PORT: 5432
   REDIS_HOST: radquest-mainnet-redis.rtlj-prod.internal
   REDIS_PORT: 6379
   REDIS_PASSWORD: ""
   LOG_LEVEL: debug
   PUBLIC_NETWORK_ID: 1
   GATEWAY_URL: "http://babylon-mainnet-active-ng.internal-dns:8080"
-  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_READ):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?schema=public
-  DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?schema=public
+  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-mainnet-rds-ro.rtlj-prod.internal:5432/radquest?schema=public
+  DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-mainnet-rds.rtlj-prod.internal:5432/radquest?schema=public
 
 secrets:
 

@@ -9,11 +9,8 @@ params:
   REDIS_HOST: radquest-dev-redis.rdx-works-main.internal
   REDIS_PORT: 6379
   REDIS_PASSWORD: 
-  POSTGRES_DATABASE: radquest
-  POSTGRES_HOST: radquest-dev-rds.rdx-works-main.internal
-  POSTGRES_READ: radquest-dev-rds-ro.rdx-works-main.internal
-  POSTGRES_PORT: 5432
-  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_READ):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?schema=public
+  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-dev-rds-ro.rdx-works-main.internal:5432/radquest?schema=public
+  DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-dev-rds.rdx-works-main.internal:5432/radquest?schema=public
 
 secrets:
   - external_secret_name: admin-postgres-user
@@ -27,12 +24,6 @@ secrets:
     aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
     aws_secret_key: "postgresql-password"
     secret_key: "database-password"
-
-  - external_secret_name: admin-database-url
-    env_variable: "DATABASE_URL"
-    aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
-    aws_secret_key: "database-url"
-    secret_key: "database-url"
 
   - external_secret_name: admin-jwt-secret
     env_variable: "JWT_SECRET"

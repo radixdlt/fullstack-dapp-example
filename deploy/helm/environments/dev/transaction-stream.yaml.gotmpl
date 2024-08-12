@@ -2,18 +2,14 @@ image:
     tag: {{ .StateValues.ci.tag }}
 
 params:
-  POSTGRES_DATABASE: radquest
-  POSTGRES_HOST: radquest-dev-rds.rdx-works-main.internal
-  POSTGRES_READ: radquest-dev-rds-ro.rdx-works-main.internal
-  POSTGRES_PORT: 5432
   REDIS_HOST: radquest-dev-redis.rdx-works-main.internal
   REDIS_PORT: 6379
   REDIS_PASSWORD: ""
   LOG_LEVEL: debug
   PUBLIC_NETWORK_ID: 2
   GATEWAY_URL: https://stokenet.radixdlt.com
-  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_READ):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?schema=public
-  DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?schema=public
+  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-dev-rds-ro.rdx-works-main.internal:5432/radquest?schema=public
+  DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-dev-rds.rdx-works-main.internal:5432/radquest?schema=public
 
 secrets:
 
