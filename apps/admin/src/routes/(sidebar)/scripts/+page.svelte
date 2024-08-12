@@ -30,6 +30,7 @@
     FailedToDeriveUserIdFromBadgeId: 'FailedToDeriveUserIdFromBadgeId',
     UserNotFound: 'UserNotFound',
     UserDisabledXrdDeposit: 'UserDisabledXrdDeposit',
+    FailedToSubmitTransaction: 'FailedToSubmitTransaction',
     FailedToCreateMessageInDb: 'FailedToCreateMessageInDb',
     FailedToUpdateTransactionIntentStatus: 'FailedToUpdateTransactionIntentStatus',
     FailedToUpdateReferralReward: 'FailedToUpdateReferralReward',
