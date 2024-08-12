@@ -151,7 +151,8 @@ export const Addresses = (networkId: number) => {
         },
         radQuestPackage: 'package_rdx1p4l4fcfctjfgj9avqzrunn42rfk84kfktrtz3wypf3a37jfwlprdxn',
         clamDexPackage: 'package_rdx1p47qnlxgwnrggs38ea7n35y0zkyr2c65ftre6vlafw096u7gygq0y6',
-        giftBoxOpenerV2Package: 'package_rdx1phm6cg8dausjd9yxmr0mqvftw42h7w7eggdc6d0kx7fewn0waal7p5',
+        giftBoxOpenerV2Package:
+          'package_rdx1phm6cg8dausjd9yxmr0mqvftw42h7w7eggdc6d0kx7fewn0waal7p5',
         cardForgeV2Package: 'package_rdx1pkar90hh0eyq5nfgam9n3ye05j08zlmkk8e5ex0wu8tknr436f9u69',
         radgemForgeV2Package: 'package_rdx1p4gtpzf4t6jsa56us38mt0uazt8ydu93t3tmhea7whkxf8zqswsnv7',
         components: {

@@ -4,7 +4,6 @@ import { QuestDefinitions, QuestId, Quests } from 'content'
 import {
   ColorCodeDescription,
   EventId,
-  GatewayApi,
   ImageModel,
   MailerLiteModel,
   MessageType,
@@ -42,7 +41,6 @@ export type EventWorkerController = ReturnType<typeof EventWorkerController>
 export const EventWorkerController = ({
   dbClient,
   logger,
-  gatewayApi,
   AccountAddressModel,
   mailerLiteModel,
   sendMessage,
@@ -52,7 +50,6 @@ export const EventWorkerController = ({
 }: {
   dbClient: PrismaClient
   AccountAddressModel: AccountAddressModel
-  gatewayApi: GatewayApi
   mailerLiteModel: MailerLiteModel
   logger: AppLogger
   sendMessage: MessageHelper

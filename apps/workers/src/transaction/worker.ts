@@ -7,7 +7,7 @@ import { WorkerError, WorkerOutputError } from '../_types'
 import { config } from '../config'
 import { okAsync } from 'neverthrow'
 
-const gatewayApi = GatewayApi(config.networkId)
+const gatewayApi = GatewayApi(config.networkId, process.env.GATEWAY_URL)
 
 const determineWhetherToSubmitNewTransaction = async (
   discriminator: string,

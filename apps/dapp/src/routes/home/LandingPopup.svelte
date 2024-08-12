@@ -149,16 +149,4 @@
       max-width: 100%;
     }
   }
-
-  .only-desktop {
-    @include mobile {
-      display: none;
-    }
-  }
-
-  .only-mobile {
-    @include desktop {
-      display: none;
-    }
-  }
 </style>
