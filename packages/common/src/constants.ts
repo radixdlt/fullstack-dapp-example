@@ -151,8 +151,8 @@ export const Addresses = (networkId: number) => {
         },
         radQuestPackage: 'package_rdx1p4l4fcfctjfgj9avqzrunn42rfk84kfktrtz3wypf3a37jfwlprdxn',
         clamDexPackage: 'package_rdx1p47qnlxgwnrggs38ea7n35y0zkyr2c65ftre6vlafw096u7gygq0y6',
-        giftBoxOpenerV2Package: '',
-        cardForgeV2Package: '',
+        giftBoxOpenerV2Package: 'package_rdx1phm6cg8dausjd9yxmr0mqvftw42h7w7eggdc6d0kx7fewn0waal7p5',
+        cardForgeV2Package: 'package_rdx1pkar90hh0eyq5nfgam9n3ye05j08zlmkk8e5ex0wu8tknr436f9u69',
         radgemForgeV2Package: 'package_rdx1p4gtpzf4t6jsa56us38mt0uazt8ydu93t3tmhea7whkxf8zqswsnv7',
         components: {
           heroBadgeForge: 'component_rdx1cra2j3w7cv9zkrv4jehjz0qn3xffxdkstucxar4xy9kyu0tpxsvya6',
@@ -164,8 +164,8 @@ export const Addresses = (networkId: number) => {
           radmorphForge: 'component_rdx1cz36kgpr72804j265rvz0lkgf9en2wneq2gqyk925g6umgv3dt57q7',
           imageOracle: 'component_rdx1cp6z7vhz3sg53qwz8y462kupm89j230hxn35pkpetdfjkhyc6dkhr9',
           refinery: 'component_rdx1crh0h7kc9e9s0607exe864uszpu5cpptjn2a605szneswhzw6nawzd',
-          giftBoxOpenerV2: '',
-          cardForgeV2: '',
+          giftBoxOpenerV2: 'component_rdx1cq2ac5qgaeykevk9stqajpuhjtddzzhljnewfx3cjk0cfvuhxczmny',
+          cardForgeV2: 'component_rdx1cq38chm09eq65q58skruheyepeelk3u84lmvua2r5rnq7eche6p0r0',
           radgemForgeV2: 'component_rdx1czv5pypn3u44yut3mqt5fxqnwphjec56j9rhn7mp74nl0tj2xytf8y',
           kycOracleKeyValueStore:
             'internal_keyvaluestore_rdx1kry2g9s07tm26js7e9uy8rztpg5htfd3auandaqgu7nvc6psvnasge',
