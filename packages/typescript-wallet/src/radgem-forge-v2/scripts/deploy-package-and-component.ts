@@ -26,7 +26,7 @@ publishPackageAdvanced({
   adminBadge: config.radQuest.badges.superAdminBadgeAddress
 })
   .map((packageAddress) => (addresses.radgemForgeV2Package = packageAddress))
-  .map(() => logger.debug('Package deployed', '\n'))
+  .map(() => logger.debug('Package deployed'))
   .andThen(() =>
     mintAdminBadge({
       adminBadgeAddress: config.radQuest.badges.adminBadgeAddress,
@@ -34,9 +34,9 @@ publishPackageAdvanced({
       amount: 1
     })
   )
-  .map(() => logger.debug('Admin Badge minted', '\n'))
+  .map(() => logger.debug('Admin Badge minted'))
   .andThen(() => newRadgemForgeV2(addresses.radgemForgeV2Package))
   .map((res) => Object.assign(addresses, res))
-  .map(() => logger.debug('RadgemForgeV2 instantiated', '\n'))
+  .map(() => logger.debug('RadgemForgeV2 instantiated'))
   .map(() => logger.debug(addresses))
   .mapErr((err) => logger.error(err))
