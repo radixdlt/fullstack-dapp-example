@@ -145,8 +145,8 @@ jobs:
         run: |
           echo "network-name=${{ steps.network.outputs.network-name }}" >> $GITHUB_STEP_SUMMARY
           echo "docker-tag=${{ steps.tag-with-network.outputs.tag-with-network }}" >> $GITHUB_STEP_SUMMARY
-          echo "PUBLIC_NETWORK_ID=${{ steps.build-args.output.PUBLIC_NETWORK_ID }}"  >> $GITHUB_STEP_SUMMARY
-          echo "PUBLIC_LOG_LEVEL=${{ steps.build-args.output.PUBLIC_LOG_LEVEL }}"  >> $GITHUB_STEP_SUMMARY
+          echo "PUBLIC_NETWORK_ID=${{ steps.build-args.outputs.PUBLIC_NETWORK_ID }}"  >> $GITHUB_STEP_SUMMARY
+          echo "PUBLIC_LOG_LEVEL=${{ steps.build-args.outputs.PUBLIC_LOG_LEVEL }}"  >> $GITHUB_STEP_SUMMARY
     outputs:
       dapp-tags: ${{ steps.dapp-tags.outputs.tags }}
       dapp-labels: ${{ steps.dapp-tags.outputs.labels }}
@@ -458,6 +458,9 @@ jobs:
       - push-transaction-stream
       - push-worker
       - setup-tags
+    concurrency: 
+      group: ${{ github.head_ref }}
+      cancel-in-progress: false
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
     with:
       jenkins_job_name: 'kubernetes-deployments/job/radquest'
@@ -485,6 +488,9 @@ jobs:
       - push-transaction-stream
       - push-worker
       - setup-tags
+    concurrency: 
+      group: ${{ github.ref }}
+      cancel-in-progress: false
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
     with:
       github_environment: 'dev'
@@ -511,6 +517,9 @@ jobs:
       - push-transaction-stream
       - push-worker
       - setup-tags
+    concurrency:
+      group: ${{ github.event_name }}
+      cancel-in-progress: false
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
     with:
       github_environment: 'mainnet'
