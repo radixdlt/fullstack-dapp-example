@@ -1,7 +1,7 @@
 import { config } from '../../config'
 import { transactionBuilder } from '../../transaction/transactionBuilder'
 
-export const registerGiftBoxes = (giftBoxOpenerV2?: string) => {
+export const setGiftBoxAddresses = (giftBoxOpenerV2?: string) => {
   const transactionManifest = `
 CALL_METHOD
     Address("${config.radQuest.accounts.system.address}")
