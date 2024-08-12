@@ -1,9 +1,6 @@
 import { ErrorPopupId, errorPopupStore } from '../../stores'
-import { publicConfig } from '$lib/public-config'
-import { GatewayApi } from 'common'
+import { gatewayApi, publicConfig } from '$lib/public-config'
 import { okAsync, ResultAsync } from 'neverthrow'
-
-const gatewayApi = GatewayApi(publicConfig.networkId)
 
 export const handleKycBadge = (
   userId: string,

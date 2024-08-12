@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { publicConfig } from '$lib/public-config'
+  import { gatewayApi, publicConfig } from '$lib/public-config'
   import { rdt } from '$lib/rdt'
-  import { GatewayApi } from 'common'
   import { okAsync } from 'neverthrow'
   import { onDestroy } from 'svelte'
   import { createEventDispatcher } from 'svelte'
@@ -83,8 +82,6 @@
       }
     })
   }
-
-  const gatewayApi = GatewayApi(publicConfig.networkId)
 
   $: {
     if ($user?.accountAddress)

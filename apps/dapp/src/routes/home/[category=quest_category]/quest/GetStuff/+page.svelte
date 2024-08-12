@@ -12,8 +12,7 @@
   import { readable, writable, derived } from 'svelte/store'
   import type { Quests } from 'content'
   import { type ComponentProps } from 'svelte'
-  import { GatewayApi } from 'common'
-  import { publicConfig } from '$lib/public-config'
+  import { gatewayApi, publicConfig } from '$lib/public-config'
   import { OneTimeDataRequestBuilder, SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
   import { rdt } from '$lib/rdt'
   import { userApi } from '$lib/api/user-api'
@@ -42,7 +41,6 @@
   let mintBadgeState: ComponentProps<DepositHeroBadge>['state']
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
 
-  const gatewayApi = GatewayApi(publicConfig.networkId)
   const skipXrdDepositPage = writable<boolean>(false)
   const registeredAccountAddress = derived(user, ($user) => !!$user?.accountAddress)
   const verifyPhoneNumber = writable(data.requirements.VerifyPhoneNumber.isComplete)

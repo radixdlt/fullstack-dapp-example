@@ -1,4 +1,4 @@
-import { Addresses } from 'common'
+import { Addresses, GatewayApi } from 'common'
 import { PUBLIC_NETWORK_ID } from '$env/static/public'
 import { RadixNetwork } from '@radixdlt/radix-dapp-toolkit'
 
@@ -42,3 +42,5 @@ const NETWORK_CONFIG = {
 
 export const publicConfig =
   NETWORK_CONFIG[parseInt(PUBLIC_NETWORK_ID) as keyof typeof NETWORK_CONFIG]
+
+export const gatewayApi = GatewayApi(publicConfig.networkId)
