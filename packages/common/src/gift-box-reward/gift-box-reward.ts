@@ -35,7 +35,7 @@ export const GiftBoxRewardConfig = ({
         card: starterBoxCard,
         quality: getQualityByRarity(starterBoxCard.rarity)
       }),
-      getElements: () => 10
+      getElements: () => 15
     },
     [GiftBoxKind.Simple]: {
       getEnergyCard: () => {
@@ -56,8 +56,8 @@ export const GiftBoxRewardConfig = ({
       },
       getElements: () =>
         getRandomIntInclusive({
-          min: 15,
-          max: 24
+          min: 5,
+          max: 14
         })
     },
     [GiftBoxKind.Fancy]: {
@@ -66,10 +66,8 @@ export const GiftBoxRewardConfig = ({
         let rarity: EnergyCardRarity
         if (randomFloat < 0.5) {
           rarity = EnergyCardRarity.Common
-        } else if (randomFloat < 0.8) {
-          rarity = EnergyCardRarity.Rare
         } else {
-          rarity = EnergyCardRarity.UltraRare
+          rarity = EnergyCardRarity.Rare
         }
         return {
           card: getRandomCardByRarity({
@@ -81,8 +79,8 @@ export const GiftBoxRewardConfig = ({
       },
       getElements: () =>
         getRandomIntInclusive({
-          min: 25,
-          max: 34
+          min: 10,
+          max: 19
         })
     },
     [GiftBoxKind.Elite]: {
@@ -104,8 +102,8 @@ export const GiftBoxRewardConfig = ({
       },
       getElements: () =>
         getRandomIntInclusive({
-          min: 35,
-          max: 45
+          min: 20,
+          max: 30
         })
     }
   } as const
