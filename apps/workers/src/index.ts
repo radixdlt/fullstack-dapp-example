@@ -112,7 +112,7 @@ const app = async () => {
 
   BatchedDepositGiftBoxRewardWorker(connection, {
     logger,
-    controller: BatchedDepositGiftBoxRewardController({ gatewayApi }),
+    controller: BatchedDepositGiftBoxRewardController({ gatewayApi, sendMessage }),
     dbClient
   })
 

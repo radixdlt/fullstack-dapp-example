@@ -1,9 +1,12 @@
-import { ResultAsync, err, fromPromise, ok, okAsync } from 'neverthrow'
+import { ResultAsync, err, errAsync, fromPromise, ok, okAsync } from 'neverthrow'
 import {
   GatewayApiClient,
   type ErrorResponse,
-  RadixNetworkConfigById
+  RadixNetworkConfigById,
+  type StateKeyValueStoreDataResponse,
+  type FungibleResourcesCollectionItemVaultAggregated
 } from '@radixdlt/babylon-gateway-api-sdk'
+import type { TransactionReceipt } from '@radixdlt/babylon-core-api-sdk'
 import { cache } from './cache'
 import { Addresses } from '../constants'
 
@@ -129,6 +132,74 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
           : err({ reason: 'MissingDepositRuleValue' })
       )
 
+  const getKeyValueStoreDataForUser = (
+    keyValueStoreAddress: string,
+    userId: string
+  ): ResultAsync<StateKeyValueStoreDataResponse, { reason: string; jsError?: any }> =>
+    userId
+      ? ResultAsync.fromPromise(
+          gatewayApiClient.state.innerClient.keyValueStoreData({
+            stateKeyValueStoreDataRequest: {
+              key_value_store_address: keyValueStoreAddress,
+              keys: [
+                {
+                  key_json: {
+                    kind: 'String',
+                    value: userId,
+                    type_name: 'UserId'
+                  }
+                }
+              ]
+            }
+          }),
+          (jsError) => ({ reason: 'CouldNotGetKeyValueStoreDataForUser', jsError })
+        )
+      : errAsync({ reason: 'UserIdIsMissing' })
+
+  const preview = (manifest: string) =>
+    callApi('getCurrent').andThen((status) => {
+      const currentEpoch = status.ledger_state.epoch
+      return ResultAsync.fromPromise(
+        gatewayApiClient.transaction.innerClient.transactionPreview({
+          transactionPreviewRequest: {
+            manifest,
+            start_epoch_inclusive: currentEpoch,
+            end_epoch_exclusive: currentEpoch + 1,
+            tip_percentage: 0,
+            nonce: Math.round(Math.random() * 10e8),
+            signer_public_keys: [],
+            flags: {
+              use_free_credit: true,
+              assume_all_signature_proofs: true,
+              skip_epoch_check: true
+            }
+          }
+        }),
+        (jsError) => ({ reason: 'CouldNotGetGiftBoxV2RewardsStatus', jsError })
+      )
+    })
+
+  const getGiftBoxV2RewardsStatus = (userId: string) =>
+    preview(
+      `
+        CALL_METHOD
+          Address("${addresses.components.giftBoxOpenerV2}")
+          "get_user_gift_box_counts"
+          "${userId}";
+      `
+    ).map((response) => {
+      const receipt = response.receipt as TransactionReceipt
+      const output =
+        receipt.status === 'Succeeded'
+          ? receipt.output?.[0].programmatic_json.fields.map((field: any) => Number(field.value))
+          : [0, 0, 0, 0]
+
+      const [openedGiftBoxes, depositedRewards, claimedRewards, recalledRewards] =
+        output as number[]
+
+      return { openedGiftBoxes, claimedRewards, recalledRewards, depositedRewards }
+    })
+
   const getResourceDepositRuleDisable = (accountAddress: string, resourceAddress: string) =>
     ResultAsync.fromPromise(
       gatewayApiClient.state.innerClient.accountResourcePreferencesPage({
@@ -166,6 +237,48 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
       )
     )
 
+  const getAccountGiftBoxes = (
+    accountAddress: string
+  ): ResultAsync<
+    Record<string, { amount: number; name: string; imageUrl: string }>,
+    { reason: string; jsError?: any }
+  > =>
+    accountAddress
+      ? callApi('getEntityDetailsVaultAggregated', [accountAddress], {
+          explicitMetadata: ['icon_url']
+        })
+          .map(([{ fungible_resources }]) => {
+            const types = ['Starter', 'Simple', 'Fancy', 'Elite'] as const
+
+            const [starter, simple, fancy, elite] = types.map((type) =>
+              fungible_resources.items.find(
+                (item) => item.resource_address === addresses.resources.giftBox[type]
+              )
+            )
+
+            const getAmount = (collection: FungibleResourcesCollectionItemVaultAggregated) =>
+              collection.vaults.items
+                .map((item) => item.amount)
+                .reduce((acc, curr) => acc + parseInt(curr), 0)
+
+            return [starter, simple, fancy, elite].filter(Boolean).reduce(
+              (acc, curr, i) => {
+                acc[curr?.resource_address!] = {
+                  amount: curr ? getAmount(curr) : 0,
+                  name: types[i],
+                  imageUrl: (
+                    curr?.explicit_metadata?.items.find((item) => item.key === 'icon_url')!.value
+                      .typed as any
+                  ).value as string
+                }
+                return acc
+              },
+              {} as Record<string, { amount: number; name: string; imageUrl: string }>
+            )
+          })
+          .mapErr((jsError) => ({ reason: 'CouldNotGetAccountGiftBoxes', jsError }))
+      : errAsync({ reason: 'AccountAddressIsMissing' })
+
   const hasAtLeastTwoRadgems = (accountAddress: string) =>
     callApi('getEntityDetailsVaultAggregated', [accountAddress]).map(([response]) => {
       const radgemVault = response.non_fungible_resources.items.find(
@@ -197,6 +310,10 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
     isDepositDisabledForResource,
     networkConfig,
     gatewayApiClient,
+    preview,
+    getAccountGiftBoxes,
+    getKeyValueStoreDataForUser,
+    getGiftBoxV2RewardsStatus,
     extractedMethods,
     hasHeroBadge,
     hasHeroBadgeAndXrd,

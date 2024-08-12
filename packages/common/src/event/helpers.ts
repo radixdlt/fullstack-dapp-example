@@ -1,5 +1,20 @@
-import type { EventsItem, ProgrammaticScryptoSborValue } from '@radixdlt/babylon-gateway-api-sdk'
+import type {
+  EventsItem,
+  ProgrammaticScryptoSborValue,
+  ProgrammaticScryptoSborValueDecimal,
+  ProgrammaticScryptoSborValueMap
+} from '@radixdlt/babylon-gateway-api-sdk'
 import { Result, ok, err } from 'neverthrow'
+
+export type EventEmitter = {
+  entity: {
+    entity_address: string
+    entity_type: string
+    is_global: boolean
+  }
+  type: string
+  object_module_id: string
+}
 
 export const getAccountFromMayaRouterWithdrawEvent = ({ data }: EventsItem) => {
   if (data.kind === 'Tuple') {
@@ -98,4 +113,60 @@ export const getValuesFromEvent = (
 
     return acc
   }, {})
+}
+
+export const getGiftBoxRewardsFromMapSbor = (value: ProgrammaticScryptoSborValue) => {
+  const mapData = value as ProgrammaticScryptoSborValueMap
+
+  return mapData.entries.reduce<{
+    fungibles: { amount: number; resourceAddress: string }[]
+    nonFungibles: { localIds: string[]; resourceAddress: string }[]
+  }>(
+    (acc, entry) => {
+      let resourceAddress: string | undefined = undefined
+      let amount: number | undefined = undefined
+      let type: 'fungible' | 'nonFungible' | undefined = undefined
+      let localIds: string[] = []
+
+      if (entry.key.kind === 'Reference') {
+        resourceAddress = entry.key.value
+      }
+
+      if (
+        entry.value.kind === 'Enum' &&
+        (entry.value.variant_name === 'FungibleAmount' || String(entry.value.variant_id) === '0')
+      ) {
+        const maybeValue = entry.value.fields.find(
+          (field): field is ProgrammaticScryptoSborValueDecimal => field.kind === 'Decimal'
+        )?.value
+        if (maybeValue) amount = parseInt(maybeValue)
+        type = 'fungible'
+      }
+
+      if (
+        entry.value.kind === 'Enum' &&
+        (entry.value.variant_name === 'NonFungibleAmount' || String(entry.value.variant_id) === '1')
+      ) {
+        type = 'nonFungible'
+        const [field] = entry.value.fields
+        if (field.kind === 'Array') {
+          const [element] = field.elements
+          if (element.kind === 'NonFungibleLocalId') {
+            localIds = [element.value]
+          }
+        }
+      }
+
+      if (type === 'fungible' && resourceAddress && amount)
+        acc.fungibles.push({ resourceAddress, amount })
+      else if (type === 'nonFungible' && resourceAddress)
+        acc.nonFungibles.push({ resourceAddress, localIds })
+
+      return acc
+    },
+    {
+      fungibles: [],
+      nonFungibles: []
+    }
+  )
 }
