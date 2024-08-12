@@ -9,6 +9,10 @@ params:
   REDIS_HOST: radquest-dev-redis.rdx-works-main.internal
   REDIS_PORT: 6379
   REDIS_PASSWORD: 
+  POSTGRES_DATABASE: radquest
+  POSTGRES_HOST: radquest-dev-rds.rdx-works-main.internal
+  POSTGRES_READ: radquest-dev-rds-ro.rdx-works-main.internal
+  POSTGRES_PORT: 5432
   RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-dev-rds-ro.rdx-works-main.internal:5432/radquest?schema=public
   DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-dev-rds.rdx-works-main.internal:5432/radquest?schema=public
 

@@ -14,6 +14,10 @@ params:
   GATEWAY_URL: https://stokenet.radixdlt.com
   EVENT_WORKER_CONCURRENCY: 20
   TRANSACTION_WORKER_CONCURRENCY: 20
+  POSTGRES_DATABASE: radquest
+  POSTGRES_HOST: radquest-dev-rds.rdx-works-main.internal
+  POSTGRES_READ: radquest-dev-rds-ro.rdx-works-main.internal
+  POSTGRES_PORT: 5432
   RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-dev-rds-ro.rdx-works-main.internal:5432/radquest?schema=public
   DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-dev-rds.rdx-works-main.internal:5432/radquest?schema=public
   
