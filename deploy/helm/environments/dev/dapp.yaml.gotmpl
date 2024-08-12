@@ -8,17 +8,18 @@ params:
   REDIS_PORT: 6379
   REDIS_PASSWORD: 
   PORT: 3000
-  POSTGRES_DATABASE: radquest
-  POSTGRES_HOST: radquest-dev-rds.rdx-works-main.internal
-  POSTGRES_READ: radquest-dev-rds-ro.rdx-works-main.internal
-  POSTGRES_PORT: 5432
   EXPECTED_ORIGIN: https://radquest-dev.rdx-works-main.extratools.works
   PUBLIC_DAPP_DEFINITION_ADDRESS: account_tdx_2_12ypap8t44k4pw9p0p56aqdp0ewexjcszzsj5suxduvsfnnmxpcj5qk
   PUBLIC_NETWORK_ID: 2
   PUBLIC_NOTIFICATION_URL: wss://radquest-notification-dev.rdx-works-main.extratools.works
   MAINTENANCE_MODE: false
   GATEWAY_URL: https://stokenet.radixdlt.com
-  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_READ):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?schema=public
+  POSTGRES_DATABASE: radquest
+  POSTGRES_HOST: radquest-dev-rds.rdx-works-main.internal
+  POSTGRES_READ: radquest-dev-rds-ro.rdx-works-main.internal
+  POSTGRES_PORT: 5432
+  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-dev-rds-ro.rdx-works-main.internal:5432/radquest?schema=public
+  DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-dev-rds.rdx-works-main.internal:5432/radquest?schema=public
 secrets:
   - external_secret_name: dapp-postgres-user
     env_variable: "POSTGRES_USER"
@@ -31,12 +32,6 @@ secrets:
     aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
     aws_secret_key: "postgresql-password"
     secret_key: "database-password"
-
-  - external_secret_name: dapp-database-url
-    env_variable: "DATABASE_URL"
-    aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
-    aws_secret_key: "database-url"
-    secret_key: "database-url"
 
   - external_secret_name: dapp-jwt-secret
     env_variable: "JWT_SECRET"
