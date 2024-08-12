@@ -157,7 +157,7 @@ export const TransactionWorker = (
           error && typeof error === 'object' && (error as any).handled ? true : false
 
         if (isHandled(error)) {
-          throw (error as { error: WorkerOutputError }).error
+          throw new Error((error as { error: WorkerOutputError }).error.reason)
         }
 
         await transactionModel(childLogger).setStatus(
