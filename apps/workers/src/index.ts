@@ -81,7 +81,6 @@ const app = async () => {
 
   TransactionWorker(connection, {
     logger,
-    transactionModel,
     dbClient,
     transactionWorkerController
   })

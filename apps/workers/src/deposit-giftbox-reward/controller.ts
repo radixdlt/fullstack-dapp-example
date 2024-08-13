@@ -1,4 +1,4 @@
-import { ResultAsync, okAsync, ok, errAsync, err } from 'neverthrow'
+import { ResultAsync, ok } from 'neverthrow'
 import { DepositGiftBoxesRewardJob } from 'queues'
 import {
   GatewayApi,
@@ -14,6 +14,10 @@ import { WorkerError, WorkerOutputError } from '../_types'
 import { dbClient } from '../db-client'
 import { createBatchDepositGiftBoxRewardManifest } from '../helpers/createBatchDepositGiftBoxRewardManifest'
 import { MessageHelper } from '../helpers/messageHelper'
+import { reachedMaxOpenedGiftBoxes, VerifyTransaction } from '../helpers/verifyTransaction'
+import { SubmitTransactionHelper } from '../helpers/submitTransactionHelper'
+import { GetLastSubmittedTransaction } from '../helpers/getLastSubmittedTransaction'
+import { UpsertSubmittedTransactions } from '../helpers/upsertSubmittedTransaction'
 
 export type BatchedDepositGiftBoxRewardController = ReturnType<
   typeof BatchedDepositGiftBoxRewardController
@@ -40,40 +44,9 @@ export const BatchedDepositGiftBoxRewardController = ({
 
     const transactionIntentDiscriminators = items.map((item) => item.discriminator)
 
-    const upsertSubmittedTransactionFactory =
-      (discriminators: string[]) =>
-      ({
-        transactionId,
-        status
-      }: {
-        transactionId: string
-        status: 'PENDING' | 'COMPLETED' | 'FAILED'
-      }) =>
-        ResultAsync.fromPromise(
-          dbClient.submittedTransaction
-            .count({ where: { transactionId: `${transactionId}:0` } })
-            .then((count) => {
-              if (count === 0) {
-                return dbClient.submittedTransaction.createMany({
-                  data: discriminators.map((discriminator, index) => ({
-                    transactionId: `${transactionId}:${index}`,
-                    transactionIntent: discriminator,
-                    status
-                  }))
-                })
-              } else {
-                return dbClient.submittedTransaction.updateMany({
-                  where: { transactionIntent: { in: discriminators } },
-                  data: { status }
-                })
-              }
-            }),
-          (error) => ({ reason: WorkerError.FailedToUpdateTransactionIntentStatus, jsError: error })
-        )
+    const [firstTransactionIntentDiscriminator] = transactionIntentDiscriminators
 
-    const upsertSubmittedTransaction = upsertSubmittedTransactionFactory(
-      transactionIntentDiscriminators
-    )
+    const updateStatus = UpsertSubmittedTransactions(transactionIntentDiscriminators, dbClient)
 
     const getGiftBoxRewards = GiftBoxReward(
       GiftBoxRewardConfig({ getRandomFloat, getRandomIntInclusive })
@@ -119,172 +92,24 @@ export const BatchedDepositGiftBoxRewardController = ({
         })
         .map(createBatchDepositGiftBoxRewardManifest)
 
-    const getLastSubmittedTransaction = (discriminator: string) =>
-      ResultAsync.fromPromise(
-        dbClient.submittedTransaction.findFirst({
-          select: { transactionId: true, status: true },
-          where: {
-            transactionIntent: discriminator
-          },
-          orderBy: { createdAt: 'desc' }
-        }),
-        (error) => ({ reason: WorkerError.FailedToGetSubmittedTransactions, jsError: error })
-      ).map((transaction) =>
-        transaction
-          ? { ...transaction, transactionId: transaction.transactionId.split(':')[0] }
-          : null
-      )
+    const verifyTransaction = VerifyTransaction(gatewayApi, [reachedMaxOpenedGiftBoxes])
 
-    const verifyTransaction = (
-      transactionId: string
-    ): ResultAsync<
-      {
-        shouldSubmitTransaction: boolean
-        shouldPollTransaction: boolean
-        transactionId: string
-      },
-      WorkerOutputError
-    > =>
-      gatewayApi
-        .callApi('getStatus', transactionId)
-        .map((response) => {
-          switch (response.intent_status) {
-            case 'CommittedSuccess':
-              return {
-                shouldSubmitTransaction: false,
-                shouldPollTransaction: false,
-                transactionId
-              }
-            case 'Pending':
-            case 'CommitPendingOutcomeUnknown':
-            case 'LikelyButNotCertainRejection':
-            case 'Unknown':
-              return {
-                shouldSubmitTransaction: false,
-                shouldPollTransaction: true,
-                transactionId
-              }
-
-            case 'CommittedFailure':
-            case 'PermanentlyRejected':
-              // TODO: Add additional logic to determine if transaction should be resubmitted
-              return {
-                shouldSubmitTransaction: true,
-                shouldPollTransaction: false,
-                transactionId
-              }
-
-            default:
-              return {
-                shouldSubmitTransaction: false,
-                shouldPollTransaction: false,
-                transactionId
-              }
-          }
-        })
-        .orElse((error) => {
-          switch (error.details?.type) {
-            case 'NotSyncedUpError':
-            case 'InternalServerError':
-              return errAsync({ reason: WorkerError.GatewayError, jsError: error })
-
-            default:
-              return okAsync({
-                shouldSubmitTransaction: false,
-                shouldPollTransaction: false,
-                transactionId
-              })
-          }
-        })
-
-    const determineIfTransactionShouldBeSubmitted = (
-      discriminator: string
-    ): ResultAsync<
-      {
-        shouldSubmitTransaction: boolean
-        shouldPollTransaction: boolean
-        transactionId?: string
-      },
-      WorkerOutputError
-    > =>
-      getLastSubmittedTransaction(discriminator).andThen((submittedTransaction) => {
-        if (!submittedTransaction)
-          return okAsync({
-            shouldSubmitTransaction: true,
-            shouldPollTransaction: false
-          })
-
-        if (submittedTransaction.status === 'COMPLETED')
-          return okAsync({
-            shouldSubmitTransaction: false,
-            shouldPollTransaction: false,
-            transactionId: submittedTransaction.transactionId
-          })
-
-        return verifyTransaction(submittedTransaction.transactionId)
-      })
-
-    const submitTransaction = () =>
-      createManifest().andThen((manifest) =>
-        transactionHelper
-          .submitTransaction(manifest, {
-            onTransactionId: (transactionId) =>
-              upsertSubmittedTransaction({
-                transactionId,
-                status: 'PENDING'
-              })
-          })
-          .orElse((error) =>
-            error.transactionId
-              ? upsertSubmittedTransaction({
-                  transactionId: error.transactionId,
-                  status: 'FAILED'
-                }).andThen(() => err(error))
-              : err(error)
-          )
-          .andThen((response) =>
-            upsertSubmittedTransaction({
-              transactionId: response.transactionId,
-              status: 'COMPLETED'
-            })
-          )
-      )
-
-    const pollTransactionId = (transactionId: string) =>
-      transactionHelper
-        .pollTransactionStatus(transactionId)
-        .orElse((error) =>
-          upsertSubmittedTransaction({
-            transactionId,
-            status: 'FAILED'
-          }).andThen(() => err(error))
+    const sendMessageToUsers = () =>
+      ResultAsync.combineWithAllErrors(
+        items.map((item) =>
+          sendMessage(item.userId, { type: 'GiftBoxesDeposited', traceId: item.traceId }, logger)
         )
-        .andThen(() =>
-          upsertSubmittedTransaction({
-            transactionId,
-            status: 'COMPLETED'
-          })
-        )
+      ).mapErr((errors) => ({ reason: WorkerError.FailedToSendMessage, jsError: errors }))
 
-    return determineIfTransactionShouldBeSubmitted(transactionIntentDiscriminators[0])
-      .andThen(({ shouldSubmitTransaction, shouldPollTransaction, transactionId }) => {
-        if (shouldSubmitTransaction) return submitTransaction()
-        else if (transactionId)
-          return shouldPollTransaction
-            ? pollTransactionId(transactionId)
-            : upsertSubmittedTransaction({
-                transactionId,
-                status: 'COMPLETED'
-              })
-        else return errAsync({ reason: WorkerError.UnhandledTransactionState })
-      })
-      .andThen((txId) =>
-        ResultAsync.combineWithAllErrors(
-          items.map((item) =>
-            sendMessage(item.userId, { type: 'GiftBoxesDeposited', traceId: item.traceId }, logger)
-          )
-        ).mapErr((errors) => ({ reason: WorkerError.FailedToSendMessage, jsError: errors }))
-      )
+    const submitTransaction = SubmitTransactionHelper({
+      createManifest,
+      transactionHelper,
+      updateStatus,
+      getLastSubmittedTransaction: GetLastSubmittedTransaction(dbClient, (id) => id.split(':')[0]),
+      verifyTransaction
+    })
+
+    return submitTransaction(firstTransactionIntentDiscriminator).andThen(sendMessageToUsers)
   }
 
   return {

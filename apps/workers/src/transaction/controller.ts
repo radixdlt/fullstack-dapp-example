@@ -1,8 +1,7 @@
 import { ResultAsync, errAsync, okAsync, err, ok } from 'neverthrow'
 import { Job, TransactionJob } from 'queues'
-import { AuditType, User } from 'database'
+import { User } from 'database'
 import {
-  AuditData,
   GatewayApi,
   GiftBoxReward,
   GiftBoxRewardConfig,
@@ -10,39 +9,41 @@ import {
   getRandomFloat,
   getRandomIntInclusive,
   type AppLogger,
-  type AuditModel,
   newRadgem,
   ColorCodeDescription,
   ShaderCodeDescription,
   transformRadgemToNfData
 } from 'common'
-import { TransactionHelper, TransactionHelperError, withSigners } from 'typescript-wallet'
+import { TransactionHelper, withSigners } from 'typescript-wallet'
 import { createRewardsDepositManifest } from './helpers/createRewardsDepositManifest'
 import { QuestDefinitions, QuestId, QuestReward } from 'content'
 import { config } from '../config'
 import { createCombinedElementsMintRadgemManifest } from './helpers/createCombinedElementsMintRadgemManifest'
-import { TokenPriceClient } from '../token-price-client'
-import BigNumber from 'bignumber.js'
 import { createCombinedElementsAddRadgemImageManifest } from './helpers/createCombinedElementsAddRadgemImageManifest'
 import { WorkerOutputError, WorkerError } from '../_types'
 import { MessageHelper } from '../helpers/messageHelper'
 import { dbClient } from '../db-client'
+import {
+  isTryingToSetImageOnBurntRadGem,
+  questAlreadyCompleted,
+  reachedMaxOpenedGiftBoxes,
+  VerifyTransaction
+} from '../helpers/verifyTransaction'
+import { GetLastSubmittedTransaction } from '../helpers/getLastSubmittedTransaction'
+import { UpsertSubmittedTransaction } from '../helpers/upsertSubmittedTransaction'
+import { SubmitTransactionHelper } from '../helpers/submitTransactionHelper'
 
 const { xrd, accounts, badges, resources, components } = config.radQuest
 const { system, payer } = accounts
 
 export type TransactionWorkerController = ReturnType<typeof TransactionWorkerController>
 export const TransactionWorkerController = ({
-  auditModel,
   gatewayApi,
   imageModel,
-  tokenPriceClient,
   sendMessage
 }: {
-  auditModel: AuditModel
   imageModel: ImageModel
   gatewayApi: GatewayApi
-  tokenPriceClient: TokenPriceClient
   sendMessage: MessageHelper
 }) => {
   const handler = ({
@@ -54,7 +55,7 @@ export const TransactionWorkerController = ({
     user: User
     logger: AppLogger
   }): ResultAsync<any, WorkerOutputError> => {
-    const { type, userId } = job.data
+    const { type, userId, discriminator } = job.data
 
     const transactionHelper = TransactionHelper({
       networkId: config.networkId,
@@ -62,193 +63,26 @@ export const TransactionWorkerController = ({
       logger
     })
 
-    const upsertSubmittedTransaction = ({
-      transactionId,
-      status
-    }: {
-      transactionId: string
-      status: 'PENDING' | 'COMPLETED' | 'FAILED'
-    }) =>
-      ResultAsync.fromPromise(
-        dbClient.submittedTransaction.upsert({
-          create: { transactionId, transactionIntent: job.data.discriminator, status },
-          update: { status },
-          where: { transactionId, transactionIntent: job.data.discriminator }
-        }),
-        (error) => ({ reason: WorkerError.FailedToUpdateSubmittedTransaction, jsError: error })
-      )
+    const updateStatus = UpsertSubmittedTransaction(discriminator, dbClient)
 
     const getGiftBoxRewards = GiftBoxReward(
       GiftBoxRewardConfig({ getRandomFloat, getRandomIntInclusive })
     )
 
-    const getCompletedOrPendingTransactionId = () =>
-      ResultAsync.fromPromise(
-        dbClient.submittedTransaction
-          .findFirst({
-            select: { transactionId: true },
-            where: {
-              transactionIntent: job.data.discriminator,
-              status: { in: ['PENDING', 'COMPLETED'] }
-            }
-          })
-          .then((value) => value?.transactionId),
-        (error) => ({ reason: WorkerError.FailedToQueryDb, jsError: error })
-      )
+    const verifyTransaction = VerifyTransaction(gatewayApi, [
+      isTryingToSetImageOnBurntRadGem(job.data.discriminator),
+      reachedMaxOpenedGiftBoxes,
+      questAlreadyCompleted
+    ])
 
     const handleSubmitTransaction = (manifest: string) =>
-      getCompletedOrPendingTransactionId().andThen((pendingOrCompletedTransactionId) => {
-        const result = pendingOrCompletedTransactionId
-          ? transactionHelper
-              .pollTransactionStatus(pendingOrCompletedTransactionId)
-              .map((response) => ({ response, transactionId: pendingOrCompletedTransactionId }))
-          : transactionHelper.submitTransaction(manifest, {
-              onTransactionId: (transactionId) => {
-                return upsertSubmittedTransaction({ transactionId, status: 'PENDING' })
-              }
-            })
-        return result
-          .orElse((error) => {
-            logger.error({
-              method: 'handleSubmitTransaction.err',
-              transactionId: error.transactionId,
-              status: 'FAILED'
-            })
-
-            return error.transactionId
-              ? upsertSubmittedTransaction({
-                  status: 'FAILED',
-                  transactionId: error.transactionId
-                }).andThen(() => errAsync(error))
-              : errAsync(error)
-          })
-          .andThen((value) =>
-            upsertSubmittedTransaction({
-              transactionId: value.transactionId,
-              status: 'COMPLETED'
-            }).map(() => value)
-          )
-      })
-
-    const addEntryToAuditTable = ({
-      userId,
-      transactionId,
-      xrdUsdValue,
-      rewards,
-      type,
-      xrdPrice
-    }: {
-      userId: string
-      transactionId: string
-      xrdUsdValue: number
-      rewards: AuditData
-      type: AuditType
-      xrdPrice: number
-    }) =>
-      auditModel(logger)
-        .add({
-          transactionId,
-          userId,
-          type,
-          xrdUsdValue,
-          xrdPrice,
-          data: rewards
-        })
-        .mapErr(({ jsError }) => ({
-          reason: WorkerError.FailedToAddAuditEntry,
-          jsError
-        }))
-
-    const getXrdPrice = (value?: string) => {
-      const xrdAmount = BigNumber(value ?? 0)
-
-      return tokenPriceClient
-        .getXrdPrice()
-        .mapErr((error) => ({
-          reason: WorkerError.CouldNotGetXrdCurrentPriceError,
-          jsError: error
-        }))
-        .map((xrdPrice) => ({
-          xrdUsdValue: xrdAmount.multipliedBy(xrdPrice).decimalPlaces(2).toNumber(),
-          xrdAmount,
-          xrdPrice: xrdPrice.decimalPlaces(3).toNumber()
-        }))
-    }
-
-    const depositQuestRewards = (rewards: QuestReward[], questId: string) => {
-      const xrdReward = rewards.find((reward) => reward.name === 'xrd')?.amount ?? 0
-      const hasXrdReward = xrdReward > 0
-
-      const checkIfKycOracleEntryExists = (userId: string) =>
-        gatewayApi.hasKycEntry(userId).mapErr(({ jsError }) => ({
-          reason: WorkerError.GatewayError,
-          jsError
-        }))
-
-      const checkIfUserHasExceededKycThreshold = (
-        userId: string,
-        xrdRewardInUsd: BigNumber
-      ): ResultAsync<boolean, { reason: WorkerError; jsError: unknown }> =>
-        auditModel(logger)
-          .getUsdAmount(userId)
-          .map((distributedUsdAmount) =>
-            xrdRewardInUsd.plus(distributedUsdAmount).isGreaterThan(config.usdKYCThreshold)
-          )
-          .mapErr((error) => ({
-            reason: WorkerError.FailedToGetTotalRewardedUsdAmount,
-            jsError: error
-          }))
-
-      const handleKycOracleUpdate = hasXrdReward
-        ? tokenPriceClient
-            .getXrdPrice()
-            .mapErr((jsError) => ({
-              reason: WorkerError.FailedToGetXrdPrice,
-              jsError
-            }))
-            .map((xrdPrice) => xrdPrice.multipliedBy(xrdReward))
-            .andThen((xrdRewardInUsd) =>
-              checkIfUserHasExceededKycThreshold(userId, xrdRewardInUsd).andThen(
-                (hasExceededKycThreshold) =>
-                  hasExceededKycThreshold
-                    ? checkIfKycOracleEntryExists(userId).map((hasEntry) => ({
-                        includeKycOracleUpdate: !hasEntry,
-                        xrdRewardInUsd
-                      }))
-                    : ok({ includeKycOracleUpdate: false, xrdRewardInUsd })
-              )
-            )
-        : okAsync({ includeKycOracleUpdate: false, xrdRewardInUsd: new BigNumber(0) })
-
-      const triggerDepositRewardsTransaction = (userId: string) =>
-        handleKycOracleUpdate
-          .andThen(({ includeKycOracleUpdate, xrdRewardInUsd }) =>
-            handleSubmitTransaction(
-              createRewardsDepositManifest({
-                questId,
-                userId,
-                rewards,
-                includeKycOracleUpdate,
-                depositRewardsTo: 'questRewards'
-              })
-            ).map(({ transactionId }) => ({ transactionId, xrdRewardInUsd }))
-          )
-          .map(({ transactionId, xrdRewardInUsd }) => ({ userId, transactionId, xrdRewardInUsd }))
-
-      return triggerDepositRewardsTransaction(userId).andThen(
-        ({ userId, transactionId, xrdRewardInUsd }) =>
-          getXrdPrice().andThen(({ xrdPrice }) =>
-            addEntryToAuditTable({
-              userId,
-              transactionId,
-              xrdPrice,
-              xrdUsdValue: xrdRewardInUsd.decimalPlaces(2).toNumber(),
-              rewards: { fungible: rewards, nonFungible: [] },
-              type: AuditType.CLAIMBOX_DEPOSIT
-            })
-          )
-      )
-    }
+      SubmitTransactionHelper({
+        createManifest: () => okAsync(manifest),
+        transactionHelper,
+        updateStatus,
+        getLastSubmittedTransaction: GetLastSubmittedTransaction(dbClient),
+        verifyTransaction
+      })(discriminator)
 
     switch (type) {
       case 'DepositPartialReward': {
@@ -265,7 +99,15 @@ export const TransactionWorkerController = ({
         }
 
         return getPartialRewards(questId as QuestId, requirement).asyncAndThen((rewards) =>
-          depositQuestRewards(rewards, `${questId}:${requirement}`)
+          handleSubmitTransaction(
+            createRewardsDepositManifest({
+              questId: `${questId}:${requirement}`,
+              userId,
+              rewards,
+              includeKycOracleUpdate: false,
+              depositRewardsTo: 'questRewards'
+            })
+          )
         )
       }
 
@@ -306,9 +148,17 @@ export const TransactionWorkerController = ({
         const { questId } = job.data
 
         const questDefinition = QuestDefinitions()[questId as QuestId]
-        const rewards = questDefinition.rewards
+        const rewards = questDefinition.rewards as unknown as QuestReward[]
 
-        return depositQuestRewards(rewards as unknown as QuestReward[], questId)
+        return handleSubmitTransaction(
+          createRewardsDepositManifest({
+            questId,
+            userId,
+            rewards,
+            includeKycOracleUpdate: false,
+            depositRewardsTo: 'questRewards'
+          })
+        )
 
       case 'DepositGiftBoxReward': {
         const { giftBoxKind } = job.data
@@ -339,20 +189,6 @@ export const TransactionWorkerController = ({
                 includeKycOracleUpdate: false,
                 depositRewardsTo: 'giftBoxOpener'
               })
-            ).andThen(({ transactionId }) =>
-              getXrdPrice().andThen(({ xrdPrice }) =>
-                addEntryToAuditTable({
-                  userId,
-                  transactionId,
-                  xrdUsdValue: 0,
-                  xrdPrice,
-                  rewards: {
-                    fungible: [{ name: 'elements', amount: elementAmount }],
-                    nonFungible: [card]
-                  },
-                  type: AuditType.CLAIMBOX_DEPOSIT
-                })
-              )
             )
           })
       }
@@ -592,25 +428,9 @@ export const TransactionWorkerController = ({
                   Address("${user.accountAddress!}")
                   "try_deposit_batch_or_abort"
                   Expression("ENTIRE_WORKTOP")
-        Enum < 0u8 > ()
-          ; `
+                  Enum<0u8>()
+                ; `
               ].join('\n')
-            )
-          )
-          .andThen(({ transactionId }) =>
-            getXrdPrice(`${config.radQuest.directXrdDepositAmount}`).andThen(
-              ({ xrdUsdValue, xrdPrice }) =>
-                addEntryToAuditTable({
-                  transactionId,
-                  userId: user.id,
-                  xrdUsdValue,
-                  xrdPrice,
-                  type: 'DIRECT_DEPOSIT',
-                  rewards: {
-                    fungible: [{ name: 'xrd', amount: config.radQuest.directXrdDepositAmount }],
-                    nonFungible: []
-                  }
-                })
             )
           )
           .andThen(() =>
@@ -631,24 +451,24 @@ export const TransactionWorkerController = ({
           ;`,
 
             `CALL_METHOD
-                Address("${payer.address}")
-                "lock_fee"
-                Decimal("50")
-              ;`,
+              Address("${payer.address}")
+              "lock_fee"
+              Decimal("50")
+            ;`,
 
             `CALL_METHOD
-                Address("${system.address}")
-                "create_proof_of_amount"
-                Address("${badges.adminBadgeAddress}")
-                Decimal("1")
-              ;`,
+              Address("${system.address}")
+              "create_proof_of_amount"
+              Address("${badges.adminBadgeAddress}")
+              Decimal("1")
+            ;`,
 
             `CALL_METHOD
-                Address("${components.heroBadgeForge}")
-                "add_user_account"
-                Address("${user.accountAddress!}")
-                 "${userId}"
-              ;`
+              Address("${components.heroBadgeForge}")
+              "add_user_account"
+              Address("${user.accountAddress!}")
+              "${userId}"
+            ;`
           ].join('\n')
         )
 

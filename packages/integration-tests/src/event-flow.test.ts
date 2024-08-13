@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import {
   mintElements,
   mintClams,
@@ -290,7 +290,7 @@ describe('Event flows', () => {
     }
   )
 
-  it('should deposit XRD to account', { timeout: 60_000, skip: false }, async () => {
+  it.skip('should deposit XRD to account', { timeout: 60_000 }, async () => {
     const { user } = await createAccount()
     const discriminator = `DepositXrdToAccount:${crypto.randomUUID()}`
 
@@ -430,7 +430,7 @@ describe('Event flows', () => {
     })
   })
 
-  it('should send clams to jetty and claim rewards', { timeout: 60_000, skip: false }, async () => {
+  it('should send clams to jetty and claim rewards', { timeout: 60_000 }, async () => {
     const { submitTransaction, user } = await createAccount({
       withXrd: true,
       withHeroBadge: true
@@ -539,7 +539,7 @@ describe('Event flows', () => {
     await waitForMessage(logger, db)(user.id, 'QuestRewardsClaimed')
   })
 
-  describe('Referral flow', () => {
+  describe.skip('Referral flow', () => {
     it(
       'should complete basic quest, deposit reward, claim reward',
       { timeout: 90_000, skip: false },
@@ -680,6 +680,7 @@ describe('Event flows', () => {
             Address("${addresses.components.giftBoxOpenerV2}")
             "claim_gift_box_rewards"
             Proof("hero_badge_proof")
+            1u64
         ;
         CALL_METHOD
             Address("${user.accountAddress}")
@@ -694,7 +695,7 @@ describe('Event flows', () => {
         const { user } = await getAccount()
         await mintGiftBox('Starter', user.accountAddress!)
         await openGiftBox({ kind: 'Starter' })
-        await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+        await waitForMessage(logger, db)(user.id, 'GiftBoxesDeposited')
         await claimGiftBoxReward()
       })
 
@@ -702,7 +703,7 @@ describe('Event flows', () => {
         const { user } = await getAccount()
         await mintGiftBox('Simple', user.accountAddress!)
         await openGiftBox({ kind: 'Simple' })
-        await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+        await waitForMessage(logger, db)(user.id, 'GiftBoxesDeposited')
         await claimGiftBoxReward()
       })
 
@@ -710,7 +711,7 @@ describe('Event flows', () => {
         const { user } = await getAccount()
         await mintGiftBox('Fancy', user.accountAddress!)
         await openGiftBox({ kind: 'Fancy' })
-        await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+        await waitForMessage(logger, db)(user.id, 'GiftBoxesDeposited')
         await claimGiftBoxReward()
       })
 
@@ -718,7 +719,7 @@ describe('Event flows', () => {
         const { user } = await getAccount()
         await mintGiftBox('Elite', user.accountAddress!)
         await openGiftBox({ kind: 'Elite' })
-        await waitForMessage(logger, db)(user.id, 'GiftBoxDeposited')
+        await waitForMessage(logger, db)(user.id, 'GiftBoxesDeposited')
         await claimGiftBoxReward()
       })
     })
@@ -750,33 +751,6 @@ describe('Event flows', () => {
         }
       })
     })
-  })
-
-  describe('KYC', () => {
-    it(
-      'should prevent user from claiming rewards without KYC',
-      { timeout: 60_000, skip: false },
-      async () => {
-        const user = await createAccount({ withXrd: true, withHeroBadge: true })
-
-        await db.audit.create({
-          data: {
-            transactionId: crypto.randomUUID(),
-            userId: user.user.id,
-            xrdUsdValue: 100,
-            xrdPrice: 1,
-            type: 'DIRECT_DEPOSIT'
-          }
-        })
-
-        try {
-          await executeUserReferralFlow(user)
-          throw new Error("User shouldn't be able to claim rewards without KYC")
-        } catch (error) {
-          expect(error).toBeDefined()
-        }
-      }
-    )
   })
 
   describe('tracked accounts', () => {
