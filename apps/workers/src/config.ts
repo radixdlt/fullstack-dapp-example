@@ -10,11 +10,7 @@ export const config = {
   },
   usdKYCThreshold: 5, // amount of dollars before system requires Instapass KYC
   postgres: {
-    database: process.env.POSTGRES_DATABASE ?? 'radquest',
-    host: process.env.POSTGRES_HOST ?? 'localhost',
-    user: process.env.POSTGRES_USER ?? 'user',
-    password: process.env.POSTGRES_PASSWORD ?? 'password',
-    port: parseInt(process.env.POSTGRES_PORT ?? '5433', 10),
+    url: process.env.DATABASE_URL,
     readUrl: process.env.RO_DATABASE_URL
   },
   logLevel: process.env.LOG_LEVEL!,
