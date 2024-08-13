@@ -8,26 +8,19 @@ params:
   LOG_LEVEL: debug
   PUBLIC_NETWORK_ID: 2
   GATEWAY_URL: https://stokenet.radixdlt.com
-  POSTGRES_DATABASE: radquest
-  POSTGRES_HOST: radquest-dev-rds.rdx-works-main.internal
-  POSTGRES_READ: radquest-dev-rds-ro.rdx-works-main.internal
-  POSTGRES_PORT: 5432
-  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-dev-rds-ro.rdx-works-main.internal:5432/radquest?schema=public
-  DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-dev-rds.rdx-works-main.internal:5432/radquest?schema=public
 
 secrets:
-
-  - external_secret_name: transaction-stream-postgres-user
-    env_variable: "POSTGRES_USER"
+  - external_secret_name: transaction-stream-postgres-url
+    env_variable: "DATABASE_URL"
     aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
-    aws_secret_key: "postgresqlUsername"
-    secret_key: "transaction-stream-database-user"
+    aws_secret_key: "transaction-stream-database-url"
+    secret_key: "transaction-stream-database-url"
 
-  - external_secret_name: transaction-stream-postgres-pass
-    env_variable: "POSTGRES_PASSWORD"
+  - external_secret_name: transaction-stream-ro-postgres-url
+    env_variable: "RO_DATABASE_URL"
     aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
-    aws_secret_key: "postgresql-password"
-    secret_key: "transaction-stream-database-password"
+    aws_secret_key: "transaction-stream-ro-database-url"
+    secret_key: "transaction-stream-ro-database-url"
 
 ingress:
   enabled: false

@@ -14,25 +14,19 @@ params:
   PUBLIC_NOTIFICATION_URL: wss://notification.radquest.io
   MAINTENANCE_MODE: true
   GATEWAY_URL: "http://babylon-mainnet-active-ng.internal-dns:8080"
-  POSTGRES_DATABASE: radquest
-  POSTGRES_HOST: radquest-mainnet-rds.rtlj-prod.internal
-  POSTGRES_READ: radquest-mainnet-rds-ro.rtlj-prod.internal
-  POSTGRES_PORT: 5432
-  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-mainnet-rds-ro.rtlj-prod.internal:5432/radquest?schema=public
-  DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-mainnet-rds.rtlj-prod.internal:5432/radquest?schema=public
 
 secrets:
-  - external_secret_name: dapp-postgres-user
-    env_variable: "POSTGRES_USER"
+  - external_secret_name: dapp-postgres-url
+    env_variable: "DATABASE_URL"
     aws_secret_name: "rtlj-prod/eks/radquest/mainnet/postgres"
-    aws_secret_key: "postgresqlUsername"
-    secret_key: "database-user"
+    aws_secret_key: "dapp-database-url"
+    secret_key: "dapp-database-url"
 
-  - external_secret_name: dapp-postgress-pass
-    env_variable: "POSTGRES_PASSWORD"
+  - external_secret_name: dapp-ro-postgres-url
+    env_variable: "RO_DATABASE_URL"
     aws_secret_name: "rtlj-prod/eks/radquest/mainnet/postgres"
-    aws_secret_key: "postgresql-password"
-    secret_key: "database-password"
+    aws_secret_key: "dapp-ro-database-url"
+    secret_key: "dapp-ro-database-url"
 
   - external_secret_name: dapp-jwt-secret
     env_variable: "JWT_SECRET"
