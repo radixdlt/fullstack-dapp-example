@@ -2,7 +2,7 @@ import { PrismaClient } from 'database'
 import { readReplicas } from '@prisma/extension-read-replicas'
 import { config } from '$lib/config'
 
-const { user, password, host, port, database, readUrl } = config.postgres
+const { url, readUrl } = config.postgres
 
 const extendReadReplicas = (dbClient: PrismaClient) => {
   if (readUrl) {
@@ -15,7 +15,7 @@ const extendReadReplicas = (dbClient: PrismaClient) => {
 export type DbClient = typeof dbClient
 export const dbClient = extendReadReplicas(
   new PrismaClient({
-    datasourceUrl: `postgresql://${user}:${password}@${host}:${port}/${database}?schema=public`
+    datasourceUrl: url
   }).$extends({
     query: {
       $allModels: {
