@@ -6,11 +6,7 @@ export type Config = typeof config
 const {
   EXPECTED_ORIGIN,
   JWT_SECRET,
-  POSTGRES_DATABASE,
-  POSTGRES_HOST,
-  POSTGRES_PASSWORD,
-  POSTGRES_PORT,
-  POSTGRES_USER,
+  DATABASE_URL,
   RO_DATABASE_URL,
   REDIS_HOST,
   REDIS_PORT,
@@ -45,11 +41,7 @@ export const config = {
   },
   challenge: { expiresInMs: 600_000, byteLength: 32 },
   postgres: {
-    database: POSTGRES_DATABASE,
-    host: POSTGRES_HOST,
-    user: POSTGRES_USER,
-    password: POSTGRES_PASSWORD,
-    port: parseInt(POSTGRES_PORT, 10),
+    url: DATABASE_URL,
     readUrl: RO_DATABASE_URL
   },
   redis: {

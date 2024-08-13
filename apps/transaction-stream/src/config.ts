@@ -1,4 +1,5 @@
 import { Addresses } from 'common'
+import { url } from 'inspector'
 
 const networkId = parseInt(process.env.PUBLIC_NETWORK_ID!, 10)
 
@@ -21,11 +22,7 @@ export const config = {
     ...Addresses(networkId)
   },
   postgres: {
-    database: process.env.POSTGRES_DATABASE,
-    host: process.env.POSTGRES_HOST,
-    user: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    port: parseInt(process.env.POSTGRES_PORT!, 10),
+    url: process.env.DATABASE_URL,
     readUrl: process.env.RO_DATABASE_URL
   }
 }

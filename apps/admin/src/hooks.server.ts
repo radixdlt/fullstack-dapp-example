@@ -8,20 +8,12 @@ import { getQueues } from 'queues'
 import { config } from '$lib/config'
 import { readReplicas } from '@prisma/extension-read-replicas'
 
-const {
-  JWT_SECRET,
-  POSTGRES_DATABASE,
-  POSTGRES_HOST,
-  POSTGRES_PASSWORD,
-  POSTGRES_PORT,
-  POSTGRES_USER,
-  RO_DATABASE_URL
-} = privateEnv
+const { JWT_SECRET, DATABASE_URL, RO_DATABASE_URL } = privateEnv
 
 const readUrl = RO_DATABASE_URL
 
 const dbClient = new PrismaClient({
-  datasourceUrl: `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}?schema=public`
+  datasourceUrl: DATABASE_URL
 }).$extends({ ...(readUrl ? readReplicas({ url: readUrl }) : {}) }) as unknown as PrismaClient
 
 const { systemQueue, eventQueue, transactionQueue } = getQueues(config.redis)
