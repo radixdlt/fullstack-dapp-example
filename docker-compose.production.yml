@@ -18,7 +18,7 @@ services:
       - REDIS_PORT=${REDIS_PORT}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - PORT=${WEB_API_PORT}
-      - POSTGRES_URL=postgresql://user:password@postgres:5433/radquest?schema=public
+      - DATABASE_URL=postgresql://user:password@postgres:5433/radquest?schema=public
       - JWT_SECRET=${JWT_SECRET}
       - EXPECTED_ORIGIN=http://localhost:3000
       - PUBLIC_DAPP_DEFINITION_ADDRESS=${PUBLIC_DAPP_DEFINITION_ADDRESS}
@@ -59,7 +59,7 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - LOG_LEVEL=${PUBLIC_LOG_LEVEL}
       - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
-      - POSTGRES_URL=postgresql://user:password@postgres:5433/radquest?schema=public
+      - DATABASE_URL=postgresql://user:password@postgres:5433/radquest?schema=public
     command: pm2-runtime apps/transaction-stream/dist/index.cjs
 
   workers:
@@ -73,7 +73,7 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - NOTIFICATION_INTERNAL_API_PORT=${NOTIFICATION_INTERNAL_API_PORT}
       - NOTIFICATION_WEBSOCKET_HOST=${NOTIFICATION_WEBSOCKET_HOST}
-      - POSTGRES_URL=postgresql://user:password@postgres:5433/radquest?schema=public
+      - DATABASE_URL=postgresql://user:password@postgres:5433/radquest?schema=public
       - LOG_LEVEL=${PUBLIC_LOG_LEVEL}
       - MNEMONIC=${MNEMONIC}
       - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
@@ -137,6 +137,6 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=${REDIS_PORT}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - POSTGRES_URL=postgresql://user:password@postgres:5433/radquest?schema=public
+      - DATABASE_URL=postgresql://user:password@postgres:5433/radquest?schema=public
       - JWT_SECRET=${JWT_SECRET}
     command: pm2-runtime apps/admin/build/index.js
