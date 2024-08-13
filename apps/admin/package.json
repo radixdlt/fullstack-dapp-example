@@ -61,6 +61,9 @@
     "json-2-csv": "^5.5.4",
     "jsonwebtoken": "^9.0.2",
     "queues": "*",
-    "tailwind-merge": "^2.3.0"
+    "tailwind-merge": "^2.3.0",
+    "@svelte-put/qr": "^1.2.1",
+    "exceljs": "^4.4.0",
+    "jszip": "^3.10.1"
   }
 }

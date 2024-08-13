@@ -67,6 +67,11 @@
       href: '/marketing'
     },
     { name: 'Blocked Countries', icon: FlagOutline, href: '/countries' },
+    {
+      name: 'Golden Tickets',
+      icon: ReceiptSolid,
+      href: '/golden-tickets'
+    },
     { name: 'Config', icon: CogOutline, href: '/config' },
     { name: 'Scripts', icon: CodeOutline, href: '/scripts' }
   ]

@@ -3,7 +3,7 @@ import { env as privateEnv } from '$env/dynamic/private'
 import { verifyJwt } from '$lib/verify-jwt'
 import { PrismaClient } from 'database'
 import { ImageController } from '$lib/server/image/controller'
-import { ImageModel, appLogger, BlockedCountryModel } from 'common'
+import { BlockedCountryModel, GoldenTicketModel, ImageModel, appLogger } from 'common'
 import { getQueues } from 'queues'
 import { config } from '$lib/config'
 import { readReplicas } from '@prisma/extension-read-replicas'
@@ -25,6 +25,7 @@ const imageController = ImageController({
 })
 
 const blockedCountryModel = BlockedCountryModel(dbClient)(logger)
+const goldenTicketModel = GoldenTicketModel(dbClient)(logger)
 
 export const handle: Handle = async ({ event, resolve }) => {
   if (event.url.pathname === '/health') {
@@ -54,6 +55,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.transactionQueue = transactionQueue
     event.locals.systemQueue = systemQueue
     event.locals.logger = logger
+    event.locals.goldenTicketModel = goldenTicketModel
 
     return resolve(event, {})
   }
