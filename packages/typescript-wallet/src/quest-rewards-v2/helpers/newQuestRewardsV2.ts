@@ -1,7 +1,7 @@
 import { config } from '../../config'
 import { transactionBuilder } from '../../transaction/transactionBuilder'
 
-export const newQuestRewardsV2 = () => {
+export const newQuestRewardsV2 = (questRewardsV2Package?: string) => {
   const transactionManifest = `
 CALL_METHOD
     Address("${config.radQuest.accounts.owner.address}")
@@ -20,7 +20,7 @@ TAKE_ALL_FROM_WORKTOP
     Bucket("admin_badge")
 ;
 CALL_FUNCTION
-    Address("${config.radQuest.questRewardsV2Package}")
+    Address("${questRewardsV2Package ?? config.radQuest.questRewardsV2Package}")
     "QuestRewardsV2"
     "new"
     Address("${config.radQuest.badges.superAdminBadgeAddress}")
