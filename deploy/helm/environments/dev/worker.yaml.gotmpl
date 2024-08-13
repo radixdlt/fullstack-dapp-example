@@ -19,14 +19,14 @@ secrets:
   - external_secret_name: workers-postgres-url
     env_variable: "DATABASE_URL"
     aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
-    aws_secret_key: "workers-database-url"
-    secret_key: "workers-database-url"
+    aws_secret_key: "database-url"
+    secret_key: "database-url"
 
   - external_secret_name: workers-ro-postgres-url
     env_variable: "RO_DATABASE_URL"
     aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
-    aws_secret_key: "workers-ro-database-url"
-    secret_key: "workers-ro-database-url"
+    aws_secret_key: "ro-database-url"
+    secret_key: "ro-database-url"
 
   - external_secret_name: worker-payer-mnemonic
     env_variable: "PAYER_MNEMONIC"
