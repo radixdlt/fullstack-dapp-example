@@ -19,14 +19,14 @@ secrets:
   - external_secret_name: dapp-postgres-url
     env_variable: "DATABASE_URL"
     aws_secret_name: "rtlj-prod/eks/radquest/mainnet/postgres"
-    aws_secret_key: "dapp-database-url"
-    secret_key: "dapp-database-url"
+    aws_secret_key: "database-url"
+    secret_key: "database-url"
 
   - external_secret_name: dapp-ro-postgres-url
     env_variable: "RO_DATABASE_URL"
     aws_secret_name: "rtlj-prod/eks/radquest/mainnet/postgres"
-    aws_secret_key: "dapp-ro-database-url"
-    secret_key: "dapp-ro-database-url"
+    aws_secret_key: "ro-database-url"
+    secret_key: "ro-database-url"
 
   - external_secret_name: dapp-jwt-secret
     env_variable: "JWT_SECRET"
