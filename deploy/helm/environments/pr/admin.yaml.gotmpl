@@ -9,14 +9,8 @@ params:
   REDIS_HOST: "redis-master"
   REDIS_PORT: "6379"
   REDIS_PASSWORD: ""
-  POSTGRES_DATABASE: radquest
-  POSTGRES_HOST: postgres-postgresql
-  POSTGRES_READ: postgres-postgresql
-  POSTGRES_PORT: 5432
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: secretString123
   DATABASE_URL: "postgresql://postgres:secretString123@postgres-postgresql:5432/radquest?schema=public"
-  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_READ):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?schema=public
+  RO_DATABASE_URL: postgresql://postgres:secretString123@postgres-postgresql:5432/radquest?schema=public
   JWT_SECRET: FkaGHXoq32rYBcEHwAn2rkhawtUCe4sE
 
 secrets:

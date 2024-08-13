@@ -14,24 +14,19 @@ params:
   PUBLIC_NOTIFICATION_URL: wss://radquest-notification-dev.rdx-works-main.extratools.works
   MAINTENANCE_MODE: false
   GATEWAY_URL: https://stokenet.radixdlt.com
-  POSTGRES_DATABASE: radquest
-  POSTGRES_HOST: radquest-dev-rds.rdx-works-main.internal
-  POSTGRES_READ: radquest-dev-rds-ro.rdx-works-main.internal
-  POSTGRES_PORT: 5432
-  RO_DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-dev-rds-ro.rdx-works-main.internal:5432/radquest?schema=public
-  DATABASE_URL: postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@radquest-dev-rds.rdx-works-main.internal:5432/radquest?schema=public
-secrets:
-  - external_secret_name: dapp-postgres-user
-    env_variable: "POSTGRES_USER"
-    aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
-    aws_secret_key: "postgresqlUsername"
-    secret_key: "database-user"
 
-  - external_secret_name: dapp-postgress-pass
-    env_variable: "POSTGRES_PASSWORD"
+secrets:
+  - external_secret_name: dapp-postgres-url
+    env_variable: "DATABASE_URL"
     aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
-    aws_secret_key: "postgresql-password"
-    secret_key: "database-password"
+    aws_secret_key: "dapp-database-url"
+    secret_key: "dapp-database-url"
+
+  - external_secret_name: dapp-ro-postgres-url
+    env_variable: "RO_DATABASE_URL"
+    aws_secret_name: "rdx-works-main-dev/eks/radquest/dev/postgres"
+    aws_secret_key: "dapp-ro-database-url"
+    secret_key: "dapp-ro-database-url"
 
   - external_secret_name: dapp-jwt-secret
     env_variable: "JWT_SECRET"
