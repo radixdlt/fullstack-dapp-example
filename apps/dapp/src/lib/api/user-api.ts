@@ -56,6 +56,13 @@ const hasReceivedXrd = () =>
     })
   ).map(({ data }) => data.exists)
 
+const hasWaitingRadgemJob = () =>
+  fetchWrapper<{ exists: boolean }>(
+    fetch(`/api/user/has-waiting-radgem-jobs`, {
+      method: 'GET'
+    })
+  ).map(({ data }) => data.exists)
+
 const getReferrals = () =>
   fetchWrapper<{
     referrals: string[]
@@ -80,6 +87,7 @@ const getNameByRefferalCode = (referralCode: string) =>
 export const userApi = {
   me,
   getReferrals,
+  hasWaitingRadgemJob,
   getNameByRefferalCode,
   allowAccountAddressToMintHeroBadge,
   hasReceivedXrd,

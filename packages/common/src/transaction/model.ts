@@ -80,10 +80,30 @@ export const TransactionModel =
         }
       ).map((count) => count > 0)
 
+    const hasWaitingRadgemJob = (userId: string) =>
+      ResultAsync.fromPromise(
+        db.transactionIntent.count({
+          where: {
+            userId,
+            status: {
+              in: ['WAITING']
+            },
+            discriminator: {
+              startsWith: 'DepositedElements:RadGem:'
+            }
+          }
+        }),
+        (error) => {
+          logger?.error({ error, method: 'hasWaitingRadgemJob', model: 'TransactionModel' })
+          return createApiError('failed to check if transaction exists', 400)()
+        }
+      ).map((count) => count > 0)
+
     return {
       add,
       setStatus,
       getItem,
+      hasWaitingRadgemJob,
       doesTransactionExist
     }
   }

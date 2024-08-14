@@ -23,7 +23,7 @@
   import OpenGiftBox, { getGiftBoxStatus } from './OpenGiftBox.svelte'
   import { goto } from '$app/navigation'
   import { i18n } from '$lib/i18n/i18n'
-  import { useLocalStorage } from '$lib/utils/local-storage'
+  import { userApi } from '$lib/api/user-api'
 
   let poppedUp = false
   let expanded = false
@@ -56,7 +56,10 @@
   let claimAvailable = writable(false)
   let giftBoxRewardsAvailable = writable(false)
 
-  const checkClaimStatus = () => {
+  const checkRadgemStatus = () => {
+    userApi.hasWaitingRadgemJob().map((data) => {
+      waitingForRadgems.set(data)
+    })
     checkClaimAvailable($user?.id!, false)
       .orElse(() => checkClaimAvailable($user?.id!, true))
       .map(() => {
@@ -75,10 +78,8 @@
   }
 
   $: if (expanded && !showMenuItemContent) {
-    checkClaimStatus()
+    checkRadgemStatus()
     checkGiftBoxStatus()
-
-    $waitingForRadgems = useLocalStorage('waiting-for-radgems').get() ?? false
   }
 
   let showMenuItemContent: boolean
@@ -98,7 +99,6 @@
 
   $: if ($claimAvailable) {
     $waitingForRadgems = false
-    useLocalStorage('waiting-for-radgems').set(false)
   }
 
   $: {
@@ -146,7 +146,7 @@
       hoveringOverJetty = e.detail
     }}
     on:item-content-closed={() => {
-      checkClaimStatus()
+      checkRadgemStatus()
       checkGiftBoxStatus()
     }}
     hideJetty={$hideJetty}
