@@ -180,6 +180,11 @@ export const UserController = ({
       .doesTransactionExist({ userId, discriminator })
       .map((exists) => ({ data: { exists }, httpResponseCode: 200 }))
 
+  const hasWaitingRadgemJob = (userId: string) =>
+    transactionModel
+      .hasWaitingRadgemJob(userId)
+      .map((exists) => ({ data: { exists }, httpResponseCode: 200 }))
+
   const setEmail = (userId: string, email: string, newsletter: boolean) => {
     const parseResult = valibot.safeParse(EmailSchema, { email })
     if (!parseResult.success) {
@@ -278,6 +283,7 @@ export const UserController = ({
   return {
     getUser,
     doesTransactionExist,
+    hasWaitingRadgemJob,
     allowAccountAddressToMintHeroBadge,
     setAccountAddress,
     populateResources,

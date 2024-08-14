@@ -51,7 +51,7 @@
   import { webSocketClient } from '$lib/websocket-client'
   import JettyMenuItemPage from './JettyMenuItemPage.svelte'
   import { waitingWarning } from '$lib/utils/waiting-warning'
-  import { useLocalStorage } from '$lib/utils/local-storage'
+  import { userApi } from '$lib/api/user-api'
 
   let rerender = false
 
@@ -130,11 +130,9 @@
     return sendTransaction({ transactionManifest })
       .map(() => {
         waitingForSendElements = false
-        useLocalStorage('waiting-for-radgems').set(true)
         waitingForElementsDeposited = true
       })
       .mapErr(() => {
-        useLocalStorage('waiting-for-radgems').set(false)
         waitingForSendElements = false
         waitingForElementsDeposited = false
       })
@@ -164,10 +162,8 @@
   )
 
   onMount(() => {
-    if (useLocalStorage('waiting-for-radgems').get()) {
-      waitingForElementsDeposited = true
-    }
     ResultAsync.combineWithAllErrors([
+      userApi.hasWaitingRadgemJob(),
       checkAmountOfElements(),
       checkClaimAvailable($user?.id!, false)
         .map((data) => {
@@ -176,7 +172,8 @@
         })
         .orElse(() => checkClaimAvailable($user?.id!, true))
     ])
-      .map(([_, radGemIds]) => {
+      .map(([hasWaitingRadgemJob, _, radGemIds]) => {
+        waitingForElementsDeposited = hasWaitingRadgemJob
         loadingLedgerData = false
         claimAvailable = true
         claimableRadGemIds = radGemIds
@@ -192,7 +189,6 @@
       if (ws)
         onMessageUnsubscribe = ws.onMessage((msg) => {
           if (msg.type === 'RadgemsMinted') {
-            useLocalStorage('waiting-for-radgems').set(false)
             radgemData = msg.radgemData as typeof radgemData
             claimAvailable = true
             waitingForElementsDeposited = false
