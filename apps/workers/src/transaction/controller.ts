@@ -689,7 +689,7 @@ export const TransactionWorkerController = ({
 
       case 'ElementsDeposited': {
         const { elementsCount, userId } = job.data
-        const numberOfRadgems = elementsCount / config.radQuest.elementsPerRadgem
+        const numberOfRadgems = Math.floor(elementsCount / config.radQuest.elementsPerRadgem)
         const radGems = Array(numberOfRadgems)
           .fill(null)
           .map(newRadgem)
