@@ -88,5 +88,10 @@
     "twilio": "^4.22.0",
     "typescript-wallet": "*",
     "valibot": "0.36.0"
+  },
+  "overrides": {
+    "@radixdlt/rola": {
+      "@radixdlt/radix-engine-toolkit": "1.0.5"
+    }
   }
 }
