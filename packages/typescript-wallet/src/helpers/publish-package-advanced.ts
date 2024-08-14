@@ -45,7 +45,7 @@ export const publishPackageAdvanced = ({
         .submit()
         .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
         .map((createdEntities): string => {
-          console.log(`\n`, JSON.stringify(createdEntities), `\n`)
+          console.log(JSON.stringify(createdEntities, null, 2))
           return createdEntities[0].entity_address!
         })
     })

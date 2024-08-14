@@ -2,7 +2,7 @@ import { newGiftBoxOpenerV2 } from '../helpers/newGiftBoxOpenerV2'
 import { mintAdminBadge } from '../../radquest/helpers/mintAdminBadge'
 import { config } from '../../config'
 import { logger } from '../../helpers'
-import { registerGiftBoxes } from '../helpers/registerGiftBoxes'
+import { setGiftBoxAddresses } from '../helpers/setGiftBoxAddresses'
 
 const result: Record<string, string> = {}
 
@@ -13,7 +13,7 @@ mintAdminBadge({
 })
   .andThen(() => newGiftBoxOpenerV2())
   .map((res) => Object.assign(result, res))
-  .andThen(({ giftBoxOpenerV2 }) => registerGiftBoxes(giftBoxOpenerV2))
+  .andThen(({ giftBoxOpenerV2 }) => setGiftBoxAddresses(giftBoxOpenerV2))
   .map((res) => logger.debug(res))
   .map(() => logger.debug(result))
   .mapErr((err) => logger.error(err, '\n\nDid you forget to rebuild the Scrypto package?\n'))
