@@ -23,6 +23,8 @@ struct UserRewardRecord {
 }
 
 #[derive(ScryptoSbor, Debug, Clone, PartialEq, Eq)]
+// Each of these counts is a number of gift boxes, e.g. claimed_rewards is
+// the number of gift boxes rewards have been claimed for
 pub struct GiftBoxCounts {
     pub opened: Decimal,
     pub deposited_rewards: Decimal,
