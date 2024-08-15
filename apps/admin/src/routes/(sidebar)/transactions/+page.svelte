@@ -111,8 +111,11 @@
 
         <TableBodyCell
           class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
-          >{transaction.status}</TableBodyCell
-        >
+          >{transaction.status}
+          {#if transaction.status === 'ERROR'}
+            ({transaction.error})
+          {/if}
+        </TableBodyCell>
 
         <TableBodyCell
           class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"

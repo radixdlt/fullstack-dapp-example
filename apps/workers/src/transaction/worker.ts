@@ -163,7 +163,7 @@ export const TransactionWorker = (
         await transactionModel(childLogger).setStatus(
           { discriminator, userId },
           TransactionIntentStatus.ERROR,
-          'UnhandledError'
+          WorkerError.UnhandledError
         )
         childLogger.error({
           method: 'transactionWorker.process.error',
