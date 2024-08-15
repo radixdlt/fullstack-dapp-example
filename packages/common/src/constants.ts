@@ -258,8 +258,7 @@ export const RedisKeys = {
 
 export const QuestTogetherConfig = {
   triggerRewardAfterQuest: 'TransferTokens',
-  referralRewardXrdAmount: 5, // amount of XRD to reward referrer when referee completes basic quests
-  maxReferrals: 5
+  maxReferrals: 10
 }
 
 export const EventId = {

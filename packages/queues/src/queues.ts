@@ -78,13 +78,6 @@ export type DepositPartialRewardTransactionJob = {
   requirement: string
 }
 
-export type DepositXrdRewardTransactionJob = {
-  type: 'DepositXrdReward'
-  questId: string
-  amount: number
-  transactionId: string
-}
-
 export type DepositGiftBoxRewardTransactionJob = {
   type: 'DepositGiftBoxReward'
   giftBoxKind: GiftBoxKind
@@ -114,7 +107,6 @@ export type TransactionJob = {
   | DepositRewardTransactionJob
   | CombinedElementsMintRadgemTransactionJob
   | DepositPartialRewardTransactionJob
-  | DepositXrdRewardTransactionJob
   | CombinedElementsAddRadgemImageTransactionJob
   | PopulateResourcesTransactionJob
   | AddAccountAddressToHeroBadgeForgeJob
