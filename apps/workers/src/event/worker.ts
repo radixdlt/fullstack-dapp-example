@@ -1,5 +1,5 @@
 import { Worker, ConnectionOptions, Queues, EventJob } from 'queues'
-import { AppLogger, EventModel } from 'common'
+import { AppLogger, EventModel, WorkerError } from 'common'
 import { EventWorkerController, UserExtended } from './controller'
 import { getUserById } from '../helpers/getUserById'
 import { PrismaClient } from 'database'
@@ -82,7 +82,7 @@ export const EventWorker = (
         logger.error({ method: 'eventWorker.process.error', error })
 
         await eventModel(logger).update(job.data.transactionId, {
-          error: 'UnhandledError'
+          error: WorkerError.UnhandledError
         })
 
         throw error

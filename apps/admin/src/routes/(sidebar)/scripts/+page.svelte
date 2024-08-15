@@ -1,48 +1,7 @@
 <script lang="ts">
+  import { WorkerError } from 'common'
   import { Heading, Dropdown, Button, Checkbox } from 'flowbite-svelte'
   import { ChevronDownOutline } from 'flowbite-svelte-icons'
-
-  type WorkerError = (typeof WorkerError)[keyof typeof WorkerError]
-  const WorkerError = {
-    FailedToGetUserFromDb: 'FailedToGetUserFromDb',
-    FailedToSubmitToRadixNetwork: 'FailedToSubmitToRadixNetwork',
-    FailedToPollTransactionStatus: 'FailedToPollTransactionStatus',
-    FailedToGetManifestBuilder: 'FailedToGetManifestBuilder',
-    FailedToGetPartialRewards: 'FailedToGetPartialRewards',
-    FailedToSendReferralRewards: 'FailedToSendReferralRewards',
-    FailedToConvertStringManifest: 'FailedToConvertStringManifest',
-    FailedToSetTransactionId: 'FailedToSetTransactionId',
-    FailedToGetImageUrl: 'FailedToGetImageUrl',
-    FailedToGetTotalRewardedUsdAmount: 'FailedToGetTotalRewardedUsdAmount',
-    FailedToSetPendingStatus: 'FailedToSetPendingStatus',
-    FailedToSetCompletedStatus: 'FailedToSetCompletedStatus',
-    FailedToGetUserIdFromBadgeId: 'FailedToGetUserIdFromBadgeId',
-    FailedToGetXrdPrice: 'FailedToGetXrdPrice',
-    FailedToAddAuditEntry: 'FailedToAddAuditEntry',
-    FailedToGetTransactionFromDb: 'FailedToGetTransactionFromDb',
-    MissingTransactionInDb: 'MissingTransactionInDb',
-    UnhandledJob: 'UnhandledJob',
-    FeatureDisabled: 'FeatureDisabled',
-    FailedToSendMessage: 'FailedToSendMessage',
-    GatewayError: 'GatewayError',
-    HeroBadgeAlreadyClaimed: 'HeroBadgeAlreadyClaimed',
-    FailedToExecuteDbTransaction: 'FailedToExecuteDbTransaction',
-    FailedToDeriveUserIdFromBadgeId: 'FailedToDeriveUserIdFromBadgeId',
-    UserNotFound: 'UserNotFound',
-    UserDisabledXrdDeposit: 'UserDisabledXrdDeposit',
-    FailedToSubmitTransaction: 'FailedToSubmitTransaction',
-    FailedToCreateMessageInDb: 'FailedToCreateMessageInDb',
-    FailedToUpdateTransactionIntentStatus: 'FailedToUpdateTransactionIntentStatus',
-    FailedToUpdateReferralReward: 'FailedToUpdateReferralReward',
-    FailedToGetKeyPairs: 'FailedToGetKeyPairs',
-    TransactionFailed: 'TransactionFailed',
-    FailedToUpdateSubmittedTransaction: 'FailedToUpdateSubmittedTransaction',
-    CouldNotGetXrdCurrentPriceError: 'CouldNotGetXrdCurrentPriceError',
-    FailedToQueryDb: 'FailedToQueryDb',
-    TemporarySkip: 'TemporarySkip',
-    FailedToCreateRadGem: 'FailedToCreateRadGem',
-    MissingPhoneNumber: 'MissingPhoneNumber'
-  } as const
 
   const rehydrate = (errors?: WorkerError[]) =>
     fetch(`/scripts/rehydrate`, {
