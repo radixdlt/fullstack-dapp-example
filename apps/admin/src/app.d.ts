@@ -1,4 +1,4 @@
-import type { UserType, PrismaClient } from 'database'
+import type { UserType, PrismaClient, BlockedCountryModel } from 'database'
 import type { ImageController } from '$lib/server/image/controller'
 import { getQueues } from 'queues'
 import { AppLogger } from 'common'
@@ -16,6 +16,7 @@ declare global {
       userId: string
       userType: UserType
       dbClient: PrismaClient
+      blockedCountryModel: BlockedCountryModel
       imageController: ImageController
       transactionQueue: Queue['transactionQueue']
       eventQueue: Queue['eventQueue']

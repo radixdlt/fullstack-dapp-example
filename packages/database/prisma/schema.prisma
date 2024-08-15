@@ -192,6 +192,12 @@ enum AuditType {
   CLAIMBOX_DEPOSIT
 }
 
+model BlockedCountry {
+  country     String  
+  countryCode String @id
+  blocked     Boolean @default(false)
+}
+
 model TransactionIntent {
   discriminator             String   @id                  
   status                    TransactionIntentStatus   @default(WAITING)

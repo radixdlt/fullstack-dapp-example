@@ -79,6 +79,11 @@ export type SavedProgress = $Result.DefaultSelection<Prisma.$SavedProgressPayloa
  */
 export type Audit = $Result.DefaultSelection<Prisma.$AuditPayload>
 /**
+ * Model BlockedCountry
+ * 
+ */
+export type BlockedCountry = $Result.DefaultSelection<Prisma.$BlockedCountryPayload>
+/**
  * Model TransactionIntent
  * 
  */
@@ -455,6 +460,16 @@ export class PrismaClient<
     * ```
     */
   get audit(): Prisma.AuditDelegate<ExtArgs>;
+
+  /**
+   * `prisma.blockedCountry`: Exposes CRUD operations for the **BlockedCountry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BlockedCountries
+    * const blockedCountries = await prisma.blockedCountry.findMany()
+    * ```
+    */
+  get blockedCountry(): Prisma.BlockedCountryDelegate<ExtArgs>;
 
   /**
    * `prisma.transactionIntent`: Exposes CRUD operations for the **TransactionIntent** model.
@@ -995,6 +1010,7 @@ export namespace Prisma {
     QuestProgress: 'QuestProgress',
     SavedProgress: 'SavedProgress',
     Audit: 'Audit',
+    BlockedCountry: 'BlockedCountry',
     TransactionIntent: 'TransactionIntent',
     BatchedTransactionIntent: 'BatchedTransactionIntent',
     SubmittedTransaction: 'SubmittedTransaction',
@@ -1016,7 +1032,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'user' | 'userEmail' | 'image' | 'userPhoneNumber' | 'referral' | 'challenge' | 'event' | 'message' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'transactionIntent' | 'batchedTransactionIntent' | 'submittedTransaction' | 'config' | 'marketing'
+      modelProps: 'user' | 'userEmail' | 'image' | 'userPhoneNumber' | 'referral' | 'challenge' | 'event' | 'message' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'blockedCountry' | 'transactionIntent' | 'batchedTransactionIntent' | 'submittedTransaction' | 'config' | 'marketing'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1927,6 +1943,76 @@ export namespace Prisma {
           count: {
             args: Prisma.AuditCountArgs<ExtArgs>,
             result: $Utils.Optional<AuditCountAggregateOutputType> | number
+          }
+        }
+      }
+      BlockedCountry: {
+        payload: Prisma.$BlockedCountryPayload<ExtArgs>
+        fields: Prisma.BlockedCountryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BlockedCountryFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BlockedCountryFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>
+          }
+          findFirst: {
+            args: Prisma.BlockedCountryFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BlockedCountryFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>
+          }
+          findMany: {
+            args: Prisma.BlockedCountryFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>[]
+          }
+          create: {
+            args: Prisma.BlockedCountryCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>
+          }
+          createMany: {
+            args: Prisma.BlockedCountryCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BlockedCountryCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>[]
+          }
+          delete: {
+            args: Prisma.BlockedCountryDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>
+          }
+          update: {
+            args: Prisma.BlockedCountryUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>
+          }
+          deleteMany: {
+            args: Prisma.BlockedCountryDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BlockedCountryUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.BlockedCountryUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>
+          }
+          aggregate: {
+            args: Prisma.BlockedCountryAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateBlockedCountry>
+          }
+          groupBy: {
+            args: Prisma.BlockedCountryGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<BlockedCountryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BlockedCountryCountArgs<ExtArgs>,
+            result: $Utils.Optional<BlockedCountryCountAggregateOutputType> | number
           }
         }
       }
@@ -15330,6 +15416,886 @@ export namespace Prisma {
 
 
   /**
+   * Model BlockedCountry
+   */
+
+  export type AggregateBlockedCountry = {
+    _count: BlockedCountryCountAggregateOutputType | null
+    _min: BlockedCountryMinAggregateOutputType | null
+    _max: BlockedCountryMaxAggregateOutputType | null
+  }
+
+  export type BlockedCountryMinAggregateOutputType = {
+    country: string | null
+    countryCode: string | null
+    blocked: boolean | null
+  }
+
+  export type BlockedCountryMaxAggregateOutputType = {
+    country: string | null
+    countryCode: string | null
+    blocked: boolean | null
+  }
+
+  export type BlockedCountryCountAggregateOutputType = {
+    country: number
+    countryCode: number
+    blocked: number
+    _all: number
+  }
+
+
+  export type BlockedCountryMinAggregateInputType = {
+    country?: true
+    countryCode?: true
+    blocked?: true
+  }
+
+  export type BlockedCountryMaxAggregateInputType = {
+    country?: true
+    countryCode?: true
+    blocked?: true
+  }
+
+  export type BlockedCountryCountAggregateInputType = {
+    country?: true
+    countryCode?: true
+    blocked?: true
+    _all?: true
+  }
+
+  export type BlockedCountryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BlockedCountry to aggregate.
+     */
+    where?: BlockedCountryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BlockedCountries to fetch.
+     */
+    orderBy?: BlockedCountryOrderByWithRelationInput | BlockedCountryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BlockedCountryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BlockedCountries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BlockedCountries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BlockedCountries
+    **/
+    _count?: true | BlockedCountryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BlockedCountryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BlockedCountryMaxAggregateInputType
+  }
+
+  export type GetBlockedCountryAggregateType<T extends BlockedCountryAggregateArgs> = {
+        [P in keyof T & keyof AggregateBlockedCountry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBlockedCountry[P]>
+      : GetScalarType<T[P], AggregateBlockedCountry[P]>
+  }
+
+
+
+
+  export type BlockedCountryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BlockedCountryWhereInput
+    orderBy?: BlockedCountryOrderByWithAggregationInput | BlockedCountryOrderByWithAggregationInput[]
+    by: BlockedCountryScalarFieldEnum[] | BlockedCountryScalarFieldEnum
+    having?: BlockedCountryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BlockedCountryCountAggregateInputType | true
+    _min?: BlockedCountryMinAggregateInputType
+    _max?: BlockedCountryMaxAggregateInputType
+  }
+
+  export type BlockedCountryGroupByOutputType = {
+    country: string
+    countryCode: string
+    blocked: boolean
+    _count: BlockedCountryCountAggregateOutputType | null
+    _min: BlockedCountryMinAggregateOutputType | null
+    _max: BlockedCountryMaxAggregateOutputType | null
+  }
+
+  type GetBlockedCountryGroupByPayload<T extends BlockedCountryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BlockedCountryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BlockedCountryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BlockedCountryGroupByOutputType[P]>
+            : GetScalarType<T[P], BlockedCountryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BlockedCountrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    country?: boolean
+    countryCode?: boolean
+    blocked?: boolean
+  }, ExtArgs["result"]["blockedCountry"]>
+
+  export type BlockedCountrySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    country?: boolean
+    countryCode?: boolean
+    blocked?: boolean
+  }, ExtArgs["result"]["blockedCountry"]>
+
+  export type BlockedCountrySelectScalar = {
+    country?: boolean
+    countryCode?: boolean
+    blocked?: boolean
+  }
+
+
+  export type $BlockedCountryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BlockedCountry"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      country: string
+      countryCode: string
+      blocked: boolean
+    }, ExtArgs["result"]["blockedCountry"]>
+    composites: {}
+  }
+
+  type BlockedCountryGetPayload<S extends boolean | null | undefined | BlockedCountryDefaultArgs> = $Result.GetResult<Prisma.$BlockedCountryPayload, S>
+
+  type BlockedCountryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<BlockedCountryFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: BlockedCountryCountAggregateInputType | true
+    }
+
+  export interface BlockedCountryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BlockedCountry'], meta: { name: 'BlockedCountry' } }
+    /**
+     * Find zero or one BlockedCountry that matches the filter.
+     * @param {BlockedCountryFindUniqueArgs} args - Arguments to find a BlockedCountry
+     * @example
+     * // Get one BlockedCountry
+     * const blockedCountry = await prisma.blockedCountry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends BlockedCountryFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, BlockedCountryFindUniqueArgs<ExtArgs>>
+    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one BlockedCountry that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {BlockedCountryFindUniqueOrThrowArgs} args - Arguments to find a BlockedCountry
+     * @example
+     * // Get one BlockedCountry
+     * const blockedCountry = await prisma.blockedCountry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends BlockedCountryFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, BlockedCountryFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first BlockedCountry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BlockedCountryFindFirstArgs} args - Arguments to find a BlockedCountry
+     * @example
+     * // Get one BlockedCountry
+     * const blockedCountry = await prisma.blockedCountry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends BlockedCountryFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, BlockedCountryFindFirstArgs<ExtArgs>>
+    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first BlockedCountry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BlockedCountryFindFirstOrThrowArgs} args - Arguments to find a BlockedCountry
+     * @example
+     * // Get one BlockedCountry
+     * const blockedCountry = await prisma.blockedCountry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends BlockedCountryFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, BlockedCountryFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more BlockedCountries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BlockedCountryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BlockedCountries
+     * const blockedCountries = await prisma.blockedCountry.findMany()
+     * 
+     * // Get first 10 BlockedCountries
+     * const blockedCountries = await prisma.blockedCountry.findMany({ take: 10 })
+     * 
+     * // Only select the `country`
+     * const blockedCountryWithCountryOnly = await prisma.blockedCountry.findMany({ select: { country: true } })
+     * 
+    **/
+    findMany<T extends BlockedCountryFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, BlockedCountryFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a BlockedCountry.
+     * @param {BlockedCountryCreateArgs} args - Arguments to create a BlockedCountry.
+     * @example
+     * // Create one BlockedCountry
+     * const BlockedCountry = await prisma.blockedCountry.create({
+     *   data: {
+     *     // ... data to create a BlockedCountry
+     *   }
+     * })
+     * 
+    **/
+    create<T extends BlockedCountryCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, BlockedCountryCreateArgs<ExtArgs>>
+    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many BlockedCountries.
+     * @param {BlockedCountryCreateManyArgs} args - Arguments to create many BlockedCountries.
+     * @example
+     * // Create many BlockedCountries
+     * const blockedCountry = await prisma.blockedCountry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+    **/
+    createMany<T extends BlockedCountryCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, BlockedCountryCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BlockedCountries and returns the data saved in the database.
+     * @param {BlockedCountryCreateManyAndReturnArgs} args - Arguments to create many BlockedCountries.
+     * @example
+     * // Create many BlockedCountries
+     * const blockedCountry = await prisma.blockedCountry.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BlockedCountries and only return the `country`
+     * const blockedCountryWithCountryOnly = await prisma.blockedCountry.createManyAndReturn({ 
+     *   select: { country: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends BlockedCountryCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, BlockedCountryCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'createManyAndReturn'>>
+
+    /**
+     * Delete a BlockedCountry.
+     * @param {BlockedCountryDeleteArgs} args - Arguments to delete one BlockedCountry.
+     * @example
+     * // Delete one BlockedCountry
+     * const BlockedCountry = await prisma.blockedCountry.delete({
+     *   where: {
+     *     // ... filter to delete one BlockedCountry
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends BlockedCountryDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, BlockedCountryDeleteArgs<ExtArgs>>
+    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one BlockedCountry.
+     * @param {BlockedCountryUpdateArgs} args - Arguments to update one BlockedCountry.
+     * @example
+     * // Update one BlockedCountry
+     * const blockedCountry = await prisma.blockedCountry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends BlockedCountryUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, BlockedCountryUpdateArgs<ExtArgs>>
+    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more BlockedCountries.
+     * @param {BlockedCountryDeleteManyArgs} args - Arguments to filter BlockedCountries to delete.
+     * @example
+     * // Delete a few BlockedCountries
+     * const { count } = await prisma.blockedCountry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends BlockedCountryDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, BlockedCountryDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BlockedCountries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BlockedCountryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BlockedCountries
+     * const blockedCountry = await prisma.blockedCountry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends BlockedCountryUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, BlockedCountryUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one BlockedCountry.
+     * @param {BlockedCountryUpsertArgs} args - Arguments to update or create a BlockedCountry.
+     * @example
+     * // Update or create a BlockedCountry
+     * const blockedCountry = await prisma.blockedCountry.upsert({
+     *   create: {
+     *     // ... data to create a BlockedCountry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BlockedCountry we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends BlockedCountryUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, BlockedCountryUpsertArgs<ExtArgs>>
+    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of BlockedCountries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BlockedCountryCountArgs} args - Arguments to filter BlockedCountries to count.
+     * @example
+     * // Count the number of BlockedCountries
+     * const count = await prisma.blockedCountry.count({
+     *   where: {
+     *     // ... the filter for the BlockedCountries we want to count
+     *   }
+     * })
+    **/
+    count<T extends BlockedCountryCountArgs>(
+      args?: Subset<T, BlockedCountryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BlockedCountryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BlockedCountry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BlockedCountryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BlockedCountryAggregateArgs>(args: Subset<T, BlockedCountryAggregateArgs>): Prisma.PrismaPromise<GetBlockedCountryAggregateType<T>>
+
+    /**
+     * Group by BlockedCountry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BlockedCountryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BlockedCountryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BlockedCountryGroupByArgs['orderBy'] }
+        : { orderBy?: BlockedCountryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BlockedCountryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBlockedCountryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BlockedCountry model
+   */
+  readonly fields: BlockedCountryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BlockedCountry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BlockedCountryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the BlockedCountry model
+   */ 
+  interface BlockedCountryFieldRefs {
+    readonly country: FieldRef<"BlockedCountry", 'String'>
+    readonly countryCode: FieldRef<"BlockedCountry", 'String'>
+    readonly blocked: FieldRef<"BlockedCountry", 'Boolean'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BlockedCountry findUnique
+   */
+  export type BlockedCountryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BlockedCountry
+     */
+    select?: BlockedCountrySelect<ExtArgs> | null
+    /**
+     * Filter, which BlockedCountry to fetch.
+     */
+    where: BlockedCountryWhereUniqueInput
+  }
+
+  /**
+   * BlockedCountry findUniqueOrThrow
+   */
+  export type BlockedCountryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BlockedCountry
+     */
+    select?: BlockedCountrySelect<ExtArgs> | null
+    /**
+     * Filter, which BlockedCountry to fetch.
+     */
+    where: BlockedCountryWhereUniqueInput
+  }
+
+  /**
+   * BlockedCountry findFirst
+   */
+  export type BlockedCountryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BlockedCountry
+     */
+    select?: BlockedCountrySelect<ExtArgs> | null
+    /**
+     * Filter, which BlockedCountry to fetch.
+     */
+    where?: BlockedCountryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BlockedCountries to fetch.
+     */
+    orderBy?: BlockedCountryOrderByWithRelationInput | BlockedCountryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BlockedCountries.
+     */
+    cursor?: BlockedCountryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BlockedCountries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BlockedCountries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BlockedCountries.
+     */
+    distinct?: BlockedCountryScalarFieldEnum | BlockedCountryScalarFieldEnum[]
+  }
+
+  /**
+   * BlockedCountry findFirstOrThrow
+   */
+  export type BlockedCountryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BlockedCountry
+     */
+    select?: BlockedCountrySelect<ExtArgs> | null
+    /**
+     * Filter, which BlockedCountry to fetch.
+     */
+    where?: BlockedCountryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BlockedCountries to fetch.
+     */
+    orderBy?: BlockedCountryOrderByWithRelationInput | BlockedCountryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BlockedCountries.
+     */
+    cursor?: BlockedCountryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BlockedCountries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BlockedCountries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BlockedCountries.
+     */
+    distinct?: BlockedCountryScalarFieldEnum | BlockedCountryScalarFieldEnum[]
+  }
+
+  /**
+   * BlockedCountry findMany
+   */
+  export type BlockedCountryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BlockedCountry
+     */
+    select?: BlockedCountrySelect<ExtArgs> | null
+    /**
+     * Filter, which BlockedCountries to fetch.
+     */
+    where?: BlockedCountryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BlockedCountries to fetch.
+     */
+    orderBy?: BlockedCountryOrderByWithRelationInput | BlockedCountryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BlockedCountries.
+     */
+    cursor?: BlockedCountryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BlockedCountries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BlockedCountries.
+     */
+    skip?: number
+    distinct?: BlockedCountryScalarFieldEnum | BlockedCountryScalarFieldEnum[]
+  }
+
+  /**
+   * BlockedCountry create
+   */
+  export type BlockedCountryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BlockedCountry
+     */
+    select?: BlockedCountrySelect<ExtArgs> | null
+    /**
+     * The data needed to create a BlockedCountry.
+     */
+    data: XOR<BlockedCountryCreateInput, BlockedCountryUncheckedCreateInput>
+  }
+
+  /**
+   * BlockedCountry createMany
+   */
+  export type BlockedCountryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BlockedCountries.
+     */
+    data: BlockedCountryCreateManyInput | BlockedCountryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BlockedCountry createManyAndReturn
+   */
+  export type BlockedCountryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BlockedCountry
+     */
+    select?: BlockedCountrySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many BlockedCountries.
+     */
+    data: BlockedCountryCreateManyInput | BlockedCountryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BlockedCountry update
+   */
+  export type BlockedCountryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BlockedCountry
+     */
+    select?: BlockedCountrySelect<ExtArgs> | null
+    /**
+     * The data needed to update a BlockedCountry.
+     */
+    data: XOR<BlockedCountryUpdateInput, BlockedCountryUncheckedUpdateInput>
+    /**
+     * Choose, which BlockedCountry to update.
+     */
+    where: BlockedCountryWhereUniqueInput
+  }
+
+  /**
+   * BlockedCountry updateMany
+   */
+  export type BlockedCountryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BlockedCountries.
+     */
+    data: XOR<BlockedCountryUpdateManyMutationInput, BlockedCountryUncheckedUpdateManyInput>
+    /**
+     * Filter which BlockedCountries to update
+     */
+    where?: BlockedCountryWhereInput
+  }
+
+  /**
+   * BlockedCountry upsert
+   */
+  export type BlockedCountryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BlockedCountry
+     */
+    select?: BlockedCountrySelect<ExtArgs> | null
+    /**
+     * The filter to search for the BlockedCountry to update in case it exists.
+     */
+    where: BlockedCountryWhereUniqueInput
+    /**
+     * In case the BlockedCountry found by the `where` argument doesn't exist, create a new BlockedCountry with this data.
+     */
+    create: XOR<BlockedCountryCreateInput, BlockedCountryUncheckedCreateInput>
+    /**
+     * In case the BlockedCountry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BlockedCountryUpdateInput, BlockedCountryUncheckedUpdateInput>
+  }
+
+  /**
+   * BlockedCountry delete
+   */
+  export type BlockedCountryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BlockedCountry
+     */
+    select?: BlockedCountrySelect<ExtArgs> | null
+    /**
+     * Filter which BlockedCountry to delete.
+     */
+    where: BlockedCountryWhereUniqueInput
+  }
+
+  /**
+   * BlockedCountry deleteMany
+   */
+  export type BlockedCountryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BlockedCountries to delete
+     */
+    where?: BlockedCountryWhereInput
+  }
+
+  /**
+   * BlockedCountry without action
+   */
+  export type BlockedCountryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BlockedCountry
+     */
+    select?: BlockedCountrySelect<ExtArgs> | null
+  }
+
+
+  /**
    * Model TransactionIntent
    */
 
@@ -20314,6 +21280,15 @@ export namespace Prisma {
   export type AuditScalarFieldEnum = (typeof AuditScalarFieldEnum)[keyof typeof AuditScalarFieldEnum]
 
 
+  export const BlockedCountryScalarFieldEnum: {
+    country: 'country',
+    countryCode: 'countryCode',
+    blocked: 'blocked'
+  };
+
+  export type BlockedCountryScalarFieldEnum = (typeof BlockedCountryScalarFieldEnum)[keyof typeof BlockedCountryScalarFieldEnum]
+
+
   export const TransactionIntentScalarFieldEnum: {
     discriminator: 'discriminator',
     status: 'status',
@@ -21336,6 +22311,48 @@ export namespace Prisma {
     data?: JsonWithAggregatesFilter<"Audit">
   }
 
+  export type BlockedCountryWhereInput = {
+    AND?: BlockedCountryWhereInput | BlockedCountryWhereInput[]
+    OR?: BlockedCountryWhereInput[]
+    NOT?: BlockedCountryWhereInput | BlockedCountryWhereInput[]
+    country?: StringFilter<"BlockedCountry"> | string
+    countryCode?: StringFilter<"BlockedCountry"> | string
+    blocked?: BoolFilter<"BlockedCountry"> | boolean
+  }
+
+  export type BlockedCountryOrderByWithRelationInput = {
+    country?: SortOrder
+    countryCode?: SortOrder
+    blocked?: SortOrder
+  }
+
+  export type BlockedCountryWhereUniqueInput = Prisma.AtLeast<{
+    countryCode?: string
+    AND?: BlockedCountryWhereInput | BlockedCountryWhereInput[]
+    OR?: BlockedCountryWhereInput[]
+    NOT?: BlockedCountryWhereInput | BlockedCountryWhereInput[]
+    country?: StringFilter<"BlockedCountry"> | string
+    blocked?: BoolFilter<"BlockedCountry"> | boolean
+  }, "countryCode">
+
+  export type BlockedCountryOrderByWithAggregationInput = {
+    country?: SortOrder
+    countryCode?: SortOrder
+    blocked?: SortOrder
+    _count?: BlockedCountryCountOrderByAggregateInput
+    _max?: BlockedCountryMaxOrderByAggregateInput
+    _min?: BlockedCountryMinOrderByAggregateInput
+  }
+
+  export type BlockedCountryScalarWhereWithAggregatesInput = {
+    AND?: BlockedCountryScalarWhereWithAggregatesInput | BlockedCountryScalarWhereWithAggregatesInput[]
+    OR?: BlockedCountryScalarWhereWithAggregatesInput[]
+    NOT?: BlockedCountryScalarWhereWithAggregatesInput | BlockedCountryScalarWhereWithAggregatesInput[]
+    country?: StringWithAggregatesFilter<"BlockedCountry"> | string
+    countryCode?: StringWithAggregatesFilter<"BlockedCountry"> | string
+    blocked?: BoolWithAggregatesFilter<"BlockedCountry"> | boolean
+  }
+
   export type TransactionIntentWhereInput = {
     AND?: TransactionIntentWhereInput | TransactionIntentWhereInput[]
     OR?: TransactionIntentWhereInput[]
@@ -22338,6 +23355,48 @@ export namespace Prisma {
     xrdUsdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     xrdPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     data?: JsonNullValueInput | InputJsonValue
+  }
+
+  export type BlockedCountryCreateInput = {
+    country: string
+    countryCode: string
+    blocked?: boolean
+  }
+
+  export type BlockedCountryUncheckedCreateInput = {
+    country: string
+    countryCode: string
+    blocked?: boolean
+  }
+
+  export type BlockedCountryUpdateInput = {
+    country?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type BlockedCountryUncheckedUpdateInput = {
+    country?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type BlockedCountryCreateManyInput = {
+    country: string
+    countryCode: string
+    blocked?: boolean
+  }
+
+  export type BlockedCountryUpdateManyMutationInput = {
+    country?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type BlockedCountryUncheckedUpdateManyInput = {
+    country?: StringFieldUpdateOperationsInput | string
+    countryCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type TransactionIntentCreateInput = {
@@ -23414,6 +24473,24 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAuditTypeFilter<$PrismaModel>
     _max?: NestedEnumAuditTypeFilter<$PrismaModel>
+  }
+
+  export type BlockedCountryCountOrderByAggregateInput = {
+    country?: SortOrder
+    countryCode?: SortOrder
+    blocked?: SortOrder
+  }
+
+  export type BlockedCountryMaxOrderByAggregateInput = {
+    country?: SortOrder
+    countryCode?: SortOrder
+    blocked?: SortOrder
+  }
+
+  export type BlockedCountryMinOrderByAggregateInput = {
+    country?: SortOrder
+    countryCode?: SortOrder
+    blocked?: SortOrder
   }
 
   export type EnumTransactionIntentStatusFilter<$PrismaModel = never> = {
@@ -27615,6 +28692,10 @@ export namespace Prisma {
      * @deprecated Use AuditDefaultArgs instead
      */
     export type AuditArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = AuditDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use BlockedCountryDefaultArgs instead
+     */
+    export type BlockedCountryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BlockedCountryDefaultArgs<ExtArgs>
     /**
      * @deprecated Use TransactionIntentDefaultArgs instead
      */
