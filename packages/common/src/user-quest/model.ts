@@ -261,6 +261,56 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
       }
     )
 
+  const setDownloadWalletRequirement = (userId: string) =>
+    ResultAsync.fromPromise(
+      db.completedQuestRequirement.upsert({
+        where: {
+          questId_userId_requirementId: {
+            userId,
+            questId: 'SetupWallet',
+            requirementId: 'DownloadWallet'
+          }
+        },
+        update: {},
+        create: {
+          userId,
+          questId: 'SetupWallet',
+          requirementId: 'DownloadWallet'
+        }
+      }),
+      (error) => {
+        logger?.error({
+          error,
+          method: 'updateDownloadWalletRequirement',
+          model: 'UserQuestModel'
+        })
+        return createApiError('failed to update download wallet requirement', 400)()
+      }
+    )
+
+  const setConnectWalletRequirement = (userId: string) =>
+    ResultAsync.fromPromise(
+      db.completedQuestRequirement.upsert({
+        where: {
+          questId_userId_requirementId: {
+            userId,
+            questId: 'SetupWallet',
+            requirementId: 'ConnectWallet'
+          }
+        },
+        update: {},
+        create: {
+          userId,
+          questId: 'SetupWallet',
+          requirementId: 'ConnectWallet'
+        }
+      }),
+      (error) => {
+        logger?.error({ error, method: 'updateConnectWalletRequirement', model: 'UserQuestModel' })
+        return createApiError('failed to update connect wallet requirement', 400)()
+      }
+    )
+
   return {
     getQuestStatus,
     getQuestsStatus,
@@ -268,6 +318,8 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
     findPrerequisites,
     getQuestsWithTrackedAccounts,
     getDepositedRewards,
+    setConnectWalletRequirement,
+    setDownloadWalletRequirement,
     addVerifiedPhoneNumber,
     addCompletedRequirement,
     findCompletedRequirements,

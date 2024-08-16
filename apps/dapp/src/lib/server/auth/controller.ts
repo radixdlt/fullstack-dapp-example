@@ -7,20 +7,12 @@ import {
 import { hasChallengeExpired } from './helpers/has-challenge-expired'
 import { Rola } from '@radixdlt/rola'
 import { SignedChallenge, parseSignedChallenge } from '@radixdlt/radix-dapp-toolkit'
-import {
-  createApiError,
-  type ApiError,
-  CookieKeys,
-  decodeBase64,
-  parseJSON,
-  type MarketingUtmValues
-} from 'common'
+import { type ApiError, CookieKeys, decodeBase64, parseJSON, type MarketingUtmValues } from 'common'
 
 import { Result, ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import type { Cookies } from '@sveltejs/kit'
 
 import type { UserType } from 'database'
-import { dbClient } from '$lib/db'
 
 export type AuthController = ReturnType<typeof AuthController>
 export const AuthController = ({
@@ -28,6 +20,7 @@ export const AuthController = ({
   config,
   authModel,
   userModel,
+  userQuestModel,
   gatewayApi,
   logger,
   marketingModel
@@ -80,56 +73,6 @@ export const AuthController = ({
       .asyncAndThen((values) => (values ? marketingModel.add(userId, values) : okAsync(undefined)))
       .map(() => cookies.delete(CookieKeys.Utm, { path: '/' }))
 
-  const updateConnectWalletRequirement = (userId: string) =>
-    ResultAsync.fromPromise(
-      dbClient.completedQuestRequirement.upsert({
-        where: {
-          questId_userId_requirementId: {
-            userId,
-            questId: 'SetupWallet',
-            requirementId: 'ConnectWallet'
-          }
-        },
-        update: {},
-        create: {
-          userId,
-          questId: 'SetupWallet',
-          requirementId: 'ConnectWallet'
-        }
-      }),
-      (error) => {
-        logger?.error({ error, method: 'updateConnectWalletRequirement', model: 'UserQuestModel' })
-        return createApiError('failed to update connect wallet requirement', 400)()
-      }
-    )
-
-  const updateDownloadWalletRequirement = (userId: string) =>
-    ResultAsync.fromPromise(
-      dbClient.completedQuestRequirement.upsert({
-        where: {
-          questId_userId_requirementId: {
-            userId,
-            questId: 'SetupWallet',
-            requirementId: 'DownloadWallet'
-          }
-        },
-        update: {},
-        create: {
-          userId,
-          questId: 'SetupWallet',
-          requirementId: 'DownloadWallet'
-        }
-      }),
-      (error) => {
-        logger?.error({
-          error,
-          method: 'updateDownloadWalletRequirement',
-          model: 'UserQuestModel'
-        })
-        return createApiError('failed to update download wallet requirement', 400)()
-      }
-    )
-
   const preventFraud = (clientIp: string) =>
     userModel.getUserIdsByIp(clientIp).andThen((ids) =>
       ids.length > config.dapp.maxUserPerIp
@@ -162,12 +105,10 @@ export const AuthController = ({
     ctx.logger.trace({ method: 'login', personaProof })
     const parsedPersonaResult = parseSignedChallenge(personaProof)
     if (!parsedPersonaResult.success) {
-      if (!parsedPersonaResult.success) {
-        ctx.logger.error({
-          method: 'login.parseSignedChallenge.error',
-          error: parsedPersonaResult.issues
-        })
-      }
+      ctx.logger.error({
+        method: 'login.parseSignedChallenge.error',
+        error: parsedPersonaResult.issues
+      })
 
       return errAsync({
         httpResponseCode: 400,
@@ -219,8 +160,8 @@ export const AuthController = ({
                 .andThen((referredBy) => userModel.create(personaProof.address, referredBy))
                 .andThen((user) =>
                   ResultAsync.combine([
-                    updateDownloadWalletRequirement(user.id),
-                    updateConnectWalletRequirement(user.id),
+                    userQuestModel.setDownloadWalletRequirement(user.id),
+                    userQuestModel.setConnectWalletRequirement(user.id),
                     addUtmToDb(user.id, cookies)
                   ]).map(() => user)
                 )
