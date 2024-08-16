@@ -3,7 +3,7 @@ import { env as privateEnv } from '$env/dynamic/private'
 import { verifyJwt } from '$lib/verify-jwt'
 import { PrismaClient } from 'database'
 import { ImageController } from '$lib/server/image/controller'
-import { ImageModel, appLogger } from 'common'
+import { ImageModel, appLogger, BlockedCountryModel } from 'common'
 import { getQueues } from 'queues'
 import { config } from '$lib/config'
 import { readReplicas } from '@prisma/extension-read-replicas'
@@ -23,6 +23,8 @@ const imageController = ImageController({
   imageModel: ImageModel(dbClient)(logger),
   systemQueue: systemQueue.queue
 })
+
+const blockedCountryModel = BlockedCountryModel(dbClient)(logger)
 
 export const handle: Handle = async ({ event, resolve }) => {
   if (event.url.pathname === '/health') {
@@ -46,6 +48,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.userId = userId
     event.locals.userType = userType
     event.locals.dbClient = dbClient
+    event.locals.blockedCountryModel = blockedCountryModel
     event.locals.imageController = imageController
     event.locals.eventQueue = eventQueue
     event.locals.transactionQueue = transactionQueue

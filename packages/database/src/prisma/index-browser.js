@@ -217,6 +217,12 @@ exports.Prisma.AuditScalarFieldEnum = {
   data: 'data'
 };
 
+exports.Prisma.BlockedCountryScalarFieldEnum = {
+  country: 'country',
+  countryCode: 'countryCode',
+  blocked: 'blocked'
+};
+
 exports.Prisma.TransactionIntentScalarFieldEnum = {
   discriminator: 'discriminator',
   status: 'status',
@@ -346,6 +352,7 @@ exports.Prisma.ModelName = {
   QuestProgress: 'QuestProgress',
   SavedProgress: 'SavedProgress',
   Audit: 'Audit',
+  BlockedCountry: 'BlockedCountry',
   TransactionIntent: 'TransactionIntent',
   BatchedTransactionIntent: 'BatchedTransactionIntent',
   SubmittedTransaction: 'SubmittedTransaction',
