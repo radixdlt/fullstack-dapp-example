@@ -1,27 +1,27 @@
 <script lang="ts">
-  import Button from '$lib/components/button/Button.svelte'
+  // import Button from '$lib/components/button/Button.svelte'
   import ReferralLevel from '$lib/components/referral/ReferralLevel.svelte'
   import ReferralsSoFar from '$lib/components/referral/ReferralsSoFar.svelte'
   import ShareBox from '$lib/components/referral/ShareBox.svelte'
 
   import FireIcon from '@images/fire.svg'
-  import {
-    createClaimXRDRewardsTransaction,
-    handleKycBadge
-  } from '$lib/helpers/create-claim-rewards-transaction'
+  // import {
+  //   createClaimXRDRewardsTransaction,
+  //   handleKycBadge
+  // } from '$lib/helpers/create-claim-rewards-transaction'
   import { i18n } from '$lib/i18n/i18n'
-  import { sendTransaction } from '$lib/rdt'
+  // import { sendTransaction } from '$lib/rdt'
 
   import { QuestDefinitions } from 'content'
   import { createEventDispatcher } from 'svelte'
-  import { user } from '../../../../../stores'
-  import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
+  // import { user } from '../../../../../stores'
+  // import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
 
   type Level = 'BronzeLevel' | 'SilverLevel' | 'GoldLevel'
 
   export let referrals: string[]
   export let claimed: number
-  export let readyToClaim: number
+  // export let readyToClaim: number
   export let progress: Record<Level, string>
 
   const dispatch = createEventDispatcher<{ seeReferrals: undefined; refresh: undefined }>()
@@ -33,7 +33,7 @@
     GoldLevel: requirements.GoldLevel.threshold
   }
 
-  $: loading = false
+  // $: loading = false
 
   $: currentLevel =
     (Object.entries(progress).find(([_, status]) => status === 'IN_PROGRESS')?.[0] as Level) ||
@@ -51,30 +51,30 @@
   )
   $: unlockedSuperLevel = referrals.length >= threshold.SilverLevel
 
-  const claimXrd = () => {
-    loading = true
+  // const claimXrd = () => {
+  //   loading = true
 
-    const account = $user?.accountAddress!
-    const sendTx = (instapassBadge?: string) =>
-      sendTransaction({
-        transactionManifest: createClaimXRDRewardsTransaction(
-          $user?.accountAddress!,
-          $user?.id!,
-          `QuestTogether`,
-          readyToClaim,
-          instapassBadge
-        )
-      })
+  //   const account = $user?.accountAddress!
+  //   const sendTx = (instapassBadge?: string) =>
+  //     sendTransaction({
+  //       transactionManifest: createClaimXRDRewardsTransaction(
+  //         $user?.accountAddress!,
+  //         $user?.id!,
+  //         `QuestTogether`,
+  //         readyToClaim,
+  //         instapassBadge
+  //       )
+  //     })
 
-    return handleKycBadge($user?.id!, account, sendTx)
-      .map(() => {
-        loading = false
-        dispatch('refresh')
-      })
-      .mapErr(() => {
-        loading = false
-      })
-  }
+  //   return handleKycBadge($user?.id!, account, sendTx)
+  //     .map(() => {
+  //       loading = false
+  //       dispatch('refresh')
+  //     })
+  //     .mapErr(() => {
+  //       loading = false
+  //     })
+  // }
 
   const refresh = () => {
     dispatch('refresh')
@@ -99,7 +99,7 @@
     </div>
   {/if}
 
-  {#if readyToClaim > 0}
+  <!-- {#if readyToClaim > 0}
     <div class="claim-button">
       <Button on:click={claimXrd} disabled={loading}>
         <div class="claim-button-text">
@@ -112,7 +112,7 @@
         </div>
       </Button>
     </div>
-  {/if}
+  {/if} -->
 
   <div class="your-level">
     {#if unlockedSuperLevel}
@@ -203,7 +203,7 @@
     text-decoration: underline;
   }
 
-  .claim-button-text {
+  /* .claim-button-text {
     margin: 0.25rem 0.75rem;
   }
 
@@ -211,7 +211,7 @@
     display: flex;
     margin: 1rem 0;
     justify-content: center;
-  }
+  } */
 
   .text-center {
     text-align: center;
