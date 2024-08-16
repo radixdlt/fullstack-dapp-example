@@ -121,7 +121,7 @@
     }
   },
   "Thorswap": {
-    "title": "Bridge Tokens with THORSwap",
+    "title": "Bridge Tokens with Maya",
     "description": "Move assets in and out of Radix",
     "introDescription": "Learn more about THORSwap and how to bridge assets to and from Radix.",
     "requirements": {
