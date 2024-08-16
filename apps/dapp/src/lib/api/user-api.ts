@@ -1,6 +1,6 @@
 import { fetchWrapper } from '$lib/helpers/fetch-wrapper'
 import type { SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
-import type { QuestStatus, User } from 'database'
+import type { GoldenTicket, QuestStatus, User } from 'database'
 
 const me = (serverFetch?: typeof fetch) =>
   fetchWrapper<User>((serverFetch ?? fetch)('/api/user')).map(({ data }) => data)
@@ -84,6 +84,16 @@ const getNameByRefferalCode = (referralCode: string) =>
     })
   ).map(({ data }) => data)
 
+const claimGoldenTicket = (id: string) =>
+  fetchWrapper(fetch(`/api/golden-ticket/${id}`, { method: 'POST' })).map(({ data }) => data)
+
+const findClaimedGoldenTicket = () =>
+  fetchWrapper<GoldenTicket | Record<string, never>>(
+    fetch(`/api/golden-ticket`, {
+      method: 'GET'
+    })
+  ).map(({ data }) => (Object.keys(data).length > 0 ? (data as GoldenTicket) : undefined))
+
 export const userApi = {
   me,
   getReferrals,
@@ -92,5 +102,7 @@ export const userApi = {
   allowAccountAddressToMintHeroBadge,
   hasReceivedXrd,
   setUserFields,
-  directDepositXrd
+  directDepositXrd,
+  claimGoldenTicket,
+  findClaimedGoldenTicket
 } as const

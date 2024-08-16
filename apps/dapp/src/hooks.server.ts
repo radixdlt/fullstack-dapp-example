@@ -14,7 +14,8 @@ import {
   NotificationModel,
   MarketingModel,
   ImageModel,
-  MailerLiteModel
+  MailerLiteModel,
+  GoldenTicketModel
 } from 'common'
 import { UserType } from 'database'
 import { dbClient } from '$lib/db'
@@ -109,6 +110,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     notificationModel: notificationModel(logger),
     marketingModel: marketingModel(logger),
     imageModel: imageModel(logger),
+    goldenTicketModel: GoldenTicketModel(dbClient)(logger),
     systemQueue
   } satisfies ControllerDependencies
 

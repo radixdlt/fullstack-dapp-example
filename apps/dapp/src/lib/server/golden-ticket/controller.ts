@@ -23,9 +23,23 @@ export const GoldenTicketController = ({ dbClient, logger }: ControllerDependenc
       .map((data) => ({ data, httpResponseCode: 200 }))
       .mapErr(createApiError('Failed to get all tickets', 400))
 
+  const claim = (id: string, userId: string) =>
+    model
+      .claimTicket(id, userId)
+      .map((data) => ({ data, httpResponseCode: 200 }))
+      .mapErr(createApiError('Failed to claim ticket', 400))
+
+  const hasClaimed = (userId: string) =>
+    model
+      .userHasClaimedTicket(userId)
+      .map((data) => ({ data, httpResponseCode: 200 }))
+      .mapErr(createApiError('Failed to check if user has claimed a ticket', 400))
+
   return {
     getTicket,
     getBatch,
-    getAll
+    getAll,
+    claim,
+    hasClaimed
   }
 }

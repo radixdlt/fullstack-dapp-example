@@ -1,27 +1,13 @@
 import { PrismaClient } from 'database'
-import { ResultAsync } from 'neverthrow'
 import { type AppLogger, getRandomReferralCode } from '..'
 import * as crypto from 'crypto'
+import { resultWrapperWithLogger } from '../helpers/db-wrapper'
 
 export enum GoldenTicketError {
   NOT_FOUND = 'Ticket not found',
   ALREADY_CLAIMED = 'Ticket already claimed',
   EXPIRED = 'Ticket expired'
 }
-
-const resultWrapperWithLogger =
-  (logger?: AppLogger) =>
-  (name: string) =>
-  <T, P, I extends Array<P>>(method: (...args: I) => Promise<T>) =>
-  (...args: I) =>
-    ResultAsync.fromPromise(method(...args), (error) => {
-      logger?.error({
-        error: (error as Error).message,
-        method: name,
-        model: 'GoldenTicketModel'
-      })
-      return error as Error
-    })
 
 export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger) => {
   const wrapper = resultWrapperWithLogger(logger)

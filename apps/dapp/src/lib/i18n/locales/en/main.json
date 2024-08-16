@@ -39,6 +39,11 @@
       "content": "If you have problems completing quests or making claims, please try again later.",
       "link": "Learn more on X @radixdlt",
       "button": "Close"
+    },
+    "GoldenTicket": {
+      "title": "You've scanned a golden ticket!",
+      "content": "To claim your ticket, please log out and back in again.",
+      "button": "Close"
     }
   },
   "footer": {

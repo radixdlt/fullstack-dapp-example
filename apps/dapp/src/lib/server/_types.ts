@@ -13,7 +13,8 @@ import type {
   NotificationModel,
   MarketingModel,
   ImageModel,
-  MailerLiteModel
+  MailerLiteModel,
+  GoldenTicketModel
 } from 'common'
 import type { PrismaClient } from 'database'
 import type { ResultAsync } from 'neverthrow'
@@ -61,6 +62,7 @@ export type ControllerDependencies = {
   notificationModel: ReturnType<NotificationModel>
   marketingModel: ReturnType<MarketingModel>
   imageModel: ReturnType<ImageModel>
+  goldenTicketModel: ReturnType<ReturnType<typeof GoldenTicketModel>>
   logger: AppLogger
   dbClient: PrismaClient
   addresses: Addresses
