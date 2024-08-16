@@ -257,6 +257,7 @@ export const RedisKeys = {
 }
 
 export const QuestTogetherConfig = {
+  // TODO: Update this to 'CreateRadmorphs'
   triggerRewardAfterQuest: 'TransferTokens',
   maxReferrals: 10
 }
