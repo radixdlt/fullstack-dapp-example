@@ -105,12 +105,10 @@ export const AuthController = ({
     ctx.logger.trace({ method: 'login', personaProof })
     const parsedPersonaResult = parseSignedChallenge(personaProof)
     if (!parsedPersonaResult.success) {
-      if (!parsedPersonaResult.success) {
-        ctx.logger.error({
-          method: 'login.parseSignedChallenge.error',
-          error: parsedPersonaResult.issues
-        })
-      }
+      ctx.logger.error({
+        method: 'login.parseSignedChallenge.error',
+        error: parsedPersonaResult.issues
+      })
 
       return errAsync({
         httpResponseCode: 400,
