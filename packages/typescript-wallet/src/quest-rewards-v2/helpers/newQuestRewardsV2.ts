@@ -38,7 +38,6 @@ CALL_FUNCTION
     Address("${config.radQuest.accounts.jetty.address}")
     Bucket("admin_badge")
     Address("${config.radQuest.badges.heroBadgeAddress}")
-    Address("${config.radQuest.badges.kycBadgeAddress}")
     Address("${config.radQuest.resources.clamAddress}")
 ;
 `
@@ -52,7 +51,7 @@ CALL_FUNCTION
     .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
     .map(
       (createdEntities): Record<string, string> => ({
-        QuestRewardsV2: createdEntities[0].entity_address!
+        questRewardsV2: createdEntities[0].entity_address!
       })
     )
 }
