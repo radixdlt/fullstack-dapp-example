@@ -27,7 +27,6 @@ interface Resources {
       "new-tier": "You just leveled up with more friends! Now go claim your rewards.",
       "swap-completed": "Continue your quest: Swap Tokens on a DEX.",
       "stake-completed": "Continue your quest: Radix Network Staking.",
-      "instapass-badge-received": "Continue your quest: Get Verified with Instapass.",
       "thorswap-swap-completed": "Continue your quest: Bridge Tokens with THORSwap"
     },
     "fuse-elements": {
@@ -81,9 +80,9 @@ interface Resources {
       "one-box-title": "Let's see what's in your {{giftBox}} Gift Box!",
       "multiple-boxes-title": "Pick a Gift Box to open",
       "open-gift-box-button": "Open Gift Box",
-      "opening-gift-box": "Opening",
+      "opening-gift-box": "Opening…",
       "gift-box-opened-title": "Gift Box opened!",
-      "gift-box-opened-subtitle": "Here's what was inside",
+      "gift-box-opened-subtitle": "Here's what was inside…",
       "quantity": "Quantity: {{count}}",
       "claimed": "You can now find the contents of your Gift Box in your Account in your Radix Wallet."
     },
@@ -105,10 +104,9 @@ interface Resources {
     "errorPopup": {
       "close": "Close",
       "XrdRewardLimit": {
-        "title": "Raise Your XRD Reward Limit",
-        "content": "Before claiming more XRD, we’d appreciate answering a few quick questions in the quest:",
-        "questName": "Get Verified with Instapass",
-        "button": "Go to Instapass Quest"
+        "title": "You have reached the XRD Reward Limit",
+        "content": "To claim more rewards, you will need to contact support:",
+        "button": "Get help with RadQuest rewards"
       },
       "AccountAlreadyRegistered": {
         "title": "Account Already Registered",
@@ -267,7 +265,7 @@ interface Resources {
       }
     },
     "Thorswap": {
-      "title": "Bridge Tokens with THORSwap",
+      "title": "Bridge Tokens with Maya",
       "description": "Move assets in and out of Radix",
       "introDescription": "Learn more about THORSwap and how to bridge assets to and from Radix.",
       "requirements": {
@@ -323,16 +321,6 @@ interface Resources {
       "title": "Swap Tokens on a DEX",
       "description": "Learn about Radix Wallet “guarantees”",
       "introDescription": "Learn how to safely swap tokens on Radix using a decentralized exchange (DEX)"
-    },
-    "Instapass": {
-      "goToInstapass": "Instapass Lite Signup",
-      "requirements": {
-        "LearnAboutInstapass": "Do a simple verification at the Instapass Lite dApp",
-        "InstapassBadgeDeposited": "Get your Instapass RadQuest badge"
-      },
-      "title": "Get Verified with Instapass",
-      "description": "A quick check to unlock more XRD",
-      "introDescription": "Answer a few basic questions at Instapass to unlock more XRD rewards."
     }
   },
   "rewards": {

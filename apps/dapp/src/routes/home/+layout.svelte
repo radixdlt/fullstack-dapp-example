@@ -190,20 +190,6 @@
             }
 
             if (
-              data.questStatus['Instapass']?.status === 'IN_PROGRESS' &&
-              !$page.url.href.includes('Instapass')
-            ) {
-              questApi
-                .getQuestInformation('Instapass', fetch)
-                .map((data) => data.requirements)
-                .map((requirements) => {
-                  if (requirements.InstapassBadgeDeposited.isComplete) {
-                    pushNotification('instapassBadgeReceived')
-                  }
-                })
-            }
-
-            if (
               data.questStatus['Thorswap']?.status === 'IN_PROGRESS' &&
               !$page.url.href.includes('Thorswap')
             ) {
@@ -316,14 +302,6 @@
 
   $: if ($webSocketClient)
     registerNotificationOnMessage($webSocketClient, 'NetworkStaking', 'XrdStaked', 'stakeCompleted')
-
-  $: if ($webSocketClient)
-    registerNotificationOnMessage(
-      $webSocketClient,
-      'Instapass',
-      'InstapassBadgeDeposited',
-      'instapassBadgeReceived'
-    )
 
   $: if ($webSocketClient)
     registerNotificationOnMessage(

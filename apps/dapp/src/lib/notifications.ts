@@ -148,12 +148,6 @@ const notifications = {
     text: i18next.t('jetty:notifications.stake-completed'),
     action: () => goto(`/home/advanced/quest/${QuestDefinitions().NetworkStaking.id}`)
   },
-  instapassBadgeReceived: {
-    id: 'instapassBadgeReceived',
-    title: 'Instapass Verification Complete!',
-    text: i18next.t('jetty:notifications.instapass-badge-received'),
-    action: () => goto(`/home/advanced/quest/${QuestDefinitions().Instapass.id}`)
-  },
   thorswapSwapCompleted: {
     id: 'thorswapSwapCompleted',
     title: 'Bridge Transaction Complete!',

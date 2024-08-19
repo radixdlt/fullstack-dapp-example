@@ -177,15 +177,5 @@
     "title": "Swap Tokens on a DEX",
     "description": "Learn about Radix Wallet “guarantees”",
     "introDescription": "Learn how to safely swap tokens on Radix using a decentralized exchange (DEX)"
-  },
-  "Instapass": {
-    "goToInstapass": "Instapass Lite Signup",
-    "requirements": {
-      "LearnAboutInstapass": "Do a simple verification at the Instapass Lite dApp",
-      "InstapassBadgeDeposited": "Get your Instapass RadQuest badge"
-    },
-    "title": "Get Verified with Instapass",
-    "description": "A quick check to unlock more XRD",
-    "introDescription": "Answer a few basic questions at Instapass to unlock more XRD rewards."
   }
 }

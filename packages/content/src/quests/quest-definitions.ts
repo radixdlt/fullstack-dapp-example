@@ -340,25 +340,6 @@ export const QuestDefinitions = () => {
         }
       }
     },
-    Instapass: {
-      id: 'Instapass',
-      category: 'advanced',
-      rewards: [
-        {
-          name: 'simpleGiftBox',
-          amount: 1
-        }
-      ],
-      trackedAccountAddress: true,
-      minutesToComplete: 6,
-      preRequisites: ['TransferTokens'],
-      requirements: {
-        [EventId.InstapassBadgeDeposited]: {
-          eventName: 'InstapassBadgeDeposited',
-          type: 'event'
-        }
-      }
-    },
     Thorswap: {
       id: 'Thorswap',
       category: 'advanced',
