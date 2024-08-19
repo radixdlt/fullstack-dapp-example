@@ -271,7 +271,6 @@ export const EventId = {
   QuestRewardClaimed: 'QuestRewardClaimed',
   JettySwap: 'JettySwap',
   LettySwap: 'LettySwap',
-  InstapassBadgeDeposited: 'InstapassBadgeDeposited',
   CombineElementsDeposited: 'CombineElementsDeposited',
   CombineElementsMintedRadgem: 'CombineElementsMintedRadgem',
   CombineElementsAddedRadgemImage: 'CombineElementsAddedRadgemImage',

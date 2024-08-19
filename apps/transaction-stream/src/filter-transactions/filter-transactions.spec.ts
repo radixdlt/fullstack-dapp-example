@@ -7,7 +7,6 @@ import StakedXrdTx from '../fixtures/transactions/staked-xrd'
 import JettySwap from '../fixtures/transactions/jetty-swap'
 import LettySwap from '../fixtures/transactions/letty-swap'
 import CombineElementsImageAdded from '../fixtures/transactions/combine-elements-image-added'
-import MintInstapassBadge from '../fixtures/transactions/mint-instapass-badge'
 import JettyReceivedClams from '../fixtures/transactions/jetty-recevied-clams'
 import MayaRouterWithdraw from '../fixtures/transactions/maya-router-withdraw'
 import GiftBoxDeposited from '../fixtures/transactions/giftbox-deposited'
@@ -96,24 +95,6 @@ describe('filter transactions', () => {
         const [transaction] = filterResult.value
         console.log(transaction)
         expect(transaction.type).toEqual(EventId.XrdStaked)
-        expect(transaction.accountAddress).toBeDefined()
-      })
-    })
-
-    describe('Instapass', () => {
-      it(`should find ${EventId.InstapassBadgeDeposited} transaction`, () => {
-        const result = filterTransactionsByType([...MintInstapassBadge])
-
-        if (result.isErr()) throw result.error
-
-        const filteredTransactions = result.value
-
-        expect(filteredTransactions.length).toEqual(1)
-
-        const [transaction] = filteredTransactions
-
-        expect(transaction.type).toEqual(EventId.InstapassBadgeDeposited)
-        expect(transaction.transactionId).toBeDefined()
         expect(transaction.accountAddress).toBeDefined()
       })
     })
