@@ -1,6 +1,7 @@
 import { DepositGiftBoxRewardBufferQueue, TransactionJob, TransactionQueue } from 'queues'
 import { ResultAsync } from 'neverthrow'
-import { PrismaClient } from 'database'
+import { PrismaClient, QuestStatus } from 'database'
+import { QuestTogetherConfig } from 'common'
 
 export type TransactionIntentHelper = ReturnType<typeof TransactionIntentHelper>
 export const TransactionIntentHelper = ({
@@ -54,30 +55,34 @@ export const TransactionIntentHelper = ({
       })
       .map(() => undefined)
 
-  const countQuestTogetherXrdDeposits = (userId: string) =>
+  const countQuestTogetherReferrals = (userId: string) =>
     ResultAsync.fromPromise(
-      dbClient.transactionIntent.count({
+      dbClient.user.findFirst({
         where: {
-          AND: [
-            {
-              userId
-            },
-            {
-              discriminator: {
-                startsWith: `QuestTogether:`
-              }
-            },
-            {
-              data: {
-                path: ['type'],
-                equals: 'DepositXrdReward'
+          id: userId ?? ''
+        },
+        include: {
+          referredUsers: {
+            where: {
+              questProgress: {
+                some: {
+                  AND: [
+                    { questId: QuestTogetherConfig.triggerRewardAfterQuest },
+                    {
+                      OR: [
+                        { status: QuestStatus.REWARDS_CLAIMED },
+                        { status: QuestStatus.COMPLETED }
+                      ]
+                    }
+                  ]
+                }
               }
             }
-          ]
+          }
         }
       }),
-      (error) => ({ reason: 'FailedToCountQuestTogetherXrdDeposits', jsError: error })
-    )
+      (error) => ({ reason: 'FailedToCountQuestTogetherReferrals', jsError: error })
+    ).map((user) => user?.referredUsers?.length ?? 0)
 
-  return { add, countQuestTogetherXrdDeposits }
+  return { add, countQuestTogetherReferrals }
 }
