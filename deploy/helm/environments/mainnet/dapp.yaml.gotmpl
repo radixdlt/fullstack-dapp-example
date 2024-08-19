@@ -57,6 +57,13 @@ secrets:
     aws_secret_name: "rtlj-prod/eks/radquest/mainnet/secrets"
     aws_secret_key: "mailer_lite_api_key"
     secret_key: "mailer_lite_api_key"
+  
+  - external_secret_name: dapp-ipqs-key
+    env_variable: "IPQS_KEY"
+    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/secrets"
+    aws_secret_key: "ipqs_key"
+    secret_key: "ipqs_key"
+
 
 ingress:
   enabled: true

@@ -58,6 +58,12 @@ secrets:
     aws_secret_key: "mailer_lite_api_key"
     secret_key: "mailer_lite_api_key"
 
+  - external_secret_name: dapp-ipqs-key
+    env_variable: "IPQS_KEY"
+    aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
+    aws_secret_key: "ipqs_key"
+    secret_key: "ipqs_key"
+
 ingress:
   enabled: true
   annotations:
