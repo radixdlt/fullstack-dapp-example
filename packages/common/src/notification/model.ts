@@ -10,11 +10,18 @@ export type NotificationModelMethods = ReturnType<NotificationModel>
 export const NotificationModel = (db: PrismaClient) => (logger?: AppLogger) => {
   const add = (userId: string, notificationId: string) => {
     return ResultAsync.fromPromise(
-      db.notification.create({
-        data: {
+      db.notification.upsert({
+        where: {
+          notificationId_userId: {
+            notificationId,
+            userId
+          }
+        },
+        create: {
           userId,
           notificationId
-        }
+        },
+        update: {}
       }),
       (error) => {
         logger?.error({
