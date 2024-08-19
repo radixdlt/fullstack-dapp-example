@@ -1,6 +1,7 @@
 import { DepositGiftBoxRewardBufferQueue, TransactionJob, TransactionQueue } from 'queues'
 import { ResultAsync } from 'neverthrow'
 import { PrismaClient, QuestStatus } from 'database'
+import { QuestTogetherConfig } from 'common'
 
 export type TransactionIntentHelper = ReturnType<typeof TransactionIntentHelper>
 export const TransactionIntentHelper = ({
@@ -66,8 +67,7 @@ export const TransactionIntentHelper = ({
               questProgress: {
                 some: {
                   AND: [
-                    // TODO: update to 'CreateRadmorphs'
-                    { questId: 'TransferTokens' },
+                    { questId: QuestTogetherConfig.triggerRewardAfterQuest },
                     {
                       OR: [
                         { status: QuestStatus.REWARDS_CLAIMED },
