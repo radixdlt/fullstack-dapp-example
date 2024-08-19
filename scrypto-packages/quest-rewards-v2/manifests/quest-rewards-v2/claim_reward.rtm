@@ -17,8 +17,6 @@ CALL_METHOD
     "claim_reward"
     "${quest_id_1}"
     Proof("hero_badge_proof")
-    # KYC badge
-    None
 ;
 CALL_METHOD
     Address("${account}")

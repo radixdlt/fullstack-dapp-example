@@ -64,7 +64,7 @@ struct UserQuestReward {
 type Unit = ();
 
 #[blueprint]
-#[types(ResourceAddress, Vault, RewardId, RewardState, UserId, Unit)]
+#[types(ResourceAddress, Vault, RewardId, RewardState, Unit)]
 #[events(RewardClaimedEvent, RewardDepositedEvent)]
 mod quest_rewards_v2 {
     enable_method_auth! {
@@ -79,7 +79,6 @@ mod quest_rewards_v2 {
             claim_reward => PUBLIC;
             deposit_users_rewards => restrict_to: [admin];
             get_clams => PUBLIC;
-            update_users_kyc_requirement => restrict_to: [admin];
         }
     }
     struct QuestRewardsV2 {
@@ -89,9 +88,7 @@ mod quest_rewards_v2 {
         rewards_record: KeyValueStore<RewardId, RewardState>,
         clam_manager: ResourceManager,
         hero_badge_address: ResourceAddress,
-        kyc_badge_address: ResourceAddress,
         admin_badge_address: ResourceAddress,
-        user_kyc_required: KeyValueStore<UserId, ()>,
     }
 
     impl QuestRewardsV2 {
@@ -101,7 +98,6 @@ mod quest_rewards_v2 {
             dapp_definition: ComponentAddress,
             admin_badge: Bucket,
             hero_badge_address: ResourceAddress,
-            kyc_badge_address: ResourceAddress,
             clam_address: ResourceAddress,
         ) -> Global<QuestRewardsV2> {
             let admin_badge_address = admin_badge.resource_address();
@@ -113,9 +109,7 @@ mod quest_rewards_v2 {
                 rewards_record: KeyValueStore::<RewardId, RewardState>::new_with_registered_type(),
                 clam_manager: ResourceManager::from_address(clam_address),
                 hero_badge_address,
-                kyc_badge_address,
                 admin_badge_address,
-                user_kyc_required: KeyValueStore::<UserId, ()>::new_with_registered_type(),
             }
             .instantiate()
             .prepare_to_globalize(owner_role)
@@ -165,15 +159,8 @@ mod quest_rewards_v2 {
                 .clone()
         }
 
-        pub fn claim_reward(
-            &mut self,
-            quest_id: QuestId,
-            hero_badge: Proof,
-            kyc_badge: Option<Proof>,
-        ) -> Vec<Bucket> {
+        pub fn claim_reward(&mut self, quest_id: QuestId, hero_badge: Proof) -> Vec<Bucket> {
             let user_id = self.get_user_id_from_badge_proof(hero_badge);
-
-            let kyc_required_for_xrd = self.get_user_kyc_requirement(user_id.clone());
 
             let mut reward_state = self
                 .rewards_record
@@ -190,16 +177,6 @@ mod quest_rewards_v2 {
                     panic!("Reward already claimed")
                 }
                 RewardState::Unclaimed(ref mut resources_record) => {
-                    // Assert kyc authorization passes if required
-                    let resources_to_claim = &resources_record.0;
-                    if resources_to_claim.contains_key(&XRD) {
-                        if kyc_required_for_xrd {
-                            kyc_badge
-                                .expect("No KYC badge proof provided")
-                                .check(self.kyc_badge_address);
-                        }
-                    }
-
                     Runtime::emit_event(RewardClaimedEvent {
                         user_id,
                         quest_id,
@@ -342,20 +319,6 @@ mod quest_rewards_v2 {
 
             self.admin_badge
                 .authorize_with_amount(dec!(1), || self.clam_manager.mint(dec!(10)))
-        }
-
-        fn get_user_kyc_requirement(&self, user_id: UserId) -> bool {
-            self.user_kyc_required.get(&user_id).is_some()
-        }
-
-        pub fn update_users_kyc_requirement(&mut self, user_kyc_requirements: Vec<(UserId, bool)>) {
-            for (user_id, require_kyc) in user_kyc_requirements {
-                if require_kyc {
-                    self.user_kyc_required.insert(user_id, ());
-                } else {
-                    self.user_kyc_required.remove(&user_id);
-                }
-            }
         }
     }
 }

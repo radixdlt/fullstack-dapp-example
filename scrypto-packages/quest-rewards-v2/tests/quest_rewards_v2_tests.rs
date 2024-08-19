@@ -6,7 +6,6 @@ struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,
     quest_rewards_v2: QuestRewardsV2,
     hero_badge: Bucket,
-    kyc_badge: Bucket,
     user_id: UserId,
     admin_badge_proof: Proof,
     super_admin_badge_proof: Proof,
@@ -31,8 +30,6 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
             )],
             &mut env,
         )?;
-    let kyc_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
-        .mint_initial_supply([()], &mut env)?;
 
     let clam = ResourceBuilder::new_fungible(OwnerRole::None)
         .divisibility(DIVISIBILITY_NONE)
@@ -52,7 +49,6 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         FAUCET, // used as dapp_definition for testing
         admin_badge.take(dec!(1), &mut env)?,
         hero_badge.resource_address(&mut env)?,
-        kyc_badge.resource_address(&mut env)?,
         clam.resource_address(&mut env)?,
         package_address,
         &mut env,
@@ -65,7 +61,6 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         env,
         quest_rewards_v2,
         hero_badge,
-        kyc_badge,
         user_id: UserId(user_id_string),
         admin_badge_proof,
         super_admin_badge_proof,
@@ -310,7 +305,6 @@ fn can_claim_rewards() -> Result<(), RuntimeError> {
     let response = quest_rewards_v2.claim_reward(
         quest_id,
         hero_badge.create_proof_of_all(&mut env)?,
-        None,
         &mut env,
     )?;
 
@@ -351,7 +345,6 @@ fn can_get_claimed_rewards_state() -> Result<(), RuntimeError> {
     quest_rewards_v2.claim_reward(
         quest_id.clone(),
         hero_badge.create_proof_of_all(&mut env)?,
-        None,
         &mut env,
     )?;
 
@@ -380,7 +373,6 @@ fn cannot_claim_rewards_before_deposit() -> Result<(), RuntimeError> {
     let result = quest_rewards_v2.claim_reward(
         quest_id,
         hero_badge.create_proof_of_all(&mut env)?,
-        None,
         &mut env,
     );
 
@@ -422,7 +414,6 @@ fn cannot_claim_rewards_already_claimed() -> Result<(), RuntimeError> {
     quest_rewards_v2.claim_reward(
         quest_id.clone(),
         hero_badge.create_proof_of_all(&mut env)?,
-        None,
         &mut env,
     )?;
 
@@ -430,7 +421,6 @@ fn cannot_claim_rewards_already_claimed() -> Result<(), RuntimeError> {
     let result = quest_rewards_v2.claim_reward(
         quest_id,
         hero_badge.create_proof_of_all(&mut env)?,
-        None,
         &mut env,
     );
 
@@ -480,7 +470,6 @@ fn can_claim_rewards_after_multiple_deposit_of_fungible_in_separate_calls(
     let response = quest_rewards_v2.claim_reward(
         quest_id,
         hero_badge.create_proof_of_all(&mut env)?,
-        None,
         &mut env,
     )?;
 
@@ -543,7 +532,6 @@ fn can_claim_rewards_after_multiple_deposit_of_non_fungible_in_separate_calls(
     let response = quest_rewards_v2.claim_reward(
         quest_id,
         hero_badge.create_proof_of_all(&mut env)?,
-        None,
         &mut env,
     )?;
 
@@ -573,97 +561,6 @@ fn can_claim_rewards_after_multiple_deposit_of_non_fungible_in_separate_calls(
         .unwrap()
         .non_fungible_local_ids(&mut env)?;
     assert_eq!(local_ids.len(), 1);
-
-    Ok(())
-}
-
-#[test]
-fn cannot_claim_rewards_when_kyc_required() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        mut quest_rewards_v2,
-        hero_badge,
-        user_id,
-        admin_badge_proof,
-        ..
-    } = arrange_test_environment()?;
-
-    let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
-    let reward_2 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
-        .mint_initial_supply([()], &mut env)?;
-
-    let quest_id = QuestId("1".into());
-
-    env.disable_auth_module();
-
-    quest_rewards_v2.update_users_kyc_requirement(vec![(user_id.clone(), true)], &mut env)?;
-    env.enable_auth_module();
-
-    LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    quest_rewards_v2.deposit_users_rewards(
-        vec![(user_id, quest_id.clone(), vec![reward_1, reward_2])],
-        &mut env,
-    )?;
-
-    // Act
-    let result = quest_rewards_v2.claim_reward(
-        quest_id,
-        hero_badge.create_proof_of_all(&mut env)?,
-        None,
-        &mut env,
-    );
-
-    // Assert
-    assert!(result.is_err());
-    assert!(result
-        .unwrap_err()
-        .to_string()
-        .contains("No KYC badge proof provided"));
-
-    Ok(())
-}
-
-#[test]
-fn can_claim_with_kyc_badge_when_required() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        mut quest_rewards_v2,
-        hero_badge,
-        user_id,
-        admin_badge_proof,
-        kyc_badge,
-        ..
-    } = arrange_test_environment()?;
-
-    let reward_1 = BucketFactory::create_fungible_bucket(XRD, 100.into(), Mock, &mut env)?;
-    let reward_2 = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
-        .mint_initial_supply([()], &mut env)?;
-
-    let quest_id = QuestId("1".into());
-
-    env.disable_auth_module();
-
-    quest_rewards_v2.update_users_kyc_requirement(vec![(user_id.clone(), true)], &mut env)?;
-    env.enable_auth_module();
-
-    LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    quest_rewards_v2.deposit_users_rewards(
-        vec![(user_id, quest_id.clone(), vec![reward_1, reward_2])],
-        &mut env,
-    )?;
-
-    // Act
-    let result = quest_rewards_v2.claim_reward(
-        quest_id,
-        hero_badge.create_proof_of_all(&mut env)?,
-        Some(kyc_badge.create_proof_of_all(&mut env)?),
-        &mut env,
-    );
-
-    // Assert
-    assert!(result.is_ok());
 
     Ok(())
 }
