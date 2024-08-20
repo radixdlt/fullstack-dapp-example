@@ -25,7 +25,6 @@ export const GET = async ({ locals, params }) => {
       completedQuestRequirements: true,
       events: true,
       messages: true,
-      phoneNumber: true,
       questProgress: true,
       referredByUser: true,
       savedProgress: true,

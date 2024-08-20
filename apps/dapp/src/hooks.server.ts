@@ -27,7 +27,6 @@ import { UserQuestController } from '$lib/server/user-quest/controller'
 import { AuthModel } from '$lib/server/auth/model'
 import { JWT } from '$lib/server/auth/jwt'
 import { MessageController } from '$lib/server/message/controller'
-import { OneTimePasswordController } from '$lib/server/otp/controller'
 import { createPreflightResponse } from '$lib/server/helpers/cors'
 import { createWellKnownResponse } from '$lib/server/helpers/create-well-known-response'
 import {
@@ -117,7 +116,6 @@ export const handle: Handle = async ({ event, resolve }) => {
     userQuestController: UserQuestController(event.locals.dependencies),
     authController: AuthController(event.locals.dependencies),
     messageController: MessageController(event.locals.dependencies),
-    oneTimePasswordController: OneTimePasswordController(event.locals.dependencies),
     notificationController: NotificationController(event.locals.dependencies),
     imageController: ImageController(event.locals.dependencies)
   }

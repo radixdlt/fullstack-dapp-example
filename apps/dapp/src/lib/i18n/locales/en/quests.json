@@ -68,7 +68,6 @@
   },
   "GetStuff": {
     "requirements": {
-      "VerifyPhoneNumber": "Prove you’re not a robot",
       "RegisterAccount": "Register an Account with RadQuest",
       "LearnAboutTransactions": "Learn about XRD and Transactions",
       "DepositHeroBadge": "Get your Hero’s Badge",
@@ -80,18 +79,7 @@
     "title": "Get Some (Web3) Stuff!",
     "description": "Claim your first quest rewards",
     "introDescription": "Do your first transactions to claim your first quest rewards right to your Radix Wallet.",
-    "failedToSendOtp": "Failed to send SMS",
-    "phoneNumberExists": "Phone number exists",
-    "invalidPhoneNumber": "Invalid phone number",
-    "invalidOtp": "Invalid code",
-    "invalidRequest": "Invalid request",
-    "failedToAddPhoneNumber": "Failed to add phone number",
-    "phoneNumberInputTitle": "Your phone number",
-    "sendSmsButton": "Send SMS",
-    "verifyOtpButton": "Verify",
-    "verifyOtpText": "Enter the 6-digit code sent to",
-    "enterYourPhoneNumber": "Please enter your phone number to receive an SMS code for verification.",
-    "weWillNotShare": "We will not share your phone number with anyone, and we will not send you any messages other than this verification."
+    "invalidRequest": "Invalid request"
   },
   "CreatingRadMorphs": {
     "title": "Creating RadMorphs",

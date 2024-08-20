@@ -137,10 +137,6 @@ export const QuestDefinitions = () => {
       preRequisites: ['SetupWallet'],
       minutesToComplete: 6,
       requirements: {
-        VerifyPhoneNumber: {
-          type: 'offLedger',
-          completedByUser: false
-        },
         RegisterAccount: {
           type: 'offLedger',
           completedByUser: false

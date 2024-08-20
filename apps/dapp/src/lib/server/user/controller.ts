@@ -45,9 +45,6 @@ export const UserController = ({
       ? okAsync(data.accountAddress)
       : errAsync(createApiError('missing account address', 400)())
 
-  const valueExists = (input: unknown, errorMessage: string): ResultAsync<boolean, ApiError> =>
-    input ? okAsync(true) : errAsync(createApiError(errorMessage, 400)())
-
   const getReferrals = (userId: string) => {
     return userModel.getReferrals(userId).map((data) => {
       return {
@@ -66,14 +63,11 @@ export const UserController = ({
     }
   ): ControllerMethodOutput<undefined> =>
     userModel
-      .getById(userId, { phoneNumber: true })
+      .getById(userId, {})
       .andThen((user) => (user ? ok(user) : err(createApiError('UserNotFound', 404)())))
       .andThen((data) =>
-        ResultAsync.combine([
-          valueExists((data as any).phoneNumber, 'missing phone number'),
-          accountAddressExists(data)
-        ])
-          .andThen(([, accountAddress]) => {
+        accountAddressExists(data)
+          .andThen((accountAddress) => {
             const item = {
               traceId: ctx.traceId,
               type: 'AddAccountAddressToHeroBadgeForge',
@@ -102,7 +96,6 @@ export const UserController = ({
       )
 
   const setAccountAddress = (
-    ctx: ControllerMethodContext,
     userId: string,
     accountAddress: string,
     proof: SignedChallengeAccount
@@ -122,12 +115,6 @@ export const UserController = ({
       .isAccountAddressUsed(accountAddress)
       .andThen((isUsed) =>
         isUsed ? errAsync(createApiError('AccountAddressAlreadyInUse', 400)()) : okAsync(undefined)
-      )
-
-    const isPhoneNumberInDb = userModel
-      .isPhoneNumberUsed(userId)
-      .andThen((exists) =>
-        exists ? okAsync(undefined) : errAsync(createApiError('PhoneNumberNotSet', 400)())
       )
 
     const parsedAccountResult = parseSignedChallenge(proof)
@@ -153,7 +140,7 @@ export const UserController = ({
             } satisfies ApiError)
           : okAsync(undefined)
       )
-      .andThen(() => ResultAsync.combine([isAccountInDb, isPhoneNumberInDb]))
+      .andThen(() => isAccountInDb)
       .andThen(() => verifySignedChallenge(proof))
       .mapErr((error) => {
         return {

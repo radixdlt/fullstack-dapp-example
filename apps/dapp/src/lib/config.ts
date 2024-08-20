@@ -11,9 +11,6 @@ const {
   REDIS_HOST,
   REDIS_PORT,
   REDIS_PASSWORD,
-  TWILIO_ACCOUNT_SID,
-  TWILIO_AUTH_TOKEN,
-  TWILIO_SERVICE_SID,
   MAX_USER_PER_IP,
   MAILER_LITE_API_KEY,
   MAINTENANCE_MODE
@@ -48,11 +45,6 @@ export const config = {
     host: REDIS_HOST,
     port: parseInt(REDIS_PORT ?? '6379', 10),
     password: REDIS_PASSWORD
-  },
-  twilio: {
-    accountSid: TWILIO_ACCOUNT_SID || 'AC',
-    authToken: TWILIO_AUTH_TOKEN || '',
-    serviceSid: TWILIO_SERVICE_SID || ''
   },
   dapp: {
     expectedOrigin: EXPECTED_ORIGIN,

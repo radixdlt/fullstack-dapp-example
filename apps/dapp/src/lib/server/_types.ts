@@ -24,7 +24,6 @@ import type { UserController } from '$lib/server/user/controller'
 import type { UserQuestController } from '$lib/server/user-quest/controller'
 import type { AuthController } from '$lib/server/auth/controller'
 import type { MessageController } from '$lib/server/message/controller'
-import type { OneTimePasswordController } from '$lib/server/otp/controller'
 import type { NotificationController } from '$lib/server/notification/controller'
 import type { ImageController } from './image/controller'
 import type { getQueues } from 'queues'
@@ -44,7 +43,6 @@ export type Controllers = {
   userQuestController: UserQuestController
   authController: AuthController
   messageController: MessageController
-  oneTimePasswordController: OneTimePasswordController
   notificationController: NotificationController
   imageController: ImageController
 }

@@ -240,7 +240,6 @@ describe('Event flows', () => {
       const discriminator = `AddAccountAddressToHeroBadgeForge:${crypto.randomUUID()}`
 
       await completeQuestRequirements(db)(user.id, 'GetStuff', [
-        'VerifyPhoneNumber',
         'RegisterAccount',
         'LearnAboutTransactions'
       ])

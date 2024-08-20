@@ -51,36 +51,6 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
     )
   }
 
-  const addVerifiedPhoneNumber = (
-    userId: string,
-    country: string,
-    hashOfPhoneNumber: string,
-    clientIp: string
-  ) =>
-    ResultAsync.fromPromise(
-      db.$transaction([
-        db.userPhoneNumber.create({
-          data: {
-            userId: userId,
-            phoneNumber: hashOfPhoneNumber,
-            ip: clientIp
-          }
-        }),
-        db.user.update({ data: { country }, where: { id: userId } }),
-        db.completedQuestRequirement.create({
-          data: {
-            userId: userId,
-            questId: 'GetStuff',
-            requirementId: 'VerifyPhoneNumber'
-          }
-        })
-      ]),
-      (error) => {
-        logger?.error({ error, method: 'addVerifiedPhoneNumber', model: 'UserQuestModel' })
-        return createApiError('failed to add verified phone number', 400)()
-      }
-    )
-
   const saveProgress = (questId: string, userId: string, progress: number) =>
     ResultAsync.fromPromise(
       db.savedProgress.upsert({
@@ -320,7 +290,6 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
     getDepositedRewards,
     setConnectWalletRequirement,
     setDownloadWalletRequirement,
-    addVerifiedPhoneNumber,
     addCompletedRequirement,
     findCompletedRequirements,
     saveProgress,
