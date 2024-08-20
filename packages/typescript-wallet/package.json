@@ -49,8 +49,12 @@
     "wallet:new:card-forge-v2": "npx tsx ./src/card-forge-v2/scripts/new-component.ts",
 
     "wallet:deploy-new:radgem-forge-v2": "npx tsx ./src/radgem-forge-v2/scripts/deploy-package-and-component.ts",
-    "wallet:deploy:radgem-forge-v2": "npx tsx ./src/radgem-forge-v2/scripts/deploy-rpackage.ts",
+    "wallet:deploy:radgem-forge-v2": "npx tsx ./src/radgem-forge-v2/scripts/deploy-package.ts",
     "wallet:new:radgem-forge-v2": "npx tsx ./src/radgem-forge-v2/scripts/new-component.ts",
+
+    "wallet:deploy-new:quest-rewards-v2": "npx tsx ./src/quest-rewards-v2/scripts/deploy-package-and-component.ts",
+    "wallet:deploy:quest-rewards-v2": "npx tsx ./src/quest-rewards-v2/scripts/deploy-package.ts",
+    "wallet:new:quest-rewards-v2": "npx tsx ./src/quest-rewards-v2/scripts/new-component.ts",
 
     "wallet:set:dapp-data:radquest": "npx tsx ./src/radquest/scripts/set-dapp-data.ts",
     "wallet:set:dapp-data:clam-dexs": "npx tsx ./src/clam-dex/scripts/set-dapp-data.ts",
