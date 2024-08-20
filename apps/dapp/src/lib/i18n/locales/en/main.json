@@ -14,10 +14,9 @@
   "errorPopup": {
     "close": "Close",
     "XrdRewardLimit": {
-      "title": "Raise Your XRD Reward Limit",
-      "content": "Before claiming more XRD, we’d appreciate answering a few quick questions in the quest:",
-      "questName": "Get Verified with Instapass",
-      "button": "Go to Instapass Quest"
+      "title": "XRD Reward Limit Reached",
+      "content": "To claim more rewards, you will need to contact RadQuest support:",
+      "button": "Get help with RadQuest rewards"
     },
     "AccountAlreadyRegistered": {
       "title": "Account Already Registered",

@@ -41,14 +41,6 @@ export const FilterTransactionsByAccountAddress =
         break
       }
 
-      case EventId.InstapassBadgeDeposited: {
-        result = accountAddressModel.getTrackedAddressUserId(
-          transaction.accountAddress,
-          'Instapass'
-        )
-        break
-      }
-
       case EventId.MayaRouterWithdrawEvent: {
         result = accountAddressModel.getTrackedAddressUserId(transaction.accountAddress, 'Thorswap')
         break

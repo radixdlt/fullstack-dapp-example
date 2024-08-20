@@ -505,9 +505,6 @@ export const EventWorkerController = ({
       case EventId.MayaRouterWithdrawEvent: {
         return handleQuestWithTrackedAccount('Thorswap')
       }
-      case EventId.InstapassBadgeDeposited: {
-        return handleQuestWithTrackedAccount('Instapass')
-      }
 
       case EventId.XrdStaked: {
         return handleQuestWithTrackedAccount('NetworkStaking')

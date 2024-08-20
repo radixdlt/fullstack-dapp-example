@@ -203,13 +203,6 @@ export const trackedTransactionTypes: TrackedTransactions = {
       keys: { intended_recipient: { kind: 'Reference', key: 'accountAddress' } }
     })
   },
-  [EventId.InstapassBadgeDeposited]: {
-    MintedEvent: nonFungibleMinted(config.radQuest.badges.instapassBadgeAddress, {}),
-    DepositedEvent: resourceDeposited({
-      resourceAddress: config.radQuest.badges.instapassBadgeAddress,
-      key: 'accountAddress'
-    })
-  },
   [EventId.JettySwap]: {
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress),
     ClamSwapEvent: eventEmittedByComponent({
