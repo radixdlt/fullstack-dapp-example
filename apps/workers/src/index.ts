@@ -23,10 +23,10 @@ import { SystemWorker } from './system/worker'
 import { SystemWorkerController } from './system/controller'
 import { MessageHelper } from './helpers/messageHelper'
 import { TransactionIntentHelper } from './helpers/transactionIntentHelper'
-import { ReferralRewardAction } from './helpers/referalReward'
 import { DepositGiftBoxRewardBufferWorker } from './deposit-giftbox-reward/buffer-worker'
 import { BatchedDepositGiftBoxRewardWorker } from './deposit-giftbox-reward/worker'
 import { BatchedDepositGiftBoxRewardController } from './deposit-giftbox-reward/controller'
+import { ReferralRewardAction } from './helpers/referalReward'
 
 const app = async () => {
   // test db connection
@@ -76,8 +76,7 @@ const app = async () => {
     gatewayApi,
     imageModel,
     tokenPriceClient,
-    sendMessage,
-    referralRewardAction
+    sendMessage
   })
 
   TransactionWorker(connection, {

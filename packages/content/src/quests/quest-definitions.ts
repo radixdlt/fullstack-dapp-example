@@ -209,6 +209,7 @@ export const QuestDefinitions = () => {
     QuestTogether: {
       id: 'QuestTogether',
       category: 'advanced',
+      // Rewards given at each level of quest completion
       partialRewards: {
         BronzeLevel: [
           {
@@ -229,17 +230,18 @@ export const QuestDefinitions = () => {
           }
         ]
       },
+      // Rewards displayed on quest but not given as quest is never "completed"
       rewards: [
-        {
-          name: 'xrd',
-          amount: 25
-        },
         {
           name: 'simpleGiftBox',
           amount: 1
         },
         {
           name: 'fancyGiftBox',
+          amount: 1
+        },
+        {
+          name: 'eliteGiftBox',
           amount: 1
         }
       ],
@@ -259,6 +261,7 @@ export const QuestDefinitions = () => {
           type: 'offLedger',
           threshold: 10
         },
+        // Unachievable requirement to prevent quest completion
         SuperLevel: {
           type: 'offLedger'
         }
@@ -270,8 +273,8 @@ export const QuestDefinitions = () => {
       trackedAccountAddress: false,
       rewards: [
         {
-          name: 'xrd',
-          amount: 5
+          name: 'simpleGiftBox',
+          amount: 1
         }
       ],
       minutesToComplete: 1,
@@ -329,25 +332,6 @@ export const QuestDefinitions = () => {
       requirements: {
         [EventId.XrdStaked]: {
           eventName: 'StakedXrd',
-          type: 'event'
-        }
-      }
-    },
-    Instapass: {
-      id: 'Instapass',
-      category: 'advanced',
-      rewards: [
-        {
-          name: 'simpleGiftBox',
-          amount: 1
-        }
-      ],
-      trackedAccountAddress: true,
-      minutesToComplete: 6,
-      preRequisites: ['TransferTokens'],
-      requirements: {
-        [EventId.InstapassBadgeDeposited]: {
-          eventName: 'InstapassBadgeDeposited',
           type: 'event'
         }
       }

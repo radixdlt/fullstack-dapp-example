@@ -177,7 +177,7 @@ export const EventWorkerController = ({
           }
         )
 
-      const unlockReward = (tier: 'BronzeLevel' | 'SilverLevel') =>
+      const unlockReward = (tier: 'BronzeLevel' | 'SilverLevel' | 'GoldLevel') =>
         addCompletedQuestRequirement({
           questId: 'QuestTogether',
           userId,
@@ -193,7 +193,7 @@ export const EventWorkerController = ({
           })
         )
 
-      const setTierInProgress = (tier: 'BronzeLevel' | 'SilverLevel') =>
+      const setTierInProgress = (tier: 'BronzeLevel' | 'SilverLevel' | 'GoldLevel') =>
         updateQuestProgressStatus({
           userId,
           questId: `QuestTogether:${tier}`,
@@ -202,6 +202,7 @@ export const EventWorkerController = ({
 
       const bronzeLevelCompleted = currentReferralsAmount >= requirements.BronzeLevel.threshold
       const silverLevelCompleted = currentReferralsAmount >= requirements.SilverLevel.threshold
+      const goldLevelCompleted = currentReferralsAmount >= requirements.GoldLevel.threshold
 
       return ResultAsync.combine([
         progress['QuestTogether:BronzeLevel'] === 'NOT_STARTED'
@@ -210,11 +211,17 @@ export const EventWorkerController = ({
         bronzeLevelCompleted && progress['QuestTogether:SilverLevel'] === 'NOT_STARTED'
           ? setTierInProgress('SilverLevel')
           : okAsync(undefined),
+        silverLevelCompleted && progress['QuestTogether:GoldLevel'] === 'NOT_STARTED'
+          ? setTierInProgress('GoldLevel')
+          : okAsync(undefined),
         bronzeLevelCompleted && !unlockedRewards['BronzeLevel']
           ? unlockReward('BronzeLevel')
           : okAsync(undefined),
         silverLevelCompleted && !unlockedRewards['SilverLevel']
           ? unlockReward('SilverLevel')
+          : okAsync(undefined),
+        goldLevelCompleted && !unlockedRewards['GoldLevel']
+          ? unlockReward('GoldLevel')
           : okAsync(undefined)
       ]).map(() => undefined)
     }
@@ -338,22 +345,6 @@ export const EventWorkerController = ({
         })
       )
 
-    const handleQuestTogetherXrdReward = <T extends { id: string }>(
-      referringUser: T,
-      count: number
-    ) =>
-      count < QuestTogetherConfig.maxReferrals
-        ? transactionIntent.add({
-            questId: 'QuestTogether',
-            userId: referringUser.id,
-            traceId,
-            type: 'DepositXrdReward',
-            amount: QuestTogetherConfig.referralRewardXrdAmount,
-            discriminator: `QuestTogether:${user.id}:${transactionId}`,
-            transactionId
-          })
-        : okAsync(undefined)
-
     const handleQuestTogetherXrdClaimed = (questId: string, xrdAmount: number) =>
       questId === 'QuestTogether'
         ? referralRewardAction({
@@ -374,18 +365,14 @@ export const EventWorkerController = ({
           .andThen(() => getUserByReferralCode(referredBy))
           .andThen((referringUser) =>
             transactionIntent
-              .countQuestTogetherXrdDeposits(referringUser.id)
+              .countQuestTogetherReferrals(referringUser.id)
               .andThen((count) =>
-                ResultAsync.combine([
-                  handleQuestTogetherXrdReward(referringUser, count),
-                  handleTiersRewards(referringUser, count)
-                ])
-              )
-              .andThen(() =>
-                sendMessage(
-                  referringUser.id,
-                  { type: MessageType.ReferralCompletedBasicQuests, traceId },
-                  childLogger
+                handleTiersRewards(referringUser, count).andThen(() =>
+                  sendMessage(
+                    referringUser.id,
+                    { type: MessageType.ReferralCompletedBasicQuests, traceId },
+                    childLogger
+                  )
                 )
               )
           )
@@ -517,9 +504,6 @@ export const EventWorkerController = ({
       }
       case EventId.MayaRouterWithdrawEvent: {
         return handleQuestWithTrackedAccount('Thorswap')
-      }
-      case EventId.InstapassBadgeDeposited: {
-        return handleQuestWithTrackedAccount('Instapass')
       }
 
       case EventId.XrdStaked: {

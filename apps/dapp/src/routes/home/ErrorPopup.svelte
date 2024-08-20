@@ -3,8 +3,8 @@
   import { i18n } from '$lib/i18n/i18n'
   import { onMount } from 'svelte'
   import { ErrorPopupId, errorPopupStore, type ErrorPopup as ErrorPopupT } from '../../stores'
-  import { goto } from '$app/navigation'
   import ErrorPopup from '$lib/components/error-popup/ErrorPopup.svelte'
+  import { user } from '../../stores'
 
   let visibleErrorPopup: ErrorPopupT | undefined
 
@@ -28,15 +28,13 @@
     {#if visibleErrorPopup.id === ErrorPopupId.XrdRewardLimit}
       <div>
         {$i18n.t('main:errorPopup.XrdRewardLimit.content')}
-        <div class="bold">{$i18n.t('main:errorPopup.XrdRewardLimit.questName')}</div>
       </div>
 
       <div class="button">
         <Button
-          on:click={() => {
-            goto('/home/advanced/quest/Instapass')
-            hide()
-          }}>{$i18n.t('main:errorPopup.XrdRewardLimit.button')}</Button
+          isExternal
+          link={`mailto:hello@radixdlt.com?subject=RadQuest%20support%20request%20%5BXRD%20limit%20reached%5D${$user?.id ? `%20-%20user%20ID%3A%20${$user.id}` : ''}`}
+          >{$i18n.t('main:errorPopup.XrdRewardLimit.button')}</Button
         >
       </div>
     {/if}

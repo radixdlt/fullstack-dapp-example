@@ -26,7 +26,6 @@ import BigNumber from 'bignumber.js'
 import { createCombinedElementsAddRadgemImageManifest } from './helpers/createCombinedElementsAddRadgemImageManifest'
 import { WorkerOutputError, WorkerError } from '../_types'
 import { MessageHelper } from '../helpers/messageHelper'
-import { ReferralRewardAction } from '../helpers/referalReward'
 import { dbClient } from '../db-client'
 
 const { xrd, accounts, badges, resources, components } = config.radQuest
@@ -38,15 +37,13 @@ export const TransactionWorkerController = ({
   gatewayApi,
   imageModel,
   tokenPriceClient,
-  sendMessage,
-  referralRewardAction
+  sendMessage
 }: {
   auditModel: AuditModel
   imageModel: ImageModel
   gatewayApi: GatewayApi
   tokenPriceClient: TokenPriceClient
   sendMessage: MessageHelper
-  referralRewardAction: ReferralRewardAction
 }) => {
   const handler = ({
     job,
@@ -254,27 +251,6 @@ export const TransactionWorkerController = ({
     }
 
     switch (type) {
-      case 'DepositXrdReward': {
-        const { amount, transactionId } = job.data
-
-        return depositQuestRewards(
-          [
-            {
-              name: 'xrd',
-              amount
-            }
-          ],
-          job.data.questId
-        ).andThen(() =>
-          referralRewardAction({
-            action: 'INC',
-            xrdValue: amount,
-            userId: user.id,
-            transactionId
-          })
-        )
-      }
-
       case 'DepositPartialReward': {
         const { questId, requirement } = job.data
 

@@ -52,6 +52,7 @@
   onMount(() => {
     markNotificationAsSeen('reachedTierBronze')
     markNotificationAsSeen('reachedTierSilver')
+    markNotificationAsSeen('reachedTierGold')
     markNotificationAsSeen('reachedTierSuper')
 
     getReferralsState()

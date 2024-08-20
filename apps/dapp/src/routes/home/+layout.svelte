@@ -190,20 +190,6 @@
             }
 
             if (
-              data.questStatus['Instapass']?.status === 'IN_PROGRESS' &&
-              !$page.url.href.includes('Instapass')
-            ) {
-              questApi
-                .getQuestInformation('Instapass', fetch)
-                .map((data) => data.requirements)
-                .map((requirements) => {
-                  if (requirements.InstapassBadgeDeposited.isComplete) {
-                    pushNotification('instapassBadgeReceived')
-                  }
-                })
-            }
-
-            if (
               data.questStatus['Thorswap']?.status === 'IN_PROGRESS' &&
               !$page.url.href.includes('Thorswap')
             ) {
@@ -226,6 +212,10 @@
 
               if (data.requirements.SilverLevel.isComplete) {
                 pushNotification('reachedTierSilver')
+              }
+
+              if (data.requirements.GoldLevel.isComplete) {
+                pushNotification('reachedTierGold')
               }
 
               if (data.requirements.SuperLevel.isComplete) {
@@ -316,14 +306,6 @@
   $: if ($webSocketClient)
     registerNotificationOnMessage(
       $webSocketClient,
-      'Instapass',
-      'InstapassBadgeDeposited',
-      'instapassBadgeReceived'
-    )
-
-  $: if ($webSocketClient)
-    registerNotificationOnMessage(
-      $webSocketClient,
       'Thorswap',
       'MayaRouterWithdrawEvent',
       'thorswapSwapCompleted'
@@ -344,6 +326,9 @@
       'SilverLevel',
       'reachedTierSilver'
     )
+
+  $: if ($webSocketClient)
+    registerNotificationOnMessage($webSocketClient, 'QuestTogether', 'GoldLevel', 'reachedTierGold')
 
   $: if ($webSocketClient)
     registerNotificationOnMessage(

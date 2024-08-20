@@ -57,7 +57,7 @@
         {$i18n.t('main:footer.build-on-radix')}
       </LinkWithLinkIcon>
       <LinkWithLinkIcon
-        href={`${links.helpEmail}?subject=RadQuest support request${userId ? ` - user ID: ${userId}` : ''}`}
+        href={`${links.helpEmail}?subject=RadQuest%20support%20request${userId ? `%20-%20user%20ID%3A%20${userId}` : ''}`}
       >
         {$i18n.t('main:footer.get-help')}
       </LinkWithLinkIcon>

@@ -257,9 +257,9 @@ export const RedisKeys = {
 }
 
 export const QuestTogetherConfig = {
+  // TODO: Update this to 'CreateRadmorphs'
   triggerRewardAfterQuest: 'TransferTokens',
-  referralRewardXrdAmount: 5, // amount of XRD to reward referrer when referee completes basic quests
-  maxReferrals: 5
+  maxReferrals: 10
 }
 
 export const EventId = {
@@ -271,7 +271,6 @@ export const EventId = {
   QuestRewardClaimed: 'QuestRewardClaimed',
   JettySwap: 'JettySwap',
   LettySwap: 'LettySwap',
-  InstapassBadgeDeposited: 'InstapassBadgeDeposited',
   CombineElementsDeposited: 'CombineElementsDeposited',
   CombineElementsMintedRadgem: 'CombineElementsMintedRadgem',
   CombineElementsAddedRadgemImage: 'CombineElementsAddedRadgemImage',
