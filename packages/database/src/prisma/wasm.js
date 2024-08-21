@@ -312,7 +312,11 @@ exports.EventStatus = exports.$Enums.EventStatus = {
   WAITING: 'WAITING',
   PENDING: 'PENDING',
   ERROR: 'ERROR',
-  COMPLETED: 'COMPLETED'
+  COMPLETED: 'COMPLETED',
+  FAILED_RETRY: 'FAILED_RETRY',
+  FAILED_PERMANENT: 'FAILED_PERMANENT',
+  PAUSED: 'PAUSED',
+  CANCELLED: 'CANCELLED'
 };
 
 exports.QuestStatus = exports.$Enums.QuestStatus = {

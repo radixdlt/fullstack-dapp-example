@@ -1,35 +1,81 @@
 import { Worker, ConnectionOptions, Queues, EventJob } from 'queues'
 import { AppLogger, EventModel, WorkerError } from 'common'
 import { EventWorkerController, UserExtended } from './controller'
-import { getUserById } from '../helpers/getUserById'
-import { PrismaClient } from 'database'
+import { EventStatus, PrismaClient } from 'database'
 import { WorkerOutputError } from '../_types'
 import { config } from '../config'
 import { dbClient } from '../db-client'
-import { okAsync } from 'neverthrow'
+import { ResultAsync, okAsync, err, ok, Result } from 'neverthrow'
+
+const isErrorHandled = (error: unknown) =>
+  error && typeof error === 'object' && (error as any).handled ? true : false
+
+const determineIfEventShouldBeProcessed = (transactionId: string) =>
+  ResultAsync.fromPromise(
+    dbClient.event
+      .count({
+        where: {
+          transactionId,
+          status: { in: ['ERROR', 'FAILED_RETRY', 'PENDING', 'WAITING'] }
+        }
+      })
+      .then((count) => count === 1),
+    (error) => ({
+      reason: WorkerError.FailedToDetermineIfEventJobShouldBeProcessed,
+      jsError: error
+    })
+  )
+
+const UpdateEventStatus =
+  (dbClient: PrismaClient, transactionId: string) => (status: EventStatus, error?: string) =>
+    ResultAsync.fromPromise(
+      dbClient.event.update({ data: { status, error }, where: { transactionId } }),
+      (error) => ({ reason: WorkerError.FailedToUpdateEventStatus, jsError: error })
+    ).map(() => undefined)
+
+const noop = () => okAsync(undefined)
+
+const getUser = (
+  userId: string
+): ResultAsync<
+  {
+    accountAddress: string
+    blocked: boolean
+    referredBy?: string
+  },
+  WorkerOutputError
+> =>
+  ResultAsync.fromPromise(
+    dbClient.user.findUnique({
+      select: { accountAddress: true, blocked: true, referredBy: true },
+      where: { id: userId, blocked: true }
+    }),
+    (error) => ({
+      reason: WorkerError.FailedToGetUserFromDb,
+      jsError: error
+    })
+  ).andThen((user) => {
+    if (!user) return err({ reason: WorkerError.UserNotFound })
+    if (!user.accountAddress) err({ reason: WorkerError.UserMissingAccountAddress })
+
+    return ok(
+      user as {
+        accountAddress: string
+        blocked: boolean
+        referredBy?: string
+      }
+    )
+  })
 
 export const EventWorker = (
   connection: ConnectionOptions,
   dependencies: {
-    eventModel: EventModel
     eventWorkerController: EventWorkerController
     logger: AppLogger
     dbClient: PrismaClient
   }
 ) => {
-  const { logger, eventWorkerController, eventModel } = dependencies
-
-  const getReason = (error: unknown): string | undefined => {
-    if (
-      typeof error === 'object' &&
-      error !== null &&
-      'reason' in error &&
-      typeof error['reason'] === 'string'
-    ) {
-      return error['reason']
-    }
-    return undefined
-  }
+  const { logger, eventWorkerController } = dependencies
 
   const worker = new Worker<EventJob>(
     Queues.EventQueue,
@@ -40,50 +86,40 @@ export const EventWorker = (
         job: job.data
       })
 
+      const updateEventStatus = UpdateEventStatus(dependencies.dbClient, job.data.transactionId)
+
       try {
-        const shouldProcessEvent = await dbClient.event
-          .count({
-            where: { transactionId: job.data.transactionId, status: 'COMPLETED' }
+        const result = await determineIfEventShouldBeProcessed(job.data.transactionId)
+          .andThen((shouldProcessEvent) => {
+            if (!shouldProcessEvent) return noop()
+
+            return getUser(job.data.userId).andThen(({ blocked, accountAddress }) => {
+              if (blocked) return updateEventStatus(EventStatus.CANCELLED, WorkerError.BlockedUser)
+
+              return eventWorkerController.handler(job, accountAddress)
+            })
           })
-          .then((count) => count === 0)
-
-        if (!shouldProcessEvent) return okAsync(undefined)
-
-        const result = await getUserById(job.data.userId, dependencies.dbClient, {
-          email: true
-        }).andThen((user) => {
-          if (user.blocked) return okAsync(undefined)
-          return eventWorkerController.handler(job, user as UserExtended)
-        })
+          .andThen(() => updateEventStatus(EventStatus.COMPLETED))
+          .orElse((error) =>
+            updateEventStatus(EventStatus.ERROR, error.reason).andThen(() => err(error))
+          )
 
         if (result.isErr()) {
-          logger.debug({
-            method: 'eventWorker.process.error',
-            id: job.id,
-            type: job.data.type,
-            transactionId: job.data.transactionId,
-            error: result.error
-          })
-
-          await eventModel(logger).update(job.data.transactionId, {
-            error: getReason(result.error) ?? 'UnknownError'
-          })
-
           throw { handled: true, error: result.error }
         }
       } catch (error) {
-        const isHandled = (error: unknown) =>
-          error && typeof error === 'object' && (error as any).handled ? true : false
+        logger.error({
+          id: job.id,
+          method: 'eventWorker.process.error',
+          error
+        })
 
-        if (isHandled(error)) {
-          throw (error as { error: WorkerOutputError }).error
+        if (isErrorHandled(error)) {
+          const handledError = error as { error: WorkerOutputError }
+          throw new Error(handledError.error.reason)
         }
 
-        logger.error({ method: 'eventWorker.process.error', error })
-
-        await eventModel(logger).update(job.data.transactionId, {
-          error: WorkerError.UnhandledError
-        })
+        await updateEventStatus(EventStatus.FAILED_RETRY, WorkerError.UnhandledError)
 
         throw error
       }
@@ -91,22 +127,6 @@ export const EventWorker = (
     },
     { connection, concurrency: config.worker.event.concurrency }
   )
-
-  worker.on('completed', (job) => {
-    const childLogger = logger.child({
-      id: job.id,
-      type: job.data.type,
-      traceId: job.data.traceId,
-      transactionId: job.data.transactionId
-    })
-    eventModel(childLogger)
-      .markAsProcessed(job.data.transactionId)
-      .map(() =>
-        childLogger.debug({
-          method: 'eventWorker.completed'
-        })
-      )
-  })
 
   return worker
 }

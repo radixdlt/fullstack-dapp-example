@@ -14,12 +14,18 @@ import {
 } from 'common'
 import { AppLogger, AccountAddressModel } from 'common'
 import { PrismaClient, QuestStatus, User } from 'database'
-import { databaseTransactions } from './helpers/databaseTransactions'
-import { WorkerError } from '../_types'
+import { WorkerError, WorkerOutputError } from '../_types'
 import { MessageHelper } from '../helpers/messageHelper'
 import { config } from '../config'
 import { TransactionIntentHelper } from '../helpers/transactionIntentHelper'
 import { ReferralRewardAction } from '../helpers/referalReward'
+import {
+  addCompletedQuestRequirement,
+  completeQuestRequirement,
+  hasCompletedAllQuestRequirements,
+  updateQuestProgressStatus
+} from '../helpers/quest'
+import { getUserEmail } from '../helpers/getUserEmail'
 
 type Reward = { resourceAddress: string; amount: string; name: string }
 
@@ -57,7 +63,11 @@ export const EventWorkerController = ({
   referralRewardAction: ReferralRewardAction
   imageModel: ImageModel
 }) => {
-  const handler = (job: Job<EventJob>, user: UserExtended) => {
+  const handler = (
+    job: Job<EventJob>,
+    accountAddress: string,
+    referredBy?: string
+  ): ResultAsync<any, WorkerOutputError> => {
     const { traceId, type, transactionId, userId } = job.data
 
     const childLogger = logger.child({
@@ -70,90 +80,10 @@ export const EventWorkerController = ({
 
     const accountAddressModel = AccountAddressModel(childLogger)
 
-    const dbTransactions = databaseTransactions({ dbClient, logger: childLogger, transactionId })
-
-    const getCompletedRequirements = (userId: string, questId: QuestId) =>
-      ResultAsync.fromPromise(
-        dbClient.completedQuestRequirement.findMany({
-          where: {
-            userId,
-            questId
-          }
-        }),
-        (error) => ({ reason: 'FailedToFindCompletedRequirements', jsError: error })
-      )
-
-    const hasCompletedAllQuestRequirements = (questId: keyof Quests, userId: string) => {
-      const questDefinition = QuestDefinitions()[questId]
-      const requirements = Object.keys(questDefinition.requirements)
-
-      return getCompletedRequirements(userId, questId).map((completedRequirements) => ({
-        isAllCompleted: completedRequirements.length === requirements.length,
-        completedRequirements
-      }))
-    }
-
-    const updateQuestProgressStatus = ({
-      userId,
-      questId,
-      status
-    }: {
-      userId: string
-      questId: string
-      status: QuestStatus
-    }) =>
-      ResultAsync.fromPromise(
-        dbClient.questProgress.upsert({
-          where: {
-            questId_userId: {
-              userId,
-              questId
-            }
-          },
-          create: {
-            userId,
-            questId,
-            status
-          },
-          update: {
-            status
-          }
-        }),
-        (error) => ({ reason: 'FailedToUpdateQuestProgress', jsError: error })
-      )
-
-    const addCompletedQuestRequirement = ({
-      questId,
-      userId,
-      requirementId
-    }: {
-      questId: string
-      userId: string
-      requirementId: string
-    }) =>
-      ResultAsync.fromPromise(
-        dbClient.completedQuestRequirement.upsert({
-          where: {
-            questId_userId_requirementId: {
-              userId,
-              questId,
-              requirementId
-            }
-          },
-          create: {
-            userId,
-            questId,
-            requirementId
-          },
-          update: {}
-        }),
-        (error) => ({ reason: 'FailedToAddCompletedRequirement', jsError: error })
-      )
-
     const handleTiersRewards = (
       referrer: UserByReferralCode,
       count: number
-    ): ResultAsync<undefined, { reason: string; jsError?: unknown }> => {
+    ): ResultAsync<undefined, WorkerOutputError> => {
       const currentReferralsAmount = count + 1
       const userId = referrer.id
       const requirements = QuestDefinitions()['QuestTogether'].requirements
@@ -178,7 +108,7 @@ export const EventWorkerController = ({
         )
 
       const unlockReward = (tier: 'BronzeLevel' | 'SilverLevel' | 'GoldLevel') =>
-        addCompletedQuestRequirement({
+        addCompletedQuestRequirement(dbClient)({
           questId: 'QuestTogether',
           userId,
           requirementId: tier
@@ -239,58 +169,36 @@ export const EventWorkerController = ({
         (error) => ({ reason: WorkerError.FailedToGetUserFromDb, jsError: error })
       ).andThen((user) => (user ? ok(user) : err({ reason: WorkerError.UserNotFound })))
 
-    const handleAllQuestRequirementCompleted = ({
-      questId,
-      userId
-    }: {
-      questId: QuestId
-      userId: string
-    }) =>
-      hasCompletedAllQuestRequirements(questId, userId).andThen((value) =>
-        value.isAllCompleted
-          ? transactionIntent
-              .add({
-                userId,
-                discriminator: `${questId}:DepositReward:${userId}`,
-                type: 'DepositReward',
-                traceId,
-                questId
-              })
-              .andThen(() =>
-                sendMessage(userId, { type: 'QuestRequirementsCompleted', questId, traceId })
-              )
-              .map(() => value)
-          : okAsync(value)
-      )
+    const depositQuestReward = (questId: QuestId) =>
+      transactionIntent.add({
+        userId,
+        discriminator: `${questId}:DepositReward:${userId}`,
+        type: 'DepositReward',
+        traceId,
+        questId
+      })
 
-    const handleMailerLiteBasicQuestFinished = (
-      questId: string,
-      user: User & { email: { email: string; newsletter: boolean } }
-    ) => {
-      return questId === 'TransferTokens' && user?.email?.email
-        ? mailerLiteModel(logger).addOrUpdate(user.email.email, { hasFinishedBasicQuests: true })
-        : okAsync(undefined)
+    const handleAllQuestRequirementCompleted = (questId: QuestId) =>
+      hasCompletedAllQuestRequirements(questId, userId, dbClient).andThen((value) => {
+        if (value.isAllCompleted)
+          return depositQuestReward(questId).andThen(() =>
+            sendMessage(userId, { type: 'QuestRequirementsCompleted', questId, traceId }).map(
+              () => value
+            )
+          )
+
+        return okAsync(value)
+      })
+
+    const handleMailerLiteBasicQuestFinished = (questId: string) => {
+      if (questId !== 'TransferTokens') return okAsync(undefined)
+
+      return getUserEmail(userId, dbClient).andThen((user) => {
+        if (!user) return okAsync(undefined)
+
+        return mailerLiteModel(logger).addOrUpdate(user.email, { hasFinishedBasicQuests: true })
+      })
     }
-
-    const completeQuestRequirement = (questId: QuestId) =>
-      ResultAsync.fromPromise(
-        dbClient.completedQuestRequirement.upsert({
-          where: {
-            questId_userId_requirementId: {
-              userId,
-              questId,
-              requirementId: type
-            }
-          },
-          update: {},
-          create: {
-            userId,
-            questId,
-            requirementId: type
-          }
-        }),
-        (error) => ({ reason: 'FailedToCompleteQuestRequirement', jsError: error })
-      )
 
     const handleQuestWithTrackedAccount = (
       questId: QuestId,
@@ -303,7 +211,7 @@ export const EventWorkerController = ({
           createdAt: Date
         }[]
       }) => boolean = () => true
-    ) => {
+    ): ResultAsync<undefined, any> => {
       const values = {
         questId,
         requirementId: type,
@@ -312,7 +220,7 @@ export const EventWorkerController = ({
         traceId
       }
 
-      return completeQuestRequirement(questId)
+      return completeQuestRequirement(dbClient)({ questId, userId, type })
         .andThen(() =>
           sendMessage(
             userId,
@@ -325,25 +233,24 @@ export const EventWorkerController = ({
             childLogger
           )
         )
-        .andThen(() => handleAllQuestRequirementCompleted(values))
+        .andThen(() => handleAllQuestRequirementCompleted(questId))
         .andThen((value) =>
           shouldRemoveTrackedAccountAddressFn(value)
-            ? accountAddressModel.deleteTrackedAddress(user.accountAddress!, questId)
+            ? accountAddressModel.deleteTrackedAddress(accountAddress, questId).mapErr((error) => ({
+                reason: WorkerError.FailedToDeleteTrackedAccountAddress,
+                jsError: error
+              }))
             : okAsync(undefined)
         )
+        .map(() => undefined)
     }
 
     const triggerRewardsForReferredUser = () =>
-      addCompletedQuestRequirement({
+      addCompletedQuestRequirement(dbClient)({
         questId: 'JoinFriend',
-        userId: user.id,
+        userId,
         requirementId: 'CompleteBasicQuests'
-      }).andThen(() =>
-        handleAllQuestRequirementCompleted({
-          questId: 'JoinFriend',
-          userId: user.id
-        })
-      )
+      }).andThen(() => handleAllQuestRequirementCompleted('JoinFriend'))
 
     const handleQuestTogetherXrdClaimed = (questId: string, xrdAmount: number) =>
       questId === 'QuestTogether'
@@ -355,10 +262,9 @@ export const EventWorkerController = ({
           })
         : okAsync(undefined)
 
-    const handleQuestTogetherRewards = (questId: string) => {
+    const handleQuestTogetherRewards = (questId: string): ResultAsync<any, WorkerOutputError> => {
       const shouldTriggerReferralRewardFlow =
         questId === QuestTogetherConfig.triggerRewardAfterQuest
-      const referredBy = user.referredBy
 
       if (referredBy && shouldTriggerReferralRewardFlow) {
         return triggerRewardsForReferredUser()
@@ -376,6 +282,7 @@ export const EventWorkerController = ({
                 )
               )
           )
+          .map(() => undefined)
       }
 
       return okAsync(undefined)
@@ -384,11 +291,7 @@ export const EventWorkerController = ({
     switch (type) {
       case EventId.QuestRewardDeposited: {
         const questId = job.data.data.questId as string
-        return dbTransactions
-          .rewardsDeposited({
-            userId,
-            questId
-          })
+        return updateQuestProgressStatus(dbClient)({ questId, userId, status: 'REWARDS_DEPOSITED' })
           .andThen(() =>
             sendMessage(userId, {
               type: 'QuestRewardsDeposited',
@@ -405,7 +308,7 @@ export const EventWorkerController = ({
         const xrdReward = rewards.find((reward) => reward.name === 'xrd')
         const xrdAmount = xrdReward ? parseFloat(xrdReward.amount) : 0
 
-        return updateQuestProgressStatus({ questId, userId, status: 'REWARDS_CLAIMED' })
+        return updateQuestProgressStatus(dbClient)({ questId, userId, status: 'REWARDS_CLAIMED' })
           .andThen(() =>
             sendMessage(
               userId,
@@ -417,7 +320,7 @@ export const EventWorkerController = ({
               childLogger
             )
           )
-          .andThen(() => handleMailerLiteBasicQuestFinished(questId, user))
+          .andThen(() => handleMailerLiteBasicQuestFinished(questId))
           .andThen(() => handleQuestTogetherXrdClaimed(questId, xrdAmount))
           .andThen(() => handleQuestTogetherRewards(questId))
       }
@@ -429,15 +332,16 @@ export const EventWorkerController = ({
           type: 'CombinedElementsMintRadgem',
           traceId
         })
+
       case EventId.CombineElementsMintedRadgem: {
         const radGemId = job.data.data.radgemLocalId as string
         const radGemData = job.data.data.radgemData as {
           color: ColorCodeDescription
           material: ShaderCodeDescription
         }
-        if (!radGemId) return errAsync({ reason: 'RadgemIdNotFound' })
         return imageModel(logger)
           .getRadGemKeyImageUrl(radGemData.color, radGemData.material)
+          .mapErr((error) => ({ reason: WorkerError.FailedToGetImageUrl, jsError: error }))
           .andThen((keyImageUrl) =>
             transactionIntent
               .add({
@@ -455,6 +359,7 @@ export const EventWorkerController = ({
       }
       case EventId.CombineElementsAddedRadgemImage:
         return sendMessage(userId, { type: 'CombineElementsAddRadgemImage', traceId }, childLogger)
+
       case EventId.DepositHeroBadge: {
         const updateHeroBadge = (questId: string) =>
           transactionIntent.add({
@@ -464,18 +369,19 @@ export const EventWorkerController = ({
             questId,
             traceId
           })
-        return completeQuestRequirement('GetStuff').andThen(() =>
-          handleAllQuestRequirementCompleted({
-            questId: 'GetStuff',
-            userId
-          }).andThen(() => {
-            return ResultAsync.combineWithAllErrors([
+        return completeQuestRequirement(dbClient)({
+          questId: 'GetStuff',
+          userId,
+          type
+        })
+          .andThen(() => handleAllQuestRequirementCompleted('GetStuff'))
+          .andThen(() =>
+            ResultAsync.combineWithAllErrors([
               updateHeroBadge('Welcome'),
               updateHeroBadge('WhatIsRadix'),
               updateHeroBadge('SetupWallet')
-            ])
-          })
-        )
+            ]).mapErr((error) => ({ reason: WorkerError.FailedToUpdateHeroBadge, jsError: error }))
+          )
       }
 
       case EventId.CombineElementsClaimed: {
@@ -491,7 +397,7 @@ export const EventWorkerController = ({
 
       case EventId.AccountAllowedToForgeHeroBadge:
         return sendMessage(
-          user.id,
+          userId,
           {
             type: 'HeroBadgeReadyToBeClaimed',
             traceId: job.data.traceId
@@ -516,41 +422,39 @@ export const EventWorkerController = ({
           'DEXSwaps',
           ({ completedRequirements }) =>
             completedRequirements.filter(({ requirementId }) =>
-              ([EventId.JettySwap, EventId.LettySwap] as string[]).includes(requirementId)
+              ([EventId.JettySwap, EventId.LettySwap] as string[]).includes(
+                requirementId as EventId
+              )
             ).length === 2
         )
       }
 
       case EventId.GiftBoxOpened: {
         const giftBoxResourceAddress = job.data.data.giftBoxResourceAddress as string
-        return getGiftBoxKindByResourceAddress(giftBoxResourceAddress)
-          .asyncAndThen((giftBoxKind) =>
-            transactionIntent.add({
-              type: 'DepositGiftBoxReward',
-              discriminator: `${EventId.GiftBoxOpened}:${job.data.transactionId}`,
-              userId: user.id,
-              traceId: job.data.traceId,
-              giftBoxKind
-            })
-          )
-          .map(() => undefined)
+        return getGiftBoxKindByResourceAddress(giftBoxResourceAddress).asyncAndThen((giftBoxKind) =>
+          transactionIntent.add({
+            type: 'DepositGiftBoxReward',
+            discriminator: `${EventId.GiftBoxOpened}:${job.data.transactionId}`,
+            userId,
+            traceId: job.data.traceId,
+            giftBoxKind
+          })
+        )
       }
 
       case EventId.GiftBoxesOpenedEvent: {
         const giftBoxResourceAddress = job.data.data.giftBoxResourceAddress as string
         const amount = parseInt(job.data.data.quantity as string)
-        return getGiftBoxKindByResourceAddress(giftBoxResourceAddress)
-          .asyncAndThen((giftBoxKind) =>
-            transactionIntent.add({
-              type: 'DepositGiftBoxesReward',
-              discriminator: `${EventId.GiftBoxesOpenedEvent}:${job.data.transactionId}`,
-              userId: user.id,
-              traceId: job.data.traceId,
-              giftBoxKind,
-              amount
-            })
-          )
-          .map(() => undefined)
+        return getGiftBoxKindByResourceAddress(giftBoxResourceAddress).asyncAndThen((giftBoxKind) =>
+          transactionIntent.add({
+            type: 'DepositGiftBoxesReward',
+            discriminator: `${EventId.GiftBoxesOpenedEvent}:${job.data.transactionId}`,
+            userId,
+            traceId: job.data.traceId,
+            giftBoxKind,
+            amount
+          })
+        )
       }
 
       case EventId.GiftBoxDeposited: {
@@ -565,32 +469,32 @@ export const EventWorkerController = ({
           }[]
         }
         const energyCard = job.data.data.energyCard as MorphCardMintedEventOutput
-        return sendMessage(user.id, {
+        return sendMessage(userId, {
           type: 'GiftBoxDeposited',
           traceId,
           rewards,
           energyCard
-        }).map(() => undefined)
+        })
       }
 
       case EventId.DepositedElements: {
         const elementsCount = parseInt((job.data.data.elementsCount as string) ?? '0')
-        if (elementsCount)
-          return transactionIntent.add({
-            userId,
-            discriminator: `${EventId.DepositedElements}:RadGem:${transactionId}`,
-            type: 'ElementsDeposited',
-            traceId,
-            elementsCount
-          })
-        return okAsync(undefined)
+        if (elementsCount === 0) return okAsync(undefined)
+
+        return transactionIntent.add({
+          userId,
+          discriminator: `${EventId.DepositedElements}:RadGem:${transactionId}`,
+          type: 'ElementsDeposited',
+          traceId,
+          elementsCount
+        })
       }
 
       default:
         childLogger.error({
           message: 'Unhandled Event'
         })
-        return errAsync({ reason: 'UnhandledEvent' })
+        return errAsync({ reason: WorkerError.UnhandledError })
     }
   }
 

@@ -1,7 +1,7 @@
 import { DepositGiftBoxRewardBufferQueue, TransactionJob, TransactionQueue } from 'queues'
 import { ResultAsync } from 'neverthrow'
 import { PrismaClient, QuestStatus } from 'database'
-import { QuestTogetherConfig } from 'common'
+import { QuestTogetherConfig, WorkerError } from 'common'
 
 export type TransactionIntentHelper = ReturnType<typeof TransactionIntentHelper>
 export const TransactionIntentHelper = ({
@@ -20,7 +20,7 @@ export const TransactionIntentHelper = ({
   }: TransactionJob): ResultAsync<
     void,
     {
-      reason: string
+      reason: WorkerError
       jsError: unknown
     }
   > =>
@@ -37,21 +37,22 @@ export const TransactionIntentHelper = ({
         },
         update: {}
       }),
-      (error) => ({ reason: 'FailedToAddTransactionIntentInDb', jsError: error })
+      (error) => ({ reason: WorkerError.FailedToUpsertTransactionIntent, jsError: error })
     )
       .andThen(() => {
         if (data.type === 'DepositGiftBoxesReward') {
           return DepositGiftBoxRewardBufferQueue.addBulk([
             { ...data, discriminator, userId }
           ]).mapErr((error) => ({
-            reason: 'FailedToAddJobToDepositGiftBoxRewardBufferQueue',
+            reason: WorkerError.FailedToAddJobToDepositGiftBoxRewardBufferQueue,
             jsError: error
           }))
         }
 
-        return transactionQueue
-          .add({ ...data, discriminator, userId })
-          .mapErr((error) => ({ reason: 'FailedToAddJobToTransactionQueue', jsError: error }))
+        return transactionQueue.add({ ...data, discriminator, userId }).mapErr((error) => ({
+          reason: WorkerError.FailedToAddJobToTransactionQueue,
+          jsError: error
+        }))
       })
       .map(() => undefined)
 
@@ -81,7 +82,7 @@ export const TransactionIntentHelper = ({
           }
         }
       }),
-      (error) => ({ reason: 'FailedToCountQuestTogetherReferrals', jsError: error })
+      (error) => ({ reason: WorkerError.FailedToCountQuestTogetherReferrals, jsError: error })
     ).map((user) => user?.referredUsers?.length ?? 0)
 
   return { add, countQuestTogetherReferrals }
