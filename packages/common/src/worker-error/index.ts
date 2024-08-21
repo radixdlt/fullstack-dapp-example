@@ -37,7 +37,6 @@ export const WorkerError = {
   FailedToQueryDb: 'FailedToQueryDb',
   TemporarySkip: 'TemporarySkip',
   FailedToCreateRadGem: 'FailedToCreateRadGem',
-  MissingPhoneNumber: 'MissingPhoneNumber',
   FailedToGetSubmittedTransactions: 'FailedToGetSubmittedTransactions',
   UnhandledTransactionState: 'UnhandledTransactionState'
 } as const

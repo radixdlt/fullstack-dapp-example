@@ -1,18 +1,7 @@
 import type { NumericRange } from '@sveltejs/kit'
 
-export const OTPError = {
-  invalidPhoneNumber: 'invalidPhoneNumber',
-  phoneNumberExists: 'phoneNumberExists',
-  failedToSendOTP: 'failedToSendOTP',
-  invalidOTP: 'invalidOTP',
-  failedToAddPhoneNumber: 'failedToAddPhoneNumber',
-  otpInvalidRequest: 'otpInvalidRequest',
-  failedToHashPhoneNumber: 'failedToHashPhoneNumber'
-} as const
-
 export const APIError = {
   failedToSaveProgress: 'failedToSaveProgress',
-  failedToGetPhoneNumber: 'failedToGetPhoneNumber',
   failedToCreateUser: 'failedToCreateUser',
   failedToGetUser: 'failedToGetUser',
   userNotFound: 'userNotFound',
@@ -29,7 +18,6 @@ export const DBError = {
 } as const
 
 export const ErrorReason = {
-  ...OTPError,
   ...APIError,
   ...DBError
 }

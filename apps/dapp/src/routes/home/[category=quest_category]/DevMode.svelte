@@ -46,17 +46,6 @@
     })
   }
 
-  const addPhoneNumber = async () => {
-    await fetchWrapper(
-      fetch('/api/debug', {
-        method: 'POST',
-        body: JSON.stringify({
-          type: 'addPhoneNumber'
-        })
-      })
-    )
-  }
-
   const updateKycOracle = async () => {
     await fetchWrapper(
       fetch('/api/debug', {
@@ -74,17 +63,6 @@
         method: 'POST',
         body: JSON.stringify({
           type: 'addReferral'
-        })
-      })
-    )
-  }
-
-  const clearPhoneNumbers = async () => {
-    await fetchWrapper(
-      fetch('/api/debug', {
-        method: 'POST',
-        body: JSON.stringify({
-          type: 'clearPhoneNumbers'
         })
       })
     )
@@ -158,7 +136,6 @@
         <Button on:click={mintBadge}>Mint hero badge (requires registered account)</Button>
         <Button on:click={clearDb}>Clear Database</Button>
         <Button on:click={setUserAsAdmin}>Set user as Admin</Button>
-        <Button on:click={addPhoneNumber}>Bypass phone verification</Button>
         <Button on:click={addReferral}>Add referral</Button>
         <Button on:click={updateKycOracle}>Update KYC oracle</Button>
         <Button
@@ -175,7 +152,6 @@
         }}>Show Error</Button
       >
 
-      <Button on:click={clearPhoneNumbers}>Clear phone numbers</Button>
       <Button on:click={clearLocalStorageAndCookies}>Clear Local Storage</Button>
 
       <Button

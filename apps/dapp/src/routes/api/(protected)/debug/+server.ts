@@ -35,15 +35,6 @@ export const POST: RequestHandler = async ({ locals, request }) => {
       userId,
       traceId: locals.context.traceId
     })
-  } else if (type === 'addPhoneNumber') {
-    await locals.dependencies.userQuestModel.addVerifiedPhoneNumber(
-      userId,
-      'GB',
-      crypto.randomUUID(),
-      crypto.randomUUID()
-    )
-  } else if (type === 'clearPhoneNumbers') {
-    await locals.dependencies.dbClient.userPhoneNumber.deleteMany({})
   } else if (type === 'addReferral') {
     const userResult = await locals.dependencies.userModel.getById(userId, {})
     if (userResult.isErr()) {

@@ -1,15 +1,11 @@
 <script lang="ts">
-  import { otpApi } from '$lib/api/otp-api'
   import Quest from '../Quest.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import { okAsync } from 'neverthrow'
   import { onMount, onDestroy } from 'svelte'
   import DepositHeroBadge from './DepositHeroBadge.svelte'
-  import VerifyOtp from './VerifyOTP.svelte'
-  import VerifyPhoneNumber from './VerifyPhoneNumber.svelte'
-  import { ErrorReason } from '$lib/errors'
   import type { PageData } from './$types'
-  import { readable, writable, derived } from 'svelte/store'
+  import { writable, derived } from 'svelte/store'
   import type { Quests } from 'content'
   import { type ComponentProps } from 'svelte'
   import { gatewayApi, publicConfig } from '$lib/public-config'
@@ -28,33 +24,16 @@
   const text = data.text as Quests['GetStuff']['text']
 
   let quest: Quest
-  let phoneNumber: string
-  let oneTimePassword: string[]
-
-  let sendingOTP = false
-  let verifyOtpError = false
   let waitingOnAccount = false
   let xrdDepositLoading = false
   let chosenAccountHasXrd = false
 
-  let otpError: keyof typeof errors | undefined
   let mintBadgeState: ComponentProps<DepositHeroBadge>['state']
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
 
   const skipXrdDepositPage = writable<boolean>(false)
   const registeredAccountAddress = derived(user, ($user) => !!$user?.accountAddress)
-  const verifyPhoneNumber = writable(data.requirements.VerifyPhoneNumber.isComplete)
   const depositHeroBadge = writable(data.requirements.DepositHeroBadge.isComplete)
-
-  const errors = {
-    [ErrorReason.failedToSendOTP]: $i18n.t('quests:GetStuff.failedToSendOtp'),
-    [ErrorReason.phoneNumberExists]: $i18n.t('quests:GetStuff.phoneNumberExists'),
-    [ErrorReason.invalidPhoneNumber]: $i18n.t('quests:GetStuff.invalidPhoneNumber'),
-    [ErrorReason.invalidOTP]: $i18n.t('quests:GetStuff.invalidOtp'),
-    [ErrorReason.otpInvalidRequest]: $i18n.t('quests:GetStuff.invalidRequest'),
-    [ErrorReason.failedToAddPhoneNumber]: $i18n.t('quests:GetStuff.failedToAddPhoneNumber'),
-    [ErrorReason.failedToHashPhoneNumber]: $i18n.t('quests:GetStuff.failedToAddPhoneNumber')
-  }
 
   $: if ($webSocketClient) {
     unsubscribeWebSocket = $webSocketClient.onMessage(async (message) => {
@@ -66,36 +45,11 @@
     })
   }
 
-  $: phoneNumberError = otpError ? errors[otpError] : undefined
-
-  const handleApiError = ({ data }: { data?: { message: keyof typeof errors } }) => {
-    otpError = data?.message
-  }
-
-  const sendOneTimePassword = async () => {
-    sendingOTP = true
-    otpError = undefined
-    await otpApi.sendOneTimePassword(phoneNumber).mapErr(handleApiError)
-    sendingOTP = false
-    if (otpError) return
-    quest.actions.next()
-  }
-
   const directDepositXrd = () => {
     xrdDepositLoading = true
     userApi.directDepositXrd().mapErr(() => {
       xrdDepositLoading = false
     })
-  }
-
-  export const verifyOneTimePassword = () => {
-    otpApi
-      .verifyOneTimePassword(phoneNumber, oneTimePassword.join(''))
-      .map(() => {
-        $verifyPhoneNumber = true
-        quest.actions.next()
-      })
-      .mapErr(() => (verifyOtpError = true))
   }
 
   const setUserAccountAddress = (accountAddress: string, accountProof: SignedChallengeAccount) =>
@@ -226,26 +180,6 @@
     {
       id: '1',
       type: 'jetty'
-    },
-    {
-      id: 'verifyPhoneNumber',
-      type: 'regular',
-      skip: verifyPhoneNumber,
-      footer: {
-        next: {
-          enabled: readable(false)
-        }
-      }
-    },
-    {
-      id: 'verifyOtp',
-      type: 'regular',
-      skip: verifyPhoneNumber,
-      footer: {
-        next: {
-          enabled: readable(false)
-        }
-      }
     },
     {
       id: '4',
@@ -383,28 +317,6 @@
 
   {#if render('3')}
     {@html text['3.md']}
-  {/if}
-
-  {#if render('verifyPhoneNumber')}
-    <p>{$i18n.t('quests:GetStuff.enterYourPhoneNumber')}</p>
-    <p>{$i18n.t('quests:GetStuff.weWillNotShare')}</p>
-    <VerifyPhoneNumber
-      bind:phoneNumber
-      on:next={next}
-      error={phoneNumberError}
-      on:click={sendOneTimePassword}
-      loading={sendingOTP}
-    />
-  {/if}
-
-  {#if render('verifyOtp')}
-    <VerifyOtp
-      bind:phoneNumber
-      bind:oneTimePassword
-      error={verifyOtpError}
-      on:filledInInput={verifyOneTimePassword}
-      on:verifyOtp={verifyOneTimePassword}
-    />
   {/if}
 
   {#if render('4')}

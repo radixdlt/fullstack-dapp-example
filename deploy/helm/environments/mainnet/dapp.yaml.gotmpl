@@ -34,24 +34,6 @@ secrets:
     aws_secret_key: "dapp_jwt_secret"
     secret_key: "dapp_jwt_secret"
 
-  - external_secret_name: dapp-twilio-account-sid
-    env_variable: "TWILIO_ACCOUNT_SID"
-    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/secrets"
-    aws_secret_key: "twilio_account_sid"
-    secret_key: "twilio_account_sid"
-
-  - external_secret_name: dapp-twilio-auth-token
-    env_variable: "TEMP_DISABLE_TWILIO_AUTH_TOKEN"
-    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/secrets"
-    aws_secret_key: "twilio_auth_token"
-    secret_key: "twilio_auth_token"
-
-  - external_secret_name: dapp-twilio-service-sid
-    env_variable: "TWILIO_SERVICE_SID"
-    aws_secret_name: "rtlj-prod/eks/radquest/mainnet/secrets"
-    aws_secret_key: "twilio_service_sid"
-    secret_key: "twilio_service_sid"
-
   - external_secret_name: dapp-mailer-lite-api-key
     env_variable: "MAILER_LITE_API_KEY"
     aws_secret_name: "rtlj-prod/eks/radquest/mainnet/secrets"

@@ -17,7 +17,6 @@ export const PUT: RequestHandler = async ({ locals, request }) => {
       requestBody.fields.map((data: UserFieldData) => {
         if (data.field === 'accountAddress')
           return locals.controllers.userController.setAccountAddress(
-            locals.context,
             locals.userId,
             data.accountAddress,
             data.proof
