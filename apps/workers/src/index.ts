@@ -3,8 +3,6 @@ import { ConnectionOptions } from 'bullmq'
 import {
   EventModel,
   MessageApi,
-  AuditModel,
-  TransactionModel,
   AccountAddressModel as AccountAddressModelFn,
   GatewayApi,
   MailerLiteModel,
@@ -18,7 +16,6 @@ import { TransactionWorker } from './transaction/worker'
 import { EventWorker } from './event/worker'
 import { dbClient } from './db-client'
 import { TransactionWorkerController } from './transaction/controller'
-import { TokenPriceClient } from './token-price-client'
 import { SystemWorker } from './system/worker'
 import { SystemWorkerController } from './system/controller'
 import { MessageHelper } from './helpers/messageHelper'
@@ -44,10 +41,7 @@ const app = async () => {
 
   const gatewayApi = GatewayApi(config.networkId, process.env.GATEWAY_URL)
   const eventModel = EventModel(dbClient)
-  const auditModel = AuditModel(dbClient)
-  const transactionModel = TransactionModel(dbClient, transactionQueue)
   const redisClient = new RedisConnection(config.redis)
-  const tokenPriceClient = TokenPriceClient({ logger, redisClient })
   const sendMessage = MessageHelper({ dbClient, messageApi })
   const referralRewardAction = ReferralRewardAction(dbClient)
   const AccountAddressModel = AccountAddressModelFn(redisClient)
@@ -72,10 +66,8 @@ const app = async () => {
   })
 
   const transactionWorkerController = TransactionWorkerController({
-    auditModel,
     gatewayApi,
     imageModel,
-    tokenPriceClient,
     sendMessage
   })
 
