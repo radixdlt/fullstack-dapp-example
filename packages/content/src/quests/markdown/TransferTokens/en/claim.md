@@ -1,3 +1,3 @@
-**You’ve made it, {name}! You’ve completed the RadQuest Basics!**
+Nicely done - a Gift Box to you!
 
-Pat yourself on the back and bask in the glory of what you’ve achieved. And enjoy an **extra nice gift**!
+Now you even know how to re-gift it to a friend if you want…

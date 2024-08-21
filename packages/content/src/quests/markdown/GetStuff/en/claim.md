@@ -1,5 +1,1 @@
-You already know how to handle a **transaction** to claim your rewards!
-
-Just tap the **Claim** button below and you’ll see a transaction in your Radix Wallet to deposit these rewards to your Account.
-
-(You’ll even see that you’re **presenting** your Hero’s Badge!)
+Remember, after you tap the **Claim** button below, go to your Radix Wallet to finish the transaction, then come back here!
