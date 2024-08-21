@@ -1,1 +1,1 @@
-> Get at least 50 XRD in your registered Radix Account for RadQuest transactions before you continue…
+_Safety tip: Whenever you paste an Account address, always check that it matches what you see in your own wallet._

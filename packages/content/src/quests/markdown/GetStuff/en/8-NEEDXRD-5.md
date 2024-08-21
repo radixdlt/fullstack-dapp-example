@@ -8,4 +8,4 @@ THORSwap supports lots of crypto assets like **BTC**, **ETH**, **USDC** and more
 
 All you need is a crypto wallet you can connect to THORSwap, like **Metamask**, **Trust Wallet**, **Coinbase Wallet**, wallets that support **WalletConnect**, and many more.
 
-On THORSwap, just connect your crypto wallet and buy at least 50 XRD. Before you go, copy your Radix Account address here and use it as the **Recipient Address**.
+On THORSwap, just connect your crypto wallet and buy at least 10 XRD (although 50 XRD would be better). Before you go, copy your Radix Account address here and use it as the **Recipient Address**.

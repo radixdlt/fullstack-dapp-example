@@ -1,2 +1,2 @@
 **Credit or debit card**
-Buy XRD securely online using Alchemy Pay.
+Buy XRD simply and securely online using Alchemy Pay.

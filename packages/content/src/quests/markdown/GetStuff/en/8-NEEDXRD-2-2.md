@@ -1,2 +1,2 @@
 **Exchanges**
-Use a crypto exchange that lists XRD.
+Use one of many crypto exchanges that list XRD.
