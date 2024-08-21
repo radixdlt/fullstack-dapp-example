@@ -1,10 +1,12 @@
 import { Worker, ConnectionOptions, Queues, BatchedDepositGiftBoxesRewardJob } from 'queues'
 import { AppLogger } from 'common'
 import { BatchedDepositGiftBoxRewardController } from './controller'
-import { PrismaClient, TransactionIntentStatus } from 'database'
+import { PrismaClient } from 'database'
 import { WorkerError, WorkerOutputError } from '../_types'
 import { config } from '../config'
 import { okAsync, ResultAsync, err } from 'neverthrow'
+import { determineIfJobShouldBeProcessed } from '../helpers/determineIfJobShouldBeProcessed'
+import { UpdateTransactionIntentsStatus } from '../helpers/updateTransactionIntentStatus'
 
 export const BatchedDepositGiftBoxRewardWorker = async (
   connection: ConnectionOptions,
@@ -16,7 +18,7 @@ export const BatchedDepositGiftBoxRewardWorker = async (
 ) => {
   const { logger, dbClient, controller } = dependencies
 
-  const getUserIds = (userIds: string[]) =>
+  const filterBlockedUsers = (userIds: string[]) =>
     ResultAsync.fromPromise(
       dbClient.user.findMany({
         select: { id: true },
@@ -28,35 +30,8 @@ export const BatchedDepositGiftBoxRewardWorker = async (
       })
     ).map((users) => users.map((user) => user.id))
 
-  const determineIfJobShouldBeProcessed = (discriminator: string) =>
-    ResultAsync.fromPromise(
-      dbClient.transactionIntent
-        .findUnique({ where: { discriminator } })
-        .then((transactionIntent) => transactionIntent?.status !== 'COMPLETED'),
-      (error) => ({ reason: WorkerError.FailedToQueryDb, jsError: error })
-    )
-
-  const UpdateTransactionIntentStatusFactory =
-    (batchId: string, itemDiscriminators: string[]) =>
-    ({ status, error }: { status: TransactionIntentStatus; error?: string }) =>
-      ResultAsync.fromPromise(
-        dbClient.batchedTransactionIntent.update({
-          where: { id: batchId },
-          data: { status, error }
-        }),
-        (error) => ({ reason: WorkerError.FailedToUpdateTransactionIntentStatus, jsError: error })
-      ).andThen(() =>
-        ResultAsync.fromPromise(
-          dbClient.transactionIntent.updateMany({
-            where: { discriminator: { in: itemDiscriminators } },
-            data: { status, error }
-          }),
-          (error) => ({ reason: WorkerError.FailedToUpdateTransactionIntentStatus, jsError: error })
-        )
-      )
-
   const withoutBlockedUsers = (items: BatchedDepositGiftBoxesRewardJob['items']) =>
-    getUserIds(items.map((item) => item.userId)).map((userIds) =>
+    filterBlockedUsers(items.map((item) => item.userId)).map((userIds) =>
       items.filter((item) => userIds.includes(item.userId))
     )
 
@@ -73,12 +48,16 @@ export const BatchedDepositGiftBoxRewardWorker = async (
       })
 
       try {
-        const updateStatus = UpdateTransactionIntentStatusFactory(
+        const updateStatus = UpdateTransactionIntentsStatus(
           job.data.id,
-          transactionIntentDiscriminators
+          transactionIntentDiscriminators,
+          dbClient
         )
 
-        const result = await determineIfJobShouldBeProcessed(transactionIntentDiscriminators[0])
+        const result = await determineIfJobShouldBeProcessed(
+          transactionIntentDiscriminators[0],
+          dbClient
+        )
           .andThen((shouldProcess) => {
             if (!shouldProcess) okAsync(undefined)
 
@@ -88,7 +67,6 @@ export const BatchedDepositGiftBoxRewardWorker = async (
           })
           .andThen(() => updateStatus({ status: 'COMPLETED' }))
           .orElse((error) =>
-            // TODO: determine what failed status that should be set
             updateStatus({ status: 'FAILED_RETRY', error: error.reason }).andThen(() => err(error))
           )
 
@@ -100,11 +78,13 @@ export const BatchedDepositGiftBoxRewardWorker = async (
             error: result.error
           })
           const errorReason = result.error.reason as unknown as WorkerError
+
           const skipError = new Set<WorkerError>([WorkerError.FailedToConvertStringManifest])
           // TODO: determine if we should throw based of error reason, throwing will trigger a retry
           if (skipError.has(errorReason)) {
             return
           }
+
           throw result.error
         }
       } catch (error) {
