@@ -104,8 +104,8 @@ interface Resources {
     "errorPopup": {
       "close": "Close",
       "XrdRewardLimit": {
-        "title": "You have reached the XRD Reward Limit",
-        "content": "To claim more rewards, you will need to contact support:",
+        "title": "XRD Reward Limit Reached",
+        "content": "To claim more rewards, you will need to contact RadQuest support:",
         "button": "Get help with RadQuest rewards"
       },
       "AccountAlreadyRegistered": {
@@ -128,6 +128,11 @@ interface Resources {
         "title": "RadQuest is experiencing very high demand.",
         "content": "If you have problems completing quests or making claims, please try again later.",
         "link": "Learn more on X @radixdlt",
+        "button": "Close"
+      },
+      "GoldenTicket": {
+        "title": "You've scanned a golden ticket!",
+        "content": "To claim your ticket, please log out and back in again.",
         "button": "Close"
       }
     },

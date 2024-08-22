@@ -263,6 +263,18 @@ exports.Prisma.MarketingScalarFieldEnum = {
   utm_term: 'utm_term'
 };
 
+exports.Prisma.GoldenTicketScalarFieldEnum = {
+  id: 'id',
+  batchId: 'batchId',
+  ownerId: 'ownerId',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt',
+  userId: 'userId',
+  claimedAt: 'claimedAt',
+  description: 'description',
+  status: 'status'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -338,6 +350,12 @@ exports.TransactionIntentStatus = exports.$Enums.TransactionIntentStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.GoldenTicketStatus = exports.$Enums.GoldenTicketStatus = {
+  CLAIMABLE: 'CLAIMABLE',
+  CLAIMED: 'CLAIMED',
+  CLAIMED_INVALID: 'CLAIMED_INVALID'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   UserEmail: 'UserEmail',
@@ -357,7 +375,8 @@ exports.Prisma.ModelName = {
   BatchedTransactionIntent: 'BatchedTransactionIntent',
   SubmittedTransaction: 'SubmittedTransaction',
   Config: 'Config',
-  Marketing: 'Marketing'
+  Marketing: 'Marketing',
+  GoldenTicket: 'GoldenTicket'
 };
 
 /**

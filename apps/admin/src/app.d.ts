@@ -1,7 +1,7 @@
 import type { UserType, PrismaClient, BlockedCountryModel } from 'database'
 import type { ImageController } from '$lib/server/image/controller'
 import { getQueues } from 'queues'
-import { AppLogger } from 'common'
+import { AppLogger, GoldenTicketModel } from 'common'
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 
@@ -22,6 +22,7 @@ declare global {
       eventQueue: Queue['eventQueue']
       systemQueue: Queue['systemQueue']
       logger: AppLogger
+      goldenTicketModel: ReturnType<ReturnType<typeof GoldenTicketModel>>
     }
   }
 }

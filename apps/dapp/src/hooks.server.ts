@@ -14,7 +14,8 @@ import {
   NotificationModel,
   MarketingModel,
   ImageModel,
-  MailerLiteModel
+  MailerLiteModel,
+  GoldenTicketModel
 } from 'common'
 import { UserType } from 'database'
 import { dbClient } from '$lib/db'
@@ -38,6 +39,7 @@ import {
   createUnauthorizedResponse
 } from '$lib/server/helpers/create-error-response'
 import { ImageController } from '$lib/server/image/controller'
+import { GoldenTicketController } from '$lib/server/golden-ticket/controller'
 
 const networkId = +PUBLIC_NETWORK_ID
 
@@ -108,6 +110,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     notificationModel: notificationModel(logger),
     marketingModel: marketingModel(logger),
     imageModel: imageModel(logger),
+    goldenTicketModel: GoldenTicketModel(dbClient)(logger),
     systemQueue
   } satisfies ControllerDependencies
 
@@ -117,7 +120,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     authController: AuthController(event.locals.dependencies),
     messageController: MessageController(event.locals.dependencies),
     notificationController: NotificationController(event.locals.dependencies),
-    imageController: ImageController(event.locals.dependencies)
+    imageController: ImageController(event.locals.dependencies),
+    goldenTicketController: GoldenTicketController(event.locals.dependencies)
   }
 
   if (event.route.id?.includes('(protected)')) {
