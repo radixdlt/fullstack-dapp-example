@@ -44,7 +44,7 @@ export const Addresses = (networkId: number) => {
         questRewardsV2Package:
           'package_tdx_2_1p4cytmfhgvs0ue2lkd0r4pkamq446wtmvm2u9rxmnw57ls4hzg8vr9',
         heroBadgeForgeV2Package:
-          'package_tdx_2_1ph2yfe0cw5dphme6vcgrvjahu7q0c6zm59hmk980w3qsvw4r8u99tg',
+          'package_tdx_2_1pk3uy78sq07rl4vzcmjf6u8yw67tgltys0zfvezyjw9yty0dmqlvf8',
         components: {
           heroBadgeForge: 'component_tdx_2_1czggp0fz9pcarmhp8uxpy9qr8ysz46qkpr49t3jdrn8zzanujj8fpy',
           kycOracle: 'component_tdx_2_1cqgu87tk0sx6ldn7x0heev0vgc6jq4uu0tahkfumfpgmw7acxtgqd3',
@@ -59,7 +59,7 @@ export const Addresses = (networkId: number) => {
             'component_tdx_2_1czvfn7wtgensyfwjn729n3mkxl83e8848uw50aar796us6pcd333mw',
           cardForgeV2: 'component_tdx_2_1crcrpc5ql7q3jf6zhnz0lksfuja3cqfpt0er4srks4xggg70kyzwd5',
           heroBadgeForgeV2:
-            'component_tdx_2_1cp9vse6n6pv5q4hw0hne3h0s7z0taenj3v4maac9yc52vr3ldqh776',
+            'component_tdx_2_1czkc90s9r0c0my9jpqva2ukdrmn94u2d6cagxrvamfajmlyrd8kwge',
           radgemForgeV2: 'component_tdx_2_1cr9sd3lfaxw679879lnp0zs08de4leakfqgxdvmjnve8zpcgh9dtlm',
           questRewardsV2: 'component_tdx_2_1czrfq6959lzvyrswj885gwhfz9lzpr06sxxax5wvl859m3mh9k9rjr',
           kycOracleKeyValueStore:
