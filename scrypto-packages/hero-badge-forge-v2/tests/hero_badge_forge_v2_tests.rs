@@ -26,6 +26,11 @@ struct LedgerTestEnvironment {
     mint_hero_badges_manifest: TransactionManifestV1,
     heroes_completed_quests_manifest: TransactionManifestV1,
     update_key_image_urls_manifest: TransactionManifestV1,
+    hero_badge: ResourceAddress,
+    user_id_1: String,
+    user_id_2: String,
+    quest_id_1: String,
+    quest_id_2: String,
 }
 
 impl LedgerTestEnvironment {
@@ -152,7 +157,7 @@ impl LedgerTestEnvironment {
             )
             .take_non_fungibles_from_worktop(
                 hero_badge,
-                [NonFungibleLocalId::string(user_id_1).unwrap()],
+                [NonFungibleLocalId::string(user_id_1.clone()).unwrap()],
                 "hero_badge_1",
             )
             .call_method_with_name_lookup(account_1, "try_deposit_or_abort", |lookup| {
@@ -177,6 +182,8 @@ impl LedgerTestEnvironment {
         let mint_hero_badges_manifest = manifest.build();
         dump_manifest_to_file("mint_hero_badges", &mint_hero_badges_manifest, names);
 
+        let quest_id_1 = "Quest_Name_1".to_string();
+        let quest_id_2 = "Quest_Name_2".to_string();
         // Update user badge with quest completion data
         let manifest = ManifestBuilder::new()
             .lock_fee_from_faucet()
@@ -184,7 +191,13 @@ impl LedgerTestEnvironment {
             .call_method(
                 hero_badge_forge_v2,
                 "heroes_completed_quests",
-                manifest_args!([(user_id_2.clone(), "Quest_Name_1".to_string())]),
+                manifest_args!([
+                    (user_id_1.clone(), vec![quest_id_1.clone()]),
+                    (
+                        user_id_2.clone(),
+                        vec![quest_id_1.clone(), quest_id_2.clone()]
+                    ),
+                ]),
             );
 
         let names = manifest.object_names();
@@ -221,6 +234,11 @@ impl LedgerTestEnvironment {
             mint_hero_badges_manifest,
             heroes_completed_quests_manifest,
             update_key_image_urls_manifest,
+            hero_badge,
+            user_id_1,
+            user_id_2,
+            quest_id_1,
+            quest_id_2,
         })
     }
 }
@@ -265,11 +283,16 @@ fn can_heroes_complete_quests() -> Result<(), RuntimeError> {
 
     // Assert
     receipt.expect_commit_success();
+    let hero_badge_1_data = lte.ledger.get_non_fungible_data::<HeroBadgeData>(
+        lte.hero_badge,
+        NonFungibleLocalId::string(lte.user_id_1).unwrap(),
+    );
+    assert!(hero_badge_1_data.quest_counter == 1);
     Ok(())
 }
 
 #[test]
-fn cannot_hero_complete_quest_twice_for_same_quest() -> Result<(), RuntimeError> {
+fn cannot_complete_quests_twice_for_same_quests() -> Result<(), RuntimeError> {
     // Arrange
     let mut lte = LedgerTestEnvironment::new()?;
     lte.ledger.execute_manifest(
@@ -289,7 +312,22 @@ fn cannot_hero_complete_quest_twice_for_same_quest() -> Result<(), RuntimeError>
     );
 
     // Assert
-    receipt.expect_commit_failure();
+    receipt.expect_commit_success();
+    let hero_badge_1_data = lte.ledger.get_non_fungible_data::<HeroBadgeData>(
+        lte.hero_badge,
+        NonFungibleLocalId::string(lte.user_id_1).unwrap(),
+    );
+    let hero_badge_2_data = lte.ledger.get_non_fungible_data::<HeroBadgeData>(
+        lte.hero_badge,
+        NonFungibleLocalId::string(lte.user_id_2).unwrap(),
+    );
+    assert!(hero_badge_1_data.quest_counter == 1);
+    assert!(hero_badge_2_data.quest_counter == 2);
+    assert!(hero_badge_1_data.quests_completed.contains(&lte.quest_id_1));
+    assert!(
+        hero_badge_2_data.quests_completed.contains(&lte.quest_id_1)
+            && hero_badge_2_data.quests_completed.contains(&lte.quest_id_2)
+    );
     Ok(())
 }
 

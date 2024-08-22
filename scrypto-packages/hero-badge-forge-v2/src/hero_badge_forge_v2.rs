@@ -21,9 +21,9 @@ pub struct HeroBadgeData {
     #[mutable]
     key_image_url: Url,
     #[mutable]
-    quests_completed: Vec<String>,
+    pub quests_completed: Vec<String>,
     #[mutable]
-    quest_counter: u32,
+    pub quest_counter: u32,
 }
 
 #[blueprint]
@@ -108,32 +108,37 @@ mod hero_badge_forge_v2 {
                 .collect()
         }
 
-        pub fn heroes_completed_quests(&mut self, users_completed_quests: Vec<(UserId, QuestId)>) {
+        pub fn heroes_completed_quests(
+            &mut self,
+            users_completed_quests: Vec<(UserId, Vec<QuestId>)>,
+        ) {
             assert!(self.enabled, "HeroBadgeForge disabled");
 
-            for (user_id, quest_id) in users_completed_quests {
+            for (user_id, mut quest_ids) in users_completed_quests {
                 self.admin_badge.as_fungible().authorize_with_amount(1, || {
                     let badge_id = NonFungibleLocalId::string(user_id.0).unwrap();
                     let mut non_fungible_data = self
                         .hero_badge_manager
                         .get_non_fungible_data::<HeroBadgeData>(&badge_id);
 
-                    assert!(
-                        non_fungible_data
-                            .quests_completed
-                            .iter()
-                            .find(|&id| id == &quest_id.0)
-                            .is_none(),
-                        "Quest already completed"
-                    );
+                    // Check if the quests have already been completed
+                    quest_ids = quest_ids
+                        .into_iter()
+                        .filter(|quest_id| {
+                            !non_fungible_data.quests_completed.contains(&quest_id.0)
+                        })
+                        .collect();
+
+                    non_fungible_data
+                        .quests_completed
+                        .extend(quest_ids.iter().map(|id| id.0.to_owned()));
 
                     self.hero_badge_manager.update_non_fungible_data(
                         &badge_id,
                         "quest_counter",
-                        non_fungible_data.quest_counter + 1,
+                        non_fungible_data.quests_completed.len() as u32,
                     );
 
-                    non_fungible_data.quests_completed.push(quest_id.0);
                     self.hero_badge_manager.update_non_fungible_data(
                         &badge_id,
                         "quests_completed",
