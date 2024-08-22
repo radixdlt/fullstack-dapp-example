@@ -33,6 +33,7 @@
   import { GatewayApi } from 'common'
   import NetworkCongestedBanner from './NetworkCongestedBanner.svelte'
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
+  import GoldenTicketAlert from './GoldenTicketAlert.svelte'
 
   export let data: LayoutData
 
@@ -48,6 +49,7 @@
     // @ts-ignore
     useCookies('requirement-SetupWallet-DownloadWallet').set(true)
   }
+
   onMount(() => {
     import('@lottiefiles/lottie-player')
 
@@ -125,6 +127,9 @@
               ...me,
               label: persona.label
             }
+
+            if ($page.url.searchParams.get('t') && !$user.goldenTicketClaimed)
+              showGoldenTicketAlert = true
 
             if (authToken) {
               $webSocketClient = WebSocketClient({ authToken, radixDappToolkit })
@@ -258,6 +263,10 @@
           )
       })
     }
+
+    const goldenTicket = $page.url.searchParams.get('t')
+
+    if (goldenTicket) useCookies('golden-ticket').set(goldenTicket)
   })
 
   onDestroy(() => {
@@ -341,6 +350,8 @@
   if (data.questStatus['TransferTokens']?.status === 'COMPLETED' && $user?.referredByUser) {
     pushNotification('joinedFriend')
   }
+
+  let showGoldenTicketAlert = false
 </script>
 
 <LandingPopup definitions={data.landingPopupDefinitions} />
@@ -371,4 +382,8 @@
 
 {#if PUBLIC_NETWORK_ID === '1'}
   <NetworkCongestedBanner />
+{/if}
+
+{#if showGoldenTicketAlert}
+  <GoldenTicketAlert />
 {/if}

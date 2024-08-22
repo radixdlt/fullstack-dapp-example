@@ -25,6 +25,7 @@ const EmailSchema = valibot.object({
 export type UserController = ReturnType<typeof UserController>
 export const UserController = ({
   userModel,
+  goldenTicketModel,
   transactionModel,
   gatewayApi,
   mailerLiteModel,
@@ -34,7 +35,8 @@ export const UserController = ({
     userModel
       .getById(userId, {
         email: true,
-        referredByUser: true
+        referredByUser: true,
+        goldenTicketClaimed: true
       })
       .map((data) => ({ data, httpResponseCode: 200 }))
 
@@ -220,8 +222,14 @@ export const UserController = ({
   const directDepositXrd = (ctx: ControllerMethodContext, userId: string) => {
     const discriminator = `PopulateResources:${userId}`
 
-    return userModel
-      .getById(userId, {})
+    return goldenTicketModel
+      .userHasClaimedTicket(userId)
+      .mapErr((error) => createApiError('InternalError', 500)(error))
+      .andThen((ticket) => {
+        if (!ticket) return errAsync(createApiError('UserHasNoTicket', 400)())
+        return okAsync(undefined)
+      })
+      .andThen(() => userModel.getById(userId, {}))
       .andThen((user) =>
         user?.accountAddress
           ? ok(user.accountAddress)

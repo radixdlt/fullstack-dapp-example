@@ -21,7 +21,8 @@ export const useCookies = <
     | CookieEntry<QuestStatusCookieKey, $Enums.QuestStatus>
     | CookieEntry<RequirementCookieKey, boolean>
     | CookieEntry<SavedProgressCookieKey, number>
-    | CookieEntry<JwtCookieKey, string>,
+    | CookieEntry<JwtCookieKey, string>
+    | CookieEntry<'golden-ticket', string>,
   V extends T['key']
 >(
   item: V

@@ -18,6 +18,7 @@
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { waitingWarning } from '$lib/utils/waiting-warning'
+  import { page } from '$app/stores'
 
   export let data: PageData
 
@@ -150,23 +151,26 @@
   })
 
   $: waitingWarning(xrdDepositLoading)
+
+  const onReceiveXRDPage = async () => {
+    xrdDepositLoading = true
+    if (!$skipXrdDepositPage) {
+      const receivedResult = await userApi.hasReceivedXrd()
+      xrdDepositLoading = false
+
+      if (receivedResult.isErr()) return
+
+      const received = receivedResult.value
+
+      skipXrdDepositPage.set(received)
+    }
+  }
 </script>
 
 <Quest
   on:render={(ev) => {
     if (ev.detail === '15') {
-      xrdDepositLoading = true
-      if (!$skipXrdDepositPage) {
-        userApi
-          .hasReceivedXrd()
-          .map((received) => {
-            xrdDepositLoading = false
-            skipXrdDepositPage.set(received)
-          })
-          .mapErr(() => {
-            xrdDepositLoading = false
-          })
-      }
+      onReceiveXRDPage()
     }
   }}
   {...data.questProps}
@@ -237,7 +241,7 @@
       skip: skipXrdDepositPage,
       footer: {
         next: {
-          enabled: writable(false)
+          enabled: writable(true) // TODO change when implementing new quest flows
         }
       }
     },
@@ -370,17 +374,28 @@
   {/if}
 
   {#if render('15')}
-    {#if chosenAccountHasXrd}
-      {@html text['15b.md']}
-    {:else}
-      {@html text['15a.md']}
-    {/if}
+    {#if $user?.goldenTicketClaimed}
+      {#if chosenAccountHasXrd}
+        {@html text['15b.md']}
+      {:else}
+        {@html text['15a.md']}
+      {/if}
 
-    <div class="center">
-      <Button on:click={directDepositXrd} loading={xrdDepositLoading} disabled={xrdDepositLoading}>
-        {$i18n.t('quests:GetStuff.getXrd')}
-      </Button>
-    </div>
+      <div class="center">
+        <Button
+          on:click={directDepositXrd}
+          loading={xrdDepositLoading}
+          disabled={xrdDepositLoading}
+        >
+          {$i18n.t('quests:GetStuff.getXrd')}
+        </Button>
+      </div>
+    {:else if $page.url.searchParams.get('t')}
+      <!-- Placeholder -->
+      Oops! Seems like your Golden Ticket is invalid. Please get some XRD and come back.
+    {:else}
+      Please get some XRD and come back.
+    {/if}
   {/if}
 
   {#if render('16')}

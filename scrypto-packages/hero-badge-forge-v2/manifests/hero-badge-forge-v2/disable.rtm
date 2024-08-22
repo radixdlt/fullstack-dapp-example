@@ -1,0 +1,15 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("5")
+;
+CALL_METHOD
+    Address("${account_1}")
+    "create_proof_of_amount"
+    Address("${super_admin_badge}")
+    Decimal("1")
+;
+CALL_METHOD
+    Address("${hero_badge_forge_v2}")
+    "disable"
+;

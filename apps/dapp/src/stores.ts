@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store'
-import type { User } from 'database'
+import type { GoldenTicket, User } from 'database'
 import { type Quests } from 'content'
 
 export const quests = writable<Quests>()
@@ -9,6 +9,7 @@ export const user = writable<
       label: string
       email?: { email: string; newsletter: boolean }
       referredByUser?: { name?: string }
+      goldenTicketClaimed?: GoldenTicket
     })
   | undefined
 >(undefined)
