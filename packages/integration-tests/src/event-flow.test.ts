@@ -678,32 +678,36 @@ describe('Event flows', () => {
       })
     })
 
-    describe.skip('gift box reward deposit batching', () => {
-      it('should batch gift box reward deposits', { timeout: 600_000, skip: false }, async () => {
-        const account1 = await getAccount()
+    describe('gift box reward deposit batching', () => {
+      it.skip(
+        'should batch gift box reward deposits',
+        { timeout: 600_000, skip: false },
+        async () => {
+          const account1 = await getAccount()
 
-        const [account2, account3] = await Promise.all(
-          new Array(2).fill(null).map(() => createAccount({ withXrd: true, withHeroBadge: true }))
-        )
+          const [account2, account3] = await Promise.all(
+            new Array(2).fill(null).map(() => createAccount({ withXrd: true, withHeroBadge: true }))
+          )
 
-        await Promise.all([
-          mintGiftBox('Simple', account1.user.accountAddress!, 100),
-          mintGiftBox('Simple', account2.user.accountAddress!, 100),
-          mintGiftBox('Simple', account3.user.accountAddress!, 100)
-        ])
+          await Promise.all([
+            mintGiftBox('Simple', account1.user.accountAddress!, 100),
+            mintGiftBox('Simple', account2.user.accountAddress!, 100),
+            mintGiftBox('Simple', account3.user.accountAddress!, 100)
+          ])
 
-        for (const _ of new Array(1).fill(null)) {
-          await Promise.all(
-            [account1, account2, account3].map((account) =>
-              Promise.all(
-                new Array(3)
-                  .fill(null)
-                  .map(() => openGiftBox({ kind: 'Simple', account, amount: 5 }))
+          for (const _ of new Array(1).fill(null)) {
+            await Promise.all(
+              [account1, account2, account3].map((account) =>
+                Promise.all(
+                  new Array(3)
+                    .fill(null)
+                    .map(() => openGiftBox({ kind: 'Simple', account, amount: 5 }))
+                )
               )
             )
-          )
+          }
         }
-      })
+      )
     })
   })
 

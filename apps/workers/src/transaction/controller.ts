@@ -3,11 +3,7 @@ import { Job, TransactionJob } from 'queues'
 import { User } from 'database'
 import {
   GatewayApi,
-  GiftBoxReward,
-  GiftBoxRewardConfig,
   ImageModel,
-  getRandomFloat,
-  getRandomIntInclusive,
   type AppLogger,
   newRadgem,
   ColorCodeDescription,
@@ -31,7 +27,7 @@ import { GetLastSubmittedTransaction } from '../helpers/getLastSubmittedTransact
 import { UpsertSubmittedTransaction } from '../helpers/upsertSubmittedTransaction'
 import { SubmitTransactionHelper } from '../helpers/submitTransactionHelper'
 
-const { xrd, accounts, badges, resources, components } = config.radQuest
+const { xrd, accounts, badges, components } = config.radQuest
 const { system, payer } = accounts
 
 export type TransactionWorkerController = ReturnType<typeof TransactionWorkerController>
@@ -108,34 +104,34 @@ export const TransactionWorkerController = ({
       case 'QuestCompleted': {
         const { questId } = job.data
 
-        return errAsync({
-          reason: WorkerError.TemporarySkip
-        })
-
-        // return handleSubmitTransaction(
-        //   `
-        //     CALL_METHOD
-        //       Address("${payer.accessController}")
-        //       "create_proof";
-        //     CALL_METHOD
-        //       Address("${system.accessController}")
-        //       "create_proof";
-        //     CALL_METHOD
-        //       Address("${payer.address}")
-        //       "lock_fee"
-        //       Decimal("100");
-        //   CALL_METHOD
-        //       Address("${system.address}")
-        //       "create_proof_of_amount"
-        //       Address("${badges.adminBadgeAddress}")
-        //       Decimal("1");
-        //    CALL_METHOD
-        //         Address("${components.heroBadgeForge}")
-        //         "hero_completed_quest"
-        //         "${userId}"
-        //         "${questId}"
-        //   ;`
-        // )
+        return handleSubmitTransaction(
+          `
+          CALL_METHOD
+            Address("${payer.accessController}")
+            "create_proof"
+          ;
+          CALL_METHOD
+            Address("${system.accessController}")
+            "create_proof"
+          ;
+          CALL_METHOD
+            Address("${payer.address}")
+            "lock_fee"
+            Decimal("100")
+          ;
+          CALL_METHOD
+            Address("${system.address}")
+            "create_proof_of_amount"
+            Address("${badges.adminBadgeAddress}")
+            Decimal("1")
+          ;
+          CALL_METHOD
+            Address("${components.heroBadgeForge}")
+            "hero_completed_quest"
+            "${userId}"
+            "${questId}"
+          ;`
+        )
       }
 
       case 'DepositReward':

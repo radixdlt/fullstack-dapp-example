@@ -5,8 +5,7 @@ import { PrismaClient } from 'database'
 import { WorkerError, WorkerOutputError } from '../_types'
 import { config } from '../config'
 import { err } from 'neverthrow'
-import { determineIfJobShouldBeProcessed } from '../helpers/determineIfJobShouldBeProcessed'
-import { UpdateTransactionIntentsStatus } from '../helpers/updateTransactionIntentStatus'
+import { TransactionIntentStatusHelper } from '../helpers/transactionIntentStatusHelper'
 import { WorkerHelper } from '../helpers/workerHelper'
 
 export const BatchedDepositGiftBoxRewardWorker = async (
@@ -17,9 +16,8 @@ export const BatchedDepositGiftBoxRewardWorker = async (
     dbClient: PrismaClient
   }
 ) => {
-  const workerHelper = WorkerHelper()
-
   const { logger, dbClient, controller } = dependencies
+  const workerHelper = WorkerHelper(dbClient)
 
   const worker = new Worker<BatchedDepositGiftBoxesRewardJob>(
     Queues.DepositGiftBoxRewardQueue,
@@ -35,17 +33,14 @@ export const BatchedDepositGiftBoxRewardWorker = async (
         itemCount: transactionIntentDiscriminators.length
       })
 
-      const updateStatus = UpdateTransactionIntentsStatus(
+      const updateStatus = TransactionIntentStatusHelper(dbClient).Batch(
         job.data.id,
-        transactionIntentDiscriminators,
-        dbClient
+        transactionIntentDiscriminators
       )
 
       try {
-        const result = await determineIfJobShouldBeProcessed(
-          firstTransactionIntentDiscriminator,
-          dbClient
-        )
+        const result = await workerHelper
+          .determineIfJobShouldBeProcessed(firstTransactionIntentDiscriminator)
           .andThen((shouldProcess) => {
             if (!shouldProcess) return workerHelper.noop()
 

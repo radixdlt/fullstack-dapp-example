@@ -54,5 +54,9 @@ export const WorkerError = {
   FailedToGetUserEmail: 'FailedToGetUserEmail',
   FailedToUpdateHeroBadge: 'FailedToUpdateHeroBadge',
   FailedToFindCompletedRequirements: 'FailedToFindCompletedRequirements',
-  FailedToAddCompletedQuestRequirement: 'FailedToAddCompletedQuestRequirement'
+  FailedToAddCompletedQuestRequirement: 'FailedToAddCompletedQuestRequirement',
+  FailedToCreateBatchedTransactionIntent: 'FailedToCreateBatchedTransactionIntent',
+  FailedToAddJobToQueue: 'FailedToAddJobToQueue',
+  FailedToMarkJobsAsFailed: 'FailedToMarkJobsAsFailed',
+  FailedToMarkJobsAsCompleted: 'FailedToMarkJobsAsCompleted'
 } as const

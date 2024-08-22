@@ -6,8 +6,8 @@ import { getUserById } from '../helpers/getUserById'
 import { WorkerOutputError } from '../_types'
 import { config } from '../config'
 import { okAsync, ResultAsync, err } from 'neverthrow'
-import { determineIfJobShouldBeProcessed } from '../helpers/determineIfJobShouldBeProcessed'
-import { UpdateTransactionIntentStatus } from '../helpers/updateTransactionIntentStatus'
+import { TransactionIntentStatusHelper } from '../helpers/transactionIntentStatusHelper'
+import { WorkerHelper } from '../helpers/workerHelper'
 
 export const TransactionWorker = (
   connection: ConnectionOptions,
@@ -18,6 +18,7 @@ export const TransactionWorker = (
   }
 ) => {
   const { logger, dbClient, transactionWorkerController: controller } = dependencies
+  const workerHelper = WorkerHelper(dbClient)
 
   const worker = new Worker<TransactionJob>(
     Queues.TransactionQueue,
@@ -25,7 +26,7 @@ export const TransactionWorker = (
       await job.updateProgress(1)
       const { discriminator, userId } = job.data
 
-      const updateStatus = UpdateTransactionIntentStatus(dbClient, discriminator)
+      const updateStatus = TransactionIntentStatusHelper(dbClient).Single(discriminator)
 
       const childLogger = logger.child({
         traceId: job.data.traceId,
@@ -39,11 +40,12 @@ export const TransactionWorker = (
 
       try {
         const result = await ResultAsync.combine([
-          determineIfJobShouldBeProcessed(discriminator, dbClient),
+          workerHelper.determineIfJobShouldBeProcessed(discriminator),
           getUserById(userId, dbClient)
         ])
           .andThen(([shouldProcess, user]) => {
-            if (!shouldProcess || user.blocked) okAsync(undefined)
+            if (!shouldProcess) return workerHelper.noop()
+            if (user.blocked) return updateStatus('CANCELLED', WorkerError.BlockedUser)
 
             return updateStatus('PENDING').andThen(() =>
               controller.handler({
@@ -63,10 +65,7 @@ export const TransactionWorker = (
           error
         })
 
-        const isHandled = (error: unknown) =>
-          error && typeof error === 'object' && 'handled' in error ? true : false
-
-        if (isHandled(error)) {
+        if (workerHelper.isErrorHandled(error)) {
           const { error: handledError } = error as { error: WorkerOutputError }
           throw new Error(handledError.reason)
         }

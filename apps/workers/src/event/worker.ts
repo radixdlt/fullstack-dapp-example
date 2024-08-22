@@ -1,14 +1,12 @@
 import { Worker, ConnectionOptions, Queues, EventJob } from 'queues'
-import { AppLogger, EventModel, WorkerError } from 'common'
-import { EventWorkerController, UserExtended } from './controller'
+import { AppLogger, WorkerError } from 'common'
+import { EventWorkerController } from './controller'
 import { EventStatus, PrismaClient } from 'database'
 import { WorkerOutputError } from '../_types'
 import { config } from '../config'
 import { dbClient } from '../db-client'
-import { ResultAsync, okAsync, err, ok, Result } from 'neverthrow'
-
-const isErrorHandled = (error: unknown) =>
-  error && typeof error === 'object' && (error as any).handled ? true : false
+import { ResultAsync, okAsync, err, ok } from 'neverthrow'
+import { WorkerHelper } from '../helpers/workerHelper'
 
 const determineIfEventShouldBeProcessed = (transactionId: string) =>
   ResultAsync.fromPromise(
@@ -32,8 +30,6 @@ const UpdateEventStatus =
       dbClient.event.update({ data: { status, error }, where: { transactionId } }),
       (error) => ({ reason: WorkerError.FailedToUpdateEventStatus, jsError: error })
     ).map(() => undefined)
-
-const noop = () => okAsync(undefined)
 
 const getUser = (
   userId: string
@@ -75,7 +71,8 @@ export const EventWorker = (
     dbClient: PrismaClient
   }
 ) => {
-  const { logger, eventWorkerController } = dependencies
+  const { logger, eventWorkerController, dbClient } = dependencies
+  const workerHelper = WorkerHelper(dbClient)
 
   const worker = new Worker<EventJob>(
     Queues.EventQueue,
@@ -91,7 +88,7 @@ export const EventWorker = (
       try {
         const result = await determineIfEventShouldBeProcessed(job.data.transactionId)
           .andThen((shouldProcessEvent) => {
-            if (!shouldProcessEvent) return noop()
+            if (!shouldProcessEvent) return workerHelper.noop()
 
             return getUser(job.data.userId).andThen(({ blocked, accountAddress }) => {
               if (blocked) return updateEventStatus(EventStatus.CANCELLED, WorkerError.BlockedUser)
@@ -114,7 +111,7 @@ export const EventWorker = (
           error
         })
 
-        if (isErrorHandled(error)) {
+        if (workerHelper.isErrorHandled(error)) {
           const handledError = error as { error: WorkerOutputError }
           throw new Error(handledError.error.reason)
         }
