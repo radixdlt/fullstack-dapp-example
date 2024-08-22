@@ -37,5 +37,6 @@ publishPackageAdvanced({
   .map(() => logger.debug('Admin badge minted'))
   .andThen(() => newHeroBadgeForgeV2(addresses.heroBadgeForgeV2Package))
   .map((res) => Object.assign(addresses, res))
+  .map(() => logger.debug('heroBadgeForgeV2 instantiated'))
   .map(() => logger.debug(addresses))
   .mapErr((err) => logger.error(err))
