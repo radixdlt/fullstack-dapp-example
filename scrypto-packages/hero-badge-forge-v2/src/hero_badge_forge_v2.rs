@@ -28,7 +28,6 @@ pub struct HeroBadgeData {
 
 #[blueprint]
 #[types(Global<Account>, UserId)]
-#[events(AccountsAddedEvent, BadgeClaimedEvent)]
 mod hero_badge_forge_v2 {
     enable_method_auth! {
       roles {
@@ -38,8 +37,7 @@ mod hero_badge_forge_v2 {
       methods {
         disable => restrict_to: [super_admin];
         enable => restrict_to: [super_admin];
-        add_user_accounts => restrict_to: [admin];
-        claim_badge => PUBLIC;
+        mint_hero_badge => restrict_to: [admin];
         heroes_completed_quests => restrict_to: [admin];
         update_key_image_urls => restrict_to: [admin];
       }
@@ -92,32 +90,8 @@ mod hero_badge_forge_v2 {
             self.enabled = true;
         }
 
-        pub fn add_user_accounts(&mut self, user_accounts: Vec<UserAccount>) {
+        pub fn mint_hero_badge(&mut self, user_id: UserId) -> Bucket {
             assert!(self.enabled, "HeroBadgeForge disabled");
-
-            Runtime::emit_event(AccountsAddedEvent(user_accounts.clone()));
-
-            for UserAccount { user_id, account } in user_accounts {
-                self.user_accounts.insert(account, user_id);
-            }
-        }
-
-        pub fn claim_badge(&mut self, claimant: Global<Account>) -> Bucket {
-            assert!(self.enabled, "HeroBadgeForge disabled");
-
-            // Getting the owner role of the account.
-            let owner_role = claimant.get_owner_role();
-            // Assert against it to make sure the clamant account matches the method caller.
-            Runtime::assert_access_rule(owner_role.rule);
-
-            let user_id = self
-                .user_accounts
-                .remove(&claimant)
-                .expect("This account is not listed");
-
-            Runtime::emit_event(BadgeClaimedEvent {
-                user_id: user_id.clone(),
-            });
 
             self.admin_badge.as_fungible().authorize_with_amount(1, || {
                 self.hero_badge_manager
@@ -180,12 +154,4 @@ mod hero_badge_forge_v2 {
             }
         }
     }
-}
-
-#[derive(ScryptoSbor, ScryptoEvent, Debug, Clone, PartialEq, Eq)]
-struct AccountsAddedEvent(Vec<UserAccount>);
-
-#[derive(ScryptoSbor, ScryptoEvent, Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-struct BadgeClaimedEvent {
-    user_id: UserId,
 }

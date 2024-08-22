@@ -1,0 +1,31 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("5")
+;
+
+CALL_METHOD
+    Address("${account_1}")
+    "create_proof_of_amount"
+    Address("${admin_badge}")
+    Decimal("1")
+;
+CALL_METHOD
+    Address("${hero_badge_forge_v2}")
+    "mint_hero_badge"
+    "${user_id_2}"
+;
+
+TAKE_NON_FUNGIBLES_FROM_WORKTOP
+    Address("${hero_badge}")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("<${user_id_2}>")
+    )
+    Bucket("user_id_2_badge")
+;
+CALL_METHOD
+    Address("${account_2}")
+    "try_deposit_or_abort"
+    Bucket("user_id_2_badge")
+    None
+;

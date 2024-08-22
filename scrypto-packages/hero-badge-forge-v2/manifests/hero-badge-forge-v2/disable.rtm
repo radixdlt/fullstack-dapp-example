@@ -4,7 +4,7 @@ CALL_METHOD
     Decimal("5")
 ;
 CALL_METHOD
-    Address("${account}")
+    Address("${account_1}")
     "create_proof_of_amount"
     Address("${super_admin_badge}")
     Decimal("1")

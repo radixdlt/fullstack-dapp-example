@@ -4,7 +4,7 @@ CALL_METHOD
     Decimal("5")
 ;
 CALL_METHOD
-    Address("${account}")
+    Address("${account_1}")
     "create_proof_of_amount"
     Address("${admin_badge}")
     Decimal("1")
@@ -13,14 +13,14 @@ CALL_METHOD
     Address("${hero_badge_forge_v2}")
     "heroes_completed_quests"
     Array<Tuple>(
-        Tuple(
-            "${user_id_1}",
-            "Quest_Name_1"
-        ),
         # Tuple(
-        #     "${user_id_2}",
-        #     "Quest_Name_2"
-        # )
+        #     "${user_id_1}",
+        #     "Quest_Name_1"
+        # ),
+        Tuple(
+            "${user_id_2}",
+            "Quest_Name_2"
+        )
     )
 ;
 

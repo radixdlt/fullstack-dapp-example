@@ -23,8 +23,7 @@ struct LedgerTestEnvironment {
     public_key: Secp256k1PublicKey,
     disable_component_manifest: TransactionManifestV1,
     enable_component_manifest: TransactionManifestV1,
-    add_user_accounts_manifest: TransactionManifestV1,
-    claim_hero_badge_manifest: TransactionManifestV1,
+    mint_hero_badge_manifest: TransactionManifestV1,
     heroes_completed_quests_manifest: TransactionManifestV1,
     update_key_image_urls_manifest: TransactionManifestV1,
 }
@@ -140,42 +139,28 @@ impl LedgerTestEnvironment {
 
         dump_manifest_to_file("enable", &enable_component_manifest, names);
 
-        // Add account that can claim a badge to the component
+        // Mint badge
         let user_id_1 = "test_id_12345".to_string();
         let user_id_2 = "test_id_54321".to_string();
         let manifest = ManifestBuilder::new()
             .lock_fee_from_faucet()
-            .create_proof_from_account_of_amount(account_1, admin_badge, 1)
+            .create_proof_from_account_of_amount(account_1, admin_badge, dec!(1))
             .call_method(
                 hero_badge_forge_v2,
-                "add_user_accounts",
-                manifest_args!([
-                    (user_id_1.clone(), account_1),
-                    (user_id_2.clone(), account_2),
-                ]),
-            );
-
-        let names = manifest.object_names();
-        let add_user_accounts_manifest = manifest.build();
-        dump_manifest_to_file("add_user_accounts", &add_user_accounts_manifest, names);
-
-        // Mint and claim badge
-        let manifest = ManifestBuilder::new()
-            .lock_fee_from_faucet()
-            .call_method(
-                hero_badge_forge_v2,
-                "claim_badge",
-                manifest_args!(account_1),
+                "mint_hero_badge",
+                manifest_args!(user_id_2.clone()),
             )
-            .call_method(
-                account_1,
-                "deposit_batch",
-                (ManifestExpression::EntireWorktop,),
-            );
+            .take_all_from_worktop(hero_badge, "hero_badge")
+            .call_method_with_name_lookup(account_2, "try_deposit_or_abort", |lookup| {
+                (
+                    lookup.bucket("hero_badge"),
+                    Option::<ResourceOrNonFungible>::None,
+                )
+            });
 
         let names = manifest.object_names();
-        let claim_hero_badge_manifest = manifest.build();
-        dump_manifest_to_file("claim_hero_badge", &claim_hero_badge_manifest, names);
+        let mint_hero_badge_manifest = manifest.build();
+        dump_manifest_to_file("mint_hero_badge", &mint_hero_badge_manifest, names);
 
         // Update user badge with quest completion data
         let manifest = ManifestBuilder::new()
@@ -184,7 +169,7 @@ impl LedgerTestEnvironment {
             .call_method(
                 hero_badge_forge_v2,
                 "heroes_completed_quests",
-                manifest_args!([(user_id_1.clone(), "Quest_Name_1".to_string())]),
+                manifest_args!([(user_id_2.clone(), "Quest_Name_1".to_string())]),
             );
 
         let names = manifest.object_names();
@@ -202,7 +187,7 @@ impl LedgerTestEnvironment {
             .call_method(
                 hero_badge_forge_v2,
                 "update_key_image_urls",
-                manifest_args!([(user_id_1.clone(), "https://example.com/image1.png"),]),
+                manifest_args!([(user_id_2.clone(), "https://example.com/image1.png"),]),
             );
 
         let names = manifest.object_names();
@@ -218,8 +203,7 @@ impl LedgerTestEnvironment {
             public_key,
             disable_component_manifest,
             enable_component_manifest,
-            add_user_accounts_manifest,
-            claim_hero_badge_manifest,
+            mint_hero_badge_manifest,
             heroes_completed_quests_manifest,
             update_key_image_urls_manifest,
         })
@@ -234,55 +218,18 @@ fn can_instantiate_hero_badge_forge() -> Result<(), RuntimeError> {
 }
 
 #[test]
-fn can_add_user_accounts() -> Result<(), RuntimeError> {
+fn can_mint_badge() -> Result<(), RuntimeError> {
     // Arrange
     let mut lte = LedgerTestEnvironment::new()?;
 
     // Act
     let receipt = lte.ledger.execute_manifest(
-        lte.add_user_accounts_manifest,
+        lte.mint_hero_badge_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
 
     // Assert
     receipt.expect_commit_success();
-    Ok(())
-}
-
-#[test]
-fn user_can_claim_own_badge() -> Result<(), RuntimeError> {
-    // Arrange
-    let mut lte = LedgerTestEnvironment::new()?;
-
-    lte.ledger.execute_manifest(
-        lte.add_user_accounts_manifest,
-        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
-    );
-
-    // Act
-    let receipt = lte.ledger.execute_manifest(
-        lte.claim_hero_badge_manifest,
-        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
-    );
-
-    // Assert
-    receipt.expect_commit_success();
-    Ok(())
-}
-
-#[test]
-fn non_user_cannot_claim_badge() -> Result<(), RuntimeError> {
-    // Arrange
-    let mut lte = LedgerTestEnvironment::new()?;
-
-    // Act
-    let receipt = lte.ledger.execute_manifest(
-        lte.claim_hero_badge_manifest,
-        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
-    );
-
-    // Assert
-    receipt.expect_commit_failure();
     Ok(())
 }
 
@@ -291,11 +238,7 @@ fn can_heroes_complete_quests() -> Result<(), RuntimeError> {
     // Arrange
     let mut lte = LedgerTestEnvironment::new()?;
     lte.ledger.execute_manifest(
-        lte.add_user_accounts_manifest,
-        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
-    );
-    lte.ledger.execute_manifest(
-        lte.claim_hero_badge_manifest,
+        lte.mint_hero_badge_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
 
@@ -315,11 +258,7 @@ fn cannot_hero_complete_quest_twice_for_same_quest() -> Result<(), RuntimeError>
     // Arrange
     let mut lte = LedgerTestEnvironment::new()?;
     lte.ledger.execute_manifest(
-        lte.add_user_accounts_manifest,
-        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
-    );
-    lte.ledger.execute_manifest(
-        lte.claim_hero_badge_manifest,
+        lte.mint_hero_badge_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
 
@@ -344,11 +283,7 @@ fn can_update_key_image_urls() -> Result<(), RuntimeError> {
     // Arrange
     let mut lte = LedgerTestEnvironment::new()?;
     lte.ledger.execute_manifest(
-        lte.add_user_accounts_manifest,
-        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
-    );
-    lte.ledger.execute_manifest(
-        lte.claim_hero_badge_manifest,
+        lte.mint_hero_badge_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
 
@@ -380,27 +315,7 @@ fn can_disable_hero_badge_forge_v2() -> Result<(), RuntimeError> {
 }
 
 #[test]
-fn cannot_add_user_accounts_when_disabled() -> Result<(), RuntimeError> {
-    // Arrange
-    let mut lte = LedgerTestEnvironment::new()?;
-    lte.ledger.execute_manifest(
-        lte.disable_component_manifest,
-        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
-    );
-
-    // Act
-    let receipt = lte.ledger.execute_manifest(
-        lte.add_user_accounts_manifest,
-        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
-    );
-
-    // Assert
-    receipt.expect_commit_failure();
-    Ok(())
-}
-
-#[test]
-fn can_enable_then_add_user_accounts_when_disabled() -> Result<(), RuntimeError> {
+fn can_enable_then_mint_when_disabled() -> Result<(), RuntimeError> {
     // Arrange
     let mut lte = LedgerTestEnvironment::new()?;
     lte.ledger.execute_manifest(
@@ -413,8 +328,9 @@ fn can_enable_then_add_user_accounts_when_disabled() -> Result<(), RuntimeError>
         lte.enable_component_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
+
     let receipt = lte.ledger.execute_manifest(
-        lte.add_user_accounts_manifest,
+        lte.mint_hero_badge_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
 
@@ -424,21 +340,17 @@ fn can_enable_then_add_user_accounts_when_disabled() -> Result<(), RuntimeError>
 }
 
 #[test]
-fn cannot_claim_badge_when_disabled() -> Result<(), RuntimeError> {
+fn cannot_mint_badge_when_disabled() -> Result<(), RuntimeError> {
     // Arrange
     let mut lte = LedgerTestEnvironment::new()?;
     lte.ledger.execute_manifest(
         lte.disable_component_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
-    lte.ledger.execute_manifest(
-        lte.add_user_accounts_manifest,
-        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
-    );
 
     // Act
     let receipt = lte.ledger.execute_manifest(
-        lte.claim_hero_badge_manifest,
+        lte.mint_hero_badge_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
 
@@ -452,11 +364,7 @@ fn cannot_complete_quests_when_disabled() -> Result<(), RuntimeError> {
     // Arrange
     let mut lte = LedgerTestEnvironment::new()?;
     lte.ledger.execute_manifest(
-        lte.add_user_accounts_manifest,
-        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
-    );
-    lte.ledger.execute_manifest(
-        lte.claim_hero_badge_manifest,
+        lte.mint_hero_badge_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
     lte.ledger.execute_manifest(
@@ -480,11 +388,7 @@ fn cannot_update_key_image_urls_when_disabled() -> Result<(), RuntimeError> {
     // Arrange
     let mut lte = LedgerTestEnvironment::new()?;
     lte.ledger.execute_manifest(
-        lte.add_user_accounts_manifest,
-        vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
-    );
-    lte.ledger.execute_manifest(
-        lte.claim_hero_badge_manifest,
+        lte.mint_hero_badge_manifest,
         vec![NonFungibleGlobalId::from_public_key(&lte.public_key)],
     );
     lte.ledger.execute_manifest(
