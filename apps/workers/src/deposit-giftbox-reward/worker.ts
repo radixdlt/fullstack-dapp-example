@@ -4,9 +4,10 @@ import { BatchedDepositGiftBoxRewardController } from './controller'
 import { PrismaClient } from 'database'
 import { WorkerError, WorkerOutputError } from '../_types'
 import { config } from '../config'
-import { okAsync, ResultAsync, err } from 'neverthrow'
+import { err } from 'neverthrow'
 import { determineIfJobShouldBeProcessed } from '../helpers/determineIfJobShouldBeProcessed'
 import { UpdateTransactionIntentsStatus } from '../helpers/updateTransactionIntentStatus'
+import { WorkerHelper } from '../helpers/workerHelper'
 
 export const BatchedDepositGiftBoxRewardWorker = async (
   connection: ConnectionOptions,
@@ -16,29 +17,16 @@ export const BatchedDepositGiftBoxRewardWorker = async (
     dbClient: PrismaClient
   }
 ) => {
+  const workerHelper = WorkerHelper()
+
   const { logger, dbClient, controller } = dependencies
-
-  const filterBlockedUsers = (userIds: string[]) =>
-    ResultAsync.fromPromise(
-      dbClient.user.findMany({
-        select: { id: true },
-        where: { id: { in: userIds }, blocked: false }
-      }),
-      (error) => ({
-        reason: WorkerError.FailedToGetUserFromDb,
-        jsError: error
-      })
-    ).map((users) => users.map((user) => user.id))
-
-  const withoutBlockedUsers = (items: BatchedDepositGiftBoxesRewardJob['items']) =>
-    filterBlockedUsers(items.map((item) => item.userId)).map((userIds) =>
-      items.filter((item) => userIds.includes(item.userId))
-    )
 
   const worker = new Worker<BatchedDepositGiftBoxesRewardJob>(
     Queues.DepositGiftBoxRewardQueue,
     async (job) => {
-      const transactionIntentDiscriminators = job.data.items.map((item) => item.discriminator)
+      const { items } = job.data
+      const transactionIntentDiscriminators = items.map((item) => item.discriminator)
+      const [firstTransactionIntentDiscriminator] = transactionIntentDiscriminators
 
       logger.info({
         method: 'BatchedDepositGiftBoxRewardWorker.process',
@@ -47,23 +35,23 @@ export const BatchedDepositGiftBoxRewardWorker = async (
         itemCount: transactionIntentDiscriminators.length
       })
 
-      try {
-        const updateStatus = UpdateTransactionIntentsStatus(
-          job.data.id,
-          transactionIntentDiscriminators,
-          dbClient
-        )
+      const updateStatus = UpdateTransactionIntentsStatus(
+        job.data.id,
+        transactionIntentDiscriminators,
+        dbClient
+      )
 
+      try {
         const result = await determineIfJobShouldBeProcessed(
-          transactionIntentDiscriminators[0],
+          firstTransactionIntentDiscriminator,
           dbClient
         )
           .andThen((shouldProcess) => {
-            if (!shouldProcess) okAsync(undefined)
+            if (!shouldProcess) return workerHelper.noop()
 
-            return updateStatus({ status: 'PENDING' })
-              .andThen(() => withoutBlockedUsers(job.data.items))
-              .andThen((items) => controller.handler({ items, logger }))
+            return updateStatus({ status: 'PENDING' }).andThen(() =>
+              controller.handler({ items, logger })
+            )
           })
           .andThen(() => updateStatus({ status: 'COMPLETED' }))
           .orElse((error) =>
@@ -71,21 +59,7 @@ export const BatchedDepositGiftBoxRewardWorker = async (
           )
 
         if (result.isErr()) {
-          logger.error({
-            method: 'BatchedDepositGiftBoxRewardWorker.process',
-            id: job.data.id,
-            itemIds: job.data.items.map((item) => item.discriminator),
-            error: result.error
-          })
-          const errorReason = result.error.reason as unknown as WorkerError
-
-          const skipError = new Set<WorkerError>([WorkerError.FailedToConvertStringManifest])
-          // TODO: determine if we should throw based of error reason, throwing will trigger a retry
-          if (skipError.has(errorReason)) {
-            return
-          }
-
-          throw result.error
+          throw { handled: true, error: result.error }
         }
       } catch (error) {
         logger.error({
@@ -94,13 +68,14 @@ export const BatchedDepositGiftBoxRewardWorker = async (
           error
         })
 
-        const maybeHandledError = error as WorkerOutputError
-
-        if (maybeHandledError.reason) {
-          throw new Error(maybeHandledError.reason)
-        } else {
-          throw error
+        if (workerHelper.isErrorHandled(error)) {
+          const handledError = { error: error as WorkerOutputError }
+          throw new Error(handledError.error.reason)
         }
+
+        await updateStatus({ status: 'FAILED_RETRY', error: WorkerError.UnhandledError })
+
+        throw error
       }
     },
     {
