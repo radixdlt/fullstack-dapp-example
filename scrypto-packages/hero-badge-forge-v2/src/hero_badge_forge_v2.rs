@@ -37,7 +37,7 @@ mod hero_badge_forge_v2 {
       methods {
         disable => restrict_to: [super_admin];
         enable => restrict_to: [super_admin];
-        mint_hero_badge => restrict_to: [admin];
+        mint_hero_badges => restrict_to: [admin];
         heroes_completed_quests => restrict_to: [admin];
         update_key_image_urls => restrict_to: [admin];
       }
@@ -90,19 +90,22 @@ mod hero_badge_forge_v2 {
             self.enabled = true;
         }
 
-        pub fn mint_hero_badge(&mut self, user_id: UserId) -> Bucket {
+        pub fn mint_hero_badges(&mut self, user_ids: Vec<UserId>) -> Vec<Bucket> {
             assert!(self.enabled, "HeroBadgeForge disabled");
 
-            self.admin_badge.as_fungible().authorize_with_amount(1, || {
-                self.hero_badge_manager
-                    .mint_non_fungible(&NonFungibleLocalId::string(user_id.0).unwrap(), HeroBadgeData {
-                        name: "Your Hero Badge".to_string(),
-                        description: "Your progress through your RadQuest journey is tracked right on your Hero Badge. Take a look at the “quests_completed” to see what you’ve accomplished!".to_string(),
-                        key_image_url: Url::of("https://arweave.net/TkgiEdjcsfohra5z1lRojXbujnLfHXqUticbAhr7yVw"),
-                        quests_completed: vec![],
-                        quest_counter: 0,
+            user_ids.iter().map(|user_id| {
+                self.admin_badge.as_fungible().authorize_with_amount(1, || {
+                    self.hero_badge_manager
+                        .mint_non_fungible(&NonFungibleLocalId::string(user_id.0.to_owned()).unwrap(), HeroBadgeData {
+                            name: "Your Hero Badge".to_string(),
+                            description: "Your progress through your RadQuest journey is tracked right on your Hero Badge. Take a look at the “quests_completed” to see what you’ve accomplished!".to_string(),
+                            key_image_url: Url::of("https://arweave.net/TkgiEdjcsfohra5z1lRojXbujnLfHXqUticbAhr7yVw"),
+                            quests_completed: vec![],
+                            quest_counter: 0,
+                        })
                     })
-            })
+                })
+                .collect()
         }
 
         pub fn heroes_completed_quests(&mut self, users_completed_quests: Vec<(UserId, QuestId)>) {
