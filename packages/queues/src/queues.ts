@@ -6,12 +6,14 @@ type GenericJob<J = Record<string, any>, I extends keyof J = keyof J> = J & {
   [key in I]: unknown
 }
 
-export const Queues = {
-  EventQueue: 'EventQueue',
-  SystemQueue: 'SystemQueue',
-  TransactionQueue: 'TransactionQueue',
-  DepositGiftBoxRewardQueue: 'DepositGiftBoxRewardQueue',
-  DepositGiftBoxRewardBufferQueue: 'DepositGiftBoxRewardBufferQueue'
+export type BatchJob<J extends GenericJob> = { id: string; items: J[] }
+
+export type QueueName = (typeof QueueName)[keyof typeof QueueName]
+export const QueueName = {
+  Event: 'Event',
+  System: 'System',
+  Transaction: 'Transaction',
+  DepositGiftBoxReward: 'DepositGiftBoxReward'
 } as const
 
 export type SystemJobType = (typeof SystemJobType)[keyof typeof SystemJobType]
@@ -37,11 +39,6 @@ export type EventJob = {
 export type DepositGiftBoxesRewardJob = GenericJob<
   TransactionJob & DepositGiftBoxesRewardTransactionJob,
   'discriminator'
->
-
-export type BatchedDepositGiftBoxesRewardJob = GenericJob<
-  { id: string; items: DepositGiftBoxesRewardJob[] },
-  'id'
 >
 
 export type DepositRewardTransactionJob = {
@@ -95,6 +92,7 @@ export type TransactionJob = {
 )
 
 export type RadmorphSystemJob = {
+  id: string
   type: (typeof SystemJobType)['PopulateRadmorphs']
   data: {
     url: string
@@ -103,25 +101,30 @@ export type RadmorphSystemJob = {
 }
 
 export type AddReferralSystemJob = {
+  id: string
   type: (typeof SystemJobType)['AddReferral']
   userId: string
   referralCode: string
 }
 
 export type UpdateKycOracleSystemJob = {
+  id: string
   type: (typeof SystemJobType)['UpdateKycOracle']
   userId: string
 }
 
 export type UpdateLettySwapDappDefinitionSystemJob = {
+  id: string
   type: (typeof SystemJobType)['UpdateLettySwapDappDefinition']
 }
 
 export type UpdateKycBadgeAddressSystemJob = {
+  id: string
   type: (typeof SystemJobType)['UpdateKycBadgeAddress']
 }
 
 export type PopulateResourcesSystemJob = {
+  id: string
   type: (typeof SystemJobType)['PopulateResources']
   accountAddress: string
   userId: string
@@ -141,19 +144,12 @@ export type DepositXrdJob = GenericJob<{
   traceId: string
 }>
 
-export type TQueues = ReturnType<typeof getQueues>
-export type TransactionQueue = TQueues['transactionQueue']
-export type EventQueue = TQueues['eventQueue']
-export type SystemQueue = TQueues['systemQueue']
-export type DepositGiftBoxRewardQueue = TQueues['DepositGiftBoxRewardQueue']
-export type DepositGiftBoxRewardBufferQueue = TQueues['DepositGiftBoxRewardBufferQueue']
-
 const defaultJobOptions = {
   attempts: 10
 }
 
 const createQueue = <J extends GenericJob>(
-  name: keyof typeof Queues,
+  name: string,
   jobIdKey: keyof J,
   connection: ConnectionOptions
 ) => {
@@ -162,17 +158,7 @@ const createQueue = <J extends GenericJob>(
     defaultJobOptions
   })
 
-  const add = (job: J) =>
-    ResultAsync.fromPromise(
-      queue.add(job[jobIdKey], job, {
-        jobId: job[jobIdKey],
-        removeOnComplete: true,
-        removeOnFail: 300
-      }),
-      typedError
-    )
-
-  const addBulk = (items: J[]) =>
+  const add = (items: J[]) =>
     ResultAsync.fromPromise(
       queue.addBulk(
         items.map((item) => ({
@@ -184,78 +170,30 @@ const createQueue = <J extends GenericJob>(
       typedError
     )
 
-  return { queue, addBulk, add }
+  return { queue, add, name, getBufferQueue: () => undefined }
 }
 
-export const getQueues = (connection: ConnectionOptions) => {
-  const eventQueue = new Queue<EventJob>(Queues.EventQueue, {
-    connection,
-    defaultJobOptions
-  })
+export type BufferQueue = ReturnType<typeof createBufferQueue>
+const createBufferQueue = <J extends GenericJob>(
+  queueName: keyof typeof QueueName,
+  jobIdKey: keyof J,
+  connection: ConnectionOptions
+) => {
+  const { queue, add } = createQueue<BatchJob<J>>(queueName, 'id', connection)
+  const buffer = createQueue<J>(`${queueName}Buffer`, jobIdKey, connection)
 
-  const transactionQueue = new Queue<TransactionJob>(Queues.TransactionQueue, {
-    connection,
-    defaultJobOptions
-  })
+  return { add, queue, buffer, name: queueName, getBufferQueue: () => buffer }
+}
 
-  const systemQueue = new Queue<SystemJob>(Queues.SystemQueue, {
+export type Queues = ReturnType<typeof getQueues>
+
+export const getQueues = (connection: ConnectionOptions) => ({
+  Event: createQueue<EventJob>(QueueName.Event, 'transactionId', connection),
+  Transaction: createQueue<TransactionJob>(QueueName.Transaction, 'discriminator', connection),
+  System: createQueue<SystemJob>(QueueName.System, 'id', connection),
+  DepositGiftBoxReward: createBufferQueue<DepositGiftBoxesRewardJob>(
+    'DepositGiftBoxReward',
+    'discriminator',
     connection
-  })
-
-  const addBulk = (items: EventJob[]) =>
-    ResultAsync.fromPromise(
-      eventQueue.addBulk(
-        items.map((item) => ({
-          name: item.transactionId,
-          data: item,
-          opts: { jobId: item.transactionId, removeOnComplete: true, removeOnFail: 300 }
-        }))
-      ),
-      typedError
-    )
-
-  const addJob = (job: EventJob) =>
-    ResultAsync.fromPromise(
-      eventQueue.add(job.transactionId, job, {
-        jobId: job.transactionId,
-        removeOnComplete: true,
-        removeOnFail: 300
-      }),
-      typedError
-    )
-
-  const addTransactionJob = (item: TransactionJob) =>
-    ResultAsync.fromPromise(
-      transactionQueue.add(item.discriminator, item, {
-        jobId: item.discriminator,
-        removeOnComplete: true,
-        removeOnFail: 300
-      }),
-      typedError
-    )
-
-  return {
-    eventQueue: { addBulk, queue: eventQueue, addJob },
-    transactionQueue: { queue: transactionQueue, add: addTransactionJob },
-    systemQueue: {
-      addBulk: (items: SystemJob[]) => {
-        const id = crypto.randomUUID()
-        return ResultAsync.fromPromise(
-          systemQueue.addBulk(items.map((item) => ({ name: id, data: item, opts: { jobId: id } }))),
-          typedError
-        )
-      },
-      queue: systemQueue
-    },
-    [Queues.DepositGiftBoxRewardQueue]: createQueue<BatchedDepositGiftBoxesRewardJob>(
-      'DepositGiftBoxRewardQueue',
-      'id',
-      connection
-    ),
-    [Queues.DepositGiftBoxRewardBufferQueue]: createQueue<DepositGiftBoxesRewardJob>(
-      'DepositGiftBoxRewardBufferQueue',
-      'discriminator',
-      connection
-    )
-  }
-}
+  )
+})

@@ -2,14 +2,14 @@ import { PrismaClient, TransactionIntentStatus, type TransactionIntent } from 'd
 import { ResultAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers'
-import type { TransactionJob, TransactionQueue } from 'queues'
+import type { Queues, TransactionJob } from 'queues'
 
 export type TransactionIdentifierData = Pick<TransactionIntent, 'discriminator' | 'userId'>
 
 export type TransactionModel = ReturnType<typeof TransactionModel>
 
 export const TransactionModel =
-  (db: PrismaClient, transactionQueue: TransactionQueue) => (logger?: AppLogger) => {
+  (db: PrismaClient, transactionQueue: Queues['Transaction']) => (logger?: AppLogger) => {
     const add = ({ discriminator, userId, ...data }: TransactionJob) =>
       ResultAsync.fromPromise(
         db.transactionIntent.upsert({
@@ -35,7 +35,7 @@ export const TransactionModel =
         }
       ).andThen(() =>
         transactionQueue
-          .add({ ...data, discriminator, userId })
+          .add([{ ...data, discriminator, userId }])
           .mapErr((error) => createApiError('failedToAddJobToTransactionQueue', 400)(error))
       )
 

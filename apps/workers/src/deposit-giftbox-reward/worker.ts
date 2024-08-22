@@ -1,6 +1,6 @@
-import { Worker, ConnectionOptions, Queues, BatchedDepositGiftBoxesRewardJob } from 'queues'
+import { Worker, ConnectionOptions, DepositGiftBoxesRewardJob, QueueName, BatchJob } from 'queues'
 import { AppLogger } from 'common'
-import { BatchedDepositGiftBoxRewardController } from './controller'
+import { DepositGiftBoxRewardController } from './controller'
 import { PrismaClient } from 'database'
 import { WorkerError, WorkerOutputError } from '../_types'
 import { config } from '../config'
@@ -8,19 +8,19 @@ import { err } from 'neverthrow'
 import { TransactionIntentStatusHelper } from '../helpers/transactionIntentStatusHelper'
 import { WorkerHelper } from '../helpers/workerHelper'
 
-export const BatchedDepositGiftBoxRewardWorker = async (
+export const DepositGiftBoxRewardWorker = async (
   connection: ConnectionOptions,
   dependencies: {
     logger: AppLogger
-    controller: BatchedDepositGiftBoxRewardController
+    controller: DepositGiftBoxRewardController
     dbClient: PrismaClient
   }
 ) => {
   const { logger, dbClient, controller } = dependencies
   const workerHelper = WorkerHelper(dbClient)
 
-  const worker = new Worker<BatchedDepositGiftBoxesRewardJob>(
-    Queues.DepositGiftBoxRewardQueue,
+  const worker = new Worker<BatchJob<DepositGiftBoxesRewardJob>>(
+    QueueName.DepositGiftBoxReward,
     async (job) => {
       const { items } = job.data
       const transactionIntentDiscriminators = items.map((item) => item.discriminator)

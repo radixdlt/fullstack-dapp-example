@@ -1,4 +1,4 @@
-import { Worker, ConnectionOptions, Queues, EventJob } from 'queues'
+import { Worker, ConnectionOptions, QueueName, EventJob } from 'queues'
 import { AppLogger, WorkerError } from 'common'
 import { EventWorkerController } from './controller'
 import { EventStatus, PrismaClient } from 'database'
@@ -75,7 +75,7 @@ export const EventWorker = (
   const workerHelper = WorkerHelper(dbClient)
 
   const worker = new Worker<EventJob>(
-    Queues.EventQueue,
+    QueueName.Event,
     async (job) => {
       await job.updateProgress(1)
       logger.debug({

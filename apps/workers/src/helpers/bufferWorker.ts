@@ -1,27 +1,37 @@
 import { ResultAsync } from 'neverthrow'
 import { PrismaClient } from 'database'
 import { AppLogger, WorkerError } from 'common'
-import { DepositGiftBoxRewardQueue, Job } from 'queues'
+import { ConnectionOptions, Job, Queues, Worker } from 'queues'
 import { createHash } from 'node:crypto'
 
-export const BufferWorker = <Q extends DepositGiftBoxRewardQueue>({
+export const BufferWorker = <Q extends Queues['DepositGiftBoxReward']>({
   queue,
   dbClient,
-  getNextJob,
-  token,
   logger,
   batchSize,
-  batchInterval
+  batchInterval,
+  connection,
+  concurrency
 }: {
   queue: Q
   dbClient: PrismaClient
-  getNextJob: (token: string) => Promise<Job>
-  token: string
   logger: AppLogger
   batchSize: number
   batchInterval: number
+  concurrency: number
+  connection: ConnectionOptions
 }) => {
-  const upsertBatchedTransactionIntent = (batchId: string, items: { discriminator: string }[]) =>
+  const worker = new Worker(queue.buffer.name, null, {
+    connection,
+    concurrency
+  })
+
+  const token = crypto.randomUUID()
+
+  const upsertBatchedTransactionIntent = (
+    batchId: string,
+    items: Parameters<Q['add']>[0][0]['items']
+  ) =>
     ResultAsync.fromPromise(
       dbClient.batchedTransactionIntent.upsert({
         where: {
@@ -38,10 +48,11 @@ export const BufferWorker = <Q extends DepositGiftBoxRewardQueue>({
       (error) => ({ reason: WorkerError.FailedToCreateBatchedTransactionIntent, jsError: error })
     )
 
-  const createAndAddToQueue = (batchId: string, items: Parameters<Q['addBulk']>[0][0]['items']) =>
-    upsertBatchedTransactionIntent(batchId, items).andThen(() =>
+  const createAndAddToQueue = (batchId: string, items: Parameters<Q['add']>[0][0]['items']) => {
+    logger?.trace({ method: 'createAndAddToQueue', batchId, items })
+    return upsertBatchedTransactionIntent(batchId, items).andThen(() =>
       queue
-        .addBulk([
+        .add([
           {
             id: batchId,
             items
@@ -52,9 +63,10 @@ export const BufferWorker = <Q extends DepositGiftBoxRewardQueue>({
           jsError: error
         }))
     )
+  }
 
   const getNextBatchOfJobs = async () =>
-    Promise.all(new Array(batchSize).fill(null).map(() => getNextJob(token))).then((jobs) =>
+    Promise.all(new Array(batchSize).fill(null).map(() => worker.getNextJob(token))).then((jobs) =>
       jobs.filter((job) => job)
     )
 
@@ -73,7 +85,7 @@ export const BufferWorker = <Q extends DepositGiftBoxRewardQueue>({
   const process = (jobs: Job[]) => {
     const itemIds = jobs.map((job) => job.data.discriminator)
 
-    logger?.debug({ method: 'processBatch', itemIds })
+    logger?.trace({ method: 'processBatch', itemIds })
 
     const batchId = createHash('sha256').update(itemIds.join(':')).digest('hex')
 

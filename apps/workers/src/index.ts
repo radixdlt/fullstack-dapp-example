@@ -18,10 +18,10 @@ import { SystemWorker } from './system/worker'
 import { SystemWorkerController } from './system/controller'
 import { MessageHelper } from './helpers/messageHelper'
 import { TransactionIntentHelper } from './helpers/transactionIntentHelper'
-import { DepositGiftBoxRewardBufferWorker } from './deposit-giftbox-reward/buffer-worker'
-import { BatchedDepositGiftBoxRewardWorker } from './deposit-giftbox-reward/worker'
-import { BatchedDepositGiftBoxRewardController } from './deposit-giftbox-reward/controller'
+import { DepositGiftBoxRewardWorker } from './deposit-giftbox-reward/worker'
+import { DepositGiftBoxRewardController } from './deposit-giftbox-reward/controller'
 import { ReferralRewardAction } from './helpers/referalReward'
+import { BufferWorker } from './helpers/bufferWorker'
 
 const app = async () => {
   // test db connection
@@ -29,8 +29,7 @@ const app = async () => {
 
   const connection: ConnectionOptions = config.redis
 
-  const { transactionQueue, DepositGiftBoxRewardBufferQueue, DepositGiftBoxRewardQueue } =
-    getQueues(config.redis)
+  const queues = getQueues(config.redis)
 
   const messageApi = MessageApi({
     baseUrl: config.notification.baseUrl,
@@ -44,38 +43,33 @@ const app = async () => {
   const AccountAddressModel = AccountAddressModelFn(redisClient)
   const imageModel = ImageModel(dbClient)
 
-  const eventWorkerController = EventWorkerController({
-    logger,
-    dbClient,
-    mailerLiteModel: MailerLiteModel({
-      apiKey: config.mailerLite.apiKey
-    }),
-    transactionIntent: TransactionIntentHelper({
-      dbClient,
-      transactionQueue,
-      DepositGiftBoxRewardBufferQueue
-    }),
-    AccountAddressModel,
-    sendMessage,
-    referralRewardAction
-  })
-
-  const transactionWorkerController = TransactionWorkerController({
-    gatewayApi,
-    imageModel,
-    sendMessage
-  })
-
   TransactionWorker(connection, {
     logger,
     dbClient,
-    transactionWorkerController
+    transactionWorkerController: TransactionWorkerController({
+      gatewayApi,
+      imageModel,
+      sendMessage
+    })
   })
 
   EventWorker(connection, {
-    eventWorkerController,
     logger,
-    dbClient
+    dbClient,
+    eventWorkerController: EventWorkerController({
+      logger,
+      dbClient,
+      mailerLiteModel: MailerLiteModel({
+        apiKey: config.mailerLite.apiKey
+      }),
+      transactionIntent: TransactionIntentHelper({
+        dbClient,
+        queues
+      }),
+      AccountAddressModel,
+      sendMessage,
+      referralRewardAction
+    })
   })
 
   SystemWorker(connection, {
@@ -87,21 +81,27 @@ const app = async () => {
     })
   })
 
-  DepositGiftBoxRewardBufferWorker(connection, {
+  DepositGiftBoxRewardWorker(connection, {
     logger,
-    DepositGiftBoxRewardQueue
+    dbClient,
+    controller: DepositGiftBoxRewardController({ gatewayApi, sendMessage })
   })
 
-  BatchedDepositGiftBoxRewardWorker(connection, {
+  BufferWorker({
+    dbClient,
     logger,
-    controller: BatchedDepositGiftBoxRewardController({ gatewayApi, sendMessage }),
-    dbClient
-  })
+    connection,
+    queue: queues.DepositGiftBoxReward,
+    batchSize: config.worker.depositGiftBoxRewardBuffer.batchSize,
+    batchInterval: config.worker.depositGiftBoxRewardBuffer.batchInterval,
+    concurrency: config.worker.depositGiftBoxRewardBuffer.concurrency
+  })()
 
   logger.debug({ message: 'workers running' })
 }
 
 app().catch((error) => {
+  console.log(error)
   logger.error({ reason: 'UnrecoverableError', error })
   // crash the process if an error is thrown within the app
   process.exit(1)

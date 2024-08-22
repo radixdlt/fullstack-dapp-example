@@ -1,4 +1,4 @@
-import { Worker, ConnectionOptions, Queues, TransactionJob } from 'queues'
+import { Worker, ConnectionOptions, QueueName, TransactionJob } from 'queues'
 import { AppLogger, WorkerError } from 'common'
 import { TransactionWorkerController } from './controller'
 import { PrismaClient } from 'database'
@@ -21,7 +21,7 @@ export const TransactionWorker = (
   const workerHelper = WorkerHelper(dbClient)
 
   const worker = new Worker<TransactionJob>(
-    Queues.TransactionQueue,
+    QueueName.Transaction,
     async (job) => {
       await job.updateProgress(1)
       const { discriminator, userId } = job.data
@@ -33,7 +33,7 @@ export const TransactionWorker = (
         type: job.data.type,
         jobId: job.id,
         userId,
-        queue: Queues.TransactionQueue
+        queue: QueueName.Transaction
       })
 
       childLogger.debug({ method: 'transactionWorker.process', data: job.data })

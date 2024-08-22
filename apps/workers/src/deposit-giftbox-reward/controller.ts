@@ -19,10 +19,8 @@ import { SubmitTransactionHelper } from '../helpers/submitTransactionHelper'
 import { GetLastSubmittedTransaction } from '../helpers/getLastSubmittedTransaction'
 import { UpsertSubmittedTransactions } from '../helpers/upsertSubmittedTransaction'
 
-export type BatchedDepositGiftBoxRewardController = ReturnType<
-  typeof BatchedDepositGiftBoxRewardController
->
-export const BatchedDepositGiftBoxRewardController = ({
+export type DepositGiftBoxRewardController = ReturnType<typeof DepositGiftBoxRewardController>
+export const DepositGiftBoxRewardController = ({
   gatewayApi,
   sendMessage
 }: {

@@ -20,19 +20,19 @@ import {
 } from 'common'
 import { PrismaClient, User } from 'database'
 import { errAsync } from 'neverthrow'
-import { Queues, RedisConnection, getQueues } from 'queues'
+import { QueueName, RedisConnection, getQueues } from 'queues'
 import { config } from './config'
 import { QueueEvents } from 'bullmq'
 import crypto from 'crypto'
 import { completeQuestRequirements } from './helpers/complete-quest-requirements'
 import { waitForMessage } from './helpers/wait-for-message'
 
-const eventQueueEvents = new QueueEvents(Queues.EventQueue, { connection: config.redis })
-const transactionQueueEvents = new QueueEvents(Queues.TransactionQueue, {
+const eventQueueEvents = new QueueEvents(QueueName.Event, { connection: config.redis })
+const transactionQueueEvents = new QueueEvents(QueueName.Transaction, {
   connection: config.redis
 })
 
-const { transactionQueue } = getQueues(config.redis)
+const queues = getQueues(config.redis)
 
 const waitForQueueEvent = async (
   status: Parameters<(typeof eventQueueEvents)['on']>[0],
@@ -65,7 +65,7 @@ const getAccount = async () => {
 
 let accountAddress: string
 
-const transactionModel = TransactionModel(db, transactionQueue)
+const transactionModel = TransactionModel(db, queues.Transaction)
 const userQuestModel = UserQuestModel(db)(logger)
 const userModel = UserModel(db)(logger)
 const accountAddressModel = AccountAddressModel(redisClient)(logger)

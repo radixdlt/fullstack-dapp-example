@@ -33,7 +33,7 @@ export const POST = async ({ locals, request }) => {
     }
     locals.logger.debug({ method: 'retryingEventJob', jobData })
     await locals.eventQueue.queue.remove(jobData.transactionId)
-    await locals.eventQueue.addJob(jobData)
+    await locals.eventQueue.add([jobData])
   }
 
   for (const transaction of transactions) {
@@ -46,7 +46,7 @@ export const POST = async ({ locals, request }) => {
     }
     locals.logger.debug({ method: 'retryingTransactionJob', jobData })
     await locals.transactionQueue.queue.remove(jobData.discriminator)
-    await locals.transactionQueue.add(jobData)
+    await locals.transactionQueue.add([jobData])
   }
 
   return json({}, { status: 200 })
