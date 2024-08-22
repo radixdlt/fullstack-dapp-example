@@ -30,7 +30,7 @@ export const POST = async ({ request, locals }) => {
       }
       locals.logger.debug({ method: 'retryingTransactionJob', jobData })
       await locals.transactionQueue.queue.remove(jobData.discriminator)
-      await locals.transactionQueue.add(jobData)
+      await locals.transactionQueue.add([jobData])
     }
 
     if (all) {

@@ -29,7 +29,8 @@ export const UserController = ({
   transactionModel,
   gatewayApi,
   mailerLiteModel,
-  addresses
+  addresses,
+  systemQueue
 }: ControllerDependencies) => {
   const getUser = (userId: string): ControllerMethodOutput<User | null> =>
     userModel
@@ -201,13 +202,14 @@ export const UserController = ({
         return okAsync(address)
       })
       .andThen((address) =>
-        transactionModel.add({
-          userId,
-          discriminator: `PopulateResources:${userId}`,
-          type: 'PopulateResources',
-          traceId: ctx.traceId,
-          accountAddress: address
-        })
+        systemQueue.add([
+          {
+            userId,
+            type: 'PopulateResources',
+            id: ctx.traceId,
+            accountAddress: address
+          }
+        ])
       )
       .map((data) => ({
         httpResponseCode: 201,

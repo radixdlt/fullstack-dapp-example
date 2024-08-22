@@ -24,7 +24,7 @@ export const POST = async ({ request, locals }) => {
     }
     locals.logger.debug({ method: 'retryingEventJob', jobData })
     await locals.eventQueue.queue.remove(jobData.transactionId)
-    await locals.eventQueue.addJob(jobData)
+    await locals.eventQueue.add([jobData])
   }
 
   return json({}, { status: 200 })
