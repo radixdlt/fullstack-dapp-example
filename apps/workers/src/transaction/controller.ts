@@ -18,8 +18,6 @@ import { TransactionHelper, withSigners } from 'typescript-wallet'
 import { createRewardsDepositManifest } from './helpers/createRewardsDepositManifest'
 import { QuestDefinitions, QuestId, QuestReward } from 'content'
 import { config } from '../config'
-import { createCombinedElementsMintRadgemManifest } from './helpers/createCombinedElementsMintRadgemManifest'
-import { createCombinedElementsAddRadgemImageManifest } from './helpers/createCombinedElementsAddRadgemImageManifest'
 import { WorkerOutputError, WorkerError } from '../_types'
 import { MessageHelper } from '../helpers/messageHelper'
 import { dbClient } from '../db-client'
@@ -159,39 +157,6 @@ export const TransactionWorkerController = ({
             depositRewardsTo: 'questRewards'
           })
         )
-
-      case 'DepositGiftBoxReward': {
-        const { giftBoxKind } = job.data
-
-        const { elements: elementAmount, energyCard } = getGiftBoxRewards(giftBoxKind)
-
-        return imageModel(logger)
-          .getUrl({ shape: energyCard.key })
-          .mapErr((error) => ({ reason: WorkerError.FailedToGetImageUrl, jsError: error }))
-          .andThen((key_image_url) => {
-            const rewards: Parameters<typeof createRewardsDepositManifest>[0]['rewards'] = [
-              { name: 'elements', amount: elementAmount }
-            ]
-
-            const card = {
-              ...energyCard,
-              key_image_url
-            }
-
-            rewards.push({
-              name: 'energyCard',
-              card
-            })
-            return handleSubmitTransaction(
-              createRewardsDepositManifest({
-                userId,
-                rewards,
-                includeKycOracleUpdate: false,
-                depositRewardsTo: 'giftBoxOpener'
-              })
-            )
-          })
-      }
 
       case 'PopulateResources':
         const { accountAddress } = job.data
@@ -372,23 +337,6 @@ export const TransactionWorkerController = ({
               Bucket("xrd_bucket")
               Enum<0u8>();
           `
-        )
-
-      case 'CombinedElementsMintRadgem':
-        return handleSubmitTransaction(
-          createCombinedElementsMintRadgemManifest({
-            userId
-          })
-        )
-
-      case 'CombinedElementsAddRadgemImage':
-        const { radgemId, keyImageUrl } = job.data
-        return handleSubmitTransaction(
-          createCombinedElementsAddRadgemImageManifest({
-            userId,
-            radgemId,
-            keyImageUrl
-          })
         )
 
       case 'DepositXrdToAccount':

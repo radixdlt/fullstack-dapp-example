@@ -48,7 +48,7 @@ const getUser = (
   ResultAsync.fromPromise(
     dbClient.user.findUnique({
       select: { accountAddress: true, blocked: true, referredBy: true },
-      where: { id: userId, blocked: true }
+      where: { id: userId }
     }),
     (error) => ({
       reason: WorkerError.FailedToGetUserFromDb,

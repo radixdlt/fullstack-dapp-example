@@ -1,7 +1,6 @@
 import { config } from './config'
 import { ConnectionOptions } from 'bullmq'
 import {
-  EventModel,
   MessageApi,
   AccountAddressModel as AccountAddressModelFn,
   GatewayApi,
@@ -40,7 +39,6 @@ const app = async () => {
   })
 
   const gatewayApi = GatewayApi(config.networkId, process.env.GATEWAY_URL)
-  const eventModel = EventModel(dbClient)
   const redisClient = new RedisConnection(config.redis)
   const sendMessage = MessageHelper({ dbClient, messageApi })
   const referralRewardAction = ReferralRewardAction(dbClient)
@@ -61,8 +59,7 @@ const app = async () => {
     }),
     AccountAddressModel,
     sendMessage,
-    referralRewardAction,
-    imageModel
+    referralRewardAction
   })
 
   const transactionWorkerController = TransactionWorkerController({
@@ -79,7 +76,6 @@ const app = async () => {
 
   EventWorker(connection, {
     eventWorkerController,
-    eventModel,
     logger,
     dbClient
   })

@@ -48,16 +48,6 @@ export type DepositRewardTransactionJob = {
   questId: string
 }
 
-export type CombinedElementsMintRadgemTransactionJob = {
-  type: 'CombinedElementsMintRadgem'
-}
-
-export type CombinedElementsAddRadgemImageTransactionJob = {
-  type: 'CombinedElementsAddRadgemImage'
-  radgemId: string
-  keyImageUrl: string
-}
-
 export type PopulateResourcesTransactionJob = {
   type: 'PopulateResources'
   accountAddress: string
@@ -76,11 +66,6 @@ export type DepositPartialRewardTransactionJob = {
   type: 'DepositPartialReward'
   questId: string
   requirement: string
-}
-
-export type DepositGiftBoxRewardTransactionJob = {
-  type: 'DepositGiftBoxReward'
-  giftBoxKind: GiftBoxKind
 }
 
 export type DepositGiftBoxesRewardTransactionJob = {
@@ -105,14 +90,11 @@ export type TransactionJob = {
   traceId: string
 } & (
   | DepositRewardTransactionJob
-  | CombinedElementsMintRadgemTransactionJob
   | DepositPartialRewardTransactionJob
-  | CombinedElementsAddRadgemImageTransactionJob
   | PopulateResourcesTransactionJob
   | AddAccountAddressToHeroBadgeForgeJob
   | DepositXrdToAccount
   | QuestCompletedTransactionJob
-  | DepositGiftBoxRewardTransactionJob
   | DepositGiftBoxesRewardTransactionJob
   | ElementsDepositedTransactionJob
 )
