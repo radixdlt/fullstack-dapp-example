@@ -1,7 +1,7 @@
 import { ResultAsync } from 'neverthrow'
 import { PrismaClient } from 'database'
 import { AppLogger, WorkerError } from 'common'
-import { DepositGiftBoxRewardQueue, Job, Worker } from 'queues'
+import { DepositGiftBoxRewardQueue, Job } from 'queues'
 import { createHash } from 'node:crypto'
 
 export const BufferWorker = <Q extends DepositGiftBoxRewardQueue>({
@@ -84,7 +84,7 @@ export const BufferWorker = <Q extends DepositGiftBoxRewardQueue>({
       .map(() => {
         logger?.trace({
           method: 'processBatch.success',
-          discriminators: items.map((item) => item.discriminator)
+          discriminators: itemIds
         })
       })
       .orElse((error) => {
