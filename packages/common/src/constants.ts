@@ -43,6 +43,8 @@ export const Addresses = (networkId: number) => {
           'package_tdx_2_1p4p33jnqt5hx9p7qp38hev3extfqpnxjxcnuw9q6pz653t8jfzrllf',
         questRewardsV2Package:
           'package_tdx_2_1p4cytmfhgvs0ue2lkd0r4pkamq446wtmvm2u9rxmnw57ls4hzg8vr9',
+        heroBadgeForgeV2Package:
+          'package_tdx_2_1pk3uy78sq07rl4vzcmjf6u8yw67tgltys0zfvezyjw9yty0dmqlvf8',
         components: {
           heroBadgeForge: 'component_tdx_2_1czggp0fz9pcarmhp8uxpy9qr8ysz46qkpr49t3jdrn8zzanujj8fpy',
           kycOracle: 'component_tdx_2_1cqgu87tk0sx6ldn7x0heev0vgc6jq4uu0tahkfumfpgmw7acxtgqd3',
@@ -56,6 +58,8 @@ export const Addresses = (networkId: number) => {
           giftBoxOpenerV2:
             'component_tdx_2_1czvfn7wtgensyfwjn729n3mkxl83e8848uw50aar796us6pcd333mw',
           cardForgeV2: 'component_tdx_2_1crcrpc5ql7q3jf6zhnz0lksfuja3cqfpt0er4srks4xggg70kyzwd5',
+          heroBadgeForgeV2:
+            'component_tdx_2_1czkc90s9r0c0my9jpqva2ukdrmn94u2d6cagxrvamfajmlyrd8kwge',
           radgemForgeV2: 'component_tdx_2_1cr9sd3lfaxw679879lnp0zs08de4leakfqgxdvmjnve8zpcgh9dtlm',
           questRewardsV2: 'component_tdx_2_1czrfq6959lzvyrswj885gwhfz9lzpr06sxxax5wvl859m3mh9k9rjr',
           kycOracleKeyValueStore:
@@ -159,6 +163,7 @@ export const Addresses = (networkId: number) => {
         cardForgeV2Package: 'package_rdx1pkar90hh0eyq5nfgam9n3ye05j08zlmkk8e5ex0wu8tknr436f9u69',
         radgemForgeV2Package: 'package_rdx1p4gtpzf4t6jsa56us38mt0uazt8ydu93t3tmhea7whkxf8zqswsnv7',
         questRewardsV2Package: '',
+        heroBadgeForgeV2Package: '',
         components: {
           heroBadgeForge: 'component_rdx1cra2j3w7cv9zkrv4jehjz0qn3xffxdkstucxar4xy9kyu0tpxsvya6',
           kycOracle: 'component_rdx1cr89pe8pz7c3fhuxf4tpw309cmuqtwg6tw2pkjl574hg3slp9v4gt9',
@@ -171,6 +176,7 @@ export const Addresses = (networkId: number) => {
           refinery: 'component_rdx1crh0h7kc9e9s0607exe864uszpu5cpptjn2a605szneswhzw6nawzd',
           giftBoxOpenerV2: 'component_rdx1cq2ac5qgaeykevk9stqajpuhjtddzzhljnewfx3cjk0cfvuhxczmny',
           cardForgeV2: 'component_rdx1cq38chm09eq65q58skruheyepeelk3u84lmvua2r5rnq7eche6p0r0',
+          heroBadgeForgeV2: '',
           radgemForgeV2: 'component_rdx1czv5pypn3u44yut3mqt5fxqnwphjec56j9rhn7mp74nl0tj2xytf8y',
           questRewardsV2: '',
           kycOracleKeyValueStore:

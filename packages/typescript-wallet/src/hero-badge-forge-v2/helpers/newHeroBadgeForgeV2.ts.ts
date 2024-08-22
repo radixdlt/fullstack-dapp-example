@@ -1,7 +1,7 @@
 import { config } from '../../config'
 import { transactionBuilder } from '../../transaction/transactionBuilder'
 
-export const newRadgemForgeV2 = (radgemForgeV2Package?: string) => {
+export const newHeroBadgeForgeV2 = (heroBadgeForgeV2Package?: string) => {
   const transactionManifest = `
 CALL_METHOD
     Address("${config.radQuest.accounts.owner.address}")
@@ -20,8 +20,8 @@ TAKE_ALL_FROM_WORKTOP
     Bucket("admin_badge")
 ;
 CALL_FUNCTION
-    Address("${radgemForgeV2Package ?? config.radQuest.radgemForgeV2Package}")
-    "RadgemForgeV2"
+    Address("${heroBadgeForgeV2Package ?? config.radQuest.heroBadgeForgeV2Package}")
+    "HeroBadgeForgeV2"
     "new"
     Address("${config.radQuest.badges.superAdminBadgeAddress}")
     Enum<OwnerRole::Fixed>(
@@ -38,8 +38,6 @@ CALL_FUNCTION
     Address("${config.radQuest.accounts.jetty.address}")
     Bucket("admin_badge")
     Address("${config.radQuest.badges.heroBadgeAddress}")
-    Address("${config.radQuest.resources.elementAddress}")
-    Address("${config.radQuest.resources.radgemAddress}")
 ;
 `
   const transaction = transactionBuilder({
@@ -51,7 +49,7 @@ CALL_FUNCTION
     .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
     .map(
       (createdEntities): Record<string, string> => ({
-        radgemForgeV2: createdEntities[0].entity_address!
+        heroBadgeForgeV2: createdEntities[0].entity_address!
       })
     )
 }

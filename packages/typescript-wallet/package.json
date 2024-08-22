@@ -44,6 +44,10 @@
     "wallet:new:gift-box-opener-v2": "npx tsx ./src/gift-box-opener-v2/scripts/new-component.ts",
     "wallet:set:gift-boxes": "npx tsx ./src/gift-box-opener-v2/scripts/set-gift-box-addresses.ts",
 
+    "wallet:deploy-new:hero-badge-forge-v2": "npx tsx ./src/hero-badge-forge-v2/scripts/deploy-package-and-component.ts",
+    "wallet:deploy:hero-badge-forge-v2": "npx tsx ./src/hero-badge-forge-v2/scripts/deploy-package.ts",
+    "wallet:new:hero-badge-forge-v2": "npx tsx ./src/hero-badge-forge-v2/scripts/new-component.ts",
+    
     "wallet:deploy-new:card-forge-v2": "npx tsx ./src/card-forge-v2/scripts/deploy-package-and-component.ts",
     "wallet:deploy:card-forge-v2": "npx tsx ./src/card-forge-v2/scripts/deploy-package.ts",
     "wallet:new:card-forge-v2": "npx tsx ./src/card-forge-v2/scripts/new-component.ts",
