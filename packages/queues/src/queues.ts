@@ -20,7 +20,8 @@ export const SystemJobType = {
   AddReferral: 'AddReferral',
   UpdateKycOracle: 'UpdateKycOracle',
   UpdateLettySwapDappDefinition: 'UpdateLettySwapDappDefinition',
-  UpdateKycBadgeAddress: 'UpdateKycBadgeAddress'
+  UpdateKycBadgeAddress: 'UpdateKycBadgeAddress',
+  PopulateResources: 'PopulateResources'
 } as const
 
 export type EventJob = {
@@ -46,11 +47,6 @@ export type BatchedDepositGiftBoxesRewardJob = GenericJob<
 export type DepositRewardTransactionJob = {
   type: 'DepositReward'
   questId: string
-}
-
-export type PopulateResourcesTransactionJob = {
-  type: 'PopulateResources'
-  accountAddress: string
 }
 
 export type AddAccountAddressToHeroBadgeForgeJob = {
@@ -91,7 +87,6 @@ export type TransactionJob = {
 } & (
   | DepositRewardTransactionJob
   | DepositPartialRewardTransactionJob
-  | PopulateResourcesTransactionJob
   | AddAccountAddressToHeroBadgeForgeJob
   | DepositXrdToAccount
   | QuestCompletedTransactionJob
@@ -105,30 +100,31 @@ export type RadmorphSystemJob = {
     url: string
     id: string
   }[]
-  traceId: string
 }
 
 export type AddReferralSystemJob = {
   type: (typeof SystemJobType)['AddReferral']
   userId: string
   referralCode: string
-  traceId: string
 }
 
 export type UpdateKycOracleSystemJob = {
   type: (typeof SystemJobType)['UpdateKycOracle']
   userId: string
-  traceId: string
 }
 
 export type UpdateLettySwapDappDefinitionSystemJob = {
   type: (typeof SystemJobType)['UpdateLettySwapDappDefinition']
-  traceId: string
 }
 
 export type UpdateKycBadgeAddressSystemJob = {
   type: (typeof SystemJobType)['UpdateKycBadgeAddress']
-  traceId: string
+}
+
+export type PopulateResourcesSystemJob = {
+  type: (typeof SystemJobType)['PopulateResources']
+  accountAddress: string
+  userId: string
 }
 
 export type SystemJob =
@@ -137,6 +133,7 @@ export type SystemJob =
   | UpdateKycOracleSystemJob
   | UpdateLettySwapDappDefinitionSystemJob
   | UpdateKycBadgeAddressSystemJob
+  | PopulateResourcesSystemJob
 
 export type DepositXrdJob = GenericJob<{
   userId: string
@@ -241,13 +238,13 @@ export const getQueues = (connection: ConnectionOptions) => {
     eventQueue: { addBulk, queue: eventQueue, addJob },
     transactionQueue: { queue: transactionQueue, add: addTransactionJob },
     systemQueue: {
-      addBulk: (items: SystemJob[]) =>
-        ResultAsync.fromPromise(
-          systemQueue.addBulk(
-            items.map((item) => ({ name: item.traceId, data: item, opts: { jobId: item.traceId } }))
-          ),
+      addBulk: (items: SystemJob[]) => {
+        const id = crypto.randomUUID()
+        return ResultAsync.fromPromise(
+          systemQueue.addBulk(items.map((item) => ({ name: id, data: item, opts: { jobId: id } }))),
           typedError
-        ),
+        )
+      },
       queue: systemQueue
     },
     [Queues.DepositGiftBoxRewardQueue]: createQueue<BatchedDepositGiftBoxesRewardJob>(

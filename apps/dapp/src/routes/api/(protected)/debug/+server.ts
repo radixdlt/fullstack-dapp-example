@@ -28,12 +28,10 @@ export const POST: RequestHandler = async ({ locals, request }) => {
       }
     })
 
-    await locals.dependencies.transactionModel.add({
+    await locals.dependencies.systemQueue.queue.add('PopulateResources', {
       type: 'PopulateResources',
-      accountAddress: accountAddress,
-      discriminator: `PopulateResources:${locals.context.traceId}`,
       userId,
-      traceId: locals.context.traceId
+      accountAddress: accountAddress
     })
   } else if (type === 'addReferral') {
     const userResult = await locals.dependencies.userModel.getById(userId, {})
@@ -45,14 +43,12 @@ export const POST: RequestHandler = async ({ locals, request }) => {
       await locals.dependencies.systemQueue.queue.add('AddReferral', {
         type: 'AddReferral',
         userId,
-        referralCode: user.referralCode,
-        traceId: locals.context.traceId
+        referralCode: user.referralCode
       })
   } else if (type === 'updateKycOracle') {
     await locals.dependencies.systemQueue.queue.add('updateKYCOracle', {
       type: 'UpdateKycOracle',
-      userId,
-      traceId: locals.context.traceId
+      userId
     })
   }
 

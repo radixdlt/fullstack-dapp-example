@@ -5,8 +5,7 @@ import {
   AccountAddressModel as AccountAddressModelFn,
   GatewayApi,
   MailerLiteModel,
-  ImageModel,
-  TransactionStreamModel
+  ImageModel
 } from 'common'
 import { logger } from './helpers/logger'
 import { RedisConnection, getQueues } from 'queues'
@@ -43,7 +42,6 @@ const app = async () => {
   const sendMessage = MessageHelper({ dbClient, messageApi })
   const referralRewardAction = ReferralRewardAction(dbClient)
   const AccountAddressModel = AccountAddressModelFn(redisClient)
-  const transactionStreamModel = TransactionStreamModel(dbClient)
   const imageModel = ImageModel(dbClient)
 
   const eventWorkerController = EventWorkerController({
@@ -85,9 +83,7 @@ const app = async () => {
     systemWorkerController: SystemWorkerController({
       logger,
       AccountAddressModel,
-      redisClient: await redisClient.client,
-      dbClient,
-      transactionStreamModel
+      dbClient
     })
   })
 
