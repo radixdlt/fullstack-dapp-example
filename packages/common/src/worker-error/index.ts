@@ -38,5 +38,25 @@ export const WorkerError = {
   TemporarySkip: 'TemporarySkip',
   FailedToCreateRadGem: 'FailedToCreateRadGem',
   FailedToGetSubmittedTransactions: 'FailedToGetSubmittedTransactions',
-  UnhandledTransactionState: 'UnhandledTransactionState'
+  UnhandledTransactionState: 'UnhandledTransactionState',
+  FailedToDetermineIfEventJobShouldBeProcessed: 'FailedToDetermineIfEventJobShouldBeProcessed',
+  FailedToUpdateEventStatus: 'FailedToUpdateEventStatus',
+  BlockedUser: 'BlockedUser',
+  FailedToCompleteQuestRequirement: 'FailedToCompleteQuestRequirement',
+  UserMissingAccountAddress: 'UserMissingAccountAddress',
+  FailedToUpdateQuestProgress: 'FailedToUpdateQuestProgress',
+  FailedToUpsertTransactionIntent: 'FailedToUpsertTransactionIntent',
+  FailedToAddJobToDepositGiftBoxRewardBufferQueue:
+    'FailedToAddJobToDepositGiftBoxRewardBufferQueue',
+  FailedToAddJobToTransactionQueue: 'FailedToAddJobToTransactionQueue',
+  FailedToCountQuestTogetherReferrals: 'FailedToCountQuestTogetherReferrals',
+  FailedToDeleteTrackedAccountAddress: 'FailedToDeleteTrackedAccountAddress',
+  FailedToGetUserEmail: 'FailedToGetUserEmail',
+  FailedToUpdateHeroBadge: 'FailedToUpdateHeroBadge',
+  FailedToFindCompletedRequirements: 'FailedToFindCompletedRequirements',
+  FailedToAddCompletedQuestRequirement: 'FailedToAddCompletedQuestRequirement',
+  FailedToCreateBatchedTransactionIntent: 'FailedToCreateBatchedTransactionIntent',
+  FailedToAddJobToQueue: 'FailedToAddJobToQueue',
+  FailedToMarkJobsAsFailed: 'FailedToMarkJobsAsFailed',
+  FailedToMarkJobsAsCompleted: 'FailedToMarkJobsAsCompleted'
 } as const

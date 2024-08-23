@@ -20,19 +20,19 @@ import {
 } from 'common'
 import { PrismaClient, User } from 'database'
 import { errAsync } from 'neverthrow'
-import { Queues, RedisConnection, getQueues } from 'queues'
+import { QueueName, RedisConnection, getQueues } from 'queues'
 import { config } from './config'
 import { QueueEvents } from 'bullmq'
 import crypto from 'crypto'
 import { completeQuestRequirements } from './helpers/complete-quest-requirements'
 import { waitForMessage } from './helpers/wait-for-message'
 
-const eventQueueEvents = new QueueEvents(Queues.EventQueue, { connection: config.redis })
-const transactionQueueEvents = new QueueEvents(Queues.TransactionQueue, {
+const eventQueueEvents = new QueueEvents(QueueName.Event, { connection: config.redis })
+const transactionQueueEvents = new QueueEvents(QueueName.Transaction, {
   connection: config.redis
 })
 
-const { transactionQueue } = getQueues(config.redis)
+const queues = getQueues(config.redis)
 
 const waitForQueueEvent = async (
   status: Parameters<(typeof eventQueueEvents)['on']>[0],
@@ -65,7 +65,7 @@ const getAccount = async () => {
 
 let accountAddress: string
 
-const transactionModel = TransactionModel(db, transactionQueue)
+const transactionModel = TransactionModel(db, queues.Transaction)
 const userQuestModel = UserQuestModel(db)(logger)
 const userModel = UserModel(db)(logger)
 const accountAddressModel = AccountAddressModel(redisClient)(logger)
@@ -325,70 +325,15 @@ describe('Event flows', () => {
   })
 
   describe('radgem', async () => {
-    it('combine elements into a RadGem', { timeout: 30_000, skip: false }, async () => {
-      const { submitTransaction, user } = await createAccount({
-        withXrd: true,
-        withHeroBadge: true
-      })
+    it(
+      `should deposit elements to RadGemForgeV2 and wait for 'RadgemsMinted' message`,
+      { timeout: 30_000, skip: false },
+      async () => {
+        const { user, submitTransaction } = await getAccount()
 
-      await mintElements(10, user.accountAddress!)
+        await mintElements(1000, user.accountAddress!)
 
-      const result = await submitTransaction(`
-        CALL_METHOD
-            Address("${user.accountAddress}")
-            "lock_fee"
-            Decimal("50")
-        ;
-
-        CALL_METHOD
-            Address("${user.accountAddress}")
-            "create_proof_of_non_fungibles"
-            Address("${addresses.badges.heroBadgeAddress}")
-            Array<NonFungibleLocalId>(NonFungibleLocalId("<${user?.id}>"))
-        ;
-
-        POP_FROM_AUTH_ZONE
-            Proof("userBadge")
-        ;
-
-        CALL_METHOD
-            Address("${user?.accountAddress}")
-            "withdraw" 
-            Address("${addresses.resources.elementAddress}")
-            Decimal("5") 
-        ;
-
-        TAKE_ALL_FROM_WORKTOP 
-            Address("${addresses.resources.elementAddress}") 
-            Bucket("elements")
-        ;
-
-        CALL_METHOD
-            Address("${addresses.components.refinery}")
-            "combine_elements_deposit"
-            Proof("userBadge")
-            Bucket("elements")
-        ;
-
-        CALL_METHOD
-            Address("${user.accountAddress}")
-            "deposit_batch"
-            Expression("ENTIRE_WORKTOP")
-        ;`)
-
-      if (result.isErr()) throw result.error
-
-      await waitForMessage(logger, db)(user.id, 'CombineElementsAddRadgemImage')
-
-      console.log('Transaction ID:', result.value)
-    })
-
-    it('should deposit elements to RadGemForgeV2', { timeout: 30_000, skip: false }, async () => {
-      const { user, submitTransaction } = await getAccount()
-
-      await mintElements(1000, user.accountAddress!)
-
-      const result = await submitTransaction(`
+        const result = await submitTransaction(`
           CALL_METHOD
             Address("${user.accountAddress}")
             "lock_fee"
@@ -426,8 +371,17 @@ describe('Event flows', () => {
           ;
           `)
 
-      expect(result.isOk()).toBe(true)
-    })
+        expect(result.isOk()).toBe(true)
+
+        const message = await waitForMessage(logger, db)(user.id, 'RadgemsMinted')
+
+        if (message.type === 'RadgemsMinted') {
+          expect(message.radgemData.length).toBe(10)
+        } else {
+          throw new Error(`Unexpected message type: ${message.type}`)
+        }
+      }
+    )
   })
 
   it('should send clams to jetty and claim rewards', { timeout: 60_000 }, async () => {
@@ -724,32 +678,36 @@ describe('Event flows', () => {
       })
     })
 
-    describe.skip('gift box reward deposit batching', () => {
-      it('should batch gift box reward deposits', { timeout: 600_000, skip: false }, async () => {
-        const account1 = await getAccount()
+    describe('gift box reward deposit batching', () => {
+      it.skip(
+        'should batch gift box reward deposits',
+        { timeout: 600_000, skip: false },
+        async () => {
+          const account1 = await getAccount()
 
-        const [account2, account3] = await Promise.all(
-          new Array(2).fill(null).map(() => createAccount({ withXrd: true, withHeroBadge: true }))
-        )
+          const [account2, account3] = await Promise.all(
+            new Array(2).fill(null).map(() => createAccount({ withXrd: true, withHeroBadge: true }))
+          )
 
-        await Promise.all([
-          mintGiftBox('Simple', account1.user.accountAddress!, 100),
-          mintGiftBox('Simple', account2.user.accountAddress!, 100),
-          mintGiftBox('Simple', account3.user.accountAddress!, 100)
-        ])
+          await Promise.all([
+            mintGiftBox('Simple', account1.user.accountAddress!, 100),
+            mintGiftBox('Simple', account2.user.accountAddress!, 100),
+            mintGiftBox('Simple', account3.user.accountAddress!, 100)
+          ])
 
-        for (const _ of new Array(1).fill(null)) {
-          await Promise.all(
-            [account1, account2, account3].map((account) =>
-              Promise.all(
-                new Array(3)
-                  .fill(null)
-                  .map(() => openGiftBox({ kind: 'Simple', account, amount: 5 }))
+          for (const _ of new Array(1).fill(null)) {
+            await Promise.all(
+              [account1, account2, account3].map((account) =>
+                Promise.all(
+                  new Array(3)
+                    .fill(null)
+                    .map(() => openGiftBox({ kind: 'Simple', account, amount: 5 }))
+                )
               )
             )
-          )
+          }
         }
-      })
+      )
     })
   })
 

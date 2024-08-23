@@ -103,6 +103,10 @@ enum EventStatus {
   PENDING
   ERROR
   COMPLETED
+  FAILED_RETRY
+  FAILED_PERMANENT
+  PAUSED
+  CANCELLED
 }
 
 model Event {

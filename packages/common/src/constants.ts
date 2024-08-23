@@ -282,13 +282,7 @@ export const EventId = {
   QuestRewardClaimed: 'QuestRewardClaimed',
   JettySwap: 'JettySwap',
   LettySwap: 'LettySwap',
-  CombineElementsDeposited: 'CombineElementsDeposited',
-  CombineElementsMintedRadgem: 'CombineElementsMintedRadgem',
-  CombineElementsAddedRadgemImage: 'CombineElementsAddedRadgemImage',
-  CombineElementsClaimed: 'CombineElementsClaimed',
   AccountAllowedToForgeHeroBadge: 'AccountAllowedToForgeHeroBadge',
-  GiftBoxOpened: 'GiftBoxOpened',
-  GiftBoxDeposited: 'GiftBoxDeposited',
   GiftBoxesOpenedEvent: 'GiftBoxesOpenedEvent',
   DepositedElements: 'DepositedElements'
 } as const

@@ -1,21 +1,10 @@
 import {
   EventsItem,
-  ProgrammaticScryptoSborValue,
   ProgrammaticScryptoSborValueArray,
-  ProgrammaticScryptoSborValueDecimal,
-  ProgrammaticScryptoSborValueMap,
-  ProgrammaticScryptoSborValueReference,
-  ProgrammaticScryptoSborValueTuple
+  ProgrammaticScryptoSborValueReference
 } from '@radixdlt/babylon-gateway-api-sdk'
 import { config } from '../config'
-import {
-  EventId,
-  GetValuesFromEventInput,
-  fromEventData,
-  getValuesFromEvent,
-  EventEmitter,
-  getGiftBoxRewardsFromMapSbor
-} from 'common'
+import { EventId, GetValuesFromEventInput, getValuesFromEvent, EventEmitter } from 'common'
 import { getRewardsFromQuestRewardDepositedEvent } from '../helpers/getRewardsFromQuestRewardDepositedEvent'
 
 export type TrackedTransactions = Record<
@@ -149,29 +138,6 @@ export const trackedTransactionTypes: TrackedTransactions = {
     XrdStake: xrdStaked,
     WithdrawEvent: resourceWithdrawn(config.radQuest.xrd, 'accountAddress')
   },
-  [EventId.CombineElementsDeposited]: {
-    DepositedEvent: eventEmittedByComponent({
-      eventName: 'CombineElementsDepositedEvent',
-      componentAddress: config.radQuest.components.refinery,
-      keys: { user_id: { kind: 'String', key: 'userId' } }
-    })
-  },
-  [EventId.CombineElementsMintedRadgem]: {
-    MintedRadgemEvent: eventEmittedByComponent({
-      eventName: 'CombineElementsMintedRadgemEvent',
-      componentAddress: config.radQuest.components.refinery,
-      keys: {
-        user_id: { kind: 'String', key: 'userId' },
-        radgem_local_id: { kind: 'NonFungibleLocalId', key: 'radgemLocalId' },
-        radgem_data: {
-          kind: 'Tuple',
-          key: 'radgemData',
-          transform: (value) =>
-            fromEventData('MintedRadgemEvent', value as ProgrammaticScryptoSborValueTuple)
-        }
-      }
-    })
-  },
   [EventId.DepositedElements]: {
     AddedRadgemImageEvent: eventEmittedByComponent({
       eventName: 'DepositedElementsEvent',
@@ -180,20 +146,6 @@ export const trackedTransactionTypes: TrackedTransactions = {
         user_id: { kind: 'String', key: 'userId' },
         elements_count: { kind: 'Decimal', key: 'elementsCount' }
       }
-    })
-  },
-  [EventId.CombineElementsAddedRadgemImage]: {
-    AddedRadgemImageEvent: eventEmittedByComponent({
-      eventName: 'CombineElementsAddedRadgemImageEvent',
-      componentAddress: config.radQuest.components.refinery,
-      keys: { user_id: { kind: 'String', key: 'userId' } }
-    })
-  },
-  [EventId.CombineElementsClaimed]: {
-    ClaimedEvent: eventEmittedByComponent({
-      eventName: 'CombineElementsClaimedEvent',
-      componentAddress: config.radQuest.components.refinery,
-      keys: { user_id: { kind: 'String', key: 'userId' } }
     })
   },
   [EventId.MayaRouterWithdrawEvent]: {
@@ -229,16 +181,6 @@ export const trackedTransactionTypes: TrackedTransactions = {
       }
     })
   },
-  [EventId.GiftBoxOpened]: {
-    GiftBoxOpenedEvent: eventEmittedByComponent({
-      eventName: 'GiftBoxOpenedEvent',
-      componentAddress: config.radQuest.components.giftBoxOpener,
-      keys: {
-        user_id: { kind: 'String', key: 'userId' },
-        resource_address: { kind: 'Reference', key: 'giftBoxResourceAddress' }
-      }
-    })
-  },
   [EventId.GiftBoxesOpenedEvent]: {
     GiftBoxesOpenedEvent: eventEmittedByComponent({
       eventName: 'GiftBoxesOpenedEvent',
@@ -247,33 +189,6 @@ export const trackedTransactionTypes: TrackedTransactions = {
         user_id: { kind: 'String', key: 'userId' },
         resource_address: { kind: 'Reference', key: 'giftBoxResourceAddress' },
         quantity: { kind: 'Decimal', key: 'quantity' }
-      }
-    })
-  },
-  [EventId.GiftBoxDeposited]: {
-    GiftBoxDepositedEvent: eventEmittedByComponent({
-      eventName: 'GiftBoxDepositedEvent',
-      componentAddress: config.radQuest.components.giftBoxOpener,
-      keys: {
-        user_id: { kind: 'String', key: 'userId' },
-        rewards: {
-          kind: 'Map',
-          key: 'rewards',
-          transform: (value) =>
-            getGiftBoxRewardsFromMapSbor(value as ProgrammaticScryptoSborValueMap)
-        }
-      }
-    }),
-    MorphCardMintedEvent: eventEmittedByComponent({
-      eventName: 'MorphCardMintedEvent',
-      componentAddress: config.radQuest.components.cardForge,
-      keys: {
-        morph_card_data: {
-          kind: 'Tuple',
-          key: 'energyCard',
-          transform: (value) =>
-            fromEventData('MorphCardMintedEvent', value as ProgrammaticScryptoSborValue)
-        }
       }
     })
   }

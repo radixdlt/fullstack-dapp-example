@@ -43,14 +43,14 @@ import { GoldenTicketController } from '$lib/server/golden-ticket/controller'
 
 const networkId = +PUBLIC_NETWORK_ID
 
-const { transactionQueue, systemQueue } = getQueues(config.redis)
+const queues = getQueues(config.redis)
 
 const redisClient = new RedisConnection(config.redis)
 
 const userModel = UserModel(dbClient)
 const authModel = AuthModel()
 const userQuestModel = UserQuestModel(dbClient)
-const transactionModel = TransactionModel(dbClient, transactionQueue)
+const transactionModel = TransactionModel(dbClient, queues.Transaction)
 const auditModel = AuditModel(dbClient)
 const gatewayApi = GatewayApi(networkId, process.env.GATEWAY_URL)
 const messageModel = MessageModel(dbClient)
@@ -110,8 +110,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     notificationModel: notificationModel(logger),
     marketingModel: marketingModel(logger),
     imageModel: imageModel(logger),
-    goldenTicketModel: GoldenTicketModel(dbClient)(logger),
-    systemQueue
+    systemQueue: queues.System,
+    goldenTicketModel: GoldenTicketModel(dbClient)(logger)
   } satisfies ControllerDependencies
 
   event.locals.controllers = {

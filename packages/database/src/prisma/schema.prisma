@@ -103,6 +103,10 @@ enum EventStatus {
   PENDING
   ERROR
   COMPLETED
+  FAILED_RETRY
+  FAILED_PERMANENT
+  PAUSED
+  CANCELLED
 }
 
 model Event {
@@ -277,6 +281,8 @@ model GoldenTicket {
 
   claimedBy User? @relation("claimedBy", fields: [userId], references: [id])
   owner     User  @relation("owner", fields: [ownerId], references: [id])
+
+  @@index(fields: [batchId], type: Hash)
 }
 
 enum GoldenTicketStatus {

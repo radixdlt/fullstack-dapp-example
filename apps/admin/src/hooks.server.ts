@@ -16,12 +16,12 @@ const dbClient = new PrismaClient({
   datasourceUrl: DATABASE_URL
 }).$extends({ ...(readUrl ? readReplicas({ url: readUrl }) : {}) }) as unknown as PrismaClient
 
-const { systemQueue, eventQueue, transactionQueue } = getQueues(config.redis)
+const queues = getQueues(config.redis)
 const logger = appLogger
 
 const imageController = ImageController({
   imageModel: ImageModel(dbClient)(logger),
-  systemQueue: systemQueue.queue
+  systemQueue: queues.System
 })
 
 const blockedCountryModel = BlockedCountryModel(dbClient)(logger)
@@ -51,9 +51,9 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.dbClient = dbClient
     event.locals.blockedCountryModel = blockedCountryModel
     event.locals.imageController = imageController
-    event.locals.eventQueue = eventQueue
-    event.locals.transactionQueue = transactionQueue
-    event.locals.systemQueue = systemQueue
+    event.locals.eventQueue = queues.Event
+    event.locals.transactionQueue = queues.Transaction
+    event.locals.systemQueue = queues.System
     event.locals.logger = logger
     event.locals.goldenTicketModel = goldenTicketModel
 

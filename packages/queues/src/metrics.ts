@@ -1,6 +1,6 @@
 import { type ConnectionOptions, Queue, QueueEvents } from 'bullmq'
 import client from 'prom-client'
-import { Queues, getQueues } from './queues'
+import { getQueues } from './queues'
 import http from 'http'
 import type { AppLogger } from 'common'
 
@@ -28,7 +28,7 @@ export const QueueMetrics = (name: string) => {
 
 const setupQueueEvents = (input: {
   queue: Queue
-  queueName: keyof typeof Queues
+  queueName: string
   connection: ConnectionOptions
   trackMetricsFn: QueueMetrics
   logger?: AppLogger
@@ -82,56 +82,26 @@ export const SetupQueueMetrics = ({
   port?: number
   logger?: AppLogger
 }) => {
-  const {
-    transactionQueue,
-    eventQueue,
-    systemQueue,
-    DepositGiftBoxRewardBufferQueue,
-    DepositGiftBoxRewardQueue
-  } = getQueues(connection)
+  const queues = getQueues(connection)
 
-  const queueMetrics = {
-    eventQueue: QueueMetrics('event'),
-    transactionQueue: QueueMetrics('transaction'),
-    systemQueue: QueueMetrics('system'),
-    DepositGiftBoxRewardBufferQueue: QueueMetrics('DepositGiftBoxRewardBuffer'),
-    DepositGiftBoxRewardQueue: QueueMetrics('DepositGiftBoxReward')
-  } as const
-
-  setupQueueEvents({
-    queueName: Queues.TransactionQueue,
-    connection,
-    queue: transactionQueue.queue,
-    trackMetricsFn: queueMetrics.transactionQueue,
-    logger
-  })
-  setupQueueEvents({
-    queueName: Queues.EventQueue,
-    connection,
-    queue: eventQueue.queue,
-    trackMetricsFn: queueMetrics.eventQueue,
-    logger
-  })
-  setupQueueEvents({
-    queueName: Queues.SystemQueue,
-    connection,
-    queue: systemQueue.queue,
-    trackMetricsFn: queueMetrics.systemQueue,
-    logger
-  })
-  setupQueueEvents({
-    queueName: Queues.DepositGiftBoxRewardBufferQueue,
-    connection,
-    queue: DepositGiftBoxRewardBufferQueue.queue,
-    trackMetricsFn: queueMetrics.DepositGiftBoxRewardBufferQueue,
-    logger
-  })
-  setupQueueEvents({
-    queueName: Queues.DepositGiftBoxRewardQueue,
-    connection,
-    queue: DepositGiftBoxRewardQueue.queue,
-    trackMetricsFn: queueMetrics.DepositGiftBoxRewardQueue,
-    logger
+  Object.values(queues).map((queue) => {
+    setupQueueEvents({
+      queueName: queue.name,
+      connection,
+      queue: queue.queue,
+      trackMetricsFn: QueueMetrics(queue.name),
+      logger
+    })
+    const bufferQueue = queue.getBufferQueue()
+    if (bufferQueue) {
+      setupQueueEvents({
+        queueName: bufferQueue.name,
+        connection,
+        queue: bufferQueue.queue,
+        trackMetricsFn: QueueMetrics(bufferQueue.name),
+        logger
+      })
+    }
   })
 
   const metricsServer = http.createServer(async (req, res) => {

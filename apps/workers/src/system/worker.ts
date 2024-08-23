@@ -1,4 +1,4 @@
-import { Worker, ConnectionOptions, Queues, SystemJob } from 'queues'
+import { Worker, ConnectionOptions, QueueName, SystemJob } from 'queues'
 import { AppLogger } from 'common'
 import { SystemWorkerController } from './controller'
 import { config } from '../config'
@@ -13,7 +13,7 @@ export const SystemWorker = (
   const { logger, systemWorkerController } = dependencies
 
   const worker = new Worker<SystemJob>(
-    Queues.SystemQueue,
+    QueueName.System,
     async (job) => {
       await job.updateProgress(1)
       logger.debug({
@@ -40,8 +40,7 @@ export const SystemWorker = (
   worker.on('completed', (job) => {
     const childLogger = logger.child({
       id: job.id,
-      type: job.data.type,
-      traceId: job.data.traceId
+      type: job.data.type
     })
     childLogger.debug({
       method: 'systemWorker.completed'

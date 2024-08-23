@@ -5,7 +5,7 @@ import { logger } from './helpers/logger'
 import { TransactionStream } from './transaction-stream/transaction-stream'
 import { AccountAddressModel, GatewayApi, TransactionStreamModel, UserQuestModel } from 'common'
 import { PrismaClient } from 'database'
-import { getQueues, RedisConnection, SetupQueueMetrics } from 'queues'
+import { getQueues, Queues, RedisConnection, SetupQueueMetrics } from 'queues'
 import { EventModel } from 'common'
 import { HandleStreamError } from './helpers/handleStreamError'
 import { HandleTransactions } from './helpers/handleTransactions'
@@ -17,7 +17,7 @@ import { FilterTransactionsByAccountAddress } from './filter-transactions/filter
 
 type Dependencies = {
   gatewayApi: GatewayApi
-  eventQueue: ReturnType<typeof getQueues>['eventQueue']
+  eventQueue: Queues['Event']
   filterTransactionsByType: FilterTransactionsByType
   filterTransactionsByAccountAddress: FilterTransactionsByAccountAddress
   transactionStreamModel: TransactionStreamModel
@@ -124,7 +124,7 @@ const app = async (dependencies: Dependencies) => {
 }
 
 const gatewayApi = GatewayApi(config.networkId, process.env.GATEWAY_URL)
-const { eventQueue } = getQueues(config.redis)
+const queues = getQueues(config.redis)
 const redisConnection = new RedisConnection(config.redis)
 const transactionStreamModel = TransactionStreamModel(dbClient)
 const accountAddressModel = AccountAddressModel(redisConnection)(logger)
@@ -133,7 +133,7 @@ const filterTransactionsByAccountAddress = FilterTransactionsByAccountAddress(ac
 
 app({
   gatewayApi,
-  eventQueue,
+  eventQueue: queues.Event,
   filterTransactionsByType,
   filterTransactionsByAccountAddress,
   transactionStreamModel,

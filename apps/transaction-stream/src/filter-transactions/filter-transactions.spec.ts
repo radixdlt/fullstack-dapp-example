@@ -6,11 +6,8 @@ import NotSupportedTx from '../fixtures/transactions/not-supported-tx'
 import StakedXrdTx from '../fixtures/transactions/staked-xrd'
 import JettySwap from '../fixtures/transactions/jetty-swap'
 import LettySwap from '../fixtures/transactions/letty-swap'
-import CombineElementsImageAdded from '../fixtures/transactions/combine-elements-image-added'
 import JettyReceivedClams from '../fixtures/transactions/jetty-recevied-clams'
 import MayaRouterWithdraw from '../fixtures/transactions/maya-router-withdraw'
-import GiftBoxDeposited from '../fixtures/transactions/giftbox-deposited'
-import GiftBoxOpened from '../fixtures/transactions/open-giftbox'
 import GiftBoxesOpened from '../fixtures/transactions/gift-boxes-opened'
 import AccountAddedTransaction from '../fixtures/transactions/allow-user-to-forge-hero-badge'
 import { trackedTransactionTypes } from './tracked-transaction-types'
@@ -18,9 +15,6 @@ import { AccountAddressModel, EventId } from 'common'
 import { FilterTransactionsByType } from './filter-transactions-by-type'
 import { RedisServer } from '../test-helpers/inMemoryRedisServer'
 import { RedisConnection } from 'queues'
-import CombineElementsDepositedEvents from '../fixtures/transactions/combine-elements-deposited-events'
-import CombineElementsMintedRadgemEvents from '../fixtures/transactions/combine-elements-minted-radgem-events'
-import CombineElementsClaimed from '../fixtures/transactions/combine-elements-claimed'
 import DepositElementsToRadGemv2 from '../fixtures/transactions/radgem-forgev2'
 
 let accountAddressModel: ReturnType<AccountAddressModel>
@@ -149,41 +143,6 @@ describe('filter transactions', () => {
   })
 
   describe('Gift boxes', () => {
-    it(`should find ${EventId.GiftBoxDeposited} transaction`, () => {
-      const result = filterTransactionsByType([...GiftBoxDeposited])
-
-      if (result.isErr()) throw result.error
-
-      const filteredTransactions = result.value
-
-      expect(filteredTransactions.length).toEqual(1)
-
-      const [transaction] = filteredTransactions
-
-      console.log(transaction)
-
-      expect(transaction.type).toEqual(EventId.GiftBoxDeposited)
-      expect(transaction.userId).toBeDefined()
-      expect(transaction.data.rewards).toBeDefined()
-      expect(transaction.data.energyCard).toBeDefined()
-    })
-
-    it(`should find ${EventId.GiftBoxOpened} transaction`, () => {
-      const result = filterTransactionsByType([...GiftBoxOpened])
-
-      if (result.isErr()) throw result.error
-
-      const filteredTransactions = result.value
-
-      expect(filteredTransactions.length).toEqual(1)
-
-      const [transaction] = filteredTransactions
-
-      expect(transaction.type).toEqual(EventId.GiftBoxOpened)
-      expect(transaction.userId).toBeDefined()
-      expect(transaction.data.giftBoxResourceAddress).toBeDefined()
-    })
-
     it(`should find ${EventId.GiftBoxesOpenedEvent} transaction`, () => {
       const result = filterTransactionsByType([...GiftBoxesOpened])
 
@@ -203,74 +162,6 @@ describe('filter transactions', () => {
   })
 
   describe('RadGem', () => {
-    it(`should find ${EventId.CombineElementsDeposited} transaction`, () => {
-      const result = filterTransactionsByType([
-        ...CombineElementsDepositedEvents,
-        ...NotSupportedTx
-      ])
-
-      if (result.isErr()) throw result.error
-
-      const filteredTransactions = result.value
-
-      expect(filteredTransactions.length).toEqual(1)
-
-      const [transaction] = filteredTransactions
-
-      expect(transaction.transactionId).toBeDefined()
-      expect(transaction.type).toEqual(EventId.CombineElementsDeposited)
-      expect(transaction.userId).toBeDefined()
-    })
-
-    it(`should find ${EventId.CombineElementsMintedRadgem} transaction`, () => {
-      const result = filterTransactionsByType([
-        ...CombineElementsMintedRadgemEvents,
-        ...NotSupportedTx
-      ])
-
-      if (result.isErr()) throw result.error
-
-      const filteredTransactions = result.value
-
-      expect(filteredTransactions.length).toEqual(1)
-
-      const [CombineElementsMintedRadgem] = filteredTransactions
-
-      expect(CombineElementsMintedRadgem.transactionId).toBeDefined()
-      expect(CombineElementsMintedRadgem.type).toEqual('CombineElementsMintedRadgem')
-      expect(CombineElementsMintedRadgem.data.radgemLocalId).toBeDefined()
-      expect(CombineElementsMintedRadgem.data.radgemData).toBeDefined()
-    })
-
-    it(`should find ${EventId.CombineElementsAddedRadgemImage} transaction`, () => {
-      const result = filterTransactionsByType([...CombineElementsImageAdded])
-
-      if (result.isErr()) throw result.error
-
-      const filteredTransactions = result.value
-
-      console.log(filteredTransactions)
-
-      const [transaction] = filteredTransactions
-
-      expect(transaction.type).toEqual(EventId.CombineElementsAddedRadgemImage)
-      expect(transaction.userId).toBeDefined()
-    })
-
-    it(`should find ${EventId.CombineElementsClaimed} transaction`, () => {
-      const result = filterTransactionsByType([...CombineElementsClaimed])
-
-      if (result.isErr()) throw result.error
-
-      const filteredTransactions = result.value
-
-      expect(filteredTransactions.length).toEqual(1)
-
-      const [transaction] = filteredTransactions
-      expect(transaction.type).toEqual(EventId.CombineElementsClaimed)
-      expect(transaction.userId).toBeDefined()
-    })
-
     it(`should find ${EventId.DepositedElements} transaction`, () => {
       const result = filterTransactionsByType([...DepositElementsToRadGemv2])
 

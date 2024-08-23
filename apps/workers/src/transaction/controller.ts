@@ -3,11 +3,7 @@ import { Job, TransactionJob } from 'queues'
 import { User } from 'database'
 import {
   GatewayApi,
-  GiftBoxReward,
-  GiftBoxRewardConfig,
   ImageModel,
-  getRandomFloat,
-  getRandomIntInclusive,
   type AppLogger,
   newRadgem,
   ColorCodeDescription,
@@ -18,8 +14,6 @@ import { TransactionHelper, withSigners } from 'typescript-wallet'
 import { createRewardsDepositManifest } from './helpers/createRewardsDepositManifest'
 import { QuestDefinitions, QuestId, QuestReward } from 'content'
 import { config } from '../config'
-import { createCombinedElementsMintRadgemManifest } from './helpers/createCombinedElementsMintRadgemManifest'
-import { createCombinedElementsAddRadgemImageManifest } from './helpers/createCombinedElementsAddRadgemImageManifest'
 import { WorkerOutputError, WorkerError } from '../_types'
 import { MessageHelper } from '../helpers/messageHelper'
 import { dbClient } from '../db-client'
@@ -33,7 +27,7 @@ import { GetLastSubmittedTransaction } from '../helpers/getLastSubmittedTransact
 import { UpsertSubmittedTransaction } from '../helpers/upsertSubmittedTransaction'
 import { SubmitTransactionHelper } from '../helpers/submitTransactionHelper'
 
-const { xrd, accounts, badges, resources, components } = config.radQuest
+const { xrd, accounts, badges, components } = config.radQuest
 const { system, payer } = accounts
 
 export type TransactionWorkerController = ReturnType<typeof TransactionWorkerController>
@@ -64,10 +58,6 @@ export const TransactionWorkerController = ({
     })
 
     const updateStatus = UpsertSubmittedTransaction(discriminator, dbClient)
-
-    const getGiftBoxRewards = GiftBoxReward(
-      GiftBoxRewardConfig({ getRandomFloat, getRandomIntInclusive })
-    )
 
     const verifyTransaction = VerifyTransaction(gatewayApi, [
       isTryingToSetImageOnBurntRadGem(job.data.discriminator),
@@ -114,34 +104,34 @@ export const TransactionWorkerController = ({
       case 'QuestCompleted': {
         const { questId } = job.data
 
-        return errAsync({
-          reason: WorkerError.TemporarySkip
-        })
-
-        // return handleSubmitTransaction(
-        //   `
-        //     CALL_METHOD
-        //       Address("${payer.accessController}")
-        //       "create_proof";
-        //     CALL_METHOD
-        //       Address("${system.accessController}")
-        //       "create_proof";
-        //     CALL_METHOD
-        //       Address("${payer.address}")
-        //       "lock_fee"
-        //       Decimal("100");
-        //   CALL_METHOD
-        //       Address("${system.address}")
-        //       "create_proof_of_amount"
-        //       Address("${badges.adminBadgeAddress}")
-        //       Decimal("1");
-        //    CALL_METHOD
-        //         Address("${components.heroBadgeForge}")
-        //         "hero_completed_quest"
-        //         "${userId}"
-        //         "${questId}"
-        //   ;`
-        // )
+        return handleSubmitTransaction(
+          `
+          CALL_METHOD
+            Address("${payer.accessController}")
+            "create_proof"
+          ;
+          CALL_METHOD
+            Address("${system.accessController}")
+            "create_proof"
+          ;
+          CALL_METHOD
+            Address("${payer.address}")
+            "lock_fee"
+            Decimal("100")
+          ;
+          CALL_METHOD
+            Address("${system.address}")
+            "create_proof_of_amount"
+            Address("${badges.adminBadgeAddress}")
+            Decimal("1")
+          ;
+          CALL_METHOD
+            Address("${components.heroBadgeForge}")
+            "hero_completed_quest"
+            "${userId}"
+            "${questId}"
+          ;`
+        )
       }
 
       case 'DepositReward':
@@ -157,237 +147,6 @@ export const TransactionWorkerController = ({
             rewards,
             includeKycOracleUpdate: false,
             depositRewardsTo: 'questRewards'
-          })
-        )
-
-      case 'DepositGiftBoxReward': {
-        const { giftBoxKind } = job.data
-
-        const { elements: elementAmount, energyCard } = getGiftBoxRewards(giftBoxKind)
-
-        return imageModel(logger)
-          .getUrl({ shape: energyCard.key })
-          .mapErr((error) => ({ reason: WorkerError.FailedToGetImageUrl, jsError: error }))
-          .andThen((key_image_url) => {
-            const rewards: Parameters<typeof createRewardsDepositManifest>[0]['rewards'] = [
-              { name: 'elements', amount: elementAmount }
-            ]
-
-            const card = {
-              ...energyCard,
-              key_image_url
-            }
-
-            rewards.push({
-              name: 'energyCard',
-              card
-            })
-            return handleSubmitTransaction(
-              createRewardsDepositManifest({
-                userId,
-                rewards,
-                includeKycOracleUpdate: false,
-                depositRewardsTo: 'giftBoxOpener'
-              })
-            )
-          })
-      }
-
-      case 'PopulateResources':
-        const { accountAddress } = job.data
-        return handleSubmitTransaction(
-          `
-            CALL_METHOD
-              Address("${payer.accessController}")
-              "create_proof"
-            ;
-
-            CALL_METHOD
-              Address("${system.accessController}")
-              "create_proof"
-            ;
-            
-            CALL_METHOD
-              Address("${payer.address}")
-              "lock_fee"
-              Decimal("100");
-
-            CALL_METHOD
-              Address("${system.address}")
-              "create_proof_of_amount"
-              Address("${badges.adminBadgeAddress}") 
-              Decimal("1");  
-              
-            MINT_FUNGIBLE
-              Address("${resources.clamAddress}")
-              Decimal("100");
-
-            MINT_FUNGIBLE
-              Address("${resources.elementAddress}")
-              Decimal("100");
-
-              MINT_FUNGIBLE
-              Address("${resources.giftBox.Starter}")
-              Decimal("20");
-
-              MINT_FUNGIBLE
-              Address("${resources.giftBox.Simple}")
-              Decimal("20");
-
-              MINT_FUNGIBLE
-              Address("${resources.giftBox.Fancy}")
-              Decimal("20");
-
-              MINT_FUNGIBLE
-              Address("${resources.giftBox.Elite}")
-              Decimal("20");
-
-
-          ${Array(5)
-            .fill(
-              `CALL_METHOD
-            Address("${config.radQuest.components.cardForge}")
-            "mint_card"
-            "${userId}"
-            ""
-            "Test Card"
-            "This is just a test card"
-            "Tidal Wave"
-            "Such amazing energy"
-            "Common"
-            Decimal("10")
-            false
-          `
-            )
-            .join(';')}
-          ;
-                
-            TAKE_FROM_WORKTOP
-              Address("${resources.clamAddress}")
-              Decimal("100")
-              Bucket("clam_bucket");
-
-                
-            TAKE_FROM_WORKTOP
-              Address("${resources.morphEnergyCardAddress}")
-              Decimal("5")
-              Bucket("card_bucket");
-
-            TAKE_FROM_WORKTOP
-              Address("${resources.elementAddress}")
-              Decimal("100")
-              Bucket("element_bucket");
-
-              TAKE_FROM_WORKTOP
-              Address("${resources.giftBox.Starter}")
-              Decimal("20")
-              Bucket("starterBox_bucket");
-      
-              TAKE_FROM_WORKTOP
-              Address("${resources.giftBox.Simple}")
-              Decimal("20")
-              Bucket("simpleBox_bucket");
-      
-              TAKE_FROM_WORKTOP
-              Address("${resources.giftBox.Fancy}")
-              Decimal("20")
-              Bucket("fancyBox_bucket");
-      
-              TAKE_FROM_WORKTOP
-              Address("${resources.giftBox.Elite}")
-              Decimal("20")
-              Bucket("eliteBox_bucket");
-
-            CALL_METHOD
-              Address("${accountAddress}")
-              "try_deposit_or_abort"
-              Bucket("element_bucket")
-              Enum<0u8>();
-            
-            CALL_METHOD
-              Address("${accountAddress}")
-              "try_deposit_or_abort"
-              Bucket("card_bucket")
-              Enum<0u8>();
-
-              CALL_METHOD
-              Address("${system.address}")
-              "create_proof_of_amount"
-              Address("${badges.adminBadgeAddress}")
-              Decimal("1")
-            ;
-
-              CALL_METHOD
-              Address("${accountAddress}")
-              "try_deposit_or_abort"
-              Bucket("starterBox_bucket")
-              Enum<0u8>();
-
-              CALL_METHOD
-              Address("${accountAddress}")
-              "try_deposit_or_abort"
-              Bucket("simpleBox_bucket")
-              Enum<0u8>();
-
-              CALL_METHOD
-              Address("${accountAddress}")
-              "try_deposit_or_abort"
-              Bucket("fancyBox_bucket")
-              Enum<0u8>();
-
-              CALL_METHOD
-              Address("${accountAddress}")
-              "try_deposit_or_abort"
-              Bucket("eliteBox_bucket")
-              Enum<0u8>();
-
-              CALL_METHOD
-              Address("${accountAddress}")
-              "try_deposit_or_abort"
-              Bucket("clam_bucket")
-              Enum<0u8>();
-
-              CALL_METHOD
-                Address("${components.heroBadgeForge}")
-                "add_user_account"
-                Address("${user.accountAddress!}")
-                "${userId}"
-              ;
-
-              CALL_METHOD
-                Address("${payer.address}")
-                "withdraw"
-                Address("${xrd}")
-                Decimal("${config.radQuest.directXrdDepositAmount}")
-              ;
-
-              TAKE_FROM_WORKTOP
-              Address("${xrd}")
-              Decimal("${config.radQuest.directXrdDepositAmount}")
-              Bucket("xrd_bucket");
-
-              CALL_METHOD
-              Address("${accountAddress}")
-              "try_deposit_or_abort"
-              Bucket("xrd_bucket")
-              Enum<0u8>();
-          `
-        )
-
-      case 'CombinedElementsMintRadgem':
-        return handleSubmitTransaction(
-          createCombinedElementsMintRadgemManifest({
-            userId
-          })
-        )
-
-      case 'CombinedElementsAddRadgemImage':
-        const { radgemId, keyImageUrl } = job.data
-        return handleSubmitTransaction(
-          createCombinedElementsAddRadgemImageManifest({
-            userId,
-            radgemId,
-            keyImageUrl
           })
         )
 

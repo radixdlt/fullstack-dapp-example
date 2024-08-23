@@ -4,10 +4,10 @@ import {
   FilterTransactionsByType
 } from '../filter-transactions/filter-transactions-by-type'
 import { AppLogger, EventId, EventModelMethods, TransactionStreamModel } from 'common'
-import { delay, getQueues } from 'queues'
+import { Queues } from 'queues'
 import crypto from 'node:crypto'
 import { FilterTransactionsByAccountAddress } from '../filter-transactions/filter-transactions-by-account-address'
-import { okAsync, ResultAsync } from 'neverthrow'
+import { ResultAsync } from 'neverthrow'
 
 export const HandleTransactions =
   ({
@@ -21,7 +21,7 @@ export const HandleTransactions =
     filterTransactionsByType: FilterTransactionsByType
     filterTransactionsByAccountAddress: FilterTransactionsByAccountAddress
     eventModel: EventModelMethods
-    eventQueue: ReturnType<typeof getQueues>['eventQueue']
+    eventQueue: Queues['Event']
     logger: AppLogger
     transactionStreamModel: TransactionStreamModel
   }) =>
@@ -70,7 +70,7 @@ export const HandleTransactions =
               }))
             )
             .andThen((items) =>
-              eventQueue.addBulk(
+              eventQueue.add(
                 items.map((item) => ({
                   traceId: crypto.randomUUID(),
                   eventId: item.id as unknown as EventId,
