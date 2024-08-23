@@ -52,6 +52,10 @@
     loading.set(true)
 
     const determineIfQuestRewardV2 = () => {
+      type Reward = {
+        resourceAddress: string
+        amount: string
+      }
       const transformPreviewResponseToQuestRewards = (
         response: ReturnType<
           Awaited<ReturnType<typeof gatewayApi.getPreviewOutput>>['_unsafeUnwrap']
@@ -66,7 +70,7 @@
                 const mapEntries = SborHelper.getMapEntries(field)
                 if (mapEntries) {
                   return mapEntries
-                    .map((mapEntry) => {
+                    .map((mapEntry): Reward | undefined => {
                       const { key, value } = mapEntry
                       const enumFields = SborHelper.getEnumFields(value) ?? []
                       const [amountField] = enumFields
@@ -80,10 +84,10 @@
                         amount
                       }
                     })
-                    .filter((item) => !!item)
+                    .filter((item): item is Reward => !!item)
                 }
               })
-              .filter((item) => !!item)
+              .filter((item): item is Reward[] => !!item)
               .flat()
           }
         }
