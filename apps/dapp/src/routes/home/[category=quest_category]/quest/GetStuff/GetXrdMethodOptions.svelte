@@ -43,6 +43,6 @@
 
 <style lang="scss">
   .country-select-container {
-    margin: 1rem 0;
+    margin: 1.5rem 0;
   }
 </style>

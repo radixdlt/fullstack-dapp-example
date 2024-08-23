@@ -21,7 +21,7 @@
 </script>
 
 <div class="radio-options">
-  {#each options as option}
-    <LabelledRadioButton {...option} {name} {availableText} />
+  {#each options as option, i}
+    <LabelledRadioButton {...option} {name} {availableText} last={i + 1 === options.length} />
   {/each}
 </div>

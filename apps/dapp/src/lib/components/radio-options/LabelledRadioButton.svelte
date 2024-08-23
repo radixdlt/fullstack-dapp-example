@@ -10,9 +10,10 @@
         notAvailable: string
       }
     | undefined = undefined
+  export let last: boolean
 </script>
 
-<div class="get-xrd-method">
+<div class="get-xrd-method" class:last>
   <input type="radio" {name} {value} id={name + '_' + value} />
   <label for={name + '_' + value}>
     <p><strong>{title}</strong></p>
@@ -31,23 +32,28 @@
     align-items: center;
     padding: 1rem 0;
     border-bottom: 1px solid var(--color-neutral);
+
+    &.last {
+      border-bottom: none;
+    }
   }
 
   input {
     position: relative;
     height: 1em;
     min-width: 1em;
-    background-color: var(--color-neutral);
+    background-color: #eeeded;
     border-radius: 50%;
     border: 1px solid var(--color-dark-translucent);
     margin-right: 1rem;
 
     &:hover {
-      opacity: 0.8;
+      opacity: 0.7;
     }
 
     &:checked {
-      border: 1.5px solid var(--color-primary);
+      border-color: var(--color-primary);
+      opacity: 1;
     }
 
     &:after {
@@ -66,5 +72,9 @@
     &:checked:after {
       display: block;
     }
+  }
+
+  p {
+    margin: 0.2em 0;
   }
 </style>
