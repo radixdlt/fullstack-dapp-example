@@ -20,7 +20,7 @@
     | undefined = undefined
 </script>
 
-<div class="get-xrd">
+<div class="radio-options">
   {#each options as option}
     <LabelledRadioButton {...option} {name} {availableText} />
   {/each}

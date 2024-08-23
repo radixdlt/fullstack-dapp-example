@@ -3,7 +3,7 @@
   import { onMount } from 'svelte'
   import Svelecte from 'svelecte'
 
-  export let country: string
+  export let country: string | null | undefined
 
   onMount(async () => {})
 </script>

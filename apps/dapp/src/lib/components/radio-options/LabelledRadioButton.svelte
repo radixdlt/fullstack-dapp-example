@@ -29,13 +29,14 @@
   .get-xrd-method {
     display: flex;
     align-items: center;
+    padding: 1rem 0;
     border-bottom: 1px solid var(--color-neutral);
   }
 
   input {
     position: relative;
     height: 1em;
-    width: 1em;
+    min-width: 1em;
     background-color: var(--color-neutral);
     border-radius: 50%;
     border: 1px solid var(--color-dark-translucent);
