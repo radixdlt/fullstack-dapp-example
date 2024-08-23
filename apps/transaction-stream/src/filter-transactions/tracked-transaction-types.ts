@@ -1,5 +1,6 @@
 import {
   EventsItem,
+  ProgrammaticScryptoSborValue,
   ProgrammaticScryptoSborValueArray,
   ProgrammaticScryptoSborValueReference
 } from '@radixdlt/babylon-gateway-api-sdk'
@@ -123,9 +124,9 @@ export const trackedTransactionTypes: TrackedTransactions = {
           const items = tupleFields
             .map(SborHelper.getArrayElements)
             .flat()
-            .filter((item) => !!item)
+            .filter((item): item is ProgrammaticScryptoSborValue => !!item)
             .map(SborHelper.getTupleFields)
-            .filter((item) => !!item)
+            .filter((item): item is ProgrammaticScryptoSborValue[] => !!item)
             .map((item) => {
               const [userIdField, questIdField] = item
               return {
