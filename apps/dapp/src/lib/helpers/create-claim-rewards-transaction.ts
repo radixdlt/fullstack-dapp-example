@@ -76,6 +76,51 @@ export const createClaimXRDRewardsTransaction = (
       `
 }
 
+export const createClaimRewardsV2Transaction = (
+  accountAddress: string,
+  userId: string,
+  questId: string,
+  rewards: { amount: string; resourceAddress: string }[]
+) => `
+    CALL_METHOD
+      Address("${accountAddress}")
+      "create_proof_of_non_fungibles"
+      Address("${publicConfig.badges.heroBadgeAddress}")
+      Array<NonFungibleLocalId>(NonFungibleLocalId("<${userId}>"))
+    ;
+
+    POP_FROM_AUTH_ZONE
+      Proof("hero_badge_proof")
+    ;
+
+    CALL_METHOD
+      Address("${publicConfig.components.questRewardsV2}")
+      "claim_reward"
+      "${questId}"
+      Proof("hero_badge_proof")
+    ;
+
+  ${rewards
+    .map(
+      (reward, index) =>
+        `
+    TAKE_FROM_WORKTOP
+      Address("${reward.resourceAddress}")
+      Decimal("${reward.amount}")
+      Bucket("bucket${index}")
+    ;
+
+    CALL_METHOD
+      Address("${accountAddress}")
+      "try_deposit_or_abort"
+      Bucket("bucket${index}")
+      Enum<0u8>()
+    ;`
+    )
+    .join('')}   
+
+`
+
 export const createClaimRewardsTransaction = (
   accountAddress: string,
   userId: string,

@@ -80,7 +80,10 @@ export const EventWorker = (
       await job.updateProgress(1)
       logger.debug({
         method: 'eventWorker.process',
-        job: job.data
+        traceId: job.data.traceId,
+        type: job.data.type,
+        userId: job.data.userId,
+        transactionId: job.data.transactionId
       })
 
       const updateEventStatus = UpdateEventStatus(dependencies.dbClient, job.data.transactionId)

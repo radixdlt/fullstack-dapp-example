@@ -4,7 +4,13 @@ import {
   ProgrammaticScryptoSborValueReference
 } from '@radixdlt/babylon-gateway-api-sdk'
 import { config } from '../config'
-import { EventId, GetValuesFromEventInput, getValuesFromEvent, EventEmitter } from 'common'
+import {
+  EventId,
+  GetValuesFromEventInput,
+  getValuesFromEvent,
+  EventEmitter,
+  SborHelper
+} from 'common'
 import { getRewardsFromQuestRewardDepositedEvent } from '../helpers/getRewardsFromQuestRewardDepositedEvent'
 
 export type TrackedTransactions = Record<
@@ -87,6 +93,10 @@ const nonFungibleMinted =
     return isMatch ? getValuesFromEvent(keys, event) : {}
   }
 
+const matchEvent = (eventName: string, componentAddress: string, event: EventsItem) =>
+  event.name === eventName &&
+  (event.emitter as EventEmitter).entity.entity_address === componentAddress
+
 export const trackedTransactionTypes: TrackedTransactions = {
   [EventId.QuestRewardDeposited]: {
     RewardDepositedEvent: eventEmittedByComponent({
@@ -104,10 +114,53 @@ export const trackedTransactionTypes: TrackedTransactions = {
       }
     })
   },
+  [EventId.QuestRewardDepositedV2]: {
+    RewardDepositedEvent: (event: EventsItem) => {
+      if (matchEvent('RewardDepositedEvent', config.radQuest.components.questRewardsV2, event)) {
+        const tupleFields = SborHelper.getTupleFields(event.data)
+
+        if (tupleFields) {
+          const items = tupleFields
+            .map(SborHelper.getArrayElements)
+            .flat()
+            .filter((item) => !!item)
+            .map(SborHelper.getTupleFields)
+            .filter((item) => !!item)
+            .map((item) => {
+              const [userIdField, questIdField] = item
+              return {
+                userId: SborHelper.getStringFieldValue(userIdField),
+                questId: SborHelper.getStringFieldValue(questIdField)
+              }
+            })
+
+          return { items, isBatch: true }
+        }
+      }
+
+      return undefined
+    }
+  },
   [EventId.QuestRewardClaimed]: {
     RewardClaimedEvent: eventEmittedByComponent({
       eventName: 'RewardClaimedEvent',
       componentAddress: config.radQuest.components.questRewards,
+      keys: {
+        user_id: { kind: 'String', key: 'userId' },
+        quest_id: { kind: 'String', key: 'questId' },
+        rewards: {
+          kind: 'Array',
+          key: 'rewards',
+          transform: (value) =>
+            getRewardsFromQuestRewardDepositedEvent(value as ProgrammaticScryptoSborValueArray)
+        }
+      }
+    })
+  },
+  [EventId.QuestRewardClaimedV2]: {
+    RewardClaimedEvent: eventEmittedByComponent({
+      eventName: 'RewardClaimedEvent',
+      componentAddress: config.radQuest.components.questRewardsV2,
       keys: {
         user_id: { kind: 'String', key: 'userId' },
         quest_id: { kind: 'String', key: 'questId' },

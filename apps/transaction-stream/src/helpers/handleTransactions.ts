@@ -59,16 +59,32 @@ export const HandleTransactions =
               .map(() => undefined)
           }
 
-          return eventModel
-            .addMultiple(
-              filteredTransactions.map((transaction) => ({
+          const itemsToProcess = filteredTransactions
+            .map((transaction) => {
+              if (transaction.data.isBatch) {
+                const batchItems = transaction.data.items as { userId: string; questId: string }[]
+
+                return batchItems.map((item, index) => ({
+                  eventId: transaction.type,
+                  transactionId: `${transaction.transactionId}:${index}`,
+                  userId: item.userId,
+                  questId: item.questId,
+                  data: { questId: item.questId }
+                }))
+              }
+
+              return {
                 eventId: transaction.type,
                 transactionId: transaction.transactionId,
                 userId: transaction.userId!,
                 data: transaction.data,
                 questId: transaction.questId
-              }))
-            )
+              }
+            })
+            .flat()
+
+          return eventModel
+            .addMultiple(itemsToProcess)
             .andThen((items) =>
               eventQueue.add(
                 items.map((item) => ({

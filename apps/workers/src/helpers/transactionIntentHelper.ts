@@ -1,28 +1,29 @@
 import { getQueues, TransactionJob } from 'queues'
 import { ResultAsync } from 'neverthrow'
 import { PrismaClient, QuestStatus } from 'database'
-import { QuestTogetherConfig, WorkerError } from 'common'
+import { AppLogger, EventId, QuestTogetherConfig, WorkerError } from 'common'
 
 export type TransactionIntentHelper = ReturnType<typeof TransactionIntentHelper>
 export const TransactionIntentHelper = ({
   dbClient,
-  queues
+  queues,
+  logger
 }: {
   dbClient: PrismaClient
   queues: ReturnType<typeof getQueues>
+  logger: AppLogger
 }) => {
-  const add = ({
-    discriminator,
-    userId,
-    ...data
-  }: TransactionJob): ResultAsync<
+  const add = (
+    job: TransactionJob
+  ): ResultAsync<
     void,
     {
       reason: WorkerError
       jsError: unknown
     }
-  > =>
-    ResultAsync.fromPromise(
+  > => {
+    const { discriminator, userId, ...data } = job
+    return ResultAsync.fromPromise(
       dbClient.transactionIntent.upsert({
         where: {
           discriminator,
@@ -38,21 +39,28 @@ export const TransactionIntentHelper = ({
       (error) => ({ reason: WorkerError.FailedToUpsertTransactionIntent, jsError: error })
     )
       .andThen(() => {
-        if (data.type === 'DepositGiftBoxesReward') {
-          return queues.DepositGiftBoxReward.buffer
-            .add([{ ...data, discriminator, userId }])
-            .mapErr((error) => ({
-              reason: WorkerError.FailedToAddJobToDepositGiftBoxRewardBufferQueue,
-              jsError: error
-            }))
+        const addToQueue = () => {
+          switch (job.type) {
+            case 'DepositGiftBoxesReward':
+              return queues.DepositGiftBoxReward.buffer.add([job])
+
+            case 'DepositReward':
+              return queues.DepositQuestReward.buffer.add([job])
+
+            default:
+              return queues.Transaction.add([job])
+          }
         }
 
-        return queues.Transaction.add([{ ...data, discriminator, userId }]).mapErr((error) => ({
-          reason: WorkerError.FailedToAddJobToTransactionQueue,
+        logger.trace({ method: 'TransactionIntentHelper.add', job })
+
+        return addToQueue().mapErr((error) => ({
+          reason: WorkerError.FailedToAddJobToQueue,
           jsError: error
         }))
       })
       .map(() => undefined)
+  }
 
   const countQuestTogetherReferrals = (userId: string) =>
     ResultAsync.fromPromise(

@@ -13,7 +13,8 @@ export const QueueName = {
   Event: 'Event',
   System: 'System',
   Transaction: 'Transaction',
-  DepositGiftBoxReward: 'DepositGiftBoxReward'
+  DepositGiftBoxReward: 'DepositGiftBoxReward',
+  DepositQuestReward: 'DepositQuestReward'
 } as const
 
 export type SystemJobType = (typeof SystemJobType)[keyof typeof SystemJobType]
@@ -38,6 +39,11 @@ export type EventJob = {
 
 export type DepositGiftBoxesRewardJob = GenericJob<
   TransactionJob & DepositGiftBoxesRewardTransactionJob,
+  'discriminator'
+>
+
+export type DepositQuestRewardJob = GenericJob<
+  TransactionJob & DepositRewardTransactionJob,
   'discriminator'
 >
 
@@ -195,5 +201,12 @@ export const getQueues = (connection: ConnectionOptions) => ({
     'DepositGiftBoxReward',
     'discriminator',
     connection
+  ),
+  DepositQuestReward: createBufferQueue<DepositQuestRewardJob>(
+    'DepositQuestReward',
+    'discriminator',
+    connection
   )
 })
+
+export type BufferQueues = Queues['DepositGiftBoxReward'] | Queues['DepositQuestReward']

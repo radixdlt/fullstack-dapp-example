@@ -22,6 +22,8 @@ import { DepositGiftBoxRewardWorker } from './deposit-giftbox-reward/worker'
 import { DepositGiftBoxRewardController } from './deposit-giftbox-reward/controller'
 import { ReferralRewardAction } from './helpers/referalReward'
 import { BufferWorker } from './helpers/bufferWorker'
+import { DepositQuestRewardWorker } from './deposit-quest-reward/worker'
+import { DepositQuestRewardController } from './deposit-quest-reward/controller'
 
 const app = async () => {
   // test db connection
@@ -64,7 +66,8 @@ const app = async () => {
       }),
       transactionIntent: TransactionIntentHelper({
         dbClient,
-        queues
+        queues,
+        logger
       }),
       AccountAddressModel,
       sendMessage,
@@ -87,14 +90,30 @@ const app = async () => {
     controller: DepositGiftBoxRewardController({ gatewayApi, sendMessage })
   })
 
+  DepositQuestRewardWorker(connection, {
+    logger,
+    dbClient,
+    controller: DepositQuestRewardController({ gatewayApi, sendMessage })
+  })
+
   BufferWorker({
     dbClient,
     logger,
     connection,
     queue: queues.DepositGiftBoxReward,
-    batchSize: config.worker.depositGiftBoxRewardBuffer.batchSize,
-    batchInterval: config.worker.depositGiftBoxRewardBuffer.batchInterval,
-    concurrency: config.worker.depositGiftBoxRewardBuffer.concurrency
+    batchSize: config.worker.depositGiftBoxReward.buffer.batchSize,
+    batchInterval: config.worker.depositGiftBoxReward.buffer.batchInterval,
+    concurrency: config.worker.depositGiftBoxReward.buffer.concurrency
+  })()
+
+  BufferWorker({
+    dbClient,
+    logger,
+    connection,
+    queue: queues.DepositQuestReward,
+    batchSize: config.worker.depositQuestReward.buffer.batchSize,
+    batchInterval: config.worker.depositQuestReward.buffer.batchInterval,
+    concurrency: config.worker.depositQuestReward.buffer.concurrency
   })()
 
   logger.debug({ message: 'workers running' })

@@ -1,10 +1,10 @@
 import { ResultAsync } from 'neverthrow'
 import { PrismaClient } from 'database'
 import { AppLogger, WorkerError } from 'common'
-import { ConnectionOptions, Job, Queues, Worker } from 'queues'
+import { BufferQueues, ConnectionOptions, Job, Worker } from 'queues'
 import { createHash } from 'node:crypto'
 
-export const BufferWorker = <Q extends Queues['DepositGiftBoxReward']>({
+export const BufferWorker = <Q extends BufferQueues>({
   queue,
   dbClient,
   logger,
@@ -48,7 +48,7 @@ export const BufferWorker = <Q extends Queues['DepositGiftBoxReward']>({
       (error) => ({ reason: WorkerError.FailedToCreateBatchedTransactionIntent, jsError: error })
     )
 
-  const createAndAddToQueue = (batchId: string, items: Parameters<Q['add']>[0][0]['items']) => {
+  const createAndAddToQueue = (batchId: string, items: any[]) => {
     logger?.trace({ method: 'createAndAddToQueue', batchId, items })
     return upsertBatchedTransactionIntent(batchId, items).andThen(() =>
       queue

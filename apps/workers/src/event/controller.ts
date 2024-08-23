@@ -89,6 +89,7 @@ export const EventWorkerController = ({
     })
 
     switch (type) {
+      case EventId.QuestRewardDepositedV2:
       case EventId.QuestRewardDeposited: {
         const questId = job.data.data.questId as string
         return questHelper
@@ -103,6 +104,7 @@ export const EventWorkerController = ({
           .map(() => undefined)
       }
 
+      case EventId.QuestRewardClaimedV2:
       case EventId.QuestRewardClaimed: {
         const questId = job.data.data.questId as QuestId
         const rewards = job.data.data.rewards as Reward[]
