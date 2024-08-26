@@ -1,7 +1,9 @@
 import { describe, it, expect, beforeAll } from 'vitest'
 import DepositHeroBadge from '../fixtures/transactions/deposit-hero-badge'
-import QuestRewardsEvents from '../fixtures/transactions/quest-rewards-events'
-import RewardClaimed from '../fixtures/transactions/quest-rewards-claimed'
+import QuestRewardsDeposited from '../fixtures/transactions/quest-rewards-deposited'
+import QuestRewardsDepositedV2 from '../fixtures/transactions/quest-rewards-deposited-v2'
+import QuestRewardClaimed from '../fixtures/transactions/quest-rewards-claimed'
+import QuestRewardClaimedV2 from '../fixtures/transactions/quest-rewards-claimed-v2'
 import NotSupportedTx from '../fixtures/transactions/not-supported-tx'
 import StakedXrdTx from '../fixtures/transactions/staked-xrd'
 import JettySwap from '../fixtures/transactions/jetty-swap'
@@ -87,7 +89,7 @@ describe('filter transactions', () => {
         if (filterResult.isErr()) throw filterResult.error
 
         const [transaction] = filterResult.value
-        console.log(transaction)
+
         expect(transaction.type).toEqual(EventId.XrdStaked)
         expect(transaction.accountAddress).toBeDefined()
       })
@@ -180,7 +182,7 @@ describe('filter transactions', () => {
 
   describe('Quest rewards', () => {
     it(`should find ${EventId.QuestRewardDeposited} transaction`, () => {
-      const result = filterTransactionsByType([...QuestRewardsEvents, ...NotSupportedTx])
+      const result = filterTransactionsByType([...QuestRewardsDeposited])
 
       if (result.isErr()) throw result.error
 
@@ -192,14 +194,30 @@ describe('filter transactions', () => {
 
       expect(transaction.transactionId).toBeDefined()
       expect(transaction.type).toEqual(EventId.QuestRewardDeposited)
-      expect(transaction.data.questId).toBeDefined()
       expect(transaction.userId).toBeDefined()
-      expect(transaction.data).toBeDefined()
+      expect(transaction.data.questId).toBeDefined()
       expect(transaction.data.rewards).toBeDefined()
     })
 
+    it(`should find ${EventId.QuestRewardDepositedV2} transaction`, () => {
+      const result = filterTransactionsByType([...QuestRewardsDepositedV2])
+
+      if (result.isErr()) throw result.error
+
+      const filteredTransactions = result.value
+
+      expect(filteredTransactions.length).toEqual(1)
+
+      const [transaction] = filteredTransactions
+
+      expect(transaction.transactionId).toBeDefined()
+      expect(transaction.type).toEqual(EventId.QuestRewardDepositedV2)
+      expect(transaction.data.items).toBeDefined()
+      expect(transaction.data.isBatch).toBeTruthy()
+    })
+
     it(`should find ${EventId.QuestRewardClaimed}`, () => {
-      const result = filterTransactionsByType([...RewardClaimed, ...NotSupportedTx])
+      const result = filterTransactionsByType([...QuestRewardClaimed, ...NotSupportedTx])
 
       if (result.isErr()) throw result.error
 
@@ -210,6 +228,22 @@ describe('filter transactions', () => {
       const [transaction] = filteredTransactions
 
       expect(transaction.type).toEqual(EventId.QuestRewardClaimed)
+      expect(transaction.userId).toBeDefined()
+      expect(transaction.data.questId).toBeDefined()
+    })
+
+    it(`should find ${EventId.QuestRewardClaimedV2}`, () => {
+      const result = filterTransactionsByType([...QuestRewardClaimedV2, ...NotSupportedTx])
+
+      if (result.isErr()) throw result.error
+
+      const filteredTransactions = result.value
+
+      expect(filteredTransactions.length).toEqual(1)
+
+      const [transaction] = filteredTransactions
+
+      expect(transaction.type).toEqual(EventId.QuestRewardClaimedV2)
       expect(transaction.userId).toBeDefined()
       expect(transaction.data.questId).toBeDefined()
     })

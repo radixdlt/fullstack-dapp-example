@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
   mintElements,
-  mintClams,
   AccountHelper,
   Account,
   mintGiftBox,
@@ -26,6 +25,7 @@ import { QueueEvents } from 'bullmq'
 import crypto from 'crypto'
 import { completeQuestRequirements } from './helpers/complete-quest-requirements'
 import { waitForMessage } from './helpers/wait-for-message'
+import { QuestId } from 'content'
 
 const eventQueueEvents = new QueueEvents(QueueName.Event, { connection: config.redis })
 const transactionQueueEvents = new QueueEvents(QueueName.Transaction, {
@@ -65,7 +65,7 @@ const getAccount = async () => {
 
 let accountAddress: string
 
-const transactionModel = TransactionModel(db, queues.Transaction)
+const transactionModel = TransactionModel(db, queues)
 const userQuestModel = UserQuestModel(db)(logger)
 const userModel = UserModel(db)(logger)
 const accountAddressModel = AccountAddressModel(redisClient)(logger)
@@ -127,6 +127,70 @@ const mintHeroBadge = async (userId: string, accountAddress: string) => {
   if (result.isErr()) throw result.error
 }
 
+const mintClams = (accountAddress: string) => {
+  return systemTransactionHelper.submitTransaction(`
+  CALL_METHOD 
+    Address("${payer.accessController}") 
+    "create_proof"
+  ;
+
+  CALL_METHOD 
+    Address("${system.accessController}") 
+    "create_proof"
+  ;
+
+  CALL_METHOD 
+    Address("${payer.address}") 
+    "lock_fee"
+    Decimal("20")
+  ;
+
+  CALL_METHOD
+    Address("${system.address}")
+    "create_proof_of_amount"
+    Address("${adminBadgeAddress}")
+    Decimal("1")
+  ;
+    
+  MINT_FUNGIBLE
+    Address("${addresses.resources.clamAddress}")
+    Decimal("10")
+  ;
+
+  CALL_METHOD
+    Address("${accountAddress}")
+    "try_deposit_batch_or_abort"
+    Expression("ENTIRE_WORKTOP")
+    None
+  ;`)
+}
+
+const sendClamsToJetty = ({ user, submitTransaction }: Awaited<ReturnType<typeof getAccount>>) =>
+  submitTransaction(`
+  CALL_METHOD
+    Address("${user.accountAddress}")
+    "lock_fee"
+    Decimal("50")
+  ;
+  CALL_METHOD
+    Address("${user.accountAddress}")
+    "withdraw"
+    Address("${addresses.resources.clamAddress}")
+    Decimal("10")
+  ;
+  TAKE_FROM_WORKTOP
+    Address("${addresses.resources.clamAddress}")
+    Decimal("10")
+    Bucket("clam_bucket")
+  ;
+  CALL_METHOD
+    Address("${addresses.accounts.jetty.address}")
+    "try_deposit_or_abort"
+    Bucket("clam_bucket")
+    Enum<0u8>()
+  ;
+`)
+
 const startQuestAndAddTrackedAccount = (userId: string, questId: string) =>
   userModel
     .getById(userId, {})
@@ -147,7 +211,7 @@ const completeTransferTokensQuest = async (user: User) => {
     'XrdQuiz'
   ])
 
-  await mintClams(10, user.accountAddress!)
+  await mintClams(user.accountAddress!)
 }
 
 const executeUserReferralFlow = async ({ user, submitTransaction }: Account) => {
@@ -228,6 +292,41 @@ const createAccount = async (
     await mintHeroBadge(userResult.value.user.id, userResult.value.user.accountAddress!)
 
   return userResult.value
+}
+
+const claimQuestReward = async (
+  { user, submitTransaction }: Awaited<ReturnType<typeof getAccount>>,
+  questId: QuestId
+) => {
+  const result = await submitTransaction(`
+  CALL_METHOD
+    Address("${user.accountAddress}")
+    "lock_fee"
+    Decimal("10")
+  ;
+  CALL_METHOD
+    Address("${user.accountAddress}")
+    "create_proof_of_non_fungibles"
+    Address("${heroBadgeAddress}")
+    Array<NonFungibleLocalId>(NonFungibleLocalId("<${user.id}>"))
+  ;
+  POP_FROM_AUTH_ZONE
+    Proof("hero_badge_proof")
+  ;
+  CALL_METHOD
+    Address("${addresses.components.questRewardsV2}")
+    "claim_reward"
+    "${questId}"
+    Proof("hero_badge_proof")
+  ;
+  
+  CALL_METHOD
+    Address("${user.accountAddress}")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+  ;`)
+  if (result.isErr()) throw result.error.reason
+  return result
 }
 
 describe('Event flows', () => {
@@ -384,113 +483,44 @@ describe('Event flows', () => {
     )
   })
 
-  it('should send clams to jetty and claim rewards', { timeout: 60_000 }, async () => {
-    const { submitTransaction, user } = await createAccount({
-      withXrd: true,
-      withHeroBadge: true
+  describe('Quest flows', () => {
+    describe('TransferTokens', () => {
+      it('should send clams to jetty and claim quest rewards', { timeout: 60_000 }, async () => {
+        const nAccounts = new Array(0)
+          .fill(null)
+          .map(() => createAccount({ withXrd: true, withHeroBadge: true }))
+
+        const accounts = await Promise.all([getAccount(), ...nAccounts])
+        const [account1] = accounts
+
+        for (const account of accounts) {
+          await Promise.all([
+            accountAddressModel.addTrackedAddress(
+              account.user.accountAddress!,
+              'TransferTokens',
+              account.user.id
+            ),
+            completeQuestRequirements(db)(account.user.id, 'TransferTokens', [
+              'PersonaQuiz',
+              'TransactionQuiz',
+              'XrdQuiz'
+            ])
+          ])
+        }
+
+        await Promise.all(
+          accounts.map((account) =>
+            mintClams(account.user.accountAddress!).andThen(() => sendClamsToJetty(account))
+          )
+        )
+
+        await waitForMessage(logger, db)(account1.user.id, 'QuestRewardsDeposited')
+
+        await claimQuestReward(account1, 'TransferTokens')
+
+        await waitForMessage(logger, db)(account1.user.id, 'QuestRewardsClaimed')
+      })
     })
-    await accountAddressModel.addTrackedAddress(user.accountAddress!, 'TransferTokens', user.id)
-
-    await completeQuestRequirements(db)(user.id, 'TransferTokens', [
-      'PersonaQuiz',
-      'TransactionQuiz',
-      'XrdQuiz'
-    ])
-
-    const clamResult = await systemTransactionHelper.submitTransaction(`
-      CALL_METHOD 
-        Address("${payer.accessController}") 
-        "create_proof"
-      ;
-
-      CALL_METHOD 
-        Address("${system.accessController}") 
-        "create_proof"
-      ;
-
-      CALL_METHOD 
-        Address("${payer.address}") 
-        "lock_fee"
-        Decimal("20")
-      ;
-
-      CALL_METHOD
-        Address("${system.address}")
-        "create_proof_of_amount"
-        Address("${adminBadgeAddress}")
-        Decimal("1")
-      ;
-        
-      MINT_FUNGIBLE
-        Address("${addresses.resources.clamAddress}")
-        Decimal("10")
-      ;
-
-      CALL_METHOD
-        Address("${user.accountAddress}")
-        "try_deposit_batch_or_abort"
-        Expression("ENTIRE_WORKTOP")
-        None
-      ;`)
-
-    if (clamResult.isErr()) throw clamResult.error
-
-    await submitTransaction(`
-        CALL_METHOD
-          Address("${user.accountAddress}")
-          "lock_fee"
-          Decimal("50")
-        ;
-        CALL_METHOD
-          Address("${user.accountAddress}")
-          "withdraw"
-          Address("${addresses.resources.clamAddress}")
-          Decimal("10")
-        ;
-        TAKE_FROM_WORKTOP
-          Address("${addresses.resources.clamAddress}")
-          Decimal("10")
-          Bucket("clam_bucket")
-        ;
-        CALL_METHOD
-          Address("${addresses.accounts.jetty.address}")
-          "try_deposit_or_abort"
-          Bucket("clam_bucket")
-          Enum<0u8>()
-        ;
-      `)
-
-    await waitForMessage(logger, db)(user.id, 'QuestRewardsDeposited')
-
-    await submitTransaction(`
-        CALL_METHOD
-          Address("${user.accountAddress}")
-          "lock_fee"
-          Decimal("10")
-        ;
-        CALL_METHOD
-          Address("${user.accountAddress}")
-          "create_proof_of_non_fungibles"
-          Address("${heroBadgeAddress}")
-          Array<NonFungibleLocalId>(NonFungibleLocalId("<${user.id}>"))
-        ;
-        POP_FROM_AUTH_ZONE
-          Proof("hero_badge_proof")
-        ;
-        CALL_METHOD
-          Address("${addresses.components.questRewards}")
-          "claim_reward"
-          "TransferTokens"
-          Proof("hero_badge_proof")
-          None
-        ;
-        CALL_METHOD
-          Address("${user.accountAddress}")
-          "deposit_batch"
-          Expression("ENTIRE_WORKTOP")
-        ;
-      `)
-    await waitForMessage(logger, db)(user.id, 'QuestRewardsClaimed')
   })
 
   describe.skip('Referral flow', () => {

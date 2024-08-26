@@ -9,10 +9,13 @@
   import { user } from '../../../../stores'
   import {
     createClaimRewardsTransaction,
+    createClaimRewardsV2Transaction,
     handleKycBadge
   } from '$lib/helpers/create-claim-rewards-transaction'
   import Button from '$lib/components/button/Button.svelte'
   import { writable } from 'svelte/store'
+  import { gatewayApi, publicConfig } from '$lib/public-config'
+  import { SborHelper } from 'common'
 
   export let questId: keyof Quests
   export let text: string
@@ -26,7 +29,6 @@
 
     if (result.isOk()) {
       const { status } = result.value
-
       if (status === 'REWARDS_CLAIMED' || status === 'COMPLETED') {
         dispatch('claimed')
       }
@@ -49,7 +51,74 @@
 
     loading.set(true)
 
-    return handleKycBadge($user?.id!, $user?.accountAddress!, sendTx)
+    const determineIfQuestRewardV2 = () => {
+      type Reward = {
+        resourceAddress: string
+        amount: string
+      }
+      const transformPreviewResponseToQuestRewards = (
+        response: ReturnType<
+          Awaited<ReturnType<typeof gatewayApi.getPreviewOutput>>['_unsafeUnwrap']
+        >
+      ) => {
+        if (response) {
+          const enumFields = SborHelper.getEnumFields(response)
+
+          if (enumFields) {
+            return enumFields
+              .map((field) => {
+                const mapEntries = SborHelper.getMapEntries(field)
+                if (mapEntries) {
+                  return mapEntries
+                    .map((mapEntry): Reward | undefined => {
+                      const { key, value } = mapEntry
+                      const enumFields = SborHelper.getEnumFields(value) ?? []
+                      const [amountField] = enumFields
+
+                      const resourceAddress = SborHelper.getReferenceFieldValue(key)
+                      const amount = SborHelper.getDecimalFieldValue(amountField)
+
+                      if (!resourceAddress || !amount) return undefined
+                      return {
+                        resourceAddress,
+                        amount
+                      }
+                    })
+                    .filter((item): item is Reward => !!item)
+                }
+              })
+              .filter((item): item is Reward[] => !!item)
+              .flat()
+          }
+        }
+        return undefined
+      }
+
+      return gatewayApi
+        .getPreviewOutput(
+          `CALL_METHOD
+            Address("${publicConfig.components.questRewardsV2}")
+            "get_rewards_state"
+            "${$user?.id!}"
+            "${questId}"
+        ;`
+        )
+        .map(transformPreviewResponseToQuestRewards)
+    }
+
+    return determineIfQuestRewardV2()
+      .andThen((maybeRewards) => {
+        if (maybeRewards)
+          return sendTransaction({
+            transactionManifest: createClaimRewardsV2Transaction(
+              $user?.accountAddress!,
+              $user?.id!,
+              questId,
+              maybeRewards
+            )
+          })
+        return handleKycBadge($user?.id!, $user?.accountAddress!, sendTx)
+      })
       .map((txResult) => {
         loading.set(false)
         if (txResult) dispatch('claimed')
