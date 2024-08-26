@@ -82,6 +82,7 @@
     "pino": "^8.17.2",
     "queues": "*",
     "ramda": "^0.30.0",
+    "svelecte": "^4.2.5",
     "svelte-gestures": "^5.0.1",
     "svelte-i18next": "^2.2.2",
     "typescript-wallet": "*",
