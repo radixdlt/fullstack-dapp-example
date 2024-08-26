@@ -136,7 +136,7 @@ const app = async () => {
       controller: BatchWorkerController<DepositHeroBadgeJob>({
         gatewayApi,
         sendMessage,
-        createManifest: (items) => createDepositHeroBadgeManifest(items)
+        createManifest: createDepositHeroBadgeManifest
       })
     },
     {
