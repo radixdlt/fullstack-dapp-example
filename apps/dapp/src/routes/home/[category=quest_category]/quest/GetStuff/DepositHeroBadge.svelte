@@ -28,44 +28,11 @@
     deposited: undefined
   }>()
 
-  const claimHeroBadge = (messageId: number) =>
-    rdtInstance
-      .andThen((rdt) => {
-        const claimHeroBadgeManifest = `
-              CALL_METHOD
-                  Address("${publicConfig.components.heroBadgeForge}")
-                  "claim_badge"
-                  Address("${$user?.accountAddress || ''}")
-              ;
-              CALL_METHOD
-                  Address("${$user?.accountAddress}")
-                  "deposit_batch"
-                  Expression("ENTIRE_WORKTOP")
-              ;
-            `
-        return rdt.walletApi.sendTransaction({ transactionManifest: claimHeroBadgeManifest })
-      })
-      .andThen(() => messageApi.markAsSeen(messageId))
-      .map(() => {
-        mintingInProgress = false
-        $hasHeroBadge = true
-        state = 'hasHeroBadge'
-        dispatch('deposited')
-      })
-      .mapErr(() => {
-        mintingInProgress = false
-      })
-
   const handleMintHeroBadge = () => {
     mintingInProgress = true
-    return userApi
-      .allowAccountAddressToMintHeroBadge()
-      .andThen(() => messageApi.getAll())
-      .map((messages) => messages.find((message) => message.type === 'HeroBadgeReadyToBeClaimed'))
-      .andThen((message) => (message ? claimHeroBadge(message.id) : okAsync(undefined)))
-      .mapErr(() => {
-        mintingInProgress = false
-      })
+    return userApi.depositHeroBadge().mapErr(() => {
+      mintingInProgress = false
+    })
   }
 
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
@@ -78,6 +45,13 @@
       ) {
         $hasHeroBadge = true
         messageApi.markAsSeen(message.id)
+        dispatch('deposited')
+      }
+
+      if (message.type === 'HeroBadgeDeposited') {
+        mintingInProgress = false
+        $hasHeroBadge = true
+        state = 'hasHeroBadge'
         dispatch('deposited')
       }
     })

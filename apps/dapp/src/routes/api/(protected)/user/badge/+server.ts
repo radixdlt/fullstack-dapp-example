@@ -4,7 +4,7 @@ import { routeHandler } from '$lib/server/route-handler'
 /** @type {import('./$types').RequestHandler} */
 export const POST: RequestHandler = async ({ locals }) =>
   routeHandler(() =>
-    locals.controllers.userController.allowAccountAddressToMintHeroBadge(locals.context, {
+    locals.controllers.userController.depositHeroBadge(locals.context, {
       userId: locals.userId
     })
   )

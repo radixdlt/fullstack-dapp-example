@@ -57,7 +57,7 @@ export const UserController = ({
     })
   }
 
-  const allowAccountAddressToMintHeroBadge = (
+  const depositHeroBadge = (
     ctx: ControllerMethodContext,
     {
       userId
@@ -68,13 +68,25 @@ export const UserController = ({
     userModel
       .getById(userId, {})
       .andThen((user) => (user ? ok(user) : err(createApiError('UserNotFound', 404)())))
+      .andThen((user) =>
+        user.blocked ? errAsync(createApiError('UserBlocked', 400)()) : okAsync(user)
+      )
       .andThen((data) =>
         accountAddressExists(data)
+          .andThen((accountAddress) =>
+            gatewayApi
+              .isDepositDisabledForResource(accountAddress, publicConfig.badges.heroBadgeAddress)
+              .andThen((isDepositDisabled) =>
+                isDepositDisabled
+                  ? errAsync(createApiError('DepositRuleDisabled', 400)())
+                  : okAsync(accountAddress)
+              )
+          )
           .andThen((accountAddress) => {
             const item = {
               traceId: ctx.traceId,
-              type: 'AddAccountAddressToHeroBadgeForge',
-              discriminator: `AddAccountAddressToHeroBadgeForge:${userId}`,
+              type: 'DepositHeroBadge',
+              discriminator: `DepositHeroBadge:${userId}`,
               accountAddress,
               userId
             } satisfies TransactionJob
@@ -91,10 +103,10 @@ export const UserController = ({
           .mapErr((error) => {
             ctx.logger.error({
               error,
-              method: 'allowAccountAddressToMintHeroBadge',
+              method: 'depositHeroBadge',
               event: 'error'
             })
-            return createApiError('allowAccountAddressToMintHeroBadgeError', 500)()
+            return createApiError('depositHeroBadgeError', 500)()
           })
       )
 
@@ -281,7 +293,7 @@ export const UserController = ({
     getUser,
     doesTransactionExist,
     hasWaitingRadgemJob,
-    allowAccountAddressToMintHeroBadge,
+    depositHeroBadge,
     setAccountAddress,
     populateResources,
     getNameByReferralCode,

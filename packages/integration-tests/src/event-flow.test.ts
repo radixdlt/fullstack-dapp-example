@@ -65,7 +65,7 @@ const getAccount = async () => {
 
 let accountAddress: string
 
-const transactionModel = TransactionModel(db, queues)
+const transactionModel = TransactionModel(db, queues)(logger)
 const userQuestModel = UserQuestModel(db)(logger)
 const userModel = UserModel(db)(logger)
 const accountAddressModel = AccountAddressModel(redisClient)(logger)
@@ -330,72 +330,13 @@ const claimQuestReward = async (
 }
 
 describe('Event flows', () => {
-  it(
-    'should add account address, track event, send notification to user, and mint hero badge',
-    { timeout: 60_000, skip: false },
-    async () => {
-      const { user, submitTransaction } = await createAccount({ withXrd: true })
-
-      const discriminator = `AddAccountAddressToHeroBadgeForge:${crypto.randomUUID()}`
-
-      await completeQuestRequirements(db)(user.id, 'GetStuff', [
-        'RegisterAccount',
-        'LearnAboutTransactions'
-      ])
-
-      await transactionModel(logger).add({
-        userId: user.id,
-        discriminator,
-        type: 'AddAccountAddressToHeroBadgeForge',
-        traceId: crypto.randomUUID(),
-        accountAddress: user.accountAddress!
-      })
-
-      await waitForQueueEvent('completed', transactionQueueEvents, discriminator)
-
-      const item = await db.transactionIntent.findFirst({
-        where: { discriminator }
-      })
-
-      expect(item?.status).toBe('COMPLETED')
-
-      await waitForMessage(logger, db)(user.id, 'HeroBadgeReadyToBeClaimed')
-
-      const claimBadgeResult = await submitTransaction(`
-        CALL_METHOD
-            Address("${user.accountAddress}")
-            "lock_fee"
-            Decimal("50")
-        ;
-        CALL_METHOD
-            Address("${addresses.components.heroBadgeForge}")
-            "claim_badge"
-            Address("${user.accountAddress}")
-        ;
-        CALL_METHOD
-            Address("${user.accountAddress}")
-            "deposit_batch"
-            Expression("ENTIRE_WORKTOP")
-        ;
-      `)
-
-      if (claimBadgeResult.isErr()) throw claimBadgeResult.error
-
-      const result = await gatewayApi.hasHeroBadge(user.accountAddress!)
-
-      if (result.isErr()) throw result.error
-
-      expect(result.value).toBe(true)
-    }
-  )
-
   it.skip('should deposit XRD to account', { timeout: 60_000 }, async () => {
     const { user } = await createAccount()
     const discriminator = `DepositXrdToAccount:${crypto.randomUUID()}`
 
     const traceId = crypto.randomUUID()
 
-    await transactionModel(logger).add({
+    await transactionModel.add({
       discriminator,
       userId: user.id,
       type: 'DepositXrdToAccount',
@@ -811,6 +752,36 @@ describe('Event flows', () => {
             utm_term: getRandom(utm_term)
           }
         })
+      }
+    })
+  })
+
+  describe('hero badge', () => {
+    it('should mint and deposit hero badge', { timeout: 60_000 }, async () => {
+      const nAccounts = new Array(51)
+        .fill(null)
+        .map(() => createAccount({ withXrd: false, withHeroBadge: false }))
+
+      const accounts = await Promise.all(nAccounts)
+
+      await Promise.all(
+        accounts.map((account) =>
+          transactionModel.add({
+            userId: account.user.id,
+            type: 'DepositHeroBadge',
+            traceId: crypto.randomUUID(),
+            accountAddress: account.user.accountAddress!,
+            discriminator: `DepositHeroBadge:${account.user.id}`
+          })
+        )
+      )
+
+      for (const account of accounts.slice(0, 2)) {
+        await waitForMessage(logger, db)(account.user.id, 'HeroBadgeDeposited')
+
+        const result = await gatewayApi.hasHeroBadge(account.user.accountAddress!)
+        if (result.isErr()) throw result.error
+        expect(result.value).toBe(true)
       }
     })
   })

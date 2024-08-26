@@ -16,7 +16,7 @@ import { ReferralRewardAction } from './referalReward'
 
 export const ReferralHelper = ({
   dbClient,
-  transactionIntent,
+  transactionIntentHelper,
   traceId,
   referredBy,
   sendMessage,
@@ -26,7 +26,7 @@ export const ReferralHelper = ({
   transactionId
 }: {
   dbClient: PrismaClient
-  transactionIntent: TransactionIntentHelper
+  transactionIntentHelper: TransactionIntentHelper
   traceId: string
   referredBy?: string
   sendMessage: MessageHelper
@@ -40,7 +40,7 @@ export const ReferralHelper = ({
     const userId = referrer.id
     const referrerQuestHelper = QuestHelper({
       dbClient,
-      transactionIntent,
+      transactionIntentHelper,
       userId,
       traceId,
       sendMessage,
@@ -79,7 +79,7 @@ export const ReferralHelper = ({
           requirementId: tier
         })
         .andThen(() =>
-          transactionIntent.add({
+          transactionIntentHelper.add({
             userId,
             discriminator: `QuestTogether:${tier}:${userId}`,
             type: 'DepositPartialReward',
@@ -151,7 +151,7 @@ export const ReferralHelper = ({
       return triggerRewardsForReferredUser()
         .andThen(() => getUserByReferralCode(referredBy))
         .andThen((referringUser) =>
-          transactionIntent
+          transactionIntentHelper
             .countQuestTogetherReferrals(referringUser.id)
             .andThen((count) =>
               handleTiersRewards(referringUser, count).andThen(() =>

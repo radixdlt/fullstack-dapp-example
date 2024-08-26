@@ -5,7 +5,7 @@ import type { GoldenTicket, QuestStatus, User } from 'database'
 const me = (serverFetch?: typeof fetch) =>
   fetchWrapper<User>((serverFetch ?? fetch)('/api/user')).map(({ data }) => data)
 
-const allowAccountAddressToMintHeroBadge = () =>
+const depositHeroBadge = () =>
   fetchWrapper<void>(
     fetch('/api/user/badge', {
       method: 'POST',
@@ -99,10 +99,10 @@ export const userApi = {
   getReferrals,
   hasWaitingRadgemJob,
   getNameByRefferalCode,
-  allowAccountAddressToMintHeroBadge,
   hasReceivedXrd,
   setUserFields,
   directDepositXrd,
   claimGoldenTicket,
-  findClaimedGoldenTicket
+  findClaimedGoldenTicket,
+  depositHeroBadge
 } as const

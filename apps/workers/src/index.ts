@@ -24,6 +24,8 @@ import { ReferralRewardAction } from './helpers/referalReward'
 import { BufferWorker } from './helpers/bufferWorker'
 import { DepositQuestRewardWorker } from './deposit-quest-reward/worker'
 import { DepositQuestRewardController } from './deposit-quest-reward/controller'
+import { DepositHeroBadgeWorker } from './deposit-hero-badge/worker'
+import { DepositHeroBadgeController } from './deposit-hero-badge/controller'
 
 const app = async () => {
   // test db connection
@@ -96,6 +98,12 @@ const app = async () => {
     controller: DepositQuestRewardController({ gatewayApi, sendMessage })
   })
 
+  DepositHeroBadgeWorker(connection, {
+    logger,
+    dbClient,
+    controller: DepositHeroBadgeController({ gatewayApi, sendMessage })
+  })
+
   BufferWorker({
     dbClient,
     logger,
@@ -114,6 +122,16 @@ const app = async () => {
     batchSize: config.worker.depositQuestReward.buffer.batchSize,
     batchInterval: config.worker.depositQuestReward.buffer.batchInterval,
     concurrency: config.worker.depositQuestReward.buffer.concurrency
+  })()
+
+  BufferWorker({
+    dbClient,
+    logger,
+    connection,
+    queue: queues.DepositHeroBadge,
+    batchSize: config.worker.depositHeroBadge.buffer.batchSize,
+    batchInterval: config.worker.depositHeroBadge.buffer.batchInterval,
+    concurrency: config.worker.depositHeroBadge.buffer.concurrency
   })()
 
   logger.debug({ message: 'workers running' })
