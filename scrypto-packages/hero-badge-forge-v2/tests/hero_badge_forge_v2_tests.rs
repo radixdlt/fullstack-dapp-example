@@ -147,13 +147,17 @@ impl LedgerTestEnvironment {
         // Mint badge
         let user_id_1 = "test_id_12345".to_string();
         let user_id_2 = "test_id_54321".to_string();
+        let quest_id_1 = "Quest_Name_1".to_string();
         let manifest = ManifestBuilder::new()
             .lock_fee_from_faucet()
             .create_proof_from_account_of_amount(account_1, admin_badge, dec!(1))
             .call_method(
                 hero_badge_forge_v2,
                 "mint_hero_badges",
-                manifest_args!([user_id_1.clone(), user_id_2.clone()]),
+                manifest_args!(
+                    [user_id_1.clone(), user_id_2.clone()],
+                    Some([quest_id_1.clone()])
+                ),
             )
             .take_non_fungibles_from_worktop(
                 hero_badge,
@@ -182,7 +186,6 @@ impl LedgerTestEnvironment {
         let mint_hero_badges_manifest = manifest.build();
         dump_manifest_to_file("mint_hero_badges", &mint_hero_badges_manifest, names);
 
-        let quest_id_1 = "Quest_Name_1".to_string();
         let quest_id_2 = "Quest_Name_2".to_string();
         // Update user badge with quest completion data
         let manifest = ManifestBuilder::new()

@@ -27,6 +27,7 @@ pub struct HeroBadgeData {
 }
 
 #[blueprint]
+#[events(BadgesMintedEvent)]
 #[types(Global<Account>, UserId)]
 mod hero_badge_forge_v2 {
     enable_method_auth! {
@@ -90,18 +91,28 @@ mod hero_badge_forge_v2 {
             self.enabled = true;
         }
 
-        pub fn mint_hero_badges(&mut self, user_ids: Vec<UserId>) -> Vec<Bucket> {
+        pub fn mint_hero_badges(
+            &mut self,
+            user_ids: Vec<UserId>,
+            quest_ids: Option<Vec<QuestId>>,
+        ) -> Vec<Bucket> {
             assert!(self.enabled, "HeroBadgeForge disabled");
 
-            user_ids.iter().map(|user_id| {
+            Runtime::emit_event(BadgesMintedEvent {
+                user_ids: user_ids.clone(),
+            });
+
+            user_ids.iter().map(|user_id | {
                 self.admin_badge.as_fungible().authorize_with_amount(1, || {
+                    let quests_completed: Vec<String> = (&quest_ids).clone().unwrap_or(vec![]).into_iter().map(|quest_id| quest_id.0).collect();
+
                     self.hero_badge_manager
                         .mint_non_fungible(&NonFungibleLocalId::string(user_id.0.to_owned()).unwrap(), HeroBadgeData {
                             name: "Your Hero Badge".to_string(),
                             description: "Your progress through your RadQuest journey is tracked right on your Hero Badge. Take a look at the “quests_completed” to see what you’ve accomplished!".to_string(),
                             key_image_url: Url::of("https://arweave.net/TkgiEdjcsfohra5z1lRojXbujnLfHXqUticbAhr7yVw"),
-                            quests_completed: vec![],
-                            quest_counter: 0,
+                            quest_counter: quests_completed.len() as u32,
+                            quests_completed,
                         })
                     })
                 })
@@ -162,4 +173,9 @@ mod hero_badge_forge_v2 {
             }
         }
     }
+}
+
+#[derive(ScryptoSbor, ScryptoEvent, Debug, Clone, PartialEq, Eq)]
+struct BadgesMintedEvent {
+    user_ids: Vec<UserId>,
 }
