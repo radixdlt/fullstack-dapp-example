@@ -1,33 +1,45 @@
-import { Worker, ConnectionOptions, QueueName, BatchJob, DepositQuestRewardJob } from 'queues'
+import { Worker, ConnectionOptions, BatchJob, TransactionJob, BufferQueues } from 'queues'
 import { AppLogger } from 'common'
-import { DepositQuestRewardController } from './controller'
 import { PrismaClient } from 'database'
 import { WorkerError, WorkerOutputError } from '../_types'
-import { config } from '../config'
 import { err } from 'neverthrow'
-import { TransactionIntentStatusHelper } from '../helpers/transactionIntentStatusHelper'
-import { WorkerHelper } from '../helpers/workerHelper'
+import { TransactionIntentStatusHelper } from './transactionIntentStatusHelper'
+import { WorkerHelper } from './workerHelper'
+import { BatchTransactionJob, BatchWorkerController } from './batchWorkerController'
+import { BufferWorker } from './bufferWorker'
+import { config } from '../config'
 
-export const DepositQuestRewardWorker = async (
-  connection: ConnectionOptions,
+export const BatchTransactionWorker = async <J extends BatchTransactionJob>(
+  queue: BufferQueues,
   dependencies: {
     logger: AppLogger
-    controller: DepositQuestRewardController
+    controller: BatchWorkerController<J>
     dbClient: PrismaClient
+  },
+  configuration: {
+    connection: ConnectionOptions
+    concurrency: number
+    buffer: {
+      batchSize: number
+      batchInterval: number
+      concurrency: number
+    }
   }
 ) => {
   const { logger, dbClient, controller } = dependencies
   const workerHelper = WorkerHelper(dbClient)
 
-  const worker = new Worker<BatchJob<DepositQuestRewardJob>>(
-    QueueName.DepositQuestReward,
+  const queueName = queue.name
+
+  const worker = new Worker<BatchJob<J>>(
+    queue.name,
     async (job) => {
       const { items } = job.data
       const transactionIntentDiscriminators = items.map((item) => item.discriminator)
       const [firstTransactionIntentDiscriminator] = transactionIntentDiscriminators
 
       logger.info({
-        method: 'DepositQuestRewardWorker.process',
+        method: `${queueName}.process`,
         batchId: job.data.id,
         items: transactionIntentDiscriminators,
         itemCount: transactionIntentDiscriminators.length
@@ -58,7 +70,7 @@ export const DepositQuestRewardWorker = async (
         }
       } catch (error) {
         logger.error({
-          method: 'DepositQuestRewardWorker.error',
+          method: `${queueName}.error`,
           id: job.data.id,
           error
         })
@@ -73,11 +85,22 @@ export const DepositQuestRewardWorker = async (
         throw error
       }
     },
-    {
-      connection,
-      concurrency: config.worker.depositQuestReward.concurrency
-    }
+    configuration
   )
+
+  BufferWorker(
+    queue,
+    {
+      dbClient,
+      logger
+    },
+    {
+      connection: configuration.connection,
+      batchSize: config.worker.depositHeroBadge.buffer.batchSize,
+      batchInterval: config.worker.depositHeroBadge.buffer.batchInterval,
+      concurrency: config.worker.depositHeroBadge.buffer.concurrency
+    }
+  )()
 
   return worker
 }

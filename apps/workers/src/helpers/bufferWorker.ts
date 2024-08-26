@@ -4,23 +4,27 @@ import { AppLogger, WorkerError } from 'common'
 import { BufferQueues, ConnectionOptions, Job, Worker } from 'queues'
 import { createHash } from 'node:crypto'
 
-export const BufferWorker = <Q extends BufferQueues>({
-  queue,
-  dbClient,
-  logger,
-  batchSize,
-  batchInterval,
-  connection,
-  concurrency
-}: {
-  queue: Q
-  dbClient: PrismaClient
-  logger: AppLogger
-  batchSize: number
-  batchInterval: number
-  concurrency: number
-  connection: ConnectionOptions
-}) => {
+export const BufferWorker = <Q extends BufferQueues>(
+  queue: Q,
+  {
+    dbClient,
+    logger
+  }: {
+    dbClient: PrismaClient
+    logger: AppLogger
+  },
+  {
+    batchSize,
+    batchInterval,
+    connection,
+    concurrency
+  }: {
+    batchSize: number
+    batchInterval: number
+    concurrency: number
+    connection: ConnectionOptions
+  }
+) => {
   const worker = new Worker(queue.buffer.name, null, {
     connection,
     concurrency

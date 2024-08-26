@@ -427,7 +427,7 @@ describe('Event flows', () => {
   describe('Quest flows', () => {
     describe('TransferTokens', () => {
       it('should send clams to jetty and claim quest rewards', { timeout: 60_000 }, async () => {
-        const nAccounts = new Array(0)
+        const nAccounts = new Array(30)
           .fill(null)
           .map(() => createAccount({ withXrd: true, withHeroBadge: true }))
 

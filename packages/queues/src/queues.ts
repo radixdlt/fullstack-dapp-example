@@ -2,7 +2,7 @@ import { type ConnectionOptions, Queue } from 'bullmq'
 import { ResultAsync } from 'neverthrow'
 import { EventId, GiftBoxKind, typedError } from 'common'
 
-type GenericJob<J = Record<string, any>, I extends keyof J = keyof J> = J & {
+export type GenericJob<J = Record<string, any>, I extends keyof J = keyof J> = J & {
   [key in I]: unknown
 }
 
