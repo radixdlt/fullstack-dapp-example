@@ -4,6 +4,7 @@
   import RadioOptions from '$lib/components/radio-options/RadioOptions.svelte'
   import { user } from '../../../../../stores'
 
+  let selectedOption: string | undefined = undefined
   let country = $user?.country
 </script>
 
@@ -13,6 +14,7 @@
 
 <RadioOptions
   name="getXrdOptions"
+  bind:selectedOption
   options={[
     {
       value: 'card',

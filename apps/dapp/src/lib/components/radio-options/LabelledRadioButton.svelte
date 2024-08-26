@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte'
+
   export let name: string
   export let value: string
   export let title: string
@@ -11,10 +13,19 @@
       }
     | undefined = undefined
   export let last: boolean
+
+  const dispatch = createEventDispatcher()
+  const handleChange = (
+    e: Event & {
+      currentTarget: EventTarget & HTMLInputElement
+    }
+  ) => {
+    if (e.currentTarget.checked) dispatch('selected', { value })
+  }
 </script>
 
 <div class="get-xrd-method" class:last>
-  <input type="radio" {name} {value} id={name + '_' + value} />
+  <input type="radio" {name} {value} id={name + '_' + value} on:change={handleChange} />
   <label for={name + '_' + value}>
     <p><strong>{title}</strong></p>
     <p>{description}</p>

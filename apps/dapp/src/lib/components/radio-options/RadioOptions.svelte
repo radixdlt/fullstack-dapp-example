@@ -18,10 +18,21 @@
         notAvailable: string
       }
     | undefined = undefined
+  export let selectedOption: string | undefined = undefined
+
+  const handleSelected = (e: CustomEvent<{ value: string }>) => {
+    selectedOption = e.detail.value
+  }
 </script>
 
 <div class="radio-options">
   {#each options as option, i}
-    <LabelledRadioButton {...option} {name} {availableText} last={i + 1 === options.length} />
+    <LabelledRadioButton
+      {...option}
+      {name}
+      {availableText}
+      last={i + 1 === options.length}
+      on:selected={handleSelected}
+    />
   {/each}
 </div>
