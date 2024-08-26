@@ -217,7 +217,6 @@ interface Resources {
     },
     "GetStuff": {
       "requirements": {
-        "VerifyPhoneNumber": "Prove you’re not a robot",
         "RegisterAccount": "Register an Account with RadQuest",
         "LearnAboutTransactions": "Learn about XRD and Transactions",
         "DepositHeroBadge": "Get your Hero’s Badge",
@@ -229,7 +228,23 @@ interface Resources {
       "title": "Get Some (Web3) Stuff!",
       "description": "Claim your first quest rewards",
       "introDescription": "Do your first transactions to claim your first quest rewards right to your Radix Wallet.",
-      "invalidRequest": "Invalid request"
+      "invalidRequest": "Invalid request",
+      "GetXrdMethodOptions": {
+        "card": {
+          "title": "Credit or debit card",
+          "description": "Buy XRD simply and  securely online using Alchemy Pay."
+        },
+        "exchange": {
+          "title": "Exchanges",
+          "description": "Use one of many crypto exchanges that list XRD."
+        },
+        "thorSwap": {
+          "title": "THORSwap",
+          "description": "If you already have crypto in a wallet, THORSwap is a quick and easy bridge to buy XRD with BTC, ETH, or many more."
+        },
+        "available": "May be available in your country",
+        "notAvailable": "Not available in your country"
+      }
     },
     "CreatingRadMorphs": {
       "title": "Creating RadMorphs",
