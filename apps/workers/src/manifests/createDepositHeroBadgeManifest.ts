@@ -1,11 +1,15 @@
 import { DepositHeroBadgeJob } from 'queues'
 import { config } from '../config'
 import { okAsync } from 'neverthrow'
+import { QuestId } from 'content'
 
 const { components, accounts, badges } = config.radQuest
 
 export const createDepositHeroBadgeManifest = (items: DepositHeroBadgeJob[]) => {
   const mintHeroBadgeInput = items.map((item) => `"${item.userId}"`).join(', ')
+  const completedQuestIds = (['Welcome', 'WhatIsRadix', 'SetupWallet'] satisfies QuestId[])
+    .map((questId) => `"${questId}"`)
+    .join(', ')
 
   const depositHeroBadgeToAccounts = items
     .map(
@@ -56,6 +60,11 @@ CALL_METHOD
   Address("${components.heroBadgeForgeV2}")
   "mint_hero_badges"
   Array<String>(${mintHeroBadgeInput})
+  Some(
+    Array<String>(
+      ${completedQuestIds}
+    )
+  )
 ;
 
 ${depositHeroBadgeToAccounts}`

@@ -284,7 +284,6 @@ export const EventId = {
   QuestRewardClaimedV2: 'QuestRewardClaimedV2',
   JettySwap: 'JettySwap',
   LettySwap: 'LettySwap',
-  AccountAllowedToForgeHeroBadge: 'AccountAllowedToForgeHeroBadge',
   GiftBoxesOpenedEvent: 'GiftBoxesOpenedEvent',
   DepositedElements: 'DepositedElements'
 } as const

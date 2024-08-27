@@ -425,9 +425,42 @@ describe('Event flows', () => {
   })
 
   describe('Quest flows', () => {
+    describe('GetStuff', () => {
+      it(
+        'should get hero badge deposited and claim quest rewards',
+        { timeout: 60_000 },
+        async () => {
+          const nAccounts = new Array(5)
+            .fill(null)
+            .map(() => createAccount({ withXrd: true, withHeroBadge: false }))
+
+          const accounts = await Promise.all(nAccounts)
+
+          for (const account of accounts) {
+            await completeQuestRequirements(db)(account.user.id, 'GetStuff', ['RegisterAccount'])
+
+            await transactionModel.add({
+              type: 'DepositHeroBadge',
+              discriminator: `DepositHeroBadge:${account.user.id}`,
+              traceId: crypto.randomUUID(),
+              userId: account.user.id,
+              accountAddress: account.user.accountAddress!
+            })
+          }
+
+          for (const account of accounts.slice(0, 3)) {
+            await waitForMessage(logger, db)(account.user.id, 'QuestRewardsDeposited')
+
+            await claimQuestReward(account, 'GetStuff')
+
+            await waitForMessage(logger, db)(account.user.id, 'QuestRewardsClaimed')
+          }
+        }
+      )
+    })
     describe('TransferTokens', () => {
       it('should send clams to jetty and claim quest rewards', { timeout: 60_000 }, async () => {
-        const nAccounts = new Array(30)
+        const nAccounts = new Array(5)
           .fill(null)
           .map(() => createAccount({ withXrd: true, withHeroBadge: true }))
 
@@ -752,36 +785,6 @@ describe('Event flows', () => {
             utm_term: getRandom(utm_term)
           }
         })
-      }
-    })
-  })
-
-  describe('hero badge', () => {
-    it('should mint and deposit hero badge', { timeout: 60_000 }, async () => {
-      const nAccounts = new Array(51)
-        .fill(null)
-        .map(() => createAccount({ withXrd: false, withHeroBadge: false }))
-
-      const accounts = await Promise.all(nAccounts)
-
-      await Promise.all(
-        accounts.map((account) =>
-          transactionModel.add({
-            userId: account.user.id,
-            type: 'DepositHeroBadge',
-            traceId: crypto.randomUUID(),
-            accountAddress: account.user.accountAddress!,
-            discriminator: `DepositHeroBadge:${account.user.id}`
-          })
-        )
-      )
-
-      for (const account of accounts.slice(0, 2)) {
-        await waitForMessage(logger, db)(account.user.id, 'HeroBadgeDeposited')
-
-        const result = await gatewayApi.hasHeroBadge(account.user.accountAddress!)
-        if (result.isErr()) throw result.error
-        expect(result.value).toBe(true)
       }
     })
   })

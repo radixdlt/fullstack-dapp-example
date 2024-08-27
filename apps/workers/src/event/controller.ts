@@ -133,38 +133,13 @@ export const EventWorkerController = ({
       }
 
       case EventId.DepositHeroBadge: {
-        const updateHeroBadge = (questId: string) =>
-          transactionIntentHelper.add({
-            userId,
-            discriminator: `${questId}:QuestCompleted:${userId}`,
-            type: 'QuestCompleted',
-            questId,
-            traceId
-          })
         return questHelper
           .completeQuestRequirement({
             questId: 'GetStuff',
             type
           })
           .andThen(() => questHelper.handleAllQuestRequirementCompleted('GetStuff'))
-          .andThen(() =>
-            ResultAsync.combineWithAllErrors([
-              updateHeroBadge('Welcome'),
-              updateHeroBadge('WhatIsRadix'),
-              updateHeroBadge('SetupWallet')
-            ]).mapErr((error) => ({ reason: WorkerError.FailedToUpdateHeroBadge, jsError: error }))
-          )
       }
-
-      case EventId.AccountAllowedToForgeHeroBadge:
-        return sendMessage(
-          userId,
-          {
-            type: 'HeroBadgeReadyToBeClaimed',
-            traceId: job.data.traceId
-          },
-          childLogger
-        )
 
       case EventId.JettyReceivedClams: {
         return questHelper.handleQuestWithTrackedAccount('TransferTokens', type)

@@ -69,21 +69,15 @@
   }
 
   const mintBadge = async () => {
-    await rdt.then((rdt) => {
-      rdt.walletApi.sendTransaction({
-        transactionManifest: `             
-          CALL_METHOD
-              Address("${publicConfig.components.heroBadgeForge}")
-              "claim_badge"
-              Address("${$user?.accountAddress || ''}")
-          ;
-          CALL_METHOD
-              Address("${$user?.accountAddress}")
-              "deposit_batch"
-              Expression("ENTIRE_WORKTOP")
-          ;`
+    await fetchWrapper(
+      fetch('/api/debug', {
+        method: 'POST',
+        body: JSON.stringify({
+          type: 'depositHeroBadge',
+          accountAddress: $user!.accountAddress
+        })
       })
-    })
+    )
   }
 
   const clearDb = async () => {

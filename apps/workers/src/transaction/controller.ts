@@ -196,41 +196,6 @@ export const TransactionWorkerController = ({
             sendMessage(user.id, { type: 'XrdDepositedToAccount', traceId: job.data.traceId })
           )
 
-      case 'AddAccountAddressToHeroBadgeForge':
-        return handleSubmitTransaction(
-          [
-            `CALL_METHOD
-            Address("${payer.accessController}")
-            "create_proof"
-          ;`,
-
-            `CALL_METHOD
-            Address("${system.accessController}")
-            "create_proof"
-          ;`,
-
-            `CALL_METHOD
-              Address("${payer.address}")
-              "lock_fee"
-              Decimal("50")
-            ;`,
-
-            `CALL_METHOD
-              Address("${system.address}")
-              "create_proof_of_amount"
-              Address("${badges.adminBadgeAddress}")
-              Decimal("1")
-            ;`,
-
-            `CALL_METHOD
-              Address("${components.heroBadgeForge}")
-              "add_user_account"
-              Address("${user.accountAddress!}")
-              "${userId}"
-            ;`
-          ].join('\n')
-        )
-
       case 'ElementsDeposited': {
         const { elementsCount, userId } = job.data
         const numberOfRadgems = Math.floor(elementsCount / config.radQuest.elementsPerRadgem)

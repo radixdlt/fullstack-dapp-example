@@ -175,11 +175,24 @@ export const trackedTransactionTypes: TrackedTransactions = {
     })
   },
   [EventId.DepositHeroBadge]: {
-    HeroBadgeDeposited: eventEmittedByComponent({
-      componentAddress: config.radQuest.components.heroBadgeForge,
-      eventName: 'BadgeClaimedEvent',
-      keys: { user_id: { kind: 'String', key: 'userId' } }
-    })
+    BadgesMintedEvent: (event: EventsItem) => {
+      if (matchEvent('BadgesMintedEvent', config.radQuest.components.heroBadgeForgeV2, event)) {
+        const tupleFields = SborHelper.getTupleFields(event.data)
+
+        if (tupleFields) {
+          const items = tupleFields
+            .map(SborHelper.getArrayElements)
+            .flat()
+            .filter((item): item is ProgrammaticScryptoSborValue => !!item)
+            .map(SborHelper.getStringFieldValue)
+            .map((userId) => ({ userId, questId: 'GetStuff' }))
+
+          return { items, isBatch: true }
+        }
+      }
+
+      return undefined
+    }
   },
   [EventId.JettyReceivedClams]: {
     DepositEvent: resourceDeposited({
@@ -223,16 +236,6 @@ export const trackedTransactionTypes: TrackedTransactions = {
       eventName: 'ClamSwapEvent',
       componentAddress: config.radQuest.components.lettySwap,
       keys: {}
-    })
-  },
-  [EventId.AccountAllowedToForgeHeroBadge]: {
-    AccountAddedEvent: eventEmittedByComponent({
-      eventName: 'AccountAddedEvent',
-      componentAddress: config.radQuest.components.heroBadgeForge,
-      keys: {
-        account: { kind: 'Reference', key: 'accountAddress' },
-        user_id: { kind: 'String', key: 'userId' }
-      }
     })
   },
   [EventId.GiftBoxesOpenedEvent]: {

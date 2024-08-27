@@ -63,11 +63,6 @@ export type DepositHeroBadgeTransactionJob = {
   accountAddress: string
 }
 
-export type AddAccountAddressToHeroBadgeForgeJob = {
-  type: 'AddAccountAddressToHeroBadgeForge'
-  accountAddress: string
-}
-
 export type DepositXrdToAccountTransactionJob = {
   type: 'DepositXrdToAccount'
 }
@@ -101,7 +96,6 @@ export type TransactionJob = {
 } & (
   | DepositRewardTransactionJob
   | DepositPartialRewardTransactionJob
-  | AddAccountAddressToHeroBadgeForgeJob
   | DepositXrdToAccountTransactionJob
   | QuestCompletedTransactionJob
   | DepositGiftBoxesRewardTransactionJob
