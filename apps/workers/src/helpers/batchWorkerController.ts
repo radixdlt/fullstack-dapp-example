@@ -5,7 +5,8 @@ import {
   DepositGiftBoxesRewardJob,
   CreateRadGemsJob,
   DepositXrdJob,
-  QuestCompletedJob
+  QuestCompletedJob,
+  DepositPartialRewardJob
 } from 'queues'
 import { GatewayApi, Message, type AppLogger } from 'common'
 import { TransactionHelper, withSigners } from 'typescript-wallet'
@@ -25,6 +26,7 @@ export type BatchTransactionJob =
   | CreateRadGemsJob
   | DepositXrdJob
   | QuestCompletedJob
+  | DepositPartialRewardJob
 
 export type BatchWorkerController<J extends BatchTransactionJob> = ReturnType<
   typeof BatchWorkerController<J>

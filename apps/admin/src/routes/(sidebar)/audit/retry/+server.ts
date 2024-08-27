@@ -23,8 +23,8 @@ export const POST = async ({ request, locals }) => {
       traceId: crypto.randomUUID()
     }
     locals.logger.debug({ method: 'retryingEventJob', jobData })
-    await locals.eventQueue.queue.remove(jobData.transactionId)
-    await locals.eventQueue.add([jobData])
+    await locals.queues.Event.queue.remove(jobData.transactionId)
+    await locals.queues.Event.add([jobData])
   }
 
   return json({}, { status: 200 })

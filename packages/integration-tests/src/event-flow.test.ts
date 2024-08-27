@@ -19,31 +19,14 @@ import {
 } from 'common'
 import { PrismaClient, User } from 'database'
 import { errAsync } from 'neverthrow'
-import { QueueName, RedisConnection, getQueues } from 'queues'
+import { RedisConnection, getQueues } from 'queues'
 import { config } from './config'
-import { QueueEvents } from 'bullmq'
 import crypto from 'crypto'
 import { completeQuestRequirements } from './helpers/complete-quest-requirements'
 import { waitForMessage } from './helpers/wait-for-message'
 import { QuestId } from 'content'
 
-const eventQueueEvents = new QueueEvents(QueueName.Event, { connection: config.redis })
-const transactionQueueEvents = new QueueEvents(QueueName.Transaction, {
-  connection: config.redis
-})
-
 const queues = getQueues(config.redis)
-
-const waitForQueueEvent = async (
-  status: Parameters<(typeof eventQueueEvents)['on']>[0],
-  queueEvents: QueueEvents,
-  jobId: string
-) =>
-  new Promise<void>((resolve) => {
-    queueEvents.on(status, async (data: any) => {
-      if (jobId === data.jobId) return resolve(undefined)
-    })
-  })
 
 const gatewayApi = GatewayApi(2)
 
@@ -817,5 +800,32 @@ describe('Event flows', () => {
         )
       }
     )
+  })
+
+  describe('deposit partial reward', () => {
+    it('should deposit partial reward to account', { timeout: 60_000, skip: false }, async () => {
+      const nAccounts = new Array(5)
+        .fill(null)
+        .map(() => createAccount({ withXrd: false, withHeroBadge: false }))
+
+      const accounts = await Promise.all(nAccounts)
+
+      await Promise.all(
+        accounts.map((account) =>
+          transactionModel.add({
+            userId: account.user.id,
+            discriminator: `QuestTogether:BronzeLevel:${account.user.id}`,
+            type: 'DepositPartialReward',
+            requirement: 'BronzeLevel',
+            questId: 'QuestTogether',
+            traceId: crypto.randomUUID()
+          })
+        )
+      )
+
+      for (const account of accounts.slice(0, 2)) {
+        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsDeposited')
+      }
+    })
   })
 })

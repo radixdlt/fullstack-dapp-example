@@ -33,9 +33,6 @@ export const config = {
     event: {
       concurrency: parseInt(process.env.EVENT_WORKER_CONCURRENCY ?? '5')
     },
-    transaction: {
-      concurrency: parseInt(process.env.TRANSACTION_WORKER_CONCURRENCY ?? '5')
-    },
     system: {
       concurrency: parseInt(process.env.SYSTEM_WORKER_CONCURRENCY ?? '1')
     },
@@ -53,7 +50,7 @@ export const config = {
       concurrency: parseInt(process.env.DEPOSIT_QUEST_REWARD_WORKER_CONCURRENCY ?? '2'),
       buffer: {
         concurrency: parseInt(process.env.DEPOSIT_QUEST_REWARD_BUFFER_WORKER_CONCURRENCY ?? '1'),
-        batchSize: parseInt(process.env.DEPOSIT_QUEST_REWARD_BUFFER_WORKER_BATCH_SIZE ?? '5'),
+        batchSize: parseInt(process.env.DEPOSIT_QUEST_REWARD_BUFFER_WORKER_BATCH_SIZE ?? '10'),
         batchInterval: parseInt(
           process.env.DEPOSIT_QUEST_REWARD_BUFFER_WORKER_BATCH_INTERVAL ?? '1000'
         )
@@ -91,6 +88,16 @@ export const config = {
         concurrency: parseInt(process.env.QUEST_COMPLETED_BUFFER_WORKER_CONCURRENCY ?? '1'),
         batchSize: parseInt(process.env.QUEST_COMPLETED_BUFFER_WORKER_BATCH_SIZE ?? '50'),
         batchInterval: parseInt(process.env.QUEST_COMPLETED_BUFFER_WORKER_BATCH_INTERVAL ?? '1000')
+      }
+    },
+    depositPartialReward: {
+      concurrency: parseInt(process.env.DEPOSIT_PARTIAL_REWARD_WORKER_CONCURRENCY ?? '2'),
+      buffer: {
+        concurrency: parseInt(process.env.DEPOSIT_PARTIAL_REWARD_BUFFER_WORKER_CONCURRENCY ?? '1'),
+        batchSize: parseInt(process.env.DEPOSIT_PARTIAL_REWARD_BUFFER_WORKER_BATCH_SIZE ?? '20'),
+        batchInterval: parseInt(
+          process.env.DEPOSIT_PARTIAL_REWARD_BUFFER_WORKER_BATCH_INTERVAL ?? '1000'
+        )
       }
     }
   }

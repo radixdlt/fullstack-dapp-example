@@ -1,7 +1,9 @@
-import { getQueues, TransactionJob } from 'queues'
-import { ResultAsync } from 'neverthrow'
-import { PrismaClient, QuestStatus } from 'database'
-import { AppLogger, EventId, QuestTogetherConfig, WorkerError } from 'common'
+import { getQueues, type TransactionJob } from 'queues'
+import { ResultAsync, errAsync } from 'neverthrow'
+import type { PrismaClient } from 'database'
+import type { AppLogger } from '../helpers'
+import { WorkerError } from '../worker-error'
+import { QuestTogetherConfig } from '../constants'
 
 export type TransactionIntentHelper = ReturnType<typeof TransactionIntentHelper>
 export const TransactionIntentHelper = ({
@@ -11,8 +13,36 @@ export const TransactionIntentHelper = ({
 }: {
   dbClient: PrismaClient
   queues: ReturnType<typeof getQueues>
-  logger: AppLogger
+  logger?: AppLogger
 }) => {
+  const addToQueue = (job: TransactionJob) => {
+    switch (job.type) {
+      case 'DepositGiftBoxesReward':
+        return queues.DepositGiftBoxReward.buffer.add([job])
+
+      case 'DepositReward':
+        return queues.DepositQuestReward.buffer.add([job])
+
+      case 'ElementsDeposited':
+        return queues.CreateRadGems.buffer.add([job])
+
+      case 'QuestCompleted':
+        return queues.QuestCompleted.buffer.add([job])
+
+      case 'DepositPartialReward':
+        return queues.DepositPartialReward.buffer.add([job])
+
+      case 'DepositHeroBadge':
+        return queues.DepositHeroBadge.buffer.add([job])
+
+      case 'DepositXrd':
+        return queues.DepositXrd.buffer.add([job])
+
+      default:
+        return errAsync('unhandled job type')
+    }
+  }
+
   const add = (
     job: TransactionJob
   ): ResultAsync<
@@ -39,28 +69,9 @@ export const TransactionIntentHelper = ({
       (error) => ({ reason: WorkerError.FailedToUpsertTransactionIntent, jsError: error })
     )
       .andThen(() => {
-        const addToQueue = () => {
-          switch (job.type) {
-            case 'DepositGiftBoxesReward':
-              return queues.DepositGiftBoxReward.buffer.add([job])
+        logger?.trace({ method: 'TransactionIntentHelper.add', job })
 
-            case 'DepositReward':
-              return queues.DepositQuestReward.buffer.add([job])
-
-            case 'ElementsDeposited':
-              return queues.CreateRadGems.buffer.add([job])
-
-            case 'QuestCompleted':
-              return queues.QuestCompleted.buffer.add([job])
-
-            default:
-              return queues.Transaction.add([job])
-          }
-        }
-
-        logger.trace({ method: 'TransactionIntentHelper.add', job })
-
-        return addToQueue().mapErr((error) => ({
+        return addToQueue(job).mapErr((error) => ({
           reason: WorkerError.FailedToAddJobToQueue,
           jsError: error
         }))
@@ -82,10 +93,7 @@ export const TransactionIntentHelper = ({
                   AND: [
                     { questId: QuestTogetherConfig.triggerRewardAfterQuest },
                     {
-                      OR: [
-                        { status: QuestStatus.REWARDS_CLAIMED },
-                        { status: QuestStatus.COMPLETED }
-                      ]
+                      OR: [{ status: 'REWARDS_CLAIMED' }, { status: 'COMPLETED' }]
                     }
                   ]
                 }
@@ -97,5 +105,5 @@ export const TransactionIntentHelper = ({
       (error) => ({ reason: WorkerError.FailedToCountQuestTogetherReferrals, jsError: error })
     ).map((user) => user?.referredUsers?.length ?? 0)
 
-  return { add, countQuestTogetherReferrals }
+  return { add, countQuestTogetherReferrals, addToQueue }
 }

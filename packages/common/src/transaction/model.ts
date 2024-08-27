@@ -4,6 +4,7 @@ import { createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers'
 import type { Queues, TransactionJob } from 'queues'
 import { EventId } from '../constants'
+import { TransactionIntentHelper } from './transactionIntentHelper'
 
 export type TransactionIdentifierData = Pick<TransactionIntent, 'discriminator' | 'userId'>
 
@@ -35,31 +36,13 @@ export const TransactionModel = (db: PrismaClient, queues: Queues) => (logger?: 
         return createApiError('failed to add transaction entry', 400)()
       }
     ).andThen(() => {
-      const addToQueue = () => {
-        switch (job.type) {
-          case 'DepositGiftBoxesReward':
-            return queues.DepositGiftBoxReward.buffer.add([job])
-
-          case 'DepositReward':
-            return queues.DepositQuestReward.buffer.add([job])
-
-          case 'DepositHeroBadge':
-            return queues.DepositHeroBadge.buffer.add([job])
-
-          case 'DepositXrd':
-            return queues.DepositXrd.buffer.add([job])
-
-          case 'QuestCompleted':
-            return queues.QuestCompleted.buffer.add([job])
-
-          default:
-            return queues.Transaction.add([job])
-        }
-      }
-
-      return addToQueue().mapErr((error) =>
-        createApiError('failedToAddJobToTransactionQueue', 400)(error)
-      )
+      return TransactionIntentHelper({
+        dbClient: db,
+        queues,
+        logger
+      })
+        .addToQueue(job)
+        .mapErr((error) => createApiError('failedToAddJobToTransactionQueue', 400)(error))
     })
   }
 

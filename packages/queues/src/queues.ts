@@ -12,13 +12,13 @@ export type QueueName = (typeof QueueName)[keyof typeof QueueName]
 export const QueueName = {
   Event: 'Event',
   System: 'System',
-  Transaction: 'Transaction',
   DepositGiftBoxReward: 'DepositGiftBoxReward',
   DepositQuestReward: 'DepositQuestReward',
   DepositHeroBadge: 'DepositHeroBadge',
   CreateRadGems: 'CreateRadGems',
   DepositXrd: 'DepositXrd',
-  QuestCompleted: 'QuestCompleted'
+  QuestCompleted: 'QuestCompleted',
+  DepositPartialReward: 'DepositPartialReward'
 } as const
 
 export type SystemJobType = (typeof SystemJobType)[keyof typeof SystemJobType]
@@ -65,6 +65,11 @@ export type DepositXrdJob = GenericJob<TransactionJob & DepositXrdTransactionJob
 
 export type QuestCompletedJob = GenericJob<
   TransactionJob & QuestCompletedTransactionJob,
+  'discriminator'
+>
+
+export type DepositPartialRewardJob = GenericJob<
+  TransactionJob & DepositPartialRewardTransactionJob,
   'discriminator'
 >
 
@@ -212,7 +217,6 @@ export type Queues = ReturnType<typeof getQueues>
 
 export const getQueues = (connection: ConnectionOptions) => ({
   Event: createQueue<EventJob>(QueueName.Event, 'transactionId', connection),
-  Transaction: createQueue<TransactionJob>(QueueName.Transaction, 'discriminator', connection),
   System: createQueue<SystemJob>(QueueName.System, 'id', connection),
   DepositGiftBoxReward: createBufferQueue<DepositGiftBoxesRewardJob>(
     'DepositGiftBoxReward',
@@ -235,6 +239,11 @@ export const getQueues = (connection: ConnectionOptions) => ({
     'QuestCompleted',
     'discriminator',
     connection
+  ),
+  DepositPartialReward: createBufferQueue<DepositPartialRewardJob>(
+    'DepositPartialReward',
+    'discriminator',
+    connection
   )
 })
 
@@ -245,3 +254,4 @@ export type BufferQueues =
   | Queues['CreateRadGems']
   | Queues['DepositXrd']
   | Queues['QuestCompleted']
+  | Queues['DepositPartialReward']
