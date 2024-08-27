@@ -13,7 +13,6 @@
   import { QuestDefinitions } from 'content'
   import { rdt } from '$lib/rdt'
   import { OneTimeDataRequestBuilder, fetchWrapper } from '@radixdlt/radix-dapp-toolkit'
-  import { publicConfig } from '$lib/public-config'
   import { user, ErrorPopupId, errorPopupStore } from '../../../stores'
 
   let open = false

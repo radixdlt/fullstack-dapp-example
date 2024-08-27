@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { gatewayApi, publicConfig } from '$lib/public-config'
-  import { rdt } from '$lib/rdt'
-  import { okAsync } from 'neverthrow'
+  import { gatewayApi } from '$lib/public-config'
   import { onDestroy } from 'svelte'
   import { createEventDispatcher } from 'svelte'
   import { hasHeroBadge, user } from '../../../../../stores'
@@ -10,10 +8,8 @@
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
-  import { ResultAsync } from 'neverthrow'
   import { i18n } from '$lib/i18n/i18n'
 
-  const rdtInstance = ResultAsync.fromSafePromise(rdt)
   export let questId: keyof Quests
   export let state:
     | 'loading'
