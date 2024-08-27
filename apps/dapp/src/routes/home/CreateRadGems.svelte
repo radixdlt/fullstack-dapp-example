@@ -34,7 +34,7 @@
 <script lang="ts">
   import { i18n } from '$lib/i18n/i18n'
   import { publicConfig } from '$lib/public-config'
-  import { GatewayApi, type ColorCodeDescription, type ShaderCodeDescription } from 'common'
+  import { GatewayApi } from 'common'
   import { user } from '../../stores'
   import pipe from 'ramda/src/pipe'
   import { sendTransaction } from '$lib/rdt'
@@ -68,12 +68,6 @@
   let waitingForElementsDeposited = false
   let elementsDeposited = false
   let radgemClaimed = false
-  let radgemData: {
-    name: string
-    quality: number
-    material: ShaderCodeDescription
-    color: ColorCodeDescription
-  }[]
 
   let useV2 = true
 
