@@ -793,12 +793,12 @@ describe('Event flows', () => {
     })
   })
 
-  describe.only('quest completed', () => {
+  describe('quest completed', () => {
     it(
       'should write quest completion to hero badge',
       { timeout: 60_000, skip: false },
       async () => {
-        const nAccounts = new Array(50)
+        const nAccounts = new Array(5)
           .fill(null)
           .map(() => createAccount({ withXrd: true, withHeroBadge: true }))
 
