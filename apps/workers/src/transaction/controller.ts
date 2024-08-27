@@ -115,22 +115,6 @@ export const TransactionWorkerController = ({ gatewayApi }: { gatewayApi: Gatewa
         )
       }
 
-      case 'DepositReward':
-        const { questId } = job.data
-
-        const questDefinition = QuestDefinitions()[questId as QuestId]
-        const rewards = questDefinition.rewards as unknown as QuestReward[]
-
-        return handleSubmitTransaction(
-          createRewardsDepositManifest({
-            questId,
-            userId,
-            rewards,
-            includeKycOracleUpdate: false,
-            depositRewardsTo: 'questRewards'
-          })
-        )
-
       default:
         return errAsync({
           reason: WorkerError.UnhandledJob,
