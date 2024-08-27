@@ -26,7 +26,7 @@ export const config = {
   networkId,
   radQuest: {
     ...Addresses(networkId),
-    directXrdDepositAmount: 5,
+    directXrdDepositAmount: 50,
     elementsPerRadgem: 5
   },
   worker: {
@@ -75,6 +75,14 @@ export const config = {
         concurrency: parseInt(process.env.CREATE_RADGEMS_BUFFER_WORKER_CONCURRENCY ?? '1'),
         batchSize: parseInt(process.env.CREATE_RADGEMS_BUFFER_WORKER_BATCH_SIZE ?? '10'),
         batchInterval: parseInt(process.env.CREATE_RADGEMS_BUFFER_WORKER_BATCH_INTERVAL ?? '1000')
+      }
+    },
+    depositXrd: {
+      concurrency: parseInt(process.env.DEPOSIT_XRD_WORKER_CONCURRENCY ?? '2'),
+      buffer: {
+        concurrency: parseInt(process.env.DEPOSIT_XRD_BUFFER_WORKER_CONCURRENCY ?? '1'),
+        batchSize: parseInt(process.env.DEPOSIT_XRD_BUFFER_WORKER_BATCH_SIZE ?? '50'),
+        batchInterval: parseInt(process.env.DEPOSIT_XRD_BUFFER_WORKER_BATCH_INTERVAL ?? '1000')
       }
     }
   }

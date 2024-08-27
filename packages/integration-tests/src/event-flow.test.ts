@@ -330,38 +330,40 @@ const claimQuestReward = async (
 }
 
 describe('Event flows', () => {
-  it.skip('should deposit XRD to account', { timeout: 60_000 }, async () => {
-    const { user } = await createAccount()
-    const discriminator = `DepositXrdToAccount:${crypto.randomUUID()}`
+  it('should deposit XRD to account', { timeout: 60_000 }, async () => {
+    const nAccounts = new Array(5)
+      .fill(null)
+      .map(() => createAccount({ withXrd: false, withHeroBadge: false }))
 
-    const traceId = crypto.randomUUID()
+    const accounts = await Promise.all(nAccounts)
 
-    await transactionModel.add({
-      discriminator,
-      userId: user.id,
-      type: 'DepositXrdToAccount',
-      traceId
-    })
-
-    await waitForQueueEvent('completed', transactionQueueEvents, discriminator)
-
-    const item = await db.transactionIntent.findFirst({
-      where: { discriminator }
-    })
-
-    expect(item?.status).toBe('COMPLETED')
-
-    const result = await gatewayApi.callApi('getEntityDetailsVaultAggregated', [
-      user.accountAddress!
-    ])
-
-    if (result.isErr()) throw result.error
-
-    expect(
-      result.value.some((item) =>
-        item.fungible_resources.items.some((token) => token.resource_address === addresses.xrd)
+    await Promise.all(
+      accounts.map((account) =>
+        transactionModel.add({
+          discriminator: `DepositXrd:${account.user.id}`,
+          userId: account.user.id,
+          type: 'DepositXrd',
+          accountAddress: account.user.accountAddress!,
+          traceId: crypto.randomUUID()
+        })
       )
-    ).toBe(true)
+    )
+
+    for (const account of accounts.slice(0, 2)) {
+      await waitForMessage(logger, db)(account.user.id, 'XrdDepositedToAccount')
+
+      const result = await gatewayApi.callApi('getEntityDetailsVaultAggregated', [
+        account.user.accountAddress!
+      ])
+
+      if (result.isErr()) throw result.error
+
+      expect(
+        result.value.some((item) =>
+          item.fungible_resources.items.some((token) => token.resource_address === addresses.xrd)
+        )
+      ).toBe(true)
+    }
   })
 
   describe.only('Create RadGems', async () => {

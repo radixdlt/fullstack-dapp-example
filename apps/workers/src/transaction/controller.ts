@@ -7,7 +7,6 @@ import { createRewardsDepositManifest } from './helpers/createRewardsDepositMani
 import { QuestDefinitions, QuestId, QuestReward } from 'content'
 import { config } from '../config'
 import { WorkerOutputError, WorkerError } from '../_types'
-import { MessageHelper } from '../helpers/messageHelper'
 import { dbClient } from '../db-client'
 import {
   isTryingToSetImageOnBurntRadGem,
@@ -19,24 +18,16 @@ import { GetLastSubmittedTransaction } from '../helpers/getLastSubmittedTransact
 import { UpsertSubmittedTransaction } from '../helpers/upsertSubmittedTransaction'
 import { SubmitTransactionHelper } from '../helpers/submitTransactionHelper'
 
-const { xrd, accounts, badges, components } = config.radQuest
+const { accounts, badges, components } = config.radQuest
 const { system, payer } = accounts
 
 export type TransactionWorkerController = ReturnType<typeof TransactionWorkerController>
-export const TransactionWorkerController = ({
-  gatewayApi,
-  sendMessage
-}: {
-  gatewayApi: GatewayApi
-  sendMessage: MessageHelper
-}) => {
+export const TransactionWorkerController = ({ gatewayApi }: { gatewayApi: GatewayApi }) => {
   const handler = ({
     job,
-    user,
     logger
   }: {
     job: Job<TransactionJob>
-    user: User
     logger: AppLogger
   }): ResultAsync<any, WorkerOutputError> => {
     const { type, userId, discriminator } = job.data
@@ -139,52 +130,6 @@ export const TransactionWorkerController = ({
             depositRewardsTo: 'questRewards'
           })
         )
-
-      case 'DepositXrdToAccount':
-        return gatewayApi
-          .isDepositDisabledForResource(user.accountAddress!, xrd)
-          .mapErr((error) => ({ reason: WorkerError.GatewayError, jsError: error }))
-          .andThen((isDisabled) =>
-            isDisabled ? err({ reason: WorkerError.UserDisabledXrdDeposit }) : ok(undefined)
-          )
-          .andThen(() =>
-            handleSubmitTransaction(
-              [
-                `CALL_METHOD
-                  Address("${payer.accessController}")
-                  "create_proof"
-                ;`,
-
-                `CALL_METHOD
-                  Address("${system.accessController}")
-                  "create_proof"
-                ;`,
-
-                `CALL_METHOD
-                  Address("${payer.address}")
-                  "lock_fee"
-                  Decimal("10")
-                ;`,
-
-                `CALL_METHOD
-                  Address("${payer.address}")
-                  "withdraw"
-                  Address("${xrd}")
-                  Decimal("${config.radQuest.directXrdDepositAmount}")
-                ;`,
-
-                `CALL_METHOD
-                  Address("${user.accountAddress!}")
-                  "try_deposit_batch_or_abort"
-                  Expression("ENTIRE_WORKTOP")
-                  Enum<0u8>()
-                ; `
-              ].join('\n')
-            )
-          )
-          .andThen(() =>
-            sendMessage(user.id, { type: 'XrdDepositedToAccount', traceId: job.data.traceId })
-          )
 
       default:
         return errAsync({

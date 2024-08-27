@@ -5,7 +5,7 @@ import { PrismaClient } from 'database'
 import { getUserById } from '../helpers/getUserById'
 import { WorkerOutputError } from '../_types'
 import { config } from '../config'
-import { okAsync, ResultAsync, err } from 'neverthrow'
+import { ResultAsync, err } from 'neverthrow'
 import { TransactionIntentStatusHelper } from '../helpers/transactionIntentStatusHelper'
 import { WorkerHelper } from '../helpers/workerHelper'
 
@@ -50,8 +50,7 @@ export const TransactionWorker = (
             return updateStatus('PENDING').andThen(() =>
               controller.handler({
                 job,
-                logger: childLogger,
-                user
+                logger: childLogger
               })
             )
           })

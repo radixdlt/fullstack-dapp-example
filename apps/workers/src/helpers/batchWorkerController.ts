@@ -3,7 +3,8 @@ import {
   DepositQuestRewardJob,
   DepositHeroBadgeJob,
   DepositGiftBoxesRewardJob,
-  CreateRadGemsJob
+  CreateRadGemsJob,
+  DepositXrdJob
 } from 'queues'
 import { GatewayApi, Message, type AppLogger } from 'common'
 import { TransactionHelper, withSigners } from 'typescript-wallet'
@@ -21,6 +22,7 @@ export type BatchTransactionJob =
   | DepositQuestRewardJob
   | DepositGiftBoxesRewardJob
   | CreateRadGemsJob
+  | DepositXrdJob
 
 export type BatchWorkerController<J extends BatchTransactionJob> = ReturnType<
   typeof BatchWorkerController<J>

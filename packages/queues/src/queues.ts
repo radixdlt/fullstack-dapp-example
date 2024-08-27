@@ -16,7 +16,8 @@ export const QueueName = {
   DepositGiftBoxReward: 'DepositGiftBoxReward',
   DepositQuestReward: 'DepositQuestReward',
   DepositHeroBadge: 'DepositHeroBadge',
-  CreateRadGems: 'CreateRadGems'
+  CreateRadGems: 'CreateRadGems',
+  DepositXrd: 'DepositXrd'
 } as const
 
 export type SystemJobType = (typeof SystemJobType)[keyof typeof SystemJobType]
@@ -59,6 +60,8 @@ export type CreateRadGemsJob = GenericJob<
   'discriminator'
 >
 
+export type DepositXrdJob = GenericJob<TransactionJob & DepositXrdTransactionJob, 'discriminator'>
+
 export type DepositRewardTransactionJob = {
   type: 'DepositReward'
   questId: string
@@ -69,8 +72,9 @@ export type DepositHeroBadgeTransactionJob = {
   accountAddress: string
 }
 
-export type DepositXrdToAccountTransactionJob = {
-  type: 'DepositXrdToAccount'
+export type DepositXrdTransactionJob = {
+  type: 'DepositXrd'
+  accountAddress: string
 }
 
 export type DepositPartialRewardTransactionJob = {
@@ -102,7 +106,7 @@ export type TransactionJob = {
 } & (
   | DepositRewardTransactionJob
   | DepositPartialRewardTransactionJob
-  | DepositXrdToAccountTransactionJob
+  | DepositXrdTransactionJob
   | QuestCompletedTransactionJob
   | DepositGiftBoxesRewardTransactionJob
   | ElementsDepositedTransactionJob
@@ -156,12 +160,6 @@ export type SystemJob =
   | UpdateLettySwapDappDefinitionSystemJob
   | UpdateKycBadgeAddressSystemJob
   | PopulateResourcesSystemJob
-
-export type DepositXrdJob = GenericJob<{
-  userId: string
-  accountAddress: string
-  traceId: string
-}>
 
 const defaultJobOptions = {
   attempts: 10
@@ -225,7 +223,8 @@ export const getQueues = (connection: ConnectionOptions) => ({
     'discriminator',
     connection
   ),
-  CreateRadGems: createBufferQueue<CreateRadGemsJob>('CreateRadGems', 'discriminator', connection)
+  CreateRadGems: createBufferQueue<CreateRadGemsJob>('CreateRadGems', 'discriminator', connection),
+  DepositXrd: createBufferQueue<DepositXrdJob>('DepositXrd', 'discriminator', connection)
 })
 
 export type BufferQueues =
@@ -233,3 +232,4 @@ export type BufferQueues =
   | Queues['DepositQuestReward']
   | Queues['DepositHeroBadge']
   | Queues['CreateRadGems']
+  | Queues['DepositXrd']

@@ -13,6 +13,7 @@ import {
   DepositGiftBoxesRewardJob,
   DepositHeroBadgeJob,
   DepositQuestRewardJob,
+  DepositXrdJob,
   RedisConnection,
   getQueues
 } from 'queues'
@@ -34,6 +35,7 @@ import {
 import { ReferralRewardAction } from './helpers/referalReward'
 import { BatchWorkerController } from './helpers/batchWorkerController'
 import { BatchTransactionWorker } from './helpers/batchTransactionWorker'
+import { createDepositXrdManifest } from './manifests/createDepositXrdManifest'
 
 const app = async () => {
   // test db connection
@@ -59,8 +61,7 @@ const app = async () => {
     logger,
     dbClient,
     transactionWorkerController: TransactionWorkerController({
-      gatewayApi,
-      sendMessage
+      gatewayApi
     })
   })
 
@@ -179,6 +180,28 @@ const app = async () => {
       connection,
       concurrency: config.worker.createRadGems.concurrency,
       buffer: config.worker.createRadGems.buffer
+    }
+  )
+
+  BatchTransactionWorker(
+    queues.DepositXrd,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<DepositXrdJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createDepositXrdManifest,
+        createMessage: (item) => ({
+          type: 'XrdDepositedToAccount',
+          traceId: item.traceId
+        })
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.depositXrd.concurrency,
+      buffer: config.worker.depositXrd.buffer
     }
   )
 
