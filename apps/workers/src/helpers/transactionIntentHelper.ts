@@ -47,6 +47,9 @@ export const TransactionIntentHelper = ({
             case 'DepositReward':
               return queues.DepositQuestReward.buffer.add([job])
 
+            case 'ElementsDeposited':
+              return queues.CreateRadGems.buffer.add([job])
+
             default:
               return queues.Transaction.add([job])
           }

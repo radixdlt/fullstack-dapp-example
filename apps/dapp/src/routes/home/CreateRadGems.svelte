@@ -189,7 +189,6 @@
       if (ws)
         onMessageUnsubscribe = ws.onMessage((msg) => {
           if (msg.type === 'RadgemsMinted') {
-            radgemData = msg.radgemData as typeof radgemData
             claimAvailable = true
             waitingForElementsDeposited = false
             elementsDeposited = true
@@ -280,7 +279,7 @@
   {:else if claimAvailable || elementsDeposited}
     <ClaimRadGem
       {useV2}
-      data={radgemData}
+      data={undefined}
       ids={claimableRadGemIds}
       on:claimed={() => {
         checkAmountOfElements().map(() => {

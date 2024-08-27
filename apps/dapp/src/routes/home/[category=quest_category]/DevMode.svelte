@@ -45,17 +45,6 @@
     })
   }
 
-  const updateKycOracle = async () => {
-    await fetchWrapper(
-      fetch('/api/debug', {
-        method: 'POST',
-        body: JSON.stringify({
-          type: 'updateKycOracle'
-        })
-      })
-    )
-  }
-
   const addReferral = async () => {
     await fetchWrapper(
       fetch('/api/debug', {
@@ -73,6 +62,18 @@
         method: 'POST',
         body: JSON.stringify({
           type: 'depositHeroBadge',
+          accountAddress: $user!.accountAddress
+        })
+      })
+    )
+  }
+
+  const mintElements = async () => {
+    await fetchWrapper(
+      fetch('/api/debug', {
+        method: 'POST',
+        body: JSON.stringify({
+          type: 'mintElements',
           accountAddress: $user!.accountAddress
         })
       })
@@ -130,7 +131,7 @@
         <Button on:click={clearDb}>Clear Database</Button>
         <Button on:click={setUserAsAdmin}>Set user as Admin</Button>
         <Button on:click={addReferral}>Add referral</Button>
-        <Button on:click={updateKycOracle}>Update KYC oracle</Button>
+        <Button on:click={mintElements}>Mint elements</Button>
         <Button
           on:click={() => {
             console.log($user)

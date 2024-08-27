@@ -52,14 +52,6 @@ export const POST: RequestHandler = async ({ locals, request }) => {
           id: randomUUID()
         }
       ])
-  } else if (type === 'updateKycOracle') {
-    await locals.dependencies.systemQueue.add([
-      {
-        type: 'UpdateKycOracle',
-        userId,
-        id: randomUUID()
-      }
-    ])
   } else if (type === 'depositHeroBadge') {
     await locals.dependencies.transactionModel.add({
       traceId: randomUUID(),
@@ -68,6 +60,15 @@ export const POST: RequestHandler = async ({ locals, request }) => {
       discriminator: `DepositHeroBadge:${userId}`,
       accountAddress
     })
+  } else if (type === 'mintElements') {
+    await locals.dependencies.systemQueue.add([
+      {
+        type: 'MintElements',
+        userId,
+        accountAddress,
+        id: randomUUID()
+      }
+    ])
   }
 
   return json({}, { status: 200 })

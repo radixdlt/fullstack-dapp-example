@@ -3,6 +3,7 @@ import { ResultAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers'
 import type { Queues, TransactionJob } from 'queues'
+import { EventId } from '../constants'
 
 export type TransactionIdentifierData = Pick<TransactionIntent, 'discriminator' | 'userId'>
 
@@ -99,17 +100,24 @@ export const TransactionModel = (db: PrismaClient, queues: Queues) => (logger?: 
 
   const hasWaitingRadgemJob = (userId: string) =>
     ResultAsync.fromPromise(
-      db.transactionIntent.count({
-        where: {
-          userId,
-          status: {
-            in: ['WAITING']
+      db.user
+        .findUnique({
+          include: {
+            transactions: {
+              where: {
+                status: { in: ['PENDING', 'WAITING'] },
+                discriminator: {
+                  startsWith: `${EventId.DepositedElements}:RadGem:`
+                }
+              }
+            }
           },
-          discriminator: {
-            startsWith: 'DepositedElements:RadGem:'
-          }
-        }
-      }),
+          where: { id: userId }
+        })
+        .then((user) => {
+          console.log(user)
+          return user?.transactions.length || 0
+        }),
       (error) => {
         logger?.error({ error, method: 'hasWaitingRadgemJob', model: 'TransactionModel' })
         return createApiError('failed to check if transaction exists', 400)()

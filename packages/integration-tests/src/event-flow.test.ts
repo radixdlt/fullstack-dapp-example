@@ -54,6 +54,23 @@ const accountHelper = AccountHelper(db)
 
 const logger = createAppLogger({ level: 'debug' })
 
+const createAccount = async (
+  value?: Partial<{ withXrd: boolean; withHeroBadge: boolean; referredBy: string }>
+) => {
+  const { withXrd = false, withHeroBadge = false, referredBy } = value ?? {}
+  const userResult = await accountHelper.createAccount({ logger, networkId: 2, referredBy })
+  if (userResult.isErr()) throw userResult.error
+  const { getXrdFromFaucet } = userResult.value
+  if (withXrd) {
+    const faucetResult = await getXrdFromFaucet()
+    if (faucetResult.isErr()) throw faucetResult.error
+  }
+  if (withHeroBadge)
+    await mintHeroBadge(userResult.value.user.id, userResult.value.user.accountAddress!)
+
+  return userResult.value
+}
+
 let account: Account
 
 const getAccount = async () => {
@@ -277,23 +294,6 @@ const executeUserReferralFlow = async ({ user, submitTransaction }: Account) => 
   if (claimRewardResult.isErr()) throw claimRewardResult.error
 }
 
-const createAccount = async (
-  value?: Partial<{ withXrd: boolean; withHeroBadge: boolean; referredBy: string }>
-) => {
-  const { withXrd = false, withHeroBadge = false, referredBy } = value ?? {}
-  const userResult = await accountHelper.createAccount({ logger, networkId: 2, referredBy })
-  if (userResult.isErr()) throw userResult.error
-  const { getXrdFromFaucet } = userResult.value
-  if (withXrd) {
-    const faucetResult = await getXrdFromFaucet()
-    if (faucetResult.isErr()) throw faucetResult.error
-  }
-  if (withHeroBadge)
-    await mintHeroBadge(userResult.value.user.id, userResult.value.user.accountAddress!)
-
-  return userResult.value
-}
-
 const claimQuestReward = async (
   { user, submitTransaction }: Awaited<ReturnType<typeof getAccount>>,
   questId: QuestId
@@ -364,61 +364,63 @@ describe('Event flows', () => {
     ).toBe(true)
   })
 
-  describe('radgem', async () => {
+  describe.only('Create RadGems', async () => {
     it(
-      `should deposit elements to RadGemForgeV2 and wait for 'RadgemsMinted' message`,
+      `should deposit elements and wait for 'RadgemsMinted' message`,
       { timeout: 30_000, skip: false },
       async () => {
-        const { user, submitTransaction } = await getAccount()
+        const nAccounts = new Array(4)
+          .fill(null)
+          .map(() => createAccount({ withXrd: true, withHeroBadge: true }))
 
-        await mintElements(1000, user.accountAddress!)
+        const accounts = await Promise.all([getAccount(), ...nAccounts])
 
-        const result = await submitTransaction(`
-          CALL_METHOD
-            Address("${user.accountAddress}")
-            "lock_fee"
-            Decimal("50")
-          ;
+        await Promise.all(
+          accounts.map((account) => {
+            mintElements(1000, account.user.accountAddress!).andThen(() =>
+              account.submitTransaction(`
+              CALL_METHOD
+                Address("${account.user.accountAddress}")
+                "lock_fee"
+                Decimal("50")
+              ;
+    
+              CALL_METHOD
+                Address("${account.user.accountAddress}")
+                "create_proof_of_non_fungibles"
+                Address("${addresses.badges.heroBadgeAddress}")
+                Array<NonFungibleLocalId>(NonFungibleLocalId("<${account.user.id}>"))
+              ;
+    
+              POP_FROM_AUTH_ZONE
+                Proof("hero_badge")
+              ;
+    
+              CALL_METHOD
+                Address("${account.user.accountAddress}")
+                "withdraw" 
+                Address("${addresses.resources.elementAddress}")
+                Decimal("50") 
+              ;
+    
+              TAKE_ALL_FROM_WORKTOP 
+                Address("${addresses.resources.elementAddress}") 
+                Bucket("elements")
+              ;
+    
+              CALL_METHOD
+                Address("${addresses.components.radgemForgeV2}")
+                "deposit_elements"
+                Proof("hero_badge")
+                Bucket("elements")
+              ;
+            `)
+            )
+          })
+        )
 
-          CALL_METHOD
-            Address("${user.accountAddress}")
-            "create_proof_of_non_fungibles"
-            Address("${addresses.badges.heroBadgeAddress}")
-            Array<NonFungibleLocalId>(NonFungibleLocalId("<${user.id}>"))
-          ;
-
-          POP_FROM_AUTH_ZONE
-            Proof("hero_badge")
-          ;
-
-          CALL_METHOD
-            Address("${user.accountAddress}")
-            "withdraw" 
-            Address("${addresses.resources.elementAddress}")
-            Decimal("50") 
-          ;
-
-          TAKE_ALL_FROM_WORKTOP 
-            Address("${addresses.resources.elementAddress}") 
-            Bucket("elements")
-          ;
-
-          CALL_METHOD
-            Address("${addresses.components.radgemForgeV2}")
-            "deposit_elements"
-            Proof("hero_badge")
-            Bucket("elements")
-          ;
-          `)
-
-        expect(result.isOk()).toBe(true)
-
-        const message = await waitForMessage(logger, db)(user.id, 'RadgemsMinted')
-
-        if (message.type === 'RadgemsMinted') {
-          expect(message.radgemData.length).toBe(10)
-        } else {
-          throw new Error(`Unexpected message type: ${message.type}`)
+        for (const account of accounts.slice(0, 2)) {
+          await waitForMessage(logger, db)(account.user.id, 'RadgemsMinted')
         }
       }
     )

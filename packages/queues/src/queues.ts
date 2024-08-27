@@ -15,17 +15,18 @@ export const QueueName = {
   Transaction: 'Transaction',
   DepositGiftBoxReward: 'DepositGiftBoxReward',
   DepositQuestReward: 'DepositQuestReward',
-  DepositHeroBadge: 'DepositHeroBadge'
+  DepositHeroBadge: 'DepositHeroBadge',
+  CreateRadGems: 'CreateRadGems'
 } as const
 
 export type SystemJobType = (typeof SystemJobType)[keyof typeof SystemJobType]
 export const SystemJobType = {
   PopulateRadmorphs: 'PopulateRadmorphs',
   AddReferral: 'AddReferral',
-  UpdateKycOracle: 'UpdateKycOracle',
   UpdateLettySwapDappDefinition: 'UpdateLettySwapDappDefinition',
   UpdateKycBadgeAddress: 'UpdateKycBadgeAddress',
-  PopulateResources: 'PopulateResources'
+  PopulateResources: 'PopulateResources',
+  MintElements: 'MintElements'
 } as const
 
 export type EventJob = {
@@ -50,6 +51,11 @@ export type DepositQuestRewardJob = GenericJob<
 
 export type DepositHeroBadgeJob = GenericJob<
   TransactionJob & DepositHeroBadgeTransactionJob,
+  'discriminator'
+>
+
+export type CreateRadGemsJob = GenericJob<
+  TransactionJob & ElementsDepositedTransactionJob,
   'discriminator'
 >
 
@@ -119,12 +125,6 @@ export type AddReferralSystemJob = {
   referralCode: string
 }
 
-export type UpdateKycOracleSystemJob = {
-  id: string
-  type: (typeof SystemJobType)['UpdateKycOracle']
-  userId: string
-}
-
 export type UpdateLettySwapDappDefinitionSystemJob = {
   id: string
   type: (typeof SystemJobType)['UpdateLettySwapDappDefinition']
@@ -142,10 +142,17 @@ export type PopulateResourcesSystemJob = {
   userId: string
 }
 
+export type MintElementsSystemJob = {
+  id: string
+  type: (typeof SystemJobType)['MintElements']
+  accountAddress: string
+  userId: string
+}
+
 export type SystemJob =
   | RadmorphSystemJob
   | AddReferralSystemJob
-  | UpdateKycOracleSystemJob
+  | MintElementsSystemJob
   | UpdateLettySwapDappDefinitionSystemJob
   | UpdateKycBadgeAddressSystemJob
   | PopulateResourcesSystemJob
@@ -217,10 +224,12 @@ export const getQueues = (connection: ConnectionOptions) => ({
     'DepositHeroBadge',
     'discriminator',
     connection
-  )
+  ),
+  CreateRadGems: createBufferQueue<CreateRadGemsJob>('CreateRadGems', 'discriminator', connection)
 })
 
 export type BufferQueues =
   | Queues['DepositGiftBoxReward']
   | Queues['DepositQuestReward']
   | Queues['DepositHeroBadge']
+  | Queues['CreateRadGems']

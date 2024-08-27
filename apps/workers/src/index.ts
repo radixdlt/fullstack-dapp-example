@@ -9,6 +9,7 @@ import {
 } from 'common'
 import { logger } from './helpers/logger'
 import {
+  CreateRadGemsJob,
   DepositGiftBoxesRewardJob,
   DepositHeroBadgeJob,
   DepositQuestRewardJob,
@@ -27,7 +28,8 @@ import { TransactionIntentHelper } from './helpers/transactionIntentHelper'
 import {
   createDepositGiftBoxesRewardManifest,
   createDepositHeroBadgeManifest,
-  createQuestRewardTransactionManifest
+  createQuestRewardTransactionManifest,
+  createRadGemsManifest
 } from './manifests'
 import { ReferralRewardAction } from './helpers/referalReward'
 import { BatchWorkerController } from './helpers/batchWorkerController'
@@ -58,7 +60,6 @@ const app = async () => {
     dbClient,
     transactionWorkerController: TransactionWorkerController({
       gatewayApi,
-      imageModel,
       sendMessage
     })
   })
@@ -156,6 +157,28 @@ const app = async () => {
       connection,
       concurrency: config.worker.depositHeroBadge.concurrency,
       buffer: config.worker.depositHeroBadge.buffer
+    }
+  )
+
+  BatchTransactionWorker(
+    queues.CreateRadGems,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<CreateRadGemsJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createRadGemsManifest(imageModel(logger)),
+        createMessage: (item) => ({
+          type: 'RadgemsMinted',
+          traceId: item.traceId
+        })
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.createRadGems.concurrency,
+      buffer: config.worker.createRadGems.buffer
     }
   )
 

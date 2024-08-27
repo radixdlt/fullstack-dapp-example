@@ -1,5 +1,10 @@
 import { ResultAsync } from 'neverthrow'
-import { DepositQuestRewardJob, DepositHeroBadgeJob, DepositGiftBoxesRewardJob } from 'queues'
+import {
+  DepositQuestRewardJob,
+  DepositHeroBadgeJob,
+  DepositGiftBoxesRewardJob,
+  CreateRadGemsJob
+} from 'queues'
 import { GatewayApi, Message, type AppLogger } from 'common'
 import { TransactionHelper, withSigners } from 'typescript-wallet'
 import { config } from '../config'
@@ -15,6 +20,7 @@ export type BatchTransactionJob =
   | DepositHeroBadgeJob
   | DepositQuestRewardJob
   | DepositGiftBoxesRewardJob
+  | CreateRadGemsJob
 
 export type BatchWorkerController<J extends BatchTransactionJob> = ReturnType<
   typeof BatchWorkerController<J>
