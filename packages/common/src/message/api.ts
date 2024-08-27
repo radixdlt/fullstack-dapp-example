@@ -18,7 +18,8 @@ export const MessageType = {
   GiftBoxDeposited: 'GiftBoxDeposited',
   GiftBoxesDeposited: 'GiftBoxesDeposited',
   RadgemsMinted: 'RadgemsMinted',
-  CombineElementsAddRadgemImage: 'CombineElementsAddRadgemImage'
+  CombineElementsAddRadgemImage: 'CombineElementsAddRadgemImage',
+  HeroBadgeDeposited: 'HeroBadgeDeposited'
 } as const
 
 export type MessageType = (typeof MessageType)[keyof typeof MessageType]
@@ -79,6 +80,9 @@ export type Messages = {
     traceId: string
   }
   [MessageType.CombineElementsAddRadgemImage]: {
+    traceId: string
+  }
+  [MessageType.HeroBadgeDeposited]: {
     traceId: string
   }
 }

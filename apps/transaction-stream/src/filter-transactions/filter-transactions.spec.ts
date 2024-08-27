@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest'
-import DepositHeroBadge from '../fixtures/transactions/deposit-hero-badge'
+import DepositHeroBadgeV2 from '../fixtures/transactions/deposit-hero-badge-v2'
 import QuestRewardsDeposited from '../fixtures/transactions/quest-rewards-deposited'
 import QuestRewardsDepositedV2 from '../fixtures/transactions/quest-rewards-deposited-v2'
 import QuestRewardClaimed from '../fixtures/transactions/quest-rewards-claimed'
@@ -11,7 +11,6 @@ import LettySwap from '../fixtures/transactions/letty-swap'
 import JettyReceivedClams from '../fixtures/transactions/jetty-recevied-clams'
 import MayaRouterWithdraw from '../fixtures/transactions/maya-router-withdraw'
 import GiftBoxesOpened from '../fixtures/transactions/gift-boxes-opened'
-import AccountAddedTransaction from '../fixtures/transactions/allow-user-to-forge-hero-badge'
 import { trackedTransactionTypes } from './tracked-transaction-types'
 import { AccountAddressModel, EventId } from 'common'
 import { FilterTransactionsByType } from './filter-transactions-by-type'
@@ -33,23 +32,8 @@ describe('filter transactions', () => {
 
   describe('Quests', () => {
     describe('Get web3 stuff', () => {
-      it(`should find ${EventId.AccountAllowedToForgeHeroBadge} transaction`, () => {
-        const result = filterTransactionsByType(AccountAddedTransaction)
-
-        if (result.isErr()) throw result.error
-
-        const filteredTransactions = result.value
-
-        expect(filteredTransactions.length).toEqual(1)
-
-        const [tx] = filteredTransactions
-
-        expect(tx.transactionId).toBeDefined()
-        expect(tx.userId).toBeDefined()
-      })
-
       it(`should find ${EventId.DepositHeroBadge} transaction`, () => {
-        const result = filterTransactionsByType([...DepositHeroBadge, ...NotSupportedTx])
+        const result = filterTransactionsByType([...DepositHeroBadgeV2, ...NotSupportedTx])
 
         if (result.isErr()) throw result.error
 
@@ -60,8 +44,8 @@ describe('filter transactions', () => {
         const [transaction] = filteredTransactions
 
         expect(transaction.type).toEqual(EventId.DepositHeroBadge)
-        expect(transaction.transactionId).toBeDefined()
-        expect(transaction.userId).toBeDefined()
+        expect(transaction.data.items).toBeDefined()
+        expect(transaction.data.isBatch).toBeTruthy()
       })
     })
 

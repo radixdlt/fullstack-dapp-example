@@ -35,7 +35,7 @@ export const EventWorkerController = ({
   AccountAddressModel,
   mailerLiteModel,
   sendMessage,
-  transactionIntent,
+  transactionIntentHelper,
   referralRewardAction
 }: {
   dbClient: PrismaClient
@@ -43,7 +43,7 @@ export const EventWorkerController = ({
   mailerLiteModel: MailerLiteModel
   logger: AppLogger
   sendMessage: MessageHelper
-  transactionIntent: TransactionIntentHelper
+  transactionIntentHelper: TransactionIntentHelper
   referralRewardAction: ReferralRewardAction
 }) => {
   const handler = (
@@ -64,7 +64,7 @@ export const EventWorkerController = ({
     const accountAddressModel = AccountAddressModel(childLogger)
 
     const questHelper = QuestHelper({
-      transactionIntent,
+      transactionIntentHelper,
       userId,
       traceId,
       sendMessage,
@@ -78,7 +78,7 @@ export const EventWorkerController = ({
 
     const referralHelper = ReferralHelper({
       dbClient,
-      transactionIntent,
+      transactionIntentHelper,
       traceId,
       referredBy,
       questHelper,
@@ -133,38 +133,13 @@ export const EventWorkerController = ({
       }
 
       case EventId.DepositHeroBadge: {
-        const updateHeroBadge = (questId: string) =>
-          transactionIntent.add({
-            userId,
-            discriminator: `${questId}:QuestCompleted:${userId}`,
-            type: 'QuestCompleted',
-            questId,
-            traceId
-          })
         return questHelper
           .completeQuestRequirement({
             questId: 'GetStuff',
             type
           })
           .andThen(() => questHelper.handleAllQuestRequirementCompleted('GetStuff'))
-          .andThen(() =>
-            ResultAsync.combineWithAllErrors([
-              updateHeroBadge('Welcome'),
-              updateHeroBadge('WhatIsRadix'),
-              updateHeroBadge('SetupWallet')
-            ]).mapErr((error) => ({ reason: WorkerError.FailedToUpdateHeroBadge, jsError: error }))
-          )
       }
-
-      case EventId.AccountAllowedToForgeHeroBadge:
-        return sendMessage(
-          userId,
-          {
-            type: 'HeroBadgeReadyToBeClaimed',
-            traceId: job.data.traceId
-          },
-          childLogger
-        )
 
       case EventId.JettyReceivedClams: {
         return questHelper.handleQuestWithTrackedAccount('TransferTokens', type)
@@ -196,7 +171,7 @@ export const EventWorkerController = ({
         const giftBoxResourceAddress = job.data.data.giftBoxResourceAddress as string
         const amount = parseInt(job.data.data.quantity as string)
         return getGiftBoxKindByResourceAddress(giftBoxResourceAddress).asyncAndThen((giftBoxKind) =>
-          transactionIntent.add({
+          transactionIntentHelper.add({
             type: 'DepositGiftBoxesReward',
             discriminator: `${EventId.GiftBoxesOpenedEvent}:${job.data.transactionId}`,
             userId,
@@ -211,7 +186,7 @@ export const EventWorkerController = ({
         const elementsCount = parseInt((job.data.data.elementsCount as string) ?? '0')
         if (elementsCount === 0) return okAsync(undefined)
 
-        return transactionIntent.add({
+        return transactionIntentHelper.add({
           userId,
           discriminator: `${EventId.DepositedElements}:RadGem:${transactionId}`,
           type: 'ElementsDeposited',

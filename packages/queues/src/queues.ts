@@ -2,7 +2,7 @@ import { type ConnectionOptions, Queue } from 'bullmq'
 import { ResultAsync } from 'neverthrow'
 import { EventId, GiftBoxKind, typedError } from 'common'
 
-type GenericJob<J = Record<string, any>, I extends keyof J = keyof J> = J & {
+export type GenericJob<J = Record<string, any>, I extends keyof J = keyof J> = J & {
   [key in I]: unknown
 }
 
@@ -14,7 +14,8 @@ export const QueueName = {
   System: 'System',
   Transaction: 'Transaction',
   DepositGiftBoxReward: 'DepositGiftBoxReward',
-  DepositQuestReward: 'DepositQuestReward'
+  DepositQuestReward: 'DepositQuestReward',
+  DepositHeroBadge: 'DepositHeroBadge'
 } as const
 
 export type SystemJobType = (typeof SystemJobType)[keyof typeof SystemJobType]
@@ -47,13 +48,18 @@ export type DepositQuestRewardJob = GenericJob<
   'discriminator'
 >
 
+export type DepositHeroBadgeJob = GenericJob<
+  TransactionJob & DepositHeroBadgeTransactionJob,
+  'discriminator'
+>
+
 export type DepositRewardTransactionJob = {
   type: 'DepositReward'
   questId: string
 }
 
-export type AddAccountAddressToHeroBadgeForgeJob = {
-  type: 'AddAccountAddressToHeroBadgeForge'
+export type DepositHeroBadgeTransactionJob = {
+  type: 'DepositHeroBadge'
   accountAddress: string
 }
 
@@ -90,11 +96,11 @@ export type TransactionJob = {
 } & (
   | DepositRewardTransactionJob
   | DepositPartialRewardTransactionJob
-  | AddAccountAddressToHeroBadgeForgeJob
   | DepositXrdToAccountTransactionJob
   | QuestCompletedTransactionJob
   | DepositGiftBoxesRewardTransactionJob
   | ElementsDepositedTransactionJob
+  | DepositHeroBadgeTransactionJob
 )
 
 export type RadmorphSystemJob = {
@@ -206,7 +212,15 @@ export const getQueues = (connection: ConnectionOptions) => ({
     'DepositQuestReward',
     'discriminator',
     connection
+  ),
+  DepositHeroBadge: createBufferQueue<DepositHeroBadgeJob>(
+    'DepositHeroBadge',
+    'discriminator',
+    connection
   )
 })
 
-export type BufferQueues = Queues['DepositGiftBoxReward'] | Queues['DepositQuestReward']
+export type BufferQueues =
+  | Queues['DepositGiftBoxReward']
+  | Queues['DepositQuestReward']
+  | Queues['DepositHeroBadge']

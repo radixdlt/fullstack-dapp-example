@@ -8,7 +8,13 @@ import {
   ImageModel
 } from 'common'
 import { logger } from './helpers/logger'
-import { RedisConnection, getQueues } from 'queues'
+import {
+  DepositGiftBoxesRewardJob,
+  DepositHeroBadgeJob,
+  DepositQuestRewardJob,
+  RedisConnection,
+  getQueues
+} from 'queues'
 import { EventWorkerController } from './event/controller'
 import { TransactionWorker } from './transaction/worker'
 import { EventWorker } from './event/worker'
@@ -18,12 +24,14 @@ import { SystemWorker } from './system/worker'
 import { SystemWorkerController } from './system/controller'
 import { MessageHelper } from './helpers/messageHelper'
 import { TransactionIntentHelper } from './helpers/transactionIntentHelper'
-import { DepositGiftBoxRewardWorker } from './deposit-giftbox-reward/worker'
-import { DepositGiftBoxRewardController } from './deposit-giftbox-reward/controller'
+import {
+  createDepositGiftBoxesRewardManifest,
+  createDepositHeroBadgeManifest,
+  createQuestRewardTransactionManifest
+} from './manifests'
 import { ReferralRewardAction } from './helpers/referalReward'
-import { BufferWorker } from './helpers/bufferWorker'
-import { DepositQuestRewardWorker } from './deposit-quest-reward/worker'
-import { DepositQuestRewardController } from './deposit-quest-reward/controller'
+import { BatchWorkerController } from './helpers/batchWorkerController'
+import { BatchTransactionWorker } from './helpers/batchTransactionWorker'
 
 const app = async () => {
   // test db connection
@@ -64,7 +72,7 @@ const app = async () => {
       mailerLiteModel: MailerLiteModel({
         apiKey: config.mailerLite.apiKey
       }),
-      transactionIntent: TransactionIntentHelper({
+      transactionIntentHelper: TransactionIntentHelper({
         dbClient,
         queues,
         logger
@@ -84,37 +92,72 @@ const app = async () => {
     })
   })
 
-  DepositGiftBoxRewardWorker(connection, {
-    logger,
-    dbClient,
-    controller: DepositGiftBoxRewardController({ gatewayApi, sendMessage })
-  })
+  BatchTransactionWorker(
+    queues.DepositGiftBoxReward,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<DepositGiftBoxesRewardJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createDepositGiftBoxesRewardManifest(dbClient),
+        createMessage: (item) => ({
+          type: 'GiftBoxesDeposited',
+          traceId: item.traceId
+        })
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.depositQuestReward.concurrency,
+      buffer: config.worker.depositQuestReward.buffer
+    }
+  )
 
-  DepositQuestRewardWorker(connection, {
-    logger,
-    dbClient,
-    controller: DepositQuestRewardController({ gatewayApi, sendMessage })
-  })
+  BatchTransactionWorker(
+    queues.DepositQuestReward,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<DepositQuestRewardJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createQuestRewardTransactionManifest,
+        createMessage: (item) => ({
+          type: 'QuestRewardsDeposited',
+          questId: item.questId,
+          traceId: item.traceId
+        })
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.depositQuestReward.concurrency,
+      buffer: config.worker.depositQuestReward.buffer
+    }
+  )
 
-  BufferWorker({
-    dbClient,
-    logger,
-    connection,
-    queue: queues.DepositGiftBoxReward,
-    batchSize: config.worker.depositGiftBoxReward.buffer.batchSize,
-    batchInterval: config.worker.depositGiftBoxReward.buffer.batchInterval,
-    concurrency: config.worker.depositGiftBoxReward.buffer.concurrency
-  })()
-
-  BufferWorker({
-    dbClient,
-    logger,
-    connection,
-    queue: queues.DepositQuestReward,
-    batchSize: config.worker.depositQuestReward.buffer.batchSize,
-    batchInterval: config.worker.depositQuestReward.buffer.batchInterval,
-    concurrency: config.worker.depositQuestReward.buffer.concurrency
-  })()
+  BatchTransactionWorker(
+    queues.DepositHeroBadge,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<DepositHeroBadgeJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createDepositHeroBadgeManifest,
+        createMessage: (item) => ({
+          type: 'HeroBadgeDeposited',
+          traceId: item.traceId
+        })
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.depositHeroBadge.concurrency,
+      buffer: config.worker.depositHeroBadge.buffer
+    }
+  )
 
   logger.debug({ message: 'workers running' })
 }

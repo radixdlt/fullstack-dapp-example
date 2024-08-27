@@ -60,6 +60,14 @@ export const POST: RequestHandler = async ({ locals, request }) => {
         id: randomUUID()
       }
     ])
+  } else if (type === 'depositHeroBadge') {
+    await locals.dependencies.transactionModel.add({
+      traceId: randomUUID(),
+      type: 'DepositHeroBadge',
+      userId,
+      discriminator: `DepositHeroBadge:${userId}`,
+      accountAddress
+    })
   }
 
   return json({}, { status: 200 })

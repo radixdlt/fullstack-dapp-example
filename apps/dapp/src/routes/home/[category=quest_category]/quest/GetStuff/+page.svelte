@@ -98,15 +98,12 @@
 
           return checkAccountStatus(accountAddress).andThen((hasXrd) =>
             setUserAccountAddress(accountAddress, accountProof as SignedChallengeAccount).andThen(
-              () =>
-                userApi
-                  .allowAccountAddressToMintHeroBadge()
-                  .map(() => {
-                    $user!.accountAddress = accounts[0].address
-                    quest.actions.next()
-                    chosenAccountHasXrd = hasXrd
-                  })
-                  .andThen(() => handleXrdDepositPossibility(accountAddress))
+              () => {
+                $user!.accountAddress = accounts[0].address
+                quest.actions.next()
+                chosenAccountHasXrd = hasXrd
+                return handleXrdDepositPossibility(accountAddress)
+              }
             )
           )
         })

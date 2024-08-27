@@ -9,7 +9,7 @@ import { getUserEmail } from './getUserEmail'
 
 export type QuestHelper = ReturnType<typeof QuestHelper>
 export const QuestHelper = ({
-  transactionIntent,
+  transactionIntentHelper,
   userId,
   traceId,
   sendMessage,
@@ -20,7 +20,7 @@ export const QuestHelper = ({
   transactionId,
   mailerLiteModel
 }: {
-  transactionIntent: TransactionIntentHelper
+  transactionIntentHelper: TransactionIntentHelper
   userId: string
   traceId: string
   sendMessage: MessageHelper
@@ -132,7 +132,7 @@ export const QuestHelper = ({
     )
 
   const depositQuestReward = (questId: QuestId) =>
-    transactionIntent.add({
+    transactionIntentHelper.add({
       userId,
       discriminator: `${questId}:DepositReward:${userId}`,
       type: 'DepositReward',
