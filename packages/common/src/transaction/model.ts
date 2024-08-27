@@ -49,6 +49,9 @@ export const TransactionModel = (db: PrismaClient, queues: Queues) => (logger?: 
           case 'DepositXrd':
             return queues.DepositXrd.buffer.add([job])
 
+          case 'QuestCompleted':
+            return queues.QuestCompleted.buffer.add([job])
+
           default:
             return queues.Transaction.add([job])
         }

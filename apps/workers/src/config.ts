@@ -84,6 +84,14 @@ export const config = {
         batchSize: parseInt(process.env.DEPOSIT_XRD_BUFFER_WORKER_BATCH_SIZE ?? '50'),
         batchInterval: parseInt(process.env.DEPOSIT_XRD_BUFFER_WORKER_BATCH_INTERVAL ?? '1000')
       }
+    },
+    questCompleted: {
+      concurrency: parseInt(process.env.QUEST_COMPLETED_WORKER_CONCURRENCY ?? '2'),
+      buffer: {
+        concurrency: parseInt(process.env.QUEST_COMPLETED_BUFFER_WORKER_CONCURRENCY ?? '1'),
+        batchSize: parseInt(process.env.QUEST_COMPLETED_BUFFER_WORKER_BATCH_SIZE ?? '50'),
+        batchInterval: parseInt(process.env.QUEST_COMPLETED_BUFFER_WORKER_BATCH_INTERVAL ?? '1000')
+      }
     }
   }
 }

@@ -366,7 +366,7 @@ describe('Event flows', () => {
     }
   })
 
-  describe.only('Create RadGems', async () => {
+  describe('Create RadGems', async () => {
     it(
       `should deposit elements and wait for 'RadgemsMinted' message`,
       { timeout: 30_000, skip: false },
@@ -791,5 +791,31 @@ describe('Event flows', () => {
         })
       }
     })
+  })
+
+  describe.only('quest completed', () => {
+    it(
+      'should write quest completion to hero badge',
+      { timeout: 60_000, skip: false },
+      async () => {
+        const nAccounts = new Array(50)
+          .fill(null)
+          .map(() => createAccount({ withXrd: true, withHeroBadge: true }))
+
+        const accounts = await Promise.all([getAccount(), ...nAccounts])
+
+        await Promise.all(
+          accounts.map((account) =>
+            transactionModel.add({
+              userId: account.user.id,
+              discriminator: `TransferTokens:QuestCompleted:${account.user.id}`,
+              type: 'QuestCompleted',
+              questId: 'TransferTokens',
+              traceId: crypto.randomUUID()
+            })
+          )
+        )
+      }
+    )
   })
 })

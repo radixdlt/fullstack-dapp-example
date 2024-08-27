@@ -14,6 +14,7 @@ import {
   DepositHeroBadgeJob,
   DepositQuestRewardJob,
   DepositXrdJob,
+  QuestCompletedJob,
   RedisConnection,
   getQueues
 } from 'queues'
@@ -36,6 +37,7 @@ import { ReferralRewardAction } from './helpers/referalReward'
 import { BatchWorkerController } from './helpers/batchWorkerController'
 import { BatchTransactionWorker } from './helpers/batchTransactionWorker'
 import { createDepositXrdManifest } from './manifests/createDepositXrdManifest'
+import { createCompletedQuestManifest } from './manifests/createQuestCompletedManifest'
 
 const app = async () => {
   // test db connection
@@ -202,6 +204,24 @@ const app = async () => {
       connection,
       concurrency: config.worker.depositXrd.concurrency,
       buffer: config.worker.depositXrd.buffer
+    }
+  )
+
+  BatchTransactionWorker(
+    queues.QuestCompleted,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<QuestCompletedJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createCompletedQuestManifest
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.questCompleted.concurrency,
+      buffer: config.worker.questCompleted.buffer
     }
   )
 

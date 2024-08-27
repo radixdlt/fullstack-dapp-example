@@ -1,10 +1,11 @@
-import { ResultAsync } from 'neverthrow'
+import { ResultAsync, okAsync } from 'neverthrow'
 import {
   DepositQuestRewardJob,
   DepositHeroBadgeJob,
   DepositGiftBoxesRewardJob,
   CreateRadGemsJob,
-  DepositXrdJob
+  DepositXrdJob,
+  QuestCompletedJob
 } from 'queues'
 import { GatewayApi, Message, type AppLogger } from 'common'
 import { TransactionHelper, withSigners } from 'typescript-wallet'
@@ -23,6 +24,7 @@ export type BatchTransactionJob =
   | DepositGiftBoxesRewardJob
   | CreateRadGemsJob
   | DepositXrdJob
+  | QuestCompletedJob
 
 export type BatchWorkerController<J extends BatchTransactionJob> = ReturnType<
   typeof BatchWorkerController<J>
@@ -37,7 +39,7 @@ export const BatchWorkerController = <J extends BatchTransactionJob>({
   gatewayApi: GatewayApi
   sendMessage: MessageHelper
   createManifest: (items: J[]) => ResultAsync<string, WorkerOutputError>
-  createMessage: (item: J) => Message
+  createMessage?: (item: J) => Message
 }) => {
   const handler = ({
     items,
@@ -61,9 +63,11 @@ export const BatchWorkerController = <J extends BatchTransactionJob>({
     const verifyTransaction = VerifyTransaction(gatewayApi, [])
 
     const sendMessageToUsers = () =>
-      ResultAsync.combineWithAllErrors(
-        items.map((item) => sendMessage(item.userId, createMessage(item), logger))
-      ).mapErr((errors) => ({ reason: WorkerError.FailedToSendMessage, jsError: errors }))
+      createMessage
+        ? ResultAsync.combineWithAllErrors(
+            items.map((item) => sendMessage(item.userId, createMessage(item), logger))
+          ).mapErr((errors) => ({ reason: WorkerError.FailedToSendMessage, jsError: errors }))
+        : okAsync(undefined)
 
     const submitTransaction = SubmitTransactionHelper({
       createManifest: () => createManifest(items),

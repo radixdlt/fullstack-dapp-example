@@ -17,7 +17,8 @@ export const QueueName = {
   DepositQuestReward: 'DepositQuestReward',
   DepositHeroBadge: 'DepositHeroBadge',
   CreateRadGems: 'CreateRadGems',
-  DepositXrd: 'DepositXrd'
+  DepositXrd: 'DepositXrd',
+  QuestCompleted: 'QuestCompleted'
 } as const
 
 export type SystemJobType = (typeof SystemJobType)[keyof typeof SystemJobType]
@@ -61,6 +62,11 @@ export type CreateRadGemsJob = GenericJob<
 >
 
 export type DepositXrdJob = GenericJob<TransactionJob & DepositXrdTransactionJob, 'discriminator'>
+
+export type QuestCompletedJob = GenericJob<
+  TransactionJob & QuestCompletedTransactionJob,
+  'discriminator'
+>
 
 export type DepositRewardTransactionJob = {
   type: 'DepositReward'
@@ -224,7 +230,12 @@ export const getQueues = (connection: ConnectionOptions) => ({
     connection
   ),
   CreateRadGems: createBufferQueue<CreateRadGemsJob>('CreateRadGems', 'discriminator', connection),
-  DepositXrd: createBufferQueue<DepositXrdJob>('DepositXrd', 'discriminator', connection)
+  DepositXrd: createBufferQueue<DepositXrdJob>('DepositXrd', 'discriminator', connection),
+  QuestCompleted: createBufferQueue<QuestCompletedJob>(
+    'QuestCompleted',
+    'discriminator',
+    connection
+  )
 })
 
 export type BufferQueues =
@@ -233,3 +244,4 @@ export type BufferQueues =
   | Queues['DepositHeroBadge']
   | Queues['CreateRadGems']
   | Queues['DepositXrd']
+  | Queues['QuestCompleted']
