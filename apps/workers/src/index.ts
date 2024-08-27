@@ -100,7 +100,11 @@ const app = async () => {
       controller: BatchWorkerController<DepositGiftBoxesRewardJob>({
         gatewayApi,
         sendMessage,
-        createManifest: createDepositGiftBoxesRewardManifest(dbClient)
+        createManifest: createDepositGiftBoxesRewardManifest(dbClient),
+        createMessage: (item) => ({
+          type: 'GiftBoxesDeposited',
+          traceId: item.traceId
+        })
       })
     },
     {
@@ -118,7 +122,12 @@ const app = async () => {
       controller: BatchWorkerController<DepositQuestRewardJob>({
         gatewayApi,
         sendMessage,
-        createManifest: createQuestRewardTransactionManifest
+        createManifest: createQuestRewardTransactionManifest,
+        createMessage: (item) => ({
+          type: 'QuestRewardsDeposited',
+          questId: item.questId,
+          traceId: item.traceId
+        })
       })
     },
     {
@@ -136,7 +145,11 @@ const app = async () => {
       controller: BatchWorkerController<DepositHeroBadgeJob>({
         gatewayApi,
         sendMessage,
-        createManifest: createDepositHeroBadgeManifest
+        createManifest: createDepositHeroBadgeManifest,
+        createMessage: (item) => ({
+          type: 'HeroBadgeDeposited',
+          traceId: item.traceId
+        })
       })
     },
     {
