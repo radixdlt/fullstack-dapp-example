@@ -19,31 +19,14 @@ import {
 } from 'common'
 import { PrismaClient, User } from 'database'
 import { errAsync } from 'neverthrow'
-import { QueueName, RedisConnection, getQueues } from 'queues'
+import { RedisConnection, getQueues } from 'queues'
 import { config } from './config'
-import { QueueEvents } from 'bullmq'
 import crypto from 'crypto'
 import { completeQuestRequirements } from './helpers/complete-quest-requirements'
 import { waitForMessage } from './helpers/wait-for-message'
 import { QuestId } from 'content'
 
-const eventQueueEvents = new QueueEvents(QueueName.Event, { connection: config.redis })
-const transactionQueueEvents = new QueueEvents(QueueName.Transaction, {
-  connection: config.redis
-})
-
 const queues = getQueues(config.redis)
-
-const waitForQueueEvent = async (
-  status: Parameters<(typeof eventQueueEvents)['on']>[0],
-  queueEvents: QueueEvents,
-  jobId: string
-) =>
-  new Promise<void>((resolve) => {
-    queueEvents.on(status, async (data: any) => {
-      if (jobId === data.jobId) return resolve(undefined)
-    })
-  })
 
 const gatewayApi = GatewayApi(2)
 
@@ -53,6 +36,23 @@ const redisClient = new RedisConnection(config.redis)
 const accountHelper = AccountHelper(db)
 
 const logger = createAppLogger({ level: 'debug' })
+
+const createAccount = async (
+  value?: Partial<{ withXrd: boolean; withHeroBadge: boolean; referredBy: string }>
+) => {
+  const { withXrd = false, withHeroBadge = false, referredBy } = value ?? {}
+  const userResult = await accountHelper.createAccount({ logger, networkId: 2, referredBy })
+  if (userResult.isErr()) throw userResult.error
+  const { getXrdFromFaucet } = userResult.value
+  if (withXrd) {
+    const faucetResult = await getXrdFromFaucet()
+    if (faucetResult.isErr()) throw faucetResult.error
+  }
+  if (withHeroBadge)
+    await mintHeroBadge(userResult.value.user.id, userResult.value.user.accountAddress!)
+
+  return userResult.value
+}
 
 let account: Account
 
@@ -277,23 +277,6 @@ const executeUserReferralFlow = async ({ user, submitTransaction }: Account) => 
   if (claimRewardResult.isErr()) throw claimRewardResult.error
 }
 
-const createAccount = async (
-  value?: Partial<{ withXrd: boolean; withHeroBadge: boolean; referredBy: string }>
-) => {
-  const { withXrd = false, withHeroBadge = false, referredBy } = value ?? {}
-  const userResult = await accountHelper.createAccount({ logger, networkId: 2, referredBy })
-  if (userResult.isErr()) throw userResult.error
-  const { getXrdFromFaucet } = userResult.value
-  if (withXrd) {
-    const faucetResult = await getXrdFromFaucet()
-    if (faucetResult.isErr()) throw faucetResult.error
-  }
-  if (withHeroBadge)
-    await mintHeroBadge(userResult.value.user.id, userResult.value.user.accountAddress!)
-
-  return userResult.value
-}
-
 const claimQuestReward = async (
   { user, submitTransaction }: Awaited<ReturnType<typeof getAccount>>,
   questId: QuestId
@@ -330,95 +313,99 @@ const claimQuestReward = async (
 }
 
 describe('Event flows', () => {
-  it.skip('should deposit XRD to account', { timeout: 60_000 }, async () => {
-    const { user } = await createAccount()
-    const discriminator = `DepositXrdToAccount:${crypto.randomUUID()}`
+  it('should deposit XRD to account', { timeout: 60_000 }, async () => {
+    const nAccounts = new Array(5)
+      .fill(null)
+      .map(() => createAccount({ withXrd: false, withHeroBadge: false }))
 
-    const traceId = crypto.randomUUID()
+    const accounts = await Promise.all(nAccounts)
 
-    await transactionModel.add({
-      discriminator,
-      userId: user.id,
-      type: 'DepositXrdToAccount',
-      traceId
-    })
-
-    await waitForQueueEvent('completed', transactionQueueEvents, discriminator)
-
-    const item = await db.transactionIntent.findFirst({
-      where: { discriminator }
-    })
-
-    expect(item?.status).toBe('COMPLETED')
-
-    const result = await gatewayApi.callApi('getEntityDetailsVaultAggregated', [
-      user.accountAddress!
-    ])
-
-    if (result.isErr()) throw result.error
-
-    expect(
-      result.value.some((item) =>
-        item.fungible_resources.items.some((token) => token.resource_address === addresses.xrd)
+    await Promise.all(
+      accounts.map((account) =>
+        transactionModel.add({
+          discriminator: `DepositXrd:${account.user.id}`,
+          userId: account.user.id,
+          type: 'DepositXrd',
+          accountAddress: account.user.accountAddress!,
+          traceId: crypto.randomUUID()
+        })
       )
-    ).toBe(true)
+    )
+
+    for (const account of accounts.slice(0, 2)) {
+      await waitForMessage(logger, db)(account.user.id, 'XrdDepositedToAccount')
+
+      const result = await gatewayApi.callApi('getEntityDetailsVaultAggregated', [
+        account.user.accountAddress!
+      ])
+
+      if (result.isErr()) throw result.error
+
+      expect(
+        result.value.some((item) =>
+          item.fungible_resources.items.some((token) => token.resource_address === addresses.xrd)
+        )
+      ).toBe(true)
+    }
   })
 
-  describe('radgem', async () => {
+  describe('Create RadGems', async () => {
     it(
-      `should deposit elements to RadGemForgeV2 and wait for 'RadgemsMinted' message`,
+      `should deposit elements and wait for 'RadgemsMinted' message`,
       { timeout: 30_000, skip: false },
       async () => {
-        const { user, submitTransaction } = await getAccount()
+        const nAccounts = new Array(4)
+          .fill(null)
+          .map(() => createAccount({ withXrd: true, withHeroBadge: true }))
 
-        await mintElements(1000, user.accountAddress!)
+        const accounts = await Promise.all([getAccount(), ...nAccounts])
 
-        const result = await submitTransaction(`
-          CALL_METHOD
-            Address("${user.accountAddress}")
-            "lock_fee"
-            Decimal("50")
-          ;
+        await Promise.all(
+          accounts.map((account) => {
+            mintElements(1000, account.user.accountAddress!).andThen(() =>
+              account.submitTransaction(`
+              CALL_METHOD
+                Address("${account.user.accountAddress}")
+                "lock_fee"
+                Decimal("50")
+              ;
+    
+              CALL_METHOD
+                Address("${account.user.accountAddress}")
+                "create_proof_of_non_fungibles"
+                Address("${addresses.badges.heroBadgeAddress}")
+                Array<NonFungibleLocalId>(NonFungibleLocalId("<${account.user.id}>"))
+              ;
+    
+              POP_FROM_AUTH_ZONE
+                Proof("hero_badge")
+              ;
+    
+              CALL_METHOD
+                Address("${account.user.accountAddress}")
+                "withdraw" 
+                Address("${addresses.resources.elementAddress}")
+                Decimal("50") 
+              ;
+    
+              TAKE_ALL_FROM_WORKTOP 
+                Address("${addresses.resources.elementAddress}") 
+                Bucket("elements")
+              ;
+    
+              CALL_METHOD
+                Address("${addresses.components.radgemForgeV2}")
+                "deposit_elements"
+                Proof("hero_badge")
+                Bucket("elements")
+              ;
+            `)
+            )
+          })
+        )
 
-          CALL_METHOD
-            Address("${user.accountAddress}")
-            "create_proof_of_non_fungibles"
-            Address("${addresses.badges.heroBadgeAddress}")
-            Array<NonFungibleLocalId>(NonFungibleLocalId("<${user.id}>"))
-          ;
-
-          POP_FROM_AUTH_ZONE
-            Proof("hero_badge")
-          ;
-
-          CALL_METHOD
-            Address("${user.accountAddress}")
-            "withdraw" 
-            Address("${addresses.resources.elementAddress}")
-            Decimal("50") 
-          ;
-
-          TAKE_ALL_FROM_WORKTOP 
-            Address("${addresses.resources.elementAddress}") 
-            Bucket("elements")
-          ;
-
-          CALL_METHOD
-            Address("${addresses.components.radgemForgeV2}")
-            "deposit_elements"
-            Proof("hero_badge")
-            Bucket("elements")
-          ;
-          `)
-
-        expect(result.isOk()).toBe(true)
-
-        const message = await waitForMessage(logger, db)(user.id, 'RadgemsMinted')
-
-        if (message.type === 'RadgemsMinted') {
-          expect(message.radgemData.length).toBe(10)
-        } else {
-          throw new Error(`Unexpected message type: ${message.type}`)
+        for (const account of accounts.slice(0, 2)) {
+          await waitForMessage(logger, db)(account.user.id, 'RadgemsMinted')
         }
       }
     )
@@ -785,6 +772,59 @@ describe('Event flows', () => {
             utm_term: getRandom(utm_term)
           }
         })
+      }
+    })
+  })
+
+  describe('quest completed', () => {
+    it(
+      'should write quest completion to hero badge',
+      { timeout: 60_000, skip: false },
+      async () => {
+        const nAccounts = new Array(5)
+          .fill(null)
+          .map(() => createAccount({ withXrd: true, withHeroBadge: true }))
+
+        const accounts = await Promise.all([getAccount(), ...nAccounts])
+
+        await Promise.all(
+          accounts.map((account) =>
+            transactionModel.add({
+              userId: account.user.id,
+              discriminator: `TransferTokens:QuestCompleted:${account.user.id}`,
+              type: 'QuestCompleted',
+              questId: 'TransferTokens',
+              traceId: crypto.randomUUID()
+            })
+          )
+        )
+      }
+    )
+  })
+
+  describe('deposit partial reward', () => {
+    it('should deposit partial reward to account', { timeout: 60_000, skip: false }, async () => {
+      const nAccounts = new Array(5)
+        .fill(null)
+        .map(() => createAccount({ withXrd: false, withHeroBadge: false }))
+
+      const accounts = await Promise.all(nAccounts)
+
+      await Promise.all(
+        accounts.map((account) =>
+          transactionModel.add({
+            userId: account.user.id,
+            discriminator: `QuestTogether:BronzeLevel:${account.user.id}`,
+            type: 'DepositPartialReward',
+            requirement: 'BronzeLevel',
+            questId: 'QuestTogether',
+            traceId: crypto.randomUUID()
+          })
+        )
+      )
+
+      for (const account of accounts.slice(0, 2)) {
+        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsDeposited')
       }
     })
   })

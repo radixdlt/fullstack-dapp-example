@@ -7,7 +7,6 @@ import { TransactionIntentStatusHelper } from './transactionIntentStatusHelper'
 import { WorkerHelper } from './workerHelper'
 import { BatchTransactionJob, BatchWorkerController } from './batchWorkerController'
 import { BufferWorker } from './bufferWorker'
-import { config } from '../config'
 
 export const BatchTransactionWorker = async <J extends BatchTransactionJob>(
   queue: BufferQueues,
@@ -96,9 +95,9 @@ export const BatchTransactionWorker = async <J extends BatchTransactionJob>(
     },
     {
       connection: configuration.connection,
-      batchSize: config.worker.depositHeroBadge.buffer.batchSize,
-      batchInterval: config.worker.depositHeroBadge.buffer.batchInterval,
-      concurrency: config.worker.depositHeroBadge.buffer.concurrency
+      batchSize: configuration.buffer.batchSize,
+      batchInterval: configuration.buffer.batchInterval,
+      concurrency: configuration.buffer.concurrency
     }
   )()
 

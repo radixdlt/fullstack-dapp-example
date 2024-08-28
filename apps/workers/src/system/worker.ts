@@ -19,7 +19,8 @@ export const SystemWorker = (
       logger.debug({
         method: 'systemWorker.process',
         id: job.id,
-        type: job.data.type
+        type: job.data.type,
+        data: job.data
       })
 
       const result = await systemWorkerController.handler(job)

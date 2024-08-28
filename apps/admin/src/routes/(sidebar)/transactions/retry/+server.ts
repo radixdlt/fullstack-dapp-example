@@ -29,8 +29,7 @@ export const POST = async ({ request, locals }) => {
         traceId: crypto.randomUUID()
       }
       locals.logger.debug({ method: 'retryingTransactionJob', jobData })
-      await locals.transactionQueue.queue.remove(jobData.discriminator)
-      await locals.transactionQueue.add([jobData])
+      await locals.transactionIntentHelper.addToQueue(jobData)
     }
 
     if (all) {

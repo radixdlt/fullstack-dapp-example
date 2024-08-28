@@ -9,29 +9,35 @@ import {
 } from 'common'
 import { logger } from './helpers/logger'
 import {
+  CreateRadGemsJob,
   DepositGiftBoxesRewardJob,
   DepositHeroBadgeJob,
+  DepositPartialRewardJob,
   DepositQuestRewardJob,
+  DepositXrdJob,
+  QuestCompletedJob,
   RedisConnection,
   getQueues
 } from 'queues'
 import { EventWorkerController } from './event/controller'
-import { TransactionWorker } from './transaction/worker'
 import { EventWorker } from './event/worker'
 import { dbClient } from './db-client'
-import { TransactionWorkerController } from './transaction/controller'
 import { SystemWorker } from './system/worker'
 import { SystemWorkerController } from './system/controller'
 import { MessageHelper } from './helpers/messageHelper'
-import { TransactionIntentHelper } from './helpers/transactionIntentHelper'
+import { TransactionIntentHelper } from 'common'
 import {
   createDepositGiftBoxesRewardManifest,
   createDepositHeroBadgeManifest,
-  createQuestRewardTransactionManifest
+  createDepositPartialRewardManifest,
+  createQuestRewardTransactionManifest,
+  createRadGemsManifest
 } from './manifests'
 import { ReferralRewardAction } from './helpers/referalReward'
 import { BatchWorkerController } from './helpers/batchWorkerController'
 import { BatchTransactionWorker } from './helpers/batchTransactionWorker'
+import { createDepositXrdManifest } from './manifests/createDepositXrdManifest'
+import { createCompletedQuestManifest } from './manifests/createQuestCompletedManifest'
 
 const app = async () => {
   // test db connection
@@ -52,16 +58,6 @@ const app = async () => {
   const referralRewardAction = ReferralRewardAction(dbClient)
   const AccountAddressModel = AccountAddressModelFn(redisClient)
   const imageModel = ImageModel(dbClient)
-
-  TransactionWorker(connection, {
-    logger,
-    dbClient,
-    transactionWorkerController: TransactionWorkerController({
-      gatewayApi,
-      imageModel,
-      sendMessage
-    })
-  })
 
   EventWorker(connection, {
     logger,
@@ -156,6 +152,86 @@ const app = async () => {
       connection,
       concurrency: config.worker.depositHeroBadge.concurrency,
       buffer: config.worker.depositHeroBadge.buffer
+    }
+  )
+
+  BatchTransactionWorker(
+    queues.CreateRadGems,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<CreateRadGemsJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createRadGemsManifest(imageModel(logger)),
+        createMessage: (item) => ({
+          type: 'RadgemsMinted',
+          traceId: item.traceId
+        })
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.createRadGems.concurrency,
+      buffer: config.worker.createRadGems.buffer
+    }
+  )
+
+  BatchTransactionWorker(
+    queues.DepositXrd,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<DepositXrdJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createDepositXrdManifest,
+        createMessage: (item) => ({
+          type: 'XrdDepositedToAccount',
+          traceId: item.traceId
+        })
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.depositXrd.concurrency,
+      buffer: config.worker.depositXrd.buffer
+    }
+  )
+
+  BatchTransactionWorker(
+    queues.QuestCompleted,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<QuestCompletedJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createCompletedQuestManifest
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.questCompleted.concurrency,
+      buffer: config.worker.questCompleted.buffer
+    }
+  )
+
+  BatchTransactionWorker(
+    queues.DepositPartialReward,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<DepositPartialRewardJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createDepositPartialRewardManifest
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.depositPartialReward.concurrency,
+      buffer: config.worker.depositPartialReward.buffer
     }
   )
 

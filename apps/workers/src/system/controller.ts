@@ -161,7 +161,7 @@ export const SystemWorkerController = ({
           .submitTransaction(lettySwapDappDefinitionTransactionManifest)
           .map(() => undefined)
 
-      case SystemJobType.UpdateKycOracle: {
+      case SystemJobType.MintElements: {
         return transactionHelper
           .submitTransaction(
             `
@@ -169,7 +169,7 @@ export const SystemWorkerController = ({
               Address("${payer.accessController}") 
               "create_proof"
             ;
-    
+
             CALL_METHOD 
               Address("${system.accessController}") 
               "create_proof"
@@ -182,19 +182,23 @@ export const SystemWorkerController = ({
             ;
 
             CALL_METHOD
-              Address("${system.address}")
+              Address("${config.radQuest.accounts.system.address}")
               "create_proof_of_amount"
-              Address("${adminBadgeAddress}")
+              Address("${config.radQuest.badges.adminBadgeAddress}")
               Decimal("1")
+            ;
+              
+            MINT_FUNGIBLE
+              Address("${config.radQuest.resources.elementAddress}")
+              Decimal("1000")
             ;
 
             CALL_METHOD
-              Address("${config.radQuest.components.kycOracle}")
-              "update_user_kyc_requirement"
-              "${job.data.userId}"
-              true
-            ;
-              `
+              Address("${job.data.accountAddress}")
+              "try_deposit_batch_or_abort"
+              Expression("ENTIRE_WORKTOP")
+              None
+            ;`
           )
           .map(() => undefined)
       }

@@ -3,12 +3,12 @@ import {
   MessageType,
   QuestTogetherConfig,
   UserByReferralCode,
-  WorkerError
+  WorkerError,
+  TransactionIntentHelper
 } from 'common'
 import { QuestDefinitions } from 'content'
-import { PrismaClient, QuestStatus, ReferralAction } from 'database'
+import { PrismaClient, QuestStatus } from 'database'
 import { okAsync, ResultAsync, ok, err } from 'neverthrow'
-import { TransactionIntentHelper } from './transactionIntentHelper'
 import { QuestHelper } from './questHelper'
 import { WorkerOutputError } from '../_types'
 import { MessageHelper } from './messageHelper'

@@ -234,7 +234,7 @@ export const UserController = ({
   }
 
   const directDepositXrd = (ctx: ControllerMethodContext, userId: string) => {
-    const discriminator = `PopulateResources:${userId}`
+    const discriminator = `DepositXrd:${userId}`
 
     return goldenTicketModel
       .userHasClaimedTicket(userId)
@@ -245,20 +245,26 @@ export const UserController = ({
       })
       .andThen(() => userModel.getById(userId, {}))
       .andThen((user) =>
+        user.blocked ? errAsync(createApiError('UserBlocked', 400)()) : okAsync(user)
+      )
+      .andThen((user) =>
         user?.accountAddress
           ? ok(user.accountAddress)
           : err(createApiError('UserAccountAddressNotSet', 400)())
       )
       .andThen((accountAddress) =>
-        gatewayApi.isDepositDisabledForResource(accountAddress, addresses.xrd).mapErr((error) => {
-          ctx.logger.error({ method: 'directDepositXrd.error', error })
-          return createApiError('InternalError', 500)(error)
-        })
+        gatewayApi
+          .isDepositDisabledForResource(accountAddress, addresses.xrd)
+          .mapErr((error) => {
+            ctx.logger.error({ method: 'directDepositXrd.error', error })
+            return createApiError('InternalError', 500)(error)
+          })
+          .map((isDisabled) => ({ isDisabled, accountAddress }))
       )
-      .andThen((isDisabled) =>
-        isDisabled ? err(createApiError('DepositDisabledForXrd', 400)()) : ok(undefined)
+      .andThen(({ isDisabled, accountAddress }) =>
+        isDisabled ? err(createApiError('DepositDisabledForXrd', 400)()) : ok(accountAddress)
       )
-      .andThen(() =>
+      .andThen((accountAddress) =>
         transactionModel.doesTransactionExist({ userId, discriminator }).andThen((exists) =>
           exists
             ? okAsync({
@@ -268,9 +274,10 @@ export const UserController = ({
             : transactionModel
                 .add({
                   userId,
-                  discriminator: `PopulateResources:${userId}`,
-                  type: 'DepositXrdToAccount',
-                  traceId: ctx.traceId
+                  discriminator: `DepositXrd:${userId}`,
+                  type: 'DepositXrd',
+                  traceId: ctx.traceId,
+                  accountAddress
                 })
                 .map(() => ({
                   httpResponseCode: 201,

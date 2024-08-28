@@ -1,8 +1,14 @@
-import { AccountAddressModel, AppLogger, EventId, MailerLiteModel, WorkerError } from 'common'
+import {
+  AccountAddressModel,
+  AppLogger,
+  EventId,
+  MailerLiteModel,
+  WorkerError,
+  TransactionIntentHelper
+} from 'common'
 import { QuestDefinitions, QuestId, Quests } from 'content'
 import { PrismaClient, QuestStatus } from 'database'
 import { ResultAsync, okAsync } from 'neverthrow'
-import { TransactionIntentHelper } from './transactionIntentHelper'
 import { MessageHelper } from './messageHelper'
 import { WorkerOutputError } from '../_types'
 import { getUserEmail } from './getUserEmail'
