@@ -89,7 +89,11 @@ export const HandleTransactions =
               logger.debug({
                 method: 'HandleTransactions',
                 stateVersion,
-                transactions: transactions.map((tx) => tx.intent_hash!)
+                transactions: filteredTransactions.map((tx) => ({
+                  type: tx.type,
+                  transactionId: tx.transactionId!,
+                  userId: tx.userId
+                }))
               })
             }
 
