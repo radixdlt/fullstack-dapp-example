@@ -22,6 +22,14 @@ export const httpFactory = (fetchFn: typeof fetch) => {
         headers: {
           'Content-Type': 'application/json'
         }
+      }).then((res) => res.json()),
+    patch: (url: string, body?: any) =>
+      fetchFn(url, {
+        method: 'PATCH',
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }).then((res) => res.json())
   }
 }

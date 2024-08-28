@@ -4,7 +4,8 @@ import {
   type ErrorResponse,
   RadixNetworkConfigById,
   type StateKeyValueStoreDataResponse,
-  type FungibleResourcesCollectionItemVaultAggregated
+  type FungibleResourcesCollectionItemVaultAggregated,
+  type ProgrammaticScryptoSborValue
 } from '@radixdlt/babylon-gateway-api-sdk'
 import type { TransactionReceipt } from '@radixdlt/babylon-core-api-sdk'
 import { cache } from './cache'
@@ -179,6 +180,15 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
       )
     })
 
+  const getPreviewOutput = (manifest: string) =>
+    preview(manifest)
+      .map((response) => response.receipt as TransactionReceipt)
+      .map((receipt) =>
+        receipt.output
+          ? (receipt.output[0].programmatic_json as ProgrammaticScryptoSborValue)
+          : null
+      )
+
   const getGiftBoxV2RewardsStatus = (userId: string) =>
     preview(
       `
@@ -311,6 +321,7 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
     networkConfig,
     gatewayApiClient,
     preview,
+    getPreviewOutput,
     getAccountGiftBoxes,
     getKeyValueStoreDataForUser,
     getGiftBoxV2RewardsStatus,

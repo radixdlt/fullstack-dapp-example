@@ -42,6 +42,8 @@ model User {
   transactions               TransactionIntent[]
   marketing                  Marketing[]
   referals                   Referral[]
+  goldenTicketClaimed        GoldenTicket?               @relation("claimedBy")
+  goldenTicketsOwned         GoldenTicket[]              @relation("owner")
 }
 
 model UserEmail {
@@ -101,6 +103,10 @@ enum EventStatus {
   PENDING
   ERROR
   COMPLETED
+  FAILED_RETRY
+  FAILED_PERMANENT
+  PAUSED
+  CANCELLED
 }
 
 model Event {
@@ -260,4 +266,33 @@ model Marketing {
   utm_term     String?
 
   user User @relation(fields: [userId], references: [id])
+}
+
+model GoldenTicket {
+  id          String             @id
+  batchId     String
+  ownerId     String
+  createdAt   DateTime           @default(now())
+  expiresAt   DateTime
+  userId      String?            @unique
+  claimedAt   DateTime?
+  description String?
+  status      GoldenTicketStatus @default(CLAIMABLE)
+  type        TicketType         @default(FULL)
+
+  claimedBy User? @relation("claimedBy", fields: [userId], references: [id])
+  owner     User  @relation("owner", fields: [ownerId], references: [id])
+
+  @@index(fields: [batchId], type: Hash)
+}
+
+enum GoldenTicketStatus {
+  CLAIMABLE
+  CLAIMED
+  CLAIMED_INVALID
+}
+
+enum TicketType {
+  FULL
+  LIMITED
 }

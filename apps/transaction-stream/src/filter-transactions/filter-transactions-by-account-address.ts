@@ -17,7 +17,7 @@ export const FilterTransactionsByAccountAddress =
       reason: string
     }
   > => {
-    if (transaction.userId != null) return okAsync(transaction)
+    if (transaction.userId != null || transaction.data.isBatch) return okAsync(transaction)
 
     let result: ResultAsync<
       string | null,

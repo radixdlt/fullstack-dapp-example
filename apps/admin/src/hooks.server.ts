@@ -3,7 +3,13 @@ import { env as privateEnv } from '$env/dynamic/private'
 import { verifyJwt } from '$lib/verify-jwt'
 import { PrismaClient } from 'database'
 import { ImageController } from '$lib/server/image/controller'
-import { ImageModel, appLogger, BlockedCountryModel } from 'common'
+import {
+  BlockedCountryModel,
+  GoldenTicketModel,
+  ImageModel,
+  appLogger,
+  TransactionIntentHelper
+} from 'common'
 import { getQueues } from 'queues'
 import { config } from '$lib/config'
 import { readReplicas } from '@prisma/extension-read-replicas'
@@ -16,15 +22,18 @@ const dbClient = new PrismaClient({
   datasourceUrl: DATABASE_URL
 }).$extends({ ...(readUrl ? readReplicas({ url: readUrl }) : {}) }) as unknown as PrismaClient
 
-const { systemQueue, eventQueue, transactionQueue } = getQueues(config.redis)
+const queues = getQueues(config.redis)
 const logger = appLogger
 
 const imageController = ImageController({
   imageModel: ImageModel(dbClient)(logger),
-  systemQueue: systemQueue.queue
+  systemQueue: queues.System
 })
 
 const blockedCountryModel = BlockedCountryModel(dbClient)(logger)
+const goldenTicketModel = GoldenTicketModel(dbClient)(logger)
+
+const transactionIntentHelper = TransactionIntentHelper({ dbClient, logger, queues })
 
 export const handle: Handle = async ({ event, resolve }) => {
   if (event.url.pathname === '/health') {
@@ -50,10 +59,10 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.dbClient = dbClient
     event.locals.blockedCountryModel = blockedCountryModel
     event.locals.imageController = imageController
-    event.locals.eventQueue = eventQueue
-    event.locals.transactionQueue = transactionQueue
-    event.locals.systemQueue = systemQueue
+    event.locals.queues = queues
     event.locals.logger = logger
+    event.locals.goldenTicketModel = goldenTicketModel
+    event.locals.transactionIntentHelper = transactionIntentHelper
 
     return resolve(event, {})
   }

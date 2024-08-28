@@ -13,7 +13,6 @@
   import { QuestDefinitions } from 'content'
   import { rdt } from '$lib/rdt'
   import { OneTimeDataRequestBuilder, fetchWrapper } from '@radixdlt/radix-dapp-toolkit'
-  import { publicConfig } from '$lib/public-config'
   import { user, ErrorPopupId, errorPopupStore } from '../../../stores'
 
   let open = false
@@ -46,17 +45,6 @@
     })
   }
 
-  const updateKycOracle = async () => {
-    await fetchWrapper(
-      fetch('/api/debug', {
-        method: 'POST',
-        body: JSON.stringify({
-          type: 'updateKycOracle'
-        })
-      })
-    )
-  }
-
   const addReferral = async () => {
     await fetchWrapper(
       fetch('/api/debug', {
@@ -69,21 +57,27 @@
   }
 
   const mintBadge = async () => {
-    await rdt.then((rdt) => {
-      rdt.walletApi.sendTransaction({
-        transactionManifest: `             
-          CALL_METHOD
-              Address("${publicConfig.components.heroBadgeForge}")
-              "claim_badge"
-              Address("${$user?.accountAddress || ''}")
-          ;
-          CALL_METHOD
-              Address("${$user?.accountAddress}")
-              "deposit_batch"
-              Expression("ENTIRE_WORKTOP")
-          ;`
+    await fetchWrapper(
+      fetch('/api/debug', {
+        method: 'POST',
+        body: JSON.stringify({
+          type: 'depositHeroBadge',
+          accountAddress: $user!.accountAddress
+        })
       })
-    })
+    )
+  }
+
+  const mintElements = async () => {
+    await fetchWrapper(
+      fetch('/api/debug', {
+        method: 'POST',
+        body: JSON.stringify({
+          type: 'mintElements',
+          accountAddress: $user!.accountAddress
+        })
+      })
+    )
   }
 
   const clearDb = async () => {
@@ -137,7 +131,7 @@
         <Button on:click={clearDb}>Clear Database</Button>
         <Button on:click={setUserAsAdmin}>Set user as Admin</Button>
         <Button on:click={addReferral}>Add referral</Button>
-        <Button on:click={updateKycOracle}>Update KYC oracle</Button>
+        <Button on:click={mintElements}>Mint elements</Button>
         <Button
           on:click={() => {
             console.log($user)

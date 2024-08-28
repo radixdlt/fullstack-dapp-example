@@ -2,7 +2,6 @@ import { err, ok } from 'neverthrow'
 import { fetchWrapper } from '../helpers/fetch-wrapper'
 import type { AppLogger } from '../helpers/logger'
 import type { MorphCardMintedEventOutput } from '../event-data/event-data'
-import type { RadgemNfData } from '../radgems'
 
 export const MessageType = {
   QuestRequirementCompleted: 'QuestRequirementCompleted',
@@ -18,7 +17,8 @@ export const MessageType = {
   GiftBoxDeposited: 'GiftBoxDeposited',
   GiftBoxesDeposited: 'GiftBoxesDeposited',
   RadgemsMinted: 'RadgemsMinted',
-  CombineElementsAddRadgemImage: 'CombineElementsAddRadgemImage'
+  CombineElementsAddRadgemImage: 'CombineElementsAddRadgemImage',
+  HeroBadgeDeposited: 'HeroBadgeDeposited'
 } as const
 
 export type MessageType = (typeof MessageType)[keyof typeof MessageType]
@@ -75,10 +75,12 @@ export type Messages = {
     traceId: string
   }
   [MessageType.RadgemsMinted]: {
-    radgemData: RadgemNfData[]
     traceId: string
   }
   [MessageType.CombineElementsAddRadgemImage]: {
+    traceId: string
+  }
+  [MessageType.HeroBadgeDeposited]: {
     traceId: string
   }
 }

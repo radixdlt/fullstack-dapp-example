@@ -1,8 +1,9 @@
-import { AppLogger } from 'common'
+import { AppLogger, Message, MessageType } from 'common'
 import { PrismaClient } from 'database'
 
 export const waitForMessage =
-  (logger: AppLogger, db: PrismaClient) => async (userId: string, messageType: string) => {
+  (logger: AppLogger, db: PrismaClient) =>
+  async (userId: string, messageType: MessageType): Promise<Message> => {
     logger.info({ method: 'waitForMessage.start', userId, messageType })
 
     let expectedMessage: any
@@ -21,5 +22,5 @@ export const waitForMessage =
       data: { seenAt: new Date() }
     })
 
-    logger.info({ method: 'waitForMessage.complete', message: expectedMessage })
+    return expectedMessage.data as Message
   }

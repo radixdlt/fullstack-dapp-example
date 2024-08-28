@@ -100,6 +100,7 @@ export const AuthController = ({
   ): ControllerMethodOutput<{
     authToken: string
     headers: { ['Set-Cookie']: string }
+    id: string
   }> => {
     const { personaProof } = proofs
     ctx.logger.trace({ method: 'login', personaProof })
@@ -167,14 +168,16 @@ export const AuthController = ({
                 )
         )
       )
-      .andThen(({ id, type }) => jwt.createTokens(id, type))
-      .map(({ authToken, refreshToken }) => ({
-        data: {
-          authToken,
-          headers: jwt.createRefreshTokenCookie(refreshToken, cookies)
-        },
-        httpResponseCode: 200
-      }))
+      .andThen(({ id, type }) =>
+        jwt.createTokens(id, type).map(({ authToken, refreshToken }) => ({
+          data: {
+            authToken,
+            headers: jwt.createRefreshTokenCookie(refreshToken, cookies),
+            id
+          },
+          httpResponseCode: 200
+        }))
+      )
   }
 
   const createRefreshTokenCookie = (userId: string, userType: UserType, cookies: Cookies) =>

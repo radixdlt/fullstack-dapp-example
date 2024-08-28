@@ -14,7 +14,8 @@ import {
   NotificationModel,
   MarketingModel,
   ImageModel,
-  MailerLiteModel
+  MailerLiteModel,
+  GoldenTicketModel
 } from 'common'
 import { UserType } from 'database'
 import { dbClient } from '$lib/db'
@@ -38,17 +39,18 @@ import {
   createUnauthorizedResponse
 } from '$lib/server/helpers/create-error-response'
 import { ImageController } from '$lib/server/image/controller'
+import { GoldenTicketController } from '$lib/server/golden-ticket/controller'
 
 const networkId = +PUBLIC_NETWORK_ID
 
-const { transactionQueue, systemQueue } = getQueues(config.redis)
+const queues = getQueues(config.redis)
 
 const redisClient = new RedisConnection(config.redis)
 
 const userModel = UserModel(dbClient)
 const authModel = AuthModel()
 const userQuestModel = UserQuestModel(dbClient)
-const transactionModel = TransactionModel(dbClient, transactionQueue)
+const transactionModel = TransactionModel(dbClient, queues)
 const auditModel = AuditModel(dbClient)
 const gatewayApi = GatewayApi(networkId, process.env.GATEWAY_URL)
 const messageModel = MessageModel(dbClient)
@@ -108,7 +110,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     notificationModel: notificationModel(logger),
     marketingModel: marketingModel(logger),
     imageModel: imageModel(logger),
-    systemQueue
+    systemQueue: queues.System,
+    goldenTicketModel: GoldenTicketModel(dbClient)(logger)
   } satisfies ControllerDependencies
 
   event.locals.controllers = {
@@ -117,7 +120,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     authController: AuthController(event.locals.dependencies),
     messageController: MessageController(event.locals.dependencies),
     notificationController: NotificationController(event.locals.dependencies),
-    imageController: ImageController(event.locals.dependencies)
+    imageController: ImageController(event.locals.dependencies),
+    goldenTicketController: GoldenTicketController(event.locals.dependencies)
   }
 
   if (event.route.id?.includes('(protected)')) {

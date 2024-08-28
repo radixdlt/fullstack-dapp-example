@@ -15,9 +15,8 @@ CALL_METHOD
     Address("${config.radQuest.badges.adminBadgeAddress}")
     Decimal("1")
 ;
-TAKE_FROM_WORKTOP
+TAKE_ALL_FROM_WORKTOP
     Address("${config.radQuest.badges.adminBadgeAddress}")
-    Decimal("1")
     Bucket("admin_badge")
 ;
 CALL_FUNCTION

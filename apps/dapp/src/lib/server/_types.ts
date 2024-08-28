@@ -13,7 +13,8 @@ import type {
   NotificationModel,
   MarketingModel,
   ImageModel,
-  MailerLiteModel
+  MailerLiteModel,
+  GoldenTicketModel
 } from 'common'
 import type { PrismaClient } from 'database'
 import type { ResultAsync } from 'neverthrow'
@@ -26,7 +27,8 @@ import type { AuthController } from '$lib/server/auth/controller'
 import type { MessageController } from '$lib/server/message/controller'
 import type { NotificationController } from '$lib/server/notification/controller'
 import type { ImageController } from './image/controller'
-import type { getQueues } from 'queues'
+import type { Queues } from 'queues'
+import type { GoldenTicketController } from './golden-ticket/controller'
 
 export type ControllerMethodOutput<T = any> = ResultAsync<
   { data: T; httpResponseCode: number },
@@ -45,6 +47,7 @@ export type Controllers = {
   messageController: MessageController
   notificationController: NotificationController
   imageController: ImageController
+  goldenTicketController: GoldenTicketController
 }
 
 export type ControllerDependencies = {
@@ -59,11 +62,12 @@ export type ControllerDependencies = {
   notificationModel: ReturnType<NotificationModel>
   marketingModel: ReturnType<MarketingModel>
   imageModel: ReturnType<ImageModel>
+  goldenTicketModel: ReturnType<ReturnType<typeof GoldenTicketModel>>
   logger: AppLogger
   dbClient: PrismaClient
   addresses: Addresses
   authModel: ReturnType<typeof AuthModel>
   config: Config
   jwt: JWT
-  systemQueue: ReturnType<typeof getQueues>['systemQueue']
+  systemQueue: Queues['System']
 }

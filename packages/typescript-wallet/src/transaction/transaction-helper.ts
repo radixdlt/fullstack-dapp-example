@@ -218,7 +218,7 @@ export const TransactionHelper = ({
         let response: TransactionStatusResponse | undefined
         let retry = 0
 
-        logger?.info({
+        logger?.trace({
           method: 'pollTransactionStatus',
           transactionId
         })

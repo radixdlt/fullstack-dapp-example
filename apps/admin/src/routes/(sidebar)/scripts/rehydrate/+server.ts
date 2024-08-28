@@ -32,8 +32,8 @@ export const POST = async ({ locals, request }) => {
       traceId: crypto.randomUUID()
     }
     locals.logger.debug({ method: 'retryingEventJob', jobData })
-    await locals.eventQueue.queue.remove(jobData.transactionId)
-    await locals.eventQueue.addJob(jobData)
+    await locals.queues.Event.queue.remove(jobData.transactionId)
+    await locals.queues.Event.add([jobData])
   }
 
   for (const transaction of transactions) {
@@ -45,8 +45,8 @@ export const POST = async ({ locals, request }) => {
       traceId: crypto.randomUUID()
     }
     locals.logger.debug({ method: 'retryingTransactionJob', jobData })
-    await locals.transactionQueue.queue.remove(jobData.discriminator)
-    await locals.transactionQueue.add(jobData)
+
+    await locals.transactionIntentHelper.addToQueue(jobData)
   }
 
   return json({}, { status: 200 })

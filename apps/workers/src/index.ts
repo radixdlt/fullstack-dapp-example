@@ -1,32 +1,44 @@
 import { config } from './config'
 import { ConnectionOptions } from 'bullmq'
 import {
-  EventModel,
   MessageApi,
-  AuditModel,
-  TransactionModel,
   AccountAddressModel as AccountAddressModelFn,
   GatewayApi,
   MailerLiteModel,
-  ImageModel,
-  TransactionStreamModel
+  ImageModel
 } from 'common'
 import { logger } from './helpers/logger'
-import { RedisConnection, getQueues } from 'queues'
+import {
+  CreateRadGemsJob,
+  DepositGiftBoxesRewardJob,
+  DepositHeroBadgeJob,
+  DepositPartialRewardJob,
+  DepositQuestRewardJob,
+  DepositXrdJob,
+  QuestCompletedJob,
+  RedisConnection,
+  getQueues
+} from 'queues'
 import { EventWorkerController } from './event/controller'
-import { TransactionWorker } from './transaction/worker'
 import { EventWorker } from './event/worker'
 import { dbClient } from './db-client'
-import { TransactionWorkerController } from './transaction/controller'
-import { TokenPriceClient } from './token-price-client'
 import { SystemWorker } from './system/worker'
 import { SystemWorkerController } from './system/controller'
 import { MessageHelper } from './helpers/messageHelper'
-import { TransactionIntentHelper } from './helpers/transactionIntentHelper'
-import { DepositGiftBoxRewardBufferWorker } from './deposit-giftbox-reward/buffer-worker'
-import { BatchedDepositGiftBoxRewardWorker } from './deposit-giftbox-reward/worker'
-import { BatchedDepositGiftBoxRewardController } from './deposit-giftbox-reward/controller'
+import { TransactionIntentHelper } from 'common'
+import {
+  createDepositGiftBoxesRewardManifest,
+  createDepositHeroBadgeManifest,
+  createDepositPartialRewardManifest,
+  createQuestRewardTransactionManifest,
+  createRadGemsManifest
+} from './manifests'
 import { ReferralRewardAction } from './helpers/referalReward'
+import { BatchWorkerController } from './helpers/batchWorkerController'
+import { BatchTransactionWorker } from './helpers/batchTransactionWorker'
+import { createDepositXrdManifest } from './manifests/createDepositXrdManifest'
+import { createCompletedQuestManifest } from './manifests/createQuestCompletedManifest'
+import { TokenPriceClient } from './token-price-client'
 
 const app = async () => {
   // test db connection
@@ -34,8 +46,7 @@ const app = async () => {
 
   const connection: ConnectionOptions = config.redis
 
-  const { transactionQueue, DepositGiftBoxRewardBufferQueue, DepositGiftBoxRewardQueue } =
-    getQueues(config.redis)
+  const queues = getQueues(config.redis)
 
   const messageApi = MessageApi({
     baseUrl: config.notification.baseUrl,
@@ -43,54 +54,32 @@ const app = async () => {
   })
 
   const gatewayApi = GatewayApi(config.networkId, process.env.GATEWAY_URL)
-  const eventModel = EventModel(dbClient)
-  const auditModel = AuditModel(dbClient)
-  const transactionModel = TransactionModel(dbClient, transactionQueue)
   const redisClient = new RedisConnection(config.redis)
-  const tokenPriceClient = TokenPriceClient({ logger, redisClient })
   const sendMessage = MessageHelper({ dbClient, messageApi })
   const referralRewardAction = ReferralRewardAction(dbClient)
   const AccountAddressModel = AccountAddressModelFn(redisClient)
-  const transactionStreamModel = TransactionStreamModel(dbClient)
   const imageModel = ImageModel(dbClient)
-
-  const eventWorkerController = EventWorkerController({
-    logger,
-    dbClient,
-    mailerLiteModel: MailerLiteModel({
-      apiKey: config.mailerLite.apiKey
-    }),
-    transactionIntent: TransactionIntentHelper({
-      dbClient,
-      transactionQueue,
-      DepositGiftBoxRewardBufferQueue
-    }),
-    AccountAddressModel,
-    sendMessage,
-    referralRewardAction,
-    imageModel
-  })
-
-  const transactionWorkerController = TransactionWorkerController({
-    auditModel,
-    gatewayApi,
-    imageModel,
-    tokenPriceClient,
-    sendMessage
-  })
-
-  TransactionWorker(connection, {
-    logger,
-    transactionModel,
-    dbClient,
-    transactionWorkerController
-  })
+  const tokenPriceClient = TokenPriceClient()
 
   EventWorker(connection, {
-    eventWorkerController,
-    eventModel,
     logger,
-    dbClient
+    dbClient,
+    eventWorkerController: EventWorkerController({
+      logger,
+      dbClient,
+      mailerLiteModel: MailerLiteModel({
+        apiKey: config.mailerLite.apiKey
+      }),
+      transactionIntentHelper: TransactionIntentHelper({
+        dbClient,
+        queues,
+        logger
+      }),
+      AccountAddressModel,
+      sendMessage,
+      referralRewardAction,
+      tokenPriceClient
+    })
   })
 
   SystemWorker(connection, {
@@ -98,27 +87,162 @@ const app = async () => {
     systemWorkerController: SystemWorkerController({
       logger,
       AccountAddressModel,
-      redisClient: await redisClient.client,
-      dbClient,
-      transactionStreamModel
+      dbClient
     })
   })
 
-  DepositGiftBoxRewardBufferWorker(connection, {
-    logger,
-    DepositGiftBoxRewardQueue
-  })
+  BatchTransactionWorker(
+    queues.DepositGiftBoxReward,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<DepositGiftBoxesRewardJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createDepositGiftBoxesRewardManifest(dbClient),
+        createMessage: (item) => ({
+          type: 'GiftBoxesDeposited',
+          traceId: item.traceId
+        })
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.depositQuestReward.concurrency,
+      buffer: config.worker.depositQuestReward.buffer
+    }
+  )
 
-  BatchedDepositGiftBoxRewardWorker(connection, {
-    logger,
-    controller: BatchedDepositGiftBoxRewardController({ gatewayApi, sendMessage }),
-    dbClient
-  })
+  BatchTransactionWorker(
+    queues.DepositQuestReward,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<DepositQuestRewardJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createQuestRewardTransactionManifest,
+        createMessage: (item) => ({
+          type: 'QuestRewardsDeposited',
+          questId: item.questId,
+          traceId: item.traceId
+        })
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.depositQuestReward.concurrency,
+      buffer: config.worker.depositQuestReward.buffer
+    }
+  )
+
+  BatchTransactionWorker(
+    queues.DepositHeroBadge,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<DepositHeroBadgeJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createDepositHeroBadgeManifest,
+        createMessage: (item) => ({
+          type: 'HeroBadgeDeposited',
+          traceId: item.traceId
+        })
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.depositHeroBadge.concurrency,
+      buffer: config.worker.depositHeroBadge.buffer
+    }
+  )
+
+  BatchTransactionWorker(
+    queues.CreateRadGems,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<CreateRadGemsJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createRadGemsManifest(imageModel(logger)),
+        createMessage: (item) => ({
+          type: 'RadgemsMinted',
+          traceId: item.traceId
+        })
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.createRadGems.concurrency,
+      buffer: config.worker.createRadGems.buffer
+    }
+  )
+
+  BatchTransactionWorker(
+    queues.DepositXrd,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<DepositXrdJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createDepositXrdManifest,
+        createMessage: (item) => ({
+          type: 'XrdDepositedToAccount',
+          traceId: item.traceId
+        })
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.depositXrd.concurrency,
+      buffer: config.worker.depositXrd.buffer
+    }
+  )
+
+  BatchTransactionWorker(
+    queues.QuestCompleted,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<QuestCompletedJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createCompletedQuestManifest
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.questCompleted.concurrency,
+      buffer: config.worker.questCompleted.buffer
+    }
+  )
+
+  BatchTransactionWorker(
+    queues.DepositPartialReward,
+    {
+      logger,
+      dbClient,
+      controller: BatchWorkerController<DepositPartialRewardJob>({
+        gatewayApi,
+        sendMessage,
+        createManifest: createDepositPartialRewardManifest
+      })
+    },
+    {
+      connection,
+      concurrency: config.worker.depositPartialReward.concurrency,
+      buffer: config.worker.depositPartialReward.buffer
+    }
+  )
 
   logger.debug({ message: 'workers running' })
 }
 
 app().catch((error) => {
+  console.log(error)
   logger.error({ reason: 'UnrecoverableError', error })
   // crash the process if an error is thrown within the app
   process.exit(1)

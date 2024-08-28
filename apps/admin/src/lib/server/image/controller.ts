@@ -3,8 +3,7 @@ import { ImageModel, createApiError } from 'common'
 import { ResultAsync } from 'neverthrow'
 
 import { chunk } from '@radixdlt/babylon-gateway-api-sdk'
-import { Queue } from 'bullmq'
-import { SystemJobType, type SystemJob } from 'queues'
+import { SystemJobType, type Queues } from 'queues'
 import { validateRadmorphConfiguration } from './helpers/validate-radmorph-configuration'
 import type { ImageType } from 'database'
 
@@ -16,22 +15,16 @@ export const ImageController = ({
   systemQueue
 }: {
   imageModel: ReturnType<ImageModel>
-  systemQueue: Queue<SystemJob>
+  systemQueue: Queues['System']
 }) => {
   const addChunksToQueue = (chunks: { id: string; url: string }[][]) => {
     return ResultAsync.fromPromise(
-      systemQueue.addBulk(
-        chunks.map((chunk) => {
-          const traceId = crypto.randomUUID()
-          return {
-            name: traceId,
-            data: {
-              traceId,
-              type: SystemJobType.PopulateRadmorphs,
-              data: chunk
-            }
-          }
-        })
+      systemQueue.add(
+        chunks.map((chunk) => ({
+          id: crypto.randomUUID(),
+          type: SystemJobType.PopulateRadmorphs,
+          data: chunk
+        }))
       ),
       (e) => createApiError('Failed to add chunks to queue', 400)(e)
     )

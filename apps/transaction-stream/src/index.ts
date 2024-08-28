@@ -5,7 +5,7 @@ import { logger } from './helpers/logger'
 import { TransactionStream } from './transaction-stream/transaction-stream'
 import { AccountAddressModel, GatewayApi, TransactionStreamModel, UserQuestModel } from 'common'
 import { PrismaClient } from 'database'
-import { getQueues, RedisConnection, SetupQueueMetrics } from 'queues'
+import { getQueues, Queues, RedisConnection, SetupQueueMetrics } from 'queues'
 import { EventModel } from 'common'
 import { HandleStreamError } from './helpers/handleStreamError'
 import { HandleTransactions } from './helpers/handleTransactions'
@@ -17,7 +17,6 @@ import { FilterTransactionsByAccountAddress } from './filter-transactions/filter
 
 type Dependencies = {
   gatewayApi: GatewayApi
-  eventQueue: ReturnType<typeof getQueues>['eventQueue']
   filterTransactionsByType: FilterTransactionsByType
   filterTransactionsByAccountAddress: FilterTransactionsByAccountAddress
   transactionStreamModel: TransactionStreamModel
@@ -53,7 +52,7 @@ const initTrackedAddresses = async ({ dbClient }: Dependencies) => {
 }
 
 const app = async (dependencies: Dependencies) => {
-  const dbClient = dependencies.dbClient
+  const { dbClient } = dependencies
 
   const metricsClient = SetupQueueMetrics({ connection: config.redis, logger })
 
@@ -67,10 +66,9 @@ const app = async (dependencies: Dependencies) => {
     // throw new Error('Failed to initialize tracked addresses')
   }
 
-  const eventModel = EventModel(dbClient)(logger)
+  const eventModel = EventModel({ db: dbClient, queues })(logger)
   const {
     gatewayApi,
-    eventQueue,
     filterTransactionsByAccountAddress,
     transactionStreamModel,
     filterTransactionsByType
@@ -95,7 +93,6 @@ const app = async (dependencies: Dependencies) => {
     filterTransactionsByAccountAddress,
     filterTransactionsByType,
     eventModel,
-    eventQueue,
     logger,
     transactionStreamModel
   })
@@ -124,7 +121,7 @@ const app = async (dependencies: Dependencies) => {
 }
 
 const gatewayApi = GatewayApi(config.networkId, process.env.GATEWAY_URL)
-const { eventQueue } = getQueues(config.redis)
+const queues = getQueues(config.redis)
 const redisConnection = new RedisConnection(config.redis)
 const transactionStreamModel = TransactionStreamModel(dbClient)
 const accountAddressModel = AccountAddressModel(redisConnection)(logger)
@@ -133,7 +130,6 @@ const filterTransactionsByAccountAddress = FilterTransactionsByAccountAddress(ac
 
 app({
   gatewayApi,
-  eventQueue,
   filterTransactionsByType,
   filterTransactionsByAccountAddress,
   transactionStreamModel,

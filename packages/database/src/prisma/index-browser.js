@@ -263,6 +263,19 @@ exports.Prisma.MarketingScalarFieldEnum = {
   utm_term: 'utm_term'
 };
 
+exports.Prisma.GoldenTicketScalarFieldEnum = {
+  id: 'id',
+  batchId: 'batchId',
+  ownerId: 'ownerId',
+  createdAt: 'createdAt',
+  expiresAt: 'expiresAt',
+  userId: 'userId',
+  claimedAt: 'claimedAt',
+  description: 'description',
+  status: 'status',
+  type: 'type'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -312,7 +325,11 @@ exports.EventStatus = exports.$Enums.EventStatus = {
   WAITING: 'WAITING',
   PENDING: 'PENDING',
   ERROR: 'ERROR',
-  COMPLETED: 'COMPLETED'
+  COMPLETED: 'COMPLETED',
+  FAILED_RETRY: 'FAILED_RETRY',
+  FAILED_PERMANENT: 'FAILED_PERMANENT',
+  PAUSED: 'PAUSED',
+  CANCELLED: 'CANCELLED'
 };
 
 exports.QuestStatus = exports.$Enums.QuestStatus = {
@@ -338,6 +355,17 @@ exports.TransactionIntentStatus = exports.$Enums.TransactionIntentStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.GoldenTicketStatus = exports.$Enums.GoldenTicketStatus = {
+  CLAIMABLE: 'CLAIMABLE',
+  CLAIMED: 'CLAIMED',
+  CLAIMED_INVALID: 'CLAIMED_INVALID'
+};
+
+exports.TicketType = exports.$Enums.TicketType = {
+  FULL: 'FULL',
+  LIMITED: 'LIMITED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   UserEmail: 'UserEmail',
@@ -357,7 +385,8 @@ exports.Prisma.ModelName = {
   BatchedTransactionIntent: 'BatchedTransactionIntent',
   SubmittedTransaction: 'SubmittedTransaction',
   Config: 'Config',
-  Marketing: 'Marketing'
+  Marketing: 'Marketing',
+  GoldenTicket: 'GoldenTicket'
 };
 
 /**

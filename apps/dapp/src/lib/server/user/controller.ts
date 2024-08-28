@@ -25,16 +25,19 @@ const EmailSchema = valibot.object({
 export type UserController = ReturnType<typeof UserController>
 export const UserController = ({
   userModel,
+  goldenTicketModel,
   transactionModel,
   gatewayApi,
   mailerLiteModel,
-  addresses
+  addresses,
+  systemQueue
 }: ControllerDependencies) => {
   const getUser = (userId: string): ControllerMethodOutput<User | null> =>
     userModel
       .getById(userId, {
         email: true,
-        referredByUser: true
+        referredByUser: true,
+        goldenTicketClaimed: true
       })
       .map((data) => ({ data, httpResponseCode: 200 }))
 
@@ -54,7 +57,7 @@ export const UserController = ({
     })
   }
 
-  const allowAccountAddressToMintHeroBadge = (
+  const depositHeroBadge = (
     ctx: ControllerMethodContext,
     {
       userId
@@ -65,13 +68,25 @@ export const UserController = ({
     userModel
       .getById(userId, {})
       .andThen((user) => (user ? ok(user) : err(createApiError('UserNotFound', 404)())))
+      .andThen((user) =>
+        user.blocked ? errAsync(createApiError('UserBlocked', 400)()) : okAsync(user)
+      )
       .andThen((data) =>
         accountAddressExists(data)
+          .andThen((accountAddress) =>
+            gatewayApi
+              .isDepositDisabledForResource(accountAddress, publicConfig.badges.heroBadgeAddress)
+              .andThen((isDepositDisabled) =>
+                isDepositDisabled
+                  ? errAsync(createApiError('DepositRuleDisabled', 400)())
+                  : okAsync(accountAddress)
+              )
+          )
           .andThen((accountAddress) => {
             const item = {
               traceId: ctx.traceId,
-              type: 'AddAccountAddressToHeroBadgeForge',
-              discriminator: `AddAccountAddressToHeroBadgeForge:${userId}`,
+              type: 'DepositHeroBadge',
+              discriminator: `DepositHeroBadge:${userId}`,
               accountAddress,
               userId
             } satisfies TransactionJob
@@ -88,10 +103,10 @@ export const UserController = ({
           .mapErr((error) => {
             ctx.logger.error({
               error,
-              method: 'allowAccountAddressToMintHeroBadge',
+              method: 'depositHeroBadge',
               event: 'error'
             })
-            return createApiError('allowAccountAddressToMintHeroBadgeError', 500)()
+            return createApiError('depositHeroBadgeError', 500)()
           })
       )
 
@@ -199,13 +214,14 @@ export const UserController = ({
         return okAsync(address)
       })
       .andThen((address) =>
-        transactionModel.add({
-          userId,
-          discriminator: `PopulateResources:${userId}`,
-          type: 'PopulateResources',
-          traceId: ctx.traceId,
-          accountAddress: address
-        })
+        systemQueue.add([
+          {
+            userId,
+            type: 'PopulateResources',
+            id: ctx.traceId,
+            accountAddress: address
+          }
+        ])
       )
       .map((data) => ({
         httpResponseCode: 201,
@@ -218,25 +234,37 @@ export const UserController = ({
   }
 
   const directDepositXrd = (ctx: ControllerMethodContext, userId: string) => {
-    const discriminator = `PopulateResources:${userId}`
+    const discriminator = `DepositXrd:${userId}`
 
-    return userModel
-      .getById(userId, {})
+    return goldenTicketModel
+      .userHasClaimedTicket(userId)
+      .mapErr((error) => createApiError('InternalError', 500)(error))
+      .andThen((ticket) => {
+        if (!ticket) return errAsync(createApiError('UserHasNoTicket', 400)())
+        return okAsync(undefined)
+      })
+      .andThen(() => userModel.getById(userId, {}))
+      .andThen((user) =>
+        user.blocked ? errAsync(createApiError('UserBlocked', 400)()) : okAsync(user)
+      )
       .andThen((user) =>
         user?.accountAddress
           ? ok(user.accountAddress)
           : err(createApiError('UserAccountAddressNotSet', 400)())
       )
       .andThen((accountAddress) =>
-        gatewayApi.isDepositDisabledForResource(accountAddress, addresses.xrd).mapErr((error) => {
-          ctx.logger.error({ method: 'directDepositXrd.error', error })
-          return createApiError('InternalError', 500)(error)
-        })
+        gatewayApi
+          .isDepositDisabledForResource(accountAddress, addresses.xrd)
+          .mapErr((error) => {
+            ctx.logger.error({ method: 'directDepositXrd.error', error })
+            return createApiError('InternalError', 500)(error)
+          })
+          .map((isDisabled) => ({ isDisabled, accountAddress }))
       )
-      .andThen((isDisabled) =>
-        isDisabled ? err(createApiError('DepositDisabledForXrd', 400)()) : ok(undefined)
+      .andThen(({ isDisabled, accountAddress }) =>
+        isDisabled ? err(createApiError('DepositDisabledForXrd', 400)()) : ok(accountAddress)
       )
-      .andThen(() =>
+      .andThen((accountAddress) =>
         transactionModel.doesTransactionExist({ userId, discriminator }).andThen((exists) =>
           exists
             ? okAsync({
@@ -246,9 +274,10 @@ export const UserController = ({
             : transactionModel
                 .add({
                   userId,
-                  discriminator: `PopulateResources:${userId}`,
-                  type: 'DepositXrdToAccount',
-                  traceId: ctx.traceId
+                  discriminator: `DepositXrd:${userId}`,
+                  type: 'DepositXrd',
+                  traceId: ctx.traceId,
+                  accountAddress
                 })
                 .map(() => ({
                   httpResponseCode: 201,
@@ -271,7 +300,7 @@ export const UserController = ({
     getUser,
     doesTransactionExist,
     hasWaitingRadgemJob,
-    allowAccountAddressToMintHeroBadge,
+    depositHeroBadge,
     setAccountAddress,
     populateResources,
     getNameByReferralCode,

@@ -4,24 +4,21 @@ import {
   FilterTransactionsByType
 } from '../filter-transactions/filter-transactions-by-type'
 import { AppLogger, EventId, EventModelMethods, TransactionStreamModel } from 'common'
-import { delay, getQueues } from 'queues'
 import crypto from 'node:crypto'
 import { FilterTransactionsByAccountAddress } from '../filter-transactions/filter-transactions-by-account-address'
-import { okAsync, ResultAsync } from 'neverthrow'
+import { ResultAsync } from 'neverthrow'
 
 export const HandleTransactions =
   ({
     filterTransactionsByType,
     filterTransactionsByAccountAddress,
     eventModel,
-    eventQueue,
     logger,
     transactionStreamModel
   }: {
     filterTransactionsByType: FilterTransactionsByType
     filterTransactionsByAccountAddress: FilterTransactionsByAccountAddress
     eventModel: EventModelMethods
-    eventQueue: ReturnType<typeof getQueues>['eventQueue']
     logger: AppLogger
     transactionStreamModel: TransactionStreamModel
   }) =>
@@ -59,39 +56,49 @@ export const HandleTransactions =
               .map(() => undefined)
           }
 
-          return eventModel
-            .addMultiple(
-              filteredTransactions.map((transaction) => ({
+          const itemsToProcess = filteredTransactions
+            .map((transaction) => {
+              if (transaction.data.isBatch) {
+                const batchItems = transaction.data.items as { userId: string; questId: string }[]
+
+                return batchItems.map((item, index) => ({
+                  eventId: transaction.type,
+                  transactionId: `${transaction.transactionId}:${index}`,
+                  userId: item.userId,
+                  questId: item.questId,
+                  data: { questId: item.questId },
+                  traceId: crypto.randomUUID(),
+                  type: transaction.type as unknown as EventId
+                }))
+              }
+
+              return {
                 eventId: transaction.type,
                 transactionId: transaction.transactionId,
                 userId: transaction.userId!,
                 data: transaction.data,
-                questId: transaction.questId
-              }))
-            )
-            .andThen((items) =>
-              eventQueue.addBulk(
-                items.map((item) => ({
-                  traceId: crypto.randomUUID(),
-                  eventId: item.id as unknown as EventId,
-                  type: item.id as unknown as EventId,
-                  transactionId: item.transactionId,
-                  userId: item.userId!,
-                  data: item.data as Record<string, unknown>
-                }))
-              )
-            )
-            .andThen(() => {
-              if (filteredTransactions.length) {
-                logger.debug({
-                  method: 'HandleTransactions',
-                  stateVersion,
-                  transactions: transactions.map((tx) => tx.intent_hash!)
-                })
+                questId: transaction.questId,
+                traceId: crypto.randomUUID(),
+                type: transaction.type as unknown as EventId
               }
-
-              continueStream(filteredTransactions.length ? 0 : 1_000)
-              return transactionStreamModel.setLatestStateVersion(stateVersion)
             })
+            .flat()
+
+          return eventModel.add(itemsToProcess).andThen(() => {
+            if (filteredTransactions.length) {
+              logger.debug({
+                method: 'HandleTransactions',
+                stateVersion,
+                transactions: filteredTransactions.map((tx) => ({
+                  type: tx.type,
+                  transactionId: tx.transactionId!,
+                  userId: tx.userId
+                }))
+              })
+            }
+
+            continueStream(filteredTransactions.length ? 0 : 1_000)
+            return transactionStreamModel.setLatestStateVersion(stateVersion)
+          })
         })
       })
