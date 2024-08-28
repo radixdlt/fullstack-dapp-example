@@ -2,7 +2,7 @@ import { EventStatus, PrismaClient } from 'database'
 import { ResultAsync, okAsync } from 'neverthrow'
 import { type ApiError, createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers'
-import { EventJob, Queues } from 'queues'
+import type { EventJob, Queues } from 'queues'
 
 export type Event = Awaited<ReturnType<PrismaClient['event']['create']>>
 
