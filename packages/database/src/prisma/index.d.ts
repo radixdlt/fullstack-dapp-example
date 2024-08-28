@@ -197,6 +197,14 @@ export const GoldenTicketStatus: {
 
 export type GoldenTicketStatus = (typeof GoldenTicketStatus)[keyof typeof GoldenTicketStatus]
 
+
+export const TicketType: {
+  FULL: 'FULL',
+  LIMITED: 'LIMITED'
+};
+
+export type TicketType = (typeof TicketType)[keyof typeof TicketType]
+
 }
 
 export type UserType = $Enums.UserType
@@ -230,6 +238,10 @@ export const TransactionIntentStatus: typeof $Enums.TransactionIntentStatus
 export type GoldenTicketStatus = $Enums.GoldenTicketStatus
 
 export const GoldenTicketStatus: typeof $Enums.GoldenTicketStatus
+
+export type TicketType = $Enums.TicketType
+
+export const TicketType: typeof $Enums.TicketType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -21306,6 +21318,7 @@ export namespace Prisma {
     claimedAt: Date | null
     description: string | null
     status: $Enums.GoldenTicketStatus | null
+    type: $Enums.TicketType | null
   }
 
   export type GoldenTicketMaxAggregateOutputType = {
@@ -21318,6 +21331,7 @@ export namespace Prisma {
     claimedAt: Date | null
     description: string | null
     status: $Enums.GoldenTicketStatus | null
+    type: $Enums.TicketType | null
   }
 
   export type GoldenTicketCountAggregateOutputType = {
@@ -21330,6 +21344,7 @@ export namespace Prisma {
     claimedAt: number
     description: number
     status: number
+    type: number
     _all: number
   }
 
@@ -21344,6 +21359,7 @@ export namespace Prisma {
     claimedAt?: true
     description?: true
     status?: true
+    type?: true
   }
 
   export type GoldenTicketMaxAggregateInputType = {
@@ -21356,6 +21372,7 @@ export namespace Prisma {
     claimedAt?: true
     description?: true
     status?: true
+    type?: true
   }
 
   export type GoldenTicketCountAggregateInputType = {
@@ -21368,6 +21385,7 @@ export namespace Prisma {
     claimedAt?: true
     description?: true
     status?: true
+    type?: true
     _all?: true
   }
 
@@ -21453,6 +21471,7 @@ export namespace Prisma {
     claimedAt: Date | null
     description: string | null
     status: $Enums.GoldenTicketStatus
+    type: $Enums.TicketType
     _count: GoldenTicketCountAggregateOutputType | null
     _min: GoldenTicketMinAggregateOutputType | null
     _max: GoldenTicketMaxAggregateOutputType | null
@@ -21482,6 +21501,7 @@ export namespace Prisma {
     claimedAt?: boolean
     description?: boolean
     status?: boolean
+    type?: boolean
     claimedBy?: boolean | GoldenTicket$claimedByArgs<ExtArgs>
     owner?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["goldenTicket"]>
@@ -21496,6 +21516,7 @@ export namespace Prisma {
     claimedAt?: boolean
     description?: boolean
     status?: boolean
+    type?: boolean
     claimedBy?: boolean | GoldenTicket$claimedByArgs<ExtArgs>
     owner?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["goldenTicket"]>
@@ -21510,6 +21531,7 @@ export namespace Prisma {
     claimedAt?: boolean
     description?: boolean
     status?: boolean
+    type?: boolean
   }
 
   export type GoldenTicketInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -21537,6 +21559,7 @@ export namespace Prisma {
       claimedAt: Date | null
       description: string | null
       status: $Enums.GoldenTicketStatus
+      type: $Enums.TicketType
     }, ExtArgs["result"]["goldenTicket"]>
     composites: {}
   }
@@ -21968,6 +21991,7 @@ export namespace Prisma {
     readonly claimedAt: FieldRef<"GoldenTicket", 'DateTime'>
     readonly description: FieldRef<"GoldenTicket", 'String'>
     readonly status: FieldRef<"GoldenTicket", 'GoldenTicketStatus'>
+    readonly type: FieldRef<"GoldenTicket", 'TicketType'>
   }
     
 
@@ -22539,7 +22563,8 @@ export namespace Prisma {
     userId: 'userId',
     claimedAt: 'claimedAt',
     description: 'description',
-    status: 'status'
+    status: 'status',
+    type: 'type'
   };
 
   export type GoldenTicketScalarFieldEnum = (typeof GoldenTicketScalarFieldEnum)[keyof typeof GoldenTicketScalarFieldEnum]
@@ -22777,6 +22802,20 @@ export namespace Prisma {
    * Reference to a field of type 'GoldenTicketStatus[]'
    */
   export type ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GoldenTicketStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'TicketType'
+   */
+  export type EnumTicketTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketType'>
+    
+
+
+  /**
+   * Reference to a field of type 'TicketType[]'
+   */
+  export type ListEnumTicketTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketType[]'>
     
 
 
@@ -23867,6 +23906,7 @@ export namespace Prisma {
     claimedAt?: DateTimeNullableFilter<"GoldenTicket"> | Date | string | null
     description?: StringNullableFilter<"GoldenTicket"> | string | null
     status?: EnumGoldenTicketStatusFilter<"GoldenTicket"> | $Enums.GoldenTicketStatus
+    type?: EnumTicketTypeFilter<"GoldenTicket"> | $Enums.TicketType
     claimedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     owner?: XOR<UserRelationFilter, UserWhereInput>
   }
@@ -23881,6 +23921,7 @@ export namespace Prisma {
     claimedAt?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     status?: SortOrder
+    type?: SortOrder
     claimedBy?: UserOrderByWithRelationInput
     owner?: UserOrderByWithRelationInput
   }
@@ -23898,6 +23939,7 @@ export namespace Prisma {
     claimedAt?: DateTimeNullableFilter<"GoldenTicket"> | Date | string | null
     description?: StringNullableFilter<"GoldenTicket"> | string | null
     status?: EnumGoldenTicketStatusFilter<"GoldenTicket"> | $Enums.GoldenTicketStatus
+    type?: EnumTicketTypeFilter<"GoldenTicket"> | $Enums.TicketType
     claimedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     owner?: XOR<UserRelationFilter, UserWhereInput>
   }, "id" | "userId">
@@ -23912,6 +23954,7 @@ export namespace Prisma {
     claimedAt?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
     status?: SortOrder
+    type?: SortOrder
     _count?: GoldenTicketCountOrderByAggregateInput
     _max?: GoldenTicketMaxOrderByAggregateInput
     _min?: GoldenTicketMinOrderByAggregateInput
@@ -23930,6 +23973,7 @@ export namespace Prisma {
     claimedAt?: DateTimeNullableWithAggregatesFilter<"GoldenTicket"> | Date | string | null
     description?: StringNullableWithAggregatesFilter<"GoldenTicket"> | string | null
     status?: EnumGoldenTicketStatusWithAggregatesFilter<"GoldenTicket"> | $Enums.GoldenTicketStatus
+    type?: EnumTicketTypeWithAggregatesFilter<"GoldenTicket"> | $Enums.TicketType
   }
 
   export type UserCreateInput = {
@@ -24995,6 +25039,7 @@ export namespace Prisma {
     claimedAt?: Date | string | null
     description?: string | null
     status?: $Enums.GoldenTicketStatus
+    type?: $Enums.TicketType
     claimedBy?: UserCreateNestedOneWithoutGoldenTicketClaimedInput
     owner: UserCreateNestedOneWithoutGoldenTicketsOwnedInput
   }
@@ -25009,6 +25054,7 @@ export namespace Prisma {
     claimedAt?: Date | string | null
     description?: string | null
     status?: $Enums.GoldenTicketStatus
+    type?: $Enums.TicketType
   }
 
   export type GoldenTicketUpdateInput = {
@@ -25019,6 +25065,7 @@ export namespace Prisma {
     claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
+    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
     claimedBy?: UserUpdateOneWithoutGoldenTicketClaimedNestedInput
     owner?: UserUpdateOneRequiredWithoutGoldenTicketsOwnedNestedInput
   }
@@ -25033,6 +25080,7 @@ export namespace Prisma {
     claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
+    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
   }
 
   export type GoldenTicketCreateManyInput = {
@@ -25045,6 +25093,7 @@ export namespace Prisma {
     claimedAt?: Date | string | null
     description?: string | null
     status?: $Enums.GoldenTicketStatus
+    type?: $Enums.TicketType
   }
 
   export type GoldenTicketUpdateManyMutationInput = {
@@ -25055,6 +25104,7 @@ export namespace Prisma {
     claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
+    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
   }
 
   export type GoldenTicketUncheckedUpdateManyInput = {
@@ -25067,6 +25117,7 @@ export namespace Prisma {
     claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
+    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -26114,6 +26165,13 @@ export namespace Prisma {
     not?: NestedEnumGoldenTicketStatusFilter<$PrismaModel> | $Enums.GoldenTicketStatus
   }
 
+  export type EnumTicketTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.TicketType | EnumTicketTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTicketTypeFilter<$PrismaModel> | $Enums.TicketType
+  }
+
   export type GoldenTicketCountOrderByAggregateInput = {
     id?: SortOrder
     batchId?: SortOrder
@@ -26124,6 +26182,7 @@ export namespace Prisma {
     claimedAt?: SortOrder
     description?: SortOrder
     status?: SortOrder
+    type?: SortOrder
   }
 
   export type GoldenTicketMaxOrderByAggregateInput = {
@@ -26136,6 +26195,7 @@ export namespace Prisma {
     claimedAt?: SortOrder
     description?: SortOrder
     status?: SortOrder
+    type?: SortOrder
   }
 
   export type GoldenTicketMinOrderByAggregateInput = {
@@ -26148,6 +26208,7 @@ export namespace Prisma {
     claimedAt?: SortOrder
     description?: SortOrder
     status?: SortOrder
+    type?: SortOrder
   }
 
   export type EnumGoldenTicketStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -26158,6 +26219,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
     _max?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
+  }
+
+  export type EnumTicketTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TicketType | EnumTicketTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTicketTypeWithAggregatesFilter<$PrismaModel> | $Enums.TicketType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTicketTypeFilter<$PrismaModel>
+    _max?: NestedEnumTicketTypeFilter<$PrismaModel>
   }
 
   export type UserCreateNestedOneWithoutReferredUsersInput = {
@@ -27128,6 +27199,10 @@ export namespace Prisma {
     set?: $Enums.GoldenTicketStatus
   }
 
+  export type EnumTicketTypeFieldUpdateOperationsInput = {
+    set?: $Enums.TicketType
+  }
+
   export type UserUpdateOneWithoutGoldenTicketClaimedNestedInput = {
     create?: XOR<UserCreateWithoutGoldenTicketClaimedInput, UserUncheckedCreateWithoutGoldenTicketClaimedInput>
     connectOrCreate?: UserCreateOrConnectWithoutGoldenTicketClaimedInput
@@ -27517,6 +27592,13 @@ export namespace Prisma {
     not?: NestedEnumGoldenTicketStatusFilter<$PrismaModel> | $Enums.GoldenTicketStatus
   }
 
+  export type NestedEnumTicketTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.TicketType | EnumTicketTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTicketTypeFilter<$PrismaModel> | $Enums.TicketType
+  }
+
   export type NestedEnumGoldenTicketStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.GoldenTicketStatus | EnumGoldenTicketStatusFieldRefInput<$PrismaModel>
     in?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
@@ -27525,6 +27607,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
     _max?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTicketTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TicketType | EnumTicketTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTicketTypeWithAggregatesFilter<$PrismaModel> | $Enums.TicketType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTicketTypeFilter<$PrismaModel>
+    _max?: NestedEnumTicketTypeFilter<$PrismaModel>
   }
 
   export type UserCreateWithoutReferredUsersInput = {
@@ -27907,6 +27999,7 @@ export namespace Prisma {
     claimedAt?: Date | string | null
     description?: string | null
     status?: $Enums.GoldenTicketStatus
+    type?: $Enums.TicketType
     owner: UserCreateNestedOneWithoutGoldenTicketsOwnedInput
   }
 
@@ -27919,6 +28012,7 @@ export namespace Prisma {
     claimedAt?: Date | string | null
     description?: string | null
     status?: $Enums.GoldenTicketStatus
+    type?: $Enums.TicketType
   }
 
   export type GoldenTicketCreateOrConnectWithoutClaimedByInput = {
@@ -27934,6 +28028,7 @@ export namespace Prisma {
     claimedAt?: Date | string | null
     description?: string | null
     status?: $Enums.GoldenTicketStatus
+    type?: $Enums.TicketType
     claimedBy?: UserCreateNestedOneWithoutGoldenTicketClaimedInput
   }
 
@@ -27946,6 +28041,7 @@ export namespace Prisma {
     claimedAt?: Date | string | null
     description?: string | null
     status?: $Enums.GoldenTicketStatus
+    type?: $Enums.TicketType
   }
 
   export type GoldenTicketCreateOrConnectWithoutOwnerInput = {
@@ -28359,6 +28455,7 @@ export namespace Prisma {
     claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
+    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
     owner?: UserUpdateOneRequiredWithoutGoldenTicketsOwnedNestedInput
   }
 
@@ -28371,6 +28468,7 @@ export namespace Prisma {
     claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
+    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
   }
 
   export type GoldenTicketUpsertWithWhereUniqueWithoutOwnerInput = {
@@ -28402,6 +28500,7 @@ export namespace Prisma {
     claimedAt?: DateTimeNullableFilter<"GoldenTicket"> | Date | string | null
     description?: StringNullableFilter<"GoldenTicket"> | string | null
     status?: EnumGoldenTicketStatusFilter<"GoldenTicket"> | $Enums.GoldenTicketStatus
+    type?: EnumTicketTypeFilter<"GoldenTicket"> | $Enums.TicketType
   }
 
   export type UserCreateWithoutEmailInput = {
@@ -30339,6 +30438,7 @@ export namespace Prisma {
     claimedAt?: Date | string | null
     description?: string | null
     status?: $Enums.GoldenTicketStatus
+    type?: $Enums.TicketType
   }
 
   export type EventUpdateWithoutUserInput = {
@@ -30601,6 +30701,7 @@ export namespace Prisma {
     claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
+    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
     claimedBy?: UserUpdateOneWithoutGoldenTicketClaimedNestedInput
   }
 
@@ -30613,6 +30714,7 @@ export namespace Prisma {
     claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
+    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
   }
 
   export type GoldenTicketUncheckedUpdateManyWithoutOwnerInput = {
@@ -30624,6 +30726,7 @@ export namespace Prisma {
     claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
+    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
   }
 
   export type ReferralCreateManyEventInput = {
