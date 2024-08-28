@@ -1,3 +1,1 @@
-And as a reward for your wisdom...
-
-Another **5 Elements**!
+Now you can bridge to your heart’s content!

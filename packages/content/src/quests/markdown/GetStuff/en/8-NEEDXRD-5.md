@@ -2,7 +2,7 @@
 
 ## Using THORSwap to buy XRD with crypto
 
-**If you’ve already got some crypto**, THORSwap is a bridge that makes it very easy to buy enough XRD so you can do transactions on your RadQuest journey.
+**THORSwap** is a bridge that makes it very easy to use crypto to buy enough XRD so you can do transactions on your RadQuest journey.
 
 THORSwap supports lots of crypto assets like **BTC**, **ETH**, **USDC** and more.
 
