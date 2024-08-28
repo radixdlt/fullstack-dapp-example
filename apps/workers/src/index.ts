@@ -38,6 +38,7 @@ import { BatchWorkerController } from './helpers/batchWorkerController'
 import { BatchTransactionWorker } from './helpers/batchTransactionWorker'
 import { createDepositXrdManifest } from './manifests/createDepositXrdManifest'
 import { createCompletedQuestManifest } from './manifests/createQuestCompletedManifest'
+import { TokenPriceClient } from './token-price-client'
 
 const app = async () => {
   // test db connection
@@ -58,6 +59,7 @@ const app = async () => {
   const referralRewardAction = ReferralRewardAction(dbClient)
   const AccountAddressModel = AccountAddressModelFn(redisClient)
   const imageModel = ImageModel(dbClient)
+  const tokenPriceClient = TokenPriceClient()
 
   EventWorker(connection, {
     logger,
@@ -75,7 +77,8 @@ const app = async () => {
       }),
       AccountAddressModel,
       sendMessage,
-      referralRewardAction
+      referralRewardAction,
+      tokenPriceClient
     })
   })
 

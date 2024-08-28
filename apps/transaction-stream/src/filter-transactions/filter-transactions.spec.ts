@@ -94,6 +94,8 @@ describe('filter transactions', () => {
         expect(transaction.type).toEqual(EventId.MayaRouterWithdrawEvent)
         expect(transaction.transactionId).toBeDefined()
         expect(transaction.accountAddress).toBeDefined()
+        expect(transaction.data.amount).toBeDefined()
+        expect(transaction.data.resourceAddress).toBeDefined()
       })
     })
 

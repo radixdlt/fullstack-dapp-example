@@ -17,7 +17,6 @@ import { FilterTransactionsByAccountAddress } from './filter-transactions/filter
 
 type Dependencies = {
   gatewayApi: GatewayApi
-  eventQueue: Queues['Event']
   filterTransactionsByType: FilterTransactionsByType
   filterTransactionsByAccountAddress: FilterTransactionsByAccountAddress
   transactionStreamModel: TransactionStreamModel
@@ -53,7 +52,7 @@ const initTrackedAddresses = async ({ dbClient }: Dependencies) => {
 }
 
 const app = async (dependencies: Dependencies) => {
-  const dbClient = dependencies.dbClient
+  const { dbClient } = dependencies
 
   const metricsClient = SetupQueueMetrics({ connection: config.redis, logger })
 
@@ -67,10 +66,9 @@ const app = async (dependencies: Dependencies) => {
     // throw new Error('Failed to initialize tracked addresses')
   }
 
-  const eventModel = EventModel(dbClient)(logger)
+  const eventModel = EventModel({ db: dbClient, queues })(logger)
   const {
     gatewayApi,
-    eventQueue,
     filterTransactionsByAccountAddress,
     transactionStreamModel,
     filterTransactionsByType
@@ -95,7 +93,6 @@ const app = async (dependencies: Dependencies) => {
     filterTransactionsByAccountAddress,
     filterTransactionsByType,
     eventModel,
-    eventQueue,
     logger,
     transactionStreamModel
   })
@@ -133,7 +130,6 @@ const filterTransactionsByAccountAddress = FilterTransactionsByAccountAddress(ac
 
 app({
   gatewayApi,
-  eventQueue: queues.Event,
   filterTransactionsByType,
   filterTransactionsByAccountAddress,
   transactionStreamModel,

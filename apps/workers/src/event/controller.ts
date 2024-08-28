@@ -1,7 +1,7 @@
 import { okAsync, errAsync, err, ok, ResultAsync } from 'neverthrow'
 import { EventJob, Job } from 'queues'
 import { QuestId } from 'content'
-import { EventId, MailerLiteModel, TransactionIntentHelper } from 'common'
+import { EventId, MailerLiteModel, BusinessLogic, TransactionIntentHelper } from 'common'
 import { AppLogger, AccountAddressModel } from 'common'
 import { PrismaClient, User } from 'database'
 import { WorkerError, WorkerOutputError } from '../_types'
@@ -10,6 +10,9 @@ import { config } from '../config'
 import { ReferralRewardAction } from '../helpers/referalReward'
 import { QuestHelper } from '../helpers/questHelper'
 import { ReferralHelper } from '../helpers/referralHelper'
+import { TokenPriceClient } from '../token-price-client'
+
+const supportedTokenAddressList = new Set<string>(Object.values(BusinessLogic.Maya.supportedTokens))
 
 type Reward = { resourceAddress: string; amount: string; name: string }
 
@@ -35,7 +38,8 @@ export const EventWorkerController = ({
   mailerLiteModel,
   sendMessage,
   transactionIntentHelper,
-  referralRewardAction
+  referralRewardAction,
+  tokenPriceClient
 }: {
   dbClient: PrismaClient
   AccountAddressModel: AccountAddressModel
@@ -44,6 +48,7 @@ export const EventWorkerController = ({
   sendMessage: MessageHelper
   transactionIntentHelper: TransactionIntentHelper
   referralRewardAction: ReferralRewardAction
+  tokenPriceClient: TokenPriceClient
 }) => {
   const handler = (
     job: Job<EventJob>,
@@ -145,7 +150,24 @@ export const EventWorkerController = ({
       }
 
       case EventId.MayaRouterWithdrawEvent: {
-        return questHelper.handleQuestWithTrackedAccount('Thorswap', type)
+        const { amount, resourceAddress } = job.data.data as {
+          amount: string
+          resourceAddress: string
+        }
+
+        if (!supportedTokenAddressList.has(resourceAddress)) return okAsync(undefined)
+
+        const valueRequirement =
+          BusinessLogic.Maya.transferValueInUSD - BusinessLogic.Maya.paddingValueInUSD
+
+        return tokenPriceClient
+          .getPrice(resourceAddress)
+          .map((tokenPrice) => tokenPrice.multipliedBy(amount).gte(valueRequirement))
+          .andThen((isRequirementFulfilled) =>
+            isRequirementFulfilled
+              ? questHelper.handleQuestWithTrackedAccount('Thorswap', type)
+              : okAsync(undefined)
+          )
       }
 
       case EventId.XrdStaked: {
