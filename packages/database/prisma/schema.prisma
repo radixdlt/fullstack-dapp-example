@@ -278,6 +278,7 @@ model GoldenTicket {
   claimedAt               DateTime?
   description             String?
   status                  GoldenTicketStatus  @default(CLAIMABLE) 
+  type                    TicketType          @default(FULL) 
 
   claimedBy               User?               @relation("claimedBy", fields: [userId], references: [id])
   owner                   User                @relation("owner", fields: [ownerId], references: [id])
@@ -289,4 +290,9 @@ enum GoldenTicketStatus {
   CLAIMABLE
   CLAIMED
   CLAIMED_INVALID
+}
+
+enum TicketType {
+  FULL
+  LIMITED
 }

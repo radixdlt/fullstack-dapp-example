@@ -272,7 +272,8 @@ exports.Prisma.GoldenTicketScalarFieldEnum = {
   userId: 'userId',
   claimedAt: 'claimedAt',
   description: 'description',
-  status: 'status'
+  status: 'status',
+  type: 'type'
 };
 
 exports.Prisma.SortOrder = {
@@ -358,6 +359,11 @@ exports.GoldenTicketStatus = exports.$Enums.GoldenTicketStatus = {
   CLAIMABLE: 'CLAIMABLE',
   CLAIMED: 'CLAIMED',
   CLAIMED_INVALID: 'CLAIMED_INVALID'
+};
+
+exports.TicketType = exports.$Enums.TicketType = {
+  FULL: 'FULL',
+  LIMITED: 'LIMITED'
 };
 
 exports.Prisma.ModelName = {
