@@ -15,7 +15,10 @@ import {
   TransactionModel,
   UserModel,
   UserQuestModel,
-  createAppLogger
+  createAppLogger,
+  EventModel,
+  EventId,
+  BusinessLogic
 } from 'common'
 import { PrismaClient, User } from 'database'
 import { errAsync } from 'neverthrow'
@@ -66,6 +69,7 @@ const getAccount = async () => {
 let accountAddress: string
 
 const transactionModel = TransactionModel(db, queues)(logger)
+const eventModel = EventModel({ db, queues })(logger)
 const userQuestModel = UserQuestModel(db)(logger)
 const userModel = UserModel(db)(logger)
 const accountAddressModel = AccountAddressModel(redisClient)(logger)
@@ -480,6 +484,98 @@ describe('Event flows', () => {
         await claimQuestReward(account1, 'TransferTokens')
 
         await waitForMessage(logger, db)(account1.user.id, 'QuestRewardsClaimed')
+      })
+    })
+    describe('Thorswap', { timeout: 60_000 }, async () => {
+      const simulateMayaSwapEvent = (
+        userId: string,
+        token: keyof typeof BusinessLogic.Maya.supportedTokens,
+        amount: string
+      ) =>
+        eventModel.add([
+          {
+            transactionId: crypto.randomUUID(),
+            traceId: crypto.randomUUID(),
+            userId,
+            eventId: EventId.MayaRouterWithdrawEvent,
+            type: EventId.MayaRouterWithdrawEvent,
+            data: {
+              amount,
+              resourceAddress: BusinessLogic.Maya.supportedTokens[token]
+            }
+          }
+        ])
+
+      it('should handle swapped XRD and claim quest rewards', { timeout: 60_000 }, async () => {
+        const account = await createAccount({ withHeroBadge: true, withXrd: true })
+
+        await accountAddressModel.addTrackedAddress(
+          account.user.accountAddress!,
+          'Thorswap',
+          account.user.id
+        )
+
+        await simulateMayaSwapEvent(account.user.id, 'XRD', '10000')
+
+        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsDeposited')
+
+        await claimQuestReward(account, 'Thorswap')
+
+        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsClaimed')
+      })
+
+      it('should handle swapped xUSDC and claim quest rewards', { timeout: 60_000 }, async () => {
+        const account = await createAccount({ withHeroBadge: true, withXrd: true })
+
+        await accountAddressModel.addTrackedAddress(
+          account.user.accountAddress!,
+          'Thorswap',
+          account.user.id
+        )
+
+        await simulateMayaSwapEvent(account.user.id, 'xUSDC', '100')
+
+        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsDeposited')
+
+        await claimQuestReward(account, 'Thorswap')
+
+        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsClaimed')
+      })
+
+      it('should handle swapped xwBTC and claim quest rewards', { timeout: 60_000 }, async () => {
+        const account = await createAccount({ withHeroBadge: true, withXrd: true })
+
+        await accountAddressModel.addTrackedAddress(
+          account.user.accountAddress!,
+          'Thorswap',
+          account.user.id
+        )
+
+        await simulateMayaSwapEvent(account.user.id, 'xwBTC', '1')
+
+        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsDeposited')
+
+        await claimQuestReward(account, 'Thorswap')
+
+        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsClaimed')
+      })
+
+      it('should handle swapped xETH and claim quest rewards', { timeout: 60_000 }, async () => {
+        const account = await createAccount({ withHeroBadge: true, withXrd: true })
+
+        await accountAddressModel.addTrackedAddress(
+          account.user.accountAddress!,
+          'Thorswap',
+          account.user.id
+        )
+
+        await simulateMayaSwapEvent(account.user.id, 'xETH', '1')
+
+        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsDeposited')
+
+        await claimQuestReward(account, 'Thorswap')
+
+        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsClaimed')
       })
     })
   })

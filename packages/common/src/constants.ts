@@ -70,7 +70,8 @@ export const Addresses = (networkId: number) => {
             'internal_keyvaluestore_tdx_2_1kzr894n384n7arfrnc4vejxfdqawu5e83rcuph6cjjqeswlmr80gsu',
           giftBoxRecordsKeyValueStore:
             'internal_keyvaluestore_tdx_2_1krepp99ahmrzxe5qrsyhzy6e7cyvqwhg4dvtqt3pdjq94yd4xwaynq',
-          mayaRouter: 'component_tdx_2_mock_maya_router_address',
+          // not available on Stokenet
+          mayaRouter: 'component_rdx1cp7hrk7k0pjavnpt5h6dsel096kzlj96r8ukw2ywqgdc5tlvpvn0as',
           jettySwap: 'component_tdx_2_1czu6r9zpgsuylret7jfswwlzfgxp39spvd6wh72waqy30sd55gwz4y',
           jettySwapPriceOracle:
             'component_tdx_2_1cqcsfhgk8k8kuknmk7cmvkfu2whrz0ysd3swxggdu3lreu3lh7hyhq',
@@ -187,7 +188,7 @@ export const Addresses = (networkId: number) => {
             'internal_keyvaluestore_rdx1krzqx8jyqr4fk6qj9sflr9merf5xsvys9s3mur9ggwsma7pktaemts',
           giftBoxRecordsKeyValueStore:
             'internal_keyvaluestore_rdx1kqxjftv92utms3l3rh9z6crqe7kavj9sdelddd75dsdlxjffqfluzg',
-          mayaRouter: '',
+          mayaRouter: 'component_rdx1cp7hrk7k0pjavnpt5h6dsel096kzlj96r8ukw2ywqgdc5tlvpvn0as',
           jettySwap: 'component_rdx1cp3he5qrfq92y9j7cpjpfm6uqvurvgyradtgltcn2qaq6pygu4lmp6',
           jettySwapPriceOracle:
             'component_rdx1czdm8csjmrcnv9d4fuhw3g5c2yzhga59xf3464nfy4egmedv2srlnh',
@@ -330,5 +331,18 @@ export const metadata = {
         tags: ['radquest']
       }
     }
+  }
+} as const
+
+export const BusinessLogic = {
+  Maya: {
+    supportedTokens: {
+      XRD: 'resource_rdx1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxradxrd',
+      xwBTC: 'resource_rdx1t580qxc7upat7lww4l2c4jckacafjeudxj5wpjrrct0p3e82sq4y75',
+      xETH: 'resource_rdx1th88qcj5syl9ghka2g9l7tw497vy5x6zaatyvgfkwcfe8n9jt2npww',
+      xUSDC: 'resource_rdx1t4upr78guuapv5ept7d7ptekk9mqhy605zgms33mcszen8l9fac8vf'
+    },
+    transferValueInUSD: 50,
+    paddingValueInUSD: 1
   }
 } as const

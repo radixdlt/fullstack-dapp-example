@@ -14,6 +14,8 @@ export const WorkerError = {
   FailedToSetCompletedStatus: 'FailedToSetCompletedStatus',
   FailedToGetUserIdFromBadgeId: 'FailedToGetUserIdFromBadgeId',
   FailedToGetXrdPrice: 'FailedToGetXrdPrice',
+  FailedToGetTokenPrice: 'FailedToGetTokenPrice',
+  TokenPriceNotFound: 'TokenPriceNotFound',
   FailedToAddAuditEntry: 'FailedToAddAuditEntry',
   FailedToGetTransactionFromDb: 'FailedToGetTransactionFromDb',
   MissingTransactionInDb: 'MissingTransactionInDb',

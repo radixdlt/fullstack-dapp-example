@@ -4,7 +4,6 @@ import {
   FilterTransactionsByType
 } from '../filter-transactions/filter-transactions-by-type'
 import { AppLogger, EventId, EventModelMethods, TransactionStreamModel } from 'common'
-import { Queues } from 'queues'
 import crypto from 'node:crypto'
 import { FilterTransactionsByAccountAddress } from '../filter-transactions/filter-transactions-by-account-address'
 import { ResultAsync } from 'neverthrow'
@@ -14,14 +13,12 @@ export const HandleTransactions =
     filterTransactionsByType,
     filterTransactionsByAccountAddress,
     eventModel,
-    eventQueue,
     logger,
     transactionStreamModel
   }: {
     filterTransactionsByType: FilterTransactionsByType
     filterTransactionsByAccountAddress: FilterTransactionsByAccountAddress
     eventModel: EventModelMethods
-    eventQueue: Queues['Event']
     logger: AppLogger
     transactionStreamModel: TransactionStreamModel
   }) =>
@@ -69,7 +66,9 @@ export const HandleTransactions =
                   transactionId: `${transaction.transactionId}:${index}`,
                   userId: item.userId,
                   questId: item.questId,
-                  data: { questId: item.questId }
+                  data: { questId: item.questId },
+                  traceId: crypto.randomUUID(),
+                  type: transaction.type as unknown as EventId
                 }))
               }
 
@@ -78,36 +77,24 @@ export const HandleTransactions =
                 transactionId: transaction.transactionId,
                 userId: transaction.userId!,
                 data: transaction.data,
-                questId: transaction.questId
+                questId: transaction.questId,
+                traceId: crypto.randomUUID(),
+                type: transaction.type as unknown as EventId
               }
             })
             .flat()
 
-          return eventModel
-            .addMultiple(itemsToProcess)
-            .andThen((items) =>
-              eventQueue.add(
-                items.map((item) => ({
-                  traceId: crypto.randomUUID(),
-                  eventId: item.id as unknown as EventId,
-                  type: item.id as unknown as EventId,
-                  transactionId: item.transactionId,
-                  userId: item.userId!,
-                  data: item.data as Record<string, unknown>
-                }))
-              )
-            )
-            .andThen(() => {
-              if (filteredTransactions.length) {
-                logger.debug({
-                  method: 'HandleTransactions',
-                  stateVersion,
-                  transactions: transactions.map((tx) => tx.intent_hash!)
-                })
-              }
+          return eventModel.add(itemsToProcess).andThen(() => {
+            if (filteredTransactions.length) {
+              logger.debug({
+                method: 'HandleTransactions',
+                stateVersion,
+                transactions: transactions.map((tx) => tx.intent_hash!)
+              })
+            }
 
-              continueStream(filteredTransactions.length ? 0 : 1_000)
-              return transactionStreamModel.setLatestStateVersion(stateVersion)
-            })
+            continueStream(filteredTransactions.length ? 0 : 1_000)
+            return transactionStreamModel.setLatestStateVersion(stateVersion)
+          })
         })
       })

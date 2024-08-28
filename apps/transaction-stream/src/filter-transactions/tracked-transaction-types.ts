@@ -219,7 +219,14 @@ export const trackedTransactionTypes: TrackedTransactions = {
     MayaRouterWithdrawEvent: eventEmittedByComponent({
       eventName: 'MayaRouterWithdrawEvent',
       componentAddress: config.radQuest.components.mayaRouter,
-      keys: { intended_recipient: { kind: 'Reference', key: 'accountAddress' } }
+      keys: {
+        intended_recipient: {
+          kind: 'Reference',
+          key: 'accountAddress'
+        },
+        resource_address: { kind: 'Reference', key: 'resourceAddress' },
+        amount: { kind: 'Decimal', key: 'amount' }
+      }
     })
   },
   [EventId.JettySwap]: {
