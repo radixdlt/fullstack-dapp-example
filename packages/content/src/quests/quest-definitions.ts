@@ -168,40 +168,7 @@ export const QuestDefinitions = () => {
       },
       nextQuest: 'TransferTokens'
     },
-    TransferTokens: {
-      id: 'TransferTokens',
-      trackedAccountAddress: true,
-      category: 'basic',
-      rewards: [
-        {
-          name: 'fancyGiftBox',
-          amount: 1
-        }
-      ],
-      preRequisites: ['CreatingRadMorphs'],
-      minutesToComplete: 6,
-      requirements: {
-        [EventId.JettyReceivedClams]: {
-          type: 'event',
-          eventName: 'DepositEvent'
-        },
-        PersonaQuiz: {
-          type: 'offLedger',
-          completedByUser: true,
-          isHidden: true
-        },
-        TransactionQuiz: {
-          type: 'offLedger',
-          completedByUser: true,
-          isHidden: true
-        },
-        XrdQuiz: {
-          type: 'offLedger',
-          completedByUser: true,
-          isHidden: true
-        }
-      }
-    },
+
     QuestTogether: {
       id: 'QuestTogether',
       category: 'advanced',
@@ -243,7 +210,7 @@ export const QuestDefinitions = () => {
       ],
       trackedAccountAddress: false,
       minutesToComplete: 1,
-      preRequisites: ['TransferTokens'],
+      preRequisites: ['CreatingRadMorphs'],
       requirements: {
         BronzeLevel: {
           type: 'offLedger',
@@ -274,7 +241,7 @@ export const QuestDefinitions = () => {
         }
       ],
       minutesToComplete: 1,
-      preRequisites: ['TransferTokens'],
+      preRequisites: ['CreatingRadMorphs'],
       requirements: {
         CompleteBasicQuests: {
           type: 'offLedger',
@@ -297,7 +264,7 @@ export const QuestDefinitions = () => {
       ],
       trackedAccountAddress: true,
       minutesToComplete: 10,
-      preRequisites: ['TransferTokens'],
+      preRequisites: ['CreatingRadMorphs'],
       requirements: {
         [EventId.JettySwap]: {
           eventName: 'ClamSwapEvent',
@@ -306,6 +273,25 @@ export const QuestDefinitions = () => {
         [EventId.LettySwap]: {
           eventName: 'ClamSwapEvent',
           type: 'event'
+        }
+      }
+    },
+    TransferTokens: {
+      id: 'TransferTokens',
+      trackedAccountAddress: true,
+      category: 'advanced',
+      rewards: [
+        {
+          name: 'simpleGiftBox',
+          amount: 1
+        }
+      ],
+      preRequisites: ['CreatingRadMorphs'],
+      minutesToComplete: 6,
+      requirements: {
+        [EventId.JettyReceivedClams]: {
+          type: 'event',
+          eventName: 'DepositEvent'
         }
       }
     },
@@ -324,7 +310,7 @@ export const QuestDefinitions = () => {
         }
       ],
       minutesToComplete: 5,
-      preRequisites: ['TransferTokens'],
+      preRequisites: ['CreatingRadMorphs'],
       requirements: {
         [EventId.XrdStaked]: {
           eventName: 'StakedXrd',
