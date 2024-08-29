@@ -70,7 +70,7 @@
   },
   "GetStuff": {
     "requirements": {
-      "LearnAboutTransactions": "Learn about XRD and Transactions"
+      "GetReadyToDoTransactionsOnRadix": "Get ready to do transactions on Radix"
     },
     "claimHeroBadge": "Claim Hero's Badge",
     "getXrd": "Receive 5 XRD",

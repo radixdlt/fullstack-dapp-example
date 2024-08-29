@@ -137,23 +137,30 @@ export const QuestHelper = ({
       (error) => ({ reason: WorkerError.FailedToUpdateQuestProgress, jsError: error })
     )
 
-  const depositQuestReward = (questId: QuestId) =>
-    transactionIntentHelper.add({
-      userId,
-      discriminator: `${questId}:DepositReward:${userId}`,
-      type: 'DepositReward',
-      traceId,
-      questId
-    })
+  const depositQuestReward = (questId: QuestId) => {
+    const questDefinition = QuestDefinitions()[questId]
+    const hasRewards = questDefinition.rewards.length
+
+    return hasRewards
+      ? transactionIntentHelper.add({
+          userId,
+          discriminator: `${questId}:DepositReward:${userId}`,
+          type: 'DepositReward',
+          traceId,
+          questId
+        })
+      : updateQuestProgressStatus({ questId, status: 'REWARDS_CLAIMED' }).map(() => undefined)
+  }
 
   const handleAllQuestRequirementCompleted = (questId: QuestId) =>
     hasCompletedAllQuestRequirements(questId, userId).andThen((value) => {
-      if (value.isAllCompleted)
+      if (value.isAllCompleted) {
         return depositQuestReward(questId).andThen(() =>
           sendMessage(userId, { type: 'QuestRequirementsCompleted', questId, traceId }).map(
             () => value
           )
         )
+      }
 
       return okAsync(value)
     })

@@ -12,6 +12,7 @@
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { waitingWarning } from '$lib/utils/waiting-warning'
+  import { questApi } from '$lib/api/quest-api'
 
   export let data: PageData
 
@@ -146,11 +147,18 @@
       skip: skipXrdDepositPage,
       footer: {
         next: {
+          onClick: (next) => {
+            questApi
+              .completeRequirement('GetStuff', 'GetReadyToDoTransactionsOnRadix', fetch)
+              .map(() => {
+                next()
+              })
+          },
           enabled: writable(true) // TODO change when implementing new quest flows
         }
       }
     },
-
+    { type: 'requirements' },
     {
       type: 'claimRewards'
     },

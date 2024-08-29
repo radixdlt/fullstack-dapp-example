@@ -140,7 +140,12 @@ export const QuestDefinitions = () => {
       ],
       preRequisites: ['SetupWallet'],
       minutesToComplete: 6,
-      requirements: {},
+      requirements: {
+        GetReadyToDoTransactionsOnRadix: {
+          type: 'offLedger',
+          completedByUser: true
+        }
+      },
       nextQuest: 'CreatingRadMorphs'
     },
     CreatingRadMorphs: {

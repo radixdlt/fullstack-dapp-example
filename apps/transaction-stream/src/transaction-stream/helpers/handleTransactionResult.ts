@@ -28,7 +28,7 @@ export const handleTransactionResult = (
 
   const lastStateVersion = lastTransaction.state_version
   const nextStateVersion = lastStateVersion + 1
-  logger.debug({
+  logger.trace({
     method: 'handleTransactionResult',
     event: 'success',
     items: transactions.length,
