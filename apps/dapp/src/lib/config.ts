@@ -14,6 +14,8 @@ const {
   TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN,
   TWILIO_SERVICE_SID,
+  IPQS_KEY,
+  IPQS_ALLOW_ALL = false,
   MAX_USER_PER_IP,
   MAILER_LITE_API_KEY,
   MAINTENANCE_MODE
@@ -33,6 +35,7 @@ const getDomain = () => {
 }
 
 export const config = {
+  developmentIp: '82.197.38.138',
   jwt: {
     secret: JWT_SECRET!,
     refreshToken: { expiresIn: '30d', expiresInMs: 1000 * 60 * 60 * 24 * 30, key: 'jwt' },
@@ -53,6 +56,14 @@ export const config = {
     accountSid: TWILIO_ACCOUNT_SID || 'AC',
     authToken: TWILIO_AUTH_TOKEN || '',
     serviceSid: TWILIO_SERVICE_SID || ''
+  },
+  ipqs: {
+    strictness: 1,
+    maxAllowedScore: 90,
+    cacheTTL: 60 * 60 * 24 * 1000,
+    allowPublicAccessPoints: false,
+    allowAll: Boolean(IPQS_ALLOW_ALL) ?? publicConfig.networkId !== 1,
+    key: IPQS_KEY
   },
   dapp: {
     expectedOrigin: EXPECTED_ORIGIN,

@@ -129,7 +129,8 @@ exports.Prisma.UserScalarFieldEnum = {
   type: 'type',
   referralCode: 'referralCode',
   referredBy: 'referredBy',
-  blocked: 'blocked'
+  blocked: 'blocked',
+  status: 'status'
 };
 
 exports.Prisma.UserEmailScalarFieldEnum = {
@@ -182,6 +183,23 @@ exports.Prisma.MessageScalarFieldEnum = {
   data: 'data'
 };
 
+exports.Prisma.IpAssessmentScalarFieldEnum = {
+  id: 'id',
+  ip: 'ip',
+  userAgent: 'userAgent',
+  acceptLanguage: 'acceptLanguage',
+  data: 'data',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.LoginAttemptScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  ipAssessmentId: 'ipAssessmentId',
+  type: 'type',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.NotificationScalarFieldEnum = {
   notificationId: 'notificationId',
   userId: 'userId',
@@ -220,7 +238,7 @@ exports.Prisma.AuditScalarFieldEnum = {
 exports.Prisma.BlockedCountryScalarFieldEnum = {
   country: 'country',
   countryCode: 'countryCode',
-  blocked: 'blocked'
+  status: 'status'
 };
 
 exports.Prisma.TransactionIntentScalarFieldEnum = {
@@ -297,6 +315,12 @@ exports.UserType = exports.$Enums.UserType = {
   ADMIN: 'ADMIN'
 };
 
+exports.UserStatus = exports.$Enums.UserStatus = {
+  OK: 'OK',
+  PERMANENTLY_BLOCKED: 'PERMANENTLY_BLOCKED',
+  TEMPORARLY_BLOCKED: 'TEMPORARLY_BLOCKED'
+};
+
 exports.ImageType = exports.$Enums.ImageType = {
   RadMorph: 'RadMorph',
   RadGem: 'RadGem',
@@ -315,6 +339,12 @@ exports.EventStatus = exports.$Enums.EventStatus = {
   COMPLETED: 'COMPLETED'
 };
 
+exports.LoginAttemptType = exports.$Enums.LoginAttemptType = {
+  USER_CREATED: 'USER_CREATED',
+  USER_LOGIN: 'USER_LOGIN',
+  USER_VERIFY: 'USER_VERIFY'
+};
+
 exports.QuestStatus = exports.$Enums.QuestStatus = {
   IN_PROGRESS: 'IN_PROGRESS',
   REWARDS_DEPOSITED: 'REWARDS_DEPOSITED',
@@ -325,6 +355,12 @@ exports.QuestStatus = exports.$Enums.QuestStatus = {
 exports.AuditType = exports.$Enums.AuditType = {
   DIRECT_DEPOSIT: 'DIRECT_DEPOSIT',
   CLAIMBOX_DEPOSIT: 'CLAIMBOX_DEPOSIT'
+};
+
+exports.CountryStatus = exports.$Enums.CountryStatus = {
+  ALLOWED: 'ALLOWED',
+  BLOCKED: 'BLOCKED',
+  SANCTIONED: 'SANCTIONED'
 };
 
 exports.TransactionIntentStatus = exports.$Enums.TransactionIntentStatus = {
@@ -347,6 +383,8 @@ exports.Prisma.ModelName = {
   Challenge: 'Challenge',
   Event: 'Event',
   Message: 'Message',
+  IpAssessment: 'IpAssessment',
+  LoginAttempt: 'LoginAttempt',
   Notification: 'Notification',
   CompletedQuestRequirement: 'CompletedQuestRequirement',
   QuestProgress: 'QuestProgress',

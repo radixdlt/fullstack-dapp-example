@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { Checkbox, TableHeadCell, TableSearch } from 'flowbite-svelte'
+  import { Select, TableHeadCell, TableSearch } from 'flowbite-svelte'
   import { TableBody, TableBodyCell, TableBodyRow, TableHead } from 'flowbite-svelte'
   import { http } from '$lib/http'
-  import type { BlockedCountry } from 'database'
+  import { type CountryStatus, type BlockedCountry } from 'database'
   import type { LayoutData } from './$types'
   import { writable } from 'svelte/store'
   import { onMount } from 'svelte'
@@ -11,8 +11,7 @@
 
   let countryFilter = ''
 
-  const toggleCountryBlock = (country: BlockedCountry) => {
-    country.blocked = !country.blocked
+  const setCountryStatus = (country: BlockedCountry) => {
     http.put('/countries/api', country)
   }
 
@@ -27,6 +26,12 @@
       )
     })
   }
+
+  const countryStatusList: { value: CountryStatus; name: string }[] = [
+    { value: 'ALLOWED', name: 'Allowed' },
+    { value: 'BLOCKED', name: 'Blocked' },
+    { value: 'SANCTIONED', name: 'Sanctioned' }
+  ]
 
   const sortKey = writable('blocked')
   const sortDirection = writable(1)
@@ -55,7 +60,7 @@
   }
 
   onMount(() => {
-    sortTable('blocked')
+    sortTable('status')
   })
 </script>
 
@@ -67,7 +72,7 @@
       >Code</TableHeadCell
     >
     <TableHeadCell on:click={() => sortTable('blocked')} class="p-4 font-medium"
-      >Blocked</TableHeadCell
+      >Status</TableHeadCell
     >
   </TableHead>
   <TableBody>
@@ -82,11 +87,12 @@
         >
 
         <TableBodyCell>
-          <Checkbox
-            checked={country.blocked}
-            on:change={() => toggleCountryBlock(country)}
-          /></TableBodyCell
-        >
+          <Select
+            items={countryStatusList}
+            bind:value={country.status}
+            on:change={() => setCountryStatus(country)}
+          />
+        </TableBodyCell>
       </TableBodyRow>
     {/each}
   </TableBody>

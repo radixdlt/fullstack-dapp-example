@@ -1,4 +1,4 @@
-import { PrismaClient } from 'database'
+import { CountryStatus, PrismaClient } from 'database'
 import { ResultAsync } from 'neverthrow'
 import { createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers'
@@ -17,12 +17,25 @@ export const BlockedCountryModel = (db: PrismaClient) => (logger?: AppLogger) =>
       }
     )
 
-  const isBlocked = (countryCode: string) =>
+  const getCountryStatus = (countryCode: string) =>
+    ResultAsync.fromPromise(
+      db.blockedCountry.findFirst({
+        where: {
+          countryCode
+        }
+      }),
+      (error) => {
+        logger?.error({ error, method: 'getCountryStatus', model: 'BlockedCountryModel' })
+        return createApiError('failed to get country status', 400)()
+      }
+    )
+
+  const isSanctioned = (countryCode: string) =>
     ResultAsync.fromPromise(
       db.blockedCountry.count({
         where: {
           countryCode,
-          blocked: true
+          status: 'SANCTIONED'
         }
       }),
       (error) => {
@@ -31,11 +44,11 @@ export const BlockedCountryModel = (db: PrismaClient) => (logger?: AppLogger) =>
       }
     ).map((count) => count > 0)
 
-  const update = (countryCode: string, blocked: boolean) =>
+  const update = (countryCode: string, status: CountryStatus) =>
     ResultAsync.fromPromise(
       db.blockedCountry.update({
         where: { countryCode },
-        data: { blocked }
+        data: { status }
       }),
       (error) => {
         logger?.error({ error, method: 'update', model: 'BlockedCountryModel' })
@@ -45,7 +58,8 @@ export const BlockedCountryModel = (db: PrismaClient) => (logger?: AppLogger) =>
 
   return {
     getAll,
-    isBlocked,
-    update
+    update,
+    isSanctioned,
+    getCountryStatus
   }
 }

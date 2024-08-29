@@ -13,7 +13,8 @@ import type {
   NotificationModel,
   MarketingModel,
   ImageModel,
-  MailerLiteModel
+  MailerLiteModel,
+  LoginAttemptModel
 } from 'common'
 import type { PrismaClient } from 'database'
 import type { ResultAsync } from 'neverthrow'
@@ -28,6 +29,7 @@ import type { OneTimePasswordController } from '$lib/server/otp/controller'
 import type { NotificationController } from '$lib/server/notification/controller'
 import type { ImageController } from './image/controller'
 import type { getQueues } from 'queues'
+import type { FraudDetectionModule } from './auth/fraud-detection/fraud-detection'
 
 export type ControllerMethodOutput<T = any> = ResultAsync<
   { data: T; httpResponseCode: number },
@@ -51,9 +53,11 @@ export type Controllers = {
 
 export type ControllerDependencies = {
   userModel: ReturnType<UserModel>
+  fraudDetectionModule: ReturnType<FraudDetectionModule>
   mailerLiteModel: ReturnType<MailerLiteModel>
   transactionModel: ReturnType<TransactionModel>
   auditModel: ReturnType<AuditModel>
+  loginAttemptModel: ReturnType<LoginAttemptModel>
   gatewayApi: ReturnType<typeof GatewayApi>
   userQuestModel: ReturnType<UserQuestModel>
   accountAddressModel: ReturnType<AccountAddressModel>
