@@ -1,40 +1,29 @@
 <script lang="ts">
   import Quest from '../Quest.svelte'
-  import { i18n } from '$lib/i18n/i18n'
   import { okAsync } from 'neverthrow'
   import { onMount, onDestroy } from 'svelte'
-  import DepositHeroBadge from './DepositHeroBadge.svelte'
   import type { PageData } from './$types'
-  import { writable, derived } from 'svelte/store'
+  import { writable } from 'svelte/store'
   import type { Quests } from 'content'
-  import { type ComponentProps } from 'svelte'
   import { gatewayApi, publicConfig } from '$lib/public-config'
-  import { OneTimeDataRequestBuilder, SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
-  import { rdt } from '$lib/rdt'
+  import { SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
   import { userApi } from '$lib/api/user-api'
-  import { user, ErrorPopupId, errorPopupStore } from '../../../../../stores'
-  import Button from '$lib/components/button/Button.svelte'
+  import { user } from '../../../../../stores'
   import { err, ok, ResultAsync } from 'neverthrow'
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { waitingWarning } from '$lib/utils/waiting-warning'
-  import { page } from '$app/stores'
 
   export let data: PageData
 
   const text = data.text as Quests['GetStuff']['text']
 
   let quest: Quest
-  let waitingOnAccount = false
   let xrdDepositLoading = false
-  let chosenAccountHasXrd = false
 
-  let mintBadgeState: ComponentProps<DepositHeroBadge>['state']
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
 
   const skipXrdDepositPage = writable<boolean>(false)
-  const registeredAccountAddress = derived(user, ($user) => !!$user?.accountAddress)
-  const depositHeroBadge = writable(data.requirements.DepositHeroBadge.isComplete)
 
   $: if ($webSocketClient) {
     unsubscribeWebSocket = $webSocketClient.onMessage(async (message) => {
@@ -43,76 +32,6 @@
         messageApi.markAsSeen(message.id)
         skipXrdDepositPage.set(true)
       }
-    })
-  }
-
-  const directDepositXrd = () => {
-    xrdDepositLoading = true
-    userApi.directDepositXrd().mapErr(() => {
-      xrdDepositLoading = false
-    })
-  }
-
-  const setUserAccountAddress = (accountAddress: string, accountProof: SignedChallengeAccount) =>
-    userApi
-      .setUserFields({
-        fields: [
-          {
-            accountAddress,
-            proof: accountProof,
-            field: 'accountAddress'
-          }
-        ]
-      })
-      .mapErr(() => ({ reason: 'failedToAddAccountAddress' }))
-
-  const checkAccountStatus = (accountAddress: string) =>
-    gatewayApi
-      .hasHeroBadgeAndXrd(accountAddress)
-      .mapErr(() => ({ reason: 'failedToCheckAccountStatus' }))
-      .andThen(({ hasHeroBadge, hasXrd }) =>
-        hasHeroBadge ? err({ reason: 'UserHasHeroBadge' }) : ok(hasXrd)
-      )
-
-  const handleXrdDepositPossibility = (accountAddress: string) =>
-    gatewayApi
-      .isDepositDisabledForResource(accountAddress, publicConfig.xrd)
-      .mapErr(() => ({ reason: 'failedToCheckDepositStatus' }))
-      .map((disabled) => {
-        if (disabled) {
-          skipXrdDepositPage.set(true)
-        }
-      })
-
-  const connectAccount = () => {
-    waitingOnAccount = true
-    rdt.then((rdt) => {
-      rdt.walletApi
-        .sendOneTimeRequest(OneTimeDataRequestBuilder.accounts().exactly(1).withProof())
-        .mapErr(() => ({ reason: 'failedToGetAccountFromWallet' }))
-        .andThen(({ accounts, proofs }) => {
-          waitingOnAccount = false
-
-          const accountProof = proofs.find((proof) => proof.type === 'account')!
-          const accountAddress = accounts[0].address
-
-          return checkAccountStatus(accountAddress).andThen((hasXrd) =>
-            setUserAccountAddress(accountAddress, accountProof as SignedChallengeAccount).andThen(
-              () => {
-                $user!.accountAddress = accounts[0].address
-                quest.actions.next()
-                chosenAccountHasXrd = hasXrd
-                return handleXrdDepositPossibility(accountAddress)
-              }
-            )
-          )
-        })
-        .mapErr((err) => {
-          if (err.reason === 'UserHasHeroBadge' || err.reason === 'failedToAddAccountAddress') {
-            errorPopupStore.set({ id: ErrorPopupId.AccountAlreadyRegistered })
-          }
-          waitingOnAccount = false
-        })
     })
   }
 
@@ -131,10 +50,7 @@
               if (disabled) {
                 skipXrdDepositPage.set(true)
               }
-            }),
-          gatewayApi.hasHeroBadgeAndXrd($user!.accountAddress).map(({ hasXrd }) => {
-            chosenAccountHasXrd = hasXrd
-          })
+            })
         ])
       }
 
@@ -172,7 +88,6 @@
   }}
   {...data.questProps}
   bind:this={quest}
-  let:next
   steps={[
     {
       id: '0',
@@ -196,13 +111,7 @@
     },
     {
       id: '7',
-      type: 'regular',
-      footer: {
-        next: {
-          enabled: registeredAccountAddress
-        }
-      },
-      skip: registeredAccountAddress
+      type: 'regular'
     },
     {
       id: '8',
@@ -242,59 +151,7 @@
         }
       }
     },
-    {
-      id: '16',
-      type: 'regular'
-    },
-    {
-      id: '17',
-      type: 'jetty'
-    },
-    {
-      id: '18',
-      type: 'jetty'
-    },
-    {
-      id: '19',
-      type: 'jetty'
-    },
-    {
-      id: '20',
-      type: 'regular',
-      skip: depositHeroBadge,
-      footer: {
-        next: {
-          enabled: depositHeroBadge
-        }
-      }
-    },
-    {
-      id: '21',
-      type: 'jetty'
-    },
-    {
-      id: '22',
-      type: 'regular'
-    },
 
-    {
-      id: '23',
-      type: 'jetty'
-    },
-    {
-      id: '24',
-      type: 'jetty',
-      footer: {
-        next: {
-          onClick: (next) => {
-            next()
-          }
-        }
-      }
-    },
-    {
-      type: 'requirements'
-    },
     {
       type: 'claimRewards'
     },
@@ -334,16 +191,6 @@
 
   {#if render('7')}
     {@html text['7.md']}
-
-    <div class="center">
-      <Button on:click={connectAccount} loading={waitingOnAccount}
-        >{$i18n.t('quests:GetStuff.registerAccount')}
-      </Button>
-    </div>
-  {/if}
-
-  {#if render('8')}
-    {@html text['8.md']}
   {/if}
 
   {#if render('9')}
@@ -371,73 +218,7 @@
   {/if}
 
   {#if render('15')}
-    {#if $user?.goldenTicketClaimed}
-      {#if chosenAccountHasXrd}
-        {@html text['15b.md']}
-      {:else}
-        {@html text['15a.md']}
-      {/if}
-
-      <div class="center">
-        <Button
-          on:click={directDepositXrd}
-          loading={xrdDepositLoading}
-          disabled={xrdDepositLoading}
-        >
-          {$i18n.t('quests:GetStuff.getXrd')}
-        </Button>
-      </div>
-    {:else if $page.url.searchParams.get('t')}
-      <!-- Placeholder -->
-      Oops! Seems like your Golden Ticket is invalid. Please get some XRD and come back.
-    {:else}
-      Please get some XRD and come back.
-    {/if}
-  {/if}
-
-  {#if render('16')}
-    {@html text['16.md']}
-  {/if}
-
-  {#if render('17')}
-    {@html text['17.md']}
-  {/if}
-
-  {#if render('18')}
-    {@html text['18.md']}
-  {/if}
-
-  {#if render('19')}
-    {@html text['19.md']}
-  {/if}
-
-  {#if render('20')}
-    {@html text['20.md']}
-
-    <DepositHeroBadge
-      on:deposited={() => {
-        $depositHeroBadge = true
-        next()
-      }}
-      questId={data.id}
-      bind:state={mintBadgeState}
-    />
-  {/if}
-
-  {#if render('21')}
-    {@html text['21.md']}
-  {/if}
-
-  {#if render('22')}
-    {@html text['22.md']}
-  {/if}
-
-  {#if render('23')}
-    {@html text['23.md']}
-  {/if}
-
-  {#if render('24')}
-    {@html text['24.md']}
+    {@html text['15.md']}
   {/if}
 </Quest>
 

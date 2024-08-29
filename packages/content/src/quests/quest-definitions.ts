@@ -112,6 +112,14 @@ export const QuestDefinitions = () => {
         ConnectWallet: {
           type: 'offLedger',
           completedByUser: true
+        },
+        RegisterAccount: {
+          type: 'offLedger',
+          completedByUser: true
+        },
+        [EventId.DepositHeroBadge]: {
+          type: 'event',
+          eventName: 'DepositEvent'
         }
       },
       nextQuest: 'GetStuff'
@@ -121,10 +129,6 @@ export const QuestDefinitions = () => {
       category: 'basic',
       trackedAccountAddress: false,
       rewards: [
-        {
-          name: 'xrd',
-          amount: 30
-        },
         {
           name: 'starterGiftBox',
           amount: 1
@@ -136,16 +140,7 @@ export const QuestDefinitions = () => {
       ],
       preRequisites: ['SetupWallet'],
       minutesToComplete: 6,
-      requirements: {
-        RegisterAccount: {
-          type: 'offLedger',
-          completedByUser: false
-        },
-        [EventId.DepositHeroBadge]: {
-          type: 'event',
-          eventName: 'DepositEvent'
-        }
-      },
+      requirements: {},
       nextQuest: 'CreatingRadMorphs'
     },
     CreatingRadMorphs: {
@@ -173,10 +168,6 @@ export const QuestDefinitions = () => {
       trackedAccountAddress: true,
       category: 'basic',
       rewards: [
-        {
-          name: 'xrd',
-          amount: 30
-        },
         {
           name: 'fancyGiftBox',
           amount: 1

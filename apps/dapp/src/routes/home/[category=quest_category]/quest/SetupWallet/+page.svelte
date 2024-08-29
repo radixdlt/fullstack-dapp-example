@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount, type ComponentProps } from 'svelte'
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
   import { useCookies } from '$lib/utils/cookies'
   import { derived, writable } from 'svelte/store'
   import type { Quests } from 'content'
-  import { user } from '../../../../../stores'
+  import { user, ErrorPopupId, errorPopupStore } from '../../../../../stores'
   import SetEmailPage from './SetEmailPage.svelte'
   import { questApi } from '$lib/api/quest-api'
   import Button from '$lib/components/button/Button.svelte'
@@ -17,6 +17,11 @@
   import AppsFlyer from './AppsFlyer.svelte'
   import { markNotificationAsSeen } from '$lib/notifications'
   import { isMobile } from '@radixdlt/radix-dapp-toolkit'
+  import DepositHeroBadge from './DepositHeroBadge.svelte'
+  import { rdt } from '$lib/rdt'
+  import { OneTimeDataRequestBuilder, SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
+  import { gatewayApi, publicConfig } from '$lib/public-config'
+  import { err, ok } from 'neverthrow'
 
   export let data: PageData
 
@@ -27,7 +32,69 @@
   let hasError: boolean
   let confirmedWalletInstall = writable<boolean>(false)
   let walletIsLinked = writable(data.requirements.ConnectWallet?.isComplete)
+  let waitingOnAccount = false
+
   const skipMobileWalletInstall = writable<boolean>(false)
+  const registeredAccountAddress = derived(user, ($user) => !!$user?.accountAddress)
+  const depositHeroBadge = writable(data.requirements.DepositHeroBadge.isComplete)
+  let mintBadgeState: ComponentProps<DepositHeroBadge>['state']
+
+  const checkAccountStatus = (accountAddress: string) =>
+    gatewayApi
+      .hasHeroBadgeAndXrd(accountAddress)
+      .mapErr(() => ({ reason: 'failedToCheckAccountStatus' }))
+      .andThen(({ hasHeroBadge, hasXrd }) =>
+        hasHeroBadge ? err({ reason: 'UserHasHeroBadge' }) : ok(hasXrd)
+      )
+
+  const handleXrdDepositPossibility = (accountAddress: string) =>
+    gatewayApi
+      .isDepositDisabledForResource(accountAddress, publicConfig.xrd)
+      .mapErr(() => ({ reason: 'failedToCheckDepositStatus' }))
+
+  const setUserAccountAddress = (accountAddress: string, accountProof: SignedChallengeAccount) =>
+    userApi
+      .setUserFields({
+        fields: [
+          {
+            accountAddress,
+            proof: accountProof,
+            field: 'accountAddress'
+          }
+        ]
+      })
+      .mapErr(() => ({ reason: 'failedToAddAccountAddress' }))
+
+  const connectAccount = () => {
+    waitingOnAccount = true
+    rdt.then((rdt) => {
+      rdt.walletApi
+        .sendOneTimeRequest(OneTimeDataRequestBuilder.accounts().exactly(1).withProof())
+        .mapErr(() => ({ reason: 'failedToGetAccountFromWallet' }))
+        .andThen(({ accounts, proofs }) => {
+          waitingOnAccount = false
+
+          const accountProof = proofs.find((proof) => proof.type === 'account')!
+          const accountAddress = accounts[0].address
+
+          return checkAccountStatus(accountAddress).andThen(() =>
+            setUserAccountAddress(accountAddress, accountProof as SignedChallengeAccount).andThen(
+              () => {
+                $user!.accountAddress = accounts[0].address
+                quest.actions.next()
+                return handleXrdDepositPossibility(accountAddress)
+              }
+            )
+          )
+        })
+        .mapErr((err) => {
+          if (err.reason === 'UserHasHeroBadge' || err.reason === 'failedToAddAccountAddress') {
+            errorPopupStore.set({ id: ErrorPopupId.AccountAlreadyRegistered })
+          }
+          waitingOnAccount = false
+        })
+    })
+  }
 
   onMount(() => {
     skipMobileWalletInstall.set(!isMobile())
@@ -107,6 +174,7 @@
 
 <Quest
   bind:this={quest}
+  let:next
   on:render={(e) => {
     if (e.detail === '9b') {
       on9bRender()
@@ -225,6 +293,26 @@
       }
     },
     {
+      id: '21',
+      type: 'regular',
+      footer: {
+        next: {
+          enabled: registeredAccountAddress
+        }
+      },
+      skip: registeredAccountAddress
+    },
+    {
+      id: '25',
+      type: 'regular',
+      skip: depositHeroBadge,
+      footer: {
+        next: {
+          enabled: depositHeroBadge
+        }
+      }
+    },
+    {
       type: 'complete'
     }
   ]}
@@ -339,6 +427,29 @@
       bind:hasError
       privacyPolicyText={text['19-2.md']}
       marketingUpdatesText={text['19-3.md']}
+    />
+  {/if}
+
+  {#if render('21')}
+    {@html text['21.md']}
+
+    <div class="center">
+      <Button on:click={connectAccount} loading={waitingOnAccount}
+        >{$i18n.t('quests:GetStuff.registerAccount')}
+      </Button>
+    </div>
+  {/if}
+
+  {#if render('25')}
+    {@html text['25.md']}
+
+    <DepositHeroBadge
+      on:deposited={() => {
+        $depositHeroBadge = true
+        next()
+      }}
+      questId={data.id}
+      bind:state={mintBadgeState}
     />
   {/if}
 </Quest>
