@@ -14,15 +14,14 @@ export type LoginAttemptModel = ReturnType<typeof LoginAttemptModel>
 
 export const LoginAttemptModel = (db: PrismaClient) => (logger: AppLogger) => {
   const add = (loginData: LoginData) => {
-    const dbData = {
+    const data = {
       type: loginData.type,
       userId: loginData.userId,
       ipAssessmentId: loginData.assessmentId
     }
-    logger.trace({ method: 'add', model: 'LoginAttempt', data: dbData })
     return ResultAsync.fromPromise(
       db.loginAttempt.create({
-        data: dbData
+        data
       }),
       (error) => {
         logger?.error({ error, method: 'add', model: 'LoginAttempt' })

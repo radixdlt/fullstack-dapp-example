@@ -134,7 +134,7 @@ export type UserType = (typeof UserType)[keyof typeof UserType]
 export const UserStatus: {
   OK: 'OK',
   PERMANENTLY_BLOCKED: 'PERMANENTLY_BLOCKED',
-  TEMPORARLY_BLOCKED: 'TEMPORARLY_BLOCKED'
+  TEMPORARILY_BLOCKED: 'TEMPORARILY_BLOCKED'
 };
 
 export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]

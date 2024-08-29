@@ -90,12 +90,16 @@ export const FraudDetectionModule = (config: {
             })
           : queryIpqs(ip, userAgent, acceptLanguage)
               .andThen((data) =>
-                ipAssessmentModel.add({ ip, userAgent, acceptLanguage }, data).map((created) => {
-                  return {
-                    response: data,
-                    assessmentId: created.id
-                  }
-                })
+                data.success
+                  ? ipAssessmentModel
+                      .add({ ip, userAgent, acceptLanguage }, data)
+                      .map((created) => {
+                        return {
+                          response: data,
+                          assessmentId: created.id
+                        }
+                      })
+                  : okAsync(IPQS_OK_RESULT)
               )
               .orElse(() => okAsync(IPQS_OK_RESULT))
       )

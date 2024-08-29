@@ -20,7 +20,7 @@ enum UserType {
 enum UserStatus {
   OK
   PERMANENTLY_BLOCKED
-  TEMPORARLY_BLOCKED
+  TEMPORARILY_BLOCKED
 }
 
 model User {

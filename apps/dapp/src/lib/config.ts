@@ -18,6 +18,7 @@ const {
   IPQS_ALLOW_ALL = false,
   MAX_USER_PER_IP,
   MAILER_LITE_API_KEY,
+  DEVELOPMENT_IP,
   MAINTENANCE_MODE
 } = privateEnv
 
@@ -35,7 +36,7 @@ const getDomain = () => {
 }
 
 export const config = {
-  developmentIp: '82.197.38.138',
+  developmentIp: DEVELOPMENT_IP,
   jwt: {
     secret: JWT_SECRET!,
     refreshToken: { expiresIn: '30d', expiresInMs: 1000 * 60 * 60 * 24 * 30, key: 'jwt' },
@@ -60,7 +61,7 @@ export const config = {
   ipqs: {
     strictness: 1,
     maxAllowedScore: 90,
-    cacheTTL: 60 * 60 * 24 * 1000,
+    cacheTTL: 60 * 60 * 8 * 1000,
     allowPublicAccessPoints: false,
     allowAll: Boolean(IPQS_ALLOW_ALL) ?? publicConfig.networkId !== 1,
     key: IPQS_KEY

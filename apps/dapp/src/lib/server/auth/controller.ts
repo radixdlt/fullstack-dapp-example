@@ -162,7 +162,7 @@ export const AuthController = ({
         }
 
         if (check.ruleRejected(FraudRule.CountrySanctioned)) {
-          return userModel.setUserBlockedStatus(user.id, 'TEMPORARLY_BLOCKED')
+          return userModel.setUserBlockedStatus(user.id, 'TEMPORARILY_BLOCKED')
         }
 
         if (check.ruleOk(FraudRule.GoldenTicket)) {
@@ -174,7 +174,7 @@ export const AuthController = ({
           check.ruleRejected(FraudRule.IPQSAggresive) ||
           check.ruleRejected(FraudRule.Farmer)
         ) {
-          return userModel.setUserBlockedStatus(user.id, 'TEMPORARLY_BLOCKED')
+          return userModel.setUserBlockedStatus(user.id, 'TEMPORARILY_BLOCKED')
         }
 
         return okAsync(evaluation)

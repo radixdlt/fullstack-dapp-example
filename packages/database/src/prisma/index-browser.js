@@ -318,7 +318,7 @@ exports.UserType = exports.$Enums.UserType = {
 exports.UserStatus = exports.$Enums.UserStatus = {
   OK: 'OK',
   PERMANENTLY_BLOCKED: 'PERMANENTLY_BLOCKED',
-  TEMPORARLY_BLOCKED: 'TEMPORARLY_BLOCKED'
+  TEMPORARILY_BLOCKED: 'TEMPORARILY_BLOCKED'
 };
 
 exports.ImageType = exports.$Enums.ImageType = {

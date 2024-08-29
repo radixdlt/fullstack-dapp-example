@@ -2,13 +2,13 @@ import { ResultAsync, err, errAsync, okAsync } from 'neverthrow'
 import {
   PrismaClient,
   Prisma,
-  User,
-  UserPhoneNumber,
-  UserEmail,
-  CompletedQuestRequirement,
-  QuestProgress,
-  UserStatus,
-  QuestStatus
+  type User,
+  type UserPhoneNumber,
+  type UserEmail,
+  type CompletedQuestRequirement,
+  type QuestProgress,
+  type UserStatus,
+  type QuestStatus
 } from 'database'
 import { QuestTogetherConfig, type AppLogger } from '../'
 import { type ApiError, createApiError } from '../helpers'
@@ -110,7 +110,7 @@ export const UserModel =
 
     const getUserIdsByIp = (ip: string, period = HOURS_24) => {
       return ResultAsync.fromPromise(
-        db.$queryRaw`
+        db.$queryRaw<{ userId: string }[]>`
       SELECT "userId" FROM "LoginAttempt" 
         WHERE "ipAssessmentId" IN (SELECT id FROM "IpAssessment" WHERE ip = ${ip}) 
         AND "createdAt" > NOW() - interval '${period} milliseconds'
@@ -119,13 +119,13 @@ export const UserModel =
           logger?.error({ error, method: 'countByIp', model: 'UserModel' })
           return createApiError('failed to count by ip', 400)(error)
         }
-      ).map((data) => (data as { userId: string }[]).map((user) => user.userId))
+      ).map((data) => data.map((user) => user.userId))
     }
 
     const countReferralCodeUsagePerIp = (userId: string, ip: string) =>
       ResultAsync.fromPromise(
-        db.$queryRaw`
-          SELECT "userId" FROM "User" u
+        db.$queryRaw<{ count: number }[]>`
+          SELECT COUNT(1) FROM "User" u
             INNER JOIN "LoginAttempt" la
               ON u.id = la."userId" 
               AND la."createdAt" > NOW() - INTERVAL '30 minutes'
@@ -140,9 +140,9 @@ export const UserModel =
             method: 'countReferralCodeUsagePerIp',
             model: 'UserModel'
           })
-          return createApiError('failed to count phone numbers by referral code and ip', 400)()
+          return createApiError('failed to count referral code usage', 500)(error)
         }
-      ).map((data: any) => data[0].count)
+      ).map((data) => data[0].count || 0)
 
     const blockUsers = (userIds: string[]) =>
       ResultAsync.fromPromise(
@@ -166,7 +166,7 @@ export const UserModel =
               ? { id: userId }
               : {
                   id: userId,
-                  status: { in: ['TEMPORARLY_BLOCKED', 'OK'] }
+                  status: { in: ['TEMPORARILY_BLOCKED', 'OK'] }
                 },
           data: {
             status
