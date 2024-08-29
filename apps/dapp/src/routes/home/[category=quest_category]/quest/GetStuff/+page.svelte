@@ -6,10 +6,9 @@
   import { writable } from 'svelte/store'
   import type { Quests } from 'content'
   import { gatewayApi, publicConfig } from '$lib/public-config'
-  import { SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
   import { userApi } from '$lib/api/user-api'
   import { user } from '../../../../../stores'
-  import { err, ok, ResultAsync } from 'neverthrow'
+  import { ResultAsync } from 'neverthrow'
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { waitingWarning } from '$lib/utils/waiting-warning'
@@ -221,11 +220,3 @@
     {@html text['15.md']}
   {/if}
 </Quest>
-
-<style lang="scss">
-  .center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-</style>
