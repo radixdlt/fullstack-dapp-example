@@ -84,15 +84,15 @@ export const HandleTransactions =
             })
             .flat()
 
-          return eventModel.add(itemsToProcess).andThen(() => {
+          return eventModel.add(itemsToProcess).andThen((items) => {
             if (filteredTransactions.length) {
               logger.debug({
                 method: 'HandleTransactions',
                 stateVersion,
-                transactions: filteredTransactions.map((tx) => ({
-                  type: tx.type,
-                  transactionId: tx.transactionId!,
-                  userId: tx.userId
+                transactions: items.map((item) => ({
+                  type: item.data.type,
+                  transactionId: item.data.transactionId,
+                  userId: item.data.userId
                 }))
               })
             }

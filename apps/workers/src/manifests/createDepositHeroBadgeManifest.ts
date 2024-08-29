@@ -7,7 +7,7 @@ const { components, accounts, badges } = config.radQuest
 
 export const createDepositHeroBadgeManifest = (items: DepositHeroBadgeJob[]) => {
   const mintHeroBadgeInput = items.map((item) => `"${item.userId}"`).join(', ')
-  const completedQuestIds = (['Welcome', 'WhatIsRadix', 'SetupWallet'] satisfies QuestId[])
+  const completedQuestIds = (['Welcome', 'WhatIsRadix'] satisfies QuestId[])
     .map((questId) => `"${questId}"`)
     .join(', ')
 

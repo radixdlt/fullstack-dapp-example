@@ -139,10 +139,10 @@ export const EventWorkerController = ({
       case EventId.DepositHeroBadge: {
         return questHelper
           .completeQuestRequirement({
-            questId: 'GetStuff',
+            questId: 'SetupWallet',
             type
           })
-          .andThen(() => questHelper.handleAllQuestRequirementCompleted('GetStuff'))
+          .andThen(() => questHelper.handleAllQuestRequirementCompleted('SetupWallet'))
       }
 
       case EventId.JettyReceivedClams: {

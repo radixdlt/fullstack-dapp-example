@@ -1,3 +1,3 @@
-Fine work, RadMorpher!
+**You’ve made it, {name}! You’ve completed the RadQuest Basics!** Pat yourself on the back and appreciate what you’ve achieved.
 
-Here’s another **Gift Box** in recognition…
+And enjoy an **extra nice gift**!

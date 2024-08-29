@@ -122,81 +122,6 @@
       type: 'jetty'
     },
     {
-      id: '9',
-      type: 'jetty'
-    },
-    {
-      id: '10',
-      type: 'jettyQuiz',
-
-      text: text['10.md'],
-      quizRequirement: 'PersonaQuiz',
-
-      answers: [
-        {
-          text: text['10a-answer.md'],
-          info: text['10a-result.md'],
-          correct: true
-        },
-        {
-          text: text['10b-answer.md'],
-          info: text['10b-result.md'],
-          correct: false
-        },
-        {
-          text: text['10c-answer.md'],
-          info: text['10c-result.md'],
-          correct: false
-        }
-      ]
-    },
-    {
-      id: '11',
-      type: 'jettyQuiz',
-      text: text['11.md'],
-      quizRequirement: 'TransactionQuiz',
-      answers: [
-        {
-          text: text['11a-answer.md'],
-          info: text['11a-result.md'],
-          correct: false
-        },
-        {
-          text: text['11b-answer.md'],
-          info: text['11b-result.md'],
-          correct: true
-        },
-        {
-          text: text['11c-answer.md'],
-          info: text['11c-result.md'],
-          correct: false
-        }
-      ]
-    },
-    {
-      id: '12',
-      type: 'jettyQuiz',
-      text: text['12.md'],
-      quizRequirement: 'XrdQuiz',
-      answers: [
-        {
-          text: text['12a-answer.md'],
-          info: text['12a-result.md'],
-          correct: true
-        },
-        {
-          text: text['12b-answer.md'],
-          info: text['12b-result.md'],
-          correct: false
-        },
-        {
-          text: text['12c-answer.md'],
-          info: text['12c-result.md'],
-          correct: false
-        }
-      ]
-    },
-    {
       type: 'requirements'
     },
     {
@@ -281,22 +206,6 @@
 
   {#if render('8')}
     {@html text['8.md']}
-  {/if}
-
-  {#if render('9')}
-    {@html text['9.md']}
-  {/if}
-  {#if render('complete0')}
-    {@html text['complete0.md']}
-  {/if}
-  {#if render('complete1')}
-    {@html text['complete1.md']}
-  {/if}
-  {#if render('complete2')}
-    {@html text['complete2.md']}
-  {/if}
-  {#if render('complete3')}
-    {@html text['complete3.md']}
   {/if}
 </Quest>
 

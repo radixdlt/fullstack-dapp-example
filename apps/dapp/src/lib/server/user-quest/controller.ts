@@ -16,8 +16,10 @@ export const UserQuestController = ({
   transactionModel,
   logger
 }: ControllerDependencies) => {
+  const questDefinitions = QuestDefinitions()
+
   const hasAllRequirementsCompleted = (questId: keyof Quests, userId: string) => {
-    const questDefinition = QuestDefinitions()[questId]
+    const questDefinition = questDefinitions[questId]
     const requirements = Object.keys(questDefinition.requirements)
     return userQuestModel
       .findCompletedRequirements(userId, questId)
@@ -85,7 +87,7 @@ export const UserQuestController = ({
     userQuestModel
       .findCompletedRequirements(userId, questId)
       .andThen((completedRequirements) => {
-        const questDefinition = QuestDefinitions()[questId]
+        const questDefinition = questDefinitions[questId]
         if (completedRequirements.length !== Object.keys(questDefinition.requirements).length) {
           return errAsync(createApiError(ErrorReason.requirementsNotMet, 400)())
         }
@@ -93,7 +95,7 @@ export const UserQuestController = ({
         return userQuestModel.updateQuestStatus(questId, userId, 'COMPLETED')
       })
       .andThen(() => {
-        if (['Welcome', 'WhatIsRadix', 'SetupWallet'].includes(questId)) {
+        if (['Welcome', 'WhatIsRadix'].includes(questId)) {
           return okAsync(undefined)
         }
         return transactionModel.add({
@@ -108,7 +110,7 @@ export const UserQuestController = ({
 
   const startQuest = (userId: string, questId: keyof Quests) => {
     logger.trace({ method: 'startQuest', userId, questId })
-    const questDefinition = QuestDefinitions()[questId]
+    const questDefinition = questDefinitions[questId]
 
     const preRequisites = questDefinition.preRequisites
 
@@ -152,7 +154,7 @@ export const UserQuestController = ({
       userQuestModel.getQuestStatus(userId, questId),
       userQuestModel.findCompletedRequirements(userId, questId)
     ]).map(([questStatus, completedRequirements]) => {
-      const questDefinition = QuestDefinitions()[questId]
+      const questDefinition = questDefinitions[questId]
       const requirementsState = completedRequirements.reduce(
         (acc, requirement) => {
           acc[requirement.requirementId] = { isComplete: true }
@@ -199,7 +201,7 @@ export const UserQuestController = ({
       userId
     })
 
-    const questDefinition = QuestDefinitions()[questId]
+    const questDefinition = questDefinitions[questId]
 
     const requirement = (questDefinition.requirements as Record<string, Requirement>)[requirementId]
 
@@ -218,7 +220,7 @@ export const UserQuestController = ({
     questId: QuestId,
     userId: string
   ) => {
-    const questDefinition = QuestDefinitions()[questId]
+    const questDefinition = questDefinitions[questId]
 
     const requirementId = Object.keys(questDefinition.requirements).find(
       // @ts-ignore

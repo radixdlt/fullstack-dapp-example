@@ -86,27 +86,8 @@
       type: 'jetty'
     },
     {
-      id: '17',
-      type: 'jettyQuiz',
-      text: text['17.md'],
-      quizRequirement: 'RadMorphsQuiz',
-      answers: [
-        {
-          text: text['17a-answer.md'],
-          info: text['17a-result.md'],
-          correct: false
-        },
-        {
-          text: text['17b-answer.md'],
-          info: text['17b-result.md'],
-          correct: true
-        },
-        {
-          text: text['17c-answer.md'],
-          info: text['17c-result.md'],
-          correct: false
-        }
-      ]
+      id: '16',
+      type: 'jetty'
     },
     {
       type: 'requirements'
@@ -170,6 +151,9 @@
   {/if}
   {#if render('16')}
     {@html text['16.md']}
+  {/if}
+  {#if render('17')}
+    {@html text['17.md']}
   {/if}
 
   {#if error}
