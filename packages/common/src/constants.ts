@@ -268,12 +268,6 @@ export const RedisKeys = {
   TrackedAccountAddresses: 'tracked-account-addresses'
 }
 
-export const QuestTogetherConfig = {
-  // TODO: Update this to 'CreateRadmorphs'
-  triggerRewardAfterQuest: 'TransferTokens',
-  maxReferrals: 10
-}
-
 export const EventId = {
   DepositHeroBadge: 'DepositHeroBadge',
   JettyReceivedClams: 'JettyReceivedClams',
@@ -344,5 +338,9 @@ export const BusinessLogic = {
     },
     transferValueInUSD: 50,
     paddingValueInUSD: 1
+  },
+  QuestTogether: {
+    triggerRewardAfterQuest: 'CreatingRadMorphs',
+    maxReferrals: 10
   }
 } as const

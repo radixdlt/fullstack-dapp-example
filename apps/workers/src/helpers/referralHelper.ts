@@ -1,7 +1,7 @@
 import {
   AppLogger,
   MessageType,
-  QuestTogetherConfig,
+  BusinessLogic,
   UserByReferralCode,
   WorkerError,
   TransactionIntentHelper
@@ -145,7 +145,8 @@ export const ReferralHelper = ({
   const handleQuestTogetherRewards = (
     questId: string
   ): ResultAsync<undefined, WorkerOutputError> => {
-    const shouldTriggerReferralRewardFlow = questId === QuestTogetherConfig.triggerRewardAfterQuest
+    const shouldTriggerReferralRewardFlow =
+      questId === BusinessLogic.QuestTogether.triggerRewardAfterQuest
 
     if (referredBy && shouldTriggerReferralRewardFlow) {
       return triggerRewardsForReferredUser()

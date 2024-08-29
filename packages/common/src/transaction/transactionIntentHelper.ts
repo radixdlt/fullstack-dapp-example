@@ -3,7 +3,7 @@ import { ResultAsync, errAsync } from 'neverthrow'
 import type { PrismaClient } from 'database'
 import type { AppLogger } from '../helpers'
 import { WorkerError } from '../worker-error'
-import { QuestTogetherConfig } from '../constants'
+import { BusinessLogic } from '../constants'
 
 export type TransactionIntentHelper = ReturnType<typeof TransactionIntentHelper>
 export const TransactionIntentHelper = ({
@@ -91,7 +91,7 @@ export const TransactionIntentHelper = ({
               questProgress: {
                 some: {
                   AND: [
-                    { questId: QuestTogetherConfig.triggerRewardAfterQuest },
+                    { questId: BusinessLogic.QuestTogether.triggerRewardAfterQuest },
                     {
                       OR: [{ status: 'REWARDS_CLAIMED' }, { status: 'COMPLETED' }]
                     }

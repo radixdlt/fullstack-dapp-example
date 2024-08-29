@@ -9,7 +9,7 @@ import type {
   QuestProgress,
   QuestStatus
 } from 'database'
-import { QuestTogetherConfig, type AppLogger } from '../'
+import { BusinessLogic, type AppLogger } from '../'
 import { type ApiError, createApiError } from '../helpers'
 import { getRandomReferralCode } from './get-random-referral-code'
 
@@ -247,7 +247,7 @@ export const UserModel =
               INNER JOIN "QuestProgress" ON "User".id = "QuestProgress"."userId"
               WHERE 
               "User"."referredBy" = (SELECT "referralCode" FROM "User" WHERE id = ${id})
-                AND "QuestProgress"."questId" = ${QuestTogetherConfig.triggerRewardAfterQuest} 
+                AND "QuestProgress"."questId" = ${BusinessLogic.QuestTogether.triggerRewardAfterQuest} 
                 AND ("QuestProgress"."status" = 'COMPLETED' OR "QuestProgress"."status" = 'REWARDS_CLAIMED');
             `,
           (error) => {
