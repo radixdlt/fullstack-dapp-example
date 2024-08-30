@@ -7,12 +7,26 @@ import {
 import { hasChallengeExpired } from './helpers/has-challenge-expired'
 import { Rola } from '@radixdlt/rola'
 import { SignedChallenge, parseSignedChallenge } from '@radixdlt/radix-dapp-toolkit'
-import { type ApiError, CookieKeys, decodeBase64, parseJSON, type MarketingUtmValues } from 'common'
 
 import { Result, ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import type { Cookies } from '@sveltejs/kit'
 
-import type { UserType } from 'database'
+import {
+  type ApiError,
+  CookieKeys,
+  decodeBase64,
+  parseJSON,
+  type MarketingUtmValues,
+  createApiError
+} from 'common'
+
+import { type User, type UserType } from 'database'
+import { FraudRule, type FraudEvaluation } from './fraud-detection/types'
+import { fraudRuleChecker } from './fraud-detection/fraud-detection'
+
+type FraudActionHandler = (
+  user: User
+) => (evaluation: FraudEvaluation) => ResultAsync<FraudEvaluation, ApiError>
 
 export type AuthController = ReturnType<typeof AuthController>
 export const AuthController = ({
@@ -21,6 +35,8 @@ export const AuthController = ({
   authModel,
   userModel,
   userQuestModel,
+  loginAttemptModel,
+  fraudDetectionModule,
   gatewayApi,
   logger,
   marketingModel
@@ -82,27 +98,61 @@ export const AuthController = ({
               clientIp,
               ids
             })
-            return err({
-              reason: 'tooManyUsers',
-              jsError: undefined,
-              httpResponseCode: 400
-            } satisfies ApiError)
+            return err(createApiError('tooManyUsers', 400)())
           })
         : ok(undefined)
     )
 
+  const setUserBlockedStatus: FraudActionHandler =
+    (user: User) => (evaluation: FraudEvaluation) => {
+      const check = fraudRuleChecker(evaluation)
+      logger.trace({ method: 'login.doFraudScoring', evaluation })
+
+      const businessLogic = () => {
+        if (check.ruleRejected(FraudRule.IPQSGenerous)) {
+          return userModel.setUserBlockedStatus(user.id, 'PERMANENTLY_BLOCKED')
+        }
+
+        if (check.ruleRejected(FraudRule.CountrySanctioned)) {
+          return userModel.setUserBlockedStatus(user.id, 'TEMPORARILY_BLOCKED')
+        }
+
+        if (check.ruleOk(FraudRule.GoldenTicket)) {
+          return okAsync(evaluation)
+        }
+
+        if (
+          check.ruleRejected(FraudRule.CountryBlocked) ||
+          check.ruleRejected(FraudRule.IPQSAggresive) ||
+          check.ruleRejected(FraudRule.Farmer)
+        ) {
+          return userModel.setUserBlockedStatus(user.id, 'TEMPORARILY_BLOCKED')
+        }
+
+        return okAsync(evaluation)
+      }
+
+      return user.status === 'PERMANENTLY_BLOCKED'
+        ? okAsync(evaluation)
+        : businessLogic().map(() => evaluation)
+    }
+
   const login = (
     ctx: ControllerMethodContext,
-    proofs: {
+    data: {
+      ip: string
+      cookies: Cookies
+      userAgent: string
+      acceptLanguage: string
       personaProof: SignedChallenge
-    },
-    cookies: Cookies
+    }
   ): ControllerMethodOutput<{
     authToken: string
     headers: { ['Set-Cookie']: string }
     id: string
   }> => {
-    const { personaProof } = proofs
+    const { personaProof, cookies } = data
+
     ctx.logger.trace({ method: 'login', personaProof })
     const parsedPersonaResult = parseSignedChallenge(personaProof)
     if (!parsedPersonaResult.success) {
@@ -111,10 +161,7 @@ export const AuthController = ({
         error: parsedPersonaResult.issues
       })
 
-      return errAsync({
-        httpResponseCode: 400,
-        reason: 'invalidRequestBody'
-      })
+      return errAsync(createApiError('invalidRequestBody', 400)())
     }
 
     return authModel(ctx.logger)
@@ -125,13 +172,7 @@ export const AuthController = ({
           method: 'login.getAndDeleteChallenge.error',
           error: 'challengeNotFound'
         })
-        return challenge
-          ? ok(challenge)
-          : err({
-              reason: 'challengeNotFound',
-              jsError: undefined,
-              httpResponseCode: 400
-            } satisfies ApiError)
+        return challenge ? ok(challenge) : err(createApiError('challengeNotFound', 400)())
       })
       .andThen((challenge) =>
         hasChallengeExpired(challenge).mapErr((error): ApiError => {
@@ -145,17 +186,11 @@ export const AuthController = ({
             ctx.logger.error({ error, method: 'login.verifyPersonaProof' })
             return error
           })
-          .mapErr((error) => {
-            return {
-              httpResponseCode: 400,
-              reason: error.reason,
-              jsError: error.jsError
-            } satisfies ApiError
-          })
+          .mapErr((error) => createApiError(error.reason, 400)(error.jsError))
       )
       .andThen(() =>
         userModel.doesUserExist(personaProof.address).andThen((userExists) =>
-          userExists
+          (userExists
             ? userModel.getByIdentityAddress(personaProof.address, {})
             : getReferredBy(cookies)
                 .andThen((referredBy) => userModel.create(personaProof.address, referredBy))
@@ -166,7 +201,27 @@ export const AuthController = ({
                     addUtmToDb(user.id, cookies)
                   ]).map(() => user)
                 )
+          ).map((user) => ({ user, isNewUser: !userExists }))
         )
+      )
+      .andThen(({ user, isNewUser }) =>
+        fraudDetectionModule
+          .evaluate({ ...data, userId: user.id })
+          .andThen(({ IPQSGenerous, ...rest }) =>
+            loginAttemptModel
+              .add({
+                type: isNewUser ? 'USER_CREATED' : 'USER_LOGIN',
+                userId: user.id,
+                assessmentId: IPQSGenerous.assessmentId
+              })
+              .map(() => ({ ...rest, IPQSGenerous }) as FraudEvaluation)
+          )
+          .andThen(setUserBlockedStatus(user))
+          .map(() => user)
+          .orElse((error) => {
+            logger.error({ method: 'login.doFraudScoring', error })
+            return okAsync(user)
+          })
       )
       .andThen(({ id, type }) =>
         jwt.createTokens(id, type).map(({ authToken, refreshToken }) => ({

@@ -1,4 +1,4 @@
-import { Addresses } from 'common'
+import { Addresses, BlockedCountryModel, IpAssessmentModel } from 'common'
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, beforeEach } from 'vitest'
 import { AuthController } from './controller'
@@ -10,6 +10,8 @@ import { publicConfig } from '$lib/public-config'
 import { UserQuestModel } from 'common'
 import { config, type Config } from '$lib/config'
 import { JWT } from './jwt'
+import { FraudDetectionModule } from './fraud-detection/fraud-detection'
+import { okAsync } from 'neverthrow'
 
 let mockCtx: MockContext
 let ctx: Context
@@ -31,10 +33,28 @@ describe('AuthController', () => {
   beforeEach(() => {
     mockCtx = createMockContext()
     ctx = mockCtx as unknown as Context
-
+    const fraudDetectionModule = FraudDetectionModule({
+      logger: methodCtx.logger,
+      ipqs: {
+        ...config.ipqs,
+        allowAll: true
+      },
+      userModel: {
+        getUserIdsByIp: () => okAsync([]),
+        countReferralCodeUsagePerIp: () => okAsync(0),
+        setUserBlockedStatus: () => okAsync({})
+      } as any,
+      ipAssessmentModel: IpAssessmentModel(ctx.prisma)(methodCtx.logger),
+      blockedCountryModel: BlockedCountryModel(ctx.prisma)(methodCtx.logger)
+    })
     controller = AuthController({
+      logger: methodCtx.logger,
       authModel: AuthModel(ctx.prisma),
+      loginAttemptModel: {
+        add: () => okAsync({})
+      },
       userModel: UserModel(ctx.prisma)(methodCtx.logger),
+      fraudDetectionModule,
       userQuestModel: UserQuestModel(ctx.prisma)(methodCtx.logger),
       gatewayApi: ctx.gatewayApi,
       config: dAppConfig,
@@ -94,20 +114,23 @@ describe('AuthController', () => {
     )
 
     mockCtx.prisma.user.findUnique.mockResolvedValue(
-      Promise.resolve({ identityAddress: personaProof.address }) as any
+      Promise.resolve({ identityAddress: personaProof.address, id: 'a', type: 'b' }) as any
     )
 
     mockCtx.prisma.user.count.mockResolvedValue(Promise.resolve(true) as any)
 
+    mockCtx.prisma.loginAttempt.create.mockResolvedValue(Promise.resolve({}) as any)
+    mockCtx.prisma.blockedCountry.findFirst.mockResolvedValue(Promise.resolve(null) as any)
+
     mockCtx.prisma.completedQuestRequirement.upsert.mockResolvedValue(Promise.resolve({}) as any)
 
-    const result = await controller.login(
-      methodCtx,
-      {
-        personaProof
-      },
-      ctx.cookies
-    )
+    const result = await controller.login(methodCtx, {
+      personaProof,
+      ip: '',
+      userAgent: '',
+      acceptLanguage: '',
+      cookies: ctx.cookies
+    })
 
     if (result.isErr()) {
       throw result.error
