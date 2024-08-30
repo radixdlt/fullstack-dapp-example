@@ -36,7 +36,10 @@
 
   const skipMobileWalletInstall = writable<boolean>(false)
   const registeredAccountAddress = derived(user, ($user) => !!$user?.accountAddress)
-  const depositHeroBadge = writable(data.requirements.DepositHeroBadge.isComplete || $isUserBlocked)
+  const depositHeroBadge = derived(
+    isUserBlocked,
+    ($isUserBlocked) => data.requirements.DepositHeroBadge.isComplete || $isUserBlocked
+  )
   let mintBadgeState: ComponentProps<DepositHeroBadge>['state']
 
   const checkAccountStatus = (accountAddress: string) =>
