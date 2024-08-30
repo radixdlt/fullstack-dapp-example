@@ -84,30 +84,65 @@ export const QuestHelper = ({
       (error) => ({ reason: WorkerError.FailedToCompleteQuestRequirement, jsError: error })
     )
 
+  const isQuestRequirementCompleted = ({
+    questId,
+    requirementId
+  }: {
+    questId: QuestId
+    requirementId: string
+  }) =>
+    ResultAsync.fromPromise(
+      dbClient.completedQuestRequirement.count({
+        where: { questId, requirementId, userId }
+      }),
+      (error) => ({ reason: WorkerError.FailedToCheckIfQuestRequirementCompleted, jsError: error })
+    ).map((n) => n > 0)
+
   const addCompletedQuestRequirement = ({
     questId,
     requirementId
   }: {
-    questId: string
+    questId: QuestId
     requirementId: string
   }) =>
-    ResultAsync.fromPromise(
-      dbClient.completedQuestRequirement.upsert({
-        where: {
-          questId_userId_requirementId: {
-            userId,
-            questId,
-            requirementId
-          }
-        },
-        create: {
-          userId,
-          questId,
-          requirementId
-        },
-        update: {}
-      }),
-      (error) => ({ reason: WorkerError.FailedToAddCompletedQuestRequirement, jsError: error })
+    isQuestRequirementCompleted({
+      questId,
+      requirementId
+    }).andThen((isCompleted) =>
+      isCompleted
+        ? okAsync(undefined)
+        : ResultAsync.fromPromise(
+            dbClient.completedQuestRequirement.upsert({
+              where: {
+                questId_userId_requirementId: {
+                  userId,
+                  questId,
+                  requirementId
+                }
+              },
+              create: {
+                userId,
+                questId,
+                requirementId
+              },
+              update: {}
+            }),
+            (error) => ({
+              reason: WorkerError.FailedToAddCompletedQuestRequirement,
+              jsError: error
+            })
+          ).andThen(() =>
+            sendMessage(
+              userId,
+              {
+                type: 'QuestRequirementCompleted',
+                traceId,
+                requirementId,
+                questId
+              },
+              logger
+            )
+          )
     )
 
   const updateQuestProgressStatus = ({

@@ -57,6 +57,7 @@ export const WorkerError = {
   FailedToUpdateHeroBadge: 'FailedToUpdateHeroBadge',
   FailedToFindCompletedRequirements: 'FailedToFindCompletedRequirements',
   FailedToAddCompletedQuestRequirement: 'FailedToAddCompletedQuestRequirement',
+  FailedToCheckIfQuestRequirementCompleted: 'FailedToCheckIfQuestRequirementCompleted',
   FailedToCreateBatchedTransactionIntent: 'FailedToCreateBatchedTransactionIntent',
   FailedToAddJobToQueue: 'FailedToAddJobToQueue',
   FailedToMarkJobsAsFailed: 'FailedToMarkJobsAsFailed',
