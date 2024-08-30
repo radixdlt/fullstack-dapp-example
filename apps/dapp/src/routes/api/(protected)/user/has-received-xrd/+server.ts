@@ -5,6 +5,6 @@ export const GET: RequestHandler = async ({ locals }) =>
   routeHandler(() =>
     locals.controllers.userController.doesTransactionExist(
       locals.userId,
-      `PopulateResources:${locals.userId}`
+      `DepositXrd:${locals.userId}`
     )
   )
