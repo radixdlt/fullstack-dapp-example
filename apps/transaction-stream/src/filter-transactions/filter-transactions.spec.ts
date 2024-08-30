@@ -17,6 +17,7 @@ import { FilterTransactionsByType } from './filter-transactions-by-type'
 import { RedisServer } from '../test-helpers/inMemoryRedisServer'
 import { RedisConnection } from 'queues'
 import DepositElementsToRadGemv2 from '../fixtures/transactions/radgem-forgev2'
+import RadMorphCreated from '../fixtures/transactions/radmorph-created'
 
 let accountAddressModel: ReturnType<AccountAddressModel>
 let filterTransactionsByType = FilterTransactionsByType(trackedTransactionTypes)
@@ -163,6 +164,22 @@ describe('filter transactions', () => {
       expect(transaction.type).toEqual(EventId.DepositedElements)
       expect(transaction.userId).toBeDefined()
       expect(transaction.data.elementsCount).toBe('5')
+    })
+  })
+
+  describe('RadMorph', () => {
+    it(`should find ${EventId.RadMorphCreated} transaction`, () => {
+      const result = filterTransactionsByType([...RadMorphCreated])
+
+      if (result.isErr()) throw result.error
+
+      const filteredTransactions = result.value
+
+      expect(filteredTransactions.length).toEqual(1)
+
+      const [transaction] = filteredTransactions
+      expect(transaction.type).toEqual(EventId.RadMorphCreated)
+      expect(transaction.accountAddress).toBeDefined()
     })
   })
 

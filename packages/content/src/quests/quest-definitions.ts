@@ -151,7 +151,7 @@ export const QuestDefinitions = () => {
     CreatingRadMorphs: {
       id: 'CreatingRadMorphs',
       category: 'basic',
-      trackedAccountAddress: false,
+      trackedAccountAddress: true,
       rewards: [
         {
           amount: 1,
@@ -161,9 +161,17 @@ export const QuestDefinitions = () => {
       minutesToComplete: 4,
       preRequisites: ['GetStuff'],
       requirements: {
-        RadMorphsQuiz: {
-          type: 'offLedger',
-          completedByUser: true
+        OpenGiftBox: {
+          type: 'event',
+          eventName: 'GiftBoxesOpenedEvent'
+        },
+        [EventId.RadGemsClaimed]: {
+          type: 'event',
+          eventName: 'ClaimedRadgemsEvent'
+        },
+        [EventId.RadMorphCreated]: {
+          type: 'event',
+          eventName: 'DepositEvent'
         }
       },
       nextQuest: 'TransferTokens'

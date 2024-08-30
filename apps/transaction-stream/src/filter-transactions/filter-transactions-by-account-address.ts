@@ -60,6 +60,14 @@ export const FilterTransactionsByAccountAddress =
         break
       }
 
+      case EventId.RadMorphCreated: {
+        result = accountAddressModel.getTrackedAddressUserId(
+          transaction.accountAddress,
+          'CreatingRadMorphs'
+        )
+        break
+      }
+
       default: {
         throw new Error(`Unhandled transaction type: ${transaction.type}`)
       }

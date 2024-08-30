@@ -280,7 +280,9 @@ export const EventId = {
   JettySwap: 'JettySwap',
   LettySwap: 'LettySwap',
   GiftBoxesOpenedEvent: 'GiftBoxesOpenedEvent',
-  DepositedElements: 'DepositedElements'
+  DepositedElements: 'DepositedElements',
+  RadGemsClaimed: 'RadGemsClaimed',
+  RadMorphCreated: 'RadMorphCreated'
 } as const
 
 export type EventId = keyof typeof EventId

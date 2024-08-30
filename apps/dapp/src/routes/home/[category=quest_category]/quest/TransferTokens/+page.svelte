@@ -11,7 +11,7 @@
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
-  import { markNotificationAsSeen, pushNotification } from '$lib/notifications'
+  import { markNotificationAsSeen } from '$lib/notifications'
   import { htmlReplace } from '$lib/helpers/html-replace'
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
@@ -73,11 +73,6 @@
 <Quest
   {...data.questProps}
   bind:this={quest}
-  on:completed={() => {
-    //@ts-ignore
-    dataLayer.push({ event: 'dl_click_5_basic_complete' })
-    pushNotification('basicQuestsComplete')
-  }}
   steps={[
     {
       id: '0',

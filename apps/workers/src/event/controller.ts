@@ -191,16 +191,29 @@ export const EventWorkerController = ({
       case EventId.GiftBoxesOpenedEvent: {
         const giftBoxResourceAddress = job.data.data.giftBoxResourceAddress as string
         const amount = parseInt(job.data.data.quantity as string)
-        return getGiftBoxKindByResourceAddress(giftBoxResourceAddress).asyncAndThen((giftBoxKind) =>
-          transactionIntentHelper.add({
-            type: 'DepositGiftBoxesReward',
-            discriminator: `${EventId.GiftBoxesOpenedEvent}:${job.data.transactionId}`,
-            userId,
-            traceId: job.data.traceId,
-            giftBoxKind,
-            amount
+
+        return getGiftBoxKindByResourceAddress(giftBoxResourceAddress)
+          .asyncAndThen((giftBoxKind) => {
+            if (giftBoxKind === 'Starter')
+              return questHelper
+                .addCompletedQuestRequirement({
+                  questId: 'CreatingRadMorphs',
+                  requirementId: 'OpenGiftBox'
+                })
+                .map(() => giftBoxKind)
+
+            return okAsync(giftBoxKind)
           })
-        )
+          .andThen((giftBoxKind) =>
+            transactionIntentHelper.add({
+              type: 'DepositGiftBoxesReward',
+              discriminator: `${EventId.GiftBoxesOpenedEvent}:${job.data.transactionId}`,
+              userId,
+              traceId: job.data.traceId,
+              giftBoxKind,
+              amount
+            })
+          )
       }
 
       case EventId.DepositedElements: {
@@ -214,6 +227,17 @@ export const EventWorkerController = ({
           traceId,
           elementsCount
         })
+      }
+
+      case EventId.RadGemsClaimed: {
+        return questHelper.addCompletedQuestRequirement({
+          questId: 'CreatingRadMorphs',
+          requirementId: EventId.RadGemsClaimed
+        })
+      }
+
+      case EventId.RadMorphCreated: {
+        return questHelper.handleQuestWithTrackedAccount('CreatingRadMorphs', type)
       }
 
       default:

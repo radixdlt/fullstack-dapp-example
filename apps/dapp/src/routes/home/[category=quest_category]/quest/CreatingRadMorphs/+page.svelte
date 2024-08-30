@@ -3,19 +3,60 @@
   import type { LayoutData } from '../$types'
   import Quest from '../Quest.svelte'
   import Error from '$lib/components/error/Error.svelte'
+  import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
+  import { messageApi } from '$lib/api/message-api'
+  import { pushNotification } from '$lib/notifications'
 
   import type { Quests } from 'content'
+  import { writable } from 'svelte/store'
+  import { onDestroy } from 'svelte'
   export let data: LayoutData
 
   let quest: Quest
   let error: boolean
+  let starterGiftBoxOpened = writable(data.requirements?.OpenGiftBox.isComplete)
+  let radGemsClaimed = writable(data.requirements?.RadGemsClaimed.isComplete)
+  let radMorphCreated = writable(data.requirements?.RadMorphCreated.isComplete)
 
   const text = data.text as Quests['CreatingRadMorphs']['text']
+
+  let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
+  $: if ($webSocketClient) {
+    unsubscribeWebSocket = $webSocketClient.onMessage((message) => {
+      if (message.type === 'QuestRequirementCompleted') {
+        switch (message.requirementId) {
+          case 'OpenGiftBox':
+            $starterGiftBoxOpened = true
+            break
+
+          case 'RadGemsClaimed':
+            $radGemsClaimed = true
+            break
+
+          case 'RadMorphCreated':
+            $radMorphCreated = true
+            break
+
+          default:
+            break
+        }
+
+        messageApi.markAsSeen(message.id)
+      }
+    })
+  }
+
+  onDestroy(() => unsubscribeWebSocket?.())
 </script>
 
 <Quest
   bind:this={quest}
   {...data.questProps}
+  on:completed={() => {
+    //@ts-ignore
+    dataLayer.push({ event: 'dl_click_5_basic_complete' })
+    pushNotification('basicQuestsComplete')
+  }}
   steps={[
     {
       id: '0',
@@ -39,7 +80,13 @@
     },
     {
       id: '5',
-      type: 'jetty'
+      type: 'jetty',
+      skip: starterGiftBoxOpened,
+      footer: {
+        next: {
+          enabled: starterGiftBoxOpened
+        }
+      }
     },
     {
       id: '6',
@@ -55,7 +102,13 @@
     },
     {
       id: '9',
-      type: 'jetty'
+      type: 'jetty',
+      skip: radGemsClaimed,
+      footer: {
+        next: {
+          enabled: radGemsClaimed
+        }
+      }
     },
     {
       id: '10',
@@ -75,7 +128,13 @@
     },
     {
       id: '14',
-      type: 'jetty'
+      type: 'jetty',
+      skip: radMorphCreated,
+      footer: {
+        next: {
+          enabled: radMorphCreated
+        }
+      }
     },
     {
       id: '15',

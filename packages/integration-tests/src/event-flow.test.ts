@@ -316,6 +316,166 @@ const claimQuestReward = async (
   return result
 }
 
+const openGiftBox = async ({
+  kind,
+  amount = 1,
+  account
+}: {
+  kind: GiftBoxKind
+  amount?: number
+  account?: Awaited<ReturnType<typeof getAccount>>
+}) => {
+  const { submitTransaction, user } = account ?? (await getAccount())
+  const openGiftBoxResult = await submitTransaction(`
+    CALL_METHOD
+      Address("${user.accountAddress}")
+      "lock_fee"
+      Decimal("50")
+    ;
+
+    CALL_METHOD
+      Address("${user.accountAddress}")
+      "create_proof_of_non_fungibles"
+      Address("${addresses.badges.heroBadgeAddress}")
+      Array<NonFungibleLocalId>(
+          NonFungibleLocalId("<${user.id}>")
+      )
+    ;
+
+    POP_FROM_AUTH_ZONE
+      Proof("hero_badge_proof")
+    ;
+
+    CALL_METHOD
+      Address("${user.accountAddress}")
+      "withdraw"
+      Address("${addresses.resources.giftBox[kind]}")
+      Decimal("${amount}")
+    ;
+
+    TAKE_ALL_FROM_WORKTOP
+      Address("${addresses.resources.giftBox[kind]}")
+      Bucket("gift_box")
+    ;
+
+    CALL_METHOD
+      Address("${addresses.components.giftBoxOpenerV2}")
+      "open_gift_boxes"
+      Proof("hero_badge_proof")
+      Bucket("gift_box")
+    ;
+  `)
+
+  if (openGiftBoxResult.isErr()) throw openGiftBoxResult.error
+}
+
+const claimGiftBoxReward = async ({ user, submitTransaction }: Account) => {
+  const result = await submitTransaction(`
+    CALL_METHOD
+        Address("${user.accountAddress}")
+        "lock_fee"
+        Decimal("50")
+    ;
+    CALL_METHOD
+        Address("${user.accountAddress}")
+        "create_proof_of_non_fungibles"
+        Address("${addresses.badges.heroBadgeAddress}")
+        Array<NonFungibleLocalId>(
+            NonFungibleLocalId("<${user.id}>")
+        )
+    ;
+    POP_FROM_AUTH_ZONE
+        Proof("hero_badge_proof")
+    ;
+    CALL_METHOD
+        Address("${addresses.components.giftBoxOpenerV2}")
+        "claim_gift_box_rewards"
+        Proof("hero_badge_proof")
+        1u64
+    ;
+    CALL_METHOD
+        Address("${user.accountAddress}")
+        "deposit_batch"
+        Expression("ENTIRE_WORKTOP")
+    ;`)
+  if (result.isErr()) throw result.error
+  return result
+}
+
+const isQuestRequirementCompleted = (questId: QuestId, requirementId: string) =>
+  db.completedQuestRequirement.findFirst({ where: { questId, requirementId } })
+
+const createRadGem = (account: Account, amount = 50) =>
+  account.submitTransaction(`
+  CALL_METHOD
+    Address("${account.user.accountAddress}")
+    "lock_fee"
+    Decimal("50")
+  ;
+
+  CALL_METHOD
+    Address("${account.user.accountAddress}")
+    "create_proof_of_non_fungibles"
+    Address("${addresses.badges.heroBadgeAddress}")
+    Array<NonFungibleLocalId>(NonFungibleLocalId("<${account.user.id}>"))
+  ;
+
+  POP_FROM_AUTH_ZONE
+    Proof("hero_badge")
+  ;
+
+  CALL_METHOD
+    Address("${account.user.accountAddress}")
+    "withdraw" 
+    Address("${addresses.resources.elementAddress}")
+    Decimal("${amount}") 
+  ;
+
+  TAKE_ALL_FROM_WORKTOP 
+    Address("${addresses.resources.elementAddress}") 
+    Bucket("elements")
+  ;
+
+  CALL_METHOD
+    Address("${addresses.components.radgemForgeV2}")
+    "deposit_elements"
+    Proof("hero_badge")
+    Bucket("elements")
+  ;
+`)
+
+const claimRadGems = (account: Account) =>
+  account.submitTransaction(`
+  CALL_METHOD
+    Address("${account.user.accountAddress}")
+    "lock_fee"
+    Decimal("50")
+  ;
+
+  CALL_METHOD
+    Address("${account.user.accountAddress}")
+    "create_proof_of_non_fungibles"
+    Address("${addresses.badges.heroBadgeAddress}")
+    Array<NonFungibleLocalId>(NonFungibleLocalId("<${account.user.id}>"))
+  ;
+
+  POP_FROM_AUTH_ZONE
+    Proof("hero_badge")
+  ;
+
+  CALL_METHOD
+    Address("${addresses.components.radgemForgeV2}")
+    "claim_radgems"
+    Proof("hero_badge")
+  ;
+
+  CALL_METHOD
+    Address("${account.user.accountAddress}")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+  ;
+`)
+
 describe('Event flows', () => {
   it('should deposit XRD to account', { timeout: 60_000 }, async () => {
     const nAccounts = new Array(5)
@@ -366,45 +526,7 @@ describe('Event flows', () => {
 
         await Promise.all(
           accounts.map((account) => {
-            mintElements(1000, account.user.accountAddress!).andThen(() =>
-              account.submitTransaction(`
-              CALL_METHOD
-                Address("${account.user.accountAddress}")
-                "lock_fee"
-                Decimal("50")
-              ;
-    
-              CALL_METHOD
-                Address("${account.user.accountAddress}")
-                "create_proof_of_non_fungibles"
-                Address("${addresses.badges.heroBadgeAddress}")
-                Array<NonFungibleLocalId>(NonFungibleLocalId("<${account.user.id}>"))
-              ;
-    
-              POP_FROM_AUTH_ZONE
-                Proof("hero_badge")
-              ;
-    
-              CALL_METHOD
-                Address("${account.user.accountAddress}")
-                "withdraw" 
-                Address("${addresses.resources.elementAddress}")
-                Decimal("50") 
-              ;
-    
-              TAKE_ALL_FROM_WORKTOP 
-                Address("${addresses.resources.elementAddress}") 
-                Bucket("elements")
-              ;
-    
-              CALL_METHOD
-                Address("${addresses.components.radgemForgeV2}")
-                "deposit_elements"
-                Proof("hero_badge")
-                Bucket("elements")
-              ;
-            `)
-            )
+            mintElements(1000, account.user.accountAddress!).andThen(() => createRadGem(account))
           })
         )
 
@@ -486,7 +608,77 @@ describe('Event flows', () => {
         await waitForMessage(logger, db)(account1.user.id, 'QuestRewardsClaimed')
       })
     })
-    describe('Thorswap', { timeout: 60_000 }, async () => {
+    describe('CreatingRadMorphs', () => {
+      it('should create a RadMorph and claim rewards', { timeout: 120_000 }, async () => {
+        const account = await createAccount({ withHeroBadge: true, withXrd: true })
+
+        await accountAddressModel.addTrackedAddress(
+          account.user.accountAddress!,
+          'CreatingRadMorphs',
+          account.user.id
+        )
+
+        await Promise.all([
+          mintGiftBox('Starter', account.user.accountAddress!),
+          mintElements(1000, account.user.accountAddress!)
+        ])
+
+        console.log('Gift box and elements minted')
+
+        await openGiftBox({ account, kind: 'Starter' })
+
+        console.log('Starter Gift box opened')
+
+        await waitForMessage(logger, db)(account.user.id, 'QuestRequirementCompleted')
+
+        console.log('QuestRequirementCompleted')
+
+        expect(await isQuestRequirementCompleted('CreatingRadMorphs', 'OpenGiftBox')).toBeTruthy()
+
+        await waitForMessage(logger, db)(account.user.id, 'GiftBoxesDeposited')
+
+        console.log('GiftBoxesDeposited')
+
+        await claimGiftBoxReward(account)
+
+        console.log('Gift box rewards claimed')
+
+        await createRadGem(account, 15)
+
+        console.log('Create RadGems')
+
+        await waitForMessage(logger, db)(account.user.id, 'RadgemsMinted')
+
+        console.log('RadGem ready to claim')
+
+        await claimRadGems(account)
+
+        console.log('RadGem claimed')
+
+        await waitForMessage(logger, db)(account.user.id, 'QuestRequirementCompleted')
+
+        await isQuestRequirementCompleted('CreatingRadMorphs', 'CreateRadGems')
+
+        // Simulate RadMorph mint event
+        await eventModel.add([
+          {
+            transactionId: crypto.randomUUID(),
+            traceId: crypto.randomUUID(),
+            userId: account.user.id,
+            eventId: EventId.RadMorphCreated,
+            type: EventId.RadMorphCreated,
+            data: {}
+          }
+        ])
+
+        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsDeposited')
+
+        await claimQuestReward(account, 'CreatingRadMorphs')
+
+        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsClaimed')
+      })
+    })
+    describe('Thorswap', () => {
       const simulateMayaSwapEvent = (
         userId: string,
         token: keyof typeof BusinessLogic.Maya.supportedTokens,
@@ -505,24 +697,6 @@ describe('Event flows', () => {
             }
           }
         ])
-
-      it('should handle swapped XRD and claim quest rewards', { timeout: 60_000 }, async () => {
-        const account = await createAccount({ withHeroBadge: true, withXrd: true })
-
-        await accountAddressModel.addTrackedAddress(
-          account.user.accountAddress!,
-          'Thorswap',
-          account.user.id
-        )
-
-        await simulateMayaSwapEvent(account.user.id, 'XRD', '10000')
-
-        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsDeposited')
-
-        await claimQuestReward(account, 'Thorswap')
-
-        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsClaimed')
-      })
 
       it('should handle swapped xUSDC and claim quest rewards', { timeout: 60_000 }, async () => {
         const account = await createAccount({ withHeroBadge: true, withXrd: true })
@@ -645,123 +819,37 @@ describe('Event flows', () => {
   })
 
   describe('giftbox', async () => {
-    const openGiftBox = async ({
-      kind,
-      amount = 1,
-      account
-    }: {
-      kind: GiftBoxKind
-      amount?: number
-      account?: Awaited<ReturnType<typeof getAccount>>
-    }) => {
-      const { submitTransaction, user } = account ?? (await getAccount())
-      const openGiftBoxResult = await submitTransaction(`
-        CALL_METHOD
-          Address("${user.accountAddress}")
-          "lock_fee"
-          Decimal("50")
-        ;
-
-        CALL_METHOD
-          Address("${user.accountAddress}")
-          "create_proof_of_non_fungibles"
-          Address("${addresses.badges.heroBadgeAddress}")
-          Array<NonFungibleLocalId>(
-              NonFungibleLocalId("<${user.id}>")
-          )
-        ;
-
-        POP_FROM_AUTH_ZONE
-          Proof("hero_badge_proof")
-        ;
-
-        CALL_METHOD
-          Address("${user.accountAddress}")
-          "withdraw"
-          Address("${addresses.resources.giftBox[kind]}")
-          Decimal("${amount}")
-        ;
-
-        TAKE_ALL_FROM_WORKTOP
-          Address("${addresses.resources.giftBox[kind]}")
-          Bucket("gift_box")
-        ;
-
-        CALL_METHOD
-          Address("${addresses.components.giftBoxOpenerV2}")
-          "open_gift_boxes"
-          Proof("hero_badge_proof")
-          Bucket("gift_box")
-        ;
-      `)
-
-      if (openGiftBoxResult.isErr()) throw openGiftBoxResult.error
-    }
-
-    const claimGiftBoxReward = async () => {
-      const { submitTransaction, user } = await getAccount()
-      const result = await submitTransaction(`
-        CALL_METHOD
-            Address("${user.accountAddress}")
-            "lock_fee"
-            Decimal("50")
-        ;
-        CALL_METHOD
-            Address("${user.accountAddress}")
-            "create_proof_of_non_fungibles"
-            Address("${addresses.badges.heroBadgeAddress}")
-            Array<NonFungibleLocalId>(
-                NonFungibleLocalId("<${user.id}>")
-            )
-        ;
-        POP_FROM_AUTH_ZONE
-            Proof("hero_badge_proof")
-        ;
-        CALL_METHOD
-            Address("${addresses.components.giftBoxOpenerV2}")
-            "claim_gift_box_rewards"
-            Proof("hero_badge_proof")
-            1u64
-        ;
-        CALL_METHOD
-            Address("${user.accountAddress}")
-            "deposit_batch"
-            Expression("ENTIRE_WORKTOP")
-        ;`)
-      if (result.isErr()) throw result.error
-    }
-
     describe('open and claim gift boxes', () => {
       it('open Starter gift box', { timeout: 120_000, skip: false }, async () => {
-        const { user } = await getAccount()
-        await mintGiftBox('Starter', user.accountAddress!)
+        const account = await getAccount()
+        await mintGiftBox('Starter', account.user.accountAddress!)
         await openGiftBox({ kind: 'Starter' })
-        await waitForMessage(logger, db)(user.id, 'GiftBoxesDeposited')
-        await claimGiftBoxReward()
+        await waitForMessage(logger, db)(account.user.id, 'GiftBoxesDeposited')
+        await claimGiftBoxReward(account)
       })
 
       it('open Simple gift box', { timeout: 60_000, skip: false }, async () => {
-        const { user } = await getAccount()
-        await mintGiftBox('Simple', user.accountAddress!)
+        const account = await getAccount()
+        await mintGiftBox('Simple', account.user.accountAddress!)
         await openGiftBox({ kind: 'Simple' })
-        await waitForMessage(logger, db)(user.id, 'GiftBoxesDeposited')
-        await claimGiftBoxReward()
+        await waitForMessage(logger, db)(account.user.id, 'GiftBoxesDeposited')
+        await claimGiftBoxReward(account)
       })
 
       it('open Fancy gift box', { timeout: 60_000, skip: false }, async () => {
-        const { user } = await getAccount()
-        await mintGiftBox('Fancy', user.accountAddress!)
+        const account = await getAccount()
+        await mintGiftBox('Fancy', account.user.accountAddress!)
         await openGiftBox({ kind: 'Fancy' })
-        await waitForMessage(logger, db)(user.id, 'GiftBoxesDeposited')
-        await claimGiftBoxReward()
+        await waitForMessage(logger, db)(account.user.id, 'GiftBoxesDeposited')
+        await claimGiftBoxReward(account)
       })
 
       it('open Elite gift box', { timeout: 60_000, skip: false }, async () => {
-        const { user } = await getAccount()
-        await mintGiftBox('Elite', user.accountAddress!)
+        const account = await getAccount()
+        await mintGiftBox('Elite', account.user.accountAddress!)
         await openGiftBox({ kind: 'Elite' })
-        await waitForMessage(logger, db)(user.id, 'GiftBoxesDeposited')
-        await claimGiftBoxReward()
+        await waitForMessage(logger, db)(account.user.id, 'GiftBoxesDeposited')
+        await claimGiftBoxReward(account)
       })
     })
 

@@ -215,6 +215,22 @@ export const trackedTransactionTypes: TrackedTransactions = {
       }
     })
   },
+  [EventId.RadGemsClaimed]: {
+    AddedRadgemImageEvent: eventEmittedByComponent({
+      eventName: 'ClaimedRadgemsEvent',
+      componentAddress: config.radQuest.components.radgemForgeV2,
+      keys: {
+        user_id: { kind: 'String', key: 'userId' }
+      }
+    })
+  },
+  [EventId.RadMorphCreated]: {
+    RadMorphCreated: nonFungibleMinted(config.addresses.resources.radmorphAddress, {}),
+    DepositEvent: resourceDeposited({
+      resourceAddress: config.radQuest.resources.radmorphAddress,
+      key: 'accountAddress'
+    })
+  },
   [EventId.MayaRouterWithdrawEvent]: {
     MayaRouterWithdrawEvent: eventEmittedByComponent({
       eventName: 'MayaRouterWithdrawEvent',
