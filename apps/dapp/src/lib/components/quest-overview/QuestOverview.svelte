@@ -21,7 +21,7 @@
   export let questId: string | undefined = undefined
 
   $: hovering = false
-  $: greyOut = !hovering && state === 'completed'
+  $: greyOut = !hovering && (state === 'completed' || state === 'partially_completed')
 
   let openingQuest = false
 
@@ -52,7 +52,7 @@
       </div>
     {/if}
   </div>
-  {#if state === 'completed' || state === 'locked' || state === 'in-progress'}
+  {#if state === 'completed' || state === 'locked' || state === 'in-progress' || state === 'partially_completed'}
     <div
       class="status-icon"
       class:status-icon-with-background={state !== 'in-progress'}
@@ -67,7 +67,7 @@
         <img src={Hourglass} class="icon in-progress-icon" alt="Hourglass" />
       {/if}
 
-      {#if state === 'completed'}
+      {#if state === 'completed' || state === 'partially_completed'}
         <img src={CheckmarkIcon} class="icon" alt="Checkmark" />
       {/if}
     </div>

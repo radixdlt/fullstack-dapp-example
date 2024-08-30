@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onDestroy, onMount } from 'svelte'
   import { questApi } from '$lib/api/quest-api'
-  import { quests, user } from '../../../../stores'
+  import { isUserBlocked, quests, user } from '../../../../stores'
   import type { Quests } from 'content'
   import RequirementsPage from '$lib/components/quest/RequirementsPage.svelte'
   import { i18n } from '$lib/i18n/i18n'
@@ -10,6 +10,7 @@
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import type { QuestRequirement } from '$lib/server/user-quest/controller'
   import { waitingWarning } from '$lib/utils/waiting-warning'
+  import { okAsync } from 'neverthrow'
 
   export let questId: keyof Quests
   export let requirements: Record<string, { isComplete: QuestRequirement['isComplete'] }>
@@ -43,6 +44,10 @@
   }>()
 
   export const checkRequirements = () => {
+    if ($isUserBlocked) {
+      dispatch('all-requirements-met')
+      return okAsync(true)
+    }
     return questApi.getQuestInformation(questId).map(({ requirements, status }) => {
       const requirementValueList = Object.entries(requirements)
       const allRequirementsMet = requirementValueList.every(([_, { isComplete }]) => isComplete)

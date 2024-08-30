@@ -189,7 +189,8 @@ export const QuestStatus: {
   IN_PROGRESS: 'IN_PROGRESS',
   REWARDS_DEPOSITED: 'REWARDS_DEPOSITED',
   REWARDS_CLAIMED: 'REWARDS_CLAIMED',
-  COMPLETED: 'COMPLETED'
+  COMPLETED: 'COMPLETED',
+  PARTIALLY_COMPLETED: 'PARTIALLY_COMPLETED'
 };
 
 export type QuestStatus = (typeof QuestStatus)[keyof typeof QuestStatus]

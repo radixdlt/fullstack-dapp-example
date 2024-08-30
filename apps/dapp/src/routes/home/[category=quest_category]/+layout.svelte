@@ -31,6 +31,9 @@
     }, 0)
   })
 
+  const isConsideredCompleted = (status: string) =>
+    status === 'COMPLETED' || status === 'PARTIALLY_COMPLETED'
+
   $: questCardState = Object.entries(data.questDefinitions).reduce(
     (prev, cur) => {
       if (PUBLIC_NETWORK_ID === '1') {
@@ -40,19 +43,20 @@
       }
 
       const [id, quest] = cur
+      const status = data.questStatus[id as QuestId]?.status
 
-      if (data.questStatus[id as QuestId]?.status === 'COMPLETED') {
-        prev[id as QuestId] = 'completed'
+      if (isConsideredCompleted(status)) {
+        prev[id as QuestId] = status.toLocaleLowerCase() as QuestStatus
         return prev
       }
 
       const preRequisites = quest.preRequisites
-      const isUnlocked = preRequisites.every(
-        (preReq) => data.questStatus[preReq]?.status === 'COMPLETED'
+      const isUnlocked = preRequisites.every((preReq) =>
+        isConsideredCompleted(data.questStatus[preReq]?.status)
       )
 
-      const isInProgress = data.questStatus[id as QuestId]?.status === 'IN_PROGRESS'
-      const hasRewardsToClaim = data.questStatus[id as QuestId]?.status === 'REWARDS_DEPOSITED'
+      const isInProgress = status === 'IN_PROGRESS'
+      const hasRewardsToClaim = status === 'REWARDS_DEPOSITED'
       prev[id as QuestId] = hasRewardsToClaim
         ? 'claim-rewards'
         : isInProgress

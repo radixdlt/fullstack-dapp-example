@@ -8,15 +8,25 @@
   import { pushNotification } from '$lib/notifications'
 
   import type { Quests } from 'content'
-  import { writable } from 'svelte/store'
+  import { derived } from 'svelte/store'
   import { onDestroy } from 'svelte'
+  import { isUserBlocked } from '../../../../../stores'
   export let data: LayoutData
 
   let quest: Quest
   let error: boolean
-  let starterGiftBoxOpened = writable(data.requirements?.OpenGiftBox.isComplete)
-  let radGemsClaimed = writable(data.requirements?.RadGemsClaimed.isComplete)
-  let radMorphCreated = writable(data.requirements?.RadMorphCreated.isComplete)
+  let starterGiftBoxOpened = derived(
+    isUserBlocked,
+    ($isUserBlocked) => $isUserBlocked || data.requirements?.OpenGiftBox.isComplete
+  )
+  let radGemsClaimed = derived(
+    isUserBlocked,
+    ($isUserBlocked) => $isUserBlocked || data.requirements?.RadGemsClaimed.isComplete
+  )
+  let radMorphCreated = derived(
+    isUserBlocked,
+    ($isUserBlocked) => $isUserBlocked || data.requirements?.RadMorphCreated.isComplete
+  )
 
   const text = data.text as Quests['CreatingRadMorphs']['text']
 

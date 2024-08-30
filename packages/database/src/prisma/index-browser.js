@@ -366,7 +366,8 @@ exports.QuestStatus = exports.$Enums.QuestStatus = {
   IN_PROGRESS: 'IN_PROGRESS',
   REWARDS_DEPOSITED: 'REWARDS_DEPOSITED',
   REWARDS_CLAIMED: 'REWARDS_CLAIMED',
-  COMPLETED: 'COMPLETED'
+  COMPLETED: 'COMPLETED',
+  PARTIALLY_COMPLETED: 'PARTIALLY_COMPLETED'
 };
 
 exports.AuditType = exports.$Enums.AuditType = {

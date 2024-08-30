@@ -100,10 +100,11 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
 
   const updateQuestStatus = (questId: string, userId: string, status: QuestStatus) => {
     const transitions = {
-      IN_PROGRESS: ['REWARDS_DEPOSITED', 'COMPLETED'],
+      IN_PROGRESS: ['REWARDS_DEPOSITED', 'COMPLETED', 'PARTIALLY_COMPLETED'],
       REWARDS_DEPOSITED: ['REWARDS_CLAIMED'],
       REWARDS_CLAIMED: ['COMPLETED'],
-      COMPLETED: ['COMPLETED'] as string[]
+      COMPLETED: ['COMPLETED'],
+      PARTIALLY_COMPLETED: ['IN_PROGRESS', 'PARTIALLY_COMPLETED']
     }
 
     return getQuestStatus(userId, questId)
@@ -136,7 +137,7 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
           }),
           (error) => {
             logger?.error({ error, method: 'updateQuestStatus', model: 'UserQuestModel' })
-            return createApiError('failed to update quest status', 400)()
+            return createApiError('failed to update quest status', 400)(error)
           }
         )
       )
