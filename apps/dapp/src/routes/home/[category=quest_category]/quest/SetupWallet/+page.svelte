@@ -5,7 +5,7 @@
   import { useCookies } from '$lib/utils/cookies'
   import { derived, writable } from 'svelte/store'
   import type { Quests } from 'content'
-  import { user, ErrorPopupId, errorPopupStore } from '../../../../../stores'
+  import { user, ErrorPopupId, errorPopupStore, isUserBlocked } from '../../../../../stores'
   import SetEmailPage from './SetEmailPage.svelte'
   import { questApi } from '$lib/api/quest-api'
   import Button from '$lib/components/button/Button.svelte'
@@ -36,7 +36,7 @@
 
   const skipMobileWalletInstall = writable<boolean>(false)
   const registeredAccountAddress = derived(user, ($user) => !!$user?.accountAddress)
-  const depositHeroBadge = writable(data.requirements.DepositHeroBadge.isComplete)
+  const depositHeroBadge = writable(data.requirements.DepositHeroBadge.isComplete || $isUserBlocked)
   let mintBadgeState: ComponentProps<DepositHeroBadge>['state']
 
   const checkAccountStatus = (accountAddress: string) =>

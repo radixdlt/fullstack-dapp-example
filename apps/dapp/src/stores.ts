@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store'
+import { writable, derived } from 'svelte/store'
 import type { GoldenTicket, User } from 'database'
 import { type Quests } from 'content'
 
@@ -13,6 +13,8 @@ export const user = writable<
     })
   | undefined
 >(undefined)
+
+export const isUserBlocked = derived(user, ($user) => $user?.blocked ?? false)
 
 export type JettyNotification = {
   id: string

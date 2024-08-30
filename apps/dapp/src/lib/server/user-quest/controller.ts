@@ -89,21 +89,26 @@ export const UserQuestController = ({
       .andThen((completedRequirements) => {
         const questDefinition = questDefinitions[questId]
         if (completedRequirements.length !== Object.keys(questDefinition.requirements).length) {
-          return errAsync(createApiError(ErrorReason.requirementsNotMet, 400)())
+          return userModel
+            .getById(userId, {})
+            .andThen((user) =>
+              user.blocked
+                ? userQuestModel.updateQuestStatus(questId, userId, 'PARTIALLY_COMPLETED')
+                : errAsync(createApiError(ErrorReason.requirementsNotMet, 400)())
+            )
         }
 
-        return userQuestModel.updateQuestStatus(questId, userId, 'COMPLETED')
-      })
-      .andThen(() => {
-        if (['Welcome', 'WhatIsRadix'].includes(questId)) {
-          return okAsync(undefined)
-        }
-        return transactionModel.add({
-          userId,
-          discriminator: `${questId}:QuestCompleted:${userId}`,
-          type: 'QuestCompleted',
-          questId,
-          traceId
+        return userQuestModel.updateQuestStatus(questId, userId, 'COMPLETED').andThen(() => {
+          if (['Welcome', 'WhatIsRadix'].includes(questId)) {
+            return okAsync(undefined)
+          }
+          return transactionModel.add({
+            userId,
+            discriminator: `${questId}:QuestCompleted:${userId}`,
+            type: 'QuestCompleted',
+            questId,
+            traceId
+          })
         })
       })
       .map(() => ({ httpResponseCode: 200, data: undefined }))

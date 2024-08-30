@@ -6,7 +6,7 @@
   import Icon from '$lib/components/icon/Icon.svelte'
   import { typeToIcon } from '$lib/utils/type-to-icon'
   import { i18n } from '$lib/i18n/i18n'
-  import { user } from '../../../../stores'
+  import { isUserBlocked, user } from '../../../../stores'
   import {
     createClaimRewardsTransaction,
     createClaimRewardsV2Transaction,
@@ -25,6 +25,10 @@
   const dispatch = createEventDispatcher<{ claimed: undefined }>()
 
   onMount(async () => {
+    if ($isUserBlocked) {
+      dispatch('claimed')
+      return
+    }
     const result = await questApi.getQuestInformation(questId)
 
     if (result.isOk()) {
@@ -142,7 +146,7 @@
       </div>
     {/each}
   </div>
-  <Button on:click={claim} loading={$loading} --min-width="9rem">
+  <Button on:click={claim} loading={$loading} --min-width="9rem" disabled={$isUserBlocked}>
     {$i18n.t('quests:claimButton')}
   </Button>
 </div>
