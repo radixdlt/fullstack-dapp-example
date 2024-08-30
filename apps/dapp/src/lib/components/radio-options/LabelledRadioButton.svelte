@@ -1,18 +1,12 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
+  import { createEventDispatcher, onMount } from 'svelte'
 
   export let name: string
   export let value: string
   export let title: string
   export let description: string
-  export let available: boolean | undefined = undefined
-  export let availableText:
-    | {
-        available: string
-        notAvailable: string
-      }
-    | undefined = undefined
   export let last: boolean
+  export let setDefault = false
 
   const dispatch = createEventDispatcher()
   const handleChange = (
@@ -20,20 +14,28 @@
       currentTarget: EventTarget & HTMLInputElement
     }
   ) => {
-    if (e.currentTarget.checked) dispatch('selected', { value })
+    if (e.currentTarget.checked) {
+      dispatch('selected', { value })
+    }
   }
+
+  onMount(() => {
+    if (setDefault) dispatch('selected', { value })
+  })
 </script>
 
 <div class="get-xrd-method" class:last>
-  <input type="radio" {name} {value} id={name + '_' + value} on:change={handleChange} />
+  <input
+    type="radio"
+    checked={setDefault}
+    {name}
+    {value}
+    id={name + '_' + value}
+    on:change={handleChange}
+  />
   <label for={name + '_' + value}>
     <p><strong>{title}</strong></p>
     <p>{description}</p>
-    {#if availableText && available}
-      <p style="color:orange">{availableText?.available}</p>
-    {:else if availableText && !available}
-      <p style="color:red">{availableText?.notAvailable}</p>
-    {/if}
   </label>
 </div>
 

@@ -1,24 +1,28 @@
 <script lang="ts">
   import Quest from '../Quest.svelte'
-  import { okAsync } from 'neverthrow'
-  import { onMount, onDestroy } from 'svelte'
+  import { i18n } from '$lib/i18n/i18n'
+  import { onDestroy } from 'svelte'
   import type { PageData } from './$types'
   import { writable } from 'svelte/store'
   import type { Quests } from 'content'
-  import { gatewayApi, publicConfig } from '$lib/public-config'
+  import { type ComponentProps } from 'svelte'
   import { userApi } from '$lib/api/user-api'
   import { user } from '../../../../../stores'
-  import { ResultAsync } from 'neverthrow'
+  import Button from '$lib/components/button/Button.svelte'
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { waitingWarning } from '$lib/utils/waiting-warning'
-  import { questApi } from '$lib/api/quest-api'
+  import { page } from '$app/stores'
+  import { hasEnoughXrd } from './has-enough-xrd'
+  import GetXrdMethodOptions from './GetXrdMethodOptions.svelte'
+  import { completeRequirement } from '$lib/helpers/complete-requirement.svelte'
+  import CopyTextBox from '$lib/components/copy-text-box/CopyTextBox.svelte'
+  import { shortenAddress } from '$lib/utils/shorten-address'
 
   export let data: PageData
 
   const text = data.text as Quests['GetStuff']['text']
 
-  let quest: Quest
   let xrdDepositLoading = false
 
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
@@ -35,32 +39,18 @@
     })
   }
 
-  onMount(() => {
-    userApi.hasReceivedXrd().andThen((received) => {
-      if (received) {
-        skipXrdDepositPage.set(true)
-        return okAsync(undefined)
-      }
-
-      if ($user?.accountAddress) {
-        return ResultAsync.combine([
-          gatewayApi
-            .isDepositDisabledForResource($user.accountAddress, publicConfig.xrd)
-            .map((disabled) => {
-              if (disabled) {
-                skipXrdDepositPage.set(true)
-              }
-            })
-        ])
-      }
-
-      return okAsync(undefined)
+  const directDepositXrd = () => {
+    xrdDepositLoading = true
+    userApi.directDepositXrd().mapErr(() => {
+      xrdDepositLoading = false
     })
-  })
+  }
 
   onDestroy(() => {
     unsubscribeWebSocket?.()
     waitingWarning(false)
+
+    if (checkXrdInterval) clearInterval(checkXrdInterval)
   })
 
   $: waitingWarning(xrdDepositLoading)
@@ -78,17 +68,10 @@
       skipXrdDepositPage.set(received)
     }
   }
-</script>
 
-<Quest
-  on:render={(ev) => {
-    if (ev.detail === '15') {
-      onReceiveXRDPage()
-    }
-  }}
-  {...data.questProps}
-  bind:this={quest}
-  steps={[
+  const hasXrd = writable(false)
+
+  const generalSteps: ComponentProps<Quest>['steps'] = [
     {
       id: '0',
       type: 'jetty'
@@ -98,23 +81,23 @@
       type: 'jetty'
     },
     {
-      id: '4',
+      id: '2',
       type: 'regular'
+    },
+    {
+      id: '3',
+      type: 'regular'
+    },
+    {
+      id: '4',
+      type: 'jetty'
     },
     {
       id: '5',
-      type: 'jetty'
-    },
-    {
-      id: '6',
-      type: 'jetty'
-    },
-    {
-      id: '7',
       type: 'regular'
     },
     {
-      id: '8',
+      id: '6',
       type: 'regular'
     },
     {
@@ -123,49 +106,177 @@
     },
     {
       id: '10',
-      type: 'regular'
+      type: 'jettyQuiz',
+      text: text['10.md'],
+      quizRequirement: 'PersonaQuiz',
+      answers: [
+        {
+          text: text['10a-answer.md'],
+          info: text['10a-result.md'],
+          correct: true
+        },
+        {
+          text: text['10b-answer.md'],
+          info: text['10b-result.md'],
+          correct: false
+        },
+        {
+          text: text['10c-answer.md'],
+          info: text['10c-result.md'],
+          correct: false
+        }
+      ]
     },
     {
       id: '11',
-      type: 'regular'
+      type: 'jettyQuiz',
+      text: text['11.md'],
+      quizRequirement: 'TransactionQuiz',
+      answers: [
+        {
+          text: text['11a-answer.md'],
+          info: text['11a-result.md'],
+          correct: false
+        },
+        {
+          text: text['11b-answer.md'],
+          info: text['11b-result.md'],
+          correct: true
+        },
+        {
+          text: text['11c-answer.md'],
+          info: text['11c-result.md'],
+          correct: false
+        }
+      ]
     },
     {
       id: '12',
-      type: 'jetty'
+      type: 'jettyQuiz',
+      text: text['12.md'],
+      quizRequirement: 'XrdQuiz',
+      answers: [
+        {
+          text: text['12a-answer.md'],
+          info: text['12a-result.md'],
+          correct: true
+        },
+        {
+          text: text['12b-answer.md'],
+          info: text['12b-result.md'],
+          correct: false
+        },
+        {
+          text: text['12c-answer.md'],
+          info: text['12c-result.md'],
+          correct: false
+        }
+      ]
     },
     {
       id: '13',
-      type: 'regular'
+      type: 'jetty'
     },
     {
       id: '14',
-      type: 'regular'
+      type: 'jetty'
     },
     {
       id: '15',
-      type: 'jetty',
-      skip: skipXrdDepositPage,
-      footer: {
-        next: {
-          onClick: (next) => {
-            questApi
-              .completeRequirement('GetStuff', 'GetReadyToDoTransactionsOnRadix', fetch)
-              .map(() => {
-                next()
-              })
-          },
-          enabled: writable(true) // TODO change when implementing new quest flows
-        }
-      }
+      type: 'jetty'
     },
-    { type: 'requirements' },
+    {
+      type: 'requirements'
+    },
     {
       type: 'claimRewards'
     },
     {
       type: 'complete'
     }
-  ]}
+  ]
+
+  let steps = generalSteps
+
+  $: if (data.hasEnoughXrd) $hasXrd = true
+
+  $: if ($hasXrd && !data.requirements['GetXRD'].isComplete) completeRequirement(data.id, 'GetXRD')
+
+  const setSteps = (newSteps: ComponentProps<Quest>['steps']) =>
+    (steps = [...generalSteps.slice(0, 7), ...newSteps, ...generalSteps.slice(7)])
+
+  $: if ($user?.goldenTicketClaimed) {
+    setSteps([
+      {
+        id: 'golden-ticket-valid',
+        type: 'jetty'
+      }
+    ])
+  } else if ($page.url.searchParams.get('t')) {
+    setSteps([
+      {
+        id: 'golden-ticket-invalid',
+        type: 'jetty'
+      }
+    ])
+  } else if ($hasXrd) {
+    setSteps([
+      {
+        id: 'has-xrd',
+        type: 'jetty'
+      }
+    ])
+  } else {
+    setSteps([
+      {
+        id: 'need-xrd',
+        type: 'jetty'
+      },
+      {
+        id: 'need-xrd-2',
+        type: 'jetty'
+      },
+      {
+        id: 'need-xrd-3',
+        type: 'regular'
+      },
+      {
+        id: 'get-xrd',
+        type: 'regular',
+        footer: {
+          next: {
+            enabled: hasXrd
+          }
+        }
+      }
+    ])
+  }
+
+  let checkXrdInterval: ReturnType<typeof setInterval> | undefined
+
+  let selectedGetXrdMethod: ComponentProps<GetXrdMethodOptions>['selectedOption'] = 'card'
+
+  $: address = $user!.accountAddress!
+</script>
+
+<Quest
+  on:render={(ev) => {
+    if (ev.detail === '15') {
+      onReceiveXRDPage()
+    }
+
+    if (ev.detail === 'get-xrd') {
+      checkXrdInterval = setInterval(() => {
+        hasEnoughXrd().map((value) => {
+          $hasXrd = value
+        })
+      }, 3_000)
+    } else {
+      clearInterval(checkXrdInterval)
+    }
+  }}
+  {...data.questProps}
+  {steps}
   let:render
 >
   {#if render('0')}
@@ -200,20 +311,66 @@
     {@html text['7.md']}
   {/if}
 
+  {#if render('golden-ticket-valid')}
+    {@html text['8-GOLDEN.md']}
+
+    <div class="center">
+      <Button on:click={directDepositXrd} loading={xrdDepositLoading} disabled={xrdDepositLoading}>
+        {$i18n.t('quests:GetStuff.getXrd')}
+      </Button>
+    </div>
+  {/if}
+
+  {#if render('golden-ticket-invalid')}
+    {@html text['7.md']}
+  {/if}
+
+  {#if render('has-xrd')}
+    {@html text['8-HASXRD.md']}
+  {/if}
+
+  {#if render('need-xrd')}
+    {@html text['8-NEEDXRD.md']}
+  {/if}
+
+  {#if render('need-xrd-2')}
+    {@html text['8-NEEDXRD-1.md']}
+  {/if}
+
+  {#if render('need-xrd-3')}
+    {@html text['8-NEEDXRD-2.md']}
+
+    <GetXrdMethodOptions bind:selectedOption={selectedGetXrdMethod} />
+  {/if}
+
+  {#if render('get-xrd')}
+    {#if selectedGetXrdMethod === 'card'}
+      {@html text['8-NEEDXRD-3.md']}
+      <CopyTextBox text={shortenAddress(address)} value={address} />
+      {@html text['8-NEEDXRD-3a.md']}
+      <div class="center">
+        <Button>{$i18n.t('quests:GetStuff.buyXRDButton')}</Button>
+      </div>
+      {@html text['8-NEEDXRD-3b.md']}
+    {:else if selectedGetXrdMethod === 'exchange'}
+      {@html text['8-NEEDXRD-4.md']}
+      <div class="center">
+        <Button>{$i18n.t('quests:GetStuff.viewExchangesButton')}</Button>
+      </div>
+      {@html text['8-NEEDXRD-4a.md']}
+    {:else if selectedGetXrdMethod === 'thorswap'}
+      {@html text['8-NEEDXRD-5.md']}
+      <CopyTextBox text={shortenAddress(address)} value={address} />
+      {@html text['8-NEEDXRD-5a.md']}
+      <div class="center">
+        <Button>{$i18n.t('quests:GetStuff.goToThorSwap')}</Button>
+      </div>
+      {@html text['8-NEEDXRD-5b.md']}
+    {/if}
+  {/if}
+
   {#if render('9')}
     {@html text['9.md']}
-  {/if}
-
-  {#if render('10')}
-    {@html text['10.md']}
-  {/if}
-
-  {#if render('11')}
-    {@html text['11.md']}
-  {/if}
-
-  {#if render('12')}
-    {@html text['12.md']}
   {/if}
 
   {#if render('13')}
@@ -228,3 +385,11 @@
     {@html text['15.md']}
   {/if}
 </Quest>
+
+<style lang="scss">
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>

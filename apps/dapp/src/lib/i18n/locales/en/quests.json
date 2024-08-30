@@ -70,7 +70,7 @@
   },
   "GetStuff": {
     "requirements": {
-      "GetReadyToDoTransactionsOnRadix": "Get ready to do transactions on Radix"
+      "GetXRD": "Get ready to do transactions on Radix"
     },
     "claimHeroBadge": "Claim Hero's Badge",
     "getXrd": "Receive 5 XRD",
@@ -94,7 +94,10 @@
       },
       "available": "May be available in your country",
       "notAvailable": "Not available in your country"
-    }
+    },
+    "buyXRDButton": "Go to Alchemy Pay",
+    "viewExchangesButton": "View Exchange List",
+    "goToThorSwap": "Go to THORSwap"
   },
   "CreatingRadMorphs": {
     "title": "Creating RadMorphs",

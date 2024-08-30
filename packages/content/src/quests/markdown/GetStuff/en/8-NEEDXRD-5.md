@@ -1,4 +1,4 @@
-![Radix Transactions](/quests-images/key/3-KeyImage_BuyingXRD_Thorswap.png)
+![Radix Transactions](/quests-images/key/3-KeyImage_BuyingXRD_Thorswap.webp)
 
 ## Using THORSwap to buy XRD with crypto
 

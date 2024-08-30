@@ -206,7 +206,9 @@ interface Resources {
     "SetupWallet": {
       "requirements": {
         "ConnectWallet": "Log in to RadQuest with your Radix Wallet",
-        "DownloadWallet": "Download the Radix Wallet mobile app, create your first Account"
+        "DownloadWallet": "Download the Radix Wallet mobile app, create your first Account",
+        "RegisterAccount": "Register your Account with RadQuest",
+        "DepositHeroBadge": "Get your Hero’s Badge"
       },
       "usernameCompleted": "Updated!",
       "walletDownloadPage": "Go to Wallet Download Page",
@@ -217,10 +219,7 @@ interface Resources {
     },
     "GetStuff": {
       "requirements": {
-        "RegisterAccount": "Register an Account with RadQuest",
-        "LearnAboutTransactions": "Learn about XRD and Transactions",
-        "DepositHeroBadge": "Get your Hero’s Badge",
-        "JettyReceivedClams": "Get your first XRD and NFT rewards"
+        "GetXRD": "Get ready to do transactions on Radix"
       },
       "claimHeroBadge": "Claim Hero's Badge",
       "getXrd": "Receive 5 XRD",
@@ -244,7 +243,10 @@ interface Resources {
         },
         "available": "May be available in your country",
         "notAvailable": "Not available in your country"
-      }
+      },
+      "buyXRDButton": "Go to Alchemy Pay",
+      "viewExchangesButton": "View Exchange List",
+      "goToThorSwap": "Go to THORSwap"
     },
     "CreatingRadMorphs": {
       "title": "Creating RadMorphs",
