@@ -49,8 +49,8 @@
     padding: 24px;
 
     :global(p > img) {
-      max-width: calc(100% + 48px);
-      margin: 0 calc(-24px);
+      margin: 0 auto;
+      display: block;
     }
 
     :global(h2) {

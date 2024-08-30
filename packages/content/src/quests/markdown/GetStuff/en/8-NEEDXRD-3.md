@@ -1,4 +1,4 @@
-![Radix Transactions](/quests-images/key/3-KeyImage_BuyingXRD_Card.png)
+![Radix Transactions](/quests-images/key/3-KeyImage_BuyingXRD_Card.webp)
 
 ## Buying XRD with a credit or debit card
 

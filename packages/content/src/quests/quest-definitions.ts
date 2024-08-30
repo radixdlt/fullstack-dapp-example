@@ -141,9 +141,24 @@ export const QuestDefinitions = () => {
       preRequisites: ['SetupWallet'],
       minutesToComplete: 6,
       requirements: {
-        GetReadyToDoTransactionsOnRadix: {
+        GetXRD: {
           type: 'offLedger',
           completedByUser: true
+        },
+        PersonaQuiz: {
+          type: 'offLedger',
+          completedByUser: true,
+          isHidden: true
+        },
+        TransactionQuiz: {
+          type: 'offLedger',
+          completedByUser: true,
+          isHidden: true
+        },
+        XrdQuiz: {
+          type: 'offLedger',
+          completedByUser: true,
+          isHidden: true
         }
       },
       nextQuest: 'CreatingRadMorphs'

@@ -3,7 +3,7 @@
     value: string
     title: string
     description: string
-    available?: boolean
+    default: boolean
   }
 </script>
 
@@ -12,13 +12,7 @@
 
   export let name: string
   export let options: LabelledRadioButtonArgs[]
-  export let availableText:
-    | {
-        available: string
-        notAvailable: string
-      }
-    | undefined = undefined
-  export let selectedOption: string | undefined = undefined
+  export let selectedOption: string | undefined = options.find((o) => o.default)?.value || undefined
 
   const handleSelected = (e: CustomEvent<{ value: string }>) => {
     selectedOption = e.detail.value
@@ -30,9 +24,9 @@
     <LabelledRadioButton
       {...option}
       {name}
-      {availableText}
       last={i + 1 === options.length}
       on:selected={handleSelected}
+      setDefault={option.default}
     />
   {/each}
 </div>

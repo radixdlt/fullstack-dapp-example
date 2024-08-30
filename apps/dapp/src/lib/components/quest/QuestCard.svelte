@@ -172,9 +172,12 @@
 
     overscroll-behavior: none;
 
-    :global(p) > :global(img) {
+    :global(p > img) {
+      display: block;
       max-width: calc(100% + 2 * var(--spacing-2xl));
-      margin: 0 calc(-1 * var(--spacing-2xl));
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     @include markdownLinkStyles();

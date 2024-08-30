@@ -1,4 +1,4 @@
-![Radix Transactions](/quests-images/key/3-KeyImage_BuyingXRD_Exchange.png)
+![Radix Transactions](/quests-images/key/3-KeyImage_BuyingXRD_Exchange.webp)
 
 ## Buying XRD on exchanges
 
