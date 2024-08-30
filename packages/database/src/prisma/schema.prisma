@@ -17,18 +17,25 @@ enum UserType {
   ADMIN
 }
 
+enum UserStatus {
+  OK
+  PERMANENTLY_BLOCKED
+  TEMPORARILY_BLOCKED
+}
+
 model User {
-  id              String   @id @default("")
-  identityAddress String   @unique
-  createdAt       DateTime @default(now())
+  id              String     @id @default("")
+  identityAddress String     @unique
+  createdAt       DateTime   @default(now())
   accountAddress  String?
   name            String?
   country         String?
-  type            UserType @default(USER)
-  referralCode    String   @unique
+  type            UserType   @default(USER)
+  referralCode    String     @unique
   referredBy      String?
-  referredByUser  User?    @relation("Referrer", fields: [referredBy], references: [referralCode])
-  blocked         Boolean  @default(false)
+  referredByUser  User?      @relation("Referrer", fields: [referredBy], references: [referralCode])
+  blocked         Boolean    @default(false)
+  status          UserStatus @default(OK)
 
   events                     Event[]
   messages                   Message[]
@@ -42,6 +49,7 @@ model User {
   transactions               TransactionIntent[]
   marketing                  Marketing[]
   referals                   Referral[]
+  loginAttempts              LoginAttempt[]
 }
 
 model UserEmail {
@@ -129,6 +137,37 @@ model Message {
   @@index([userId, seenAt])
 }
 
+model IpAssessment {
+  id             Int            @id @default(autoincrement())
+  ip             String
+  userAgent      String
+  acceptLanguage String
+  data           Json
+  createdAt      DateTime       @default(now())
+  loginAttempts  LoginAttempt[]
+
+  @@index([ip, createdAt])
+}
+
+enum LoginAttemptType {
+  USER_CREATED
+  USER_LOGIN
+  USER_VERIFY
+}
+
+model LoginAttempt {
+  id             Int              @id @default(autoincrement())
+  userId         String
+  ipAssessmentId Int
+  type           LoginAttemptType
+  createdAt      DateTime         @default(now())
+
+  user         User         @relation(fields: [userId], references: [id])
+  ipAssessment IpAssessment @relation(fields: [ipAssessmentId], references: [id])
+
+  @@index(userId)
+}
+
 model Notification {
   notificationId String
   userId         String
@@ -192,10 +231,16 @@ enum AuditType {
   CLAIMBOX_DEPOSIT
 }
 
+enum CountryStatus {
+  ALLOWED
+  BLOCKED // Allow users with golden ticket
+  SANCTIONED // Does not allow any user, even with golden ticket
+}
+
 model BlockedCountry {
   country     String
-  countryCode String  @id
-  blocked     Boolean @default(false)
+  countryCode String        @id
+  status      CountryStatus @default(ALLOWED)
 }
 
 model TransactionIntent {

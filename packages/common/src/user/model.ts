@@ -1,13 +1,14 @@
 import { ResultAsync, err, errAsync, okAsync } from 'neverthrow'
-import type {
+import {
   PrismaClient,
   Prisma,
-  User,
-  UserPhoneNumber,
-  UserEmail,
-  CompletedQuestRequirement,
-  QuestProgress,
-  QuestStatus
+  type User,
+  type UserPhoneNumber,
+  type UserEmail,
+  type CompletedQuestRequirement,
+  type QuestProgress,
+  type UserStatus,
+  type QuestStatus
 } from 'database'
 import { QuestTogetherConfig, type AppLogger } from '../'
 import { type ApiError, createApiError } from '../helpers'
@@ -56,13 +57,16 @@ type UserModelType = {
   setEmail: (userId: string, email: string, newsletter: boolean) => ResultAsync<UserEmail, ApiError>
   getUserIdsByIp: (ip: string) => ResultAsync<string[], ApiError>
   blockUsers: (userIds: string[]) => ResultAsync<undefined, ApiError>
+  setUserBlockedStatus: (userId: string, status: UserStatus) => ResultAsync<undefined, ApiError>
   isPhoneNumberUsed: (userId: string) => ResultAsync<boolean, ApiError>
+  countReferralCodeUsagePerIp: (userId: string, ip: string) => ResultAsync<number, ApiError>
 }
 
 export type UserModel = ReturnType<typeof UserModel>
 export const UserModel =
   (db: PrismaClient) =>
   (logger: AppLogger): UserModelType => {
+    const HOURS_24 = 1000 * 60 * 60 * 24
     const doesUserExist = (identityAddress: string) =>
       ResultAsync.fromPromise(
         db.user.count({ where: { identityAddress } }).then((count) => count > 0),
@@ -104,20 +108,41 @@ export const UserModel =
       })
     }
 
-    const getUserIdsByIp = (ip: string) => {
+    const getUserIdsByIp = (ip: string, period = HOURS_24) => {
       return ResultAsync.fromPromise(
-        db.userPhoneNumber.findMany({
-          where: { ip },
-          select: {
-            userId: true
-          }
-        }),
+        db.$queryRaw<{ userId: string }[]>`
+      SELECT "userId" FROM "LoginAttempt" 
+        WHERE "ipAssessmentId" IN (SELECT id FROM "IpAssessment" WHERE ip = ${ip}) 
+        AND "createdAt" > NOW() - interval '${period} milliseconds'
+      `,
         (error) => {
           logger?.error({ error, method: 'countByIp', model: 'UserModel' })
           return createApiError('failed to count by ip', 400)(error)
         }
       ).map((data) => data.map((user) => user.userId))
     }
+
+    const countReferralCodeUsagePerIp = (userId: string, ip: string) =>
+      ResultAsync.fromPromise(
+        db.$queryRaw<{ count: number }[]>`
+          SELECT COUNT(1) FROM "User" u
+            INNER JOIN "LoginAttempt" la
+              ON u.id = la."userId" 
+              AND la."createdAt" > NOW() - INTERVAL '30 minutes'
+            INNER JOIN "IpAssessment" ia
+              ON la."ipAssessmentId" = ia.id 
+              AND ia."ip" = ${ip}
+            WHERE "referredBy" = (SELECT "referralCode" FROM "User" WHERE id = ${userId});
+          `,
+        (error) => {
+          logger?.error({
+            error,
+            method: 'countReferralCodeUsagePerIp',
+            model: 'UserModel'
+          })
+          return createApiError('failed to count referral code usage', 500)(error)
+        }
+      ).map((data) => data[0].count || 0)
 
     const blockUsers = (userIds: string[]) =>
       ResultAsync.fromPromise(
@@ -132,6 +157,27 @@ export const UserModel =
           return createApiError('failed to block users', 400)()
         }
       ).map(() => undefined)
+
+    const setUserBlockedStatus = (userId: string, status: UserStatus) => {
+      return ResultAsync.fromPromise(
+        db.user.update({
+          where:
+            status === 'PERMANENTLY_BLOCKED'
+              ? { id: userId }
+              : {
+                  id: userId,
+                  status: { in: ['TEMPORARILY_BLOCKED', 'OK'] }
+                },
+          data: {
+            status
+          }
+        }),
+        (error) => {
+          logger?.error({ error, method: 'setUsersBlockedStatus', model: 'UserModel' })
+          return createApiError('failed to block users', 400)()
+        }
+      ).map(() => undefined)
+    }
 
     const addAccount = (userId: string, accountAddress: string) =>
       ResultAsync.fromPromise(
@@ -409,9 +455,11 @@ export const UserModel =
       getByReferralCode,
       getReferrals,
       blockUsers,
+      setUserBlockedStatus,
       getUserIdsByIp,
       getPhoneNumber,
       addAccount,
+      countReferralCodeUsagePerIp,
       setUserName,
       isAccountAddressUsed,
       getPhoneNumberByUserId,

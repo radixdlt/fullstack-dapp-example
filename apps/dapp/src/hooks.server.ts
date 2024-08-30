@@ -1,3 +1,4 @@
+import { FraudDetectionModule } from './lib/server/auth/fraud-detection/fraud-detection'
 import { AuthController } from '$lib/server/auth/controller'
 import { type Handle } from '@sveltejs/kit'
 import { config } from '$lib/config'
@@ -12,9 +13,12 @@ import {
   Addresses,
   MessageModel,
   NotificationModel,
+  LoginAttemptModel,
   MarketingModel,
   ImageModel,
-  MailerLiteModel
+  IpAssessmentModel,
+  MailerLiteModel,
+  BlockedCountryModel
 } from 'common'
 import { UserType } from 'database'
 import { dbClient } from '$lib/db'
@@ -55,6 +59,9 @@ const gatewayApi = GatewayApi(networkId, process.env.GATEWAY_URL)
 const messageModel = MessageModel(dbClient)
 const accountAddressModel = AccountAddressModel(redisClient)
 const addresses = Addresses(networkId)
+const loginAttemptModel = LoginAttemptModel(dbClient)
+const ipAssessmentModel = IpAssessmentModel(dbClient)
+const blockedCountryModel = BlockedCountryModel(dbClient)
 const mailerLiteModel = MailerLiteModel({
   apiKey: config.mailerLite.apiKey
 })
@@ -89,13 +96,26 @@ export const handle: Handle = async ({ event, resolve }) => {
     traceId,
     logger
   }
-  event.locals.clientIp = event.request.headers.get('True-Client-IP') || event.getClientAddress()
+  event.locals.clientIp =
+    config.developmentIp || event.request.headers.get('True-Client-IP') || event.getClientAddress()
+
+  const userModelWithLogger = userModel(logger)
+
+  const fraudDetectionModule = FraudDetectionModule({
+    logger,
+    ipqs: config.ipqs,
+    userModel: userModelWithLogger,
+    ipAssessmentModel: ipAssessmentModel(logger),
+    blockedCountryModel: blockedCountryModel(logger)
+  })
 
   event.locals.dependencies = {
-    userModel: userModel(logger),
+    userModel: userModelWithLogger,
     userQuestModel: userQuestModel(logger),
     transactionModel: transactionModel(logger),
     mailerLiteModel: mailerLiteModel(logger),
+    loginAttemptModel: loginAttemptModel(logger),
+    fraudDetectionModule,
     auditModel: auditModel(logger),
     accountAddressModel: accountAddressModel(logger),
     gatewayApi,

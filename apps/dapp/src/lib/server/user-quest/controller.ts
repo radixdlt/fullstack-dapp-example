@@ -1,4 +1,4 @@
-import type { QuestStatus } from 'database'
+import { type QuestStatus } from 'database'
 import { type ControllerDependencies, type ControllerMethodContext } from '../_types'
 import { QuestDefinitions, type Quests } from 'content'
 import { ResultAsync, errAsync, okAsync } from 'neverthrow'
