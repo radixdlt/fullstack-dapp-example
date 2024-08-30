@@ -11,31 +11,38 @@
   import type { QuestRequirement } from '$lib/server/user-quest/controller'
   import { waitingWarning } from '$lib/utils/waiting-warning'
   import { okAsync } from 'neverthrow'
+  import type { $Enums } from 'database'
 
   export let questId: keyof Quests
-  export let requirements: Record<string, { isComplete: QuestRequirement['isComplete'] }>
+  export let requirements: Record<string, QuestRequirement>
+  export let questStatus: $Enums.QuestStatus
 
   const quest = $quests[questId]
 
-  let requirementsStatus = Object.entries(requirements).map(([key, value]) => {
-    // @ts-ignore
-    const type = quest.requirements[key].type
+  const getRequirementStatus = (reqs: typeof requirements) =>
+    Object.entries(reqs)
+      .filter(([, { isHidden }]) => !isHidden)
+      .map(([key, value]) => {
+        // @ts-ignore
+        const type = quest.requirements[key].type
 
-    if (type === 'content' && !$user) {
-      useCookies(`requirement-${questId}-${key}` as RequirementCookieKey).set(true)
-    }
+        if (type === 'content' && !$user) {
+          useCookies(`requirement-${questId}-${key}` as RequirementCookieKey).set(true)
+        }
 
-    const complete =
-      useCookies(`requirement-${questId}-${key}` as RequirementCookieKey).get() === 'true'
-        ? true
-        : false
+        const complete =
+          useCookies(`requirement-${questId}-${key}` as RequirementCookieKey).get() === 'true'
+            ? true
+            : false
 
-    return {
-      //@ts-ignore
-      text: $i18n.t(`quests:${questId}.requirements.${key}`),
-      complete: type === 'content' ? true : complete || value.isComplete
-    }
-  }) as { text: string; complete: boolean }[]
+        return {
+          //@ts-ignore
+          text: $i18n.t(`quests:${questId}.requirements.${key}`),
+          complete: type === 'content' ? true : complete || value.isComplete
+        }
+      }) as { text: string; complete: boolean }[]
+
+  let requirementsStatus = getRequirementStatus(requirements)
 
   let loading = true
 
@@ -49,19 +56,11 @@
       return okAsync(true)
     }
     return questApi.getQuestInformation(questId).map(({ requirements, status }) => {
-      const requirementValueList = Object.entries(requirements)
-      const allRequirementsMet = requirementValueList.every(([_, { isComplete }]) => isComplete)
       const isInProgress = status === 'IN_PROGRESS'
 
-      requirementsStatus = requirementValueList
-        .filter(([, { isHidden }]) => !isHidden)
-        .map(([key, { isComplete }]) => {
-          return {
-            //@ts-ignore
-            text: $i18n.t(`quests:${questId}.requirements.${key}`),
-            complete: isComplete
-          }
-        })
+      requirementsStatus = getRequirementStatus(requirements)
+
+      const allRequirementsMet = requirementsStatus.every((req) => req.complete)
 
       if (allRequirementsMet && !isInProgress) {
         dispatch('all-requirements-met')
@@ -90,7 +89,9 @@
   })
 
   onMount(() => {
-    if ($user) {
+    if (requirementsStatus.every((req) => req.complete) && questStatus !== 'IN_PROGRESS') {
+      dispatch('all-requirements-met')
+    } else if ($user) {
       checkRequirements()
     }
   })

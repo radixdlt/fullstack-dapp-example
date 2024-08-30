@@ -370,6 +370,29 @@ export const QuestDefinitions = (ticketType?: TicketType) => {
           type: 'event'
         }
       }
+    },
+    ExploreEcosystem: {
+      id: 'ExploreEcosystem',
+      category: 'advanced',
+      trackedAccountAddress: false,
+      rewards: [
+        {
+          name: 'simpleGiftBox',
+          amount: 1
+        }
+      ],
+      minutesToComplete: 5,
+      preRequisites: ['CreatingRadMorphs'],
+      requirements: {
+        LearnDapps: {
+          type: 'content'
+        },
+        Quiz: {
+          type: 'offLedger',
+          completedByUser: true,
+          isHidden: true
+        }
+      }
     }
   } as const satisfies { [key: string]: QuestDefinition }
 }

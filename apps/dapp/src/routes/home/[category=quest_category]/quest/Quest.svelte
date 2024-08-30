@@ -104,17 +104,17 @@
 
     nextDisabled = false
 
-    if (e.detail !== steps.length - 1) return
+    if (steps[e.detail - 1]?.type === 'requirements') {
+      const contentRequirement = Object.values($quests[id].requirements).find(
+        (requirement) => requirement.type === 'content'
+      )
 
-    const contentRequirement = Object.values($quests[id].requirements).find(
-      (requirement) => requirement.type === 'content'
-    )?.id
-
-    if (contentRequirement) {
-      if ($user) {
-        questApi.completeContentRequirement(id)
-      } else {
-        useCookies(`requirement-${id}-${contentRequirement}` as RequirementCookieKey).set(true)
+      if (contentRequirement) {
+        if ($user) {
+          questApi.completeContentRequirement(id)
+        } else {
+          useCookies(`requirement-${id}-${contentRequirement}` as RequirementCookieKey).set(true)
+        }
       }
     }
   }
@@ -242,6 +242,7 @@
   {#if render('requirements')}
     <VerifyRequirements
       questId={id}
+      questStatus={status}
       {requirements}
       on:all-requirements-met|once={() => {
         $requirementsNextEnabled = true
