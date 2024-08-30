@@ -68,6 +68,17 @@
     )
   }
 
+  const simulateMayaSwap = async () => {
+    await fetchWrapper(
+      fetch('/api/debug', {
+        method: 'POST',
+        body: JSON.stringify({
+          type: 'simulateMayaSwap'
+        })
+      })
+    )
+  }
+
   const mintElements = async () => {
     await fetchWrapper(
       fetch('/api/debug', {
@@ -132,6 +143,7 @@
         <Button on:click={setUserAsAdmin}>Set user as Admin</Button>
         <Button on:click={addReferral}>Add referral</Button>
         <Button on:click={mintElements}>Mint elements</Button>
+        <Button on:click={simulateMayaSwap}>Simulate Maya Swap</Button>
         <Button
           on:click={() => {
             console.log($user)

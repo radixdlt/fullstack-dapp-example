@@ -2,7 +2,6 @@
   import QuestRewards from '../quest-rewards/QuestRewards.svelte'
   import QuestOverviewText from './quest-overview-text/QuestOverviewText.svelte'
   import Button from '../button/Button.svelte'
-  import PadlockIcon from '@images/padlock.svg'
   import CheckmarkIcon from '@images/checkmark.svg'
   import LockIcon from '@images/padlock.svg'
   import Hourglass from '@images/hourglass.svg'
@@ -92,12 +91,6 @@
             {$i18n.t('quests:QuestOverviewButton.referralInProgress')}
           {:else if state === 'in-progress'}
             {$i18n.t('quests:QuestOverviewButton.inProgress')}
-          {:else if state === 'locked'}
-            {#if questId === 'Thorswap'}
-              {$i18n.t('quests:QuestOverviewButton.comingSoon')}
-            {:else}
-              <img src={PadlockIcon} alt="Padlock icon" />
-            {/if}
           {:else if state === 'claim-rewards'}
             {$i18n.t('quests:QuestOverviewButton.claimRewards')}
           {:else}
