@@ -54,6 +54,16 @@ export type Event = $Result.DefaultSelection<Prisma.$EventPayload>
  */
 export type Message = $Result.DefaultSelection<Prisma.$MessagePayload>
 /**
+ * Model IpAssessment
+ * 
+ */
+export type IpAssessment = $Result.DefaultSelection<Prisma.$IpAssessmentPayload>
+/**
+ * Model LoginAttempt
+ * 
+ */
+export type LoginAttempt = $Result.DefaultSelection<Prisma.$LoginAttemptPayload>
+/**
  * Model Notification
  * 
  */
@@ -126,6 +136,15 @@ export namespace $Enums {
 export type UserType = (typeof UserType)[keyof typeof UserType]
 
 
+export const UserStatus: {
+  OK: 'OK',
+  PERMANENTLY_BLOCKED: 'PERMANENTLY_BLOCKED',
+  TEMPORARILY_BLOCKED: 'TEMPORARILY_BLOCKED'
+};
+
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
+
 export const ImageType: {
   RadMorph: 'RadMorph',
   RadGem: 'RadGem',
@@ -157,6 +176,15 @@ export const EventStatus: {
 export type EventStatus = (typeof EventStatus)[keyof typeof EventStatus]
 
 
+export const LoginAttemptType: {
+  USER_CREATED: 'USER_CREATED',
+  USER_LOGIN: 'USER_LOGIN',
+  USER_VERIFY: 'USER_VERIFY'
+};
+
+export type LoginAttemptType = (typeof LoginAttemptType)[keyof typeof LoginAttemptType]
+
+
 export const QuestStatus: {
   IN_PROGRESS: 'IN_PROGRESS',
   REWARDS_DEPOSITED: 'REWARDS_DEPOSITED',
@@ -173,6 +201,15 @@ export const AuditType: {
 };
 
 export type AuditType = (typeof AuditType)[keyof typeof AuditType]
+
+
+export const CountryStatus: {
+  ALLOWED: 'ALLOWED',
+  BLOCKED: 'BLOCKED',
+  SANCTIONED: 'SANCTIONED'
+};
+
+export type CountryStatus = (typeof CountryStatus)[keyof typeof CountryStatus]
 
 
 export const TransactionIntentStatus: {
@@ -211,6 +248,10 @@ export type UserType = $Enums.UserType
 
 export const UserType: typeof $Enums.UserType
 
+export type UserStatus = $Enums.UserStatus
+
+export const UserStatus: typeof $Enums.UserStatus
+
 export type ImageType = $Enums.ImageType
 
 export const ImageType: typeof $Enums.ImageType
@@ -223,6 +264,10 @@ export type EventStatus = $Enums.EventStatus
 
 export const EventStatus: typeof $Enums.EventStatus
 
+export type LoginAttemptType = $Enums.LoginAttemptType
+
+export const LoginAttemptType: typeof $Enums.LoginAttemptType
+
 export type QuestStatus = $Enums.QuestStatus
 
 export const QuestStatus: typeof $Enums.QuestStatus
@@ -230,6 +275,10 @@ export const QuestStatus: typeof $Enums.QuestStatus
 export type AuditType = $Enums.AuditType
 
 export const AuditType: typeof $Enums.AuditType
+
+export type CountryStatus = $Enums.CountryStatus
+
+export const CountryStatus: typeof $Enums.CountryStatus
 
 export type TransactionIntentStatus = $Enums.TransactionIntentStatus
 
@@ -444,6 +493,26 @@ export class PrismaClient<
     * ```
     */
   get message(): Prisma.MessageDelegate<ExtArgs>;
+
+  /**
+   * `prisma.ipAssessment`: Exposes CRUD operations for the **IpAssessment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more IpAssessments
+    * const ipAssessments = await prisma.ipAssessment.findMany()
+    * ```
+    */
+  get ipAssessment(): Prisma.IpAssessmentDelegate<ExtArgs>;
+
+  /**
+   * `prisma.loginAttempt`: Exposes CRUD operations for the **LoginAttempt** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LoginAttempts
+    * const loginAttempts = await prisma.loginAttempt.findMany()
+    * ```
+    */
+  get loginAttempt(): Prisma.LoginAttemptDelegate<ExtArgs>;
 
   /**
    * `prisma.notification`: Exposes CRUD operations for the **Notification** model.
@@ -1049,6 +1118,8 @@ export namespace Prisma {
     Challenge: 'Challenge',
     Event: 'Event',
     Message: 'Message',
+    IpAssessment: 'IpAssessment',
+    LoginAttempt: 'LoginAttempt',
     Notification: 'Notification',
     CompletedQuestRequirement: 'CompletedQuestRequirement',
     QuestProgress: 'QuestProgress',
@@ -1077,7 +1148,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'user' | 'userEmail' | 'image' | 'userPhoneNumber' | 'referral' | 'challenge' | 'event' | 'message' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'blockedCountry' | 'transactionIntent' | 'batchedTransactionIntent' | 'submittedTransaction' | 'config' | 'marketing' | 'goldenTicket'
+      modelProps: 'user' | 'userEmail' | 'image' | 'userPhoneNumber' | 'referral' | 'challenge' | 'event' | 'message' | 'ipAssessment' | 'loginAttempt' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'blockedCountry' | 'transactionIntent' | 'batchedTransactionIntent' | 'submittedTransaction' | 'config' | 'marketing' | 'goldenTicket'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1638,6 +1709,146 @@ export namespace Prisma {
           count: {
             args: Prisma.MessageCountArgs<ExtArgs>,
             result: $Utils.Optional<MessageCountAggregateOutputType> | number
+          }
+        }
+      }
+      IpAssessment: {
+        payload: Prisma.$IpAssessmentPayload<ExtArgs>
+        fields: Prisma.IpAssessmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.IpAssessmentFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.IpAssessmentFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>
+          }
+          findFirst: {
+            args: Prisma.IpAssessmentFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.IpAssessmentFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>
+          }
+          findMany: {
+            args: Prisma.IpAssessmentFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>[]
+          }
+          create: {
+            args: Prisma.IpAssessmentCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>
+          }
+          createMany: {
+            args: Prisma.IpAssessmentCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.IpAssessmentCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>[]
+          }
+          delete: {
+            args: Prisma.IpAssessmentDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>
+          }
+          update: {
+            args: Prisma.IpAssessmentUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.IpAssessmentDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.IpAssessmentUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.IpAssessmentUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>
+          }
+          aggregate: {
+            args: Prisma.IpAssessmentAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateIpAssessment>
+          }
+          groupBy: {
+            args: Prisma.IpAssessmentGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<IpAssessmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.IpAssessmentCountArgs<ExtArgs>,
+            result: $Utils.Optional<IpAssessmentCountAggregateOutputType> | number
+          }
+        }
+      }
+      LoginAttempt: {
+        payload: Prisma.$LoginAttemptPayload<ExtArgs>
+        fields: Prisma.LoginAttemptFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LoginAttemptFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LoginAttemptFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          findFirst: {
+            args: Prisma.LoginAttemptFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LoginAttemptFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          findMany: {
+            args: Prisma.LoginAttemptFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+          }
+          create: {
+            args: Prisma.LoginAttemptCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          createMany: {
+            args: Prisma.LoginAttemptCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LoginAttemptCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+          }
+          delete: {
+            args: Prisma.LoginAttemptDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          update: {
+            args: Prisma.LoginAttemptUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          deleteMany: {
+            args: Prisma.LoginAttemptDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LoginAttemptUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.LoginAttemptUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          aggregate: {
+            args: Prisma.LoginAttemptAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateLoginAttempt>
+          }
+          groupBy: {
+            args: Prisma.LoginAttemptGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<LoginAttemptGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LoginAttemptCountArgs<ExtArgs>,
+            result: $Utils.Optional<LoginAttemptCountAggregateOutputType> | number
           }
         }
       }
@@ -2651,6 +2862,7 @@ export namespace Prisma {
     marketing: number
     referals: number
     goldenTicketsOwned: number
+    loginAttempts: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2664,6 +2876,7 @@ export namespace Prisma {
     marketing?: boolean | UserCountOutputTypeCountMarketingArgs
     referals?: boolean | UserCountOutputTypeCountReferalsArgs
     goldenTicketsOwned?: boolean | UserCountOutputTypeCountGoldenTicketsOwnedArgs
+    loginAttempts?: boolean | UserCountOutputTypeCountLoginAttemptsArgs
   }
 
   // Custom InputTypes
@@ -2747,6 +2960,13 @@ export namespace Prisma {
     where?: GoldenTicketWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountLoginAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LoginAttemptWhereInput
+  }
+
 
   /**
    * Count Type EventCountOutputType
@@ -2776,6 +2996,37 @@ export namespace Prisma {
    */
   export type EventCountOutputTypeCountReferralArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReferralWhereInput
+  }
+
+
+  /**
+   * Count Type IpAssessmentCountOutputType
+   */
+
+  export type IpAssessmentCountOutputType = {
+    loginAttempts: number
+  }
+
+  export type IpAssessmentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    loginAttempts?: boolean | IpAssessmentCountOutputTypeCountLoginAttemptsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * IpAssessmentCountOutputType without action
+   */
+  export type IpAssessmentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IpAssessmentCountOutputType
+     */
+    select?: IpAssessmentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * IpAssessmentCountOutputType without action
+   */
+  export type IpAssessmentCountOutputTypeCountLoginAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LoginAttemptWhereInput
   }
 
 
@@ -2866,6 +3117,7 @@ export namespace Prisma {
     referralCode: string | null
     referredBy: string | null
     blocked: boolean | null
+    status: $Enums.UserStatus | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -2879,6 +3131,7 @@ export namespace Prisma {
     referralCode: string | null
     referredBy: string | null
     blocked: boolean | null
+    status: $Enums.UserStatus | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -2892,6 +3145,7 @@ export namespace Prisma {
     referralCode: number
     referredBy: number
     blocked: number
+    status: number
     _all: number
   }
 
@@ -2907,6 +3161,7 @@ export namespace Prisma {
     referralCode?: true
     referredBy?: true
     blocked?: true
+    status?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -2920,6 +3175,7 @@ export namespace Prisma {
     referralCode?: true
     referredBy?: true
     blocked?: true
+    status?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -2933,6 +3189,7 @@ export namespace Prisma {
     referralCode?: true
     referredBy?: true
     blocked?: true
+    status?: true
     _all?: true
   }
 
@@ -3019,6 +3276,7 @@ export namespace Prisma {
     referralCode: string
     referredBy: string | null
     blocked: boolean
+    status: $Enums.UserStatus
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -3049,6 +3307,7 @@ export namespace Prisma {
     referralCode?: boolean
     referredBy?: boolean
     blocked?: boolean
+    status?: boolean
     referredByUser?: boolean | User$referredByUserArgs<ExtArgs>
     events?: boolean | User$eventsArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
@@ -3064,6 +3323,7 @@ export namespace Prisma {
     referals?: boolean | User$referalsArgs<ExtArgs>
     goldenTicketClaimed?: boolean | User$goldenTicketClaimedArgs<ExtArgs>
     goldenTicketsOwned?: boolean | User$goldenTicketsOwnedArgs<ExtArgs>
+    loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3078,6 +3338,7 @@ export namespace Prisma {
     referralCode?: boolean
     referredBy?: boolean
     blocked?: boolean
+    status?: boolean
     referredByUser?: boolean | User$referredByUserArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3092,6 +3353,7 @@ export namespace Prisma {
     referralCode?: boolean
     referredBy?: boolean
     blocked?: boolean
+    status?: boolean
   }
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3110,6 +3372,7 @@ export namespace Prisma {
     referals?: boolean | User$referalsArgs<ExtArgs>
     goldenTicketClaimed?: boolean | User$goldenTicketClaimedArgs<ExtArgs>
     goldenTicketsOwned?: boolean | User$goldenTicketsOwnedArgs<ExtArgs>
+    loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3134,6 +3397,7 @@ export namespace Prisma {
       referals: Prisma.$ReferralPayload<ExtArgs>[]
       goldenTicketClaimed: Prisma.$GoldenTicketPayload<ExtArgs> | null
       goldenTicketsOwned: Prisma.$GoldenTicketPayload<ExtArgs>[]
+      loginAttempts: Prisma.$LoginAttemptPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3146,6 +3410,7 @@ export namespace Prisma {
       referralCode: string
       referredBy: string | null
       blocked: boolean
+      status: $Enums.UserStatus
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -3566,6 +3831,8 @@ export namespace Prisma {
 
     goldenTicketsOwned<T extends User$goldenTicketsOwnedArgs<ExtArgs> = {}>(args?: Subset<T, User$goldenTicketsOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'findMany'> | Null>;
 
+    loginAttempts<T extends User$loginAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$loginAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findMany'> | Null>;
+
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3604,6 +3871,7 @@ export namespace Prisma {
     readonly referralCode: FieldRef<"User", 'String'>
     readonly referredBy: FieldRef<"User", 'String'>
     readonly blocked: FieldRef<"User", 'Boolean'>
+    readonly status: FieldRef<"User", 'UserStatus'>
   }
     
 
@@ -4194,6 +4462,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: GoldenTicketScalarFieldEnum | GoldenTicketScalarFieldEnum[]
+  }
+
+  /**
+   * User.loginAttempts
+   */
+  export type User$loginAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    where?: LoginAttemptWhereInput
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    cursor?: LoginAttemptWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
   }
 
   /**
@@ -10837,6 +11125,2026 @@ export namespace Prisma {
 
 
   /**
+   * Model IpAssessment
+   */
+
+  export type AggregateIpAssessment = {
+    _count: IpAssessmentCountAggregateOutputType | null
+    _avg: IpAssessmentAvgAggregateOutputType | null
+    _sum: IpAssessmentSumAggregateOutputType | null
+    _min: IpAssessmentMinAggregateOutputType | null
+    _max: IpAssessmentMaxAggregateOutputType | null
+  }
+
+  export type IpAssessmentAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type IpAssessmentSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type IpAssessmentMinAggregateOutputType = {
+    id: number | null
+    ip: string | null
+    userAgent: string | null
+    acceptLanguage: string | null
+    createdAt: Date | null
+  }
+
+  export type IpAssessmentMaxAggregateOutputType = {
+    id: number | null
+    ip: string | null
+    userAgent: string | null
+    acceptLanguage: string | null
+    createdAt: Date | null
+  }
+
+  export type IpAssessmentCountAggregateOutputType = {
+    id: number
+    ip: number
+    userAgent: number
+    acceptLanguage: number
+    data: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type IpAssessmentAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type IpAssessmentSumAggregateInputType = {
+    id?: true
+  }
+
+  export type IpAssessmentMinAggregateInputType = {
+    id?: true
+    ip?: true
+    userAgent?: true
+    acceptLanguage?: true
+    createdAt?: true
+  }
+
+  export type IpAssessmentMaxAggregateInputType = {
+    id?: true
+    ip?: true
+    userAgent?: true
+    acceptLanguage?: true
+    createdAt?: true
+  }
+
+  export type IpAssessmentCountAggregateInputType = {
+    id?: true
+    ip?: true
+    userAgent?: true
+    acceptLanguage?: true
+    data?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type IpAssessmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IpAssessment to aggregate.
+     */
+    where?: IpAssessmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IpAssessments to fetch.
+     */
+    orderBy?: IpAssessmentOrderByWithRelationInput | IpAssessmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: IpAssessmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IpAssessments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IpAssessments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned IpAssessments
+    **/
+    _count?: true | IpAssessmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: IpAssessmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: IpAssessmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: IpAssessmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: IpAssessmentMaxAggregateInputType
+  }
+
+  export type GetIpAssessmentAggregateType<T extends IpAssessmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateIpAssessment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateIpAssessment[P]>
+      : GetScalarType<T[P], AggregateIpAssessment[P]>
+  }
+
+
+
+
+  export type IpAssessmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IpAssessmentWhereInput
+    orderBy?: IpAssessmentOrderByWithAggregationInput | IpAssessmentOrderByWithAggregationInput[]
+    by: IpAssessmentScalarFieldEnum[] | IpAssessmentScalarFieldEnum
+    having?: IpAssessmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: IpAssessmentCountAggregateInputType | true
+    _avg?: IpAssessmentAvgAggregateInputType
+    _sum?: IpAssessmentSumAggregateInputType
+    _min?: IpAssessmentMinAggregateInputType
+    _max?: IpAssessmentMaxAggregateInputType
+  }
+
+  export type IpAssessmentGroupByOutputType = {
+    id: number
+    ip: string
+    userAgent: string
+    acceptLanguage: string
+    data: JsonValue
+    createdAt: Date
+    _count: IpAssessmentCountAggregateOutputType | null
+    _avg: IpAssessmentAvgAggregateOutputType | null
+    _sum: IpAssessmentSumAggregateOutputType | null
+    _min: IpAssessmentMinAggregateOutputType | null
+    _max: IpAssessmentMaxAggregateOutputType | null
+  }
+
+  type GetIpAssessmentGroupByPayload<T extends IpAssessmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<IpAssessmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof IpAssessmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], IpAssessmentGroupByOutputType[P]>
+            : GetScalarType<T[P], IpAssessmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type IpAssessmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ip?: boolean
+    userAgent?: boolean
+    acceptLanguage?: boolean
+    data?: boolean
+    createdAt?: boolean
+    loginAttempts?: boolean | IpAssessment$loginAttemptsArgs<ExtArgs>
+    _count?: boolean | IpAssessmentCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["ipAssessment"]>
+
+  export type IpAssessmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ip?: boolean
+    userAgent?: boolean
+    acceptLanguage?: boolean
+    data?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["ipAssessment"]>
+
+  export type IpAssessmentSelectScalar = {
+    id?: boolean
+    ip?: boolean
+    userAgent?: boolean
+    acceptLanguage?: boolean
+    data?: boolean
+    createdAt?: boolean
+  }
+
+  export type IpAssessmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    loginAttempts?: boolean | IpAssessment$loginAttemptsArgs<ExtArgs>
+    _count?: boolean | IpAssessmentCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type IpAssessmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $IpAssessmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "IpAssessment"
+    objects: {
+      loginAttempts: Prisma.$LoginAttemptPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      ip: string
+      userAgent: string
+      acceptLanguage: string
+      data: Prisma.JsonValue
+      createdAt: Date
+    }, ExtArgs["result"]["ipAssessment"]>
+    composites: {}
+  }
+
+  type IpAssessmentGetPayload<S extends boolean | null | undefined | IpAssessmentDefaultArgs> = $Result.GetResult<Prisma.$IpAssessmentPayload, S>
+
+  type IpAssessmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<IpAssessmentFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: IpAssessmentCountAggregateInputType | true
+    }
+
+  export interface IpAssessmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IpAssessment'], meta: { name: 'IpAssessment' } }
+    /**
+     * Find zero or one IpAssessment that matches the filter.
+     * @param {IpAssessmentFindUniqueArgs} args - Arguments to find a IpAssessment
+     * @example
+     * // Get one IpAssessment
+     * const ipAssessment = await prisma.ipAssessment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends IpAssessmentFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, IpAssessmentFindUniqueArgs<ExtArgs>>
+    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one IpAssessment that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {IpAssessmentFindUniqueOrThrowArgs} args - Arguments to find a IpAssessment
+     * @example
+     * // Get one IpAssessment
+     * const ipAssessment = await prisma.ipAssessment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends IpAssessmentFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, IpAssessmentFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first IpAssessment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IpAssessmentFindFirstArgs} args - Arguments to find a IpAssessment
+     * @example
+     * // Get one IpAssessment
+     * const ipAssessment = await prisma.ipAssessment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends IpAssessmentFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, IpAssessmentFindFirstArgs<ExtArgs>>
+    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first IpAssessment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IpAssessmentFindFirstOrThrowArgs} args - Arguments to find a IpAssessment
+     * @example
+     * // Get one IpAssessment
+     * const ipAssessment = await prisma.ipAssessment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends IpAssessmentFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, IpAssessmentFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more IpAssessments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IpAssessmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all IpAssessments
+     * const ipAssessments = await prisma.ipAssessment.findMany()
+     * 
+     * // Get first 10 IpAssessments
+     * const ipAssessments = await prisma.ipAssessment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const ipAssessmentWithIdOnly = await prisma.ipAssessment.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends IpAssessmentFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, IpAssessmentFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a IpAssessment.
+     * @param {IpAssessmentCreateArgs} args - Arguments to create a IpAssessment.
+     * @example
+     * // Create one IpAssessment
+     * const IpAssessment = await prisma.ipAssessment.create({
+     *   data: {
+     *     // ... data to create a IpAssessment
+     *   }
+     * })
+     * 
+    **/
+    create<T extends IpAssessmentCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, IpAssessmentCreateArgs<ExtArgs>>
+    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many IpAssessments.
+     * @param {IpAssessmentCreateManyArgs} args - Arguments to create many IpAssessments.
+     * @example
+     * // Create many IpAssessments
+     * const ipAssessment = await prisma.ipAssessment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+    **/
+    createMany<T extends IpAssessmentCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, IpAssessmentCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many IpAssessments and returns the data saved in the database.
+     * @param {IpAssessmentCreateManyAndReturnArgs} args - Arguments to create many IpAssessments.
+     * @example
+     * // Create many IpAssessments
+     * const ipAssessment = await prisma.ipAssessment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many IpAssessments and only return the `id`
+     * const ipAssessmentWithIdOnly = await prisma.ipAssessment.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends IpAssessmentCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, IpAssessmentCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'createManyAndReturn'>>
+
+    /**
+     * Delete a IpAssessment.
+     * @param {IpAssessmentDeleteArgs} args - Arguments to delete one IpAssessment.
+     * @example
+     * // Delete one IpAssessment
+     * const IpAssessment = await prisma.ipAssessment.delete({
+     *   where: {
+     *     // ... filter to delete one IpAssessment
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends IpAssessmentDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, IpAssessmentDeleteArgs<ExtArgs>>
+    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one IpAssessment.
+     * @param {IpAssessmentUpdateArgs} args - Arguments to update one IpAssessment.
+     * @example
+     * // Update one IpAssessment
+     * const ipAssessment = await prisma.ipAssessment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends IpAssessmentUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, IpAssessmentUpdateArgs<ExtArgs>>
+    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more IpAssessments.
+     * @param {IpAssessmentDeleteManyArgs} args - Arguments to filter IpAssessments to delete.
+     * @example
+     * // Delete a few IpAssessments
+     * const { count } = await prisma.ipAssessment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends IpAssessmentDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, IpAssessmentDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IpAssessments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IpAssessmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many IpAssessments
+     * const ipAssessment = await prisma.ipAssessment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends IpAssessmentUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, IpAssessmentUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one IpAssessment.
+     * @param {IpAssessmentUpsertArgs} args - Arguments to update or create a IpAssessment.
+     * @example
+     * // Update or create a IpAssessment
+     * const ipAssessment = await prisma.ipAssessment.upsert({
+     *   create: {
+     *     // ... data to create a IpAssessment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the IpAssessment we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends IpAssessmentUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, IpAssessmentUpsertArgs<ExtArgs>>
+    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of IpAssessments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IpAssessmentCountArgs} args - Arguments to filter IpAssessments to count.
+     * @example
+     * // Count the number of IpAssessments
+     * const count = await prisma.ipAssessment.count({
+     *   where: {
+     *     // ... the filter for the IpAssessments we want to count
+     *   }
+     * })
+    **/
+    count<T extends IpAssessmentCountArgs>(
+      args?: Subset<T, IpAssessmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], IpAssessmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a IpAssessment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IpAssessmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends IpAssessmentAggregateArgs>(args: Subset<T, IpAssessmentAggregateArgs>): Prisma.PrismaPromise<GetIpAssessmentAggregateType<T>>
+
+    /**
+     * Group by IpAssessment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IpAssessmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends IpAssessmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: IpAssessmentGroupByArgs['orderBy'] }
+        : { orderBy?: IpAssessmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, IpAssessmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIpAssessmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the IpAssessment model
+   */
+  readonly fields: IpAssessmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for IpAssessment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__IpAssessmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+    loginAttempts<T extends IpAssessment$loginAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, IpAssessment$loginAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findMany'> | Null>;
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the IpAssessment model
+   */ 
+  interface IpAssessmentFieldRefs {
+    readonly id: FieldRef<"IpAssessment", 'Int'>
+    readonly ip: FieldRef<"IpAssessment", 'String'>
+    readonly userAgent: FieldRef<"IpAssessment", 'String'>
+    readonly acceptLanguage: FieldRef<"IpAssessment", 'String'>
+    readonly data: FieldRef<"IpAssessment", 'Json'>
+    readonly createdAt: FieldRef<"IpAssessment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * IpAssessment findUnique
+   */
+  export type IpAssessmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IpAssessment
+     */
+    select?: IpAssessmentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IpAssessmentInclude<ExtArgs> | null
+    /**
+     * Filter, which IpAssessment to fetch.
+     */
+    where: IpAssessmentWhereUniqueInput
+  }
+
+  /**
+   * IpAssessment findUniqueOrThrow
+   */
+  export type IpAssessmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IpAssessment
+     */
+    select?: IpAssessmentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IpAssessmentInclude<ExtArgs> | null
+    /**
+     * Filter, which IpAssessment to fetch.
+     */
+    where: IpAssessmentWhereUniqueInput
+  }
+
+  /**
+   * IpAssessment findFirst
+   */
+  export type IpAssessmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IpAssessment
+     */
+    select?: IpAssessmentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IpAssessmentInclude<ExtArgs> | null
+    /**
+     * Filter, which IpAssessment to fetch.
+     */
+    where?: IpAssessmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IpAssessments to fetch.
+     */
+    orderBy?: IpAssessmentOrderByWithRelationInput | IpAssessmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IpAssessments.
+     */
+    cursor?: IpAssessmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IpAssessments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IpAssessments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IpAssessments.
+     */
+    distinct?: IpAssessmentScalarFieldEnum | IpAssessmentScalarFieldEnum[]
+  }
+
+  /**
+   * IpAssessment findFirstOrThrow
+   */
+  export type IpAssessmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IpAssessment
+     */
+    select?: IpAssessmentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IpAssessmentInclude<ExtArgs> | null
+    /**
+     * Filter, which IpAssessment to fetch.
+     */
+    where?: IpAssessmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IpAssessments to fetch.
+     */
+    orderBy?: IpAssessmentOrderByWithRelationInput | IpAssessmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IpAssessments.
+     */
+    cursor?: IpAssessmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IpAssessments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IpAssessments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IpAssessments.
+     */
+    distinct?: IpAssessmentScalarFieldEnum | IpAssessmentScalarFieldEnum[]
+  }
+
+  /**
+   * IpAssessment findMany
+   */
+  export type IpAssessmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IpAssessment
+     */
+    select?: IpAssessmentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IpAssessmentInclude<ExtArgs> | null
+    /**
+     * Filter, which IpAssessments to fetch.
+     */
+    where?: IpAssessmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IpAssessments to fetch.
+     */
+    orderBy?: IpAssessmentOrderByWithRelationInput | IpAssessmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing IpAssessments.
+     */
+    cursor?: IpAssessmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IpAssessments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IpAssessments.
+     */
+    skip?: number
+    distinct?: IpAssessmentScalarFieldEnum | IpAssessmentScalarFieldEnum[]
+  }
+
+  /**
+   * IpAssessment create
+   */
+  export type IpAssessmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IpAssessment
+     */
+    select?: IpAssessmentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IpAssessmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a IpAssessment.
+     */
+    data: XOR<IpAssessmentCreateInput, IpAssessmentUncheckedCreateInput>
+  }
+
+  /**
+   * IpAssessment createMany
+   */
+  export type IpAssessmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many IpAssessments.
+     */
+    data: IpAssessmentCreateManyInput | IpAssessmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * IpAssessment createManyAndReturn
+   */
+  export type IpAssessmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IpAssessment
+     */
+    select?: IpAssessmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many IpAssessments.
+     */
+    data: IpAssessmentCreateManyInput | IpAssessmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * IpAssessment update
+   */
+  export type IpAssessmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IpAssessment
+     */
+    select?: IpAssessmentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IpAssessmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a IpAssessment.
+     */
+    data: XOR<IpAssessmentUpdateInput, IpAssessmentUncheckedUpdateInput>
+    /**
+     * Choose, which IpAssessment to update.
+     */
+    where: IpAssessmentWhereUniqueInput
+  }
+
+  /**
+   * IpAssessment updateMany
+   */
+  export type IpAssessmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update IpAssessments.
+     */
+    data: XOR<IpAssessmentUpdateManyMutationInput, IpAssessmentUncheckedUpdateManyInput>
+    /**
+     * Filter which IpAssessments to update
+     */
+    where?: IpAssessmentWhereInput
+  }
+
+  /**
+   * IpAssessment upsert
+   */
+  export type IpAssessmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IpAssessment
+     */
+    select?: IpAssessmentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IpAssessmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the IpAssessment to update in case it exists.
+     */
+    where: IpAssessmentWhereUniqueInput
+    /**
+     * In case the IpAssessment found by the `where` argument doesn't exist, create a new IpAssessment with this data.
+     */
+    create: XOR<IpAssessmentCreateInput, IpAssessmentUncheckedCreateInput>
+    /**
+     * In case the IpAssessment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<IpAssessmentUpdateInput, IpAssessmentUncheckedUpdateInput>
+  }
+
+  /**
+   * IpAssessment delete
+   */
+  export type IpAssessmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IpAssessment
+     */
+    select?: IpAssessmentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IpAssessmentInclude<ExtArgs> | null
+    /**
+     * Filter which IpAssessment to delete.
+     */
+    where: IpAssessmentWhereUniqueInput
+  }
+
+  /**
+   * IpAssessment deleteMany
+   */
+  export type IpAssessmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IpAssessments to delete
+     */
+    where?: IpAssessmentWhereInput
+  }
+
+  /**
+   * IpAssessment.loginAttempts
+   */
+  export type IpAssessment$loginAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    where?: LoginAttemptWhereInput
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    cursor?: LoginAttemptWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * IpAssessment without action
+   */
+  export type IpAssessmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IpAssessment
+     */
+    select?: IpAssessmentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IpAssessmentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model LoginAttempt
+   */
+
+  export type AggregateLoginAttempt = {
+    _count: LoginAttemptCountAggregateOutputType | null
+    _avg: LoginAttemptAvgAggregateOutputType | null
+    _sum: LoginAttemptSumAggregateOutputType | null
+    _min: LoginAttemptMinAggregateOutputType | null
+    _max: LoginAttemptMaxAggregateOutputType | null
+  }
+
+  export type LoginAttemptAvgAggregateOutputType = {
+    id: number | null
+    ipAssessmentId: number | null
+  }
+
+  export type LoginAttemptSumAggregateOutputType = {
+    id: number | null
+    ipAssessmentId: number | null
+  }
+
+  export type LoginAttemptMinAggregateOutputType = {
+    id: number | null
+    userId: string | null
+    ipAssessmentId: number | null
+    type: $Enums.LoginAttemptType | null
+    createdAt: Date | null
+  }
+
+  export type LoginAttemptMaxAggregateOutputType = {
+    id: number | null
+    userId: string | null
+    ipAssessmentId: number | null
+    type: $Enums.LoginAttemptType | null
+    createdAt: Date | null
+  }
+
+  export type LoginAttemptCountAggregateOutputType = {
+    id: number
+    userId: number
+    ipAssessmentId: number
+    type: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type LoginAttemptAvgAggregateInputType = {
+    id?: true
+    ipAssessmentId?: true
+  }
+
+  export type LoginAttemptSumAggregateInputType = {
+    id?: true
+    ipAssessmentId?: true
+  }
+
+  export type LoginAttemptMinAggregateInputType = {
+    id?: true
+    userId?: true
+    ipAssessmentId?: true
+    type?: true
+    createdAt?: true
+  }
+
+  export type LoginAttemptMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    ipAssessmentId?: true
+    type?: true
+    createdAt?: true
+  }
+
+  export type LoginAttemptCountAggregateInputType = {
+    id?: true
+    userId?: true
+    ipAssessmentId?: true
+    type?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type LoginAttemptAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LoginAttempt to aggregate.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LoginAttempts
+    **/
+    _count?: true | LoginAttemptCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LoginAttemptAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LoginAttemptSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LoginAttemptMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LoginAttemptMaxAggregateInputType
+  }
+
+  export type GetLoginAttemptAggregateType<T extends LoginAttemptAggregateArgs> = {
+        [P in keyof T & keyof AggregateLoginAttempt]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLoginAttempt[P]>
+      : GetScalarType<T[P], AggregateLoginAttempt[P]>
+  }
+
+
+
+
+  export type LoginAttemptGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LoginAttemptWhereInput
+    orderBy?: LoginAttemptOrderByWithAggregationInput | LoginAttemptOrderByWithAggregationInput[]
+    by: LoginAttemptScalarFieldEnum[] | LoginAttemptScalarFieldEnum
+    having?: LoginAttemptScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LoginAttemptCountAggregateInputType | true
+    _avg?: LoginAttemptAvgAggregateInputType
+    _sum?: LoginAttemptSumAggregateInputType
+    _min?: LoginAttemptMinAggregateInputType
+    _max?: LoginAttemptMaxAggregateInputType
+  }
+
+  export type LoginAttemptGroupByOutputType = {
+    id: number
+    userId: string
+    ipAssessmentId: number
+    type: $Enums.LoginAttemptType
+    createdAt: Date
+    _count: LoginAttemptCountAggregateOutputType | null
+    _avg: LoginAttemptAvgAggregateOutputType | null
+    _sum: LoginAttemptSumAggregateOutputType | null
+    _min: LoginAttemptMinAggregateOutputType | null
+    _max: LoginAttemptMaxAggregateOutputType | null
+  }
+
+  type GetLoginAttemptGroupByPayload<T extends LoginAttemptGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LoginAttemptGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LoginAttemptGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LoginAttemptGroupByOutputType[P]>
+            : GetScalarType<T[P], LoginAttemptGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LoginAttemptSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    ipAssessmentId?: boolean
+    type?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    ipAssessment?: boolean | IpAssessmentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["loginAttempt"]>
+
+  export type LoginAttemptSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    ipAssessmentId?: boolean
+    type?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    ipAssessment?: boolean | IpAssessmentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["loginAttempt"]>
+
+  export type LoginAttemptSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    ipAssessmentId?: boolean
+    type?: boolean
+    createdAt?: boolean
+  }
+
+  export type LoginAttemptInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    ipAssessment?: boolean | IpAssessmentDefaultArgs<ExtArgs>
+  }
+  export type LoginAttemptIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    ipAssessment?: boolean | IpAssessmentDefaultArgs<ExtArgs>
+  }
+
+  export type $LoginAttemptPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LoginAttempt"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      ipAssessment: Prisma.$IpAssessmentPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      userId: string
+      ipAssessmentId: number
+      type: $Enums.LoginAttemptType
+      createdAt: Date
+    }, ExtArgs["result"]["loginAttempt"]>
+    composites: {}
+  }
+
+  type LoginAttemptGetPayload<S extends boolean | null | undefined | LoginAttemptDefaultArgs> = $Result.GetResult<Prisma.$LoginAttemptPayload, S>
+
+  type LoginAttemptCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<LoginAttemptFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: LoginAttemptCountAggregateInputType | true
+    }
+
+  export interface LoginAttemptDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LoginAttempt'], meta: { name: 'LoginAttempt' } }
+    /**
+     * Find zero or one LoginAttempt that matches the filter.
+     * @param {LoginAttemptFindUniqueArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends LoginAttemptFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, LoginAttemptFindUniqueArgs<ExtArgs>>
+    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one LoginAttempt that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {LoginAttemptFindUniqueOrThrowArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends LoginAttemptFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, LoginAttemptFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first LoginAttempt that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptFindFirstArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends LoginAttemptFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, LoginAttemptFindFirstArgs<ExtArgs>>
+    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first LoginAttempt that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptFindFirstOrThrowArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends LoginAttemptFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, LoginAttemptFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more LoginAttempts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LoginAttempts
+     * const loginAttempts = await prisma.loginAttempt.findMany()
+     * 
+     * // Get first 10 LoginAttempts
+     * const loginAttempts = await prisma.loginAttempt.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const loginAttemptWithIdOnly = await prisma.loginAttempt.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends LoginAttemptFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, LoginAttemptFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a LoginAttempt.
+     * @param {LoginAttemptCreateArgs} args - Arguments to create a LoginAttempt.
+     * @example
+     * // Create one LoginAttempt
+     * const LoginAttempt = await prisma.loginAttempt.create({
+     *   data: {
+     *     // ... data to create a LoginAttempt
+     *   }
+     * })
+     * 
+    **/
+    create<T extends LoginAttemptCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, LoginAttemptCreateArgs<ExtArgs>>
+    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many LoginAttempts.
+     * @param {LoginAttemptCreateManyArgs} args - Arguments to create many LoginAttempts.
+     * @example
+     * // Create many LoginAttempts
+     * const loginAttempt = await prisma.loginAttempt.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+    **/
+    createMany<T extends LoginAttemptCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, LoginAttemptCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LoginAttempts and returns the data saved in the database.
+     * @param {LoginAttemptCreateManyAndReturnArgs} args - Arguments to create many LoginAttempts.
+     * @example
+     * // Create many LoginAttempts
+     * const loginAttempt = await prisma.loginAttempt.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LoginAttempts and only return the `id`
+     * const loginAttemptWithIdOnly = await prisma.loginAttempt.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends LoginAttemptCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, LoginAttemptCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'createManyAndReturn'>>
+
+    /**
+     * Delete a LoginAttempt.
+     * @param {LoginAttemptDeleteArgs} args - Arguments to delete one LoginAttempt.
+     * @example
+     * // Delete one LoginAttempt
+     * const LoginAttempt = await prisma.loginAttempt.delete({
+     *   where: {
+     *     // ... filter to delete one LoginAttempt
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends LoginAttemptDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, LoginAttemptDeleteArgs<ExtArgs>>
+    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one LoginAttempt.
+     * @param {LoginAttemptUpdateArgs} args - Arguments to update one LoginAttempt.
+     * @example
+     * // Update one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends LoginAttemptUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, LoginAttemptUpdateArgs<ExtArgs>>
+    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more LoginAttempts.
+     * @param {LoginAttemptDeleteManyArgs} args - Arguments to filter LoginAttempts to delete.
+     * @example
+     * // Delete a few LoginAttempts
+     * const { count } = await prisma.loginAttempt.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends LoginAttemptDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, LoginAttemptDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LoginAttempts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LoginAttempts
+     * const loginAttempt = await prisma.loginAttempt.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends LoginAttemptUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, LoginAttemptUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one LoginAttempt.
+     * @param {LoginAttemptUpsertArgs} args - Arguments to update or create a LoginAttempt.
+     * @example
+     * // Update or create a LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.upsert({
+     *   create: {
+     *     // ... data to create a LoginAttempt
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LoginAttempt we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends LoginAttemptUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, LoginAttemptUpsertArgs<ExtArgs>>
+    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of LoginAttempts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptCountArgs} args - Arguments to filter LoginAttempts to count.
+     * @example
+     * // Count the number of LoginAttempts
+     * const count = await prisma.loginAttempt.count({
+     *   where: {
+     *     // ... the filter for the LoginAttempts we want to count
+     *   }
+     * })
+    **/
+    count<T extends LoginAttemptCountArgs>(
+      args?: Subset<T, LoginAttemptCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LoginAttemptCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LoginAttempt.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LoginAttemptAggregateArgs>(args: Subset<T, LoginAttemptAggregateArgs>): Prisma.PrismaPromise<GetLoginAttemptAggregateType<T>>
+
+    /**
+     * Group by LoginAttempt.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LoginAttemptGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LoginAttemptGroupByArgs['orderBy'] }
+        : { orderBy?: LoginAttemptGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LoginAttemptGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLoginAttemptGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LoginAttempt model
+   */
+  readonly fields: LoginAttemptFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LoginAttempt.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LoginAttemptClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
+
+    ipAssessment<T extends IpAssessmentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IpAssessmentDefaultArgs<ExtArgs>>): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the LoginAttempt model
+   */ 
+  interface LoginAttemptFieldRefs {
+    readonly id: FieldRef<"LoginAttempt", 'Int'>
+    readonly userId: FieldRef<"LoginAttempt", 'String'>
+    readonly ipAssessmentId: FieldRef<"LoginAttempt", 'Int'>
+    readonly type: FieldRef<"LoginAttempt", 'LoginAttemptType'>
+    readonly createdAt: FieldRef<"LoginAttempt", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LoginAttempt findUnique
+   */
+  export type LoginAttemptFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt findUniqueOrThrow
+   */
+  export type LoginAttemptFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt findFirst
+   */
+  export type LoginAttemptFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LoginAttempts.
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LoginAttempts.
+     */
+    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * LoginAttempt findFirstOrThrow
+   */
+  export type LoginAttemptFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LoginAttempts.
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LoginAttempts.
+     */
+    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * LoginAttempt findMany
+   */
+  export type LoginAttemptFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempts to fetch.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LoginAttempts.
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * LoginAttempt create
+   */
+  export type LoginAttemptCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * The data needed to create a LoginAttempt.
+     */
+    data: XOR<LoginAttemptCreateInput, LoginAttemptUncheckedCreateInput>
+  }
+
+  /**
+   * LoginAttempt createMany
+   */
+  export type LoginAttemptCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LoginAttempts.
+     */
+    data: LoginAttemptCreateManyInput | LoginAttemptCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LoginAttempt createManyAndReturn
+   */
+  export type LoginAttemptCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many LoginAttempts.
+     */
+    data: LoginAttemptCreateManyInput | LoginAttemptCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LoginAttempt update
+   */
+  export type LoginAttemptUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * The data needed to update a LoginAttempt.
+     */
+    data: XOR<LoginAttemptUpdateInput, LoginAttemptUncheckedUpdateInput>
+    /**
+     * Choose, which LoginAttempt to update.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt updateMany
+   */
+  export type LoginAttemptUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LoginAttempts.
+     */
+    data: XOR<LoginAttemptUpdateManyMutationInput, LoginAttemptUncheckedUpdateManyInput>
+    /**
+     * Filter which LoginAttempts to update
+     */
+    where?: LoginAttemptWhereInput
+  }
+
+  /**
+   * LoginAttempt upsert
+   */
+  export type LoginAttemptUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * The filter to search for the LoginAttempt to update in case it exists.
+     */
+    where: LoginAttemptWhereUniqueInput
+    /**
+     * In case the LoginAttempt found by the `where` argument doesn't exist, create a new LoginAttempt with this data.
+     */
+    create: XOR<LoginAttemptCreateInput, LoginAttemptUncheckedCreateInput>
+    /**
+     * In case the LoginAttempt was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LoginAttemptUpdateInput, LoginAttemptUncheckedUpdateInput>
+  }
+
+  /**
+   * LoginAttempt delete
+   */
+  export type LoginAttemptDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+    /**
+     * Filter which LoginAttempt to delete.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt deleteMany
+   */
+  export type LoginAttemptDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LoginAttempts to delete
+     */
+    where?: LoginAttemptWhereInput
+  }
+
+  /**
+   * LoginAttempt without action
+   */
+  export type LoginAttemptDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginAttemptInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Notification
    */
 
@@ -15597,19 +17905,19 @@ export namespace Prisma {
   export type BlockedCountryMinAggregateOutputType = {
     country: string | null
     countryCode: string | null
-    blocked: boolean | null
+    status: $Enums.CountryStatus | null
   }
 
   export type BlockedCountryMaxAggregateOutputType = {
     country: string | null
     countryCode: string | null
-    blocked: boolean | null
+    status: $Enums.CountryStatus | null
   }
 
   export type BlockedCountryCountAggregateOutputType = {
     country: number
     countryCode: number
-    blocked: number
+    status: number
     _all: number
   }
 
@@ -15617,19 +17925,19 @@ export namespace Prisma {
   export type BlockedCountryMinAggregateInputType = {
     country?: true
     countryCode?: true
-    blocked?: true
+    status?: true
   }
 
   export type BlockedCountryMaxAggregateInputType = {
     country?: true
     countryCode?: true
-    blocked?: true
+    status?: true
   }
 
   export type BlockedCountryCountAggregateInputType = {
     country?: true
     countryCode?: true
-    blocked?: true
+    status?: true
     _all?: true
   }
 
@@ -15708,7 +18016,7 @@ export namespace Prisma {
   export type BlockedCountryGroupByOutputType = {
     country: string
     countryCode: string
-    blocked: boolean
+    status: $Enums.CountryStatus
     _count: BlockedCountryCountAggregateOutputType | null
     _min: BlockedCountryMinAggregateOutputType | null
     _max: BlockedCountryMaxAggregateOutputType | null
@@ -15731,19 +18039,19 @@ export namespace Prisma {
   export type BlockedCountrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     country?: boolean
     countryCode?: boolean
-    blocked?: boolean
+    status?: boolean
   }, ExtArgs["result"]["blockedCountry"]>
 
   export type BlockedCountrySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     country?: boolean
     countryCode?: boolean
-    blocked?: boolean
+    status?: boolean
   }, ExtArgs["result"]["blockedCountry"]>
 
   export type BlockedCountrySelectScalar = {
     country?: boolean
     countryCode?: boolean
-    blocked?: boolean
+    status?: boolean
   }
 
 
@@ -15753,7 +18061,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       country: string
       countryCode: string
-      blocked: boolean
+      status: $Enums.CountryStatus
     }, ExtArgs["result"]["blockedCountry"]>
     composites: {}
   }
@@ -16175,7 +18483,7 @@ export namespace Prisma {
   interface BlockedCountryFieldRefs {
     readonly country: FieldRef<"BlockedCountry", 'String'>
     readonly countryCode: FieldRef<"BlockedCountry", 'String'>
-    readonly blocked: FieldRef<"BlockedCountry", 'Boolean'>
+    readonly status: FieldRef<"BlockedCountry", 'CountryStatus'>
   }
     
 
@@ -22363,7 +24671,8 @@ export namespace Prisma {
     type: 'type',
     referralCode: 'referralCode',
     referredBy: 'referredBy',
-    blocked: 'blocked'
+    blocked: 'blocked',
+    status: 'status'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -22440,6 +24749,29 @@ export namespace Prisma {
   export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
 
 
+  export const IpAssessmentScalarFieldEnum: {
+    id: 'id',
+    ip: 'ip',
+    userAgent: 'userAgent',
+    acceptLanguage: 'acceptLanguage',
+    data: 'data',
+    createdAt: 'createdAt'
+  };
+
+  export type IpAssessmentScalarFieldEnum = (typeof IpAssessmentScalarFieldEnum)[keyof typeof IpAssessmentScalarFieldEnum]
+
+
+  export const LoginAttemptScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    ipAssessmentId: 'ipAssessmentId',
+    type: 'type',
+    createdAt: 'createdAt'
+  };
+
+  export type LoginAttemptScalarFieldEnum = (typeof LoginAttemptScalarFieldEnum)[keyof typeof LoginAttemptScalarFieldEnum]
+
+
   export const NotificationScalarFieldEnum: {
     notificationId: 'notificationId',
     userId: 'userId',
@@ -22493,7 +24825,7 @@ export namespace Prisma {
   export const BlockedCountryScalarFieldEnum: {
     country: 'country',
     countryCode: 'countryCode',
-    blocked: 'blocked'
+    status: 'status'
   };
 
   export type BlockedCountryScalarFieldEnum = (typeof BlockedCountryScalarFieldEnum)[keyof typeof BlockedCountryScalarFieldEnum]
@@ -22673,6 +25005,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'UserStatus'
+   */
+  export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'UserStatus[]'
+   */
+  export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'ImageType'
    */
   export type EnumImageTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImageType'>
@@ -22750,6 +25096,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'LoginAttemptType'
+   */
+  export type EnumLoginAttemptTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoginAttemptType'>
+    
+
+
+  /**
+   * Reference to a field of type 'LoginAttemptType[]'
+   */
+  export type ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoginAttemptType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'QuestStatus'
    */
   export type EnumQuestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QuestStatus'>
@@ -22774,6 +25134,20 @@ export namespace Prisma {
    * Reference to a field of type 'AuditType[]'
    */
   export type ListEnumAuditTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuditType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'CountryStatus'
+   */
+  export type EnumCountryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CountryStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'CountryStatus[]'
+   */
+  export type ListEnumCountryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CountryStatus[]'>
     
 
 
@@ -22850,6 +25224,7 @@ export namespace Prisma {
     referralCode?: StringFilter<"User"> | string
     referredBy?: StringNullableFilter<"User"> | string | null
     blocked?: BoolFilter<"User"> | boolean
+    status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     referredByUser?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     events?: EventListRelationFilter
     messages?: MessageListRelationFilter
@@ -22865,6 +25240,7 @@ export namespace Prisma {
     referals?: ReferralListRelationFilter
     goldenTicketClaimed?: XOR<GoldenTicketNullableRelationFilter, GoldenTicketWhereInput> | null
     goldenTicketsOwned?: GoldenTicketListRelationFilter
+    loginAttempts?: LoginAttemptListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -22878,6 +25254,7 @@ export namespace Prisma {
     referralCode?: SortOrder
     referredBy?: SortOrderInput | SortOrder
     blocked?: SortOrder
+    status?: SortOrder
     referredByUser?: UserOrderByWithRelationInput
     events?: EventOrderByRelationAggregateInput
     messages?: MessageOrderByRelationAggregateInput
@@ -22893,6 +25270,7 @@ export namespace Prisma {
     referals?: ReferralOrderByRelationAggregateInput
     goldenTicketClaimed?: GoldenTicketOrderByWithRelationInput
     goldenTicketsOwned?: GoldenTicketOrderByRelationAggregateInput
+    loginAttempts?: LoginAttemptOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -22909,6 +25287,7 @@ export namespace Prisma {
     type?: EnumUserTypeFilter<"User"> | $Enums.UserType
     referredBy?: StringNullableFilter<"User"> | string | null
     blocked?: BoolFilter<"User"> | boolean
+    status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     referredByUser?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     events?: EventListRelationFilter
     messages?: MessageListRelationFilter
@@ -22924,6 +25303,7 @@ export namespace Prisma {
     referals?: ReferralListRelationFilter
     goldenTicketClaimed?: XOR<GoldenTicketNullableRelationFilter, GoldenTicketWhereInput> | null
     goldenTicketsOwned?: GoldenTicketListRelationFilter
+    loginAttempts?: LoginAttemptListRelationFilter
   }, "id" | "identityAddress" | "referralCode">
 
   export type UserOrderByWithAggregationInput = {
@@ -22937,6 +25317,7 @@ export namespace Prisma {
     referralCode?: SortOrder
     referredBy?: SortOrderInput | SortOrder
     blocked?: SortOrder
+    status?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -22956,6 +25337,7 @@ export namespace Prisma {
     referralCode?: StringWithAggregatesFilter<"User"> | string
     referredBy?: StringNullableWithAggregatesFilter<"User"> | string | null
     blocked?: BoolWithAggregatesFilter<"User"> | boolean
+    status?: EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
   }
 
   export type UserEmailWhereInput = {
@@ -23317,6 +25699,128 @@ export namespace Prisma {
     data?: JsonWithAggregatesFilter<"Message">
   }
 
+  export type IpAssessmentWhereInput = {
+    AND?: IpAssessmentWhereInput | IpAssessmentWhereInput[]
+    OR?: IpAssessmentWhereInput[]
+    NOT?: IpAssessmentWhereInput | IpAssessmentWhereInput[]
+    id?: IntFilter<"IpAssessment"> | number
+    ip?: StringFilter<"IpAssessment"> | string
+    userAgent?: StringFilter<"IpAssessment"> | string
+    acceptLanguage?: StringFilter<"IpAssessment"> | string
+    data?: JsonFilter<"IpAssessment">
+    createdAt?: DateTimeFilter<"IpAssessment"> | Date | string
+    loginAttempts?: LoginAttemptListRelationFilter
+  }
+
+  export type IpAssessmentOrderByWithRelationInput = {
+    id?: SortOrder
+    ip?: SortOrder
+    userAgent?: SortOrder
+    acceptLanguage?: SortOrder
+    data?: SortOrder
+    createdAt?: SortOrder
+    loginAttempts?: LoginAttemptOrderByRelationAggregateInput
+  }
+
+  export type IpAssessmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: IpAssessmentWhereInput | IpAssessmentWhereInput[]
+    OR?: IpAssessmentWhereInput[]
+    NOT?: IpAssessmentWhereInput | IpAssessmentWhereInput[]
+    ip?: StringFilter<"IpAssessment"> | string
+    userAgent?: StringFilter<"IpAssessment"> | string
+    acceptLanguage?: StringFilter<"IpAssessment"> | string
+    data?: JsonFilter<"IpAssessment">
+    createdAt?: DateTimeFilter<"IpAssessment"> | Date | string
+    loginAttempts?: LoginAttemptListRelationFilter
+  }, "id">
+
+  export type IpAssessmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    ip?: SortOrder
+    userAgent?: SortOrder
+    acceptLanguage?: SortOrder
+    data?: SortOrder
+    createdAt?: SortOrder
+    _count?: IpAssessmentCountOrderByAggregateInput
+    _avg?: IpAssessmentAvgOrderByAggregateInput
+    _max?: IpAssessmentMaxOrderByAggregateInput
+    _min?: IpAssessmentMinOrderByAggregateInput
+    _sum?: IpAssessmentSumOrderByAggregateInput
+  }
+
+  export type IpAssessmentScalarWhereWithAggregatesInput = {
+    AND?: IpAssessmentScalarWhereWithAggregatesInput | IpAssessmentScalarWhereWithAggregatesInput[]
+    OR?: IpAssessmentScalarWhereWithAggregatesInput[]
+    NOT?: IpAssessmentScalarWhereWithAggregatesInput | IpAssessmentScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"IpAssessment"> | number
+    ip?: StringWithAggregatesFilter<"IpAssessment"> | string
+    userAgent?: StringWithAggregatesFilter<"IpAssessment"> | string
+    acceptLanguage?: StringWithAggregatesFilter<"IpAssessment"> | string
+    data?: JsonWithAggregatesFilter<"IpAssessment">
+    createdAt?: DateTimeWithAggregatesFilter<"IpAssessment"> | Date | string
+  }
+
+  export type LoginAttemptWhereInput = {
+    AND?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    OR?: LoginAttemptWhereInput[]
+    NOT?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    id?: IntFilter<"LoginAttempt"> | number
+    userId?: StringFilter<"LoginAttempt"> | string
+    ipAssessmentId?: IntFilter<"LoginAttempt"> | number
+    type?: EnumLoginAttemptTypeFilter<"LoginAttempt"> | $Enums.LoginAttemptType
+    createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+    ipAssessment?: XOR<IpAssessmentRelationFilter, IpAssessmentWhereInput>
+  }
+
+  export type LoginAttemptOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    ipAssessmentId?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    ipAssessment?: IpAssessmentOrderByWithRelationInput
+  }
+
+  export type LoginAttemptWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    OR?: LoginAttemptWhereInput[]
+    NOT?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    userId?: StringFilter<"LoginAttempt"> | string
+    ipAssessmentId?: IntFilter<"LoginAttempt"> | number
+    type?: EnumLoginAttemptTypeFilter<"LoginAttempt"> | $Enums.LoginAttemptType
+    createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
+    user?: XOR<UserRelationFilter, UserWhereInput>
+    ipAssessment?: XOR<IpAssessmentRelationFilter, IpAssessmentWhereInput>
+  }, "id">
+
+  export type LoginAttemptOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    ipAssessmentId?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+    _count?: LoginAttemptCountOrderByAggregateInput
+    _avg?: LoginAttemptAvgOrderByAggregateInput
+    _max?: LoginAttemptMaxOrderByAggregateInput
+    _min?: LoginAttemptMinOrderByAggregateInput
+    _sum?: LoginAttemptSumOrderByAggregateInput
+  }
+
+  export type LoginAttemptScalarWhereWithAggregatesInput = {
+    AND?: LoginAttemptScalarWhereWithAggregatesInput | LoginAttemptScalarWhereWithAggregatesInput[]
+    OR?: LoginAttemptScalarWhereWithAggregatesInput[]
+    NOT?: LoginAttemptScalarWhereWithAggregatesInput | LoginAttemptScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"LoginAttempt"> | number
+    userId?: StringWithAggregatesFilter<"LoginAttempt"> | string
+    ipAssessmentId?: IntWithAggregatesFilter<"LoginAttempt"> | number
+    type?: EnumLoginAttemptTypeWithAggregatesFilter<"LoginAttempt"> | $Enums.LoginAttemptType
+    createdAt?: DateTimeWithAggregatesFilter<"LoginAttempt"> | Date | string
+  }
+
   export type NotificationWhereInput = {
     AND?: NotificationWhereInput | NotificationWhereInput[]
     OR?: NotificationWhereInput[]
@@ -23577,13 +26081,13 @@ export namespace Prisma {
     NOT?: BlockedCountryWhereInput | BlockedCountryWhereInput[]
     country?: StringFilter<"BlockedCountry"> | string
     countryCode?: StringFilter<"BlockedCountry"> | string
-    blocked?: BoolFilter<"BlockedCountry"> | boolean
+    status?: EnumCountryStatusFilter<"BlockedCountry"> | $Enums.CountryStatus
   }
 
   export type BlockedCountryOrderByWithRelationInput = {
     country?: SortOrder
     countryCode?: SortOrder
-    blocked?: SortOrder
+    status?: SortOrder
   }
 
   export type BlockedCountryWhereUniqueInput = Prisma.AtLeast<{
@@ -23592,13 +26096,13 @@ export namespace Prisma {
     OR?: BlockedCountryWhereInput[]
     NOT?: BlockedCountryWhereInput | BlockedCountryWhereInput[]
     country?: StringFilter<"BlockedCountry"> | string
-    blocked?: BoolFilter<"BlockedCountry"> | boolean
+    status?: EnumCountryStatusFilter<"BlockedCountry"> | $Enums.CountryStatus
   }, "countryCode">
 
   export type BlockedCountryOrderByWithAggregationInput = {
     country?: SortOrder
     countryCode?: SortOrder
-    blocked?: SortOrder
+    status?: SortOrder
     _count?: BlockedCountryCountOrderByAggregateInput
     _max?: BlockedCountryMaxOrderByAggregateInput
     _min?: BlockedCountryMinOrderByAggregateInput
@@ -23610,7 +26114,7 @@ export namespace Prisma {
     NOT?: BlockedCountryScalarWhereWithAggregatesInput | BlockedCountryScalarWhereWithAggregatesInput[]
     country?: StringWithAggregatesFilter<"BlockedCountry"> | string
     countryCode?: StringWithAggregatesFilter<"BlockedCountry"> | string
-    blocked?: BoolWithAggregatesFilter<"BlockedCountry"> | boolean
+    status?: EnumCountryStatusWithAggregatesFilter<"BlockedCountry"> | $Enums.CountryStatus
   }
 
   export type TransactionIntentWhereInput = {
@@ -23986,6 +26490,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -24001,6 +26506,7 @@ export namespace Prisma {
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -24014,6 +26520,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -24028,6 +26535,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -24040,6 +26548,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -24055,6 +26564,7 @@ export namespace Prisma {
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -24068,6 +26578,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -24082,6 +26593,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -24095,6 +26607,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
   }
 
   export type UserUpdateManyMutationInput = {
@@ -24107,6 +26620,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -24120,6 +26634,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   }
 
   export type UserEmailCreateInput = {
@@ -24467,6 +26982,121 @@ export namespace Prisma {
     data?: JsonNullValueInput | InputJsonValue
   }
 
+  export type IpAssessmentCreateInput = {
+    ip: string
+    userAgent: string
+    acceptLanguage: string
+    data: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutIpAssessmentInput
+  }
+
+  export type IpAssessmentUncheckedCreateInput = {
+    id?: number
+    ip: string
+    userAgent: string
+    acceptLanguage: string
+    data: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutIpAssessmentInput
+  }
+
+  export type IpAssessmentUpdateInput = {
+    ip?: StringFieldUpdateOperationsInput | string
+    userAgent?: StringFieldUpdateOperationsInput | string
+    acceptLanguage?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    loginAttempts?: LoginAttemptUpdateManyWithoutIpAssessmentNestedInput
+  }
+
+  export type IpAssessmentUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    ip?: StringFieldUpdateOperationsInput | string
+    userAgent?: StringFieldUpdateOperationsInput | string
+    acceptLanguage?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutIpAssessmentNestedInput
+  }
+
+  export type IpAssessmentCreateManyInput = {
+    id?: number
+    ip: string
+    userAgent: string
+    acceptLanguage: string
+    data: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type IpAssessmentUpdateManyMutationInput = {
+    ip?: StringFieldUpdateOperationsInput | string
+    userAgent?: StringFieldUpdateOperationsInput | string
+    acceptLanguage?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IpAssessmentUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    ip?: StringFieldUpdateOperationsInput | string
+    userAgent?: StringFieldUpdateOperationsInput | string
+    acceptLanguage?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoginAttemptCreateInput = {
+    type: $Enums.LoginAttemptType
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutLoginAttemptsInput
+    ipAssessment: IpAssessmentCreateNestedOneWithoutLoginAttemptsInput
+  }
+
+  export type LoginAttemptUncheckedCreateInput = {
+    id?: number
+    userId: string
+    ipAssessmentId: number
+    type: $Enums.LoginAttemptType
+    createdAt?: Date | string
+  }
+
+  export type LoginAttemptUpdateInput = {
+    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutLoginAttemptsNestedInput
+    ipAssessment?: IpAssessmentUpdateOneRequiredWithoutLoginAttemptsNestedInput
+  }
+
+  export type LoginAttemptUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    ipAssessmentId?: IntFieldUpdateOperationsInput | number
+    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoginAttemptCreateManyInput = {
+    id?: number
+    userId: string
+    ipAssessmentId: number
+    type: $Enums.LoginAttemptType
+    createdAt?: Date | string
+  }
+
+  export type LoginAttemptUpdateManyMutationInput = {
+    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoginAttemptUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    ipAssessmentId?: IntFieldUpdateOperationsInput | number
+    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type NotificationCreateInput = {
     notificationId: string
     userId: string
@@ -24711,43 +27341,43 @@ export namespace Prisma {
   export type BlockedCountryCreateInput = {
     country: string
     countryCode: string
-    blocked?: boolean
+    status?: $Enums.CountryStatus
   }
 
   export type BlockedCountryUncheckedCreateInput = {
     country: string
     countryCode: string
-    blocked?: boolean
+    status?: $Enums.CountryStatus
   }
 
   export type BlockedCountryUpdateInput = {
     country?: StringFieldUpdateOperationsInput | string
     countryCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCountryStatusFieldUpdateOperationsInput | $Enums.CountryStatus
   }
 
   export type BlockedCountryUncheckedUpdateInput = {
     country?: StringFieldUpdateOperationsInput | string
     countryCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCountryStatusFieldUpdateOperationsInput | $Enums.CountryStatus
   }
 
   export type BlockedCountryCreateManyInput = {
     country: string
     countryCode: string
-    blocked?: boolean
+    status?: $Enums.CountryStatus
   }
 
   export type BlockedCountryUpdateManyMutationInput = {
     country?: StringFieldUpdateOperationsInput | string
     countryCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCountryStatusFieldUpdateOperationsInput | $Enums.CountryStatus
   }
 
   export type BlockedCountryUncheckedUpdateManyInput = {
     country?: StringFieldUpdateOperationsInput | string
     countryCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumCountryStatusFieldUpdateOperationsInput | $Enums.CountryStatus
   }
 
   export type TransactionIntentCreateInput = {
@@ -25173,6 +27803,13 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type EnumUserStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserStatusFilter<$PrismaModel> | $Enums.UserStatus
+  }
+
   export type UserNullableRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -25258,6 +27895,12 @@ export namespace Prisma {
     none?: GoldenTicketWhereInput
   }
 
+  export type LoginAttemptListRelationFilter = {
+    every?: LoginAttemptWhereInput
+    some?: LoginAttemptWhereInput
+    none?: LoginAttemptWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -25303,6 +27946,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type LoginAttemptOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     identityAddress?: SortOrder
@@ -25314,6 +27961,7 @@ export namespace Prisma {
     referralCode?: SortOrder
     referredBy?: SortOrder
     blocked?: SortOrder
+    status?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -25327,6 +27975,7 @@ export namespace Prisma {
     referralCode?: SortOrder
     referredBy?: SortOrder
     blocked?: SortOrder
+    status?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -25340,6 +27989,7 @@ export namespace Prisma {
     referralCode?: SortOrder
     referredBy?: SortOrder
     blocked?: SortOrder
+    status?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -25408,6 +28058,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type EnumUserStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserStatusWithAggregatesFilter<$PrismaModel> | $Enums.UserStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserStatusFilter<$PrismaModel>
+    _max?: NestedEnumUserStatusFilter<$PrismaModel>
   }
 
   export type UserRelationFilter = {
@@ -25759,6 +28419,95 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type IpAssessmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    ip?: SortOrder
+    userAgent?: SortOrder
+    acceptLanguage?: SortOrder
+    data?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type IpAssessmentAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type IpAssessmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    ip?: SortOrder
+    userAgent?: SortOrder
+    acceptLanguage?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type IpAssessmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    ip?: SortOrder
+    userAgent?: SortOrder
+    acceptLanguage?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type IpAssessmentSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type EnumLoginAttemptTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginAttemptType | EnumLoginAttemptTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLoginAttemptTypeFilter<$PrismaModel> | $Enums.LoginAttemptType
+  }
+
+  export type IpAssessmentRelationFilter = {
+    is?: IpAssessmentWhereInput
+    isNot?: IpAssessmentWhereInput
+  }
+
+  export type LoginAttemptCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    ipAssessmentId?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LoginAttemptAvgOrderByAggregateInput = {
+    id?: SortOrder
+    ipAssessmentId?: SortOrder
+  }
+
+  export type LoginAttemptMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    ipAssessmentId?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LoginAttemptMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    ipAssessmentId?: SortOrder
+    type?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LoginAttemptSumOrderByAggregateInput = {
+    id?: SortOrder
+    ipAssessmentId?: SortOrder
+  }
+
+  export type EnumLoginAttemptTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginAttemptType | EnumLoginAttemptTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLoginAttemptTypeWithAggregatesFilter<$PrismaModel> | $Enums.LoginAttemptType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
+    _max?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
+  }
+
   export type NotificationNotificationIdUserIdCompoundUniqueInput = {
     notificationId: string
     userId: string
@@ -25930,22 +28679,39 @@ export namespace Prisma {
     _max?: NestedEnumAuditTypeFilter<$PrismaModel>
   }
 
+  export type EnumCountryStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CountryStatus | EnumCountryStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCountryStatusFilter<$PrismaModel> | $Enums.CountryStatus
+  }
+
   export type BlockedCountryCountOrderByAggregateInput = {
     country?: SortOrder
     countryCode?: SortOrder
-    blocked?: SortOrder
+    status?: SortOrder
   }
 
   export type BlockedCountryMaxOrderByAggregateInput = {
     country?: SortOrder
     countryCode?: SortOrder
-    blocked?: SortOrder
+    status?: SortOrder
   }
 
   export type BlockedCountryMinOrderByAggregateInput = {
     country?: SortOrder
     countryCode?: SortOrder
-    blocked?: SortOrder
+    status?: SortOrder
+  }
+
+  export type EnumCountryStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CountryStatus | EnumCountryStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCountryStatusWithAggregatesFilter<$PrismaModel> | $Enums.CountryStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCountryStatusFilter<$PrismaModel>
+    _max?: NestedEnumCountryStatusFilter<$PrismaModel>
   }
 
   export type EnumTransactionIntentStatusFilter<$PrismaModel = never> = {
@@ -26331,6 +29097,13 @@ export namespace Prisma {
     connect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
   }
 
+  export type LoginAttemptCreateNestedManyWithoutUserInput = {
+    create?: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput> | LoginAttemptCreateWithoutUserInput[] | LoginAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
+    createMany?: LoginAttemptCreateManyUserInputEnvelope
+    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+  }
+
   export type EventUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<EventCreateWithoutUserInput, EventUncheckedCreateWithoutUserInput> | EventCreateWithoutUserInput[] | EventUncheckedCreateWithoutUserInput[]
     connectOrCreate?: EventCreateOrConnectWithoutUserInput | EventCreateOrConnectWithoutUserInput[]
@@ -26425,6 +29198,13 @@ export namespace Prisma {
     connect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
   }
 
+  export type LoginAttemptUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput> | LoginAttemptCreateWithoutUserInput[] | LoginAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
+    createMany?: LoginAttemptCreateManyUserInputEnvelope
+    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -26443,6 +29223,10 @@ export namespace Prisma {
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type EnumUserStatusFieldUpdateOperationsInput = {
+    set?: $Enums.UserStatus
   }
 
   export type UserUpdateOneWithoutReferredUsersNestedInput = {
@@ -26635,6 +29419,20 @@ export namespace Prisma {
     deleteMany?: GoldenTicketScalarWhereInput | GoldenTicketScalarWhereInput[]
   }
 
+  export type LoginAttemptUpdateManyWithoutUserNestedInput = {
+    create?: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput> | LoginAttemptCreateWithoutUserInput[] | LoginAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
+    upsert?: LoginAttemptUpsertWithWhereUniqueWithoutUserInput | LoginAttemptUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: LoginAttemptCreateManyUserInputEnvelope
+    set?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    disconnect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    delete?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    update?: LoginAttemptUpdateWithWhereUniqueWithoutUserInput | LoginAttemptUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: LoginAttemptUpdateManyWithWhereWithoutUserInput | LoginAttemptUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
+  }
+
   export type EventUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<EventCreateWithoutUserInput, EventUncheckedCreateWithoutUserInput> | EventCreateWithoutUserInput[] | EventUncheckedCreateWithoutUserInput[]
     connectOrCreate?: EventCreateOrConnectWithoutUserInput | EventCreateOrConnectWithoutUserInput[]
@@ -26815,6 +29613,20 @@ export namespace Prisma {
     deleteMany?: GoldenTicketScalarWhereInput | GoldenTicketScalarWhereInput[]
   }
 
+  export type LoginAttemptUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput> | LoginAttemptCreateWithoutUserInput[] | LoginAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
+    upsert?: LoginAttemptUpsertWithWhereUniqueWithoutUserInput | LoginAttemptUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: LoginAttemptCreateManyUserInputEnvelope
+    set?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    disconnect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    delete?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    update?: LoginAttemptUpdateWithWhereUniqueWithoutUserInput | LoginAttemptUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: LoginAttemptUpdateManyWithWhereWithoutUserInput | LoginAttemptUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutEmailInput = {
     create?: XOR<UserCreateWithoutEmailInput, UserUncheckedCreateWithoutEmailInput>
     connectOrCreate?: UserCreateOrConnectWithoutEmailInput
@@ -26973,6 +29785,80 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type LoginAttemptCreateNestedManyWithoutIpAssessmentInput = {
+    create?: XOR<LoginAttemptCreateWithoutIpAssessmentInput, LoginAttemptUncheckedCreateWithoutIpAssessmentInput> | LoginAttemptCreateWithoutIpAssessmentInput[] | LoginAttemptUncheckedCreateWithoutIpAssessmentInput[]
+    connectOrCreate?: LoginAttemptCreateOrConnectWithoutIpAssessmentInput | LoginAttemptCreateOrConnectWithoutIpAssessmentInput[]
+    createMany?: LoginAttemptCreateManyIpAssessmentInputEnvelope
+    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+  }
+
+  export type LoginAttemptUncheckedCreateNestedManyWithoutIpAssessmentInput = {
+    create?: XOR<LoginAttemptCreateWithoutIpAssessmentInput, LoginAttemptUncheckedCreateWithoutIpAssessmentInput> | LoginAttemptCreateWithoutIpAssessmentInput[] | LoginAttemptUncheckedCreateWithoutIpAssessmentInput[]
+    connectOrCreate?: LoginAttemptCreateOrConnectWithoutIpAssessmentInput | LoginAttemptCreateOrConnectWithoutIpAssessmentInput[]
+    createMany?: LoginAttemptCreateManyIpAssessmentInputEnvelope
+    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+  }
+
+  export type LoginAttemptUpdateManyWithoutIpAssessmentNestedInput = {
+    create?: XOR<LoginAttemptCreateWithoutIpAssessmentInput, LoginAttemptUncheckedCreateWithoutIpAssessmentInput> | LoginAttemptCreateWithoutIpAssessmentInput[] | LoginAttemptUncheckedCreateWithoutIpAssessmentInput[]
+    connectOrCreate?: LoginAttemptCreateOrConnectWithoutIpAssessmentInput | LoginAttemptCreateOrConnectWithoutIpAssessmentInput[]
+    upsert?: LoginAttemptUpsertWithWhereUniqueWithoutIpAssessmentInput | LoginAttemptUpsertWithWhereUniqueWithoutIpAssessmentInput[]
+    createMany?: LoginAttemptCreateManyIpAssessmentInputEnvelope
+    set?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    disconnect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    delete?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    update?: LoginAttemptUpdateWithWhereUniqueWithoutIpAssessmentInput | LoginAttemptUpdateWithWhereUniqueWithoutIpAssessmentInput[]
+    updateMany?: LoginAttemptUpdateManyWithWhereWithoutIpAssessmentInput | LoginAttemptUpdateManyWithWhereWithoutIpAssessmentInput[]
+    deleteMany?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
+  }
+
+  export type LoginAttemptUncheckedUpdateManyWithoutIpAssessmentNestedInput = {
+    create?: XOR<LoginAttemptCreateWithoutIpAssessmentInput, LoginAttemptUncheckedCreateWithoutIpAssessmentInput> | LoginAttemptCreateWithoutIpAssessmentInput[] | LoginAttemptUncheckedCreateWithoutIpAssessmentInput[]
+    connectOrCreate?: LoginAttemptCreateOrConnectWithoutIpAssessmentInput | LoginAttemptCreateOrConnectWithoutIpAssessmentInput[]
+    upsert?: LoginAttemptUpsertWithWhereUniqueWithoutIpAssessmentInput | LoginAttemptUpsertWithWhereUniqueWithoutIpAssessmentInput[]
+    createMany?: LoginAttemptCreateManyIpAssessmentInputEnvelope
+    set?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    disconnect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    delete?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
+    update?: LoginAttemptUpdateWithWhereUniqueWithoutIpAssessmentInput | LoginAttemptUpdateWithWhereUniqueWithoutIpAssessmentInput[]
+    updateMany?: LoginAttemptUpdateManyWithWhereWithoutIpAssessmentInput | LoginAttemptUpdateManyWithWhereWithoutIpAssessmentInput[]
+    deleteMany?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutLoginAttemptsInput = {
+    create?: XOR<UserCreateWithoutLoginAttemptsInput, UserUncheckedCreateWithoutLoginAttemptsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLoginAttemptsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type IpAssessmentCreateNestedOneWithoutLoginAttemptsInput = {
+    create?: XOR<IpAssessmentCreateWithoutLoginAttemptsInput, IpAssessmentUncheckedCreateWithoutLoginAttemptsInput>
+    connectOrCreate?: IpAssessmentCreateOrConnectWithoutLoginAttemptsInput
+    connect?: IpAssessmentWhereUniqueInput
+  }
+
+  export type EnumLoginAttemptTypeFieldUpdateOperationsInput = {
+    set?: $Enums.LoginAttemptType
+  }
+
+  export type UserUpdateOneRequiredWithoutLoginAttemptsNestedInput = {
+    create?: XOR<UserCreateWithoutLoginAttemptsInput, UserUncheckedCreateWithoutLoginAttemptsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLoginAttemptsInput
+    upsert?: UserUpsertWithoutLoginAttemptsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLoginAttemptsInput, UserUpdateWithoutLoginAttemptsInput>, UserUncheckedUpdateWithoutLoginAttemptsInput>
+  }
+
+  export type IpAssessmentUpdateOneRequiredWithoutLoginAttemptsNestedInput = {
+    create?: XOR<IpAssessmentCreateWithoutLoginAttemptsInput, IpAssessmentUncheckedCreateWithoutLoginAttemptsInput>
+    connectOrCreate?: IpAssessmentCreateOrConnectWithoutLoginAttemptsInput
+    upsert?: IpAssessmentUpsertWithoutLoginAttemptsInput
+    connect?: IpAssessmentWhereUniqueInput
+    update?: XOR<XOR<IpAssessmentUpdateToOneWithWhereWithoutLoginAttemptsInput, IpAssessmentUpdateWithoutLoginAttemptsInput>, IpAssessmentUncheckedUpdateWithoutLoginAttemptsInput>
+  }
+
   export type UserCreateNestedOneWithoutCompletedQuestRequirementsInput = {
     create?: XOR<UserCreateWithoutCompletedQuestRequirementsInput, UserUncheckedCreateWithoutCompletedQuestRequirementsInput>
     connectOrCreate?: UserCreateOrConnectWithoutCompletedQuestRequirementsInput
@@ -27035,6 +29921,10 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutAuditLogsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAuditLogsInput, UserUpdateWithoutAuditLogsInput>, UserUncheckedUpdateWithoutAuditLogsInput>
+  }
+
+  export type EnumCountryStatusFieldUpdateOperationsInput = {
+    set?: $Enums.CountryStatus
   }
 
   export type SubmittedTransactionCreateNestedManyWithoutTransactionInput = {
@@ -27272,6 +30162,13 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type NestedEnumUserStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserStatusFilter<$PrismaModel> | $Enums.UserStatus
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -27358,6 +30255,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedEnumUserStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumUserStatusWithAggregatesFilter<$PrismaModel> | $Enums.UserStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserStatusFilter<$PrismaModel>
+    _max?: NestedEnumUserStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumImageTypeFilter<$PrismaModel = never> = {
@@ -27512,6 +30419,23 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumLoginAttemptTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginAttemptType | EnumLoginAttemptTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLoginAttemptTypeFilter<$PrismaModel> | $Enums.LoginAttemptType
+  }
+
+  export type NestedEnumLoginAttemptTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginAttemptType | EnumLoginAttemptTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLoginAttemptTypeWithAggregatesFilter<$PrismaModel> | $Enums.LoginAttemptType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
+    _max?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
+  }
+
   export type NestedEnumQuestStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.QuestStatus | EnumQuestStatusFieldRefInput<$PrismaModel>
     in?: $Enums.QuestStatus[] | ListEnumQuestStatusFieldRefInput<$PrismaModel>
@@ -27544,6 +30468,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAuditTypeFilter<$PrismaModel>
     _max?: NestedEnumAuditTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumCountryStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CountryStatus | EnumCountryStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCountryStatusFilter<$PrismaModel> | $Enums.CountryStatus
+  }
+
+  export type NestedEnumCountryStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CountryStatus | EnumCountryStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCountryStatusWithAggregatesFilter<$PrismaModel> | $Enums.CountryStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCountryStatusFilter<$PrismaModel>
+    _max?: NestedEnumCountryStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumTransactionIntentStatusFilter<$PrismaModel = never> = {
@@ -27629,6 +30570,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -27643,6 +30585,7 @@ export namespace Prisma {
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReferredUsersInput = {
@@ -27656,6 +30599,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -27669,6 +30613,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReferredUsersInput = {
@@ -27858,6 +30803,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     email?: UserEmailCreateNestedOneWithoutUserInput
@@ -27872,6 +30818,7 @@ export namespace Prisma {
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReferredByUserInput = {
@@ -27884,6 +30831,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -27898,6 +30846,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReferredByUserInput = {
@@ -28054,6 +31003,29 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type LoginAttemptCreateWithoutUserInput = {
+    type: $Enums.LoginAttemptType
+    createdAt?: Date | string
+    ipAssessment: IpAssessmentCreateNestedOneWithoutLoginAttemptsInput
+  }
+
+  export type LoginAttemptUncheckedCreateWithoutUserInput = {
+    id?: number
+    ipAssessmentId: number
+    type: $Enums.LoginAttemptType
+    createdAt?: Date | string
+  }
+
+  export type LoginAttemptCreateOrConnectWithoutUserInput = {
+    where: LoginAttemptWhereUniqueInput
+    create: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput>
+  }
+
+  export type LoginAttemptCreateManyUserInputEnvelope = {
+    data: LoginAttemptCreateManyUserInput | LoginAttemptCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutReferredUsersInput = {
     update: XOR<UserUpdateWithoutReferredUsersInput, UserUncheckedUpdateWithoutReferredUsersInput>
     create: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
@@ -28075,6 +31047,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -28089,6 +31062,7 @@ export namespace Prisma {
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReferredUsersInput = {
@@ -28102,6 +31076,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -28115,6 +31090,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type EventUpsertWithWhereUniqueWithoutUserInput = {
@@ -28349,6 +31325,7 @@ export namespace Prisma {
     referralCode?: StringFilter<"User"> | string
     referredBy?: StringNullableFilter<"User"> | string | null
     blocked?: BoolFilter<"User"> | boolean
+    status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
   }
 
   export type TransactionIntentUpsertWithWhereUniqueWithoutUserInput = {
@@ -28503,6 +31480,33 @@ export namespace Prisma {
     type?: EnumTicketTypeFilter<"GoldenTicket"> | $Enums.TicketType
   }
 
+  export type LoginAttemptUpsertWithWhereUniqueWithoutUserInput = {
+    where: LoginAttemptWhereUniqueInput
+    update: XOR<LoginAttemptUpdateWithoutUserInput, LoginAttemptUncheckedUpdateWithoutUserInput>
+    create: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput>
+  }
+
+  export type LoginAttemptUpdateWithWhereUniqueWithoutUserInput = {
+    where: LoginAttemptWhereUniqueInput
+    data: XOR<LoginAttemptUpdateWithoutUserInput, LoginAttemptUncheckedUpdateWithoutUserInput>
+  }
+
+  export type LoginAttemptUpdateManyWithWhereWithoutUserInput = {
+    where: LoginAttemptScalarWhereInput
+    data: XOR<LoginAttemptUpdateManyMutationInput, LoginAttemptUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type LoginAttemptScalarWhereInput = {
+    AND?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
+    OR?: LoginAttemptScalarWhereInput[]
+    NOT?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
+    id?: IntFilter<"LoginAttempt"> | number
+    userId?: StringFilter<"LoginAttempt"> | string
+    ipAssessmentId?: IntFilter<"LoginAttempt"> | number
+    type?: EnumLoginAttemptTypeFilter<"LoginAttempt"> | $Enums.LoginAttemptType
+    createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
+  }
+
   export type UserCreateWithoutEmailInput = {
     id?: string
     identityAddress: string
@@ -28513,6 +31517,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -28527,6 +31532,7 @@ export namespace Prisma {
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEmailInput = {
@@ -28540,6 +31546,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
@@ -28553,6 +31560,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEmailInput = {
@@ -28581,6 +31589,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -28595,6 +31604,7 @@ export namespace Prisma {
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmailInput = {
@@ -28608,6 +31618,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
@@ -28621,6 +31632,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutPhoneNumberInput = {
@@ -28633,6 +31645,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -28647,6 +31660,7 @@ export namespace Prisma {
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPhoneNumberInput = {
@@ -28660,6 +31674,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -28673,6 +31688,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPhoneNumberInput = {
@@ -28701,6 +31717,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -28715,6 +31732,7 @@ export namespace Prisma {
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPhoneNumberInput = {
@@ -28728,6 +31746,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -28741,6 +31760,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type EventCreateWithoutReferralInput = {
@@ -28780,6 +31800,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -28794,6 +31815,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReferalsInput = {
@@ -28807,6 +31829,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -28820,6 +31843,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReferalsInput = {
@@ -28881,6 +31905,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -28895,6 +31920,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReferalsInput = {
@@ -28908,6 +31934,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -28921,6 +31948,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutEventsInput = {
@@ -28933,6 +31961,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     email?: UserEmailCreateNestedOneWithoutUserInput
@@ -28947,6 +31976,7 @@ export namespace Prisma {
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEventsInput = {
@@ -28960,6 +31990,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
@@ -28973,6 +32004,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEventsInput = {
@@ -29023,6 +32055,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     email?: UserEmailUpdateOneWithoutUserNestedInput
@@ -29037,6 +32070,7 @@ export namespace Prisma {
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEventsInput = {
@@ -29050,6 +32084,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
@@ -29063,6 +32098,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReferralUpsertWithWhereUniqueWithoutEventInput = {
@@ -29091,6 +32127,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     email?: UserEmailCreateNestedOneWithoutUserInput
@@ -29105,6 +32142,7 @@ export namespace Prisma {
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMessagesInput = {
@@ -29118,6 +32156,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
     phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
@@ -29131,6 +32170,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMessagesInput = {
@@ -29159,6 +32199,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     email?: UserEmailUpdateOneWithoutUserNestedInput
@@ -29173,6 +32214,7 @@ export namespace Prisma {
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -29186,7 +32228,198 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
+    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
+    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
+    completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
+    savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
+    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
+    questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
+    transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
+    referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
+    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
+    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type LoginAttemptCreateWithoutIpAssessmentInput = {
+    type: $Enums.LoginAttemptType
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutLoginAttemptsInput
+  }
+
+  export type LoginAttemptUncheckedCreateWithoutIpAssessmentInput = {
+    id?: number
+    userId: string
+    type: $Enums.LoginAttemptType
+    createdAt?: Date | string
+  }
+
+  export type LoginAttemptCreateOrConnectWithoutIpAssessmentInput = {
+    where: LoginAttemptWhereUniqueInput
+    create: XOR<LoginAttemptCreateWithoutIpAssessmentInput, LoginAttemptUncheckedCreateWithoutIpAssessmentInput>
+  }
+
+  export type LoginAttemptCreateManyIpAssessmentInputEnvelope = {
+    data: LoginAttemptCreateManyIpAssessmentInput | LoginAttemptCreateManyIpAssessmentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type LoginAttemptUpsertWithWhereUniqueWithoutIpAssessmentInput = {
+    where: LoginAttemptWhereUniqueInput
+    update: XOR<LoginAttemptUpdateWithoutIpAssessmentInput, LoginAttemptUncheckedUpdateWithoutIpAssessmentInput>
+    create: XOR<LoginAttemptCreateWithoutIpAssessmentInput, LoginAttemptUncheckedCreateWithoutIpAssessmentInput>
+  }
+
+  export type LoginAttemptUpdateWithWhereUniqueWithoutIpAssessmentInput = {
+    where: LoginAttemptWhereUniqueInput
+    data: XOR<LoginAttemptUpdateWithoutIpAssessmentInput, LoginAttemptUncheckedUpdateWithoutIpAssessmentInput>
+  }
+
+  export type LoginAttemptUpdateManyWithWhereWithoutIpAssessmentInput = {
+    where: LoginAttemptScalarWhereInput
+    data: XOR<LoginAttemptUpdateManyMutationInput, LoginAttemptUncheckedUpdateManyWithoutIpAssessmentInput>
+  }
+
+  export type UserCreateWithoutLoginAttemptsInput = {
+    id?: string
+    identityAddress: string
+    createdAt?: Date | string
+    accountAddress?: string | null
+    name?: string | null
+    country?: string | null
+    type?: $Enums.UserType
+    referralCode: string
+    blocked?: boolean
+    status?: $Enums.UserStatus
+    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
+    events?: EventCreateNestedManyWithoutUserInput
+    messages?: MessageCreateNestedManyWithoutUserInput
+    email?: UserEmailCreateNestedOneWithoutUserInput
+    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
+    completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
+    savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
+    auditLogs?: AuditCreateNestedManyWithoutUserInput
+    questProgress?: QuestProgressCreateNestedManyWithoutUserInput
+    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
+    transactions?: TransactionIntentCreateNestedManyWithoutUserInput
+    marketing?: MarketingCreateNestedManyWithoutUserInput
+    referals?: ReferralCreateNestedManyWithoutUserInput
+    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
+    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserUncheckedCreateWithoutLoginAttemptsInput = {
+    id?: string
+    identityAddress: string
+    createdAt?: Date | string
+    accountAddress?: string | null
+    name?: string | null
+    country?: string | null
+    type?: $Enums.UserType
+    referralCode: string
+    referredBy?: string | null
+    blocked?: boolean
+    status?: $Enums.UserStatus
+    events?: EventUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
+    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
+    completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
+    savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
+    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
+    questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
+    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
+    transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
+    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
+    referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
+    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
+    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserCreateOrConnectWithoutLoginAttemptsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutLoginAttemptsInput, UserUncheckedCreateWithoutLoginAttemptsInput>
+  }
+
+  export type IpAssessmentCreateWithoutLoginAttemptsInput = {
+    ip: string
+    userAgent: string
+    acceptLanguage: string
+    data: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type IpAssessmentUncheckedCreateWithoutLoginAttemptsInput = {
+    id?: number
+    ip: string
+    userAgent: string
+    acceptLanguage: string
+    data: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type IpAssessmentCreateOrConnectWithoutLoginAttemptsInput = {
+    where: IpAssessmentWhereUniqueInput
+    create: XOR<IpAssessmentCreateWithoutLoginAttemptsInput, IpAssessmentUncheckedCreateWithoutLoginAttemptsInput>
+  }
+
+  export type UserUpsertWithoutLoginAttemptsInput = {
+    update: XOR<UserUpdateWithoutLoginAttemptsInput, UserUncheckedUpdateWithoutLoginAttemptsInput>
+    create: XOR<UserCreateWithoutLoginAttemptsInput, UserUncheckedCreateWithoutLoginAttemptsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutLoginAttemptsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutLoginAttemptsInput, UserUncheckedUpdateWithoutLoginAttemptsInput>
+  }
+
+  export type UserUpdateWithoutLoginAttemptsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identityAddress?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referralCode?: StringFieldUpdateOperationsInput | string
+    blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
+    events?: EventUpdateManyWithoutUserNestedInput
+    messages?: MessageUpdateManyWithoutUserNestedInput
+    email?: UserEmailUpdateOneWithoutUserNestedInput
+    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
+    completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
+    savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
+    auditLogs?: AuditUpdateManyWithoutUserNestedInput
+    questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
+    transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUpdateManyWithoutUserNestedInput
+    referals?: ReferralUpdateManyWithoutUserNestedInput
+    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
+    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutLoginAttemptsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identityAddress?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    events?: EventUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
     phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
@@ -29201,6 +32434,34 @@ export namespace Prisma {
     goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
+  export type IpAssessmentUpsertWithoutLoginAttemptsInput = {
+    update: XOR<IpAssessmentUpdateWithoutLoginAttemptsInput, IpAssessmentUncheckedUpdateWithoutLoginAttemptsInput>
+    create: XOR<IpAssessmentCreateWithoutLoginAttemptsInput, IpAssessmentUncheckedCreateWithoutLoginAttemptsInput>
+    where?: IpAssessmentWhereInput
+  }
+
+  export type IpAssessmentUpdateToOneWithWhereWithoutLoginAttemptsInput = {
+    where?: IpAssessmentWhereInput
+    data: XOR<IpAssessmentUpdateWithoutLoginAttemptsInput, IpAssessmentUncheckedUpdateWithoutLoginAttemptsInput>
+  }
+
+  export type IpAssessmentUpdateWithoutLoginAttemptsInput = {
+    ip?: StringFieldUpdateOperationsInput | string
+    userAgent?: StringFieldUpdateOperationsInput | string
+    acceptLanguage?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IpAssessmentUncheckedUpdateWithoutLoginAttemptsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    ip?: StringFieldUpdateOperationsInput | string
+    userAgent?: StringFieldUpdateOperationsInput | string
+    acceptLanguage?: StringFieldUpdateOperationsInput | string
+    data?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateWithoutCompletedQuestRequirementsInput = {
     id?: string
     identityAddress: string
@@ -29211,6 +32472,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -29225,6 +32487,7 @@ export namespace Prisma {
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCompletedQuestRequirementsInput = {
@@ -29238,6 +32501,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -29251,6 +32515,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCompletedQuestRequirementsInput = {
@@ -29279,6 +32544,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -29293,6 +32559,7 @@ export namespace Prisma {
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompletedQuestRequirementsInput = {
@@ -29306,6 +32573,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -29319,6 +32587,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutQuestProgressInput = {
@@ -29331,6 +32600,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -29345,6 +32615,7 @@ export namespace Prisma {
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutQuestProgressInput = {
@@ -29358,6 +32629,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -29371,6 +32643,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutQuestProgressInput = {
@@ -29399,6 +32672,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -29413,6 +32687,7 @@ export namespace Prisma {
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutQuestProgressInput = {
@@ -29426,6 +32701,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -29439,6 +32715,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSavedProgressInput = {
@@ -29451,6 +32728,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -29465,6 +32743,7 @@ export namespace Prisma {
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSavedProgressInput = {
@@ -29478,6 +32757,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -29491,6 +32771,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSavedProgressInput = {
@@ -29519,6 +32800,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -29533,6 +32815,7 @@ export namespace Prisma {
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSavedProgressInput = {
@@ -29546,6 +32829,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -29559,6 +32843,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -29571,6 +32856,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -29585,6 +32871,7 @@ export namespace Prisma {
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -29598,6 +32885,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -29611,6 +32899,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -29639,6 +32928,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -29653,6 +32943,7 @@ export namespace Prisma {
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -29666,6 +32957,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -29679,6 +32971,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SubmittedTransactionCreateWithoutTransactionInput = {
@@ -29713,6 +33006,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -29727,6 +33021,7 @@ export namespace Prisma {
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -29740,6 +33035,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -29753,6 +33049,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -29826,6 +33123,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -29840,6 +33138,7 @@ export namespace Prisma {
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -29853,6 +33152,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -29866,6 +33166,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BatchedTransactionIntentUpsertWithoutTransactionIntentsInput = {
@@ -30005,6 +33306,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -30019,6 +33321,7 @@ export namespace Prisma {
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMarketingInput = {
@@ -30032,6 +33335,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -30045,6 +33349,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
     goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMarketingInput = {
@@ -30073,6 +33378,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -30087,6 +33393,7 @@ export namespace Prisma {
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMarketingInput = {
@@ -30100,6 +33407,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -30113,6 +33421,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutGoldenTicketClaimedInput = {
@@ -30125,6 +33434,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -30139,6 +33449,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutGoldenTicketClaimedInput = {
@@ -30152,6 +33463,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -30165,6 +33477,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutGoldenTicketClaimedInput = {
@@ -30182,6 +33495,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -30196,6 +33510,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutGoldenTicketsOwnedInput = {
@@ -30209,6 +33524,7 @@ export namespace Prisma {
     referralCode: string
     referredBy?: string | null
     blocked?: boolean
+    status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -30222,6 +33538,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutGoldenTicketsOwnedInput = {
@@ -30250,6 +33567,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -30264,6 +33582,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutGoldenTicketClaimedInput = {
@@ -30277,6 +33596,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -30290,6 +33610,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutGoldenTicketsOwnedInput = {
@@ -30313,6 +33634,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -30327,6 +33649,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutGoldenTicketsOwnedInput = {
@@ -30340,6 +33663,7 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -30353,6 +33677,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type EventCreateManyUserInput = {
@@ -30402,6 +33727,7 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     blocked?: boolean
+    status?: $Enums.UserStatus
   }
 
   export type TransactionIntentCreateManyUserInput = {
@@ -30439,6 +33765,13 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.GoldenTicketStatus
     type?: $Enums.TicketType
+  }
+
+  export type LoginAttemptCreateManyUserInput = {
+    id?: number
+    ipAssessmentId: number
+    type: $Enums.LoginAttemptType
+    createdAt?: Date | string
   }
 
   export type EventUpdateWithoutUserInput = {
@@ -30563,6 +33896,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     email?: UserEmailUpdateOneWithoutUserNestedInput
@@ -30577,6 +33911,7 @@ export namespace Prisma {
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReferredByUserInput = {
@@ -30589,6 +33924,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -30603,6 +33939,7 @@ export namespace Prisma {
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
     goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutReferredByUserInput = {
@@ -30615,6 +33952,7 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     blocked?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   }
 
   export type TransactionIntentUpdateWithoutUserInput = {
@@ -30729,6 +34067,26 @@ export namespace Prisma {
     type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
   }
 
+  export type LoginAttemptUpdateWithoutUserInput = {
+    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ipAssessment?: IpAssessmentUpdateOneRequiredWithoutLoginAttemptsNestedInput
+  }
+
+  export type LoginAttemptUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    ipAssessmentId?: IntFieldUpdateOperationsInput | number
+    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoginAttemptUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    ipAssessmentId?: IntFieldUpdateOperationsInput | number
+    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ReferralCreateManyEventInput = {
     userId: string
     action: $Enums.ReferralAction
@@ -30751,6 +34109,33 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     action?: EnumReferralActionFieldUpdateOperationsInput | $Enums.ReferralAction
     xrdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type LoginAttemptCreateManyIpAssessmentInput = {
+    id?: number
+    userId: string
+    type: $Enums.LoginAttemptType
+    createdAt?: Date | string
+  }
+
+  export type LoginAttemptUpdateWithoutIpAssessmentInput = {
+    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutLoginAttemptsNestedInput
+  }
+
+  export type LoginAttemptUncheckedUpdateWithoutIpAssessmentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoginAttemptUncheckedUpdateManyWithoutIpAssessmentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SubmittedTransactionCreateManyTransactionInput = {
@@ -30829,6 +34214,10 @@ export namespace Prisma {
      */
     export type EventCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = EventCountOutputTypeDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use IpAssessmentCountOutputTypeDefaultArgs instead
+     */
+    export type IpAssessmentCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = IpAssessmentCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use TransactionIntentCountOutputTypeDefaultArgs instead
      */
     export type TransactionIntentCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TransactionIntentCountOutputTypeDefaultArgs<ExtArgs>
@@ -30868,6 +34257,14 @@ export namespace Prisma {
      * @deprecated Use MessageDefaultArgs instead
      */
     export type MessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = MessageDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use IpAssessmentDefaultArgs instead
+     */
+    export type IpAssessmentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = IpAssessmentDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use LoginAttemptDefaultArgs instead
+     */
+    export type LoginAttemptArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = LoginAttemptDefaultArgs<ExtArgs>
     /**
      * @deprecated Use NotificationDefaultArgs instead
      */

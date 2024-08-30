@@ -11,8 +11,11 @@ const {
   REDIS_HOST,
   REDIS_PORT,
   REDIS_PASSWORD,
+  IPQS_KEY,
+  IPQS_ALLOW_ALL = false,
   MAX_USER_PER_IP,
   MAILER_LITE_API_KEY,
+  DEVELOPMENT_IP,
   MAINTENANCE_MODE
 } = privateEnv
 
@@ -30,6 +33,7 @@ const getDomain = () => {
 }
 
 export const config = {
+  developmentIp: DEVELOPMENT_IP,
   jwt: {
     secret: JWT_SECRET!,
     refreshToken: { expiresIn: '30d', expiresInMs: 1000 * 60 * 60 * 24 * 30, key: 'jwt' },
@@ -45,6 +49,14 @@ export const config = {
     host: REDIS_HOST,
     port: parseInt(REDIS_PORT ?? '6379', 10),
     password: REDIS_PASSWORD
+  },
+  ipqs: {
+    strictness: 1,
+    maxAllowedScore: 90,
+    cacheTTL: 60 * 60 * 8 * 1000,
+    allowPublicAccessPoints: false,
+    allowAll: Boolean(IPQS_ALLOW_ALL) ?? publicConfig.networkId !== 1,
+    key: IPQS_KEY
   },
   dapp: {
     expectedOrigin: EXPECTED_ORIGIN,
