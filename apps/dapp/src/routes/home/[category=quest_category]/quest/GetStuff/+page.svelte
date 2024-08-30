@@ -209,7 +209,13 @@
     setSteps([
       {
         id: 'golden-ticket-valid',
-        type: 'jetty'
+        type: 'jetty',
+        skip: skipXrdDepositPage,
+        footer: {
+          next: {
+            enabled: skipXrdDepositPage
+          }
+        }
       }
     ])
   } else if ($page.url.searchParams.get('t')) {
@@ -261,8 +267,10 @@
 
 <Quest
   on:render={(ev) => {
-    if (ev.detail === '15') {
+    if (ev.detail === 'golden-ticket-valid') {
       onReceiveXRDPage()
+    } else {
+      waitingWarning(false)
     }
 
     if (ev.detail === 'get-xrd') {
