@@ -263,10 +263,13 @@
   let selectedGetXrdMethod: ComponentProps<GetXrdMethodOptions>['selectedOption'] = 'card'
 
   $: address = $user!.accountAddress!
+
+  $: console.log(steps)
 </script>
 
 <Quest
   on:render={(ev) => {
+    console.log(ev.detail)
     if (ev.detail === 'golden-ticket-valid') {
       onReceiveXRDPage()
     } else {
