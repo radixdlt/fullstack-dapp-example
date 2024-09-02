@@ -1,12 +1,43 @@
+<script lang="ts" context="module">
+  const claimAvailableInKeyValueStore = (
+    storeData: StateKeyValueStoreDataResponse
+  ): ResultAsync<string[], string> => {
+    const unclaimed = storeData.entries.find(
+      ({ value }) =>
+        value.programmatic_json.kind === 'Enum' &&
+        value.programmatic_json.variant_name === 'Unclaimed'
+    )
+
+    if (unclaimed) {
+      const nftIds = (
+        (unclaimed.value.programmatic_json as ProgrammaticScryptoSborValueTuple).fields[0] as any
+      ).elements.map((element: any) => element.value) as string[]
+      return okAsync(nftIds)
+    }
+
+    return errAsync('No claim available')
+  }
+
+  const getKeyValueStoreData = (userId: string, v2: boolean) =>
+    gatewayApi.getKeyValueStoreDataForUser(
+      publicConfig.components[v2 ? 'radgemRecordsV2KeyValueStore' : 'radgemRecordsKeyValueStore'],
+      userId
+    )
+
+  export const checkClaimAvailable = (userId: string, v2: boolean) =>
+    getKeyValueStoreData(userId, v2).andThen(claimAvailableInKeyValueStore)
+</script>
+
 <script lang="ts">
-  import { publicConfig } from '$lib/public-config'
+  import { gatewayApi, publicConfig } from '$lib/public-config'
   import { sendTransaction } from '$lib/rdt'
   import { createEventDispatcher, onMount } from 'svelte'
   import { user } from '../../stores'
   import { GatewayApi, type ColorCodeDescription, type ShaderCodeDescription } from 'common'
   import type {
     ProgrammaticScryptoSborValueTuple,
-    ProgrammaticScryptoSborValueString
+    ProgrammaticScryptoSborValueString,
+    StateKeyValueStoreDataResponse
   } from '@radixdlt/babylon-gateway-api-sdk'
   import pipe from 'ramda/src/pipe'
   import { i18n } from '$lib/i18n/i18n'
@@ -14,9 +45,10 @@
   import GemCard from '$lib/components/resource-card/GemCard.svelte'
   import Carousel from '$lib/components/carousel/Carousel.svelte'
   import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
+  import { errAsync, okAsync, type ResultAsync } from 'neverthrow'
 
   export let useV2 = true
-  export let data:
+  let data:
     | {
         name: string
         quality: number
@@ -24,7 +56,7 @@
         color: ColorCodeDescription
       }[]
     | undefined
-  export let ids: string[]
+  let ids: string[]
 
   let loading = false
 
@@ -112,11 +144,19 @@
   )
 
   onMount(() => {
-    if (!data) {
-      getRadgemPreview().map((_preview) => {
+    checkClaimAvailable($user?.id!, false)
+      .map((data) => {
+        useV2 = false
+        return data
+      })
+      .orElse(() => checkClaimAvailable($user?.id!, true))
+      .andThen((value) => {
+        ids = value
+        return getRadgemPreview()
+      })
+      .map((_preview) => {
         data = _preview
       })
-    }
   })
 
   const dispatch = createEventDispatcher<{
