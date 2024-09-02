@@ -1,4 +1,5 @@
 import { EventId } from 'common'
+import { type TicketType } from 'database'
 
 export type QuestCategory = (typeof QuestCategory)[keyof typeof QuestCategory]
 
@@ -64,7 +65,7 @@ export type QuestId = ReturnType<typeof QuestDefinitions>[keyof ReturnType<
   typeof QuestDefinitions
 >]['id']
 
-export const QuestDefinitions = () => {
+export const QuestDefinitions = (ticketType?: TicketType) => {
   return {
     Welcome: {
       id: 'Welcome',
@@ -196,41 +197,59 @@ export const QuestDefinitions = () => {
       id: 'QuestTogether',
       category: 'advanced',
       // Rewards given at each level of quest completion
-      partialRewards: {
-        BronzeLevel: [
-          {
-            name: 'simpleGiftBox',
-            amount: 1
-          }
-        ],
-        SilverLevel: [
-          {
-            name: 'fancyGiftBox',
-            amount: 1
-          }
-        ],
-        GoldLevel: [
-          {
-            name: 'eliteGiftBox',
-            amount: 1
-          }
-        ]
-      },
+      partialRewards:
+        ticketType === 'FULL'
+          ? {
+              BronzeLevel: [
+                {
+                  name: 'simpleGiftBox',
+                  amount: 1
+                }
+              ],
+              SilverLevel: [
+                {
+                  name: 'fancyGiftBox',
+                  amount: 1
+                }
+              ],
+              GoldLevel: [
+                {
+                  name: 'eliteGiftBox',
+                  amount: 1
+                }
+              ]
+            }
+          : {
+              BronzeLevel: [
+                {
+                  name: 'simpleGiftBox',
+                  amount: 1
+                }
+              ]
+            },
       // Rewards displayed on quest but not given as quest is never "completed"
-      rewards: [
-        {
-          name: 'simpleGiftBox',
-          amount: 1
-        },
-        {
-          name: 'fancyGiftBox',
-          amount: 1
-        },
-        {
-          name: 'eliteGiftBox',
-          amount: 1
-        }
-      ],
+      rewards:
+        ticketType === 'FULL'
+          ? [
+              {
+                name: 'simpleGiftBox',
+                amount: 1
+              },
+              {
+                name: 'fancyGiftBox',
+                amount: 1
+              },
+              {
+                name: 'eliteGiftBox',
+                amount: 1
+              }
+            ]
+          : [
+              {
+                name: 'simpleGiftBox',
+                amount: 1
+              }
+            ],
       trackedAccountAddress: false,
       minutesToComplete: 1,
       preRequisites: ['CreatingRadMorphs'],
