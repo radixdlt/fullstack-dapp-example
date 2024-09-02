@@ -8,25 +8,19 @@
   import { pushNotification } from '$lib/notifications'
 
   import type { Quests } from 'content'
-  import { derived } from 'svelte/store'
+  import { writable } from 'svelte/store'
   import { onDestroy } from 'svelte'
-  import { isUserBlocked } from '../../../../../stores'
+  import { deriveIsUserBlockedAlternative } from '../../../../../stores'
   export let data: LayoutData
 
   let quest: Quest
   let error: boolean
-  let starterGiftBoxOpened = derived(
-    isUserBlocked,
-    ($isUserBlocked) => $isUserBlocked || data.requirements?.OpenGiftBox.isComplete
-  )
-  let radGemsClaimed = derived(
-    isUserBlocked,
-    ($isUserBlocked) => $isUserBlocked || data.requirements?.RadGemsClaimed.isComplete
-  )
-  let radMorphCreated = derived(
-    isUserBlocked,
-    ($isUserBlocked) => $isUserBlocked || data.requirements?.RadMorphCreated.isComplete
-  )
+  const isOpenGiftBoxCompleted = writable(data.requirements?.OpenGiftBox.isComplete)
+  const isRadgemsClaimedCompleted = writable(data.requirements?.RadGemsClaimed.isComplete)
+  const isRadMorphCreatedCompleted = writable(data.requirements?.RadMorphCreated.isComplete)
+  const skipStarterGiftBoxOpened = deriveIsUserBlockedAlternative(isOpenGiftBoxCompleted)
+  const skipRadGemsClaimed = deriveIsUserBlockedAlternative(isRadgemsClaimedCompleted)
+  const skipRadMorphCreated = deriveIsUserBlockedAlternative(isRadMorphCreatedCompleted)
 
   const text = data.text as Quests['CreatingRadMorphs']['text']
 
@@ -36,15 +30,15 @@
       if (message.type === 'QuestRequirementCompleted') {
         switch (message.requirementId) {
           case 'OpenGiftBox':
-            $starterGiftBoxOpened = true
+            isOpenGiftBoxCompleted.set(true)
             break
 
           case 'RadGemsClaimed':
-            $radGemsClaimed = true
+            isRadgemsClaimedCompleted.set(true)
             break
 
           case 'RadMorphCreated':
-            $radMorphCreated = true
+            isRadMorphCreatedCompleted.set(true)
             break
 
           default:
@@ -91,10 +85,10 @@
     {
       id: '5',
       type: 'jetty',
-      skip: starterGiftBoxOpened,
+      skip: skipStarterGiftBoxOpened,
       footer: {
         next: {
-          enabled: starterGiftBoxOpened
+          enabled: skipStarterGiftBoxOpened
         }
       }
     },
@@ -113,10 +107,10 @@
     {
       id: '9',
       type: 'jetty',
-      skip: radGemsClaimed,
+      skip: skipRadGemsClaimed,
       footer: {
         next: {
-          enabled: radGemsClaimed
+          enabled: skipRadGemsClaimed
         }
       }
     },
@@ -139,10 +133,10 @@
     {
       id: '14',
       type: 'jetty',
-      skip: radMorphCreated,
+      skip: skipRadMorphCreated,
       footer: {
         next: {
-          enabled: radMorphCreated
+          enabled: skipRadMorphCreated
         }
       }
     },

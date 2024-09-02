@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Quests } from 'content'
   import Quest from '../Quest.svelte'
-  import { derived, writable } from 'svelte/store'
+  import { writable } from 'svelte/store'
   import { onDestroy, onMount } from 'svelte'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { messageApi } from '$lib/api/message-api'
@@ -12,7 +12,7 @@
   import type { PageData } from '../DEXSwaps/$types'
   import { markNotificationAsSeen } from '$lib/notifications'
   import { checkAccountHasClams, getClams } from '$lib/helpers/get-clams'
-  import { isUserBlocked, user } from '../../../../../stores'
+  import { isUserBlocked, deriveIsUserBlockedAlternative, user } from '../../../../../stores'
   import { htmlReplace } from '$lib/helpers/html-replace'
 
   export let data: PageData
@@ -89,10 +89,7 @@
       skip: jettySwap,
       footer: {
         next: {
-          enabled: derived(
-            [jettySwap, isUserBlocked],
-            ([$jettySwap, $isUserBlocked]) => $jettySwap || $isUserBlocked
-          )
+          enabled: deriveIsUserBlockedAlternative(jettySwap)
         }
       }
     },
@@ -114,10 +111,7 @@
       skip: lettySwap,
       footer: {
         next: {
-          enabled: derived(
-            [lettySwap, isUserBlocked],
-            ([$lettySwap, $isUserBlocked]) => $lettySwap || $isUserBlocked
-          )
+          enabled: deriveIsUserBlockedAlternative(lettySwap)
         }
       }
     },
