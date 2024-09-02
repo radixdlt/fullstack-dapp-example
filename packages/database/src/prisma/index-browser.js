@@ -129,7 +129,6 @@ exports.Prisma.UserScalarFieldEnum = {
   type: 'type',
   referralCode: 'referralCode',
   referredBy: 'referredBy',
-  blocked: 'blocked',
   status: 'status'
 };
 

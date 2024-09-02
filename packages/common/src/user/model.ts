@@ -60,7 +60,6 @@ type UserModelType = {
   confirmReferralCode: (referralCode: string) => ResultAsync<string | undefined, ApiError>
   setEmail: (userId: string, email: string, newsletter: boolean) => ResultAsync<UserEmail, ApiError>
   getUserIdsByIp: (ip: string) => ResultAsync<string[], ApiError>
-  blockUsers: (userIds: string[]) => ResultAsync<undefined, ApiError>
   setUserBlockedStatus: (userId: string, status: UserStatus) => ResultAsync<undefined, ApiError>
   isPhoneNumberUsed: (userId: string) => ResultAsync<boolean, ApiError>
   countReferralCodeUsagePerIp: (userId: string, ip: string) => ResultAsync<number, ApiError>
@@ -147,20 +146,6 @@ export const UserModel =
           return createApiError('failed to count referral code usage', 500)(error)
         }
       ).map((data) => data[0].count || 0)
-
-    const blockUsers = (userIds: string[]) =>
-      ResultAsync.fromPromise(
-        db.user.updateMany({
-          where: { id: { in: userIds } },
-          data: {
-            blocked: true
-          }
-        }),
-        (error) => {
-          logger?.error({ error, method: 'blockUsers', model: 'UserModel' })
-          return createApiError('failed to block users', 400)()
-        }
-      ).map(() => undefined)
 
     const setUserBlockedStatus = (userId: string, status: UserStatus) => {
       return ResultAsync.fromPromise(
@@ -458,7 +443,6 @@ export const UserModel =
       getByAccountAddress,
       getByReferralCode,
       getReferrals,
-      blockUsers,
       setUserBlockedStatus,
       getUserIdsByIp,
       getPhoneNumber,

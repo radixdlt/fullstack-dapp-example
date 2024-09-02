@@ -1,36 +1,3 @@
-<script lang="ts" context="module">
-  const gatewayApi = GatewayApi(publicConfig.networkId)
-
-  const getKeyValueStoreData = (userId: string, v2: boolean) =>
-    gatewayApi.getKeyValueStoreDataForUser(
-      publicConfig.components[v2 ? 'radgemRecordsV2KeyValueStore' : 'radgemRecordsKeyValueStore'],
-      userId
-    )
-
-  const claimAvailableInKeyValueStore = (
-    storeData: StateKeyValueStoreDataResponse
-  ): ResultAsync<string[], string> => {
-    const unclaimed = storeData.entries.find(
-      ({ value }) =>
-        value.programmatic_json.kind === 'Enum' &&
-        value.programmatic_json.variant_name === 'Unclaimed'
-    )
-
-    if (unclaimed) {
-      const nftIds = (
-        (unclaimed.value.programmatic_json as ProgrammaticScryptoSborValueTuple).fields[0] as any
-      ).elements.map((element: any) => element.value) as string[]
-
-      return okAsync(nftIds)
-    }
-
-    return errAsync('No claim available')
-  }
-
-  export const checkClaimAvailable = (userId: string, v2: boolean) =>
-    getKeyValueStoreData(userId, v2).andThen(claimAvailableInKeyValueStore)
-</script>
-
 <script lang="ts">
   import { i18n } from '$lib/i18n/i18n'
   import { publicConfig } from '$lib/public-config'
@@ -40,12 +7,8 @@
   import { sendTransaction } from '$lib/rdt'
   import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
   import { createEventDispatcher, onMount } from 'svelte'
-  import { ResultAsync, errAsync, okAsync } from 'neverthrow'
-  import type {
-    StateKeyValueStoreDataResponse,
-    ProgrammaticScryptoSborValueTuple
-  } from '@radixdlt/babylon-gateway-api-sdk'
-  import ClaimRadGem from './ClaimRadGem.svelte'
+  import { ResultAsync } from 'neverthrow'
+  import ClaimRadGem, { checkClaimAvailable } from './ClaimRadGem.svelte'
   import { messageApi } from '$lib/api/message-api'
   import { context } from '$lib/components/jetty-menu/JettyMenu.svelte'
   import { webSocketClient } from '$lib/websocket-client'
@@ -64,7 +27,6 @@
   let amountOfElements: string
   let errorLoadingElements = false
   let claimAvailable = false
-  let claimableRadGemIds: string[]
   let waitingForElementsDeposited = false
   let elementsDeposited = false
   let radgemClaimed = false
@@ -159,18 +121,12 @@
     ResultAsync.combineWithAllErrors([
       userApi.hasWaitingRadgemJob(),
       checkAmountOfElements(),
-      checkClaimAvailable($user?.id!, false)
-        .map((data) => {
-          useV2 = false
-          return data
-        })
-        .orElse(() => checkClaimAvailable($user?.id!, true))
+      checkClaimAvailable($user?.id!, useV2)
     ])
-      .map(([hasWaitingRadgemJob, _, radGemIds]) => {
+      .map(([hasWaitingRadgemJob, _]) => {
         waitingForElementsDeposited = hasWaitingRadgemJob
         loadingLedgerData = false
         claimAvailable = true
-        claimableRadGemIds = radGemIds
       })
       .mapErr(([_, _errorLoadingElements]) => {
         loadingLedgerData = false
@@ -273,8 +229,6 @@
   {:else if claimAvailable || elementsDeposited}
     <ClaimRadGem
       {useV2}
-      data={undefined}
-      ids={claimableRadGemIds}
       on:claimed={() => {
         checkAmountOfElements().map(() => {
           radgemClaimed = true

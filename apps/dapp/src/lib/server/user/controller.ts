@@ -69,7 +69,7 @@ export const UserController = ({
       .getById(userId, {})
       .andThen((user) => (user ? ok(user) : err(createApiError('UserNotFound', 404)())))
       .andThen((user) =>
-        user.blocked ? errAsync(createApiError('UserBlocked', 400)()) : okAsync(user)
+        user.status !== 'OK' ? errAsync(createApiError('UserBlocked', 400)()) : okAsync(user)
       )
       .andThen((data) =>
         accountAddressExists(data)
@@ -245,7 +245,7 @@ export const UserController = ({
       })
       .andThen(() => userModel.getById(userId, {}))
       .andThen((user) =>
-        user.blocked ? errAsync(createApiError('UserBlocked', 400)()) : okAsync(user)
+        user.status !== 'OK' ? errAsync(createApiError('UserBlocked', 400)()) : okAsync(user)
       )
       .andThen((user) =>
         user?.accountAddress

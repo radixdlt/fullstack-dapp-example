@@ -5,7 +5,8 @@
   import LightningIcon from '@images/lightning-icon.svg'
   import BoxIcon from '@images/box.svg'
   import { loadGlossary } from 'content'
-  import CreateRadGems, { checkClaimAvailable } from './CreateRadGems.svelte'
+  import CreateRadGems from './CreateRadGems.svelte'
+  import { checkClaimAvailable } from './ClaimRadGem.svelte'
   import { page } from '$app/stores'
   import { markLatestNotificationAsSeen } from '$lib/notifications'
   import {

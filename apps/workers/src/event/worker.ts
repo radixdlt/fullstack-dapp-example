@@ -1,7 +1,7 @@
 import { Worker, ConnectionOptions, QueueName, EventJob } from 'queues'
 import { AppLogger, WorkerError } from 'common'
 import { EventWorkerController } from './controller'
-import { EventStatus, PrismaClient } from 'database'
+import { EventStatus, PrismaClient, UserStatus } from 'database'
 import { WorkerOutputError } from '../_types'
 import { config } from '../config'
 import { dbClient } from '../db-client'
@@ -36,14 +36,14 @@ const getUser = (
 ): ResultAsync<
   {
     accountAddress: string
-    blocked: boolean
+    status: UserStatus
     referredBy?: string
   },
   WorkerOutputError
 > =>
   ResultAsync.fromPromise(
     dbClient.user.findUnique({
-      select: { accountAddress: true, blocked: true, referredBy: true },
+      select: { accountAddress: true, status: true, referredBy: true },
       where: { id: userId }
     }),
     (error) => ({
@@ -57,7 +57,7 @@ const getUser = (
     return ok(
       user as {
         accountAddress: string
-        blocked: boolean
+        status: UserStatus
         referredBy?: string
       }
     )
@@ -93,8 +93,9 @@ export const EventWorker = (
           .andThen((shouldProcessEvent) => {
             if (!shouldProcessEvent) return workerHelper.noop()
 
-            return getUser(job.data.userId).andThen(({ blocked, accountAddress }) => {
-              if (blocked) return updateEventStatus(EventStatus.CANCELLED, WorkerError.BlockedUser)
+            return getUser(job.data.userId).andThen(({ status, accountAddress }) => {
+              if (status !== 'OK')
+                return updateEventStatus(EventStatus.CANCELLED, WorkerError.BlockedUser)
 
               return eventWorkerController.handler(job, accountAddress)
             })

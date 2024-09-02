@@ -119,7 +119,7 @@
             //@ts-ignore
             dataLayer.push({ event: 'dl_click_4_wallet_connected' })
 
-            if (me.blocked) {
+            if (['PERMANENTLY_BLOCKED', 'TEMPORARILY_BLOCKED'].includes(me.status)) {
               errorPopupStore.set({ id: ErrorPopupId.AccountLocked })
             }
 

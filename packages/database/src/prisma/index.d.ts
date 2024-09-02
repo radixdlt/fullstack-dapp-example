@@ -3117,7 +3117,6 @@ export namespace Prisma {
     type: $Enums.UserType | null
     referralCode: string | null
     referredBy: string | null
-    blocked: boolean | null
     status: $Enums.UserStatus | null
   }
 
@@ -3131,7 +3130,6 @@ export namespace Prisma {
     type: $Enums.UserType | null
     referralCode: string | null
     referredBy: string | null
-    blocked: boolean | null
     status: $Enums.UserStatus | null
   }
 
@@ -3145,7 +3143,6 @@ export namespace Prisma {
     type: number
     referralCode: number
     referredBy: number
-    blocked: number
     status: number
     _all: number
   }
@@ -3161,7 +3158,6 @@ export namespace Prisma {
     type?: true
     referralCode?: true
     referredBy?: true
-    blocked?: true
     status?: true
   }
 
@@ -3175,7 +3171,6 @@ export namespace Prisma {
     type?: true
     referralCode?: true
     referredBy?: true
-    blocked?: true
     status?: true
   }
 
@@ -3189,7 +3184,6 @@ export namespace Prisma {
     type?: true
     referralCode?: true
     referredBy?: true
-    blocked?: true
     status?: true
     _all?: true
   }
@@ -3276,7 +3270,6 @@ export namespace Prisma {
     type: $Enums.UserType
     referralCode: string
     referredBy: string | null
-    blocked: boolean
     status: $Enums.UserStatus
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
@@ -3307,7 +3300,6 @@ export namespace Prisma {
     type?: boolean
     referralCode?: boolean
     referredBy?: boolean
-    blocked?: boolean
     status?: boolean
     referredByUser?: boolean | User$referredByUserArgs<ExtArgs>
     events?: boolean | User$eventsArgs<ExtArgs>
@@ -3338,7 +3330,6 @@ export namespace Prisma {
     type?: boolean
     referralCode?: boolean
     referredBy?: boolean
-    blocked?: boolean
     status?: boolean
     referredByUser?: boolean | User$referredByUserArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -3353,7 +3344,6 @@ export namespace Prisma {
     type?: boolean
     referralCode?: boolean
     referredBy?: boolean
-    blocked?: boolean
     status?: boolean
   }
 
@@ -3410,7 +3400,6 @@ export namespace Prisma {
       type: $Enums.UserType
       referralCode: string
       referredBy: string | null
-      blocked: boolean
       status: $Enums.UserStatus
     }, ExtArgs["result"]["user"]>
     composites: {}
@@ -3871,7 +3860,6 @@ export namespace Prisma {
     readonly type: FieldRef<"User", 'UserType'>
     readonly referralCode: FieldRef<"User", 'String'>
     readonly referredBy: FieldRef<"User", 'String'>
-    readonly blocked: FieldRef<"User", 'Boolean'>
     readonly status: FieldRef<"User", 'UserStatus'>
   }
     
@@ -24672,7 +24660,6 @@ export namespace Prisma {
     type: 'type',
     referralCode: 'referralCode',
     referredBy: 'referredBy',
-    blocked: 'blocked',
     status: 'status'
   };
 
@@ -24999,13 +24986,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
    * Reference to a field of type 'UserStatus'
    */
   export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus'>
@@ -25016,6 +24996,13 @@ export namespace Prisma {
    * Reference to a field of type 'UserStatus[]'
    */
   export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -25224,7 +25211,6 @@ export namespace Prisma {
     type?: EnumUserTypeFilter<"User"> | $Enums.UserType
     referralCode?: StringFilter<"User"> | string
     referredBy?: StringNullableFilter<"User"> | string | null
-    blocked?: BoolFilter<"User"> | boolean
     status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     referredByUser?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     events?: EventListRelationFilter
@@ -25254,7 +25240,6 @@ export namespace Prisma {
     type?: SortOrder
     referralCode?: SortOrder
     referredBy?: SortOrderInput | SortOrder
-    blocked?: SortOrder
     status?: SortOrder
     referredByUser?: UserOrderByWithRelationInput
     events?: EventOrderByRelationAggregateInput
@@ -25287,7 +25272,6 @@ export namespace Prisma {
     country?: StringNullableFilter<"User"> | string | null
     type?: EnumUserTypeFilter<"User"> | $Enums.UserType
     referredBy?: StringNullableFilter<"User"> | string | null
-    blocked?: BoolFilter<"User"> | boolean
     status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     referredByUser?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     events?: EventListRelationFilter
@@ -25317,7 +25301,6 @@ export namespace Prisma {
     type?: SortOrder
     referralCode?: SortOrder
     referredBy?: SortOrderInput | SortOrder
-    blocked?: SortOrder
     status?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -25337,7 +25320,6 @@ export namespace Prisma {
     type?: EnumUserTypeWithAggregatesFilter<"User"> | $Enums.UserType
     referralCode?: StringWithAggregatesFilter<"User"> | string
     referredBy?: StringNullableWithAggregatesFilter<"User"> | string | null
-    blocked?: BoolWithAggregatesFilter<"User"> | boolean
     status?: EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
   }
 
@@ -26490,7 +26472,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
@@ -26520,7 +26501,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -26548,7 +26528,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
@@ -26578,7 +26557,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -26607,7 +26585,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
   }
 
@@ -26620,7 +26597,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   }
 
@@ -26634,7 +26610,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   }
 
@@ -27799,11 +27774,6 @@ export namespace Prisma {
     not?: NestedEnumUserTypeFilter<$PrismaModel> | $Enums.UserType
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type EnumUserStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
     in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
@@ -27961,7 +27931,6 @@ export namespace Prisma {
     type?: SortOrder
     referralCode?: SortOrder
     referredBy?: SortOrder
-    blocked?: SortOrder
     status?: SortOrder
   }
 
@@ -27975,7 +27944,6 @@ export namespace Prisma {
     type?: SortOrder
     referralCode?: SortOrder
     referredBy?: SortOrder
-    blocked?: SortOrder
     status?: SortOrder
   }
 
@@ -27989,7 +27957,6 @@ export namespace Prisma {
     type?: SortOrder
     referralCode?: SortOrder
     referredBy?: SortOrder
-    blocked?: SortOrder
     status?: SortOrder
   }
 
@@ -28053,14 +28020,6 @@ export namespace Prisma {
     _max?: NestedEnumUserTypeFilter<$PrismaModel>
   }
 
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
   export type EnumUserStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
     in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
@@ -28069,6 +28028,11 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUserStatusFilter<$PrismaModel>
     _max?: NestedEnumUserStatusFilter<$PrismaModel>
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type UserRelationFilter = {
@@ -28092,6 +28056,14 @@ export namespace Prisma {
     userId?: SortOrder
     email?: SortOrder
     newsletter?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type EnumImageTypeFilter<$PrismaModel = never> = {
@@ -29222,10 +29194,6 @@ export namespace Prisma {
     set?: $Enums.UserType
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
   export type EnumUserStatusFieldUpdateOperationsInput = {
     set?: $Enums.UserStatus
   }
@@ -29632,6 +29600,10 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutEmailInput, UserUncheckedCreateWithoutEmailInput>
     connectOrCreate?: UserCreateOrConnectWithoutEmailInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type UserUpdateOneRequiredWithoutEmailNestedInput = {
@@ -30158,11 +30130,6 @@ export namespace Prisma {
     not?: NestedEnumUserTypeFilter<$PrismaModel> | $Enums.UserType
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type NestedEnumUserStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
     in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
@@ -30250,14 +30217,6 @@ export namespace Prisma {
     _max?: NestedEnumUserTypeFilter<$PrismaModel>
   }
 
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
   export type NestedEnumUserStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
     in?: $Enums.UserStatus[] | ListEnumUserStatusFieldRefInput<$PrismaModel>
@@ -30266,6 +30225,19 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUserStatusFilter<$PrismaModel>
     _max?: NestedEnumUserStatusFilter<$PrismaModel>
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedEnumImageTypeFilter<$PrismaModel = never> = {
@@ -30570,7 +30542,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
@@ -30599,7 +30570,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -30803,7 +30773,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -30831,7 +30800,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -31047,7 +31015,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
@@ -31076,7 +31043,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -31325,7 +31291,6 @@ export namespace Prisma {
     type?: EnumUserTypeFilter<"User"> | $Enums.UserType
     referralCode?: StringFilter<"User"> | string
     referredBy?: StringNullableFilter<"User"> | string | null
-    blocked?: BoolFilter<"User"> | boolean
     status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
   }
 
@@ -31517,7 +31482,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
@@ -31546,7 +31510,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -31589,7 +31552,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
@@ -31618,7 +31580,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -31645,7 +31606,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
@@ -31674,7 +31634,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -31717,7 +31676,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
@@ -31746,7 +31704,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -31800,7 +31757,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
@@ -31829,7 +31785,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -31905,7 +31860,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
@@ -31934,7 +31888,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -31961,7 +31914,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
@@ -31990,7 +31942,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -32055,7 +32006,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -32084,7 +32034,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -32127,7 +32076,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
@@ -32156,7 +32104,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
@@ -32199,7 +32146,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
@@ -32228,7 +32174,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
@@ -32294,7 +32239,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
@@ -32323,7 +32267,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -32388,7 +32331,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
@@ -32417,7 +32359,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -32472,7 +32413,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
@@ -32501,7 +32441,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -32544,7 +32483,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
@@ -32573,7 +32511,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -32600,7 +32537,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
@@ -32629,7 +32565,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -32672,7 +32607,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
@@ -32701,7 +32635,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -32728,7 +32661,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
@@ -32757,7 +32689,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -32800,7 +32731,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
@@ -32829,7 +32759,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -32856,7 +32785,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
@@ -32885,7 +32813,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -32928,7 +32855,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
@@ -32957,7 +32883,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -33006,7 +32931,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
@@ -33035,7 +32959,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -33123,7 +33046,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
@@ -33152,7 +33074,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -33306,7 +33227,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
@@ -33335,7 +33255,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -33378,7 +33297,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
@@ -33407,7 +33325,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -33434,7 +33351,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
@@ -33463,7 +33379,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -33495,7 +33410,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
@@ -33524,7 +33438,6 @@ export namespace Prisma {
     type?: $Enums.UserType
     referralCode: string
     referredBy?: string | null
-    blocked?: boolean
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -33567,7 +33480,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
@@ -33596,7 +33508,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -33634,7 +33545,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
@@ -33663,7 +33573,6 @@ export namespace Prisma {
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -33727,7 +33636,6 @@ export namespace Prisma {
     country?: string | null
     type?: $Enums.UserType
     referralCode: string
-    blocked?: boolean
     status?: $Enums.UserStatus
   }
 
@@ -33896,7 +33804,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
@@ -33924,7 +33831,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -33952,7 +33858,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
     referralCode?: StringFieldUpdateOperationsInput | string
-    blocked?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   }
 

@@ -14,7 +14,7 @@ export const user = writable<
   | undefined
 >(undefined)
 
-export const isUserBlocked = derived(user, ($user) => $user?.blocked ?? false)
+export const isUserBlocked = derived(user, ($user) => $user?.status !== 'OK' ?? false)
 
 export type JettyNotification = {
   id: string
