@@ -131,10 +131,11 @@
   "Thorswap": {
     "title": "Bridge Tokens with Maya",
     "description": "Move assets in and out of Radix",
-    "introDescription": "Learn more about THORSwap and how to bridge assets to and from Radix.",
+    "introDescription": "Use the THORSwap dApp to “bridge” assets into Radix and back out",
     "requirements": {
-      "MayaRouterWithdrawEvent": "Do at least one bridge/swap of >$50 value"
-    }
+      "MayaRouterWithdrawEvent": "Do a swap into Radix on THORSwap of $50 value or more"
+    },
+    "gotoThorswap": "Go to THORSwap"
   },
   "QuestTogether": {
     "title": "Invite Your Friends",

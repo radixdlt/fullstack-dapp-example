@@ -2,6 +2,7 @@ import type { RequestHandler } from './$types'
 import { isDevEnvironment } from '$lib/server/helpers/is-dev-environment'
 import { json } from '@sveltejs/kit'
 import { randomUUID } from 'node:crypto'
+import { BusinessLogic, EventId } from 'common'
 
 /** @type {import('./$types').RequestHandler} */
 export const POST: RequestHandler = async ({ locals, request }) => {
@@ -67,6 +68,20 @@ export const POST: RequestHandler = async ({ locals, request }) => {
         userId,
         accountAddress,
         id: randomUUID()
+      }
+    ])
+  } else if (type === 'simulateMayaSwap') {
+    locals.dependencies.eventModel.add([
+      {
+        transactionId: crypto.randomUUID(),
+        traceId: crypto.randomUUID(),
+        userId,
+        eventId: EventId.MayaRouterWithdrawEvent,
+        type: EventId.MayaRouterWithdrawEvent,
+        data: {
+          amount: 100_000,
+          resourceAddress: BusinessLogic.Maya.supportedTokens.XRD
+        }
       }
     ])
   }

@@ -221,8 +221,8 @@ interface Resources {
       "requirements": {
         "GetXRD": "Get ready to do transactions on Radix"
       },
-      "claimHeroBadge": "Claim Hero's Badge",
-      "getXrd": "Receive 5 XRD",
+      "claimHeroBadge": "Get Hero's Badge",
+      "getXrd": "Receive 50 XRD",
       "registerAccount": "Register Account",
       "title": "Get Some (Web3) Stuff!",
       "description": "Claim your first quest rewards",
@@ -251,7 +251,9 @@ interface Resources {
     "CreatingRadMorphs": {
       "title": "Creating RadMorphs",
       "requirements": {
-        "RadMorphsQuiz": "Learn about rewards, from Gift Boxes to RadMorphs"
+        "OpenGiftBox": "Open a Gift Box",
+        "RadGemsClaimed": "Create RadGems",
+        "RadMorphCreated": "Create your first RadMorph"
       },
       "description": "How to collect and combine",
       "introDescription": "How to collect and combine on RadQuest to make the best and most rare RadMorph NFTs."
@@ -281,7 +283,8 @@ interface Resources {
       "introDescription": "Learn more about THORSwap and how to bridge assets to and from Radix.",
       "requirements": {
         "MayaRouterWithdrawEvent": "Do at least one bridge/swap of >$50 value"
-      }
+      },
+      "gotoThorswap": "Go to THORSwap"
     },
     "QuestTogether": {
       "title": "Invite Your Friends",

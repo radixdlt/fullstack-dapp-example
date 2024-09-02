@@ -15,7 +15,8 @@ import type {
   ImageModel,
   MailerLiteModel,
   GoldenTicketModel,
-  LoginAttemptModel
+  LoginAttemptModel,
+  EventModel
 } from 'common'
 import type { PrismaClient } from 'database'
 import type { ResultAsync } from 'neverthrow'
@@ -74,4 +75,5 @@ export type ControllerDependencies = {
   config: Config
   jwt: JWT
   systemQueue: Queues['System']
+  eventModel: ReturnType<EventModel>
 }

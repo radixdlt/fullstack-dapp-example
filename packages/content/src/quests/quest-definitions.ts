@@ -277,10 +277,6 @@ export const QuestDefinitions = () => {
       category: 'advanced',
       rewards: [
         {
-          name: 'xrd',
-          amount: 20
-        },
-        {
           name: 'fancyGiftBox',
           amount: 1
         }
@@ -324,10 +320,6 @@ export const QuestDefinitions = () => {
       trackedAccountAddress: true,
       rewards: [
         {
-          name: 'xrd',
-          amount: 60
-        },
-        {
           name: 'simpleGiftBox',
           amount: 1
         }
@@ -345,10 +337,6 @@ export const QuestDefinitions = () => {
       id: 'Thorswap',
       category: 'advanced',
       rewards: [
-        {
-          name: 'xrd',
-          amount: 300
-        },
         {
           name: 'eliteGiftBox',
           amount: 1

@@ -19,7 +19,8 @@ import {
   GoldenTicketModel,
   IpAssessmentModel,
   MailerLiteModel,
-  BlockedCountryModel
+  BlockedCountryModel,
+  EventModel
 } from 'common'
 import { UserType } from 'database'
 import { dbClient } from '$lib/db'
@@ -52,6 +53,7 @@ const queues = getQueues(config.redis)
 const redisClient = new RedisConnection(config.redis)
 
 const userModel = UserModel(dbClient)
+const eventModel = EventModel({ db: dbClient, queues })
 const authModel = AuthModel()
 const userQuestModel = UserQuestModel(dbClient)
 const transactionModel = TransactionModel(dbClient, queues)
@@ -131,7 +133,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     marketingModel: marketingModel(logger),
     imageModel: imageModel(logger),
     systemQueue: queues.System,
-    goldenTicketModel: GoldenTicketModel(dbClient)(logger)
+    goldenTicketModel: GoldenTicketModel(dbClient)(logger),
+    eventModel: eventModel(logger)
   } satisfies ControllerDependencies
 
   event.locals.controllers = {
