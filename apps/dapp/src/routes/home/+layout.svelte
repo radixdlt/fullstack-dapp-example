@@ -20,7 +20,7 @@
   import { resolveRDT } from '$lib/rdt'
   import { webSocketClient, WebSocketClient } from '$lib/websocket-client'
   import { questApi } from '$lib/api/quest-api'
-  import { QuestCategory, type QuestId } from 'content'
+  import { loadQuests, QuestCategory, type QuestId } from 'content'
   import { useLocalStorage } from '$lib/utils/local-storage'
   import LandingPopup from './LandingPopup.svelte'
   import { page } from '$app/stores'
@@ -38,7 +38,7 @@
   export let data: LayoutData
 
   const callbacks: (() => void)[] = []
-  $quests = data.questDefinitions
+  $: $quests = loadQuests('en', $user?.goldenTicketClaimed?.type)
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
   const { dAppDefinitionAddress, networkId } = publicConfig

@@ -5,23 +5,16 @@
   import ShareBox from '$lib/components/referral/ShareBox.svelte'
 
   import FireIcon from '@images/fire.svg'
-  // import {
-  //   createClaimXRDRewardsTransaction,
-  //   handleKycBadge
-  // } from '$lib/helpers/create-claim-rewards-transaction'
   import { i18n } from '$lib/i18n/i18n'
-  // import { sendTransaction } from '$lib/rdt'
 
   import { QuestDefinitions } from 'content'
   import { createEventDispatcher } from 'svelte'
-  // import { user } from '../../../../../stores'
-  // import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
+  import { user } from '../../../../../stores'
 
   type Level = 'BronzeLevel' | 'SilverLevel' | 'GoldLevel'
 
   export let referrals: string[]
   export let claimed: number
-  // export let readyToClaim: number
   export let progress: Record<Level, string>
 
   const dispatch = createEventDispatcher<{ seeReferrals: undefined; refresh: undefined }>()
@@ -33,48 +26,22 @@
     GoldLevel: requirements.GoldLevel.threshold
   }
 
-  // $: loading = false
-
   $: currentLevel =
     (Object.entries(progress).find(([_, status]) => status === 'IN_PROGRESS')?.[0] as Level) ||
     ('BronzeLevel' as Level)
-  $: nextLevel =
-    currentLevel === 'BronzeLevel'
-      ? 'SilverLevel'
-      : currentLevel === 'SilverLevel'
-        ? 'GoldLevel'
-        : ('SuperLevel' as Level | 'SuperLevel')
+  const getNextLevel = (currentLevel: string) => {
+    if ($user?.goldenTicketClaimed?.type !== 'FULL') return 'SuperLevel'
+    else if (currentLevel === 'BronzeLevel') return 'SilverLevel'
+    else if (currentLevel === 'SilverLevel') return 'GoldLevel'
+    else return 'SuperLevel' as Level | 'SuperLevel'
+  }
+  $: nextLevel = getNextLevel(currentLevel)
   $: nextLevelIn =
     nextLevel === 'SuperLevel' ? -1 : threshold[currentLevel as Level] - referrals.length
   $: hasWaitingRewards = Object.entries(progress).some(
     ([_, status]) => status === 'REWARDS_DEPOSITED'
   )
   $: unlockedSuperLevel = referrals.length >= threshold.SilverLevel
-
-  // const claimXrd = () => {
-  //   loading = true
-
-  //   const account = $user?.accountAddress!
-  //   const sendTx = (instapassBadge?: string) =>
-  //     sendTransaction({
-  //       transactionManifest: createClaimXRDRewardsTransaction(
-  //         $user?.accountAddress!,
-  //         $user?.id!,
-  //         `QuestTogether`,
-  //         readyToClaim,
-  //         instapassBadge
-  //       )
-  //     })
-
-  //   return handleKycBadge($user?.id!, account, sendTx)
-  //     .map(() => {
-  //       loading = false
-  //       dispatch('refresh')
-  //     })
-  //     .mapErr(() => {
-  //       loading = false
-  //     })
-  // }
 
   const refresh = () => {
     dispatch('refresh')
@@ -98,21 +65,6 @@
       {$i18n.t('quests:QuestTogether.alreadyClaimed', { amount: claimed })}
     </div>
   {/if}
-
-  <!-- {#if readyToClaim > 0}
-    <div class="claim-button">
-      <Button on:click={claimXrd} disabled={loading}>
-        <div class="claim-button-text">
-          {#if loading}
-            <LoadingSpinner />
-          {:else}
-            {$i18n.t('quests:claimButton')}
-            {readyToClaim} XRD
-          {/if}
-        </div>
-      </Button>
-    </div>
-  {/if} -->
 
   <div class="your-level">
     {#if unlockedSuperLevel}
@@ -149,20 +101,22 @@
       referred={referrals.length}
       status={progress.BronzeLevel}
     />
-    <ReferralLevel
-      level="SilverLevel"
-      on:refresh={refresh}
-      maximum={threshold.SilverLevel}
-      referred={referrals.length}
-      status={progress.SilverLevel}
-    />
-    <ReferralLevel
-      level="GoldLevel"
-      on:refresh={refresh}
-      maximum={threshold.GoldLevel}
-      referred={referrals.length}
-      status={progress.GoldLevel}
-    />
+    {#if $user?.goldenTicketClaimed?.type === 'FULL'}
+      <ReferralLevel
+        level="SilverLevel"
+        on:refresh={refresh}
+        maximum={threshold.SilverLevel}
+        referred={referrals.length}
+        status={progress.SilverLevel}
+      />
+      <ReferralLevel
+        level="GoldLevel"
+        on:refresh={refresh}
+        maximum={threshold.GoldLevel}
+        referred={referrals.length}
+        status={progress.GoldLevel}
+      />
+    {/if}
   </div>
 </div>
 

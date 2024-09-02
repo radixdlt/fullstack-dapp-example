@@ -405,7 +405,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/dawidsowa/work/radquest/packages/database/src/prisma",
+      "value": "/Users/azizi/Code/radquest/packages/database/src/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -427,12 +427,12 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/dawidsowa/work/radquest/packages/database/prisma/schema.prisma",
+    "sourceFilePath": "/Users/azizi/Code/radquest/packages/database/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
     "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
+    "schemaEnvPath": "../../../../.env"
   },
   "relativePath": "../../prisma",
   "clientVersion": "5.15.0",
