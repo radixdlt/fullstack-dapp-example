@@ -1,0 +1,40 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("5")
+;
+CALL_METHOD
+    Address("${account}")
+    "create_proof_of_non_fungibles"
+    Address("${hero_badge}")
+    Array<NonFungibleLocalId>(
+        NonFungibleLocalId("<${user_id}>")
+    )
+;
+POP_FROM_AUTH_ZONE
+    Proof("hero_badge_proof")
+;
+
+CALL_METHOD
+    Address("${account}")
+    "withdraw"
+    Address("${xrd}")
+    Decimal("1000")
+;
+TAKE_ALL_FROM_WORKTOP
+    Address("${xrd}")
+    Bucket("xrd")
+;
+
+CALL_METHOD
+    Address("${ticket_machine}")
+    "purchase_tickets"
+    Proof("hero_badge_proof")
+    Bucket("xrd")
+;
+CALL_METHOD
+    Address("${account}")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;
+

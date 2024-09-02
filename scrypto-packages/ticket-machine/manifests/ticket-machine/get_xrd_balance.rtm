@@ -1,0 +1,9 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("5")
+;
+CALL_METHOD
+    Address("${ticket_machine}")
+    "get_xrd_balance"
+;
