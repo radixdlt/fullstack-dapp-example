@@ -30,7 +30,7 @@
   import { loadUnseenNotifications, pushNotification } from '$lib/notifications'
   import Footer from '$lib/components/footer/footer.svelte'
   import ErrorPopup from './ErrorPopup.svelte'
-  import { GatewayApi } from 'common'
+  import { CookieKeys, GatewayApi } from 'common'
   import NetworkCongestedBanner from './NetworkCongestedBanner.svelte'
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
   import GoldenTicketAlert from './GoldenTicketAlert.svelte'
@@ -266,7 +266,7 @@
 
     const goldenTicket = $page.url.searchParams.get('t')
 
-    if (goldenTicket) useCookies('golden-ticket').set(goldenTicket)
+    if (goldenTicket) useCookies(CookieKeys.GoldenTicket).set(goldenTicket)
   })
 
   onDestroy(() => {

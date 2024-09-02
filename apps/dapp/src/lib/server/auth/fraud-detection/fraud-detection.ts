@@ -2,6 +2,7 @@ import { ok, okAsync, ResultAsync } from 'neverthrow'
 import {
   BlockedCountryModel,
   createApiError,
+  GoldenTicketModel,
   IpAssessmentModel,
   UserModel,
   type ApiError,
@@ -28,6 +29,7 @@ export type FraudDetectionModule = typeof FraudDetectionModule
 export const FraudDetectionModule = (config: {
   logger: AppLogger
   userModel: ReturnType<UserModel>
+  goldenTicketModel: ReturnType<GoldenTicketModel>
   ipAssessmentModel: ReturnType<IpAssessmentModel>
   blockedCountryModel: ReturnType<BlockedCountryModel>
   ipqs: {
@@ -46,7 +48,8 @@ export const FraudDetectionModule = (config: {
     maxAllowedScore: number
   }
 }) => {
-  const { logger, userModel, ipAssessmentModel, ipqs, blockedCountryModel } = config
+  const { logger, userModel, ipAssessmentModel, ipqs, blockedCountryModel, goldenTicketModel } =
+    config
 
   const queryIpqs = (ip: string, userAgent: string, acceptLanguage: string) =>
     ResultAsync.fromPromise(
@@ -140,10 +143,7 @@ export const FraudDetectionModule = (config: {
       [FraudRule.Farmer]: farmerEvaluation
     }))
 
-  const hasGoldenTicket = (_userId: string) => {
-    // TODO: implement
-    return okAsync(true)
-  }
+  const hasGoldenTicket = (_userId: string) => goldenTicketModel.userHasClaimedTicket(_userId)
 
   const evaluateGoldenTicket = ({ userId }: { userId: string }) =>
     hasGoldenTicket(userId).map((hasGoldenTicket) => ({

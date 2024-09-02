@@ -39,7 +39,11 @@ describe('AuthController', () => {
         ...config.ipqs,
         allowAll: true
       },
+      goldenTicketModel: {
+        userHasClaimedTicket: () => okAsync(false)
+      } as any,
       userModel: {
+        getById: () => okAsync({}),
         getUserIdsByIp: () => okAsync([]),
         countReferralCodeUsagePerIp: () => okAsync(0),
         setUserBlockedStatus: () => okAsync({})

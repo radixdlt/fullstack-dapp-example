@@ -13,21 +13,7 @@ export const POST: RequestHandler = async ({ request, cookies, locals }) => {
     acceptLanguage: request.headers.get('accept-language') || ''
   })
 
-  const goldenTicket = cookies.get('golden-ticket')
-
   if (loginResult.isErr()) error(loginResult.error.httpResponseCode, loginResult.error.reason)
-
-  if (goldenTicket) {
-    const claimTicketResult = await locals.controllers.goldenTicketController.claim(
-      goldenTicket,
-      loginResult.value.data.id
-    )
-
-    if (claimTicketResult.isErr())
-      error(claimTicketResult.error.httpResponseCode, claimTicketResult.error.reason)
-
-    cookies.delete('golden-ticket', { path: '/' })
-  }
 
   const { authToken, headers, id } = loginResult.value.data
 

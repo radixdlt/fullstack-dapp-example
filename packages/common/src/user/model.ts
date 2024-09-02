@@ -8,15 +8,19 @@ import {
   type CompletedQuestRequirement,
   type QuestProgress,
   type UserStatus,
-  type QuestStatus
+  type QuestStatus,
+  type GoldenTicket
 } from 'database'
 import { BusinessLogic, type AppLogger } from '../'
 import { type ApiError, createApiError } from '../helpers'
 import { getRandomReferralCode } from './get-random-referral-code'
 
-type GetByIdReturnType<T> = User & T extends { referredUsers: true }
-  ? { referredUsers: User[] }
-  : User
+type GetByIdReturnType<T> = User &
+  (T extends { referredUsers: true }
+    ? { referredUsers: User[] }
+    : T extends { goldenTicketClaimed: true }
+      ? { goldenTicketClaimed: GoldenTicket }
+      : User)
 
 export type UserByReferralCode = User & {
   referredUsers: User[]

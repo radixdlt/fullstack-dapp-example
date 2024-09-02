@@ -103,10 +103,12 @@ export const handle: Handle = async ({ event, resolve }) => {
     config.developmentIp || event.request.headers.get('True-Client-IP') || event.getClientAddress()
 
   const userModelWithLogger = userModel(logger)
+  const goldenTicketModel = GoldenTicketModel(dbClient)(logger)
 
   const fraudDetectionModule = FraudDetectionModule({
     logger,
     ipqs: config.ipqs,
+    goldenTicketModel,
     userModel: userModelWithLogger,
     ipAssessmentModel: ipAssessmentModel(logger),
     blockedCountryModel: blockedCountryModel(logger)
@@ -133,7 +135,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     marketingModel: marketingModel(logger),
     imageModel: imageModel(logger),
     systemQueue: queues.System,
-    goldenTicketModel: GoldenTicketModel(dbClient)(logger),
+    goldenTicketModel,
     eventModel: eventModel(logger)
   } satisfies ControllerDependencies
 

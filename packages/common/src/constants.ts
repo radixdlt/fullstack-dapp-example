@@ -288,7 +288,8 @@ export const EventId = {
 export type EventId = keyof typeof EventId
 
 export const CookieKeys = {
-  Utm: 'rq_ma'
+  Utm: 'rq_ma',
+  GoldenTicket: 'golden-ticket'
 } as const
 
 export type Metadata = typeof metadata

@@ -34,6 +34,7 @@ export const AuthController = ({
   config,
   authModel,
   userModel,
+  goldenTicketModel,
   userQuestModel,
   loginAttemptModel,
   fraudDetectionModule,
@@ -137,6 +138,17 @@ export const AuthController = ({
         : businessLogic().map(() => evaluation)
     }
 
+  const claimGoldenTicket = (
+    goldenTicket: string | undefined,
+    data: { user: User; isNewUser: boolean }
+  ) =>
+    goldenTicket
+      ? goldenTicketModel
+          .claimTicket(goldenTicket, data.user.id)
+          .map(() => data)
+          .mapErr((error) => createApiError('failed to claim golden ticket', 400)(error))
+      : okAsync(data)
+
   const login = (
     ctx: ControllerMethodContext,
     data: {
@@ -152,6 +164,8 @@ export const AuthController = ({
     id: string
   }> => {
     const { personaProof, cookies } = data
+    const goldenTicket = cookies.get(CookieKeys.GoldenTicket)
+    cookies.delete(CookieKeys.GoldenTicket, { path: '/' })
 
     ctx.logger.trace({ method: 'login', personaProof })
     const parsedPersonaResult = parseSignedChallenge(personaProof)
@@ -204,6 +218,7 @@ export const AuthController = ({
           ).map((user) => ({ user, isNewUser: !userExists }))
         )
       )
+      .andThen((data) => claimGoldenTicket(goldenTicket, data))
       .andThen(({ user, isNewUser }) =>
         fraudDetectionModule
           .evaluate({ ...data, userId: user.id })

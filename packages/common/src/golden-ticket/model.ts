@@ -9,6 +9,8 @@ export enum GoldenTicketError {
   EXPIRED = 'Ticket expired'
 }
 
+export type GoldenTicketModel = ReturnType<typeof GoldenTicketModel>
+
 export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger) => {
   const wrapper = resultWrapperWithLogger(logger)
 
