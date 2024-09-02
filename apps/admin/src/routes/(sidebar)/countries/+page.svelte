@@ -2,10 +2,9 @@
   import { Select, TableHeadCell, TableSearch } from 'flowbite-svelte'
   import { TableBody, TableBodyCell, TableBodyRow, TableHead } from 'flowbite-svelte'
   import { http } from '$lib/http'
-  import { type CountryStatus, type BlockedCountry } from 'database'
+  import type { CountryStatus, BlockedCountry } from 'database'
   import type { LayoutData } from './$types'
   import { writable } from 'svelte/store'
-  import { onMount } from 'svelte'
 
   export let data: LayoutData
 
@@ -33,7 +32,7 @@
     { value: 'SANCTIONED', name: 'Sanctioned' }
   ]
 
-  const sortKey = writable('blocked')
+  const sortKey = writable('status')
   const sortDirection = writable(1)
   const sortItems = writable(data.countries)
 
@@ -58,10 +57,6 @@
     })
     sortItems.set(sorted)
   }
-
-  onMount(() => {
-    sortTable('status')
-  })
 </script>
 
 <TableSearch placeholder="Find country" bind:inputValue={countryFilter}>
@@ -71,7 +66,7 @@
     <TableHeadCell on:click={() => sortTable('countryCode')} class="p-4 font-medium"
       >Code</TableHeadCell
     >
-    <TableHeadCell on:click={() => sortTable('blocked')} class="p-4 font-medium"
+    <TableHeadCell on:click={() => sortTable('status')} class="p-4 font-medium"
       >Status</TableHeadCell
     >
   </TableHead>

@@ -6,8 +6,8 @@ export const GET = async ({ locals }) => {
 }
 
 export const PUT = async ({ request, locals }) => {
-  const { countryCode, blocked } = await request.json()
-  const result = await locals.blockedCountryModel.update(countryCode, blocked)
+  const { countryCode, status } = await request.json()
+  const result = await locals.blockedCountryModel.update(countryCode, status)
 
   return json(result.value, { status: 200 })
 }

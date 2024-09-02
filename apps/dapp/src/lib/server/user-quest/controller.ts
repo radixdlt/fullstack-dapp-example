@@ -92,7 +92,7 @@ export const UserQuestController = ({
           return userModel
             .getById(userId, {})
             .andThen((user) =>
-              user.blocked
+              user.status !== 'OK'
                 ? userQuestModel.updateQuestStatus(questId, userId, 'PARTIALLY_COMPLETED')
                 : errAsync(createApiError(ErrorReason.requirementsNotMet, 400)())
             )

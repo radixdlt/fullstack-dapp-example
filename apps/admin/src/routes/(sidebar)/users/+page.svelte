@@ -53,7 +53,7 @@
   </div>
   <Table>
     <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
-      {#each ['Id', 'Created', 'blocked', 'Account address', 'Country'] as title}
+      {#each ['Id', 'Created', 'Status', 'Account address', 'Country'] as title}
         <TableHeadCell class="p-4 font-medium">{title}</TableHeadCell>
       {/each}
     </TableHead>
@@ -81,7 +81,11 @@
           <TableBodyCell
             class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-gray-500 dark:text-gray-400 xl:max-w-xs"
           >
-            {user.blocked ? 'Yes' : 'No'}
+            {user.status === 'OK'
+              ? 'No'
+              : user.status === 'PERMANENTLY_BLOCKED'
+                ? 'Permanently Blocked'
+                : 'Temporarily Blocked'}
           </TableBodyCell>
           <TableBodyCell
             class="max-w-sm overflow-hidden truncate p-4 text-base font-normal text-blue-500 dark:text-blue-500 xl:max-w-xs"

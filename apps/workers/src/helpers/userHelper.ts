@@ -7,7 +7,7 @@ export const UserHelper = (dbClient: PrismaClient) => {
     ResultAsync.fromPromise(
       dbClient.user.findMany({
         select: { id: true },
-        where: { id: { in: userIds }, blocked: false }
+        where: { id: { in: userIds }, status: 'OK' }
       }),
       (error) => ({
         reason: WorkerError.FailedToGetUserFromDb,

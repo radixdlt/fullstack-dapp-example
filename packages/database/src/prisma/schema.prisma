@@ -34,7 +34,6 @@ model User {
   referralCode    String     @unique
   referredBy      String?
   referredByUser  User?      @relation("Referrer", fields: [referredBy], references: [referralCode])
-  blocked         Boolean    @default(false)
   status          UserStatus @default(OK)
 
   events                     Event[]

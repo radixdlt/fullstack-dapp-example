@@ -90,20 +90,6 @@ export const AuthController = ({
       .asyncAndThen((values) => (values ? marketingModel.add(userId, values) : okAsync(undefined)))
       .map(() => cookies.delete(CookieKeys.Utm, { path: '/' }))
 
-  const preventFraud = (clientIp: string) =>
-    userModel.getUserIdsByIp(clientIp).andThen((ids) =>
-      ids.length > config.dapp.maxUserPerIp
-        ? userModel.blockUsers(ids).andThen(() => {
-            logger.info({
-              method: 'preventFraud',
-              clientIp,
-              ids
-            })
-            return err(createApiError('tooManyUsers', 400)())
-          })
-        : ok(undefined)
-    )
-
   const setUserBlockedStatus: FraudActionHandler =
     (user: User) => (evaluation: FraudEvaluation) => {
       const check = fraudRuleChecker(evaluation)
@@ -269,7 +255,6 @@ export const AuthController = ({
     createChallenge,
     createRefreshTokenCookie,
     login,
-    preventFraud,
     renewAuthToken,
     verifyAuthToken,
     verifyAuthHeader

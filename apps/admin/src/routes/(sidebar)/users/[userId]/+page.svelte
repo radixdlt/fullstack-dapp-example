@@ -22,10 +22,10 @@
     fetchUser()
   })
 
-  const blockUser = () => {
+  const setUserStatus = (status: string) => {
     fetch(`/users/${userId}`, {
       method: 'POST',
-      body: JSON.stringify({ block: !$user!.blocked })
+      body: JSON.stringify({ status })
     }).then(() => fetchUser())
   }
 </script>
@@ -37,9 +37,24 @@
         {userId}
       </Heading>
     </div>
-    <Button color={'red'} on:click={() => blockUser()}>
-      {$user.blocked ? 'Unblock user' : 'Block user'}
-    </Button>
+    {#if $user.status === 'OK'}
+      <Button color={'green'} on:click={() => setUserStatus('TEMPORARILY_BLOCKED')}>
+        Temporarily Block
+      </Button>
+      <Button color={'green'} on:click={() => setUserStatus('PERMANENTLY_BLOCKED')}>
+        Permanently Block
+      </Button>
+    {:else if $user.status === 'PERMANENTLY_BLOCKED'}
+      <Button color={'green'} on:click={() => setUserStatus('TEMPORARILY_BLOCKED')}>
+        Temporarily Block
+      </Button>
+      <Button color={'red'} on:click={() => setUserStatus('OK')}>Unblock User</Button>
+    {:else if $user.status === 'TEMPORARILY_BLOCKED'}
+      <Button color={'red'} on:click={() => setUserStatus('OK')}>Unblock User</Button>
+      <Button color={'green'} on:click={() => setUserStatus('PERMANENTLY_BLOCKED')}>
+        Permanently Block
+      </Button>
+    {/if}
 
     <div class="p-4">
       <pre class="text-white">{JSON.stringify($user, null, 2)}</pre>
