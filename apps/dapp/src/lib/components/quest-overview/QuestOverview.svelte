@@ -7,6 +7,7 @@
   import Hourglass from '@images/hourglass.svg'
   import type { QuestReward } from 'content'
   import type { QuestStatus } from '../../../types'
+  import PadlockIcon from '@images/padlock.svg'
   import { i18n } from '$lib/i18n/i18n'
   import { onNavigate } from '$app/navigation'
 
@@ -91,6 +92,8 @@
             {$i18n.t('quests:QuestOverviewButton.referralInProgress')}
           {:else if state === 'in-progress'}
             {$i18n.t('quests:QuestOverviewButton.inProgress')}
+          {:else if state === 'locked'}
+            <img src={PadlockIcon} alt="Padlock icon" />
           {:else if state === 'claim-rewards'}
             {$i18n.t('quests:QuestOverviewButton.claimRewards')}
           {:else}
