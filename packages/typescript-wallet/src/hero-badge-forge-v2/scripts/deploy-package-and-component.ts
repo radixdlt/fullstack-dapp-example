@@ -4,7 +4,7 @@ import { publishPackageAdvanced } from '../../helpers/publish-package-advanced'
 import { config } from '../../config'
 import { logger } from '../../helpers'
 import { mintAdminBadge } from '../../radquest/helpers/mintAdminBadge'
-import { newHeroBadgeForgeV2 } from '../helpers/newHeroBadgeForgeV2.ts'
+import { newHeroBadgeForgeV2 } from '../helpers/newHeroBadgeForgeV2'
 
 const rpdPath =
   '../../scrypto-packages/hero-badge-forge-v2/target/wasm32-unknown-unknown/release/hero_badge_forge_v2.rpd'
