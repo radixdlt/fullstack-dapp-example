@@ -315,10 +315,6 @@
     {@html text['6.md']}
   {/if}
 
-  {#if render('7')}
-    {@html text['7.md']}
-  {/if}
-
   {#if render('golden-ticket-valid')}
     {@html text['8-GOLDEN.md']}
 
