@@ -1,4 +1,4 @@
-import { Addresses, BlockedCountryModel, IpAssessmentModel } from 'common'
+import { Addresses, BlockedCountryModel } from 'common'
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, beforeEach } from 'vitest'
 import { AuthController } from './controller'
@@ -48,7 +48,13 @@ describe('AuthController', () => {
         countReferralCodeUsagePerIp: () => okAsync(0),
         setUserBlockedStatus: () => okAsync({})
       } as any,
-      ipAssessmentModel: IpAssessmentModel(ctx.prisma)(methodCtx.logger),
+      ipAssessmentModel: {
+        findByIp: () =>
+          okAsync({
+            data: {},
+            id: 1
+          })
+      } as any,
       blockedCountryModel: BlockedCountryModel(ctx.prisma)(methodCtx.logger)
     })
     controller = AuthController({

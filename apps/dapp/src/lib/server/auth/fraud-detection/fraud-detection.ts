@@ -15,7 +15,7 @@ import {
   FraudRule,
   type FraudEvaluation,
   type FraudScoringInput,
-  IPQS_OK_RESULT
+  IPQS_OK_RESPONSE
 } from './types'
 
 export const fraudRuleChecker = (evaluation: FraudEvaluation) => {
@@ -34,7 +34,7 @@ export const FraudDetectionModule = (config: {
   blockedCountryModel: ReturnType<BlockedCountryModel>
   ipqs: {
     /**
-     * Maximum time (in seconds) to get cached IPQS response from our database (IpAssessment table)
+     * Maximum time (in miliseconds) to get cached IPQS response from our database (IpAssessment table)
      * before triggerring new IPQS API call
      */
     cacheTTL?: number
@@ -67,6 +67,14 @@ export const FraudDetectionModule = (config: {
         return error
       }
     )
+      .map((data) => {
+        if (data.success) {
+          return data
+        }
+        logger.error({ method: 'IPQSClient.apiCall', data })
+        return IPQS_OK_RESPONSE
+      })
+      .orElse(() => ok(IPQS_OK_RESPONSE))
 
   const getIpqsResult = ({
     ip,
@@ -77,13 +85,9 @@ export const FraudDetectionModule = (config: {
       response: IPQSResponse
       assessmentId: number
     },
-    never
-  > => {
-    if (ipqs.allowAll) {
-      return okAsync(IPQS_OK_RESULT)
-    }
-
-    return ipAssessmentModel
+    ApiError
+  > =>
+    ipAssessmentModel
       .findByIp(ip, ipqs.cacheTTL)
       .andThen((result) =>
         result
@@ -91,25 +95,23 @@ export const FraudDetectionModule = (config: {
               response: result.data,
               assessmentId: result.id
             })
-          : queryIpqs(ip, userAgent, acceptLanguage)
-              .andThen((data) =>
-                data.success
-                  ? ipAssessmentModel
-                      .add({ ip, userAgent, acceptLanguage }, data)
-                      .map((created) => {
-                        return {
-                          response: data,
-                          assessmentId: created.id
-                        }
-                      })
-                  : okAsync(IPQS_OK_RESULT)
-              )
-              .orElse(() => okAsync(IPQS_OK_RESULT))
+          : queryIpqs(ip, userAgent, acceptLanguage).andThen((data) =>
+              ipAssessmentModel.add({ ip, userAgent, acceptLanguage }, data).map((created) => ({
+                response: data,
+                assessmentId: created.id
+              }))
+            )
       )
-      .orElse(() => okAsync(IPQS_OK_RESULT))
-  }
+      .mapErr((error) => {
+        logger.error({ method: 'FraudDetectionModule.getIpqsResult', error })
+        return createApiError('IpqsFailed', 400)(error)
+      })
 
   const passesIPQSAggressive = ({ fraud_score, vpn, tor, proxy }: IPQSResponse) => {
+    if (ipqs.allowAll) {
+      return true
+    }
+
     if (fraud_score && fraud_score > ipqs.maxAllowedScore) {
       return false
     }
@@ -122,6 +124,10 @@ export const FraudDetectionModule = (config: {
   }
 
   const passesIPQSGenerous = ({ fraud_score, vpn, tor, proxy }: IPQSResponse) => {
+    if (ipqs.allowAll) {
+      return true
+    }
+
     return passesIPQSAggressive({ fraud_score, vpn, tor, proxy } as IPQSResponse)
   }
 
