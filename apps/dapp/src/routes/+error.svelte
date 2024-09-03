@@ -24,6 +24,7 @@
         We are working to restore access as quickly as we can.
       {:else}
         <h4>{$page.error?.message}</h4>
+        <Button link="/home">{$i18n.t('main:error-page.go-home-button')}</Button>
       {/if}
     </div>
   </div>
