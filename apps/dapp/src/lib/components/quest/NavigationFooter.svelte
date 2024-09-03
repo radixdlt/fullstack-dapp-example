@@ -33,7 +33,7 @@
 
   .footer-container {
     grid-area: 4 / 1;
-    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    border-top: 1px solid var(--color-dark-translucent);
     width: 100%;
     display: flex;
     justify-content: center;

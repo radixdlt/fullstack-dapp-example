@@ -59,9 +59,9 @@ body {
 
   /* Light and Dark */
   --color-light: #fffbf4;
-  --color-light-translucent: #fffbf566;
+  --color-light-translucent: hsla(36, 100%, 98%, 0.2);
   --color-dark: #111f29;
-  --color-dark-translucent: #111f2966;
+  --color-dark-translucent: #111f2933;
   --color-nearly-black: #192d3a;
   background: var(--gradient-7);
   background-color: var(--color-background-dark);
