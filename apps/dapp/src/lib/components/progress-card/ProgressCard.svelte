@@ -37,8 +37,9 @@
     min-height: 28rem;
     max-width: 25rem;
     overflow-y: hidden;
+
     @include smallMobile {
-      min-height: 0;
+      min-height: 20rem;
     }
   }
 </style>
