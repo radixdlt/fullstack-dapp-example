@@ -6,8 +6,8 @@
   import { markNotificationAsSeen } from '$lib/notifications'
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
-  import { derived, writable } from 'svelte/store'
-  import { isUserBlocked } from '../../../../../stores'
+  import { writable } from 'svelte/store'
+  import { deriveIsUserBlockedAlternative } from '../../../../../stores'
   import { webSocketClient, WebSocketClient } from '$lib/websocket-client'
   import { messageApi } from '$lib/api/message-api'
   export let data: PageData
@@ -15,7 +15,7 @@
   let quest: Quest
 
   const mayaSwap = writable(data.requirements.MayaRouterWithdrawEvent.isComplete)
-  const isEnabled = derived(isUserBlocked, ($isUserBlocked) => $mayaSwap || $isUserBlocked)
+  const isEnabled = deriveIsUserBlockedAlternative(mayaSwap)
 
   onMount(() => {
     markNotificationAsSeen('thorswapSwapCompleted')

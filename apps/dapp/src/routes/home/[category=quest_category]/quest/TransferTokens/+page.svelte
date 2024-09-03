@@ -7,7 +7,7 @@
   import CopyTextBox from '$lib/components/copy-text-box/CopyTextBox.svelte'
   import QR from '@svelte-put/qr/svg/QR.svelte'
   import { shortenAddress } from '$lib/utils/shorten-address'
-  import { derived, writable } from 'svelte/store'
+  import { writable } from 'svelte/store'
   import type { Quests } from 'content'
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
@@ -15,7 +15,7 @@
   import { htmlReplace } from '$lib/helpers/html-replace'
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
-  import { isUserBlocked, user } from '../../../../../stores'
+  import { isUserBlocked, deriveIsUserBlockedAlternative, user } from '../../../../../stores'
 
   import { checkAccountHasClams, getClams } from '$lib/helpers/get-clams'
   import { isMobile } from '@radixdlt/radix-dapp-toolkit'
@@ -104,7 +104,7 @@
       skip: receivedClams,
       footer: {
         next: {
-          enabled: derived([receivedClams, isUserBlocked], ([$a, $b]) => $a || $b)
+          enabled: deriveIsUserBlockedAlternative(receivedClams)
         }
       }
     },
