@@ -75,7 +75,7 @@ const getReferrals = () =>
     })
   ).map(({ data }) => data)
 
-const getNameByRefferalCode = (referralCode: string) =>
+const getNameByReferralCode = (referralCode: string) =>
   fetchWrapper<{
     name: string
   }>(
@@ -98,7 +98,7 @@ export const userApi = {
   me,
   getReferrals,
   hasWaitingRadgemJob,
-  getNameByRefferalCode,
+  getNameByReferralCode,
   hasReceivedXrd,
   setUserFields,
   directDepositXrd,

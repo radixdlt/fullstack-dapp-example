@@ -34,7 +34,7 @@
         html: definitions[LandingPopupSchema.UserReferral],
         replacer: (html: string) =>
           userApi
-            .getNameByRefferalCode(searchParams.get('ref') || '')
+            .getNameByReferralCode(searchParams.get('ref') || '')
             .map(({ name }) => htmlReplace(html, { inviter_name: name }))
             .orElse(() => okAsync(html))
             .unwrapOr(html)

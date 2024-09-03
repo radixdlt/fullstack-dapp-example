@@ -34,7 +34,7 @@
   const isConsideredCompleted = (status: string) =>
     status === 'COMPLETED' || status === 'PARTIALLY_COMPLETED'
 
-  $: questCardState = Object.entries(data.questDefinitions).reduce(
+  $: questCardState = Object.entries($quests).reduce(
     (prev, cur) => {
       if (PUBLIC_NETWORK_ID === '1') {
         // temporarily lock all quests
