@@ -7,14 +7,11 @@ import { PrismaClient, User } from 'database'
 import { WorkerError, WorkerOutputError } from '../_types'
 import { MessageHelper } from '../helpers/messageHelper'
 import { config } from '../config'
-import { ReferralRewardAction } from '../helpers/referalReward'
 import { QuestHelper } from '../helpers/questHelper'
 import { ReferralHelper } from '../helpers/referralHelper'
 import { TokenPriceClient } from '../token-price-client'
 
 const supportedTokenAddressList = new Set<string>(Object.values(BusinessLogic.Maya.supportedTokens))
-
-type Reward = { resourceAddress: string; amount: string; name: string }
 
 type GiftBoxKind = keyof typeof config.radQuest.resources.giftBox
 
@@ -38,7 +35,6 @@ export const EventWorkerController = ({
   mailerLiteModel,
   sendMessage,
   transactionIntentHelper,
-  referralRewardAction,
   tokenPriceClient
 }: {
   dbClient: PrismaClient
@@ -47,7 +43,6 @@ export const EventWorkerController = ({
   logger: AppLogger
   sendMessage: MessageHelper
   transactionIntentHelper: TransactionIntentHelper
-  referralRewardAction: ReferralRewardAction
   tokenPriceClient: TokenPriceClient
 }) => {
   const handler = (
@@ -85,17 +80,16 @@ export const EventWorkerController = ({
       transactionIntentHelper,
       traceId,
       referredBy,
-      questHelper,
       sendMessage,
       logger: childLogger,
-      transactionId,
-      referralRewardAction
+      transactionId
     })
 
     switch (type) {
       case EventId.QuestRewardDepositedV2:
       case EventId.QuestRewardDeposited: {
         const questId = job.data.data.questId as string
+
         return questHelper
           .updateQuestProgressStatus({ questId, status: 'REWARDS_DEPOSITED' })
           .andThen(() =>
@@ -111,9 +105,9 @@ export const EventWorkerController = ({
       case EventId.QuestRewardClaimedV2:
       case EventId.QuestRewardClaimed: {
         const questId = job.data.data.questId as QuestId
-        const rewards = job.data.data.rewards as Reward[]
-        const xrdReward = rewards.find((reward) => reward.name === 'xrd')
-        const xrdAmount = xrdReward ? parseFloat(xrdReward.amount) : 0
+
+        const shouldTriggerReferralRewardFlow =
+          (!!referredBy && questId === BusinessLogic.QuestTogether.triggerRewardAfterQuest) ?? false
 
         const sendQuestRewardsClaimedMessage = () =>
           sendMessage(
@@ -126,14 +120,23 @@ export const EventWorkerController = ({
             childLogger
           )
 
+        logger.trace({ shouldTriggerReferralRewardFlow, referredBy, userId, questId })
+
         return questHelper
           .updateQuestProgressStatus({ questId, status: 'REWARDS_CLAIMED' })
           .andThen(sendQuestRewardsClaimedMessage)
-          .andThen(() => questHelper.handleMailerLiteBasicQuestFinished(questId))
           .andThen(() =>
-            referralHelper.handleQuestTogetherXrdClaimed({ questId, xrdAmount, userId })
+            shouldTriggerReferralRewardFlow
+              ? questHelper
+                  .addCompletedQuestRequirement({
+                    questId: 'JoinFriend',
+                    requirementId: 'CompleteBasicQuests'
+                  })
+                  .andThen(() => questHelper.handleAllQuestRequirementCompleted('JoinFriend'))
+                  .andThen(() => referralHelper.handleQuestTogetherRewards(questId))
+              : okAsync(undefined)
           )
-          .andThen(() => referralHelper.handleQuestTogetherRewards(questId))
+          .andThen(() => questHelper.handleMailerLiteBasicQuestFinished(questId))
       }
 
       case EventId.DepositHeroBadge: {

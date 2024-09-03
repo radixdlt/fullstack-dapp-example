@@ -9,10 +9,14 @@
   import ReferralLevelUI from './ReferralLevelUI.svelte'
   import QuestRewards from '../quest-rewards/QuestRewards.svelte'
   import CompletedGradientIcon from '@images/completed-gradient.svg'
-  import { createClaimRewardsTransaction } from '$lib/helpers/create-claim-rewards-transaction'
+  import {
+    createClaimRewardsTransaction,
+    createClaimRewardsV2Transaction
+  } from '$lib/helpers/create-claim-rewards-transaction'
   import { user } from '../../../stores'
   import { createEventDispatcher } from 'svelte'
   import { questApi } from '$lib/api/quest-api'
+  import { determineIfQuestRewardV2 } from '../../../routes/home/[category=quest_category]/quest/ClaimRewards.svelte'
 
   type Level = keyof ReturnType<typeof QuestDefinitions>['QuestTogether']['partialRewards']
 
@@ -38,18 +42,30 @@
 
   const claimRewards = () => {
     loading = true
-    questApi
-      .getDepositedRewards(`QuestTogether:${level}` as QuestId)
-      .andThen((rewards) =>
-        sendTransaction({
-          transactionManifest: createClaimRewardsTransaction(
-            $user?.accountAddress!,
-            $user?.id!,
-            `QuestTogether:${level}`,
-            rewards
-          )
+    const questId = `QuestTogether:${level}` as QuestId
+    return determineIfQuestRewardV2($user?.id!, questId)
+      .andThen((maybeRewards) => {
+        if (maybeRewards)
+          return sendTransaction({
+            transactionManifest: createClaimRewardsV2Transaction(
+              $user?.accountAddress!,
+              $user?.id!,
+              questId,
+              maybeRewards
+            )
+          })
+
+        return questApi.getDepositedRewards(questId).andThen((rewards) => {
+          return sendTransaction({
+            transactionManifest: createClaimRewardsTransaction(
+              $user?.accountAddress!,
+              $user?.id!,
+              questId,
+              rewards
+            )
+          })
         })
-      )
+      })
       .map(() => {
         loading = false
         dispatch('refresh')

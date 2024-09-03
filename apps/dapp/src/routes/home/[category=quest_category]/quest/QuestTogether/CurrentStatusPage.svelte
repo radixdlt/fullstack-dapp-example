@@ -1,5 +1,4 @@
 <script lang="ts">
-  // import Button from '$lib/components/button/Button.svelte'
   import ReferralLevel from '$lib/components/referral/ReferralLevel.svelte'
   import ReferralsSoFar from '$lib/components/referral/ReferralsSoFar.svelte'
   import ShareBox from '$lib/components/referral/ShareBox.svelte'
@@ -14,7 +13,6 @@
   type Level = 'BronzeLevel' | 'SilverLevel' | 'GoldLevel'
 
   export let referrals: string[]
-  export let claimed: number
   export let progress: Record<Level, string>
 
   const dispatch = createEventDispatcher<{ seeReferrals: undefined; refresh: undefined }>()
@@ -41,7 +39,7 @@
   $: hasWaitingRewards = Object.entries(progress).some(
     ([_, status]) => status === 'REWARDS_DEPOSITED'
   )
-  $: unlockedSuperLevel = referrals.length >= threshold.SilverLevel
+  $: unlockedSuperLevel = referrals.length >= threshold.GoldLevel
 
   const refresh = () => {
     dispatch('refresh')
@@ -60,11 +58,6 @@
       dispatch('seeReferrals')
     }}
   />
-  {#if claimed !== 0}
-    <div class="already-claimed">
-      {$i18n.t('quests:QuestTogether.alreadyClaimed', { amount: claimed })}
-    </div>
-  {/if}
 
   <div class="your-level">
     {#if unlockedSuperLevel}
@@ -121,10 +114,6 @@
 </div>
 
 <style lang="scss">
-  .already-claimed {
-    margin-top: -0.5rem;
-  }
-
   .share-box {
     margin: 5px 1rem 1.5rem;
   }
@@ -156,16 +145,6 @@
   .super-level > p > :global(a) {
     text-decoration: underline;
   }
-
-  /* .claim-button-text {
-    margin: 0.25rem 0.75rem;
-  }
-
-  .claim-button {
-    display: flex;
-    margin: 1rem 0;
-    justify-content: center;
-  } */
 
   .text-center {
     text-align: center;

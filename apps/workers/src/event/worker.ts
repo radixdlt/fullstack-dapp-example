@@ -28,7 +28,11 @@ const UpdateEventStatus =
   (dbClient: PrismaClient, transactionId: string) => (status: EventStatus, error?: string) =>
     ResultAsync.fromPromise(
       dbClient.event.update({ data: { status, error }, where: { transactionId } }),
-      (error) => ({ reason: WorkerError.FailedToUpdateEventStatus, jsError: error })
+      (error) => ({
+        reason: WorkerError.FailedToUpdateEventStatus,
+        jsError: error,
+        data: { transactionId, status, error }
+      })
     ).map(() => undefined)
 
 const getUser = (
@@ -83,7 +87,8 @@ export const EventWorker = (
         traceId: job.data.traceId,
         type: job.data.type,
         userId: job.data.userId,
-        transactionId: job.data.transactionId
+        transactionId: job.data.transactionId,
+        questId: job.data.questId
       })
 
       const updateEventStatus = UpdateEventStatus(dependencies.dbClient, job.data.transactionId)
@@ -93,11 +98,11 @@ export const EventWorker = (
           .andThen((shouldProcessEvent) => {
             if (!shouldProcessEvent) return workerHelper.noop()
 
-            return getUser(job.data.userId).andThen(({ status, accountAddress }) => {
+            return getUser(job.data.userId).andThen(({ status, accountAddress, referredBy }) => {
               if (status !== 'OK')
                 return updateEventStatus(EventStatus.CANCELLED, WorkerError.BlockedUser)
 
-              return eventWorkerController.handler(job, accountAddress)
+              return eventWorkerController.handler(job, accountAddress, referredBy)
             })
           })
           .andThen(() => updateEventStatus(EventStatus.COMPLETED))

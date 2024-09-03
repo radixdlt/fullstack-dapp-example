@@ -5,7 +5,8 @@ import {
   AccountAddressModel as AccountAddressModelFn,
   GatewayApi,
   MailerLiteModel,
-  ImageModel
+  ImageModel,
+  EventModel
 } from 'common'
 import { logger } from './helpers/logger'
 import {
@@ -33,7 +34,6 @@ import {
   createQuestRewardTransactionManifest,
   createRadGemsManifest
 } from './manifests'
-import { ReferralRewardAction } from './helpers/referalReward'
 import { BatchWorkerController } from './helpers/batchWorkerController'
 import { BatchTransactionWorker } from './helpers/batchTransactionWorker'
 import { createDepositXrdManifest } from './manifests/createDepositXrdManifest'
@@ -56,10 +56,10 @@ const app = async () => {
   const gatewayApi = GatewayApi(config.networkId, process.env.GATEWAY_URL)
   const redisClient = new RedisConnection(config.redis)
   const sendMessage = MessageHelper({ dbClient, messageApi })
-  const referralRewardAction = ReferralRewardAction(dbClient)
   const AccountAddressModel = AccountAddressModelFn(redisClient)
   const imageModel = ImageModel(dbClient)
   const tokenPriceClient = TokenPriceClient()
+  const eventModel = EventModel({ db: dbClient, queues })
 
   EventWorker(connection, {
     logger,
@@ -77,7 +77,6 @@ const app = async () => {
       }),
       AccountAddressModel,
       sendMessage,
-      referralRewardAction,
       tokenPriceClient
     })
   })
@@ -87,7 +86,8 @@ const app = async () => {
     systemWorkerController: SystemWorkerController({
       logger,
       AccountAddressModel,
-      dbClient
+      dbClient,
+      eventModel: eventModel(logger)
     })
   })
 
@@ -228,7 +228,7 @@ const app = async () => {
       controller: BatchWorkerController<DepositPartialRewardJob>({
         gatewayApi,
         sendMessage,
-        createManifest: createDepositPartialRewardManifest
+        createManifest: (items) => createDepositPartialRewardManifest(items, logger)
       })
     },
     {

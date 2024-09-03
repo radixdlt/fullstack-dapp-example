@@ -7,12 +7,11 @@ import {
   TransactionIntentHelper
 } from 'common'
 import { QuestDefinitions } from 'content'
-import { PrismaClient, QuestStatus } from 'database'
+import { $Enums, PrismaClient, QuestStatus } from 'database'
 import { okAsync, ResultAsync, ok, err } from 'neverthrow'
 import { QuestHelper } from './questHelper'
 import { WorkerOutputError } from '../_types'
 import { MessageHelper } from './messageHelper'
-import { ReferralRewardAction } from './referalReward'
 
 export const ReferralHelper = ({
   dbClient,
@@ -21,8 +20,6 @@ export const ReferralHelper = ({
   referredBy,
   sendMessage,
   logger,
-  questHelper,
-  referralRewardAction,
   transactionId
 }: {
   dbClient: PrismaClient
@@ -31,11 +28,14 @@ export const ReferralHelper = ({
   referredBy?: string
   sendMessage: MessageHelper
   logger?: AppLogger
-  questHelper: QuestHelper
-  referralRewardAction: ReferralRewardAction
   transactionId: string
 }) => {
-  const handleTiersRewards = (referrer: UserByReferralCode, count: number) => {
+  const handleTiersRewards = (
+    referrer: UserByReferralCode,
+    count: number,
+    hasGoldenTicket: boolean,
+    ticketType: $Enums.TicketType | undefined
+  ) => {
     const currentReferralsAmount = count + 1
     const userId = referrer.id
     const referrerQuestHelper = QuestHelper({
@@ -51,13 +51,15 @@ export const ReferralHelper = ({
       accountAddressModel: {} as any,
       mailerLiteModel: {} as any
     })
-    const requirements = QuestDefinitions()['QuestTogether'].requirements
+    const requirements = QuestDefinitions(ticketType)['QuestTogether'].requirements
+
     const unlockedRewards = referrer.completedQuestRequirements
       .filter((req) => req.questId === 'QuestTogether')
       .reduce<Record<string, boolean>>((acc, requirement) => {
         acc[requirement.requirementId] = true
         return acc
       }, {})
+
     const progress = referrer.questProgress
       .filter((progress) => progress.questId.includes('QuestTogether'))
       .reduce<Record<string, QuestStatus | 'NOT_STARTED'>>(
@@ -85,7 +87,7 @@ export const ReferralHelper = ({
             type: 'DepositPartialReward',
             requirement: tier,
             traceId,
-            questId: 'QuestTogether'
+            questId: `QuestTogether:${tier}`
           })
         )
 
@@ -99,35 +101,35 @@ export const ReferralHelper = ({
     const silverLevelCompleted = currentReferralsAmount >= requirements.SilverLevel.threshold
     const goldLevelCompleted = currentReferralsAmount >= requirements.GoldLevel.threshold
 
-    return ResultAsync.combine([
-      progress['QuestTogether:BronzeLevel'] === 'NOT_STARTED'
-        ? setTierInProgress('BronzeLevel')
-        : okAsync(undefined),
-      bronzeLevelCompleted && progress['QuestTogether:SilverLevel'] === 'NOT_STARTED'
-        ? setTierInProgress('SilverLevel')
-        : okAsync(undefined),
-      silverLevelCompleted && progress['QuestTogether:GoldLevel'] === 'NOT_STARTED'
-        ? setTierInProgress('GoldLevel')
-        : okAsync(undefined),
-      bronzeLevelCompleted && !unlockedRewards['BronzeLevel']
-        ? unlockReward('BronzeLevel')
-        : okAsync(undefined),
-      silverLevelCompleted && !unlockedRewards['SilverLevel']
-        ? unlockReward('SilverLevel')
-        : okAsync(undefined),
-      goldLevelCompleted && !unlockedRewards['GoldLevel']
-        ? unlockReward('GoldLevel')
-        : okAsync(undefined)
-    ]).map(() => undefined)
-  }
+    const results: ResultAsync<any, WorkerOutputError>[] = []
 
-  const triggerRewardsForReferredUser = () =>
-    questHelper
-      .addCompletedQuestRequirement({
-        questId: 'JoinFriend',
-        requirementId: 'CompleteBasicQuests'
-      })
-      .andThen(() => questHelper.handleAllQuestRequirementCompleted('JoinFriend'))
+    logger?.trace({ method: 'handleQuestTogetherRewards.handleTiersRewards', progress })
+
+    if (progress['QuestTogether:BronzeLevel'] === 'NOT_STARTED') {
+      results.push(setTierInProgress('BronzeLevel'))
+    }
+
+    if (bronzeLevelCompleted && !unlockedRewards['BronzeLevel']) {
+      results.push(unlockReward('BronzeLevel'))
+    }
+
+    if (hasGoldenTicket && ticketType === 'FULL') {
+      if (bronzeLevelCompleted && progress['QuestTogether:SilverLevel'] === 'NOT_STARTED') {
+        results.push(setTierInProgress('SilverLevel'))
+      }
+      if (silverLevelCompleted && progress['QuestTogether:GoldLevel'] === 'NOT_STARTED') {
+        results.push(setTierInProgress('GoldLevel'))
+      }
+      if (silverLevelCompleted && !unlockedRewards['SilverLevel']) {
+        results.push(unlockReward('SilverLevel'))
+      }
+      if (goldLevelCompleted && !unlockedRewards['GoldLevel']) {
+        results.push(unlockReward('GoldLevel'))
+      }
+    }
+
+    return ResultAsync.combine(results).map(() => undefined)
+  }
 
   const getUserByReferralCode = (referralCode: string) =>
     ResultAsync.fromPromise(
@@ -136,33 +138,71 @@ export const ReferralHelper = ({
         include: {
           referredUsers: true,
           questProgress: true,
-          completedQuestRequirements: true
+          completedQuestRequirements: true,
+          goldenTicketClaimed: true
         }
       }),
       (error) => ({ reason: WorkerError.FailedToGetUserFromDb, jsError: error })
-    ).andThen((user) => (user ? ok(user) : err({ reason: WorkerError.UserNotFound })))
+    ).andThen((user) => {
+      const hasGoldenTicket =
+        (user?.goldenTicketClaimed && user?.goldenTicketClaimed.status === 'CLAIMED') ?? false
+
+      return user
+        ? ok({ ...user, hasGoldenTicket, ticketType: user?.goldenTicketClaimed?.type })
+        : err({ reason: WorkerError.UserNotFound })
+    })
+
+  const countQuestTogetherReferrals = (userId: string) =>
+    ResultAsync.fromPromise(
+      dbClient.user.findFirst({
+        where: {
+          id: userId
+        },
+        include: {
+          referredUsers: {
+            where: {
+              questProgress: {
+                some: {
+                  AND: [
+                    { questId: BusinessLogic.QuestTogether.triggerRewardAfterQuest },
+                    {
+                      OR: [{ status: 'REWARDS_CLAIMED' }, { status: 'COMPLETED' }]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }),
+      (error) => ({ reason: WorkerError.FailedToCountQuestTogetherReferrals, jsError: error })
+    ).map((user) => user?.referredUsers?.length ?? 0)
 
   const handleQuestTogetherRewards = (
     questId: string
   ): ResultAsync<undefined, WorkerOutputError> => {
     const shouldTriggerReferralRewardFlow =
-      questId === BusinessLogic.QuestTogether.triggerRewardAfterQuest
+      referredBy && questId === BusinessLogic.QuestTogether.triggerRewardAfterQuest
 
-    if (referredBy && shouldTriggerReferralRewardFlow) {
-      return triggerRewardsForReferredUser()
-        .andThen(() => getUserByReferralCode(referredBy))
+    logger?.trace({ method: 'handleQuestTogetherRewards', shouldTriggerReferralRewardFlow })
+    if (shouldTriggerReferralRewardFlow) {
+      return getUserByReferralCode(referredBy)
         .andThen((referringUser) =>
-          transactionIntentHelper
-            .countQuestTogetherReferrals(referringUser.id)
-            .andThen((count) =>
-              handleTiersRewards(referringUser, count).andThen(() =>
-                sendMessage(
-                  referringUser.id,
-                  { type: MessageType.ReferralCompletedBasicQuests, traceId },
-                  logger
-                )
+          countQuestTogetherReferrals(referringUser.id).andThen((count) => {
+            logger?.trace({ method: 'handleQuestTogetherRewards', count })
+            return handleTiersRewards(
+              referringUser,
+              count,
+              referringUser.hasGoldenTicket,
+              referringUser.ticketType
+            ).andThen(() =>
+              sendMessage(
+                referringUser.id,
+                { type: MessageType.ReferralCompletedBasicQuests, traceId },
+                logger
               )
             )
+          })
         )
         .map(() => undefined)
     }
@@ -170,23 +210,25 @@ export const ReferralHelper = ({
     return okAsync(undefined)
   }
 
-  const handleQuestTogetherXrdClaimed = ({
-    questId,
-    xrdAmount,
-    userId
-  }: {
-    questId: string
-    xrdAmount: number
-    userId: string
-  }) =>
-    questId === 'QuestTogether'
-      ? referralRewardAction({
-          transactionId,
+  const getTransactionIntents = (userId: string) =>
+    ResultAsync.fromPromise(
+      dbClient.transactionIntent.findMany({
+        where: {
           userId,
-          xrdValue: -xrdAmount,
-          action: 'DEC'
-        })
-      : okAsync(undefined)
+          AND: {
+            discriminator: {
+              in: [
+                `QuestTogether:BronzeLevel:${userId}`,
+                `QuestTogether:SilverLevel:${userId}`,
+                `QuestTogether:GoldLevel:${userId}`
+              ]
+            },
+            status: 'COMPLETED'
+          }
+        }
+      }),
+      (error) => ({ reason: WorkerError.FailedToGetTransactionIntent, jsError: error })
+    )
 
-  return { handleQuestTogetherRewards, handleQuestTogetherXrdClaimed }
+  return { handleQuestTogetherRewards, getTransactionIntents }
 }
