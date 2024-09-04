@@ -363,7 +363,7 @@ export const QuestDefinitions = (ticketType?: TicketType) => {
       ],
       trackedAccountAddress: true,
       minutesToComplete: 5,
-      preRequisites: ['QuestTogether'],
+      preRequisites: ['CreatingRadMorphs'],
       requirements: {
         [EventId.MayaRouterWithdrawEvent]: {
           eventName: 'MayaRouterWithdrawEvent',
