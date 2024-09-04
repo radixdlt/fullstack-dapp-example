@@ -97,18 +97,14 @@ export const AuthController = ({
     eventModel.getTemporarilyCancelledEvents(userId).andThen((events) => {
       return ResultAsync.combineWithAllErrors(
         events.map((event) => {
-          const data = event.data as Record<string, unknown>
-          const type = event.id as EventId
           const jobData = {
-            data,
+            data: event.data as Record<string, unknown>,
             eventId: event.id,
-            type,
+            type: event.id as EventId,
             transactionId: event.transactionId,
             userId: event.userId,
             traceId: crypto.randomUUID()
           }
-          console.log({ method: 'retryingEventJob', jobData })
-
           return eventQueue.remove(jobData.transactionId).andThen(() => eventQueue.add([jobData]))
         })
       ).mapErr((error) => {

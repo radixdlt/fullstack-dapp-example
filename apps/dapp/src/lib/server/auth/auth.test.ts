@@ -63,6 +63,9 @@ describe('AuthController', () => {
       loginAttemptModel: {
         add: () => okAsync({})
       },
+      eventModel: {
+        getTemporarilyCancelledEvents: () => okAsync([])
+      } as any,
       userModel: UserModel(ctx.prisma)(methodCtx.logger),
       fraudDetectionModule,
       userQuestModel: UserQuestModel(ctx.prisma)(methodCtx.logger),
@@ -128,7 +131,7 @@ describe('AuthController', () => {
     )
 
     mockCtx.prisma.user.count.mockResolvedValue(Promise.resolve(true) as any)
-
+    mockCtx.prisma.user.update.mockResolvedValue(Promise.resolve({}) as any)
     mockCtx.prisma.loginAttempt.create.mockResolvedValue(Promise.resolve({}) as any)
     mockCtx.prisma.blockedCountry.findFirst.mockResolvedValue(Promise.resolve(null) as any)
 

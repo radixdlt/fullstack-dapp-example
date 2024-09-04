@@ -289,11 +289,7 @@ export const UserQuestController = ({
     getSavedProgress,
     deleteSavedProgress,
     completeRequirement,
-    handleAllRequirementsCompleted: (data: {
-      userId: string
-      questId: keyof Quests
-      traceId: string
-    }) =>
+    handleAllRequirementsCompleted: (data: { userId: string; questId: QuestId; traceId: string }) =>
       handleAllRequirementsCompleted(data)
         .map(() => ({ httpResponseCode: 200, data: undefined }))
         .mapErr((error) => {
