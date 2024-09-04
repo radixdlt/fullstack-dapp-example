@@ -218,69 +218,6 @@ const completeTransferTokensQuest = async (user: User) => {
   await mintClams(user.accountAddress!)
 }
 
-const executeUserReferralFlow = async ({ user, submitTransaction }: Account) => {
-  console.log('Completing transfer tokens quest')
-  await accountAddressModel.addTrackedAddress(user.accountAddress!, 'TransferTokens', user.id)
-  await completeTransferTokensQuest(user)
-
-  await submitTransaction(`
-    CALL_METHOD
-      Address("${user.accountAddress}")
-      "lock_fee"
-      Decimal("50")
-    ;
-    CALL_METHOD
-      Address("${user.accountAddress}")
-      "withdraw"
-      Address("${addresses.resources.clamAddress}")
-      Decimal("10")
-    ;
-    TAKE_FROM_WORKTOP
-      Address("${addresses.resources.clamAddress}")
-      Decimal("10")
-      Bucket("clam_bucket")
-    ;
-    CALL_METHOD
-      Address("${addresses.accounts.jetty.address}")
-      "try_deposit_or_abort"
-      Bucket("clam_bucket")
-      Enum<0u8>()
-    ;
-  `)
-  await waitForMessage(logger, db)(user.id, 'QuestRewardsDeposited')
-  console.log('Claiming rewards for transfer tokens quest')
-  const claimRewardResult = await submitTransaction(`
-    CALL_METHOD
-      Address("${user.accountAddress}")
-      "lock_fee"
-      Decimal("10")
-    ;
-    CALL_METHOD
-      Address("${user.accountAddress}")
-      "create_proof_of_non_fungibles"
-      Address("${addresses.badges.heroBadgeAddress}")
-      Array<NonFungibleLocalId>(NonFungibleLocalId("<${user.id}>"))
-    ;
-    POP_FROM_AUTH_ZONE
-      Proof("hero_badge_proof")
-    ;
-    CALL_METHOD
-      Address("${addresses.components.questRewards}")
-      "claim_reward"
-      "TransferTokens"
-      Proof("hero_badge_proof")
-      None
-    ;
-    CALL_METHOD
-      Address("${user.accountAddress}")
-      "deposit_batch"
-      Expression("ENTIRE_WORKTOP")
-    ;
-  `)
-
-  if (claimRewardResult.isErr()) throw claimRewardResult.error
-}
-
 const claimQuestReward = async (
   { user, submitTransaction }: Awaited<ReturnType<typeof getAccount>>,
   questId: QuestId
@@ -476,11 +413,42 @@ const claimRadGems = (account: Account) =>
   ;
 `)
 
+const triggerQuestTogetherReward = async (account: Account) => {
+  await accountAddressModel.addTrackedAddress(
+    account.user.accountAddress!,
+    'CreatingRadMorphs',
+    account.user.id
+  )
+
+  await completeQuestRequirements(db)(account.user.id, 'CreatingRadMorphs', [
+    'OpenGiftBox',
+    'RadGemsClaimed'
+  ])
+
+  // Simulate RadMorph mint event
+  await eventModel.add([
+    {
+      transactionId: crypto.randomUUID(),
+      traceId: crypto.randomUUID(),
+      userId: account.user.id,
+      eventId: EventId.RadMorphCreated,
+      type: EventId.RadMorphCreated,
+      data: {}
+    }
+  ])
+
+  await waitForMessage(logger, db)(account.user.id, 'QuestRewardsDeposited')
+
+  await claimQuestReward(account, 'CreatingRadMorphs')
+
+  await waitForMessage(logger, db)(account.user.id, 'QuestRewardsClaimed')
+}
+
 describe('Event flows', () => {
   it('should deposit XRD to account', { timeout: 60_000 }, async () => {
     const nAccounts = new Array(5)
       .fill(null)
-      .map(() => createAccount({ withXrd: false, withHeroBadge: false }))
+      .map(() => createAccount({ withXrd: false, withHeroBadge: true }))
 
     const accounts = await Promise.all(nAccounts)
 
@@ -538,26 +506,61 @@ describe('Event flows', () => {
   })
 
   describe('Quest flows', () => {
+    describe('SetupWallet', () => {
+      it(`should register account and deposit hero's badge`, { timeout: 60_000 }, async () => {
+        const nAccounts = new Array(5)
+          .fill(null)
+          .map(() => createAccount({ withXrd: true, withHeroBadge: false }))
+
+        const accounts = await Promise.all(nAccounts)
+
+        for (const account of accounts) {
+          await completeQuestRequirements(db)(account.user.id, 'SetupWallet', [
+            'DownloadWallet',
+            'ConnectWallet',
+            'RegisterAccount'
+          ])
+
+          await transactionModel.add({
+            type: 'DepositHeroBadge',
+            discriminator: `DepositHeroBadge:${account.user.id}`,
+            traceId: crypto.randomUUID(),
+            userId: account.user.id,
+            accountAddress: account.user.accountAddress!
+          })
+        }
+
+        for (const account of accounts.slice(0, 3)) {
+          await waitForMessage(logger, db)(account.user.id, 'QuestRequirementsCompleted')
+        }
+      })
+    })
+
     describe('GetStuff', () => {
       it(
-        'should get hero badge deposited and claim quest rewards',
+        'should get complete quest requirements and claim rewards',
         { timeout: 60_000 },
         async () => {
           const nAccounts = new Array(5)
             .fill(null)
-            .map(() => createAccount({ withXrd: true, withHeroBadge: false }))
+            .map(() => createAccount({ withXrd: true, withHeroBadge: true }))
 
           const accounts = await Promise.all(nAccounts)
 
           for (const account of accounts) {
-            await completeQuestRequirements(db)(account.user.id, 'GetStuff', ['RegisterAccount'])
+            await completeQuestRequirements(db)(account.user.id, 'GetStuff', [
+              'GetXRD',
+              'PersonaQuiz',
+              'TransactionQuiz',
+              'XrdQuiz'
+            ])
 
             await transactionModel.add({
-              type: 'DepositHeroBadge',
-              discriminator: `DepositHeroBadge:${account.user.id}`,
-              traceId: crypto.randomUUID(),
               userId: account.user.id,
-              accountAddress: account.user.accountAddress!
+              discriminator: `GetStuff:DepositReward:${account.user.id}`,
+              type: 'DepositReward',
+              traceId: crypto.randomUUID(),
+              questId: 'GetStuff'
             })
           }
 
@@ -586,12 +589,7 @@ describe('Event flows', () => {
               account.user.accountAddress!,
               'TransferTokens',
               account.user.id
-            ),
-            completeQuestRequirements(db)(account.user.id, 'TransferTokens', [
-              'PersonaQuiz',
-              'TransactionQuiz',
-              'XrdQuiz'
-            ])
+            )
           ])
         }
 
@@ -752,70 +750,30 @@ describe('Event flows', () => {
         await waitForMessage(logger, db)(account.user.id, 'QuestRewardsClaimed')
       })
     })
-  })
+    describe('Quest together', () => {
+      it(
+        'should complete basic quests and claim referral reward',
+        { timeout: 60_000 },
+        async () => {
+          const referrerAccount = await getAccount()
+          const referredAccount = await createAccount({
+            withHeroBadge: true,
+            withXrd: true,
+            referredBy: referrerAccount.user.referralCode
+          })
 
-  describe.skip('Referral flow', () => {
-    it(
-      'should complete basic quest, deposit reward, claim reward',
-      { timeout: 90_000, skip: false },
-      async () => {
-        const referrer = await createAccount({ withXrd: true, withHeroBadge: true })
+          await triggerQuestTogetherReward(referredAccount)
 
-        const users = await Promise.all(
-          new Array(1).fill(0).map(() =>
-            createAccount({
-              referredBy: referrer.user.referralCode,
-              withHeroBadge: true,
-              withXrd: true
-            })
-          )
-        )
+          await waitForMessage(logger, db)(referredAccount.user.id, 'QuestRewardsDeposited')
 
-        for (const account of users) {
-          await executeUserReferralFlow(account)
-          await waitForMessage(logger, db)(referrer.user.id, 'ReferralCompletedBasicQuests')
+          await claimQuestReward(referredAccount, 'JoinFriend')
+
+          await waitForMessage(logger, db)(referrerAccount.user.id, 'QuestRewardsDeposited')
+
+          await claimQuestReward(referrerAccount, `QuestTogether:BronzeLevel` as QuestId)
         }
-
-        await waitForMessage(logger, db)(referrer.user.id, 'QuestRewardsDeposited')
-
-        // expect(await getXrdRewardToClaim(referrer.user.id)).toEqual(50)
-
-        const claimRewardResult = await referrer.submitTransaction(
-          `
-              CALL_METHOD
-                Address("${referrer.user.accountAddress}")
-                "lock_fee"
-                Decimal("10")
-              ;
-              CALL_METHOD
-                Address("${referrer.user.accountAddress}")
-                "create_proof_of_non_fungibles"
-                Address("${addresses.badges.heroBadgeAddress}")
-                Array<NonFungibleLocalId>(NonFungibleLocalId("<${referrer.user.id}>"))
-              ;
-              POP_FROM_AUTH_ZONE
-                Proof("hero_badge_proof")
-              ;
-              CALL_METHOD
-                Address("${addresses.components.questRewards}")
-                "claim_reward"
-                "QuestTogether"
-                Proof("hero_badge_proof")
-                None
-              ;
-              CALL_METHOD
-                Address("${referrer.user.accountAddress}")
-                "deposit_batch"
-                Expression("ENTIRE_WORKTOP")
-              ;
-          `
-        )
-
-        if (claimRewardResult.isErr()) throw claimRewardResult.error
-
-        await waitForMessage(logger, db)(referrer.user.id, 'QuestRewardsClaimed')
-      }
-    )
+      )
+    })
   })
 
   describe('giftbox', async () => {

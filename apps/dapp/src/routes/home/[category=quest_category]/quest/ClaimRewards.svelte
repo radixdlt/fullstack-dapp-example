@@ -1,7 +1,62 @@
+<script lang="ts" context="module">
+  export const determineIfQuestRewardV2 = (userId: string, questId: QuestId) => {
+    type Reward = {
+      resourceAddress: string
+      amount: string
+    }
+    const transformPreviewResponseToQuestRewards = (
+      response: ReturnType<Awaited<ReturnType<typeof gatewayApi.getPreviewOutput>>['_unsafeUnwrap']>
+    ) => {
+      if (response) {
+        const enumFields = SborHelper.getEnumFields(response)
+
+        if (enumFields) {
+          return enumFields
+            .map((field) => {
+              const mapEntries = SborHelper.getMapEntries(field)
+              if (mapEntries) {
+                return mapEntries
+                  .map((mapEntry): Reward | undefined => {
+                    const { key, value } = mapEntry
+                    const enumFields = SborHelper.getEnumFields(value) ?? []
+                    const [amountField] = enumFields
+
+                    const resourceAddress = SborHelper.getReferenceFieldValue(key)
+                    const amount = SborHelper.getDecimalFieldValue(amountField)
+
+                    if (!resourceAddress || !amount) return undefined
+                    return {
+                      resourceAddress,
+                      amount
+                    }
+                  })
+                  .filter((item): item is Reward => !!item)
+              }
+            })
+            .filter((item): item is Reward[] => !!item)
+            .flat()
+        }
+      }
+      return undefined
+    }
+
+    return gatewayApi
+      .getPreviewOutput(
+        `CALL_METHOD
+            Address("${publicConfig.components.questRewardsV2}")
+            "get_rewards_state"
+            "${userId}"
+            "${questId}"
+        ;`
+      )
+      .map(transformPreviewResponseToQuestRewards)
+  }
+</script>
+
 <script lang="ts">
   import { sendTransaction } from '$lib/rdt'
   import { createEventDispatcher, onMount } from 'svelte'
-  import { QuestDefinitions, type Quests } from 'content'
+  import { QuestDefinitions, type QuestId, type Quests } from 'content'
   import { questApi } from '$lib/api/quest-api'
   import Icon from '$lib/components/icon/Icon.svelte'
   import { typeToIcon } from '$lib/utils/type-to-icon'
@@ -55,62 +110,7 @@
 
     loading.set(true)
 
-    const determineIfQuestRewardV2 = () => {
-      type Reward = {
-        resourceAddress: string
-        amount: string
-      }
-      const transformPreviewResponseToQuestRewards = (
-        response: ReturnType<
-          Awaited<ReturnType<typeof gatewayApi.getPreviewOutput>>['_unsafeUnwrap']
-        >
-      ) => {
-        if (response) {
-          const enumFields = SborHelper.getEnumFields(response)
-
-          if (enumFields) {
-            return enumFields
-              .map((field) => {
-                const mapEntries = SborHelper.getMapEntries(field)
-                if (mapEntries) {
-                  return mapEntries
-                    .map((mapEntry): Reward | undefined => {
-                      const { key, value } = mapEntry
-                      const enumFields = SborHelper.getEnumFields(value) ?? []
-                      const [amountField] = enumFields
-
-                      const resourceAddress = SborHelper.getReferenceFieldValue(key)
-                      const amount = SborHelper.getDecimalFieldValue(amountField)
-
-                      if (!resourceAddress || !amount) return undefined
-                      return {
-                        resourceAddress,
-                        amount
-                      }
-                    })
-                    .filter((item): item is Reward => !!item)
-                }
-              })
-              .filter((item): item is Reward[] => !!item)
-              .flat()
-          }
-        }
-        return undefined
-      }
-
-      return gatewayApi
-        .getPreviewOutput(
-          `CALL_METHOD
-            Address("${publicConfig.components.questRewardsV2}")
-            "get_rewards_state"
-            "${$user?.id!}"
-            "${questId}"
-        ;`
-        )
-        .map(transformPreviewResponseToQuestRewards)
-    }
-
-    return determineIfQuestRewardV2()
+    return determineIfQuestRewardV2($user?.id!, questId)
       .andThen((maybeRewards) => {
         if (maybeRewards)
           return sendTransaction({

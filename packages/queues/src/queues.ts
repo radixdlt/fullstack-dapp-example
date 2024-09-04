@@ -173,7 +173,7 @@ export type SystemJob =
   | PopulateResourcesSystemJob
 
 const defaultJobOptions = {
-  attempts: 10
+  attempts: parseInt(process.env.QUEUE_RETRY_ATTEMPTS ?? '10')
 }
 
 const createQueue = <J extends GenericJob>(

@@ -71,7 +71,7 @@ export const POST: RequestHandler = async ({ locals, request }) => {
       }
     ])
   } else if (type === 'simulateMayaSwap') {
-    locals.dependencies.eventModel.add([
+    await locals.dependencies.eventModel.add([
       {
         transactionId: crypto.randomUUID(),
         traceId: crypto.randomUUID(),
@@ -84,6 +84,17 @@ export const POST: RequestHandler = async ({ locals, request }) => {
         }
       }
     ])
+  } else if (type === 'claimGoldenTicket') {
+    await locals.dependencies.goldenTicketModel
+      .createBatch(1, new Date(body.expired ? Date.now() - 600 : Date.now() + 600), userId)
+      .andThen((tickets) =>
+        locals.dependencies.goldenTicketModel.claimTicket(tickets[0].id, userId)
+      )
+  } else if (type === 'updateUserStatus') {
+    await locals.dependencies.dbClient.user.update({
+      where: { id: userId },
+      data: { status: body.status }
+    })
   }
 
   return json({}, { status: 200 })

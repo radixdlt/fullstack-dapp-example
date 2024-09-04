@@ -68,6 +68,7 @@ export const BatchTransactionWorker = async <J extends BatchTransactionJob>(
           throw { handled: true, error: result.error }
         }
       } catch (error) {
+        console.log(error)
         logger.error({
           method: `${queueName}.error`,
           id: job.data.id,

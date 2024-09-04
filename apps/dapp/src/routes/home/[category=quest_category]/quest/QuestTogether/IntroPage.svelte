@@ -9,12 +9,9 @@
   <h3>{$i18n.t('quests:QuestTogether.introHeader')}</h3>
   <p class="header">{$i18n.t('quests:QuestTogether.copyReferral')}</p>
   <ShareBox />
-  <p class="info">{@html $i18n.t('quests:QuestTogether.info_1')}</p>
 
   <p class="info">
-    {#if referralsCount < 10}
-      {@html $i18n.t('quests:QuestTogether.info_2')}
-    {:else}
+    {#if referralsCount > 9}
       <strong>{$i18n.t('quests:QuestTogether.unlockedSuperLevel')}</strong><br />
       {@html $i18n.t('quests:QuestTogether.unlockedSuperLevelInfo')}
     {/if}

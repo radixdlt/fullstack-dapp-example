@@ -3,7 +3,6 @@ import { ResultAsync, errAsync } from 'neverthrow'
 import type { PrismaClient } from 'database'
 import type { AppLogger } from '../helpers'
 import { WorkerError } from '../worker-error'
-import { BusinessLogic } from '../constants'
 
 export type TransactionIntentHelper = ReturnType<typeof TransactionIntentHelper>
 export const TransactionIntentHelper = ({
@@ -79,31 +78,5 @@ export const TransactionIntentHelper = ({
       .map(() => undefined)
   }
 
-  const countQuestTogetherReferrals = (userId: string) =>
-    ResultAsync.fromPromise(
-      dbClient.user.findFirst({
-        where: {
-          id: userId ?? ''
-        },
-        include: {
-          referredUsers: {
-            where: {
-              questProgress: {
-                some: {
-                  AND: [
-                    { questId: BusinessLogic.QuestTogether.triggerRewardAfterQuest },
-                    {
-                      OR: [{ status: 'REWARDS_CLAIMED' }, { status: 'COMPLETED' }]
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }),
-      (error) => ({ reason: WorkerError.FailedToCountQuestTogetherReferrals, jsError: error })
-    ).map((user) => user?.referredUsers?.length ?? 0)
-
-  return { add, countQuestTogetherReferrals, addToQueue }
+  return { add, addToQueue }
 }

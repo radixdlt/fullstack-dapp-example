@@ -61,5 +61,6 @@ export const WorkerError = {
   FailedToCreateBatchedTransactionIntent: 'FailedToCreateBatchedTransactionIntent',
   FailedToAddJobToQueue: 'FailedToAddJobToQueue',
   FailedToMarkJobsAsFailed: 'FailedToMarkJobsAsFailed',
-  FailedToMarkJobsAsCompleted: 'FailedToMarkJobsAsCompleted'
+  FailedToMarkJobsAsCompleted: 'FailedToMarkJobsAsCompleted',
+  FailedToGetTransactionIntent: 'FailedToGetTransactionIntent'
 } as const

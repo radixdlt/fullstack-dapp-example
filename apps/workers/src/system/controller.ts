@@ -1,22 +1,25 @@
-import { ok } from 'neverthrow'
-import { Job, RedisConnection, SystemJob, SystemJobType } from 'queues'
-import { AccountAddressModel, AppLogger, TransactionStreamModel, waitForMessage } from 'common'
+import { ok, ResultAsync } from 'neverthrow'
+import { Job, SystemJob, SystemJobType } from 'queues'
+import { AccountAddressModel, AppLogger, EventId, EventModel, waitForMessage } from 'common'
 import { getImageOracleManifest } from './helpers/getImageOracleManifest'
 import { config } from '../config'
-import { AccountHelper, TransactionHelper, withSigners } from 'typescript-wallet'
+import { Account, AccountHelper, TransactionHelper, withSigners } from 'typescript-wallet'
 import { completeQuestRequirements } from './helpers/completeQuestRequirements'
 import { PrismaClient } from 'database'
 import { lettySwapDappDefinitionTransactionManifest } from './helpers/setLettySwapDappDefintion'
+import { QuestId } from 'content'
 
 export type SystemWorkerController = ReturnType<typeof SystemWorkerController>
 export const SystemWorkerController = ({
   logger,
   AccountAddressModel,
-  dbClient
+  dbClient,
+  eventModel
 }: {
   logger: AppLogger
   AccountAddressModel: AccountAddressModel
   dbClient: PrismaClient
+  eventModel: ReturnType<EventModel>
 }) => {
   const handler = async (job: Job<SystemJob>) => {
     const { type } = job.data
@@ -41,6 +44,36 @@ export const SystemWorkerController = ({
     const { questRewards } = components
 
     const accountHelper = AccountHelper(dbClient)
+
+    const claimQuestReward = ({ user, submitTransaction }: Account, questId: QuestId) => {
+      return submitTransaction(`
+      CALL_METHOD
+        Address("${user.accountAddress}")
+        "lock_fee"
+        Decimal("10")
+      ;
+      CALL_METHOD
+        Address("${user.accountAddress}")
+        "create_proof_of_non_fungibles"
+        Address("${heroBadgeAddress}")
+        Array<NonFungibleLocalId>(NonFungibleLocalId("<${user.id}>"))
+      ;
+      POP_FROM_AUTH_ZONE
+        Proof("hero_badge_proof")
+      ;
+      CALL_METHOD
+        Address("${components.questRewardsV2}")
+        "claim_reward"
+        "${questId}"
+        Proof("hero_badge_proof")
+      ;
+      
+      CALL_METHOD
+        Address("${user.accountAddress}")
+        "deposit_batch"
+        Expression("ENTIRE_WORKTOP")
+      ;`)
+    }
 
     const mintHeroBadge = async (userId: string, accountAddress: string) => {
       const result = await transactionHelper.submitTransaction(`
@@ -204,112 +237,44 @@ export const SystemWorkerController = ({
       }
 
       case SystemJobType.AddReferral: {
-        const { user, submitTransaction } = await createAccount({
+        const account = await createAccount({
           referredBy: job.data.referralCode,
           withHeroBadge: true,
           withXrd: true
         })
-        await accountAddressModel.addTrackedAddress(user.accountAddress!, 'TransferTokens', user.id)
 
-        await completeQuestRequirements(dbClient)(user.id, 'TransferTokens', [
-          'PersonaQuiz',
-          'TransactionQuiz',
-          'XrdQuiz'
-        ])
+        const triggerQuestTogetherReward = async (account: Account) => {
+          await accountAddressModel.addTrackedAddress(
+            account.user.accountAddress!,
+            'CreatingRadMorphs',
+            account.user.id
+          )
 
-        await transactionHelper.submitTransaction(`
-          CALL_METHOD 
-            Address("${payer.accessController}") 
-            "create_proof"
-          ;
+          await completeQuestRequirements(dbClient)(account.user.id, 'CreatingRadMorphs', [
+            'OpenGiftBox',
+            'RadGemsClaimed'
+          ])
 
-          CALL_METHOD 
-            Address("${system.accessController}") 
-            "create_proof"
-          ;
+          // Simulate RadMorph mint event
+          await eventModel.add([
+            {
+              transactionId: crypto.randomUUID(),
+              traceId: crypto.randomUUID(),
+              userId: account.user.id,
+              eventId: EventId.RadMorphCreated,
+              type: EventId.RadMorphCreated,
+              data: {}
+            }
+          ])
 
-          CALL_METHOD 
-            Address("${payer.address}") 
-            "lock_fee"
-            Decimal("20")
-          ;
+          await waitForMessage(logger, dbClient)(account.user.id, 'QuestRewardsDeposited')
 
-          CALL_METHOD
-            Address("${system.address}")
-            "create_proof_of_amount"
-            Address("${adminBadgeAddress}")
-            Decimal("1")
-          ;
-            
-          MINT_FUNGIBLE
-            Address("${clamAddress}")
-            Decimal("10")
-          ;
+          await claimQuestReward(account, 'CreatingRadMorphs')
 
-          CALL_METHOD
-            Address("${user.accountAddress}")
-            "try_deposit_batch_or_abort"
-            Expression("ENTIRE_WORKTOP")
-            None
-          ;`)
+          await waitForMessage(logger, dbClient)(account.user.id, 'QuestRewardsClaimed')
+        }
 
-        await submitTransaction(`
-            CALL_METHOD
-              Address("${user.accountAddress}")
-              "lock_fee"
-              Decimal("50")
-            ;
-            CALL_METHOD
-              Address("${user.accountAddress}")
-              "withdraw"
-              Address("${clamAddress}")
-              Decimal("10")
-            ;
-            TAKE_FROM_WORKTOP
-              Address("${clamAddress}")
-              Decimal("10")
-              Bucket("clam_bucket")
-            ;
-            CALL_METHOD
-              Address("${jetty.address}")
-              "try_deposit_or_abort"
-              Bucket("clam_bucket")
-              Enum<0u8>()
-            ;
-          `)
-
-        await waitForMessage(logger, dbClient)(user.id, 'QuestRewardsDeposited')
-
-        await submitTransaction(`
-            CALL_METHOD
-              Address("${user.accountAddress}")
-              "lock_fee"
-              Decimal("10")
-            ;
-            CALL_METHOD
-              Address("${user.accountAddress}")
-              "create_proof_of_non_fungibles"
-              Address("${heroBadgeAddress}")
-              Array<NonFungibleLocalId>(NonFungibleLocalId("<${user.id}>"))
-            ;
-            POP_FROM_AUTH_ZONE
-              Proof("hero_badge_proof")
-            ;
-            CALL_METHOD
-              Address("${questRewards}")
-              "claim_reward"
-              "TransferTokens"
-              Proof("hero_badge_proof")
-              None
-            ;
-            CALL_METHOD
-              Address("${user.accountAddress}")
-              "deposit_batch"
-              Expression("ENTIRE_WORKTOP")
-            ;
-          `)
-
-        return ok(undefined)
+        return ResultAsync.fromPromise(triggerQuestTogetherReward(account), (err) => err as Error)
       }
 
       case SystemJobType.PopulateResources:

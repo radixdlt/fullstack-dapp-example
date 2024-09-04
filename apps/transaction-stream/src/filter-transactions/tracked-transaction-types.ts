@@ -185,7 +185,7 @@ export const trackedTransactionTypes: TrackedTransactions = {
             .flat()
             .filter((item): item is ProgrammaticScryptoSborValue => !!item)
             .map(SborHelper.getStringFieldValue)
-            .map((userId) => ({ userId, questId: 'GetStuff' }))
+            .map((userId) => ({ userId, questId: 'SetupWallet' }))
 
           return { items, isBatch: true }
         }

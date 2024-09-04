@@ -40,7 +40,7 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
       ownerId
     }))
 
-    return dbClient.goldenTicket.createMany({ data: tickets })
+    return dbClient.goldenTicket.createMany({ data: tickets }).then(() => tickets)
   }
 
   const claimTicket = async (id: string, userId: string) => {

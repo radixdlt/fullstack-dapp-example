@@ -14,6 +14,7 @@
   import { rdt } from '$lib/rdt'
   import { OneTimeDataRequestBuilder, fetchWrapper } from '@radixdlt/radix-dapp-toolkit'
   import { user, ErrorPopupId, errorPopupStore } from '../../../stores'
+  import type { $Enums } from 'database'
 
   let open = false
 
@@ -91,6 +92,30 @@
     )
   }
 
+  const claimGoldenTicket = async (expired: boolean) => {
+    await fetchWrapper(
+      fetch('/api/debug', {
+        method: 'POST',
+        body: JSON.stringify({
+          type: 'claimGoldenTicket',
+          expired
+        })
+      })
+    )
+  }
+
+  const updateUserStatus = async (status: $Enums.UserStatus) => {
+    await fetchWrapper(
+      fetch('/api/debug', {
+        method: 'POST',
+        body: JSON.stringify({
+          type: 'updateUserStatus',
+          status
+        })
+      })
+    )
+  }
+
   const clearDb = async () => {
     await fetch('/api/user/clear-db', {
       method: 'POST'
@@ -144,6 +169,11 @@
         <Button on:click={addReferral}>Add referral</Button>
         <Button on:click={mintElements}>Mint elements</Button>
         <Button on:click={simulateMayaSwap}>Simulate Maya Swap</Button>
+        <Button on:click={() => claimGoldenTicket(false)}>Claim GT</Button>
+        <Button on:click={() => claimGoldenTicket(true)}>Claim expired GT</Button>
+        <Button on:click={() => updateUserStatus('OK')}>Unblock</Button>
+        <Button on:click={() => updateUserStatus('PERMANENTLY_BLOCKED')}>Permanent block</Button>
+        <Button on:click={() => updateUserStatus('TEMPORARILY_BLOCKED')}>Temporary block</Button>
         <Button
           on:click={() => {
             console.log($user)
