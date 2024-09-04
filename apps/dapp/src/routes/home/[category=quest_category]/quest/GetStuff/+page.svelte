@@ -263,13 +263,10 @@
   let selectedGetXrdMethod: ComponentProps<GetXrdMethodOptions>['selectedOption'] = 'card'
 
   $: address = $user!.accountAddress!
-
-  $: console.log(steps)
 </script>
 
 <Quest
   on:render={(ev) => {
-    console.log(ev.detail)
     if (ev.detail === 'golden-ticket-valid') {
       onReceiveXRDPage()
     } else {
@@ -370,7 +367,12 @@
       <CopyTextBox text={shortenAddress(address)} value={address} />
       {@html text['8-NEEDXRD-5a.md']}
       <div class="center">
-        <Button>{$i18n.t('quests:GetStuff.goToThorSwap')}</Button>
+        <Button
+          link={'https://app.thorswap.finance/swap/ETH.ETH_THOR.XRD.XRD?sellAmount=0'}
+          isExternal
+        >
+          {$i18n.t('quests:GetStuff.goToThorSwap')}
+        </Button>
       </div>
       {@html text['8-NEEDXRD-5b.md']}
     {/if}

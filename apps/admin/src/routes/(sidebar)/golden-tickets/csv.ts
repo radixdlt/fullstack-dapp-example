@@ -1,5 +1,6 @@
 import type { GoldenTicket } from 'database'
 import ExcelJS from 'exceljs'
+import Papa from 'papaparse'
 
 const workbook = new ExcelJS.Workbook()
 const sheet = workbook.addWorksheet('Batch Links')
@@ -30,4 +31,24 @@ export const download = async () => {
   a.download = 'batch-links.csv'
   a.click()
   URL.revokeObjectURL(url)
+}
+
+export const readRows = async (file: File) => {
+  const tickets: string[] = []
+
+  let resolve: (value: string[]) => void
+  const promise = new Promise<string[]>((_resolve) => {
+    resolve = _resolve
+  })
+
+  Papa.parse(file, {
+    complete(results: Papa.ParseResult<string>) {
+      results.data.forEach((row, i) => {
+        if (i > 0) tickets.push(new URL(row[0]).searchParams.get('t')!)
+        if (i === results.data.length - 1) resolve(tickets)
+      })
+    }
+  })
+
+  return promise
 }

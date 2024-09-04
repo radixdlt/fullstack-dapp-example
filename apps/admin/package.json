@@ -24,6 +24,7 @@
     "@sveltejs/kit": "^2.5.9",
     "@sveltejs/vite-plugin-svelte": "^3.1.0",
     "@types/eslint": "8.56.0",
+    "@types/papaparse": "^5.3.14",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "autoprefixer": "^10.4.19",
@@ -53,17 +54,18 @@
   "dependencies": {
     "@prisma/extension-read-replicas": "^0.4.0",
     "@radixdlt/radix-dapp-toolkit": "^2.0.3",
+    "@svelte-put/qr": "^1.2.1",
     "common": "*",
     "content": "*",
     "database": "*",
+    "exceljs": "^4.4.0",
     "flowbite-svelte": "^0.44.24",
     "flowbite-svelte-icons": "^1.6.1",
     "json-2-csv": "^5.5.4",
     "jsonwebtoken": "^9.0.2",
+    "jszip": "^3.10.1",
+    "papaparse": "^5.4.1",
     "queues": "*",
-    "tailwind-merge": "^2.3.0",
-    "@svelte-put/qr": "^1.2.1",
-    "exceljs": "^4.4.0",
-    "jszip": "^3.10.1"
+    "tailwind-merge": "^2.3.0"
   }
 }
