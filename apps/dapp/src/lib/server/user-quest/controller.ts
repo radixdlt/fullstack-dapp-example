@@ -38,17 +38,23 @@ export const UserQuestController = ({
     questId: keyof Quests
     traceId: string
   }) => {
-    return hasAllRequirementsCompleted(questId, userId).andThen(({ isAllCompleted }) =>
-      isAllCompleted && hasAnyRewards(questId)
-        ? transactionModel.add({
-            userId,
-            discriminator: `${questId}:DepositReward:${userId}`,
-            type: 'DepositReward',
-            traceId: traceId,
-            questId
-          })
-        : okAsync(undefined)
-    )
+    return hasAllRequirementsCompleted(questId, userId)
+      .andThen(({ isAllCompleted }) =>
+        userModel
+          .getById(userId, {})
+          .map((user) => ({ isAllCompleted, isNotBlocked: user.status === 'OK' }))
+      )
+      .andThen(({ isAllCompleted, isNotBlocked }) =>
+        isAllCompleted && hasAnyRewards(questId) && isNotBlocked
+          ? transactionModel.add({
+              userId,
+              discriminator: `${questId}:DepositReward:${userId}`,
+              type: 'DepositReward',
+              traceId: traceId,
+              questId
+            })
+          : okAsync(undefined)
+      )
   }
 
   const getQuestsProgress = (userId: string) =>
@@ -78,38 +84,55 @@ export const UserQuestController = ({
       httpResponseCode: 200
     }))
 
+  const completeQuestAndUpdateHeroBadge = (userId: string, questId: QuestId, traceId: string) =>
+    userQuestModel.updateQuestStatus(questId, userId, 'COMPLETED').andThen(() => {
+      if (['Welcome', 'WhatIsRadix'].includes(questId)) {
+        return okAsync(undefined)
+      }
+      return transactionModel.add({
+        userId,
+        discriminator: `${questId}:QuestCompleted:${userId}`,
+        type: 'QuestCompleted',
+        questId,
+        traceId
+      })
+    })
+
+  const partiallyCompleteOrThrow = (userId: string, questId: QuestId) =>
+    userModel
+      .getById(userId, {})
+      .andThen((user) =>
+        user.status !== 'OK'
+          ? userQuestModel.updateQuestStatus(questId, userId, 'PARTIALLY_COMPLETED')
+          : errAsync(createApiError(ErrorReason.requirementsNotMet, 400)())
+      )
+
   const deleteSavedProgress = (userId: string) =>
     userQuestModel
       .deleteSavedProgress(userId)
       .map(() => ({ httpResponseCode: 200, data: undefined }))
 
   const completeQuest = (userId: string, questId: QuestId, traceId: string) =>
-    userQuestModel
-      .findCompletedRequirements(userId, questId)
-      .andThen((completedRequirements) => {
-        const questDefinition = questDefinitions[questId]
-        if (completedRequirements.length !== Object.keys(questDefinition.requirements).length) {
-          return userModel
-            .getById(userId, {})
-            .andThen((user) =>
-              user.status !== 'OK'
-                ? userQuestModel.updateQuestStatus(questId, userId, 'PARTIALLY_COMPLETED')
-                : errAsync(createApiError(ErrorReason.requirementsNotMet, 400)())
+    hasAllRequirementsCompleted(questId, userId)
+      .andThen(({ isAllCompleted }) => {
+        if (!isAllCompleted) {
+          return partiallyCompleteOrThrow(userId, questId)
+        }
+
+        if (hasAnyRewards(questId)) {
+          return transactionModel
+            .doesTransactionExist({
+              userId,
+              discriminator: `${questId}:DepositReward:${userId}`
+            })
+            .andThen((exists) =>
+              exists
+                ? completeQuestAndUpdateHeroBadge(userId, questId, traceId)
+                : userQuestModel.updateQuestStatus(questId, userId, 'PARTIALLY_COMPLETED')
             )
         }
 
-        return userQuestModel.updateQuestStatus(questId, userId, 'COMPLETED').andThen(() => {
-          if (['Welcome', 'WhatIsRadix'].includes(questId)) {
-            return okAsync(undefined)
-          }
-          return transactionModel.add({
-            userId,
-            discriminator: `${questId}:QuestCompleted:${userId}`,
-            type: 'QuestCompleted',
-            questId,
-            traceId
-          })
-        })
+        return completeQuestAndUpdateHeroBadge(userId, questId, traceId)
       })
       .map(() => ({ httpResponseCode: 200, data: undefined }))
 
@@ -266,6 +289,17 @@ export const UserQuestController = ({
     getSavedProgress,
     deleteSavedProgress,
     completeRequirement,
+    handleAllRequirementsCompleted: (data: {
+      userId: string
+      questId: keyof Quests
+      traceId: string
+    }) =>
+      handleAllRequirementsCompleted(data)
+        .map(() => ({ httpResponseCode: 200, data: undefined }))
+        .mapErr((error) => {
+          logger.error({ method: 'handleAllRequirementsCompleted', error })
+          return createApiError('requestStatusNotOk', 400)(error)
+        }),
     completeContentRequirement
   }
 }
