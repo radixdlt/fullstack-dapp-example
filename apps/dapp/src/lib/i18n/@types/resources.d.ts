@@ -280,9 +280,9 @@ interface Resources {
     "Thorswap": {
       "title": "Bridge Tokens with Maya",
       "description": "Move assets in and out of Radix",
-      "introDescription": "Learn more about THORSwap and how to bridge assets to and from Radix.",
+      "introDescription": "Use the THORSwap dApp to “bridge” assets into Radix and back out",
       "requirements": {
-        "MayaRouterWithdrawEvent": "Do at least one bridge/swap of >$50 value"
+        "MayaRouterWithdrawEvent": "Do a swap into Radix on THORSwap of $50 value or more"
       },
       "gotoThorswap": "Go to THORSwap"
     },
@@ -335,6 +335,14 @@ interface Resources {
       "title": "Swap Tokens on a DEX",
       "description": "Learn about Radix Wallet “guarantees”",
       "introDescription": "Learn how to safely swap tokens on Radix using a decentralized exchange (DEX)"
+    },
+    "ExploreEcosystem": {
+      "requirements": {
+        "LearnDapps": "Learn where you can find new Radix dApps"
+      },
+      "title": "Explore the Radix Ecosystem",
+      "description": "Experience a world of new dApps",
+      "introDescription": "Start using all of the amazing dApps already in the Radix ecosystem"
     }
   },
   "rewards": {
