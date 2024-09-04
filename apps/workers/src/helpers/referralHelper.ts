@@ -31,13 +31,14 @@ export const ReferralHelper = ({
   transactionId: string
 }) => {
   const handleTiersRewards = (
-    referrer: UserByReferralCode,
+    userId: string,
+    questProgress: UserByReferralCode['questProgress'],
+    completedQuestRequirements: UserByReferralCode['completedQuestRequirements'],
     count: number,
     hasGoldenTicket: boolean,
     ticketType: $Enums.TicketType | undefined
   ) => {
     const currentReferralsAmount = count + 1
-    const userId = referrer.id
     const referrerQuestHelper = QuestHelper({
       dbClient,
       transactionIntentHelper,
@@ -53,14 +54,14 @@ export const ReferralHelper = ({
     })
     const requirements = QuestDefinitions(ticketType)['QuestTogether'].requirements
 
-    const unlockedRewards = referrer.completedQuestRequirements
+    const unlockedRewards = completedQuestRequirements
       .filter((req) => req.questId === 'QuestTogether')
       .reduce<Record<string, boolean>>((acc, requirement) => {
         acc[requirement.requirementId] = true
         return acc
       }, {})
 
-    const progress = referrer.questProgress
+    const progress = questProgress
       .filter((progress) => progress.questId.includes('QuestTogether'))
       .reduce<Record<string, QuestStatus | 'NOT_STARTED'>>(
         (acc, progress) => {
@@ -191,7 +192,9 @@ export const ReferralHelper = ({
           countQuestTogetherReferrals(referringUser.id).andThen((count) => {
             logger?.trace({ method: 'handleQuestTogetherRewards', count })
             return handleTiersRewards(
-              referringUser,
+              referringUser.id,
+              referringUser.questProgress,
+              referringUser.completedQuestRequirements,
               count,
               referringUser.hasGoldenTicket,
               referringUser.ticketType
