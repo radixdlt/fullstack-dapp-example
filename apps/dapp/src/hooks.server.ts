@@ -100,7 +100,10 @@ export const handle: Handle = async ({ event, resolve }) => {
     logger
   }
   event.locals.clientIp =
-    config.developmentIp || event.request.headers.get('True-Client-IP') || event.getClientAddress()
+    config.developmentIp ||
+    event.request.headers.get('True-Client-IP') ||
+    event.request.headers.get('x-forwarded-for') ||
+    event.getClientAddress()
 
   const userModelWithLogger = userModel(logger)
   const goldenTicketModel = GoldenTicketModel(dbClient)(logger)
