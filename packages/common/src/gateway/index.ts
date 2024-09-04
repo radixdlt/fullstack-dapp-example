@@ -176,7 +176,7 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
             }
           }
         }),
-        (jsError) => ({ reason: 'CouldNotGetGiftBoxV2RewardsStatus', jsError })
+        (jsError) => ({ reason: 'FailedToGetTransactionPreview', jsError })
       )
     })
 

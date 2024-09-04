@@ -69,6 +69,10 @@
   let quest: Quest
 
   onMount(() => {
+    if (status === 'PARTIALLY_COMPLETED') {
+      questApi.handleAllRequirementsCompleted(id)
+    }
+
     actions.next = quest.next
     actions.back = quest.back
     actions.goToStep = quest.goToStep

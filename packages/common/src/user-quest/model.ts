@@ -104,7 +104,7 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
       REWARDS_DEPOSITED: ['REWARDS_CLAIMED'],
       REWARDS_CLAIMED: ['COMPLETED'],
       COMPLETED: ['COMPLETED'],
-      PARTIALLY_COMPLETED: ['IN_PROGRESS', 'PARTIALLY_COMPLETED']
+      PARTIALLY_COMPLETED: ['IN_PROGRESS', 'REWARDS_DEPOSITED', 'PARTIALLY_COMPLETED']
     }
 
     return getQuestStatus(userId, questId)

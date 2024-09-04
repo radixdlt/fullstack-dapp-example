@@ -135,6 +135,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     marketingModel: marketingModel(logger),
     imageModel: imageModel(logger),
     systemQueue: queues.System,
+    eventQueue: queues.Event,
     goldenTicketModel,
     eventModel: eventModel(logger)
   } satisfies ControllerDependencies

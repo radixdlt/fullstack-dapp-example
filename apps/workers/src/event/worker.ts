@@ -13,8 +13,17 @@ const determineIfEventShouldBeProcessed = (transactionId: string) =>
     dbClient.event
       .count({
         where: {
-          transactionId,
-          status: { in: ['ERROR', 'FAILED_RETRY', 'PENDING', 'WAITING'] }
+          OR: [
+            {
+              transactionId,
+              status: { in: ['ERROR', 'FAILED_RETRY', 'PENDING', 'WAITING'] }
+            },
+            {
+              transactionId,
+              status: 'CANCELLED',
+              error: WorkerError.TemporarilyBlockedUser
+            }
+          ]
         }
       })
       .then((count) => count === 1),
@@ -25,7 +34,7 @@ const determineIfEventShouldBeProcessed = (transactionId: string) =>
   )
 
 const UpdateEventStatus =
-  (dbClient: PrismaClient, transactionId: string) => (status: EventStatus, error?: string) =>
+  (dbClient: PrismaClient, transactionId: string) => (status: EventStatus, error?: string | null) =>
     ResultAsync.fromPromise(
       dbClient.event.update({ data: { status, error }, where: { transactionId } }),
       (error) => ({
@@ -67,6 +76,20 @@ const getUser = (
     )
   })
 
+const dataForBlockedUser: Record<
+  Exclude<UserStatus, 'OK'>,
+  { eventStatus: EventStatus; workerError: WorkerError }
+> = {
+  PERMANENTLY_BLOCKED: {
+    eventStatus: EventStatus.FAILED_PERMANENT,
+    workerError: WorkerError.PermanentlyBlockedUser
+  },
+  TEMPORARILY_BLOCKED: {
+    eventStatus: EventStatus.CANCELLED,
+    workerError: WorkerError.TemporarilyBlockedUser
+  }
+}
+
 export const EventWorker = (
   connection: ConnectionOptions,
   dependencies: {
@@ -99,13 +122,16 @@ export const EventWorker = (
             if (!shouldProcessEvent) return workerHelper.noop()
 
             return getUser(job.data.userId).andThen(({ status, accountAddress, referredBy }) => {
-              if (status !== 'OK')
-                return updateEventStatus(EventStatus.CANCELLED, WorkerError.BlockedUser)
+              if (status !== 'OK') {
+                const { eventStatus, workerError } = dataForBlockedUser[status]
+                return updateEventStatus(eventStatus, workerError)
+              }
 
-              return eventWorkerController.handler(job, accountAddress, referredBy)
+              return eventWorkerController
+                .handler(job, accountAddress, referredBy)
+                .andThen(() => updateEventStatus(EventStatus.COMPLETED, null))
             })
           })
-          .andThen(() => updateEventStatus(EventStatus.COMPLETED))
           .orElse((error) =>
             updateEventStatus(EventStatus.ERROR, error.reason).andThen(() => err(error))
           )

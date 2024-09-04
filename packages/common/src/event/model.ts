@@ -3,6 +3,7 @@ import { ResultAsync, okAsync } from 'neverthrow'
 import { type ApiError, createApiError } from '../helpers/create-api-error'
 import type { AppLogger } from '../helpers'
 import type { EventJob, Queues } from 'queues'
+import { WorkerError } from '../worker-error'
 
 export type Event = Awaited<ReturnType<PrismaClient['event']['create']>>
 
@@ -96,6 +97,21 @@ export const EventModel =
         }
       )
 
+    const getTemporarilyCancelledEvents = (userId: string) =>
+      ResultAsync.fromPromise(
+        db.event.findMany({
+          where: {
+            userId,
+            status: 'CANCELLED',
+            error: WorkerError.TemporarilyBlockedUser
+          }
+        }),
+        (error) => {
+          logger?.error({ error, method: 'getTemporarilyCancelledEvents', model: 'EventModel' })
+          return createApiError('failed to get temporarily cancelled events', 400)()
+        }
+      )
+
     const markAsProcessed = (transactionId: string) =>
       ResultAsync.fromPromise(
         db.event.update({
@@ -112,6 +128,7 @@ export const EventModel =
       add,
       update,
       markAsProcessed,
-      getLastAddedTransactionId
+      getLastAddedTransactionId,
+      getTemporarilyCancelledEvents
     }
   }

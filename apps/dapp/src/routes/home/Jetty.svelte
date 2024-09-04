@@ -14,6 +14,7 @@
     hideJetty,
     hideJettyMenu,
     jettyNotifications,
+    deriveIsUserBlockedAlternative,
     retractJettyMenu,
     user
   } from '../../stores'
@@ -118,7 +119,7 @@
       text: $i18n.t('jetty:menu-giftBox'),
       icon: BoxIcon,
       alert: giftBoxRewardsAvailable,
-      disabled: missingHeroBadge,
+      disabled: deriveIsUserBlockedAlternative(missingHeroBadge),
       loading: waitingForGiftBox
     },
     {
@@ -126,14 +127,14 @@
       text: $i18n.t('jetty:menu-radgems'),
       icon: LightningIcon,
       alert: claimAvailable,
-      disabled: missingHeroBadge,
+      disabled: deriveIsUserBlockedAlternative(missingHeroBadge),
       loading: waitingForRadgems
     },
     {
       id: 'radmorphs',
       text: $i18n.t('jetty:menu-radmorphs'),
       icon: MinimizeIcon,
-      disabled: missingHeroBadge
+      disabled: deriveIsUserBlockedAlternative(missingHeroBadge)
     }
   ]
 </script>
