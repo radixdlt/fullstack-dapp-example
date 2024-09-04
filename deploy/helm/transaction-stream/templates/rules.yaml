@@ -87,7 +87,7 @@ spec:
     
     - alert: GatewayVersionNotIncreasing
       expr: >
-        rate(transaction_stream_processed_state_version{namespace="{{ $ns }}"}[2m]) == 0
+        rate(transaction_stream_processed_state_version{namespace="{{ $ns }}"}[5m]) == 0
       for: 2m
       labels:
         severity: critical
