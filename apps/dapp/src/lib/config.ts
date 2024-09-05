@@ -12,6 +12,8 @@ const {
   REDIS_PORT,
   REDIS_PASSWORD,
   IPQS_KEY,
+  IPQS_STRICTNESS,
+  IPQS_LIGHTER_PENALTIES,
   IPQS_ALLOW_ALL = false,
   MAX_USER_PER_IP,
   MAILER_LITE_API_KEY,
@@ -51,8 +53,9 @@ export const config = {
     password: REDIS_PASSWORD
   },
   ipqs: {
-    strictness: 1,
-    maxAllowedScore: 99,
+    strictness: IPQS_STRICTNESS || 0,
+    lighterPenalties: Boolean(IPQS_LIGHTER_PENALTIES) ?? true,
+    maxAllowedScore: 90,
     cacheTTL: 60 * 60 * 4 * 1000,
     allowPublicAccessPoints: false,
     allowAll: Boolean(IPQS_ALLOW_ALL) ?? publicConfig.networkId !== 1,

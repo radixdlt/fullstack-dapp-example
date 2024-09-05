@@ -42,6 +42,7 @@ export const FraudDetectionModule = (config: {
      * Do not query IPQS api, always return IPQS_OK_RESPONSE
      */
     allowAll?: boolean
+    lighterPenalties?: boolean
     key: string
     strictness: number
     allowPublicAccessPoints: boolean
@@ -59,6 +60,7 @@ export const FraudDetectionModule = (config: {
           `?user_agent=${userAgent}`,
           `&user_language=${acceptLanguage}`,
           `&strictness=${ipqs.strictness}`,
+          `&lighter_penalties=${ipqs.lighterPenalties}`,
           `&allow_public_access_points=${ipqs.allowPublicAccessPoints}`
         ].join('')
       ).then((response) => response.json()),
