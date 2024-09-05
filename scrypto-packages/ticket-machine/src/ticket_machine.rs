@@ -17,7 +17,6 @@ mod ticket_machine {
             set_ticket_price => restrict_to: [super_admin];
             get_ticket_price => PUBLIC;
             withdraw_all_xrd => restrict_to: [super_admin];
-            withdraw_xrd_amount => restrict_to: [super_admin];
             get_xrd_balance => PUBLIC;
             purchase_tickets => PUBLIC;
         }
@@ -81,6 +80,7 @@ mod ticket_machine {
 
         pub fn purchase_tickets(&mut self, user_badge_proof: Proof, mut xrd: Bucket) -> Bucket {
             assert!(self.enabled, "TicketMachine is disabled");
+            assert!(xrd.amount() >= self.ticket_price, "Insufficient XRD");
 
             let user_id = self.get_user_id_from_badge_proof(user_badge_proof);
 
@@ -111,10 +111,6 @@ mod ticket_machine {
 
         pub fn withdraw_all_xrd(&mut self) -> Bucket {
             self.xrd_vault.take_all()
-        }
-
-        pub fn withdraw_xrd_amount(&mut self, amount: Decimal) -> Bucket {
-            self.xrd_vault.take(amount)
         }
 
         pub fn get_xrd_balance(&self) -> Decimal {

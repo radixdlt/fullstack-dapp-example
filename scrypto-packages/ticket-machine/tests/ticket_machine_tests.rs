@@ -123,10 +123,15 @@ fn cannot_purchase_tickets_when_not_enough_xrd() -> Result<(), RuntimeError> {
     let xrd = BucketFactory::create_fungible_bucket(XRD, 49.into(), Mock, &mut env)?;
 
     // Act
-    let change = ticket_machine.purchase_tickets(hero_badge_proof, xrd, &mut env)?;
+    let result = ticket_machine.purchase_tickets(hero_badge_proof, xrd, &mut env);
 
     // Assert
-    assert_eq!(change.amount(&mut env)?, 49.into());
+    assert!(result.is_err());
+    assert!(result
+        .err()
+        .unwrap()
+        .to_string()
+        .contains("Insufficient XRD"));
 
     Ok(())
 }
@@ -155,34 +160,6 @@ fn can_withdraw_all_xrd() -> Result<(), RuntimeError> {
 
     let xrd_balance = ticket_machine.get_xrd_balance(&mut env)?;
     assert_eq!(xrd_balance, 0.into());
-
-    Ok(())
-}
-
-#[test]
-fn can_withdraw_xrd_amount() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        mut ticket_machine,
-        hero_badge_proof,
-        super_admin_badge_proof,
-        ..
-    } = arrange_test_environment()?;
-
-    let xrd = BucketFactory::create_fungible_bucket(XRD, 1111.into(), Mock, &mut env)?;
-
-    let _ = ticket_machine.purchase_tickets(hero_badge_proof, xrd, &mut env)?;
-
-    // Act
-    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
-    let withdrawn_xrd = ticket_machine.withdraw_xrd_amount(dec!(100), &mut env)?;
-
-    // Assert
-    assert_eq!(withdrawn_xrd.amount(&mut env)?, 100.into());
-
-    let xrd_balance = ticket_machine.get_xrd_balance(&mut env)?;
-    assert_eq!(xrd_balance, 1000.into());
 
     Ok(())
 }
