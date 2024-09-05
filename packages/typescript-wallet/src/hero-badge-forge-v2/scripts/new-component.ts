@@ -1,4 +1,4 @@
-import { newHeroBadgeForgeV2 } from '../helpers/newHeroBadgeForgeV2.ts'
+import { newHeroBadgeForgeV2 } from '../helpers/newHeroBadgeForgeV2'
 import { mintAdminBadge } from '../../radquest/helpers/mintAdminBadge'
 import { config } from '../../config'
 import { logger } from '../../helpers'

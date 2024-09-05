@@ -45,6 +45,8 @@ export const Addresses = (networkId: number) => {
           'package_tdx_2_1p4cytmfhgvs0ue2lkd0r4pkamq446wtmvm2u9rxmnw57ls4hzg8vr9',
         heroBadgeForgeV2Package:
           'package_tdx_2_1pkarhzxqd9554ywvhwd9jag04lxqqjsddcmlsf6zvnn3mzurz7xq0u',
+        ticketMachinePackage:
+          'pick d18ba89f code(scrypto): remove ticket-machine withdraw_xrd_amount method',
         components: {
           heroBadgeForge: 'component_tdx_2_1czggp0fz9pcarmhp8uxpy9qr8ysz46qkpr49t3jdrn8zzanujj8fpy',
           kycOracle: 'component_tdx_2_1cqgu87tk0sx6ldn7x0heev0vgc6jq4uu0tahkfumfpgmw7acxtgqd3',
@@ -62,6 +64,7 @@ export const Addresses = (networkId: number) => {
             'component_tdx_2_1czz48rxnhqlzkcdnr32r97njp75zrsa00luzunufd4hljt82tz9n3d',
           radgemForgeV2: 'component_tdx_2_1cr9sd3lfaxw679879lnp0zs08de4leakfqgxdvmjnve8zpcgh9dtlm',
           questRewardsV2: 'component_tdx_2_1czrfq6959lzvyrswj885gwhfz9lzpr06sxxax5wvl859m3mh9k9rjr',
+          ticketMachine: 'component_tdx_2_1cr6mvq384sjshjwxgjrf20l25wcq4hqfhuezujh7l88w5ulf6gy9pf',
           kycOracleKeyValueStore:
             'internal_keyvaluestore_tdx_2_1kq4cuyae3uuw9ss06an9cdhd577p7gjnkfqm7mwqvsdyecqe4syxql',
           radgemRecordsKeyValueStore:
@@ -165,6 +168,7 @@ export const Addresses = (networkId: number) => {
         radgemForgeV2Package: 'package_rdx1p4gtpzf4t6jsa56us38mt0uazt8ydu93t3tmhea7whkxf8zqswsnv7',
         questRewardsV2Package: '',
         heroBadgeForgeV2Package: '',
+        ticketMachinePackage: '',
         components: {
           heroBadgeForge: 'component_rdx1cra2j3w7cv9zkrv4jehjz0qn3xffxdkstucxar4xy9kyu0tpxsvya6',
           kycOracle: 'component_rdx1cr89pe8pz7c3fhuxf4tpw309cmuqtwg6tw2pkjl574hg3slp9v4gt9',
@@ -180,6 +184,7 @@ export const Addresses = (networkId: number) => {
           heroBadgeForgeV2: '',
           radgemForgeV2: 'component_rdx1czv5pypn3u44yut3mqt5fxqnwphjec56j9rhn7mp74nl0tj2xytf8y',
           questRewardsV2: '',
+          ticketMachine: '',
           kycOracleKeyValueStore:
             'internal_keyvaluestore_rdx1kry2g9s07tm26js7e9uy8rztpg5htfd3auandaqgu7nvc6psvnasge',
           radgemRecordsKeyValueStore:
