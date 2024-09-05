@@ -1,22 +1,6 @@
-import { resolve } from 'path'
-import { existsSync, readFileSync } from 'fs'
-import { publishPackageAdvanced } from '../../helpers/publish-package-advanced'
-import { config } from '../../config'
+import { logger } from '../../helpers'
+import { deployQuestRewardsV2Package } from '../helpers/deployQuestRewardsV2Package'
 
-const rpdPath =
-  '../../scrypto-packages/quest-rewards-v2/target/wasm32-unknown-unknown/release/quest_rewards_v2.rpd'
-const wasmPath =
-  '../../scrypto-packages/quest-rewards-v2/target/wasm32-unknown-unknown/release/quest_rewards_v2.wasm'
-
-if (!existsSync(resolve(rpdPath)) || !existsSync(resolve(wasmPath))) {
-  throw new Error('rpd and wasm files not found')
-}
-
-const rpd = readFileSync(rpdPath)
-const wasm = readFileSync(wasmPath)
-
-publishPackageAdvanced({
-  rpd,
-  wasm,
-  adminBadge: config.radQuest.badges.superAdminBadgeAddress
-}).map((packageAddress) => console.log(`\nPackage deployed at: ${packageAddress}`))
+deployQuestRewardsV2Package({})
+  .map((address) => logger.debug(address))
+  .mapErr((err) => logger.error(err))
