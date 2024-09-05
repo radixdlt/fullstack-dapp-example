@@ -15,7 +15,7 @@
   import { invalidateAll } from '$app/navigation'
   import type { PageServerData } from './$types'
   import type { GoldenTicket } from 'database'
-  import { clear, download, writeRows } from './write-csv'
+  import { clear, download, readRows, writeRows } from './csv'
   import { createZip } from './qr-codes'
   import { slide } from 'svelte/transition'
   import Pagination from './Pagination.svelte'
@@ -35,6 +35,7 @@
   )
 
   let showCreateBatch = false
+  let showImportBatch = false
   let showChangeExpiration = false
   let changeExpirationOnBatch: string
   let newExpirationDate: string
@@ -65,6 +66,19 @@
     invalidateAll()
   }
 
+  const importBatch = async () => {
+    const tickets = readRows(importedBatch[0])
+
+    await http.post(`/golden-tickets/import`, {
+      expiresAt: new Date(expiresAt),
+      tickets: JSON.stringify(await tickets),
+      ownerId
+    })
+
+    showImportBatch = false
+    invalidateAll()
+  }
+
   const downloadFiles = async (tickets: GoldenTicket[]) => {
     writeRows(tickets, data.baseUrl)
     await download()
@@ -82,6 +96,10 @@
 
   let currentPage = 0
   const ticketsPerPage = 50
+
+  let importedBatch: FileList
+
+  $: console.log(importedBatch)
 </script>
 
 <Modal title="Issue Batch" bind:open={showCreateBatch} autoclose>
@@ -92,6 +110,15 @@
     Expires at<Input label="Expires at" type="date" bind:value={expiresAt} />
   </div>
   <Button on:click={issueBatch}>Issue</Button>
+</Modal>
+
+<Modal title="Import Batch" bind:open={showImportBatch} autoclose>
+  <input type="file" accept=".csv" bind:files={importedBatch} />
+  <div>
+    Expires at<Input label="Expires at" type="date" bind:value={expiresAt} />
+  </div>
+
+  <Button on:click={importBatch}>Import</Button>
 </Modal>
 
 <Modal title="Change Expiration Date" bind:open={showChangeExpiration} autoclose>
@@ -126,7 +153,8 @@
   >
 
   <div class="ml-auto mr-10 flex gap-5">
-    <Button on:click={() => (showCreateBatch = true)}>Issue Batch</Button>
+    <Button on:click={() => (showCreateBatch = true)}>Issue New Batch</Button>
+    <Button on:click={() => (showImportBatch = true)}>Import Batch</Button>
     <Button
       on:click={() => {
         invalidateAll()

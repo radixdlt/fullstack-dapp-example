@@ -17,7 +17,8 @@ import {
   decodeBase64,
   parseJSON,
   type MarketingUtmValues,
-  createApiError
+  createApiError,
+  EventId
 } from 'common'
 
 import { type User, type UserType } from 'database'
@@ -34,6 +35,8 @@ export const AuthController = ({
   config,
   authModel,
   userModel,
+  eventModel,
+  eventQueue,
   goldenTicketModel,
   userQuestModel,
   loginAttemptModel,
@@ -90,6 +93,26 @@ export const AuthController = ({
       .asyncAndThen((values) => (values ? marketingModel.add(userId, values) : okAsync(undefined)))
       .map(() => cookies.delete(CookieKeys.Utm, { path: '/' }))
 
+  const retryCancelledEvents = (userId: string) =>
+    eventModel.getTemporarilyCancelledEvents(userId).andThen((events) => {
+      return ResultAsync.combineWithAllErrors(
+        events.map((event) => {
+          const jobData = {
+            data: event.data as Record<string, unknown>,
+            eventId: event.id,
+            type: event.id as EventId,
+            transactionId: event.transactionId,
+            userId: event.userId,
+            traceId: crypto.randomUUID()
+          }
+          return eventQueue.remove(jobData.transactionId).andThen(() => eventQueue.add([jobData]))
+        })
+      ).mapErr((error) => {
+        logger.error({ method: 'retryCancelledEvents', error })
+        return createApiError('failed to retry cancelled events', 400)(error)
+      })
+    })
+
   const setUserBlockedStatus: FraudActionHandler =
     (user: User) => (evaluation: FraudEvaluation) => {
       const check = fraudRuleChecker(evaluation)
@@ -105,7 +128,9 @@ export const AuthController = ({
         }
 
         if (check.ruleOk(FraudRule.GoldenTicket)) {
-          return okAsync(evaluation)
+          return userModel
+            .setUserBlockedStatus(user.id, 'OK')
+            .andThen(() => retryCancelledEvents(user.id))
         }
 
         if (
@@ -116,7 +141,9 @@ export const AuthController = ({
           return userModel.setUserBlockedStatus(user.id, 'TEMPORARILY_BLOCKED')
         }
 
-        return okAsync(evaluation)
+        return userModel
+          .setUserBlockedStatus(user.id, 'OK')
+          .andThen(() => retryCancelledEvents(user.id))
       }
 
       return user.status === 'PERMANENTLY_BLOCKED'

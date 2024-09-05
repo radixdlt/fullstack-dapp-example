@@ -9,6 +9,7 @@
   import type { QuestStatus } from '../../../types'
   import PadlockIcon from '@images/padlock.svg'
   import { i18n } from '$lib/i18n/i18n'
+  import { isUserBlocked } from '../../../stores'
   import { onNavigate } from '$app/navigation'
 
   export let title: string
@@ -96,6 +97,8 @@
             <img src={PadlockIcon} alt="Padlock icon" />
           {:else if state === 'claim-rewards'}
             {$i18n.t('quests:QuestOverviewButton.claimRewards')}
+          {:else if state === 'partially_completed' && !$isUserBlocked}
+            {$i18n.t('quests:QuestOverviewButton.inProgress')}
           {:else}
             {$i18n.t('quests:QuestOverviewButton.complete')}
           {/if}

@@ -210,7 +210,6 @@
         toInput = ''
       })
       .mapErr((err) => {
-        console.error(err)
         swapButtonLoading = false
       })
   }

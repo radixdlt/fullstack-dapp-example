@@ -127,7 +127,9 @@ model Event {
   data              Json            @default("{}")
 
   user              User            @relation(fields: [userId], references: [id])
-  referral          Referral[]         
+  referral          Referral[]       
+
+  @@index([userId, status])  
 }
 
 model Message {

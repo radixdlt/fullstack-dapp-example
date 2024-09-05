@@ -186,5 +186,13 @@
     "title": "Swap Tokens on a DEX",
     "description": "Learn about Radix Wallet “guarantees”",
     "introDescription": "Learn how to safely swap tokens on Radix using a decentralized exchange (DEX)"
+  },
+  "ExploreEcosystem": {
+    "requirements": {
+      "LearnDapps": "Learn where you can find new Radix dApps"
+    },
+    "title": "Explore the Radix Ecosystem",
+    "description": "Experience a world of new dApps",
+    "introDescription": "Start using all of the amazing dApps already in the Radix ecosystem"
   }
 }

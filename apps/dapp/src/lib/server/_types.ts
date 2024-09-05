@@ -75,5 +75,6 @@ export type ControllerDependencies = {
   config: Config
   jwt: JWT
   systemQueue: Queues['System']
+  eventQueue: Queues['Event']
   eventModel: ReturnType<EventModel>
 }

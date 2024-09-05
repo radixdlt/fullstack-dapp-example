@@ -43,6 +43,19 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
     return dbClient.goldenTicket.createMany({ data: tickets }).then(() => tickets)
   }
 
+  const importBatch = (tickets: string[], expiresAt: Date, ownerId: string) => {
+    const batchId = crypto.randomUUID() as string
+
+    const ticketData = tickets.map((id) => ({
+      id,
+      batchId,
+      expiresAt,
+      ownerId
+    }))
+
+    return dbClient.goldenTicket.createMany({ data: ticketData })
+  }
+
   const claimTicket = async (id: string, userId: string) => {
     const ticket = await dbClient.goldenTicket.findUnique({
       where: { id },
@@ -81,6 +94,7 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
     getBatch: wrapper('getBatch')(getBatch),
     getAll: wrapper('getAll')(getAll),
     createBatch: wrapper('createBatch')(createBatch),
+    importBatch: wrapper('importBatch')(importBatch),
     setExpirationDateOnBatch: wrapper('setExpirationDateOnBatch')(setExpirationDateOnBatch),
     claimTicket: wrapper('claimTicket')(claimTicket),
     userHasClaimedTicket: wrapper('userHasClaimedTicket')(userHasClaimedTicket)

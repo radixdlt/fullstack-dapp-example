@@ -198,7 +198,9 @@ const createQueue = <J extends GenericJob>(
       typedError
     )
 
-  return { queue, add, name, getBufferQueue: () => undefined }
+  const remove = (jobId: string) => ResultAsync.fromPromise(queue.remove(jobId), typedError)
+
+  return { queue, add, remove, name, getBufferQueue: () => undefined }
 }
 
 export type BufferQueue = ReturnType<typeof createBufferQueue>
