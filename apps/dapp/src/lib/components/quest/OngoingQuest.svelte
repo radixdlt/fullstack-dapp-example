@@ -84,7 +84,11 @@
   {/key}
 
   {#if $$slots.footer && steps?.[progress]?.hasFooter}
-    <div class="footer" transition:fly|local={{ x: -300, opacity: 1, duration: 200 }}>
+    <div
+      class="footer"
+      in:fly|local={{ x: -width, opacity: 1, duration: 650, delay: 150 }}
+      out:fly|local={{ x: -width, opacity: 1, duration: 250 }}
+    >
       <slot name="footer" {progress} {next} {back} />
     </div>
   {/if}

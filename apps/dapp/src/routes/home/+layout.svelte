@@ -1,6 +1,6 @@
 <script lang="ts">
   import '../../global.scss'
-  import { onMount, onDestroy } from 'svelte'
+  import { onMount, onDestroy, tick } from 'svelte'
   import {
     DataRequestBuilder,
     RadixDappToolkit,
@@ -38,7 +38,8 @@
   export let data: LayoutData
 
   const callbacks: (() => void)[] = []
-  $: $quests = loadQuests('en', $user?.goldenTicketClaimed?.type)
+  $quests = data.questDefinitions
+  $: tick().then(() => ($quests = loadQuests('en', $user?.goldenTicketClaimed?.type)))
   // TODO: move dApp toolkit to a better location
   let radixDappToolkit: RadixDappToolkit
   const { dAppDefinitionAddress, networkId } = publicConfig
@@ -252,14 +253,12 @@
 
     if (savedProgress) {
       const { questId, progress } = JSON.parse(savedProgress)
-      goto(
-        `/home/${data.questDefinitions[questId as QuestId].category}/quest/${questId}#${progress}`
-      )
+      goto(`/home/${$quests[questId as QuestId].category}/quest/${questId}#${progress}`)
     } else if ($user) {
       questApi.getSavedProgress().map((savedProgress) => {
         if (savedProgress.questId)
           goto(
-            `home/${data.questDefinitions[savedProgress.questId as QuestId].category}/quest/${savedProgress.questId}#${savedProgress.progress}`
+            `home/${$quests[savedProgress.questId as QuestId].category}/quest/${savedProgress.questId}#${savedProgress.progress}`
           )
       })
     }

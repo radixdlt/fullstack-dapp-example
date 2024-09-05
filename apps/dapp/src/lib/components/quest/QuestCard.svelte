@@ -187,6 +187,7 @@
 
   .intro-footer {
     grid-area: 4 / 1;
+    border-top: 1px solid var(--color-dark-translucent);
     display: flex;
     justify-content: center;
     align-items: end;

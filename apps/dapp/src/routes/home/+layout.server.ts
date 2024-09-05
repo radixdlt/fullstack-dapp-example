@@ -1,4 +1,5 @@
 import { questApi } from '$lib/api/quest-api'
+import { userApi } from '$lib/api/user-api'
 import { ResultAsync, okAsync } from 'neverthrow'
 import type { LayoutServerLoad } from './$types'
 import { loadLandingPopup, loadQuests, type QuestId } from 'content'
@@ -9,7 +10,9 @@ import { error, type Cookies } from '@sveltejs/kit'
 export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) => {
   if (locals.maintenanceMode) return error(503, 'Site unavailable')
   const questStatusResult = await questApi.getQuestsInformation(fetch)
-  const questDefinitions = loadQuests('en')
+  const user = await userApi.me(fetch).unwrapOr(null)
+  // @ts-ignore
+  const questDefinitions = loadQuests('en', user?.goldenTicketClaimed?.type)
   const landingPopupDefinitions = loadLandingPopup('en')
   const referredBy = url.searchParams.get('ref')
   const dappReferrer = url.searchParams.get('dapp_referrer')
