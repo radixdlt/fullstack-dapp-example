@@ -14,7 +14,11 @@ export const pushNotification = (id: keyof typeof notifications) =>
         else return fromSafePromise(response.json())
       }),
     (result) =>
-      result.andThen(() => okAsync(jettyNotifications.update((n) => [...n, notifications[id]])))
+      result.andThen((data) =>
+        Object.keys(data).length === 0
+          ? okAsync(undefined)
+          : okAsync(jettyNotifications.update((n) => [...n, notifications[id]]))
+      )
   )()
 
 export const markLatestNotificationAsSeen = pipe(

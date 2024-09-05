@@ -10,19 +10,23 @@ export type NotificationModelMethods = ReturnType<NotificationModel>
 export const NotificationModel = (db: PrismaClient) => (logger?: AppLogger) => {
   const add = (userId: string, notificationId: string) => {
     return ResultAsync.fromPromise(
-      db.notification.upsert({
-        where: {
-          notificationId_userId: {
-            notificationId,
-            userId
+      (async () => {
+        const notifications = await db.notification.count({
+          where: {
+            userId,
+            notificationId
           }
-        },
-        create: {
-          userId,
-          notificationId
-        },
-        update: {}
-      }),
+        })
+
+        if (notifications > 0) return
+
+        return db.notification.create({
+          data: {
+            userId,
+            notificationId
+          }
+        })
+      })(),
       (error) => {
         logger?.error({
           error,
@@ -54,18 +58,31 @@ export const NotificationModel = (db: PrismaClient) => (logger?: AppLogger) => {
 
   const markAsSeen = (notificationId: string, userId: string) => {
     const seenAt = new Date()
+
     return ResultAsync.fromPromise(
-      db.notification.update({
-        where: {
-          notificationId_userId: {
+      (async () => {
+        const notifications = await db.notification.count({
+          where: {
+            userId,
             notificationId,
-            userId
+            seenAt: null
           }
-        },
-        data: {
-          seenAt
-        }
-      }),
+        })
+
+        if (notifications === 0) return
+
+        return db.notification.update({
+          where: {
+            notificationId_userId: {
+              notificationId,
+              userId
+            }
+          },
+          data: {
+            seenAt
+          }
+        })
+      })(),
       (error) => {
         logger?.error({
           error,
