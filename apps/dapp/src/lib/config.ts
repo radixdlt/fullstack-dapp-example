@@ -53,7 +53,7 @@ export const config = {
     password: REDIS_PASSWORD
   },
   ipqs: {
-    strictness: IPQS_STRICTNESS || 0,
+    strictness: IPQS_STRICTNESS ? Number(IPQS_STRICTNESS) : 0,
     lighterPenalties: Boolean(IPQS_LIGHTER_PENALTIES) ?? true,
     maxAllowedScore: 90,
     cacheTTL: 60 * 60 * 4 * 1000,

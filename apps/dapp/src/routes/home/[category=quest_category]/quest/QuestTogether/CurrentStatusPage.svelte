@@ -68,22 +68,13 @@
           {@html $i18n.t('quests:QuestTogether.unlockedSuperLevelInfo')}
         </p>
       </div>
-    {:else}
-      <div>
-        <strong
-          >{$i18n.t('quests:QuestTogether.yourLevel', {
-            level: $i18n.t(`quests:QuestTogether.${currentLevel}`)
-          })}</strong
-        >
-      </div>
-      {#if nextLevel !== 'SuperLevel'}
-        {$i18n.t('quests:QuestTogether.referMore', {
-          nextLevel: $i18n.t(`quests:QuestTogether.${nextLevel}`),
-          count: nextLevelIn
-        })}
-      {:else if hasWaitingRewards}
-        {$i18n.t('quests:QuestTogether.rewardsWaiting')}
-      {/if}
+    {:else if nextLevel !== 'SuperLevel'}
+      {$i18n.t('quests:QuestTogether.referMore', {
+        nextLevel: $i18n.t(`quests:QuestTogether.${nextLevel}`),
+        count: nextLevelIn
+      })}
+    {:else if hasWaitingRewards}
+      {$i18n.t('quests:QuestTogether.rewardsWaiting')}
     {/if}
   </div>
   <div class="referral-levels">

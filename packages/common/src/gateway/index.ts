@@ -229,16 +229,18 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
     accountAddress: string,
     resourceAddress: string
   ): ResultAsync<boolean, { reason: string }> =>
-    ResultAsync.combine([
+    ResultAsync.combineWithAllErrors([
       getResourceDepositRuleDisable(accountAddress, resourceAddress),
       getDefaultDepositRule(accountAddress)
-    ]).map(([resourceDepositRule, defaultRule]) => {
-      if (resourceDepositRule) {
-        return resourceDepositRule === 'Disallowed'
-      } else {
-        return defaultRule === 'Reject'
-      }
-    })
+    ])
+      .map(([resourceDepositRule, defaultRule]) => {
+        if (resourceDepositRule) {
+          return resourceDepositRule === 'Disallowed'
+        } else {
+          return defaultRule === 'Reject'
+        }
+      })
+      .mapErr(() => ({ reason: 'FailedToCheckDisabledDeposit' }))
 
   const hasHeroBadge = (accountAddress: string) =>
     callApi('getEntityDetailsVaultAggregated', [accountAddress]).map(([response]) =>

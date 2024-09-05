@@ -278,7 +278,7 @@ interface Resources {
       }
     },
     "Thorswap": {
-      "title": "Bridge Tokens with Maya",
+      "title": "Bridge Tokens with Thorswap",
       "description": "Move assets in and out of Radix",
       "introDescription": "Use the THORSwap dApp to “bridge” assets into Radix and back out",
       "requirements": {
@@ -305,7 +305,6 @@ interface Resources {
       "info_1": "<strong>Your friends will get 5 XRD</strong> when they use your referral link and complete all basic quests.",
       "info_2": "<strong>You’ll also receive 5 XRD</strong> for each referral and you’ll win <strong>extra rewards</strong> at each milestone (1 and 5 referrals)!",
       "shareYourLink": "Share Your Referral Link:",
-      "yourLevel": "You are at {{level}} Level!",
       "referMore": "Refer {{count}} more friends to claim your rewards and progress to {{nextLevel}}!",
       "BronzeLevel": "Bronze",
       "SilverLevel": "Silver",

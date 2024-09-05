@@ -359,7 +359,9 @@
     {:else if selectedGetXrdMethod === 'exchange'}
       {@html text['8-NEEDXRD-4.md']}
       <div class="center">
-        <Button>{$i18n.t('quests:GetStuff.viewExchangesButton')}</Button>
+        <Button isExternal link="https://www.radixdlt.com/token#exchanges">
+          {$i18n.t('quests:GetStuff.viewExchangesButton')}
+        </Button>
       </div>
       {@html text['8-NEEDXRD-4a.md']}
     {:else if selectedGetXrdMethod === 'thorswap'}
@@ -368,7 +370,7 @@
       {@html text['8-NEEDXRD-5a.md']}
       <div class="center">
         <Button
-          link={'https://app.thorswap.finance/swap/ETH.ETH_THOR.XRD.XRD?sellAmount=0'}
+          link={'https://app.thorswap.finance/swap/ETH.ETH_XRD.XRD?sellAmount=0.001'}
           isExternal
         >
           {$i18n.t('quests:GetStuff.goToThorSwap')}

@@ -2,7 +2,7 @@
   import { onMount, type ComponentProps } from 'svelte'
   import Quest from '../Quest.svelte'
   import type { PageData } from './$types'
-  import { useCookies } from '$lib/utils/cookies'
+  import { useCookies, type RequirementCookieKey } from '$lib/utils/cookies'
   import { derived, writable } from 'svelte/store'
   import type { Quests } from 'content'
   import {
@@ -31,20 +31,32 @@
   export let data: PageData
 
   const text = data.text as Quests['SetupWallet']['text']
+  const connectWalletRequirementKey =
+    'requirement-SetupWallet-ConnectWallet' as RequirementCookieKey
+  const downloadWalletRequirementKey =
+    'requirement-SetupWallet-DownloadWallet' as RequirementCookieKey
 
   let marketingUpdatesCheckbox: boolean
   let email = $user?.email?.email || ''
   let hasError: boolean
   let confirmedWalletInstall = writable<boolean>(false)
-  let walletIsLinked = writable(data.requirements.ConnectWallet?.isComplete)
+  const walletIsLinked = writable(data.requirements.ConnectWallet?.isComplete)
   const isHeroBadgeDeposited = writable(data.requirements.DepositHeroBadge?.isComplete)
+  const canDepositHeroBadge = writable<boolean>(false)
+  let thirdPartyPolling: undefined | ReturnType<typeof setInterval>
   let waitingOnAccount = false
 
   const skipMobileWalletInstall = writable<boolean>(false)
   const registeredAccountAddress = derived(user, ($user) => !!$user?.accountAddress)
 
-  const depositHeroBadge = deriveIsUserBlockedAlternative(isHeroBadgeDeposited)
+  const skipDepositHeroBadge = deriveIsUserBlockedAlternative(isHeroBadgeDeposited)
   let mintBadgeState: ComponentProps<DepositHeroBadge>['state']
+
+  const completeWalletRequirements = () => {
+    useCookies(connectWalletRequirementKey).set(true)
+    useCookies(downloadWalletRequirementKey).set(true)
+    walletIsLinked.set(true)
+  }
 
   const checkAccountStatus = (accountAddress: string) =>
     gatewayApi
@@ -54,10 +66,12 @@
         hasHeroBadge ? err({ reason: 'UserHasHeroBadge' }) : ok(hasXrd)
       )
 
-  const handleXrdDepositPossibility = (accountAddress: string) =>
+  const handleHeroBadgeDepositPossibility = (accountAddress: string) =>
     gatewayApi
-      .isDepositDisabledForResource(accountAddress, publicConfig.xrd)
-      .mapErr(() => ({ reason: 'failedToCheckDepositStatus' }))
+      .isDepositDisabledForResource(accountAddress, publicConfig.badges.heroBadgeAddress)
+      .map((isDisabled) => {
+        canDepositHeroBadge.set(!isDisabled)
+      })
 
   const setUserAccountAddress = (accountAddress: string, accountProof: SignedChallengeAccount) =>
     userApi
@@ -89,7 +103,7 @@
               () => {
                 $user!.accountAddress = accounts[0].address
                 quest.actions.next()
-                return handleXrdDepositPossibility(accountAddress)
+                return handleHeroBadgeDepositPossibility(accountAddress)
               }
             )
           )
@@ -103,17 +117,33 @@
     })
   }
 
+  const start3rdPartyPolling = () => {
+    clearInterval(thirdPartyPolling)
+    if ($user?.accountAddress) {
+      handleHeroBadgeDepositPossibility($user.accountAddress)
+    }
+    thirdPartyPolling = setInterval(() => {
+      if ($user?.accountAddress) {
+        handleHeroBadgeDepositPossibility($user.accountAddress)
+      }
+    }, 6000)
+  }
+
+  const stop3rdPartyPolling = () => {
+    clearInterval(thirdPartyPolling)
+  }
+
   onMount(() => {
     skipMobileWalletInstall.set(!isMobile())
     markNotificationAsSeen('loggedIn')
 
     if (isMobile()) {
-      // @ts-ignore
-      useCookies('requirement-SetupWallet-ConnectWallet').set(true)
-      // @ts-ignore
-      useCookies('requirement-SetupWallet-DownloadWallet').set(true)
-      $walletIsLinked = true
+      completeWalletRequirements()
       return
+    }
+
+    if ($user?.accountAddress) {
+      handleHeroBadgeDepositPossibility($user.accountAddress)
     }
 
     const callback = ({ detail }: any) => {
@@ -121,17 +151,14 @@
       const { isWalletLinked } = detail
 
       if (isWalletLinked) {
-        // @ts-ignore
-        useCookies('requirement-SetupWallet-ConnectWallet').set(true)
-        // @ts-ignore
-        useCookies('requirement-SetupWallet-DownloadWallet').set(true)
-        $walletIsLinked = true
+        completeWalletRequirements()
       }
     }
 
     window.addEventListener('radix#chromeExtension#receive', callback)
 
     return () => {
+      clearInterval(thirdPartyPolling)
       window.removeEventListener('radix#chromeExtension#receive', callback)
     }
   })
@@ -186,6 +213,14 @@
     if (e.detail === '9b') {
       on9bRender()
     }
+
+    if (e.detail === '24' && $user?.accountAddress) {
+      start3rdPartyPolling()
+    }
+
+    if (e.detail !== '24') {
+      stop3rdPartyPolling()
+    }
   }}
   {...data.questProps}
   steps={[
@@ -195,7 +230,7 @@
     },
     {
       id: '1',
-      type: 'jetty'
+      type: 'regular'
     },
     {
       id: '2',
@@ -300,6 +335,10 @@
       }
     },
     {
+      id: '20',
+      type: 'jetty'
+    },
+    {
       id: '21',
       type: 'regular',
       footer: {
@@ -310,14 +349,36 @@
       skip: registeredAccountAddress
     },
     {
-      id: '25',
+      id: '22',
+      type: 'regular'
+    },
+    {
+      id: '23',
+      type: 'jetty'
+    },
+    {
+      id: '24',
       type: 'regular',
-      skip: depositHeroBadge,
+      skip: canDepositHeroBadge,
       footer: {
         next: {
-          enabled: depositHeroBadge
+          enabled: canDepositHeroBadge
         }
       }
+    },
+    {
+      id: '25',
+      type: 'regular',
+      skip: skipDepositHeroBadge,
+      footer: {
+        next: {
+          enabled: skipDepositHeroBadge
+        }
+      }
+    },
+    {
+      id: '26',
+      type: 'regular'
     },
     {
       type: 'complete'
@@ -437,6 +498,10 @@
     />
   {/if}
 
+  {#if render('20')}
+    {@html text['20.md']}
+  {/if}
+
   {#if render('21')}
     {@html text['21.md']}
 
@@ -445,6 +510,18 @@
         >{$i18n.t('quests:GetStuff.registerAccount')}
       </Button>
     </div>
+  {/if}
+
+  {#if render('22')}
+    {@html text['22.md']}
+  {/if}
+
+  {#if render('23')}
+    {@html text['23.md']}
+  {/if}
+
+  {#if render('24')}
+    {@html text['24.md']}
   {/if}
 
   {#if render('25')}
@@ -458,6 +535,10 @@
       questId={data.id}
       bind:state={mintBadgeState}
     />
+  {/if}
+
+  {#if render('26')}
+    {@html text['26.md']}
   {/if}
 </Quest>
 
