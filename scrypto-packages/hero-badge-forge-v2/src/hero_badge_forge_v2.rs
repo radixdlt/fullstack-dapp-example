@@ -104,7 +104,21 @@ mod hero_badge_forge_v2 {
 
             user_ids.iter().map(|user_id | {
                 self.admin_badge.as_fungible().authorize_with_amount(1, || {
-                    let quests_completed: Vec<String> = (&quest_ids).clone().unwrap_or(vec![]).into_iter().map(|quest_id| quest_id.0).collect();
+                    let quests_completed: Vec<String> =  match &quest_ids {
+                        Some(quest_ids) => (quest_ids)
+                            .clone()
+                            .into_iter()
+                            .enumerate()
+                            // Filter out any duplicate quest_ids
+                            .filter_map(|(i,quest_id)| {
+                                match quest_ids.iter().position(|qi| qi == &quest_id) {
+                                    Some(pos) if pos == i => Some(quest_id.0),
+                                    _ => None,
+                                }
+                            })
+                            .collect(),
+                        None => vec![],
+                    };
 
                     self.hero_badge_manager
                         .mint_non_fungible(&NonFungibleLocalId::string(user_id.0.to_owned()).unwrap(), HeroBadgeData {
