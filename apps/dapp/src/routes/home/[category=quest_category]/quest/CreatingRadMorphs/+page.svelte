@@ -149,14 +149,26 @@
       type: 'jetty'
     },
     {
-      id: '16',
-      type: 'jetty'
-    },
-    {
       type: 'requirements'
     },
     {
       type: 'claimRewards'
+    },
+    {
+      id: 'complete0',
+      type: 'jetty'
+    },
+    {
+      id: 'complete1',
+      type: 'jetty'
+    },
+    {
+      id: 'complete2',
+      type: 'jetty'
+    },
+    {
+      id: 'complete3',
+      type: 'jetty'
     },
     {
       type: 'complete'
@@ -217,6 +229,18 @@
   {/if}
   {#if render('17')}
     {@html text['17.md']}
+  {/if}
+  {#if render('complete0')}
+    {@html text['complete0.md']}
+  {/if}
+  {#if render('complete1')}
+    {@html text['complete1.md']}
+  {/if}
+  {#if render('complete2')}
+    {@html text['complete2.md']}
+  {/if}
+  {#if render('complete3')}
+    {@html text['complete3.md']}
   {/if}
 
   {#if error}
