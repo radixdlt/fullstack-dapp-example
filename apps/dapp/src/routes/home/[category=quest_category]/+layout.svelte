@@ -127,8 +127,11 @@
 
 <slot />
 
-<style>
+<style lang="scss">
   :global(.carousel > .item) {
     padding: var(--spacing-2xl) 0;
+    @include smallMobile {
+      padding: var(--spacing-xl) 0;
+    }
   }
 </style>

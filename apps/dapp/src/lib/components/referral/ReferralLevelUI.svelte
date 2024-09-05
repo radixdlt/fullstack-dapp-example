@@ -67,13 +67,20 @@
     justify-content: flex-end;
     gap: 1rem;
     width: 100%;
+    @include smallMobile {
+      padding: 1rem 0.5rem;
+    }
 
     h3 {
-      line-height: 24px;
-      font-size: 24px;
+      line-height: var(--text-md3);
+      font-size: var(--text-md3);
       font-weight: 300;
       margin: 0;
       margin-right: auto;
+      @include smallMobile {
+        line-height: var(--text-md2);
+        font-size: var(--text-md2);
+      }
     }
   }
 

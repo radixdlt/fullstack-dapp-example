@@ -22,22 +22,33 @@
     display: grid;
     grid-template-rows: auto 1fr;
     min-height: 100dvh;
+    position: relative;
   }
 
   .tabs {
     display: flex;
     justify-content: center;
     align-items: center;
+    @include smallMobile {
+      transform: translateY(var(--spacing-xs));
+    }
   }
 
   .header {
     height: 10dvh;
+    @include smallMobile {
+      position: absolute;
+      width: 100%;
+    }
   }
 
   .quests {
     min-height: 20rem;
-    height: calc(80dvh);
+    height: 80dvh;
     max-height: 39rem;
+    @include smallMobile {
+      height: 90dvh;
+    }
   }
 
   .content {
@@ -49,7 +60,9 @@
     flex-direction: column;
     justify-content: center;
     height: 90dvh;
-
+    @include smallMobile {
+      height: 100dvh;
+    }
     @include desktop {
       gap: var(--spacing-2xl);
     }

@@ -237,7 +237,10 @@
 
   .claim-radgem {
     :global(.carousel > .item) {
-      padding: var(--spacing-2xl) 0 50px;
+      padding: var(--spacing-2xl) 0 var(--spacing-3xl);
+      @include smallMobile {
+        padding-top: var(--spacing-lg);
+      }
     }
   }
 

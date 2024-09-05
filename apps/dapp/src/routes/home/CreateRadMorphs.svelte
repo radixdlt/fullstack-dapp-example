@@ -336,6 +336,9 @@
     @include mobile {
       padding: 0 var(--spacing-xl);
     }
+    @include smallMobile {
+      padding: 0 var(--spacing-lg);
+    }
   }
 
   .loading {

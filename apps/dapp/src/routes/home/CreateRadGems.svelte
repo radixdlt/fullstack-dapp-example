@@ -302,8 +302,6 @@
 
 <style lang="scss">
   .fuse-elements {
-    display: flex;
-    justify-content: center;
     color: var(--color-light);
     height: 100%;
   }
@@ -349,6 +347,7 @@
       padding-bottom: var(--spacing-xl);
       text-align: center;
       font-size: var(--text-xs);
+      text-wrap: pretty;
     }
   }
 </style>

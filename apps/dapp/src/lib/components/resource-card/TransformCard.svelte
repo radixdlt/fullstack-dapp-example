@@ -54,6 +54,9 @@
     width: 100%;
     height: 12rem;
     aspect-ratio: 1/1.66;
+    @include smallMobile {
+      height: 10rem;
+    }
   }
 
   .quality {

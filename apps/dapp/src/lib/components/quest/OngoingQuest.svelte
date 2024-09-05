@@ -105,6 +105,10 @@
     width: 25rem;
     overflow-y: hidden;
     overflow-x: hidden;
+
+    @include smallMobile {
+      min-height: 0rem;
+    }
   }
   .title {
     font-size: var(--text-xs);
@@ -124,12 +128,18 @@
     > *:last-child {
       width: 1.5rem;
     }
+    @include smallMobile {
+      padding: 0.9rem 1.5rem;
+    }
   }
 
   .footer {
     padding: var(--spacing-xl) var(--spacing-2xl);
     display: flex;
     justify-content: center;
+    @include smallMobile {
+      padding: var(--spacing-lg) var(--spacing-2xl) calc(var(--spacing-lg) + var(--spacing-xs));
+    }
   }
 
   .content {

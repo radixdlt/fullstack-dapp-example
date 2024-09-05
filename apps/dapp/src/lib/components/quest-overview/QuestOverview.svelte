@@ -153,6 +153,9 @@
     @media (max-width: 25rem) {
       width: 84vw;
     }
+    @include smallMobile {
+      padding: var(--spacing-xl);
+    }
   }
 
   .border {

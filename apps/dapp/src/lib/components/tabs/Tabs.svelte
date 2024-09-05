@@ -45,10 +45,12 @@
   .tabs {
     display: flex;
     gap: var(--spacing-2xl);
+    @include smallMobile {
+      gap: var(--spacing-xl);
+    }
   }
 
   .tab-container {
-    width: 5rem;
     display: flex;
     justify-content: center;
   }

@@ -150,6 +150,10 @@
     > *:last-child {
       width: 1.5rem;
     }
+
+    @include smallMobile {
+      padding: 0.9rem 1.5rem;
+    }
   }
 
   .content-wrapper {
@@ -195,5 +199,8 @@
 
   .footer {
     padding: var(--spacing-xl) var(--spacing-2xl);
+    @include smallMobile {
+      padding: var(--spacing-lg) var(--spacing-2xl) calc(var(--spacing-lg) + var(--spacing-xs));
+    }
   }
 </style>

@@ -240,7 +240,6 @@ input {
 
 /* Element Styles */
 body {
-  --radix-connect-button-border-radius: 12px;
   font-family: var(--font-main);
   margin: 0;
   padding: 0;
@@ -301,6 +300,10 @@ h3 {
   color: var(--color-background-dark);
   letter-spacing: 0.0175rem;
   line-height: 2.25rem;
+  @include smallMobile {
+    font-size: var(--text-md3);
+    line-height: 2rem;
+  }
 }
 
 * {
