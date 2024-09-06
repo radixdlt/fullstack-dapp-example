@@ -107,15 +107,6 @@ export const UserQuestController = ({
       )
     })
 
-  const partiallyCompleteOrThrow = (userId: string, questId: QuestId) =>
-    userModel
-      .getById(userId, {})
-      .andThen((user) =>
-        user.status !== 'OK'
-          ? userQuestModel.updateQuestStatus(questId, userId, 'PARTIALLY_COMPLETED')
-          : errAsync(createApiError(ErrorReason.requirementsNotMet, 400)())
-      )
-
   const deleteSavedProgress = (userId: string) =>
     userQuestModel
       .deleteSavedProgress(userId)
@@ -125,7 +116,7 @@ export const UserQuestController = ({
     hasAllRequirementsCompleted(questId, userId)
       .andThen(({ isAllCompleted }) => {
         if (!isAllCompleted) {
-          return partiallyCompleteOrThrow(userId, questId)
+          return errAsync(createApiError(ErrorReason.requirementsNotMet, 400)())
         }
 
         if (hasAnyRewards(questId)) {

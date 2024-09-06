@@ -42,6 +42,7 @@ export const ErrorPopupId = {
   XrdRewardLimit: 'XrdRewardLimit',
   AccountLocked: 'AccountLocked',
   AccountAlreadyRegistered: 'AccountAlreadyRegistered',
+  CannotClaimRewards: 'CannotClaimRewards',
   HighDemand: 'HighDemand'
 } as const
 

@@ -95,6 +95,7 @@
   }
 
   const missingHeroBadge = derived(hasHeroBadge, ($hasHeroBadge) => !$hasHeroBadge)
+  const jettyMenuDisabled = deriveIsUserBlockedAlternative(missingHeroBadge)
 
   const waitingForGiftBox = writable(false)
   const waitingForRadgems = writable(false)
@@ -119,7 +120,7 @@
       text: $i18n.t('jetty:menu-giftBox'),
       icon: BoxIcon,
       alert: giftBoxRewardsAvailable,
-      disabled: deriveIsUserBlockedAlternative(missingHeroBadge),
+      disabled: jettyMenuDisabled,
       loading: waitingForGiftBox
     },
     {
@@ -127,14 +128,14 @@
       text: $i18n.t('jetty:menu-radgems'),
       icon: LightningIcon,
       alert: claimAvailable,
-      disabled: deriveIsUserBlockedAlternative(missingHeroBadge),
+      disabled: jettyMenuDisabled,
       loading: waitingForRadgems
     },
     {
       id: 'radmorphs',
       text: $i18n.t('jetty:menu-radmorphs'),
       icon: MinimizeIcon,
-      disabled: deriveIsUserBlockedAlternative(missingHeroBadge)
+      disabled: jettyMenuDisabled
     }
   ]
 </script>

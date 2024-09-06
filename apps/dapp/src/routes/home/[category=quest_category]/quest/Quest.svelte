@@ -175,11 +175,6 @@
       return {
         type: 'jetty',
         id: 'claimRewards',
-        footer: {
-          next: {
-            enabled: writable(false)
-          }
-        },
         skip: skipClaimRewards
       }
     }
