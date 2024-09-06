@@ -48,6 +48,7 @@ export const EventWorkerController = ({
   const handler = (
     job: Job<EventJob>,
     accountAddress: string,
+    priority: boolean,
     referredBy?: string
   ): ResultAsync<any, WorkerOutputError> => {
     const { traceId, type, transactionId, userId } = job.data
@@ -57,6 +58,7 @@ export const EventWorkerController = ({
       type,
       transactionId,
       userId,
+      priority,
       method: 'eventWorker.handler'
     })
 
@@ -64,6 +66,7 @@ export const EventWorkerController = ({
 
     const questHelper = QuestHelper({
       transactionIntentHelper,
+      priority,
       userId,
       traceId,
       sendMessage,
@@ -77,6 +80,7 @@ export const EventWorkerController = ({
 
     const referralHelper = ReferralHelper({
       dbClient,
+      priority,
       transactionIntentHelper,
       traceId,
       referredBy,

@@ -66,38 +66,40 @@ export const UserController = ({
     }
   ): ControllerMethodOutput<undefined> =>
     userModel
-      .getById(userId, {})
+      .getById(userId, { goldenTicketClaimed: true })
       .andThen((user) => (user ? ok(user) : err(createApiError('UserNotFound', 404)())))
       .andThen((user) =>
         user.status !== 'OK' ? errAsync(createApiError('UserBlocked', 400)()) : okAsync(user)
       )
-      .andThen((data) =>
-        accountAddressExists(data)
+      .andThen((user) =>
+        accountAddressExists(user)
           .andThen((accountAddress) =>
             gatewayApi
               .isDepositDisabledForResource(accountAddress, publicConfig.badges.heroBadgeAddress)
               .andThen((isDepositDisabled) =>
                 isDepositDisabled
                   ? errAsync(createApiError('DepositRuleDisabled', 400)())
-                  : okAsync(accountAddress)
+                  : okAsync(user)
               )
           )
-          .andThen((accountAddress) => {
+          .andThen((user) => {
             const item = {
               traceId: ctx.traceId,
               type: 'DepositHeroBadge',
               discriminator: `DepositHeroBadge:${userId}`,
-              accountAddress,
+              accountAddress: user.accountAddress!,
               userId
             } satisfies TransactionJob
 
             return transactionModel.doesTransactionExist(item).andThen((exists) =>
               exists
                 ? okAsync({ httpResponseCode: 200, data: undefined })
-                : transactionModel.add(item).map(() => ({
-                    httpResponseCode: 201,
-                    data: undefined
-                  }))
+                : transactionModel
+                    .add(item, user?.goldenTicketClaimed.status === 'CLAIMED')
+                    .map(() => ({
+                      httpResponseCode: 201,
+                      data: undefined
+                    }))
             )
           })
           .mapErr((error) => {

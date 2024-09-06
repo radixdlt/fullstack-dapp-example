@@ -24,7 +24,8 @@ export const QuestHelper = ({
   accountAddressModel,
   accountAddress,
   transactionId,
-  mailerLiteModel
+  mailerLiteModel,
+  priority
 }: {
   transactionIntentHelper: TransactionIntentHelper
   userId: string
@@ -36,6 +37,7 @@ export const QuestHelper = ({
   accountAddress: string
   transactionId: string
   mailerLiteModel: ReturnType<MailerLiteModel>
+  priority: boolean
 }) => {
   const getCompletedQuestRequirements = (
     userId: string,
@@ -177,13 +179,16 @@ export const QuestHelper = ({
     const hasRewards = questDefinition.rewards.length
 
     return hasRewards
-      ? transactionIntentHelper.add({
-          userId,
-          discriminator: `${questId}:DepositReward:${userId}`,
-          type: 'DepositReward',
-          traceId,
-          questId
-        })
+      ? transactionIntentHelper.add(
+          {
+            userId,
+            discriminator: `${questId}:DepositReward:${userId}`,
+            type: 'DepositReward',
+            traceId,
+            questId
+          },
+          priority
+        )
       : updateQuestProgressStatus({ questId, status: 'REWARDS_CLAIMED' }).map(() => undefined)
   }
 

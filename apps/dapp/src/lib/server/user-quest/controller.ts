@@ -40,19 +40,24 @@ export const UserQuestController = ({
   }) => {
     return hasAllRequirementsCompleted(questId, userId)
       .andThen(({ isAllCompleted }) =>
-        userModel
-          .getById(userId, {})
-          .map((user) => ({ isAllCompleted, isNotBlocked: user.status === 'OK' }))
+        userModel.getById(userId, { goldenTicketClaimed: true }).map((user) => ({
+          isAllCompleted,
+          isNotBlocked: user.status === 'OK',
+          prioritize: user?.goldenTicketClaimed.status === 'CLAIMED'
+        }))
       )
-      .andThen(({ isAllCompleted, isNotBlocked }) =>
+      .andThen(({ isAllCompleted, isNotBlocked, prioritize }) =>
         isAllCompleted && hasAnyRewards(questId) && isNotBlocked
-          ? transactionModel.add({
-              userId,
-              discriminator: `${questId}:DepositReward:${userId}`,
-              type: 'DepositReward',
-              traceId: traceId,
-              questId
-            })
+          ? transactionModel.add(
+              {
+                userId,
+                discriminator: `${questId}:DepositReward:${userId}`,
+                type: 'DepositReward',
+                traceId: traceId,
+                questId
+              },
+              prioritize
+            )
           : okAsync(undefined)
       )
   }

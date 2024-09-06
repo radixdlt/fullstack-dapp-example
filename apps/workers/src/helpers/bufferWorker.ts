@@ -52,14 +52,15 @@ export const BufferWorker = <Q extends BufferQueues>(
       (error) => ({ reason: WorkerError.FailedToCreateBatchedTransactionIntent, jsError: error })
     )
 
-  const createAndAddToQueue = (batchId: string, items: any[]) => {
+  const createAndAddToQueue = (batchId: string, items: any[], priority: boolean) => {
     logger?.trace({ method: 'createAndAddToQueue', batchId, items })
     return upsertBatchedTransactionIntent(batchId, items).andThen(() =>
       queue
         .add([
           {
             id: batchId,
-            items
+            items,
+            priority: priority ? 10 : 20
           }
         ])
         .mapErr((error) => ({
@@ -89,13 +90,14 @@ export const BufferWorker = <Q extends BufferQueues>(
   const process = (jobs: Job[]) => {
     const itemIds = jobs.map((job) => job.data.discriminator)
 
-    logger?.trace({ method: 'processBatch', itemIds })
-
     const batchId = createHash('sha256').update(itemIds.join(':')).digest('hex')
 
     const items = jobs.map((job) => job.data)
+    const priority = jobs.some((job) => !!job.opts.priority)
 
-    return createAndAddToQueue(batchId, items)
+    logger?.trace({ method: 'processBatch', itemIds, priority })
+
+    return createAndAddToQueue(batchId, items, priority)
       .andThen(() => markJobsAsCompleted(jobs))
       .map(() => {
         logger?.trace({

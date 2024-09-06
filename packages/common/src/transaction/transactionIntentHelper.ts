@@ -14,28 +14,29 @@ export const TransactionIntentHelper = ({
   queues: ReturnType<typeof getQueues>
   logger?: AppLogger
 }) => {
-  const addToQueue = (job: TransactionJob) => {
+  const addToQueue = (job: TransactionJob, priority?: boolean) => {
+    const priorityNumber = priority ? 10 : 20
     switch (job.type) {
       case 'DepositGiftBoxesReward':
-        return queues.DepositGiftBoxReward.buffer.add([job])
+        return queues.DepositGiftBoxReward.buffer.add([{ ...job, priority: priorityNumber }])
 
       case 'DepositReward':
-        return queues.DepositQuestReward.buffer.add([job])
+        return queues.DepositQuestReward.buffer.add([{ ...job, priority: priorityNumber }])
 
       case 'ElementsDeposited':
-        return queues.CreateRadGems.buffer.add([job])
+        return queues.CreateRadGems.buffer.add([{ ...job, priority: priorityNumber }])
 
       case 'QuestCompleted':
-        return queues.QuestCompleted.buffer.add([job])
+        return queues.QuestCompleted.buffer.add([{ ...job, priority: priorityNumber }])
 
       case 'DepositPartialReward':
-        return queues.DepositPartialReward.buffer.add([job])
+        return queues.DepositPartialReward.buffer.add([{ ...job, priority: priorityNumber }])
 
       case 'DepositHeroBadge':
-        return queues.DepositHeroBadge.buffer.add([job])
+        return queues.DepositHeroBadge.buffer.add([{ ...job, priority: priorityNumber }])
 
       case 'DepositXrd':
-        return queues.DepositXrd.buffer.add([job])
+        return queues.DepositXrd.buffer.add([{ ...job, priority: priorityNumber }])
 
       default:
         return errAsync('unhandled job type')
@@ -43,7 +44,8 @@ export const TransactionIntentHelper = ({
   }
 
   const add = (
-    job: TransactionJob
+    job: TransactionJob,
+    priority?: boolean
   ): ResultAsync<
     void,
     {
@@ -70,7 +72,7 @@ export const TransactionIntentHelper = ({
       .andThen(() => {
         logger?.trace({ method: 'TransactionIntentHelper.add', job })
 
-        return addToQueue(job).mapErr((error) => ({
+        return addToQueue(job, priority).mapErr((error) => ({
           reason: WorkerError.FailedToAddJobToQueue,
           jsError: error
         }))

@@ -971,3 +971,30 @@ describe('Event flows', () => {
     })
   })
 })
+
+describe.skip('queue', () => {
+  it('should process prioritized jobs first', { timeout: 60_000 }, async () => {
+    await queues.DepositXrd.buffer.queue.pause()
+    await queues.DepositXrd.queue.pause()
+
+    for (const [index] of Object.entries(new Array(100).fill(null))) {
+      const account = await createAccount({ withXrd: false, withHeroBadge: false })
+      const shouldPrio = parseInt(index) === 99
+      await transactionModel.add(
+        {
+          discriminator: shouldPrio
+            ? `DepositXrd:${account.user.id}:prio`
+            : `DepositXrd:${account.user.id}`,
+          userId: account.user.id,
+          type: 'DepositXrd',
+          accountAddress: account.user.accountAddress!,
+          traceId: crypto.randomUUID()
+        },
+        shouldPrio
+      )
+    }
+
+    await queues.DepositXrd.buffer.queue.resume()
+    await queues.DepositXrd.queue.resume()
+  })
+})

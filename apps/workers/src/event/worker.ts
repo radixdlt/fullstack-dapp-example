@@ -1,7 +1,7 @@
 import { Worker, ConnectionOptions, QueueName, EventJob } from 'queues'
 import { AppLogger, WorkerError } from 'common'
 import { EventWorkerController } from './controller'
-import { EventStatus, PrismaClient, UserStatus } from 'database'
+import { EventStatus, PrismaClient, User, UserStatus } from 'database'
 import { WorkerOutputError } from '../_types'
 import { config } from '../config'
 import { dbClient } from '../db-client'
@@ -44,19 +44,10 @@ const UpdateEventStatus =
       })
     ).map(() => undefined)
 
-const getUser = (
-  userId: string
-): ResultAsync<
-  {
-    accountAddress: string
-    status: UserStatus
-    referredBy?: string
-  },
-  WorkerOutputError
-> =>
+const getUser = (userId: string): ResultAsync<User & { priority: boolean }, WorkerOutputError> =>
   ResultAsync.fromPromise(
     dbClient.user.findUnique({
-      select: { accountAddress: true, status: true, referredBy: true },
+      include: { goldenTicketClaimed: true },
       where: { id: userId }
     }),
     (error) => ({
@@ -67,13 +58,9 @@ const getUser = (
     if (!user) return err({ reason: WorkerError.UserNotFound })
     if (!user.accountAddress) err({ reason: WorkerError.UserMissingAccountAddress })
 
-    return ok(
-      user as {
-        accountAddress: string
-        status: UserStatus
-        referredBy?: string
-      }
-    )
+    const priority = user.goldenTicketClaimed?.status === 'CLAIMED'
+
+    return ok({ ...user, priority })
   })
 
 const dataForBlockedUser: Record<
@@ -121,16 +108,18 @@ export const EventWorker = (
           .andThen((shouldProcessEvent) => {
             if (!shouldProcessEvent) return workerHelper.noop()
 
-            return getUser(job.data.userId).andThen(({ status, accountAddress, referredBy }) => {
-              if (status !== 'OK') {
-                const { eventStatus, workerError } = dataForBlockedUser[status]
-                return updateEventStatus(eventStatus, workerError)
-              }
+            return getUser(job.data.userId).andThen(
+              ({ status, accountAddress, referredBy, priority }) => {
+                if (status !== 'OK') {
+                  const { eventStatus, workerError } = dataForBlockedUser[status]
+                  return updateEventStatus(eventStatus, workerError)
+                }
 
-              return eventWorkerController
-                .handler(job, accountAddress, referredBy)
-                .andThen(() => updateEventStatus(EventStatus.COMPLETED, null))
-            })
+                return eventWorkerController
+                  .handler(job, accountAddress!, priority, referredBy!)
+                  .andThen(() => updateEventStatus(EventStatus.COMPLETED, null))
+              }
+            )
           })
           .orElse((error) =>
             updateEventStatus(EventStatus.ERROR, error.reason).andThen(() => err(error))

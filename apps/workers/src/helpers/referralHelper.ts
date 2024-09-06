@@ -20,7 +20,8 @@ export const ReferralHelper = ({
   referredBy,
   sendMessage,
   logger,
-  transactionId
+  transactionId,
+  priority
 }: {
   dbClient: PrismaClient
   transactionIntentHelper: TransactionIntentHelper
@@ -29,6 +30,7 @@ export const ReferralHelper = ({
   sendMessage: MessageHelper
   logger?: AppLogger
   transactionId: string
+  priority: boolean
 }) => {
   const handleTiersRewards = (
     userId: string,
@@ -50,7 +52,8 @@ export const ReferralHelper = ({
       // following fields are not used in this context
       accountAddress: '',
       accountAddressModel: {} as any,
-      mailerLiteModel: {} as any
+      mailerLiteModel: {} as any,
+      priority
     })
     const requirements = QuestDefinitions(ticketType)['QuestTogether'].requirements
 
