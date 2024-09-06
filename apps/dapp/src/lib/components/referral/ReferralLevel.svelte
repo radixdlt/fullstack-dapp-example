@@ -20,6 +20,7 @@
 
   type Level = keyof ReturnType<typeof QuestDefinitions>['QuestTogether']['partialRewards']
 
+  export let isOpened = false
   export let level: Level | 'SuperLevel'
   export let maximum: number = 0
   export let referred: number = 0
@@ -29,7 +30,6 @@
   const dispatch = createEventDispatcher<{ refresh: undefined }>()
 
   $: loading = false
-  $: name = $i18n.t(`quests:QuestTogether.${level}`)
   $: rewards = questDefinition.partialRewards?.[level as Level] || []
   $: requirement = questDefinition.requirements?.[level as Level]
   $: icon =
@@ -76,7 +76,7 @@
   }
 </script>
 
-<ReferralLevelUI title={name} {icon} progress={referred} totalSteps={requirement.threshold}>
+<ReferralLevelUI {isOpened} {level} {icon} progress={referred} totalSteps={requirement.threshold}>
   <svelte:fragment slot="referrals">
     {$i18n.t('quests:QuestTogether.referralsProgress', {
       referred: referredCount,

@@ -167,7 +167,8 @@ export const Addresses = (networkId: number) => {
         cardForgeV2Package: 'package_rdx1pkar90hh0eyq5nfgam9n3ye05j08zlmkk8e5ex0wu8tknr436f9u69',
         radgemForgeV2Package: 'package_rdx1p4gtpzf4t6jsa56us38mt0uazt8ydu93t3tmhea7whkxf8zqswsnv7',
         questRewardsV2Package: 'package_rdx1pknnm0zaxdft534hugky97n2elf8cfpkezqfvwgxk7nqujk7768qff',
-        heroBadgeForgeV2Package: 'package_rdx1p4yqtresqmmszkan4vfchvs7sq3437f9jk479876lkv3zvaf20frr3',
+        heroBadgeForgeV2Package:
+          'package_rdx1p4yqtresqmmszkan4vfchvs7sq3437f9jk479876lkv3zvaf20frr3',
         ticketMachinePackage: 'package_rdx1p4nkhxa3t8updx63gnfqqzdpqhtt0dp2r9a4n6d7m49djl4xggm8gu',
         components: {
           heroBadgeForge: 'component_rdx1cra2j3w7cv9zkrv4jehjz0qn3xffxdkstucxar4xy9kyu0tpxsvya6',

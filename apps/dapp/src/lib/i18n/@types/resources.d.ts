@@ -302,6 +302,12 @@ interface Resources {
       "referralsSoFarHeader_one": "You have {{count}} referral so far!",
       "referralsSoFarDescription": "These friends have signed up using your link and completed the basic quests. You each get 5 XRD!",
       "alreadyClaimed": "Already claimed: {{amount}} XRD",
+      "levelHeader": {
+        "BronzeLevel": "Invite 1 Friend",
+        "SilverLevel": "Invite 5 Friends",
+        "GoldLevel": "Invite 10 Friends",
+        "SuperLevel": ""
+      },
       "info_1": "<strong>Your friends will get 5 XRD</strong> when they use your referral link and complete all basic quests.",
       "info_2": "<strong>You’ll also receive 5 XRD</strong> for each referral and you’ll win <strong>extra rewards</strong> at each milestone (1 and 5 referrals)!",
       "shareYourLink": "Share Your Referral Link:",
@@ -317,7 +323,7 @@ interface Resources {
       "SuperLevelInfo": "Want to keep referring? Contact Radix to find out about our influencer reward scheme!",
       "SuperLevelButton": "Want to keep referring? Contact Radix to find out about our influencer reward scheme!",
       "progressSuperLevel": "{{count}}+ referrals",
-      "referralsProgress": "{{referred}}/{{maximum}} referrals",
+      "referralsProgress": "{{referred}}/{{maximum}}",
       "requirements": {
         "LearnAboutParty": "Learn about Party Quest",
         "ClaimQuestTogetherRewards": "Claim your rewards"
