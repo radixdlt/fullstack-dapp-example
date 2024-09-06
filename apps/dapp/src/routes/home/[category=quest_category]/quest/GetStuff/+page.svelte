@@ -353,7 +353,12 @@
       <CopyTextBox text={shortenAddress(address)} value={address} />
       {@html text['8-NEEDXRD-3a.md']}
       <div class="center">
-        <Button>{$i18n.t('quests:GetStuff.buyXRDButton')}</Button>
+        <Button
+          link={'https://ramp.alchemypay.org/?appId=qjpmy9BwBPRGBneF&crypto=XRD#/index'}
+          isExternal
+        >
+          {$i18n.t('quests:GetStuff.buyXRDButton')}
+        </Button>
       </div>
       {@html text['8-NEEDXRD-3b.md']}
     {:else if selectedGetXrdMethod === 'exchange'}
