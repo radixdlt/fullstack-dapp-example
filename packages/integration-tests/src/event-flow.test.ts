@@ -18,7 +18,8 @@ import {
   createAppLogger,
   EventModel,
   EventId,
-  BusinessLogic
+  BusinessLogic,
+  Priority
 } from 'common'
 import { PrismaClient, User } from 'database'
 import { errAsync } from 'neverthrow'
@@ -969,5 +970,33 @@ describe('Event flows', () => {
         await waitForMessage(logger, db)(account.user.id, 'QuestRewardsDeposited')
       }
     })
+  })
+})
+
+describe.skip('queue', () => {
+  it('should process prioritized jobs first', { timeout: 60_000 }, async () => {
+    await queues.DepositXrd.buffer.queue.pause()
+    await queues.DepositXrd.queue.pause()
+
+    for (const [index] of Object.entries(new Array(100).fill(null))) {
+      const account = await createAccount({ withXrd: false, withHeroBadge: false })
+      const priority = parseInt(index) === 99 ? Priority.High : Priority.Low
+      await transactionModel.add(
+        {
+          discriminator:
+            priority === Priority.High
+              ? `DepositXrd:${account.user.id}:prio`
+              : `DepositXrd:${account.user.id}`,
+          userId: account.user.id,
+          type: 'DepositXrd',
+          accountAddress: account.user.accountAddress!,
+          traceId: crypto.randomUUID()
+        },
+        priority
+      )
+    }
+
+    await queues.DepositXrd.buffer.queue.resume()
+    await queues.DepositXrd.queue.resume()
   })
 })

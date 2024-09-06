@@ -352,3 +352,9 @@ export const BusinessLogic = {
     maxReferrals: 10
   }
 } as const
+
+export const Priority = {
+  High: 10,
+  Medium: 20,
+  Low: 30
+} as const

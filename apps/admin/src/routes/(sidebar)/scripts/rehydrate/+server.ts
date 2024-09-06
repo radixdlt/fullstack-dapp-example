@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit'
-import { EventId } from 'common'
+import { EventId, Priority } from 'common'
 import type { TransactionIntent } from 'database'
 import type { TransactionJob } from 'queues'
 
@@ -46,7 +46,7 @@ export const POST = async ({ locals, request }) => {
     }
     locals.logger.debug({ method: 'retryingTransactionJob', jobData })
 
-    await locals.transactionIntentHelper.addToQueue(jobData)
+    await locals.transactionIntentHelper.addToQueue(jobData, Priority.Low)
   }
 
   return json({}, { status: 200 })

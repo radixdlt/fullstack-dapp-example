@@ -2,7 +2,8 @@ import type { RequestHandler } from './$types'
 import { isDevEnvironment } from '$lib/server/helpers/is-dev-environment'
 import { json } from '@sveltejs/kit'
 import { randomUUID } from 'node:crypto'
-import { BusinessLogic, EventId } from 'common'
+import { BusinessLogic, EventId, Priority } from 'common'
+import { ResultAsync } from 'neverthrow'
 
 /** @type {import('./$types').RequestHandler} */
 export const POST: RequestHandler = async ({ locals, request }) => {
@@ -54,13 +55,16 @@ export const POST: RequestHandler = async ({ locals, request }) => {
         }
       ])
   } else if (type === 'depositHeroBadge') {
-    await locals.dependencies.transactionModel.add({
-      traceId: randomUUID(),
-      type: 'DepositHeroBadge',
-      userId,
-      discriminator: `DepositHeroBadge:${userId}`,
-      accountAddress
-    })
+    await locals.dependencies.transactionModel.add(
+      {
+        traceId: randomUUID(),
+        type: 'DepositHeroBadge',
+        userId,
+        discriminator: `DepositHeroBadge:${userId}`,
+        accountAddress
+      },
+      Priority.High
+    )
   } else if (type === 'mintElements') {
     await locals.dependencies.systemQueue.add([
       {
@@ -87,8 +91,18 @@ export const POST: RequestHandler = async ({ locals, request }) => {
   } else if (type === 'claimGoldenTicket') {
     await locals.dependencies.goldenTicketModel
       .createBatch(1, new Date(body.expired ? Date.now() - 600 : Date.now() + 600), userId)
-      .andThen((tickets) =>
-        locals.dependencies.goldenTicketModel.claimTicket(tickets[0].id, userId)
+      .andThen(([ticket]) =>
+        ResultAsync.fromPromise(
+          (locals.dependencies.dbClient as any).$primary().goldenTicket.update({
+            where: { id: ticket.id },
+            data: {
+              status: body.expired ? 'CLAIMED_INVALID' : 'CLAIMED',
+              userId,
+              claimedAt: new Date()
+            }
+          }),
+          (error) => error
+        )
       )
   } else if (type === 'updateUserStatus') {
     await locals.dependencies.dbClient.user.update({
