@@ -34,6 +34,7 @@
   import NetworkCongestedBanner from './NetworkCongestedBanner.svelte'
   import { PUBLIC_NETWORK_ID } from '$env/static/public'
   import GoldenTicketAlert from './GoldenTicketAlert.svelte'
+  import { messageApi } from '$lib/api/message-api'
 
   export let data: LayoutData
 
@@ -278,7 +279,8 @@
     webSocketClient: WebSocketClient,
     questId: QuestId,
     requirementId: string,
-    notificationName: Parameters<typeof pushNotification>[0]
+    notificationName: Parameters<typeof pushNotification>[0],
+    markAsSeen = false
   ) => {
     callbacks.push(
       webSocketClient.onMessage((message) => {
@@ -288,6 +290,7 @@
             message.requirementId === requirementId
           ) {
             pushNotification(notificationName)
+            if (markAsSeen) messageApi.markAsSeen(message.id)
           }
         }
       })
@@ -324,7 +327,8 @@
       $webSocketClient,
       'QuestTogether',
       'BronzeLevel',
-      'reachedTierBronze'
+      'reachedTierBronze',
+      true
     )
 
   $: if ($webSocketClient)
@@ -332,7 +336,8 @@
       $webSocketClient,
       'QuestTogether',
       'SilverLevel',
-      'reachedTierSilver'
+      'reachedTierSilver',
+      true
     )
 
   $: if ($webSocketClient)
@@ -343,7 +348,8 @@
       $webSocketClient,
       'QuestTogether',
       'SuperLevel',
-      'reachedTierSuper'
+      'reachedTierSuper',
+      true
     )
 
   if (data.questStatus['TransferTokens']?.status === 'COMPLETED' && $user?.referredByUser) {
