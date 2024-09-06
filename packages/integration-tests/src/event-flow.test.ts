@@ -973,20 +973,24 @@ describe('Event flows', () => {
   })
 })
 
-describe.skip('queue', () => {
+describe.only('queue', () => {
   it('should process prioritized jobs first', { timeout: 60_000 }, async () => {
     await queues.DepositXrd.buffer.queue.pause()
     await queues.DepositXrd.queue.pause()
 
-    for (const [index] of Object.entries(new Array(100).fill(null))) {
+    for (const [_index] of Object.entries(new Array(100).fill(null))) {
       const account = await createAccount({ withXrd: false, withHeroBadge: false })
-      const priority = parseInt(index) === 99 ? Priority.High : Priority.Low
+      const index = parseInt(_index)
+      const priority =
+        index % 40 === 0 ? Priority.High : index % 25 === 0 ? Priority.Medium : Priority.Low
       await transactionModel.add(
         {
           discriminator:
             priority === Priority.High
-              ? `DepositXrd:${account.user.id}:prio`
-              : `DepositXrd:${account.user.id}`,
+              ? `DepositXrd:${account.user.id}:high`
+              : priority === Priority.Medium
+                ? `DepositXrd:${account.user.id}:medium`
+                : `DepositXrd:${account.user.id}`,
           userId: account.user.id,
           type: 'DepositXrd',
           accountAddress: account.user.accountAddress!,
