@@ -2,12 +2,15 @@ import { gatewayApi, publicConfig } from '$lib/public-config'
 import { get } from 'svelte/store'
 import { user } from '../../../../../stores'
 import BigNumber from 'bignumber.js'
+import { okAsync } from 'neverthrow'
 
 const THRESHOLD = 10
 
-export const hasEnoughXrd = () =>
-  gatewayApi
-    .callApi('getEntityDetailsVaultAggregated', [get(user)!.accountAddress!])
+export const hasEnoughXrd = () => {
+  const accountAddress = get(user)?.accountAddress
+  if (!accountAddress) return okAsync(false)
+  return gatewayApi
+    .callApi('getEntityDetailsVaultAggregated', [accountAddress])
     .map(([details]) => {
       const xrd = details.fungible_resources.items.find(
         (item) => item.resource_address === publicConfig.xrd
@@ -23,3 +26,4 @@ export const hasEnoughXrd = () =>
       const amountOfXrd = parseFloat(xrd)
       return amountOfXrd >= THRESHOLD
     })
+}
