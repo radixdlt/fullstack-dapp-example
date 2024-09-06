@@ -79,6 +79,7 @@
   </div>
   <div class="referral-levels">
     <ReferralLevel
+      isOpened={currentLevel === 'BronzeLevel'}
       level="BronzeLevel"
       on:refresh={refresh}
       maximum={threshold.BronzeLevel}
@@ -87,6 +88,7 @@
     />
     {#if $user?.goldenTicketClaimed?.type === 'FULL'}
       <ReferralLevel
+        isOpened={currentLevel === 'SilverLevel'}
         level="SilverLevel"
         on:refresh={refresh}
         maximum={threshold.SilverLevel}
@@ -94,6 +96,7 @@
         status={progress.SilverLevel}
       />
       <ReferralLevel
+        isOpened={currentLevel === 'GoldLevel'}
         level="GoldLevel"
         on:refresh={refresh}
         maximum={threshold.GoldLevel}

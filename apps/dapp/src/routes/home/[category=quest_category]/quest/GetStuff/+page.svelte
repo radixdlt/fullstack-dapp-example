@@ -249,6 +249,7 @@
       {
         id: 'get-xrd',
         type: 'regular',
+        skip: hasXrd,
         footer: {
           next: {
             enabled: hasXrd
@@ -271,6 +272,14 @@
       onReceiveXRDPage()
     } else {
       waitingWarning(false)
+    }
+
+    if (ev.detail === '6') {
+      hasEnoughXrd().map((value) => {
+        hasXrd.set(value)
+        // [RQ-708] TODO: this has no effect because `setSteps` is not called.
+        // Even after calling `setSteps` they're not updated because of children components keeping own copy of `steps`
+      })
     }
 
     if (ev.detail === 'get-xrd') {

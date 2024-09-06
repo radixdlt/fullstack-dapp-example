@@ -65,7 +65,7 @@
 >
   <svelte:fragment slot="content" let:progress let:next>
     {#if progress === 0}
-      <IntroPage referralsCount={referralsData.referrals.length} />
+      <IntroPage />
     {:else if progress === 1}
       <CurrentStatusPage
         {...referralsData}

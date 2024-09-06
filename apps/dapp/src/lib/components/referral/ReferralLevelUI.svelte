@@ -2,13 +2,16 @@
   import Chevron from '@images/chevron.svg'
   import { scale, slide } from 'svelte/transition'
   import ProgressBar from '../progress-bar/ProgressBar.svelte'
+  import type { QuestDefinitions } from 'content'
+  import { i18n } from '$lib/i18n/i18n'
 
-  export let title: string
+  type Level = keyof ReturnType<typeof QuestDefinitions>['QuestTogether']['partialRewards']
+
+  export let level: Level | 'SuperLevel'
   export let icon: string
   export let progress: number
   export let totalSteps: number
-
-  $: isOpened = false
+  export let isOpened: boolean = false
 
   const toggle = () => {
     isOpened = !isOpened
@@ -17,7 +20,7 @@
 
 <div class="referral-level">
   <button class="referral-level__header" on:click={toggle}>
-    <h3>{title}</h3>
+    <h3>{$i18n.t(`quests:QuestTogether.levelHeader.${level}`)}</h3>
 
     <img src={icon} alt="" />
 
