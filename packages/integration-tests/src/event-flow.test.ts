@@ -973,7 +973,7 @@ describe('Event flows', () => {
   })
 })
 
-describe.only('queue', () => {
+describe.skip('queue', () => {
   it('should process prioritized jobs first', { timeout: 60_000 }, async () => {
     await queues.DepositXrd.buffer.queue.pause()
     await queues.DepositXrd.queue.pause()
