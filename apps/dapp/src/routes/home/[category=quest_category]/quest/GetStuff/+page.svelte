@@ -41,9 +41,12 @@
 
   const directDepositXrd = () => {
     xrdDepositLoading = true
-    userApi.directDepositXrd().mapErr(() => {
-      xrdDepositLoading = false
-    })
+    userApi
+      .directDepositXrd()
+      .mapErr(() => {
+        xrdDepositLoading = false
+      })
+      .andThen(() => completeRequirement(data.id, 'GetXRD'))
   }
 
   onDestroy(() => {
