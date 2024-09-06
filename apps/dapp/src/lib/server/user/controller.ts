@@ -6,7 +6,7 @@ import type {
 } from '../_types'
 import type { User } from 'database'
 import { config } from '$lib/config'
-import { createApiError, type ApiError } from 'common'
+import { createApiError, getPriorityByGoldenTicketType, type ApiError } from 'common'
 import { type SignedChallengeAccount, parseSignedChallenge } from '@radixdlt/radix-dapp-toolkit'
 import { Rola } from '@radixdlt/rola'
 import { publicConfig } from '$lib/public-config'
@@ -95,7 +95,7 @@ export const UserController = ({
               exists
                 ? okAsync({ httpResponseCode: 200, data: undefined })
                 : transactionModel
-                    .add(item, user?.goldenTicketClaimed.status === 'CLAIMED')
+                    .add(item, getPriorityByGoldenTicketType(user?.goldenTicketClaimed))
                     .map(() => ({
                       httpResponseCode: 201,
                       data: undefined
@@ -245,28 +245,26 @@ export const UserController = ({
         if (!ticket) return errAsync(createApiError('UserHasNoTicket', 400)())
         return okAsync(undefined)
       })
-      .andThen(() => userModel.getById(userId, {}))
+      .andThen(() => userModel.getById(userId, { goldenTicketClaimed: true }))
       .andThen((user) =>
         user.status !== 'OK' ? errAsync(createApiError('UserBlocked', 400)()) : okAsync(user)
       )
       .andThen((user) =>
-        user?.accountAddress
-          ? ok(user.accountAddress)
-          : err(createApiError('UserAccountAddressNotSet', 400)())
+        user?.accountAddress ? ok(user) : err(createApiError('UserAccountAddressNotSet', 400)())
       )
-      .andThen((accountAddress) =>
+      .andThen((user) =>
         gatewayApi
-          .isDepositDisabledForResource(accountAddress, addresses.xrd)
+          .isDepositDisabledForResource(user.accountAddress!, addresses.xrd)
           .mapErr((error) => {
             ctx.logger.error({ method: 'directDepositXrd.error', error })
             return createApiError('InternalError', 500)(error)
           })
-          .map((isDisabled) => ({ isDisabled, accountAddress }))
+          .map((isDisabled) => ({ isDisabled, user }))
       )
-      .andThen(({ isDisabled, accountAddress }) =>
-        isDisabled ? err(createApiError('DepositDisabledForXrd', 400)()) : ok(accountAddress)
+      .andThen(({ isDisabled, user }) =>
+        isDisabled ? err(createApiError('DepositDisabledForXrd', 400)()) : ok(user)
       )
-      .andThen((accountAddress) =>
+      .andThen((user) =>
         transactionModel.doesTransactionExist({ userId, discriminator }).andThen((exists) =>
           exists
             ? okAsync({
@@ -274,13 +272,16 @@ export const UserController = ({
                 data: {}
               })
             : transactionModel
-                .add({
-                  userId,
-                  discriminator: `DepositXrd:${userId}`,
-                  type: 'DepositXrd',
-                  traceId: ctx.traceId,
-                  accountAddress
-                })
+                .add(
+                  {
+                    userId,
+                    discriminator: `DepositXrd:${userId}`,
+                    type: 'DepositXrd',
+                    traceId: ctx.traceId,
+                    accountAddress: user.accountAddress!
+                  },
+                  getPriorityByGoldenTicketType(user?.goldenTicketClaimed)
+                )
                 .map(() => ({
                   httpResponseCode: 201,
                   data: {}

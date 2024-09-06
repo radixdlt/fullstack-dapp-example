@@ -37,7 +37,7 @@ export const QuestHelper = ({
   accountAddress: string
   transactionId: string
   mailerLiteModel: ReturnType<MailerLiteModel>
-  priority: boolean
+  priority: number
 }) => {
   const getCompletedQuestRequirements = (
     userId: string,

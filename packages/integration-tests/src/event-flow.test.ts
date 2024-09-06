@@ -18,7 +18,8 @@ import {
   createAppLogger,
   EventModel,
   EventId,
-  BusinessLogic
+  BusinessLogic,
+  Priority
 } from 'common'
 import { PrismaClient, User } from 'database'
 import { errAsync } from 'neverthrow'
@@ -979,18 +980,19 @@ describe.skip('queue', () => {
 
     for (const [index] of Object.entries(new Array(100).fill(null))) {
       const account = await createAccount({ withXrd: false, withHeroBadge: false })
-      const shouldPrio = parseInt(index) === 99
+      const priority = parseInt(index) === 99 ? Priority.High : Priority.Low
       await transactionModel.add(
         {
-          discriminator: shouldPrio
-            ? `DepositXrd:${account.user.id}:prio`
-            : `DepositXrd:${account.user.id}`,
+          discriminator:
+            priority === Priority.High
+              ? `DepositXrd:${account.user.id}:prio`
+              : `DepositXrd:${account.user.id}`,
           userId: account.user.id,
           type: 'DepositXrd',
           accountAddress: account.user.accountAddress!,
           traceId: crypto.randomUUID()
         },
-        shouldPrio
+        priority
       )
     }
 

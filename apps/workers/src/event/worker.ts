@@ -1,5 +1,5 @@
 import { Worker, ConnectionOptions, QueueName, EventJob } from 'queues'
-import { AppLogger, WorkerError } from 'common'
+import { AppLogger, getPriorityByGoldenTicketType, WorkerError } from 'common'
 import { EventWorkerController } from './controller'
 import { EventStatus, PrismaClient, User, UserStatus } from 'database'
 import { WorkerOutputError } from '../_types'
@@ -44,7 +44,7 @@ const UpdateEventStatus =
       })
     ).map(() => undefined)
 
-const getUser = (userId: string): ResultAsync<User & { priority: boolean }, WorkerOutputError> =>
+const getUser = (userId: string) =>
   ResultAsync.fromPromise(
     dbClient.user.findUnique({
       include: { goldenTicketClaimed: true },
@@ -58,9 +58,7 @@ const getUser = (userId: string): ResultAsync<User & { priority: boolean }, Work
     if (!user) return err({ reason: WorkerError.UserNotFound })
     if (!user.accountAddress) err({ reason: WorkerError.UserMissingAccountAddress })
 
-    const priority = user.goldenTicketClaimed?.status === 'CLAIMED'
-
-    return ok({ ...user, priority })
+    return ok(user)
   })
 
 const dataForBlockedUser: Record<
@@ -109,14 +107,21 @@ export const EventWorker = (
             if (!shouldProcessEvent) return workerHelper.noop()
 
             return getUser(job.data.userId).andThen(
-              ({ status, accountAddress, referredBy, priority }) => {
+              ({ status, accountAddress, referredBy, goldenTicketClaimed }) => {
                 if (status !== 'OK') {
                   const { eventStatus, workerError } = dataForBlockedUser[status]
                   return updateEventStatus(eventStatus, workerError)
                 }
 
                 return eventWorkerController
-                  .handler(job, accountAddress!, priority, referredBy!)
+                  .handler(
+                    job,
+                    accountAddress!,
+                    getPriorityByGoldenTicketType(
+                      goldenTicketClaimed ? goldenTicketClaimed : undefined
+                    ),
+                    referredBy!
+                  )
                   .andThen(() => updateEventStatus(EventStatus.COMPLETED, null))
               }
             )

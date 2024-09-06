@@ -30,7 +30,7 @@ export const ReferralHelper = ({
   sendMessage: MessageHelper
   logger?: AppLogger
   transactionId: string
-  priority: boolean
+  priority: number
 }) => {
   const handleTiersRewards = (
     userId: string,

@@ -11,7 +11,7 @@ export type TransactionIdentifierData = Pick<TransactionIntent, 'discriminator' 
 export type TransactionModel = ReturnType<typeof TransactionModel>
 
 export const TransactionModel = (db: PrismaClient, queues: Queues) => (logger?: AppLogger) => {
-  const add = (job: TransactionJob, priority?: boolean) => {
+  const add = (job: TransactionJob, priority: number) => {
     const { discriminator, userId, ...data } = job
     return ResultAsync.fromPromise(
       db.transactionIntent.upsert({

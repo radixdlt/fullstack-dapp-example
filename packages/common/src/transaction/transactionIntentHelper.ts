@@ -3,6 +3,7 @@ import { ResultAsync, errAsync } from 'neverthrow'
 import type { PrismaClient } from 'database'
 import type { AppLogger } from '../helpers'
 import { WorkerError } from '../worker-error'
+import { Priority } from '../constants'
 
 export type TransactionIntentHelper = ReturnType<typeof TransactionIntentHelper>
 export const TransactionIntentHelper = ({
@@ -14,29 +15,28 @@ export const TransactionIntentHelper = ({
   queues: ReturnType<typeof getQueues>
   logger?: AppLogger
 }) => {
-  const addToQueue = (job: TransactionJob, priority?: boolean) => {
-    const priorityNumber = priority ? 10 : 20
+  const addToQueue = (job: TransactionJob, priority: number) => {
     switch (job.type) {
       case 'DepositGiftBoxesReward':
-        return queues.DepositGiftBoxReward.buffer.add([{ ...job, priority: priorityNumber }])
+        return queues.DepositGiftBoxReward.buffer.add([{ ...job, priority }])
 
       case 'DepositReward':
-        return queues.DepositQuestReward.buffer.add([{ ...job, priority: priorityNumber }])
+        return queues.DepositQuestReward.buffer.add([{ ...job, priority }])
 
       case 'ElementsDeposited':
-        return queues.CreateRadGems.buffer.add([{ ...job, priority: priorityNumber }])
+        return queues.CreateRadGems.buffer.add([{ ...job, priority }])
 
       case 'QuestCompleted':
-        return queues.QuestCompleted.buffer.add([{ ...job, priority: priorityNumber }])
+        return queues.QuestCompleted.buffer.add([{ ...job, priority }])
 
       case 'DepositPartialReward':
-        return queues.DepositPartialReward.buffer.add([{ ...job, priority: priorityNumber }])
+        return queues.DepositPartialReward.buffer.add([{ ...job, priority }])
 
       case 'DepositHeroBadge':
-        return queues.DepositHeroBadge.buffer.add([{ ...job, priority: priorityNumber }])
+        return queues.DepositHeroBadge.buffer.add([{ ...job, priority }])
 
       case 'DepositXrd':
-        return queues.DepositXrd.buffer.add([{ ...job, priority: priorityNumber }])
+        return queues.DepositXrd.buffer.add([{ ...job, priority }])
 
       default:
         return errAsync('unhandled job type')
@@ -45,7 +45,7 @@ export const TransactionIntentHelper = ({
 
   const add = (
     job: TransactionJob,
-    priority?: boolean
+    priority: number = Priority.Low
   ): ResultAsync<
     void,
     {

@@ -48,7 +48,7 @@ export const EventWorkerController = ({
   const handler = (
     job: Job<EventJob>,
     accountAddress: string,
-    priority: boolean,
+    priority: number,
     referredBy?: string
   ): ResultAsync<any, WorkerOutputError> => {
     const { traceId, type, transactionId, userId } = job.data
