@@ -64,6 +64,8 @@
     "wallet:deploy:ticket-machine": "npx tsx ./src/ticket-machine/scripts/deploy-package.ts",
     "wallet:new:ticket-machine": "npx tsx ./src/ticket-machine/scripts/new-component.ts",
 
+    "wallet:deploy-new:all-v2": "npx tsx ./src/radquest/scripts/deploy-and-instantiate-v2.ts",
+
     "wallet:set:dapp-data:radquest": "npx tsx ./src/radquest/scripts/set-dapp-data.ts",
     "wallet:set:dapp-data:clam-dexs": "npx tsx ./src/clam-dex/scripts/set-dapp-data.ts",
     "wallet:set:dapp-data": "npx tsx ./src/radquest/scripts/set-dapp-data.ts && npx tsx ./src/clam-dex/scripts/set-dapp-data.ts",

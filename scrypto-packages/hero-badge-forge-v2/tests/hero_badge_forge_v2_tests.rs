@@ -156,7 +156,7 @@ impl LedgerTestEnvironment {
                 "mint_hero_badges",
                 manifest_args!(
                     [user_id_1.clone(), user_id_2.clone()],
-                    Some([quest_id_1.clone()])
+                    Some([quest_id_1.clone(), quest_id_1.clone()])
                 ),
             )
             .take_non_fungibles_from_worktop(

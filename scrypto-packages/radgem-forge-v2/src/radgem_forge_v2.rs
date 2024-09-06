@@ -108,7 +108,8 @@ mod radgem_forge_v2 {
             UserId(local_id_string)
         }
 
-        // User deposits Elements to be turned into a RadGem
+        // User deposits Elements to be turned into a RadGem. Elements are burned and an event
+        // is emitted triggering off chain logic that sends an authorised mint TX for the user.
         pub fn deposit_elements(&self, hero_badge_proof: Proof, elements: Bucket) -> () {
             assert!(self.enabled, "RadgemForgeV2 disabled");
             assert_eq!(elements.resource_address(), self.element_address);
