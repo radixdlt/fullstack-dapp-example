@@ -137,6 +137,33 @@ fn cannot_purchase_tickets_when_not_enough_xrd() -> Result<(), RuntimeError> {
 }
 
 #[test]
+fn cannot_purchase_tickets_with_wrong_token() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        mut ticket_machine,
+        hero_badge_proof,
+        ..
+    } = arrange_test_environment()?;
+
+    let token =
+        ResourceBuilder::new_fungible(OwnerRole::None).mint_initial_supply(111, &mut env)?;
+
+    // Act
+    let result = ticket_machine.purchase_tickets(hero_badge_proof, token, &mut env);
+
+    // Assert
+    assert!(result.is_err());
+    assert!(result
+        .err()
+        .unwrap()
+        .to_string()
+        .contains("InvalidDropAccess"));
+
+    Ok(())
+}
+
+#[test]
 fn can_withdraw_all_xrd() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
