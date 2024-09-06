@@ -12,6 +12,8 @@ import { newHeroBadgeForgeV2 } from '../../hero-badge-forge-v2/helpers/newHeroBa
 import { newQuestRewardsV2 } from '../../quest-rewards-v2/helpers/newQuestRewardsV2'
 // import { newRadgemForgeV2 } from '../../radgem-forge-v2/helpers/newRadgemForgeV2'
 import { setGiftBoxAddresses } from '../../gift-box-opener-v2/helpers/setGiftBoxAddresses'
+import { deployTicketMachinePackage } from '../../ticket-machine/helpers/deployTicketMachinePackage'
+import { newTicketMachine } from '../../ticket-machine/helpers/newTicketMachine'
 
 mintAdminBadge({
   adminBadgeAddress: config.radQuest.badges.adminBadgeAddress,
@@ -56,5 +58,12 @@ mintAdminBadge({
   //     .map(() => logger.debug('RadgemForgeV2 component instantiated'))
   //     .map(() => addresses)
   // )
+  .andThen((addresses) => deployTicketMachinePackage(addresses))
+  .andThen((addresses) =>
+    newTicketMachine(50, addresses.ticketMachinePackage)
+      .map((res) => Object.assign(addresses, res))
+      .map(() => logger.debug('TicketMachine instantiated'))
+      .map(() => addresses)
+  )
   .map((addresses) => logger.debug(addresses))
   .mapErr((err) => logger.error(err))
