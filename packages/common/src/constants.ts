@@ -166,9 +166,9 @@ export const Addresses = (networkId: number) => {
           'package_rdx1phm6cg8dausjd9yxmr0mqvftw42h7w7eggdc6d0kx7fewn0waal7p5',
         cardForgeV2Package: 'package_rdx1pkar90hh0eyq5nfgam9n3ye05j08zlmkk8e5ex0wu8tknr436f9u69',
         radgemForgeV2Package: 'package_rdx1p4gtpzf4t6jsa56us38mt0uazt8ydu93t3tmhea7whkxf8zqswsnv7',
-        questRewardsV2Package: '',
-        heroBadgeForgeV2Package: '',
-        ticketMachinePackage: '',
+        questRewardsV2Package: 'package_rdx1pknnm0zaxdft534hugky97n2elf8cfpkezqfvwgxk7nqujk7768qff',
+        heroBadgeForgeV2Package: 'package_rdx1p4yqtresqmmszkan4vfchvs7sq3437f9jk479876lkv3zvaf20frr3',
+        ticketMachinePackage: 'package_rdx1p4nkhxa3t8updx63gnfqqzdpqhtt0dp2r9a4n6d7m49djl4xggm8gu',
         components: {
           heroBadgeForge: 'component_rdx1cra2j3w7cv9zkrv4jehjz0qn3xffxdkstucxar4xy9kyu0tpxsvya6',
           kycOracle: 'component_rdx1cr89pe8pz7c3fhuxf4tpw309cmuqtwg6tw2pkjl574hg3slp9v4gt9',
@@ -181,10 +181,10 @@ export const Addresses = (networkId: number) => {
           refinery: 'component_rdx1crh0h7kc9e9s0607exe864uszpu5cpptjn2a605szneswhzw6nawzd',
           giftBoxOpenerV2: 'component_rdx1cq2ac5qgaeykevk9stqajpuhjtddzzhljnewfx3cjk0cfvuhxczmny',
           cardForgeV2: 'component_rdx1cq38chm09eq65q58skruheyepeelk3u84lmvua2r5rnq7eche6p0r0',
-          heroBadgeForgeV2: '',
+          heroBadgeForgeV2: 'component_rdx1cppsrjpy5lk8guwwflww3as86y75d4mluwsvfcdnwavt9k7vl4yr5t',
           radgemForgeV2: 'component_rdx1czv5pypn3u44yut3mqt5fxqnwphjec56j9rhn7mp74nl0tj2xytf8y',
-          questRewardsV2: '',
-          ticketMachine: '',
+          questRewardsV2: 'component_rdx1cpklwp2zr6padewcxdkvnqydwp6mlzquyuuvlsztm8agdjdpmfzkxc',
+          ticketMachine: 'component_rdx1cr2q4mazpxgq807n5stwv94vxusukjfevwzcusenuh2xttksk6jylp',
           kycOracleKeyValueStore:
             'internal_keyvaluestore_rdx1kry2g9s07tm26js7e9uy8rztpg5htfd3auandaqgu7nvc6psvnasge',
           radgemRecordsKeyValueStore:
