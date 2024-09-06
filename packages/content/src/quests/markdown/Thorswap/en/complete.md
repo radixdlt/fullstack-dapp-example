@@ -1,3 +1,3 @@
-The world is opening up for you. You are learning the ways of Radix!
+Now that you have some tokens on the Radix Network, you can start putting them to work on dApps!
 
-But there's plenty more to discover...!
+Check out some options in the [Explore the Radix Ecosystem](https://radixdlt.com/ecosystem-directory) quest.
