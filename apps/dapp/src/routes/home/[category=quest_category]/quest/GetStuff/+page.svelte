@@ -13,11 +13,11 @@
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { waitingWarning } from '$lib/utils/waiting-warning'
   import { page } from '$app/stores'
-  import { hasEnoughXrd } from './has-enough-xrd'
   import GetXrdMethodOptions from './GetXrdMethodOptions.svelte'
   import { completeRequirement } from '$lib/helpers/complete-requirement.svelte'
   import CopyTextBox from '$lib/components/copy-text-box/CopyTextBox.svelte'
   import { shortenAddress } from '$lib/utils/shorten-address'
+  import { hasEnoughXrd } from '$lib/utils/has-enough-xrd'
 
   export let data: PageData
 

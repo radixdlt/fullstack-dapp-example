@@ -29,10 +29,8 @@ export const markLatestNotificationAsSeen = pipe(
       if (notifications.length === 0) return errAsync(Error('No notifications to mark as seen'))
       else
         return fromPromise(
-          fetch(`/api/notification/seen`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ notificationId: notifications[notifications.length - 1].id })
+          fetch(`/api/notification/${notifications[notifications.length - 1].id}/seen`, {
+            method: 'POST'
           }),
           (e) => e as Error
         )
@@ -50,10 +48,8 @@ export const markNotificationAsSeen = (id: keyof typeof notifications) =>
   pipe(
     () =>
       fromPromise(
-        fetch(`/api/notification/seen`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ notificationId: id })
+        fetch(`/api/notification/${id}/seen`, {
+          method: 'POST'
         }),
         (e) => e as Error
       ),
@@ -82,6 +78,26 @@ export const loadUnseenNotifications = () =>
           )
         )
         return okAsync(undefined)
+      })
+  )()
+
+export const hasSeenNotification = (id: keyof typeof notifications) =>
+  pipe(
+    () =>
+      fromPromise(
+        fetch(`/api/notification/${id}/seen`, {
+          method: 'GET'
+        }),
+        (e) => e as Error
+      ),
+    (result) =>
+      result.andThen((response) => {
+        if (!response.ok) return errAsync(Error('Failed to check if notification has been seen'))
+        else return fromSafePromise(response.json())
+      }),
+    (result) =>
+      result.map(({ hasSeen }) => {
+        return hasSeen
       })
   )()
 
@@ -157,5 +173,11 @@ const notifications = {
     title: 'Bridge Transaction Complete!',
     text: i18next.t('jetty:notifications.swap-completed'),
     action: () => goto(`/home/advanced/quests/${QuestDefinitions().Thorswap.id}`)
+  },
+  notEnoughXrd: {
+    id: 'notEnoughXrd',
+    title: 'Low on XRD',
+    text: i18next.t('jetty:notifications.not-enough-xrd'),
+    action: () => goto(`/home/basic/quest/${QuestDefinitions().GetStuff.id}#8`)
   }
 } as const satisfies { [key: string]: JettyNotification }

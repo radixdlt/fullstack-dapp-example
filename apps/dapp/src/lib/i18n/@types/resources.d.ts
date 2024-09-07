@@ -27,7 +27,8 @@ interface Resources {
       "new-tier": "You just leveled up with more friends! Now go claim your rewards.",
       "swap-completed": "Continue your quest: Swap Tokens on a DEX.",
       "stake-completed": "Continue your quest: Radix Network Staking.",
-      "thorswap-swap-completed": "Continue your quest: Bridge Tokens with THORSwap"
+      "thorswap-swap-completed": "Continue your quest: Bridge Tokens with THORSwap",
+      "not-enough-xrd": "You need more XRD"
     },
     "fuse-elements": {
       "intro1": "Using my Web3 powers, I can fuse 5 Elements into a RadGem. Who knows what color or material it will be!",

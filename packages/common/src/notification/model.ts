@@ -56,6 +56,28 @@ export const NotificationModel = (db: PrismaClient) => (logger?: AppLogger) => {
       }
     )
 
+  const hasSeenNotification = (userId: string, notificationId: string) =>
+    ResultAsync.fromPromise(
+      db.notification.count({
+        where: {
+          userId,
+          notificationId,
+          NOT: {
+            seenAt: null
+          }
+        }
+      }),
+      (error) => {
+        logger?.error({
+          error,
+          method: 'getSeen',
+          model: 'NotificationModel',
+          data: { notificationId, userId }
+        })
+        return createApiError('failed to get seen notification', 400)()
+      }
+    ).map((count) => count > 0)
+
   const markAsSeen = (notificationId: string, userId: string) => {
     const seenAt = new Date()
 
@@ -98,6 +120,7 @@ export const NotificationModel = (db: PrismaClient) => (logger?: AppLogger) => {
   return {
     add,
     markAsSeen,
-    getAllUnseen
+    getAllUnseen,
+    hasSeenNotification
   }
 }

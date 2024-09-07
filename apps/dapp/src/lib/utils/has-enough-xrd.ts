@@ -1,7 +1,7 @@
 import { gatewayApi, publicConfig } from '$lib/public-config'
 import { get } from 'svelte/store'
-import { user } from '../../../../../stores'
 import BigNumber from 'bignumber.js'
+import { user } from '../../stores'
 
 const THRESHOLD = 10
 
