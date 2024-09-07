@@ -61,7 +61,7 @@
   import Icon from '$lib/components/icon/Icon.svelte'
   import { typeToIcon } from '$lib/utils/type-to-icon'
   import { i18n } from '$lib/i18n/i18n'
-  import { isUserBlocked, user } from '../../../../stores'
+  import { ErrorPopupId, errorPopupStore, isUserBlocked, user } from '../../../../stores'
   import {
     createClaimRewardsTransaction,
     createClaimRewardsV2Transaction,
@@ -95,6 +95,10 @@
   })
 
   export const claim = () => {
+    if ($isUserBlocked) {
+      errorPopupStore.set({ id: ErrorPopupId.CannotClaimRewards })
+      return
+    }
     const sendTx = (instapassBadge?: string) =>
       questApi.getDepositedRewards(questId).andThen((rewards) =>
         sendTransaction({
@@ -146,7 +150,7 @@
       </div>
     {/each}
   </div>
-  <Button on:click={claim} loading={$loading} --min-width="9rem" disabled={$isUserBlocked}>
+  <Button on:click={claim} loading={$loading} --min-width="9rem">
     {$i18n.t('quests:claimButton')}
   </Button>
 </div>

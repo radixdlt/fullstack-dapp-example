@@ -7,7 +7,7 @@
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import { writable } from 'svelte/store'
-  import { deriveIsUserBlockedAlternative, user } from '../../../../../stores'
+  import { user } from '../../../../../stores'
   import { webSocketClient, WebSocketClient } from '$lib/websocket-client'
   import { messageApi } from '$lib/api/message-api'
   import CopyTextBox from '$lib/components/copy-text-box/CopyTextBox.svelte'
@@ -17,7 +17,6 @@
   let quest: Quest
 
   const mayaSwap = writable(data.requirements.MayaRouterWithdrawEvent.isComplete)
-  const isEnabled = deriveIsUserBlockedAlternative(mayaSwap)
 
   onMount(() => {
     markNotificationAsSeen('thorswapSwapCompleted')
@@ -78,10 +77,10 @@
     {
       id: '8',
       type: 'regular',
-      skip: isEnabled,
+      skip: mayaSwap,
       footer: {
         next: {
-          enabled: isEnabled
+          enabled: mayaSwap
         }
       }
     },

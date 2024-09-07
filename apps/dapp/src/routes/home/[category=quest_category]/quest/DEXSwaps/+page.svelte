@@ -12,7 +12,7 @@
   import type { PageData } from '../DEXSwaps/$types'
   import { markNotificationAsSeen } from '$lib/notifications'
   import { checkAccountHasClams, getClams } from '$lib/helpers/get-clams'
-  import { isUserBlocked, deriveIsUserBlockedAlternative, user } from '../../../../../stores'
+  import { isUserBlocked, user } from '../../../../../stores'
   import { htmlReplace } from '$lib/helpers/html-replace'
 
   export let data: PageData
@@ -89,7 +89,7 @@
       skip: jettySwap,
       footer: {
         next: {
-          enabled: deriveIsUserBlockedAlternative(jettySwap)
+          enabled: jettySwap
         }
       }
     },
@@ -111,7 +111,7 @@
       skip: lettySwap,
       footer: {
         next: {
-          enabled: deriveIsUserBlockedAlternative(lettySwap)
+          enabled: lettySwap
         }
       }
     },

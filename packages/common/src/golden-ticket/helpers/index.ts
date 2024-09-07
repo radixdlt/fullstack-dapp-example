@@ -1,1 +1,1 @@
-export * from './getPriorityByGoldenTicketType';
+export * from './getPriorityByGoldenTicketType'

@@ -108,6 +108,11 @@ interface Resources {
         "content": "To claim more rewards, you will need to contact RadQuest support:",
         "button": "Get help with RadQuest rewards"
       },
+      "CannotClaimRewards": {
+        "title": "You are currently blocked",
+        "content": "While you are blocked, you cannot claim quest rewards or make use of Jetty’s RadMorph creation features.",
+        "button": "Close"
+      },
       "AccountAlreadyRegistered": {
         "title": "Account Already Registered",
         "content": "You seem to be already a RadQuest user - please log in with the Persona you originally used to continue.",
@@ -308,8 +313,8 @@ interface Resources {
         "GoldLevel": "Invite 10 Friends",
         "SuperLevel": ""
       },
-      "info_1": "<strong>Your friends will get 5 XRD</strong> when they use your referral link and complete all basic quests.",
-      "info_2": "<strong>You’ll also receive 5 XRD</strong> for each referral and you’ll win <strong>extra rewards</strong> at each milestone (1 and 5 referrals)!",
+      "info_1": "<strong>Your friends will get a Simple Gift Box</strong> when they use your referral link and complete all the basic quests.",
+      "info_2": " <strong>You can also earn a reward</strong> for inviting your friends. View your status on the next screen.",
       "shareYourLink": "Share Your Referral Link:",
       "referMore": "Refer {{count}} more friends to claim your rewards and progress to {{nextLevel}}!",
       "BronzeLevel": "Bronze",

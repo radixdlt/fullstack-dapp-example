@@ -10,7 +10,6 @@
   import type { Quests } from 'content'
   import { writable } from 'svelte/store'
   import { onDestroy } from 'svelte'
-  import { deriveIsUserBlockedAlternative } from '../../../../../stores'
   export let data: LayoutData
 
   let quest: Quest
@@ -18,9 +17,6 @@
   const isOpenGiftBoxCompleted = writable(data.requirements?.OpenGiftBox.isComplete)
   const isRadgemsClaimedCompleted = writable(data.requirements?.RadGemsClaimed.isComplete)
   const isRadMorphCreatedCompleted = writable(data.requirements?.RadMorphCreated.isComplete)
-  const skipStarterGiftBoxOpened = deriveIsUserBlockedAlternative(isOpenGiftBoxCompleted)
-  const skipRadGemsClaimed = deriveIsUserBlockedAlternative(isRadgemsClaimedCompleted)
-  const skipRadMorphCreated = deriveIsUserBlockedAlternative(isRadMorphCreatedCompleted)
 
   const text = data.text as Quests['CreatingRadMorphs']['text']
 
@@ -85,10 +81,10 @@
     {
       id: '5',
       type: 'jetty',
-      skip: skipStarterGiftBoxOpened,
+      skip: isOpenGiftBoxCompleted,
       footer: {
         next: {
-          enabled: skipStarterGiftBoxOpened
+          enabled: isOpenGiftBoxCompleted
         }
       }
     },
@@ -107,10 +103,10 @@
     {
       id: '9',
       type: 'jetty',
-      skip: skipRadGemsClaimed,
+      skip: isRadgemsClaimedCompleted,
       footer: {
         next: {
-          enabled: skipRadGemsClaimed
+          enabled: isRadgemsClaimedCompleted
         }
       }
     },
@@ -133,10 +129,10 @@
     {
       id: '14',
       type: 'jetty',
-      skip: skipRadMorphCreated,
+      skip: isRadMorphCreatedCompleted,
       footer: {
         next: {
-          enabled: skipRadMorphCreated
+          enabled: isRadMorphCreatedCompleted
         }
       }
     },
