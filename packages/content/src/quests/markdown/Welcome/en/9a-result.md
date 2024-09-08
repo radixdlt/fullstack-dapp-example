@@ -1,1 +1,1 @@
-Yup! And get some rewards!
+Yup! And get some collectible NFTs!
