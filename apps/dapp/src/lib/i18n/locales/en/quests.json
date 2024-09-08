@@ -129,7 +129,7 @@
     }
   },
   "Thorswap": {
-    "title": "Bridge Tokens with Thorswap",
+    "title": "Bridge Tokens with THORSwap",
     "description": "Move assets in and out of Radix",
     "introDescription": "Use the THORSwap dApp to “bridge” assets into Radix and back out",
     "requirements": {
