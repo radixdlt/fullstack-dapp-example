@@ -201,7 +201,11 @@
 
   let steps = generalSteps
 
-  $: if (data.hasEnoughXrd) $hasXrd = true
+  $: if ($user?.accountAddress) {
+    hasEnoughXrd().map((value) => {
+      $hasXrd = value
+    })
+  }
 
   $: if ($hasXrd && !data.requirements['GetXRD'].isComplete) completeRequirement(data.id, 'GetXRD')
 
@@ -266,7 +270,7 @@
 
   let selectedGetXrdMethod: ComponentProps<GetXrdMethodOptions>['selectedOption'] = 'card'
 
-  $: address = $user!.accountAddress!
+  $: address = $user?.accountAddress
 </script>
 
 <Quest
@@ -362,7 +366,9 @@
   {#if render('get-xrd')}
     {#if selectedGetXrdMethod === 'card'}
       {@html text['8-NEEDXRD-3.md']}
-      <CopyTextBox text={shortenAddress(address)} value={address} />
+      {#if address}
+        <CopyTextBox text={shortenAddress(address)} value={address} />
+      {/if}
       {@html text['8-NEEDXRD-3a.md']}
       <div class="center">
         <Button
@@ -383,7 +389,9 @@
       {@html text['8-NEEDXRD-4a.md']}
     {:else if selectedGetXrdMethod === 'thorswap'}
       {@html text['8-NEEDXRD-5.md']}
-      <CopyTextBox text={shortenAddress(address)} value={address} />
+      {#if address}
+        <CopyTextBox text={shortenAddress(address)} value={address} />
+      {/if}
       {@html text['8-NEEDXRD-5a.md']}
       <div class="center">
         <Button
