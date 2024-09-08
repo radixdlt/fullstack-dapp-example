@@ -18,7 +18,7 @@ import { newTicketMachine } from '../../ticket-machine/helpers/newTicketMachine'
 mintAdminBadge({
   adminBadgeAddress: config.radQuest.badges.adminBadgeAddress,
   superAdminBadgeAddress: config.radQuest.badges.superAdminBadgeAddress,
-  amount: 2 // 5 if including all packages
+  amount: 2 // 5 if including the RadgemForgeV2
 })
   .map(() => logger.debug('Admin Badges minted'))
   .andThen(() => deployHeroBadgeForgeV2Package({}))
