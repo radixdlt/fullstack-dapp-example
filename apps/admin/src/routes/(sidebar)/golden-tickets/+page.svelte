@@ -43,6 +43,7 @@
   let amountToIssue: number
   const ownerId = data.userId
   let expiresAt: Date
+  let description: string
 
   let searchedTicketId: string
 
@@ -59,7 +60,8 @@
     await http.post(`/golden-tickets`, {
       amount: amountToIssue,
       ownerId,
-      expiresAt: new Date(expiresAt)
+      expiresAt: new Date(expiresAt),
+      description
     })
 
     showCreateBatch = false
@@ -72,7 +74,8 @@
     await http.post(`/golden-tickets/import`, {
       expiresAt: new Date(expiresAt),
       tickets: JSON.stringify(await tickets),
-      ownerId
+      ownerId,
+      description
     })
 
     showImportBatch = false
@@ -98,8 +101,6 @@
   const ticketsPerPage = 50
 
   let importedBatch: FileList
-
-  $: console.log(importedBatch)
 </script>
 
 <Modal title="Issue Batch" bind:open={showCreateBatch} autoclose>
@@ -109,6 +110,9 @@
   <div>
     Expires at<Input label="Expires at" type="date" bind:value={expiresAt} />
   </div>
+  <div>
+    Description<Input label="Description" bind:value={description} />
+  </div>
   <Button on:click={issueBatch}>Issue</Button>
 </Modal>
 
@@ -116,6 +120,9 @@
   <input type="file" accept=".csv" bind:files={importedBatch} />
   <div>
     Expires at<Input label="Expires at" type="date" bind:value={expiresAt} />
+  </div>
+  <div>
+    Description<Input label="Description" bind:value={description} />
   </div>
 
   <Button on:click={importBatch}>Import</Button>
@@ -165,7 +172,7 @@
 
 <Table>
   <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
-    {#each ['batch id', 'size', 'claimed', 'claimed invalid', 'expired', 'created at', 'expires at', '', ''] as title}
+    {#each ['batch id', 'size', 'claimed', 'claimed invalid', 'expired', 'created at', 'expires at', 'description', '', ''] as title}
       <TableHeadCell class="p-4 font-medium">{title}</TableHeadCell>
     {/each}
   </TableHead>
@@ -186,6 +193,7 @@
         >
         <TableBodyCell>{tickets[0].createdAt.toLocaleDateString()}</TableBodyCell>
         <TableBodyCell>{tickets[0].expiresAt.toLocaleDateString()}</TableBodyCell>
+        <TableBodyCell>{tickets[0].description}</TableBodyCell>
         <TableBodyCell>
           <Button
             on:click={(e) => {
