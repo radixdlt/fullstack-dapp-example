@@ -80,10 +80,6 @@
   const dispatch = createEventDispatcher<{ claimed: undefined }>()
 
   onMount(async () => {
-    if ($isUserBlocked) {
-      dispatch('claimed')
-      return
-    }
     const result = await questApi.getQuestInformation(questId)
 
     if (result.isOk()) {
