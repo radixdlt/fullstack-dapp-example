@@ -18,6 +18,11 @@
       "content": "To claim more rewards, you will need to contact RadQuest support:",
       "button": "Get help with RadQuest rewards"
     },
+    "CannotClaimRewards": {
+      "title": "You are currently blocked",
+      "content": "While you are blocked, you cannot claim quest rewards or make use of Jetty’s RadMorph creation features.",
+      "button": "Close"
+    },
     "AccountAlreadyRegistered": {
       "title": "Account Already Registered",
       "content": "You seem to be already a RadQuest user - please log in with the Persona you originally used to continue.",

@@ -39,7 +39,7 @@
       </div>
     {/if}
 
-    {#if visibleErrorPopup.id === ErrorPopupId.AccountAlreadyRegistered || visibleErrorPopup.id === ErrorPopupId.AccountLocked}
+    {#if visibleErrorPopup.id === ErrorPopupId.AccountAlreadyRegistered || visibleErrorPopup.id === ErrorPopupId.AccountLocked || visibleErrorPopup.id === ErrorPopupId.CannotClaimRewards}
       <div>
         {$i18n.t(`main:errorPopup.${visibleErrorPopup.id}.content`)}
       </div>

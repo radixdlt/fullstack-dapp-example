@@ -1,6 +1,6 @@
 import { ResultAsync } from 'neverthrow'
 import { PrismaClient } from 'database'
-import { AppLogger, WorkerError } from 'common'
+import { AppLogger, Priority, WorkerError } from 'common'
 import { BufferQueues, ConnectionOptions, Job, Worker } from 'queues'
 import { createHash } from 'node:crypto'
 
@@ -52,14 +52,15 @@ export const BufferWorker = <Q extends BufferQueues>(
       (error) => ({ reason: WorkerError.FailedToCreateBatchedTransactionIntent, jsError: error })
     )
 
-  const createAndAddToQueue = (batchId: string, items: any[]) => {
+  const createAndAddToQueue = (batchId: string, items: any[], priority: number) => {
     logger?.trace({ method: 'createAndAddToQueue', batchId, items })
     return upsertBatchedTransactionIntent(batchId, items).andThen(() =>
       queue
         .add([
           {
             id: batchId,
-            items
+            items,
+            priority
           }
         ])
         .mapErr((error) => ({
@@ -89,13 +90,18 @@ export const BufferWorker = <Q extends BufferQueues>(
   const process = (jobs: Job[]) => {
     const itemIds = jobs.map((job) => job.data.discriminator)
 
-    logger?.trace({ method: 'processBatch', itemIds })
-
     const batchId = createHash('sha256').update(itemIds.join(':')).digest('hex')
 
     const items = jobs.map((job) => job.data)
+    const priority = jobs.reduce((acc, job) => {
+      if (job.opts?.priority && job.opts?.priority < acc) return job.opts?.priority
 
-    return createAndAddToQueue(batchId, items)
+      return acc
+    }, Priority.Low as number)
+
+    logger?.trace({ method: 'processBatch', itemIds, priority })
+
+    return createAndAddToQueue(batchId, items, priority)
       .andThen(() => markJobsAsCompleted(jobs))
       .map(() => {
         logger?.trace({

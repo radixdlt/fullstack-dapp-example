@@ -11,7 +11,7 @@ export type TransactionIdentifierData = Pick<TransactionIntent, 'discriminator' 
 export type TransactionModel = ReturnType<typeof TransactionModel>
 
 export const TransactionModel = (db: PrismaClient, queues: Queues) => (logger?: AppLogger) => {
-  const add = (job: TransactionJob) => {
+  const add = (job: TransactionJob, priority: number) => {
     const { discriminator, userId, ...data } = job
     return ResultAsync.fromPromise(
       db.transactionIntent.upsert({
@@ -41,7 +41,7 @@ export const TransactionModel = (db: PrismaClient, queues: Queues) => (logger?: 
         queues,
         logger
       })
-        .addToQueue(job)
+        .addToQueue(job, priority)
         .mapErr((error) => createApiError('failedToAddJobToTransactionQueue', 400)(error))
     })
   }

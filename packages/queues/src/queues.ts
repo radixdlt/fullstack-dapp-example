@@ -183,16 +183,23 @@ const createQueue = <J extends GenericJob>(
 ) => {
   const queue = new Queue<J>(name, {
     connection,
-    defaultJobOptions
+    defaultJobOptions: { ...defaultJobOptions }
   })
 
-  const add = (items: J[]) =>
+  type JwP = J & { priority?: number }
+
+  const add = (items: JwP[]) =>
     ResultAsync.fromPromise(
       queue.addBulk(
         items.map((item) => ({
           name: item[jobIdKey],
           data: item,
-          opts: { jobId: item[jobIdKey], removeOnComplete: 100, removeOnFail: 300 }
+          opts: {
+            jobId: item[jobIdKey],
+            removeOnComplete: 100,
+            removeOnFail: 300,
+            priority: item.priority
+          }
         }))
       ),
       typedError

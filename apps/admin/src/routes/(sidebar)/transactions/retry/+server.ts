@@ -1,4 +1,5 @@
 import { json } from '@sveltejs/kit'
+import { Priority } from 'common'
 import { TransactionIntentStatus } from 'database'
 import type { TransactionJob } from 'queues'
 
@@ -29,7 +30,7 @@ export const POST = async ({ request, locals }) => {
         traceId: crypto.randomUUID()
       }
       locals.logger.debug({ method: 'retryingTransactionJob', jobData })
-      await locals.transactionIntentHelper.addToQueue(jobData)
+      await locals.transactionIntentHelper.addToQueue(jobData, Priority.Low)
     }
 
     if (all) {

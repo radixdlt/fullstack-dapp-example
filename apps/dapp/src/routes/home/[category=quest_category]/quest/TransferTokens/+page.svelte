@@ -15,7 +15,7 @@
   import { htmlReplace } from '$lib/helpers/html-replace'
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
-  import { isUserBlocked, deriveIsUserBlockedAlternative, user } from '../../../../../stores'
+  import { isUserBlocked, user } from '../../../../../stores'
 
   import { checkAccountHasClams, getClams } from '$lib/helpers/get-clams'
   import { isMobile } from '@radixdlt/radix-dapp-toolkit'
@@ -104,7 +104,7 @@
       skip: receivedClams,
       footer: {
         next: {
-          enabled: deriveIsUserBlockedAlternative(receivedClams)
+          enabled: receivedClams
         }
       }
     },

@@ -6,6 +6,7 @@ import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId, Requirement } from 'content'
 import { config } from '$lib/config'
 import { hasAnyRewards } from '../helpers/has-any-rewards'
+import { getPriorityByGoldenTicketType, Priority } from 'common'
 export type QuestRequirement = { isHidden: boolean; isComplete: boolean }
 
 export type UserQuestController = ReturnType<typeof UserQuestController>
@@ -40,19 +41,24 @@ export const UserQuestController = ({
   }) => {
     return hasAllRequirementsCompleted(questId, userId)
       .andThen(({ isAllCompleted }) =>
-        userModel
-          .getById(userId, {})
-          .map((user) => ({ isAllCompleted, isNotBlocked: user.status === 'OK' }))
+        userModel.getById(userId, { goldenTicketClaimed: true }).map((user) => ({
+          isAllCompleted,
+          isNotBlocked: user.status === 'OK',
+          priority: getPriorityByGoldenTicketType(user?.goldenTicketClaimed)
+        }))
       )
-      .andThen(({ isAllCompleted, isNotBlocked }) =>
+      .andThen(({ isAllCompleted, isNotBlocked, priority }) =>
         isAllCompleted && hasAnyRewards(questId) && isNotBlocked
-          ? transactionModel.add({
-              userId,
-              discriminator: `${questId}:DepositReward:${userId}`,
-              type: 'DepositReward',
-              traceId: traceId,
-              questId
-            })
+          ? transactionModel.add(
+              {
+                userId,
+                discriminator: `${questId}:DepositReward:${userId}`,
+                type: 'DepositReward',
+                traceId: traceId,
+                questId
+              },
+              priority
+            )
           : okAsync(undefined)
       )
   }
@@ -89,23 +95,17 @@ export const UserQuestController = ({
       if (['Welcome', 'WhatIsRadix'].includes(questId)) {
         return okAsync(undefined)
       }
-      return transactionModel.add({
-        userId,
-        discriminator: `${questId}:QuestCompleted:${userId}`,
-        type: 'QuestCompleted',
-        questId,
-        traceId
-      })
-    })
-
-  const partiallyCompleteOrThrow = (userId: string, questId: QuestId) =>
-    userModel
-      .getById(userId, {})
-      .andThen((user) =>
-        user.status !== 'OK'
-          ? userQuestModel.updateQuestStatus(questId, userId, 'PARTIALLY_COMPLETED')
-          : errAsync(createApiError(ErrorReason.requirementsNotMet, 400)())
+      return transactionModel.add(
+        {
+          userId,
+          discriminator: `${questId}:QuestCompleted:${userId}`,
+          type: 'QuestCompleted',
+          questId,
+          traceId
+        },
+        Priority.Low
       )
+    })
 
   const deleteSavedProgress = (userId: string) =>
     userQuestModel
@@ -116,7 +116,7 @@ export const UserQuestController = ({
     hasAllRequirementsCompleted(questId, userId)
       .andThen(({ isAllCompleted }) => {
         if (!isAllCompleted) {
-          return partiallyCompleteOrThrow(userId, questId)
+          return errAsync(createApiError(ErrorReason.requirementsNotMet, 400)())
         }
 
         if (hasAnyRewards(questId)) {

@@ -3,6 +3,7 @@ import { ResultAsync, errAsync } from 'neverthrow'
 import type { PrismaClient } from 'database'
 import type { AppLogger } from '../helpers'
 import { WorkerError } from '../worker-error'
+import { Priority } from '../constants'
 
 export type TransactionIntentHelper = ReturnType<typeof TransactionIntentHelper>
 export const TransactionIntentHelper = ({
@@ -14,28 +15,28 @@ export const TransactionIntentHelper = ({
   queues: ReturnType<typeof getQueues>
   logger?: AppLogger
 }) => {
-  const addToQueue = (job: TransactionJob) => {
+  const addToQueue = (job: TransactionJob, priority: number) => {
     switch (job.type) {
       case 'DepositGiftBoxesReward':
-        return queues.DepositGiftBoxReward.buffer.add([job])
+        return queues.DepositGiftBoxReward.buffer.add([{ ...job, priority }])
 
       case 'DepositReward':
-        return queues.DepositQuestReward.buffer.add([job])
+        return queues.DepositQuestReward.buffer.add([{ ...job, priority }])
 
       case 'ElementsDeposited':
-        return queues.CreateRadGems.buffer.add([job])
+        return queues.CreateRadGems.buffer.add([{ ...job, priority }])
 
       case 'QuestCompleted':
-        return queues.QuestCompleted.buffer.add([job])
+        return queues.QuestCompleted.buffer.add([{ ...job, priority }])
 
       case 'DepositPartialReward':
-        return queues.DepositPartialReward.buffer.add([job])
+        return queues.DepositPartialReward.buffer.add([{ ...job, priority }])
 
       case 'DepositHeroBadge':
-        return queues.DepositHeroBadge.buffer.add([job])
+        return queues.DepositHeroBadge.buffer.add([{ ...job, priority }])
 
       case 'DepositXrd':
-        return queues.DepositXrd.buffer.add([job])
+        return queues.DepositXrd.buffer.add([{ ...job, priority }])
 
       default:
         return errAsync('unhandled job type')
@@ -43,7 +44,8 @@ export const TransactionIntentHelper = ({
   }
 
   const add = (
-    job: TransactionJob
+    job: TransactionJob,
+    priority: number = Priority.Low
   ): ResultAsync<
     void,
     {
@@ -70,7 +72,7 @@ export const TransactionIntentHelper = ({
       .andThen(() => {
         logger?.trace({ method: 'TransactionIntentHelper.add', job })
 
-        return addToQueue(job).mapErr((error) => ({
+        return addToQueue(job, priority).mapErr((error) => ({
           reason: WorkerError.FailedToAddJobToQueue,
           jsError: error
         }))

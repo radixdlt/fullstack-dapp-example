@@ -7,15 +7,16 @@
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
   import { writable } from 'svelte/store'
-  import { deriveIsUserBlockedAlternative } from '../../../../../stores'
+  import { user } from '../../../../../stores'
   import { webSocketClient, WebSocketClient } from '$lib/websocket-client'
   import { messageApi } from '$lib/api/message-api'
+  import CopyTextBox from '$lib/components/copy-text-box/CopyTextBox.svelte'
+  import { shortenAddress } from '$lib/utils/shorten-address'
   export let data: PageData
   const text = data.text as Quests['Thorswap']['text']
   let quest: Quest
 
   const mayaSwap = writable(data.requirements.MayaRouterWithdrawEvent.isComplete)
-  const isEnabled = deriveIsUserBlockedAlternative(mayaSwap)
 
   onMount(() => {
     markNotificationAsSeen('thorswapSwapCompleted')
@@ -76,10 +77,10 @@
     {
       id: '8',
       type: 'regular',
-      skip: isEnabled,
+      skip: mayaSwap,
       footer: {
         next: {
-          enabled: isEnabled
+          enabled: mayaSwap
         }
       }
     },
@@ -126,12 +127,17 @@
 
   {#if render('8')}
     {@html text['8a.md']}
+    <CopyTextBox
+      text={shortenAddress($user?.accountAddress || '')}
+      value={$user?.accountAddress || ''}
+    />
+    {@html text['8b.md']}
     <div class="center">
       <Button link="https://app.thorswap.finance/swap" isExternal={true}>
         {$i18n.t('quests:Thorswap.gotoThorswap')}
       </Button>
     </div>
-    {@html text['8b.md']}
+    {@html text['8c.md']}
   {/if}
 </Quest>
 

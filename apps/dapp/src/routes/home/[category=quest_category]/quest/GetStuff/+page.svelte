@@ -41,9 +41,12 @@
 
   const directDepositXrd = () => {
     xrdDepositLoading = true
-    userApi.directDepositXrd().mapErr(() => {
-      xrdDepositLoading = false
-    })
+    userApi
+      .directDepositXrd()
+      .mapErr(() => {
+        xrdDepositLoading = false
+      })
+      .andThen(() => completeRequirement(data.id, 'GetXRD'))
   }
 
   onDestroy(() => {
@@ -249,6 +252,7 @@
       {
         id: 'get-xrd',
         type: 'regular',
+        skip: hasXrd,
         footer: {
           next: {
             enabled: hasXrd
@@ -262,7 +266,7 @@
 
   let selectedGetXrdMethod: ComponentProps<GetXrdMethodOptions>['selectedOption'] = 'card'
 
-  $: address = $user!.accountAddress!
+  $: address = $user?.accountAddress
 </script>
 
 <Quest
@@ -271,6 +275,14 @@
       onReceiveXRDPage()
     } else {
       waitingWarning(false)
+    }
+
+    if (ev.detail === '6') {
+      hasEnoughXrd().map((value) => {
+        hasXrd.set(value)
+        // [RQ-708] TODO: this has no effect because `setSteps` is not called.
+        // Even after calling `setSteps` they're not updated because of children components keeping own copy of `steps`
+      })
     }
 
     if (ev.detail === 'get-xrd') {
@@ -350,7 +362,7 @@
   {#if render('get-xrd')}
     {#if selectedGetXrdMethod === 'card'}
       {@html text['8-NEEDXRD-3.md']}
-      <CopyTextBox text={shortenAddress(address)} value={address} />
+      <CopyTextBox text={shortenAddress(address ?? '')} value={address ?? ''} />
       {@html text['8-NEEDXRD-3a.md']}
       <div class="center">
         <Button
@@ -371,7 +383,7 @@
       {@html text['8-NEEDXRD-4a.md']}
     {:else if selectedGetXrdMethod === 'thorswap'}
       {@html text['8-NEEDXRD-5.md']}
-      <CopyTextBox text={shortenAddress(address)} value={address} />
+      <CopyTextBox text={shortenAddress(address ?? '')} value={address ?? ''} />
       {@html text['8-NEEDXRD-5a.md']}
       <div class="center">
         <Button
