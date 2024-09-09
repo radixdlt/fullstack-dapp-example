@@ -27,14 +27,17 @@
         switch (message.requirementId) {
           case 'OpenGiftBox':
             isOpenGiftBoxCompleted.set(true)
+            quest.actions.goToStep('6')
             break
 
           case 'RadGemsClaimed':
             isRadgemsClaimedCompleted.set(true)
+            quest.actions.goToStep('10')
             break
 
           case 'RadMorphCreated':
             isRadMorphCreatedCompleted.set(true)
+            quest.actions.goToStep('15')
             break
 
           default:
@@ -81,7 +84,6 @@
     {
       id: '5',
       type: 'jetty',
-      skip: isOpenGiftBoxCompleted,
       footer: {
         next: {
           enabled: isOpenGiftBoxCompleted
@@ -103,7 +105,6 @@
     {
       id: '9',
       type: 'jetty',
-      skip: isRadgemsClaimedCompleted,
       footer: {
         next: {
           enabled: isRadgemsClaimedCompleted
@@ -129,7 +130,6 @@
     {
       id: '14',
       type: 'jetty',
-      skip: isRadMorphCreatedCompleted,
       footer: {
         next: {
           enabled: isRadMorphCreatedCompleted
