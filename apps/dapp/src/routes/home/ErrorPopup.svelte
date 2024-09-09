@@ -34,8 +34,9 @@
         <Button
           isExternal
           link={`mailto:hello@radixdlt.com?subject=RadQuest%20support%20request%20%5BXRD%20limit%20reached%5D${$user?.id ? `%20-%20user%20ID%3A%20${$user.id}` : ''}`}
-          >{$i18n.t('main:errorPopup.XrdRewardLimit.button')}</Button
         >
+          {$i18n.t('main:errorPopup.XrdRewardLimit.button')}
+        </Button>
       </div>
     {/if}
 
