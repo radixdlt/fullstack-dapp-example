@@ -125,14 +125,6 @@ export const FraudDetectionModule = (config: {
     return true
   }
 
-  const passesIPQSGenerous = ({ fraud_score, vpn, tor, proxy }: IPQSResponse) => {
-    if (ipqs.allowAll) {
-      return true
-    }
-
-    return passesIPQSAggressive({ fraud_score, vpn, tor, proxy } as IPQSResponse)
-  }
-
   const isFarmer = (clientIp: string, userId: string) =>
     ResultAsync.combineWithAllErrors([
       userModel.getUserIdsByIp(clientIp),
@@ -165,7 +157,6 @@ export const FraudDetectionModule = (config: {
     getIpqsResult(input).andThen((data) => {
       const result = data.response
       const countryCode = result.country_code || ''
-      const _passesIPQSGenerous = passesIPQSGenerous(result)
       const _passesIPQSAggressive = passesIPQSAggressive(result)
       const countryStatus = countryCode
         ? blockedCountryModel.getCountryStatus(countryCode)
@@ -190,10 +181,6 @@ export const FraudDetectionModule = (config: {
         },
         [FraudRule.IPQSAggresive]: {
           status: _passesIPQSAggressive ? FraudRuleStatus.Passed : FraudRuleStatus.Rejected,
-          ...data
-        },
-        [FraudRule.IPQSGenerous]: {
-          status: _passesIPQSGenerous ? FraudRuleStatus.Passed : FraudRuleStatus.Rejected,
           ...data
         }
       }))

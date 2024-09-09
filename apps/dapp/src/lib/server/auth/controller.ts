@@ -119,12 +119,8 @@ export const AuthController = ({
       logger.trace({ method: 'login.doFraudScoring', evaluation })
 
       const businessLogic = () => {
-        if (check.ruleRejected(FraudRule.IPQSGenerous)) {
-          return userModel.setUserBlockedStatus(user.id, 'PERMANENTLY_BLOCKED')
-        }
-
         if (check.ruleRejected(FraudRule.CountrySanctioned)) {
-          return userModel.setUserBlockedStatus(user.id, 'TEMPORARILY_BLOCKED')
+          return userModel.setUserBlockedStatus(user.id, 'PERMANENTLY_BLOCKED')
         }
 
         if (check.ruleOk(FraudRule.GoldenTicket)) {
@@ -235,14 +231,14 @@ export const AuthController = ({
       .andThen(({ user, isNewUser }) =>
         fraudDetectionModule
           .evaluate({ ...data, userId: user.id })
-          .andThen(({ IPQSGenerous, ...rest }) =>
+          .andThen(({ IPQSAggresive, ...rest }) =>
             loginAttemptModel
               .add({
                 type: isNewUser ? 'USER_CREATED' : 'USER_LOGIN',
                 userId: user.id,
-                assessmentId: IPQSGenerous.assessmentId
+                assessmentId: IPQSAggresive.assessmentId
               })
-              .map(() => ({ ...rest, IPQSGenerous }) as FraudEvaluation)
+              .map(() => ({ ...rest, IPQSAggresive }) as FraudEvaluation)
           )
           .andThen(setUserBlockedStatus(user))
           .map(() => user)
