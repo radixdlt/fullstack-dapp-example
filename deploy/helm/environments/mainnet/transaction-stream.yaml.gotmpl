@@ -44,7 +44,13 @@ pm2_metrics:
 metrics:
   enabled: true
   port: 9210
-
   alert_labels:
     cluster: rtlj-prod
     env: mainnet
+
+alerts:
+  aws_infrastructure_enabled: true
+  free_rds_ram_warning_threshold_in_bytes: "2000000000"
+  free_rds_ram_warning_threshold: "2 GB"
+  free_rds_ram_critical_threshold_in_bytes: "1000000000"
+  free_rds_ram_critical_threshold: "1 GB"
