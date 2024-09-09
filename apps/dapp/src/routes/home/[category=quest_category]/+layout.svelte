@@ -51,8 +51,10 @@
       }
 
       const preRequisites = quest.preRequisites
-      const isUnlocked = preRequisites.every((preReq) =>
-        isConsideredCompleted(data.questStatus[preReq]?.status)
+      const isUnlocked = preRequisites.every(
+        (preReq) =>
+          isConsideredCompleted(data.questStatus[preReq]?.status) ||
+          data.questStatus[preReq]?.status === 'REWARDS_DEPOSITED'
       )
 
       const isInProgress = status === 'IN_PROGRESS'

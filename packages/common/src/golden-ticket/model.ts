@@ -27,7 +27,7 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
 
   const getAll = () => dbClient.goldenTicket.findMany({ orderBy: { createdAt: 'desc' } })
 
-  const createBatch = (count: number, expiresAt: Date, ownerId: string) => {
+  const createBatch = (count: number, expiresAt: Date, ownerId: string, description?: string) => {
     const batchId = crypto.randomUUID() as string
 
     const tickets = Array.from({ length: count }, () => ({
@@ -37,20 +37,27 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
       ),
       batchId,
       expiresAt,
-      ownerId
+      ownerId,
+      description
     }))
 
     return dbClient.goldenTicket.createMany({ data: tickets }).then(() => tickets)
   }
 
-  const importBatch = (tickets: string[], expiresAt: Date, ownerId: string) => {
+  const importBatch = (
+    tickets: string[],
+    expiresAt: Date,
+    ownerId: string,
+    description?: string
+  ) => {
     const batchId = crypto.randomUUID() as string
 
     const ticketData = tickets.map((id) => ({
       id,
       batchId,
       expiresAt,
-      ownerId
+      ownerId,
+      description
     }))
 
     return dbClient.goldenTicket.createMany({ data: ticketData })
