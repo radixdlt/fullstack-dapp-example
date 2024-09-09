@@ -47,3 +47,10 @@ metrics:
   alert_labels:
     cluster: rdx-works-main-dev
     env: dev
+
+alerts:
+  aws_infrastructure_enabled: true
+  free_rds_ram_warning_threshold_in_bytes: "500000000"
+  free_rds_ram_warning_threshold: "500 MB"
+  free_rds_ram_critical_threshold_in_bytes: "250000000"
+  free_rds_ram_critical_threshold: "250 MB"

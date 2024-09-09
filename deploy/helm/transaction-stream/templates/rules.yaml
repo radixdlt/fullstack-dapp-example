@@ -180,3 +180,107 @@ spec:
         description: "There is over 1s latency for the p95 for some Redis commands"
         dashboard: {{ $metrics.dashboard_url }}
         runbook_url: "https://runbooks.extratools.works"
+
+{{- if .Values.alerts.aws_infrastructure_enabled }}
+
+  - name: RadquestRDS
+    rules:
+    - alert: RDSCpuUtilizationHigh
+      expr: aws_rds_cpuutilization_average *on(dbinstance_identifier) group_left(tag_radixdlt_rds_cluster) aws_resource_info{dbinstance_identifier=~"{{ $ns }}.*"} > 80
+      for: 15m
+      labels:
+        severity: warning
+        tier: application
+        application: radquest
+        namespace: {{ $ns }}
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: {{`"High CPU utilization for {{ $labels.dbinstance_identifier }} instance."`}}
+        description: {{`"The CPU utilization of RDS {{ $labels.dbinstance_identifier }} instance is over 80% for 15mins."`}}
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
+
+    - alert: RDSCpuUtilizationCritical
+      expr: aws_rds_cpuutilization_average *on(dbinstance_identifier) group_left(tag_radixdlt_rds_cluster) aws_resource_info{dbinstance_identifier=~"{{ $ns }}.*"} > 90
+      for: 15m
+      labels:
+        severity: critical
+        tier: application
+        application: radquest
+        namespace: {{ $ns }}
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: {{`"High CPU utilization for {{ $labels.dbinstance_identifier }} instance."`}}
+        description: {{`"The CPU utilization of RDS {{ $labels.dbinstance_identifier }} instance is over 90% for 15mins."`}}
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
+
+    - alert: RDSLowFreeRamHigh
+      expr: aws_rds_freeable_memory_average *on(dbinstance_identifier) group_left(tag_radixdlt_rds_cluster) aws_resource_info{dbinstance_identifier=~"{{ $ns }}.*"} < {{ .Values.alerts.free_rds_ram_warning_threshold_in_bytes }}
+      for: 15m
+      labels:
+        severity: warning
+        tier: application
+        application: radquest
+        namespace: {{ $ns }}
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: {{`"Low free RAM for {{ $labels.dbinstance_identifier }} instance."`}}
+        description: "RDS instance is having less than {{ .Values.alerts.free_rds_ram_warning_threshold }} for 15mins"
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
+
+    - alert: RDSLowFreeRamCritical
+      expr: aws_rds_freeable_memory_average *on(dbinstance_identifier) group_left(tag_radixdlt_rds_cluster) aws_resource_info{dbinstance_identifier=~"{{ $ns }}.*"} < {{ .Values.alerts.free_rds_ram_critical_threshold_in_bytes }}
+      for: 15m
+      labels:
+        severity: critical
+        tier: application
+        application: radquest
+        namespace: {{ $ns }}
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: {{`"Low free RAM for {{ $labels.dbinstance_identifier }} instance."`}}
+        description: "RDS instance is having less than {{ .Values.alerts.free_rds_ram_critical_threshold }} for 15mins"
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
+
+  - name: RadquestElasticacheRedis
+    rules:
+    - alert: RedisCpuUtilizationHigh
+      expr: aws_elasticache_cpuutilization_average *on(cache_cluster_id) group_left(tag_radixdlt_application) aws_resource_info{cache_cluster_id=~"{{ $ns }}.*"} > 80
+      for: 15m
+      labels:
+        severity: warning
+        tier: application
+        application: radquest
+        namespace: {{ $ns }}
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: {{`"High CPU utilization for {{ $labels.cache_cluster_id }} node"`}}
+        description: {{`"The CPU utilization of Redis {{ $labels.cache_cluster_id }} node is over 80% for 15mins."`}}
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
+
+    - alert: RedisCpuUtilizationCritical
+      expr: aws_elasticache_cpuutilization_average *on(cache_cluster_id) group_left(tag_radixdlt_application) aws_resource_info{cache_cluster_id=~"{{ $ns }}.*"} > 90
+      for: 15m
+      labels:
+        severity: critical
+        tier: application
+        application: radquest
+        namespace: {{ $ns }}
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: {{`"High CPU utilization for {{ $labels.cache_cluster_id }} node"`}}
+        description: {{`"The CPU utilization of Redis {{ $labels.cache_cluster_id }} node is over 90% for 15mins."`}}
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
+
+{{- end }}
