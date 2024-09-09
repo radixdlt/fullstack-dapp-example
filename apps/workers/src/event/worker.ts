@@ -90,14 +90,6 @@ export const EventWorker = (
     QueueName.Event,
     async (job) => {
       await job.updateProgress(1)
-      logger.debug({
-        method: 'eventWorker.process',
-        traceId: job.data.traceId,
-        type: job.data.type,
-        userId: job.data.userId,
-        transactionId: job.data.transactionId,
-        questId: job.data.questId
-      })
 
       const updateEventStatus = UpdateEventStatus(dependencies.dbClient, job.data.transactionId)
 
@@ -105,6 +97,15 @@ export const EventWorker = (
         const result = await determineIfEventShouldBeProcessed(job.data.transactionId)
           .andThen((shouldProcessEvent) => {
             if (!shouldProcessEvent) return workerHelper.noop()
+
+            logger.debug({
+              method: 'eventWorker.process',
+              traceId: job.data.traceId,
+              type: job.data.type,
+              userId: job.data.userId,
+              transactionId: job.data.transactionId,
+              questId: job.data.questId
+            })
 
             return getUser(job.data.userId).andThen(
               ({ status, accountAddress, referredBy, goldenTicketClaimed }) => {
