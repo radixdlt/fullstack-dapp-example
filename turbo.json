@@ -95,5 +95,6 @@
     "tsc": {
       "cache": false
     }
-  }
+  },
+  "ui": "tui"
 }
