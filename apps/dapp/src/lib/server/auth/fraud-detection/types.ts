@@ -59,7 +59,6 @@ export const IPQS_OK_RESULT = {
 export const FraudRule = {
   Farmer: 'Farmer',
   GoldenTicket: 'GoldenTicket',
-  IPQSGenerous: 'IPQSGenerous',
   IPQSAggresive: 'IPQSAggresive',
   CountryBlocked: 'CountryBlocked',
   CountrySanctioned: 'CountrySanctioned'
@@ -77,11 +76,6 @@ export type FraudRuleStatus = (typeof FraudRuleStatus)[keyof typeof FraudRuleSta
 
 export type FraudEvaluation = {
   [FraudRule.IPQSAggresive]: {
-    status: FraudRuleStatus
-    response: IPQSResponse
-    assessmentId: number
-  }
-  [FraudRule.IPQSGenerous]: {
     status: FraudRuleStatus
     response: IPQSResponse
     assessmentId: number
