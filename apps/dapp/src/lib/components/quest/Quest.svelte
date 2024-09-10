@@ -106,7 +106,9 @@
     type: 'intro'
   }
 
-  let _steps: (IntroStep | RegularStep | JettyStep)[] = [introStep, ...steps]
+  let _steps: (IntroStep | RegularStep | JettyStep)[]
+
+  $: _steps = [introStep, ...steps]
 
   $: render = (id: string) => currentStep?.id === id
 

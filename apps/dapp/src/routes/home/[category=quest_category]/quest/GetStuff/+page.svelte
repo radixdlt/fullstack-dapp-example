@@ -13,11 +13,11 @@
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { waitingWarning } from '$lib/utils/waiting-warning'
   import { page } from '$app/stores'
-  import { hasEnoughXrd } from './has-enough-xrd'
   import GetXrdMethodOptions from './GetXrdMethodOptions.svelte'
   import { completeRequirement } from '$lib/helpers/complete-requirement.svelte'
   import CopyTextBox from '$lib/components/copy-text-box/CopyTextBox.svelte'
   import { shortenAddress } from '$lib/utils/shorten-address'
+  import { hasEnoughXrd } from '$lib/utils/has-enough-xrd'
 
   export let data: PageData
 
@@ -283,9 +283,7 @@
 
     if (ev.detail === '6') {
       hasEnoughXrd().map((value) => {
-        hasXrd.set(value)
-        // [RQ-708] TODO: this has no effect because `setSteps` is not called.
-        // Even after calling `setSteps` they're not updated because of children components keeping own copy of `steps`
+        $hasXrd = value
       })
     }
 
