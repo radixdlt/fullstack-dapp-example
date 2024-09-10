@@ -48,7 +48,7 @@
   }
   .error-popup {
     margin: var(--spacing-md);
-    max-width: 25rem;
+    max-width: min(25rem, calc(100vw - 2 * var(--spacing-md)));
   }
 
   .error-popup-content {
@@ -59,5 +59,8 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+    @include smallMobile {
+      padding: var(--spacing-md);
+    }
   }
 </style>

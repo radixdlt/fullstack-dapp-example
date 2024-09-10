@@ -4,7 +4,9 @@
   import NavigateButton from './NavigateButton.svelte'
 
   export let noButtons = false
-  export let stepSize = 400
+  export let stepSize: number | undefined = undefined
+  $: defaultStepSize = typeof window !== 'undefined' ? Math.min(window.screen.width, 400) : 400
+  $: currentStepSize = stepSize || defaultStepSize
 
   let carousel: HTMLElement
 
@@ -23,7 +25,7 @@
   export const scrollToNext = () => {
     if (isScrolledToEnd) return
     carousel.scrollTo({
-      left: carousel.scrollLeft + stepSize,
+      left: carousel.scrollLeft + currentStepSize,
       behavior: 'smooth'
     })
   }
@@ -31,14 +33,14 @@
   export const scrollToPrev = () => {
     if (isScrolledToStart) return
     carousel.scrollTo({
-      left: carousel.scrollLeft - stepSize,
+      left: carousel.scrollLeft - currentStepSize,
       behavior: 'smooth'
     })
   }
 
   export const scrollToIndex = (i: number) => {
     carousel.scrollTo({
-      left: i * stepSize - carousel.offsetWidth / 2,
+      left: i * currentStepSize - carousel.offsetWidth / 2,
       behavior: 'smooth'
     })
   }
@@ -84,7 +86,7 @@
       if (!canScroll) return
       canScroll = false
       e.currentTarget.scrollBy({
-        left: delta < 0 ? -stepSize : stepSize,
+        left: delta < 0 ? -currentStepSize : currentStepSize,
         behavior: 'smooth'
       })
       setTimeout(() => {

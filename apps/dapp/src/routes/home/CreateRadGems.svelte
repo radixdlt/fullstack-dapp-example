@@ -124,7 +124,7 @@
       checkClaimAvailable($user?.id!, useV2)
     ])
       .map(([hasWaitingRadgemJob, _]) => {
-        waitingForElementsDeposited = hasWaitingRadgemJob
+        waitingForElementsDeposited = !claimAvailable && !elementsDeposited && hasWaitingRadgemJob
         loadingLedgerData = false
         claimAvailable = true
       })

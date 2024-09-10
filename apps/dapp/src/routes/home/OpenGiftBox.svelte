@@ -166,7 +166,7 @@
     })
       .map(() => {
         waitingForOpenTransaction = false
-        waitingForDepositedRewards = true
+        waitingForDepositedRewards = !readyToClaim
       })
       .mapErr(() => {
         waitingForOpenTransaction = false
