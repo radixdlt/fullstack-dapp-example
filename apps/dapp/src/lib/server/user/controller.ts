@@ -13,7 +13,7 @@ import { type ErrorResponse } from '@radixdlt/babylon-gateway-api-sdk'
 import type { TransactionJob } from 'queues'
 import * as valibot from 'valibot'
 import type { GoldenTicket, GoldenTicketStatus, TicketType, User, UserEmail } from 'database'
-export type LimitedUser = {
+export type UserSubset = {
   id: string
   accountAddress: string | null
   referralCode: string
@@ -49,7 +49,7 @@ export const UserController = ({
   addresses,
   systemQueue
 }: ControllerDependencies) => {
-  const getUser = (userId: string): ControllerMethodOutput<LimitedUser | null> =>
+  const getUser = (userId: string): ControllerMethodOutput<UserSubset | null> =>
     userModel
       .getById(userId, {
         email: true,
