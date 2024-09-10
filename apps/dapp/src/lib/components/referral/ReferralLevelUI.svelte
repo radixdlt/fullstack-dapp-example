@@ -67,22 +67,22 @@
     padding: 1rem 1.5rem;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 1rem;
+    justify-content: space-around;
+    gap: 0.5rem;
     width: 100%;
     @include smallMobile {
-      padding: 1rem 0.5rem;
+      padding: 1rem;
     }
 
     h3 {
-      line-height: var(--text-md3);
-      font-size: var(--text-md3);
+      line-height: var(--text-md2);
+      font-size: var(--text-md2);
       font-weight: 300;
       margin: 0;
-      margin-right: auto;
+
       @include smallMobile {
-        line-height: var(--text-md2);
-        font-size: var(--text-md2);
+        line-height: var(--text-md1);
+        font-size: var(--text-md1);
       }
     }
   }
