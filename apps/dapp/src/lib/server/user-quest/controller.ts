@@ -155,9 +155,15 @@ export const UserQuestController = ({
         shouldTrackAccountAddress
           ? userModel
               .getById(userId, {})
-              .andThen((user) =>
-                accountAddressModel.addTrackedAddress(user.accountAddress!, questId, userId)
-              )
+              .andThen((user) => {
+                if (user.accountAddress)
+                  return accountAddressModel.addTrackedAddress(user.accountAddress, questId, userId)
+
+                logger.error({ method: 'startQuest.accountAddressNotSet', user, questId })
+
+                return errAsync(createApiError(ErrorReason.accountAddressNotSet, 400)())
+              })
+              .map(() => undefined)
           : okAsync(undefined)
       )
 

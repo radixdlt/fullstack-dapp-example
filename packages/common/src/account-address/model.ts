@@ -1,4 +1,4 @@
-import { ResultAsync } from 'neverthrow'
+import { okAsync, ResultAsync } from 'neverthrow'
 import { type AppLogger, createApiError, typedError } from '../helpers'
 import { RedisKeys } from '../constants'
 import { RedisConnection } from 'bullmq'
@@ -13,27 +13,32 @@ export const AccountAddressModel = (redisClient: RedisConnection) => (logger?: A
   const getRedisClient = () => ResultAsync.fromPromise(redisClient.client, typedError)
 
   const addTrackedAddress = (accountAddress: string, questId: string, userId: string) =>
-    getRedisClient()
-      .andThen((client) => {
-        logger?.debug({
-          method: 'addTrackedAddress',
-          model: 'AccountAddressModel',
-          accountAddress,
-          questId,
-          userId
-        })
-        return ResultAsync.fromPromise(
-          client.setnx(`${RedisKeys.TrackedAccountAddresses}:${accountAddress}:${questId}`, userId),
-          (error) => {
+    accountAddress
+      ? getRedisClient()
+          .andThen((client) => {
+            logger?.debug({
+              method: 'addTrackedAddress',
+              model: 'AccountAddressModel',
+              accountAddress,
+              questId,
+              userId
+            })
+            return ResultAsync.fromPromise(
+              client.setnx(
+                `${RedisKeys.TrackedAccountAddresses}:${accountAddress}:${questId}`,
+                userId
+              ),
+              (error) => {
+                logger?.error({ error, method: 'addTrackedAddress', model: 'AccountAddressModel' })
+                return createApiError('Failed to add tracked address', 500)()
+              }
+            )
+          })
+          .mapErr((error) => {
             logger?.error({ error, method: 'addTrackedAddress', model: 'AccountAddressModel' })
-            return createApiError('Failed to add tracked address', 500)()
-          }
-        )
-      })
-      .mapErr((error) => {
-        logger?.error({ error, method: 'addTrackedAddress', model: 'AccountAddressModel' })
-        return createApiError('Failed to connect to redis when adding tracked account', 500)()
-      })
+            return createApiError('Failed to connect to redis when adding tracked account', 500)()
+          })
+      : okAsync(createApiError('Account address is required', 400)())
 
   const getTrackedAddressUserId = (accountAddress: string, questId: string) =>
     getRedisClient()
