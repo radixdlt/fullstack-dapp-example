@@ -168,7 +168,7 @@ describe('filter transactions', () => {
     })
   })
 
-  describe.only('RadMorph', () => {
+  describe('RadMorph', () => {
     it(`should find ${EventId.RadMorphCreated} transaction`, () => {
       const result = filterTransactionsByType([...RadMorphCreated, ...RadMorphCreated2])
 
