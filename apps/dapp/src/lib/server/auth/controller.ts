@@ -21,7 +21,7 @@ import {
   EventId
 } from 'common'
 
-import { type User, type UserType } from 'database'
+import { UserStatus, type User, type UserType } from 'database'
 import { FraudRule, type FraudEvaluation } from './fraud-detection/types'
 import { fraudRuleChecker } from './fraud-detection/fraud-detection'
 
@@ -168,6 +168,8 @@ export const AuthController = ({
     }
   ): ControllerMethodOutput<{
     authToken: string
+    status: UserStatus
+    vpn: boolean
     headers: { ['Set-Cookie']: string }
     id: string
   }> => {
@@ -242,8 +244,8 @@ export const AuthController = ({
               .map((status) => ({
                 id: user.id,
                 type: user.type,
-                status,
-                vpn: IPQSAggresive.response.vpn
+                status: status as UserStatus,
+                vpn: IPQSAggresive.response.vpn || false
               }))
           )
           .orElse((error) => {
