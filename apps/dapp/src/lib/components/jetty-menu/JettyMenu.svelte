@@ -23,6 +23,7 @@
   import Notification from './Notification.svelte'
   import { swipe } from 'svelte-gestures'
   import { clickOutside } from '$lib/utils/click-outside'
+  import { isMobile } from '$lib/utils/is-mobile'
 
   export let expanded = false
   export let poppedUp = true
@@ -174,7 +175,7 @@
     class="jetty-icon"
     style:--iconPosition={`${jettyPositionFactor * 30 - 88}%`}
     on:mouseenter={() => {
-      dispatch('hover-over-jetty', true)
+      if (!isMobile()) dispatch('hover-over-jetty', true)
     }}
     on:mouseleave={() => {
       dispatch('hover-over-jetty', false)
