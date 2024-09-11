@@ -387,7 +387,7 @@
     }
   }
 
-  $: if ($user?.accountAddress && data.questStatus['GetStuff']?.status) {
+  $: if ($user?.accountAddress && data.questStatus['GetStuff']?.status === 'COMPLETED') {
     pollXrd()
   }
 
