@@ -24,9 +24,29 @@
     GoldLevel: requirements.GoldLevel.threshold
   }
 
-  $: currentLevel =
+  const getCurrentLevel = (referralCount: number) => {
+    if ($user?.goldenTicketClaimed?.type !== 'FULL') return 'BronzeLevel' as Level
+    if (referralCount >= threshold.GoldLevel) return 'SuperLevel' as Level | 'SuperLevel'
+    else if (referralCount >= threshold.SilverLevel) return 'GoldLevel' as Level
+    else if (referralCount >= threshold.BronzeLevel) return 'SilverLevel' as Level
+    else return 'BronzeLevel' as Level
+  }
+
+  $: currentLevel = getCurrentLevel(referrals.length)
+
+  $: rewardDisplayLevel =
+    (Object.entries(progress).find(
+      ([_, status]) => status === 'REWARDS_DEPOSITED'
+    )?.[0] as Level) ||
     (Object.entries(progress).find(([_, status]) => status === 'IN_PROGRESS')?.[0] as Level) ||
-    ('BronzeLevel' as Level)
+    currentLevel
+
+  $: {
+    console.log('currentLevel:', currentLevel)
+    console.log('rewardDisplayLevel:', rewardDisplayLevel)
+    console.log('progress:', progress)
+  }
+
   const getNextLevel = (currentLevel: string) => {
     if ($user?.goldenTicketClaimed?.type !== 'FULL') return 'SuperLevel'
     else if (currentLevel === 'BronzeLevel') return 'SilverLevel'
@@ -53,7 +73,7 @@
   </div>
 
   <ReferralsSoFar
-    count={referrals.length}
+    referralCount={referrals.length}
     on:click={() => {
       dispatch('seeReferrals')
     }}
@@ -79,28 +99,28 @@
   </div>
   <div class="referral-levels">
     <ReferralLevel
-      isOpened={currentLevel === 'BronzeLevel'}
+      isOpened={rewardDisplayLevel === 'BronzeLevel'}
       level="BronzeLevel"
       on:refresh={refresh}
       maximum={threshold.BronzeLevel}
-      referred={referrals.length}
+      referralCount={referrals.length}
       status={progress.BronzeLevel}
     />
     {#if $user?.goldenTicketClaimed?.type === 'FULL'}
       <ReferralLevel
-        isOpened={currentLevel === 'SilverLevel'}
+        isOpened={rewardDisplayLevel === 'SilverLevel'}
         level="SilverLevel"
         on:refresh={refresh}
         maximum={threshold.SilverLevel}
-        referred={referrals.length}
+        referralCount={referrals.length}
         status={progress.SilverLevel}
       />
       <ReferralLevel
-        isOpened={currentLevel === 'GoldLevel'}
+        isOpened={rewardDisplayLevel === 'GoldLevel'}
         level="GoldLevel"
         on:refresh={refresh}
         maximum={threshold.GoldLevel}
-        referred={referrals.length}
+        referralCount={referrals.length}
         status={progress.GoldLevel}
       />
     {/if}
