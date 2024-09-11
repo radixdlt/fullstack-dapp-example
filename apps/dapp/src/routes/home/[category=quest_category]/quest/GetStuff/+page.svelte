@@ -12,7 +12,6 @@
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { waitingWarning } from '$lib/utils/waiting-warning'
-  import { page } from '$app/stores'
   import GetXrdMethodOptions from './GetXrdMethodOptions.svelte'
   import { completeRequirement } from '$lib/helpers/complete-requirement.svelte'
   import CopyTextBox from '$lib/components/copy-text-box/CopyTextBox.svelte'
@@ -212,7 +211,32 @@
   const setSteps = (newSteps: ComponentProps<Quest>['steps']) =>
     (steps = [...generalSteps.slice(0, 7), ...newSteps, ...generalSteps.slice(7)])
 
-  $: if ($user?.goldenTicketClaimed) {
+  const needXrdSteps = [
+    {
+      id: 'need-xrd',
+      type: 'jetty'
+    },
+    {
+      id: 'need-xrd-2',
+      type: 'jetty'
+    },
+    {
+      id: 'need-xrd-3',
+      type: 'regular'
+    },
+    {
+      id: 'get-xrd',
+      type: 'regular',
+      skip: hasXrd,
+      footer: {
+        next: {
+          enabled: hasXrd
+        }
+      }
+    }
+  ] as const
+
+  $: if ($user?.goldenTicketClaimed?.status === 'CLAIMED') {
     setSteps([
       {
         id: 'golden-ticket-valid',
@@ -225,12 +249,13 @@
         }
       }
     ])
-  } else if ($page.url.searchParams.get('t')) {
+  } else if ($user?.goldenTicketClaimed?.status === 'CLAIMED_INVALID') {
     setSteps([
       {
         id: 'golden-ticket-invalid',
         type: 'jetty'
-      }
+      },
+      ...needXrdSteps
     ])
   } else if ($hasXrd) {
     setSteps([
@@ -240,30 +265,7 @@
       }
     ])
   } else {
-    setSteps([
-      {
-        id: 'need-xrd',
-        type: 'jetty'
-      },
-      {
-        id: 'need-xrd-2',
-        type: 'jetty'
-      },
-      {
-        id: 'need-xrd-3',
-        type: 'regular'
-      },
-      {
-        id: 'get-xrd',
-        type: 'regular',
-        skip: hasXrd,
-        footer: {
-          next: {
-            enabled: hasXrd
-          }
-        }
-      }
-    ])
+    setSteps([...needXrdSteps])
   }
 
   let checkXrdInterval: ReturnType<typeof setInterval> | undefined
