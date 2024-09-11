@@ -69,7 +69,6 @@ export type UserModel = ReturnType<typeof UserModel>
 export const UserModel =
   (db: PrismaClient) =>
   (logger: AppLogger): UserModelType => {
-    const HOURS_24 = 1000 * 60 * 60 * 24
     const doesUserExist = (identityAddress: string) =>
       ResultAsync.fromPromise(
         db.user.count({ where: { identityAddress } }).then((count) => count > 0),
@@ -111,12 +110,12 @@ export const UserModel =
       })
     }
 
-    const getUserIdsByIp = (ip: string, period = HOURS_24) => {
+    const getUserIdsByIp = (ip: string) => {
       return ResultAsync.fromPromise(
         db.$queryRaw<{ userId: string }[]>`
       SELECT "userId" FROM "LoginAttempt" 
         WHERE "ipAssessmentId" IN (SELECT id FROM "IpAssessment" WHERE ip = ${ip}) 
-        AND "createdAt" > NOW() - interval '${period} milliseconds'
+        AND "createdAt" > NOW() - interval '24 hours'
       `,
         (error) => {
           logger?.error({ error, method: 'countByIp', model: 'UserModel' })
