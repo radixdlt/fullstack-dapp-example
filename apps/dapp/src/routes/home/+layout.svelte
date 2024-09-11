@@ -116,6 +116,12 @@
           radixDappToolkit.disconnect()
           throw Error('Failed to login')
         }
+
+        if (['PERMANENTLY_BLOCKED', 'TEMPORARILY_BLOCKED'].includes(result.value.status)) {
+          errorPopupStore.set({
+            id: result.value.vpn ? ErrorPopupId.GetOffVPN : ErrorPopupId.AccountLocked
+          })
+        }
       }
     })
 
@@ -125,10 +131,6 @@
           .map(async ([me, authToken]) => {
             //@ts-ignore
             dataLayer.push({ event: 'dl_click_4_wallet_connected' })
-
-            if (['PERMANENTLY_BLOCKED', 'TEMPORARILY_BLOCKED'].includes(me.status)) {
-              errorPopupStore.set({ id: ErrorPopupId.AccountLocked })
-            }
 
             $user = {
               ...me,

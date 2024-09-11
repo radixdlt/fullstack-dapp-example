@@ -43,6 +43,7 @@ export const ErrorPopupId = {
   AccountLocked: 'AccountLocked',
   AccountAlreadyRegistered: 'AccountAlreadyRegistered',
   CannotClaimRewards: 'CannotClaimRewards',
+  GetOffVPN: 'GetOffVPN',
   HighDemand: 'HighDemand'
 } as const
 
