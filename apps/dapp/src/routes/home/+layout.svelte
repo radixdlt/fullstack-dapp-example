@@ -117,9 +117,13 @@
           throw Error('Failed to login')
         }
 
-        if (['PERMANENTLY_BLOCKED', 'TEMPORARILY_BLOCKED'].includes(result.value.status)) {
+        if (['PERMANENTLY_BLOCKED'].includes(result.value.status)) {
           errorPopupStore.set({
-            id: result.value.vpn ? ErrorPopupId.GetOffVPN : ErrorPopupId.AccountLocked
+            id: ErrorPopupId.PermanentlyBlocked
+          })
+        } else if (['TEMPORARILY_BLOCKED'].includes(result.value.status)) {
+          errorPopupStore.set({
+            id: result.value.vpn ? ErrorPopupId.GetOffVPN : ErrorPopupId.SessionBlocked
           })
         }
       }
