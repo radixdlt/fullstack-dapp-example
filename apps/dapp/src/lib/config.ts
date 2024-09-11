@@ -55,7 +55,7 @@ export const config = {
   ipqs: {
     strictness: IPQS_STRICTNESS ? Number(IPQS_STRICTNESS) : 0,
     lighterPenalties: Boolean(IPQS_LIGHTER_PENALTIES) ?? true,
-    maxAllowedScore: 90,
+    maxAllowedScore: 80,
     cacheTTL: 60 * 60 * 4 * 1000,
     allowPublicAccessPoints: false,
     allowAll: Boolean(IPQS_ALLOW_ALL) ?? publicConfig.networkId !== 1,

@@ -18,6 +18,11 @@
       "content": "To claim more rewards, you will need to contact RadQuest support:",
       "button": "Get help with RadQuest rewards"
     },
+    "GetOffVPN": {
+      "title": "Account Suspended",
+      "content": "Try accessing RadQuest without a VPN or proxy.",
+      "button": "Close"
+    },
     "CannotClaimRewards": {
       "title": "You are currently blocked",
       "content": "While you are blocked, you cannot claim quest rewards or make use of Jetty’s RadMorph creation features.",

@@ -28,7 +28,7 @@ interface Resources {
       "swap-completed": "Continue your quest: Swap Tokens on a DEX.",
       "stake-completed": "Continue your quest: Radix Network Staking.",
       "thorswap-swap-completed": "Continue your quest: Bridge Tokens with THORSwap",
-      "not-enough-xrd": "You need more XRD"
+      "not-enough-xrd": "Tap here to get more XRD so you can keep questing!"
     },
     "fuse-elements": {
       "intro1": "Using my Web3 powers, I can fuse 5 Elements into a RadGem. Who knows what color or material it will be!",
@@ -108,6 +108,11 @@ interface Resources {
         "title": "XRD Reward Limit Reached",
         "content": "To claim more rewards, you will need to contact RadQuest support:",
         "button": "Get help with RadQuest rewards"
+      },
+      "GetOffVPN": {
+        "title": "Account Suspended",
+        "content": "Try accessing RadQuest without a VPN or proxy.",
+        "button": "Close"
       },
       "CannotClaimRewards": {
         "title": "You are currently blocked",
@@ -284,7 +289,7 @@ interface Resources {
       }
     },
     "Thorswap": {
-      "title": "Bridge Tokens with Thorswap",
+      "title": "Bridge Tokens with THORSwap",
       "description": "Move assets in and out of Radix",
       "introDescription": "Use the THORSwap dApp to “bridge” assets into Radix and back out",
       "requirements": {

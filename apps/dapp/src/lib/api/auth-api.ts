@@ -2,7 +2,7 @@ import type { SignedChallenge } from '@radixdlt/radix-dapp-toolkit'
 import { fetchWrapper } from '$lib/helpers/fetch-wrapper'
 
 const login = (personaProof: SignedChallenge) =>
-  fetchWrapper<{ authToken: string; id: string }>(
+  fetchWrapper<{ authToken: string; id: string; status: string; vpn: boolean }>(
     fetch('/api/auth/login', {
       method: 'POST',
       headers: {
@@ -12,7 +12,7 @@ const login = (personaProof: SignedChallenge) =>
         personaProof
       })
     })
-  ).map(({ data }) => data.authToken)
+  ).map(({ data }) => data)
 
 const createChallenge = () =>
   fetchWrapper<{ challenge: string }>(fetch('/api/auth/challenge')).map(

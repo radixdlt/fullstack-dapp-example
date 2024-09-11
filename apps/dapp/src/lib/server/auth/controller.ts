@@ -25,10 +25,6 @@ import { type User, type UserType } from 'database'
 import { FraudRule, type FraudEvaluation } from './fraud-detection/types'
 import { fraudRuleChecker } from './fraud-detection/fraud-detection'
 
-type FraudActionHandler = (
-  user: User
-) => (evaluation: FraudEvaluation) => ResultAsync<FraudEvaluation, ApiError>
-
 export type AuthController = ReturnType<typeof AuthController>
 export const AuthController = ({
   jwt,
@@ -113,39 +109,42 @@ export const AuthController = ({
       })
     })
 
-  const setUserBlockedStatus: FraudActionHandler =
-    (user: User) => (evaluation: FraudEvaluation) => {
-      const check = fraudRuleChecker(evaluation)
-      logger.trace({ method: 'login.doFraudScoring', evaluation })
+  const setUserStatus = (user: User) => (evaluation: FraudEvaluation) => {
+    const check = fraudRuleChecker(evaluation)
+    logger.trace({ method: 'login.doFraudScoring', evaluation })
 
-      const businessLogic = () => {
-        if (check.ruleRejected(FraudRule.CountrySanctioned)) {
-          return userModel.setUserBlockedStatus(user.id, 'PERMANENTLY_BLOCKED')
-        }
+    const businessLogic = () => {
+      if (check.ruleRejected(FraudRule.CountrySanctioned)) {
+        return userModel
+          .setUserBlockedStatus(user.id, 'PERMANENTLY_BLOCKED')
+          .map(() => 'PERMANENTLY_BLOCKED')
+      }
 
-        if (check.ruleOk(FraudRule.GoldenTicket)) {
-          return userModel
-            .setUserBlockedStatus(user.id, 'OK')
-            .andThen(() => retryCancelledEvents(user.id))
-        }
-
-        if (
-          check.ruleRejected(FraudRule.CountryBlocked) ||
-          check.ruleRejected(FraudRule.IPQSAggresive) ||
-          check.ruleRejected(FraudRule.Farmer)
-        ) {
-          return userModel.setUserBlockedStatus(user.id, 'TEMPORARILY_BLOCKED')
-        }
-
+      if (check.ruleOk(FraudRule.GoldenTicket)) {
         return userModel
           .setUserBlockedStatus(user.id, 'OK')
           .andThen(() => retryCancelledEvents(user.id))
+          .map(() => 'OK')
       }
 
-      return user.status === 'PERMANENTLY_BLOCKED'
-        ? okAsync(evaluation)
-        : businessLogic().map(() => evaluation)
+      if (
+        check.ruleRejected(FraudRule.CountryBlocked) ||
+        check.ruleRejected(FraudRule.IPQSAggresive) ||
+        check.ruleRejected(FraudRule.Farmer)
+      ) {
+        return userModel
+          .setUserBlockedStatus(user.id, 'TEMPORARILY_BLOCKED')
+          .map(() => 'TEMPORARILY_BLOCKED')
+      }
+
+      return userModel
+        .setUserBlockedStatus(user.id, 'OK')
+        .andThen(() => retryCancelledEvents(user.id))
+        .map(() => 'OK')
     }
+
+    return user.status === 'PERMANENTLY_BLOCKED' ? okAsync('PERMANENTLY_BLOCKED') : businessLogic()
+  }
 
   const claimGoldenTicket = (
     goldenTicket: string | undefined,
@@ -239,19 +238,26 @@ export const AuthController = ({
                 assessmentId: IPQSAggresive.assessmentId
               })
               .map(() => ({ ...rest, IPQSAggresive }) as FraudEvaluation)
+              .andThen((evaluation) => setUserStatus(user)(evaluation))
+              .map((status) => ({
+                id: user.id,
+                type: user.type,
+                status,
+                vpn: IPQSAggresive.response.vpn
+              }))
           )
-          .andThen(setUserBlockedStatus(user))
-          .map(() => user)
           .orElse((error) => {
             logger.error({ method: 'login.doFraudScoring', error })
-            return okAsync(user)
+            return okAsync({ ...user, vpn: false })
           })
       )
-      .andThen(({ id, type }) =>
+      .andThen(({ id, type, vpn, status }) =>
         jwt.createTokens(id, type).map(({ authToken, refreshToken }) => ({
           data: {
             authToken,
             headers: jwt.createRefreshTokenCookie(refreshToken, cookies),
+            vpn,
+            status,
             id
           },
           httpResponseCode: 200
