@@ -50,6 +50,7 @@
   export let startAtProgress: number | string = 0
   export let currentStep: IntroStep | RegularStep | JettyStep | undefined = undefined
 
+  let intendedGoToStep: string | undefined
   export const setProgress = async (_progress: number) => {
     if (_progress < 0 || _progress >= _steps.length) return
 
@@ -82,6 +83,7 @@
   }
 
   export const goToStep = (id: string) => {
+    intendedGoToStep = id
     const index = _steps.findIndex((step) => step.id === id)
     if (index < 0) return
     setProgress(index)
@@ -124,10 +126,16 @@
 
   let currentStepEnabledStore: Writable<boolean> | Readable<boolean> = readable(true)
 
-  $: if (currentStep.type !== 'intro' && currentStep.footer?.next?.enabled) {
-    currentStepEnabledStore = currentStep.footer.next.enabled
+  $: if (!currentStep) {
+    if (intendedGoToStep) {
+      goToStep(intendedGoToStep)
+    }
   } else {
-    currentStepEnabledStore = readable(true)
+    if (currentStep.type !== 'intro' && currentStep.footer?.next?.enabled) {
+      currentStepEnabledStore = currentStep.footer.next.enabled
+    } else {
+      currentStepEnabledStore = readable(true)
+    }
   }
 
   $: skipStore = currentStep?.skip
