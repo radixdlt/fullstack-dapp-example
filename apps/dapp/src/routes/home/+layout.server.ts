@@ -88,7 +88,12 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
         ['COMPLETED', 'IN_PROGRESS'].includes(questStatusCookieValue) &&
         missingQuestStatusInDb
       ) {
-        await questApi.startQuest(questId, fetch)
+        const startQuestResult = await questApi.startQuest(questId, fetch)
+
+        if (startQuestResult.isErr()) {
+          error(500, 'Failed to start quest')
+        }
+
         questStatus[questId] = {
           savedProgress: 0,
           status: 'IN_PROGRESS'
