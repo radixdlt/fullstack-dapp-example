@@ -126,11 +126,11 @@ export const UserController = ({
         accountAddressExists(user)
           .andThen((accountAddress) =>
             gatewayApi
-              .isDepositDisabledForResource(accountAddress, publicConfig.badges.heroBadgeAddress)
-              .andThen((isDepositDisabled) =>
-                isDepositDisabled
-                  ? errAsync(createApiError('DepositRuleDisabled', 400)())
-                  : okAsync(user)
+              .isDepositAllowedForResource(accountAddress, publicConfig.badges.heroBadgeAddress)
+              .andThen((isDepositAllowed) =>
+                isDepositAllowed
+                  ? okAsync(user)
+                  : errAsync(createApiError('DepositRuleDisabled', 400)())
               )
           )
           .andThen((user) => {
@@ -305,12 +305,12 @@ export const UserController = ({
       )
       .andThen((user) =>
         gatewayApi
-          .isDepositDisabledForResource(user.accountAddress!, addresses.xrd)
+          .isDepositAllowedForResource(user.accountAddress!, addresses.xrd)
           .mapErr((error) => {
             ctx.logger.error({ method: 'directDepositXrd.error', error })
             return createApiError('InternalError', 500)(error)
           })
-          .map((isDisabled) => ({ isDisabled, user }))
+          .map((isAllowed) => ({ isDisabled: !isAllowed, user }))
       )
       .andThen(({ isDisabled, user }) =>
         isDisabled ? err(createApiError('DepositDisabledForXrd', 400)()) : ok(user)
