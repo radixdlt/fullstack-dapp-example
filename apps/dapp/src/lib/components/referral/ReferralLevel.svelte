@@ -23,7 +23,7 @@
   export let isOpened = false
   export let level: Level | 'SuperLevel'
   export let maximum: number = 0
-  export let referred: number = 0
+  export let referralCount: number = 0
   export let status: string | undefined
 
   const questDefinition = QuestDefinitions($user?.goldenTicketClaimed?.type).QuestTogether
@@ -38,7 +38,7 @@
       : status === 'REWARDS_CLAIMED'
         ? CompletedGradientIcon
         : HourGlassIcon
-  $: referredCount = Math.min(maximum, referred)
+  $: referredCount = Math.min(maximum, referralCount)
 
   const claimRewards = () => {
     loading = true
@@ -66,17 +66,20 @@
           })
         })
       })
-      .map(() => {
+      .then(() => {
         loading = false
         dispatch('refresh')
-      })
-      .mapErr(() => {
-        loading = false
       })
   }
 </script>
 
-<ReferralLevelUI {isOpened} {level} {icon} progress={referred} totalSteps={requirement.threshold}>
+<ReferralLevelUI
+  {isOpened}
+  {level}
+  {icon}
+  progress={referralCount}
+  totalSteps={requirement.threshold}
+>
   <svelte:fragment slot="referrals">
     {$i18n.t('quests:QuestTogether.referralsProgress', {
       referred: referredCount,
