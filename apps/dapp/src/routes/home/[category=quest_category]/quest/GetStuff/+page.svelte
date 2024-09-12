@@ -3,7 +3,7 @@
   import { i18n } from '$lib/i18n/i18n'
   import { onDestroy } from 'svelte'
   import type { PageData } from './$types'
-  import { writable } from 'svelte/store'
+  import { derived, writable } from 'svelte/store'
   import type { Quests } from 'content'
   import { type ComponentProps } from 'svelte'
   import { userApi } from '$lib/api/user-api'
@@ -73,7 +73,53 @@
 
   const hasXrd = writable(false)
 
-  const generalSteps: ComponentProps<Quest>['steps'] = [
+  $: if ($user?.accountAddress) {
+    hasEnoughXrd().map((value) => {
+      $hasXrd = value
+    })
+  }
+
+  $: if ($hasXrd && !data.requirements['GetXRD'].isComplete) completeRequirement(data.id, 'GetXRD')
+
+  const hasGoldenTicket = writable(false)
+  const hasInvalidGoldenTicket = writable(false)
+
+  $: if ($user?.goldenTicketClaimed?.status === 'CLAIMED') $hasGoldenTicket = true
+  $: if ($user?.goldenTicketClaimed?.status === 'CLAIMED_INVALID') $hasInvalidGoldenTicket = true
+
+  let checkXrdInterval: ReturnType<typeof setInterval> | undefined
+
+  let selectedGetXrdMethod: ComponentProps<GetXrdMethodOptions>['selectedOption'] = 'card'
+
+  $: address = $user?.accountAddress
+</script>
+
+<Quest
+  on:render={(ev) => {
+    if (ev.detail === 'golden-ticket-valid') {
+      onReceiveXRDPage()
+    } else {
+      waitingWarning(false)
+    }
+
+    if (ev.detail === '6') {
+      hasEnoughXrd().map((value) => {
+        $hasXrd = value
+      })
+    }
+
+    if (ev.detail === 'get-xrd') {
+      checkXrdInterval = setInterval(() => {
+        hasEnoughXrd().map((value) => {
+          $hasXrd = value
+        })
+      }, 3_000)
+    } else {
+      clearInterval(checkXrdInterval)
+    }
+  }}
+  {...data.questProps}
+  steps={[
     {
       id: '0',
       type: 'jetty'
@@ -101,6 +147,58 @@
     {
       id: '6',
       type: 'regular'
+    },
+    {
+      id: 'golden-ticket-valid',
+      type: 'jetty',
+      skip: derived(
+        [hasGoldenTicket, skipXrdDepositPage],
+        ([$hasGoldenTicket, $skipXrdDepositPage]) => !$hasGoldenTicket || $skipXrdDepositPage
+      ),
+      footer: {
+        next: {
+          enabled: skipXrdDepositPage
+        }
+      }
+    },
+    {
+      id: 'golden-ticket-invalid',
+      skip: derived(hasInvalidGoldenTicket, ($hasInvalidGoldenTicket) => !$hasInvalidGoldenTicket),
+      type: 'jetty'
+    },
+    {
+      id: 'has-xrd',
+      type: 'jetty',
+      skip: derived(
+        [hasXrd, hasGoldenTicket, hasInvalidGoldenTicket],
+        ([$hasXrd, $hasGoldenTicket, $hasInvalidGoldenTicket]) =>
+          !$hasXrd || $hasGoldenTicket || $hasInvalidGoldenTicket
+      )
+    },
+    {
+      id: 'need-xrd',
+      type: 'jetty',
+      skip: hasXrd
+    },
+    {
+      id: 'need-xrd-2',
+      type: 'jetty',
+      skip: hasXrd
+    },
+    {
+      id: 'need-xrd-3',
+      type: 'regular',
+      skip: hasXrd
+    },
+    {
+      id: 'get-xrd',
+      type: 'regular',
+      skip: hasXrd,
+      footer: {
+        next: {
+          enabled: hasXrd
+        }
+      }
     },
     {
       id: '9',
@@ -196,111 +294,7 @@
     {
       type: 'complete'
     }
-  ]
-
-  let steps = generalSteps
-
-  $: if ($user?.accountAddress) {
-    hasEnoughXrd().map((value) => {
-      $hasXrd = value
-    })
-  }
-
-  $: if ($hasXrd && !data.requirements['GetXRD'].isComplete) completeRequirement(data.id, 'GetXRD')
-
-  const setSteps = (newSteps: ComponentProps<Quest>['steps']) =>
-    (steps = [...generalSteps.slice(0, 7), ...newSteps, ...generalSteps.slice(7)])
-
-  const needXrdSteps = [
-    {
-      id: 'need-xrd',
-      type: 'jetty'
-    },
-    {
-      id: 'need-xrd-2',
-      type: 'jetty'
-    },
-    {
-      id: 'need-xrd-3',
-      type: 'regular'
-    },
-    {
-      id: 'get-xrd',
-      type: 'regular',
-      skip: hasXrd,
-      footer: {
-        next: {
-          enabled: hasXrd
-        }
-      }
-    }
-  ] as const
-
-  $: if ($user?.goldenTicketClaimed?.status === 'CLAIMED') {
-    setSteps([
-      {
-        id: 'golden-ticket-valid',
-        type: 'jetty',
-        skip: skipXrdDepositPage,
-        footer: {
-          next: {
-            enabled: skipXrdDepositPage
-          }
-        }
-      }
-    ])
-  } else if ($user?.goldenTicketClaimed?.status === 'CLAIMED_INVALID') {
-    setSteps([
-      {
-        id: 'golden-ticket-invalid',
-        type: 'jetty'
-      },
-      ...needXrdSteps
-    ])
-  } else if ($hasXrd) {
-    setSteps([
-      {
-        id: 'has-xrd',
-        type: 'jetty'
-      }
-    ])
-  } else {
-    setSteps([...needXrdSteps])
-  }
-
-  let checkXrdInterval: ReturnType<typeof setInterval> | undefined
-
-  let selectedGetXrdMethod: ComponentProps<GetXrdMethodOptions>['selectedOption'] = 'card'
-
-  $: address = $user?.accountAddress
-</script>
-
-<Quest
-  on:render={(ev) => {
-    if (ev.detail === 'golden-ticket-valid') {
-      onReceiveXRDPage()
-    } else {
-      waitingWarning(false)
-    }
-
-    if (ev.detail === '6') {
-      hasEnoughXrd().map((value) => {
-        $hasXrd = value
-      })
-    }
-
-    if (ev.detail === 'get-xrd') {
-      checkXrdInterval = setInterval(() => {
-        hasEnoughXrd().map((value) => {
-          $hasXrd = value
-        })
-      }, 3_000)
-    } else {
-      clearInterval(checkXrdInterval)
-    }
-  }}
-  {...data.questProps}
-  {steps}
+  ]}
   let:render
 >
   {#if render('0')}
