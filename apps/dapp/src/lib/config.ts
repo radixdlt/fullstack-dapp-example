@@ -13,6 +13,7 @@ const {
   REDIS_PASSWORD,
   IPQS_KEY,
   IPQS_STRICTNESS,
+  IPQS_MAX_ALLOWED_SCORE,
   IPQS_LIGHTER_PENALTIES,
   IPQS_ALLOW_ALL = false,
   MAX_USER_PER_IP,
@@ -55,7 +56,7 @@ export const config = {
   ipqs: {
     strictness: IPQS_STRICTNESS ? Number(IPQS_STRICTNESS) : 0,
     lighterPenalties: Boolean(IPQS_LIGHTER_PENALTIES) ?? true,
-    maxAllowedScore: 80,
+    maxAllowedScore: IPQS_MAX_ALLOWED_SCORE ? Number(IPQS_MAX_ALLOWED_SCORE) : 86,
     cacheTTL: 60 * 60 * 4 * 1000,
     allowPublicAccessPoints: false,
     allowAll: Boolean(IPQS_ALLOW_ALL) ?? publicConfig.networkId !== 1,
