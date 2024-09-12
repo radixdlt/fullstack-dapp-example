@@ -73,6 +73,10 @@
       questApi.handleAllRequirementsCompleted(id)
     }
 
+    if (status === 'REWARDS_DEPOSITED') {
+      quest.goToStep('claimRewards')
+    }
+
     actions.next = quest.next
     actions.back = quest.back
     actions.goToStep = quest.goToStep
