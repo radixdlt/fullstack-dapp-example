@@ -17,6 +17,7 @@ export type UserSubset = {
   id: string
   accountAddress: string | null
   referralCode: string
+  referredBy: string | null
   type: string
   email: {
     email: string
@@ -66,6 +67,7 @@ export const UserController = ({
         return {
           data: {
             id: data.id,
+            referredBy: data.referredBy,
             accountAddress: data.accountAddress,
             referralCode: data.referralCode,
             type: data.type,
