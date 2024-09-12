@@ -162,12 +162,23 @@ enum LoginAttemptType {
   USER_VERIFY
 }
 
+enum FraudScoringOutput {
+  GOLDEN_TICKET
+  IS_FARMER
+  IPQS_AGGRESSIVE
+  BLOCKED_COUNTRY
+  SANCTIONED_COUNTRY
+  PERMANENTLY_BLOCKED
+  OK
+}
+
 model LoginAttempt {
-  id             Int              @id @default(autoincrement())
+  id             Int                 @id @default(autoincrement())
   userId         String
   ipAssessmentId Int
   type           LoginAttemptType
-  createdAt      DateTime         @default(now())
+  fraudScoring   FraudScoringOutput?
+  createdAt      DateTime            @default(now())
 
   user         User         @relation(fields: [userId], references: [id])
   ipAssessment IpAssessment @relation(fields: [ipAssessmentId], references: [id])

@@ -21,7 +21,7 @@ import {
   EventId
 } from 'common'
 
-import { UserStatus, type User, type UserType } from 'database'
+import { FraudScoringOutput, UserStatus, type User, type UserType } from 'database'
 import { FraudRule, type FraudEvaluation } from './fraud-detection/types'
 import { fraudRuleChecker } from './fraud-detection/fraud-detection'
 
@@ -115,35 +115,55 @@ export const AuthController = ({
 
     const businessLogic = () => {
       if (check.ruleRejected(FraudRule.CountrySanctioned)) {
-        return userModel
-          .setUserBlockedStatus(user.id, 'PERMANENTLY_BLOCKED')
-          .map(() => 'PERMANENTLY_BLOCKED')
+        return userModel.setUserStatus(user.id, 'PERMANENTLY_BLOCKED').map(() => ({
+          status: 'PERMANENTLY_BLOCKED',
+          reason: 'SANCTIONED_COUNTRY'
+        }))
       }
 
       if (check.ruleOk(FraudRule.GoldenTicket)) {
         return userModel
-          .setUserBlockedStatus(user.id, 'OK')
+          .setUserStatus(user.id, 'OK')
           .andThen(() => retryCancelledEvents(user.id))
-          .map(() => 'OK')
+          .map(() => ({
+            status: 'OK',
+            reason: 'GOLDEN_TICKET'
+          }))
       }
 
-      if (
-        check.ruleRejected(FraudRule.CountryBlocked) ||
-        check.ruleRejected(FraudRule.IPQSAggresive) ||
-        check.ruleRejected(FraudRule.Farmer)
-      ) {
-        return userModel
-          .setUserBlockedStatus(user.id, 'TEMPORARILY_BLOCKED')
-          .map(() => 'TEMPORARILY_BLOCKED')
+      if (check.ruleRejected(FraudRule.IPQSAggresive)) {
+        return userModel.setUserStatus(user.id, 'TEMPORARILY_BLOCKED').map(() => ({
+          status: 'TEMPORARILY_BLOCKED',
+          reason: 'IPQS_AGGRESSIVE'
+        }))
+      }
+
+      if (check.ruleRejected(FraudRule.Farmer)) {
+        return userModel.setUserStatus(user.id, 'TEMPORARILY_BLOCKED').map(() => ({
+          status: 'TEMPORARILY_BLOCKED',
+          reason: 'IS_FARMER'
+        }))
+      }
+
+      if (check.ruleRejected(FraudRule.CountryBlocked)) {
+        return userModel.setUserStatus(user.id, 'TEMPORARILY_BLOCKED').map(() => ({
+          status: 'TEMPORARILY_BLOCKED',
+          reason: 'BLOCKED_COUNTRY'
+        }))
       }
 
       return userModel
-        .setUserBlockedStatus(user.id, 'OK')
+        .setUserStatus(user.id, 'OK')
         .andThen(() => retryCancelledEvents(user.id))
-        .map(() => 'OK')
+        .map(() => ({
+          status: 'OK',
+          reason: 'OK'
+        }))
     }
 
-    return user.status === 'PERMANENTLY_BLOCKED' ? okAsync('PERMANENTLY_BLOCKED') : businessLogic()
+    return user.status === 'PERMANENTLY_BLOCKED'
+      ? okAsync({ status: 'PERMANENTLY_BLOCKED', reason: 'PERMANENTLY_BLOCKED' })
+      : businessLogic()
   }
 
   const claimGoldenTicket = (
@@ -232,22 +252,24 @@ export const AuthController = ({
       .andThen(({ user, isNewUser }) =>
         fraudDetectionModule
           .evaluate({ ...data, userId: user.id })
-          .andThen(({ IPQSAggresive, ...rest }) =>
-            loginAttemptModel
-              .add({
-                type: isNewUser ? 'USER_CREATED' : 'USER_LOGIN',
-                userId: user.id,
-                assessmentId: IPQSAggresive.assessmentId
-              })
-              .map(() => ({ ...rest, IPQSAggresive }) as FraudEvaluation)
-              .andThen((evaluation) => setUserStatus(user)(evaluation))
-              .map((status) => ({
-                id: user.id,
-                type: user.type,
-                status: status as UserStatus,
-                vpn: IPQSAggresive.response.vpn || false
-              }))
+          .andThen((evaluation) =>
+            setUserStatus(user)(evaluation).andThen(({ status, reason }) =>
+              loginAttemptModel
+                .add({
+                  type: isNewUser ? 'USER_CREATED' : 'USER_LOGIN',
+                  userId: user.id,
+                  reason: reason as FraudScoringOutput,
+                  assessmentId: evaluation.IPQSAggresive.assessmentId
+                })
+                .map(() => ({
+                  id: user.id,
+                  type: user.type,
+                  status: status as UserStatus,
+                  vpn: evaluation.IPQSAggresive.response.vpn || false
+                }))
+            )
           )
+
           .orElse((error) => {
             logger.error({ method: 'login.doFraudScoring', error })
             return okAsync({ ...user, vpn: false })

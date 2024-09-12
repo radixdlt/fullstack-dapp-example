@@ -185,6 +185,19 @@ export const LoginAttemptType: {
 export type LoginAttemptType = (typeof LoginAttemptType)[keyof typeof LoginAttemptType]
 
 
+export const FraudScoringOutput: {
+  GOLDEN_TICKET: 'GOLDEN_TICKET',
+  IS_FARMER: 'IS_FARMER',
+  IPQS_AGGRESSIVE: 'IPQS_AGGRESSIVE',
+  BLOCKED_COUNTRY: 'BLOCKED_COUNTRY',
+  SANCTIONED_COUNTRY: 'SANCTIONED_COUNTRY',
+  PERMANENTLY_BLOCKED: 'PERMANENTLY_BLOCKED',
+  OK: 'OK'
+};
+
+export type FraudScoringOutput = (typeof FraudScoringOutput)[keyof typeof FraudScoringOutput]
+
+
 export const QuestStatus: {
   IN_PROGRESS: 'IN_PROGRESS',
   REWARDS_DEPOSITED: 'REWARDS_DEPOSITED',
@@ -268,6 +281,10 @@ export const EventStatus: typeof $Enums.EventStatus
 export type LoginAttemptType = $Enums.LoginAttemptType
 
 export const LoginAttemptType: typeof $Enums.LoginAttemptType
+
+export type FraudScoringOutput = $Enums.FraudScoringOutput
+
+export const FraudScoringOutput: typeof $Enums.FraudScoringOutput
 
 export type QuestStatus = $Enums.QuestStatus
 
@@ -12156,6 +12173,7 @@ export namespace Prisma {
     userId: string | null
     ipAssessmentId: number | null
     type: $Enums.LoginAttemptType | null
+    fraudScoring: $Enums.FraudScoringOutput | null
     createdAt: Date | null
   }
 
@@ -12164,6 +12182,7 @@ export namespace Prisma {
     userId: string | null
     ipAssessmentId: number | null
     type: $Enums.LoginAttemptType | null
+    fraudScoring: $Enums.FraudScoringOutput | null
     createdAt: Date | null
   }
 
@@ -12172,6 +12191,7 @@ export namespace Prisma {
     userId: number
     ipAssessmentId: number
     type: number
+    fraudScoring: number
     createdAt: number
     _all: number
   }
@@ -12192,6 +12212,7 @@ export namespace Prisma {
     userId?: true
     ipAssessmentId?: true
     type?: true
+    fraudScoring?: true
     createdAt?: true
   }
 
@@ -12200,6 +12221,7 @@ export namespace Prisma {
     userId?: true
     ipAssessmentId?: true
     type?: true
+    fraudScoring?: true
     createdAt?: true
   }
 
@@ -12208,6 +12230,7 @@ export namespace Prisma {
     userId?: true
     ipAssessmentId?: true
     type?: true
+    fraudScoring?: true
     createdAt?: true
     _all?: true
   }
@@ -12303,6 +12326,7 @@ export namespace Prisma {
     userId: string
     ipAssessmentId: number
     type: $Enums.LoginAttemptType
+    fraudScoring: $Enums.FraudScoringOutput | null
     createdAt: Date
     _count: LoginAttemptCountAggregateOutputType | null
     _avg: LoginAttemptAvgAggregateOutputType | null
@@ -12330,6 +12354,7 @@ export namespace Prisma {
     userId?: boolean
     ipAssessmentId?: boolean
     type?: boolean
+    fraudScoring?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     ipAssessment?: boolean | IpAssessmentDefaultArgs<ExtArgs>
@@ -12340,6 +12365,7 @@ export namespace Prisma {
     userId?: boolean
     ipAssessmentId?: boolean
     type?: boolean
+    fraudScoring?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     ipAssessment?: boolean | IpAssessmentDefaultArgs<ExtArgs>
@@ -12350,6 +12376,7 @@ export namespace Prisma {
     userId?: boolean
     ipAssessmentId?: boolean
     type?: boolean
+    fraudScoring?: boolean
     createdAt?: boolean
   }
 
@@ -12373,6 +12400,7 @@ export namespace Prisma {
       userId: string
       ipAssessmentId: number
       type: $Enums.LoginAttemptType
+      fraudScoring: $Enums.FraudScoringOutput | null
       createdAt: Date
     }, ExtArgs["result"]["loginAttempt"]>
     composites: {}
@@ -12800,6 +12828,7 @@ export namespace Prisma {
     readonly userId: FieldRef<"LoginAttempt", 'String'>
     readonly ipAssessmentId: FieldRef<"LoginAttempt", 'Int'>
     readonly type: FieldRef<"LoginAttempt", 'LoginAttemptType'>
+    readonly fraudScoring: FieldRef<"LoginAttempt", 'FraudScoringOutput'>
     readonly createdAt: FieldRef<"LoginAttempt", 'DateTime'>
   }
     
@@ -24754,6 +24783,7 @@ export namespace Prisma {
     userId: 'userId',
     ipAssessmentId: 'ipAssessmentId',
     type: 'type',
+    fraudScoring: 'fraudScoring',
     createdAt: 'createdAt'
   };
 
@@ -25094,6 +25124,20 @@ export namespace Prisma {
    * Reference to a field of type 'LoginAttemptType[]'
    */
   export type ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoginAttemptType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'FraudScoringOutput'
+   */
+  export type EnumFraudScoringOutputFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FraudScoringOutput'>
+    
+
+
+  /**
+   * Reference to a field of type 'FraudScoringOutput[]'
+   */
+  export type ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FraudScoringOutput[]'>
     
 
 
@@ -25752,6 +25796,7 @@ export namespace Prisma {
     userId?: StringFilter<"LoginAttempt"> | string
     ipAssessmentId?: IntFilter<"LoginAttempt"> | number
     type?: EnumLoginAttemptTypeFilter<"LoginAttempt"> | $Enums.LoginAttemptType
+    fraudScoring?: EnumFraudScoringOutputNullableFilter<"LoginAttempt"> | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
     ipAssessment?: XOR<IpAssessmentRelationFilter, IpAssessmentWhereInput>
@@ -25762,6 +25807,7 @@ export namespace Prisma {
     userId?: SortOrder
     ipAssessmentId?: SortOrder
     type?: SortOrder
+    fraudScoring?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
     ipAssessment?: IpAssessmentOrderByWithRelationInput
@@ -25775,6 +25821,7 @@ export namespace Prisma {
     userId?: StringFilter<"LoginAttempt"> | string
     ipAssessmentId?: IntFilter<"LoginAttempt"> | number
     type?: EnumLoginAttemptTypeFilter<"LoginAttempt"> | $Enums.LoginAttemptType
+    fraudScoring?: EnumFraudScoringOutputNullableFilter<"LoginAttempt"> | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
     ipAssessment?: XOR<IpAssessmentRelationFilter, IpAssessmentWhereInput>
@@ -25785,6 +25832,7 @@ export namespace Prisma {
     userId?: SortOrder
     ipAssessmentId?: SortOrder
     type?: SortOrder
+    fraudScoring?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: LoginAttemptCountOrderByAggregateInput
     _avg?: LoginAttemptAvgOrderByAggregateInput
@@ -25801,6 +25849,7 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"LoginAttempt"> | string
     ipAssessmentId?: IntWithAggregatesFilter<"LoginAttempt"> | number
     type?: EnumLoginAttemptTypeWithAggregatesFilter<"LoginAttempt"> | $Enums.LoginAttemptType
+    fraudScoring?: EnumFraudScoringOutputNullableWithAggregatesFilter<"LoginAttempt"> | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeWithAggregatesFilter<"LoginAttempt"> | Date | string
   }
 
@@ -27024,6 +27073,7 @@ export namespace Prisma {
 
   export type LoginAttemptCreateInput = {
     type: $Enums.LoginAttemptType
+    fraudScoring?: $Enums.FraudScoringOutput | null
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutLoginAttemptsInput
     ipAssessment: IpAssessmentCreateNestedOneWithoutLoginAttemptsInput
@@ -27034,11 +27084,13 @@ export namespace Prisma {
     userId: string
     ipAssessmentId: number
     type: $Enums.LoginAttemptType
+    fraudScoring?: $Enums.FraudScoringOutput | null
     createdAt?: Date | string
   }
 
   export type LoginAttemptUpdateInput = {
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutLoginAttemptsNestedInput
     ipAssessment?: IpAssessmentUpdateOneRequiredWithoutLoginAttemptsNestedInput
@@ -27049,6 +27101,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     ipAssessmentId?: IntFieldUpdateOperationsInput | number
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -27057,11 +27110,13 @@ export namespace Prisma {
     userId: string
     ipAssessmentId: number
     type: $Enums.LoginAttemptType
+    fraudScoring?: $Enums.FraudScoringOutput | null
     createdAt?: Date | string
   }
 
   export type LoginAttemptUpdateManyMutationInput = {
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -27070,6 +27125,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     ipAssessmentId?: IntFieldUpdateOperationsInput | number
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -28432,6 +28488,13 @@ export namespace Prisma {
     not?: NestedEnumLoginAttemptTypeFilter<$PrismaModel> | $Enums.LoginAttemptType
   }
 
+  export type EnumFraudScoringOutputNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.FraudScoringOutput | EnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFraudScoringOutputNullableFilter<$PrismaModel> | $Enums.FraudScoringOutput | null
+  }
+
   export type IpAssessmentRelationFilter = {
     is?: IpAssessmentWhereInput
     isNot?: IpAssessmentWhereInput
@@ -28442,6 +28505,7 @@ export namespace Prisma {
     userId?: SortOrder
     ipAssessmentId?: SortOrder
     type?: SortOrder
+    fraudScoring?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -28455,6 +28519,7 @@ export namespace Prisma {
     userId?: SortOrder
     ipAssessmentId?: SortOrder
     type?: SortOrder
+    fraudScoring?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -28463,6 +28528,7 @@ export namespace Prisma {
     userId?: SortOrder
     ipAssessmentId?: SortOrder
     type?: SortOrder
+    fraudScoring?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -28479,6 +28545,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
     _max?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
+  }
+
+  export type EnumFraudScoringOutputNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FraudScoringOutput | EnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFraudScoringOutputNullableWithAggregatesFilter<$PrismaModel> | $Enums.FraudScoringOutput | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumFraudScoringOutputNullableFilter<$PrismaModel>
+    _max?: NestedEnumFraudScoringOutputNullableFilter<$PrismaModel>
   }
 
   export type NotificationNotificationIdUserIdCompoundUniqueInput = {
@@ -29816,6 +29892,10 @@ export namespace Prisma {
     set?: $Enums.LoginAttemptType
   }
 
+  export type NullableEnumFraudScoringOutputFieldUpdateOperationsInput = {
+    set?: $Enums.FraudScoringOutput | null
+  }
+
   export type UserUpdateOneRequiredWithoutLoginAttemptsNestedInput = {
     create?: XOR<UserCreateWithoutLoginAttemptsInput, UserUncheckedCreateWithoutLoginAttemptsInput>
     connectOrCreate?: UserCreateOrConnectWithoutLoginAttemptsInput
@@ -30399,6 +30479,13 @@ export namespace Prisma {
     not?: NestedEnumLoginAttemptTypeFilter<$PrismaModel> | $Enums.LoginAttemptType
   }
 
+  export type NestedEnumFraudScoringOutputNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.FraudScoringOutput | EnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFraudScoringOutputNullableFilter<$PrismaModel> | $Enums.FraudScoringOutput | null
+  }
+
   export type NestedEnumLoginAttemptTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.LoginAttemptType | EnumLoginAttemptTypeFieldRefInput<$PrismaModel>
     in?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
@@ -30407,6 +30494,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
     _max?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumFraudScoringOutputNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FraudScoringOutput | EnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
+    in?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumFraudScoringOutputNullableWithAggregatesFilter<$PrismaModel> | $Enums.FraudScoringOutput | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumFraudScoringOutputNullableFilter<$PrismaModel>
+    _max?: NestedEnumFraudScoringOutputNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumQuestStatusFilter<$PrismaModel = never> = {
@@ -30974,6 +31071,7 @@ export namespace Prisma {
 
   export type LoginAttemptCreateWithoutUserInput = {
     type: $Enums.LoginAttemptType
+    fraudScoring?: $Enums.FraudScoringOutput | null
     createdAt?: Date | string
     ipAssessment: IpAssessmentCreateNestedOneWithoutLoginAttemptsInput
   }
@@ -30982,6 +31080,7 @@ export namespace Prisma {
     id?: number
     ipAssessmentId: number
     type: $Enums.LoginAttemptType
+    fraudScoring?: $Enums.FraudScoringOutput | null
     createdAt?: Date | string
   }
 
@@ -31470,6 +31569,7 @@ export namespace Prisma {
     userId?: StringFilter<"LoginAttempt"> | string
     ipAssessmentId?: IntFilter<"LoginAttempt"> | number
     type?: EnumLoginAttemptTypeFilter<"LoginAttempt"> | $Enums.LoginAttemptType
+    fraudScoring?: EnumFraudScoringOutputNullableFilter<"LoginAttempt"> | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
   }
 
@@ -32193,6 +32293,7 @@ export namespace Prisma {
 
   export type LoginAttemptCreateWithoutIpAssessmentInput = {
     type: $Enums.LoginAttemptType
+    fraudScoring?: $Enums.FraudScoringOutput | null
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutLoginAttemptsInput
   }
@@ -32201,6 +32302,7 @@ export namespace Prisma {
     id?: number
     userId: string
     type: $Enums.LoginAttemptType
+    fraudScoring?: $Enums.FraudScoringOutput | null
     createdAt?: Date | string
   }
 
@@ -33680,6 +33782,7 @@ export namespace Prisma {
     id?: number
     ipAssessmentId: number
     type: $Enums.LoginAttemptType
+    fraudScoring?: $Enums.FraudScoringOutput | null
     createdAt?: Date | string
   }
 
@@ -33975,6 +34078,7 @@ export namespace Prisma {
 
   export type LoginAttemptUpdateWithoutUserInput = {
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ipAssessment?: IpAssessmentUpdateOneRequiredWithoutLoginAttemptsNestedInput
   }
@@ -33983,6 +34087,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     ipAssessmentId?: IntFieldUpdateOperationsInput | number
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -33990,6 +34095,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     ipAssessmentId?: IntFieldUpdateOperationsInput | number
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -34021,11 +34127,13 @@ export namespace Prisma {
     id?: number
     userId: string
     type: $Enums.LoginAttemptType
+    fraudScoring?: $Enums.FraudScoringOutput | null
     createdAt?: Date | string
   }
 
   export type LoginAttemptUpdateWithoutIpAssessmentInput = {
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutLoginAttemptsNestedInput
   }
@@ -34034,6 +34142,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -34041,6 +34150,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
+    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
