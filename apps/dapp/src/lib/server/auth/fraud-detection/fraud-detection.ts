@@ -109,16 +109,12 @@ export const FraudDetectionModule = (config: {
         return createApiError('IpqsFailed', 400)(error)
       })
 
-  const passesIPQSAggressive = ({ fraud_score, vpn, tor, proxy }: IPQSResponse) => {
+  const passesIPQSAggressive = ({ fraud_score }: IPQSResponse) => {
     if (ipqs.allowAll) {
       return true
     }
 
     if (fraud_score && fraud_score > ipqs.maxAllowedScore) {
-      return false
-    }
-
-    if (vpn || tor || proxy) {
       return false
     }
 
