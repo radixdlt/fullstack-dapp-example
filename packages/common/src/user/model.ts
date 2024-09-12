@@ -60,7 +60,7 @@ type UserModelType = {
   confirmReferralCode: (referralCode: string) => ResultAsync<string | undefined, ApiError>
   setEmail: (userId: string, email: string, newsletter: boolean) => ResultAsync<UserEmail, ApiError>
   getUserIdsByIp: (ip: string) => ResultAsync<string[], ApiError>
-  setUserBlockedStatus: (userId: string, status: UserStatus) => ResultAsync<undefined, ApiError>
+  setUserStatus: (userId: string, status: UserStatus) => ResultAsync<undefined, ApiError>
   isPhoneNumberUsed: (userId: string) => ResultAsync<boolean, ApiError>
   countReferralCodeUsagePerIp: (userId: string, ip: string) => ResultAsync<number, ApiError>
 }
@@ -146,7 +146,7 @@ export const UserModel =
         }
       ).map((data) => data[0].count || 0)
 
-    const setUserBlockedStatus = (userId: string, status: UserStatus) => {
+    const setUserStatus = (userId: string, status: UserStatus) => {
       return ResultAsync.fromPromise(
         db.user.update({
           where:
@@ -411,7 +411,7 @@ export const UserModel =
       getByAccountAddress,
       getByReferralCode,
       getReferrals,
-      setUserBlockedStatus,
+      setUserStatus,
       getUserIdsByIp,
       getPhoneNumber,
       addAccount,
