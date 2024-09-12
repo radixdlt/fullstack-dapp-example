@@ -122,17 +122,6 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
       return vault?.items || []
     })
 
-  const getDefaultDepositRule = (accountAddress: string) =>
-    callApi('getEntityDetailsVaultAggregated', [accountAddress])
-      .mapErr((error) => ({ reason: 'GatewayError', error }))
-      .andThen(([response]) =>
-        response.details?.type === 'Component' &&
-        response.details.state &&
-        'default_deposit_rule' in response.details.state
-          ? ok(response.details.state.default_deposit_rule)
-          : err({ reason: 'MissingDepositRuleValue' })
-      )
-
   const getKeyValueStoreDataForUser = (
     keyValueStoreAddress: string,
     userId: string
@@ -210,37 +199,29 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
       return { openedGiftBoxes, claimedRewards, recalledRewards, depositedRewards }
     })
 
-  const getResourceDepositRuleDisable = (accountAddress: string, resourceAddress: string) =>
+  const isDepositAllowedForResource = (
+    accountAddress: string,
+    resourceAddress: string
+  ): ResultAsync<boolean, { reason: string }> =>
     ResultAsync.fromPromise(
-      gatewayApiClient.state.innerClient.accountResourcePreferencesPage({
-        stateAccountResourcePreferencesPageRequest: { account_address: accountAddress }
+      gatewayApiClient.transaction.innerClient.accountDepositPreValidation({
+        accountDepositPreValidationRequest: {
+          account_address: accountAddress,
+          resource_addresses: [resourceAddress]
+        }
       }),
       (error) => {
         const errorResponse = (error as RawGatewayError)?.errorResponse
         return { reason: errorResponse.message, code: errorResponse.code, error }
       }
     )
-      .map((response) => response.items.find((item) => item.resource_address === resourceAddress))
-      .map((item) => item?.resource_preference_rule)
-      // If the account can't be found (404), it is virtual and defaults to default deposit rule
-      .orElse((error) => (error.code === 404 ? ok('Allowed') : err(error)))
-
-  const isDepositDisabledForResource = (
-    accountAddress: string,
-    resourceAddress: string
-  ): ResultAsync<boolean, { reason: string }> =>
-    ResultAsync.combineWithAllErrors([
-      getResourceDepositRuleDisable(accountAddress, resourceAddress),
-      getDefaultDepositRule(accountAddress)
-    ])
-      .map(([resourceDepositRule, defaultRule]) => {
-        if (resourceDepositRule) {
-          return resourceDepositRule === 'Disallowed'
-        } else {
-          return defaultRule === 'Reject'
-        }
-      })
-      .mapErr(() => ({ reason: 'FailedToCheckDisabledDeposit' }))
+      .map(
+        (response) =>
+          response.resource_specific_behaviour?.find(
+            (resource) => resource.resource_address === resourceAddress
+          )?.allows_try_deposit || true
+      )
+      .orElse((error) => (error.code === 404 ? ok(true) : err(error)))
 
   const hasHeroBadge = (accountAddress: string) =>
     callApi('getEntityDetailsVaultAggregated', [accountAddress]).map(([response]) =>
@@ -319,7 +300,7 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
     hasKycEntry,
     getInstapassBadges,
     hasAtLeastTwoRadgems,
-    isDepositDisabledForResource,
+    isDepositAllowedForResource,
     networkConfig,
     gatewayApiClient,
     preview,
