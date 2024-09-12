@@ -164,9 +164,12 @@
     align-items: center;
     z-index: 3;
     position: absolute;
-    bottom: -5px;
+    bottom: -0.4rem;
     left: 50%;
     transform: translateX(-50%);
+    @include smallMobile {
+      bottom: -0.8rem;
+    }
   }
 
   .content-wrapper {
@@ -178,6 +181,9 @@
     grid-area: 3 / 1;
     overflow: hidden;
     padding-bottom: 2rem;
+    @include smallMobile {
+      padding-bottom: 1.2rem;
+    }
   }
 
   .content {
