@@ -41,12 +41,6 @@
     (Object.entries(progress).find(([_, status]) => status === 'IN_PROGRESS')?.[0] as Level) ||
     currentLevel
 
-  $: {
-    console.log('currentLevel:', currentLevel)
-    console.log('rewardDisplayLevel:', rewardDisplayLevel)
-    console.log('progress:', progress)
-  }
-
   const getNextLevel = (currentLevel: string) => {
     if ($user?.goldenTicketClaimed?.type !== 'FULL') return 'SuperLevel'
     else if (currentLevel === 'BronzeLevel') return 'SilverLevel'
