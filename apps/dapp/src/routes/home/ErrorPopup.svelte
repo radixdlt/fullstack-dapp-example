@@ -40,7 +40,7 @@
       </div>
     {/if}
 
-    {#if visibleErrorPopup.id === ErrorPopupId.AccountAlreadyRegistered || visibleErrorPopup.id === ErrorPopupId.AccountLocked || visibleErrorPopup.id === ErrorPopupId.CannotClaimRewards || visibleErrorPopup.id === ErrorPopupId.GetOffVPN}
+    {#if visibleErrorPopup.id === ErrorPopupId.AccountAlreadyRegistered || visibleErrorPopup.id === ErrorPopupId.SessionBlocked || visibleErrorPopup.id === ErrorPopupId.PermanentlyBlocked || visibleErrorPopup.id === ErrorPopupId.CannotClaimRewards || visibleErrorPopup.id === ErrorPopupId.GetOffVPN}
       <div>
         {$i18n.t(`main:errorPopup.${visibleErrorPopup.id}.content`)}
       </div>

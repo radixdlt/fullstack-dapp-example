@@ -18,11 +18,6 @@
       "content": "To claim more rewards, you will need to contact RadQuest support:",
       "button": "Get help with RadQuest rewards"
     },
-    "GetOffVPN": {
-      "title": "Account Suspended",
-      "content": "Try accessing RadQuest without a VPN or proxy.",
-      "button": "Close"
-    },
     "CannotClaimRewards": {
       "title": "You are currently blocked",
       "content": "While you are blocked, you cannot claim quest rewards or make use of Jetty’s RadMorph creation features.",
@@ -39,9 +34,19 @@
       "link": "Learn more on X @radixdlt",
       "button": "Close"
     },
-    "AccountLocked": {
+    "PermanentlyBlocked": {
       "title": "Account Suspended",
-      "content": "There was suspicious activity on this account. Feel free to keep looking around RadQuest, but you can no longer receive rewards and certain features may not work.",
+      "content": "There was suspicious activity on this login and you can no longer receive rewards and certain features may not work.",
+      "button": "Close"
+    },
+    "SessionBlocked": {
+      "title": "Suspicious Activity",
+      "content": "Your connection location has unusual activity. For this login, you won't be able to claim rewards or use many of RadQuest's features.",
+      "button": "Close"
+    },
+    "GetOffVPN": {
+      "title": "VPN Detected",
+      "content": "To continue claiming rewards and using all of RadQuest's features, try turning off any VPN software you may be using.",
       "button": "Close"
     },
     "NetworkCongestion": {
