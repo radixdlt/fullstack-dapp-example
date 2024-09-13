@@ -185,12 +185,14 @@
       @include smallMobile {
         padding-bottom: 1.2rem;
       }
+      transition: padding 0s;
     }
+    transition: padding 0.3s ease;
   }
 
   .content {
     border-radius: 0;
-    padding: 24px 24px 4px;
+    padding: 24px;
     box-shadow: none;
 
     overflow-y: auto;
