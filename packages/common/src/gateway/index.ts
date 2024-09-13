@@ -241,9 +241,14 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
           explicitMetadata: ['icon_url']
         })
           .map(([{ fungible_resources }]) => {
-            const types = ['Starter', 'Simple', 'Fancy', 'Elite'] as const
+            const types = {
+              [addresses.resources.giftBox.Starter]: 'Starter',
+              [addresses.resources.giftBox.Simple]: 'Simple',
+              [addresses.resources.giftBox.Fancy]: 'Fancy',
+              [addresses.resources.giftBox.Elite]: 'Elite'
+            }
 
-            const [starter, simple, fancy, elite] = types.map((type) =>
+            const [starter, simple, fancy, elite] = Object.values(types).map((type) =>
               fungible_resources.items.find(
                 (item) => item.resource_address === addresses.resources.giftBox[type]
               )
@@ -258,7 +263,7 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
               (acc, curr, i) => {
                 acc[curr?.resource_address!] = {
                   amount: curr ? getAmount(curr) : 0,
-                  name: types[i],
+                  name: types[curr?.resource_address!],
                   imageUrl: (
                     curr?.explicit_metadata?.items.find((item) => item.key === 'icon_url')!.value
                       .typed as any
