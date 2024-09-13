@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
   import { get, writable } from 'svelte/store'
-  import { user } from '../../../../stores'
+  import { hideJetty, user } from '../../../../stores'
 
   let loggedIn = false
 
@@ -21,6 +21,7 @@
     setTimeout(() => {
       goto(`/home/${get(page).params.category}`).then(() => {
         closingQuest.set(false)
+        hideJetty.set(false)
         clearTimeout(timeout)
       })
     }, 0)
