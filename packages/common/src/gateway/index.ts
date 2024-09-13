@@ -246,7 +246,7 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
               [addresses.resources.giftBox.Simple]: 'Simple',
               [addresses.resources.giftBox.Fancy]: 'Fancy',
               [addresses.resources.giftBox.Elite]: 'Elite'
-            }
+            } as const
 
             const [starter, simple, fancy, elite] = Object.values(types).map((type) =>
               fungible_resources.items.find(
@@ -260,7 +260,7 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
                 .reduce((acc, curr) => acc + parseInt(curr), 0)
 
             return [starter, simple, fancy, elite].filter(Boolean).reduce(
-              (acc, curr, i) => {
+              (acc, curr) => {
                 acc[curr?.resource_address!] = {
                   amount: curr ? getAmount(curr) : 0,
                   name: types[curr?.resource_address!],
