@@ -180,15 +180,17 @@
     }
     grid-area: 3 / 1;
     overflow: hidden;
-    padding-bottom: 2rem;
-    @include smallMobile {
-      padding-bottom: 1.2rem;
+    &.scroll-spacing {
+      padding-bottom: 2rem;
+      @include smallMobile {
+        padding-bottom: 1.2rem;
+      }
     }
   }
 
   .content {
     border-radius: 0;
-    padding: 24px;
+    padding: 24px 24px 4px;
     box-shadow: none;
 
     overflow-y: auto;

@@ -12,7 +12,14 @@
   import { ResultAsync } from 'neverthrow'
   import { publicConfig } from '$lib/public-config'
   import { goto, invalidateAll } from '$app/navigation'
-  import { ErrorPopupId, errorPopupStore, hasHeroBadge, quests, user } from '../../stores'
+  import {
+    ErrorPopupId,
+    errorPopupStore,
+    hasHeroBadge,
+    jettyNotifications,
+    quests,
+    user
+  } from '../../stores'
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
@@ -255,6 +262,7 @@
             if (status === 401) radixDappToolkit.disconnect()
           })
       } else {
+        $jettyNotifications = []
         authApi.logout()
       }
     })
