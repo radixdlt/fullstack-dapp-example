@@ -99,6 +99,8 @@
 
         $user = undefined
 
+        $jettyNotifications = []
+
         await invalidateAll()
       }
     })
@@ -262,7 +264,6 @@
             if (status === 401) radixDappToolkit.disconnect()
           })
       } else {
-        $jettyNotifications = []
         authApi.logout()
       }
     })
