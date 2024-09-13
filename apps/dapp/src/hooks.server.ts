@@ -167,17 +167,14 @@ export const handle: Handle = async ({ event, resolve }) => {
       return createUnauthorizedResponse(result.error.reason)
     }
 
+    const isAdmin = result.value.userType === UserType.ADMIN
+
     // temporarily disable all quests
     if (
-      (event.route.id?.includes('/quest/') ||
-        event.route.id?.includes('/otp/') ||
-        event.route.id?.includes('/direct-deposit/')) &&
-      PUBLIC_NETWORK_ID === '1'
+      (event.route.id?.includes('/quest/') || event.route.id?.includes('/direct-deposit/')) &&
+      PUBLIC_NETWORK_ID === '1' &&
+      !isAdmin
     ) {
-      return createForbiddenResponse()
-    }
-
-    if (event.route.id?.includes('(admin)') && result.value.userType !== UserType.ADMIN) {
       return createForbiddenResponse()
     }
 

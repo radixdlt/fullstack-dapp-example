@@ -36,7 +36,7 @@
 
   $: questCardState = Object.entries($quests).reduce(
     (prev, cur) => {
-      if (PUBLIC_NETWORK_ID === '1') {
+      if (PUBLIC_NETWORK_ID === '1' && $user?.type !== 'ADMIN') {
         // temporarily lock all quests
         prev[cur[0] as QuestId] = 'locked'
         return prev
