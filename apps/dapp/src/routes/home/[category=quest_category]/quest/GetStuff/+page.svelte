@@ -17,6 +17,7 @@
   import CopyTextBox from '$lib/components/copy-text-box/CopyTextBox.svelte'
   import { shortenAddress } from '$lib/utils/shorten-address'
   import { hasEnoughXrd } from '$lib/utils/has-enough-xrd'
+  import { useCookies } from '$lib/utils/cookies'
 
   export let data: PageData
 
@@ -88,7 +89,11 @@
   const hasInvalidGoldenTicket = writable(false)
 
   $: if ($user?.goldenTicketClaimed?.status === 'CLAIMED') $hasGoldenTicket = true
-  $: if ($user?.goldenTicketClaimed?.status === 'CLAIMED_INVALID') $hasInvalidGoldenTicket = true
+  $: if (
+    $user?.goldenTicketClaimed?.status === 'CLAIMED_INVALID' ||
+    (!$user?.goldenTicketClaimed && useCookies('golden-ticket').get())
+  )
+    $hasInvalidGoldenTicket = true
 
   let checkXrdInterval: ReturnType<typeof setInterval> | undefined
 

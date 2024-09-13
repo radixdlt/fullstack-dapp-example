@@ -174,7 +174,7 @@ export const AuthController = ({
       ? goldenTicketModel
           .claimTicket(goldenTicket, data.user.id)
           .map(() => data)
-          .mapErr((error) => createApiError('failed to claim golden ticket', 400)(error))
+          .orElse((_) => okAsync(data))
       : okAsync(data)
 
   const login = (
@@ -195,7 +195,6 @@ export const AuthController = ({
   }> => {
     const { personaProof, cookies } = data
     const goldenTicket = cookies.get(CookieKeys.GoldenTicket)
-    cookies.delete(CookieKeys.GoldenTicket, { path: '/' })
 
     ctx.logger.trace({ method: 'login', personaProof })
     const parsedPersonaResult = parseSignedChallenge(personaProof)
