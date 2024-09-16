@@ -336,7 +336,7 @@ export const SystemWorkerController = ({
             ""
             "Test Card"
             "This is just a test card"
-            "Tidal Wave"
+            "tidal wave"
             "Such amazing energy"
             "Common"
             Decimal("10")
