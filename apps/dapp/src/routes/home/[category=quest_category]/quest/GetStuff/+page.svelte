@@ -73,10 +73,13 @@
 
   const hasXrd = writable(false)
 
-  $: if ($user?.accountAddress) {
+  const checkHasEnoughXrd = () => {
     hasEnoughXrd().map((value) => {
       $hasXrd = value
     })
+  }
+  $: if ($user?.accountAddress) {
+    checkHasEnoughXrd()
   }
 
   $: if ($hasXrd && !data.requirements['GetXRD'].isComplete) completeRequirement(data.id, 'GetXRD')
@@ -102,17 +105,13 @@
       waitingWarning(false)
     }
 
-    if (ev.detail === '6') {
-      hasEnoughXrd().map((value) => {
-        $hasXrd = value
-      })
+    if (ev.detail === '6' || ev.detail.includes('need-xrd')) {
+      checkHasEnoughXrd()
     }
 
     if (ev.detail === 'get-xrd') {
       checkXrdInterval = setInterval(() => {
-        hasEnoughXrd().map((value) => {
-          $hasXrd = value
-        })
+        checkHasEnoughXrd()
       }, 3_000)
     } else {
       clearInterval(checkXrdInterval)
