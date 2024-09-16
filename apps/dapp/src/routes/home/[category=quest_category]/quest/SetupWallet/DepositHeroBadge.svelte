@@ -2,7 +2,13 @@
   import { gatewayApi } from '$lib/public-config'
   import { onDestroy } from 'svelte'
   import { createEventDispatcher } from 'svelte'
-  import { hasHeroBadge, user } from '../../../../../stores'
+  import {
+    ErrorPopupId,
+    errorPopupStore,
+    hasHeroBadge,
+    isUserBlocked,
+    user
+  } from '../../../../../stores'
   import Button from '$lib/components/button/Button.svelte'
   import { userApi } from '$lib/api/user-api'
   import type { Quests } from 'content'
@@ -25,6 +31,10 @@
   }>()
 
   const handleMintHeroBadge = () => {
+    if ($isUserBlocked) {
+      errorPopupStore.set({ id: ErrorPopupId.CannotClaimRewards })
+      return
+    }
     mintingInProgress = true
     return userApi.depositHeroBadge().mapErr(() => {
       mintingInProgress = false
