@@ -22,7 +22,6 @@ import {
   BlockedCountryModel,
   EventModel
 } from 'common'
-import { UserType } from 'database'
 import { dbClient } from '$lib/db'
 import { RedisConnection, getQueues } from 'queues'
 import type { ControllerDependencies } from '$lib/server/_types'
@@ -39,10 +38,7 @@ import {
   createInvalidQuestIdResponse,
   isValidQuestId
 } from '$lib/server/helpers/quest-id-validation'
-import {
-  createForbiddenResponse,
-  createUnauthorizedResponse
-} from '$lib/server/helpers/create-error-response'
+import { createUnauthorizedResponse } from '$lib/server/helpers/create-error-response'
 import { ImageController } from '$lib/server/image/controller'
 import { GoldenTicketController } from '$lib/server/golden-ticket/controller'
 
