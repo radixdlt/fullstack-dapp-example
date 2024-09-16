@@ -223,7 +223,7 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
         where: {
           userId,
           questId: { in: preRequisites },
-          status: 'COMPLETED'
+          status: { not: 'IN_PROGRESS' }
         }
       }),
       (error) => {
