@@ -94,7 +94,7 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
     })
 
   const userHasClaimedTicket = (userId: string) =>
-    (dbClient as any).$primary.goldenTicket
+    (dbClient as any).$primary().goldenTicket
       .count({ where: { userId, status: 'CLAIMED' } })
       .then((count: number) => count > 0)
 
