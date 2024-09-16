@@ -42,8 +42,6 @@
   import Footer from '$lib/components/footer/footer.svelte'
   import ErrorPopup from './ErrorPopup.svelte'
   import { CookieKeys, GatewayApi } from 'common'
-  import NetworkCongestedBanner from './NetworkCongestedBanner.svelte'
-  import { PUBLIC_NETWORK_ID } from '$env/static/public'
   import GoldenTicketAlert from './GoldenTicketAlert.svelte'
   import { messageApi } from '$lib/api/message-api'
   import { hasEnoughXrd } from '$lib/utils/has-enough-xrd'
@@ -438,10 +436,6 @@
 
   <Footer slot="footer" userId={$user?.id} />
 </Layout>
-
-{#if PUBLIC_NETWORK_ID === '1'}
-  <NetworkCongestedBanner />
-{/if}
 
 {#if showGoldenTicketAlert}
   <GoldenTicketAlert />
