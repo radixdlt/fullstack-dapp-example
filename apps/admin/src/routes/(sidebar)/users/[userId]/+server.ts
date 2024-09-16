@@ -23,7 +23,6 @@ export const GET = async ({ locals, params }) => {
   const user = await locals.dbClient.user.findUnique({
     where: { id: params.userId },
     include: {
-      auditLogs: true,
       completedQuestRequirements: true,
       events: true,
       messages: true,
@@ -31,7 +30,9 @@ export const GET = async ({ locals, params }) => {
       referredByUser: true,
       savedProgress: true,
       transactions: true,
-      marketing: true
+      marketing: true,
+      goldenTicketClaimed: true,
+      loginAttempts: true
     }
   })
 
