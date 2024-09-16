@@ -167,17 +167,6 @@ export const handle: Handle = async ({ event, resolve }) => {
       return createUnauthorizedResponse(result.error.reason)
     }
 
-    const isAdmin = result.value.userType === UserType.ADMIN
-
-    // temporarily disable all quests
-    if (
-      (event.route.id?.includes('/quest/') || event.route.id?.includes('/direct-deposit/')) &&
-      PUBLIC_NETWORK_ID === '1' &&
-      !isAdmin
-    ) {
-      return createForbiddenResponse()
-    }
-
     event.locals.userId = result.value.userId
     event.locals.userType = result.value.userType
     event.locals.authToken = result.value.authToken

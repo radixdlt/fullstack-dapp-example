@@ -11,7 +11,6 @@
   import { useCookies } from '$lib/utils/cookies'
   import { onMount, tick } from 'svelte'
   import { derived } from 'svelte/store'
-  import { PUBLIC_NETWORK_ID } from '$env/static/public'
 
   export let data: LayoutData
 
@@ -36,12 +35,6 @@
 
   $: questCardState = Object.entries($quests).reduce(
     (accumulator, currentQuest) => {
-      if (PUBLIC_NETWORK_ID === '1' && $user?.type !== 'ADMIN') {
-        // temporarily lock all quests
-        accumulator[currentQuest[0] as QuestId] = 'locked'
-        return accumulator
-      }
-
       const [id, quest] = currentQuest
       const status = data.questStatus[id as QuestId]?.status
 
