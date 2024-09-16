@@ -19,6 +19,7 @@
   const isRadMorphCreatedCompleted = writable(data.requirements?.RadMorphCreated.isComplete)
 
   const text = data.text as Quests['CreatingRadMorphs']['text']
+  let render: (id: string) => boolean
 
   let unsubscribeWebSocket: ReturnType<WebSocketClient['onMessage']> | undefined
   $: if ($webSocketClient) {
@@ -26,18 +27,18 @@
       if (message.type === 'QuestRequirementCompleted') {
         switch (message.requirementId) {
           case 'OpenGiftBox':
-            isOpenGiftBoxCompleted.set(true)
-            quest.actions.goToStep('6')
+            $isOpenGiftBoxCompleted = true
+            if (quest && render('5')) quest.actions.next()
             break
 
           case 'RadGemsClaimed':
-            isRadgemsClaimedCompleted.set(true)
-            quest.actions.goToStep('10')
+            $isRadgemsClaimedCompleted = true
+            if (quest && render('9')) quest.actions.next()
             break
 
           case 'RadMorphCreated':
-            isRadMorphCreatedCompleted.set(true)
-            quest.actions.goToStep('15')
+            $isRadMorphCreatedCompleted = true
+            if (quest && render('14')) quest.actions.next()
             break
 
           default:
@@ -54,6 +55,7 @@
 
 <Quest
   bind:this={quest}
+  bind:render
   {...data.questProps}
   on:completed={() => {
     //@ts-ignore
