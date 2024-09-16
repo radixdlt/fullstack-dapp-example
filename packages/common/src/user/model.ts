@@ -115,6 +115,7 @@ export const UserModel =
         db.$queryRaw<{ userId: string }[]>`
       SELECT "userId" FROM "LoginAttempt" 
         WHERE "ipAssessmentId" IN (SELECT id FROM "IpAssessment" WHERE ip = ${ip}) 
+        AND "type" = 'USER_CREATED'
         AND "createdAt" > NOW() - interval '24 hours'
       `,
         (error) => {
@@ -131,6 +132,7 @@ export const UserModel =
             INNER JOIN "LoginAttempt" la
               ON u.id = la."userId" 
               AND la."createdAt" > NOW() - INTERVAL '30 minutes'
+              AND la."type" = 'USER_CREATED'
             INNER JOIN "IpAssessment" ia
               ON la."ipAssessmentId" = ia.id 
               AND ia."ip" = ${ip}
