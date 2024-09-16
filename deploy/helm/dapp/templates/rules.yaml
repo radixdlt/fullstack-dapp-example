@@ -13,7 +13,7 @@ spec:
     rules:
     - alert: DappHpaMaxedOut
       expr: >
-        kube_horizontalpodautoscaler_status_current_replicas{namespace="{{ $ns }}"} == kube_horizontalpodautoscaler_spec_max_replicas{namespace="{{ $ns }}"}
+        kube_horizontalpodautoscaler_status_current_replicas{namespace="{{ $ns }}",horizontalpodautoscaler="dapp"} == kube_horizontalpodautoscaler_spec_max_replicas{namespace="{{ $ns }}",horizontalpodautoscaler="dapp"}
       for: 15m
       labels:
         severity: critical
