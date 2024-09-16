@@ -28,6 +28,13 @@
       body: JSON.stringify({ status })
     }).then(() => fetchUser())
   }
+
+  const setUserType = (type: 'ADMIN' | 'USER') => {
+    fetch(`/users/${userId}`, {
+      method: 'POST',
+      body: JSON.stringify({ type })
+    }).then(() => fetchUser())
+  }
 </script>
 
 {#if $user}
@@ -54,6 +61,12 @@
       <Button color={'green'} on:click={() => setUserStatus('PERMANENTLY_BLOCKED')}>
         Permanently Block
       </Button>
+    {/if}
+
+    {#if $user.type === 'ADMIN'}
+      <Button color={'blue'} on:click={() => setUserType('USER')}>Demote to User</Button>
+    {:else if $user.type === 'USER'}
+      <Button color={'yellow'} on:click={() => setUserType('ADMIN')}>Promote to Admin</Button>
     {/if}
 
     <div class="p-4">
