@@ -83,15 +83,10 @@
     `
 
     waitingForSendElements = true
-    return sendTransaction({ transactionManifest })
-      .map(() => {
-        waitingForSendElements = false
-        waitingForElementsDeposited = true
-      })
-      .mapErr(() => {
-        waitingForSendElements = false
-        waitingForElementsDeposited = false
-      })
+    return sendTransaction({ transactionManifest }).then(() => {
+      waitingForSendElements = false
+      waitingForElementsDeposited = !elementsDeposited
+    })
   }
 
   const checkAmountOfElements = pipe(
