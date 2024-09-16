@@ -6,12 +6,13 @@ export const POST = async ({ request, locals, params }) => {
 
   const userId = params.userId
 
-  const { status }: { status: UserStatus } = requestBody
+  const { status, type }: { status: UserStatus; type: 'USER' | 'ADMIN' } = requestBody
 
   const user = await locals.dbClient.user.update({
     where: { id: userId },
     data: {
-      status
+      status,
+      type
     }
   })
 
