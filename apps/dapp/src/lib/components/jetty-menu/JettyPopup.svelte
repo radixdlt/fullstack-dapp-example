@@ -17,7 +17,9 @@
 
   let jettyHeight: number
 
-  $: hideJetty ? ($jettyPosition = jettyHeight) : ($jettyPosition = 0)
+  $: {
+    jettyPosition.set(hideJetty ? jettyHeight : 0)
+  }
 </script>
 
 <div class="jetty-popup" class:gradient-border={notification}>
