@@ -27,6 +27,9 @@
       type: 'jetty'
     },
     {
+      type: 'requirements'
+    },
+    {
       type: 'claimRewards'
     },
     {

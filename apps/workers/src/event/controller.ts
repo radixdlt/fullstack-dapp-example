@@ -106,17 +106,6 @@ export const EventWorkerController = ({
               traceId
             })
           )
-          .andThen(() =>
-            shouldTriggerReferralRewardFlow(questId)
-              ? questHelper
-                  .addCompletedQuestRequirement({
-                    questId: 'JoinFriend',
-                    requirementId: 'CompleteBasicQuests'
-                  })
-                  .andThen(() => questHelper.handleAllQuestRequirementCompleted('JoinFriend'))
-              : okAsync(undefined)
-          )
-          .map(() => undefined)
       }
 
       case EventId.QuestRewardClaimedV2:
