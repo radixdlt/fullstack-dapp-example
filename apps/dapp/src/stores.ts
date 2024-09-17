@@ -40,9 +40,11 @@ export const hasHeroBadge = writable(false)
 
 export const ErrorPopupId = {
   XrdRewardLimit: 'XrdRewardLimit',
-  AccountLocked: 'AccountLocked',
   AccountAlreadyRegistered: 'AccountAlreadyRegistered',
   CannotClaimRewards: 'CannotClaimRewards',
+  SessionBlocked: 'SessionBlocked',
+  PermanentlyBlocked: 'PermanentlyBlocked',
+  GetOffVPN: 'GetOffVPN',
   HighDemand: 'HighDemand'
 } as const
 

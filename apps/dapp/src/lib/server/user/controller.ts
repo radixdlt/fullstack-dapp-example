@@ -4,7 +4,6 @@ import type {
   ControllerMethodContext,
   ControllerMethodOutput
 } from '../_types'
-import type { User } from 'database'
 import { config } from '$lib/config'
 import { createApiError, getPriorityByGoldenTicketType, type ApiError } from 'common'
 import { type SignedChallengeAccount, parseSignedChallenge } from '@radixdlt/radix-dapp-toolkit'
@@ -13,6 +12,25 @@ import { publicConfig } from '$lib/public-config'
 import { type ErrorResponse } from '@radixdlt/babylon-gateway-api-sdk'
 import type { TransactionJob } from 'queues'
 import * as valibot from 'valibot'
+import type { GoldenTicket, GoldenTicketStatus, TicketType, User, UserEmail } from 'database'
+export type UserSubset = {
+  id: string
+  accountAddress: string | null
+  referralCode: string
+  referredBy: string | null
+  type: string
+  email: {
+    email: string
+    newsletter: boolean
+  } | null
+  referredByUser: {
+    name: string | null
+  } | null
+  goldenTicketClaimed: {
+    type: TicketType
+    status: GoldenTicketStatus
+  } | null
+}
 
 const isGatewayError = (error: any): error is ErrorResponse => error.details !== undefined
 const EmailSchema = valibot.object({
@@ -32,14 +50,49 @@ export const UserController = ({
   addresses,
   systemQueue
 }: ControllerDependencies) => {
-  const getUser = (userId: string): ControllerMethodOutput<User | null> =>
+  const getUser = (userId: string): ControllerMethodOutput<UserSubset | null> =>
     userModel
       .getById(userId, {
         email: true,
         referredByUser: true,
         goldenTicketClaimed: true
       })
-      .map((data) => ({ data, httpResponseCode: 200 }))
+      .map((data) => {
+        const email = (data as unknown as { email: UserEmail | null }).email
+        const referredByUser = (data as unknown as { referredByUser: User | null }).referredByUser
+        const goldenTicketClaimed = (
+          data as unknown as { goldenTicketClaimed: GoldenTicket | null }
+        ).goldenTicketClaimed
+
+        return {
+          data: {
+            id: data.id,
+            referredBy: data.referredBy,
+            accountAddress: data.accountAddress,
+            referralCode: data.referralCode,
+            type: data.type,
+            status: data.status,
+            email: email
+              ? {
+                  email: email.email,
+                  newsletter: email.newsletter
+                }
+              : null,
+            referredByUser: referredByUser
+              ? {
+                  name: referredByUser.name
+                }
+              : null,
+            goldenTicketClaimed: goldenTicketClaimed
+              ? {
+                  type: goldenTicketClaimed.type,
+                  status: goldenTicketClaimed.status
+                }
+              : null
+          },
+          httpResponseCode: 200
+        }
+      })
 
   const accountAddressExists = (
     data: { accountAddress: string | null } | null
@@ -75,11 +128,11 @@ export const UserController = ({
         accountAddressExists(user)
           .andThen((accountAddress) =>
             gatewayApi
-              .isDepositDisabledForResource(accountAddress, publicConfig.badges.heroBadgeAddress)
-              .andThen((isDepositDisabled) =>
-                isDepositDisabled
-                  ? errAsync(createApiError('DepositRuleDisabled', 400)())
-                  : okAsync(user)
+              .isDepositAllowedForResource(accountAddress, publicConfig.badges.heroBadgeAddress)
+              .andThen((isDepositAllowed) =>
+                isDepositAllowed
+                  ? okAsync(user)
+                  : errAsync(createApiError('DepositRuleDisabled', 400)())
               )
           )
           .andThen((user) => {
@@ -254,12 +307,12 @@ export const UserController = ({
       )
       .andThen((user) =>
         gatewayApi
-          .isDepositDisabledForResource(user.accountAddress!, addresses.xrd)
+          .isDepositAllowedForResource(user.accountAddress!, addresses.xrd)
           .mapErr((error) => {
             ctx.logger.error({ method: 'directDepositXrd.error', error })
             return createApiError('InternalError', 500)(error)
           })
-          .map((isDisabled) => ({ isDisabled, user }))
+          .map((isAllowed) => ({ isDisabled: !isAllowed, user }))
       )
       .andThen(({ isDisabled, user }) =>
         isDisabled ? err(createApiError('DepositDisabledForXrd', 400)()) : ok(user)

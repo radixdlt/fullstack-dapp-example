@@ -21,13 +21,9 @@ import {
   EventId
 } from 'common'
 
-import { type User, type UserType } from 'database'
+import { FraudScoringOutput, UserStatus, type User, type UserType } from 'database'
 import { FraudRule, type FraudEvaluation } from './fraud-detection/types'
 import { fraudRuleChecker } from './fraud-detection/fraud-detection'
-
-type FraudActionHandler = (
-  user: User
-) => (evaluation: FraudEvaluation) => ResultAsync<FraudEvaluation, ApiError>
 
 export type AuthController = ReturnType<typeof AuthController>
 export const AuthController = ({
@@ -113,43 +109,62 @@ export const AuthController = ({
       })
     })
 
-  const setUserBlockedStatus: FraudActionHandler =
-    (user: User) => (evaluation: FraudEvaluation) => {
-      const check = fraudRuleChecker(evaluation)
-      logger.trace({ method: 'login.doFraudScoring', evaluation })
+  const setUserStatus = (user: User) => (evaluation: FraudEvaluation) => {
+    const check = fraudRuleChecker(evaluation)
+    logger.trace({ method: 'login.doFraudScoring', evaluation })
 
-      const businessLogic = () => {
-        if (check.ruleRejected(FraudRule.IPQSGenerous)) {
-          return userModel.setUserBlockedStatus(user.id, 'PERMANENTLY_BLOCKED')
-        }
-
-        if (check.ruleRejected(FraudRule.CountrySanctioned)) {
-          return userModel.setUserBlockedStatus(user.id, 'TEMPORARILY_BLOCKED')
-        }
-
-        if (check.ruleOk(FraudRule.GoldenTicket)) {
-          return userModel
-            .setUserBlockedStatus(user.id, 'OK')
-            .andThen(() => retryCancelledEvents(user.id))
-        }
-
-        if (
-          check.ruleRejected(FraudRule.CountryBlocked) ||
-          check.ruleRejected(FraudRule.IPQSAggresive) ||
-          check.ruleRejected(FraudRule.Farmer)
-        ) {
-          return userModel.setUserBlockedStatus(user.id, 'TEMPORARILY_BLOCKED')
-        }
-
-        return userModel
-          .setUserBlockedStatus(user.id, 'OK')
-          .andThen(() => retryCancelledEvents(user.id))
+    const businessLogic = () => {
+      if (check.ruleRejected(FraudRule.CountrySanctioned)) {
+        return userModel.setUserStatus(user.id, 'PERMANENTLY_BLOCKED').map(() => ({
+          status: 'PERMANENTLY_BLOCKED',
+          reason: 'SANCTIONED_COUNTRY'
+        }))
       }
 
-      return user.status === 'PERMANENTLY_BLOCKED'
-        ? okAsync(evaluation)
-        : businessLogic().map(() => evaluation)
+      if (check.ruleOk(FraudRule.GoldenTicket)) {
+        return userModel
+          .setUserStatus(user.id, 'OK')
+          .andThen(() => retryCancelledEvents(user.id))
+          .map(() => ({
+            status: 'OK',
+            reason: 'GOLDEN_TICKET'
+          }))
+      }
+
+      if (check.ruleRejected(FraudRule.IPQSAggresive)) {
+        return userModel.setUserStatus(user.id, 'TEMPORARILY_BLOCKED').map(() => ({
+          status: 'TEMPORARILY_BLOCKED',
+          reason: 'IPQS_AGGRESSIVE'
+        }))
+      }
+
+      if (check.ruleRejected(FraudRule.Farmer)) {
+        return userModel.setUserStatus(user.id, 'TEMPORARILY_BLOCKED').map(() => ({
+          status: 'TEMPORARILY_BLOCKED',
+          reason: 'IS_FARMER'
+        }))
+      }
+
+      if (check.ruleRejected(FraudRule.CountryBlocked)) {
+        return userModel.setUserStatus(user.id, 'TEMPORARILY_BLOCKED').map(() => ({
+          status: 'TEMPORARILY_BLOCKED',
+          reason: 'BLOCKED_COUNTRY'
+        }))
+      }
+
+      return userModel
+        .setUserStatus(user.id, 'OK')
+        .andThen(() => retryCancelledEvents(user.id))
+        .map(() => ({
+          status: 'OK',
+          reason: 'OK'
+        }))
     }
+
+    return user.status === 'PERMANENTLY_BLOCKED'
+      ? okAsync({ status: 'PERMANENTLY_BLOCKED', reason: 'PERMANENTLY_BLOCKED' })
+      : businessLogic()
+  }
 
   const claimGoldenTicket = (
     goldenTicket: string | undefined,
@@ -173,6 +188,8 @@ export const AuthController = ({
     }
   ): ControllerMethodOutput<{
     authToken: string
+    status: UserStatus
+    vpn: boolean
     headers: { ['Set-Cookie']: string }
     id: string
   }> => {
@@ -235,27 +252,36 @@ export const AuthController = ({
       .andThen(({ user, isNewUser }) =>
         fraudDetectionModule
           .evaluate({ ...data, userId: user.id })
-          .andThen(({ IPQSGenerous, ...rest }) =>
-            loginAttemptModel
-              .add({
-                type: isNewUser ? 'USER_CREATED' : 'USER_LOGIN',
-                userId: user.id,
-                assessmentId: IPQSGenerous.assessmentId
-              })
-              .map(() => ({ ...rest, IPQSGenerous }) as FraudEvaluation)
+          .andThen((evaluation) =>
+            setUserStatus(user)(evaluation).andThen(({ status, reason }) =>
+              loginAttemptModel
+                .add({
+                  type: isNewUser ? 'USER_CREATED' : 'USER_LOGIN',
+                  userId: user.id,
+                  reason: reason as FraudScoringOutput,
+                  assessmentId: evaluation.IPQSAggresive.assessmentId
+                })
+                .map(() => ({
+                  id: user.id,
+                  type: user.type,
+                  status: status as UserStatus,
+                  vpn: evaluation.IPQSAggresive.response.vpn || false
+                }))
+            )
           )
-          .andThen(setUserBlockedStatus(user))
-          .map(() => user)
+
           .orElse((error) => {
             logger.error({ method: 'login.doFraudScoring', error })
-            return okAsync(user)
+            return okAsync({ ...user, vpn: false })
           })
       )
-      .andThen(({ id, type }) =>
+      .andThen(({ id, type, vpn, status }) =>
         jwt.createTokens(id, type).map(({ authToken, refreshToken }) => ({
           data: {
             authToken,
             headers: jwt.createRefreshTokenCookie(refreshToken, cookies),
+            vpn,
+            status,
             id
           },
           httpResponseCode: 200

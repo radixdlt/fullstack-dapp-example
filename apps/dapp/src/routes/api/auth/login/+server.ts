@@ -15,10 +15,10 @@ export const POST: RequestHandler = async ({ request, cookies, locals }) => {
 
   if (loginResult.isErr()) error(loginResult.error.httpResponseCode, loginResult.error.reason)
 
-  const { authToken, headers, id } = loginResult.value.data
+  const { authToken, headers, id, status, vpn } = loginResult.value.data
 
   return json(
-    { authToken, id },
+    { authToken, id, status, vpn },
     {
       status: loginResult.value.httpResponseCode,
       headers

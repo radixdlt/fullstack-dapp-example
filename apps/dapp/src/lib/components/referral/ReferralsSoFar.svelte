@@ -3,7 +3,7 @@
   import { createEventDispatcher } from 'svelte'
   import ChevronRight from '@images/chevron-right.svg'
 
-  export let count: number
+  export let referralCount: number
 
   const dispatch = createEventDispatcher<{ click: string }>()
 </script>
@@ -11,7 +11,7 @@
 <button
   class="wrapper"
   on:click={(ev) => {
-    if (!count) {
+    if (!referralCount) {
       ev.preventDefault()
       ev.stopImmediatePropagation()
       return
@@ -20,10 +20,10 @@
     dispatch('click', '')
   }}
 >
-  <span class="amount">{count}</span>
-  <span class="link" class:active={count > 0}>
+  <span class="amount">{referralCount}</span>
+  <span class="link" class:active={referralCount > 0}>
     {$i18n.t('quests:QuestTogether.referralsSoFar')}
-    {#if count > 0}
+    {#if referralCount > 0}
       <img src={ChevronRight} alt={$i18n.t('quests:QuestTogether.referralsSoFar')} />
     {/if}
   </span>

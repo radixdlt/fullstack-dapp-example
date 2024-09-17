@@ -196,6 +196,7 @@ exports.Prisma.LoginAttemptScalarFieldEnum = {
   userId: 'userId',
   ipAssessmentId: 'ipAssessmentId',
   type: 'type',
+  fraudScoring: 'fraudScoring',
   createdAt: 'createdAt'
 };
 
@@ -359,6 +360,16 @@ exports.LoginAttemptType = exports.$Enums.LoginAttemptType = {
   USER_CREATED: 'USER_CREATED',
   USER_LOGIN: 'USER_LOGIN',
   USER_VERIFY: 'USER_VERIFY'
+};
+
+exports.FraudScoringOutput = exports.$Enums.FraudScoringOutput = {
+  GOLDEN_TICKET: 'GOLDEN_TICKET',
+  IS_FARMER: 'IS_FARMER',
+  IPQS_AGGRESSIVE: 'IPQS_AGGRESSIVE',
+  BLOCKED_COUNTRY: 'BLOCKED_COUNTRY',
+  SANCTIONED_COUNTRY: 'SANCTIONED_COUNTRY',
+  PERMANENTLY_BLOCKED: 'PERMANENTLY_BLOCKED',
+  OK: 'OK'
 };
 
 exports.QuestStatus = exports.$Enums.QuestStatus = {

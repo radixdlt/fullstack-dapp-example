@@ -20,5 +20,11 @@ export const NotificationController = ({ notificationModel }: ControllerDependen
       httpResponseCode: 200
     }))
 
-  return { markAsSeen, getUnseen, create }
+  const hasSeenNotification = (userId: string, notificationId: string) =>
+    notificationModel.hasSeenNotification(userId, notificationId).map((data) => ({
+      data: { hasSeen: data },
+      httpResponseCode: 200
+    }))
+
+  return { markAsSeen, getUnseen, create, hasSeenNotification }
 }

@@ -2,6 +2,8 @@
   import { Heading, Toggle } from 'flowbite-svelte'
 
   import type { PageData } from './$types'
+  import { onMount } from 'svelte'
+  import type { GetQueuesResponse } from '../queues/+server'
 
   export let data: PageData
 
@@ -27,6 +29,16 @@
     .reduce<ExtendedItem[]>((acc, item) => [...acc, item], [])
 
   extendedItems.forEach((item) => (values[item.key] = item.transformResponse(item.value)))
+
+  let queues: GetQueuesResponse['queues'] = []
+
+  onMount(() => {
+    fetch('/queues')
+      .then((res) => res.json())
+      .then((data: GetQueuesResponse) => {
+        queues = data.queues
+      })
+  })
 </script>
 
 <main class="p-4">
@@ -38,8 +50,8 @@
     </div>
     <div class="col-span-full space-y-4">
       {#each extendedItems as item}
-        <div class="flex items-center justify-between">
-          <div class="flex flex-grow flex-col">
+        <div class="flex items-center gap-10">
+          <div class="flex flex-col">
             <div class="text-lg font-semibold text-gray-900 dark:text-white">{item.title}</div>
             <div class="text-base font-normal text-gray-500 dark:text-gray-400">
               {item.subtitle}
@@ -60,5 +72,31 @@
         </div>
       {/each}
     </div>
+
+    {#each queues as queue}
+      <div class="col-span-full space-y-4">
+        <div class="flex gap-10">
+          <div class="text-lg font-semibold text-gray-900 dark:text-white">{queue.name}</div>
+
+          <Toggle
+            checked={!queue.isPaused}
+            on:change={async () => {
+              const nextStatus = queue.isPaused ? false : true
+              queue.isPaused = nextStatus
+              await fetch(`/queues`, {
+                method: 'PUT',
+                body: JSON.stringify({ shouldPause: nextStatus, name: queue.name })
+              })
+            }}
+            classDiv="peer-focus:ring-0 me-0"
+          />
+        </div>
+        {#each Object.entries(queue.count) as [type, count]}
+          <div class="text-base font-normal text-gray-500 dark:text-gray-400">
+            {type}: {count}
+          </div>
+        {/each}
+      </div>
+    {/each}
   </div>
 </main>

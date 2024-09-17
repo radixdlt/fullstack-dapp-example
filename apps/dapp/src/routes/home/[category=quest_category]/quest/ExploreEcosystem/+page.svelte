@@ -44,7 +44,7 @@
         {
           text: text['6a-answer.md'],
           info: text['6a-result.md'],
-          correct: true
+          correct: false
         },
         {
           text: text['6b-answer.md'],
@@ -54,7 +54,53 @@
         {
           text: text['6c-answer.md'],
           info: text['6c-result.md'],
+          correct: true
+        }
+      ]
+    },
+    {
+      id: '7',
+      type: 'jettyQuiz',
+      text: text['7.md'],
+      quizRequirement: 'Quiz',
+      answers: [
+        {
+          text: text['7a-answer.md'],
+          info: text['7a-result.md'],
+          correct: true
+        },
+        {
+          text: text['7b-answer.md'],
+          info: text['7b-result.md'],
           correct: false
+        },
+        {
+          text: text['7c-answer.md'],
+          info: text['7c-result.md'],
+          correct: false
+        }
+      ]
+    },
+    {
+      id: '8',
+      type: 'jettyQuiz',
+      text: text['8.md'],
+      quizRequirement: 'Quiz',
+      answers: [
+        {
+          text: text['8a-answer.md'],
+          info: text['8a-result.md'],
+          correct: false
+        },
+        {
+          text: text['8b-answer.md'],
+          info: text['8b-result.md'],
+          correct: false
+        },
+        {
+          text: text['8c-answer.md'],
+          info: text['8c-result.md'],
+          correct: true
         }
       ]
     },

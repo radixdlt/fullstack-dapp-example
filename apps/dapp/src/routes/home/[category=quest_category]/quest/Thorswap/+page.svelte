@@ -133,7 +133,10 @@
     />
     {@html text['8b.md']}
     <div class="center">
-      <Button link="https://app.thorswap.finance/swap" isExternal={true}>
+      <Button
+        link="https://app.thorswap.finance/swap/ETH.ETH_XRD.XRD?sellAmount=0.05"
+        isExternal={true}
+      >
         {$i18n.t('quests:Thorswap.gotoThorswap')}
       </Button>
     </div>

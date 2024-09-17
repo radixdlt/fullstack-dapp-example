@@ -34,9 +34,19 @@
       "link": "Learn more on X @radixdlt",
       "button": "Close"
     },
-    "AccountLocked": {
+    "PermanentlyBlocked": {
       "title": "Account Suspended",
-      "content": "There was suspicious activity on this account. Feel free to keep looking around RadQuest, but you can no longer receive rewards and certain features may not work.",
+      "content": "There was suspicious activity on this login and you can no longer receive rewards and certain features may not work.",
+      "button": "Close"
+    },
+    "SessionBlocked": {
+      "title": "Suspicious Activity",
+      "content": "Your connection location has unusual activity. For this login, you won't be able to claim rewards or use many of RadQuest's features.",
+      "button": "Close"
+    },
+    "GetOffVPN": {
+      "title": "VPN Detected",
+      "content": "To continue claiming rewards and using all of RadQuest's features, try turning off any VPN software you may be using.",
       "button": "Close"
     },
     "NetworkCongestion": {

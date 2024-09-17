@@ -6,12 +6,13 @@ export const POST = async ({ request, locals, params }) => {
 
   const userId = params.userId
 
-  const { status }: { status: UserStatus } = requestBody
+  const { status, type }: { status: UserStatus; type: 'USER' | 'ADMIN' } = requestBody
 
   const user = await locals.dbClient.user.update({
     where: { id: userId },
     data: {
-      status
+      status,
+      type
     }
   })
 
@@ -22,7 +23,6 @@ export const GET = async ({ locals, params }) => {
   const user = await locals.dbClient.user.findUnique({
     where: { id: params.userId },
     include: {
-      auditLogs: true,
       completedQuestRequirements: true,
       events: true,
       messages: true,
@@ -30,7 +30,9 @@ export const GET = async ({ locals, params }) => {
       referredByUser: true,
       savedProgress: true,
       transactions: true,
-      marketing: true
+      marketing: true,
+      goldenTicketClaimed: true,
+      loginAttempts: true
     }
   })
 

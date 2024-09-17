@@ -60,7 +60,7 @@ type UserModelType = {
   confirmReferralCode: (referralCode: string) => ResultAsync<string | undefined, ApiError>
   setEmail: (userId: string, email: string, newsletter: boolean) => ResultAsync<UserEmail, ApiError>
   getUserIdsByIp: (ip: string) => ResultAsync<string[], ApiError>
-  setUserBlockedStatus: (userId: string, status: UserStatus) => ResultAsync<undefined, ApiError>
+  setUserStatus: (userId: string, status: UserStatus) => ResultAsync<undefined, ApiError>
   isPhoneNumberUsed: (userId: string) => ResultAsync<boolean, ApiError>
   countReferralCodeUsagePerIp: (userId: string, ip: string) => ResultAsync<number, ApiError>
 }
@@ -69,7 +69,6 @@ export type UserModel = ReturnType<typeof UserModel>
 export const UserModel =
   (db: PrismaClient) =>
   (logger: AppLogger): UserModelType => {
-    const HOURS_24 = 1000 * 60 * 60 * 24
     const doesUserExist = (identityAddress: string) =>
       ResultAsync.fromPromise(
         db.user.count({ where: { identityAddress } }).then((count) => count > 0),
@@ -111,12 +110,13 @@ export const UserModel =
       })
     }
 
-    const getUserIdsByIp = (ip: string, period = HOURS_24) => {
+    const getUserIdsByIp = (ip: string) => {
       return ResultAsync.fromPromise(
         db.$queryRaw<{ userId: string }[]>`
       SELECT "userId" FROM "LoginAttempt" 
         WHERE "ipAssessmentId" IN (SELECT id FROM "IpAssessment" WHERE ip = ${ip}) 
-        AND "createdAt" > NOW() - interval '${period} milliseconds'
+        AND "type" = 'USER_CREATED'
+        AND "createdAt" > NOW() - interval '24 hours'
       `,
         (error) => {
           logger?.error({ error, method: 'countByIp', model: 'UserModel' })
@@ -132,6 +132,7 @@ export const UserModel =
             INNER JOIN "LoginAttempt" la
               ON u.id = la."userId" 
               AND la."createdAt" > NOW() - INTERVAL '30 minutes'
+              AND la."type" = 'USER_CREATED'
             INNER JOIN "IpAssessment" ia
               ON la."ipAssessmentId" = ia.id 
               AND ia."ip" = ${ip}
@@ -147,7 +148,7 @@ export const UserModel =
         }
       ).map((data) => data[0].count || 0)
 
-    const setUserBlockedStatus = (userId: string, status: UserStatus) => {
+    const setUserStatus = (userId: string, status: UserStatus) => {
       return ResultAsync.fromPromise(
         db.user.update({
           where:
@@ -412,7 +413,7 @@ export const UserModel =
       getByAccountAddress,
       getByReferralCode,
       getReferrals,
-      setUserBlockedStatus,
+      setUserStatus,
       getUserIdsByIp,
       getPhoneNumber,
       addAccount,

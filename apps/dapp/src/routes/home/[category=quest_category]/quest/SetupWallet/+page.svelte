@@ -62,9 +62,9 @@
 
   const handleHeroBadgeDepositPossibility = (accountAddress: string) =>
     gatewayApi
-      .isDepositDisabledForResource(accountAddress, publicConfig.badges.heroBadgeAddress)
-      .map((isDisabled) => {
-        canDepositHeroBadge.set(!isDisabled)
+      .isDepositAllowedForResource(accountAddress, publicConfig.badges.heroBadgeAddress)
+      .map((isAllowed) => {
+        canDepositHeroBadge.set(isAllowed)
       })
 
   const setUserAccountAddress = (accountAddress: string, accountProof: SignedChallengeAccount) =>

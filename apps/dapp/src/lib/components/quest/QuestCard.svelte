@@ -7,7 +7,7 @@
   import { createEventDispatcher, onMount, tick } from 'svelte'
   import NavigationFooter from './NavigationFooter.svelte'
   import { writable, type Writable } from 'svelte/store'
-  import ScrollIndicator from '../scroll-indicator/ScrollIndicator.svelte'
+  import ScrollIndicator from '@images/scroll-indicator.svg'
   import { isMobile } from '@radixdlt/radix-dapp-toolkit'
 
   export let title: string
@@ -49,8 +49,8 @@
   let footerNextLoading = writable(false)
 
   const canScrollDown = () => {
-    if (content) {
-      if (content.scrollHeight - content.scrollTop > content.clientHeight + 5) return true
+    if (content && content.scrollHeight - content.scrollTop > content.clientHeight + 5) {
+      return true
     }
     return false
   }
@@ -78,7 +78,7 @@
 
   $: if (mounted) {
     progress
-    if (isMobile()) tick().then(checkScroll)
+    if (isMobile()) tick().then(() => setTimeout(checkScroll, 10))
   }
 </script>
 
@@ -94,9 +94,9 @@
   </div>
 
   <svelte:fragment slot="content">
-    <div class="content-wrapper">
+    <div class="content-wrapper" class:scroll-spacing={canScroll}>
       {#if canScroll}
-        <ScrollIndicator />
+        <img src={ScrollIndicator} class="scroll-indicator" alt="Scroll Arrow" />
       {/if}
       <div class="card content" bind:this={content}>
         {#key progress}
@@ -156,6 +156,22 @@
     }
   }
 
+  .scroll-indicator {
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+    position: absolute;
+    bottom: -0.4rem;
+    left: 50%;
+    transform: translateX(-50%);
+    @include smallMobile {
+      bottom: -0.8rem;
+    }
+  }
+
   .content-wrapper {
     display: grid;
     position: relative;
@@ -164,6 +180,14 @@
     }
     grid-area: 3 / 1;
     overflow: hidden;
+    &.scroll-spacing {
+      padding-bottom: 2rem;
+      @include smallMobile {
+        padding-bottom: 1.2rem;
+      }
+      transition: padding 0s;
+    }
+    transition: padding 0.3s ease;
   }
 
   .content {

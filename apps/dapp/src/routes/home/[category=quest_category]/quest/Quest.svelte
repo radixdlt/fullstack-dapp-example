@@ -6,7 +6,7 @@
     type RegularStep,
     type _Step
   } from '$lib/components/quest/Quest.svelte'
-  import { createEventDispatcher, onMount, tick, type ComponentProps } from 'svelte'
+  import { createEventDispatcher, onMount, type ComponentProps } from 'svelte'
   import { closeQuest } from './+layout.svelte'
   import { hideJetty, quests, retractJettyMenu, scrollToQuestIndex, user } from '../../../../stores'
   import ClaimRewards from './ClaimRewards.svelte'
@@ -73,6 +73,10 @@
       questApi.handleAllRequirementsCompleted(id)
     }
 
+    if (status === 'REWARDS_DEPOSITED') {
+      quest.goToStep('claimRewards')
+    }
+
     actions.next = quest.next
     actions.back = quest.back
     actions.goToStep = quest.goToStep
@@ -87,11 +91,6 @@
     }
 
     $retractJettyMenu = true
-
-    return () =>
-      tick().then(() => {
-        $hideJetty = false
-      })
   })
 
   const _completeQuest = async () => {

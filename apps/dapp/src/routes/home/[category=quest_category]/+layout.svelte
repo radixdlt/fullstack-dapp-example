@@ -11,7 +11,6 @@
   import { useCookies } from '$lib/utils/cookies'
   import { onMount, tick } from 'svelte'
   import { derived } from 'svelte/store'
-  import { PUBLIC_NETWORK_ID } from '$env/static/public'
 
   export let data: LayoutData
 
@@ -35,19 +34,13 @@
     status === 'COMPLETED' || status === 'PARTIALLY_COMPLETED'
 
   $: questCardState = Object.entries($quests).reduce(
-    (prev, cur) => {
-      if (PUBLIC_NETWORK_ID === '1') {
-        // temporarily lock all quests
-        prev[cur[0] as QuestId] = 'locked'
-        return prev
-      }
-
-      const [id, quest] = cur
+    (accumulator, currentQuest) => {
+      const [id, quest] = currentQuest
       const status = data.questStatus[id as QuestId]?.status
 
       if (isConsideredCompleted(status)) {
-        prev[id as QuestId] = status.toLocaleLowerCase() as QuestStatus
-        return prev
+        accumulator[id as QuestId] = status.toLocaleLowerCase() as QuestStatus
+        return accumulator
       }
 
       const preRequisites = quest.preRequisites
@@ -58,16 +51,19 @@
       )
 
       const isInProgress = status === 'IN_PROGRESS'
-      const hasRewardsToClaim = status === 'REWARDS_DEPOSITED'
-      prev[id as QuestId] = hasRewardsToClaim
-        ? 'claim-rewards'
-        : isInProgress
-          ? 'in-progress'
-          : isUnlocked
-            ? 'unlocked'
-            : 'locked'
+      const isRewardReadyToClaim = status === 'REWARDS_DEPOSITED'
+      const isRewardClaimed = status === 'REWARDS_CLAIMED'
 
-      return prev
+      const getQuestStatus = () => {
+        if (isRewardReadyToClaim) return 'claim-rewards'
+        if (isInProgress || isRewardClaimed) return 'in-progress'
+        if (isUnlocked) return 'unlocked'
+        return 'locked'
+      }
+
+      accumulator[id as QuestId] = getQuestStatus()
+
+      return accumulator
     },
     {} as { [key in QuestId]: QuestStatus }
   )

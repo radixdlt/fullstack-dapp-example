@@ -46,7 +46,7 @@ describe('AuthController', () => {
         getById: () => okAsync({}),
         getUserIdsByIp: () => okAsync([]),
         countReferralCodeUsagePerIp: () => okAsync(0),
-        setUserBlockedStatus: () => okAsync({})
+        setUserStatus: () => okAsync({})
       } as any,
       ipAssessmentModel: {
         findByIp: () =>

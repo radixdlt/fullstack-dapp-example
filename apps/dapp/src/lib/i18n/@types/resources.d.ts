@@ -27,7 +27,8 @@ interface Resources {
       "new-tier": "You just leveled up with more friends! Now go claim your rewards.",
       "swap-completed": "Continue your quest: Swap Tokens on a DEX.",
       "stake-completed": "Continue your quest: Radix Network Staking.",
-      "thorswap-swap-completed": "Continue your quest: Bridge Tokens with THORSwap"
+      "thorswap-swap-completed": "Continue your quest: Bridge Tokens with THORSwap",
+      "not-enough-xrd": "Tap here to get more XRD so you can keep questing!"
     },
     "fuse-elements": {
       "intro1": "Using my Web3 powers, I can fuse 5 Elements into a RadGem. Who knows what color or material it will be!",
@@ -124,9 +125,19 @@ interface Resources {
         "link": "Learn more on X @radixdlt",
         "button": "Close"
       },
-      "AccountLocked": {
+      "PermanentlyBlocked": {
         "title": "Account Suspended",
-        "content": "There was suspicious activity on this account. Feel free to keep looking around RadQuest, but you can no longer receive rewards and certain features may not work.",
+        "content": "There was suspicious activity on this login and you can no longer receive rewards and certain features may not work.",
+        "button": "Close"
+      },
+      "SessionBlocked": {
+        "title": "Suspicious Activity",
+        "content": "Your connection location has unusual activity. For this login, you won't be able to claim rewards or use many of RadQuest's features.",
+        "button": "Close"
+      },
+      "GetOffVPN": {
+        "title": "VPN Detected",
+        "content": "To continue claiming rewards and using all of RadQuest's features, try turning off any VPN software you may be using.",
         "button": "Close"
       },
       "NetworkCongestion": {
@@ -283,7 +294,7 @@ interface Resources {
       }
     },
     "Thorswap": {
-      "title": "Bridge Tokens with Thorswap",
+      "title": "Bridge Tokens with THORSwap",
       "description": "Move assets in and out of Radix",
       "introDescription": "Use the THORSwap dApp to “bridge” assets into Radix and back out",
       "requirements": {

@@ -12,7 +12,14 @@
   import { ResultAsync } from 'neverthrow'
   import { publicConfig } from '$lib/public-config'
   import { goto, invalidateAll } from '$app/navigation'
-  import { ErrorPopupId, errorPopupStore, hasHeroBadge, quests, user } from '../../stores'
+  import {
+    ErrorPopupId,
+    errorPopupStore,
+    hasHeroBadge,
+    jettyNotifications,
+    quests,
+    user
+  } from '../../stores'
   import Header from '$lib/components/header/Header.svelte'
   import Layout from '$lib/components/layout/Layout.svelte'
   import Tabs from '$lib/components/tabs/Tabs.svelte'
@@ -27,14 +34,17 @@
   import type { LayoutData } from './$types'
   import { useCookies } from '$lib/utils/cookies'
   import Jetty from './Jetty.svelte'
-  import { loadUnseenNotifications, pushNotification } from '$lib/notifications'
+  import {
+    hasSeenNotification,
+    loadUnseenNotifications,
+    pushNotification
+  } from '$lib/notifications'
   import Footer from '$lib/components/footer/footer.svelte'
   import ErrorPopup from './ErrorPopup.svelte'
   import { CookieKeys, GatewayApi } from 'common'
-  import NetworkCongestedBanner from './NetworkCongestedBanner.svelte'
-  import { PUBLIC_NETWORK_ID } from '$env/static/public'
   import GoldenTicketAlert from './GoldenTicketAlert.svelte'
   import { messageApi } from '$lib/api/message-api'
+  import { hasEnoughXrd } from '$lib/utils/has-enough-xrd'
 
   export let data: LayoutData
 
@@ -87,6 +97,8 @@
 
         $user = undefined
 
+        $jettyNotifications = []
+
         await invalidateAll()
       }
     })
@@ -111,6 +123,16 @@
           radixDappToolkit.disconnect()
           throw Error('Failed to login')
         }
+
+        if (['PERMANENTLY_BLOCKED'].includes(result.value.status)) {
+          errorPopupStore.set({
+            id: ErrorPopupId.PermanentlyBlocked
+          })
+        } else if (['TEMPORARILY_BLOCKED'].includes(result.value.status)) {
+          errorPopupStore.set({
+            id: result.value.vpn ? ErrorPopupId.GetOffVPN : ErrorPopupId.SessionBlocked
+          })
+        }
       }
     })
 
@@ -120,10 +142,6 @@
           .map(async ([me, authToken]) => {
             //@ts-ignore
             dataLayer.push({ event: 'dl_click_4_wallet_connected' })
-
-            if (['PERMANENTLY_BLOCKED', 'TEMPORARILY_BLOCKED'].includes(me.status)) {
-              errorPopupStore.set({ id: ErrorPopupId.AccountLocked })
-            }
 
             $user = {
               ...me,
@@ -273,6 +291,7 @@
     callbacks.forEach((cb) => {
       cb()
     })
+    clearXrdInterval()
   })
 
   const registerNotificationOnMessage = (
@@ -356,6 +375,39 @@
     pushNotification('joinedFriend')
   }
 
+  let checkXrdInterval: ReturnType<typeof setInterval> | undefined
+
+  const pollXrd = () => {
+    if (checkXrdInterval) return
+    hasSeenNotification('notEnoughXrd').map((seen) => {
+      if (!seen) {
+        checkXrdInterval = setInterval(() => {
+          hasEnoughXrd().map((enough) => {
+            if (!enough) {
+              pushNotification('notEnoughXrd')
+              clearInterval(checkXrdInterval)
+            }
+          })
+        }, 10_000)
+      }
+    })
+  }
+
+  const clearXrdInterval = () => {
+    if (checkXrdInterval) {
+      clearInterval(checkXrdInterval)
+      checkXrdInterval = undefined
+    }
+  }
+
+  $: if ($user?.accountAddress && data.questStatus['GetStuff']?.status === 'COMPLETED') {
+    pollXrd()
+  }
+
+  $: if (!$user?.accountAddress) {
+    clearXrdInterval()
+  }
+
   let showGoldenTicketAlert = false
 </script>
 
@@ -384,10 +436,6 @@
 
   <Footer slot="footer" userId={$user?.id} />
 </Layout>
-
-{#if PUBLIC_NETWORK_ID === '1'}
-  <NetworkCongestedBanner />
-{/if}
 
 {#if showGoldenTicketAlert}
   <GoldenTicketAlert />

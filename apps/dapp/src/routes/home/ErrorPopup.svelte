@@ -34,12 +34,13 @@
         <Button
           isExternal
           link={`mailto:hello@radixdlt.com?subject=RadQuest%20support%20request%20%5BXRD%20limit%20reached%5D${$user?.id ? `%20-%20user%20ID%3A%20${$user.id}` : ''}`}
-          >{$i18n.t('main:errorPopup.XrdRewardLimit.button')}</Button
         >
+          {$i18n.t('main:errorPopup.XrdRewardLimit.button')}
+        </Button>
       </div>
     {/if}
 
-    {#if visibleErrorPopup.id === ErrorPopupId.AccountAlreadyRegistered || visibleErrorPopup.id === ErrorPopupId.AccountLocked || visibleErrorPopup.id === ErrorPopupId.CannotClaimRewards}
+    {#if visibleErrorPopup.id === ErrorPopupId.AccountAlreadyRegistered || visibleErrorPopup.id === ErrorPopupId.SessionBlocked || visibleErrorPopup.id === ErrorPopupId.PermanentlyBlocked || visibleErrorPopup.id === ErrorPopupId.CannotClaimRewards || visibleErrorPopup.id === ErrorPopupId.GetOffVPN}
       <div>
         {$i18n.t(`main:errorPopup.${visibleErrorPopup.id}.content`)}
       </div>
