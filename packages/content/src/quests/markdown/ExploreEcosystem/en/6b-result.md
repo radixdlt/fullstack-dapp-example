@@ -1,1 +1,1 @@
-Although LettySwap is a dApp on Radix, it’s just a _demo_ used for RadQuest!
+The first two are just demo DEXs… and the third isn’t even a thing!
