@@ -285,6 +285,10 @@ export const QuestDefinitions = (ticketType?: TicketType) => {
       minutesToComplete: 1,
       preRequisites: ['CreatingRadMorphs'],
       requirements: {
+        ReadContent: {
+          type: 'content',
+          isHidden: true
+        },
         CompleteBasicQuests: {
           type: 'offLedger',
           completedByUser: false
