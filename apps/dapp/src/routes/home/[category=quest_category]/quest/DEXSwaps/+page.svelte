@@ -25,6 +25,8 @@
   const jettySwap = writable(data.requirements?.JettySwap.isComplete)
   const lettySwap = writable(data.requirements?.LettySwap.isComplete)
 
+  let render: (id: string) => boolean
+
   onMount(() => {
     markNotificationAsSeen('jettySwapCompleted')
     markNotificationAsSeen('lettySwapCompleted')
@@ -50,11 +52,13 @@
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'JettySwap') {
         $jettySwap = true
         messageApi.markAsSeen(message.id)
+        if (quest && render('6')) quest.actions.next()
       }
 
       if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'LettySwap') {
         $lettySwap = true
         messageApi.markAsSeen(message.id)
+        if (quest && render('19')) quest.actions.next()
       }
     })
   }
@@ -65,6 +69,7 @@
 
 <Quest
   bind:this={quest}
+  bind:render
   on:render={({ detail }) => {
     if (detail === '18' || detail === '5') {
       if ($user?.accountAddress) {
@@ -86,7 +91,6 @@
     {
       id: '6',
       type: 'regular',
-      skip: jettySwap,
       footer: {
         next: {
           enabled: jettySwap
@@ -108,7 +112,6 @@
     {
       id: '19',
       type: 'regular',
-      skip: lettySwap,
       footer: {
         next: {
           enabled: lettySwap

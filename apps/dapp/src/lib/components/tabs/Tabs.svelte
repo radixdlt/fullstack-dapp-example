@@ -9,10 +9,6 @@
 
   export let activeTab = tabs[0].id
 
-  export const setActiveTab = (tab: string) => {
-    activeTab = tab
-  }
-
   const dispatch = createEventDispatcher<{ 'tab-changed': string }>()
 
   const [send, receive] = crossfade({

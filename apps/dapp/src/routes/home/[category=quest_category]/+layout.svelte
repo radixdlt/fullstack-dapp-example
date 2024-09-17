@@ -27,7 +27,7 @@
 
     setTimeout(() => {
       scrollToEarliestQuest()
-    }, 0)
+    }, 100)
   })
 
   const isConsideredCompleted = (status: string) =>
@@ -83,9 +83,9 @@
       ([id, _]) => questCardState[id] !== 'locked' && questCardState[id] !== 'completed'
     )?.[0]
 
-    if (earliestUnlockedQuest)
+    if (earliestUnlockedQuest) {
       carousel.scrollToIndex(_quests.findIndex(([id, _]) => id === earliestUnlockedQuest))
-    else carousel.scrollToIndex(0)
+    } else carousel.scrollToIndex(0)
   }
 
   const category = derived(page, ($page) => $page.params.category)
