@@ -286,7 +286,8 @@ export const QuestDefinitions = (ticketType?: TicketType) => {
       preRequisites: ['CreatingRadMorphs'],
       requirements: {
         ReadContent: {
-          type: 'content'
+          type: 'content',
+          isHidden: true
         },
         CompleteBasicQuests: {
           type: 'offLedger',
