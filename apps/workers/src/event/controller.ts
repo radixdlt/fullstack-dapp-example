@@ -53,6 +53,9 @@ export const EventWorkerController = ({
   ): ResultAsync<any, WorkerOutputError> => {
     const { traceId, type, transactionId, userId } = job.data
 
+    const shouldTriggerReferralRewardFlow = (questId: QuestId) =>
+      (!!referredBy && questId === BusinessLogic.QuestTogether.triggerRewardAfterQuest) ?? false
+
     const childLogger = logger.child({
       traceId,
       type,
@@ -92,7 +95,7 @@ export const EventWorkerController = ({
     switch (type) {
       case EventId.QuestRewardDepositedV2:
       case EventId.QuestRewardDeposited: {
-        const questId = job.data.data.questId as string
+        const questId = job.data.data.questId as QuestId
 
         return questHelper
           .updateQuestProgressStatus({ questId, status: 'REWARDS_DEPOSITED' })
@@ -103,15 +106,22 @@ export const EventWorkerController = ({
               traceId
             })
           )
+          .andThen(() =>
+            shouldTriggerReferralRewardFlow(questId)
+              ? questHelper
+                  .addCompletedQuestRequirement({
+                    questId: 'JoinFriend',
+                    requirementId: 'CompleteBasicQuests'
+                  })
+                  .andThen(() => questHelper.handleAllQuestRequirementCompleted('JoinFriend'))
+              : okAsync(undefined)
+          )
           .map(() => undefined)
       }
 
       case EventId.QuestRewardClaimedV2:
       case EventId.QuestRewardClaimed: {
         const questId = job.data.data.questId as QuestId
-
-        const shouldTriggerReferralRewardFlow =
-          (!!referredBy && questId === BusinessLogic.QuestTogether.triggerRewardAfterQuest) ?? false
 
         const sendQuestRewardsClaimedMessage = () =>
           sendMessage(
@@ -130,14 +140,8 @@ export const EventWorkerController = ({
           .updateQuestProgressStatus({ questId, status: 'REWARDS_CLAIMED' })
           .andThen(sendQuestRewardsClaimedMessage)
           .andThen(() =>
-            shouldTriggerReferralRewardFlow
-              ? questHelper
-                  .addCompletedQuestRequirement({
-                    questId: 'JoinFriend',
-                    requirementId: 'CompleteBasicQuests'
-                  })
-                  .andThen(() => questHelper.handleAllQuestRequirementCompleted('JoinFriend'))
-                  .andThen(() => referralHelper.handleQuestTogetherRewards(questId))
+            shouldTriggerReferralRewardFlow(questId)
+              ? referralHelper.handleQuestTogetherRewards(questId)
               : okAsync(undefined)
           )
           .andThen(() => questHelper.handleMailerLiteBasicQuestFinished(questId))
