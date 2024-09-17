@@ -130,7 +130,12 @@ export const EventWorkerController = ({
           .andThen(sendQuestRewardsClaimedMessage)
           .andThen(() =>
             shouldTriggerReferralRewardFlow(questId)
-              ? referralHelper.handleQuestTogetherRewards(questId)
+              ? questHelper
+                  .addCompletedQuestRequirement({
+                    questId: 'JoinFriend',
+                    requirementId: 'CompleteBasicQuests'
+                  })
+                  .andThen(() => referralHelper.handleQuestTogetherRewards(questId))
               : okAsync(undefined)
           )
           .andThen(() => questHelper.handleMailerLiteBasicQuestFinished(questId))
