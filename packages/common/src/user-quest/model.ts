@@ -87,7 +87,7 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
 
   const deleteSavedProgress = (userId: string) =>
     ResultAsync.fromPromise(
-      db.savedProgress.delete({
+      db.savedProgress.deleteMany({
         where: {
           userId
         }
