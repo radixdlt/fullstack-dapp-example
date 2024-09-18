@@ -62,7 +62,7 @@
     grid-template-rows: auto 5rem;
     height: 100%;
     overflow: hidden;
-    @include smallMobile {
+    @include short {
       grid-template-rows: auto 4rem;
     }
     &.no-actions {
@@ -76,7 +76,7 @@
     @include mobile {
       padding: var(--spacing-lg) var(--spacing-xl);
     }
-    @include smallMobile {
+    @include short {
       padding: var(--spacing-md) var(--spacing-lg);
     }
   }
@@ -99,7 +99,7 @@
     padding: var(--spacing-xl) var(--spacing-2xl);
     overflow: hidden;
     width: 100%;
-    @include smallMobile {
+    @include short {
       border-top: 1px solid var(--color-light-translucent);
       gap: var(--spacing-xl);
       padding: var(--spacing-lg) var(--spacing-2xl);

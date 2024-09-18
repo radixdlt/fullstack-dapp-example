@@ -303,7 +303,7 @@
     right: 1.5rem;
     z-index: 1;
     transform: translateY(var(--iconPosition));
-    @include smallMobile {
+    @include short {
       right: 1rem;
       transform: translateY(calc(var(--iconPosition) * 0.85));
     }

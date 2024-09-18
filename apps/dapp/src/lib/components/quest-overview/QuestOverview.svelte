@@ -153,7 +153,7 @@
     @media (max-width: 25rem) {
       width: 84vw;
     }
-    @include smallMobile {
+    @include shortMobile {
       padding: var(--spacing-xl);
     }
   }

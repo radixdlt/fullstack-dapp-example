@@ -47,7 +47,7 @@
     background-size: 99%;
     height: 12rem;
     aspect-ratio: 1/1.66;
-    @include smallMobile {
+    @include short {
       height: 10rem;
     }
   }

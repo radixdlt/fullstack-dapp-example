@@ -106,7 +106,7 @@
     overflow-y: hidden;
     overflow-x: hidden;
 
-    @include smallMobile {
+    @include shortMobile {
       min-height: 0rem;
     }
   }
@@ -128,7 +128,7 @@
     > *:last-child {
       width: 1.5rem;
     }
-    @include smallMobile {
+    @include shortMobile {
       padding: 0.9rem 1.5rem;
     }
   }
@@ -137,7 +137,7 @@
     padding: var(--spacing-xl) var(--spacing-2xl);
     display: flex;
     justify-content: center;
-    @include smallMobile {
+    @include shortMobile {
       padding: var(--spacing-lg) var(--spacing-2xl) calc(var(--spacing-lg) + var(--spacing-xs));
     }
   }

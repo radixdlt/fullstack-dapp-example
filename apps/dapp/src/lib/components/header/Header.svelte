@@ -18,7 +18,7 @@
     padding: var(--spacing-lg);
     height: 4rem;
     padding: 0 1.4rem;
-    @include smallMobile {
+    @include shortMobile {
       height: 3rem;
       padding: 0 1rem;
     }
@@ -27,7 +27,7 @@
   .logo {
     width: 143px;
     height: 40px;
-    @include smallMobile {
+    @include shortMobile {
       display: none;
     }
   }
@@ -36,7 +36,7 @@
     width: 40px;
     height: 40px;
     display: none;
-    @include smallMobile {
+    @include shortMobile {
       display: block;
     }
   }
@@ -44,7 +44,7 @@
   .radix-btn {
     --radix-connect-button-border-radius: 20px;
     z-index: 2;
-    @include smallMobile {
+    @include shortMobile {
       --radix-connect-button-width: 4rem;
       --radix-connect-button-border-radius: var(--spacing-md);
     }

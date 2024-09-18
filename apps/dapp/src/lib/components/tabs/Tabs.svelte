@@ -41,7 +41,7 @@
   .tabs {
     display: flex;
     gap: var(--spacing-2xl);
-    @include smallMobile {
+    @include shortMobile {
       gap: var(--spacing-xl);
     }
   }

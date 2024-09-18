@@ -354,7 +354,7 @@
     display: flex;
     justify-content: center;
     transform: translateY(-2rem);
-    @include smallMobile {
+    @include short {
       :global(.carousel) {
         transform: translateY(1rem);
       }
@@ -379,7 +379,7 @@
     :global(.transform-card),
     :global(.container) {
       height: 10rem;
-      @include smallMobile {
+      @include short {
         height: 8rem;
       }
     }
@@ -410,7 +410,7 @@
 
     img {
       height: 250px;
-      @include smallMobile {
+      @include short {
         height: 200px;
       }
     }

@@ -300,7 +300,7 @@ h3 {
   color: var(--color-background-dark);
   letter-spacing: 0.0175rem;
   line-height: 2.25rem;
-  @include smallMobile {
+  @include shortMobile {
     font-size: var(--text-md3);
     line-height: 2rem;
   }

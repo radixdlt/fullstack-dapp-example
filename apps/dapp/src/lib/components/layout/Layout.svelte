@@ -29,14 +29,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    @include smallMobile {
+    @include shortMobile {
       transform: translateY(var(--spacing-xs));
     }
   }
 
   .header {
     height: 10dvh;
-    @include smallMobile {
+    @include shortMobile {
       position: absolute;
       width: 100%;
     }
@@ -46,7 +46,7 @@
     min-height: 20rem;
     height: 80dvh;
     max-height: 39rem;
-    @include smallMobile {
+    @include shortMobile {
       height: 90dvh;
     }
   }
@@ -60,7 +60,7 @@
     flex-direction: column;
     justify-content: center;
     height: 90dvh;
-    @include smallMobile {
+    @include shortMobile {
       height: 100dvh;
     }
     @include desktop {

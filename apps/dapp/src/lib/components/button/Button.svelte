@@ -64,7 +64,7 @@
         }
       }
     }
-    @include smallMobile {
+    @include shortMobile {
       min-width: 6rem;
       padding: 0.5rem 1rem;
       height: 2.5rem;

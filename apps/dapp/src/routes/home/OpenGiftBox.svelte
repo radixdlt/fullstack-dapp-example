@@ -452,7 +452,7 @@
     @include mobile {
       padding: var(--spacing-xl);
     }
-    @include smallMobile {
+    @include short {
       padding: var(--spacing-sm);
     }
   }
@@ -480,7 +480,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
-    @include smallMobile {
+    @include short {
       width: 70%;
       margin: auto;
     }
@@ -514,7 +514,7 @@
     align-items: center;
     height: 100%;
     transform: translateY(-2rem);
-    @include smallMobile {
+    @include short {
       transform: translateY(-1rem);
     }
   }

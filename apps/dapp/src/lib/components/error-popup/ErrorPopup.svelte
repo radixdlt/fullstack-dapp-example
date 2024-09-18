@@ -59,7 +59,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    @include smallMobile {
+    @include shortMobile {
       padding: var(--spacing-md);
     }
   }
