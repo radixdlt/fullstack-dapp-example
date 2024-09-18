@@ -36,8 +36,11 @@
     background-color: var(--color-primary);
   }
 
-  :global(a[href^='?glossaryAnchor'])::after {
-    mask-image: url('@images/book-open.svg');
+  :global(a[href^='?glossaryAnchor']) {
+    text-wrap: nowrap;
+    &::after {
+      mask-image: url('@images/book-open.svg');
+    }
   }
 
   :global(a[href^='https:'])::after {
