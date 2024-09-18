@@ -4,7 +4,6 @@ import {
   Prisma,
   type User,
   type UserPhoneNumber,
-  type UserEmail,
   type CompletedQuestRequirement,
   type QuestProgress,
   type UserStatus,
@@ -58,7 +57,7 @@ type UserModelType = {
   setUserName: (userId: string, name: string) => ResultAsync<User, ApiError>
   getPhoneNumberByUserId: (userId: string) => ResultAsync<string | undefined, ApiError>
   confirmReferralCode: (referralCode: string) => ResultAsync<string | undefined, ApiError>
-  setEmail: (userId: string, email: string, newsletter: boolean) => ResultAsync<UserEmail, ApiError>
+  setEmail: (userId: string, email: string, newsletter: boolean) => ResultAsync<undefined, ApiError>
   getUserIdsByIp: (ip: string) => ResultAsync<string[], ApiError>
   setUserStatus: (userId: string, status: UserStatus) => ResultAsync<undefined, ApiError>
   isPhoneNumberUsed: (userId: string) => ResultAsync<boolean, ApiError>
@@ -368,23 +367,40 @@ export const UserModel =
 
     const setEmail = (userId: string, email: string, newsletter: boolean) =>
       ResultAsync.fromPromise(
-        db.userEmail.upsert({
-          create: {
-            userId,
-            email,
-            newsletter
-          },
-          update: {
-            email,
-            newsletter
-          },
-          where: { userId }
+        db.userEmail.findFirst({
+          where: {
+            email
+          }
         }),
-        (error) => {
-          logger?.error({ error, method: 'setEmail', model: 'UserModel' })
-          return createApiError('failed to set user email', 400)()
+        (e) => {
+          logger?.error({ error: e, method: 'setEmail', model: 'UserModel' })
+          return createApiError('failed to count user email', 400)()
         }
       )
+        .andThen((existingEmail) =>
+          existingEmail && existingEmail.userId === userId
+            ? ResultAsync.fromPromise(
+                db.userEmail.upsert({
+                  create: {
+                    userId,
+                    email,
+                    newsletter
+                  },
+                  update: {
+                    email,
+                    newsletter
+                  },
+                  where: { userId }
+                }),
+                (error) => {
+                  logger?.error({ error, method: 'setEmail', model: 'UserModel' })
+
+                  return createApiError('failed to set user email', 400)(error)
+                }
+              )
+            : okAsync(undefined)
+        )
+        .map(() => undefined)
 
     const getPhoneNumberByUserId = (userId: string): ResultAsync<string | undefined, ApiError> =>
       ResultAsync.fromPromise(db.userPhoneNumber.findFirst({ where: { userId } }), (error) => {
