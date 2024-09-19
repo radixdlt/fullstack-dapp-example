@@ -78,11 +78,12 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
       const missingQuestStatusInDb = !questStatus[questId]?.status
 
       if (syncQuestStatusCookieValueWithDb) {
+        const userId = user?.id!
         const completeQuestResult = await ResultAsync.fromPromise(
           locals.dependencies.dbClient.questProgress.upsert({
-            where: { questId_userId: { userId: locals.userId, questId } },
-            create: { userId: locals.userId, questId, status: 'COMPLETED' },
-            update: { userId: locals.userId, questId, status: 'COMPLETED' }
+            where: { questId_userId: { userId: userId, questId } },
+            create: { userId: userId, questId, status: 'COMPLETED' },
+            update: { userId: userId, questId, status: 'COMPLETED' }
           }),
           (error) => error
         )
