@@ -84,9 +84,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
             create: { userId: locals.userId, questId, status: 'COMPLETED' },
             update: { userId: locals.userId, questId, status: 'COMPLETED' }
           }),
-          (error) => {
-            locals.context.logger.error({ error, method: 'layout.server.completeQuest' })
-          }
+          (error) => error
         )
 
         if (completeQuestResult.isErr()) {
