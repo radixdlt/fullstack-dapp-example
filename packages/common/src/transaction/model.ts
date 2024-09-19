@@ -104,7 +104,6 @@ export const TransactionModel = (db: PrismaClient, queues: Queues) => (logger?: 
           where: { id: userId }
         })
         .then((user) => {
-          console.log(user)
           return user?.transactions.length || 0
         }),
       (error) => {
