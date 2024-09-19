@@ -78,8 +78,24 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
       const missingQuestStatusInDb = !questStatus[questId]?.status
 
       if (syncQuestStatusCookieValueWithDb) {
-        await questApi.completeContentRequirement(questId, fetch)
-        await questApi.completeQuest(questId, fetch)
+        const userId = user?.id!
+        const completeQuestResult = await ResultAsync.fromPromise(
+          locals.dependencies.dbClient.questProgress.upsert({
+            where: { questId_userId: { userId: userId, questId } },
+            create: { userId: userId, questId, status: 'COMPLETED' },
+            update: { userId: userId, questId, status: 'COMPLETED' }
+          }),
+          (error) => error
+        )
+
+        if (completeQuestResult.isErr()) {
+          locals.context.logger.error({
+            error: completeQuestResult.error,
+            method: 'layout.server.completeQuest'
+          })
+          return error(500, 'Failed to complete quest')
+        }
+
         questStatus[questId] = {
           savedProgress: questStatus[questId]?.savedProgress ?? 0,
           status: 'COMPLETED'
