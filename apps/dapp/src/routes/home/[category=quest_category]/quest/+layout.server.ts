@@ -79,6 +79,8 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
           expires: new Date('9999-12-31'),
           httpOnly: false
         })
+    } else if (isInvalidRefreshToken) {
+      return redirect(301, '/home/basic')
     } else {
       error(500, 'Failed to start quest')
     }
@@ -86,7 +88,7 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
     if (questStatus[id]?.status === 'COMPLETED')
       cookies.delete(`saved-progress-${id}`, { path: '/' })
 
-    locals.context.logger.info({ questId: id, requirements })
+    locals.context.logger.trace({ questId: id, requirements })
 
     return {
       id,
