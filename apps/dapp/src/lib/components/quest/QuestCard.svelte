@@ -151,7 +151,7 @@
       width: 1.5rem;
     }
 
-    @include smallMobile {
+    @include shortMobile {
       padding: 0.9rem 1.5rem;
     }
   }
@@ -167,7 +167,7 @@
     bottom: -0.4rem;
     left: 50%;
     transform: translateX(-50%);
-    @include smallMobile {
+    @include shortMobile {
       bottom: -0.8rem;
     }
   }
@@ -182,7 +182,7 @@
     overflow: hidden;
     &.scroll-spacing {
       padding-bottom: 2rem;
-      @include smallMobile {
+      @include shortMobile {
         padding-bottom: 1.2rem;
       }
       transition: padding 0s;
@@ -223,7 +223,7 @@
 
   .footer {
     padding: var(--spacing-xl) var(--spacing-2xl);
-    @include smallMobile {
+    @include shortMobile {
       padding: var(--spacing-lg) var(--spacing-2xl) calc(var(--spacing-lg) + var(--spacing-xs));
     }
   }

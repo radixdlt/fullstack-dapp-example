@@ -336,7 +336,7 @@
     @include mobile {
       padding: 0 var(--spacing-xl);
     }
-    @include smallMobile {
+    @include short {
       padding: 0 var(--spacing-lg);
     }
   }

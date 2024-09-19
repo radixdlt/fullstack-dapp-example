@@ -29,7 +29,7 @@
 <style lang="scss">
   .footer {
     padding: var(--spacing-xl);
-    @include smallMobile {
+    @include shortMobile {
       padding: var(--spacing-lg) var(--spacing-xl) calc(var(--spacing-lg) + var(--spacing-xs));
     }
   }

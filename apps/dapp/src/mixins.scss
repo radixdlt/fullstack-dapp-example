@@ -5,13 +5,19 @@
 }
 
 @mixin mobile {
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     @content;
   }
 }
 
-@mixin smallMobile {
-  @media (max-height: 500px) and (max-width: 768px) {
+@mixin short {
+  @media (max-height: 520px) {
+    @content;
+  }
+}
+
+@mixin shortMobile {
+  @media (max-height: 500px) and (max-width: 767px) {
     @content;
   }
 }
@@ -36,8 +42,11 @@
     background-color: var(--color-primary);
   }
 
-  :global(a[href^='?glossaryAnchor'])::after {
-    mask-image: url('@images/book-open.svg');
+  :global(a[href^='?glossaryAnchor']) {
+    text-wrap: nowrap;
+    &::after {
+      mask-image: url('@images/book-open.svg');
+    }
   }
 
   :global(a[href^='https:'])::after {

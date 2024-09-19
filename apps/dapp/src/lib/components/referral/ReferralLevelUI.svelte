@@ -70,7 +70,7 @@
     justify-content: space-around;
     gap: 0.5rem;
     width: 100%;
-    @include smallMobile {
+    @include shortMobile {
       padding: 1rem;
     }
 
@@ -80,7 +80,7 @@
       font-weight: 300;
       margin: 0;
 
-      @include smallMobile {
+      @include shortMobile {
         line-height: var(--text-md1);
         font-size: var(--text-md1);
       }

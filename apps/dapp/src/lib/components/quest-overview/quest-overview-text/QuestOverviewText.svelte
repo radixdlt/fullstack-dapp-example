@@ -41,7 +41,7 @@
     gap: var(--spacing-lg);
     text-align: center;
     overflow: hidden;
-    @include smallMobile {
+    @include shortMobile {
       gap: var(--spacing-md);
     }
   }
