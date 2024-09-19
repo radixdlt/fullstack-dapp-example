@@ -219,7 +219,7 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
 
   const findPrerequisites = (userId: string, preRequisites: string[]) =>
     ResultAsync.fromPromise(
-      db.questProgress.findMany({
+      ((db as any).$primary() as PrismaClient).questProgress.findMany({
         where: {
           userId,
           questId: { in: preRequisites },
