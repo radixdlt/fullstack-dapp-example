@@ -91,6 +91,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
         const startQuestResult = await questApi.startQuest(questId, fetch)
 
         if (startQuestResult.isErr()) {
+          locals.context.logger.error({ startQuestResult, method: 'layout.server.startQuest' })
           error(500, 'Failed to start quest')
         }
 
