@@ -6,7 +6,8 @@ import {
   GatewayApi,
   MailerLiteModel,
   ImageModel,
-  EventModel
+  EventModel,
+  GoldenTicketModel
 } from 'common'
 import { logger } from './helpers/logger'
 import {
@@ -70,6 +71,7 @@ const app = async () => {
       mailerLiteModel: MailerLiteModel({
         apiKey: config.mailerLite.apiKey
       }),
+      goldenTicketModel: GoldenTicketModel(dbClient),
       transactionIntentHelper: TransactionIntentHelper({
         dbClient,
         queues,

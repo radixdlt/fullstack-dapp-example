@@ -271,5 +271,15 @@ export const trackedTransactionTypes: TrackedTransactions = {
         quantity: { kind: 'Decimal', key: 'quantity' }
       }
     })
+  },
+  [EventId.PurchaseTicketsEvent]: {
+    PurchaseTicketsEvent: eventEmittedByComponent({
+      eventName: 'PurchaseTicketsEvent',
+      componentAddress: config.radQuest.components.ticketMachine,
+      keys: {
+        user_id: { kind: 'String', key: 'userId' },
+        ticket_amount: { kind: 'Decimal', key: 'ticketAmount' }
+      }
+    })
   }
 } as const

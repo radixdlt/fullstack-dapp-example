@@ -288,7 +288,8 @@ export const EventId = {
   GiftBoxesOpenedEvent: 'GiftBoxesOpenedEvent',
   DepositedElements: 'DepositedElements',
   RadGemsClaimed: 'RadGemsClaimed',
-  RadMorphCreated: 'RadMorphCreated'
+  RadMorphCreated: 'RadMorphCreated',
+  PurchaseTicketsEvent: 'PurchaseTicketsEvent'
 } as const
 
 export type EventId = keyof typeof EventId

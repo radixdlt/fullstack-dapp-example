@@ -63,5 +63,6 @@ export const WorkerError = {
   FailedToAddJobToQueue: 'FailedToAddJobToQueue',
   FailedToMarkJobsAsFailed: 'FailedToMarkJobsAsFailed',
   FailedToMarkJobsAsCompleted: 'FailedToMarkJobsAsCompleted',
-  FailedToGetTransactionIntent: 'FailedToGetTransactionIntent'
+  FailedToGetTransactionIntent: 'FailedToGetTransactionIntent',
+  FailedToIssueSilverTickets: 'FailedToIssueSilverTickets'
 } as const

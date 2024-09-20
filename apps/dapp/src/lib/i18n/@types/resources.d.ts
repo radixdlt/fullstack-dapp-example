@@ -161,6 +161,19 @@ interface Resources {
       "privacy-notice": "Privacy Notice",
       "build-on-radix": "Build on Radix",
       "get-help": "Get help with RadQuest"
+    },
+    "silverTickets": {
+      "set-expiration": "Expiration date",
+      "set-description": "Description",
+      "header": "Purchase pre-funded referral links",
+      "purchased-header": "Purchased links",
+      "purchased-at": "Purchased at",
+      "expires-at": "Expires at",
+      "set-info": "Set expiration and description",
+      "claimed": "Claimed",
+      "save": "Save",
+      "enter-quantity": "Enter quantity",
+      "purchase": "Purchase for {{amount}} XRD"
     }
   },
   "quests": {

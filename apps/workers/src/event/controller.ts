@@ -1,7 +1,13 @@
 import { okAsync, errAsync, err, ok, ResultAsync } from 'neverthrow'
 import { EventJob, Job } from 'queues'
 import { QuestId } from 'content'
-import { EventId, MailerLiteModel, BusinessLogic, TransactionIntentHelper } from 'common'
+import {
+  EventId,
+  MailerLiteModel,
+  BusinessLogic,
+  TransactionIntentHelper,
+  GoldenTicketModel
+} from 'common'
 import { AppLogger, AccountAddressModel } from 'common'
 import { PrismaClient, User } from 'database'
 import { WorkerError, WorkerOutputError } from '../_types'
@@ -32,6 +38,7 @@ export const EventWorkerController = ({
   dbClient,
   logger,
   AccountAddressModel,
+  goldenTicketModel,
   mailerLiteModel,
   sendMessage,
   transactionIntentHelper,
@@ -39,6 +46,7 @@ export const EventWorkerController = ({
 }: {
   dbClient: PrismaClient
   AccountAddressModel: AccountAddressModel
+  goldenTicketModel: GoldenTicketModel
   mailerLiteModel: MailerLiteModel
   logger: AppLogger
   sendMessage: MessageHelper
@@ -243,6 +251,24 @@ export const EventWorkerController = ({
 
       case EventId.RadMorphCreated: {
         return questHelper.handleQuestWithTrackedAccount('CreatingRadMorphs', type)
+      }
+
+      case EventId.PurchaseTicketsEvent: {
+        const { ticketAmount } = job.data.data
+
+        return goldenTicketModel(logger)
+          .createSilverTicketBatch(ticketAmount as number, job.data.userId)
+          .mapErr(() => ({ reason: WorkerError.FailedToIssueSilverTickets }))
+          .andThen(() =>
+            sendMessage(
+              job.data.userId,
+              {
+                type: 'TicketsPurchased',
+                traceId
+              },
+              childLogger
+            )
+          )
       }
 
       default:

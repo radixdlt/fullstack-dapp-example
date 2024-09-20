@@ -27,7 +27,13 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
 
   const getAll = () => dbClient.goldenTicket.findMany({ orderBy: { createdAt: 'desc' } })
 
-  const createBatch = (count: number, expiresAt: Date, ownerId: string, description?: string) => {
+  const createBatch = (
+    count: number,
+    expiresAt: Date,
+    ownerId: string,
+    description?: string,
+    type: 'FULL' | 'LIMITED' = 'FULL'
+  ) => {
     const batchId = crypto.randomUUID() as string
 
     const tickets = Array.from({ length: count }, () => ({
@@ -38,7 +44,8 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
       batchId,
       expiresAt,
       ownerId,
-      description
+      description,
+      type
     }))
 
     return dbClient.goldenTicket.createMany({ data: tickets }).then(() => tickets)
@@ -99,6 +106,31 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
       .goldenTicket.count({ where: { userId, status: 'CLAIMED' } })
       .then((count: number) => count > 0)
 
+  const createSilverTicketBatch = (count: number, ownerId: string) =>
+    createBatch(
+      count,
+      new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // in 1 year
+      ownerId,
+      '',
+      'LIMITED'
+    )
+
+  const getOwnedTickets = (ownerId: string) =>
+    dbClient.user
+      .findUnique({ include: { goldenTicketsOwned: true }, where: { id: ownerId } })
+      .then((value) => (value ? value.goldenTicketsOwned : []))
+
+  const updateSilverTicketBatch = (
+    ownerId: string,
+    batchId: string,
+    expiresAt: Date,
+    description: string
+  ) =>
+    dbClient.goldenTicket.updateMany({
+      where: { ownerId, batchId, type: 'LIMITED' },
+      data: { expiresAt, description }
+    })
+
   return {
     getTicket: wrapper('getTicket')(getTicket),
     getBatch: wrapper('getBatch')(getBatch),
@@ -107,6 +139,9 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
     importBatch: wrapper('importBatch')(importBatch),
     setExpirationDateOnBatch: wrapper('setExpirationDateOnBatch')(setExpirationDateOnBatch),
     claimTicket: wrapper('claimTicket')(claimTicket),
-    userHasClaimedTicket: wrapper('userHasClaimedTicket')(userHasClaimedTicket)
+    userHasClaimedTicket: wrapper('userHasClaimedTicket')(userHasClaimedTicket),
+    createSilverTicketBatch: wrapper('createSilverTicketBatch')(createSilverTicketBatch),
+    getOwnedTickets: wrapper('getOwnedSilverTickets')(getOwnedTickets),
+    updateSilverTicketBatch: wrapper('updateSilverTicketBatch')(updateSilverTicketBatch)
   }
 }
