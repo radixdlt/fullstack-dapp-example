@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "@prisma/extension-read-replicas": "^0.4.0",
-    "@radixdlt/radix-dapp-toolkit": "^2.0.3",
+    "@radixdlt/radix-dapp-toolkit": "^2.1.0",
     "@svelte-put/qr": "^1.2.1",
     "common": "*",
     "content": "*",

@@ -15,7 +15,7 @@
   "dependencies": {
     "@mailerlite/mailerlite-nodejs": "^1.2.2",
     "@radixdlt/babylon-gateway-api-sdk": "^1.3.0",
-    "@radixdlt/radix-dapp-toolkit": "^2.0.3",
+    "@radixdlt/radix-dapp-toolkit": "^2.1.0",
     "@radixdlt/babylon-core-api-sdk": "^1.2.0",
     "bullmq": "^5.7.8",
     "database": "*",
