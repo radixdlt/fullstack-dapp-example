@@ -40,7 +40,7 @@ export type IPQSResponse = {
 }
 
 export const IPQS_OK_RESPONSE: IPQSResponse = {
-  success: true,
+  success: false,
   message: 'This is mock IPQS response in case of API failure',
   request_id: '',
   country_code: 'PL',
@@ -49,11 +49,6 @@ export const IPQS_OK_RESPONSE: IPQSResponse = {
   vpn: false,
   tor: false,
   proxy: false
-}
-
-export const IPQS_OK_RESULT = {
-  response: IPQS_OK_RESPONSE,
-  assessmentId: 1
 }
 
 export const FraudRule = {
