@@ -74,7 +74,10 @@ export const FraudDetectionModule = (config: {
           return data
         }
         logger.error({ method: 'IPQSClient.apiCall', data })
-        return IPQS_OK_RESPONSE
+        return {
+          ...IPQS_OK_RESPONSE,
+          request_id: data.request_id
+        }
       })
       .orElse(() => ok(IPQS_OK_RESPONSE))
 
