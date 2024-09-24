@@ -80,7 +80,7 @@
   },
   "license": "SEE LICENSE",
   "dependencies": {
-    "@radixdlt/radix-dapp-toolkit": "^2.1.0",
+    "@radixdlt/radix-dapp-toolkit": "^2.1.1",
     "@radixdlt/radix-engine-toolkit": "^1.0.5",
     "bip39": "^3.1.0",
     "common": "*",
