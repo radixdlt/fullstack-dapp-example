@@ -227,7 +227,7 @@
   {:else}
     <div class="content">
       <div class="main-menu-page">
-        {#if hasNotifications}
+        {#if hasNotifications && latestNotification}
           <div transition:scale>
             <Notification
               title={latestNotification.title}
