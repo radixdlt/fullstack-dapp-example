@@ -35,11 +35,30 @@ export const GoldenTicketController = ({ dbClient, logger }: ControllerDependenc
       .map((data) => ({ data, httpResponseCode: 200 }))
       .mapErr(createApiError('Failed to check if user has claimed a ticket', 400))
 
+  const getOwnedSilverTickets = (userId: string) =>
+    model
+      .getOwnedTickets(userId)
+      .map((data) => ({ data, httpResponseCode: 200 }))
+      .mapErr(createApiError('Failed to get owned silver tickets', 400))
+
+  const updateSilverTicketBatch = (
+    ownerId: string,
+    batchId: string,
+    expiresAt: Date,
+    description: string
+  ) =>
+    model
+      .updateSilverTicketBatch(ownerId, batchId, expiresAt, description)
+      .map((data) => ({ data, httpResponseCode: 200 }))
+      .mapErr(createApiError('Failed to update silver ticket batch', 400))
+
   return {
     getTicket,
     getBatch,
     getAll,
     claim,
-    hasClaimed
+    hasClaimed,
+    getOwnedSilverTickets,
+    updateSilverTicketBatch
   }
 }

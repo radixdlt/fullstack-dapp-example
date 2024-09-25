@@ -1,9 +1,9 @@
 <script lang="ts">
-  import Chevron from '@images/chevron.svg'
   import { scale, slide } from 'svelte/transition'
   import ProgressBar from '../progress-bar/ProgressBar.svelte'
   import type { QuestDefinitions } from 'content'
   import { i18n } from '$lib/i18n/i18n'
+  import Accordion from '../accordion/Accordion.svelte'
 
   type Level = keyof ReturnType<typeof QuestDefinitions>['QuestTogether']['partialRewards']
 
@@ -12,14 +12,10 @@
   export let progress: number
   export let totalSteps: number
   export let isOpened: boolean = false
-
-  const toggle = () => {
-    isOpened = !isOpened
-  }
 </script>
 
-<div class="referral-level">
-  <button class="referral-level__header" on:click={toggle}>
+<Accordion bind:isOpened>
+  <svelte:fragment slot="header">
     <h3>{$i18n.t(`quests:QuestTogether.levelHeader.${level}`)}</h3>
 
     <img src={icon} alt="" />
@@ -27,27 +23,35 @@
     <span class="referrals">
       <slot name="referrals" />
     </span>
+  </svelte:fragment>
 
-    <div class="icon" style:transform={`rotate(${isOpened ? '180deg' : 0})`}>
-      <img src={Chevron} alt="" />
-    </div>
-  </button>
-
-  {#if isOpened}
+  <svelte:fragment slot="content">
     <div class="progress-bar" in:scale out:slide>
       <ProgressBar {totalSteps} {progress} --color-background-dark="var(--color-primary)" />
     </div>
-    <div class="referral-level__content" transition:slide>
+    <div class="referral-level__content">
       <slot name="content" />
 
       <div class="action-button">
         <slot name="action-button" />
       </div>
     </div>
-  {/if}
-</div>
+  </svelte:fragment>
+</Accordion>
 
 <style lang="scss">
+  h3 {
+    line-height: var(--text-md2);
+    font-size: var(--text-md2);
+    font-weight: 300;
+    margin: 0;
+
+    @include shortMobile {
+      line-height: var(--text-md1);
+      font-size: var(--text-md1);
+    }
+  }
+
   .referrals {
     font-size: var(--text-xs);
   }
@@ -57,43 +61,8 @@
     justify-content: center;
     padding: 0.5rem;
   }
-  .icon {
-    transition: transform 0.3s ease-in-out;
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-  }
-  .referral-level__header {
-    padding: 1rem 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    gap: 0.5rem;
-    width: 100%;
-    @include shortMobile {
-      padding: 1rem;
-    }
-
-    h3 {
-      line-height: var(--text-md2);
-      font-size: var(--text-md2);
-      font-weight: 300;
-      margin: 0;
-
-      @include shortMobile {
-        line-height: var(--text-md1);
-        font-size: var(--text-md1);
-      }
-    }
-  }
 
   .referral-level__content {
     padding: 1rem 1.5rem;
-  }
-
-  .referral-level {
-    border-radius: 15px;
-    border: 1px solid;
-    border-color: linear-gradient(4.06deg, #0e2130 5.91%, #091a26 91.69%);
   }
 </style>

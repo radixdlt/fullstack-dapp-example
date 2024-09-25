@@ -19,6 +19,7 @@ import { RedisConnection } from 'queues'
 import DepositElementsToRadGemv2 from '../fixtures/transactions/radgem-forgev2'
 import RadMorphCreated from '../fixtures/transactions/radmorph-created'
 import RadMorphCreated2 from '../fixtures/transactions/radmorph-created-2'
+import TicketsPurchased from '../fixtures/transactions/tickets-purchased'
 
 let accountAddressModel: ReturnType<AccountAddressModel>
 let filterTransactionsByType = FilterTransactionsByType(trackedTransactionTypes)
@@ -250,6 +251,21 @@ describe('filter transactions', () => {
       expect(transaction.type).toEqual(EventId.QuestRewardClaimedV2)
       expect(transaction.userId).toBeDefined()
       expect(transaction.data.questId).toBeDefined()
+    })
+
+    it(`should find ${EventId.PurchaseTicketsEvent} transaction`, () => {
+      const result = filterTransactionsByType([...TicketsPurchased])
+
+      if (result.isErr()) throw result.error
+
+      const filteredTransactions = result.value
+
+      expect(filteredTransactions.length).toEqual(1)
+
+      const [transaction] = filteredTransactions
+      expect(transaction.type).toEqual(EventId.PurchaseTicketsEvent)
+      expect(transaction.data.userId).toBeDefined()
+      expect(transaction.data.ticketAmount).toBeDefined()
     })
   })
 
