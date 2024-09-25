@@ -148,8 +148,9 @@
               label: persona.label
             }
 
-            if ($page.url.searchParams.get('t') && !$user.goldenTicketClaimed)
-              showGoldenTicketAlert = true
+            const ticket = $page.url.searchParams.get('t')
+
+            if (ticket && !$user.goldenTicketClaimed) showGoldenTicketAlert = true
 
             if (authToken) {
               $webSocketClient = WebSocketClient({ authToken, radixDappToolkit })
