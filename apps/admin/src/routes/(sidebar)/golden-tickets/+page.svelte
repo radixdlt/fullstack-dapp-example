@@ -15,11 +15,10 @@
   import { invalidateAll } from '$app/navigation'
   import type { PageServerData } from './$types'
   import type { GoldenTicket } from 'database'
-  import { clear, download, readRows, writeRows } from './csv'
-  import { createZip } from './qr-codes'
   import { slide } from 'svelte/transition'
   import Pagination from './Pagination.svelte'
   import { http } from '$lib/http'
+  import { goldenTicketUtils } from 'common'
 
   export let data: PageServerData
 
@@ -69,7 +68,7 @@
   }
 
   const importBatch = async () => {
-    const tickets = readRows(importedBatch[0])
+    const tickets = goldenTicketUtils.csv.readRows(importedBatch[0])
 
     await http.post(`/golden-tickets/import`, {
       expiresAt: new Date(expiresAt),
@@ -83,11 +82,11 @@
   }
 
   const downloadFiles = async (tickets: GoldenTicket[]) => {
-    writeRows(tickets, data.baseUrl)
-    await download()
-    clear()
+    goldenTicketUtils.csv.writeRows(tickets, data.baseUrl)
+    await goldenTicketUtils.csv.download()
+    goldenTicketUtils.csv.clear()
 
-    await createZip(tickets, data.baseUrl)
+    await goldenTicketUtils.qr.createZip(tickets, data.baseUrl)
   }
 
   let openRow: number | undefined

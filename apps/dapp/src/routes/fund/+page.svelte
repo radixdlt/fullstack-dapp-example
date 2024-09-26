@@ -1,46 +1,22 @@
 <script lang="ts">
   import '../../global.scss'
   import { onMount } from 'svelte'
-  import { RadixDappToolkit, Logger } from '@radixdlt/radix-dapp-toolkit'
   import { publicConfig } from '$lib/public-config'
   import Button from '$lib/components/button/Button.svelte'
-  import Header from '$lib/components/header/Header.svelte'
   import { userApi } from '$lib/api/user-api'
   import type { GoldenTicket } from 'database'
-  import { authApi } from '$lib/api/auth-api'
   import { gatewayApi } from '$lib/public-config'
-  import { WebSocketClient } from '$lib/websocket-client'
+  import { webSocketClient, WebSocketClient } from '$lib/websocket-client'
   import Accordion from '$lib/components/accordion/Accordion.svelte'
   import CopyIcon from '@images/copy.svg'
   import Popup from '$lib/components/popup/Popup.svelte'
   import type { PageData } from './$types'
   import { i18n } from '$lib/i18n/i18n'
+  import { hasHeroBadge, user } from '../../stores'
+  import { sendTransaction } from '$lib/rdt'
+  import { goldenTicketUtils } from 'common'
 
   export let data: PageData
-
-  const { dAppDefinitionAddress, networkId } = publicConfig
-
-  let radixDappToolkit: RadixDappToolkit
-
-  let websocketClient: WebSocketClient
-
-  onMount(() => {
-    radixDappToolkit = RadixDappToolkit({
-      networkId,
-      dAppDefinitionAddress: dAppDefinitionAddress ?? '',
-      logger: Logger(1)
-    })
-
-    radixDappToolkit.walletApi.walletData$.subscribe(({ persona }) => {
-      if (persona?.identityAddress) {
-        authApi.authToken().map(async (authToken) => {
-          if (authToken) {
-            websocketClient = WebSocketClient({ authToken, radixDappToolkit })
-          }
-        })
-      }
-    })
-  })
 
   let amountOfTickets = 0
 
@@ -48,11 +24,11 @@
 
   const purchaseManifest = () => `
     CALL_METHOD
-        Address("${data.accountAddress}")
+        Address("${$user!.accountAddress}")
         "create_proof_of_non_fungibles"
         Address("${publicConfig.badges.heroBadgeAddress}")
         Array<NonFungibleLocalId>(
-            NonFungibleLocalId("<${data.id}>")
+            NonFungibleLocalId("<${$user!.id}>")
         )
     ;
     POP_FROM_AUTH_ZONE
@@ -60,7 +36,7 @@
     ;
 
     CALL_METHOD
-        Address("${data.accountAddress}")
+        Address("${$user!.accountAddress}")
         "withdraw"
         Address("${publicConfig.xrd}")
         Decimal("${price * amountOfTickets}")
@@ -79,7 +55,7 @@
         Bucket("xrd")
     ;
     CALL_METHOD
-        Address("${data.accountAddress}")
+        Address("${$user!.accountAddress}")
         "deposit_batch"
         Expression("ENTIRE_WORKTOP")
     ;
@@ -127,7 +103,7 @@
   let unsub: ReturnType<WebSocketClient['onMessage']> | undefined
 
   const handleMessage = () => {
-    unsub = websocketClient.onMessage((message) => {
+    unsub = $webSocketClient!.onMessage((message) => {
       if (message.type === 'TicketsPurchased') {
         getTickets()
           .map(() => {
@@ -144,10 +120,9 @@
 
   const purchase = () => {
     sendingTransaction = true
-    radixDappToolkit.walletApi
-      .sendTransaction({
-        transactionManifest: purchaseManifest()
-      })
+    sendTransaction({
+      transactionManifest: purchaseManifest()
+    })
       .map(() => {
         handleMessage()
       })
@@ -166,6 +141,16 @@
     setInfoOnBatch = ''
     updateExpiresAt = ''
     updateDescription = ''
+  }
+
+  const downloadCsv = async (tickets: GoldenTicket[]) => {
+    goldenTicketUtils.csv.writeRows(tickets, data.baseUrl)
+    await goldenTicketUtils.csv.download()
+    goldenTicketUtils.csv.clear()
+  }
+
+  const downloadQr = (tickets: GoldenTicket[]) => {
+    goldenTicketUtils.qr.createZip(tickets, data.baseUrl)
   }
 </script>
 
@@ -212,26 +197,30 @@
   </Popup>
 {/if}
 
-<div class="header">
-  <Header />
-</div>
-
 <div class="container">
   <div class="card fund">
     <h3>{$i18n.t('main:silverTickets.header')}</h3>
 
-    <input type="number" min="0" bind:value={amountOfTickets} />
+    <p>{@html $i18n.t('main:silverTickets.purchase-description')}</p>
+
+    <input disabled={!$hasHeroBadge} type="number" min="0" bind:value={amountOfTickets} />
 
     <div class="btn">
       <Button
         on:click={purchase}
-        disabled={amountOfTickets === 0}
+        disabled={!amountOfTickets || amountOfTickets === 0 || !$hasHeroBadge}
         loading={loadingPrice || sendingTransaction}
-        >{amountOfTickets === 0
-          ? $i18n.t('main:silverTickets.enter-quantity')
+        >{!amountOfTickets || amountOfTickets === 0
+          ? $i18n.t('main:silverTickets.purchase-empty')
           : $i18n.t('main:silverTickets.purchase', { amount: price * amountOfTickets })}
       </Button>
     </div>
+
+    {#if !$hasHeroBadge}
+      <p class="warning">
+        {$i18n.t('main:silverTickets.not-logged-in')}
+      </p>
+    {/if}
 
     {#if ownedBatches.length > 0}
       <div class="owned-tickets">
@@ -241,22 +230,20 @@
           <div class="batch">
             <Accordion>
               <svelte:fragment slot="header">
-                <div class="header-text">
-                  {$i18n.t('main:silverTickets.purchased-at')}:
-                  <div class="header-info">
-                    {batch[0].createdAt.toLocaleDateString()}
+                <div class="accordion-header">
+                  <div class="header-description">
+                    {#if batch[0].description}
+                      {batch[0].description}
+                    {/if}
+                  </div>
+                  <div class="expires">
+                    <b>{$i18n.t('main:silverTickets.expires-at')}:</b>
+                    {batch[0].expiresAt.toLocaleDateString()}
                   </div>
                 </div>
               </svelte:fragment>
 
               <svelte:fragment slot="content">
-                <b>{$i18n.t('main:silverTickets.expires-at')}:</b>
-                {batch[0].expiresAt.toLocaleDateString()}
-                {#if batch[0].description}
-                  <div class="description">
-                    {batch[0].description}
-                  </div>
-                {/if}
                 <div class="set-info">
                   <Button
                     on:click={() => {
@@ -265,6 +252,18 @@
                     }}>{$i18n.t('main:silverTickets.set-info')}</Button
                   >
                 </div>
+
+                <b>{$i18n.t('main:silverTickets.quantity', { amount: batch.length })}</b>
+
+                <div class="download-btns">
+                  <Button on:click={() => downloadCsv(batch)}>
+                    {$i18n.t('main:silverTickets.download-csv')}
+                  </Button>
+                  <Button on:click={() => downloadQr(batch)}>
+                    {$i18n.t('main:silverTickets.download-qr')}
+                  </Button>
+                </div>
+
                 <div class="batches">
                   {#each batch as ticket}
                     {@const link = `${data.baseUrl}?t=${ticket.id}`}
@@ -291,17 +290,17 @@
 </div>
 
 <style lang="scss">
-  .header {
-    :global(radix-connect-button) {
-      display: none;
-    }
-  }
   .container {
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     margin: var(--spacing-2xl);
+  }
+
+  .warning {
+    color: var(--color-error);
+    font-weight: var(--font-weight-bold);
   }
 
   .fund {
@@ -340,21 +339,24 @@
     justify-content: center;
   }
 
-  .header-text {
-    font-weight: bold;
-    padding: var(--spacing-lg);
+  .download-btns {
     display: flex;
+    justify-content: center;
     gap: var(--spacing-md);
-    white-space: nowrap;
-
-    .header-info {
-      font-weight: normal;
-    }
+    margin: var(--spacing-xl);
   }
 
-  .description {
-    padding: var(--spacing-lg);
-    font-style: italic;
+  .accordion-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    overflow: hidden;
+    width: 100%;
+
+    .header-description {
+      text-align: left;
+    }
   }
 
   .link {

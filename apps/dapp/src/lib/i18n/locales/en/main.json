@@ -74,14 +74,20 @@
   "silverTickets": {
     "set-expiration": "Expiration date",
     "set-description": "Description",
-    "header": "Purchase pre-funded referral links",
-    "purchased-header": "Purchased links",
+    "purchase-description": "Enter the quantity of referral links to purchase. Each link costs <b>50 XRD</b>, to be passed on to the user. It cannot be refunded.",
+    "header": "Purchase Pre-funded Referral Links",
+    "purchased-header": "Your Batches of Links",
     "purchased-at": "Purchased at",
-    "expires-at": "Expires at",
-    "set-info": "Set expiration and description",
+    "expires-at": "Expires on",
+    "set-info": "Set Expiration and Description",
     "claimed": "Claimed",
     "save": "Save",
     "enter-quantity": "Enter quantity",
-    "purchase": "Purchase for {{amount}} XRD"
+    "purchase": "Purchase Links ({{amount}} XRD)",
+    "purchase-empty": "Purchase Links",
+    "quantity": "{{amount}} Referral Links",
+    "download-csv": "Download CSV",
+    "download-qr": "Download QR Codes",
+    "not-logged-in": "To buy links, please login with a Persona that has gotten a Hero Badge on RadQuest."
   }
 }
