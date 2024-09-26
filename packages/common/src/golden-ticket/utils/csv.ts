@@ -19,7 +19,9 @@ export const writeRows = (tickets: GoldenTicket[], baseUrl: string) => {
 }
 
 export const clear = () => {
-  sheet.spliceRows(2, sheet.rowCount - 1)
+  while (sheet.rowCount > 1) {
+    sheet.spliceRows(2, 1)
+  }
 }
 
 export const download = async () => {
