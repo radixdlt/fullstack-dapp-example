@@ -1,8 +1,4 @@
 <div class="layout">
-  <div class="header">
-    <slot name="header" />
-  </div>
-
   <div class="content">
     <div class="tabs">
       <slot name="tabs" />
@@ -31,14 +27,6 @@
     align-items: center;
     @include shortMobile {
       transform: translateY(var(--spacing-xs));
-    }
-  }
-
-  .header {
-    height: 10dvh;
-    @include shortMobile {
-      position: absolute;
-      width: 100%;
     }
   }
 
