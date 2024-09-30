@@ -9,6 +9,11 @@
       "0.md": "<h2>Welcome to RadQuest</h2>\n<p><strong>Fantastic!</strong> Another visitor from <strong>{source}</strong> ready to dive into RadQuest. I'll be your guide!</p>\n<p>Begin your adventure and start earning your <strong>$20 of XRD</strong>!</p>\n"
     }
   },
+  "ticket": {
+    "en": {
+      "0.md": "<h2>Welcome to RadQuest</h2>\n<p>You've arrived to RadQuest by <strong>special referral</strong>!</p>\n<p>Get started, and once you get your Radix Wallet setup and connected, you'll receive <strong>50 XRD</strong> tokens to help you on your journey!</p>\n"
+    }
+  },
   "userreferral": {
     "en": {
       "0.md": "<h2>Welcome to RadQuest</h2>\n<p><strong>”{inviter_name}”</strong> has invited you to join them here on RadQuest!</p>\n<p>Complete the <strong>Basics</strong> quests and you’ll <em>both</em> be able to claim a reward in real <strong>XRD tokens</strong>!</p>\n"

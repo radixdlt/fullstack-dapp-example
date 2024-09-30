@@ -1,4 +1,5 @@
 export const LandingPopupSchema = {
+  Ticket: 'ticket',
   UserReferral: 'userreferral',
   Influencer: 'influencer',
   Paid: 'paid'

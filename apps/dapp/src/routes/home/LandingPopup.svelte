@@ -28,7 +28,13 @@
   onMount(() => {
     seenLandingPopup = useLocalStorage('seen-landing-popup').get()
     const searchParams = new URLSearchParams(window.location.search)
-    if (searchParams.has('ref')) {
+    if (searchParams.has('t')) {
+      visibleLandingPopup = {
+        id: `t=${searchParams.get('t')}`,
+        html: definitions[LandingPopupSchema.Ticket],
+        replacer: (html: string) => Promise.resolve(html)
+      }
+    } else if (searchParams.has('ref')) {
       visibleLandingPopup = {
         id: `ref=${searchParams.get('ref')}`,
         html: definitions[LandingPopupSchema.UserReferral],
@@ -39,9 +45,7 @@
             .orElse(() => okAsync(html))
             .unwrapOr(html)
       }
-    }
-
-    if (searchParams.has('utm_source')) {
+    } else if (searchParams.has('utm_source')) {
       const utmSource = searchParams.get('utm_source') as keyof typeof UtmSourceLanding
       const landingConfig = UtmSourceLanding[utmSource]
       if (landingConfig) {
