@@ -12,7 +12,7 @@ import { publicConfig } from '$lib/public-config'
 import { type ErrorResponse } from '@radixdlt/babylon-gateway-api-sdk'
 import type { TransactionJob } from 'queues'
 import * as valibot from 'valibot'
-import type { GoldenTicket, GoldenTicketStatus, TicketType, User, UserEmail } from 'database'
+import type { GoldenTicketStatus, Prisma, TicketType, User, UserEmail } from 'database'
 export type UserSubset = {
   id: string
   accountAddress: string | null
@@ -55,13 +55,15 @@ export const UserController = ({
       .getById(userId, {
         email: true,
         referredByUser: true,
-        goldenTicketClaimed: true
+        goldenTicketClaimed: { include: { batch: true } }
       })
       .map((data) => {
         const email = (data as unknown as { email: UserEmail | null }).email
         const referredByUser = (data as unknown as { referredByUser: User | null }).referredByUser
         const goldenTicketClaimed = (
-          data as unknown as { goldenTicketClaimed: GoldenTicket | null }
+          data as unknown as {
+            goldenTicketClaimed: Prisma.GoldenTicketGetPayload<{ include: { batch: true } }> | null
+          }
         ).goldenTicketClaimed
 
         return {
@@ -85,7 +87,7 @@ export const UserController = ({
               : null,
             goldenTicketClaimed: goldenTicketClaimed
               ? {
-                  type: goldenTicketClaimed.type,
+                  type: goldenTicketClaimed.batch.type,
                   status: goldenTicketClaimed.status
                 }
               : null
@@ -119,7 +121,7 @@ export const UserController = ({
     }
   ): ControllerMethodOutput<undefined> =>
     userModel
-      .getById(userId, { goldenTicketClaimed: true })
+      .getById(userId, { goldenTicketClaimed: { include: { batch: true } } })
       .andThen((user) => (user ? ok(user) : err(createApiError('UserNotFound', 404)())))
       .andThen((user) =>
         user.status !== 'OK' ? errAsync(createApiError('UserBlocked', 400)()) : okAsync(user)
@@ -148,6 +150,7 @@ export const UserController = ({
               exists
                 ? okAsync({ httpResponseCode: 200, data: undefined })
                 : transactionModel
+                    // @ts-ignore
                     .add(item, getPriorityByGoldenTicketType(user?.goldenTicketClaimed))
                     .map(() => ({
                       httpResponseCode: 201,
@@ -298,7 +301,9 @@ export const UserController = ({
         if (!ticket) return errAsync(createApiError('UserHasNoTicket', 400)())
         return okAsync(undefined)
       })
-      .andThen(() => userModel.getById(userId, { goldenTicketClaimed: true }))
+      .andThen(() =>
+        userModel.getById(userId, { goldenTicketClaimed: { include: { batch: true } } })
+      )
       .andThen((user) =>
         user.status !== 'OK' ? errAsync(createApiError('UserBlocked', 400)()) : okAsync(user)
       )
@@ -333,6 +338,7 @@ export const UserController = ({
                     traceId: ctx.traceId,
                     accountAddress: user.accountAddress!
                   },
+                  // @ts-ignore
                   getPriorityByGoldenTicketType(user?.goldenTicketClaimed)
                 )
                 .map(() => ({

@@ -1,7 +1,9 @@
-import { PrismaClient } from 'database'
+import { type GoldenTicketBatch, PrismaClient } from 'database'
 import { type AppLogger, getRandomReferralCode } from '..'
 import * as crypto from 'crypto'
 import { resultWrapperWithLogger } from '../helpers/db-wrapper'
+
+const bigIntToNumber = (bigInt: BigInt) => Number(bigInt?.toString() || 0)
 
 export enum GoldenTicketError {
   NOT_FOUND = 'Ticket not found',
@@ -16,16 +18,66 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
 
   const getTicket = (id: string) =>
     dbClient.goldenTicket.findUnique({
-      where: { id }
+      where: { id },
+      include: { batch: true }
     })
 
   const getBatch = (batchId: string) =>
-    dbClient.goldenTicket.findMany({
-      where: { batchId },
-      orderBy: { createdAt: 'desc' }
-    })
+    (
+      dbClient.$queryRaw`
+    SELECT
+      b.*,
+      COUNT(t.id) as ticketCount,
+      COUNT(t."claimedAt") as claimedCount,
+      COUNT(t."claimedAt") FILTER (WHERE t."status" = 'CLAIMED_INVALID') as claimedInvalidCount
+    FROM "GoldenTicketBatch" b
+    LEFT JOIN "GoldenTicket" t ON t."batchId" = b."id"
+    WHERE b."id" = ${batchId}
+    GROUP BY b."id"
+  ` as Promise<
+        GoldenTicketBatch &
+          {
+            ticketcount: BigInt
+            claimedcount: BigInt
+            claimedInvalidcount: BigInt
+          }[]
+      >
+    ).then(([batch]) => ({
+      ...batch,
+      ticketCount: bigIntToNumber(batch.ticketcount),
+      claimedCount: bigIntToNumber(batch.claimedcount),
+      claimedInvalidCount: bigIntToNumber(batch.claimedInvalidcount)
+    }))
 
-  const getAll = () => dbClient.goldenTicket.findMany({ orderBy: { createdAt: 'desc' } })
+  const getAllBatches = () =>
+    (
+      dbClient.$queryRaw`
+    SELECT
+      b.*,
+      COUNT(t.id) as ticketCount,
+      COUNT(t."claimedAt") as claimedCount,
+      COUNT(t."claimedAt") FILTER (WHERE t."status" = 'CLAIMED_INVALID') as claimedInvalidCount
+    FROM "GoldenTicketBatch" b
+    LEFT JOIN "GoldenTicket" t ON t."batchId" = b."id"
+    GROUP BY b."id"
+  ` as Promise<
+        (GoldenTicketBatch & {
+          ticketcount: BigInt
+          claimedcount: BigInt
+          claimedInvalidcount: BigInt
+        })[]
+      >
+    ).then((batches) =>
+      batches.map((batch) => ({
+        ...batch,
+        ticketCount: bigIntToNumber(batch.ticketcount),
+        claimedCount: bigIntToNumber(batch.claimedcount),
+        claimedInvalidCount: bigIntToNumber(batch.claimedInvalidcount)
+      }))
+    )
+
+  const getTicketsInBatch = (batchId: string, userId: string) =>
+    dbClient.goldenTicket.findMany({ where: { batchId, userId }, include: { batch: true } })
 
   const createBatch = (
     count: number,
@@ -40,15 +92,21 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
       id: getRandomReferralCode(
         16,
         'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-      ),
-      batchId,
-      expiresAt,
-      ownerId,
-      description,
-      type
+      )
     }))
 
-    return dbClient.goldenTicket.createMany({ data: tickets }).then(() => tickets)
+    return dbClient.goldenTicketBatch
+      .create({
+        data: {
+          id: batchId,
+          expiresAt,
+          ownerId,
+          description,
+          type,
+          tickets: { create: tickets }
+        }
+      })
+      .then(() => tickets)
   }
 
   const importBatch = (
@@ -61,24 +119,35 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
 
     const ticketData = tickets.map((id) => ({
       id,
-      batchId,
-      expiresAt,
-      ownerId,
-      description
+      batchId
     }))
 
-    return dbClient.goldenTicket.createMany({ data: ticketData })
+    return dbClient.goldenTicketBatch
+      .create({
+        data: {
+          id: batchId,
+          expiresAt,
+          ownerId,
+          description
+        }
+      })
+      .then(() => dbClient.goldenTicket.createMany({ data: ticketData }))
+      .then(() => ticketData)
   }
 
   const claimTicket = async (id: string, userId: string) => {
     const ticket = await dbClient.goldenTicket.findUnique({
       where: { id },
-      select: { claimedAt: true, expiresAt: true }
+      include: { batch: true }
     })
 
-    if (ticket) {
+    const batch = await dbClient.goldenTicketBatch.findUnique({
+      where: { id: ticket?.batchId }
+    })
+
+    if (ticket && batch) {
       if (ticket.claimedAt) throw new Error(GoldenTicketError.ALREADY_CLAIMED)
-      if (ticket.expiresAt.getTime() <= Date.now()) {
+      if (batch.expiresAt.getTime() <= Date.now()) {
         await dbClient.goldenTicket.update({
           where: { id },
           data: { status: 'CLAIMED_INVALID', userId, claimedAt: new Date() }
@@ -95,8 +164,8 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
   }
 
   const setExpirationDateOnBatch = (batchId: string, expiresAt: Date) =>
-    dbClient.goldenTicket.updateMany({
-      where: { batchId, claimedAt: null },
+    dbClient.goldenTicketBatch.update({
+      where: { id: batchId },
       data: { expiresAt }
     })
 
@@ -115,10 +184,22 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
       'LIMITED'
     )
 
-  const getOwnedTickets = (ownerId: string) =>
+  const getOwnedTicketBatches = (ownerId: string) =>
     dbClient.user
-      .findUnique({ include: { goldenTicketsOwned: true }, where: { id: ownerId } })
-      .then((value) => (value ? value.goldenTicketsOwned : []))
+      .findUnique({
+        include: {
+          goldenTicketBatchesOwned: { include: { _count: { select: { tickets: true } } } }
+        },
+        where: { id: ownerId }
+      })
+      .then((value) =>
+        value
+          ? value.goldenTicketBatchesOwned.map((batch) => ({
+              ...batch,
+              ticketCount: batch._count.tickets
+            }))
+          : []
+      )
 
   const updateSilverTicketBatch = (
     ownerId: string,
@@ -126,22 +207,23 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
     expiresAt: Date,
     description: string
   ) =>
-    dbClient.goldenTicket.updateMany({
-      where: { ownerId, batchId, type: 'LIMITED' },
+    dbClient.goldenTicketBatch.update({
+      where: { ownerId, id: batchId },
       data: { expiresAt, description }
     })
 
   return {
     getTicket: wrapper('getTicket')(getTicket),
     getBatch: wrapper('getBatch')(getBatch),
-    getAll: wrapper('getAll')(getAll),
+    getAllBatches: wrapper('getAll')(getAllBatches),
     createBatch: wrapper('createBatch')(createBatch),
     importBatch: wrapper('importBatch')(importBatch),
     setExpirationDateOnBatch: wrapper('setExpirationDateOnBatch')(setExpirationDateOnBatch),
     claimTicket: wrapper('claimTicket')(claimTicket),
     userHasClaimedTicket: wrapper('userHasClaimedTicket')(userHasClaimedTicket),
     createSilverTicketBatch: wrapper('createSilverTicketBatch')(createSilverTicketBatch),
-    getOwnedTickets: wrapper('getOwnedSilverTickets')(getOwnedTickets),
-    updateSilverTicketBatch: wrapper('updateSilverTicketBatch')(updateSilverTicketBatch)
+    getOwnedTicketBatches: wrapper('getOwnedSilverTickets')(getOwnedTicketBatches),
+    updateSilverTicketBatch: wrapper('updateSilverTicketBatch')(updateSilverTicketBatch),
+    getTicketsInBatch: wrapper('getTicketsInBatch')(getTicketsInBatch)
   }
 }

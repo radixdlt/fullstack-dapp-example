@@ -119,6 +119,11 @@ export type Config = $Result.DefaultSelection<Prisma.$ConfigPayload>
  */
 export type Marketing = $Result.DefaultSelection<Prisma.$MarketingPayload>
 /**
+ * Model GoldenTicketBatch
+ * 
+ */
+export type GoldenTicketBatch = $Result.DefaultSelection<Prisma.$GoldenTicketBatchPayload>
+/**
  * Model GoldenTicket
  * 
  */
@@ -241,6 +246,14 @@ export const TransactionIntentStatus: {
 export type TransactionIntentStatus = (typeof TransactionIntentStatus)[keyof typeof TransactionIntentStatus]
 
 
+export const TicketType: {
+  FULL: 'FULL',
+  LIMITED: 'LIMITED'
+};
+
+export type TicketType = (typeof TicketType)[keyof typeof TicketType]
+
+
 export const GoldenTicketStatus: {
   CLAIMABLE: 'CLAIMABLE',
   CLAIMED: 'CLAIMED',
@@ -248,14 +261,6 @@ export const GoldenTicketStatus: {
 };
 
 export type GoldenTicketStatus = (typeof GoldenTicketStatus)[keyof typeof GoldenTicketStatus]
-
-
-export const TicketType: {
-  FULL: 'FULL',
-  LIMITED: 'LIMITED'
-};
-
-export type TicketType = (typeof TicketType)[keyof typeof TicketType]
 
 }
 
@@ -303,13 +308,13 @@ export type TransactionIntentStatus = $Enums.TransactionIntentStatus
 
 export const TransactionIntentStatus: typeof $Enums.TransactionIntentStatus
 
-export type GoldenTicketStatus = $Enums.GoldenTicketStatus
-
-export const GoldenTicketStatus: typeof $Enums.GoldenTicketStatus
-
 export type TicketType = $Enums.TicketType
 
 export const TicketType: typeof $Enums.TicketType
+
+export type GoldenTicketStatus = $Enums.GoldenTicketStatus
+
+export const GoldenTicketStatus: typeof $Enums.GoldenTicketStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -642,6 +647,16 @@ export class PrismaClient<
     * ```
     */
   get marketing(): Prisma.MarketingDelegate<ExtArgs>;
+
+  /**
+   * `prisma.goldenTicketBatch`: Exposes CRUD operations for the **GoldenTicketBatch** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GoldenTicketBatches
+    * const goldenTicketBatches = await prisma.goldenTicketBatch.findMany()
+    * ```
+    */
+  get goldenTicketBatch(): Prisma.GoldenTicketBatchDelegate<ExtArgs>;
 
   /**
    * `prisma.goldenTicket`: Exposes CRUD operations for the **GoldenTicket** model.
@@ -1150,6 +1165,7 @@ export namespace Prisma {
     SubmittedTransaction: 'SubmittedTransaction',
     Config: 'Config',
     Marketing: 'Marketing',
+    GoldenTicketBatch: 'GoldenTicketBatch',
     GoldenTicket: 'GoldenTicket'
   };
 
@@ -1167,7 +1183,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'user' | 'userEmail' | 'image' | 'userPhoneNumber' | 'referral' | 'challenge' | 'event' | 'message' | 'ipAssessment' | 'loginAttempt' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'blockedCountry' | 'transactionIntent' | 'batchedTransactionIntent' | 'submittedTransaction' | 'config' | 'marketing' | 'goldenTicket'
+      modelProps: 'user' | 'userEmail' | 'image' | 'userPhoneNumber' | 'referral' | 'challenge' | 'event' | 'message' | 'ipAssessment' | 'loginAttempt' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'blockedCountry' | 'transactionIntent' | 'batchedTransactionIntent' | 'submittedTransaction' | 'config' | 'marketing' | 'goldenTicketBatch' | 'goldenTicket'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -2641,6 +2657,76 @@ export namespace Prisma {
           }
         }
       }
+      GoldenTicketBatch: {
+        payload: Prisma.$GoldenTicketBatchPayload<ExtArgs>
+        fields: Prisma.GoldenTicketBatchFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GoldenTicketBatchFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GoldenTicketBatchFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>
+          }
+          findFirst: {
+            args: Prisma.GoldenTicketBatchFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GoldenTicketBatchFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>
+          }
+          findMany: {
+            args: Prisma.GoldenTicketBatchFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>[]
+          }
+          create: {
+            args: Prisma.GoldenTicketBatchCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>
+          }
+          createMany: {
+            args: Prisma.GoldenTicketBatchCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GoldenTicketBatchCreateManyAndReturnArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>[]
+          }
+          delete: {
+            args: Prisma.GoldenTicketBatchDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>
+          }
+          update: {
+            args: Prisma.GoldenTicketBatchUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>
+          }
+          deleteMany: {
+            args: Prisma.GoldenTicketBatchDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GoldenTicketBatchUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.GoldenTicketBatchUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>
+          }
+          aggregate: {
+            args: Prisma.GoldenTicketBatchAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateGoldenTicketBatch>
+          }
+          groupBy: {
+            args: Prisma.GoldenTicketBatchGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<GoldenTicketBatchGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GoldenTicketBatchCountArgs<ExtArgs>,
+            result: $Utils.Optional<GoldenTicketBatchCountAggregateOutputType> | number
+          }
+        }
+      }
       GoldenTicket: {
         payload: Prisma.$GoldenTicketPayload<ExtArgs>
         fields: Prisma.GoldenTicketFieldRefs
@@ -2880,7 +2966,7 @@ export namespace Prisma {
     transactions: number
     marketing: number
     referals: number
-    goldenTicketsOwned: number
+    goldenTicketBatchesOwned: number
     loginAttempts: number
   }
 
@@ -2894,7 +2980,7 @@ export namespace Prisma {
     transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
     marketing?: boolean | UserCountOutputTypeCountMarketingArgs
     referals?: boolean | UserCountOutputTypeCountReferalsArgs
-    goldenTicketsOwned?: boolean | UserCountOutputTypeCountGoldenTicketsOwnedArgs
+    goldenTicketBatchesOwned?: boolean | UserCountOutputTypeCountGoldenTicketBatchesOwnedArgs
     loginAttempts?: boolean | UserCountOutputTypeCountLoginAttemptsArgs
   }
 
@@ -2975,8 +3061,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountGoldenTicketsOwnedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GoldenTicketWhereInput
+  export type UserCountOutputTypeCountGoldenTicketBatchesOwnedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GoldenTicketBatchWhereInput
   }
 
   /**
@@ -3108,6 +3194,37 @@ export namespace Prisma {
    */
   export type BatchedTransactionIntentCountOutputTypeCountTransactionIntentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TransactionIntentWhereInput
+  }
+
+
+  /**
+   * Count Type GoldenTicketBatchCountOutputType
+   */
+
+  export type GoldenTicketBatchCountOutputType = {
+    tickets: number
+  }
+
+  export type GoldenTicketBatchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tickets?: boolean | GoldenTicketBatchCountOutputTypeCountTicketsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * GoldenTicketBatchCountOutputType without action
+   */
+  export type GoldenTicketBatchCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoldenTicketBatchCountOutputType
+     */
+    select?: GoldenTicketBatchCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * GoldenTicketBatchCountOutputType without action
+   */
+  export type GoldenTicketBatchCountOutputTypeCountTicketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GoldenTicketWhereInput
   }
 
 
@@ -3333,7 +3450,7 @@ export namespace Prisma {
     marketing?: boolean | User$marketingArgs<ExtArgs>
     referals?: boolean | User$referalsArgs<ExtArgs>
     goldenTicketClaimed?: boolean | User$goldenTicketClaimedArgs<ExtArgs>
-    goldenTicketsOwned?: boolean | User$goldenTicketsOwnedArgs<ExtArgs>
+    goldenTicketBatchesOwned?: boolean | User$goldenTicketBatchesOwnedArgs<ExtArgs>
     loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -3380,7 +3497,7 @@ export namespace Prisma {
     marketing?: boolean | User$marketingArgs<ExtArgs>
     referals?: boolean | User$referalsArgs<ExtArgs>
     goldenTicketClaimed?: boolean | User$goldenTicketClaimedArgs<ExtArgs>
-    goldenTicketsOwned?: boolean | User$goldenTicketsOwnedArgs<ExtArgs>
+    goldenTicketBatchesOwned?: boolean | User$goldenTicketBatchesOwnedArgs<ExtArgs>
     loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -3405,7 +3522,7 @@ export namespace Prisma {
       marketing: Prisma.$MarketingPayload<ExtArgs>[]
       referals: Prisma.$ReferralPayload<ExtArgs>[]
       goldenTicketClaimed: Prisma.$GoldenTicketPayload<ExtArgs> | null
-      goldenTicketsOwned: Prisma.$GoldenTicketPayload<ExtArgs>[]
+      goldenTicketBatchesOwned: Prisma.$GoldenTicketBatchPayload<ExtArgs>[]
       loginAttempts: Prisma.$LoginAttemptPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -3837,7 +3954,7 @@ export namespace Prisma {
 
     goldenTicketClaimed<T extends User$goldenTicketClaimedArgs<ExtArgs> = {}>(args?: Subset<T, User$goldenTicketClaimedArgs<ExtArgs>>): Prisma__GoldenTicketClient<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
 
-    goldenTicketsOwned<T extends User$goldenTicketsOwnedArgs<ExtArgs> = {}>(args?: Subset<T, User$goldenTicketsOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'findMany'> | Null>;
+    goldenTicketBatchesOwned<T extends User$goldenTicketBatchesOwnedArgs<ExtArgs> = {}>(args?: Subset<T, User$goldenTicketBatchesOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'findMany'> | Null>;
 
     loginAttempts<T extends User$loginAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$loginAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findMany'> | Null>;
 
@@ -4452,23 +4569,23 @@ export namespace Prisma {
   }
 
   /**
-   * User.goldenTicketsOwned
+   * User.goldenTicketBatchesOwned
    */
-  export type User$goldenTicketsOwnedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$goldenTicketBatchesOwnedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the GoldenTicket
+     * Select specific fields to fetch from the GoldenTicketBatch
      */
-    select?: GoldenTicketSelect<ExtArgs> | null
+    select?: GoldenTicketBatchSelect<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: GoldenTicketInclude<ExtArgs> | null
-    where?: GoldenTicketWhereInput
-    orderBy?: GoldenTicketOrderByWithRelationInput | GoldenTicketOrderByWithRelationInput[]
-    cursor?: GoldenTicketWhereUniqueInput
+    include?: GoldenTicketBatchInclude<ExtArgs> | null
+    where?: GoldenTicketBatchWhereInput
+    orderBy?: GoldenTicketBatchOrderByWithRelationInput | GoldenTicketBatchOrderByWithRelationInput[]
+    cursor?: GoldenTicketBatchWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: GoldenTicketScalarFieldEnum | GoldenTicketScalarFieldEnum[]
+    distinct?: GoldenTicketBatchScalarFieldEnum | GoldenTicketBatchScalarFieldEnum[]
   }
 
   /**
@@ -23626,6 +23743,1004 @@ export namespace Prisma {
 
 
   /**
+   * Model GoldenTicketBatch
+   */
+
+  export type AggregateGoldenTicketBatch = {
+    _count: GoldenTicketBatchCountAggregateOutputType | null
+    _min: GoldenTicketBatchMinAggregateOutputType | null
+    _max: GoldenTicketBatchMaxAggregateOutputType | null
+  }
+
+  export type GoldenTicketBatchMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    expiresAt: Date | null
+    description: string | null
+    type: $Enums.TicketType | null
+    ownerId: string | null
+  }
+
+  export type GoldenTicketBatchMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    expiresAt: Date | null
+    description: string | null
+    type: $Enums.TicketType | null
+    ownerId: string | null
+  }
+
+  export type GoldenTicketBatchCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    expiresAt: number
+    description: number
+    type: number
+    ownerId: number
+    _all: number
+  }
+
+
+  export type GoldenTicketBatchMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    expiresAt?: true
+    description?: true
+    type?: true
+    ownerId?: true
+  }
+
+  export type GoldenTicketBatchMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    expiresAt?: true
+    description?: true
+    type?: true
+    ownerId?: true
+  }
+
+  export type GoldenTicketBatchCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    expiresAt?: true
+    description?: true
+    type?: true
+    ownerId?: true
+    _all?: true
+  }
+
+  export type GoldenTicketBatchAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GoldenTicketBatch to aggregate.
+     */
+    where?: GoldenTicketBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GoldenTicketBatches to fetch.
+     */
+    orderBy?: GoldenTicketBatchOrderByWithRelationInput | GoldenTicketBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GoldenTicketBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GoldenTicketBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GoldenTicketBatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GoldenTicketBatches
+    **/
+    _count?: true | GoldenTicketBatchCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GoldenTicketBatchMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GoldenTicketBatchMaxAggregateInputType
+  }
+
+  export type GetGoldenTicketBatchAggregateType<T extends GoldenTicketBatchAggregateArgs> = {
+        [P in keyof T & keyof AggregateGoldenTicketBatch]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGoldenTicketBatch[P]>
+      : GetScalarType<T[P], AggregateGoldenTicketBatch[P]>
+  }
+
+
+
+
+  export type GoldenTicketBatchGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GoldenTicketBatchWhereInput
+    orderBy?: GoldenTicketBatchOrderByWithAggregationInput | GoldenTicketBatchOrderByWithAggregationInput[]
+    by: GoldenTicketBatchScalarFieldEnum[] | GoldenTicketBatchScalarFieldEnum
+    having?: GoldenTicketBatchScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GoldenTicketBatchCountAggregateInputType | true
+    _min?: GoldenTicketBatchMinAggregateInputType
+    _max?: GoldenTicketBatchMaxAggregateInputType
+  }
+
+  export type GoldenTicketBatchGroupByOutputType = {
+    id: string
+    createdAt: Date
+    expiresAt: Date
+    description: string | null
+    type: $Enums.TicketType
+    ownerId: string
+    _count: GoldenTicketBatchCountAggregateOutputType | null
+    _min: GoldenTicketBatchMinAggregateOutputType | null
+    _max: GoldenTicketBatchMaxAggregateOutputType | null
+  }
+
+  type GetGoldenTicketBatchGroupByPayload<T extends GoldenTicketBatchGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GoldenTicketBatchGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GoldenTicketBatchGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GoldenTicketBatchGroupByOutputType[P]>
+            : GetScalarType<T[P], GoldenTicketBatchGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GoldenTicketBatchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    expiresAt?: boolean
+    description?: boolean
+    type?: boolean
+    ownerId?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    tickets?: boolean | GoldenTicketBatch$ticketsArgs<ExtArgs>
+    _count?: boolean | GoldenTicketBatchCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["goldenTicketBatch"]>
+
+  export type GoldenTicketBatchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    expiresAt?: boolean
+    description?: boolean
+    type?: boolean
+    ownerId?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["goldenTicketBatch"]>
+
+  export type GoldenTicketBatchSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    expiresAt?: boolean
+    description?: boolean
+    type?: boolean
+    ownerId?: boolean
+  }
+
+  export type GoldenTicketBatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+    tickets?: boolean | GoldenTicketBatch$ticketsArgs<ExtArgs>
+    _count?: boolean | GoldenTicketBatchCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type GoldenTicketBatchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $GoldenTicketBatchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GoldenTicketBatch"
+    objects: {
+      owner: Prisma.$UserPayload<ExtArgs>
+      tickets: Prisma.$GoldenTicketPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      expiresAt: Date
+      description: string | null
+      type: $Enums.TicketType
+      ownerId: string
+    }, ExtArgs["result"]["goldenTicketBatch"]>
+    composites: {}
+  }
+
+  type GoldenTicketBatchGetPayload<S extends boolean | null | undefined | GoldenTicketBatchDefaultArgs> = $Result.GetResult<Prisma.$GoldenTicketBatchPayload, S>
+
+  type GoldenTicketBatchCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<GoldenTicketBatchFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: GoldenTicketBatchCountAggregateInputType | true
+    }
+
+  export interface GoldenTicketBatchDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GoldenTicketBatch'], meta: { name: 'GoldenTicketBatch' } }
+    /**
+     * Find zero or one GoldenTicketBatch that matches the filter.
+     * @param {GoldenTicketBatchFindUniqueArgs} args - Arguments to find a GoldenTicketBatch
+     * @example
+     * // Get one GoldenTicketBatch
+     * const goldenTicketBatch = await prisma.goldenTicketBatch.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends GoldenTicketBatchFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, GoldenTicketBatchFindUniqueArgs<ExtArgs>>
+    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one GoldenTicketBatch that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {GoldenTicketBatchFindUniqueOrThrowArgs} args - Arguments to find a GoldenTicketBatch
+     * @example
+     * // Get one GoldenTicketBatch
+     * const goldenTicketBatch = await prisma.goldenTicketBatch.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends GoldenTicketBatchFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, GoldenTicketBatchFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first GoldenTicketBatch that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoldenTicketBatchFindFirstArgs} args - Arguments to find a GoldenTicketBatch
+     * @example
+     * // Get one GoldenTicketBatch
+     * const goldenTicketBatch = await prisma.goldenTicketBatch.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends GoldenTicketBatchFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, GoldenTicketBatchFindFirstArgs<ExtArgs>>
+    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first GoldenTicketBatch that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoldenTicketBatchFindFirstOrThrowArgs} args - Arguments to find a GoldenTicketBatch
+     * @example
+     * // Get one GoldenTicketBatch
+     * const goldenTicketBatch = await prisma.goldenTicketBatch.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends GoldenTicketBatchFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, GoldenTicketBatchFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more GoldenTicketBatches that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoldenTicketBatchFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GoldenTicketBatches
+     * const goldenTicketBatches = await prisma.goldenTicketBatch.findMany()
+     * 
+     * // Get first 10 GoldenTicketBatches
+     * const goldenTicketBatches = await prisma.goldenTicketBatch.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const goldenTicketBatchWithIdOnly = await prisma.goldenTicketBatch.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends GoldenTicketBatchFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, GoldenTicketBatchFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a GoldenTicketBatch.
+     * @param {GoldenTicketBatchCreateArgs} args - Arguments to create a GoldenTicketBatch.
+     * @example
+     * // Create one GoldenTicketBatch
+     * const GoldenTicketBatch = await prisma.goldenTicketBatch.create({
+     *   data: {
+     *     // ... data to create a GoldenTicketBatch
+     *   }
+     * })
+     * 
+    **/
+    create<T extends GoldenTicketBatchCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, GoldenTicketBatchCreateArgs<ExtArgs>>
+    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many GoldenTicketBatches.
+     * @param {GoldenTicketBatchCreateManyArgs} args - Arguments to create many GoldenTicketBatches.
+     * @example
+     * // Create many GoldenTicketBatches
+     * const goldenTicketBatch = await prisma.goldenTicketBatch.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+    **/
+    createMany<T extends GoldenTicketBatchCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, GoldenTicketBatchCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GoldenTicketBatches and returns the data saved in the database.
+     * @param {GoldenTicketBatchCreateManyAndReturnArgs} args - Arguments to create many GoldenTicketBatches.
+     * @example
+     * // Create many GoldenTicketBatches
+     * const goldenTicketBatch = await prisma.goldenTicketBatch.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GoldenTicketBatches and only return the `id`
+     * const goldenTicketBatchWithIdOnly = await prisma.goldenTicketBatch.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+    **/
+    createManyAndReturn<T extends GoldenTicketBatchCreateManyAndReturnArgs<ExtArgs>>(
+      args?: SelectSubset<T, GoldenTicketBatchCreateManyAndReturnArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'createManyAndReturn'>>
+
+    /**
+     * Delete a GoldenTicketBatch.
+     * @param {GoldenTicketBatchDeleteArgs} args - Arguments to delete one GoldenTicketBatch.
+     * @example
+     * // Delete one GoldenTicketBatch
+     * const GoldenTicketBatch = await prisma.goldenTicketBatch.delete({
+     *   where: {
+     *     // ... filter to delete one GoldenTicketBatch
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends GoldenTicketBatchDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, GoldenTicketBatchDeleteArgs<ExtArgs>>
+    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one GoldenTicketBatch.
+     * @param {GoldenTicketBatchUpdateArgs} args - Arguments to update one GoldenTicketBatch.
+     * @example
+     * // Update one GoldenTicketBatch
+     * const goldenTicketBatch = await prisma.goldenTicketBatch.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends GoldenTicketBatchUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, GoldenTicketBatchUpdateArgs<ExtArgs>>
+    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more GoldenTicketBatches.
+     * @param {GoldenTicketBatchDeleteManyArgs} args - Arguments to filter GoldenTicketBatches to delete.
+     * @example
+     * // Delete a few GoldenTicketBatches
+     * const { count } = await prisma.goldenTicketBatch.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends GoldenTicketBatchDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, GoldenTicketBatchDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GoldenTicketBatches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoldenTicketBatchUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GoldenTicketBatches
+     * const goldenTicketBatch = await prisma.goldenTicketBatch.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends GoldenTicketBatchUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, GoldenTicketBatchUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one GoldenTicketBatch.
+     * @param {GoldenTicketBatchUpsertArgs} args - Arguments to update or create a GoldenTicketBatch.
+     * @example
+     * // Update or create a GoldenTicketBatch
+     * const goldenTicketBatch = await prisma.goldenTicketBatch.upsert({
+     *   create: {
+     *     // ... data to create a GoldenTicketBatch
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GoldenTicketBatch we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends GoldenTicketBatchUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, GoldenTicketBatchUpsertArgs<ExtArgs>>
+    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of GoldenTicketBatches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoldenTicketBatchCountArgs} args - Arguments to filter GoldenTicketBatches to count.
+     * @example
+     * // Count the number of GoldenTicketBatches
+     * const count = await prisma.goldenTicketBatch.count({
+     *   where: {
+     *     // ... the filter for the GoldenTicketBatches we want to count
+     *   }
+     * })
+    **/
+    count<T extends GoldenTicketBatchCountArgs>(
+      args?: Subset<T, GoldenTicketBatchCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GoldenTicketBatchCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GoldenTicketBatch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoldenTicketBatchAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GoldenTicketBatchAggregateArgs>(args: Subset<T, GoldenTicketBatchAggregateArgs>): Prisma.PrismaPromise<GetGoldenTicketBatchAggregateType<T>>
+
+    /**
+     * Group by GoldenTicketBatch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoldenTicketBatchGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GoldenTicketBatchGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GoldenTicketBatchGroupByArgs['orderBy'] }
+        : { orderBy?: GoldenTicketBatchGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GoldenTicketBatchGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGoldenTicketBatchGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GoldenTicketBatch model
+   */
+  readonly fields: GoldenTicketBatchFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GoldenTicketBatch.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GoldenTicketBatchClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+    owner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
+
+    tickets<T extends GoldenTicketBatch$ticketsArgs<ExtArgs> = {}>(args?: Subset<T, GoldenTicketBatch$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'findMany'> | Null>;
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the GoldenTicketBatch model
+   */ 
+  interface GoldenTicketBatchFieldRefs {
+    readonly id: FieldRef<"GoldenTicketBatch", 'String'>
+    readonly createdAt: FieldRef<"GoldenTicketBatch", 'DateTime'>
+    readonly expiresAt: FieldRef<"GoldenTicketBatch", 'DateTime'>
+    readonly description: FieldRef<"GoldenTicketBatch", 'String'>
+    readonly type: FieldRef<"GoldenTicketBatch", 'TicketType'>
+    readonly ownerId: FieldRef<"GoldenTicketBatch", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GoldenTicketBatch findUnique
+   */
+  export type GoldenTicketBatchFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoldenTicketBatch
+     */
+    select?: GoldenTicketBatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoldenTicketBatchInclude<ExtArgs> | null
+    /**
+     * Filter, which GoldenTicketBatch to fetch.
+     */
+    where: GoldenTicketBatchWhereUniqueInput
+  }
+
+  /**
+   * GoldenTicketBatch findUniqueOrThrow
+   */
+  export type GoldenTicketBatchFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoldenTicketBatch
+     */
+    select?: GoldenTicketBatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoldenTicketBatchInclude<ExtArgs> | null
+    /**
+     * Filter, which GoldenTicketBatch to fetch.
+     */
+    where: GoldenTicketBatchWhereUniqueInput
+  }
+
+  /**
+   * GoldenTicketBatch findFirst
+   */
+  export type GoldenTicketBatchFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoldenTicketBatch
+     */
+    select?: GoldenTicketBatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoldenTicketBatchInclude<ExtArgs> | null
+    /**
+     * Filter, which GoldenTicketBatch to fetch.
+     */
+    where?: GoldenTicketBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GoldenTicketBatches to fetch.
+     */
+    orderBy?: GoldenTicketBatchOrderByWithRelationInput | GoldenTicketBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GoldenTicketBatches.
+     */
+    cursor?: GoldenTicketBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GoldenTicketBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GoldenTicketBatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GoldenTicketBatches.
+     */
+    distinct?: GoldenTicketBatchScalarFieldEnum | GoldenTicketBatchScalarFieldEnum[]
+  }
+
+  /**
+   * GoldenTicketBatch findFirstOrThrow
+   */
+  export type GoldenTicketBatchFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoldenTicketBatch
+     */
+    select?: GoldenTicketBatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoldenTicketBatchInclude<ExtArgs> | null
+    /**
+     * Filter, which GoldenTicketBatch to fetch.
+     */
+    where?: GoldenTicketBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GoldenTicketBatches to fetch.
+     */
+    orderBy?: GoldenTicketBatchOrderByWithRelationInput | GoldenTicketBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GoldenTicketBatches.
+     */
+    cursor?: GoldenTicketBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GoldenTicketBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GoldenTicketBatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GoldenTicketBatches.
+     */
+    distinct?: GoldenTicketBatchScalarFieldEnum | GoldenTicketBatchScalarFieldEnum[]
+  }
+
+  /**
+   * GoldenTicketBatch findMany
+   */
+  export type GoldenTicketBatchFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoldenTicketBatch
+     */
+    select?: GoldenTicketBatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoldenTicketBatchInclude<ExtArgs> | null
+    /**
+     * Filter, which GoldenTicketBatches to fetch.
+     */
+    where?: GoldenTicketBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GoldenTicketBatches to fetch.
+     */
+    orderBy?: GoldenTicketBatchOrderByWithRelationInput | GoldenTicketBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GoldenTicketBatches.
+     */
+    cursor?: GoldenTicketBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GoldenTicketBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GoldenTicketBatches.
+     */
+    skip?: number
+    distinct?: GoldenTicketBatchScalarFieldEnum | GoldenTicketBatchScalarFieldEnum[]
+  }
+
+  /**
+   * GoldenTicketBatch create
+   */
+  export type GoldenTicketBatchCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoldenTicketBatch
+     */
+    select?: GoldenTicketBatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoldenTicketBatchInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GoldenTicketBatch.
+     */
+    data: XOR<GoldenTicketBatchCreateInput, GoldenTicketBatchUncheckedCreateInput>
+  }
+
+  /**
+   * GoldenTicketBatch createMany
+   */
+  export type GoldenTicketBatchCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GoldenTicketBatches.
+     */
+    data: GoldenTicketBatchCreateManyInput | GoldenTicketBatchCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GoldenTicketBatch createManyAndReturn
+   */
+  export type GoldenTicketBatchCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoldenTicketBatch
+     */
+    select?: GoldenTicketBatchSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many GoldenTicketBatches.
+     */
+    data: GoldenTicketBatchCreateManyInput | GoldenTicketBatchCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoldenTicketBatchIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GoldenTicketBatch update
+   */
+  export type GoldenTicketBatchUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoldenTicketBatch
+     */
+    select?: GoldenTicketBatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoldenTicketBatchInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GoldenTicketBatch.
+     */
+    data: XOR<GoldenTicketBatchUpdateInput, GoldenTicketBatchUncheckedUpdateInput>
+    /**
+     * Choose, which GoldenTicketBatch to update.
+     */
+    where: GoldenTicketBatchWhereUniqueInput
+  }
+
+  /**
+   * GoldenTicketBatch updateMany
+   */
+  export type GoldenTicketBatchUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GoldenTicketBatches.
+     */
+    data: XOR<GoldenTicketBatchUpdateManyMutationInput, GoldenTicketBatchUncheckedUpdateManyInput>
+    /**
+     * Filter which GoldenTicketBatches to update
+     */
+    where?: GoldenTicketBatchWhereInput
+  }
+
+  /**
+   * GoldenTicketBatch upsert
+   */
+  export type GoldenTicketBatchUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoldenTicketBatch
+     */
+    select?: GoldenTicketBatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoldenTicketBatchInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GoldenTicketBatch to update in case it exists.
+     */
+    where: GoldenTicketBatchWhereUniqueInput
+    /**
+     * In case the GoldenTicketBatch found by the `where` argument doesn't exist, create a new GoldenTicketBatch with this data.
+     */
+    create: XOR<GoldenTicketBatchCreateInput, GoldenTicketBatchUncheckedCreateInput>
+    /**
+     * In case the GoldenTicketBatch was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GoldenTicketBatchUpdateInput, GoldenTicketBatchUncheckedUpdateInput>
+  }
+
+  /**
+   * GoldenTicketBatch delete
+   */
+  export type GoldenTicketBatchDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoldenTicketBatch
+     */
+    select?: GoldenTicketBatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoldenTicketBatchInclude<ExtArgs> | null
+    /**
+     * Filter which GoldenTicketBatch to delete.
+     */
+    where: GoldenTicketBatchWhereUniqueInput
+  }
+
+  /**
+   * GoldenTicketBatch deleteMany
+   */
+  export type GoldenTicketBatchDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GoldenTicketBatches to delete
+     */
+    where?: GoldenTicketBatchWhereInput
+  }
+
+  /**
+   * GoldenTicketBatch.tickets
+   */
+  export type GoldenTicketBatch$ticketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoldenTicket
+     */
+    select?: GoldenTicketSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoldenTicketInclude<ExtArgs> | null
+    where?: GoldenTicketWhereInput
+    orderBy?: GoldenTicketOrderByWithRelationInput | GoldenTicketOrderByWithRelationInput[]
+    cursor?: GoldenTicketWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GoldenTicketScalarFieldEnum | GoldenTicketScalarFieldEnum[]
+  }
+
+  /**
+   * GoldenTicketBatch without action
+   */
+  export type GoldenTicketBatchDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoldenTicketBatch
+     */
+    select?: GoldenTicketBatchSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoldenTicketBatchInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model GoldenTicket
    */
 
@@ -23638,40 +24753,25 @@ export namespace Prisma {
   export type GoldenTicketMinAggregateOutputType = {
     id: string | null
     batchId: string | null
-    ownerId: string | null
-    createdAt: Date | null
-    expiresAt: Date | null
     userId: string | null
     claimedAt: Date | null
-    description: string | null
     status: $Enums.GoldenTicketStatus | null
-    type: $Enums.TicketType | null
   }
 
   export type GoldenTicketMaxAggregateOutputType = {
     id: string | null
     batchId: string | null
-    ownerId: string | null
-    createdAt: Date | null
-    expiresAt: Date | null
     userId: string | null
     claimedAt: Date | null
-    description: string | null
     status: $Enums.GoldenTicketStatus | null
-    type: $Enums.TicketType | null
   }
 
   export type GoldenTicketCountAggregateOutputType = {
     id: number
     batchId: number
-    ownerId: number
-    createdAt: number
-    expiresAt: number
     userId: number
     claimedAt: number
-    description: number
     status: number
-    type: number
     _all: number
   }
 
@@ -23679,40 +24779,25 @@ export namespace Prisma {
   export type GoldenTicketMinAggregateInputType = {
     id?: true
     batchId?: true
-    ownerId?: true
-    createdAt?: true
-    expiresAt?: true
     userId?: true
     claimedAt?: true
-    description?: true
     status?: true
-    type?: true
   }
 
   export type GoldenTicketMaxAggregateInputType = {
     id?: true
     batchId?: true
-    ownerId?: true
-    createdAt?: true
-    expiresAt?: true
     userId?: true
     claimedAt?: true
-    description?: true
     status?: true
-    type?: true
   }
 
   export type GoldenTicketCountAggregateInputType = {
     id?: true
     batchId?: true
-    ownerId?: true
-    createdAt?: true
-    expiresAt?: true
     userId?: true
     claimedAt?: true
-    description?: true
     status?: true
-    type?: true
     _all?: true
   }
 
@@ -23791,14 +24876,9 @@ export namespace Prisma {
   export type GoldenTicketGroupByOutputType = {
     id: string
     batchId: string
-    ownerId: string
-    createdAt: Date
-    expiresAt: Date
     userId: string | null
     claimedAt: Date | null
-    description: string | null
     status: $Enums.GoldenTicketStatus
-    type: $Enums.TicketType
     _count: GoldenTicketCountAggregateOutputType | null
     _min: GoldenTicketMinAggregateOutputType | null
     _max: GoldenTicketMaxAggregateOutputType | null
@@ -23821,72 +24901,52 @@ export namespace Prisma {
   export type GoldenTicketSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     batchId?: boolean
-    ownerId?: boolean
-    createdAt?: boolean
-    expiresAt?: boolean
     userId?: boolean
     claimedAt?: boolean
-    description?: boolean
     status?: boolean
-    type?: boolean
     claimedBy?: boolean | GoldenTicket$claimedByArgs<ExtArgs>
-    owner?: boolean | UserDefaultArgs<ExtArgs>
+    batch?: boolean | GoldenTicketBatchDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["goldenTicket"]>
 
   export type GoldenTicketSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     batchId?: boolean
-    ownerId?: boolean
-    createdAt?: boolean
-    expiresAt?: boolean
     userId?: boolean
     claimedAt?: boolean
-    description?: boolean
     status?: boolean
-    type?: boolean
     claimedBy?: boolean | GoldenTicket$claimedByArgs<ExtArgs>
-    owner?: boolean | UserDefaultArgs<ExtArgs>
+    batch?: boolean | GoldenTicketBatchDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["goldenTicket"]>
 
   export type GoldenTicketSelectScalar = {
     id?: boolean
     batchId?: boolean
-    ownerId?: boolean
-    createdAt?: boolean
-    expiresAt?: boolean
     userId?: boolean
     claimedAt?: boolean
-    description?: boolean
     status?: boolean
-    type?: boolean
   }
 
   export type GoldenTicketInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     claimedBy?: boolean | GoldenTicket$claimedByArgs<ExtArgs>
-    owner?: boolean | UserDefaultArgs<ExtArgs>
+    batch?: boolean | GoldenTicketBatchDefaultArgs<ExtArgs>
   }
   export type GoldenTicketIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     claimedBy?: boolean | GoldenTicket$claimedByArgs<ExtArgs>
-    owner?: boolean | UserDefaultArgs<ExtArgs>
+    batch?: boolean | GoldenTicketBatchDefaultArgs<ExtArgs>
   }
 
   export type $GoldenTicketPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "GoldenTicket"
     objects: {
       claimedBy: Prisma.$UserPayload<ExtArgs> | null
-      owner: Prisma.$UserPayload<ExtArgs>
+      batch: Prisma.$GoldenTicketBatchPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       batchId: string
-      ownerId: string
-      createdAt: Date
-      expiresAt: Date
       userId: string | null
       claimedAt: Date | null
-      description: string | null
       status: $Enums.GoldenTicketStatus
-      type: $Enums.TicketType
     }, ExtArgs["result"]["goldenTicket"]>
     composites: {}
   }
@@ -24279,7 +25339,7 @@ export namespace Prisma {
 
     claimedBy<T extends GoldenTicket$claimedByArgs<ExtArgs> = {}>(args?: Subset<T, GoldenTicket$claimedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
 
-    owner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
+    batch<T extends GoldenTicketBatchDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GoldenTicketBatchDefaultArgs<ExtArgs>>): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
 
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -24311,14 +25371,9 @@ export namespace Prisma {
   interface GoldenTicketFieldRefs {
     readonly id: FieldRef<"GoldenTicket", 'String'>
     readonly batchId: FieldRef<"GoldenTicket", 'String'>
-    readonly ownerId: FieldRef<"GoldenTicket", 'String'>
-    readonly createdAt: FieldRef<"GoldenTicket", 'DateTime'>
-    readonly expiresAt: FieldRef<"GoldenTicket", 'DateTime'>
     readonly userId: FieldRef<"GoldenTicket", 'String'>
     readonly claimedAt: FieldRef<"GoldenTicket", 'DateTime'>
-    readonly description: FieldRef<"GoldenTicket", 'String'>
     readonly status: FieldRef<"GoldenTicket", 'GoldenTicketStatus'>
-    readonly type: FieldRef<"GoldenTicket", 'TicketType'>
   }
     
 
@@ -24905,17 +25960,24 @@ export namespace Prisma {
   export type MarketingScalarFieldEnum = (typeof MarketingScalarFieldEnum)[keyof typeof MarketingScalarFieldEnum]
 
 
+  export const GoldenTicketBatchScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    expiresAt: 'expiresAt',
+    description: 'description',
+    type: 'type',
+    ownerId: 'ownerId'
+  };
+
+  export type GoldenTicketBatchScalarFieldEnum = (typeof GoldenTicketBatchScalarFieldEnum)[keyof typeof GoldenTicketBatchScalarFieldEnum]
+
+
   export const GoldenTicketScalarFieldEnum: {
     id: 'id',
     batchId: 'batchId',
-    ownerId: 'ownerId',
-    createdAt: 'createdAt',
-    expiresAt: 'expiresAt',
     userId: 'userId',
     claimedAt: 'claimedAt',
-    description: 'description',
-    status: 'status',
-    type: 'type'
+    status: 'status'
   };
 
   export type GoldenTicketScalarFieldEnum = (typeof GoldenTicketScalarFieldEnum)[keyof typeof GoldenTicketScalarFieldEnum]
@@ -25199,20 +26261,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'GoldenTicketStatus'
-   */
-  export type EnumGoldenTicketStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GoldenTicketStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'GoldenTicketStatus[]'
-   */
-  export type ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GoldenTicketStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'TicketType'
    */
   export type EnumTicketTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketType'>
@@ -25223,6 +26271,20 @@ export namespace Prisma {
    * Reference to a field of type 'TicketType[]'
    */
   export type ListEnumTicketTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'GoldenTicketStatus'
+   */
+  export type EnumGoldenTicketStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GoldenTicketStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'GoldenTicketStatus[]'
+   */
+  export type ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GoldenTicketStatus[]'>
     
 
 
@@ -25271,7 +26333,7 @@ export namespace Prisma {
     marketing?: MarketingListRelationFilter
     referals?: ReferralListRelationFilter
     goldenTicketClaimed?: XOR<GoldenTicketNullableRelationFilter, GoldenTicketWhereInput> | null
-    goldenTicketsOwned?: GoldenTicketListRelationFilter
+    goldenTicketBatchesOwned?: GoldenTicketBatchListRelationFilter
     loginAttempts?: LoginAttemptListRelationFilter
   }
 
@@ -25300,7 +26362,7 @@ export namespace Prisma {
     marketing?: MarketingOrderByRelationAggregateInput
     referals?: ReferralOrderByRelationAggregateInput
     goldenTicketClaimed?: GoldenTicketOrderByWithRelationInput
-    goldenTicketsOwned?: GoldenTicketOrderByRelationAggregateInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchOrderByRelationAggregateInput
     loginAttempts?: LoginAttemptOrderByRelationAggregateInput
   }
 
@@ -25332,7 +26394,7 @@ export namespace Prisma {
     marketing?: MarketingListRelationFilter
     referals?: ReferralListRelationFilter
     goldenTicketClaimed?: XOR<GoldenTicketNullableRelationFilter, GoldenTicketWhereInput> | null
-    goldenTicketsOwned?: GoldenTicketListRelationFilter
+    goldenTicketBatchesOwned?: GoldenTicketBatchListRelationFilter
     loginAttempts?: LoginAttemptListRelationFilter
   }, "id" | "identityAddress" | "referralCode">
 
@@ -26430,37 +27492,90 @@ export namespace Prisma {
     utm_term?: StringNullableWithAggregatesFilter<"Marketing"> | string | null
   }
 
+  export type GoldenTicketBatchWhereInput = {
+    AND?: GoldenTicketBatchWhereInput | GoldenTicketBatchWhereInput[]
+    OR?: GoldenTicketBatchWhereInput[]
+    NOT?: GoldenTicketBatchWhereInput | GoldenTicketBatchWhereInput[]
+    id?: StringFilter<"GoldenTicketBatch"> | string
+    createdAt?: DateTimeFilter<"GoldenTicketBatch"> | Date | string
+    expiresAt?: DateTimeFilter<"GoldenTicketBatch"> | Date | string
+    description?: StringNullableFilter<"GoldenTicketBatch"> | string | null
+    type?: EnumTicketTypeFilter<"GoldenTicketBatch"> | $Enums.TicketType
+    ownerId?: StringFilter<"GoldenTicketBatch"> | string
+    owner?: XOR<UserRelationFilter, UserWhereInput>
+    tickets?: GoldenTicketListRelationFilter
+  }
+
+  export type GoldenTicketBatchOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    expiresAt?: SortOrder
+    description?: SortOrderInput | SortOrder
+    type?: SortOrder
+    ownerId?: SortOrder
+    owner?: UserOrderByWithRelationInput
+    tickets?: GoldenTicketOrderByRelationAggregateInput
+  }
+
+  export type GoldenTicketBatchWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: GoldenTicketBatchWhereInput | GoldenTicketBatchWhereInput[]
+    OR?: GoldenTicketBatchWhereInput[]
+    NOT?: GoldenTicketBatchWhereInput | GoldenTicketBatchWhereInput[]
+    createdAt?: DateTimeFilter<"GoldenTicketBatch"> | Date | string
+    expiresAt?: DateTimeFilter<"GoldenTicketBatch"> | Date | string
+    description?: StringNullableFilter<"GoldenTicketBatch"> | string | null
+    type?: EnumTicketTypeFilter<"GoldenTicketBatch"> | $Enums.TicketType
+    ownerId?: StringFilter<"GoldenTicketBatch"> | string
+    owner?: XOR<UserRelationFilter, UserWhereInput>
+    tickets?: GoldenTicketListRelationFilter
+  }, "id">
+
+  export type GoldenTicketBatchOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    expiresAt?: SortOrder
+    description?: SortOrderInput | SortOrder
+    type?: SortOrder
+    ownerId?: SortOrder
+    _count?: GoldenTicketBatchCountOrderByAggregateInput
+    _max?: GoldenTicketBatchMaxOrderByAggregateInput
+    _min?: GoldenTicketBatchMinOrderByAggregateInput
+  }
+
+  export type GoldenTicketBatchScalarWhereWithAggregatesInput = {
+    AND?: GoldenTicketBatchScalarWhereWithAggregatesInput | GoldenTicketBatchScalarWhereWithAggregatesInput[]
+    OR?: GoldenTicketBatchScalarWhereWithAggregatesInput[]
+    NOT?: GoldenTicketBatchScalarWhereWithAggregatesInput | GoldenTicketBatchScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GoldenTicketBatch"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"GoldenTicketBatch"> | Date | string
+    expiresAt?: DateTimeWithAggregatesFilter<"GoldenTicketBatch"> | Date | string
+    description?: StringNullableWithAggregatesFilter<"GoldenTicketBatch"> | string | null
+    type?: EnumTicketTypeWithAggregatesFilter<"GoldenTicketBatch"> | $Enums.TicketType
+    ownerId?: StringWithAggregatesFilter<"GoldenTicketBatch"> | string
+  }
+
   export type GoldenTicketWhereInput = {
     AND?: GoldenTicketWhereInput | GoldenTicketWhereInput[]
     OR?: GoldenTicketWhereInput[]
     NOT?: GoldenTicketWhereInput | GoldenTicketWhereInput[]
     id?: StringFilter<"GoldenTicket"> | string
     batchId?: StringFilter<"GoldenTicket"> | string
-    ownerId?: StringFilter<"GoldenTicket"> | string
-    createdAt?: DateTimeFilter<"GoldenTicket"> | Date | string
-    expiresAt?: DateTimeFilter<"GoldenTicket"> | Date | string
     userId?: StringNullableFilter<"GoldenTicket"> | string | null
     claimedAt?: DateTimeNullableFilter<"GoldenTicket"> | Date | string | null
-    description?: StringNullableFilter<"GoldenTicket"> | string | null
     status?: EnumGoldenTicketStatusFilter<"GoldenTicket"> | $Enums.GoldenTicketStatus
-    type?: EnumTicketTypeFilter<"GoldenTicket"> | $Enums.TicketType
     claimedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
-    owner?: XOR<UserRelationFilter, UserWhereInput>
+    batch?: XOR<GoldenTicketBatchRelationFilter, GoldenTicketBatchWhereInput>
   }
 
   export type GoldenTicketOrderByWithRelationInput = {
     id?: SortOrder
     batchId?: SortOrder
-    ownerId?: SortOrder
-    createdAt?: SortOrder
-    expiresAt?: SortOrder
     userId?: SortOrderInput | SortOrder
     claimedAt?: SortOrderInput | SortOrder
-    description?: SortOrderInput | SortOrder
     status?: SortOrder
-    type?: SortOrder
     claimedBy?: UserOrderByWithRelationInput
-    owner?: UserOrderByWithRelationInput
+    batch?: GoldenTicketBatchOrderByWithRelationInput
   }
 
   export type GoldenTicketWhereUniqueInput = Prisma.AtLeast<{
@@ -26470,28 +27585,18 @@ export namespace Prisma {
     OR?: GoldenTicketWhereInput[]
     NOT?: GoldenTicketWhereInput | GoldenTicketWhereInput[]
     batchId?: StringFilter<"GoldenTicket"> | string
-    ownerId?: StringFilter<"GoldenTicket"> | string
-    createdAt?: DateTimeFilter<"GoldenTicket"> | Date | string
-    expiresAt?: DateTimeFilter<"GoldenTicket"> | Date | string
     claimedAt?: DateTimeNullableFilter<"GoldenTicket"> | Date | string | null
-    description?: StringNullableFilter<"GoldenTicket"> | string | null
     status?: EnumGoldenTicketStatusFilter<"GoldenTicket"> | $Enums.GoldenTicketStatus
-    type?: EnumTicketTypeFilter<"GoldenTicket"> | $Enums.TicketType
     claimedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
-    owner?: XOR<UserRelationFilter, UserWhereInput>
+    batch?: XOR<GoldenTicketBatchRelationFilter, GoldenTicketBatchWhereInput>
   }, "id" | "userId">
 
   export type GoldenTicketOrderByWithAggregationInput = {
     id?: SortOrder
     batchId?: SortOrder
-    ownerId?: SortOrder
-    createdAt?: SortOrder
-    expiresAt?: SortOrder
     userId?: SortOrderInput | SortOrder
     claimedAt?: SortOrderInput | SortOrder
-    description?: SortOrderInput | SortOrder
     status?: SortOrder
-    type?: SortOrder
     _count?: GoldenTicketCountOrderByAggregateInput
     _max?: GoldenTicketMaxOrderByAggregateInput
     _min?: GoldenTicketMinOrderByAggregateInput
@@ -26503,14 +27608,9 @@ export namespace Prisma {
     NOT?: GoldenTicketScalarWhereWithAggregatesInput | GoldenTicketScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"GoldenTicket"> | string
     batchId?: StringWithAggregatesFilter<"GoldenTicket"> | string
-    ownerId?: StringWithAggregatesFilter<"GoldenTicket"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"GoldenTicket"> | Date | string
-    expiresAt?: DateTimeWithAggregatesFilter<"GoldenTicket"> | Date | string
     userId?: StringNullableWithAggregatesFilter<"GoldenTicket"> | string | null
     claimedAt?: DateTimeNullableWithAggregatesFilter<"GoldenTicket"> | Date | string | null
-    description?: StringNullableWithAggregatesFilter<"GoldenTicket"> | string | null
     status?: EnumGoldenTicketStatusWithAggregatesFilter<"GoldenTicket"> | $Enums.GoldenTicketStatus
-    type?: EnumTicketTypeWithAggregatesFilter<"GoldenTicket"> | $Enums.TicketType
   }
 
   export type UserCreateInput = {
@@ -26537,7 +27637,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -26565,7 +27665,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -26593,7 +27693,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -26621,7 +27721,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -27694,93 +28794,124 @@ export namespace Prisma {
     utm_term?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type GoldenTicketCreateInput = {
+  export type GoldenTicketBatchCreateInput = {
     id: string
-    batchId: string
     createdAt?: Date | string
     expiresAt: Date | string
-    claimedAt?: Date | string | null
     description?: string | null
-    status?: $Enums.GoldenTicketStatus
     type?: $Enums.TicketType
+    owner: UserCreateNestedOneWithoutGoldenTicketBatchesOwnedInput
+    tickets?: GoldenTicketCreateNestedManyWithoutBatchInput
+  }
+
+  export type GoldenTicketBatchUncheckedCreateInput = {
+    id: string
+    createdAt?: Date | string
+    expiresAt: Date | string
+    description?: string | null
+    type?: $Enums.TicketType
+    ownerId: string
+    tickets?: GoldenTicketUncheckedCreateNestedManyWithoutBatchInput
+  }
+
+  export type GoldenTicketBatchUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
+    owner?: UserUpdateOneRequiredWithoutGoldenTicketBatchesOwnedNestedInput
+    tickets?: GoldenTicketUpdateManyWithoutBatchNestedInput
+  }
+
+  export type GoldenTicketBatchUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
+    ownerId?: StringFieldUpdateOperationsInput | string
+    tickets?: GoldenTicketUncheckedUpdateManyWithoutBatchNestedInput
+  }
+
+  export type GoldenTicketBatchCreateManyInput = {
+    id: string
+    createdAt?: Date | string
+    expiresAt: Date | string
+    description?: string | null
+    type?: $Enums.TicketType
+    ownerId: string
+  }
+
+  export type GoldenTicketBatchUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
+  }
+
+  export type GoldenTicketBatchUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
+    ownerId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GoldenTicketCreateInput = {
+    id: string
+    claimedAt?: Date | string | null
+    status?: $Enums.GoldenTicketStatus
     claimedBy?: UserCreateNestedOneWithoutGoldenTicketClaimedInput
-    owner: UserCreateNestedOneWithoutGoldenTicketsOwnedInput
+    batch: GoldenTicketBatchCreateNestedOneWithoutTicketsInput
   }
 
   export type GoldenTicketUncheckedCreateInput = {
     id: string
     batchId: string
-    ownerId: string
-    createdAt?: Date | string
-    expiresAt: Date | string
     userId?: string | null
     claimedAt?: Date | string | null
-    description?: string | null
     status?: $Enums.GoldenTicketStatus
-    type?: $Enums.TicketType
   }
 
   export type GoldenTicketUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    batchId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
-    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
     claimedBy?: UserUpdateOneWithoutGoldenTicketClaimedNestedInput
-    owner?: UserUpdateOneRequiredWithoutGoldenTicketsOwnedNestedInput
+    batch?: GoldenTicketBatchUpdateOneRequiredWithoutTicketsNestedInput
   }
 
   export type GoldenTicketUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     batchId?: StringFieldUpdateOperationsInput | string
-    ownerId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
-    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
   }
 
   export type GoldenTicketCreateManyInput = {
     id: string
     batchId: string
-    ownerId: string
-    createdAt?: Date | string
-    expiresAt: Date | string
     userId?: string | null
     claimedAt?: Date | string | null
-    description?: string | null
     status?: $Enums.GoldenTicketStatus
-    type?: $Enums.TicketType
   }
 
   export type GoldenTicketUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    batchId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
-    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
   }
 
   export type GoldenTicketUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     batchId?: StringFieldUpdateOperationsInput | string
-    ownerId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
-    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -27917,10 +29048,10 @@ export namespace Prisma {
     isNot?: GoldenTicketWhereInput | null
   }
 
-  export type GoldenTicketListRelationFilter = {
-    every?: GoldenTicketWhereInput
-    some?: GoldenTicketWhereInput
-    none?: GoldenTicketWhereInput
+  export type GoldenTicketBatchListRelationFilter = {
+    every?: GoldenTicketBatchWhereInput
+    some?: GoldenTicketBatchWhereInput
+    none?: GoldenTicketBatchWhereInput
   }
 
   export type LoginAttemptListRelationFilter = {
@@ -27970,7 +29101,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type GoldenTicketOrderByRelationAggregateInput = {
+  export type GoldenTicketBatchOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -28974,13 +30105,6 @@ export namespace Prisma {
     id?: SortOrder
   }
 
-  export type EnumGoldenTicketStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.GoldenTicketStatus | EnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumGoldenTicketStatusFilter<$PrismaModel> | $Enums.GoldenTicketStatus
-  }
-
   export type EnumTicketTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.TicketType | EnumTicketTypeFieldRefInput<$PrismaModel>
     in?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
@@ -28988,53 +30112,41 @@ export namespace Prisma {
     not?: NestedEnumTicketTypeFilter<$PrismaModel> | $Enums.TicketType
   }
 
-  export type GoldenTicketCountOrderByAggregateInput = {
-    id?: SortOrder
-    batchId?: SortOrder
-    ownerId?: SortOrder
-    createdAt?: SortOrder
-    expiresAt?: SortOrder
-    userId?: SortOrder
-    claimedAt?: SortOrder
-    description?: SortOrder
-    status?: SortOrder
-    type?: SortOrder
+  export type GoldenTicketListRelationFilter = {
+    every?: GoldenTicketWhereInput
+    some?: GoldenTicketWhereInput
+    none?: GoldenTicketWhereInput
   }
 
-  export type GoldenTicketMaxOrderByAggregateInput = {
-    id?: SortOrder
-    batchId?: SortOrder
-    ownerId?: SortOrder
-    createdAt?: SortOrder
-    expiresAt?: SortOrder
-    userId?: SortOrder
-    claimedAt?: SortOrder
-    description?: SortOrder
-    status?: SortOrder
-    type?: SortOrder
+  export type GoldenTicketOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
-  export type GoldenTicketMinOrderByAggregateInput = {
+  export type GoldenTicketBatchCountOrderByAggregateInput = {
     id?: SortOrder
-    batchId?: SortOrder
-    ownerId?: SortOrder
     createdAt?: SortOrder
     expiresAt?: SortOrder
-    userId?: SortOrder
-    claimedAt?: SortOrder
     description?: SortOrder
-    status?: SortOrder
     type?: SortOrder
+    ownerId?: SortOrder
   }
 
-  export type EnumGoldenTicketStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.GoldenTicketStatus | EnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumGoldenTicketStatusWithAggregatesFilter<$PrismaModel> | $Enums.GoldenTicketStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
-    _max?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
+  export type GoldenTicketBatchMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    expiresAt?: SortOrder
+    description?: SortOrder
+    type?: SortOrder
+    ownerId?: SortOrder
+  }
+
+  export type GoldenTicketBatchMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    expiresAt?: SortOrder
+    description?: SortOrder
+    type?: SortOrder
+    ownerId?: SortOrder
   }
 
   export type EnumTicketTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -29045,6 +30157,52 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTicketTypeFilter<$PrismaModel>
     _max?: NestedEnumTicketTypeFilter<$PrismaModel>
+  }
+
+  export type EnumGoldenTicketStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.GoldenTicketStatus | EnumGoldenTicketStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumGoldenTicketStatusFilter<$PrismaModel> | $Enums.GoldenTicketStatus
+  }
+
+  export type GoldenTicketBatchRelationFilter = {
+    is?: GoldenTicketBatchWhereInput
+    isNot?: GoldenTicketBatchWhereInput
+  }
+
+  export type GoldenTicketCountOrderByAggregateInput = {
+    id?: SortOrder
+    batchId?: SortOrder
+    userId?: SortOrder
+    claimedAt?: SortOrder
+    status?: SortOrder
+  }
+
+  export type GoldenTicketMaxOrderByAggregateInput = {
+    id?: SortOrder
+    batchId?: SortOrder
+    userId?: SortOrder
+    claimedAt?: SortOrder
+    status?: SortOrder
+  }
+
+  export type GoldenTicketMinOrderByAggregateInput = {
+    id?: SortOrder
+    batchId?: SortOrder
+    userId?: SortOrder
+    claimedAt?: SortOrder
+    status?: SortOrder
+  }
+
+  export type EnumGoldenTicketStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GoldenTicketStatus | EnumGoldenTicketStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumGoldenTicketStatusWithAggregatesFilter<$PrismaModel> | $Enums.GoldenTicketStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
+    _max?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
   }
 
   export type UserCreateNestedOneWithoutReferredUsersInput = {
@@ -29140,11 +30298,11 @@ export namespace Prisma {
     connect?: GoldenTicketWhereUniqueInput
   }
 
-  export type GoldenTicketCreateNestedManyWithoutOwnerInput = {
-    create?: XOR<GoldenTicketCreateWithoutOwnerInput, GoldenTicketUncheckedCreateWithoutOwnerInput> | GoldenTicketCreateWithoutOwnerInput[] | GoldenTicketUncheckedCreateWithoutOwnerInput[]
-    connectOrCreate?: GoldenTicketCreateOrConnectWithoutOwnerInput | GoldenTicketCreateOrConnectWithoutOwnerInput[]
-    createMany?: GoldenTicketCreateManyOwnerInputEnvelope
-    connect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
+  export type GoldenTicketBatchCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<GoldenTicketBatchCreateWithoutOwnerInput, GoldenTicketBatchUncheckedCreateWithoutOwnerInput> | GoldenTicketBatchCreateWithoutOwnerInput[] | GoldenTicketBatchUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: GoldenTicketBatchCreateOrConnectWithoutOwnerInput | GoldenTicketBatchCreateOrConnectWithoutOwnerInput[]
+    createMany?: GoldenTicketBatchCreateManyOwnerInputEnvelope
+    connect?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
   }
 
   export type LoginAttemptCreateNestedManyWithoutUserInput = {
@@ -29241,11 +30399,11 @@ export namespace Prisma {
     connect?: GoldenTicketWhereUniqueInput
   }
 
-  export type GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput = {
-    create?: XOR<GoldenTicketCreateWithoutOwnerInput, GoldenTicketUncheckedCreateWithoutOwnerInput> | GoldenTicketCreateWithoutOwnerInput[] | GoldenTicketUncheckedCreateWithoutOwnerInput[]
-    connectOrCreate?: GoldenTicketCreateOrConnectWithoutOwnerInput | GoldenTicketCreateOrConnectWithoutOwnerInput[]
-    createMany?: GoldenTicketCreateManyOwnerInputEnvelope
-    connect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
+  export type GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<GoldenTicketBatchCreateWithoutOwnerInput, GoldenTicketBatchUncheckedCreateWithoutOwnerInput> | GoldenTicketBatchCreateWithoutOwnerInput[] | GoldenTicketBatchUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: GoldenTicketBatchCreateOrConnectWithoutOwnerInput | GoldenTicketBatchCreateOrConnectWithoutOwnerInput[]
+    createMany?: GoldenTicketBatchCreateManyOwnerInputEnvelope
+    connect?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
   }
 
   export type LoginAttemptUncheckedCreateNestedManyWithoutUserInput = {
@@ -29451,18 +30609,18 @@ export namespace Prisma {
     update?: XOR<XOR<GoldenTicketUpdateToOneWithWhereWithoutClaimedByInput, GoldenTicketUpdateWithoutClaimedByInput>, GoldenTicketUncheckedUpdateWithoutClaimedByInput>
   }
 
-  export type GoldenTicketUpdateManyWithoutOwnerNestedInput = {
-    create?: XOR<GoldenTicketCreateWithoutOwnerInput, GoldenTicketUncheckedCreateWithoutOwnerInput> | GoldenTicketCreateWithoutOwnerInput[] | GoldenTicketUncheckedCreateWithoutOwnerInput[]
-    connectOrCreate?: GoldenTicketCreateOrConnectWithoutOwnerInput | GoldenTicketCreateOrConnectWithoutOwnerInput[]
-    upsert?: GoldenTicketUpsertWithWhereUniqueWithoutOwnerInput | GoldenTicketUpsertWithWhereUniqueWithoutOwnerInput[]
-    createMany?: GoldenTicketCreateManyOwnerInputEnvelope
-    set?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    disconnect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    delete?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    connect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    update?: GoldenTicketUpdateWithWhereUniqueWithoutOwnerInput | GoldenTicketUpdateWithWhereUniqueWithoutOwnerInput[]
-    updateMany?: GoldenTicketUpdateManyWithWhereWithoutOwnerInput | GoldenTicketUpdateManyWithWhereWithoutOwnerInput[]
-    deleteMany?: GoldenTicketScalarWhereInput | GoldenTicketScalarWhereInput[]
+  export type GoldenTicketBatchUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<GoldenTicketBatchCreateWithoutOwnerInput, GoldenTicketBatchUncheckedCreateWithoutOwnerInput> | GoldenTicketBatchCreateWithoutOwnerInput[] | GoldenTicketBatchUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: GoldenTicketBatchCreateOrConnectWithoutOwnerInput | GoldenTicketBatchCreateOrConnectWithoutOwnerInput[]
+    upsert?: GoldenTicketBatchUpsertWithWhereUniqueWithoutOwnerInput | GoldenTicketBatchUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: GoldenTicketBatchCreateManyOwnerInputEnvelope
+    set?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
+    disconnect?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
+    delete?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
+    connect?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
+    update?: GoldenTicketBatchUpdateWithWhereUniqueWithoutOwnerInput | GoldenTicketBatchUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: GoldenTicketBatchUpdateManyWithWhereWithoutOwnerInput | GoldenTicketBatchUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: GoldenTicketBatchScalarWhereInput | GoldenTicketBatchScalarWhereInput[]
   }
 
   export type LoginAttemptUpdateManyWithoutUserNestedInput = {
@@ -29645,18 +30803,18 @@ export namespace Prisma {
     update?: XOR<XOR<GoldenTicketUpdateToOneWithWhereWithoutClaimedByInput, GoldenTicketUpdateWithoutClaimedByInput>, GoldenTicketUncheckedUpdateWithoutClaimedByInput>
   }
 
-  export type GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput = {
-    create?: XOR<GoldenTicketCreateWithoutOwnerInput, GoldenTicketUncheckedCreateWithoutOwnerInput> | GoldenTicketCreateWithoutOwnerInput[] | GoldenTicketUncheckedCreateWithoutOwnerInput[]
-    connectOrCreate?: GoldenTicketCreateOrConnectWithoutOwnerInput | GoldenTicketCreateOrConnectWithoutOwnerInput[]
-    upsert?: GoldenTicketUpsertWithWhereUniqueWithoutOwnerInput | GoldenTicketUpsertWithWhereUniqueWithoutOwnerInput[]
-    createMany?: GoldenTicketCreateManyOwnerInputEnvelope
-    set?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    disconnect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    delete?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    connect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    update?: GoldenTicketUpdateWithWhereUniqueWithoutOwnerInput | GoldenTicketUpdateWithWhereUniqueWithoutOwnerInput[]
-    updateMany?: GoldenTicketUpdateManyWithWhereWithoutOwnerInput | GoldenTicketUpdateManyWithWhereWithoutOwnerInput[]
-    deleteMany?: GoldenTicketScalarWhereInput | GoldenTicketScalarWhereInput[]
+  export type GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<GoldenTicketBatchCreateWithoutOwnerInput, GoldenTicketBatchUncheckedCreateWithoutOwnerInput> | GoldenTicketBatchCreateWithoutOwnerInput[] | GoldenTicketBatchUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: GoldenTicketBatchCreateOrConnectWithoutOwnerInput | GoldenTicketBatchCreateOrConnectWithoutOwnerInput[]
+    upsert?: GoldenTicketBatchUpsertWithWhereUniqueWithoutOwnerInput | GoldenTicketBatchUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: GoldenTicketBatchCreateManyOwnerInputEnvelope
+    set?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
+    disconnect?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
+    delete?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
+    connect?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
+    update?: GoldenTicketBatchUpdateWithWhereUniqueWithoutOwnerInput | GoldenTicketBatchUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: GoldenTicketBatchUpdateManyWithWhereWithoutOwnerInput | GoldenTicketBatchUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: GoldenTicketBatchScalarWhereInput | GoldenTicketBatchScalarWhereInput[]
   }
 
   export type LoginAttemptUncheckedUpdateManyWithoutUserNestedInput = {
@@ -30127,24 +31285,80 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMarketingInput, UserUpdateWithoutMarketingInput>, UserUncheckedUpdateWithoutMarketingInput>
   }
 
+  export type UserCreateNestedOneWithoutGoldenTicketBatchesOwnedInput = {
+    create?: XOR<UserCreateWithoutGoldenTicketBatchesOwnedInput, UserUncheckedCreateWithoutGoldenTicketBatchesOwnedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGoldenTicketBatchesOwnedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type GoldenTicketCreateNestedManyWithoutBatchInput = {
+    create?: XOR<GoldenTicketCreateWithoutBatchInput, GoldenTicketUncheckedCreateWithoutBatchInput> | GoldenTicketCreateWithoutBatchInput[] | GoldenTicketUncheckedCreateWithoutBatchInput[]
+    connectOrCreate?: GoldenTicketCreateOrConnectWithoutBatchInput | GoldenTicketCreateOrConnectWithoutBatchInput[]
+    createMany?: GoldenTicketCreateManyBatchInputEnvelope
+    connect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
+  }
+
+  export type GoldenTicketUncheckedCreateNestedManyWithoutBatchInput = {
+    create?: XOR<GoldenTicketCreateWithoutBatchInput, GoldenTicketUncheckedCreateWithoutBatchInput> | GoldenTicketCreateWithoutBatchInput[] | GoldenTicketUncheckedCreateWithoutBatchInput[]
+    connectOrCreate?: GoldenTicketCreateOrConnectWithoutBatchInput | GoldenTicketCreateOrConnectWithoutBatchInput[]
+    createMany?: GoldenTicketCreateManyBatchInputEnvelope
+    connect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
+  }
+
+  export type EnumTicketTypeFieldUpdateOperationsInput = {
+    set?: $Enums.TicketType
+  }
+
+  export type UserUpdateOneRequiredWithoutGoldenTicketBatchesOwnedNestedInput = {
+    create?: XOR<UserCreateWithoutGoldenTicketBatchesOwnedInput, UserUncheckedCreateWithoutGoldenTicketBatchesOwnedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGoldenTicketBatchesOwnedInput
+    upsert?: UserUpsertWithoutGoldenTicketBatchesOwnedInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGoldenTicketBatchesOwnedInput, UserUpdateWithoutGoldenTicketBatchesOwnedInput>, UserUncheckedUpdateWithoutGoldenTicketBatchesOwnedInput>
+  }
+
+  export type GoldenTicketUpdateManyWithoutBatchNestedInput = {
+    create?: XOR<GoldenTicketCreateWithoutBatchInput, GoldenTicketUncheckedCreateWithoutBatchInput> | GoldenTicketCreateWithoutBatchInput[] | GoldenTicketUncheckedCreateWithoutBatchInput[]
+    connectOrCreate?: GoldenTicketCreateOrConnectWithoutBatchInput | GoldenTicketCreateOrConnectWithoutBatchInput[]
+    upsert?: GoldenTicketUpsertWithWhereUniqueWithoutBatchInput | GoldenTicketUpsertWithWhereUniqueWithoutBatchInput[]
+    createMany?: GoldenTicketCreateManyBatchInputEnvelope
+    set?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
+    disconnect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
+    delete?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
+    connect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
+    update?: GoldenTicketUpdateWithWhereUniqueWithoutBatchInput | GoldenTicketUpdateWithWhereUniqueWithoutBatchInput[]
+    updateMany?: GoldenTicketUpdateManyWithWhereWithoutBatchInput | GoldenTicketUpdateManyWithWhereWithoutBatchInput[]
+    deleteMany?: GoldenTicketScalarWhereInput | GoldenTicketScalarWhereInput[]
+  }
+
+  export type GoldenTicketUncheckedUpdateManyWithoutBatchNestedInput = {
+    create?: XOR<GoldenTicketCreateWithoutBatchInput, GoldenTicketUncheckedCreateWithoutBatchInput> | GoldenTicketCreateWithoutBatchInput[] | GoldenTicketUncheckedCreateWithoutBatchInput[]
+    connectOrCreate?: GoldenTicketCreateOrConnectWithoutBatchInput | GoldenTicketCreateOrConnectWithoutBatchInput[]
+    upsert?: GoldenTicketUpsertWithWhereUniqueWithoutBatchInput | GoldenTicketUpsertWithWhereUniqueWithoutBatchInput[]
+    createMany?: GoldenTicketCreateManyBatchInputEnvelope
+    set?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
+    disconnect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
+    delete?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
+    connect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
+    update?: GoldenTicketUpdateWithWhereUniqueWithoutBatchInput | GoldenTicketUpdateWithWhereUniqueWithoutBatchInput[]
+    updateMany?: GoldenTicketUpdateManyWithWhereWithoutBatchInput | GoldenTicketUpdateManyWithWhereWithoutBatchInput[]
+    deleteMany?: GoldenTicketScalarWhereInput | GoldenTicketScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutGoldenTicketClaimedInput = {
     create?: XOR<UserCreateWithoutGoldenTicketClaimedInput, UserUncheckedCreateWithoutGoldenTicketClaimedInput>
     connectOrCreate?: UserCreateOrConnectWithoutGoldenTicketClaimedInput
     connect?: UserWhereUniqueInput
   }
 
-  export type UserCreateNestedOneWithoutGoldenTicketsOwnedInput = {
-    create?: XOR<UserCreateWithoutGoldenTicketsOwnedInput, UserUncheckedCreateWithoutGoldenTicketsOwnedInput>
-    connectOrCreate?: UserCreateOrConnectWithoutGoldenTicketsOwnedInput
-    connect?: UserWhereUniqueInput
+  export type GoldenTicketBatchCreateNestedOneWithoutTicketsInput = {
+    create?: XOR<GoldenTicketBatchCreateWithoutTicketsInput, GoldenTicketBatchUncheckedCreateWithoutTicketsInput>
+    connectOrCreate?: GoldenTicketBatchCreateOrConnectWithoutTicketsInput
+    connect?: GoldenTicketBatchWhereUniqueInput
   }
 
   export type EnumGoldenTicketStatusFieldUpdateOperationsInput = {
     set?: $Enums.GoldenTicketStatus
-  }
-
-  export type EnumTicketTypeFieldUpdateOperationsInput = {
-    set?: $Enums.TicketType
   }
 
   export type UserUpdateOneWithoutGoldenTicketClaimedNestedInput = {
@@ -30157,12 +31371,12 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGoldenTicketClaimedInput, UserUpdateWithoutGoldenTicketClaimedInput>, UserUncheckedUpdateWithoutGoldenTicketClaimedInput>
   }
 
-  export type UserUpdateOneRequiredWithoutGoldenTicketsOwnedNestedInput = {
-    create?: XOR<UserCreateWithoutGoldenTicketsOwnedInput, UserUncheckedCreateWithoutGoldenTicketsOwnedInput>
-    connectOrCreate?: UserCreateOrConnectWithoutGoldenTicketsOwnedInput
-    upsert?: UserUpsertWithoutGoldenTicketsOwnedInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGoldenTicketsOwnedInput, UserUpdateWithoutGoldenTicketsOwnedInput>, UserUncheckedUpdateWithoutGoldenTicketsOwnedInput>
+  export type GoldenTicketBatchUpdateOneRequiredWithoutTicketsNestedInput = {
+    create?: XOR<GoldenTicketBatchCreateWithoutTicketsInput, GoldenTicketBatchUncheckedCreateWithoutTicketsInput>
+    connectOrCreate?: GoldenTicketBatchCreateOrConnectWithoutTicketsInput
+    upsert?: GoldenTicketBatchUpsertWithoutTicketsInput
+    connect?: GoldenTicketBatchWhereUniqueInput
+    update?: XOR<XOR<GoldenTicketBatchUpdateToOneWithWhereWithoutTicketsInput, GoldenTicketBatchUpdateWithoutTicketsInput>, GoldenTicketBatchUncheckedUpdateWithoutTicketsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -30597,28 +31811,11 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type NestedEnumGoldenTicketStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.GoldenTicketStatus | EnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumGoldenTicketStatusFilter<$PrismaModel> | $Enums.GoldenTicketStatus
-  }
-
   export type NestedEnumTicketTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.TicketType | EnumTicketTypeFieldRefInput<$PrismaModel>
     in?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
     notIn?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
     not?: NestedEnumTicketTypeFilter<$PrismaModel> | $Enums.TicketType
-  }
-
-  export type NestedEnumGoldenTicketStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.GoldenTicketStatus | EnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumGoldenTicketStatusWithAggregatesFilter<$PrismaModel> | $Enums.GoldenTicketStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
-    _max?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumTicketTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -30629,6 +31826,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTicketTypeFilter<$PrismaModel>
     _max?: NestedEnumTicketTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumGoldenTicketStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.GoldenTicketStatus | EnumGoldenTicketStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumGoldenTicketStatusFilter<$PrismaModel> | $Enums.GoldenTicketStatus
+  }
+
+  export type NestedEnumGoldenTicketStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.GoldenTicketStatus | EnumGoldenTicketStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumGoldenTicketStatusWithAggregatesFilter<$PrismaModel> | $Enums.GoldenTicketStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
+    _max?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
   }
 
   export type UserCreateWithoutReferredUsersInput = {
@@ -30654,7 +31868,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -30681,7 +31895,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -30885,7 +32099,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -30912,7 +32126,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -31009,26 +32223,16 @@ export namespace Prisma {
 
   export type GoldenTicketCreateWithoutClaimedByInput = {
     id: string
-    batchId: string
-    createdAt?: Date | string
-    expiresAt: Date | string
     claimedAt?: Date | string | null
-    description?: string | null
     status?: $Enums.GoldenTicketStatus
-    type?: $Enums.TicketType
-    owner: UserCreateNestedOneWithoutGoldenTicketsOwnedInput
+    batch: GoldenTicketBatchCreateNestedOneWithoutTicketsInput
   }
 
   export type GoldenTicketUncheckedCreateWithoutClaimedByInput = {
     id: string
     batchId: string
-    ownerId: string
-    createdAt?: Date | string
-    expiresAt: Date | string
     claimedAt?: Date | string | null
-    description?: string | null
     status?: $Enums.GoldenTicketStatus
-    type?: $Enums.TicketType
   }
 
   export type GoldenTicketCreateOrConnectWithoutClaimedByInput = {
@@ -31036,37 +32240,31 @@ export namespace Prisma {
     create: XOR<GoldenTicketCreateWithoutClaimedByInput, GoldenTicketUncheckedCreateWithoutClaimedByInput>
   }
 
-  export type GoldenTicketCreateWithoutOwnerInput = {
+  export type GoldenTicketBatchCreateWithoutOwnerInput = {
     id: string
-    batchId: string
     createdAt?: Date | string
     expiresAt: Date | string
-    claimedAt?: Date | string | null
     description?: string | null
-    status?: $Enums.GoldenTicketStatus
     type?: $Enums.TicketType
-    claimedBy?: UserCreateNestedOneWithoutGoldenTicketClaimedInput
+    tickets?: GoldenTicketCreateNestedManyWithoutBatchInput
   }
 
-  export type GoldenTicketUncheckedCreateWithoutOwnerInput = {
+  export type GoldenTicketBatchUncheckedCreateWithoutOwnerInput = {
     id: string
-    batchId: string
     createdAt?: Date | string
     expiresAt: Date | string
-    userId?: string | null
-    claimedAt?: Date | string | null
     description?: string | null
-    status?: $Enums.GoldenTicketStatus
     type?: $Enums.TicketType
+    tickets?: GoldenTicketUncheckedCreateNestedManyWithoutBatchInput
   }
 
-  export type GoldenTicketCreateOrConnectWithoutOwnerInput = {
-    where: GoldenTicketWhereUniqueInput
-    create: XOR<GoldenTicketCreateWithoutOwnerInput, GoldenTicketUncheckedCreateWithoutOwnerInput>
+  export type GoldenTicketBatchCreateOrConnectWithoutOwnerInput = {
+    where: GoldenTicketBatchWhereUniqueInput
+    create: XOR<GoldenTicketBatchCreateWithoutOwnerInput, GoldenTicketBatchUncheckedCreateWithoutOwnerInput>
   }
 
-  export type GoldenTicketCreateManyOwnerInputEnvelope = {
-    data: GoldenTicketCreateManyOwnerInput | GoldenTicketCreateManyOwnerInput[]
+  export type GoldenTicketBatchCreateManyOwnerInputEnvelope = {
+    data: GoldenTicketBatchCreateManyOwnerInput | GoldenTicketBatchCreateManyOwnerInput[]
     skipDuplicates?: boolean
   }
 
@@ -31129,7 +32327,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -31156,7 +32354,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -31492,58 +32690,44 @@ export namespace Prisma {
 
   export type GoldenTicketUpdateWithoutClaimedByInput = {
     id?: StringFieldUpdateOperationsInput | string
-    batchId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
-    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
-    owner?: UserUpdateOneRequiredWithoutGoldenTicketsOwnedNestedInput
+    batch?: GoldenTicketBatchUpdateOneRequiredWithoutTicketsNestedInput
   }
 
   export type GoldenTicketUncheckedUpdateWithoutClaimedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     batchId?: StringFieldUpdateOperationsInput | string
-    ownerId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
-    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
   }
 
-  export type GoldenTicketUpsertWithWhereUniqueWithoutOwnerInput = {
-    where: GoldenTicketWhereUniqueInput
-    update: XOR<GoldenTicketUpdateWithoutOwnerInput, GoldenTicketUncheckedUpdateWithoutOwnerInput>
-    create: XOR<GoldenTicketCreateWithoutOwnerInput, GoldenTicketUncheckedCreateWithoutOwnerInput>
+  export type GoldenTicketBatchUpsertWithWhereUniqueWithoutOwnerInput = {
+    where: GoldenTicketBatchWhereUniqueInput
+    update: XOR<GoldenTicketBatchUpdateWithoutOwnerInput, GoldenTicketBatchUncheckedUpdateWithoutOwnerInput>
+    create: XOR<GoldenTicketBatchCreateWithoutOwnerInput, GoldenTicketBatchUncheckedCreateWithoutOwnerInput>
   }
 
-  export type GoldenTicketUpdateWithWhereUniqueWithoutOwnerInput = {
-    where: GoldenTicketWhereUniqueInput
-    data: XOR<GoldenTicketUpdateWithoutOwnerInput, GoldenTicketUncheckedUpdateWithoutOwnerInput>
+  export type GoldenTicketBatchUpdateWithWhereUniqueWithoutOwnerInput = {
+    where: GoldenTicketBatchWhereUniqueInput
+    data: XOR<GoldenTicketBatchUpdateWithoutOwnerInput, GoldenTicketBatchUncheckedUpdateWithoutOwnerInput>
   }
 
-  export type GoldenTicketUpdateManyWithWhereWithoutOwnerInput = {
-    where: GoldenTicketScalarWhereInput
-    data: XOR<GoldenTicketUpdateManyMutationInput, GoldenTicketUncheckedUpdateManyWithoutOwnerInput>
+  export type GoldenTicketBatchUpdateManyWithWhereWithoutOwnerInput = {
+    where: GoldenTicketBatchScalarWhereInput
+    data: XOR<GoldenTicketBatchUpdateManyMutationInput, GoldenTicketBatchUncheckedUpdateManyWithoutOwnerInput>
   }
 
-  export type GoldenTicketScalarWhereInput = {
-    AND?: GoldenTicketScalarWhereInput | GoldenTicketScalarWhereInput[]
-    OR?: GoldenTicketScalarWhereInput[]
-    NOT?: GoldenTicketScalarWhereInput | GoldenTicketScalarWhereInput[]
-    id?: StringFilter<"GoldenTicket"> | string
-    batchId?: StringFilter<"GoldenTicket"> | string
-    ownerId?: StringFilter<"GoldenTicket"> | string
-    createdAt?: DateTimeFilter<"GoldenTicket"> | Date | string
-    expiresAt?: DateTimeFilter<"GoldenTicket"> | Date | string
-    userId?: StringNullableFilter<"GoldenTicket"> | string | null
-    claimedAt?: DateTimeNullableFilter<"GoldenTicket"> | Date | string | null
-    description?: StringNullableFilter<"GoldenTicket"> | string | null
-    status?: EnumGoldenTicketStatusFilter<"GoldenTicket"> | $Enums.GoldenTicketStatus
-    type?: EnumTicketTypeFilter<"GoldenTicket"> | $Enums.TicketType
+  export type GoldenTicketBatchScalarWhereInput = {
+    AND?: GoldenTicketBatchScalarWhereInput | GoldenTicketBatchScalarWhereInput[]
+    OR?: GoldenTicketBatchScalarWhereInput[]
+    NOT?: GoldenTicketBatchScalarWhereInput | GoldenTicketBatchScalarWhereInput[]
+    id?: StringFilter<"GoldenTicketBatch"> | string
+    createdAt?: DateTimeFilter<"GoldenTicketBatch"> | Date | string
+    expiresAt?: DateTimeFilter<"GoldenTicketBatch"> | Date | string
+    description?: StringNullableFilter<"GoldenTicketBatch"> | string | null
+    type?: EnumTicketTypeFilter<"GoldenTicketBatch"> | $Enums.TicketType
+    ownerId?: StringFilter<"GoldenTicketBatch"> | string
   }
 
   export type LoginAttemptUpsertWithWhereUniqueWithoutUserInput = {
@@ -31597,7 +32781,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -31624,7 +32808,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -31667,7 +32851,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -31694,7 +32878,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -31721,7 +32905,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -31748,7 +32932,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -31791,7 +32975,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -31818,7 +33002,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -31872,7 +33056,7 @@ export namespace Prisma {
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
     marketing?: MarketingCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -31899,7 +33083,7 @@ export namespace Prisma {
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -31975,7 +33159,7 @@ export namespace Prisma {
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -32002,7 +33186,7 @@ export namespace Prisma {
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -32029,7 +33213,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -32056,7 +33240,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -32121,7 +33305,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -32148,7 +33332,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -32191,7 +33375,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -32218,7 +33402,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -32261,7 +33445,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -32288,7 +33472,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -32357,7 +33541,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutLoginAttemptsInput = {
@@ -32384,7 +33568,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutLoginAttemptsInput = {
@@ -32449,7 +33633,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLoginAttemptsInput = {
@@ -32476,7 +33660,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type IpAssessmentUpsertWithoutLoginAttemptsInput = {
@@ -32530,7 +33714,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -32557,7 +33741,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -32600,7 +33784,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -32627,7 +33811,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -32654,7 +33838,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -32681,7 +33865,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -32724,7 +33908,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -32751,7 +33935,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -32778,7 +33962,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -32805,7 +33989,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -32848,7 +34032,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -32875,7 +34059,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -32902,7 +34086,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -32929,7 +34113,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -32972,7 +34156,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -32999,7 +34183,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -33048,7 +34232,7 @@ export namespace Prisma {
     marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -33075,7 +34259,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -33163,7 +34347,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -33190,7 +34374,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -33344,7 +34528,7 @@ export namespace Prisma {
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -33371,7 +34555,7 @@ export namespace Prisma {
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
     goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -33414,7 +34598,7 @@ export namespace Prisma {
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -33441,70 +34625,11 @@ export namespace Prisma {
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type UserCreateWithoutGoldenTicketClaimedInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    status?: $Enums.UserStatus
-    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
-    events?: EventCreateNestedManyWithoutUserInput
-    messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
-    questProgress?: QuestProgressCreateNestedManyWithoutUserInput
-    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
-    referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketsOwned?: GoldenTicketCreateNestedManyWithoutOwnerInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutGoldenTicketClaimedInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    referredBy?: string | null
-    status?: $Enums.UserStatus
-    events?: EventUncheckedCreateNestedManyWithoutUserInput
-    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
-    questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
-    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
-    referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketsOwned?: GoldenTicketUncheckedCreateNestedManyWithoutOwnerInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutGoldenTicketClaimedInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutGoldenTicketClaimedInput, UserUncheckedCreateWithoutGoldenTicketClaimedInput>
-  }
-
-  export type UserCreateWithoutGoldenTicketsOwnedInput = {
+  export type UserCreateWithoutGoldenTicketBatchesOwnedInput = {
     id?: string
     identityAddress: string
     createdAt?: Date | string
@@ -33531,7 +34656,7 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
-  export type UserUncheckedCreateWithoutGoldenTicketsOwnedInput = {
+  export type UserUncheckedCreateWithoutGoldenTicketBatchesOwnedInput = {
     id?: string
     identityAddress: string
     createdAt?: Date | string
@@ -33558,9 +34683,207 @@ export namespace Prisma {
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
-  export type UserCreateOrConnectWithoutGoldenTicketsOwnedInput = {
+  export type UserCreateOrConnectWithoutGoldenTicketBatchesOwnedInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutGoldenTicketsOwnedInput, UserUncheckedCreateWithoutGoldenTicketsOwnedInput>
+    create: XOR<UserCreateWithoutGoldenTicketBatchesOwnedInput, UserUncheckedCreateWithoutGoldenTicketBatchesOwnedInput>
+  }
+
+  export type GoldenTicketCreateWithoutBatchInput = {
+    id: string
+    claimedAt?: Date | string | null
+    status?: $Enums.GoldenTicketStatus
+    claimedBy?: UserCreateNestedOneWithoutGoldenTicketClaimedInput
+  }
+
+  export type GoldenTicketUncheckedCreateWithoutBatchInput = {
+    id: string
+    userId?: string | null
+    claimedAt?: Date | string | null
+    status?: $Enums.GoldenTicketStatus
+  }
+
+  export type GoldenTicketCreateOrConnectWithoutBatchInput = {
+    where: GoldenTicketWhereUniqueInput
+    create: XOR<GoldenTicketCreateWithoutBatchInput, GoldenTicketUncheckedCreateWithoutBatchInput>
+  }
+
+  export type GoldenTicketCreateManyBatchInputEnvelope = {
+    data: GoldenTicketCreateManyBatchInput | GoldenTicketCreateManyBatchInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutGoldenTicketBatchesOwnedInput = {
+    update: XOR<UserUpdateWithoutGoldenTicketBatchesOwnedInput, UserUncheckedUpdateWithoutGoldenTicketBatchesOwnedInput>
+    create: XOR<UserCreateWithoutGoldenTicketBatchesOwnedInput, UserUncheckedCreateWithoutGoldenTicketBatchesOwnedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutGoldenTicketBatchesOwnedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutGoldenTicketBatchesOwnedInput, UserUncheckedUpdateWithoutGoldenTicketBatchesOwnedInput>
+  }
+
+  export type UserUpdateWithoutGoldenTicketBatchesOwnedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identityAddress?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referralCode?: StringFieldUpdateOperationsInput | string
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
+    events?: EventUpdateManyWithoutUserNestedInput
+    messages?: MessageUpdateManyWithoutUserNestedInput
+    email?: UserEmailUpdateOneWithoutUserNestedInput
+    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
+    completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
+    savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
+    auditLogs?: AuditUpdateManyWithoutUserNestedInput
+    questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
+    transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUpdateManyWithoutUserNestedInput
+    referals?: ReferralUpdateManyWithoutUserNestedInput
+    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
+    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutGoldenTicketBatchesOwnedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    identityAddress?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+    referralCode?: StringFieldUpdateOperationsInput | string
+    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    events?: EventUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
+    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
+    completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
+    savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
+    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
+    questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
+    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
+    transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
+    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
+    referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
+    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
+    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type GoldenTicketUpsertWithWhereUniqueWithoutBatchInput = {
+    where: GoldenTicketWhereUniqueInput
+    update: XOR<GoldenTicketUpdateWithoutBatchInput, GoldenTicketUncheckedUpdateWithoutBatchInput>
+    create: XOR<GoldenTicketCreateWithoutBatchInput, GoldenTicketUncheckedCreateWithoutBatchInput>
+  }
+
+  export type GoldenTicketUpdateWithWhereUniqueWithoutBatchInput = {
+    where: GoldenTicketWhereUniqueInput
+    data: XOR<GoldenTicketUpdateWithoutBatchInput, GoldenTicketUncheckedUpdateWithoutBatchInput>
+  }
+
+  export type GoldenTicketUpdateManyWithWhereWithoutBatchInput = {
+    where: GoldenTicketScalarWhereInput
+    data: XOR<GoldenTicketUpdateManyMutationInput, GoldenTicketUncheckedUpdateManyWithoutBatchInput>
+  }
+
+  export type GoldenTicketScalarWhereInput = {
+    AND?: GoldenTicketScalarWhereInput | GoldenTicketScalarWhereInput[]
+    OR?: GoldenTicketScalarWhereInput[]
+    NOT?: GoldenTicketScalarWhereInput | GoldenTicketScalarWhereInput[]
+    id?: StringFilter<"GoldenTicket"> | string
+    batchId?: StringFilter<"GoldenTicket"> | string
+    userId?: StringNullableFilter<"GoldenTicket"> | string | null
+    claimedAt?: DateTimeNullableFilter<"GoldenTicket"> | Date | string | null
+    status?: EnumGoldenTicketStatusFilter<"GoldenTicket"> | $Enums.GoldenTicketStatus
+  }
+
+  export type UserCreateWithoutGoldenTicketClaimedInput = {
+    id?: string
+    identityAddress: string
+    createdAt?: Date | string
+    accountAddress?: string | null
+    name?: string | null
+    country?: string | null
+    type?: $Enums.UserType
+    referralCode: string
+    status?: $Enums.UserStatus
+    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
+    events?: EventCreateNestedManyWithoutUserInput
+    messages?: MessageCreateNestedManyWithoutUserInput
+    email?: UserEmailCreateNestedOneWithoutUserInput
+    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
+    completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
+    savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
+    auditLogs?: AuditCreateNestedManyWithoutUserInput
+    questProgress?: QuestProgressCreateNestedManyWithoutUserInput
+    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
+    transactions?: TransactionIntentCreateNestedManyWithoutUserInput
+    marketing?: MarketingCreateNestedManyWithoutUserInput
+    referals?: ReferralCreateNestedManyWithoutUserInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutGoldenTicketClaimedInput = {
+    id?: string
+    identityAddress: string
+    createdAt?: Date | string
+    accountAddress?: string | null
+    name?: string | null
+    country?: string | null
+    type?: $Enums.UserType
+    referralCode: string
+    referredBy?: string | null
+    status?: $Enums.UserStatus
+    events?: EventUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
+    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
+    completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
+    savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
+    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
+    questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
+    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
+    transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
+    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
+    referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
+    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutGoldenTicketClaimedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutGoldenTicketClaimedInput, UserUncheckedCreateWithoutGoldenTicketClaimedInput>
+  }
+
+  export type GoldenTicketBatchCreateWithoutTicketsInput = {
+    id: string
+    createdAt?: Date | string
+    expiresAt: Date | string
+    description?: string | null
+    type?: $Enums.TicketType
+    owner: UserCreateNestedOneWithoutGoldenTicketBatchesOwnedInput
+  }
+
+  export type GoldenTicketBatchUncheckedCreateWithoutTicketsInput = {
+    id: string
+    createdAt?: Date | string
+    expiresAt: Date | string
+    description?: string | null
+    type?: $Enums.TicketType
+    ownerId: string
+  }
+
+  export type GoldenTicketBatchCreateOrConnectWithoutTicketsInput = {
+    where: GoldenTicketBatchWhereUniqueInput
+    create: XOR<GoldenTicketBatchCreateWithoutTicketsInput, GoldenTicketBatchUncheckedCreateWithoutTicketsInput>
   }
 
   export type UserUpsertWithoutGoldenTicketClaimedInput = {
@@ -33597,7 +34920,7 @@ export namespace Prisma {
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -33624,73 +34947,37 @@ export namespace Prisma {
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type UserUpsertWithoutGoldenTicketsOwnedInput = {
-    update: XOR<UserUpdateWithoutGoldenTicketsOwnedInput, UserUncheckedUpdateWithoutGoldenTicketsOwnedInput>
-    create: XOR<UserCreateWithoutGoldenTicketsOwnedInput, UserUncheckedCreateWithoutGoldenTicketsOwnedInput>
-    where?: UserWhereInput
+  export type GoldenTicketBatchUpsertWithoutTicketsInput = {
+    update: XOR<GoldenTicketBatchUpdateWithoutTicketsInput, GoldenTicketBatchUncheckedUpdateWithoutTicketsInput>
+    create: XOR<GoldenTicketBatchCreateWithoutTicketsInput, GoldenTicketBatchUncheckedCreateWithoutTicketsInput>
+    where?: GoldenTicketBatchWhereInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutGoldenTicketsOwnedInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutGoldenTicketsOwnedInput, UserUncheckedUpdateWithoutGoldenTicketsOwnedInput>
+  export type GoldenTicketBatchUpdateToOneWithWhereWithoutTicketsInput = {
+    where?: GoldenTicketBatchWhereInput
+    data: XOR<GoldenTicketBatchUpdateWithoutTicketsInput, GoldenTicketBatchUncheckedUpdateWithoutTicketsInput>
   }
 
-  export type UserUpdateWithoutGoldenTicketsOwnedInput = {
+  export type GoldenTicketBatchUpdateWithoutTicketsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
-    events?: EventUpdateManyWithoutUserNestedInput
-    messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
-    questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
-    referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
+    owner?: UserUpdateOneRequiredWithoutGoldenTicketBatchesOwnedNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutGoldenTicketsOwnedInput = {
+  export type GoldenTicketBatchUncheckedUpdateWithoutTicketsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    events?: EventUncheckedUpdateManyWithoutUserNestedInput
-    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
-    questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
-    referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
+    ownerId?: StringFieldUpdateOperationsInput | string
   }
 
   export type EventCreateManyUserInput = {
@@ -33767,15 +35054,11 @@ export namespace Prisma {
     xrdValue: Decimal | DecimalJsLike | number | string
   }
 
-  export type GoldenTicketCreateManyOwnerInput = {
+  export type GoldenTicketBatchCreateManyOwnerInput = {
     id: string
-    batchId: string
     createdAt?: Date | string
     expiresAt: Date | string
-    userId?: string | null
-    claimedAt?: Date | string | null
     description?: string | null
-    status?: $Enums.GoldenTicketStatus
     type?: $Enums.TicketType
   }
 
@@ -33922,7 +35205,7 @@ export namespace Prisma {
     marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -33949,7 +35232,7 @@ export namespace Prisma {
     marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
     goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketsOwned?: GoldenTicketUncheckedUpdateManyWithoutOwnerNestedInput
+    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -34041,39 +35324,29 @@ export namespace Prisma {
     xrdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
-  export type GoldenTicketUpdateWithoutOwnerInput = {
+  export type GoldenTicketBatchUpdateWithoutOwnerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    batchId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
     type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
-    claimedBy?: UserUpdateOneWithoutGoldenTicketClaimedNestedInput
+    tickets?: GoldenTicketUpdateManyWithoutBatchNestedInput
   }
 
-  export type GoldenTicketUncheckedUpdateWithoutOwnerInput = {
+  export type GoldenTicketBatchUncheckedUpdateWithoutOwnerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    batchId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
     type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
+    tickets?: GoldenTicketUncheckedUpdateManyWithoutBatchNestedInput
   }
 
-  export type GoldenTicketUncheckedUpdateManyWithoutOwnerInput = {
+  export type GoldenTicketBatchUncheckedUpdateManyWithoutOwnerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    batchId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
     type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
   }
 
@@ -34217,6 +35490,34 @@ export namespace Prisma {
     data?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type GoldenTicketCreateManyBatchInput = {
+    id: string
+    userId?: string | null
+    claimedAt?: Date | string | null
+    status?: $Enums.GoldenTicketStatus
+  }
+
+  export type GoldenTicketUpdateWithoutBatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
+    claimedBy?: UserUpdateOneWithoutGoldenTicketClaimedNestedInput
+  }
+
+  export type GoldenTicketUncheckedUpdateWithoutBatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
+  }
+
+  export type GoldenTicketUncheckedUpdateManyWithoutBatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
+  }
+
 
 
   /**
@@ -34242,6 +35543,10 @@ export namespace Prisma {
      * @deprecated Use BatchedTransactionIntentCountOutputTypeDefaultArgs instead
      */
     export type BatchedTransactionIntentCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BatchedTransactionIntentCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use GoldenTicketBatchCountOutputTypeDefaultArgs instead
+     */
+    export type GoldenTicketBatchCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = GoldenTicketBatchCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use UserDefaultArgs instead
      */
@@ -34326,6 +35631,10 @@ export namespace Prisma {
      * @deprecated Use MarketingDefaultArgs instead
      */
     export type MarketingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = MarketingDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use GoldenTicketBatchDefaultArgs instead
+     */
+    export type GoldenTicketBatchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = GoldenTicketBatchDefaultArgs<ExtArgs>
     /**
      * @deprecated Use GoldenTicketDefaultArgs instead
      */

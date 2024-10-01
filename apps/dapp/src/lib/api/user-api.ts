@@ -1,6 +1,6 @@
 import { fetchWrapper } from '$lib/helpers/fetch-wrapper'
 import type { SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
-import type { GoldenTicket, QuestStatus, User } from 'database'
+import type { GoldenTicket, GoldenTicketBatch, QuestStatus, User } from 'database'
 
 const me = (serverFetch?: typeof fetch) =>
   fetchWrapper<User>((serverFetch ?? fetch)('/api/user')).map(({ data }) => data)
@@ -84,17 +84,16 @@ const getNameByReferralCode = (referralCode: string) =>
     })
   ).map(({ data }) => data)
 
-const getOwnedSilverTickets = () =>
-  fetchWrapper<GoldenTicket[]>(
+const getOwnedTicketBatches = () =>
+  fetchWrapper<(GoldenTicketBatch & { ticketCount: number })[]>(
     fetch(`/api/golden-tickets`, {
       method: 'GET'
     })
   ).map(({ data }) =>
-    data.map((ticket) => ({
-      ...ticket,
-      expiresAt: new Date(ticket.expiresAt),
-      createdAt: new Date(ticket.createdAt),
-      claimedAt: ticket.claimedAt ? new Date(ticket.claimedAt) : null
+    data.map((batch) => ({
+      ...batch,
+      expiresAt: new Date(batch.expiresAt),
+      createdAt: new Date(batch.createdAt)
     }))
   )
 
@@ -109,6 +108,13 @@ const updateSilverTicketBatch = (batchId: string, expiresAt?: Date, description?
     })
   )
 
+const getTicketsInBatch = (batchId: string) =>
+  fetchWrapper<GoldenTicket[]>(
+    fetch(`/api/golden-tickets/${batchId}`, {
+      method: 'GET'
+    })
+  )
+
 export const userApi = {
   me,
   getReferrals,
@@ -118,6 +124,7 @@ export const userApi = {
   setUserFields,
   directDepositXrd,
   depositHeroBadge,
-  getOwnedSilverTickets,
-  updateSilverTicketBatch
+  getOwnedTicketBatches,
+  updateSilverTicketBatch,
+  getTicketsInBatch
 } as const

@@ -4,7 +4,7 @@
   import { publicConfig } from '$lib/public-config'
   import Button from '$lib/components/button/Button.svelte'
   import { userApi } from '$lib/api/user-api'
-  import type { GoldenTicket } from 'database'
+  import type { GoldenTicket, GoldenTicketBatch } from 'database'
   import { gatewayApi } from '$lib/public-config'
   import { webSocketClient, WebSocketClient } from '$lib/websocket-client'
   import Accordion from '$lib/components/accordion/Accordion.svelte'
@@ -15,6 +15,7 @@
   import { hasHeroBadge, user } from '../../stores'
   import { sendTransaction } from '$lib/rdt'
   import { goldenTicketUtils } from 'common'
+  import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
 
   export let data: PageData
 
@@ -70,21 +71,13 @@
 
   let mounted = false
 
-  let ownedBatches: GoldenTicket[][] = []
+  let ownedBatches: (GoldenTicketBatch & { ticketCount: number })[] = []
 
   const getTickets = () =>
-    userApi.getOwnedSilverTickets().map((response) => {
-      ownedBatches = response
-        ?.reduce((acc, ticket) => {
-          const batch = acc.find((b) => b[0].batchId === ticket.batchId)
-          if (batch) {
-            batch.push(ticket)
-          } else {
-            acc.push([ticket])
-          }
-          return acc
-        }, [] as GoldenTicket[][])
-        .sort((a, b) => b[0].createdAt.getMilliseconds() - a[0].createdAt.getMilliseconds())
+    userApi.getOwnedTicketBatches().map((response) => {
+      ownedBatches = response.sort(
+        (a, b) => b.createdAt.getMilliseconds() - a.createdAt.getMilliseconds()
+      )
     })
 
   onMount(() => {
@@ -152,6 +145,10 @@
   const downloadQr = (tickets: GoldenTicket[]) => {
     goldenTicketUtils.qr.createZip(tickets, data.baseUrl)
   }
+
+  let loadingBatch = false
+
+  const tickets: { [key: string]: GoldenTicket[] } = {}
 </script>
 
 {#if showSetInfo}
@@ -230,56 +227,73 @@
           <div class="batch">
             <Accordion>
               <svelte:fragment slot="header">
-                <div class="accordion-header">
+                <button
+                  class="accordion-header"
+                  on:click={() => {
+                    if (!tickets[batch.id]) {
+                      loadingBatch = true
+                      userApi.getTicketsInBatch(batch.id).map(({ data }) => {
+                        tickets[batch.id] = data
+                        loadingBatch = false
+                      })
+                    }
+                  }}
+                >
                   <div class="header-description">
-                    {#if batch[0].description}
-                      {batch[0].description}
+                    {#if batch.description}
+                      {batch.description}
                     {/if}
                   </div>
                   <div class="expires">
                     <b>{$i18n.t('main:silverTickets.expires-at')}:</b>
-                    {batch[0].expiresAt.toLocaleDateString()}
+                    {batch.expiresAt.toLocaleDateString()}
                   </div>
-                </div>
+                </button>
               </svelte:fragment>
 
               <svelte:fragment slot="content">
-                <div class="set-info">
-                  <Button
-                    on:click={() => {
-                      setInfoOnBatch = batch[0].batchId
-                      showSetInfo = true
-                    }}>{$i18n.t('main:silverTickets.set-info')}</Button
-                  >
-                </div>
+                {#if loadingBatch}
+                  <div class="loading">
+                    <LoadingSpinner />
+                  </div>
+                {:else}
+                  <div class="set-info">
+                    <Button
+                      on:click={() => {
+                        setInfoOnBatch = batch.id
+                        showSetInfo = true
+                      }}>{$i18n.t('main:silverTickets.set-info')}</Button
+                    >
+                  </div>
 
-                <b>{$i18n.t('main:silverTickets.quantity', { amount: batch.length })}</b>
+                  <b>{$i18n.t('main:silverTickets.quantity', { amount: batch.ticketCount })}</b>
 
-                <div class="download-btns">
-                  <Button on:click={() => downloadCsv(batch)}>
-                    {$i18n.t('main:silverTickets.download-csv')}
-                  </Button>
-                  <Button on:click={() => downloadQr(batch)}>
-                    {$i18n.t('main:silverTickets.download-qr')}
-                  </Button>
-                </div>
+                  <div class="download-btns">
+                    <Button on:click={() => downloadCsv(tickets[batch.id])}>
+                      {$i18n.t('main:silverTickets.download-csv')}
+                    </Button>
+                    <Button on:click={() => downloadQr(tickets[batch.id])}>
+                      {$i18n.t('main:silverTickets.download-qr')}
+                    </Button>
+                  </div>
 
-                <div class="batches">
-                  {#each batch as ticket}
-                    {@const link = `${data.baseUrl}?t=${ticket.id}`}
-                    <div class="link">
-                      <div class="text">
-                        <button on:click={() => navigator.clipboard.writeText(link)}>
-                          <img src={CopyIcon} alt="Copy" />
-                        </button>
-                        <div>{ticket.id}</div>
+                  <div class="batches">
+                    {#each tickets[batch.id] as ticket}
+                      {@const link = `${data.baseUrl}?t=${ticket.id}`}
+                      <div class="link">
+                        <div class="text">
+                          <button on:click={() => navigator.clipboard.writeText(link)}>
+                            <img src={CopyIcon} alt="Copy" />
+                          </button>
+                          <div>{ticket.id}</div>
+                        </div>
+                        <div>
+                          {$i18n.t('main:silverTickets.claimed')}: {ticket.claimedAt ? '✅' : '❌'}
+                        </div>
                       </div>
-                      <div>
-                        {$i18n.t('main:silverTickets.claimed')}: {ticket.claimedAt ? '✅' : '❌'}
-                      </div>
-                    </div>
-                  {/each}
-                </div>
+                    {/each}
+                  </div>
+                {/if}
               </svelte:fragment>
             </Accordion>
           </div>
@@ -322,6 +336,14 @@
   input {
     background: var(--color-neutral);
     border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+  }
+
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10rem;
     padding: var(--spacing-md);
   }
 

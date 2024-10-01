@@ -7,19 +7,11 @@ import {
   type CompletedQuestRequirement,
   type QuestProgress,
   type UserStatus,
-  type QuestStatus,
-  type GoldenTicket
+  type QuestStatus
 } from 'database'
 import { BusinessLogic, type AppLogger } from '../'
 import { type ApiError, createApiError } from '../helpers'
 import { getRandomReferralCode } from './get-random-referral-code'
-
-type GetByIdReturnType<T> = User &
-  (T extends { referredUsers: true }
-    ? { referredUsers: User[] }
-    : T extends { goldenTicketClaimed: true }
-      ? { goldenTicketClaimed: GoldenTicket }
-      : User)
 
 export type UserByReferralCode = User & {
   referredUsers: User[]
@@ -40,11 +32,11 @@ type UserModelType = {
   getById: <T extends Prisma.UserInclude<any>>(
     id: string,
     include: T
-  ) => ResultAsync<GetByIdReturnType<T>, ApiError>
+  ) => ResultAsync<Prisma.UserGetPayload<{ include: T }>, ApiError>
   getByIdentityAddress: <T extends Prisma.UserInclude<any>>(
     identityAddress: string,
     include: T
-  ) => ResultAsync<GetByIdReturnType<T>, ApiError>
+  ) => ResultAsync<Prisma.UserGetPayload<{ include: T }>, ApiError>
   getByAccountAddress: <T extends Prisma.UserInclude<any>>(
     accountAddress: string,
     include: T
@@ -203,7 +195,7 @@ export const UserModel =
         }
       ).andThen((data) =>
         data
-          ? okAsync(data as unknown as GetByIdReturnType<T>)
+          ? okAsync(data as unknown as Prisma.UserGetPayload<{ include: T }>)
           : errAsync(createApiError('user not found', 404)())
       )
 
@@ -227,7 +219,7 @@ export const UserModel =
         }
       ).andThen((data) =>
         data
-          ? okAsync(data as unknown as GetByIdReturnType<T>)
+          ? okAsync(data as unknown as Prisma.UserGetPayload<{ include: T }>)
           : errAsync(createApiError('user not found', 404)())
       )
 

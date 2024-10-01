@@ -143,7 +143,11 @@ export const ReferralHelper = ({
           referredUsers: true,
           questProgress: true,
           completedQuestRequirements: true,
-          goldenTicketClaimed: true
+          goldenTicketClaimed: {
+            include: {
+              batch: true
+            }
+          }
         }
       }),
       (error) => ({ reason: WorkerError.FailedToGetUserFromDb, jsError: error })
@@ -152,7 +156,7 @@ export const ReferralHelper = ({
         (user?.goldenTicketClaimed && user?.goldenTicketClaimed.status === 'CLAIMED') ?? false
 
       return user
-        ? ok({ ...user, hasGoldenTicket, ticketType: user?.goldenTicketClaimed?.type })
+        ? ok({ ...user, hasGoldenTicket, ticketType: user?.goldenTicketClaimed?.batch?.type })
         : err({ reason: WorkerError.UserNotFound })
     })
 

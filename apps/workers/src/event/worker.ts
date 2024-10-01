@@ -119,6 +119,7 @@ export const EventWorker = (
                     job,
                     accountAddress!,
                     getPriorityByGoldenTicketType(
+                      // @ts-ignore
                       goldenTicketClaimed ? goldenTicketClaimed : undefined
                     ),
                     referredBy!

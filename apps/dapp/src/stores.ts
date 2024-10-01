@@ -1,5 +1,5 @@
 import { writable, derived, type Writable, type Readable } from 'svelte/store'
-import type { GoldenTicket, User } from 'database'
+import type { $Enums, User } from 'database'
 import { type Quests } from 'content'
 
 export const quests = writable<Quests>()
@@ -9,7 +9,10 @@ export const user = writable<
       label: string
       email?: { email: string; newsletter: boolean }
       referredByUser?: { name?: string }
-      goldenTicketClaimed?: GoldenTicket
+      goldenTicketClaimed?: {
+        status: $Enums.GoldenTicketStatus
+        type: $Enums.TicketType
+      }
     })
   | undefined
 >(undefined)
