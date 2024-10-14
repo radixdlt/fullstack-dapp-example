@@ -49,7 +49,7 @@ model User {
   marketing                  Marketing[]
   referals                   Referral[]
   goldenTicketClaimed        GoldenTicket?               @relation("claimedBy")
-  goldenTicketsOwned         GoldenTicket[]              @relation("owner")
+  goldenTicketBatchesOwned   GoldenTicketBatch[]         @relation("owner")
   loginAttempts              LoginAttempt[]
 }
 
@@ -327,20 +327,29 @@ model Marketing {
   user User @relation(fields: [userId], references: [id])
 }
 
-model GoldenTicket {
-  id          String             @id
-  batchId     String
-  ownerId     String
-  createdAt   DateTime           @default(now())
+model GoldenTicketBatch {
+  id          String     @id
+  createdAt   DateTime   @default(now())
   expiresAt   DateTime
-  userId      String?            @unique
-  claimedAt   DateTime?
   description String?
-  status      GoldenTicketStatus @default(CLAIMABLE)
-  type        TicketType         @default(FULL)
+  type        TicketType @default(FULL)
+  ownerId     String
 
-  claimedBy User? @relation("claimedBy", fields: [userId], references: [id])
-  owner     User  @relation("owner", fields: [ownerId], references: [id])
+  owner   User           @relation("owner", fields: [ownerId], references: [id])
+  tickets GoldenTicket[]
+
+  @@index(fields: [ownerId], type: Hash)
+}
+
+model GoldenTicket {
+  id        String             @id
+  batchId   String
+  userId    String?            @unique
+  claimedAt DateTime?
+  status    GoldenTicketStatus @default(CLAIMABLE)
+
+  claimedBy User?             @relation("claimedBy", fields: [userId], references: [id])
+  batch     GoldenTicketBatch @relation(fields: [batchId], references: [id])
 
   @@index(fields: [batchId], type: Hash)
 }

@@ -2,14 +2,26 @@
   export let currentPage: number
   export let totalPages: number
   export let set: (page: number) => void
+
+  let pageStart = 1
 </script>
 
 <div class="pagination">
-  {#each Array(totalPages).fill(0) as _, i}
-    <button class="page-button" disabled={i === currentPage} on:click={() => set(i)}>
-      {i + 1}
+  {#if pageStart > 1}
+    <button class="page-button" on:click={() => (pageStart -= 10)}>...</button>
+  {/if}
+  {#each Array(Math.min(10, totalPages - pageStart + 1)).fill(0) as _, i}
+    <button
+      class="page-button"
+      disabled={pageStart + i === currentPage}
+      on:click={() => set(pageStart + i)}
+    >
+      {pageStart + i}
     </button>
   {/each}
+  {#if pageStart + 10 <= totalPages}
+    <button class="page-button" on:click={() => (pageStart += 10)}>...</button>
+  {/if}
 </div>
 
 <style>

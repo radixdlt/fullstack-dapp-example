@@ -12,3 +12,8 @@ export const PUT = async ({ locals, request, params }) => {
     )
   )
 }
+
+export const GET = async ({ locals, params }) =>
+  routeHandler(() =>
+    locals.controllers.goldenTicketController.getTicketsInBatch(params.batchId, locals.userId)
+  )

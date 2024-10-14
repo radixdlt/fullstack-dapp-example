@@ -257,7 +257,7 @@ export const EventWorkerController = ({
         const { ticketAmount } = job.data.data
 
         return goldenTicketModel(logger)
-          .createSilverTicketBatch(ticketAmount as number, job.data.userId)
+          .createSilverTicketBatch(parseInt(ticketAmount as string), job.data.userId)
           .mapErr(() => ({ reason: WorkerError.FailedToIssueSilverTickets }))
           .andThen(() =>
             sendMessage(

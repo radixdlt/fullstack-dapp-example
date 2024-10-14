@@ -41,11 +41,13 @@ export const UserQuestController = ({
   }) => {
     return hasAllRequirementsCompleted(questId, userId)
       .andThen(({ isAllCompleted }) =>
-        userModel.getById(userId, { goldenTicketClaimed: true }).map((user) => ({
-          isAllCompleted,
-          isNotBlocked: user.status === 'OK',
-          priority: getPriorityByGoldenTicketType(user?.goldenTicketClaimed)
-        }))
+        userModel
+          .getById(userId, { goldenTicketClaimed: { include: { batch: true } } })
+          .map((user) => ({
+            isAllCompleted,
+            isNotBlocked: user.status === 'OK',
+            priority: getPriorityByGoldenTicketType(user?.goldenTicketClaimed ?? undefined)
+          }))
       )
       .andThen(({ isAllCompleted, isNotBlocked, priority }) =>
         isAllCompleted && hasAnyRewards(questId) && isNotBlocked

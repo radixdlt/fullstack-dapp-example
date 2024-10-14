@@ -48,7 +48,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   const jwt = event.cookies.get('jwt')
 
   if (jwt) {
-    const result = verifyJwt(jwt, JWT_SECRET)
+    const result = verifyJwt(jwt, JWT_SECRET!)
 
     if (result.isErr() || result.value.userType !== 'ADMIN') return error(401)
 
