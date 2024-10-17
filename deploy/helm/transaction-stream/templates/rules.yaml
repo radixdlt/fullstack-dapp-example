@@ -1,4 +1,4 @@
-{{- $subsystem := list "transaction" "event" "system" -}}
+{{- $subsystem := list "Event" "System" -}}
 {{- $ns := .Release.Namespace -}}
 {{- $metrics := .Values.metrics -}}
 
@@ -12,6 +12,22 @@ spec:
   groups:
   - name: RadquestTransactionStream
     rules:
+    - alert: HighEventQueueCompletedJobs
+      expr: sum(increase(Event_queue_failed_jobs{namespace="{{ $ns }}"}[5m])) > 100
+      for: 5m
+      labels:
+        severity: critical
+        tier: application
+        application: radquest
+        component: transaction-stream
+        namespace: {{ $ns }}
+        cluster: {{ $metrics.alert_labels.cluster }}
+        env: {{ $metrics.alert_labels.env }}
+      annotations:
+        summary: "High number of completed jobs in Event queue"
+        description: "The Event queue has seen more than 100 completed jobs in the last 5 minutes ."
+        dashboard: {{ $metrics.dashboard_url }}
+        runbook_url: "https://runbooks.extratools.works"
 {{- range $subsystem }}
     - alert: Critical{{ title .}}QueueFailedJobs
       expr: sum(increase({{ . }}_queue_failed_jobs{namespace="{{ $ns }}"}[5m])) > 100
