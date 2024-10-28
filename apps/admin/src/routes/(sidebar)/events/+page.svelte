@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Button, Checkbox, Heading, TableHeadCell, TableSearch } from 'flowbite-svelte'
-  import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead } from 'flowbite-svelte'
+  import { TableBody, TableBodyCell, TableBodyRow, TableHead } from 'flowbite-svelte'
   import { GatewayApi, type Event } from 'common'
   import { publicConfig } from '$lib/public-config'
   import { onMount } from 'svelte'
@@ -13,11 +13,15 @@
 
   let filters = {
     status: {
-      completed: true,
+      waiting: false,
+      pending: false,
       error: true,
-      waiting: true,
-      pending: true
-    },
+      completed: false,
+      failed_retry: true,
+      failed_permanent: false,
+      paused: false,
+      cancelled: false
+    } as Record<string, boolean>,
     userId: ''
   }
 
@@ -50,18 +54,16 @@
     <Heading tag="h1" class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
       Events
     </Heading>
-    <TableSearch placeholder="Find user by id" hoverable={true} bind:inputValue={filters.userId}
-    ></TableSearch>
-    <div>
+
+    <div class="flex gap-3 mt-4">
       <div class="text-gray-900 dark:text-white">Status:</div>
-      <Checkbox bind:checked={filters.status.completed}>Completed</Checkbox>
-      <Checkbox bind:checked={filters.status.error}>Error</Checkbox>
-      <Checkbox bind:checked={filters.status.pending}>Pending</Checkbox>
-      <Checkbox bind:checked={filters.status.waiting}>Waiting</Checkbox>
+      {#each Array.from(Object.keys(filters.status)) as name}
+        <Checkbox bind:checked={filters.status[name]}>{name}</Checkbox>
+      {/each}
     </div>
   </div>
 
-  <Table>
+  <TableSearch placeholder="Find user by id" hoverable={true} bind:inputValue={filters.userId}>
     <TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
       {#each ['eventId', 'userId', 'created', 'transactionId', 'status', 'Action'] as title}
         <TableHeadCell class="p-4 font-medium">{title}</TableHeadCell>
@@ -106,5 +108,5 @@
         </TableBodyRow>
       {/each}
     </TableBody>
-  </Table>
+  </TableSearch>
 </main>
