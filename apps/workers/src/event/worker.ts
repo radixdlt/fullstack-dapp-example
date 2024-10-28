@@ -47,7 +47,14 @@ const UpdateEventStatus =
 const getUser = (userId: string) =>
   ResultAsync.fromPromise(
     dbClient.user.findUnique({
-      include: { goldenTicketClaimed: true },
+      include: {
+        goldenTicketClaimed: {
+          select: {
+            status: true,
+            batch: true
+          }
+        }
+      },
       where: { id: userId }
     }),
     (error) => ({
@@ -119,7 +126,6 @@ export const EventWorker = (
                     job,
                     accountAddress!,
                     getPriorityByGoldenTicketType(
-                      // @ts-ignore
                       goldenTicketClaimed ? goldenTicketClaimed : undefined
                     ),
                     referredBy!

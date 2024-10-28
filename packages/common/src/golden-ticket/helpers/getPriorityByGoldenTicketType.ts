@@ -1,11 +1,10 @@
-import type { Prisma } from 'database'
+import type { GoldenTicketStatus, TicketType } from 'database'
 import { Priority } from '../../constants'
 
-export const getPriorityByGoldenTicketType = (
-  maybeGoldenTicket?: Prisma.GoldenTicketGetPayload<{
-    include: { batch: true }
-  }>
-): number =>
+export const getPriorityByGoldenTicketType = (maybeGoldenTicket?: {
+  status: GoldenTicketStatus
+  batch: { type: TicketType }
+}): number =>
   maybeGoldenTicket?.status === 'CLAIMED' && maybeGoldenTicket?.batch.type === 'FULL'
     ? Priority.High
     : maybeGoldenTicket?.status === 'CLAIMED' && maybeGoldenTicket?.batch.type === 'LIMITED'
