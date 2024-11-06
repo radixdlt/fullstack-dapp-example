@@ -1,7 +1,8 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
   import { context } from '../jetty-menu/JettyMenu.svelte'
-
+  import { goto } from '$app/navigation'
+  import { page as pageStore } from '$app/stores'
   export let glossary: {
     id: string
     title: string
@@ -12,7 +13,7 @@
   export const openGlossaryItem = (id: string) => {
     page = 'item'
     selectedItem = id
-    navigationHistory.push(id)
+    navigationHistory = [...navigationHistory, id]
     dispatch('open-item', { id })
   }
 
@@ -26,10 +27,11 @@
 
   $: if ($back) {
     if (page === 'item') {
-      if (navigationHistory.length > 1) {
-        navigationHistory.pop()
+      navigationHistory = navigationHistory.slice(0, -1)
+      if (navigationHistory.length > 0) {
         selectedItem = navigationHistory[navigationHistory.length - 1]
         dispatch('open-item', { id: selectedItem })
+        goto($pageStore.url.href.split('?')[0])
       } else {
         page = 'glossary'
       }
