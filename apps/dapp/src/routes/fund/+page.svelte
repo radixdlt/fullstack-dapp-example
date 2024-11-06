@@ -71,7 +71,7 @@
 
   let mounted = false
 
-  let ownedBatches: (GoldenTicketBatch & { ticketCount: number })[] = []
+  let ownedBatches: (GoldenTicketBatch & { ticketCount: number; tickets: GoldenTicket[] })[] = []
 
   const getTickets = () =>
     userApi.getOwnedTicketBatches().map((response) => {
@@ -147,8 +147,6 @@
   }
 
   let loadingBatch = false
-
-  const tickets: { [key: string]: GoldenTicket[] } = {}
 </script>
 
 {#if showSetInfo}
@@ -230,10 +228,10 @@
                 <button
                   class="accordion-header"
                   on:click={() => {
-                    if (!tickets[batch.id]) {
+                    if (!batch.tickets) {
                       loadingBatch = true
                       userApi.getTicketsInBatch(batch.id).map(({ data }) => {
-                        tickets[batch.id] = data
+                        batch.tickets = data
                         loadingBatch = false
                       })
                     }
@@ -269,16 +267,16 @@
                   <b>{$i18n.t('main:silverTickets.quantity', { amount: batch.ticketCount })}</b>
 
                   <div class="download-btns">
-                    <Button on:click={() => downloadCsv(tickets[batch.id])}>
+                    <Button on:click={() => downloadCsv(batch.tickets)}>
                       {$i18n.t('main:silverTickets.download-csv')}
                     </Button>
-                    <Button on:click={() => downloadQr(tickets[batch.id])}>
+                    <Button on:click={() => downloadQr(batch.tickets)}>
                       {$i18n.t('main:silverTickets.download-qr')}
                     </Button>
                   </div>
 
                   <div class="batches">
-                    {#each tickets[batch.id] as ticket}
+                    {#each batch.tickets as ticket}
                       {@const link = `${data.baseUrl}?t=${ticket.id}`}
                       <div class="link">
                         <div class="text">
