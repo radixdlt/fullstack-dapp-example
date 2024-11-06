@@ -12,8 +12,11 @@
   export const openGlossaryItem = (id: string) => {
     page = 'item'
     selectedItem = id
+    navigationHistory.push(id)
     dispatch('open-item', { id })
   }
+
+  let navigationHistory: string[] = []
 
   let page: 'glossary' | 'item' = 'glossary'
   let selectedItem: string
@@ -23,7 +26,13 @@
 
   $: if ($back) {
     if (page === 'item') {
-      page = 'glossary'
+      if (navigationHistory.length > 1) {
+        navigationHistory.pop()
+        selectedItem = navigationHistory[navigationHistory.length - 1]
+        dispatch('open-item', { id: selectedItem })
+      } else {
+        page = 'glossary'
+      }
     } else {
       close()
     }
@@ -33,7 +42,9 @@
 
 {#if page === 'item' && selectedItem}
   <div class="item-page">
-    {@html glossary.find(({ id }) => id === selectedItem)?.html}
+    {#key selectedItem}
+      {@html glossary.find(({ id }) => id === selectedItem)?.html}
+    {/key}
   </div>
 {:else}
   <div class="glossary">
