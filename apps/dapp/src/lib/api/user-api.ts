@@ -85,7 +85,7 @@ const getNameByReferralCode = (referralCode: string) =>
   ).map(({ data }) => data)
 
 const getOwnedTicketBatches = () =>
-  fetchWrapper<(GoldenTicketBatch & { ticketCount: number })[]>(
+  fetchWrapper<(GoldenTicketBatch & { ticketCount: number; tickets: GoldenTicket[] })[]>(
     fetch(`/api/golden-tickets`, {
       method: 'GET'
     })

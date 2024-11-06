@@ -188,7 +188,9 @@ export const GoldenTicketModel = (dbClient: PrismaClient) => (logger?: AppLogger
     dbClient.user
       .findUnique({
         include: {
-          goldenTicketBatchesOwned: { include: { _count: { select: { tickets: true } } } }
+          goldenTicketBatchesOwned: {
+            include: { tickets: true, _count: { select: { tickets: true } } }
+          }
         },
         where: { id: ownerId }
       })
