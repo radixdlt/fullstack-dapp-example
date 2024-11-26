@@ -8,26 +8,19 @@ import { hasChallengeExpired } from './helpers/has-challenge-expired'
 import { Rola } from '@radixdlt/rola'
 import { SignedChallenge, parseSignedChallenge } from '@radixdlt/radix-dapp-toolkit'
 
-import { Result, ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
+import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import type { Cookies } from '@sveltejs/kit'
 
 import {
   type ApiError,
-  CookieKeys,
-  decodeBase64,
-  parseJSON,
-  type MarketingUtmValues,
   createApiError,
   EventId
 } from 'common'
 
-import { type FraudScoringOutput, type UserStatus, type User, type UserType } from 'database'
-import { FraudRule, type FraudEvaluation } from './fraud-detection/types'
-import { fraudRuleChecker } from './fraud-detection/fraud-detection'
+import { type UserStatus, type User, type UserType } from 'database'
 
 type SetUserStatusOutput = {
   status: UserStatus
-  reason: FraudScoringOutput
 }
 
 export type AuthController = ReturnType<typeof AuthController>
@@ -38,13 +31,10 @@ export const AuthController = ({
   userModel,
   eventModel,
   eventQueue,
-  goldenTicketModel,
   userQuestModel,
   loginAttemptModel,
-  fraudDetectionModule,
   gatewayApi,
   logger,
-  marketingModel
 }: ControllerDependencies) => {
   const { dAppDefinitionAddress, networkId, expectedOrigin } = config.dapp
 
@@ -75,25 +65,6 @@ export const AuthController = ({
     return referredBy ? userModel.confirmReferralCode(referredBy) : okAsync(undefined)
   }
 
-  const getUtmValuesFromCookie = (
-    cookies: Cookies
-  ): Result<MarketingUtmValues | undefined, never> => {
-    const maybeValue = cookies.get(CookieKeys.Utm)
-    if (!maybeValue) return ok(undefined)
-
-    return decodeBase64(maybeValue)
-      .andThen(parseJSON<MarketingUtmValues>)
-      .orElse((error) => {
-        logger.error({ method: 'getUtmValues.error', error })
-        return ok(undefined)
-      })
-  }
-
-  const addUtmToDb = (userId: string, cookies: Cookies) =>
-    getUtmValuesFromCookie(cookies)
-      .asyncAndThen((values) => (values ? marketingModel.add(userId, values) : okAsync(undefined)))
-      .map(() => cookies.delete(CookieKeys.Utm, { path: '/' }))
-
   const retryCancelledEvents = (userId: string) =>
     eventModel.getTemporarilyCancelledEvents(userId).andThen((events) => {
       return ResultAsync.combineWithAllErrors(
@@ -116,69 +87,11 @@ export const AuthController = ({
 
   const setUserStatus: (
     user: User
-  ) => (evaluation: FraudEvaluation) => ResultAsync<SetUserStatusOutput, ApiError> =
-    (user: User) => (evaluation: FraudEvaluation) => {
-      const check = fraudRuleChecker(evaluation)
-      logger.trace({ method: 'login.doFraudScoring', evaluation })
+  ) => () => ResultAsync<SetUserStatusOutput, ApiError> =
+    (user: User) => () => {
+      logger.trace({ method: 'login.doFraudScoring' })
 
       const businessLogic = () => {
-        if (check.ruleRejected(FraudRule.CountrySanctioned)) {
-          return userModel.setUserStatus(user.id, 'PERMANENTLY_BLOCKED').map(
-            () =>
-              ({
-                status: 'PERMANENTLY_BLOCKED',
-                reason: 'BLOCKED_SANCTIONED_COUNTRY'
-              }) as SetUserStatusOutput
-          )
-        }
-
-        if (check.ruleOk(FraudRule.GoldenTicket)) {
-          return userModel
-            .setUserStatus(user.id, 'OK')
-            .andThen(() => retryCancelledEvents(user.id))
-            .map(
-              () =>
-                ({
-                  status: 'OK',
-                  reason: 'ALLOWED_GOLDEN_TICKET'
-                }) as SetUserStatusOutput
-            )
-        }
-
-        if (check.ruleRejected(FraudRule.IPQSAggresive)) {
-          return userModel.setUserStatus(user.id, 'TEMPORARILY_BLOCKED').map(
-            () =>
-              ({
-                status: 'TEMPORARILY_BLOCKED',
-                reason: 'BLOCKED_IPQS_SCORE'
-              }) as SetUserStatusOutput
-          )
-        }
-
-        if (check.ruleRejected(FraudRule.Farmer)) {
-          return userModel.setUserStatus(user.id, 'TEMPORARILY_BLOCKED').map(
-            () =>
-              ({
-                status: 'TEMPORARILY_BLOCKED',
-                reason: 'BLOCKED_IS_FARMER'
-              }) as SetUserStatusOutput
-          )
-        }
-
-        if (check.ruleRejected(FraudRule.CountryBlocked)) {
-          return userModel.setUserStatus(user.id, 'TEMPORARILY_BLOCKED').map(
-            () =>
-              ({
-                status: 'TEMPORARILY_BLOCKED',
-                reason: 'BLOCKED_BLOCKED_COUNTRY'
-              }) as SetUserStatusOutput
-          )
-        }
-
-        const hasIpqsFailed = [false, 'false'].includes(
-          evaluation[FraudRule.IPQSAggresive]?.response.success
-        )
-
         return userModel
           .setUserStatus(user.id, 'OK')
           .andThen(() => retryCancelledEvents(user.id))
@@ -186,29 +99,18 @@ export const AuthController = ({
             () =>
               ({
                 status: 'OK',
-                reason: hasIpqsFailed ? 'ALLOWED_NO_IPQS_DATA' : 'ALLOWED'
+                reason: 'ALLOWED'
               }) as SetUserStatusOutput
           )
       }
 
       return user.status === 'PERMANENTLY_BLOCKED'
         ? okAsync({
-            status: 'PERMANENTLY_BLOCKED',
-            reason: 'BLOCKED_PERMANENTLY_BLOCKED'
-          } as SetUserStatusOutput)
+          status: 'PERMANENTLY_BLOCKED',
+          reason: 'BLOCKED_PERMANENTLY_BLOCKED'
+        } as SetUserStatusOutput)
         : businessLogic()
     }
-
-  const claimGoldenTicket = (
-    goldenTicket: string | undefined,
-    data: { user: User; isNewUser: boolean }
-  ) =>
-    goldenTicket
-      ? goldenTicketModel
-          .claimTicket(goldenTicket, data.user.id)
-          .map(() => data)
-          .orElse((_) => okAsync(data))
-      : okAsync(data)
 
   const login = (
     ctx: ControllerMethodContext,
@@ -222,12 +124,10 @@ export const AuthController = ({
   ): ControllerMethodOutput<{
     authToken: string
     status: UserStatus
-    vpn: boolean
     headers: { ['Set-Cookie']: string }
     id: string
   }> => {
     const { personaProof, cookies } = data
-    const goldenTicket = cookies.get(CookieKeys.GoldenTicket)
 
     ctx.logger.trace({ method: 'login', personaProof })
     const parsedPersonaResult = parseSignedChallenge(personaProof)
@@ -269,50 +169,38 @@ export const AuthController = ({
           (userExists
             ? userModel.getByIdentityAddress(personaProof.address, {})
             : getReferredBy(cookies)
-                .andThen((referredBy) => userModel.create(personaProof.address, referredBy))
-                .andThen((user) =>
-                  ResultAsync.combine([
-                    userQuestModel.setDownloadWalletRequirement(user.id),
-                    userQuestModel.setConnectWalletRequirement(user.id),
-                    addUtmToDb(user.id, cookies)
-                  ]).map(() => user)
-                )
+              .andThen((referredBy) => userModel.create(personaProof.address, referredBy))
+              .andThen((user) =>
+                ResultAsync.combine([
+                  userQuestModel.setDownloadWalletRequirement(user.id),
+                  userQuestModel.setConnectWalletRequirement(user.id)
+                ]).map(() => user)
+              )
           ).map((user) => ({ user, isNewUser: !userExists }))
         )
       )
-      .andThen((data) => claimGoldenTicket(goldenTicket, data))
       .andThen(({ user, isNewUser }) =>
-        fraudDetectionModule
-          .evaluate({ ...data, userId: user.id })
-          .andThen((evaluation) =>
-            setUserStatus(user)(evaluation).andThen(({ status, reason }) =>
-              loginAttemptModel
-                .add({
-                  type: isNewUser ? 'USER_CREATED' : 'USER_LOGIN',
-                  userId: user.id,
-                  reason: reason,
-                  assessmentId: evaluation.IPQSAggresive.assessmentId
-                })
-                .map(() => ({
-                  id: user.id,
-                  type: user.type,
-                  status: status,
-                  vpn: evaluation.IPQSAggresive.response.vpn || false
-                }))
-            )
-          )
-
-          .orElse((error) => {
-            logger.error({ method: 'login.doFraudScoring', error })
-            return okAsync({ ...user, vpn: false })
-          })
+        setUserStatus(user)().andThen(({ status }) =>
+          loginAttemptModel
+            .add({
+              type: isNewUser ? 'USER_CREATED' : 'USER_LOGIN',
+              userId: user.id
+            })
+            .map(() => ({
+              id: user.id,
+              type: user.type,
+              status: status
+            }))
+        ).orElse((error) => {
+          logger.error({ method: 'login.doFraudScoring', error })
+          return okAsync({ ...user })
+        })
       )
-      .andThen(({ id, type, vpn, status }) =>
+      .andThen(({ id, type, status }) =>
         jwt.createTokens(id, type).map(({ authToken, refreshToken }) => ({
           data: {
             authToken,
             headers: jwt.createRefreshTokenCookie(refreshToken, cookies),
-            vpn,
             status,
             id
           },

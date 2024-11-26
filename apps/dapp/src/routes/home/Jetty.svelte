@@ -111,11 +111,6 @@
 
   let menuItems = [
     {
-      id: 'glossary',
-      text: $i18n.t('jetty:menu-glossary'),
-      icon: BookIcon
-    },
-    {
       id: 'gift-box',
       text: $i18n.t('jetty:menu-giftBox'),
       icon: BoxIcon,
