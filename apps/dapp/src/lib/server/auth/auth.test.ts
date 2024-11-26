@@ -1,4 +1,4 @@
-import { Addresses, BlockedCountryModel } from 'common'
+import { Addresses } from 'common'
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, beforeEach } from 'vitest'
 import { AuthController } from './controller'
@@ -10,7 +10,6 @@ import { publicConfig } from '$lib/public-config'
 import { UserQuestModel } from 'common'
 import { config, type Config } from '$lib/config'
 import { JWT } from './jwt'
-import { FraudDetectionModule } from './fraud-detection/fraud-detection'
 import { okAsync } from 'neverthrow'
 
 let mockCtx: MockContext
@@ -33,30 +32,7 @@ describe('AuthController', () => {
   beforeEach(() => {
     mockCtx = createMockContext()
     ctx = mockCtx as unknown as Context
-    const fraudDetectionModule = FraudDetectionModule({
-      logger: methodCtx.logger,
-      ipqs: {
-        ...config.ipqs,
-        allowAll: true
-      },
-      goldenTicketModel: {
-        userHasClaimedTicket: () => okAsync(false)
-      } as any,
-      userModel: {
-        getById: () => okAsync({}),
-        getUserIdsByIp: () => okAsync([]),
-        countReferralCodeUsagePerIp: () => okAsync(0),
-        setUserStatus: () => okAsync({})
-      } as any,
-      ipAssessmentModel: {
-        findByIp: () =>
-          okAsync({
-            data: {},
-            id: 1
-          })
-      } as any,
-      blockedCountryModel: BlockedCountryModel(ctx.prisma)(methodCtx.logger)
-    })
+    
     controller = AuthController({
       logger: methodCtx.logger,
       authModel: AuthModel(ctx.prisma),
@@ -67,7 +43,6 @@ describe('AuthController', () => {
         getTemporarilyCancelledEvents: () => okAsync([])
       } as any,
       userModel: UserModel(ctx.prisma)(methodCtx.logger),
-      fraudDetectionModule,
       userQuestModel: UserQuestModel(ctx.prisma)(methodCtx.logger),
       gatewayApi: ctx.gatewayApi,
       config: dAppConfig,
@@ -133,8 +108,6 @@ describe('AuthController', () => {
     mockCtx.prisma.user.count.mockResolvedValue(Promise.resolve(true) as any)
     mockCtx.prisma.user.update.mockResolvedValue(Promise.resolve({}) as any)
     mockCtx.prisma.loginAttempt.create.mockResolvedValue(Promise.resolve({}) as any)
-    mockCtx.prisma.blockedCountry.findFirst.mockResolvedValue(Promise.resolve(null) as any)
-
     mockCtx.prisma.completedQuestRequirement.upsert.mockResolvedValue(Promise.resolve({}) as any)
 
     const result = await controller.login(methodCtx, {

@@ -32,7 +32,7 @@
 
         useCookies('jwt').clear()
 
-        const quests = loadQuests('en', $user?.goldenTicketClaimed?.type)
+        const quests = loadQuests('en')
 
         Object.entries(quests).forEach(([questId, quest]) => {
           useCookies(`quest-status-${questId as QuestId}`).clear()

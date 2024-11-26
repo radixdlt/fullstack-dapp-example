@@ -49,8 +49,6 @@
   })
 </script>
 
-<LandingPopup definitions={data.landingPopupDefinitions} />
-<ErrorPopup />
 <Jetty />
 
 <Layout>
