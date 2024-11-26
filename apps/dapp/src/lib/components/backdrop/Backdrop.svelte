@@ -29,7 +29,6 @@
   .backdrop {
     backdrop-filter: blur(2px);
     opacity: 0.9;
-    background: var(--gradient-3);
   }
 
   .content {

@@ -59,7 +59,6 @@
   import { QuestDefinitions, type QuestId, type Quests } from 'content'
   import { questApi } from '$lib/api/quest-api'
   import Icon from '$lib/components/icon/Icon.svelte'
-  import { typeToIcon } from '$lib/utils/type-to-icon'
   import { i18n } from '$lib/i18n/i18n'
   import { ErrorPopupId, errorPopupStore, isUserBlocked, user } from '../../../../stores'
   import {
@@ -112,7 +111,15 @@
 
     return determineIfQuestRewardV2($user?.id!, questId)
       .andThen((maybeRewards) => {
-        if (maybeRewards)
+        if (maybeRewards) {
+          console.log(
+            createClaimRewardsV2Transaction(
+              $user?.accountAddress!,
+              $user?.id!,
+              questId,
+              maybeRewards
+            )
+          )
           return sendTransaction({
             transactionManifest: createClaimRewardsV2Transaction(
               $user?.accountAddress!,
@@ -121,6 +128,7 @@
               maybeRewards
             )
           })
+        }
         return handleKycBadge($user?.id!, $user?.accountAddress!, sendTx)
       })
       .map((txResult) => {
@@ -138,7 +146,7 @@
   <div class="rewards-list">
     {#each rewards as { name, amount }}
       <div class="row">
-        <Icon url={typeToIcon[name]} size="large" />
+        <Icon url={''} size="large" />
         <div class="reward-text">
           {amount}
           {$i18n.t(`rewards:${name}`, { count: amount })}

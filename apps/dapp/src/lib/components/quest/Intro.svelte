@@ -19,17 +19,6 @@
   <div class="overview-text">
     <QuestOverviewText {title} {description} {minutesToComplete} />
   </div>
-
-  {#if rewards.length > 0}
-    <div class="rewards">
-      <div class="title">{$i18n.t('quests:rewards')}:</div>
-      <QuestRewards {rewards} displayName />
-    </div>
-  {/if}
-
-  {#if requirements && requirements.length > 0}
-    <Requirements {requirements} />
-  {/if}
 </div>
 
 <style lang="scss">

@@ -1,5 +1,4 @@
 import { EventId } from 'common'
-import { type TicketType } from 'database'
 
 export type QuestCategory = (typeof QuestCategory)[keyof typeof QuestCategory]
 
@@ -65,45 +64,14 @@ export type QuestId = ReturnType<typeof QuestDefinitions>[keyof ReturnType<
   typeof QuestDefinitions
 >]['id']
 
-export const QuestDefinitions = (ticketType?: TicketType) => {
+export const QuestDefinitions = () => {
   return {
-    Welcome: {
-      id: 'Welcome',
-      trackedAccountAddress: false,
-      category: 'basic',
-      rewards: [],
-      preRequisites: [],
-      minutesToComplete: 2,
-      requirements: {
-        RadQuestQuiz: {
-          type: 'offLedger',
-          completedByUser: true
-        }
-      },
-      nextQuest: 'WhatIsRadix'
-    },
-    WhatIsRadix: {
-      id: 'WhatIsRadix',
-      category: 'basic',
-      trackedAccountAddress: false,
-      rewards: [],
-      preRequisites: ['Welcome'],
-      minutesToComplete: 3,
-      requirements: {
-        RadixQuiz: {
-          type: 'offLedger',
-          completedByUser: true,
-          isHidden: false
-        }
-      },
-      nextQuest: 'SetupWallet'
-    },
     SetupWallet: {
       id: 'SetupWallet',
       category: 'basic',
       trackedAccountAddress: false,
       rewards: [],
-      preRequisites: ['WhatIsRadix'],
+      preRequisites: [],
       minutesToComplete: 5,
       requirements: {
         DownloadWallet: {
@@ -145,21 +113,6 @@ export const QuestDefinitions = (ticketType?: TicketType) => {
         GetXRD: {
           type: 'offLedger',
           completedByUser: true
-        },
-        PersonaQuiz: {
-          type: 'offLedger',
-          completedByUser: true,
-          isHidden: true
-        },
-        TransactionQuiz: {
-          type: 'offLedger',
-          completedByUser: true,
-          isHidden: true
-        },
-        XrdQuiz: {
-          type: 'offLedger',
-          completedByUser: true,
-          isHidden: true
         }
       },
       nextQuest: 'CreatingRadMorphs'
@@ -195,64 +148,49 @@ export const QuestDefinitions = (ticketType?: TicketType) => {
 
     QuestTogether: {
       id: 'QuestTogether',
-      category: 'advanced',
+      category: 'basic',
       // Rewards given at each level of quest completion
-      partialRewards:
-        ticketType === 'FULL'
-          ? {
-              BronzeLevel: [
-                {
-                  name: 'simpleGiftBox',
-                  amount: 1
-                }
-              ],
-              SilverLevel: [
-                {
-                  name: 'fancyGiftBox',
-                  amount: 1
-                }
-              ],
-              GoldLevel: [
-                {
-                  name: 'eliteGiftBox',
-                  amount: 1
-                }
-              ]
-            }
-          : {
-              BronzeLevel: [
-                {
-                  name: 'simpleGiftBox',
-                  amount: 1
-                }
-              ]
-            },
+      partialRewards: {
+        BronzeLevel: [
+          {
+            name: 'simpleGiftBox',
+            amount: 1
+          }
+        ],
+        SilverLevel: [
+          {
+            name: 'fancyGiftBox',
+            amount: 1
+          }
+        ],
+        GoldLevel: [
+          {
+            name: 'eliteGiftBox',
+            amount: 1
+          }
+        ]
+      }
+      ,
       // Rewards displayed on quest but not given as quest is never "completed"
       rewards:
-        ticketType === 'FULL'
-          ? [
-              {
-                name: 'simpleGiftBox',
-                amount: 1
-              },
-              {
-                name: 'fancyGiftBox',
-                amount: 1
-              },
-              {
-                name: 'eliteGiftBox',
-                amount: 1
-              }
-            ]
-          : [
-              {
-                name: 'simpleGiftBox',
-                amount: 1
-              }
-            ],
+        [
+          {
+            name: 'simpleGiftBox',
+            amount: 1
+          },
+          {
+            name: 'fancyGiftBox',
+            amount: 1
+          },
+          {
+            name: 'eliteGiftBox',
+            amount: 1
+          }
+        ]
+      ,
       trackedAccountAddress: false,
       minutesToComplete: 1,
-      preRequisites: ['CreatingRadMorphs'],
+      preRequisites: [],
       requirements: {
         BronzeLevel: {
           type: 'offLedger',
@@ -272,32 +210,9 @@ export const QuestDefinitions = (ticketType?: TicketType) => {
         }
       }
     },
-    JoinFriend: {
-      id: 'JoinFriend',
-      category: 'advanced',
-      trackedAccountAddress: false,
-      rewards: [
-        {
-          name: 'simpleGiftBox',
-          amount: 1
-        }
-      ],
-      minutesToComplete: 1,
-      preRequisites: ['CreatingRadMorphs'],
-      requirements: {
-        ReadContent: {
-          type: 'content',
-          isHidden: true
-        },
-        CompleteBasicQuests: {
-          type: 'offLedger',
-          completedByUser: false
-        }
-      }
-    },
     DEXSwaps: {
       id: 'DEXSwaps',
-      category: 'advanced',
+      category: 'basic',
       rewards: [
         {
           name: 'fancyGiftBox',
@@ -306,7 +221,7 @@ export const QuestDefinitions = (ticketType?: TicketType) => {
       ],
       trackedAccountAddress: true,
       minutesToComplete: 10,
-      preRequisites: ['CreatingRadMorphs'],
+      preRequisites: ['GetStuff'],
       requirements: {
         [EventId.JettySwap]: {
           eventName: 'ClamSwapEvent',
@@ -315,86 +230,6 @@ export const QuestDefinitions = (ticketType?: TicketType) => {
         [EventId.LettySwap]: {
           eventName: 'ClamSwapEvent',
           type: 'event'
-        }
-      }
-    },
-    TransferTokens: {
-      id: 'TransferTokens',
-      trackedAccountAddress: true,
-      category: 'advanced',
-      rewards: [
-        {
-          name: 'simpleGiftBox',
-          amount: 1
-        }
-      ],
-      preRequisites: ['CreatingRadMorphs'],
-      minutesToComplete: 6,
-      requirements: {
-        [EventId.JettyReceivedClams]: {
-          type: 'event',
-          eventName: 'DepositEvent'
-        }
-      }
-    },
-    NetworkStaking: {
-      id: 'NetworkStaking',
-      category: 'advanced',
-      trackedAccountAddress: true,
-      rewards: [
-        {
-          name: 'simpleGiftBox',
-          amount: 1
-        }
-      ],
-      minutesToComplete: 5,
-      preRequisites: ['CreatingRadMorphs'],
-      requirements: {
-        [EventId.XrdStaked]: {
-          eventName: 'StakedXrd',
-          type: 'event'
-        }
-      }
-    },
-    Thorswap: {
-      id: 'Thorswap',
-      category: 'advanced',
-      rewards: [
-        {
-          name: 'eliteGiftBox',
-          amount: 1
-        }
-      ],
-      trackedAccountAddress: true,
-      minutesToComplete: 5,
-      preRequisites: ['CreatingRadMorphs'],
-      requirements: {
-        [EventId.MayaRouterWithdrawEvent]: {
-          eventName: 'MayaRouterWithdrawEvent',
-          type: 'event'
-        }
-      }
-    },
-    ExploreEcosystem: {
-      id: 'ExploreEcosystem',
-      category: 'advanced',
-      trackedAccountAddress: false,
-      rewards: [
-        {
-          name: 'simpleGiftBox',
-          amount: 1
-        }
-      ],
-      minutesToComplete: 5,
-      preRequisites: ['CreatingRadMorphs'],
-      requirements: {
-        LearnDapps: {
-          type: 'content'
-        },
-        Quiz: {
-          type: 'offLedger',
-          completedByUser: true,
-          isHidden: true
         }
       }
     }

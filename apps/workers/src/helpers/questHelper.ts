@@ -2,7 +2,6 @@ import {
   AccountAddressModel,
   AppLogger,
   EventId,
-  MailerLiteModel,
   WorkerError,
   TransactionIntentHelper
 } from 'common'
@@ -11,7 +10,6 @@ import { PrismaClient, QuestStatus } from 'database'
 import { ResultAsync, okAsync } from 'neverthrow'
 import { MessageHelper } from './messageHelper'
 import { WorkerOutputError } from '../_types'
-import { getUserEmail } from './getUserEmail'
 
 export type QuestHelper = ReturnType<typeof QuestHelper>
 export const QuestHelper = ({
@@ -24,7 +22,6 @@ export const QuestHelper = ({
   accountAddressModel,
   accountAddress,
   transactionId,
-  mailerLiteModel,
   priority
 }: {
   transactionIntentHelper: TransactionIntentHelper
@@ -36,7 +33,6 @@ export const QuestHelper = ({
   accountAddressModel: ReturnType<AccountAddressModel>
   accountAddress: string
   transactionId: string
-  mailerLiteModel: ReturnType<MailerLiteModel>
   priority: number
 }) => {
   const getCompletedQuestRequirements = (
@@ -257,22 +253,11 @@ export const QuestHelper = ({
       .map(() => undefined)
   }
 
-  const handleMailerLiteBasicQuestFinished = (questId: string) => {
-    if (questId !== 'TransferTokens') return okAsync(undefined)
-
-    return getUserEmail(userId, dbClient).andThen((user) => {
-      if (!user) return okAsync(undefined)
-
-      return mailerLiteModel.addOrUpdate(user.email, { hasFinishedBasicQuests: true })
-    })
-  }
-
   return {
     handleAllQuestRequirementCompleted,
     updateQuestProgressStatus,
     addCompletedQuestRequirement,
     completeQuestRequirement,
-    handleQuestWithTrackedAccount,
-    handleMailerLiteBasicQuestFinished
+    handleQuestWithTrackedAccount
   }
 }

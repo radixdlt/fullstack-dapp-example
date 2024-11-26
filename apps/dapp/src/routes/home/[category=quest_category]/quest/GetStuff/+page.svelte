@@ -125,50 +125,14 @@
   {...data.questProps}
   steps={[
     {
-      id: '0',
-      type: 'jetty'
-    },
-    {
-      id: '1',
-      type: 'jetty'
-    },
-    {
-      id: '2',
-      type: 'regular'
-    },
-    {
-      id: '3',
-      type: 'regular'
-    },
-    {
-      id: '4',
-      type: 'jetty'
-    },
-    {
-      id: '5',
-      type: 'regular'
-    },
-    {
-      id: '6',
-      type: 'regular'
-    },
-    {
       id: 'golden-ticket-valid',
       type: 'jetty',
-      skip: derived(
-        [hasGoldenTicket, skipXrdDepositPage],
-        ([$hasGoldenTicket, $skipXrdDepositPage]) => !$hasGoldenTicket || $skipXrdDepositPage
-      ),
+      skip: derived([skipXrdDepositPage], ([$skipXrdDepositPage]) => $skipXrdDepositPage),
       footer: {
         next: {
           enabled: skipXrdDepositPage
         }
       }
-    },
-    {
-      id: 'golden-ticket-invalid',
-      skip: derived(hasInvalidGoldenTicket, ($hasInvalidGoldenTicket) => !$hasInvalidGoldenTicket),
-      type: 'jetty'
     },
     {
       id: 'has-xrd',
@@ -178,119 +142,6 @@
         ([$hasXrd, $hasGoldenTicket, $hasInvalidGoldenTicket]) =>
           !$hasXrd || $hasGoldenTicket || $hasInvalidGoldenTicket
       )
-    },
-    {
-      id: 'need-xrd',
-      type: 'jetty',
-      skip: hasXrd
-    },
-    {
-      id: 'need-xrd-2',
-      type: 'jetty',
-      skip: hasXrd
-    },
-    {
-      id: 'need-xrd-3',
-      type: 'regular',
-      skip: hasXrd
-    },
-    {
-      id: 'get-xrd',
-      type: 'regular',
-      skip: hasXrd,
-      footer: {
-        next: {
-          enabled: hasXrd
-        }
-      }
-    },
-    {
-      id: '9',
-      type: 'jetty'
-    },
-    {
-      id: '10',
-      type: 'jettyQuiz',
-      text: text['10.md'],
-      quizRequirement: 'PersonaQuiz',
-      answers: [
-        {
-          text: text['10a-answer.md'],
-          info: text['10a-result.md'],
-          correct: true
-        },
-        {
-          text: text['10b-answer.md'],
-          info: text['10b-result.md'],
-          correct: false
-        },
-        {
-          text: text['10c-answer.md'],
-          info: text['10c-result.md'],
-          correct: false
-        }
-      ]
-    },
-    {
-      id: '11',
-      type: 'jettyQuiz',
-      text: text['11.md'],
-      quizRequirement: 'TransactionQuiz',
-      answers: [
-        {
-          text: text['11a-answer.md'],
-          info: text['11a-result.md'],
-          correct: false
-        },
-        {
-          text: text['11b-answer.md'],
-          info: text['11b-result.md'],
-          correct: true
-        },
-        {
-          text: text['11c-answer.md'],
-          info: text['11c-result.md'],
-          correct: false
-        }
-      ]
-    },
-    {
-      id: '12',
-      type: 'jettyQuiz',
-      text: text['12.md'],
-      quizRequirement: 'XrdQuiz',
-      answers: [
-        {
-          text: text['12a-answer.md'],
-          info: text['12a-result.md'],
-          correct: true
-        },
-        {
-          text: text['12b-answer.md'],
-          info: text['12b-result.md'],
-          correct: false
-        },
-        {
-          text: text['12c-answer.md'],
-          info: text['12c-result.md'],
-          correct: false
-        }
-      ]
-    },
-    {
-      id: '13',
-      type: 'jetty'
-    },
-    {
-      id: '14',
-      type: 'jetty'
-    },
-    {
-      id: '15',
-      type: 'jetty'
-    },
-    {
-      type: 'requirements'
     },
     {
       type: 'claimRewards'

@@ -6,7 +6,7 @@ import { ErrorReason, createApiError } from '../../errors'
 import type { QuestId, Requirement } from 'content'
 import { config } from '$lib/config'
 import { hasAnyRewards } from '../helpers/has-any-rewards'
-import { getPriorityByGoldenTicketType, Priority } from 'common'
+import { Priority } from 'common'
 export type QuestRequirement = { isHidden: boolean; isComplete: boolean }
 
 export type UserQuestController = ReturnType<typeof UserQuestController>
@@ -42,11 +42,11 @@ export const UserQuestController = ({
     return hasAllRequirementsCompleted(questId, userId)
       .andThen(({ isAllCompleted }) =>
         userModel
-          .getById(userId, { goldenTicketClaimed: { include: { batch: true } } })
+          .getById(userId, {})
           .map((user) => ({
             isAllCompleted,
             isNotBlocked: user.status === 'OK',
-            priority: getPriorityByGoldenTicketType(user?.goldenTicketClaimed ?? undefined)
+            priority: 1
           }))
       )
       .andThen(({ isAllCompleted, isNotBlocked, priority }) =>

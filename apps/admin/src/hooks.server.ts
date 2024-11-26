@@ -4,8 +4,6 @@ import { verifyJwt } from '$lib/verify-jwt'
 import { PrismaClient } from 'database'
 import { ImageController } from '$lib/server/image/controller'
 import {
-  BlockedCountryModel,
-  GoldenTicketModel,
   ImageModel,
   appLogger,
   TransactionIntentHelper
@@ -29,9 +27,6 @@ const imageController = ImageController({
   imageModel: ImageModel(dbClient)(logger),
   systemQueue: queues.System
 })
-
-const blockedCountryModel = BlockedCountryModel(dbClient)(logger)
-const goldenTicketModel = GoldenTicketModel(dbClient)(logger)
 
 const transactionIntentHelper = TransactionIntentHelper({ dbClient, logger, queues })
 
@@ -57,11 +52,9 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.userId = userId
     event.locals.userType = userType
     event.locals.dbClient = dbClient
-    event.locals.blockedCountryModel = blockedCountryModel
     event.locals.imageController = imageController
     event.locals.queues = queues
     event.locals.logger = logger
-    event.locals.goldenTicketModel = goldenTicketModel
     event.locals.transactionIntentHelper = transactionIntentHelper
 
     return resolve(event, {})

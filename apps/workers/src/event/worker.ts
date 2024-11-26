@@ -1,5 +1,5 @@
 import { Worker, ConnectionOptions, QueueName, EventJob } from 'queues'
-import { AppLogger, getPriorityByGoldenTicketType, WorkerError } from 'common'
+import { AppLogger, WorkerError } from 'common'
 import { EventWorkerController } from './controller'
 import { EventStatus, PrismaClient, User, UserStatus } from 'database'
 import { WorkerOutputError } from '../_types'
@@ -47,14 +47,6 @@ const UpdateEventStatus =
 const getUser = (userId: string) =>
   ResultAsync.fromPromise(
     dbClient.user.findUnique({
-      include: {
-        goldenTicketClaimed: {
-          select: {
-            status: true,
-            batch: true
-          }
-        }
-      },
       where: { id: userId }
     }),
     (error) => ({
@@ -115,7 +107,7 @@ export const EventWorker = (
             })
 
             return getUser(job.data.userId).andThen(
-              ({ status, accountAddress, referredBy, goldenTicketClaimed }) => {
+              ({ status, accountAddress, referredBy }) => {
                 if (status !== 'OK') {
                   const { eventStatus, workerError } = dataForBlockedUser[status]
                   return updateEventStatus(eventStatus, workerError)
@@ -125,9 +117,7 @@ export const EventWorker = (
                   .handler(
                     job,
                     accountAddress!,
-                    getPriorityByGoldenTicketType(
-                      goldenTicketClaimed ? goldenTicketClaimed : undefined
-                    ),
+                    0,
                     referredBy!
                   )
                   .andThen(() => updateEventStatus(EventStatus.COMPLETED, null))

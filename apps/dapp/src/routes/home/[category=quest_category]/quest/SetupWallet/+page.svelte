@@ -6,7 +6,6 @@
   import { derived, writable } from 'svelte/store'
   import type { Quests } from 'content'
   import { user, ErrorPopupId, errorPopupStore } from '../../../../../stores'
-  import SetEmailPage from './SetEmailPage.svelte'
   import { questApi } from '$lib/api/quest-api'
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
@@ -33,7 +32,6 @@
 
   let marketingUpdatesCheckbox: boolean
   let email = $user?.email?.email || ''
-  let hasError: boolean
   let confirmedWalletInstall = writable<boolean>(false)
   const walletIsLinked = writable(data.requirements.ConnectWallet?.isComplete)
   const isHeroBadgeDeposited = writable(data.requirements.DepositHeroBadge?.isComplete)
@@ -219,52 +217,6 @@
   {...data.questProps}
   steps={[
     {
-      id: '0',
-      type: 'regular'
-    },
-    {
-      id: '1',
-      type: 'regular'
-    },
-    {
-      id: '2',
-      type: 'jetty'
-    },
-    {
-      id: '3',
-      type: 'regular'
-    },
-    {
-      id: '4',
-      type: 'jetty'
-    },
-    {
-      id: '5',
-      type: 'regular'
-    },
-    {
-      id: '6',
-      type: 'regular'
-    },
-    {
-      id: '7',
-      type: 'regular'
-    },
-    {
-      id: '8',
-      type: 'jetty'
-    },
-    {
-      id: '9a',
-      type: 'regular',
-      skip: skipMobileWalletInstall,
-      footer: {
-        next: {
-          enabled: confirmedWalletInstall
-        }
-      }
-    },
-    {
       id: '9b',
       type: 'regular',
       skip: walletIsLinked,
@@ -273,22 +225,6 @@
           enabled: walletIsLinked
         }
       }
-    },
-    {
-      id: '10',
-      type: 'jetty'
-    },
-    {
-      id: '11',
-      type: 'regular'
-    },
-    {
-      id: '12',
-      type: 'regular'
-    },
-    {
-      id: '13',
-      type: 'jetty'
     },
     {
       id: '14',
@@ -301,38 +237,6 @@
       skip: loggedIn
     },
     {
-      id: '15',
-      type: 'jetty'
-    },
-    {
-      id: '16',
-      type: 'jetty'
-    },
-    {
-      id: '17',
-      type: 'jetty'
-    },
-    {
-      id: '18',
-      type: 'jetty'
-    },
-    {
-      id: '19',
-      type: 'regular',
-      skip: writable($user?.email?.newsletter || false),
-      footer: {
-        next: {
-          onClick: () => {
-            submitEmailOrProceed()
-          }
-        }
-      }
-    },
-    {
-      id: '20',
-      type: 'jetty'
-    },
-    {
       id: '21',
       type: 'regular',
       footer: {
@@ -341,14 +245,6 @@
         }
       },
       skip: registeredAccountAddress
-    },
-    {
-      id: '22',
-      type: 'regular'
-    },
-    {
-      id: '23',
-      type: 'jetty'
     },
     {
       id: '24',
@@ -371,60 +267,11 @@
       }
     },
     {
-      id: '26',
-      type: 'regular'
-    },
-    {
       type: 'complete'
     }
   ]}
   let:render
 >
-  {#if render('0')}
-    {@html text['0.md']}
-  {/if}
-
-  {#if render('1')}
-    {@html text['1.md']}
-  {/if}
-
-  {#if render('2')}
-    {@html text['2.md']}
-  {/if}
-
-  {#if render('3')}
-    {@html text['3.md']}
-  {/if}
-
-  {#if render('4')}
-    {@html text['4.md']}
-  {/if}
-
-  {#if render('5')}
-    {@html text['5.md']}
-  {/if}
-
-  {#if render('6')}
-    {@html text['6.md']}
-  {/if}
-
-  {#if render('7')}
-    {@html text['7.md']}
-  {/if}
-
-  {#if render('8')}
-    {@html text['8.md']}
-  {/if}
-
-  {#if render('9a')}
-    {@html text['9a-1.md']}
-
-    <AppsFlyer />
-
-    {@html text['9a-2.md']}
-    <Checkbox bind:checked={$confirmedWalletInstall}>{@html text['9a-2-checkbox.md']}</Checkbox>
-  {/if}
-
   {#if render('9b')}
     {@html text['9b-1.md']}
     <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -446,14 +293,6 @@
 
   {#if render('10')}
     {@html text['10.md']}
-  {/if}
-
-  {#if render('11')}
-    {@html text['11.md']}
-  {/if}
-
-  {#if render('12')}
-    {@html text['12.md']}
   {/if}
 
   {#if render('13')}
@@ -481,17 +320,6 @@
     {@html htmlReplace(text['18.md'], { name: $user?.name || '' })}
   {/if}
 
-  {#if render('19')}
-    {@html text['19-1.md']}
-    <SetEmailPage
-      bind:sendNewsletter={marketingUpdatesCheckbox}
-      bind:email
-      bind:hasError
-      privacyPolicyText={text['19-2.md']}
-      marketingUpdatesText={text['19-3.md']}
-    />
-  {/if}
-
   {#if render('20')}
     {@html text['20.md']}
   {/if}
@@ -504,10 +332,6 @@
         >{$i18n.t('quests:GetStuff.registerAccount')}
       </Button>
     </div>
-  {/if}
-
-  {#if render('22')}
-    {@html text['22.md']}
   {/if}
 
   {#if render('23')}
@@ -531,9 +355,6 @@
     />
   {/if}
 
-  {#if render('26')}
-    {@html text['26.md']}
-  {/if}
 </Quest>
 
 <style lang="scss">

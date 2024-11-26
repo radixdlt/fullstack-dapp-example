@@ -11,10 +11,6 @@ import type {
   Addresses,
   MessageModel,
   NotificationModel,
-  MarketingModel,
-  ImageModel,
-  MailerLiteModel,
-  GoldenTicketModel,
   LoginAttemptModel,
   EventModel
 } from 'common'
@@ -30,8 +26,6 @@ import type { MessageController } from '$lib/server/message/controller'
 import type { NotificationController } from '$lib/server/notification/controller'
 import type { ImageController } from './image/controller'
 import type { Queues } from 'queues'
-import type { GoldenTicketController } from './golden-ticket/controller'
-import type { FraudDetectionModule } from './auth/fraud-detection/fraud-detection'
 
 export type ControllerMethodOutput<T = any> = ResultAsync<
   { data: T; httpResponseCode: number },
@@ -50,13 +44,10 @@ export type Controllers = {
   messageController: MessageController
   notificationController: NotificationController
   imageController: ImageController
-  goldenTicketController: GoldenTicketController
 }
 
 export type ControllerDependencies = {
   userModel: ReturnType<UserModel>
-  fraudDetectionModule: ReturnType<FraudDetectionModule>
-  mailerLiteModel: ReturnType<MailerLiteModel>
   transactionModel: ReturnType<TransactionModel>
   auditModel: ReturnType<AuditModel>
   loginAttemptModel: ReturnType<LoginAttemptModel>
@@ -65,9 +56,6 @@ export type ControllerDependencies = {
   accountAddressModel: ReturnType<AccountAddressModel>
   messageModel: ReturnType<MessageModel>
   notificationModel: ReturnType<NotificationModel>
-  marketingModel: ReturnType<MarketingModel>
-  imageModel: ReturnType<ImageModel>
-  goldenTicketModel: ReturnType<ReturnType<typeof GoldenTicketModel>>
   logger: AppLogger
   dbClient: PrismaClient
   addresses: Addresses

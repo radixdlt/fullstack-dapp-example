@@ -3,10 +3,8 @@ import { EventJob, Job } from 'queues'
 import { QuestId } from 'content'
 import {
   EventId,
-  MailerLiteModel,
   BusinessLogic,
   TransactionIntentHelper,
-  GoldenTicketModel
 } from 'common'
 import { AppLogger, AccountAddressModel } from 'common'
 import { PrismaClient, User } from 'database'
@@ -38,20 +36,15 @@ export const EventWorkerController = ({
   dbClient,
   logger,
   AccountAddressModel,
-  goldenTicketModel,
-  mailerLiteModel,
   sendMessage,
   transactionIntentHelper,
-  tokenPriceClient
 }: {
   dbClient: PrismaClient
   AccountAddressModel: AccountAddressModel
-  goldenTicketModel: GoldenTicketModel
-  mailerLiteModel: MailerLiteModel
   logger: AppLogger
   sendMessage: MessageHelper
   transactionIntentHelper: TransactionIntentHelper
-  tokenPriceClient: TokenPriceClient
+
 }) => {
   const handler = (
     job: Job<EventJob>,
@@ -85,8 +78,7 @@ export const EventWorkerController = ({
       accountAddressModel,
       accountAddress,
       logger: childLogger,
-      transactionId,
-      mailerLiteModel: mailerLiteModel(childLogger)
+      transactionId
     })
 
     const referralHelper = ReferralHelper({
@@ -139,14 +131,13 @@ export const EventWorkerController = ({
           .andThen(() =>
             shouldTriggerReferralRewardFlow(questId)
               ? questHelper
-                  .addCompletedQuestRequirement({
-                    questId: 'JoinFriend',
-                    requirementId: 'CompleteBasicQuests'
-                  })
-                  .andThen(() => referralHelper.handleQuestTogetherRewards(questId))
+                .addCompletedQuestRequirement({
+                  questId: 'JoinFriend',
+                  requirementId: 'CompleteBasicQuests'
+                })
+                .andThen(() => referralHelper.handleQuestTogetherRewards(questId))
               : okAsync(undefined)
           )
-          .andThen(() => questHelper.handleMailerLiteBasicQuestFinished(questId))
       }
 
       case EventId.DepositHeroBadge: {
@@ -157,36 +148,6 @@ export const EventWorkerController = ({
           })
           .andThen(() => questHelper.handleAllQuestRequirementCompleted('SetupWallet'))
       }
-
-      case EventId.JettyReceivedClams: {
-        return questHelper.handleQuestWithTrackedAccount('TransferTokens', type)
-      }
-
-      case EventId.MayaRouterWithdrawEvent: {
-        const { amount, resourceAddress } = job.data.data as {
-          amount: string
-          resourceAddress: string
-        }
-
-        if (!supportedTokenAddressList.has(resourceAddress)) return okAsync(undefined)
-
-        const valueRequirement =
-          BusinessLogic.Maya.transferValueInUSD - BusinessLogic.Maya.paddingValueInUSD
-
-        return tokenPriceClient
-          .getPrice(resourceAddress)
-          .map((tokenPrice) => tokenPrice.multipliedBy(amount).gte(valueRequirement))
-          .andThen((isRequirementFulfilled) =>
-            isRequirementFulfilled
-              ? questHelper.handleQuestWithTrackedAccount('Thorswap', type)
-              : okAsync(undefined)
-          )
-      }
-
-      case EventId.XrdStaked: {
-        return questHelper.handleQuestWithTrackedAccount('NetworkStaking', type)
-      }
-
       case EventId.JettySwap:
       case EventId.LettySwap: {
         return questHelper.handleQuestWithTrackedAccount(
@@ -251,24 +212,6 @@ export const EventWorkerController = ({
 
       case EventId.RadMorphCreated: {
         return questHelper.handleQuestWithTrackedAccount('CreatingRadMorphs', type)
-      }
-
-      case EventId.PurchaseTicketsEvent: {
-        const { ticketAmount } = job.data.data
-
-        return goldenTicketModel(logger)
-          .createSilverTicketBatch(parseInt(ticketAmount as string), job.data.userId)
-          .mapErr(() => ({ reason: WorkerError.FailedToIssueSilverTickets }))
-          .andThen(() =>
-            sendMessage(
-              job.data.userId,
-              {
-                type: 'TicketsPurchased',
-                traceId
-              },
-              childLogger
-            )
-          )
       }
 
       default:

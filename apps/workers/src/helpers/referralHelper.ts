@@ -36,9 +36,7 @@ export const ReferralHelper = ({
     userId: string,
     questProgress: UserByReferralCode['questProgress'],
     completedQuestRequirements: UserByReferralCode['completedQuestRequirements'],
-    count: number,
-    hasGoldenTicket: boolean,
-    ticketType: $Enums.TicketType | undefined
+    count: number
   ) => {
     const currentReferralsAmount = count + 1
     const referrerQuestHelper = QuestHelper({
@@ -52,10 +50,9 @@ export const ReferralHelper = ({
       // following fields are not used in this context
       accountAddress: '',
       accountAddressModel: {} as any,
-      mailerLiteModel: {} as any,
       priority
     })
-    const requirements = QuestDefinitions(ticketType)['QuestTogether'].requirements
+    const requirements = QuestDefinitions()['QuestTogether'].requirements
 
     const unlockedRewards = completedQuestRequirements
       .filter((req) => req.questId === 'QuestTogether')
@@ -117,21 +114,6 @@ export const ReferralHelper = ({
       results.push(unlockReward('BronzeLevel'))
     }
 
-    if (hasGoldenTicket && ticketType === 'FULL') {
-      if (bronzeLevelCompleted && progress['QuestTogether:SilverLevel'] === 'NOT_STARTED') {
-        results.push(setTierInProgress('SilverLevel'))
-      }
-      if (silverLevelCompleted && progress['QuestTogether:GoldLevel'] === 'NOT_STARTED') {
-        results.push(setTierInProgress('GoldLevel'))
-      }
-      if (silverLevelCompleted && !unlockedRewards['SilverLevel']) {
-        results.push(unlockReward('SilverLevel'))
-      }
-      if (goldLevelCompleted && !unlockedRewards['GoldLevel']) {
-        results.push(unlockReward('GoldLevel'))
-      }
-    }
-
     return ResultAsync.combine(results).map(() => undefined)
   }
 
@@ -143,20 +125,13 @@ export const ReferralHelper = ({
           referredUsers: true,
           questProgress: true,
           completedQuestRequirements: true,
-          goldenTicketClaimed: {
-            include: {
-              batch: true
-            }
-          }
         }
       }),
       (error) => ({ reason: WorkerError.FailedToGetUserFromDb, jsError: error })
     ).andThen((user) => {
-      const hasGoldenTicket =
-        (user?.goldenTicketClaimed && user?.goldenTicketClaimed.status === 'CLAIMED') ?? false
 
       return user
-        ? ok({ ...user, hasGoldenTicket, ticketType: user?.goldenTicketClaimed?.batch?.type })
+        ? ok({ ...user })
         : err({ reason: WorkerError.UserNotFound })
     })
 
@@ -203,8 +178,6 @@ export const ReferralHelper = ({
               referringUser.questProgress,
               referringUser.completedQuestRequirements,
               count,
-              referringUser.hasGoldenTicket,
-              referringUser.ticketType
             ).andThen(() =>
               sendMessage(
                 referringUser.id,

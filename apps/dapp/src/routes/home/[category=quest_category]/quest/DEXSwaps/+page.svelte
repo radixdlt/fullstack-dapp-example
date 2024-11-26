@@ -82,11 +82,6 @@
   }}
   {...data.questProps}
   steps={[
-    { id: '0', type: 'regular' },
-    { id: '1', type: 'regular' },
-    { id: '2', type: 'jetty' },
-    { id: '3', type: 'regular' },
-    { id: '4', type: 'jetty' },
     { id: '5', type: 'regular' },
     {
       id: '6',
@@ -97,17 +92,6 @@
         }
       }
     },
-    { id: '7', type: 'jetty' },
-    { id: '8', type: 'regular' },
-    { id: '9', type: 'regular' },
-    { id: '10', type: 'jetty' },
-    { id: '11', type: 'regular' },
-    { id: '12', type: 'jetty' },
-    { id: '13', type: 'regular' },
-    { id: '14', type: 'jetty' },
-    { id: '15', type: 'regular' },
-    { id: '16', type: 'jetty' },
-    { id: '17', type: 'jetty' },
     { id: '18', type: 'regular', skip: accountHasClams },
     {
       id: '19',
@@ -118,27 +102,11 @@
         }
       }
     },
-    { id: '20', type: 'jetty' },
     { type: 'claimRewards' },
     { type: 'complete' }
   ]}
   let:render
 >
-  {#if render('0')}
-    {@html text['0.md']}
-  {/if}
-  {#if render('1')}
-    {@html text['1.md']}
-  {/if}
-  {#if render('2')}
-    {@html text['2.md']}
-  {/if}
-  {#if render('3')}
-    {@html text['3.md']}
-  {/if}
-  {#if render('4')}
-    {@html text['4.md']}
-  {/if}
   {#if render('5')}
     {#if $accountHasClams}
       {@html text['5a.md']}
@@ -155,12 +123,6 @@
     {@html htmlReplace(text['6.md'], {
       jettySwapLink: `<a href="${addresses.dapps.jettySwap.url}" target="_blank">JettySwap</a>`
     })}
-  {/if}
-  {#if render('7')}
-    {@html text['7.md']}
-  {/if}
-  {#if render('8')}
-    {@html text['8.md']}
   {/if}
   {#if render('9')}
     {@html text['9.md']}

@@ -1,12 +1,9 @@
 <script lang="ts">
   import { i18n } from '$lib/i18n/i18n'
-  import RadquestLogo from '@images/radquest-logo.svg'
-  import RadquestIcon from '@images/radquest-icon.svg'
 </script>
 
 <div class="header">
-  <img class="logo" src={RadquestLogo} alt={$i18n.t('quests:radquest-logo-alt')} />
-  <img class="icon" src={RadquestIcon} alt={$i18n.t('quests:radquest-logo-alt')} />
+  <div></div>
   <radix-connect-button class="radix-btn" />
 </div>
 

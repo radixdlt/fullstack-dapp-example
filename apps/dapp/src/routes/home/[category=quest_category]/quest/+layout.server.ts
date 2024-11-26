@@ -29,15 +29,6 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
       failedToFetchRequirements &&
       (requirementsResult.error.data as any).error === 'invalidRefreshToken'
 
-    const hasCompletedFirstQuests =
-      [
-        questDefinitions['Welcome'].id,
-        questDefinitions['WhatIsRadix'].id,
-        questDefinitions['SetupWallet'].id
-        // @ts-ignore
-      ].includes(id) &&
-      quest.preRequisites.every((preReq) => questStatus[preReq]?.status === 'COMPLETED')
-
     let requirements: Record<string, QuestRequirement> = {}
 
     if (requirementsResult.isOk()) {
@@ -52,7 +43,7 @@ export const load: LayoutServerLoad = ({ fetch, cookies, url, parent, locals }) 
       }
 
       requirements = requirementsResult.value
-    } else if (failedToFetchRequirements && isInvalidRefreshToken && hasCompletedFirstQuests) {
+    } else if (failedToFetchRequirements && isInvalidRefreshToken) {
       Object.entries(quest.requirements).forEach(([key, requirement]) => {
         const cachedRequirement = cookies.get(`requirement-${id}-${key}`) as boolean | undefined
 
