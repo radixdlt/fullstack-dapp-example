@@ -9,15 +9,11 @@ export const user = writable<
       label: string
       email?: { email: string; newsletter: boolean }
       referredByUser?: { name?: string }
-      goldenTicketClaimed?: {
-        status: $Enums.GoldenTicketStatus
-        type: $Enums.TicketType
-      }
     })
   | undefined
 >(undefined)
 
-export const isUserBlocked = derived(user, ($user) => $user?.status !== 'OK' ?? false)
+export const isUserBlocked = derived(user, ($user) => $user?.status !== 'OK')
 
 export const deriveIsUserBlockedAlternative = (store: Writable<boolean> | Readable<boolean>) =>
   derived([store, isUserBlocked], ([$store, $isUserBlocked]) => $store || $isUserBlocked)

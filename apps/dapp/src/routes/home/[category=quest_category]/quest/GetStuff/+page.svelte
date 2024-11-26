@@ -88,13 +88,6 @@
   const hasGoldenTicket = writable(false)
   const hasInvalidGoldenTicket = writable(false)
 
-  $: if ($user?.goldenTicketClaimed?.status === 'CLAIMED') $hasGoldenTicket = true
-  $: if (
-    $user?.goldenTicketClaimed?.status === 'CLAIMED_INVALID' ||
-    (!$user?.goldenTicketClaimed && useCookies('golden-ticket').get())
-  )
-    $hasInvalidGoldenTicket = true
-
   let checkXrdInterval: ReturnType<typeof setInterval> | undefined
 
   let selectedGetXrdMethod: ComponentProps<GetXrdMethodOptions>['selectedOption'] = 'card'

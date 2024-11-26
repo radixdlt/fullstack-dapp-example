@@ -26,7 +26,7 @@
   export let referralCount: number = 0
   export let status: string | undefined
 
-  const questDefinition = QuestDefinitions($user?.goldenTicketClaimed?.type).QuestTogether
+  const questDefinition = QuestDefinitions().QuestTogether
   const dispatch = createEventDispatcher<{ refresh: undefined }>()
 
   $: loading = false

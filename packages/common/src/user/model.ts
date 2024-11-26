@@ -185,6 +185,7 @@ export const UserModel =
             include
           }),
           (error) => {
+            console.log(error)
             logger?.error({ error, method: 'getById', where: { id }, model: 'UserModel' })
             return createApiError('failed to get user', 400)()
           }
