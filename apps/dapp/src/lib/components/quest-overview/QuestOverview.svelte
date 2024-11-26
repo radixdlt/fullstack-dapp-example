@@ -16,7 +16,6 @@
   export let description: string
   export let minutesToComplete: number
   export let state: QuestStatus = 'locked'
-  export let backgroundImage: string | undefined = undefined
   export let rewards: Readonly<QuestReward[]> = []
   export let link: string | undefined = undefined
   export let questId: string | undefined = undefined
@@ -44,7 +43,6 @@
   <div
     class="card-background"
     class:border={state === 'in-progress' || state === 'unlocked'}
-    style:--background-image={backgroundImage ? `url(${backgroundImage})` : ''}
     class:grey-out={greyOut}
   >
     {#if rewards}
@@ -116,8 +114,6 @@
   .card-background {
     background: var(--gradient-5);
     background-size: contain;
-    background-image: linear-gradient(transparent 30%, var(--color-light) 50%),
-      var(--background-image), var(--gradient-5);
     background-position-y: 2.5rem;
     height: 100%;
     width: 21.5rem;
@@ -129,8 +125,6 @@
 
     @media (max-width: 25rem) {
       width: 84vw;
-      background-image: linear-gradient(transparent 10%, var(--color-light) 40%),
-        var(--background-image), var(--gradient-5);
     }
   }
   .quest-card {

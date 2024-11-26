@@ -19,20 +19,10 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
- * Model UserEmail
- * 
- */
-export type UserEmail = $Result.DefaultSelection<Prisma.$UserEmailPayload>
-/**
  * Model Image
  * 
  */
 export type Image = $Result.DefaultSelection<Prisma.$ImagePayload>
-/**
- * Model UserPhoneNumber
- * 
- */
-export type UserPhoneNumber = $Result.DefaultSelection<Prisma.$UserPhoneNumberPayload>
 /**
  * Model Referral
  * 
@@ -53,11 +43,6 @@ export type Event = $Result.DefaultSelection<Prisma.$EventPayload>
  * 
  */
 export type Message = $Result.DefaultSelection<Prisma.$MessagePayload>
-/**
- * Model IpAssessment
- * 
- */
-export type IpAssessment = $Result.DefaultSelection<Prisma.$IpAssessmentPayload>
 /**
  * Model LoginAttempt
  * 
@@ -89,11 +74,6 @@ export type SavedProgress = $Result.DefaultSelection<Prisma.$SavedProgressPayloa
  */
 export type Audit = $Result.DefaultSelection<Prisma.$AuditPayload>
 /**
- * Model BlockedCountry
- * 
- */
-export type BlockedCountry = $Result.DefaultSelection<Prisma.$BlockedCountryPayload>
-/**
  * Model TransactionIntent
  * 
  */
@@ -113,21 +93,6 @@ export type SubmittedTransaction = $Result.DefaultSelection<Prisma.$SubmittedTra
  * 
  */
 export type Config = $Result.DefaultSelection<Prisma.$ConfigPayload>
-/**
- * Model Marketing
- * 
- */
-export type Marketing = $Result.DefaultSelection<Prisma.$MarketingPayload>
-/**
- * Model GoldenTicketBatch
- * 
- */
-export type GoldenTicketBatch = $Result.DefaultSelection<Prisma.$GoldenTicketBatchPayload>
-/**
- * Model GoldenTicket
- * 
- */
-export type GoldenTicket = $Result.DefaultSelection<Prisma.$GoldenTicketPayload>
 
 /**
  * Enums
@@ -190,20 +155,6 @@ export const LoginAttemptType: {
 export type LoginAttemptType = (typeof LoginAttemptType)[keyof typeof LoginAttemptType]
 
 
-export const FraudScoringOutput: {
-  ALLOWED: 'ALLOWED',
-  ALLOWED_NO_IPQS_DATA: 'ALLOWED_NO_IPQS_DATA',
-  ALLOWED_GOLDEN_TICKET: 'ALLOWED_GOLDEN_TICKET',
-  BLOCKED_IS_FARMER: 'BLOCKED_IS_FARMER',
-  BLOCKED_IPQS_SCORE: 'BLOCKED_IPQS_SCORE',
-  BLOCKED_SANCTIONED_COUNTRY: 'BLOCKED_SANCTIONED_COUNTRY',
-  BLOCKED_BLOCKED_COUNTRY: 'BLOCKED_BLOCKED_COUNTRY',
-  BLOCKED_PERMANENTLY_BLOCKED: 'BLOCKED_PERMANENTLY_BLOCKED'
-};
-
-export type FraudScoringOutput = (typeof FraudScoringOutput)[keyof typeof FraudScoringOutput]
-
-
 export const QuestStatus: {
   IN_PROGRESS: 'IN_PROGRESS',
   REWARDS_DEPOSITED: 'REWARDS_DEPOSITED',
@@ -223,15 +174,6 @@ export const AuditType: {
 export type AuditType = (typeof AuditType)[keyof typeof AuditType]
 
 
-export const CountryStatus: {
-  ALLOWED: 'ALLOWED',
-  BLOCKED: 'BLOCKED',
-  SANCTIONED: 'SANCTIONED'
-};
-
-export type CountryStatus = (typeof CountryStatus)[keyof typeof CountryStatus]
-
-
 export const TransactionIntentStatus: {
   WAITING: 'WAITING',
   PENDING: 'PENDING',
@@ -244,23 +186,6 @@ export const TransactionIntentStatus: {
 };
 
 export type TransactionIntentStatus = (typeof TransactionIntentStatus)[keyof typeof TransactionIntentStatus]
-
-
-export const TicketType: {
-  FULL: 'FULL',
-  LIMITED: 'LIMITED'
-};
-
-export type TicketType = (typeof TicketType)[keyof typeof TicketType]
-
-
-export const GoldenTicketStatus: {
-  CLAIMABLE: 'CLAIMABLE',
-  CLAIMED: 'CLAIMED',
-  CLAIMED_INVALID: 'CLAIMED_INVALID'
-};
-
-export type GoldenTicketStatus = (typeof GoldenTicketStatus)[keyof typeof GoldenTicketStatus]
 
 }
 
@@ -288,10 +213,6 @@ export type LoginAttemptType = $Enums.LoginAttemptType
 
 export const LoginAttemptType: typeof $Enums.LoginAttemptType
 
-export type FraudScoringOutput = $Enums.FraudScoringOutput
-
-export const FraudScoringOutput: typeof $Enums.FraudScoringOutput
-
 export type QuestStatus = $Enums.QuestStatus
 
 export const QuestStatus: typeof $Enums.QuestStatus
@@ -300,21 +221,9 @@ export type AuditType = $Enums.AuditType
 
 export const AuditType: typeof $Enums.AuditType
 
-export type CountryStatus = $Enums.CountryStatus
-
-export const CountryStatus: typeof $Enums.CountryStatus
-
 export type TransactionIntentStatus = $Enums.TransactionIntentStatus
 
 export const TransactionIntentStatus: typeof $Enums.TransactionIntentStatus
-
-export type TicketType = $Enums.TicketType
-
-export const TicketType: typeof $Enums.TicketType
-
-export type GoldenTicketStatus = $Enums.GoldenTicketStatus
-
-export const GoldenTicketStatus: typeof $Enums.GoldenTicketStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -449,16 +358,6 @@ export class PrismaClient<
   get user(): Prisma.UserDelegate<ExtArgs>;
 
   /**
-   * `prisma.userEmail`: Exposes CRUD operations for the **UserEmail** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more UserEmails
-    * const userEmails = await prisma.userEmail.findMany()
-    * ```
-    */
-  get userEmail(): Prisma.UserEmailDelegate<ExtArgs>;
-
-  /**
    * `prisma.image`: Exposes CRUD operations for the **Image** model.
     * Example usage:
     * ```ts
@@ -467,16 +366,6 @@ export class PrismaClient<
     * ```
     */
   get image(): Prisma.ImageDelegate<ExtArgs>;
-
-  /**
-   * `prisma.userPhoneNumber`: Exposes CRUD operations for the **UserPhoneNumber** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more UserPhoneNumbers
-    * const userPhoneNumbers = await prisma.userPhoneNumber.findMany()
-    * ```
-    */
-  get userPhoneNumber(): Prisma.UserPhoneNumberDelegate<ExtArgs>;
 
   /**
    * `prisma.referral`: Exposes CRUD operations for the **Referral** model.
@@ -517,16 +406,6 @@ export class PrismaClient<
     * ```
     */
   get message(): Prisma.MessageDelegate<ExtArgs>;
-
-  /**
-   * `prisma.ipAssessment`: Exposes CRUD operations for the **IpAssessment** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more IpAssessments
-    * const ipAssessments = await prisma.ipAssessment.findMany()
-    * ```
-    */
-  get ipAssessment(): Prisma.IpAssessmentDelegate<ExtArgs>;
 
   /**
    * `prisma.loginAttempt`: Exposes CRUD operations for the **LoginAttempt** model.
@@ -589,16 +468,6 @@ export class PrismaClient<
   get audit(): Prisma.AuditDelegate<ExtArgs>;
 
   /**
-   * `prisma.blockedCountry`: Exposes CRUD operations for the **BlockedCountry** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more BlockedCountries
-    * const blockedCountries = await prisma.blockedCountry.findMany()
-    * ```
-    */
-  get blockedCountry(): Prisma.BlockedCountryDelegate<ExtArgs>;
-
-  /**
    * `prisma.transactionIntent`: Exposes CRUD operations for the **TransactionIntent** model.
     * Example usage:
     * ```ts
@@ -637,36 +506,6 @@ export class PrismaClient<
     * ```
     */
   get config(): Prisma.ConfigDelegate<ExtArgs>;
-
-  /**
-   * `prisma.marketing`: Exposes CRUD operations for the **Marketing** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Marketings
-    * const marketings = await prisma.marketing.findMany()
-    * ```
-    */
-  get marketing(): Prisma.MarketingDelegate<ExtArgs>;
-
-  /**
-   * `prisma.goldenTicketBatch`: Exposes CRUD operations for the **GoldenTicketBatch** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more GoldenTicketBatches
-    * const goldenTicketBatches = await prisma.goldenTicketBatch.findMany()
-    * ```
-    */
-  get goldenTicketBatch(): Prisma.GoldenTicketBatchDelegate<ExtArgs>;
-
-  /**
-   * `prisma.goldenTicket`: Exposes CRUD operations for the **GoldenTicket** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more GoldenTickets
-    * const goldenTickets = await prisma.goldenTicket.findMany()
-    * ```
-    */
-  get goldenTicket(): Prisma.GoldenTicketDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -1145,28 +984,21 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
-    UserEmail: 'UserEmail',
     Image: 'Image',
-    UserPhoneNumber: 'UserPhoneNumber',
     Referral: 'Referral',
     Challenge: 'Challenge',
     Event: 'Event',
     Message: 'Message',
-    IpAssessment: 'IpAssessment',
     LoginAttempt: 'LoginAttempt',
     Notification: 'Notification',
     CompletedQuestRequirement: 'CompletedQuestRequirement',
     QuestProgress: 'QuestProgress',
     SavedProgress: 'SavedProgress',
     Audit: 'Audit',
-    BlockedCountry: 'BlockedCountry',
     TransactionIntent: 'TransactionIntent',
     BatchedTransactionIntent: 'BatchedTransactionIntent',
     SubmittedTransaction: 'SubmittedTransaction',
-    Config: 'Config',
-    Marketing: 'Marketing',
-    GoldenTicketBatch: 'GoldenTicketBatch',
-    GoldenTicket: 'GoldenTicket'
+    Config: 'Config'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1183,7 +1015,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'user' | 'userEmail' | 'image' | 'userPhoneNumber' | 'referral' | 'challenge' | 'event' | 'message' | 'ipAssessment' | 'loginAttempt' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'blockedCountry' | 'transactionIntent' | 'batchedTransactionIntent' | 'submittedTransaction' | 'config' | 'marketing' | 'goldenTicketBatch' | 'goldenTicket'
+      modelProps: 'user' | 'image' | 'referral' | 'challenge' | 'event' | 'message' | 'loginAttempt' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'transactionIntent' | 'batchedTransactionIntent' | 'submittedTransaction' | 'config'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1257,76 +1089,6 @@ export namespace Prisma {
           }
         }
       }
-      UserEmail: {
-        payload: Prisma.$UserEmailPayload<ExtArgs>
-        fields: Prisma.UserEmailFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.UserEmailFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.UserEmailFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>
-          }
-          findFirst: {
-            args: Prisma.UserEmailFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.UserEmailFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>
-          }
-          findMany: {
-            args: Prisma.UserEmailFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>[]
-          }
-          create: {
-            args: Prisma.UserEmailCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>
-          }
-          createMany: {
-            args: Prisma.UserEmailCreateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.UserEmailCreateManyAndReturnArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>[]
-          }
-          delete: {
-            args: Prisma.UserEmailDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>
-          }
-          update: {
-            args: Prisma.UserEmailUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>
-          }
-          deleteMany: {
-            args: Prisma.UserEmailDeleteManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          updateMany: {
-            args: Prisma.UserEmailUpdateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          upsert: {
-            args: Prisma.UserEmailUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserEmailPayload>
-          }
-          aggregate: {
-            args: Prisma.UserEmailAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateUserEmail>
-          }
-          groupBy: {
-            args: Prisma.UserEmailGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<UserEmailGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.UserEmailCountArgs<ExtArgs>,
-            result: $Utils.Optional<UserEmailCountAggregateOutputType> | number
-          }
-        }
-      }
       Image: {
         payload: Prisma.$ImagePayload<ExtArgs>
         fields: Prisma.ImageFieldRefs
@@ -1394,76 +1156,6 @@ export namespace Prisma {
           count: {
             args: Prisma.ImageCountArgs<ExtArgs>,
             result: $Utils.Optional<ImageCountAggregateOutputType> | number
-          }
-        }
-      }
-      UserPhoneNumber: {
-        payload: Prisma.$UserPhoneNumberPayload<ExtArgs>
-        fields: Prisma.UserPhoneNumberFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.UserPhoneNumberFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserPhoneNumberPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.UserPhoneNumberFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserPhoneNumberPayload>
-          }
-          findFirst: {
-            args: Prisma.UserPhoneNumberFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserPhoneNumberPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.UserPhoneNumberFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserPhoneNumberPayload>
-          }
-          findMany: {
-            args: Prisma.UserPhoneNumberFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserPhoneNumberPayload>[]
-          }
-          create: {
-            args: Prisma.UserPhoneNumberCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserPhoneNumberPayload>
-          }
-          createMany: {
-            args: Prisma.UserPhoneNumberCreateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.UserPhoneNumberCreateManyAndReturnArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserPhoneNumberPayload>[]
-          }
-          delete: {
-            args: Prisma.UserPhoneNumberDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserPhoneNumberPayload>
-          }
-          update: {
-            args: Prisma.UserPhoneNumberUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserPhoneNumberPayload>
-          }
-          deleteMany: {
-            args: Prisma.UserPhoneNumberDeleteManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          updateMany: {
-            args: Prisma.UserPhoneNumberUpdateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          upsert: {
-            args: Prisma.UserPhoneNumberUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$UserPhoneNumberPayload>
-          }
-          aggregate: {
-            args: Prisma.UserPhoneNumberAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateUserPhoneNumber>
-          }
-          groupBy: {
-            args: Prisma.UserPhoneNumberGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<UserPhoneNumberGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.UserPhoneNumberCountArgs<ExtArgs>,
-            result: $Utils.Optional<UserPhoneNumberCountAggregateOutputType> | number
           }
         }
       }
@@ -1744,76 +1436,6 @@ export namespace Prisma {
           count: {
             args: Prisma.MessageCountArgs<ExtArgs>,
             result: $Utils.Optional<MessageCountAggregateOutputType> | number
-          }
-        }
-      }
-      IpAssessment: {
-        payload: Prisma.$IpAssessmentPayload<ExtArgs>
-        fields: Prisma.IpAssessmentFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.IpAssessmentFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.IpAssessmentFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>
-          }
-          findFirst: {
-            args: Prisma.IpAssessmentFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.IpAssessmentFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>
-          }
-          findMany: {
-            args: Prisma.IpAssessmentFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>[]
-          }
-          create: {
-            args: Prisma.IpAssessmentCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>
-          }
-          createMany: {
-            args: Prisma.IpAssessmentCreateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.IpAssessmentCreateManyAndReturnArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>[]
-          }
-          delete: {
-            args: Prisma.IpAssessmentDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>
-          }
-          update: {
-            args: Prisma.IpAssessmentUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>
-          }
-          deleteMany: {
-            args: Prisma.IpAssessmentDeleteManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          updateMany: {
-            args: Prisma.IpAssessmentUpdateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          upsert: {
-            args: Prisma.IpAssessmentUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$IpAssessmentPayload>
-          }
-          aggregate: {
-            args: Prisma.IpAssessmentAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateIpAssessment>
-          }
-          groupBy: {
-            args: Prisma.IpAssessmentGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<IpAssessmentGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.IpAssessmentCountArgs<ExtArgs>,
-            result: $Utils.Optional<IpAssessmentCountAggregateOutputType> | number
           }
         }
       }
@@ -2237,76 +1859,6 @@ export namespace Prisma {
           }
         }
       }
-      BlockedCountry: {
-        payload: Prisma.$BlockedCountryPayload<ExtArgs>
-        fields: Prisma.BlockedCountryFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.BlockedCountryFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.BlockedCountryFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>
-          }
-          findFirst: {
-            args: Prisma.BlockedCountryFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.BlockedCountryFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>
-          }
-          findMany: {
-            args: Prisma.BlockedCountryFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>[]
-          }
-          create: {
-            args: Prisma.BlockedCountryCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>
-          }
-          createMany: {
-            args: Prisma.BlockedCountryCreateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.BlockedCountryCreateManyAndReturnArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>[]
-          }
-          delete: {
-            args: Prisma.BlockedCountryDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>
-          }
-          update: {
-            args: Prisma.BlockedCountryUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>
-          }
-          deleteMany: {
-            args: Prisma.BlockedCountryDeleteManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          updateMany: {
-            args: Prisma.BlockedCountryUpdateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          upsert: {
-            args: Prisma.BlockedCountryUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$BlockedCountryPayload>
-          }
-          aggregate: {
-            args: Prisma.BlockedCountryAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateBlockedCountry>
-          }
-          groupBy: {
-            args: Prisma.BlockedCountryGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<BlockedCountryGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.BlockedCountryCountArgs<ExtArgs>,
-            result: $Utils.Optional<BlockedCountryCountAggregateOutputType> | number
-          }
-        }
-      }
       TransactionIntent: {
         payload: Prisma.$TransactionIntentPayload<ExtArgs>
         fields: Prisma.TransactionIntentFieldRefs
@@ -2587,216 +2139,6 @@ export namespace Prisma {
           }
         }
       }
-      Marketing: {
-        payload: Prisma.$MarketingPayload<ExtArgs>
-        fields: Prisma.MarketingFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.MarketingFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$MarketingPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.MarketingFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>
-          }
-          findFirst: {
-            args: Prisma.MarketingFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$MarketingPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.MarketingFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>
-          }
-          findMany: {
-            args: Prisma.MarketingFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>[]
-          }
-          create: {
-            args: Prisma.MarketingCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>
-          }
-          createMany: {
-            args: Prisma.MarketingCreateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.MarketingCreateManyAndReturnArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>[]
-          }
-          delete: {
-            args: Prisma.MarketingDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>
-          }
-          update: {
-            args: Prisma.MarketingUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>
-          }
-          deleteMany: {
-            args: Prisma.MarketingDeleteManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          updateMany: {
-            args: Prisma.MarketingUpdateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          upsert: {
-            args: Prisma.MarketingUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$MarketingPayload>
-          }
-          aggregate: {
-            args: Prisma.MarketingAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateMarketing>
-          }
-          groupBy: {
-            args: Prisma.MarketingGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<MarketingGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.MarketingCountArgs<ExtArgs>,
-            result: $Utils.Optional<MarketingCountAggregateOutputType> | number
-          }
-        }
-      }
-      GoldenTicketBatch: {
-        payload: Prisma.$GoldenTicketBatchPayload<ExtArgs>
-        fields: Prisma.GoldenTicketBatchFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.GoldenTicketBatchFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.GoldenTicketBatchFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>
-          }
-          findFirst: {
-            args: Prisma.GoldenTicketBatchFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.GoldenTicketBatchFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>
-          }
-          findMany: {
-            args: Prisma.GoldenTicketBatchFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>[]
-          }
-          create: {
-            args: Prisma.GoldenTicketBatchCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>
-          }
-          createMany: {
-            args: Prisma.GoldenTicketBatchCreateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.GoldenTicketBatchCreateManyAndReturnArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>[]
-          }
-          delete: {
-            args: Prisma.GoldenTicketBatchDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>
-          }
-          update: {
-            args: Prisma.GoldenTicketBatchUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>
-          }
-          deleteMany: {
-            args: Prisma.GoldenTicketBatchDeleteManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          updateMany: {
-            args: Prisma.GoldenTicketBatchUpdateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          upsert: {
-            args: Prisma.GoldenTicketBatchUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketBatchPayload>
-          }
-          aggregate: {
-            args: Prisma.GoldenTicketBatchAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateGoldenTicketBatch>
-          }
-          groupBy: {
-            args: Prisma.GoldenTicketBatchGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<GoldenTicketBatchGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.GoldenTicketBatchCountArgs<ExtArgs>,
-            result: $Utils.Optional<GoldenTicketBatchCountAggregateOutputType> | number
-          }
-        }
-      }
-      GoldenTicket: {
-        payload: Prisma.$GoldenTicketPayload<ExtArgs>
-        fields: Prisma.GoldenTicketFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.GoldenTicketFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.GoldenTicketFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketPayload>
-          }
-          findFirst: {
-            args: Prisma.GoldenTicketFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.GoldenTicketFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketPayload>
-          }
-          findMany: {
-            args: Prisma.GoldenTicketFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketPayload>[]
-          }
-          create: {
-            args: Prisma.GoldenTicketCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketPayload>
-          }
-          createMany: {
-            args: Prisma.GoldenTicketCreateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.GoldenTicketCreateManyAndReturnArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketPayload>[]
-          }
-          delete: {
-            args: Prisma.GoldenTicketDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketPayload>
-          }
-          update: {
-            args: Prisma.GoldenTicketUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketPayload>
-          }
-          deleteMany: {
-            args: Prisma.GoldenTicketDeleteManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          updateMany: {
-            args: Prisma.GoldenTicketUpdateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          upsert: {
-            args: Prisma.GoldenTicketUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$GoldenTicketPayload>
-          }
-          aggregate: {
-            args: Prisma.GoldenTicketAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateGoldenTicket>
-          }
-          groupBy: {
-            args: Prisma.GoldenTicketGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<GoldenTicketGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.GoldenTicketCountArgs<ExtArgs>,
-            result: $Utils.Optional<GoldenTicketCountAggregateOutputType> | number
-          }
-        }
-      }
     }
   } & {
     other: {
@@ -2964,9 +2306,7 @@ export namespace Prisma {
     questProgress: number
     referredUsers: number
     transactions: number
-    marketing: number
     referals: number
-    goldenTicketBatchesOwned: number
     loginAttempts: number
   }
 
@@ -2978,9 +2318,7 @@ export namespace Prisma {
     questProgress?: boolean | UserCountOutputTypeCountQuestProgressArgs
     referredUsers?: boolean | UserCountOutputTypeCountReferredUsersArgs
     transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
-    marketing?: boolean | UserCountOutputTypeCountMarketingArgs
     referals?: boolean | UserCountOutputTypeCountReferalsArgs
-    goldenTicketBatchesOwned?: boolean | UserCountOutputTypeCountGoldenTicketBatchesOwnedArgs
     loginAttempts?: boolean | UserCountOutputTypeCountLoginAttemptsArgs
   }
 
@@ -3047,22 +2385,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountMarketingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: MarketingWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
   export type UserCountOutputTypeCountReferalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReferralWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountGoldenTicketBatchesOwnedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GoldenTicketBatchWhereInput
   }
 
   /**
@@ -3101,37 +2425,6 @@ export namespace Prisma {
    */
   export type EventCountOutputTypeCountReferralArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReferralWhereInput
-  }
-
-
-  /**
-   * Count Type IpAssessmentCountOutputType
-   */
-
-  export type IpAssessmentCountOutputType = {
-    loginAttempts: number
-  }
-
-  export type IpAssessmentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    loginAttempts?: boolean | IpAssessmentCountOutputTypeCountLoginAttemptsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * IpAssessmentCountOutputType without action
-   */
-  export type IpAssessmentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpAssessmentCountOutputType
-     */
-    select?: IpAssessmentCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * IpAssessmentCountOutputType without action
-   */
-  export type IpAssessmentCountOutputTypeCountLoginAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LoginAttemptWhereInput
   }
 
 
@@ -3194,37 +2487,6 @@ export namespace Prisma {
    */
   export type BatchedTransactionIntentCountOutputTypeCountTransactionIntentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TransactionIntentWhereInput
-  }
-
-
-  /**
-   * Count Type GoldenTicketBatchCountOutputType
-   */
-
-  export type GoldenTicketBatchCountOutputType = {
-    tickets: number
-  }
-
-  export type GoldenTicketBatchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    tickets?: boolean | GoldenTicketBatchCountOutputTypeCountTicketsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * GoldenTicketBatchCountOutputType without action
-   */
-  export type GoldenTicketBatchCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicketBatchCountOutputType
-     */
-    select?: GoldenTicketBatchCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * GoldenTicketBatchCountOutputType without action
-   */
-  export type GoldenTicketBatchCountOutputTypeCountTicketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GoldenTicketWhereInput
   }
 
 
@@ -3439,18 +2701,13 @@ export namespace Prisma {
     referredByUser?: boolean | User$referredByUserArgs<ExtArgs>
     events?: boolean | User$eventsArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
-    email?: boolean | User$emailArgs<ExtArgs>
-    phoneNumber?: boolean | User$phoneNumberArgs<ExtArgs>
     completedQuestRequirements?: boolean | User$completedQuestRequirementsArgs<ExtArgs>
     savedProgress?: boolean | User$savedProgressArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
     questProgress?: boolean | User$questProgressArgs<ExtArgs>
     referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
-    marketing?: boolean | User$marketingArgs<ExtArgs>
     referals?: boolean | User$referalsArgs<ExtArgs>
-    goldenTicketClaimed?: boolean | User$goldenTicketClaimedArgs<ExtArgs>
-    goldenTicketBatchesOwned?: boolean | User$goldenTicketBatchesOwnedArgs<ExtArgs>
     loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -3486,18 +2743,13 @@ export namespace Prisma {
     referredByUser?: boolean | User$referredByUserArgs<ExtArgs>
     events?: boolean | User$eventsArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
-    email?: boolean | User$emailArgs<ExtArgs>
-    phoneNumber?: boolean | User$phoneNumberArgs<ExtArgs>
     completedQuestRequirements?: boolean | User$completedQuestRequirementsArgs<ExtArgs>
     savedProgress?: boolean | User$savedProgressArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
     questProgress?: boolean | User$questProgressArgs<ExtArgs>
     referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
-    marketing?: boolean | User$marketingArgs<ExtArgs>
     referals?: boolean | User$referalsArgs<ExtArgs>
-    goldenTicketClaimed?: boolean | User$goldenTicketClaimedArgs<ExtArgs>
-    goldenTicketBatchesOwned?: boolean | User$goldenTicketBatchesOwnedArgs<ExtArgs>
     loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -3511,18 +2763,13 @@ export namespace Prisma {
       referredByUser: Prisma.$UserPayload<ExtArgs> | null
       events: Prisma.$EventPayload<ExtArgs>[]
       messages: Prisma.$MessagePayload<ExtArgs>[]
-      email: Prisma.$UserEmailPayload<ExtArgs> | null
-      phoneNumber: Prisma.$UserPhoneNumberPayload<ExtArgs> | null
       completedQuestRequirements: Prisma.$CompletedQuestRequirementPayload<ExtArgs>[]
       savedProgress: Prisma.$SavedProgressPayload<ExtArgs> | null
       auditLogs: Prisma.$AuditPayload<ExtArgs>[]
       questProgress: Prisma.$QuestProgressPayload<ExtArgs>[]
       referredUsers: Prisma.$UserPayload<ExtArgs>[]
       transactions: Prisma.$TransactionIntentPayload<ExtArgs>[]
-      marketing: Prisma.$MarketingPayload<ExtArgs>[]
       referals: Prisma.$ReferralPayload<ExtArgs>[]
-      goldenTicketClaimed: Prisma.$GoldenTicketPayload<ExtArgs> | null
-      goldenTicketBatchesOwned: Prisma.$GoldenTicketBatchPayload<ExtArgs>[]
       loginAttempts: Prisma.$LoginAttemptPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -3932,10 +3179,6 @@ export namespace Prisma {
 
     messages<T extends User$messagesArgs<ExtArgs> = {}>(args?: Subset<T, User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, 'findMany'> | Null>;
 
-    email<T extends User$emailArgs<ExtArgs> = {}>(args?: Subset<T, User$emailArgs<ExtArgs>>): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
-
-    phoneNumber<T extends User$phoneNumberArgs<ExtArgs> = {}>(args?: Subset<T, User$phoneNumberArgs<ExtArgs>>): Prisma__UserPhoneNumberClient<$Result.GetResult<Prisma.$UserPhoneNumberPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
-
     completedQuestRequirements<T extends User$completedQuestRequirementsArgs<ExtArgs> = {}>(args?: Subset<T, User$completedQuestRequirementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompletedQuestRequirementPayload<ExtArgs>, T, 'findMany'> | Null>;
 
     savedProgress<T extends User$savedProgressArgs<ExtArgs> = {}>(args?: Subset<T, User$savedProgressArgs<ExtArgs>>): Prisma__SavedProgressClient<$Result.GetResult<Prisma.$SavedProgressPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
@@ -3948,13 +3191,7 @@ export namespace Prisma {
 
     transactions<T extends User$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionIntentPayload<ExtArgs>, T, 'findMany'> | Null>;
 
-    marketing<T extends User$marketingArgs<ExtArgs> = {}>(args?: Subset<T, User$marketingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'findMany'> | Null>;
-
     referals<T extends User$referalsArgs<ExtArgs> = {}>(args?: Subset<T, User$referalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, 'findMany'> | Null>;
-
-    goldenTicketClaimed<T extends User$goldenTicketClaimedArgs<ExtArgs> = {}>(args?: Subset<T, User$goldenTicketClaimedArgs<ExtArgs>>): Prisma__GoldenTicketClient<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
-
-    goldenTicketBatchesOwned<T extends User$goldenTicketBatchesOwnedArgs<ExtArgs> = {}>(args?: Subset<T, User$goldenTicketBatchesOwnedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'findMany'> | Null>;
 
     loginAttempts<T extends User$loginAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$loginAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findMany'> | Null>;
 
@@ -4369,36 +3606,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.email
-   */
-  export type User$emailArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserEmail
-     */
-    select?: UserEmailSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserEmailInclude<ExtArgs> | null
-    where?: UserEmailWhereInput
-  }
-
-  /**
-   * User.phoneNumber
-   */
-  export type User$phoneNumberArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPhoneNumber
-     */
-    select?: UserPhoneNumberSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPhoneNumberInclude<ExtArgs> | null
-    where?: UserPhoneNumberWhereInput
-  }
-
-  /**
    * User.completedQuestRequirements
    */
   export type User$completedQuestRequirementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4514,26 +3721,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.marketing
-   */
-  export type User$marketingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Marketing
-     */
-    select?: MarketingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketingInclude<ExtArgs> | null
-    where?: MarketingWhereInput
-    orderBy?: MarketingOrderByWithRelationInput | MarketingOrderByWithRelationInput[]
-    cursor?: MarketingWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: MarketingScalarFieldEnum | MarketingScalarFieldEnum[]
-  }
-
-  /**
    * User.referals
    */
   export type User$referalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4551,41 +3738,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
-  }
-
-  /**
-   * User.goldenTicketClaimed
-   */
-  export type User$goldenTicketClaimedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicket
-     */
-    select?: GoldenTicketSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketInclude<ExtArgs> | null
-    where?: GoldenTicketWhereInput
-  }
-
-  /**
-   * User.goldenTicketBatchesOwned
-   */
-  export type User$goldenTicketBatchesOwnedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicketBatch
-     */
-    select?: GoldenTicketBatchSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketBatchInclude<ExtArgs> | null
-    where?: GoldenTicketBatchWhereInput
-    orderBy?: GoldenTicketBatchOrderByWithRelationInput | GoldenTicketBatchOrderByWithRelationInput[]
-    cursor?: GoldenTicketBatchWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: GoldenTicketBatchScalarFieldEnum | GoldenTicketBatchScalarFieldEnum[]
   }
 
   /**
@@ -4620,941 +3772,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model UserEmail
-   */
-
-  export type AggregateUserEmail = {
-    _count: UserEmailCountAggregateOutputType | null
-    _min: UserEmailMinAggregateOutputType | null
-    _max: UserEmailMaxAggregateOutputType | null
-  }
-
-  export type UserEmailMinAggregateOutputType = {
-    userId: string | null
-    email: string | null
-    newsletter: boolean | null
-  }
-
-  export type UserEmailMaxAggregateOutputType = {
-    userId: string | null
-    email: string | null
-    newsletter: boolean | null
-  }
-
-  export type UserEmailCountAggregateOutputType = {
-    userId: number
-    email: number
-    newsletter: number
-    _all: number
-  }
-
-
-  export type UserEmailMinAggregateInputType = {
-    userId?: true
-    email?: true
-    newsletter?: true
-  }
-
-  export type UserEmailMaxAggregateInputType = {
-    userId?: true
-    email?: true
-    newsletter?: true
-  }
-
-  export type UserEmailCountAggregateInputType = {
-    userId?: true
-    email?: true
-    newsletter?: true
-    _all?: true
-  }
-
-  export type UserEmailAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which UserEmail to aggregate.
-     */
-    where?: UserEmailWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserEmails to fetch.
-     */
-    orderBy?: UserEmailOrderByWithRelationInput | UserEmailOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: UserEmailWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserEmails from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserEmails.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned UserEmails
-    **/
-    _count?: true | UserEmailCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: UserEmailMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: UserEmailMaxAggregateInputType
-  }
-
-  export type GetUserEmailAggregateType<T extends UserEmailAggregateArgs> = {
-        [P in keyof T & keyof AggregateUserEmail]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateUserEmail[P]>
-      : GetScalarType<T[P], AggregateUserEmail[P]>
-  }
-
-
-
-
-  export type UserEmailGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserEmailWhereInput
-    orderBy?: UserEmailOrderByWithAggregationInput | UserEmailOrderByWithAggregationInput[]
-    by: UserEmailScalarFieldEnum[] | UserEmailScalarFieldEnum
-    having?: UserEmailScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: UserEmailCountAggregateInputType | true
-    _min?: UserEmailMinAggregateInputType
-    _max?: UserEmailMaxAggregateInputType
-  }
-
-  export type UserEmailGroupByOutputType = {
-    userId: string
-    email: string
-    newsletter: boolean
-    _count: UserEmailCountAggregateOutputType | null
-    _min: UserEmailMinAggregateOutputType | null
-    _max: UserEmailMaxAggregateOutputType | null
-  }
-
-  type GetUserEmailGroupByPayload<T extends UserEmailGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<UserEmailGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof UserEmailGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], UserEmailGroupByOutputType[P]>
-            : GetScalarType<T[P], UserEmailGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type UserEmailSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    userId?: boolean
-    email?: boolean
-    newsletter?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userEmail"]>
-
-  export type UserEmailSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    userId?: boolean
-    email?: boolean
-    newsletter?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userEmail"]>
-
-  export type UserEmailSelectScalar = {
-    userId?: boolean
-    email?: boolean
-    newsletter?: boolean
-  }
-
-  export type UserEmailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type UserEmailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-
-  export type $UserEmailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "UserEmail"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      userId: string
-      email: string
-      newsletter: boolean
-    }, ExtArgs["result"]["userEmail"]>
-    composites: {}
-  }
-
-  type UserEmailGetPayload<S extends boolean | null | undefined | UserEmailDefaultArgs> = $Result.GetResult<Prisma.$UserEmailPayload, S>
-
-  type UserEmailCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<UserEmailFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: UserEmailCountAggregateInputType | true
-    }
-
-  export interface UserEmailDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserEmail'], meta: { name: 'UserEmail' } }
-    /**
-     * Find zero or one UserEmail that matches the filter.
-     * @param {UserEmailFindUniqueArgs} args - Arguments to find a UserEmail
-     * @example
-     * // Get one UserEmail
-     * const userEmail = await prisma.userEmail.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUnique<T extends UserEmailFindUniqueArgs<ExtArgs>>(
-      args: SelectSubset<T, UserEmailFindUniqueArgs<ExtArgs>>
-    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
-
-    /**
-     * Find one UserEmail that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {UserEmailFindUniqueOrThrowArgs} args - Arguments to find a UserEmail
-     * @example
-     * // Get one UserEmail
-     * const userEmail = await prisma.userEmail.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends UserEmailFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, UserEmailFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find the first UserEmail that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserEmailFindFirstArgs} args - Arguments to find a UserEmail
-     * @example
-     * // Get one UserEmail
-     * const userEmail = await prisma.userEmail.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirst<T extends UserEmailFindFirstArgs<ExtArgs>>(
-      args?: SelectSubset<T, UserEmailFindFirstArgs<ExtArgs>>
-    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
-
-    /**
-     * Find the first UserEmail that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserEmailFindFirstOrThrowArgs} args - Arguments to find a UserEmail
-     * @example
-     * // Get one UserEmail
-     * const userEmail = await prisma.userEmail.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends UserEmailFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, UserEmailFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find zero or more UserEmails that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserEmailFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all UserEmails
-     * const userEmails = await prisma.userEmail.findMany()
-     * 
-     * // Get first 10 UserEmails
-     * const userEmails = await prisma.userEmail.findMany({ take: 10 })
-     * 
-     * // Only select the `userId`
-     * const userEmailWithUserIdOnly = await prisma.userEmail.findMany({ select: { userId: true } })
-     * 
-    **/
-    findMany<T extends UserEmailFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, UserEmailFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'findMany'>>
-
-    /**
-     * Create a UserEmail.
-     * @param {UserEmailCreateArgs} args - Arguments to create a UserEmail.
-     * @example
-     * // Create one UserEmail
-     * const UserEmail = await prisma.userEmail.create({
-     *   data: {
-     *     // ... data to create a UserEmail
-     *   }
-     * })
-     * 
-    **/
-    create<T extends UserEmailCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, UserEmailCreateArgs<ExtArgs>>
-    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
-
-    /**
-     * Create many UserEmails.
-     * @param {UserEmailCreateManyArgs} args - Arguments to create many UserEmails.
-     * @example
-     * // Create many UserEmails
-     * const userEmail = await prisma.userEmail.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-    **/
-    createMany<T extends UserEmailCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, UserEmailCreateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many UserEmails and returns the data saved in the database.
-     * @param {UserEmailCreateManyAndReturnArgs} args - Arguments to create many UserEmails.
-     * @example
-     * // Create many UserEmails
-     * const userEmail = await prisma.userEmail.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many UserEmails and only return the `userId`
-     * const userEmailWithUserIdOnly = await prisma.userEmail.createManyAndReturn({ 
-     *   select: { userId: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-    **/
-    createManyAndReturn<T extends UserEmailCreateManyAndReturnArgs<ExtArgs>>(
-      args?: SelectSubset<T, UserEmailCreateManyAndReturnArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'createManyAndReturn'>>
-
-    /**
-     * Delete a UserEmail.
-     * @param {UserEmailDeleteArgs} args - Arguments to delete one UserEmail.
-     * @example
-     * // Delete one UserEmail
-     * const UserEmail = await prisma.userEmail.delete({
-     *   where: {
-     *     // ... filter to delete one UserEmail
-     *   }
-     * })
-     * 
-    **/
-    delete<T extends UserEmailDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, UserEmailDeleteArgs<ExtArgs>>
-    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
-
-    /**
-     * Update one UserEmail.
-     * @param {UserEmailUpdateArgs} args - Arguments to update one UserEmail.
-     * @example
-     * // Update one UserEmail
-     * const userEmail = await prisma.userEmail.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    update<T extends UserEmailUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, UserEmailUpdateArgs<ExtArgs>>
-    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
-
-    /**
-     * Delete zero or more UserEmails.
-     * @param {UserEmailDeleteManyArgs} args - Arguments to filter UserEmails to delete.
-     * @example
-     * // Delete a few UserEmails
-     * const { count } = await prisma.userEmail.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-    **/
-    deleteMany<T extends UserEmailDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, UserEmailDeleteManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more UserEmails.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserEmailUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many UserEmails
-     * const userEmail = await prisma.userEmail.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    updateMany<T extends UserEmailUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, UserEmailUpdateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one UserEmail.
-     * @param {UserEmailUpsertArgs} args - Arguments to update or create a UserEmail.
-     * @example
-     * // Update or create a UserEmail
-     * const userEmail = await prisma.userEmail.upsert({
-     *   create: {
-     *     // ... data to create a UserEmail
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the UserEmail we want to update
-     *   }
-     * })
-    **/
-    upsert<T extends UserEmailUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, UserEmailUpsertArgs<ExtArgs>>
-    ): Prisma__UserEmailClient<$Result.GetResult<Prisma.$UserEmailPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
-
-    /**
-     * Count the number of UserEmails.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserEmailCountArgs} args - Arguments to filter UserEmails to count.
-     * @example
-     * // Count the number of UserEmails
-     * const count = await prisma.userEmail.count({
-     *   where: {
-     *     // ... the filter for the UserEmails we want to count
-     *   }
-     * })
-    **/
-    count<T extends UserEmailCountArgs>(
-      args?: Subset<T, UserEmailCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], UserEmailCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a UserEmail.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserEmailAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends UserEmailAggregateArgs>(args: Subset<T, UserEmailAggregateArgs>): Prisma.PrismaPromise<GetUserEmailAggregateType<T>>
-
-    /**
-     * Group by UserEmail.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserEmailGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends UserEmailGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: UserEmailGroupByArgs['orderBy'] }
-        : { orderBy?: UserEmailGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, UserEmailGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserEmailGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the UserEmail model
-   */
-  readonly fields: UserEmailFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for UserEmail.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__UserEmailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: 'PrismaPromise';
-
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
-
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
-  }
-
-
-
-  /**
-   * Fields of the UserEmail model
-   */ 
-  interface UserEmailFieldRefs {
-    readonly userId: FieldRef<"UserEmail", 'String'>
-    readonly email: FieldRef<"UserEmail", 'String'>
-    readonly newsletter: FieldRef<"UserEmail", 'Boolean'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * UserEmail findUnique
-   */
-  export type UserEmailFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserEmail
-     */
-    select?: UserEmailSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserEmailInclude<ExtArgs> | null
-    /**
-     * Filter, which UserEmail to fetch.
-     */
-    where: UserEmailWhereUniqueInput
-  }
-
-  /**
-   * UserEmail findUniqueOrThrow
-   */
-  export type UserEmailFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserEmail
-     */
-    select?: UserEmailSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserEmailInclude<ExtArgs> | null
-    /**
-     * Filter, which UserEmail to fetch.
-     */
-    where: UserEmailWhereUniqueInput
-  }
-
-  /**
-   * UserEmail findFirst
-   */
-  export type UserEmailFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserEmail
-     */
-    select?: UserEmailSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserEmailInclude<ExtArgs> | null
-    /**
-     * Filter, which UserEmail to fetch.
-     */
-    where?: UserEmailWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserEmails to fetch.
-     */
-    orderBy?: UserEmailOrderByWithRelationInput | UserEmailOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UserEmails.
-     */
-    cursor?: UserEmailWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserEmails from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserEmails.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UserEmails.
-     */
-    distinct?: UserEmailScalarFieldEnum | UserEmailScalarFieldEnum[]
-  }
-
-  /**
-   * UserEmail findFirstOrThrow
-   */
-  export type UserEmailFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserEmail
-     */
-    select?: UserEmailSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserEmailInclude<ExtArgs> | null
-    /**
-     * Filter, which UserEmail to fetch.
-     */
-    where?: UserEmailWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserEmails to fetch.
-     */
-    orderBy?: UserEmailOrderByWithRelationInput | UserEmailOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UserEmails.
-     */
-    cursor?: UserEmailWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserEmails from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserEmails.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UserEmails.
-     */
-    distinct?: UserEmailScalarFieldEnum | UserEmailScalarFieldEnum[]
-  }
-
-  /**
-   * UserEmail findMany
-   */
-  export type UserEmailFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserEmail
-     */
-    select?: UserEmailSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserEmailInclude<ExtArgs> | null
-    /**
-     * Filter, which UserEmails to fetch.
-     */
-    where?: UserEmailWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserEmails to fetch.
-     */
-    orderBy?: UserEmailOrderByWithRelationInput | UserEmailOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing UserEmails.
-     */
-    cursor?: UserEmailWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserEmails from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserEmails.
-     */
-    skip?: number
-    distinct?: UserEmailScalarFieldEnum | UserEmailScalarFieldEnum[]
-  }
-
-  /**
-   * UserEmail create
-   */
-  export type UserEmailCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserEmail
-     */
-    select?: UserEmailSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserEmailInclude<ExtArgs> | null
-    /**
-     * The data needed to create a UserEmail.
-     */
-    data: XOR<UserEmailCreateInput, UserEmailUncheckedCreateInput>
-  }
-
-  /**
-   * UserEmail createMany
-   */
-  export type UserEmailCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many UserEmails.
-     */
-    data: UserEmailCreateManyInput | UserEmailCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * UserEmail createManyAndReturn
-   */
-  export type UserEmailCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserEmail
-     */
-    select?: UserEmailSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many UserEmails.
-     */
-    data: UserEmailCreateManyInput | UserEmailCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserEmailIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * UserEmail update
-   */
-  export type UserEmailUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserEmail
-     */
-    select?: UserEmailSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserEmailInclude<ExtArgs> | null
-    /**
-     * The data needed to update a UserEmail.
-     */
-    data: XOR<UserEmailUpdateInput, UserEmailUncheckedUpdateInput>
-    /**
-     * Choose, which UserEmail to update.
-     */
-    where: UserEmailWhereUniqueInput
-  }
-
-  /**
-   * UserEmail updateMany
-   */
-  export type UserEmailUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update UserEmails.
-     */
-    data: XOR<UserEmailUpdateManyMutationInput, UserEmailUncheckedUpdateManyInput>
-    /**
-     * Filter which UserEmails to update
-     */
-    where?: UserEmailWhereInput
-  }
-
-  /**
-   * UserEmail upsert
-   */
-  export type UserEmailUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserEmail
-     */
-    select?: UserEmailSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserEmailInclude<ExtArgs> | null
-    /**
-     * The filter to search for the UserEmail to update in case it exists.
-     */
-    where: UserEmailWhereUniqueInput
-    /**
-     * In case the UserEmail found by the `where` argument doesn't exist, create a new UserEmail with this data.
-     */
-    create: XOR<UserEmailCreateInput, UserEmailUncheckedCreateInput>
-    /**
-     * In case the UserEmail was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<UserEmailUpdateInput, UserEmailUncheckedUpdateInput>
-  }
-
-  /**
-   * UserEmail delete
-   */
-  export type UserEmailDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserEmail
-     */
-    select?: UserEmailSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserEmailInclude<ExtArgs> | null
-    /**
-     * Filter which UserEmail to delete.
-     */
-    where: UserEmailWhereUniqueInput
-  }
-
-  /**
-   * UserEmail deleteMany
-   */
-  export type UserEmailDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which UserEmails to delete
-     */
-    where?: UserEmailWhereInput
-  }
-
-  /**
-   * UserEmail without action
-   */
-  export type UserEmailDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserEmail
-     */
-    select?: UserEmailSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserEmailInclude<ExtArgs> | null
   }
 
 
@@ -6435,953 +4652,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the Image
      */
     select?: ImageSelect<ExtArgs> | null
-  }
-
-
-  /**
-   * Model UserPhoneNumber
-   */
-
-  export type AggregateUserPhoneNumber = {
-    _count: UserPhoneNumberCountAggregateOutputType | null
-    _min: UserPhoneNumberMinAggregateOutputType | null
-    _max: UserPhoneNumberMaxAggregateOutputType | null
-  }
-
-  export type UserPhoneNumberMinAggregateOutputType = {
-    userId: string | null
-    phoneNumber: string | null
-    createdAt: Date | null
-    ip: string | null
-  }
-
-  export type UserPhoneNumberMaxAggregateOutputType = {
-    userId: string | null
-    phoneNumber: string | null
-    createdAt: Date | null
-    ip: string | null
-  }
-
-  export type UserPhoneNumberCountAggregateOutputType = {
-    userId: number
-    phoneNumber: number
-    createdAt: number
-    ip: number
-    _all: number
-  }
-
-
-  export type UserPhoneNumberMinAggregateInputType = {
-    userId?: true
-    phoneNumber?: true
-    createdAt?: true
-    ip?: true
-  }
-
-  export type UserPhoneNumberMaxAggregateInputType = {
-    userId?: true
-    phoneNumber?: true
-    createdAt?: true
-    ip?: true
-  }
-
-  export type UserPhoneNumberCountAggregateInputType = {
-    userId?: true
-    phoneNumber?: true
-    createdAt?: true
-    ip?: true
-    _all?: true
-  }
-
-  export type UserPhoneNumberAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which UserPhoneNumber to aggregate.
-     */
-    where?: UserPhoneNumberWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserPhoneNumbers to fetch.
-     */
-    orderBy?: UserPhoneNumberOrderByWithRelationInput | UserPhoneNumberOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: UserPhoneNumberWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserPhoneNumbers from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserPhoneNumbers.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned UserPhoneNumbers
-    **/
-    _count?: true | UserPhoneNumberCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: UserPhoneNumberMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: UserPhoneNumberMaxAggregateInputType
-  }
-
-  export type GetUserPhoneNumberAggregateType<T extends UserPhoneNumberAggregateArgs> = {
-        [P in keyof T & keyof AggregateUserPhoneNumber]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateUserPhoneNumber[P]>
-      : GetScalarType<T[P], AggregateUserPhoneNumber[P]>
-  }
-
-
-
-
-  export type UserPhoneNumberGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserPhoneNumberWhereInput
-    orderBy?: UserPhoneNumberOrderByWithAggregationInput | UserPhoneNumberOrderByWithAggregationInput[]
-    by: UserPhoneNumberScalarFieldEnum[] | UserPhoneNumberScalarFieldEnum
-    having?: UserPhoneNumberScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: UserPhoneNumberCountAggregateInputType | true
-    _min?: UserPhoneNumberMinAggregateInputType
-    _max?: UserPhoneNumberMaxAggregateInputType
-  }
-
-  export type UserPhoneNumberGroupByOutputType = {
-    userId: string
-    phoneNumber: string
-    createdAt: Date
-    ip: string
-    _count: UserPhoneNumberCountAggregateOutputType | null
-    _min: UserPhoneNumberMinAggregateOutputType | null
-    _max: UserPhoneNumberMaxAggregateOutputType | null
-  }
-
-  type GetUserPhoneNumberGroupByPayload<T extends UserPhoneNumberGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<UserPhoneNumberGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof UserPhoneNumberGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], UserPhoneNumberGroupByOutputType[P]>
-            : GetScalarType<T[P], UserPhoneNumberGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type UserPhoneNumberSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    userId?: boolean
-    phoneNumber?: boolean
-    createdAt?: boolean
-    ip?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userPhoneNumber"]>
-
-  export type UserPhoneNumberSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    userId?: boolean
-    phoneNumber?: boolean
-    createdAt?: boolean
-    ip?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["userPhoneNumber"]>
-
-  export type UserPhoneNumberSelectScalar = {
-    userId?: boolean
-    phoneNumber?: boolean
-    createdAt?: boolean
-    ip?: boolean
-  }
-
-  export type UserPhoneNumberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type UserPhoneNumberIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-
-  export type $UserPhoneNumberPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "UserPhoneNumber"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      userId: string
-      phoneNumber: string
-      createdAt: Date
-      ip: string
-    }, ExtArgs["result"]["userPhoneNumber"]>
-    composites: {}
-  }
-
-  type UserPhoneNumberGetPayload<S extends boolean | null | undefined | UserPhoneNumberDefaultArgs> = $Result.GetResult<Prisma.$UserPhoneNumberPayload, S>
-
-  type UserPhoneNumberCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<UserPhoneNumberFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: UserPhoneNumberCountAggregateInputType | true
-    }
-
-  export interface UserPhoneNumberDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserPhoneNumber'], meta: { name: 'UserPhoneNumber' } }
-    /**
-     * Find zero or one UserPhoneNumber that matches the filter.
-     * @param {UserPhoneNumberFindUniqueArgs} args - Arguments to find a UserPhoneNumber
-     * @example
-     * // Get one UserPhoneNumber
-     * const userPhoneNumber = await prisma.userPhoneNumber.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUnique<T extends UserPhoneNumberFindUniqueArgs<ExtArgs>>(
-      args: SelectSubset<T, UserPhoneNumberFindUniqueArgs<ExtArgs>>
-    ): Prisma__UserPhoneNumberClient<$Result.GetResult<Prisma.$UserPhoneNumberPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
-
-    /**
-     * Find one UserPhoneNumber that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {UserPhoneNumberFindUniqueOrThrowArgs} args - Arguments to find a UserPhoneNumber
-     * @example
-     * // Get one UserPhoneNumber
-     * const userPhoneNumber = await prisma.userPhoneNumber.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends UserPhoneNumberFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, UserPhoneNumberFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__UserPhoneNumberClient<$Result.GetResult<Prisma.$UserPhoneNumberPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find the first UserPhoneNumber that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPhoneNumberFindFirstArgs} args - Arguments to find a UserPhoneNumber
-     * @example
-     * // Get one UserPhoneNumber
-     * const userPhoneNumber = await prisma.userPhoneNumber.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirst<T extends UserPhoneNumberFindFirstArgs<ExtArgs>>(
-      args?: SelectSubset<T, UserPhoneNumberFindFirstArgs<ExtArgs>>
-    ): Prisma__UserPhoneNumberClient<$Result.GetResult<Prisma.$UserPhoneNumberPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
-
-    /**
-     * Find the first UserPhoneNumber that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPhoneNumberFindFirstOrThrowArgs} args - Arguments to find a UserPhoneNumber
-     * @example
-     * // Get one UserPhoneNumber
-     * const userPhoneNumber = await prisma.userPhoneNumber.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends UserPhoneNumberFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, UserPhoneNumberFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__UserPhoneNumberClient<$Result.GetResult<Prisma.$UserPhoneNumberPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find zero or more UserPhoneNumbers that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPhoneNumberFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all UserPhoneNumbers
-     * const userPhoneNumbers = await prisma.userPhoneNumber.findMany()
-     * 
-     * // Get first 10 UserPhoneNumbers
-     * const userPhoneNumbers = await prisma.userPhoneNumber.findMany({ take: 10 })
-     * 
-     * // Only select the `userId`
-     * const userPhoneNumberWithUserIdOnly = await prisma.userPhoneNumber.findMany({ select: { userId: true } })
-     * 
-    **/
-    findMany<T extends UserPhoneNumberFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, UserPhoneNumberFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPhoneNumberPayload<ExtArgs>, T, 'findMany'>>
-
-    /**
-     * Create a UserPhoneNumber.
-     * @param {UserPhoneNumberCreateArgs} args - Arguments to create a UserPhoneNumber.
-     * @example
-     * // Create one UserPhoneNumber
-     * const UserPhoneNumber = await prisma.userPhoneNumber.create({
-     *   data: {
-     *     // ... data to create a UserPhoneNumber
-     *   }
-     * })
-     * 
-    **/
-    create<T extends UserPhoneNumberCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, UserPhoneNumberCreateArgs<ExtArgs>>
-    ): Prisma__UserPhoneNumberClient<$Result.GetResult<Prisma.$UserPhoneNumberPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
-
-    /**
-     * Create many UserPhoneNumbers.
-     * @param {UserPhoneNumberCreateManyArgs} args - Arguments to create many UserPhoneNumbers.
-     * @example
-     * // Create many UserPhoneNumbers
-     * const userPhoneNumber = await prisma.userPhoneNumber.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-    **/
-    createMany<T extends UserPhoneNumberCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, UserPhoneNumberCreateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many UserPhoneNumbers and returns the data saved in the database.
-     * @param {UserPhoneNumberCreateManyAndReturnArgs} args - Arguments to create many UserPhoneNumbers.
-     * @example
-     * // Create many UserPhoneNumbers
-     * const userPhoneNumber = await prisma.userPhoneNumber.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many UserPhoneNumbers and only return the `userId`
-     * const userPhoneNumberWithUserIdOnly = await prisma.userPhoneNumber.createManyAndReturn({ 
-     *   select: { userId: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-    **/
-    createManyAndReturn<T extends UserPhoneNumberCreateManyAndReturnArgs<ExtArgs>>(
-      args?: SelectSubset<T, UserPhoneNumberCreateManyAndReturnArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPhoneNumberPayload<ExtArgs>, T, 'createManyAndReturn'>>
-
-    /**
-     * Delete a UserPhoneNumber.
-     * @param {UserPhoneNumberDeleteArgs} args - Arguments to delete one UserPhoneNumber.
-     * @example
-     * // Delete one UserPhoneNumber
-     * const UserPhoneNumber = await prisma.userPhoneNumber.delete({
-     *   where: {
-     *     // ... filter to delete one UserPhoneNumber
-     *   }
-     * })
-     * 
-    **/
-    delete<T extends UserPhoneNumberDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, UserPhoneNumberDeleteArgs<ExtArgs>>
-    ): Prisma__UserPhoneNumberClient<$Result.GetResult<Prisma.$UserPhoneNumberPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
-
-    /**
-     * Update one UserPhoneNumber.
-     * @param {UserPhoneNumberUpdateArgs} args - Arguments to update one UserPhoneNumber.
-     * @example
-     * // Update one UserPhoneNumber
-     * const userPhoneNumber = await prisma.userPhoneNumber.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    update<T extends UserPhoneNumberUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, UserPhoneNumberUpdateArgs<ExtArgs>>
-    ): Prisma__UserPhoneNumberClient<$Result.GetResult<Prisma.$UserPhoneNumberPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
-
-    /**
-     * Delete zero or more UserPhoneNumbers.
-     * @param {UserPhoneNumberDeleteManyArgs} args - Arguments to filter UserPhoneNumbers to delete.
-     * @example
-     * // Delete a few UserPhoneNumbers
-     * const { count } = await prisma.userPhoneNumber.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-    **/
-    deleteMany<T extends UserPhoneNumberDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, UserPhoneNumberDeleteManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more UserPhoneNumbers.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPhoneNumberUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many UserPhoneNumbers
-     * const userPhoneNumber = await prisma.userPhoneNumber.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    updateMany<T extends UserPhoneNumberUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, UserPhoneNumberUpdateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one UserPhoneNumber.
-     * @param {UserPhoneNumberUpsertArgs} args - Arguments to update or create a UserPhoneNumber.
-     * @example
-     * // Update or create a UserPhoneNumber
-     * const userPhoneNumber = await prisma.userPhoneNumber.upsert({
-     *   create: {
-     *     // ... data to create a UserPhoneNumber
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the UserPhoneNumber we want to update
-     *   }
-     * })
-    **/
-    upsert<T extends UserPhoneNumberUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, UserPhoneNumberUpsertArgs<ExtArgs>>
-    ): Prisma__UserPhoneNumberClient<$Result.GetResult<Prisma.$UserPhoneNumberPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
-
-    /**
-     * Count the number of UserPhoneNumbers.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPhoneNumberCountArgs} args - Arguments to filter UserPhoneNumbers to count.
-     * @example
-     * // Count the number of UserPhoneNumbers
-     * const count = await prisma.userPhoneNumber.count({
-     *   where: {
-     *     // ... the filter for the UserPhoneNumbers we want to count
-     *   }
-     * })
-    **/
-    count<T extends UserPhoneNumberCountArgs>(
-      args?: Subset<T, UserPhoneNumberCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], UserPhoneNumberCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a UserPhoneNumber.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPhoneNumberAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends UserPhoneNumberAggregateArgs>(args: Subset<T, UserPhoneNumberAggregateArgs>): Prisma.PrismaPromise<GetUserPhoneNumberAggregateType<T>>
-
-    /**
-     * Group by UserPhoneNumber.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserPhoneNumberGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends UserPhoneNumberGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: UserPhoneNumberGroupByArgs['orderBy'] }
-        : { orderBy?: UserPhoneNumberGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, UserPhoneNumberGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserPhoneNumberGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the UserPhoneNumber model
-   */
-  readonly fields: UserPhoneNumberFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for UserPhoneNumber.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__UserPhoneNumberClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: 'PrismaPromise';
-
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
-
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
-  }
-
-
-
-  /**
-   * Fields of the UserPhoneNumber model
-   */ 
-  interface UserPhoneNumberFieldRefs {
-    readonly userId: FieldRef<"UserPhoneNumber", 'String'>
-    readonly phoneNumber: FieldRef<"UserPhoneNumber", 'String'>
-    readonly createdAt: FieldRef<"UserPhoneNumber", 'DateTime'>
-    readonly ip: FieldRef<"UserPhoneNumber", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * UserPhoneNumber findUnique
-   */
-  export type UserPhoneNumberFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPhoneNumber
-     */
-    select?: UserPhoneNumberSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPhoneNumberInclude<ExtArgs> | null
-    /**
-     * Filter, which UserPhoneNumber to fetch.
-     */
-    where: UserPhoneNumberWhereUniqueInput
-  }
-
-  /**
-   * UserPhoneNumber findUniqueOrThrow
-   */
-  export type UserPhoneNumberFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPhoneNumber
-     */
-    select?: UserPhoneNumberSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPhoneNumberInclude<ExtArgs> | null
-    /**
-     * Filter, which UserPhoneNumber to fetch.
-     */
-    where: UserPhoneNumberWhereUniqueInput
-  }
-
-  /**
-   * UserPhoneNumber findFirst
-   */
-  export type UserPhoneNumberFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPhoneNumber
-     */
-    select?: UserPhoneNumberSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPhoneNumberInclude<ExtArgs> | null
-    /**
-     * Filter, which UserPhoneNumber to fetch.
-     */
-    where?: UserPhoneNumberWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserPhoneNumbers to fetch.
-     */
-    orderBy?: UserPhoneNumberOrderByWithRelationInput | UserPhoneNumberOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UserPhoneNumbers.
-     */
-    cursor?: UserPhoneNumberWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserPhoneNumbers from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserPhoneNumbers.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UserPhoneNumbers.
-     */
-    distinct?: UserPhoneNumberScalarFieldEnum | UserPhoneNumberScalarFieldEnum[]
-  }
-
-  /**
-   * UserPhoneNumber findFirstOrThrow
-   */
-  export type UserPhoneNumberFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPhoneNumber
-     */
-    select?: UserPhoneNumberSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPhoneNumberInclude<ExtArgs> | null
-    /**
-     * Filter, which UserPhoneNumber to fetch.
-     */
-    where?: UserPhoneNumberWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserPhoneNumbers to fetch.
-     */
-    orderBy?: UserPhoneNumberOrderByWithRelationInput | UserPhoneNumberOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UserPhoneNumbers.
-     */
-    cursor?: UserPhoneNumberWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserPhoneNumbers from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserPhoneNumbers.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UserPhoneNumbers.
-     */
-    distinct?: UserPhoneNumberScalarFieldEnum | UserPhoneNumberScalarFieldEnum[]
-  }
-
-  /**
-   * UserPhoneNumber findMany
-   */
-  export type UserPhoneNumberFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPhoneNumber
-     */
-    select?: UserPhoneNumberSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPhoneNumberInclude<ExtArgs> | null
-    /**
-     * Filter, which UserPhoneNumbers to fetch.
-     */
-    where?: UserPhoneNumberWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserPhoneNumbers to fetch.
-     */
-    orderBy?: UserPhoneNumberOrderByWithRelationInput | UserPhoneNumberOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing UserPhoneNumbers.
-     */
-    cursor?: UserPhoneNumberWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserPhoneNumbers from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserPhoneNumbers.
-     */
-    skip?: number
-    distinct?: UserPhoneNumberScalarFieldEnum | UserPhoneNumberScalarFieldEnum[]
-  }
-
-  /**
-   * UserPhoneNumber create
-   */
-  export type UserPhoneNumberCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPhoneNumber
-     */
-    select?: UserPhoneNumberSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPhoneNumberInclude<ExtArgs> | null
-    /**
-     * The data needed to create a UserPhoneNumber.
-     */
-    data: XOR<UserPhoneNumberCreateInput, UserPhoneNumberUncheckedCreateInput>
-  }
-
-  /**
-   * UserPhoneNumber createMany
-   */
-  export type UserPhoneNumberCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many UserPhoneNumbers.
-     */
-    data: UserPhoneNumberCreateManyInput | UserPhoneNumberCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * UserPhoneNumber createManyAndReturn
-   */
-  export type UserPhoneNumberCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPhoneNumber
-     */
-    select?: UserPhoneNumberSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many UserPhoneNumbers.
-     */
-    data: UserPhoneNumberCreateManyInput | UserPhoneNumberCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPhoneNumberIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * UserPhoneNumber update
-   */
-  export type UserPhoneNumberUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPhoneNumber
-     */
-    select?: UserPhoneNumberSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPhoneNumberInclude<ExtArgs> | null
-    /**
-     * The data needed to update a UserPhoneNumber.
-     */
-    data: XOR<UserPhoneNumberUpdateInput, UserPhoneNumberUncheckedUpdateInput>
-    /**
-     * Choose, which UserPhoneNumber to update.
-     */
-    where: UserPhoneNumberWhereUniqueInput
-  }
-
-  /**
-   * UserPhoneNumber updateMany
-   */
-  export type UserPhoneNumberUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update UserPhoneNumbers.
-     */
-    data: XOR<UserPhoneNumberUpdateManyMutationInput, UserPhoneNumberUncheckedUpdateManyInput>
-    /**
-     * Filter which UserPhoneNumbers to update
-     */
-    where?: UserPhoneNumberWhereInput
-  }
-
-  /**
-   * UserPhoneNumber upsert
-   */
-  export type UserPhoneNumberUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPhoneNumber
-     */
-    select?: UserPhoneNumberSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPhoneNumberInclude<ExtArgs> | null
-    /**
-     * The filter to search for the UserPhoneNumber to update in case it exists.
-     */
-    where: UserPhoneNumberWhereUniqueInput
-    /**
-     * In case the UserPhoneNumber found by the `where` argument doesn't exist, create a new UserPhoneNumber with this data.
-     */
-    create: XOR<UserPhoneNumberCreateInput, UserPhoneNumberUncheckedCreateInput>
-    /**
-     * In case the UserPhoneNumber was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<UserPhoneNumberUpdateInput, UserPhoneNumberUncheckedUpdateInput>
-  }
-
-  /**
-   * UserPhoneNumber delete
-   */
-  export type UserPhoneNumberDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPhoneNumber
-     */
-    select?: UserPhoneNumberSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPhoneNumberInclude<ExtArgs> | null
-    /**
-     * Filter which UserPhoneNumber to delete.
-     */
-    where: UserPhoneNumberWhereUniqueInput
-  }
-
-  /**
-   * UserPhoneNumber deleteMany
-   */
-  export type UserPhoneNumberDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which UserPhoneNumbers to delete
-     */
-    where?: UserPhoneNumberWhereInput
-  }
-
-  /**
-   * UserPhoneNumber without action
-   */
-  export type UserPhoneNumberDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserPhoneNumber
-     */
-    select?: UserPhoneNumberSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserPhoneNumberInclude<ExtArgs> | null
   }
 
 
@@ -11249,1022 +8519,6 @@ export namespace Prisma {
 
 
   /**
-   * Model IpAssessment
-   */
-
-  export type AggregateIpAssessment = {
-    _count: IpAssessmentCountAggregateOutputType | null
-    _avg: IpAssessmentAvgAggregateOutputType | null
-    _sum: IpAssessmentSumAggregateOutputType | null
-    _min: IpAssessmentMinAggregateOutputType | null
-    _max: IpAssessmentMaxAggregateOutputType | null
-  }
-
-  export type IpAssessmentAvgAggregateOutputType = {
-    id: number | null
-  }
-
-  export type IpAssessmentSumAggregateOutputType = {
-    id: number | null
-  }
-
-  export type IpAssessmentMinAggregateOutputType = {
-    id: number | null
-    ip: string | null
-    userAgent: string | null
-    acceptLanguage: string | null
-    createdAt: Date | null
-  }
-
-  export type IpAssessmentMaxAggregateOutputType = {
-    id: number | null
-    ip: string | null
-    userAgent: string | null
-    acceptLanguage: string | null
-    createdAt: Date | null
-  }
-
-  export type IpAssessmentCountAggregateOutputType = {
-    id: number
-    ip: number
-    userAgent: number
-    acceptLanguage: number
-    data: number
-    createdAt: number
-    _all: number
-  }
-
-
-  export type IpAssessmentAvgAggregateInputType = {
-    id?: true
-  }
-
-  export type IpAssessmentSumAggregateInputType = {
-    id?: true
-  }
-
-  export type IpAssessmentMinAggregateInputType = {
-    id?: true
-    ip?: true
-    userAgent?: true
-    acceptLanguage?: true
-    createdAt?: true
-  }
-
-  export type IpAssessmentMaxAggregateInputType = {
-    id?: true
-    ip?: true
-    userAgent?: true
-    acceptLanguage?: true
-    createdAt?: true
-  }
-
-  export type IpAssessmentCountAggregateInputType = {
-    id?: true
-    ip?: true
-    userAgent?: true
-    acceptLanguage?: true
-    data?: true
-    createdAt?: true
-    _all?: true
-  }
-
-  export type IpAssessmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which IpAssessment to aggregate.
-     */
-    where?: IpAssessmentWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of IpAssessments to fetch.
-     */
-    orderBy?: IpAssessmentOrderByWithRelationInput | IpAssessmentOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: IpAssessmentWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` IpAssessments from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` IpAssessments.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned IpAssessments
-    **/
-    _count?: true | IpAssessmentCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: IpAssessmentAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: IpAssessmentSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: IpAssessmentMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: IpAssessmentMaxAggregateInputType
-  }
-
-  export type GetIpAssessmentAggregateType<T extends IpAssessmentAggregateArgs> = {
-        [P in keyof T & keyof AggregateIpAssessment]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateIpAssessment[P]>
-      : GetScalarType<T[P], AggregateIpAssessment[P]>
-  }
-
-
-
-
-  export type IpAssessmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: IpAssessmentWhereInput
-    orderBy?: IpAssessmentOrderByWithAggregationInput | IpAssessmentOrderByWithAggregationInput[]
-    by: IpAssessmentScalarFieldEnum[] | IpAssessmentScalarFieldEnum
-    having?: IpAssessmentScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: IpAssessmentCountAggregateInputType | true
-    _avg?: IpAssessmentAvgAggregateInputType
-    _sum?: IpAssessmentSumAggregateInputType
-    _min?: IpAssessmentMinAggregateInputType
-    _max?: IpAssessmentMaxAggregateInputType
-  }
-
-  export type IpAssessmentGroupByOutputType = {
-    id: number
-    ip: string
-    userAgent: string
-    acceptLanguage: string
-    data: JsonValue
-    createdAt: Date
-    _count: IpAssessmentCountAggregateOutputType | null
-    _avg: IpAssessmentAvgAggregateOutputType | null
-    _sum: IpAssessmentSumAggregateOutputType | null
-    _min: IpAssessmentMinAggregateOutputType | null
-    _max: IpAssessmentMaxAggregateOutputType | null
-  }
-
-  type GetIpAssessmentGroupByPayload<T extends IpAssessmentGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<IpAssessmentGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof IpAssessmentGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], IpAssessmentGroupByOutputType[P]>
-            : GetScalarType<T[P], IpAssessmentGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type IpAssessmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    ip?: boolean
-    userAgent?: boolean
-    acceptLanguage?: boolean
-    data?: boolean
-    createdAt?: boolean
-    loginAttempts?: boolean | IpAssessment$loginAttemptsArgs<ExtArgs>
-    _count?: boolean | IpAssessmentCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["ipAssessment"]>
-
-  export type IpAssessmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    ip?: boolean
-    userAgent?: boolean
-    acceptLanguage?: boolean
-    data?: boolean
-    createdAt?: boolean
-  }, ExtArgs["result"]["ipAssessment"]>
-
-  export type IpAssessmentSelectScalar = {
-    id?: boolean
-    ip?: boolean
-    userAgent?: boolean
-    acceptLanguage?: boolean
-    data?: boolean
-    createdAt?: boolean
-  }
-
-  export type IpAssessmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    loginAttempts?: boolean | IpAssessment$loginAttemptsArgs<ExtArgs>
-    _count?: boolean | IpAssessmentCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type IpAssessmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-
-  export type $IpAssessmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "IpAssessment"
-    objects: {
-      loginAttempts: Prisma.$LoginAttemptPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      ip: string
-      userAgent: string
-      acceptLanguage: string
-      data: Prisma.JsonValue
-      createdAt: Date
-    }, ExtArgs["result"]["ipAssessment"]>
-    composites: {}
-  }
-
-  type IpAssessmentGetPayload<S extends boolean | null | undefined | IpAssessmentDefaultArgs> = $Result.GetResult<Prisma.$IpAssessmentPayload, S>
-
-  type IpAssessmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<IpAssessmentFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: IpAssessmentCountAggregateInputType | true
-    }
-
-  export interface IpAssessmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IpAssessment'], meta: { name: 'IpAssessment' } }
-    /**
-     * Find zero or one IpAssessment that matches the filter.
-     * @param {IpAssessmentFindUniqueArgs} args - Arguments to find a IpAssessment
-     * @example
-     * // Get one IpAssessment
-     * const ipAssessment = await prisma.ipAssessment.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUnique<T extends IpAssessmentFindUniqueArgs<ExtArgs>>(
-      args: SelectSubset<T, IpAssessmentFindUniqueArgs<ExtArgs>>
-    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
-
-    /**
-     * Find one IpAssessment that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {IpAssessmentFindUniqueOrThrowArgs} args - Arguments to find a IpAssessment
-     * @example
-     * // Get one IpAssessment
-     * const ipAssessment = await prisma.ipAssessment.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends IpAssessmentFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, IpAssessmentFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find the first IpAssessment that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IpAssessmentFindFirstArgs} args - Arguments to find a IpAssessment
-     * @example
-     * // Get one IpAssessment
-     * const ipAssessment = await prisma.ipAssessment.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirst<T extends IpAssessmentFindFirstArgs<ExtArgs>>(
-      args?: SelectSubset<T, IpAssessmentFindFirstArgs<ExtArgs>>
-    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
-
-    /**
-     * Find the first IpAssessment that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IpAssessmentFindFirstOrThrowArgs} args - Arguments to find a IpAssessment
-     * @example
-     * // Get one IpAssessment
-     * const ipAssessment = await prisma.ipAssessment.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends IpAssessmentFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, IpAssessmentFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find zero or more IpAssessments that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IpAssessmentFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all IpAssessments
-     * const ipAssessments = await prisma.ipAssessment.findMany()
-     * 
-     * // Get first 10 IpAssessments
-     * const ipAssessments = await prisma.ipAssessment.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const ipAssessmentWithIdOnly = await prisma.ipAssessment.findMany({ select: { id: true } })
-     * 
-    **/
-    findMany<T extends IpAssessmentFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, IpAssessmentFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'findMany'>>
-
-    /**
-     * Create a IpAssessment.
-     * @param {IpAssessmentCreateArgs} args - Arguments to create a IpAssessment.
-     * @example
-     * // Create one IpAssessment
-     * const IpAssessment = await prisma.ipAssessment.create({
-     *   data: {
-     *     // ... data to create a IpAssessment
-     *   }
-     * })
-     * 
-    **/
-    create<T extends IpAssessmentCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, IpAssessmentCreateArgs<ExtArgs>>
-    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
-
-    /**
-     * Create many IpAssessments.
-     * @param {IpAssessmentCreateManyArgs} args - Arguments to create many IpAssessments.
-     * @example
-     * // Create many IpAssessments
-     * const ipAssessment = await prisma.ipAssessment.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-    **/
-    createMany<T extends IpAssessmentCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, IpAssessmentCreateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many IpAssessments and returns the data saved in the database.
-     * @param {IpAssessmentCreateManyAndReturnArgs} args - Arguments to create many IpAssessments.
-     * @example
-     * // Create many IpAssessments
-     * const ipAssessment = await prisma.ipAssessment.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many IpAssessments and only return the `id`
-     * const ipAssessmentWithIdOnly = await prisma.ipAssessment.createManyAndReturn({ 
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-    **/
-    createManyAndReturn<T extends IpAssessmentCreateManyAndReturnArgs<ExtArgs>>(
-      args?: SelectSubset<T, IpAssessmentCreateManyAndReturnArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'createManyAndReturn'>>
-
-    /**
-     * Delete a IpAssessment.
-     * @param {IpAssessmentDeleteArgs} args - Arguments to delete one IpAssessment.
-     * @example
-     * // Delete one IpAssessment
-     * const IpAssessment = await prisma.ipAssessment.delete({
-     *   where: {
-     *     // ... filter to delete one IpAssessment
-     *   }
-     * })
-     * 
-    **/
-    delete<T extends IpAssessmentDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, IpAssessmentDeleteArgs<ExtArgs>>
-    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
-
-    /**
-     * Update one IpAssessment.
-     * @param {IpAssessmentUpdateArgs} args - Arguments to update one IpAssessment.
-     * @example
-     * // Update one IpAssessment
-     * const ipAssessment = await prisma.ipAssessment.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    update<T extends IpAssessmentUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, IpAssessmentUpdateArgs<ExtArgs>>
-    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
-
-    /**
-     * Delete zero or more IpAssessments.
-     * @param {IpAssessmentDeleteManyArgs} args - Arguments to filter IpAssessments to delete.
-     * @example
-     * // Delete a few IpAssessments
-     * const { count } = await prisma.ipAssessment.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-    **/
-    deleteMany<T extends IpAssessmentDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, IpAssessmentDeleteManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more IpAssessments.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IpAssessmentUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many IpAssessments
-     * const ipAssessment = await prisma.ipAssessment.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    updateMany<T extends IpAssessmentUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, IpAssessmentUpdateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one IpAssessment.
-     * @param {IpAssessmentUpsertArgs} args - Arguments to update or create a IpAssessment.
-     * @example
-     * // Update or create a IpAssessment
-     * const ipAssessment = await prisma.ipAssessment.upsert({
-     *   create: {
-     *     // ... data to create a IpAssessment
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the IpAssessment we want to update
-     *   }
-     * })
-    **/
-    upsert<T extends IpAssessmentUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, IpAssessmentUpsertArgs<ExtArgs>>
-    ): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
-
-    /**
-     * Count the number of IpAssessments.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IpAssessmentCountArgs} args - Arguments to filter IpAssessments to count.
-     * @example
-     * // Count the number of IpAssessments
-     * const count = await prisma.ipAssessment.count({
-     *   where: {
-     *     // ... the filter for the IpAssessments we want to count
-     *   }
-     * })
-    **/
-    count<T extends IpAssessmentCountArgs>(
-      args?: Subset<T, IpAssessmentCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], IpAssessmentCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a IpAssessment.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IpAssessmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends IpAssessmentAggregateArgs>(args: Subset<T, IpAssessmentAggregateArgs>): Prisma.PrismaPromise<GetIpAssessmentAggregateType<T>>
-
-    /**
-     * Group by IpAssessment.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {IpAssessmentGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends IpAssessmentGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: IpAssessmentGroupByArgs['orderBy'] }
-        : { orderBy?: IpAssessmentGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, IpAssessmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIpAssessmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the IpAssessment model
-   */
-  readonly fields: IpAssessmentFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for IpAssessment.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__IpAssessmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: 'PrismaPromise';
-
-    loginAttempts<T extends IpAssessment$loginAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, IpAssessment$loginAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findMany'> | Null>;
-
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
-  }
-
-
-
-  /**
-   * Fields of the IpAssessment model
-   */ 
-  interface IpAssessmentFieldRefs {
-    readonly id: FieldRef<"IpAssessment", 'Int'>
-    readonly ip: FieldRef<"IpAssessment", 'String'>
-    readonly userAgent: FieldRef<"IpAssessment", 'String'>
-    readonly acceptLanguage: FieldRef<"IpAssessment", 'String'>
-    readonly data: FieldRef<"IpAssessment", 'Json'>
-    readonly createdAt: FieldRef<"IpAssessment", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * IpAssessment findUnique
-   */
-  export type IpAssessmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpAssessment
-     */
-    select?: IpAssessmentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpAssessmentInclude<ExtArgs> | null
-    /**
-     * Filter, which IpAssessment to fetch.
-     */
-    where: IpAssessmentWhereUniqueInput
-  }
-
-  /**
-   * IpAssessment findUniqueOrThrow
-   */
-  export type IpAssessmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpAssessment
-     */
-    select?: IpAssessmentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpAssessmentInclude<ExtArgs> | null
-    /**
-     * Filter, which IpAssessment to fetch.
-     */
-    where: IpAssessmentWhereUniqueInput
-  }
-
-  /**
-   * IpAssessment findFirst
-   */
-  export type IpAssessmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpAssessment
-     */
-    select?: IpAssessmentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpAssessmentInclude<ExtArgs> | null
-    /**
-     * Filter, which IpAssessment to fetch.
-     */
-    where?: IpAssessmentWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of IpAssessments to fetch.
-     */
-    orderBy?: IpAssessmentOrderByWithRelationInput | IpAssessmentOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for IpAssessments.
-     */
-    cursor?: IpAssessmentWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` IpAssessments from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` IpAssessments.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of IpAssessments.
-     */
-    distinct?: IpAssessmentScalarFieldEnum | IpAssessmentScalarFieldEnum[]
-  }
-
-  /**
-   * IpAssessment findFirstOrThrow
-   */
-  export type IpAssessmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpAssessment
-     */
-    select?: IpAssessmentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpAssessmentInclude<ExtArgs> | null
-    /**
-     * Filter, which IpAssessment to fetch.
-     */
-    where?: IpAssessmentWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of IpAssessments to fetch.
-     */
-    orderBy?: IpAssessmentOrderByWithRelationInput | IpAssessmentOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for IpAssessments.
-     */
-    cursor?: IpAssessmentWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` IpAssessments from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` IpAssessments.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of IpAssessments.
-     */
-    distinct?: IpAssessmentScalarFieldEnum | IpAssessmentScalarFieldEnum[]
-  }
-
-  /**
-   * IpAssessment findMany
-   */
-  export type IpAssessmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpAssessment
-     */
-    select?: IpAssessmentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpAssessmentInclude<ExtArgs> | null
-    /**
-     * Filter, which IpAssessments to fetch.
-     */
-    where?: IpAssessmentWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of IpAssessments to fetch.
-     */
-    orderBy?: IpAssessmentOrderByWithRelationInput | IpAssessmentOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing IpAssessments.
-     */
-    cursor?: IpAssessmentWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` IpAssessments from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` IpAssessments.
-     */
-    skip?: number
-    distinct?: IpAssessmentScalarFieldEnum | IpAssessmentScalarFieldEnum[]
-  }
-
-  /**
-   * IpAssessment create
-   */
-  export type IpAssessmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpAssessment
-     */
-    select?: IpAssessmentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpAssessmentInclude<ExtArgs> | null
-    /**
-     * The data needed to create a IpAssessment.
-     */
-    data: XOR<IpAssessmentCreateInput, IpAssessmentUncheckedCreateInput>
-  }
-
-  /**
-   * IpAssessment createMany
-   */
-  export type IpAssessmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many IpAssessments.
-     */
-    data: IpAssessmentCreateManyInput | IpAssessmentCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * IpAssessment createManyAndReturn
-   */
-  export type IpAssessmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpAssessment
-     */
-    select?: IpAssessmentSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many IpAssessments.
-     */
-    data: IpAssessmentCreateManyInput | IpAssessmentCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * IpAssessment update
-   */
-  export type IpAssessmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpAssessment
-     */
-    select?: IpAssessmentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpAssessmentInclude<ExtArgs> | null
-    /**
-     * The data needed to update a IpAssessment.
-     */
-    data: XOR<IpAssessmentUpdateInput, IpAssessmentUncheckedUpdateInput>
-    /**
-     * Choose, which IpAssessment to update.
-     */
-    where: IpAssessmentWhereUniqueInput
-  }
-
-  /**
-   * IpAssessment updateMany
-   */
-  export type IpAssessmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update IpAssessments.
-     */
-    data: XOR<IpAssessmentUpdateManyMutationInput, IpAssessmentUncheckedUpdateManyInput>
-    /**
-     * Filter which IpAssessments to update
-     */
-    where?: IpAssessmentWhereInput
-  }
-
-  /**
-   * IpAssessment upsert
-   */
-  export type IpAssessmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpAssessment
-     */
-    select?: IpAssessmentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpAssessmentInclude<ExtArgs> | null
-    /**
-     * The filter to search for the IpAssessment to update in case it exists.
-     */
-    where: IpAssessmentWhereUniqueInput
-    /**
-     * In case the IpAssessment found by the `where` argument doesn't exist, create a new IpAssessment with this data.
-     */
-    create: XOR<IpAssessmentCreateInput, IpAssessmentUncheckedCreateInput>
-    /**
-     * In case the IpAssessment was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<IpAssessmentUpdateInput, IpAssessmentUncheckedUpdateInput>
-  }
-
-  /**
-   * IpAssessment delete
-   */
-  export type IpAssessmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpAssessment
-     */
-    select?: IpAssessmentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpAssessmentInclude<ExtArgs> | null
-    /**
-     * Filter which IpAssessment to delete.
-     */
-    where: IpAssessmentWhereUniqueInput
-  }
-
-  /**
-   * IpAssessment deleteMany
-   */
-  export type IpAssessmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which IpAssessments to delete
-     */
-    where?: IpAssessmentWhereInput
-  }
-
-  /**
-   * IpAssessment.loginAttempts
-   */
-  export type IpAssessment$loginAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LoginAttempt
-     */
-    select?: LoginAttemptSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LoginAttemptInclude<ExtArgs> | null
-    where?: LoginAttemptWhereInput
-    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
-    cursor?: LoginAttemptWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
-  }
-
-  /**
-   * IpAssessment without action
-   */
-  export type IpAssessmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the IpAssessment
-     */
-    select?: IpAssessmentSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: IpAssessmentInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model LoginAttempt
    */
 
@@ -12278,38 +8532,30 @@ export namespace Prisma {
 
   export type LoginAttemptAvgAggregateOutputType = {
     id: number | null
-    ipAssessmentId: number | null
   }
 
   export type LoginAttemptSumAggregateOutputType = {
     id: number | null
-    ipAssessmentId: number | null
   }
 
   export type LoginAttemptMinAggregateOutputType = {
     id: number | null
     userId: string | null
-    ipAssessmentId: number | null
     type: $Enums.LoginAttemptType | null
-    fraudScoring: $Enums.FraudScoringOutput | null
     createdAt: Date | null
   }
 
   export type LoginAttemptMaxAggregateOutputType = {
     id: number | null
     userId: string | null
-    ipAssessmentId: number | null
     type: $Enums.LoginAttemptType | null
-    fraudScoring: $Enums.FraudScoringOutput | null
     createdAt: Date | null
   }
 
   export type LoginAttemptCountAggregateOutputType = {
     id: number
     userId: number
-    ipAssessmentId: number
     type: number
-    fraudScoring: number
     createdAt: number
     _all: number
   }
@@ -12317,38 +8563,30 @@ export namespace Prisma {
 
   export type LoginAttemptAvgAggregateInputType = {
     id?: true
-    ipAssessmentId?: true
   }
 
   export type LoginAttemptSumAggregateInputType = {
     id?: true
-    ipAssessmentId?: true
   }
 
   export type LoginAttemptMinAggregateInputType = {
     id?: true
     userId?: true
-    ipAssessmentId?: true
     type?: true
-    fraudScoring?: true
     createdAt?: true
   }
 
   export type LoginAttemptMaxAggregateInputType = {
     id?: true
     userId?: true
-    ipAssessmentId?: true
     type?: true
-    fraudScoring?: true
     createdAt?: true
   }
 
   export type LoginAttemptCountAggregateInputType = {
     id?: true
     userId?: true
-    ipAssessmentId?: true
     type?: true
-    fraudScoring?: true
     createdAt?: true
     _all?: true
   }
@@ -12442,9 +8680,7 @@ export namespace Prisma {
   export type LoginAttemptGroupByOutputType = {
     id: number
     userId: string
-    ipAssessmentId: number
     type: $Enums.LoginAttemptType
-    fraudScoring: $Enums.FraudScoringOutput | null
     createdAt: Date
     _count: LoginAttemptCountAggregateOutputType | null
     _avg: LoginAttemptAvgAggregateOutputType | null
@@ -12470,55 +8706,42 @@ export namespace Prisma {
   export type LoginAttemptSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    ipAssessmentId?: boolean
     type?: boolean
-    fraudScoring?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    ipAssessment?: boolean | IpAssessmentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["loginAttempt"]>
 
   export type LoginAttemptSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    ipAssessmentId?: boolean
     type?: boolean
-    fraudScoring?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
-    ipAssessment?: boolean | IpAssessmentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["loginAttempt"]>
 
   export type LoginAttemptSelectScalar = {
     id?: boolean
     userId?: boolean
-    ipAssessmentId?: boolean
     type?: boolean
-    fraudScoring?: boolean
     createdAt?: boolean
   }
 
   export type LoginAttemptInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    ipAssessment?: boolean | IpAssessmentDefaultArgs<ExtArgs>
   }
   export type LoginAttemptIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
-    ipAssessment?: boolean | IpAssessmentDefaultArgs<ExtArgs>
   }
 
   export type $LoginAttemptPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "LoginAttempt"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
-      ipAssessment: Prisma.$IpAssessmentPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       userId: string
-      ipAssessmentId: number
       type: $Enums.LoginAttemptType
-      fraudScoring: $Enums.FraudScoringOutput | null
       createdAt: Date
     }, ExtArgs["result"]["loginAttempt"]>
     composites: {}
@@ -12912,8 +9135,6 @@ export namespace Prisma {
 
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
 
-    ipAssessment<T extends IpAssessmentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IpAssessmentDefaultArgs<ExtArgs>>): Prisma__IpAssessmentClient<$Result.GetResult<Prisma.$IpAssessmentPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
-
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12944,9 +9165,7 @@ export namespace Prisma {
   interface LoginAttemptFieldRefs {
     readonly id: FieldRef<"LoginAttempt", 'Int'>
     readonly userId: FieldRef<"LoginAttempt", 'String'>
-    readonly ipAssessmentId: FieldRef<"LoginAttempt", 'Int'>
     readonly type: FieldRef<"LoginAttempt", 'LoginAttemptType'>
-    readonly fraudScoring: FieldRef<"LoginAttempt", 'FraudScoringOutput'>
     readonly createdAt: FieldRef<"LoginAttempt", 'DateTime'>
   }
     
@@ -18029,886 +14248,6 @@ export namespace Prisma {
 
 
   /**
-   * Model BlockedCountry
-   */
-
-  export type AggregateBlockedCountry = {
-    _count: BlockedCountryCountAggregateOutputType | null
-    _min: BlockedCountryMinAggregateOutputType | null
-    _max: BlockedCountryMaxAggregateOutputType | null
-  }
-
-  export type BlockedCountryMinAggregateOutputType = {
-    country: string | null
-    countryCode: string | null
-    status: $Enums.CountryStatus | null
-  }
-
-  export type BlockedCountryMaxAggregateOutputType = {
-    country: string | null
-    countryCode: string | null
-    status: $Enums.CountryStatus | null
-  }
-
-  export type BlockedCountryCountAggregateOutputType = {
-    country: number
-    countryCode: number
-    status: number
-    _all: number
-  }
-
-
-  export type BlockedCountryMinAggregateInputType = {
-    country?: true
-    countryCode?: true
-    status?: true
-  }
-
-  export type BlockedCountryMaxAggregateInputType = {
-    country?: true
-    countryCode?: true
-    status?: true
-  }
-
-  export type BlockedCountryCountAggregateInputType = {
-    country?: true
-    countryCode?: true
-    status?: true
-    _all?: true
-  }
-
-  export type BlockedCountryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which BlockedCountry to aggregate.
-     */
-    where?: BlockedCountryWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BlockedCountries to fetch.
-     */
-    orderBy?: BlockedCountryOrderByWithRelationInput | BlockedCountryOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: BlockedCountryWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BlockedCountries from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BlockedCountries.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned BlockedCountries
-    **/
-    _count?: true | BlockedCountryCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: BlockedCountryMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: BlockedCountryMaxAggregateInputType
-  }
-
-  export type GetBlockedCountryAggregateType<T extends BlockedCountryAggregateArgs> = {
-        [P in keyof T & keyof AggregateBlockedCountry]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateBlockedCountry[P]>
-      : GetScalarType<T[P], AggregateBlockedCountry[P]>
-  }
-
-
-
-
-  export type BlockedCountryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: BlockedCountryWhereInput
-    orderBy?: BlockedCountryOrderByWithAggregationInput | BlockedCountryOrderByWithAggregationInput[]
-    by: BlockedCountryScalarFieldEnum[] | BlockedCountryScalarFieldEnum
-    having?: BlockedCountryScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: BlockedCountryCountAggregateInputType | true
-    _min?: BlockedCountryMinAggregateInputType
-    _max?: BlockedCountryMaxAggregateInputType
-  }
-
-  export type BlockedCountryGroupByOutputType = {
-    country: string
-    countryCode: string
-    status: $Enums.CountryStatus
-    _count: BlockedCountryCountAggregateOutputType | null
-    _min: BlockedCountryMinAggregateOutputType | null
-    _max: BlockedCountryMaxAggregateOutputType | null
-  }
-
-  type GetBlockedCountryGroupByPayload<T extends BlockedCountryGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<BlockedCountryGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof BlockedCountryGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], BlockedCountryGroupByOutputType[P]>
-            : GetScalarType<T[P], BlockedCountryGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type BlockedCountrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    country?: boolean
-    countryCode?: boolean
-    status?: boolean
-  }, ExtArgs["result"]["blockedCountry"]>
-
-  export type BlockedCountrySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    country?: boolean
-    countryCode?: boolean
-    status?: boolean
-  }, ExtArgs["result"]["blockedCountry"]>
-
-  export type BlockedCountrySelectScalar = {
-    country?: boolean
-    countryCode?: boolean
-    status?: boolean
-  }
-
-
-  export type $BlockedCountryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "BlockedCountry"
-    objects: {}
-    scalars: $Extensions.GetPayloadResult<{
-      country: string
-      countryCode: string
-      status: $Enums.CountryStatus
-    }, ExtArgs["result"]["blockedCountry"]>
-    composites: {}
-  }
-
-  type BlockedCountryGetPayload<S extends boolean | null | undefined | BlockedCountryDefaultArgs> = $Result.GetResult<Prisma.$BlockedCountryPayload, S>
-
-  type BlockedCountryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<BlockedCountryFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: BlockedCountryCountAggregateInputType | true
-    }
-
-  export interface BlockedCountryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BlockedCountry'], meta: { name: 'BlockedCountry' } }
-    /**
-     * Find zero or one BlockedCountry that matches the filter.
-     * @param {BlockedCountryFindUniqueArgs} args - Arguments to find a BlockedCountry
-     * @example
-     * // Get one BlockedCountry
-     * const blockedCountry = await prisma.blockedCountry.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUnique<T extends BlockedCountryFindUniqueArgs<ExtArgs>>(
-      args: SelectSubset<T, BlockedCountryFindUniqueArgs<ExtArgs>>
-    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
-
-    /**
-     * Find one BlockedCountry that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {BlockedCountryFindUniqueOrThrowArgs} args - Arguments to find a BlockedCountry
-     * @example
-     * // Get one BlockedCountry
-     * const blockedCountry = await prisma.blockedCountry.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends BlockedCountryFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, BlockedCountryFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find the first BlockedCountry that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BlockedCountryFindFirstArgs} args - Arguments to find a BlockedCountry
-     * @example
-     * // Get one BlockedCountry
-     * const blockedCountry = await prisma.blockedCountry.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirst<T extends BlockedCountryFindFirstArgs<ExtArgs>>(
-      args?: SelectSubset<T, BlockedCountryFindFirstArgs<ExtArgs>>
-    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
-
-    /**
-     * Find the first BlockedCountry that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BlockedCountryFindFirstOrThrowArgs} args - Arguments to find a BlockedCountry
-     * @example
-     * // Get one BlockedCountry
-     * const blockedCountry = await prisma.blockedCountry.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends BlockedCountryFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, BlockedCountryFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find zero or more BlockedCountries that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BlockedCountryFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all BlockedCountries
-     * const blockedCountries = await prisma.blockedCountry.findMany()
-     * 
-     * // Get first 10 BlockedCountries
-     * const blockedCountries = await prisma.blockedCountry.findMany({ take: 10 })
-     * 
-     * // Only select the `country`
-     * const blockedCountryWithCountryOnly = await prisma.blockedCountry.findMany({ select: { country: true } })
-     * 
-    **/
-    findMany<T extends BlockedCountryFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, BlockedCountryFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'findMany'>>
-
-    /**
-     * Create a BlockedCountry.
-     * @param {BlockedCountryCreateArgs} args - Arguments to create a BlockedCountry.
-     * @example
-     * // Create one BlockedCountry
-     * const BlockedCountry = await prisma.blockedCountry.create({
-     *   data: {
-     *     // ... data to create a BlockedCountry
-     *   }
-     * })
-     * 
-    **/
-    create<T extends BlockedCountryCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, BlockedCountryCreateArgs<ExtArgs>>
-    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
-
-    /**
-     * Create many BlockedCountries.
-     * @param {BlockedCountryCreateManyArgs} args - Arguments to create many BlockedCountries.
-     * @example
-     * // Create many BlockedCountries
-     * const blockedCountry = await prisma.blockedCountry.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-    **/
-    createMany<T extends BlockedCountryCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, BlockedCountryCreateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many BlockedCountries and returns the data saved in the database.
-     * @param {BlockedCountryCreateManyAndReturnArgs} args - Arguments to create many BlockedCountries.
-     * @example
-     * // Create many BlockedCountries
-     * const blockedCountry = await prisma.blockedCountry.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many BlockedCountries and only return the `country`
-     * const blockedCountryWithCountryOnly = await prisma.blockedCountry.createManyAndReturn({ 
-     *   select: { country: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-    **/
-    createManyAndReturn<T extends BlockedCountryCreateManyAndReturnArgs<ExtArgs>>(
-      args?: SelectSubset<T, BlockedCountryCreateManyAndReturnArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'createManyAndReturn'>>
-
-    /**
-     * Delete a BlockedCountry.
-     * @param {BlockedCountryDeleteArgs} args - Arguments to delete one BlockedCountry.
-     * @example
-     * // Delete one BlockedCountry
-     * const BlockedCountry = await prisma.blockedCountry.delete({
-     *   where: {
-     *     // ... filter to delete one BlockedCountry
-     *   }
-     * })
-     * 
-    **/
-    delete<T extends BlockedCountryDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, BlockedCountryDeleteArgs<ExtArgs>>
-    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
-
-    /**
-     * Update one BlockedCountry.
-     * @param {BlockedCountryUpdateArgs} args - Arguments to update one BlockedCountry.
-     * @example
-     * // Update one BlockedCountry
-     * const blockedCountry = await prisma.blockedCountry.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    update<T extends BlockedCountryUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, BlockedCountryUpdateArgs<ExtArgs>>
-    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
-
-    /**
-     * Delete zero or more BlockedCountries.
-     * @param {BlockedCountryDeleteManyArgs} args - Arguments to filter BlockedCountries to delete.
-     * @example
-     * // Delete a few BlockedCountries
-     * const { count } = await prisma.blockedCountry.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-    **/
-    deleteMany<T extends BlockedCountryDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, BlockedCountryDeleteManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more BlockedCountries.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BlockedCountryUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many BlockedCountries
-     * const blockedCountry = await prisma.blockedCountry.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    updateMany<T extends BlockedCountryUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, BlockedCountryUpdateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one BlockedCountry.
-     * @param {BlockedCountryUpsertArgs} args - Arguments to update or create a BlockedCountry.
-     * @example
-     * // Update or create a BlockedCountry
-     * const blockedCountry = await prisma.blockedCountry.upsert({
-     *   create: {
-     *     // ... data to create a BlockedCountry
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the BlockedCountry we want to update
-     *   }
-     * })
-    **/
-    upsert<T extends BlockedCountryUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, BlockedCountryUpsertArgs<ExtArgs>>
-    ): Prisma__BlockedCountryClient<$Result.GetResult<Prisma.$BlockedCountryPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
-
-    /**
-     * Count the number of BlockedCountries.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BlockedCountryCountArgs} args - Arguments to filter BlockedCountries to count.
-     * @example
-     * // Count the number of BlockedCountries
-     * const count = await prisma.blockedCountry.count({
-     *   where: {
-     *     // ... the filter for the BlockedCountries we want to count
-     *   }
-     * })
-    **/
-    count<T extends BlockedCountryCountArgs>(
-      args?: Subset<T, BlockedCountryCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], BlockedCountryCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a BlockedCountry.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BlockedCountryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends BlockedCountryAggregateArgs>(args: Subset<T, BlockedCountryAggregateArgs>): Prisma.PrismaPromise<GetBlockedCountryAggregateType<T>>
-
-    /**
-     * Group by BlockedCountry.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {BlockedCountryGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends BlockedCountryGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: BlockedCountryGroupByArgs['orderBy'] }
-        : { orderBy?: BlockedCountryGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, BlockedCountryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBlockedCountryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the BlockedCountry model
-   */
-  readonly fields: BlockedCountryFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for BlockedCountry.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__BlockedCountryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: 'PrismaPromise';
-
-
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
-  }
-
-
-
-  /**
-   * Fields of the BlockedCountry model
-   */ 
-  interface BlockedCountryFieldRefs {
-    readonly country: FieldRef<"BlockedCountry", 'String'>
-    readonly countryCode: FieldRef<"BlockedCountry", 'String'>
-    readonly status: FieldRef<"BlockedCountry", 'CountryStatus'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * BlockedCountry findUnique
-   */
-  export type BlockedCountryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BlockedCountry
-     */
-    select?: BlockedCountrySelect<ExtArgs> | null
-    /**
-     * Filter, which BlockedCountry to fetch.
-     */
-    where: BlockedCountryWhereUniqueInput
-  }
-
-  /**
-   * BlockedCountry findUniqueOrThrow
-   */
-  export type BlockedCountryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BlockedCountry
-     */
-    select?: BlockedCountrySelect<ExtArgs> | null
-    /**
-     * Filter, which BlockedCountry to fetch.
-     */
-    where: BlockedCountryWhereUniqueInput
-  }
-
-  /**
-   * BlockedCountry findFirst
-   */
-  export type BlockedCountryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BlockedCountry
-     */
-    select?: BlockedCountrySelect<ExtArgs> | null
-    /**
-     * Filter, which BlockedCountry to fetch.
-     */
-    where?: BlockedCountryWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BlockedCountries to fetch.
-     */
-    orderBy?: BlockedCountryOrderByWithRelationInput | BlockedCountryOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for BlockedCountries.
-     */
-    cursor?: BlockedCountryWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BlockedCountries from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BlockedCountries.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of BlockedCountries.
-     */
-    distinct?: BlockedCountryScalarFieldEnum | BlockedCountryScalarFieldEnum[]
-  }
-
-  /**
-   * BlockedCountry findFirstOrThrow
-   */
-  export type BlockedCountryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BlockedCountry
-     */
-    select?: BlockedCountrySelect<ExtArgs> | null
-    /**
-     * Filter, which BlockedCountry to fetch.
-     */
-    where?: BlockedCountryWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BlockedCountries to fetch.
-     */
-    orderBy?: BlockedCountryOrderByWithRelationInput | BlockedCountryOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for BlockedCountries.
-     */
-    cursor?: BlockedCountryWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BlockedCountries from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BlockedCountries.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of BlockedCountries.
-     */
-    distinct?: BlockedCountryScalarFieldEnum | BlockedCountryScalarFieldEnum[]
-  }
-
-  /**
-   * BlockedCountry findMany
-   */
-  export type BlockedCountryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BlockedCountry
-     */
-    select?: BlockedCountrySelect<ExtArgs> | null
-    /**
-     * Filter, which BlockedCountries to fetch.
-     */
-    where?: BlockedCountryWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of BlockedCountries to fetch.
-     */
-    orderBy?: BlockedCountryOrderByWithRelationInput | BlockedCountryOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing BlockedCountries.
-     */
-    cursor?: BlockedCountryWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` BlockedCountries from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` BlockedCountries.
-     */
-    skip?: number
-    distinct?: BlockedCountryScalarFieldEnum | BlockedCountryScalarFieldEnum[]
-  }
-
-  /**
-   * BlockedCountry create
-   */
-  export type BlockedCountryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BlockedCountry
-     */
-    select?: BlockedCountrySelect<ExtArgs> | null
-    /**
-     * The data needed to create a BlockedCountry.
-     */
-    data: XOR<BlockedCountryCreateInput, BlockedCountryUncheckedCreateInput>
-  }
-
-  /**
-   * BlockedCountry createMany
-   */
-  export type BlockedCountryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many BlockedCountries.
-     */
-    data: BlockedCountryCreateManyInput | BlockedCountryCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * BlockedCountry createManyAndReturn
-   */
-  export type BlockedCountryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BlockedCountry
-     */
-    select?: BlockedCountrySelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many BlockedCountries.
-     */
-    data: BlockedCountryCreateManyInput | BlockedCountryCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * BlockedCountry update
-   */
-  export type BlockedCountryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BlockedCountry
-     */
-    select?: BlockedCountrySelect<ExtArgs> | null
-    /**
-     * The data needed to update a BlockedCountry.
-     */
-    data: XOR<BlockedCountryUpdateInput, BlockedCountryUncheckedUpdateInput>
-    /**
-     * Choose, which BlockedCountry to update.
-     */
-    where: BlockedCountryWhereUniqueInput
-  }
-
-  /**
-   * BlockedCountry updateMany
-   */
-  export type BlockedCountryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update BlockedCountries.
-     */
-    data: XOR<BlockedCountryUpdateManyMutationInput, BlockedCountryUncheckedUpdateManyInput>
-    /**
-     * Filter which BlockedCountries to update
-     */
-    where?: BlockedCountryWhereInput
-  }
-
-  /**
-   * BlockedCountry upsert
-   */
-  export type BlockedCountryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BlockedCountry
-     */
-    select?: BlockedCountrySelect<ExtArgs> | null
-    /**
-     * The filter to search for the BlockedCountry to update in case it exists.
-     */
-    where: BlockedCountryWhereUniqueInput
-    /**
-     * In case the BlockedCountry found by the `where` argument doesn't exist, create a new BlockedCountry with this data.
-     */
-    create: XOR<BlockedCountryCreateInput, BlockedCountryUncheckedCreateInput>
-    /**
-     * In case the BlockedCountry was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<BlockedCountryUpdateInput, BlockedCountryUncheckedUpdateInput>
-  }
-
-  /**
-   * BlockedCountry delete
-   */
-  export type BlockedCountryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BlockedCountry
-     */
-    select?: BlockedCountrySelect<ExtArgs> | null
-    /**
-     * Filter which BlockedCountry to delete.
-     */
-    where: BlockedCountryWhereUniqueInput
-  }
-
-  /**
-   * BlockedCountry deleteMany
-   */
-  export type BlockedCountryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which BlockedCountries to delete
-     */
-    where?: BlockedCountryWhereInput
-  }
-
-  /**
-   * BlockedCountry without action
-   */
-  export type BlockedCountryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the BlockedCountry
-     */
-    select?: BlockedCountrySelect<ExtArgs> | null
-  }
-
-
-  /**
    * Model TransactionIntent
    */
 
@@ -22714,3014 +18053,6 @@ export namespace Prisma {
 
 
   /**
-   * Model Marketing
-   */
-
-  export type AggregateMarketing = {
-    _count: MarketingCountAggregateOutputType | null
-    _avg: MarketingAvgAggregateOutputType | null
-    _sum: MarketingSumAggregateOutputType | null
-    _min: MarketingMinAggregateOutputType | null
-    _max: MarketingMaxAggregateOutputType | null
-  }
-
-  export type MarketingAvgAggregateOutputType = {
-    id: number | null
-  }
-
-  export type MarketingSumAggregateOutputType = {
-    id: number | null
-  }
-
-  export type MarketingMinAggregateOutputType = {
-    id: number | null
-    userId: string | null
-    utm_campaign: string | null
-    utm_medium: string | null
-    utm_source: string | null
-    utm_id: string | null
-    utm_content: string | null
-    utm_term: string | null
-  }
-
-  export type MarketingMaxAggregateOutputType = {
-    id: number | null
-    userId: string | null
-    utm_campaign: string | null
-    utm_medium: string | null
-    utm_source: string | null
-    utm_id: string | null
-    utm_content: string | null
-    utm_term: string | null
-  }
-
-  export type MarketingCountAggregateOutputType = {
-    id: number
-    userId: number
-    utm_campaign: number
-    utm_medium: number
-    utm_source: number
-    utm_id: number
-    utm_content: number
-    utm_term: number
-    _all: number
-  }
-
-
-  export type MarketingAvgAggregateInputType = {
-    id?: true
-  }
-
-  export type MarketingSumAggregateInputType = {
-    id?: true
-  }
-
-  export type MarketingMinAggregateInputType = {
-    id?: true
-    userId?: true
-    utm_campaign?: true
-    utm_medium?: true
-    utm_source?: true
-    utm_id?: true
-    utm_content?: true
-    utm_term?: true
-  }
-
-  export type MarketingMaxAggregateInputType = {
-    id?: true
-    userId?: true
-    utm_campaign?: true
-    utm_medium?: true
-    utm_source?: true
-    utm_id?: true
-    utm_content?: true
-    utm_term?: true
-  }
-
-  export type MarketingCountAggregateInputType = {
-    id?: true
-    userId?: true
-    utm_campaign?: true
-    utm_medium?: true
-    utm_source?: true
-    utm_id?: true
-    utm_content?: true
-    utm_term?: true
-    _all?: true
-  }
-
-  export type MarketingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Marketing to aggregate.
-     */
-    where?: MarketingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Marketings to fetch.
-     */
-    orderBy?: MarketingOrderByWithRelationInput | MarketingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: MarketingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Marketings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Marketings.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Marketings
-    **/
-    _count?: true | MarketingCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: MarketingAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: MarketingSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: MarketingMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: MarketingMaxAggregateInputType
-  }
-
-  export type GetMarketingAggregateType<T extends MarketingAggregateArgs> = {
-        [P in keyof T & keyof AggregateMarketing]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateMarketing[P]>
-      : GetScalarType<T[P], AggregateMarketing[P]>
-  }
-
-
-
-
-  export type MarketingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: MarketingWhereInput
-    orderBy?: MarketingOrderByWithAggregationInput | MarketingOrderByWithAggregationInput[]
-    by: MarketingScalarFieldEnum[] | MarketingScalarFieldEnum
-    having?: MarketingScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: MarketingCountAggregateInputType | true
-    _avg?: MarketingAvgAggregateInputType
-    _sum?: MarketingSumAggregateInputType
-    _min?: MarketingMinAggregateInputType
-    _max?: MarketingMaxAggregateInputType
-  }
-
-  export type MarketingGroupByOutputType = {
-    id: number
-    userId: string
-    utm_campaign: string | null
-    utm_medium: string | null
-    utm_source: string | null
-    utm_id: string | null
-    utm_content: string | null
-    utm_term: string | null
-    _count: MarketingCountAggregateOutputType | null
-    _avg: MarketingAvgAggregateOutputType | null
-    _sum: MarketingSumAggregateOutputType | null
-    _min: MarketingMinAggregateOutputType | null
-    _max: MarketingMaxAggregateOutputType | null
-  }
-
-  type GetMarketingGroupByPayload<T extends MarketingGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<MarketingGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof MarketingGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], MarketingGroupByOutputType[P]>
-            : GetScalarType<T[P], MarketingGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type MarketingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    utm_campaign?: boolean
-    utm_medium?: boolean
-    utm_source?: boolean
-    utm_id?: boolean
-    utm_content?: boolean
-    utm_term?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["marketing"]>
-
-  export type MarketingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    utm_campaign?: boolean
-    utm_medium?: boolean
-    utm_source?: boolean
-    utm_id?: boolean
-    utm_content?: boolean
-    utm_term?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["marketing"]>
-
-  export type MarketingSelectScalar = {
-    id?: boolean
-    userId?: boolean
-    utm_campaign?: boolean
-    utm_medium?: boolean
-    utm_source?: boolean
-    utm_id?: boolean
-    utm_content?: boolean
-    utm_term?: boolean
-  }
-
-  export type MarketingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type MarketingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-
-  export type $MarketingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Marketing"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      userId: string
-      utm_campaign: string | null
-      utm_medium: string | null
-      utm_source: string | null
-      utm_id: string | null
-      utm_content: string | null
-      utm_term: string | null
-    }, ExtArgs["result"]["marketing"]>
-    composites: {}
-  }
-
-  type MarketingGetPayload<S extends boolean | null | undefined | MarketingDefaultArgs> = $Result.GetResult<Prisma.$MarketingPayload, S>
-
-  type MarketingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<MarketingFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: MarketingCountAggregateInputType | true
-    }
-
-  export interface MarketingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Marketing'], meta: { name: 'Marketing' } }
-    /**
-     * Find zero or one Marketing that matches the filter.
-     * @param {MarketingFindUniqueArgs} args - Arguments to find a Marketing
-     * @example
-     * // Get one Marketing
-     * const marketing = await prisma.marketing.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUnique<T extends MarketingFindUniqueArgs<ExtArgs>>(
-      args: SelectSubset<T, MarketingFindUniqueArgs<ExtArgs>>
-    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
-
-    /**
-     * Find one Marketing that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {MarketingFindUniqueOrThrowArgs} args - Arguments to find a Marketing
-     * @example
-     * // Get one Marketing
-     * const marketing = await prisma.marketing.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends MarketingFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, MarketingFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find the first Marketing that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MarketingFindFirstArgs} args - Arguments to find a Marketing
-     * @example
-     * // Get one Marketing
-     * const marketing = await prisma.marketing.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirst<T extends MarketingFindFirstArgs<ExtArgs>>(
-      args?: SelectSubset<T, MarketingFindFirstArgs<ExtArgs>>
-    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
-
-    /**
-     * Find the first Marketing that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MarketingFindFirstOrThrowArgs} args - Arguments to find a Marketing
-     * @example
-     * // Get one Marketing
-     * const marketing = await prisma.marketing.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends MarketingFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, MarketingFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find zero or more Marketings that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MarketingFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Marketings
-     * const marketings = await prisma.marketing.findMany()
-     * 
-     * // Get first 10 Marketings
-     * const marketings = await prisma.marketing.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const marketingWithIdOnly = await prisma.marketing.findMany({ select: { id: true } })
-     * 
-    **/
-    findMany<T extends MarketingFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, MarketingFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'findMany'>>
-
-    /**
-     * Create a Marketing.
-     * @param {MarketingCreateArgs} args - Arguments to create a Marketing.
-     * @example
-     * // Create one Marketing
-     * const Marketing = await prisma.marketing.create({
-     *   data: {
-     *     // ... data to create a Marketing
-     *   }
-     * })
-     * 
-    **/
-    create<T extends MarketingCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, MarketingCreateArgs<ExtArgs>>
-    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
-
-    /**
-     * Create many Marketings.
-     * @param {MarketingCreateManyArgs} args - Arguments to create many Marketings.
-     * @example
-     * // Create many Marketings
-     * const marketing = await prisma.marketing.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-    **/
-    createMany<T extends MarketingCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, MarketingCreateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Marketings and returns the data saved in the database.
-     * @param {MarketingCreateManyAndReturnArgs} args - Arguments to create many Marketings.
-     * @example
-     * // Create many Marketings
-     * const marketing = await prisma.marketing.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Marketings and only return the `id`
-     * const marketingWithIdOnly = await prisma.marketing.createManyAndReturn({ 
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-    **/
-    createManyAndReturn<T extends MarketingCreateManyAndReturnArgs<ExtArgs>>(
-      args?: SelectSubset<T, MarketingCreateManyAndReturnArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'createManyAndReturn'>>
-
-    /**
-     * Delete a Marketing.
-     * @param {MarketingDeleteArgs} args - Arguments to delete one Marketing.
-     * @example
-     * // Delete one Marketing
-     * const Marketing = await prisma.marketing.delete({
-     *   where: {
-     *     // ... filter to delete one Marketing
-     *   }
-     * })
-     * 
-    **/
-    delete<T extends MarketingDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, MarketingDeleteArgs<ExtArgs>>
-    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
-
-    /**
-     * Update one Marketing.
-     * @param {MarketingUpdateArgs} args - Arguments to update one Marketing.
-     * @example
-     * // Update one Marketing
-     * const marketing = await prisma.marketing.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    update<T extends MarketingUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, MarketingUpdateArgs<ExtArgs>>
-    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
-
-    /**
-     * Delete zero or more Marketings.
-     * @param {MarketingDeleteManyArgs} args - Arguments to filter Marketings to delete.
-     * @example
-     * // Delete a few Marketings
-     * const { count } = await prisma.marketing.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-    **/
-    deleteMany<T extends MarketingDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, MarketingDeleteManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Marketings.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MarketingUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Marketings
-     * const marketing = await prisma.marketing.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    updateMany<T extends MarketingUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, MarketingUpdateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Marketing.
-     * @param {MarketingUpsertArgs} args - Arguments to update or create a Marketing.
-     * @example
-     * // Update or create a Marketing
-     * const marketing = await prisma.marketing.upsert({
-     *   create: {
-     *     // ... data to create a Marketing
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Marketing we want to update
-     *   }
-     * })
-    **/
-    upsert<T extends MarketingUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, MarketingUpsertArgs<ExtArgs>>
-    ): Prisma__MarketingClient<$Result.GetResult<Prisma.$MarketingPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
-
-    /**
-     * Count the number of Marketings.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MarketingCountArgs} args - Arguments to filter Marketings to count.
-     * @example
-     * // Count the number of Marketings
-     * const count = await prisma.marketing.count({
-     *   where: {
-     *     // ... the filter for the Marketings we want to count
-     *   }
-     * })
-    **/
-    count<T extends MarketingCountArgs>(
-      args?: Subset<T, MarketingCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], MarketingCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Marketing.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MarketingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends MarketingAggregateArgs>(args: Subset<T, MarketingAggregateArgs>): Prisma.PrismaPromise<GetMarketingAggregateType<T>>
-
-    /**
-     * Group by Marketing.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MarketingGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends MarketingGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: MarketingGroupByArgs['orderBy'] }
-        : { orderBy?: MarketingGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, MarketingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMarketingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Marketing model
-   */
-  readonly fields: MarketingFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Marketing.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__MarketingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: 'PrismaPromise';
-
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
-
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
-  }
-
-
-
-  /**
-   * Fields of the Marketing model
-   */ 
-  interface MarketingFieldRefs {
-    readonly id: FieldRef<"Marketing", 'Int'>
-    readonly userId: FieldRef<"Marketing", 'String'>
-    readonly utm_campaign: FieldRef<"Marketing", 'String'>
-    readonly utm_medium: FieldRef<"Marketing", 'String'>
-    readonly utm_source: FieldRef<"Marketing", 'String'>
-    readonly utm_id: FieldRef<"Marketing", 'String'>
-    readonly utm_content: FieldRef<"Marketing", 'String'>
-    readonly utm_term: FieldRef<"Marketing", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Marketing findUnique
-   */
-  export type MarketingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Marketing
-     */
-    select?: MarketingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketingInclude<ExtArgs> | null
-    /**
-     * Filter, which Marketing to fetch.
-     */
-    where: MarketingWhereUniqueInput
-  }
-
-  /**
-   * Marketing findUniqueOrThrow
-   */
-  export type MarketingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Marketing
-     */
-    select?: MarketingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketingInclude<ExtArgs> | null
-    /**
-     * Filter, which Marketing to fetch.
-     */
-    where: MarketingWhereUniqueInput
-  }
-
-  /**
-   * Marketing findFirst
-   */
-  export type MarketingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Marketing
-     */
-    select?: MarketingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketingInclude<ExtArgs> | null
-    /**
-     * Filter, which Marketing to fetch.
-     */
-    where?: MarketingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Marketings to fetch.
-     */
-    orderBy?: MarketingOrderByWithRelationInput | MarketingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Marketings.
-     */
-    cursor?: MarketingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Marketings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Marketings.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Marketings.
-     */
-    distinct?: MarketingScalarFieldEnum | MarketingScalarFieldEnum[]
-  }
-
-  /**
-   * Marketing findFirstOrThrow
-   */
-  export type MarketingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Marketing
-     */
-    select?: MarketingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketingInclude<ExtArgs> | null
-    /**
-     * Filter, which Marketing to fetch.
-     */
-    where?: MarketingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Marketings to fetch.
-     */
-    orderBy?: MarketingOrderByWithRelationInput | MarketingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Marketings.
-     */
-    cursor?: MarketingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Marketings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Marketings.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Marketings.
-     */
-    distinct?: MarketingScalarFieldEnum | MarketingScalarFieldEnum[]
-  }
-
-  /**
-   * Marketing findMany
-   */
-  export type MarketingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Marketing
-     */
-    select?: MarketingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketingInclude<ExtArgs> | null
-    /**
-     * Filter, which Marketings to fetch.
-     */
-    where?: MarketingWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Marketings to fetch.
-     */
-    orderBy?: MarketingOrderByWithRelationInput | MarketingOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Marketings.
-     */
-    cursor?: MarketingWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Marketings from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Marketings.
-     */
-    skip?: number
-    distinct?: MarketingScalarFieldEnum | MarketingScalarFieldEnum[]
-  }
-
-  /**
-   * Marketing create
-   */
-  export type MarketingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Marketing
-     */
-    select?: MarketingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketingInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Marketing.
-     */
-    data: XOR<MarketingCreateInput, MarketingUncheckedCreateInput>
-  }
-
-  /**
-   * Marketing createMany
-   */
-  export type MarketingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Marketings.
-     */
-    data: MarketingCreateManyInput | MarketingCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Marketing createManyAndReturn
-   */
-  export type MarketingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Marketing
-     */
-    select?: MarketingSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many Marketings.
-     */
-    data: MarketingCreateManyInput | MarketingCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketingIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Marketing update
-   */
-  export type MarketingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Marketing
-     */
-    select?: MarketingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketingInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Marketing.
-     */
-    data: XOR<MarketingUpdateInput, MarketingUncheckedUpdateInput>
-    /**
-     * Choose, which Marketing to update.
-     */
-    where: MarketingWhereUniqueInput
-  }
-
-  /**
-   * Marketing updateMany
-   */
-  export type MarketingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Marketings.
-     */
-    data: XOR<MarketingUpdateManyMutationInput, MarketingUncheckedUpdateManyInput>
-    /**
-     * Filter which Marketings to update
-     */
-    where?: MarketingWhereInput
-  }
-
-  /**
-   * Marketing upsert
-   */
-  export type MarketingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Marketing
-     */
-    select?: MarketingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketingInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Marketing to update in case it exists.
-     */
-    where: MarketingWhereUniqueInput
-    /**
-     * In case the Marketing found by the `where` argument doesn't exist, create a new Marketing with this data.
-     */
-    create: XOR<MarketingCreateInput, MarketingUncheckedCreateInput>
-    /**
-     * In case the Marketing was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<MarketingUpdateInput, MarketingUncheckedUpdateInput>
-  }
-
-  /**
-   * Marketing delete
-   */
-  export type MarketingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Marketing
-     */
-    select?: MarketingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketingInclude<ExtArgs> | null
-    /**
-     * Filter which Marketing to delete.
-     */
-    where: MarketingWhereUniqueInput
-  }
-
-  /**
-   * Marketing deleteMany
-   */
-  export type MarketingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Marketings to delete
-     */
-    where?: MarketingWhereInput
-  }
-
-  /**
-   * Marketing without action
-   */
-  export type MarketingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Marketing
-     */
-    select?: MarketingSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketingInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model GoldenTicketBatch
-   */
-
-  export type AggregateGoldenTicketBatch = {
-    _count: GoldenTicketBatchCountAggregateOutputType | null
-    _min: GoldenTicketBatchMinAggregateOutputType | null
-    _max: GoldenTicketBatchMaxAggregateOutputType | null
-  }
-
-  export type GoldenTicketBatchMinAggregateOutputType = {
-    id: string | null
-    createdAt: Date | null
-    expiresAt: Date | null
-    description: string | null
-    type: $Enums.TicketType | null
-    ownerId: string | null
-  }
-
-  export type GoldenTicketBatchMaxAggregateOutputType = {
-    id: string | null
-    createdAt: Date | null
-    expiresAt: Date | null
-    description: string | null
-    type: $Enums.TicketType | null
-    ownerId: string | null
-  }
-
-  export type GoldenTicketBatchCountAggregateOutputType = {
-    id: number
-    createdAt: number
-    expiresAt: number
-    description: number
-    type: number
-    ownerId: number
-    _all: number
-  }
-
-
-  export type GoldenTicketBatchMinAggregateInputType = {
-    id?: true
-    createdAt?: true
-    expiresAt?: true
-    description?: true
-    type?: true
-    ownerId?: true
-  }
-
-  export type GoldenTicketBatchMaxAggregateInputType = {
-    id?: true
-    createdAt?: true
-    expiresAt?: true
-    description?: true
-    type?: true
-    ownerId?: true
-  }
-
-  export type GoldenTicketBatchCountAggregateInputType = {
-    id?: true
-    createdAt?: true
-    expiresAt?: true
-    description?: true
-    type?: true
-    ownerId?: true
-    _all?: true
-  }
-
-  export type GoldenTicketBatchAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which GoldenTicketBatch to aggregate.
-     */
-    where?: GoldenTicketBatchWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GoldenTicketBatches to fetch.
-     */
-    orderBy?: GoldenTicketBatchOrderByWithRelationInput | GoldenTicketBatchOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: GoldenTicketBatchWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GoldenTicketBatches from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GoldenTicketBatches.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned GoldenTicketBatches
-    **/
-    _count?: true | GoldenTicketBatchCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: GoldenTicketBatchMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: GoldenTicketBatchMaxAggregateInputType
-  }
-
-  export type GetGoldenTicketBatchAggregateType<T extends GoldenTicketBatchAggregateArgs> = {
-        [P in keyof T & keyof AggregateGoldenTicketBatch]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateGoldenTicketBatch[P]>
-      : GetScalarType<T[P], AggregateGoldenTicketBatch[P]>
-  }
-
-
-
-
-  export type GoldenTicketBatchGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GoldenTicketBatchWhereInput
-    orderBy?: GoldenTicketBatchOrderByWithAggregationInput | GoldenTicketBatchOrderByWithAggregationInput[]
-    by: GoldenTicketBatchScalarFieldEnum[] | GoldenTicketBatchScalarFieldEnum
-    having?: GoldenTicketBatchScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: GoldenTicketBatchCountAggregateInputType | true
-    _min?: GoldenTicketBatchMinAggregateInputType
-    _max?: GoldenTicketBatchMaxAggregateInputType
-  }
-
-  export type GoldenTicketBatchGroupByOutputType = {
-    id: string
-    createdAt: Date
-    expiresAt: Date
-    description: string | null
-    type: $Enums.TicketType
-    ownerId: string
-    _count: GoldenTicketBatchCountAggregateOutputType | null
-    _min: GoldenTicketBatchMinAggregateOutputType | null
-    _max: GoldenTicketBatchMaxAggregateOutputType | null
-  }
-
-  type GetGoldenTicketBatchGroupByPayload<T extends GoldenTicketBatchGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<GoldenTicketBatchGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof GoldenTicketBatchGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], GoldenTicketBatchGroupByOutputType[P]>
-            : GetScalarType<T[P], GoldenTicketBatchGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type GoldenTicketBatchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    createdAt?: boolean
-    expiresAt?: boolean
-    description?: boolean
-    type?: boolean
-    ownerId?: boolean
-    owner?: boolean | UserDefaultArgs<ExtArgs>
-    tickets?: boolean | GoldenTicketBatch$ticketsArgs<ExtArgs>
-    _count?: boolean | GoldenTicketBatchCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["goldenTicketBatch"]>
-
-  export type GoldenTicketBatchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    createdAt?: boolean
-    expiresAt?: boolean
-    description?: boolean
-    type?: boolean
-    ownerId?: boolean
-    owner?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["goldenTicketBatch"]>
-
-  export type GoldenTicketBatchSelectScalar = {
-    id?: boolean
-    createdAt?: boolean
-    expiresAt?: boolean
-    description?: boolean
-    type?: boolean
-    ownerId?: boolean
-  }
-
-  export type GoldenTicketBatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    owner?: boolean | UserDefaultArgs<ExtArgs>
-    tickets?: boolean | GoldenTicketBatch$ticketsArgs<ExtArgs>
-    _count?: boolean | GoldenTicketBatchCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type GoldenTicketBatchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    owner?: boolean | UserDefaultArgs<ExtArgs>
-  }
-
-  export type $GoldenTicketBatchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "GoldenTicketBatch"
-    objects: {
-      owner: Prisma.$UserPayload<ExtArgs>
-      tickets: Prisma.$GoldenTicketPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      createdAt: Date
-      expiresAt: Date
-      description: string | null
-      type: $Enums.TicketType
-      ownerId: string
-    }, ExtArgs["result"]["goldenTicketBatch"]>
-    composites: {}
-  }
-
-  type GoldenTicketBatchGetPayload<S extends boolean | null | undefined | GoldenTicketBatchDefaultArgs> = $Result.GetResult<Prisma.$GoldenTicketBatchPayload, S>
-
-  type GoldenTicketBatchCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<GoldenTicketBatchFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: GoldenTicketBatchCountAggregateInputType | true
-    }
-
-  export interface GoldenTicketBatchDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GoldenTicketBatch'], meta: { name: 'GoldenTicketBatch' } }
-    /**
-     * Find zero or one GoldenTicketBatch that matches the filter.
-     * @param {GoldenTicketBatchFindUniqueArgs} args - Arguments to find a GoldenTicketBatch
-     * @example
-     * // Get one GoldenTicketBatch
-     * const goldenTicketBatch = await prisma.goldenTicketBatch.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUnique<T extends GoldenTicketBatchFindUniqueArgs<ExtArgs>>(
-      args: SelectSubset<T, GoldenTicketBatchFindUniqueArgs<ExtArgs>>
-    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
-
-    /**
-     * Find one GoldenTicketBatch that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {GoldenTicketBatchFindUniqueOrThrowArgs} args - Arguments to find a GoldenTicketBatch
-     * @example
-     * // Get one GoldenTicketBatch
-     * const goldenTicketBatch = await prisma.goldenTicketBatch.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends GoldenTicketBatchFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, GoldenTicketBatchFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find the first GoldenTicketBatch that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GoldenTicketBatchFindFirstArgs} args - Arguments to find a GoldenTicketBatch
-     * @example
-     * // Get one GoldenTicketBatch
-     * const goldenTicketBatch = await prisma.goldenTicketBatch.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirst<T extends GoldenTicketBatchFindFirstArgs<ExtArgs>>(
-      args?: SelectSubset<T, GoldenTicketBatchFindFirstArgs<ExtArgs>>
-    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
-
-    /**
-     * Find the first GoldenTicketBatch that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GoldenTicketBatchFindFirstOrThrowArgs} args - Arguments to find a GoldenTicketBatch
-     * @example
-     * // Get one GoldenTicketBatch
-     * const goldenTicketBatch = await prisma.goldenTicketBatch.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends GoldenTicketBatchFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, GoldenTicketBatchFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find zero or more GoldenTicketBatches that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GoldenTicketBatchFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all GoldenTicketBatches
-     * const goldenTicketBatches = await prisma.goldenTicketBatch.findMany()
-     * 
-     * // Get first 10 GoldenTicketBatches
-     * const goldenTicketBatches = await prisma.goldenTicketBatch.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const goldenTicketBatchWithIdOnly = await prisma.goldenTicketBatch.findMany({ select: { id: true } })
-     * 
-    **/
-    findMany<T extends GoldenTicketBatchFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, GoldenTicketBatchFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'findMany'>>
-
-    /**
-     * Create a GoldenTicketBatch.
-     * @param {GoldenTicketBatchCreateArgs} args - Arguments to create a GoldenTicketBatch.
-     * @example
-     * // Create one GoldenTicketBatch
-     * const GoldenTicketBatch = await prisma.goldenTicketBatch.create({
-     *   data: {
-     *     // ... data to create a GoldenTicketBatch
-     *   }
-     * })
-     * 
-    **/
-    create<T extends GoldenTicketBatchCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, GoldenTicketBatchCreateArgs<ExtArgs>>
-    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
-
-    /**
-     * Create many GoldenTicketBatches.
-     * @param {GoldenTicketBatchCreateManyArgs} args - Arguments to create many GoldenTicketBatches.
-     * @example
-     * // Create many GoldenTicketBatches
-     * const goldenTicketBatch = await prisma.goldenTicketBatch.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-    **/
-    createMany<T extends GoldenTicketBatchCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, GoldenTicketBatchCreateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many GoldenTicketBatches and returns the data saved in the database.
-     * @param {GoldenTicketBatchCreateManyAndReturnArgs} args - Arguments to create many GoldenTicketBatches.
-     * @example
-     * // Create many GoldenTicketBatches
-     * const goldenTicketBatch = await prisma.goldenTicketBatch.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many GoldenTicketBatches and only return the `id`
-     * const goldenTicketBatchWithIdOnly = await prisma.goldenTicketBatch.createManyAndReturn({ 
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-    **/
-    createManyAndReturn<T extends GoldenTicketBatchCreateManyAndReturnArgs<ExtArgs>>(
-      args?: SelectSubset<T, GoldenTicketBatchCreateManyAndReturnArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'createManyAndReturn'>>
-
-    /**
-     * Delete a GoldenTicketBatch.
-     * @param {GoldenTicketBatchDeleteArgs} args - Arguments to delete one GoldenTicketBatch.
-     * @example
-     * // Delete one GoldenTicketBatch
-     * const GoldenTicketBatch = await prisma.goldenTicketBatch.delete({
-     *   where: {
-     *     // ... filter to delete one GoldenTicketBatch
-     *   }
-     * })
-     * 
-    **/
-    delete<T extends GoldenTicketBatchDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, GoldenTicketBatchDeleteArgs<ExtArgs>>
-    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
-
-    /**
-     * Update one GoldenTicketBatch.
-     * @param {GoldenTicketBatchUpdateArgs} args - Arguments to update one GoldenTicketBatch.
-     * @example
-     * // Update one GoldenTicketBatch
-     * const goldenTicketBatch = await prisma.goldenTicketBatch.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    update<T extends GoldenTicketBatchUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, GoldenTicketBatchUpdateArgs<ExtArgs>>
-    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
-
-    /**
-     * Delete zero or more GoldenTicketBatches.
-     * @param {GoldenTicketBatchDeleteManyArgs} args - Arguments to filter GoldenTicketBatches to delete.
-     * @example
-     * // Delete a few GoldenTicketBatches
-     * const { count } = await prisma.goldenTicketBatch.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-    **/
-    deleteMany<T extends GoldenTicketBatchDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, GoldenTicketBatchDeleteManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more GoldenTicketBatches.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GoldenTicketBatchUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many GoldenTicketBatches
-     * const goldenTicketBatch = await prisma.goldenTicketBatch.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    updateMany<T extends GoldenTicketBatchUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, GoldenTicketBatchUpdateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one GoldenTicketBatch.
-     * @param {GoldenTicketBatchUpsertArgs} args - Arguments to update or create a GoldenTicketBatch.
-     * @example
-     * // Update or create a GoldenTicketBatch
-     * const goldenTicketBatch = await prisma.goldenTicketBatch.upsert({
-     *   create: {
-     *     // ... data to create a GoldenTicketBatch
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the GoldenTicketBatch we want to update
-     *   }
-     * })
-    **/
-    upsert<T extends GoldenTicketBatchUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, GoldenTicketBatchUpsertArgs<ExtArgs>>
-    ): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
-
-    /**
-     * Count the number of GoldenTicketBatches.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GoldenTicketBatchCountArgs} args - Arguments to filter GoldenTicketBatches to count.
-     * @example
-     * // Count the number of GoldenTicketBatches
-     * const count = await prisma.goldenTicketBatch.count({
-     *   where: {
-     *     // ... the filter for the GoldenTicketBatches we want to count
-     *   }
-     * })
-    **/
-    count<T extends GoldenTicketBatchCountArgs>(
-      args?: Subset<T, GoldenTicketBatchCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], GoldenTicketBatchCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a GoldenTicketBatch.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GoldenTicketBatchAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends GoldenTicketBatchAggregateArgs>(args: Subset<T, GoldenTicketBatchAggregateArgs>): Prisma.PrismaPromise<GetGoldenTicketBatchAggregateType<T>>
-
-    /**
-     * Group by GoldenTicketBatch.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GoldenTicketBatchGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends GoldenTicketBatchGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: GoldenTicketBatchGroupByArgs['orderBy'] }
-        : { orderBy?: GoldenTicketBatchGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, GoldenTicketBatchGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGoldenTicketBatchGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the GoldenTicketBatch model
-   */
-  readonly fields: GoldenTicketBatchFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for GoldenTicketBatch.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__GoldenTicketBatchClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: 'PrismaPromise';
-
-    owner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
-
-    tickets<T extends GoldenTicketBatch$ticketsArgs<ExtArgs> = {}>(args?: Subset<T, GoldenTicketBatch$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'findMany'> | Null>;
-
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
-  }
-
-
-
-  /**
-   * Fields of the GoldenTicketBatch model
-   */ 
-  interface GoldenTicketBatchFieldRefs {
-    readonly id: FieldRef<"GoldenTicketBatch", 'String'>
-    readonly createdAt: FieldRef<"GoldenTicketBatch", 'DateTime'>
-    readonly expiresAt: FieldRef<"GoldenTicketBatch", 'DateTime'>
-    readonly description: FieldRef<"GoldenTicketBatch", 'String'>
-    readonly type: FieldRef<"GoldenTicketBatch", 'TicketType'>
-    readonly ownerId: FieldRef<"GoldenTicketBatch", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * GoldenTicketBatch findUnique
-   */
-  export type GoldenTicketBatchFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicketBatch
-     */
-    select?: GoldenTicketBatchSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketBatchInclude<ExtArgs> | null
-    /**
-     * Filter, which GoldenTicketBatch to fetch.
-     */
-    where: GoldenTicketBatchWhereUniqueInput
-  }
-
-  /**
-   * GoldenTicketBatch findUniqueOrThrow
-   */
-  export type GoldenTicketBatchFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicketBatch
-     */
-    select?: GoldenTicketBatchSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketBatchInclude<ExtArgs> | null
-    /**
-     * Filter, which GoldenTicketBatch to fetch.
-     */
-    where: GoldenTicketBatchWhereUniqueInput
-  }
-
-  /**
-   * GoldenTicketBatch findFirst
-   */
-  export type GoldenTicketBatchFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicketBatch
-     */
-    select?: GoldenTicketBatchSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketBatchInclude<ExtArgs> | null
-    /**
-     * Filter, which GoldenTicketBatch to fetch.
-     */
-    where?: GoldenTicketBatchWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GoldenTicketBatches to fetch.
-     */
-    orderBy?: GoldenTicketBatchOrderByWithRelationInput | GoldenTicketBatchOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for GoldenTicketBatches.
-     */
-    cursor?: GoldenTicketBatchWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GoldenTicketBatches from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GoldenTicketBatches.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of GoldenTicketBatches.
-     */
-    distinct?: GoldenTicketBatchScalarFieldEnum | GoldenTicketBatchScalarFieldEnum[]
-  }
-
-  /**
-   * GoldenTicketBatch findFirstOrThrow
-   */
-  export type GoldenTicketBatchFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicketBatch
-     */
-    select?: GoldenTicketBatchSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketBatchInclude<ExtArgs> | null
-    /**
-     * Filter, which GoldenTicketBatch to fetch.
-     */
-    where?: GoldenTicketBatchWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GoldenTicketBatches to fetch.
-     */
-    orderBy?: GoldenTicketBatchOrderByWithRelationInput | GoldenTicketBatchOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for GoldenTicketBatches.
-     */
-    cursor?: GoldenTicketBatchWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GoldenTicketBatches from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GoldenTicketBatches.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of GoldenTicketBatches.
-     */
-    distinct?: GoldenTicketBatchScalarFieldEnum | GoldenTicketBatchScalarFieldEnum[]
-  }
-
-  /**
-   * GoldenTicketBatch findMany
-   */
-  export type GoldenTicketBatchFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicketBatch
-     */
-    select?: GoldenTicketBatchSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketBatchInclude<ExtArgs> | null
-    /**
-     * Filter, which GoldenTicketBatches to fetch.
-     */
-    where?: GoldenTicketBatchWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GoldenTicketBatches to fetch.
-     */
-    orderBy?: GoldenTicketBatchOrderByWithRelationInput | GoldenTicketBatchOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing GoldenTicketBatches.
-     */
-    cursor?: GoldenTicketBatchWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GoldenTicketBatches from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GoldenTicketBatches.
-     */
-    skip?: number
-    distinct?: GoldenTicketBatchScalarFieldEnum | GoldenTicketBatchScalarFieldEnum[]
-  }
-
-  /**
-   * GoldenTicketBatch create
-   */
-  export type GoldenTicketBatchCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicketBatch
-     */
-    select?: GoldenTicketBatchSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketBatchInclude<ExtArgs> | null
-    /**
-     * The data needed to create a GoldenTicketBatch.
-     */
-    data: XOR<GoldenTicketBatchCreateInput, GoldenTicketBatchUncheckedCreateInput>
-  }
-
-  /**
-   * GoldenTicketBatch createMany
-   */
-  export type GoldenTicketBatchCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many GoldenTicketBatches.
-     */
-    data: GoldenTicketBatchCreateManyInput | GoldenTicketBatchCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * GoldenTicketBatch createManyAndReturn
-   */
-  export type GoldenTicketBatchCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicketBatch
-     */
-    select?: GoldenTicketBatchSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many GoldenTicketBatches.
-     */
-    data: GoldenTicketBatchCreateManyInput | GoldenTicketBatchCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketBatchIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * GoldenTicketBatch update
-   */
-  export type GoldenTicketBatchUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicketBatch
-     */
-    select?: GoldenTicketBatchSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketBatchInclude<ExtArgs> | null
-    /**
-     * The data needed to update a GoldenTicketBatch.
-     */
-    data: XOR<GoldenTicketBatchUpdateInput, GoldenTicketBatchUncheckedUpdateInput>
-    /**
-     * Choose, which GoldenTicketBatch to update.
-     */
-    where: GoldenTicketBatchWhereUniqueInput
-  }
-
-  /**
-   * GoldenTicketBatch updateMany
-   */
-  export type GoldenTicketBatchUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update GoldenTicketBatches.
-     */
-    data: XOR<GoldenTicketBatchUpdateManyMutationInput, GoldenTicketBatchUncheckedUpdateManyInput>
-    /**
-     * Filter which GoldenTicketBatches to update
-     */
-    where?: GoldenTicketBatchWhereInput
-  }
-
-  /**
-   * GoldenTicketBatch upsert
-   */
-  export type GoldenTicketBatchUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicketBatch
-     */
-    select?: GoldenTicketBatchSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketBatchInclude<ExtArgs> | null
-    /**
-     * The filter to search for the GoldenTicketBatch to update in case it exists.
-     */
-    where: GoldenTicketBatchWhereUniqueInput
-    /**
-     * In case the GoldenTicketBatch found by the `where` argument doesn't exist, create a new GoldenTicketBatch with this data.
-     */
-    create: XOR<GoldenTicketBatchCreateInput, GoldenTicketBatchUncheckedCreateInput>
-    /**
-     * In case the GoldenTicketBatch was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<GoldenTicketBatchUpdateInput, GoldenTicketBatchUncheckedUpdateInput>
-  }
-
-  /**
-   * GoldenTicketBatch delete
-   */
-  export type GoldenTicketBatchDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicketBatch
-     */
-    select?: GoldenTicketBatchSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketBatchInclude<ExtArgs> | null
-    /**
-     * Filter which GoldenTicketBatch to delete.
-     */
-    where: GoldenTicketBatchWhereUniqueInput
-  }
-
-  /**
-   * GoldenTicketBatch deleteMany
-   */
-  export type GoldenTicketBatchDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which GoldenTicketBatches to delete
-     */
-    where?: GoldenTicketBatchWhereInput
-  }
-
-  /**
-   * GoldenTicketBatch.tickets
-   */
-  export type GoldenTicketBatch$ticketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicket
-     */
-    select?: GoldenTicketSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketInclude<ExtArgs> | null
-    where?: GoldenTicketWhereInput
-    orderBy?: GoldenTicketOrderByWithRelationInput | GoldenTicketOrderByWithRelationInput[]
-    cursor?: GoldenTicketWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: GoldenTicketScalarFieldEnum | GoldenTicketScalarFieldEnum[]
-  }
-
-  /**
-   * GoldenTicketBatch without action
-   */
-  export type GoldenTicketBatchDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicketBatch
-     */
-    select?: GoldenTicketBatchSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketBatchInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model GoldenTicket
-   */
-
-  export type AggregateGoldenTicket = {
-    _count: GoldenTicketCountAggregateOutputType | null
-    _min: GoldenTicketMinAggregateOutputType | null
-    _max: GoldenTicketMaxAggregateOutputType | null
-  }
-
-  export type GoldenTicketMinAggregateOutputType = {
-    id: string | null
-    batchId: string | null
-    userId: string | null
-    claimedAt: Date | null
-    status: $Enums.GoldenTicketStatus | null
-  }
-
-  export type GoldenTicketMaxAggregateOutputType = {
-    id: string | null
-    batchId: string | null
-    userId: string | null
-    claimedAt: Date | null
-    status: $Enums.GoldenTicketStatus | null
-  }
-
-  export type GoldenTicketCountAggregateOutputType = {
-    id: number
-    batchId: number
-    userId: number
-    claimedAt: number
-    status: number
-    _all: number
-  }
-
-
-  export type GoldenTicketMinAggregateInputType = {
-    id?: true
-    batchId?: true
-    userId?: true
-    claimedAt?: true
-    status?: true
-  }
-
-  export type GoldenTicketMaxAggregateInputType = {
-    id?: true
-    batchId?: true
-    userId?: true
-    claimedAt?: true
-    status?: true
-  }
-
-  export type GoldenTicketCountAggregateInputType = {
-    id?: true
-    batchId?: true
-    userId?: true
-    claimedAt?: true
-    status?: true
-    _all?: true
-  }
-
-  export type GoldenTicketAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which GoldenTicket to aggregate.
-     */
-    where?: GoldenTicketWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GoldenTickets to fetch.
-     */
-    orderBy?: GoldenTicketOrderByWithRelationInput | GoldenTicketOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: GoldenTicketWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GoldenTickets from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GoldenTickets.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned GoldenTickets
-    **/
-    _count?: true | GoldenTicketCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: GoldenTicketMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: GoldenTicketMaxAggregateInputType
-  }
-
-  export type GetGoldenTicketAggregateType<T extends GoldenTicketAggregateArgs> = {
-        [P in keyof T & keyof AggregateGoldenTicket]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateGoldenTicket[P]>
-      : GetScalarType<T[P], AggregateGoldenTicket[P]>
-  }
-
-
-
-
-  export type GoldenTicketGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: GoldenTicketWhereInput
-    orderBy?: GoldenTicketOrderByWithAggregationInput | GoldenTicketOrderByWithAggregationInput[]
-    by: GoldenTicketScalarFieldEnum[] | GoldenTicketScalarFieldEnum
-    having?: GoldenTicketScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: GoldenTicketCountAggregateInputType | true
-    _min?: GoldenTicketMinAggregateInputType
-    _max?: GoldenTicketMaxAggregateInputType
-  }
-
-  export type GoldenTicketGroupByOutputType = {
-    id: string
-    batchId: string
-    userId: string | null
-    claimedAt: Date | null
-    status: $Enums.GoldenTicketStatus
-    _count: GoldenTicketCountAggregateOutputType | null
-    _min: GoldenTicketMinAggregateOutputType | null
-    _max: GoldenTicketMaxAggregateOutputType | null
-  }
-
-  type GetGoldenTicketGroupByPayload<T extends GoldenTicketGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<GoldenTicketGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof GoldenTicketGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], GoldenTicketGroupByOutputType[P]>
-            : GetScalarType<T[P], GoldenTicketGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type GoldenTicketSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    batchId?: boolean
-    userId?: boolean
-    claimedAt?: boolean
-    status?: boolean
-    claimedBy?: boolean | GoldenTicket$claimedByArgs<ExtArgs>
-    batch?: boolean | GoldenTicketBatchDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["goldenTicket"]>
-
-  export type GoldenTicketSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    batchId?: boolean
-    userId?: boolean
-    claimedAt?: boolean
-    status?: boolean
-    claimedBy?: boolean | GoldenTicket$claimedByArgs<ExtArgs>
-    batch?: boolean | GoldenTicketBatchDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["goldenTicket"]>
-
-  export type GoldenTicketSelectScalar = {
-    id?: boolean
-    batchId?: boolean
-    userId?: boolean
-    claimedAt?: boolean
-    status?: boolean
-  }
-
-  export type GoldenTicketInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    claimedBy?: boolean | GoldenTicket$claimedByArgs<ExtArgs>
-    batch?: boolean | GoldenTicketBatchDefaultArgs<ExtArgs>
-  }
-  export type GoldenTicketIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    claimedBy?: boolean | GoldenTicket$claimedByArgs<ExtArgs>
-    batch?: boolean | GoldenTicketBatchDefaultArgs<ExtArgs>
-  }
-
-  export type $GoldenTicketPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "GoldenTicket"
-    objects: {
-      claimedBy: Prisma.$UserPayload<ExtArgs> | null
-      batch: Prisma.$GoldenTicketBatchPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      batchId: string
-      userId: string | null
-      claimedAt: Date | null
-      status: $Enums.GoldenTicketStatus
-    }, ExtArgs["result"]["goldenTicket"]>
-    composites: {}
-  }
-
-  type GoldenTicketGetPayload<S extends boolean | null | undefined | GoldenTicketDefaultArgs> = $Result.GetResult<Prisma.$GoldenTicketPayload, S>
-
-  type GoldenTicketCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<GoldenTicketFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: GoldenTicketCountAggregateInputType | true
-    }
-
-  export interface GoldenTicketDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GoldenTicket'], meta: { name: 'GoldenTicket' } }
-    /**
-     * Find zero or one GoldenTicket that matches the filter.
-     * @param {GoldenTicketFindUniqueArgs} args - Arguments to find a GoldenTicket
-     * @example
-     * // Get one GoldenTicket
-     * const goldenTicket = await prisma.goldenTicket.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUnique<T extends GoldenTicketFindUniqueArgs<ExtArgs>>(
-      args: SelectSubset<T, GoldenTicketFindUniqueArgs<ExtArgs>>
-    ): Prisma__GoldenTicketClient<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
-
-    /**
-     * Find one GoldenTicket that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {GoldenTicketFindUniqueOrThrowArgs} args - Arguments to find a GoldenTicket
-     * @example
-     * // Get one GoldenTicket
-     * const goldenTicket = await prisma.goldenTicket.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends GoldenTicketFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, GoldenTicketFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__GoldenTicketClient<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find the first GoldenTicket that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GoldenTicketFindFirstArgs} args - Arguments to find a GoldenTicket
-     * @example
-     * // Get one GoldenTicket
-     * const goldenTicket = await prisma.goldenTicket.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirst<T extends GoldenTicketFindFirstArgs<ExtArgs>>(
-      args?: SelectSubset<T, GoldenTicketFindFirstArgs<ExtArgs>>
-    ): Prisma__GoldenTicketClient<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
-
-    /**
-     * Find the first GoldenTicket that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GoldenTicketFindFirstOrThrowArgs} args - Arguments to find a GoldenTicket
-     * @example
-     * // Get one GoldenTicket
-     * const goldenTicket = await prisma.goldenTicket.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends GoldenTicketFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, GoldenTicketFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__GoldenTicketClient<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find zero or more GoldenTickets that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GoldenTicketFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all GoldenTickets
-     * const goldenTickets = await prisma.goldenTicket.findMany()
-     * 
-     * // Get first 10 GoldenTickets
-     * const goldenTickets = await prisma.goldenTicket.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const goldenTicketWithIdOnly = await prisma.goldenTicket.findMany({ select: { id: true } })
-     * 
-    **/
-    findMany<T extends GoldenTicketFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, GoldenTicketFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'findMany'>>
-
-    /**
-     * Create a GoldenTicket.
-     * @param {GoldenTicketCreateArgs} args - Arguments to create a GoldenTicket.
-     * @example
-     * // Create one GoldenTicket
-     * const GoldenTicket = await prisma.goldenTicket.create({
-     *   data: {
-     *     // ... data to create a GoldenTicket
-     *   }
-     * })
-     * 
-    **/
-    create<T extends GoldenTicketCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, GoldenTicketCreateArgs<ExtArgs>>
-    ): Prisma__GoldenTicketClient<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
-
-    /**
-     * Create many GoldenTickets.
-     * @param {GoldenTicketCreateManyArgs} args - Arguments to create many GoldenTickets.
-     * @example
-     * // Create many GoldenTickets
-     * const goldenTicket = await prisma.goldenTicket.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-    **/
-    createMany<T extends GoldenTicketCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, GoldenTicketCreateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many GoldenTickets and returns the data saved in the database.
-     * @param {GoldenTicketCreateManyAndReturnArgs} args - Arguments to create many GoldenTickets.
-     * @example
-     * // Create many GoldenTickets
-     * const goldenTicket = await prisma.goldenTicket.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many GoldenTickets and only return the `id`
-     * const goldenTicketWithIdOnly = await prisma.goldenTicket.createManyAndReturn({ 
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-    **/
-    createManyAndReturn<T extends GoldenTicketCreateManyAndReturnArgs<ExtArgs>>(
-      args?: SelectSubset<T, GoldenTicketCreateManyAndReturnArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'createManyAndReturn'>>
-
-    /**
-     * Delete a GoldenTicket.
-     * @param {GoldenTicketDeleteArgs} args - Arguments to delete one GoldenTicket.
-     * @example
-     * // Delete one GoldenTicket
-     * const GoldenTicket = await prisma.goldenTicket.delete({
-     *   where: {
-     *     // ... filter to delete one GoldenTicket
-     *   }
-     * })
-     * 
-    **/
-    delete<T extends GoldenTicketDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, GoldenTicketDeleteArgs<ExtArgs>>
-    ): Prisma__GoldenTicketClient<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
-
-    /**
-     * Update one GoldenTicket.
-     * @param {GoldenTicketUpdateArgs} args - Arguments to update one GoldenTicket.
-     * @example
-     * // Update one GoldenTicket
-     * const goldenTicket = await prisma.goldenTicket.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    update<T extends GoldenTicketUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, GoldenTicketUpdateArgs<ExtArgs>>
-    ): Prisma__GoldenTicketClient<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
-
-    /**
-     * Delete zero or more GoldenTickets.
-     * @param {GoldenTicketDeleteManyArgs} args - Arguments to filter GoldenTickets to delete.
-     * @example
-     * // Delete a few GoldenTickets
-     * const { count } = await prisma.goldenTicket.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-    **/
-    deleteMany<T extends GoldenTicketDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, GoldenTicketDeleteManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more GoldenTickets.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GoldenTicketUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many GoldenTickets
-     * const goldenTicket = await prisma.goldenTicket.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    updateMany<T extends GoldenTicketUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, GoldenTicketUpdateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one GoldenTicket.
-     * @param {GoldenTicketUpsertArgs} args - Arguments to update or create a GoldenTicket.
-     * @example
-     * // Update or create a GoldenTicket
-     * const goldenTicket = await prisma.goldenTicket.upsert({
-     *   create: {
-     *     // ... data to create a GoldenTicket
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the GoldenTicket we want to update
-     *   }
-     * })
-    **/
-    upsert<T extends GoldenTicketUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, GoldenTicketUpsertArgs<ExtArgs>>
-    ): Prisma__GoldenTicketClient<$Result.GetResult<Prisma.$GoldenTicketPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
-
-    /**
-     * Count the number of GoldenTickets.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GoldenTicketCountArgs} args - Arguments to filter GoldenTickets to count.
-     * @example
-     * // Count the number of GoldenTickets
-     * const count = await prisma.goldenTicket.count({
-     *   where: {
-     *     // ... the filter for the GoldenTickets we want to count
-     *   }
-     * })
-    **/
-    count<T extends GoldenTicketCountArgs>(
-      args?: Subset<T, GoldenTicketCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], GoldenTicketCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a GoldenTicket.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GoldenTicketAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends GoldenTicketAggregateArgs>(args: Subset<T, GoldenTicketAggregateArgs>): Prisma.PrismaPromise<GetGoldenTicketAggregateType<T>>
-
-    /**
-     * Group by GoldenTicket.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {GoldenTicketGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends GoldenTicketGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: GoldenTicketGroupByArgs['orderBy'] }
-        : { orderBy?: GoldenTicketGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, GoldenTicketGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGoldenTicketGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the GoldenTicket model
-   */
-  readonly fields: GoldenTicketFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for GoldenTicket.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__GoldenTicketClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: 'PrismaPromise';
-
-    claimedBy<T extends GoldenTicket$claimedByArgs<ExtArgs> = {}>(args?: Subset<T, GoldenTicket$claimedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
-
-    batch<T extends GoldenTicketBatchDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GoldenTicketBatchDefaultArgs<ExtArgs>>): Prisma__GoldenTicketBatchClient<$Result.GetResult<Prisma.$GoldenTicketBatchPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
-
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
-  }
-
-
-
-  /**
-   * Fields of the GoldenTicket model
-   */ 
-  interface GoldenTicketFieldRefs {
-    readonly id: FieldRef<"GoldenTicket", 'String'>
-    readonly batchId: FieldRef<"GoldenTicket", 'String'>
-    readonly userId: FieldRef<"GoldenTicket", 'String'>
-    readonly claimedAt: FieldRef<"GoldenTicket", 'DateTime'>
-    readonly status: FieldRef<"GoldenTicket", 'GoldenTicketStatus'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * GoldenTicket findUnique
-   */
-  export type GoldenTicketFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicket
-     */
-    select?: GoldenTicketSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketInclude<ExtArgs> | null
-    /**
-     * Filter, which GoldenTicket to fetch.
-     */
-    where: GoldenTicketWhereUniqueInput
-  }
-
-  /**
-   * GoldenTicket findUniqueOrThrow
-   */
-  export type GoldenTicketFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicket
-     */
-    select?: GoldenTicketSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketInclude<ExtArgs> | null
-    /**
-     * Filter, which GoldenTicket to fetch.
-     */
-    where: GoldenTicketWhereUniqueInput
-  }
-
-  /**
-   * GoldenTicket findFirst
-   */
-  export type GoldenTicketFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicket
-     */
-    select?: GoldenTicketSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketInclude<ExtArgs> | null
-    /**
-     * Filter, which GoldenTicket to fetch.
-     */
-    where?: GoldenTicketWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GoldenTickets to fetch.
-     */
-    orderBy?: GoldenTicketOrderByWithRelationInput | GoldenTicketOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for GoldenTickets.
-     */
-    cursor?: GoldenTicketWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GoldenTickets from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GoldenTickets.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of GoldenTickets.
-     */
-    distinct?: GoldenTicketScalarFieldEnum | GoldenTicketScalarFieldEnum[]
-  }
-
-  /**
-   * GoldenTicket findFirstOrThrow
-   */
-  export type GoldenTicketFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicket
-     */
-    select?: GoldenTicketSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketInclude<ExtArgs> | null
-    /**
-     * Filter, which GoldenTicket to fetch.
-     */
-    where?: GoldenTicketWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GoldenTickets to fetch.
-     */
-    orderBy?: GoldenTicketOrderByWithRelationInput | GoldenTicketOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for GoldenTickets.
-     */
-    cursor?: GoldenTicketWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GoldenTickets from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GoldenTickets.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of GoldenTickets.
-     */
-    distinct?: GoldenTicketScalarFieldEnum | GoldenTicketScalarFieldEnum[]
-  }
-
-  /**
-   * GoldenTicket findMany
-   */
-  export type GoldenTicketFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicket
-     */
-    select?: GoldenTicketSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketInclude<ExtArgs> | null
-    /**
-     * Filter, which GoldenTickets to fetch.
-     */
-    where?: GoldenTicketWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of GoldenTickets to fetch.
-     */
-    orderBy?: GoldenTicketOrderByWithRelationInput | GoldenTicketOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing GoldenTickets.
-     */
-    cursor?: GoldenTicketWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` GoldenTickets from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` GoldenTickets.
-     */
-    skip?: number
-    distinct?: GoldenTicketScalarFieldEnum | GoldenTicketScalarFieldEnum[]
-  }
-
-  /**
-   * GoldenTicket create
-   */
-  export type GoldenTicketCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicket
-     */
-    select?: GoldenTicketSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketInclude<ExtArgs> | null
-    /**
-     * The data needed to create a GoldenTicket.
-     */
-    data: XOR<GoldenTicketCreateInput, GoldenTicketUncheckedCreateInput>
-  }
-
-  /**
-   * GoldenTicket createMany
-   */
-  export type GoldenTicketCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many GoldenTickets.
-     */
-    data: GoldenTicketCreateManyInput | GoldenTicketCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * GoldenTicket createManyAndReturn
-   */
-  export type GoldenTicketCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicket
-     */
-    select?: GoldenTicketSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many GoldenTickets.
-     */
-    data: GoldenTicketCreateManyInput | GoldenTicketCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * GoldenTicket update
-   */
-  export type GoldenTicketUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicket
-     */
-    select?: GoldenTicketSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketInclude<ExtArgs> | null
-    /**
-     * The data needed to update a GoldenTicket.
-     */
-    data: XOR<GoldenTicketUpdateInput, GoldenTicketUncheckedUpdateInput>
-    /**
-     * Choose, which GoldenTicket to update.
-     */
-    where: GoldenTicketWhereUniqueInput
-  }
-
-  /**
-   * GoldenTicket updateMany
-   */
-  export type GoldenTicketUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update GoldenTickets.
-     */
-    data: XOR<GoldenTicketUpdateManyMutationInput, GoldenTicketUncheckedUpdateManyInput>
-    /**
-     * Filter which GoldenTickets to update
-     */
-    where?: GoldenTicketWhereInput
-  }
-
-  /**
-   * GoldenTicket upsert
-   */
-  export type GoldenTicketUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicket
-     */
-    select?: GoldenTicketSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketInclude<ExtArgs> | null
-    /**
-     * The filter to search for the GoldenTicket to update in case it exists.
-     */
-    where: GoldenTicketWhereUniqueInput
-    /**
-     * In case the GoldenTicket found by the `where` argument doesn't exist, create a new GoldenTicket with this data.
-     */
-    create: XOR<GoldenTicketCreateInput, GoldenTicketUncheckedCreateInput>
-    /**
-     * In case the GoldenTicket was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<GoldenTicketUpdateInput, GoldenTicketUncheckedUpdateInput>
-  }
-
-  /**
-   * GoldenTicket delete
-   */
-  export type GoldenTicketDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicket
-     */
-    select?: GoldenTicketSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketInclude<ExtArgs> | null
-    /**
-     * Filter which GoldenTicket to delete.
-     */
-    where: GoldenTicketWhereUniqueInput
-  }
-
-  /**
-   * GoldenTicket deleteMany
-   */
-  export type GoldenTicketDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which GoldenTickets to delete
-     */
-    where?: GoldenTicketWhereInput
-  }
-
-  /**
-   * GoldenTicket.claimedBy
-   */
-  export type GoldenTicket$claimedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-  }
-
-  /**
-   * GoldenTicket without action
-   */
-  export type GoldenTicketDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the GoldenTicket
-     */
-    select?: GoldenTicketSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: GoldenTicketInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Enums
    */
 
@@ -25751,15 +18082,6 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-  export const UserEmailScalarFieldEnum: {
-    userId: 'userId',
-    email: 'email',
-    newsletter: 'newsletter'
-  };
-
-  export type UserEmailScalarFieldEnum = (typeof UserEmailScalarFieldEnum)[keyof typeof UserEmailScalarFieldEnum]
-
-
   export const ImageScalarFieldEnum: {
     id: 'id',
     url: 'url',
@@ -25767,16 +18089,6 @@ export namespace Prisma {
   };
 
   export type ImageScalarFieldEnum = (typeof ImageScalarFieldEnum)[keyof typeof ImageScalarFieldEnum]
-
-
-  export const UserPhoneNumberScalarFieldEnum: {
-    userId: 'userId',
-    phoneNumber: 'phoneNumber',
-    createdAt: 'createdAt',
-    ip: 'ip'
-  };
-
-  export type UserPhoneNumberScalarFieldEnum = (typeof UserPhoneNumberScalarFieldEnum)[keyof typeof UserPhoneNumberScalarFieldEnum]
 
 
   export const ReferralScalarFieldEnum: {
@@ -25822,24 +18134,10 @@ export namespace Prisma {
   export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
 
 
-  export const IpAssessmentScalarFieldEnum: {
-    id: 'id',
-    ip: 'ip',
-    userAgent: 'userAgent',
-    acceptLanguage: 'acceptLanguage',
-    data: 'data',
-    createdAt: 'createdAt'
-  };
-
-  export type IpAssessmentScalarFieldEnum = (typeof IpAssessmentScalarFieldEnum)[keyof typeof IpAssessmentScalarFieldEnum]
-
-
   export const LoginAttemptScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
-    ipAssessmentId: 'ipAssessmentId',
     type: 'type',
-    fraudScoring: 'fraudScoring',
     createdAt: 'createdAt'
   };
 
@@ -25896,15 +18194,6 @@ export namespace Prisma {
   export type AuditScalarFieldEnum = (typeof AuditScalarFieldEnum)[keyof typeof AuditScalarFieldEnum]
 
 
-  export const BlockedCountryScalarFieldEnum: {
-    country: 'country',
-    countryCode: 'countryCode',
-    status: 'status'
-  };
-
-  export type BlockedCountryScalarFieldEnum = (typeof BlockedCountryScalarFieldEnum)[keyof typeof BlockedCountryScalarFieldEnum]
-
-
   export const TransactionIntentScalarFieldEnum: {
     discriminator: 'discriminator',
     status: 'status',
@@ -25944,43 +18233,6 @@ export namespace Prisma {
   };
 
   export type ConfigScalarFieldEnum = (typeof ConfigScalarFieldEnum)[keyof typeof ConfigScalarFieldEnum]
-
-
-  export const MarketingScalarFieldEnum: {
-    id: 'id',
-    userId: 'userId',
-    utm_campaign: 'utm_campaign',
-    utm_medium: 'utm_medium',
-    utm_source: 'utm_source',
-    utm_id: 'utm_id',
-    utm_content: 'utm_content',
-    utm_term: 'utm_term'
-  };
-
-  export type MarketingScalarFieldEnum = (typeof MarketingScalarFieldEnum)[keyof typeof MarketingScalarFieldEnum]
-
-
-  export const GoldenTicketBatchScalarFieldEnum: {
-    id: 'id',
-    createdAt: 'createdAt',
-    expiresAt: 'expiresAt',
-    description: 'description',
-    type: 'type',
-    ownerId: 'ownerId'
-  };
-
-  export type GoldenTicketBatchScalarFieldEnum = (typeof GoldenTicketBatchScalarFieldEnum)[keyof typeof GoldenTicketBatchScalarFieldEnum]
-
-
-  export const GoldenTicketScalarFieldEnum: {
-    id: 'id',
-    batchId: 'batchId',
-    userId: 'userId',
-    claimedAt: 'claimedAt',
-    status: 'status'
-  };
-
-  export type GoldenTicketScalarFieldEnum = (typeof GoldenTicketScalarFieldEnum)[keyof typeof GoldenTicketScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -26093,13 +18345,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
    * Reference to a field of type 'ImageType'
    */
   export type EnumImageTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ImageType'>
@@ -26191,20 +18436,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'FraudScoringOutput'
-   */
-  export type EnumFraudScoringOutputFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FraudScoringOutput'>
-    
-
-
-  /**
-   * Reference to a field of type 'FraudScoringOutput[]'
-   */
-  export type ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FraudScoringOutput[]'>
-    
-
-
-  /**
    * Reference to a field of type 'QuestStatus'
    */
   export type EnumQuestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QuestStatus'>
@@ -26233,20 +18464,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'CountryStatus'
-   */
-  export type EnumCountryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CountryStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'CountryStatus[]'
-   */
-  export type ListEnumCountryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CountryStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'TransactionIntentStatus'
    */
   export type EnumTransactionIntentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionIntentStatus'>
@@ -26257,34 +18474,6 @@ export namespace Prisma {
    * Reference to a field of type 'TransactionIntentStatus[]'
    */
   export type ListEnumTransactionIntentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionIntentStatus[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'TicketType'
-   */
-  export type EnumTicketTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketType'>
-    
-
-
-  /**
-   * Reference to a field of type 'TicketType[]'
-   */
-  export type ListEnumTicketTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'GoldenTicketStatus'
-   */
-  export type EnumGoldenTicketStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GoldenTicketStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'GoldenTicketStatus[]'
-   */
-  export type ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GoldenTicketStatus[]'>
     
 
 
@@ -26322,18 +18511,13 @@ export namespace Prisma {
     referredByUser?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     events?: EventListRelationFilter
     messages?: MessageListRelationFilter
-    email?: XOR<UserEmailNullableRelationFilter, UserEmailWhereInput> | null
-    phoneNumber?: XOR<UserPhoneNumberNullableRelationFilter, UserPhoneNumberWhereInput> | null
     completedQuestRequirements?: CompletedQuestRequirementListRelationFilter
     savedProgress?: XOR<SavedProgressNullableRelationFilter, SavedProgressWhereInput> | null
     auditLogs?: AuditListRelationFilter
     questProgress?: QuestProgressListRelationFilter
     referredUsers?: UserListRelationFilter
     transactions?: TransactionIntentListRelationFilter
-    marketing?: MarketingListRelationFilter
     referals?: ReferralListRelationFilter
-    goldenTicketClaimed?: XOR<GoldenTicketNullableRelationFilter, GoldenTicketWhereInput> | null
-    goldenTicketBatchesOwned?: GoldenTicketBatchListRelationFilter
     loginAttempts?: LoginAttemptListRelationFilter
   }
 
@@ -26351,18 +18535,13 @@ export namespace Prisma {
     referredByUser?: UserOrderByWithRelationInput
     events?: EventOrderByRelationAggregateInput
     messages?: MessageOrderByRelationAggregateInput
-    email?: UserEmailOrderByWithRelationInput
-    phoneNumber?: UserPhoneNumberOrderByWithRelationInput
     completedQuestRequirements?: CompletedQuestRequirementOrderByRelationAggregateInput
     savedProgress?: SavedProgressOrderByWithRelationInput
     auditLogs?: AuditOrderByRelationAggregateInput
     questProgress?: QuestProgressOrderByRelationAggregateInput
     referredUsers?: UserOrderByRelationAggregateInput
     transactions?: TransactionIntentOrderByRelationAggregateInput
-    marketing?: MarketingOrderByRelationAggregateInput
     referals?: ReferralOrderByRelationAggregateInput
-    goldenTicketClaimed?: GoldenTicketOrderByWithRelationInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchOrderByRelationAggregateInput
     loginAttempts?: LoginAttemptOrderByRelationAggregateInput
   }
 
@@ -26383,18 +18562,13 @@ export namespace Prisma {
     referredByUser?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     events?: EventListRelationFilter
     messages?: MessageListRelationFilter
-    email?: XOR<UserEmailNullableRelationFilter, UserEmailWhereInput> | null
-    phoneNumber?: XOR<UserPhoneNumberNullableRelationFilter, UserPhoneNumberWhereInput> | null
     completedQuestRequirements?: CompletedQuestRequirementListRelationFilter
     savedProgress?: XOR<SavedProgressNullableRelationFilter, SavedProgressWhereInput> | null
     auditLogs?: AuditListRelationFilter
     questProgress?: QuestProgressListRelationFilter
     referredUsers?: UserListRelationFilter
     transactions?: TransactionIntentListRelationFilter
-    marketing?: MarketingListRelationFilter
     referals?: ReferralListRelationFilter
-    goldenTicketClaimed?: XOR<GoldenTicketNullableRelationFilter, GoldenTicketWhereInput> | null
-    goldenTicketBatchesOwned?: GoldenTicketBatchListRelationFilter
     loginAttempts?: LoginAttemptListRelationFilter
   }, "id" | "identityAddress" | "referralCode">
 
@@ -26428,51 +18602,6 @@ export namespace Prisma {
     referralCode?: StringWithAggregatesFilter<"User"> | string
     referredBy?: StringNullableWithAggregatesFilter<"User"> | string | null
     status?: EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
-  }
-
-  export type UserEmailWhereInput = {
-    AND?: UserEmailWhereInput | UserEmailWhereInput[]
-    OR?: UserEmailWhereInput[]
-    NOT?: UserEmailWhereInput | UserEmailWhereInput[]
-    userId?: StringFilter<"UserEmail"> | string
-    email?: StringFilter<"UserEmail"> | string
-    newsletter?: BoolFilter<"UserEmail"> | boolean
-    user?: XOR<UserRelationFilter, UserWhereInput>
-  }
-
-  export type UserEmailOrderByWithRelationInput = {
-    userId?: SortOrder
-    email?: SortOrder
-    newsletter?: SortOrder
-    user?: UserOrderByWithRelationInput
-  }
-
-  export type UserEmailWhereUniqueInput = Prisma.AtLeast<{
-    userId?: string
-    email?: string
-    AND?: UserEmailWhereInput | UserEmailWhereInput[]
-    OR?: UserEmailWhereInput[]
-    NOT?: UserEmailWhereInput | UserEmailWhereInput[]
-    newsletter?: BoolFilter<"UserEmail"> | boolean
-    user?: XOR<UserRelationFilter, UserWhereInput>
-  }, "email" | "userId" | "email">
-
-  export type UserEmailOrderByWithAggregationInput = {
-    userId?: SortOrder
-    email?: SortOrder
-    newsletter?: SortOrder
-    _count?: UserEmailCountOrderByAggregateInput
-    _max?: UserEmailMaxOrderByAggregateInput
-    _min?: UserEmailMinOrderByAggregateInput
-  }
-
-  export type UserEmailScalarWhereWithAggregatesInput = {
-    AND?: UserEmailScalarWhereWithAggregatesInput | UserEmailScalarWhereWithAggregatesInput[]
-    OR?: UserEmailScalarWhereWithAggregatesInput[]
-    NOT?: UserEmailScalarWhereWithAggregatesInput | UserEmailScalarWhereWithAggregatesInput[]
-    userId?: StringWithAggregatesFilter<"UserEmail"> | string
-    email?: StringWithAggregatesFilter<"UserEmail"> | string
-    newsletter?: BoolWithAggregatesFilter<"UserEmail"> | boolean
   }
 
   export type ImageWhereInput = {
@@ -26515,56 +18644,6 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Image"> | string
     url?: StringWithAggregatesFilter<"Image"> | string
     type?: EnumImageTypeWithAggregatesFilter<"Image"> | $Enums.ImageType
-  }
-
-  export type UserPhoneNumberWhereInput = {
-    AND?: UserPhoneNumberWhereInput | UserPhoneNumberWhereInput[]
-    OR?: UserPhoneNumberWhereInput[]
-    NOT?: UserPhoneNumberWhereInput | UserPhoneNumberWhereInput[]
-    userId?: StringFilter<"UserPhoneNumber"> | string
-    phoneNumber?: StringFilter<"UserPhoneNumber"> | string
-    createdAt?: DateTimeFilter<"UserPhoneNumber"> | Date | string
-    ip?: StringFilter<"UserPhoneNumber"> | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
-  }
-
-  export type UserPhoneNumberOrderByWithRelationInput = {
-    userId?: SortOrder
-    phoneNumber?: SortOrder
-    createdAt?: SortOrder
-    ip?: SortOrder
-    user?: UserOrderByWithRelationInput
-  }
-
-  export type UserPhoneNumberWhereUniqueInput = Prisma.AtLeast<{
-    userId?: string
-    phoneNumber?: string
-    AND?: UserPhoneNumberWhereInput | UserPhoneNumberWhereInput[]
-    OR?: UserPhoneNumberWhereInput[]
-    NOT?: UserPhoneNumberWhereInput | UserPhoneNumberWhereInput[]
-    createdAt?: DateTimeFilter<"UserPhoneNumber"> | Date | string
-    ip?: StringFilter<"UserPhoneNumber"> | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
-  }, "phoneNumber" | "userId" | "phoneNumber">
-
-  export type UserPhoneNumberOrderByWithAggregationInput = {
-    userId?: SortOrder
-    phoneNumber?: SortOrder
-    createdAt?: SortOrder
-    ip?: SortOrder
-    _count?: UserPhoneNumberCountOrderByAggregateInput
-    _max?: UserPhoneNumberMaxOrderByAggregateInput
-    _min?: UserPhoneNumberMinOrderByAggregateInput
-  }
-
-  export type UserPhoneNumberScalarWhereWithAggregatesInput = {
-    AND?: UserPhoneNumberScalarWhereWithAggregatesInput | UserPhoneNumberScalarWhereWithAggregatesInput[]
-    OR?: UserPhoneNumberScalarWhereWithAggregatesInput[]
-    NOT?: UserPhoneNumberScalarWhereWithAggregatesInput | UserPhoneNumberScalarWhereWithAggregatesInput[]
-    userId?: StringWithAggregatesFilter<"UserPhoneNumber"> | string
-    phoneNumber?: StringWithAggregatesFilter<"UserPhoneNumber"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"UserPhoneNumber"> | Date | string
-    ip?: StringWithAggregatesFilter<"UserPhoneNumber"> | string
   }
 
   export type ReferralWhereInput = {
@@ -26789,91 +18868,23 @@ export namespace Prisma {
     data?: JsonWithAggregatesFilter<"Message">
   }
 
-  export type IpAssessmentWhereInput = {
-    AND?: IpAssessmentWhereInput | IpAssessmentWhereInput[]
-    OR?: IpAssessmentWhereInput[]
-    NOT?: IpAssessmentWhereInput | IpAssessmentWhereInput[]
-    id?: IntFilter<"IpAssessment"> | number
-    ip?: StringFilter<"IpAssessment"> | string
-    userAgent?: StringFilter<"IpAssessment"> | string
-    acceptLanguage?: StringFilter<"IpAssessment"> | string
-    data?: JsonFilter<"IpAssessment">
-    createdAt?: DateTimeFilter<"IpAssessment"> | Date | string
-    loginAttempts?: LoginAttemptListRelationFilter
-  }
-
-  export type IpAssessmentOrderByWithRelationInput = {
-    id?: SortOrder
-    ip?: SortOrder
-    userAgent?: SortOrder
-    acceptLanguage?: SortOrder
-    data?: SortOrder
-    createdAt?: SortOrder
-    loginAttempts?: LoginAttemptOrderByRelationAggregateInput
-  }
-
-  export type IpAssessmentWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: IpAssessmentWhereInput | IpAssessmentWhereInput[]
-    OR?: IpAssessmentWhereInput[]
-    NOT?: IpAssessmentWhereInput | IpAssessmentWhereInput[]
-    ip?: StringFilter<"IpAssessment"> | string
-    userAgent?: StringFilter<"IpAssessment"> | string
-    acceptLanguage?: StringFilter<"IpAssessment"> | string
-    data?: JsonFilter<"IpAssessment">
-    createdAt?: DateTimeFilter<"IpAssessment"> | Date | string
-    loginAttempts?: LoginAttemptListRelationFilter
-  }, "id">
-
-  export type IpAssessmentOrderByWithAggregationInput = {
-    id?: SortOrder
-    ip?: SortOrder
-    userAgent?: SortOrder
-    acceptLanguage?: SortOrder
-    data?: SortOrder
-    createdAt?: SortOrder
-    _count?: IpAssessmentCountOrderByAggregateInput
-    _avg?: IpAssessmentAvgOrderByAggregateInput
-    _max?: IpAssessmentMaxOrderByAggregateInput
-    _min?: IpAssessmentMinOrderByAggregateInput
-    _sum?: IpAssessmentSumOrderByAggregateInput
-  }
-
-  export type IpAssessmentScalarWhereWithAggregatesInput = {
-    AND?: IpAssessmentScalarWhereWithAggregatesInput | IpAssessmentScalarWhereWithAggregatesInput[]
-    OR?: IpAssessmentScalarWhereWithAggregatesInput[]
-    NOT?: IpAssessmentScalarWhereWithAggregatesInput | IpAssessmentScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"IpAssessment"> | number
-    ip?: StringWithAggregatesFilter<"IpAssessment"> | string
-    userAgent?: StringWithAggregatesFilter<"IpAssessment"> | string
-    acceptLanguage?: StringWithAggregatesFilter<"IpAssessment"> | string
-    data?: JsonWithAggregatesFilter<"IpAssessment">
-    createdAt?: DateTimeWithAggregatesFilter<"IpAssessment"> | Date | string
-  }
-
   export type LoginAttemptWhereInput = {
     AND?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
     OR?: LoginAttemptWhereInput[]
     NOT?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
     id?: IntFilter<"LoginAttempt"> | number
     userId?: StringFilter<"LoginAttempt"> | string
-    ipAssessmentId?: IntFilter<"LoginAttempt"> | number
     type?: EnumLoginAttemptTypeFilter<"LoginAttempt"> | $Enums.LoginAttemptType
-    fraudScoring?: EnumFraudScoringOutputNullableFilter<"LoginAttempt"> | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
-    ipAssessment?: XOR<IpAssessmentRelationFilter, IpAssessmentWhereInput>
   }
 
   export type LoginAttemptOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
-    ipAssessmentId?: SortOrder
     type?: SortOrder
-    fraudScoring?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
-    ipAssessment?: IpAssessmentOrderByWithRelationInput
   }
 
   export type LoginAttemptWhereUniqueInput = Prisma.AtLeast<{
@@ -26882,20 +18893,15 @@ export namespace Prisma {
     OR?: LoginAttemptWhereInput[]
     NOT?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
     userId?: StringFilter<"LoginAttempt"> | string
-    ipAssessmentId?: IntFilter<"LoginAttempt"> | number
     type?: EnumLoginAttemptTypeFilter<"LoginAttempt"> | $Enums.LoginAttemptType
-    fraudScoring?: EnumFraudScoringOutputNullableFilter<"LoginAttempt"> | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
     user?: XOR<UserRelationFilter, UserWhereInput>
-    ipAssessment?: XOR<IpAssessmentRelationFilter, IpAssessmentWhereInput>
   }, "id">
 
   export type LoginAttemptOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
-    ipAssessmentId?: SortOrder
     type?: SortOrder
-    fraudScoring?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: LoginAttemptCountOrderByAggregateInput
     _avg?: LoginAttemptAvgOrderByAggregateInput
@@ -26910,9 +18916,7 @@ export namespace Prisma {
     NOT?: LoginAttemptScalarWhereWithAggregatesInput | LoginAttemptScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"LoginAttempt"> | number
     userId?: StringWithAggregatesFilter<"LoginAttempt"> | string
-    ipAssessmentId?: IntWithAggregatesFilter<"LoginAttempt"> | number
     type?: EnumLoginAttemptTypeWithAggregatesFilter<"LoginAttempt"> | $Enums.LoginAttemptType
-    fraudScoring?: EnumFraudScoringOutputNullableWithAggregatesFilter<"LoginAttempt"> | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeWithAggregatesFilter<"LoginAttempt"> | Date | string
   }
 
@@ -27170,48 +19174,6 @@ export namespace Prisma {
     data?: JsonWithAggregatesFilter<"Audit">
   }
 
-  export type BlockedCountryWhereInput = {
-    AND?: BlockedCountryWhereInput | BlockedCountryWhereInput[]
-    OR?: BlockedCountryWhereInput[]
-    NOT?: BlockedCountryWhereInput | BlockedCountryWhereInput[]
-    country?: StringFilter<"BlockedCountry"> | string
-    countryCode?: StringFilter<"BlockedCountry"> | string
-    status?: EnumCountryStatusFilter<"BlockedCountry"> | $Enums.CountryStatus
-  }
-
-  export type BlockedCountryOrderByWithRelationInput = {
-    country?: SortOrder
-    countryCode?: SortOrder
-    status?: SortOrder
-  }
-
-  export type BlockedCountryWhereUniqueInput = Prisma.AtLeast<{
-    countryCode?: string
-    AND?: BlockedCountryWhereInput | BlockedCountryWhereInput[]
-    OR?: BlockedCountryWhereInput[]
-    NOT?: BlockedCountryWhereInput | BlockedCountryWhereInput[]
-    country?: StringFilter<"BlockedCountry"> | string
-    status?: EnumCountryStatusFilter<"BlockedCountry"> | $Enums.CountryStatus
-  }, "countryCode">
-
-  export type BlockedCountryOrderByWithAggregationInput = {
-    country?: SortOrder
-    countryCode?: SortOrder
-    status?: SortOrder
-    _count?: BlockedCountryCountOrderByAggregateInput
-    _max?: BlockedCountryMaxOrderByAggregateInput
-    _min?: BlockedCountryMinOrderByAggregateInput
-  }
-
-  export type BlockedCountryScalarWhereWithAggregatesInput = {
-    AND?: BlockedCountryScalarWhereWithAggregatesInput | BlockedCountryScalarWhereWithAggregatesInput[]
-    OR?: BlockedCountryScalarWhereWithAggregatesInput[]
-    NOT?: BlockedCountryScalarWhereWithAggregatesInput | BlockedCountryScalarWhereWithAggregatesInput[]
-    country?: StringWithAggregatesFilter<"BlockedCountry"> | string
-    countryCode?: StringWithAggregatesFilter<"BlockedCountry"> | string
-    status?: EnumCountryStatusWithAggregatesFilter<"BlockedCountry"> | $Enums.CountryStatus
-  }
-
   export type TransactionIntentWhereInput = {
     AND?: TransactionIntentWhereInput | TransactionIntentWhereInput[]
     OR?: TransactionIntentWhereInput[]
@@ -27420,199 +19382,6 @@ export namespace Prisma {
     value?: StringWithAggregatesFilter<"Config"> | string
   }
 
-  export type MarketingWhereInput = {
-    AND?: MarketingWhereInput | MarketingWhereInput[]
-    OR?: MarketingWhereInput[]
-    NOT?: MarketingWhereInput | MarketingWhereInput[]
-    id?: IntFilter<"Marketing"> | number
-    userId?: StringFilter<"Marketing"> | string
-    utm_campaign?: StringNullableFilter<"Marketing"> | string | null
-    utm_medium?: StringNullableFilter<"Marketing"> | string | null
-    utm_source?: StringNullableFilter<"Marketing"> | string | null
-    utm_id?: StringNullableFilter<"Marketing"> | string | null
-    utm_content?: StringNullableFilter<"Marketing"> | string | null
-    utm_term?: StringNullableFilter<"Marketing"> | string | null
-    user?: XOR<UserRelationFilter, UserWhereInput>
-  }
-
-  export type MarketingOrderByWithRelationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    utm_campaign?: SortOrderInput | SortOrder
-    utm_medium?: SortOrderInput | SortOrder
-    utm_source?: SortOrderInput | SortOrder
-    utm_id?: SortOrderInput | SortOrder
-    utm_content?: SortOrderInput | SortOrder
-    utm_term?: SortOrderInput | SortOrder
-    user?: UserOrderByWithRelationInput
-  }
-
-  export type MarketingWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: MarketingWhereInput | MarketingWhereInput[]
-    OR?: MarketingWhereInput[]
-    NOT?: MarketingWhereInput | MarketingWhereInput[]
-    userId?: StringFilter<"Marketing"> | string
-    utm_campaign?: StringNullableFilter<"Marketing"> | string | null
-    utm_medium?: StringNullableFilter<"Marketing"> | string | null
-    utm_source?: StringNullableFilter<"Marketing"> | string | null
-    utm_id?: StringNullableFilter<"Marketing"> | string | null
-    utm_content?: StringNullableFilter<"Marketing"> | string | null
-    utm_term?: StringNullableFilter<"Marketing"> | string | null
-    user?: XOR<UserRelationFilter, UserWhereInput>
-  }, "id">
-
-  export type MarketingOrderByWithAggregationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    utm_campaign?: SortOrderInput | SortOrder
-    utm_medium?: SortOrderInput | SortOrder
-    utm_source?: SortOrderInput | SortOrder
-    utm_id?: SortOrderInput | SortOrder
-    utm_content?: SortOrderInput | SortOrder
-    utm_term?: SortOrderInput | SortOrder
-    _count?: MarketingCountOrderByAggregateInput
-    _avg?: MarketingAvgOrderByAggregateInput
-    _max?: MarketingMaxOrderByAggregateInput
-    _min?: MarketingMinOrderByAggregateInput
-    _sum?: MarketingSumOrderByAggregateInput
-  }
-
-  export type MarketingScalarWhereWithAggregatesInput = {
-    AND?: MarketingScalarWhereWithAggregatesInput | MarketingScalarWhereWithAggregatesInput[]
-    OR?: MarketingScalarWhereWithAggregatesInput[]
-    NOT?: MarketingScalarWhereWithAggregatesInput | MarketingScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Marketing"> | number
-    userId?: StringWithAggregatesFilter<"Marketing"> | string
-    utm_campaign?: StringNullableWithAggregatesFilter<"Marketing"> | string | null
-    utm_medium?: StringNullableWithAggregatesFilter<"Marketing"> | string | null
-    utm_source?: StringNullableWithAggregatesFilter<"Marketing"> | string | null
-    utm_id?: StringNullableWithAggregatesFilter<"Marketing"> | string | null
-    utm_content?: StringNullableWithAggregatesFilter<"Marketing"> | string | null
-    utm_term?: StringNullableWithAggregatesFilter<"Marketing"> | string | null
-  }
-
-  export type GoldenTicketBatchWhereInput = {
-    AND?: GoldenTicketBatchWhereInput | GoldenTicketBatchWhereInput[]
-    OR?: GoldenTicketBatchWhereInput[]
-    NOT?: GoldenTicketBatchWhereInput | GoldenTicketBatchWhereInput[]
-    id?: StringFilter<"GoldenTicketBatch"> | string
-    createdAt?: DateTimeFilter<"GoldenTicketBatch"> | Date | string
-    expiresAt?: DateTimeFilter<"GoldenTicketBatch"> | Date | string
-    description?: StringNullableFilter<"GoldenTicketBatch"> | string | null
-    type?: EnumTicketTypeFilter<"GoldenTicketBatch"> | $Enums.TicketType
-    ownerId?: StringFilter<"GoldenTicketBatch"> | string
-    owner?: XOR<UserRelationFilter, UserWhereInput>
-    tickets?: GoldenTicketListRelationFilter
-  }
-
-  export type GoldenTicketBatchOrderByWithRelationInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    expiresAt?: SortOrder
-    description?: SortOrderInput | SortOrder
-    type?: SortOrder
-    ownerId?: SortOrder
-    owner?: UserOrderByWithRelationInput
-    tickets?: GoldenTicketOrderByRelationAggregateInput
-  }
-
-  export type GoldenTicketBatchWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: GoldenTicketBatchWhereInput | GoldenTicketBatchWhereInput[]
-    OR?: GoldenTicketBatchWhereInput[]
-    NOT?: GoldenTicketBatchWhereInput | GoldenTicketBatchWhereInput[]
-    createdAt?: DateTimeFilter<"GoldenTicketBatch"> | Date | string
-    expiresAt?: DateTimeFilter<"GoldenTicketBatch"> | Date | string
-    description?: StringNullableFilter<"GoldenTicketBatch"> | string | null
-    type?: EnumTicketTypeFilter<"GoldenTicketBatch"> | $Enums.TicketType
-    ownerId?: StringFilter<"GoldenTicketBatch"> | string
-    owner?: XOR<UserRelationFilter, UserWhereInput>
-    tickets?: GoldenTicketListRelationFilter
-  }, "id">
-
-  export type GoldenTicketBatchOrderByWithAggregationInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    expiresAt?: SortOrder
-    description?: SortOrderInput | SortOrder
-    type?: SortOrder
-    ownerId?: SortOrder
-    _count?: GoldenTicketBatchCountOrderByAggregateInput
-    _max?: GoldenTicketBatchMaxOrderByAggregateInput
-    _min?: GoldenTicketBatchMinOrderByAggregateInput
-  }
-
-  export type GoldenTicketBatchScalarWhereWithAggregatesInput = {
-    AND?: GoldenTicketBatchScalarWhereWithAggregatesInput | GoldenTicketBatchScalarWhereWithAggregatesInput[]
-    OR?: GoldenTicketBatchScalarWhereWithAggregatesInput[]
-    NOT?: GoldenTicketBatchScalarWhereWithAggregatesInput | GoldenTicketBatchScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"GoldenTicketBatch"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"GoldenTicketBatch"> | Date | string
-    expiresAt?: DateTimeWithAggregatesFilter<"GoldenTicketBatch"> | Date | string
-    description?: StringNullableWithAggregatesFilter<"GoldenTicketBatch"> | string | null
-    type?: EnumTicketTypeWithAggregatesFilter<"GoldenTicketBatch"> | $Enums.TicketType
-    ownerId?: StringWithAggregatesFilter<"GoldenTicketBatch"> | string
-  }
-
-  export type GoldenTicketWhereInput = {
-    AND?: GoldenTicketWhereInput | GoldenTicketWhereInput[]
-    OR?: GoldenTicketWhereInput[]
-    NOT?: GoldenTicketWhereInput | GoldenTicketWhereInput[]
-    id?: StringFilter<"GoldenTicket"> | string
-    batchId?: StringFilter<"GoldenTicket"> | string
-    userId?: StringNullableFilter<"GoldenTicket"> | string | null
-    claimedAt?: DateTimeNullableFilter<"GoldenTicket"> | Date | string | null
-    status?: EnumGoldenTicketStatusFilter<"GoldenTicket"> | $Enums.GoldenTicketStatus
-    claimedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
-    batch?: XOR<GoldenTicketBatchRelationFilter, GoldenTicketBatchWhereInput>
-  }
-
-  export type GoldenTicketOrderByWithRelationInput = {
-    id?: SortOrder
-    batchId?: SortOrder
-    userId?: SortOrderInput | SortOrder
-    claimedAt?: SortOrderInput | SortOrder
-    status?: SortOrder
-    claimedBy?: UserOrderByWithRelationInput
-    batch?: GoldenTicketBatchOrderByWithRelationInput
-  }
-
-  export type GoldenTicketWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    userId?: string
-    AND?: GoldenTicketWhereInput | GoldenTicketWhereInput[]
-    OR?: GoldenTicketWhereInput[]
-    NOT?: GoldenTicketWhereInput | GoldenTicketWhereInput[]
-    batchId?: StringFilter<"GoldenTicket"> | string
-    claimedAt?: DateTimeNullableFilter<"GoldenTicket"> | Date | string | null
-    status?: EnumGoldenTicketStatusFilter<"GoldenTicket"> | $Enums.GoldenTicketStatus
-    claimedBy?: XOR<UserNullableRelationFilter, UserWhereInput> | null
-    batch?: XOR<GoldenTicketBatchRelationFilter, GoldenTicketBatchWhereInput>
-  }, "id" | "userId">
-
-  export type GoldenTicketOrderByWithAggregationInput = {
-    id?: SortOrder
-    batchId?: SortOrder
-    userId?: SortOrderInput | SortOrder
-    claimedAt?: SortOrderInput | SortOrder
-    status?: SortOrder
-    _count?: GoldenTicketCountOrderByAggregateInput
-    _max?: GoldenTicketMaxOrderByAggregateInput
-    _min?: GoldenTicketMinOrderByAggregateInput
-  }
-
-  export type GoldenTicketScalarWhereWithAggregatesInput = {
-    AND?: GoldenTicketScalarWhereWithAggregatesInput | GoldenTicketScalarWhereWithAggregatesInput[]
-    OR?: GoldenTicketScalarWhereWithAggregatesInput[]
-    NOT?: GoldenTicketScalarWhereWithAggregatesInput | GoldenTicketScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"GoldenTicket"> | string
-    batchId?: StringWithAggregatesFilter<"GoldenTicket"> | string
-    userId?: StringNullableWithAggregatesFilter<"GoldenTicket"> | string | null
-    claimedAt?: DateTimeNullableWithAggregatesFilter<"GoldenTicket"> | Date | string | null
-    status?: EnumGoldenTicketStatusWithAggregatesFilter<"GoldenTicket"> | $Enums.GoldenTicketStatus
-  }
-
   export type UserCreateInput = {
     id?: string
     identityAddress: string
@@ -27626,18 +19395,13 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -27654,18 +19418,13 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -27682,18 +19441,13 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -27710,18 +19464,13 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -27761,47 +19510,6 @@ export namespace Prisma {
     referralCode?: StringFieldUpdateOperationsInput | string
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-  }
-
-  export type UserEmailCreateInput = {
-    email: string
-    newsletter?: boolean
-    user: UserCreateNestedOneWithoutEmailInput
-  }
-
-  export type UserEmailUncheckedCreateInput = {
-    userId: string
-    email: string
-    newsletter?: boolean
-  }
-
-  export type UserEmailUpdateInput = {
-    email?: StringFieldUpdateOperationsInput | string
-    newsletter?: BoolFieldUpdateOperationsInput | boolean
-    user?: UserUpdateOneRequiredWithoutEmailNestedInput
-  }
-
-  export type UserEmailUncheckedUpdateInput = {
-    userId?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    newsletter?: BoolFieldUpdateOperationsInput | boolean
-  }
-
-  export type UserEmailCreateManyInput = {
-    userId: string
-    email: string
-    newsletter?: boolean
-  }
-
-  export type UserEmailUpdateManyMutationInput = {
-    email?: StringFieldUpdateOperationsInput | string
-    newsletter?: BoolFieldUpdateOperationsInput | boolean
-  }
-
-  export type UserEmailUncheckedUpdateManyInput = {
-    userId?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    newsletter?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ImageCreateInput = {
@@ -27844,54 +19552,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
     type?: EnumImageTypeFieldUpdateOperationsInput | $Enums.ImageType
-  }
-
-  export type UserPhoneNumberCreateInput = {
-    phoneNumber: string
-    createdAt?: Date | string
-    ip?: string
-    user: UserCreateNestedOneWithoutPhoneNumberInput
-  }
-
-  export type UserPhoneNumberUncheckedCreateInput = {
-    userId: string
-    phoneNumber: string
-    createdAt?: Date | string
-    ip?: string
-  }
-
-  export type UserPhoneNumberUpdateInput = {
-    phoneNumber?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    ip?: StringFieldUpdateOperationsInput | string
-    user?: UserUpdateOneRequiredWithoutPhoneNumberNestedInput
-  }
-
-  export type UserPhoneNumberUncheckedUpdateInput = {
-    userId?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    ip?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type UserPhoneNumberCreateManyInput = {
-    userId: string
-    phoneNumber: string
-    createdAt?: Date | string
-    ip?: string
-  }
-
-  export type UserPhoneNumberUpdateManyMutationInput = {
-    phoneNumber?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    ip?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type UserPhoneNumberUncheckedUpdateManyInput = {
-    userId?: StringFieldUpdateOperationsInput | string
-    phoneNumber?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    ip?: StringFieldUpdateOperationsInput | string
   }
 
   export type ReferralCreateInput = {
@@ -28108,125 +19768,48 @@ export namespace Prisma {
     data?: JsonNullValueInput | InputJsonValue
   }
 
-  export type IpAssessmentCreateInput = {
-    ip: string
-    userAgent: string
-    acceptLanguage: string
-    data: JsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutIpAssessmentInput
-  }
-
-  export type IpAssessmentUncheckedCreateInput = {
-    id?: number
-    ip: string
-    userAgent: string
-    acceptLanguage: string
-    data: JsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutIpAssessmentInput
-  }
-
-  export type IpAssessmentUpdateInput = {
-    ip?: StringFieldUpdateOperationsInput | string
-    userAgent?: StringFieldUpdateOperationsInput | string
-    acceptLanguage?: StringFieldUpdateOperationsInput | string
-    data?: JsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    loginAttempts?: LoginAttemptUpdateManyWithoutIpAssessmentNestedInput
-  }
-
-  export type IpAssessmentUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    ip?: StringFieldUpdateOperationsInput | string
-    userAgent?: StringFieldUpdateOperationsInput | string
-    acceptLanguage?: StringFieldUpdateOperationsInput | string
-    data?: JsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutIpAssessmentNestedInput
-  }
-
-  export type IpAssessmentCreateManyInput = {
-    id?: number
-    ip: string
-    userAgent: string
-    acceptLanguage: string
-    data: JsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
-  export type IpAssessmentUpdateManyMutationInput = {
-    ip?: StringFieldUpdateOperationsInput | string
-    userAgent?: StringFieldUpdateOperationsInput | string
-    acceptLanguage?: StringFieldUpdateOperationsInput | string
-    data?: JsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IpAssessmentUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    ip?: StringFieldUpdateOperationsInput | string
-    userAgent?: StringFieldUpdateOperationsInput | string
-    acceptLanguage?: StringFieldUpdateOperationsInput | string
-    data?: JsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type LoginAttemptCreateInput = {
     type: $Enums.LoginAttemptType
-    fraudScoring?: $Enums.FraudScoringOutput | null
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutLoginAttemptsInput
-    ipAssessment: IpAssessmentCreateNestedOneWithoutLoginAttemptsInput
   }
 
   export type LoginAttemptUncheckedCreateInput = {
     id?: number
     userId: string
-    ipAssessmentId: number
     type: $Enums.LoginAttemptType
-    fraudScoring?: $Enums.FraudScoringOutput | null
     createdAt?: Date | string
   }
 
   export type LoginAttemptUpdateInput = {
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutLoginAttemptsNestedInput
-    ipAssessment?: IpAssessmentUpdateOneRequiredWithoutLoginAttemptsNestedInput
   }
 
   export type LoginAttemptUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
-    ipAssessmentId?: IntFieldUpdateOperationsInput | number
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type LoginAttemptCreateManyInput = {
     id?: number
     userId: string
-    ipAssessmentId: number
     type: $Enums.LoginAttemptType
-    fraudScoring?: $Enums.FraudScoringOutput | null
     createdAt?: Date | string
   }
 
   export type LoginAttemptUpdateManyMutationInput = {
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type LoginAttemptUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
-    ipAssessmentId?: IntFieldUpdateOperationsInput | number
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -28471,48 +20054,6 @@ export namespace Prisma {
     data?: JsonNullValueInput | InputJsonValue
   }
 
-  export type BlockedCountryCreateInput = {
-    country: string
-    countryCode: string
-    status?: $Enums.CountryStatus
-  }
-
-  export type BlockedCountryUncheckedCreateInput = {
-    country: string
-    countryCode: string
-    status?: $Enums.CountryStatus
-  }
-
-  export type BlockedCountryUpdateInput = {
-    country?: StringFieldUpdateOperationsInput | string
-    countryCode?: StringFieldUpdateOperationsInput | string
-    status?: EnumCountryStatusFieldUpdateOperationsInput | $Enums.CountryStatus
-  }
-
-  export type BlockedCountryUncheckedUpdateInput = {
-    country?: StringFieldUpdateOperationsInput | string
-    countryCode?: StringFieldUpdateOperationsInput | string
-    status?: EnumCountryStatusFieldUpdateOperationsInput | $Enums.CountryStatus
-  }
-
-  export type BlockedCountryCreateManyInput = {
-    country: string
-    countryCode: string
-    status?: $Enums.CountryStatus
-  }
-
-  export type BlockedCountryUpdateManyMutationInput = {
-    country?: StringFieldUpdateOperationsInput | string
-    countryCode?: StringFieldUpdateOperationsInput | string
-    status?: EnumCountryStatusFieldUpdateOperationsInput | $Enums.CountryStatus
-  }
-
-  export type BlockedCountryUncheckedUpdateManyInput = {
-    country?: StringFieldUpdateOperationsInput | string
-    countryCode?: StringFieldUpdateOperationsInput | string
-    status?: EnumCountryStatusFieldUpdateOperationsInput | $Enums.CountryStatus
-  }
-
   export type TransactionIntentCreateInput = {
     discriminator: string
     status?: $Enums.TransactionIntentStatus
@@ -28721,199 +20262,6 @@ export namespace Prisma {
     value?: StringFieldUpdateOperationsInput | string
   }
 
-  export type MarketingCreateInput = {
-    utm_campaign?: string | null
-    utm_medium?: string | null
-    utm_source?: string | null
-    utm_id?: string | null
-    utm_content?: string | null
-    utm_term?: string | null
-    user: UserCreateNestedOneWithoutMarketingInput
-  }
-
-  export type MarketingUncheckedCreateInput = {
-    id?: number
-    userId: string
-    utm_campaign?: string | null
-    utm_medium?: string | null
-    utm_source?: string | null
-    utm_id?: string | null
-    utm_content?: string | null
-    utm_term?: string | null
-  }
-
-  export type MarketingUpdateInput = {
-    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_id?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_content?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_term?: NullableStringFieldUpdateOperationsInput | string | null
-    user?: UserUpdateOneRequiredWithoutMarketingNestedInput
-  }
-
-  export type MarketingUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
-    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_id?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_content?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_term?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type MarketingCreateManyInput = {
-    id?: number
-    userId: string
-    utm_campaign?: string | null
-    utm_medium?: string | null
-    utm_source?: string | null
-    utm_id?: string | null
-    utm_content?: string | null
-    utm_term?: string | null
-  }
-
-  export type MarketingUpdateManyMutationInput = {
-    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_id?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_content?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_term?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type MarketingUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
-    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_id?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_content?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_term?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type GoldenTicketBatchCreateInput = {
-    id: string
-    createdAt?: Date | string
-    expiresAt: Date | string
-    description?: string | null
-    type?: $Enums.TicketType
-    owner: UserCreateNestedOneWithoutGoldenTicketBatchesOwnedInput
-    tickets?: GoldenTicketCreateNestedManyWithoutBatchInput
-  }
-
-  export type GoldenTicketBatchUncheckedCreateInput = {
-    id: string
-    createdAt?: Date | string
-    expiresAt: Date | string
-    description?: string | null
-    type?: $Enums.TicketType
-    ownerId: string
-    tickets?: GoldenTicketUncheckedCreateNestedManyWithoutBatchInput
-  }
-
-  export type GoldenTicketBatchUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
-    owner?: UserUpdateOneRequiredWithoutGoldenTicketBatchesOwnedNestedInput
-    tickets?: GoldenTicketUpdateManyWithoutBatchNestedInput
-  }
-
-  export type GoldenTicketBatchUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
-    ownerId?: StringFieldUpdateOperationsInput | string
-    tickets?: GoldenTicketUncheckedUpdateManyWithoutBatchNestedInput
-  }
-
-  export type GoldenTicketBatchCreateManyInput = {
-    id: string
-    createdAt?: Date | string
-    expiresAt: Date | string
-    description?: string | null
-    type?: $Enums.TicketType
-    ownerId: string
-  }
-
-  export type GoldenTicketBatchUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
-  }
-
-  export type GoldenTicketBatchUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
-    ownerId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type GoldenTicketCreateInput = {
-    id: string
-    claimedAt?: Date | string | null
-    status?: $Enums.GoldenTicketStatus
-    claimedBy?: UserCreateNestedOneWithoutGoldenTicketClaimedInput
-    batch: GoldenTicketBatchCreateNestedOneWithoutTicketsInput
-  }
-
-  export type GoldenTicketUncheckedCreateInput = {
-    id: string
-    batchId: string
-    userId?: string | null
-    claimedAt?: Date | string | null
-    status?: $Enums.GoldenTicketStatus
-  }
-
-  export type GoldenTicketUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
-    claimedBy?: UserUpdateOneWithoutGoldenTicketClaimedNestedInput
-    batch?: GoldenTicketBatchUpdateOneRequiredWithoutTicketsNestedInput
-  }
-
-  export type GoldenTicketUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    batchId?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
-  }
-
-  export type GoldenTicketCreateManyInput = {
-    id: string
-    batchId: string
-    userId?: string | null
-    claimedAt?: Date | string | null
-    status?: $Enums.GoldenTicketStatus
-  }
-
-  export type GoldenTicketUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
-  }
-
-  export type GoldenTicketUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    batchId?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
-  }
-
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -28986,16 +20334,6 @@ export namespace Prisma {
     none?: MessageWhereInput
   }
 
-  export type UserEmailNullableRelationFilter = {
-    is?: UserEmailWhereInput | null
-    isNot?: UserEmailWhereInput | null
-  }
-
-  export type UserPhoneNumberNullableRelationFilter = {
-    is?: UserPhoneNumberWhereInput | null
-    isNot?: UserPhoneNumberWhereInput | null
-  }
-
   export type CompletedQuestRequirementListRelationFilter = {
     every?: CompletedQuestRequirementWhereInput
     some?: CompletedQuestRequirementWhereInput
@@ -29031,27 +20369,10 @@ export namespace Prisma {
     none?: TransactionIntentWhereInput
   }
 
-  export type MarketingListRelationFilter = {
-    every?: MarketingWhereInput
-    some?: MarketingWhereInput
-    none?: MarketingWhereInput
-  }
-
   export type ReferralListRelationFilter = {
     every?: ReferralWhereInput
     some?: ReferralWhereInput
     none?: ReferralWhereInput
-  }
-
-  export type GoldenTicketNullableRelationFilter = {
-    is?: GoldenTicketWhereInput | null
-    isNot?: GoldenTicketWhereInput | null
-  }
-
-  export type GoldenTicketBatchListRelationFilter = {
-    every?: GoldenTicketBatchWhereInput
-    some?: GoldenTicketBatchWhereInput
-    none?: GoldenTicketBatchWhereInput
   }
 
   export type LoginAttemptListRelationFilter = {
@@ -29093,15 +20414,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type MarketingOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type ReferralOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type GoldenTicketBatchOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -29218,42 +20531,6 @@ export namespace Prisma {
     _max?: NestedEnumUserStatusFilter<$PrismaModel>
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type UserRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
-  }
-
-  export type UserEmailCountOrderByAggregateInput = {
-    userId?: SortOrder
-    email?: SortOrder
-    newsletter?: SortOrder
-  }
-
-  export type UserEmailMaxOrderByAggregateInput = {
-    userId?: SortOrder
-    email?: SortOrder
-    newsletter?: SortOrder
-  }
-
-  export type UserEmailMinOrderByAggregateInput = {
-    userId?: SortOrder
-    email?: SortOrder
-    newsletter?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
   export type EnumImageTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.ImageType | EnumImageTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ImageType[] | ListEnumImageTypeFieldRefInput<$PrismaModel>
@@ -29289,27 +20566,6 @@ export namespace Prisma {
     _max?: NestedEnumImageTypeFilter<$PrismaModel>
   }
 
-  export type UserPhoneNumberCountOrderByAggregateInput = {
-    userId?: SortOrder
-    phoneNumber?: SortOrder
-    createdAt?: SortOrder
-    ip?: SortOrder
-  }
-
-  export type UserPhoneNumberMaxOrderByAggregateInput = {
-    userId?: SortOrder
-    phoneNumber?: SortOrder
-    createdAt?: SortOrder
-    ip?: SortOrder
-  }
-
-  export type UserPhoneNumberMinOrderByAggregateInput = {
-    userId?: SortOrder
-    phoneNumber?: SortOrder
-    createdAt?: SortOrder
-    ip?: SortOrder
-  }
-
   export type EnumReferralActionFilter<$PrismaModel = never> = {
     equals?: $Enums.ReferralAction | EnumReferralActionFieldRefInput<$PrismaModel>
     in?: $Enums.ReferralAction[] | ListEnumReferralActionFieldRefInput<$PrismaModel>
@@ -29331,6 +20587,11 @@ export namespace Prisma {
   export type EventRelationFilter = {
     is?: EventWhereInput
     isNot?: EventWhereInput
+  }
+
+  export type UserRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
   }
 
   export type ReferralCountOrderByAggregateInput = {
@@ -29580,39 +20841,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type IpAssessmentCountOrderByAggregateInput = {
-    id?: SortOrder
-    ip?: SortOrder
-    userAgent?: SortOrder
-    acceptLanguage?: SortOrder
-    data?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type IpAssessmentAvgOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type IpAssessmentMaxOrderByAggregateInput = {
-    id?: SortOrder
-    ip?: SortOrder
-    userAgent?: SortOrder
-    acceptLanguage?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type IpAssessmentMinOrderByAggregateInput = {
-    id?: SortOrder
-    ip?: SortOrder
-    userAgent?: SortOrder
-    acceptLanguage?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type IpAssessmentSumOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
   export type EnumLoginAttemptTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.LoginAttemptType | EnumLoginAttemptTypeFieldRefInput<$PrismaModel>
     in?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
@@ -29620,53 +20848,33 @@ export namespace Prisma {
     not?: NestedEnumLoginAttemptTypeFilter<$PrismaModel> | $Enums.LoginAttemptType
   }
 
-  export type EnumFraudScoringOutputNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.FraudScoringOutput | EnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
-    in?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumFraudScoringOutputNullableFilter<$PrismaModel> | $Enums.FraudScoringOutput | null
-  }
-
-  export type IpAssessmentRelationFilter = {
-    is?: IpAssessmentWhereInput
-    isNot?: IpAssessmentWhereInput
-  }
-
   export type LoginAttemptCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    ipAssessmentId?: SortOrder
     type?: SortOrder
-    fraudScoring?: SortOrder
     createdAt?: SortOrder
   }
 
   export type LoginAttemptAvgOrderByAggregateInput = {
     id?: SortOrder
-    ipAssessmentId?: SortOrder
   }
 
   export type LoginAttemptMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    ipAssessmentId?: SortOrder
     type?: SortOrder
-    fraudScoring?: SortOrder
     createdAt?: SortOrder
   }
 
   export type LoginAttemptMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    ipAssessmentId?: SortOrder
     type?: SortOrder
-    fraudScoring?: SortOrder
     createdAt?: SortOrder
   }
 
   export type LoginAttemptSumOrderByAggregateInput = {
     id?: SortOrder
-    ipAssessmentId?: SortOrder
   }
 
   export type EnumLoginAttemptTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -29677,16 +20885,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
     _max?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
-  }
-
-  export type EnumFraudScoringOutputNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.FraudScoringOutput | EnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
-    in?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumFraudScoringOutputNullableWithAggregatesFilter<$PrismaModel> | $Enums.FraudScoringOutput | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumFraudScoringOutputNullableFilter<$PrismaModel>
-    _max?: NestedEnumFraudScoringOutputNullableFilter<$PrismaModel>
   }
 
   export type NotificationNotificationIdUserIdCompoundUniqueInput = {
@@ -29860,41 +21058,6 @@ export namespace Prisma {
     _max?: NestedEnumAuditTypeFilter<$PrismaModel>
   }
 
-  export type EnumCountryStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.CountryStatus | EnumCountryStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumCountryStatusFilter<$PrismaModel> | $Enums.CountryStatus
-  }
-
-  export type BlockedCountryCountOrderByAggregateInput = {
-    country?: SortOrder
-    countryCode?: SortOrder
-    status?: SortOrder
-  }
-
-  export type BlockedCountryMaxOrderByAggregateInput = {
-    country?: SortOrder
-    countryCode?: SortOrder
-    status?: SortOrder
-  }
-
-  export type BlockedCountryMinOrderByAggregateInput = {
-    country?: SortOrder
-    countryCode?: SortOrder
-    status?: SortOrder
-  }
-
-  export type EnumCountryStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.CountryStatus | EnumCountryStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumCountryStatusWithAggregatesFilter<$PrismaModel> | $Enums.CountryStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumCountryStatusFilter<$PrismaModel>
-    _max?: NestedEnumCountryStatusFilter<$PrismaModel>
-  }
-
   export type EnumTransactionIntentStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.TransactionIntentStatus | EnumTransactionIntentStatusFieldRefInput<$PrismaModel>
     in?: $Enums.TransactionIntentStatus[] | ListEnumTransactionIntentStatusFieldRefInput<$PrismaModel>
@@ -30064,147 +21227,6 @@ export namespace Prisma {
     value?: SortOrder
   }
 
-  export type MarketingCountOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    utm_campaign?: SortOrder
-    utm_medium?: SortOrder
-    utm_source?: SortOrder
-    utm_id?: SortOrder
-    utm_content?: SortOrder
-    utm_term?: SortOrder
-  }
-
-  export type MarketingAvgOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type MarketingMaxOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    utm_campaign?: SortOrder
-    utm_medium?: SortOrder
-    utm_source?: SortOrder
-    utm_id?: SortOrder
-    utm_content?: SortOrder
-    utm_term?: SortOrder
-  }
-
-  export type MarketingMinOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    utm_campaign?: SortOrder
-    utm_medium?: SortOrder
-    utm_source?: SortOrder
-    utm_id?: SortOrder
-    utm_content?: SortOrder
-    utm_term?: SortOrder
-  }
-
-  export type MarketingSumOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type EnumTicketTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.TicketType | EnumTicketTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumTicketTypeFilter<$PrismaModel> | $Enums.TicketType
-  }
-
-  export type GoldenTicketListRelationFilter = {
-    every?: GoldenTicketWhereInput
-    some?: GoldenTicketWhereInput
-    none?: GoldenTicketWhereInput
-  }
-
-  export type GoldenTicketOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type GoldenTicketBatchCountOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    expiresAt?: SortOrder
-    description?: SortOrder
-    type?: SortOrder
-    ownerId?: SortOrder
-  }
-
-  export type GoldenTicketBatchMaxOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    expiresAt?: SortOrder
-    description?: SortOrder
-    type?: SortOrder
-    ownerId?: SortOrder
-  }
-
-  export type GoldenTicketBatchMinOrderByAggregateInput = {
-    id?: SortOrder
-    createdAt?: SortOrder
-    expiresAt?: SortOrder
-    description?: SortOrder
-    type?: SortOrder
-    ownerId?: SortOrder
-  }
-
-  export type EnumTicketTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.TicketType | EnumTicketTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumTicketTypeWithAggregatesFilter<$PrismaModel> | $Enums.TicketType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumTicketTypeFilter<$PrismaModel>
-    _max?: NestedEnumTicketTypeFilter<$PrismaModel>
-  }
-
-  export type EnumGoldenTicketStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.GoldenTicketStatus | EnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumGoldenTicketStatusFilter<$PrismaModel> | $Enums.GoldenTicketStatus
-  }
-
-  export type GoldenTicketBatchRelationFilter = {
-    is?: GoldenTicketBatchWhereInput
-    isNot?: GoldenTicketBatchWhereInput
-  }
-
-  export type GoldenTicketCountOrderByAggregateInput = {
-    id?: SortOrder
-    batchId?: SortOrder
-    userId?: SortOrder
-    claimedAt?: SortOrder
-    status?: SortOrder
-  }
-
-  export type GoldenTicketMaxOrderByAggregateInput = {
-    id?: SortOrder
-    batchId?: SortOrder
-    userId?: SortOrder
-    claimedAt?: SortOrder
-    status?: SortOrder
-  }
-
-  export type GoldenTicketMinOrderByAggregateInput = {
-    id?: SortOrder
-    batchId?: SortOrder
-    userId?: SortOrder
-    claimedAt?: SortOrder
-    status?: SortOrder
-  }
-
-  export type EnumGoldenTicketStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.GoldenTicketStatus | EnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumGoldenTicketStatusWithAggregatesFilter<$PrismaModel> | $Enums.GoldenTicketStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
-    _max?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
-  }
-
   export type UserCreateNestedOneWithoutReferredUsersInput = {
     create?: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
     connectOrCreate?: UserCreateOrConnectWithoutReferredUsersInput
@@ -30223,18 +21245,6 @@ export namespace Prisma {
     connectOrCreate?: MessageCreateOrConnectWithoutUserInput | MessageCreateOrConnectWithoutUserInput[]
     createMany?: MessageCreateManyUserInputEnvelope
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
-  }
-
-  export type UserEmailCreateNestedOneWithoutUserInput = {
-    create?: XOR<UserEmailCreateWithoutUserInput, UserEmailUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserEmailCreateOrConnectWithoutUserInput
-    connect?: UserEmailWhereUniqueInput
-  }
-
-  export type UserPhoneNumberCreateNestedOneWithoutUserInput = {
-    create?: XOR<UserPhoneNumberCreateWithoutUserInput, UserPhoneNumberUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserPhoneNumberCreateOrConnectWithoutUserInput
-    connect?: UserPhoneNumberWhereUniqueInput
   }
 
   export type CompletedQuestRequirementCreateNestedManyWithoutUserInput = {
@@ -30278,31 +21288,11 @@ export namespace Prisma {
     connect?: TransactionIntentWhereUniqueInput | TransactionIntentWhereUniqueInput[]
   }
 
-  export type MarketingCreateNestedManyWithoutUserInput = {
-    create?: XOR<MarketingCreateWithoutUserInput, MarketingUncheckedCreateWithoutUserInput> | MarketingCreateWithoutUserInput[] | MarketingUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: MarketingCreateOrConnectWithoutUserInput | MarketingCreateOrConnectWithoutUserInput[]
-    createMany?: MarketingCreateManyUserInputEnvelope
-    connect?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
-  }
-
   export type ReferralCreateNestedManyWithoutUserInput = {
     create?: XOR<ReferralCreateWithoutUserInput, ReferralUncheckedCreateWithoutUserInput> | ReferralCreateWithoutUserInput[] | ReferralUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ReferralCreateOrConnectWithoutUserInput | ReferralCreateOrConnectWithoutUserInput[]
     createMany?: ReferralCreateManyUserInputEnvelope
     connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
-  }
-
-  export type GoldenTicketCreateNestedOneWithoutClaimedByInput = {
-    create?: XOR<GoldenTicketCreateWithoutClaimedByInput, GoldenTicketUncheckedCreateWithoutClaimedByInput>
-    connectOrCreate?: GoldenTicketCreateOrConnectWithoutClaimedByInput
-    connect?: GoldenTicketWhereUniqueInput
-  }
-
-  export type GoldenTicketBatchCreateNestedManyWithoutOwnerInput = {
-    create?: XOR<GoldenTicketBatchCreateWithoutOwnerInput, GoldenTicketBatchUncheckedCreateWithoutOwnerInput> | GoldenTicketBatchCreateWithoutOwnerInput[] | GoldenTicketBatchUncheckedCreateWithoutOwnerInput[]
-    connectOrCreate?: GoldenTicketBatchCreateOrConnectWithoutOwnerInput | GoldenTicketBatchCreateOrConnectWithoutOwnerInput[]
-    createMany?: GoldenTicketBatchCreateManyOwnerInputEnvelope
-    connect?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
   }
 
   export type LoginAttemptCreateNestedManyWithoutUserInput = {
@@ -30324,18 +21314,6 @@ export namespace Prisma {
     connectOrCreate?: MessageCreateOrConnectWithoutUserInput | MessageCreateOrConnectWithoutUserInput[]
     createMany?: MessageCreateManyUserInputEnvelope
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
-  }
-
-  export type UserEmailUncheckedCreateNestedOneWithoutUserInput = {
-    create?: XOR<UserEmailCreateWithoutUserInput, UserEmailUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserEmailCreateOrConnectWithoutUserInput
-    connect?: UserEmailWhereUniqueInput
-  }
-
-  export type UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput = {
-    create?: XOR<UserPhoneNumberCreateWithoutUserInput, UserPhoneNumberUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserPhoneNumberCreateOrConnectWithoutUserInput
-    connect?: UserPhoneNumberWhereUniqueInput
   }
 
   export type CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput = {
@@ -30379,31 +21357,11 @@ export namespace Prisma {
     connect?: TransactionIntentWhereUniqueInput | TransactionIntentWhereUniqueInput[]
   }
 
-  export type MarketingUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<MarketingCreateWithoutUserInput, MarketingUncheckedCreateWithoutUserInput> | MarketingCreateWithoutUserInput[] | MarketingUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: MarketingCreateOrConnectWithoutUserInput | MarketingCreateOrConnectWithoutUserInput[]
-    createMany?: MarketingCreateManyUserInputEnvelope
-    connect?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
-  }
-
   export type ReferralUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<ReferralCreateWithoutUserInput, ReferralUncheckedCreateWithoutUserInput> | ReferralCreateWithoutUserInput[] | ReferralUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ReferralCreateOrConnectWithoutUserInput | ReferralCreateOrConnectWithoutUserInput[]
     createMany?: ReferralCreateManyUserInputEnvelope
     connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
-  }
-
-  export type GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput = {
-    create?: XOR<GoldenTicketCreateWithoutClaimedByInput, GoldenTicketUncheckedCreateWithoutClaimedByInput>
-    connectOrCreate?: GoldenTicketCreateOrConnectWithoutClaimedByInput
-    connect?: GoldenTicketWhereUniqueInput
-  }
-
-  export type GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput = {
-    create?: XOR<GoldenTicketBatchCreateWithoutOwnerInput, GoldenTicketBatchUncheckedCreateWithoutOwnerInput> | GoldenTicketBatchCreateWithoutOwnerInput[] | GoldenTicketBatchUncheckedCreateWithoutOwnerInput[]
-    connectOrCreate?: GoldenTicketBatchCreateOrConnectWithoutOwnerInput | GoldenTicketBatchCreateOrConnectWithoutOwnerInput[]
-    createMany?: GoldenTicketBatchCreateManyOwnerInputEnvelope
-    connect?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
   }
 
   export type LoginAttemptUncheckedCreateNestedManyWithoutUserInput = {
@@ -30469,26 +21427,6 @@ export namespace Prisma {
     update?: MessageUpdateWithWhereUniqueWithoutUserInput | MessageUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: MessageUpdateManyWithWhereWithoutUserInput | MessageUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
-  }
-
-  export type UserEmailUpdateOneWithoutUserNestedInput = {
-    create?: XOR<UserEmailCreateWithoutUserInput, UserEmailUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserEmailCreateOrConnectWithoutUserInput
-    upsert?: UserEmailUpsertWithoutUserInput
-    disconnect?: UserEmailWhereInput | boolean
-    delete?: UserEmailWhereInput | boolean
-    connect?: UserEmailWhereUniqueInput
-    update?: XOR<XOR<UserEmailUpdateToOneWithWhereWithoutUserInput, UserEmailUpdateWithoutUserInput>, UserEmailUncheckedUpdateWithoutUserInput>
-  }
-
-  export type UserPhoneNumberUpdateOneWithoutUserNestedInput = {
-    create?: XOR<UserPhoneNumberCreateWithoutUserInput, UserPhoneNumberUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserPhoneNumberCreateOrConnectWithoutUserInput
-    upsert?: UserPhoneNumberUpsertWithoutUserInput
-    disconnect?: UserPhoneNumberWhereInput | boolean
-    delete?: UserPhoneNumberWhereInput | boolean
-    connect?: UserPhoneNumberWhereUniqueInput
-    update?: XOR<XOR<UserPhoneNumberUpdateToOneWithWhereWithoutUserInput, UserPhoneNumberUpdateWithoutUserInput>, UserPhoneNumberUncheckedUpdateWithoutUserInput>
   }
 
   export type CompletedQuestRequirementUpdateManyWithoutUserNestedInput = {
@@ -30571,20 +21509,6 @@ export namespace Prisma {
     deleteMany?: TransactionIntentScalarWhereInput | TransactionIntentScalarWhereInput[]
   }
 
-  export type MarketingUpdateManyWithoutUserNestedInput = {
-    create?: XOR<MarketingCreateWithoutUserInput, MarketingUncheckedCreateWithoutUserInput> | MarketingCreateWithoutUserInput[] | MarketingUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: MarketingCreateOrConnectWithoutUserInput | MarketingCreateOrConnectWithoutUserInput[]
-    upsert?: MarketingUpsertWithWhereUniqueWithoutUserInput | MarketingUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: MarketingCreateManyUserInputEnvelope
-    set?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
-    disconnect?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
-    delete?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
-    connect?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
-    update?: MarketingUpdateWithWhereUniqueWithoutUserInput | MarketingUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: MarketingUpdateManyWithWhereWithoutUserInput | MarketingUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: MarketingScalarWhereInput | MarketingScalarWhereInput[]
-  }
-
   export type ReferralUpdateManyWithoutUserNestedInput = {
     create?: XOR<ReferralCreateWithoutUserInput, ReferralUncheckedCreateWithoutUserInput> | ReferralCreateWithoutUserInput[] | ReferralUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ReferralCreateOrConnectWithoutUserInput | ReferralCreateOrConnectWithoutUserInput[]
@@ -30597,30 +21521,6 @@ export namespace Prisma {
     update?: ReferralUpdateWithWhereUniqueWithoutUserInput | ReferralUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ReferralUpdateManyWithWhereWithoutUserInput | ReferralUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
-  }
-
-  export type GoldenTicketUpdateOneWithoutClaimedByNestedInput = {
-    create?: XOR<GoldenTicketCreateWithoutClaimedByInput, GoldenTicketUncheckedCreateWithoutClaimedByInput>
-    connectOrCreate?: GoldenTicketCreateOrConnectWithoutClaimedByInput
-    upsert?: GoldenTicketUpsertWithoutClaimedByInput
-    disconnect?: GoldenTicketWhereInput | boolean
-    delete?: GoldenTicketWhereInput | boolean
-    connect?: GoldenTicketWhereUniqueInput
-    update?: XOR<XOR<GoldenTicketUpdateToOneWithWhereWithoutClaimedByInput, GoldenTicketUpdateWithoutClaimedByInput>, GoldenTicketUncheckedUpdateWithoutClaimedByInput>
-  }
-
-  export type GoldenTicketBatchUpdateManyWithoutOwnerNestedInput = {
-    create?: XOR<GoldenTicketBatchCreateWithoutOwnerInput, GoldenTicketBatchUncheckedCreateWithoutOwnerInput> | GoldenTicketBatchCreateWithoutOwnerInput[] | GoldenTicketBatchUncheckedCreateWithoutOwnerInput[]
-    connectOrCreate?: GoldenTicketBatchCreateOrConnectWithoutOwnerInput | GoldenTicketBatchCreateOrConnectWithoutOwnerInput[]
-    upsert?: GoldenTicketBatchUpsertWithWhereUniqueWithoutOwnerInput | GoldenTicketBatchUpsertWithWhereUniqueWithoutOwnerInput[]
-    createMany?: GoldenTicketBatchCreateManyOwnerInputEnvelope
-    set?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
-    disconnect?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
-    delete?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
-    connect?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
-    update?: GoldenTicketBatchUpdateWithWhereUniqueWithoutOwnerInput | GoldenTicketBatchUpdateWithWhereUniqueWithoutOwnerInput[]
-    updateMany?: GoldenTicketBatchUpdateManyWithWhereWithoutOwnerInput | GoldenTicketBatchUpdateManyWithWhereWithoutOwnerInput[]
-    deleteMany?: GoldenTicketBatchScalarWhereInput | GoldenTicketBatchScalarWhereInput[]
   }
 
   export type LoginAttemptUpdateManyWithoutUserNestedInput = {
@@ -30663,26 +21563,6 @@ export namespace Prisma {
     update?: MessageUpdateWithWhereUniqueWithoutUserInput | MessageUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: MessageUpdateManyWithWhereWithoutUserInput | MessageUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
-  }
-
-  export type UserEmailUncheckedUpdateOneWithoutUserNestedInput = {
-    create?: XOR<UserEmailCreateWithoutUserInput, UserEmailUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserEmailCreateOrConnectWithoutUserInput
-    upsert?: UserEmailUpsertWithoutUserInput
-    disconnect?: UserEmailWhereInput | boolean
-    delete?: UserEmailWhereInput | boolean
-    connect?: UserEmailWhereUniqueInput
-    update?: XOR<XOR<UserEmailUpdateToOneWithWhereWithoutUserInput, UserEmailUpdateWithoutUserInput>, UserEmailUncheckedUpdateWithoutUserInput>
-  }
-
-  export type UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput = {
-    create?: XOR<UserPhoneNumberCreateWithoutUserInput, UserPhoneNumberUncheckedCreateWithoutUserInput>
-    connectOrCreate?: UserPhoneNumberCreateOrConnectWithoutUserInput
-    upsert?: UserPhoneNumberUpsertWithoutUserInput
-    disconnect?: UserPhoneNumberWhereInput | boolean
-    delete?: UserPhoneNumberWhereInput | boolean
-    connect?: UserPhoneNumberWhereUniqueInput
-    update?: XOR<XOR<UserPhoneNumberUpdateToOneWithWhereWithoutUserInput, UserPhoneNumberUpdateWithoutUserInput>, UserPhoneNumberUncheckedUpdateWithoutUserInput>
   }
 
   export type CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput = {
@@ -30765,20 +21645,6 @@ export namespace Prisma {
     deleteMany?: TransactionIntentScalarWhereInput | TransactionIntentScalarWhereInput[]
   }
 
-  export type MarketingUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<MarketingCreateWithoutUserInput, MarketingUncheckedCreateWithoutUserInput> | MarketingCreateWithoutUserInput[] | MarketingUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: MarketingCreateOrConnectWithoutUserInput | MarketingCreateOrConnectWithoutUserInput[]
-    upsert?: MarketingUpsertWithWhereUniqueWithoutUserInput | MarketingUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: MarketingCreateManyUserInputEnvelope
-    set?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
-    disconnect?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
-    delete?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
-    connect?: MarketingWhereUniqueInput | MarketingWhereUniqueInput[]
-    update?: MarketingUpdateWithWhereUniqueWithoutUserInput | MarketingUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: MarketingUpdateManyWithWhereWithoutUserInput | MarketingUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: MarketingScalarWhereInput | MarketingScalarWhereInput[]
-  }
-
   export type ReferralUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<ReferralCreateWithoutUserInput, ReferralUncheckedCreateWithoutUserInput> | ReferralCreateWithoutUserInput[] | ReferralUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ReferralCreateOrConnectWithoutUserInput | ReferralCreateOrConnectWithoutUserInput[]
@@ -30791,30 +21657,6 @@ export namespace Prisma {
     update?: ReferralUpdateWithWhereUniqueWithoutUserInput | ReferralUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ReferralUpdateManyWithWhereWithoutUserInput | ReferralUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
-  }
-
-  export type GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput = {
-    create?: XOR<GoldenTicketCreateWithoutClaimedByInput, GoldenTicketUncheckedCreateWithoutClaimedByInput>
-    connectOrCreate?: GoldenTicketCreateOrConnectWithoutClaimedByInput
-    upsert?: GoldenTicketUpsertWithoutClaimedByInput
-    disconnect?: GoldenTicketWhereInput | boolean
-    delete?: GoldenTicketWhereInput | boolean
-    connect?: GoldenTicketWhereUniqueInput
-    update?: XOR<XOR<GoldenTicketUpdateToOneWithWhereWithoutClaimedByInput, GoldenTicketUpdateWithoutClaimedByInput>, GoldenTicketUncheckedUpdateWithoutClaimedByInput>
-  }
-
-  export type GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput = {
-    create?: XOR<GoldenTicketBatchCreateWithoutOwnerInput, GoldenTicketBatchUncheckedCreateWithoutOwnerInput> | GoldenTicketBatchCreateWithoutOwnerInput[] | GoldenTicketBatchUncheckedCreateWithoutOwnerInput[]
-    connectOrCreate?: GoldenTicketBatchCreateOrConnectWithoutOwnerInput | GoldenTicketBatchCreateOrConnectWithoutOwnerInput[]
-    upsert?: GoldenTicketBatchUpsertWithWhereUniqueWithoutOwnerInput | GoldenTicketBatchUpsertWithWhereUniqueWithoutOwnerInput[]
-    createMany?: GoldenTicketBatchCreateManyOwnerInputEnvelope
-    set?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
-    disconnect?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
-    delete?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
-    connect?: GoldenTicketBatchWhereUniqueInput | GoldenTicketBatchWhereUniqueInput[]
-    update?: GoldenTicketBatchUpdateWithWhereUniqueWithoutOwnerInput | GoldenTicketBatchUpdateWithWhereUniqueWithoutOwnerInput[]
-    updateMany?: GoldenTicketBatchUpdateManyWithWhereWithoutOwnerInput | GoldenTicketBatchUpdateManyWithWhereWithoutOwnerInput[]
-    deleteMany?: GoldenTicketBatchScalarWhereInput | GoldenTicketBatchScalarWhereInput[]
   }
 
   export type LoginAttemptUncheckedUpdateManyWithoutUserNestedInput = {
@@ -30831,40 +21673,8 @@ export namespace Prisma {
     deleteMany?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutEmailInput = {
-    create?: XOR<UserCreateWithoutEmailInput, UserUncheckedCreateWithoutEmailInput>
-    connectOrCreate?: UserCreateOrConnectWithoutEmailInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
-  export type UserUpdateOneRequiredWithoutEmailNestedInput = {
-    create?: XOR<UserCreateWithoutEmailInput, UserUncheckedCreateWithoutEmailInput>
-    connectOrCreate?: UserCreateOrConnectWithoutEmailInput
-    upsert?: UserUpsertWithoutEmailInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutEmailInput, UserUpdateWithoutEmailInput>, UserUncheckedUpdateWithoutEmailInput>
-  }
-
   export type EnumImageTypeFieldUpdateOperationsInput = {
     set?: $Enums.ImageType
-  }
-
-  export type UserCreateNestedOneWithoutPhoneNumberInput = {
-    create?: XOR<UserCreateWithoutPhoneNumberInput, UserUncheckedCreateWithoutPhoneNumberInput>
-    connectOrCreate?: UserCreateOrConnectWithoutPhoneNumberInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type UserUpdateOneRequiredWithoutPhoneNumberNestedInput = {
-    create?: XOR<UserCreateWithoutPhoneNumberInput, UserUncheckedCreateWithoutPhoneNumberInput>
-    connectOrCreate?: UserCreateOrConnectWithoutPhoneNumberInput
-    upsert?: UserUpsertWithoutPhoneNumberInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPhoneNumberInput, UserUpdateWithoutPhoneNumberInput>, UserUncheckedUpdateWithoutPhoneNumberInput>
   }
 
   export type EventCreateNestedOneWithoutReferralInput = {
@@ -30993,66 +21803,14 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type LoginAttemptCreateNestedManyWithoutIpAssessmentInput = {
-    create?: XOR<LoginAttemptCreateWithoutIpAssessmentInput, LoginAttemptUncheckedCreateWithoutIpAssessmentInput> | LoginAttemptCreateWithoutIpAssessmentInput[] | LoginAttemptUncheckedCreateWithoutIpAssessmentInput[]
-    connectOrCreate?: LoginAttemptCreateOrConnectWithoutIpAssessmentInput | LoginAttemptCreateOrConnectWithoutIpAssessmentInput[]
-    createMany?: LoginAttemptCreateManyIpAssessmentInputEnvelope
-    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-  }
-
-  export type LoginAttemptUncheckedCreateNestedManyWithoutIpAssessmentInput = {
-    create?: XOR<LoginAttemptCreateWithoutIpAssessmentInput, LoginAttemptUncheckedCreateWithoutIpAssessmentInput> | LoginAttemptCreateWithoutIpAssessmentInput[] | LoginAttemptUncheckedCreateWithoutIpAssessmentInput[]
-    connectOrCreate?: LoginAttemptCreateOrConnectWithoutIpAssessmentInput | LoginAttemptCreateOrConnectWithoutIpAssessmentInput[]
-    createMany?: LoginAttemptCreateManyIpAssessmentInputEnvelope
-    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-  }
-
-  export type LoginAttemptUpdateManyWithoutIpAssessmentNestedInput = {
-    create?: XOR<LoginAttemptCreateWithoutIpAssessmentInput, LoginAttemptUncheckedCreateWithoutIpAssessmentInput> | LoginAttemptCreateWithoutIpAssessmentInput[] | LoginAttemptUncheckedCreateWithoutIpAssessmentInput[]
-    connectOrCreate?: LoginAttemptCreateOrConnectWithoutIpAssessmentInput | LoginAttemptCreateOrConnectWithoutIpAssessmentInput[]
-    upsert?: LoginAttemptUpsertWithWhereUniqueWithoutIpAssessmentInput | LoginAttemptUpsertWithWhereUniqueWithoutIpAssessmentInput[]
-    createMany?: LoginAttemptCreateManyIpAssessmentInputEnvelope
-    set?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    disconnect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    delete?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    update?: LoginAttemptUpdateWithWhereUniqueWithoutIpAssessmentInput | LoginAttemptUpdateWithWhereUniqueWithoutIpAssessmentInput[]
-    updateMany?: LoginAttemptUpdateManyWithWhereWithoutIpAssessmentInput | LoginAttemptUpdateManyWithWhereWithoutIpAssessmentInput[]
-    deleteMany?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
-  }
-
-  export type LoginAttemptUncheckedUpdateManyWithoutIpAssessmentNestedInput = {
-    create?: XOR<LoginAttemptCreateWithoutIpAssessmentInput, LoginAttemptUncheckedCreateWithoutIpAssessmentInput> | LoginAttemptCreateWithoutIpAssessmentInput[] | LoginAttemptUncheckedCreateWithoutIpAssessmentInput[]
-    connectOrCreate?: LoginAttemptCreateOrConnectWithoutIpAssessmentInput | LoginAttemptCreateOrConnectWithoutIpAssessmentInput[]
-    upsert?: LoginAttemptUpsertWithWhereUniqueWithoutIpAssessmentInput | LoginAttemptUpsertWithWhereUniqueWithoutIpAssessmentInput[]
-    createMany?: LoginAttemptCreateManyIpAssessmentInputEnvelope
-    set?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    disconnect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    delete?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    update?: LoginAttemptUpdateWithWhereUniqueWithoutIpAssessmentInput | LoginAttemptUpdateWithWhereUniqueWithoutIpAssessmentInput[]
-    updateMany?: LoginAttemptUpdateManyWithWhereWithoutIpAssessmentInput | LoginAttemptUpdateManyWithWhereWithoutIpAssessmentInput[]
-    deleteMany?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
-  }
-
   export type UserCreateNestedOneWithoutLoginAttemptsInput = {
     create?: XOR<UserCreateWithoutLoginAttemptsInput, UserUncheckedCreateWithoutLoginAttemptsInput>
     connectOrCreate?: UserCreateOrConnectWithoutLoginAttemptsInput
     connect?: UserWhereUniqueInput
   }
 
-  export type IpAssessmentCreateNestedOneWithoutLoginAttemptsInput = {
-    create?: XOR<IpAssessmentCreateWithoutLoginAttemptsInput, IpAssessmentUncheckedCreateWithoutLoginAttemptsInput>
-    connectOrCreate?: IpAssessmentCreateOrConnectWithoutLoginAttemptsInput
-    connect?: IpAssessmentWhereUniqueInput
-  }
-
   export type EnumLoginAttemptTypeFieldUpdateOperationsInput = {
     set?: $Enums.LoginAttemptType
-  }
-
-  export type NullableEnumFraudScoringOutputFieldUpdateOperationsInput = {
-    set?: $Enums.FraudScoringOutput | null
   }
 
   export type UserUpdateOneRequiredWithoutLoginAttemptsNestedInput = {
@@ -31061,14 +21819,6 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutLoginAttemptsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLoginAttemptsInput, UserUpdateWithoutLoginAttemptsInput>, UserUncheckedUpdateWithoutLoginAttemptsInput>
-  }
-
-  export type IpAssessmentUpdateOneRequiredWithoutLoginAttemptsNestedInput = {
-    create?: XOR<IpAssessmentCreateWithoutLoginAttemptsInput, IpAssessmentUncheckedCreateWithoutLoginAttemptsInput>
-    connectOrCreate?: IpAssessmentCreateOrConnectWithoutLoginAttemptsInput
-    upsert?: IpAssessmentUpsertWithoutLoginAttemptsInput
-    connect?: IpAssessmentWhereUniqueInput
-    update?: XOR<XOR<IpAssessmentUpdateToOneWithWhereWithoutLoginAttemptsInput, IpAssessmentUpdateWithoutLoginAttemptsInput>, IpAssessmentUncheckedUpdateWithoutLoginAttemptsInput>
   }
 
   export type UserCreateNestedOneWithoutCompletedQuestRequirementsInput = {
@@ -31133,10 +21883,6 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutAuditLogsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAuditLogsInput, UserUpdateWithoutAuditLogsInput>, UserUncheckedUpdateWithoutAuditLogsInput>
-  }
-
-  export type EnumCountryStatusFieldUpdateOperationsInput = {
-    set?: $Enums.CountryStatus
   }
 
   export type SubmittedTransactionCreateNestedManyWithoutTransactionInput = {
@@ -31269,114 +22015,6 @@ export namespace Prisma {
     upsert?: TransactionIntentUpsertWithoutTransactionsInput
     connect?: TransactionIntentWhereUniqueInput
     update?: XOR<XOR<TransactionIntentUpdateToOneWithWhereWithoutTransactionsInput, TransactionIntentUpdateWithoutTransactionsInput>, TransactionIntentUncheckedUpdateWithoutTransactionsInput>
-  }
-
-  export type UserCreateNestedOneWithoutMarketingInput = {
-    create?: XOR<UserCreateWithoutMarketingInput, UserUncheckedCreateWithoutMarketingInput>
-    connectOrCreate?: UserCreateOrConnectWithoutMarketingInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type UserUpdateOneRequiredWithoutMarketingNestedInput = {
-    create?: XOR<UserCreateWithoutMarketingInput, UserUncheckedCreateWithoutMarketingInput>
-    connectOrCreate?: UserCreateOrConnectWithoutMarketingInput
-    upsert?: UserUpsertWithoutMarketingInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMarketingInput, UserUpdateWithoutMarketingInput>, UserUncheckedUpdateWithoutMarketingInput>
-  }
-
-  export type UserCreateNestedOneWithoutGoldenTicketBatchesOwnedInput = {
-    create?: XOR<UserCreateWithoutGoldenTicketBatchesOwnedInput, UserUncheckedCreateWithoutGoldenTicketBatchesOwnedInput>
-    connectOrCreate?: UserCreateOrConnectWithoutGoldenTicketBatchesOwnedInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type GoldenTicketCreateNestedManyWithoutBatchInput = {
-    create?: XOR<GoldenTicketCreateWithoutBatchInput, GoldenTicketUncheckedCreateWithoutBatchInput> | GoldenTicketCreateWithoutBatchInput[] | GoldenTicketUncheckedCreateWithoutBatchInput[]
-    connectOrCreate?: GoldenTicketCreateOrConnectWithoutBatchInput | GoldenTicketCreateOrConnectWithoutBatchInput[]
-    createMany?: GoldenTicketCreateManyBatchInputEnvelope
-    connect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-  }
-
-  export type GoldenTicketUncheckedCreateNestedManyWithoutBatchInput = {
-    create?: XOR<GoldenTicketCreateWithoutBatchInput, GoldenTicketUncheckedCreateWithoutBatchInput> | GoldenTicketCreateWithoutBatchInput[] | GoldenTicketUncheckedCreateWithoutBatchInput[]
-    connectOrCreate?: GoldenTicketCreateOrConnectWithoutBatchInput | GoldenTicketCreateOrConnectWithoutBatchInput[]
-    createMany?: GoldenTicketCreateManyBatchInputEnvelope
-    connect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-  }
-
-  export type EnumTicketTypeFieldUpdateOperationsInput = {
-    set?: $Enums.TicketType
-  }
-
-  export type UserUpdateOneRequiredWithoutGoldenTicketBatchesOwnedNestedInput = {
-    create?: XOR<UserCreateWithoutGoldenTicketBatchesOwnedInput, UserUncheckedCreateWithoutGoldenTicketBatchesOwnedInput>
-    connectOrCreate?: UserCreateOrConnectWithoutGoldenTicketBatchesOwnedInput
-    upsert?: UserUpsertWithoutGoldenTicketBatchesOwnedInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGoldenTicketBatchesOwnedInput, UserUpdateWithoutGoldenTicketBatchesOwnedInput>, UserUncheckedUpdateWithoutGoldenTicketBatchesOwnedInput>
-  }
-
-  export type GoldenTicketUpdateManyWithoutBatchNestedInput = {
-    create?: XOR<GoldenTicketCreateWithoutBatchInput, GoldenTicketUncheckedCreateWithoutBatchInput> | GoldenTicketCreateWithoutBatchInput[] | GoldenTicketUncheckedCreateWithoutBatchInput[]
-    connectOrCreate?: GoldenTicketCreateOrConnectWithoutBatchInput | GoldenTicketCreateOrConnectWithoutBatchInput[]
-    upsert?: GoldenTicketUpsertWithWhereUniqueWithoutBatchInput | GoldenTicketUpsertWithWhereUniqueWithoutBatchInput[]
-    createMany?: GoldenTicketCreateManyBatchInputEnvelope
-    set?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    disconnect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    delete?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    connect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    update?: GoldenTicketUpdateWithWhereUniqueWithoutBatchInput | GoldenTicketUpdateWithWhereUniqueWithoutBatchInput[]
-    updateMany?: GoldenTicketUpdateManyWithWhereWithoutBatchInput | GoldenTicketUpdateManyWithWhereWithoutBatchInput[]
-    deleteMany?: GoldenTicketScalarWhereInput | GoldenTicketScalarWhereInput[]
-  }
-
-  export type GoldenTicketUncheckedUpdateManyWithoutBatchNestedInput = {
-    create?: XOR<GoldenTicketCreateWithoutBatchInput, GoldenTicketUncheckedCreateWithoutBatchInput> | GoldenTicketCreateWithoutBatchInput[] | GoldenTicketUncheckedCreateWithoutBatchInput[]
-    connectOrCreate?: GoldenTicketCreateOrConnectWithoutBatchInput | GoldenTicketCreateOrConnectWithoutBatchInput[]
-    upsert?: GoldenTicketUpsertWithWhereUniqueWithoutBatchInput | GoldenTicketUpsertWithWhereUniqueWithoutBatchInput[]
-    createMany?: GoldenTicketCreateManyBatchInputEnvelope
-    set?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    disconnect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    delete?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    connect?: GoldenTicketWhereUniqueInput | GoldenTicketWhereUniqueInput[]
-    update?: GoldenTicketUpdateWithWhereUniqueWithoutBatchInput | GoldenTicketUpdateWithWhereUniqueWithoutBatchInput[]
-    updateMany?: GoldenTicketUpdateManyWithWhereWithoutBatchInput | GoldenTicketUpdateManyWithWhereWithoutBatchInput[]
-    deleteMany?: GoldenTicketScalarWhereInput | GoldenTicketScalarWhereInput[]
-  }
-
-  export type UserCreateNestedOneWithoutGoldenTicketClaimedInput = {
-    create?: XOR<UserCreateWithoutGoldenTicketClaimedInput, UserUncheckedCreateWithoutGoldenTicketClaimedInput>
-    connectOrCreate?: UserCreateOrConnectWithoutGoldenTicketClaimedInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type GoldenTicketBatchCreateNestedOneWithoutTicketsInput = {
-    create?: XOR<GoldenTicketBatchCreateWithoutTicketsInput, GoldenTicketBatchUncheckedCreateWithoutTicketsInput>
-    connectOrCreate?: GoldenTicketBatchCreateOrConnectWithoutTicketsInput
-    connect?: GoldenTicketBatchWhereUniqueInput
-  }
-
-  export type EnumGoldenTicketStatusFieldUpdateOperationsInput = {
-    set?: $Enums.GoldenTicketStatus
-  }
-
-  export type UserUpdateOneWithoutGoldenTicketClaimedNestedInput = {
-    create?: XOR<UserCreateWithoutGoldenTicketClaimedInput, UserUncheckedCreateWithoutGoldenTicketClaimedInput>
-    connectOrCreate?: UserCreateOrConnectWithoutGoldenTicketClaimedInput
-    upsert?: UserUpsertWithoutGoldenTicketClaimedInput
-    disconnect?: UserWhereInput | boolean
-    delete?: UserWhereInput | boolean
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGoldenTicketClaimedInput, UserUpdateWithoutGoldenTicketClaimedInput>, UserUncheckedUpdateWithoutGoldenTicketClaimedInput>
-  }
-
-  export type GoldenTicketBatchUpdateOneRequiredWithoutTicketsNestedInput = {
-    create?: XOR<GoldenTicketBatchCreateWithoutTicketsInput, GoldenTicketBatchUncheckedCreateWithoutTicketsInput>
-    connectOrCreate?: GoldenTicketBatchCreateOrConnectWithoutTicketsInput
-    upsert?: GoldenTicketBatchUpsertWithoutTicketsInput
-    connect?: GoldenTicketBatchWhereUniqueInput
-    update?: XOR<XOR<GoldenTicketBatchUpdateToOneWithWhereWithoutTicketsInput, GoldenTicketBatchUpdateWithoutTicketsInput>, GoldenTicketBatchUncheckedUpdateWithoutTicketsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -31520,19 +22158,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUserStatusFilter<$PrismaModel>
     _max?: NestedEnumUserStatusFilter<$PrismaModel>
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedEnumImageTypeFilter<$PrismaModel = never> = {
@@ -31694,13 +22319,6 @@ export namespace Prisma {
     not?: NestedEnumLoginAttemptTypeFilter<$PrismaModel> | $Enums.LoginAttemptType
   }
 
-  export type NestedEnumFraudScoringOutputNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.FraudScoringOutput | EnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
-    in?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumFraudScoringOutputNullableFilter<$PrismaModel> | $Enums.FraudScoringOutput | null
-  }
-
   export type NestedEnumLoginAttemptTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.LoginAttemptType | EnumLoginAttemptTypeFieldRefInput<$PrismaModel>
     in?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
@@ -31709,16 +22327,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
     _max?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
-  }
-
-  export type NestedEnumFraudScoringOutputNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.FraudScoringOutput | EnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
-    in?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.FraudScoringOutput[] | ListEnumFraudScoringOutputFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumFraudScoringOutputNullableWithAggregatesFilter<$PrismaModel> | $Enums.FraudScoringOutput | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumFraudScoringOutputNullableFilter<$PrismaModel>
-    _max?: NestedEnumFraudScoringOutputNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumQuestStatusFilter<$PrismaModel = never> = {
@@ -31753,23 +22361,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAuditTypeFilter<$PrismaModel>
     _max?: NestedEnumAuditTypeFilter<$PrismaModel>
-  }
-
-  export type NestedEnumCountryStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.CountryStatus | EnumCountryStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumCountryStatusFilter<$PrismaModel> | $Enums.CountryStatus
-  }
-
-  export type NestedEnumCountryStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.CountryStatus | EnumCountryStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.CountryStatus[] | ListEnumCountryStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumCountryStatusWithAggregatesFilter<$PrismaModel> | $Enums.CountryStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumCountryStatusFilter<$PrismaModel>
-    _max?: NestedEnumCountryStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumTransactionIntentStatusFilter<$PrismaModel = never> = {
@@ -31811,40 +22402,6 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type NestedEnumTicketTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.TicketType | EnumTicketTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumTicketTypeFilter<$PrismaModel> | $Enums.TicketType
-  }
-
-  export type NestedEnumTicketTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.TicketType | EnumTicketTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.TicketType[] | ListEnumTicketTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumTicketTypeWithAggregatesFilter<$PrismaModel> | $Enums.TicketType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumTicketTypeFilter<$PrismaModel>
-    _max?: NestedEnumTicketTypeFilter<$PrismaModel>
-  }
-
-  export type NestedEnumGoldenTicketStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.GoldenTicketStatus | EnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumGoldenTicketStatusFilter<$PrismaModel> | $Enums.GoldenTicketStatus
-  }
-
-  export type NestedEnumGoldenTicketStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.GoldenTicketStatus | EnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.GoldenTicketStatus[] | ListEnumGoldenTicketStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumGoldenTicketStatusWithAggregatesFilter<$PrismaModel> | $Enums.GoldenTicketStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
-    _max?: NestedEnumGoldenTicketStatusFilter<$PrismaModel>
-  }
-
   export type UserCreateWithoutReferredUsersInput = {
     id?: string
     identityAddress: string
@@ -31858,17 +22415,12 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -31885,17 +22437,12 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -31957,38 +22504,6 @@ export namespace Prisma {
   export type MessageCreateManyUserInputEnvelope = {
     data: MessageCreateManyUserInput | MessageCreateManyUserInput[]
     skipDuplicates?: boolean
-  }
-
-  export type UserEmailCreateWithoutUserInput = {
-    email: string
-    newsletter?: boolean
-  }
-
-  export type UserEmailUncheckedCreateWithoutUserInput = {
-    email: string
-    newsletter?: boolean
-  }
-
-  export type UserEmailCreateOrConnectWithoutUserInput = {
-    where: UserEmailWhereUniqueInput
-    create: XOR<UserEmailCreateWithoutUserInput, UserEmailUncheckedCreateWithoutUserInput>
-  }
-
-  export type UserPhoneNumberCreateWithoutUserInput = {
-    phoneNumber: string
-    createdAt?: Date | string
-    ip?: string
-  }
-
-  export type UserPhoneNumberUncheckedCreateWithoutUserInput = {
-    phoneNumber: string
-    createdAt?: Date | string
-    ip?: string
-  }
-
-  export type UserPhoneNumberCreateOrConnectWithoutUserInput = {
-    where: UserPhoneNumberWhereUniqueInput
-    create: XOR<UserPhoneNumberCreateWithoutUserInput, UserPhoneNumberUncheckedCreateWithoutUserInput>
   }
 
   export type CompletedQuestRequirementCreateWithoutUserInput = {
@@ -32088,18 +22603,13 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -32115,18 +22625,13 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -32170,35 +22675,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type MarketingCreateWithoutUserInput = {
-    utm_campaign?: string | null
-    utm_medium?: string | null
-    utm_source?: string | null
-    utm_id?: string | null
-    utm_content?: string | null
-    utm_term?: string | null
-  }
-
-  export type MarketingUncheckedCreateWithoutUserInput = {
-    id?: number
-    utm_campaign?: string | null
-    utm_medium?: string | null
-    utm_source?: string | null
-    utm_id?: string | null
-    utm_content?: string | null
-    utm_term?: string | null
-  }
-
-  export type MarketingCreateOrConnectWithoutUserInput = {
-    where: MarketingWhereUniqueInput
-    create: XOR<MarketingCreateWithoutUserInput, MarketingUncheckedCreateWithoutUserInput>
-  }
-
-  export type MarketingCreateManyUserInputEnvelope = {
-    data: MarketingCreateManyUserInput | MarketingCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
   export type ReferralCreateWithoutUserInput = {
     action: $Enums.ReferralAction
     xrdValue: Decimal | DecimalJsLike | number | string
@@ -32221,65 +22697,14 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type GoldenTicketCreateWithoutClaimedByInput = {
-    id: string
-    claimedAt?: Date | string | null
-    status?: $Enums.GoldenTicketStatus
-    batch: GoldenTicketBatchCreateNestedOneWithoutTicketsInput
-  }
-
-  export type GoldenTicketUncheckedCreateWithoutClaimedByInput = {
-    id: string
-    batchId: string
-    claimedAt?: Date | string | null
-    status?: $Enums.GoldenTicketStatus
-  }
-
-  export type GoldenTicketCreateOrConnectWithoutClaimedByInput = {
-    where: GoldenTicketWhereUniqueInput
-    create: XOR<GoldenTicketCreateWithoutClaimedByInput, GoldenTicketUncheckedCreateWithoutClaimedByInput>
-  }
-
-  export type GoldenTicketBatchCreateWithoutOwnerInput = {
-    id: string
-    createdAt?: Date | string
-    expiresAt: Date | string
-    description?: string | null
-    type?: $Enums.TicketType
-    tickets?: GoldenTicketCreateNestedManyWithoutBatchInput
-  }
-
-  export type GoldenTicketBatchUncheckedCreateWithoutOwnerInput = {
-    id: string
-    createdAt?: Date | string
-    expiresAt: Date | string
-    description?: string | null
-    type?: $Enums.TicketType
-    tickets?: GoldenTicketUncheckedCreateNestedManyWithoutBatchInput
-  }
-
-  export type GoldenTicketBatchCreateOrConnectWithoutOwnerInput = {
-    where: GoldenTicketBatchWhereUniqueInput
-    create: XOR<GoldenTicketBatchCreateWithoutOwnerInput, GoldenTicketBatchUncheckedCreateWithoutOwnerInput>
-  }
-
-  export type GoldenTicketBatchCreateManyOwnerInputEnvelope = {
-    data: GoldenTicketBatchCreateManyOwnerInput | GoldenTicketBatchCreateManyOwnerInput[]
-    skipDuplicates?: boolean
-  }
-
   export type LoginAttemptCreateWithoutUserInput = {
     type: $Enums.LoginAttemptType
-    fraudScoring?: $Enums.FraudScoringOutput | null
     createdAt?: Date | string
-    ipAssessment: IpAssessmentCreateNestedOneWithoutLoginAttemptsInput
   }
 
   export type LoginAttemptUncheckedCreateWithoutUserInput = {
     id?: number
-    ipAssessmentId: number
     type: $Enums.LoginAttemptType
-    fraudScoring?: $Enums.FraudScoringOutput | null
     createdAt?: Date | string
   }
 
@@ -32317,17 +22742,12 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -32344,17 +22764,12 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -32413,50 +22828,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Message"> | Date | string
     seenAt?: DateTimeNullableFilter<"Message"> | Date | string | null
     data?: JsonFilter<"Message">
-  }
-
-  export type UserEmailUpsertWithoutUserInput = {
-    update: XOR<UserEmailUpdateWithoutUserInput, UserEmailUncheckedUpdateWithoutUserInput>
-    create: XOR<UserEmailCreateWithoutUserInput, UserEmailUncheckedCreateWithoutUserInput>
-    where?: UserEmailWhereInput
-  }
-
-  export type UserEmailUpdateToOneWithWhereWithoutUserInput = {
-    where?: UserEmailWhereInput
-    data: XOR<UserEmailUpdateWithoutUserInput, UserEmailUncheckedUpdateWithoutUserInput>
-  }
-
-  export type UserEmailUpdateWithoutUserInput = {
-    email?: StringFieldUpdateOperationsInput | string
-    newsletter?: BoolFieldUpdateOperationsInput | boolean
-  }
-
-  export type UserEmailUncheckedUpdateWithoutUserInput = {
-    email?: StringFieldUpdateOperationsInput | string
-    newsletter?: BoolFieldUpdateOperationsInput | boolean
-  }
-
-  export type UserPhoneNumberUpsertWithoutUserInput = {
-    update: XOR<UserPhoneNumberUpdateWithoutUserInput, UserPhoneNumberUncheckedUpdateWithoutUserInput>
-    create: XOR<UserPhoneNumberCreateWithoutUserInput, UserPhoneNumberUncheckedCreateWithoutUserInput>
-    where?: UserPhoneNumberWhereInput
-  }
-
-  export type UserPhoneNumberUpdateToOneWithWhereWithoutUserInput = {
-    where?: UserPhoneNumberWhereInput
-    data: XOR<UserPhoneNumberUpdateWithoutUserInput, UserPhoneNumberUncheckedUpdateWithoutUserInput>
-  }
-
-  export type UserPhoneNumberUpdateWithoutUserInput = {
-    phoneNumber?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    ip?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type UserPhoneNumberUncheckedUpdateWithoutUserInput = {
-    phoneNumber?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    ip?: StringFieldUpdateOperationsInput | string
   }
 
   export type CompletedQuestRequirementUpsertWithWhereUniqueWithoutUserInput = {
@@ -32621,36 +22992,6 @@ export namespace Prisma {
     batchId?: StringNullableFilter<"TransactionIntent"> | string | null
   }
 
-  export type MarketingUpsertWithWhereUniqueWithoutUserInput = {
-    where: MarketingWhereUniqueInput
-    update: XOR<MarketingUpdateWithoutUserInput, MarketingUncheckedUpdateWithoutUserInput>
-    create: XOR<MarketingCreateWithoutUserInput, MarketingUncheckedCreateWithoutUserInput>
-  }
-
-  export type MarketingUpdateWithWhereUniqueWithoutUserInput = {
-    where: MarketingWhereUniqueInput
-    data: XOR<MarketingUpdateWithoutUserInput, MarketingUncheckedUpdateWithoutUserInput>
-  }
-
-  export type MarketingUpdateManyWithWhereWithoutUserInput = {
-    where: MarketingScalarWhereInput
-    data: XOR<MarketingUpdateManyMutationInput, MarketingUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type MarketingScalarWhereInput = {
-    AND?: MarketingScalarWhereInput | MarketingScalarWhereInput[]
-    OR?: MarketingScalarWhereInput[]
-    NOT?: MarketingScalarWhereInput | MarketingScalarWhereInput[]
-    id?: IntFilter<"Marketing"> | number
-    userId?: StringFilter<"Marketing"> | string
-    utm_campaign?: StringNullableFilter<"Marketing"> | string | null
-    utm_medium?: StringNullableFilter<"Marketing"> | string | null
-    utm_source?: StringNullableFilter<"Marketing"> | string | null
-    utm_id?: StringNullableFilter<"Marketing"> | string | null
-    utm_content?: StringNullableFilter<"Marketing"> | string | null
-    utm_term?: StringNullableFilter<"Marketing"> | string | null
-  }
-
   export type ReferralUpsertWithWhereUniqueWithoutUserInput = {
     where: ReferralWhereUniqueInput
     update: XOR<ReferralUpdateWithoutUserInput, ReferralUncheckedUpdateWithoutUserInput>
@@ -32677,59 +23018,6 @@ export namespace Prisma {
     xrdValue?: DecimalFilter<"Referral"> | Decimal | DecimalJsLike | number | string
   }
 
-  export type GoldenTicketUpsertWithoutClaimedByInput = {
-    update: XOR<GoldenTicketUpdateWithoutClaimedByInput, GoldenTicketUncheckedUpdateWithoutClaimedByInput>
-    create: XOR<GoldenTicketCreateWithoutClaimedByInput, GoldenTicketUncheckedCreateWithoutClaimedByInput>
-    where?: GoldenTicketWhereInput
-  }
-
-  export type GoldenTicketUpdateToOneWithWhereWithoutClaimedByInput = {
-    where?: GoldenTicketWhereInput
-    data: XOR<GoldenTicketUpdateWithoutClaimedByInput, GoldenTicketUncheckedUpdateWithoutClaimedByInput>
-  }
-
-  export type GoldenTicketUpdateWithoutClaimedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
-    batch?: GoldenTicketBatchUpdateOneRequiredWithoutTicketsNestedInput
-  }
-
-  export type GoldenTicketUncheckedUpdateWithoutClaimedByInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    batchId?: StringFieldUpdateOperationsInput | string
-    claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
-  }
-
-  export type GoldenTicketBatchUpsertWithWhereUniqueWithoutOwnerInput = {
-    where: GoldenTicketBatchWhereUniqueInput
-    update: XOR<GoldenTicketBatchUpdateWithoutOwnerInput, GoldenTicketBatchUncheckedUpdateWithoutOwnerInput>
-    create: XOR<GoldenTicketBatchCreateWithoutOwnerInput, GoldenTicketBatchUncheckedCreateWithoutOwnerInput>
-  }
-
-  export type GoldenTicketBatchUpdateWithWhereUniqueWithoutOwnerInput = {
-    where: GoldenTicketBatchWhereUniqueInput
-    data: XOR<GoldenTicketBatchUpdateWithoutOwnerInput, GoldenTicketBatchUncheckedUpdateWithoutOwnerInput>
-  }
-
-  export type GoldenTicketBatchUpdateManyWithWhereWithoutOwnerInput = {
-    where: GoldenTicketBatchScalarWhereInput
-    data: XOR<GoldenTicketBatchUpdateManyMutationInput, GoldenTicketBatchUncheckedUpdateManyWithoutOwnerInput>
-  }
-
-  export type GoldenTicketBatchScalarWhereInput = {
-    AND?: GoldenTicketBatchScalarWhereInput | GoldenTicketBatchScalarWhereInput[]
-    OR?: GoldenTicketBatchScalarWhereInput[]
-    NOT?: GoldenTicketBatchScalarWhereInput | GoldenTicketBatchScalarWhereInput[]
-    id?: StringFilter<"GoldenTicketBatch"> | string
-    createdAt?: DateTimeFilter<"GoldenTicketBatch"> | Date | string
-    expiresAt?: DateTimeFilter<"GoldenTicketBatch"> | Date | string
-    description?: StringNullableFilter<"GoldenTicketBatch"> | string | null
-    type?: EnumTicketTypeFilter<"GoldenTicketBatch"> | $Enums.TicketType
-    ownerId?: StringFilter<"GoldenTicketBatch"> | string
-  }
-
   export type LoginAttemptUpsertWithWhereUniqueWithoutUserInput = {
     where: LoginAttemptWhereUniqueInput
     update: XOR<LoginAttemptUpdateWithoutUserInput, LoginAttemptUncheckedUpdateWithoutUserInput>
@@ -32752,258 +23040,8 @@ export namespace Prisma {
     NOT?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
     id?: IntFilter<"LoginAttempt"> | number
     userId?: StringFilter<"LoginAttempt"> | string
-    ipAssessmentId?: IntFilter<"LoginAttempt"> | number
     type?: EnumLoginAttemptTypeFilter<"LoginAttempt"> | $Enums.LoginAttemptType
-    fraudScoring?: EnumFraudScoringOutputNullableFilter<"LoginAttempt"> | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
-  }
-
-  export type UserCreateWithoutEmailInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    status?: $Enums.UserStatus
-    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
-    events?: EventCreateNestedManyWithoutUserInput
-    messages?: MessageCreateNestedManyWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
-    questProgress?: QuestProgressCreateNestedManyWithoutUserInput
-    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
-    referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutEmailInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    referredBy?: string | null
-    status?: $Enums.UserStatus
-    events?: EventUncheckedCreateNestedManyWithoutUserInput
-    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
-    questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
-    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
-    referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutEmailInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutEmailInput, UserUncheckedCreateWithoutEmailInput>
-  }
-
-  export type UserUpsertWithoutEmailInput = {
-    update: XOR<UserUpdateWithoutEmailInput, UserUncheckedUpdateWithoutEmailInput>
-    create: XOR<UserCreateWithoutEmailInput, UserUncheckedCreateWithoutEmailInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutEmailInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutEmailInput, UserUncheckedUpdateWithoutEmailInput>
-  }
-
-  export type UserUpdateWithoutEmailInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
-    events?: EventUpdateManyWithoutUserNestedInput
-    messages?: MessageUpdateManyWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
-    questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
-    referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutEmailInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    events?: EventUncheckedUpdateManyWithoutUserNestedInput
-    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
-    questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
-    referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserCreateWithoutPhoneNumberInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    status?: $Enums.UserStatus
-    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
-    events?: EventCreateNestedManyWithoutUserInput
-    messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
-    questProgress?: QuestProgressCreateNestedManyWithoutUserInput
-    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
-    referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutPhoneNumberInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    referredBy?: string | null
-    status?: $Enums.UserStatus
-    events?: EventUncheckedCreateNestedManyWithoutUserInput
-    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
-    questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
-    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
-    referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutPhoneNumberInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutPhoneNumberInput, UserUncheckedCreateWithoutPhoneNumberInput>
-  }
-
-  export type UserUpsertWithoutPhoneNumberInput = {
-    update: XOR<UserUpdateWithoutPhoneNumberInput, UserUncheckedUpdateWithoutPhoneNumberInput>
-    create: XOR<UserCreateWithoutPhoneNumberInput, UserUncheckedCreateWithoutPhoneNumberInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutPhoneNumberInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutPhoneNumberInput, UserUncheckedUpdateWithoutPhoneNumberInput>
-  }
-
-  export type UserUpdateWithoutPhoneNumberInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
-    events?: EventUpdateManyWithoutUserNestedInput
-    messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
-    questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
-    referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutPhoneNumberInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    events?: EventUncheckedUpdateManyWithoutUserNestedInput
-    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
-    questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
-    referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type EventCreateWithoutReferralInput = {
@@ -33046,17 +23084,12 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -33073,17 +23106,12 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -33149,17 +23177,12 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -33176,17 +23199,12 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -33202,18 +23220,13 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -33229,18 +23242,13 @@ export namespace Prisma {
     referredBy?: string | null
     status?: $Enums.UserStatus
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -33294,18 +23302,13 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -33321,18 +23324,13 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -33364,18 +23362,13 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -33391,18 +23384,13 @@ export namespace Prisma {
     referredBy?: string | null
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -33434,18 +23422,13 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -33461,60 +23444,14 @@ export namespace Prisma {
     referredBy?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type LoginAttemptCreateWithoutIpAssessmentInput = {
-    type: $Enums.LoginAttemptType
-    fraudScoring?: $Enums.FraudScoringOutput | null
-    createdAt?: Date | string
-    user: UserCreateNestedOneWithoutLoginAttemptsInput
-  }
-
-  export type LoginAttemptUncheckedCreateWithoutIpAssessmentInput = {
-    id?: number
-    userId: string
-    type: $Enums.LoginAttemptType
-    fraudScoring?: $Enums.FraudScoringOutput | null
-    createdAt?: Date | string
-  }
-
-  export type LoginAttemptCreateOrConnectWithoutIpAssessmentInput = {
-    where: LoginAttemptWhereUniqueInput
-    create: XOR<LoginAttemptCreateWithoutIpAssessmentInput, LoginAttemptUncheckedCreateWithoutIpAssessmentInput>
-  }
-
-  export type LoginAttemptCreateManyIpAssessmentInputEnvelope = {
-    data: LoginAttemptCreateManyIpAssessmentInput | LoginAttemptCreateManyIpAssessmentInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type LoginAttemptUpsertWithWhereUniqueWithoutIpAssessmentInput = {
-    where: LoginAttemptWhereUniqueInput
-    update: XOR<LoginAttemptUpdateWithoutIpAssessmentInput, LoginAttemptUncheckedUpdateWithoutIpAssessmentInput>
-    create: XOR<LoginAttemptCreateWithoutIpAssessmentInput, LoginAttemptUncheckedCreateWithoutIpAssessmentInput>
-  }
-
-  export type LoginAttemptUpdateWithWhereUniqueWithoutIpAssessmentInput = {
-    where: LoginAttemptWhereUniqueInput
-    data: XOR<LoginAttemptUpdateWithoutIpAssessmentInput, LoginAttemptUncheckedUpdateWithoutIpAssessmentInput>
-  }
-
-  export type LoginAttemptUpdateManyWithWhereWithoutIpAssessmentInput = {
-    where: LoginAttemptScalarWhereInput
-    data: XOR<LoginAttemptUpdateManyMutationInput, LoginAttemptUncheckedUpdateManyWithoutIpAssessmentInput>
   }
 
   export type UserCreateWithoutLoginAttemptsInput = {
@@ -33530,18 +23467,13 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutLoginAttemptsInput = {
@@ -33557,45 +23489,18 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutLoginAttemptsInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutLoginAttemptsInput, UserUncheckedCreateWithoutLoginAttemptsInput>
-  }
-
-  export type IpAssessmentCreateWithoutLoginAttemptsInput = {
-    ip: string
-    userAgent: string
-    acceptLanguage: string
-    data: JsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
-  export type IpAssessmentUncheckedCreateWithoutLoginAttemptsInput = {
-    id?: number
-    ip: string
-    userAgent: string
-    acceptLanguage: string
-    data: JsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
-  export type IpAssessmentCreateOrConnectWithoutLoginAttemptsInput = {
-    where: IpAssessmentWhereUniqueInput
-    create: XOR<IpAssessmentCreateWithoutLoginAttemptsInput, IpAssessmentUncheckedCreateWithoutLoginAttemptsInput>
   }
 
   export type UserUpsertWithoutLoginAttemptsInput = {
@@ -33622,18 +23527,13 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutLoginAttemptsInput = {
@@ -33649,46 +23549,13 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
-  }
-
-  export type IpAssessmentUpsertWithoutLoginAttemptsInput = {
-    update: XOR<IpAssessmentUpdateWithoutLoginAttemptsInput, IpAssessmentUncheckedUpdateWithoutLoginAttemptsInput>
-    create: XOR<IpAssessmentCreateWithoutLoginAttemptsInput, IpAssessmentUncheckedCreateWithoutLoginAttemptsInput>
-    where?: IpAssessmentWhereInput
-  }
-
-  export type IpAssessmentUpdateToOneWithWhereWithoutLoginAttemptsInput = {
-    where?: IpAssessmentWhereInput
-    data: XOR<IpAssessmentUpdateWithoutLoginAttemptsInput, IpAssessmentUncheckedUpdateWithoutLoginAttemptsInput>
-  }
-
-  export type IpAssessmentUpdateWithoutLoginAttemptsInput = {
-    ip?: StringFieldUpdateOperationsInput | string
-    userAgent?: StringFieldUpdateOperationsInput | string
-    acceptLanguage?: StringFieldUpdateOperationsInput | string
-    data?: JsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type IpAssessmentUncheckedUpdateWithoutLoginAttemptsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    ip?: StringFieldUpdateOperationsInput | string
-    userAgent?: StringFieldUpdateOperationsInput | string
-    acceptLanguage?: StringFieldUpdateOperationsInput | string
-    data?: JsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateWithoutCompletedQuestRequirementsInput = {
@@ -33704,17 +23571,12 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -33731,17 +23593,12 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -33774,17 +23631,12 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -33801,17 +23653,12 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -33828,17 +23675,12 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -33855,17 +23697,12 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -33898,17 +23735,12 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -33925,17 +23757,12 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -33952,17 +23779,12 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -33979,17 +23801,12 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -34022,17 +23839,12 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -34049,17 +23861,12 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -34076,17 +23883,12 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -34103,17 +23905,12 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -34146,17 +23943,12 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -34173,17 +23965,12 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -34222,17 +24009,12 @@ export namespace Prisma {
     referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
     auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
@@ -34249,17 +24031,12 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
     auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
     loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -34337,17 +24114,12 @@ export namespace Prisma {
     referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -34364,17 +24136,12 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -34505,481 +24272,6 @@ export namespace Prisma {
     batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type UserCreateWithoutMarketingInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    status?: $Enums.UserStatus
-    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
-    events?: EventCreateNestedManyWithoutUserInput
-    messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
-    questProgress?: QuestProgressCreateNestedManyWithoutUserInput
-    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutMarketingInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    referredBy?: string | null
-    status?: $Enums.UserStatus
-    events?: EventUncheckedCreateNestedManyWithoutUserInput
-    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
-    questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
-    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutMarketingInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutMarketingInput, UserUncheckedCreateWithoutMarketingInput>
-  }
-
-  export type UserUpsertWithoutMarketingInput = {
-    update: XOR<UserUpdateWithoutMarketingInput, UserUncheckedUpdateWithoutMarketingInput>
-    create: XOR<UserCreateWithoutMarketingInput, UserUncheckedCreateWithoutMarketingInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutMarketingInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutMarketingInput, UserUncheckedUpdateWithoutMarketingInput>
-  }
-
-  export type UserUpdateWithoutMarketingInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
-    events?: EventUpdateManyWithoutUserNestedInput
-    messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
-    questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutMarketingInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    events?: EventUncheckedUpdateManyWithoutUserNestedInput
-    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
-    questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserCreateWithoutGoldenTicketBatchesOwnedInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    status?: $Enums.UserStatus
-    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
-    events?: EventCreateNestedManyWithoutUserInput
-    messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
-    questProgress?: QuestProgressCreateNestedManyWithoutUserInput
-    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
-    referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketCreateNestedOneWithoutClaimedByInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutGoldenTicketBatchesOwnedInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    referredBy?: string | null
-    status?: $Enums.UserStatus
-    events?: EventUncheckedCreateNestedManyWithoutUserInput
-    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
-    questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
-    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
-    referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketClaimed?: GoldenTicketUncheckedCreateNestedOneWithoutClaimedByInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutGoldenTicketBatchesOwnedInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutGoldenTicketBatchesOwnedInput, UserUncheckedCreateWithoutGoldenTicketBatchesOwnedInput>
-  }
-
-  export type GoldenTicketCreateWithoutBatchInput = {
-    id: string
-    claimedAt?: Date | string | null
-    status?: $Enums.GoldenTicketStatus
-    claimedBy?: UserCreateNestedOneWithoutGoldenTicketClaimedInput
-  }
-
-  export type GoldenTicketUncheckedCreateWithoutBatchInput = {
-    id: string
-    userId?: string | null
-    claimedAt?: Date | string | null
-    status?: $Enums.GoldenTicketStatus
-  }
-
-  export type GoldenTicketCreateOrConnectWithoutBatchInput = {
-    where: GoldenTicketWhereUniqueInput
-    create: XOR<GoldenTicketCreateWithoutBatchInput, GoldenTicketUncheckedCreateWithoutBatchInput>
-  }
-
-  export type GoldenTicketCreateManyBatchInputEnvelope = {
-    data: GoldenTicketCreateManyBatchInput | GoldenTicketCreateManyBatchInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type UserUpsertWithoutGoldenTicketBatchesOwnedInput = {
-    update: XOR<UserUpdateWithoutGoldenTicketBatchesOwnedInput, UserUncheckedUpdateWithoutGoldenTicketBatchesOwnedInput>
-    create: XOR<UserCreateWithoutGoldenTicketBatchesOwnedInput, UserUncheckedCreateWithoutGoldenTicketBatchesOwnedInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutGoldenTicketBatchesOwnedInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutGoldenTicketBatchesOwnedInput, UserUncheckedUpdateWithoutGoldenTicketBatchesOwnedInput>
-  }
-
-  export type UserUpdateWithoutGoldenTicketBatchesOwnedInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
-    events?: EventUpdateManyWithoutUserNestedInput
-    messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
-    questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
-    referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutGoldenTicketBatchesOwnedInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    events?: EventUncheckedUpdateManyWithoutUserNestedInput
-    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
-    questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
-    referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type GoldenTicketUpsertWithWhereUniqueWithoutBatchInput = {
-    where: GoldenTicketWhereUniqueInput
-    update: XOR<GoldenTicketUpdateWithoutBatchInput, GoldenTicketUncheckedUpdateWithoutBatchInput>
-    create: XOR<GoldenTicketCreateWithoutBatchInput, GoldenTicketUncheckedCreateWithoutBatchInput>
-  }
-
-  export type GoldenTicketUpdateWithWhereUniqueWithoutBatchInput = {
-    where: GoldenTicketWhereUniqueInput
-    data: XOR<GoldenTicketUpdateWithoutBatchInput, GoldenTicketUncheckedUpdateWithoutBatchInput>
-  }
-
-  export type GoldenTicketUpdateManyWithWhereWithoutBatchInput = {
-    where: GoldenTicketScalarWhereInput
-    data: XOR<GoldenTicketUpdateManyMutationInput, GoldenTicketUncheckedUpdateManyWithoutBatchInput>
-  }
-
-  export type GoldenTicketScalarWhereInput = {
-    AND?: GoldenTicketScalarWhereInput | GoldenTicketScalarWhereInput[]
-    OR?: GoldenTicketScalarWhereInput[]
-    NOT?: GoldenTicketScalarWhereInput | GoldenTicketScalarWhereInput[]
-    id?: StringFilter<"GoldenTicket"> | string
-    batchId?: StringFilter<"GoldenTicket"> | string
-    userId?: StringNullableFilter<"GoldenTicket"> | string | null
-    claimedAt?: DateTimeNullableFilter<"GoldenTicket"> | Date | string | null
-    status?: EnumGoldenTicketStatusFilter<"GoldenTicket"> | $Enums.GoldenTicketStatus
-  }
-
-  export type UserCreateWithoutGoldenTicketClaimedInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    status?: $Enums.UserStatus
-    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
-    events?: EventCreateNestedManyWithoutUserInput
-    messages?: MessageCreateNestedManyWithoutUserInput
-    email?: UserEmailCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberCreateNestedOneWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
-    questProgress?: QuestProgressCreateNestedManyWithoutUserInput
-    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    marketing?: MarketingCreateNestedManyWithoutUserInput
-    referals?: ReferralCreateNestedManyWithoutUserInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchCreateNestedManyWithoutOwnerInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutGoldenTicketClaimedInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    referredBy?: string | null
-    status?: $Enums.UserStatus
-    events?: EventUncheckedCreateNestedManyWithoutUserInput
-    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    email?: UserEmailUncheckedCreateNestedOneWithoutUserInput
-    phoneNumber?: UserPhoneNumberUncheckedCreateNestedOneWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
-    questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
-    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    marketing?: MarketingUncheckedCreateNestedManyWithoutUserInput
-    referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedCreateNestedManyWithoutOwnerInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutGoldenTicketClaimedInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutGoldenTicketClaimedInput, UserUncheckedCreateWithoutGoldenTicketClaimedInput>
-  }
-
-  export type GoldenTicketBatchCreateWithoutTicketsInput = {
-    id: string
-    createdAt?: Date | string
-    expiresAt: Date | string
-    description?: string | null
-    type?: $Enums.TicketType
-    owner: UserCreateNestedOneWithoutGoldenTicketBatchesOwnedInput
-  }
-
-  export type GoldenTicketBatchUncheckedCreateWithoutTicketsInput = {
-    id: string
-    createdAt?: Date | string
-    expiresAt: Date | string
-    description?: string | null
-    type?: $Enums.TicketType
-    ownerId: string
-  }
-
-  export type GoldenTicketBatchCreateOrConnectWithoutTicketsInput = {
-    where: GoldenTicketBatchWhereUniqueInput
-    create: XOR<GoldenTicketBatchCreateWithoutTicketsInput, GoldenTicketBatchUncheckedCreateWithoutTicketsInput>
-  }
-
-  export type UserUpsertWithoutGoldenTicketClaimedInput = {
-    update: XOR<UserUpdateWithoutGoldenTicketClaimedInput, UserUncheckedUpdateWithoutGoldenTicketClaimedInput>
-    create: XOR<UserCreateWithoutGoldenTicketClaimedInput, UserUncheckedCreateWithoutGoldenTicketClaimedInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutGoldenTicketClaimedInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutGoldenTicketClaimedInput, UserUncheckedUpdateWithoutGoldenTicketClaimedInput>
-  }
-
-  export type UserUpdateWithoutGoldenTicketClaimedInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
-    events?: EventUpdateManyWithoutUserNestedInput
-    messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
-    questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
-    referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutGoldenTicketClaimedInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    events?: EventUncheckedUpdateManyWithoutUserNestedInput
-    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
-    questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
-    referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type GoldenTicketBatchUpsertWithoutTicketsInput = {
-    update: XOR<GoldenTicketBatchUpdateWithoutTicketsInput, GoldenTicketBatchUncheckedUpdateWithoutTicketsInput>
-    create: XOR<GoldenTicketBatchCreateWithoutTicketsInput, GoldenTicketBatchUncheckedCreateWithoutTicketsInput>
-    where?: GoldenTicketBatchWhereInput
-  }
-
-  export type GoldenTicketBatchUpdateToOneWithWhereWithoutTicketsInput = {
-    where?: GoldenTicketBatchWhereInput
-    data: XOR<GoldenTicketBatchUpdateWithoutTicketsInput, GoldenTicketBatchUncheckedUpdateWithoutTicketsInput>
-  }
-
-  export type GoldenTicketBatchUpdateWithoutTicketsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
-    owner?: UserUpdateOneRequiredWithoutGoldenTicketBatchesOwnedNestedInput
-  }
-
-  export type GoldenTicketBatchUncheckedUpdateWithoutTicketsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
-    ownerId?: StringFieldUpdateOperationsInput | string
-  }
-
   export type EventCreateManyUserInput = {
     transactionId: string
     id: string
@@ -35038,35 +24330,15 @@ export namespace Prisma {
     batchId?: string | null
   }
 
-  export type MarketingCreateManyUserInput = {
-    id?: number
-    utm_campaign?: string | null
-    utm_medium?: string | null
-    utm_source?: string | null
-    utm_id?: string | null
-    utm_content?: string | null
-    utm_term?: string | null
-  }
-
   export type ReferralCreateManyUserInput = {
     eventId: string
     action: $Enums.ReferralAction
     xrdValue: Decimal | DecimalJsLike | number | string
   }
 
-  export type GoldenTicketBatchCreateManyOwnerInput = {
-    id: string
-    createdAt?: Date | string
-    expiresAt: Date | string
-    description?: string | null
-    type?: $Enums.TicketType
-  }
-
   export type LoginAttemptCreateManyUserInput = {
     id?: number
-    ipAssessmentId: number
     type: $Enums.LoginAttemptType
-    fraudScoring?: $Enums.FraudScoringOutput | null
     createdAt?: Date | string
   }
 
@@ -35194,18 +24466,13 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
-    email?: UserEmailUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
@@ -35221,18 +24488,13 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    email?: UserEmailUncheckedUpdateOneWithoutUserNestedInput
-    phoneNumber?: UserPhoneNumberUncheckedUpdateOneWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
     auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    marketing?: MarketingUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    goldenTicketClaimed?: GoldenTicketUncheckedUpdateOneWithoutClaimedByNestedInput
-    goldenTicketBatchesOwned?: GoldenTicketBatchUncheckedUpdateManyWithoutOwnerNestedInput
     loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -35277,35 +24539,6 @@ export namespace Prisma {
     batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type MarketingUpdateWithoutUserInput = {
-    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_id?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_content?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_term?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type MarketingUncheckedUpdateWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_id?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_content?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_term?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type MarketingUncheckedUpdateManyWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_id?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_content?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_term?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
   export type ReferralUpdateWithoutUserInput = {
     action?: EnumReferralActionFieldUpdateOperationsInput | $Enums.ReferralAction
     xrdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -35324,52 +24557,20 @@ export namespace Prisma {
     xrdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
-  export type GoldenTicketBatchUpdateWithoutOwnerInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
-    tickets?: GoldenTicketUpdateManyWithoutBatchNestedInput
-  }
-
-  export type GoldenTicketBatchUncheckedUpdateWithoutOwnerInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
-    tickets?: GoldenTicketUncheckedUpdateManyWithoutBatchNestedInput
-  }
-
-  export type GoldenTicketBatchUncheckedUpdateManyWithoutOwnerInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumTicketTypeFieldUpdateOperationsInput | $Enums.TicketType
-  }
-
   export type LoginAttemptUpdateWithoutUserInput = {
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    ipAssessment?: IpAssessmentUpdateOneRequiredWithoutLoginAttemptsNestedInput
   }
 
   export type LoginAttemptUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    ipAssessmentId?: IntFieldUpdateOperationsInput | number
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type LoginAttemptUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    ipAssessmentId?: IntFieldUpdateOperationsInput | number
     type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -35395,37 +24596,6 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     action?: EnumReferralActionFieldUpdateOperationsInput | $Enums.ReferralAction
     xrdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-  }
-
-  export type LoginAttemptCreateManyIpAssessmentInput = {
-    id?: number
-    userId: string
-    type: $Enums.LoginAttemptType
-    fraudScoring?: $Enums.FraudScoringOutput | null
-    createdAt?: Date | string
-  }
-
-  export type LoginAttemptUpdateWithoutIpAssessmentInput = {
-    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutLoginAttemptsNestedInput
-  }
-
-  export type LoginAttemptUncheckedUpdateWithoutIpAssessmentInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
-    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LoginAttemptUncheckedUpdateManyWithoutIpAssessmentInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
-    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    fraudScoring?: NullableEnumFraudScoringOutputFieldUpdateOperationsInput | $Enums.FraudScoringOutput | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SubmittedTransactionCreateManyTransactionInput = {
@@ -35490,34 +24660,6 @@ export namespace Prisma {
     data?: NullableJsonNullValueInput | InputJsonValue
   }
 
-  export type GoldenTicketCreateManyBatchInput = {
-    id: string
-    userId?: string | null
-    claimedAt?: Date | string | null
-    status?: $Enums.GoldenTicketStatus
-  }
-
-  export type GoldenTicketUpdateWithoutBatchInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
-    claimedBy?: UserUpdateOneWithoutGoldenTicketClaimedNestedInput
-  }
-
-  export type GoldenTicketUncheckedUpdateWithoutBatchInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
-  }
-
-  export type GoldenTicketUncheckedUpdateManyWithoutBatchInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    claimedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: EnumGoldenTicketStatusFieldUpdateOperationsInput | $Enums.GoldenTicketStatus
-  }
-
 
 
   /**
@@ -35532,10 +24674,6 @@ export namespace Prisma {
      */
     export type EventCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = EventCountOutputTypeDefaultArgs<ExtArgs>
     /**
-     * @deprecated Use IpAssessmentCountOutputTypeDefaultArgs instead
-     */
-    export type IpAssessmentCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = IpAssessmentCountOutputTypeDefaultArgs<ExtArgs>
-    /**
      * @deprecated Use TransactionIntentCountOutputTypeDefaultArgs instead
      */
     export type TransactionIntentCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TransactionIntentCountOutputTypeDefaultArgs<ExtArgs>
@@ -35544,25 +24682,13 @@ export namespace Prisma {
      */
     export type BatchedTransactionIntentCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BatchedTransactionIntentCountOutputTypeDefaultArgs<ExtArgs>
     /**
-     * @deprecated Use GoldenTicketBatchCountOutputTypeDefaultArgs instead
-     */
-    export type GoldenTicketBatchCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = GoldenTicketBatchCountOutputTypeDefaultArgs<ExtArgs>
-    /**
      * @deprecated Use UserDefaultArgs instead
      */
     export type UserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserDefaultArgs<ExtArgs>
     /**
-     * @deprecated Use UserEmailDefaultArgs instead
-     */
-    export type UserEmailArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserEmailDefaultArgs<ExtArgs>
-    /**
      * @deprecated Use ImageDefaultArgs instead
      */
     export type ImageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ImageDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use UserPhoneNumberDefaultArgs instead
-     */
-    export type UserPhoneNumberArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserPhoneNumberDefaultArgs<ExtArgs>
     /**
      * @deprecated Use ReferralDefaultArgs instead
      */
@@ -35579,10 +24705,6 @@ export namespace Prisma {
      * @deprecated Use MessageDefaultArgs instead
      */
     export type MessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = MessageDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use IpAssessmentDefaultArgs instead
-     */
-    export type IpAssessmentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = IpAssessmentDefaultArgs<ExtArgs>
     /**
      * @deprecated Use LoginAttemptDefaultArgs instead
      */
@@ -35608,10 +24730,6 @@ export namespace Prisma {
      */
     export type AuditArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = AuditDefaultArgs<ExtArgs>
     /**
-     * @deprecated Use BlockedCountryDefaultArgs instead
-     */
-    export type BlockedCountryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BlockedCountryDefaultArgs<ExtArgs>
-    /**
      * @deprecated Use TransactionIntentDefaultArgs instead
      */
     export type TransactionIntentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TransactionIntentDefaultArgs<ExtArgs>
@@ -35627,18 +24745,6 @@ export namespace Prisma {
      * @deprecated Use ConfigDefaultArgs instead
      */
     export type ConfigArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ConfigDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use MarketingDefaultArgs instead
-     */
-    export type MarketingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = MarketingDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use GoldenTicketBatchDefaultArgs instead
-     */
-    export type GoldenTicketBatchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = GoldenTicketBatchDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use GoldenTicketDefaultArgs instead
-     */
-    export type GoldenTicketArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = GoldenTicketDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

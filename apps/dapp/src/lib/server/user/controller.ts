@@ -5,30 +5,22 @@ import type {
   ControllerMethodOutput
 } from '../_types'
 import { config } from '$lib/config'
-import { createApiError, getPriorityByGoldenTicketType, type ApiError } from 'common'
+import { createApiError, type ApiError } from 'common'
 import { type SignedChallengeAccount, parseSignedChallenge } from '@radixdlt/radix-dapp-toolkit'
 import { Rola } from '@radixdlt/rola'
 import { publicConfig } from '$lib/public-config'
 import { type ErrorResponse } from '@radixdlt/babylon-gateway-api-sdk'
 import type { TransactionJob } from 'queues'
 import * as valibot from 'valibot'
-import type { GoldenTicketStatus, Prisma, TicketType, User, UserEmail } from 'database'
+import type { User } from 'database'
 export type UserSubset = {
   id: string
   accountAddress: string | null
   referralCode: string
   referredBy: string | null
   type: string
-  email: {
-    email: string
-    newsletter: boolean
-  } | null
   referredByUser: {
     name: string | null
-  } | null
-  goldenTicketClaimed: {
-    type: TicketType
-    status: GoldenTicketStatus
   } | null
 }
 
@@ -43,10 +35,8 @@ const EmailSchema = valibot.object({
 export type UserController = ReturnType<typeof UserController>
 export const UserController = ({
   userModel,
-  goldenTicketModel,
   transactionModel,
   gatewayApi,
-  mailerLiteModel,
   addresses,
   systemQueue
 }: ControllerDependencies) => {
@@ -58,13 +48,7 @@ export const UserController = ({
         goldenTicketClaimed: { include: { batch: true } }
       })
       .map((data) => {
-        const email = (data as unknown as { email: UserEmail | null }).email
         const referredByUser = (data as unknown as { referredByUser: User | null }).referredByUser
-        const goldenTicketClaimed = (
-          data as unknown as {
-            goldenTicketClaimed: Prisma.GoldenTicketGetPayload<{ include: { batch: true } }> | null
-          }
-        ).goldenTicketClaimed
 
         return {
           data: {
@@ -74,22 +58,10 @@ export const UserController = ({
             referralCode: data.referralCode,
             type: data.type,
             status: data.status,
-            email: email
-              ? {
-                  email: email.email,
-                  newsletter: email.newsletter
-                }
-              : null,
             referredByUser: referredByUser
               ? {
-                  name: referredByUser.name
-                }
-              : null,
-            goldenTicketClaimed: goldenTicketClaimed
-              ? {
-                  type: goldenTicketClaimed.batch.type,
-                  status: goldenTicketClaimed.status
-                }
+                name: referredByUser.name
+              }
               : null
           },
           httpResponseCode: 200
@@ -121,7 +93,7 @@ export const UserController = ({
     }
   ): ControllerMethodOutput<undefined> =>
     userModel
-      .getById(userId, { goldenTicketClaimed: { include: { batch: true } } })
+      .getById(userId, {})
       .andThen((user) => (user ? ok(user) : err(createApiError('UserNotFound', 404)())))
       .andThen((user) =>
         user.status !== 'OK' ? errAsync(createApiError('UserBlocked', 400)()) : okAsync(user)
@@ -150,12 +122,12 @@ export const UserController = ({
               exists
                 ? okAsync({ httpResponseCode: 200, data: undefined })
                 : transactionModel
-                    // @ts-ignore
-                    .add(item, getPriorityByGoldenTicketType(user?.goldenTicketClaimed))
-                    .map(() => ({
-                      httpResponseCode: 201,
-                      data: undefined
-                    }))
+                  // @ts-ignore
+                  .add(item, getPriorityByGoldenTicketType(user?.goldenTicketClaimed))
+                  .map(() => ({
+                    httpResponseCode: 201,
+                    data: undefined
+                  }))
             )
           })
           .mapErr((error) => {
@@ -208,9 +180,9 @@ export const UserController = ({
       .andThen((hasBadge) =>
         hasBadge
           ? errAsync({
-              httpResponseCode: 400,
-              reason: 'account already has hero badge'
-            } satisfies ApiError)
+            httpResponseCode: 400,
+            reason: 'account already has hero badge'
+          } satisfies ApiError)
           : okAsync(undefined)
       )
       .andThen(() => isAccountInDb)
@@ -244,18 +216,6 @@ export const UserController = ({
     transactionModel
       .hasWaitingRadgemJob(userId)
       .map((exists) => ({ data: { exists }, httpResponseCode: 200 }))
-
-  const setEmail = (userId: string, email: string, newsletter: boolean) => {
-    const parseResult = valibot.safeParse(EmailSchema, { email })
-    if (!parseResult.success) {
-      return errAsync(createApiError('Invalid email format', 400)(parseResult.issues))
-    }
-
-    return userModel
-      .setEmail(userId, email, newsletter)
-      .andThen(() => mailerLiteModel.addOrUpdate(email, { newsletter }))
-      .map(() => ({ httpResponseCode: 200, data: {} }))
-  }
 
   const populateResources = (ctx: ControllerMethodContext, userId: string) => {
     if (config.dapp.networkId === 1)
@@ -294,19 +254,7 @@ export const UserController = ({
   const directDepositXrd = (ctx: ControllerMethodContext, userId: string) => {
     const discriminator = `DepositXrd:${userId}`
 
-    return goldenTicketModel
-      .userHasClaimedTicket(userId)
-      .mapErr((error) => createApiError('InternalError', 500)(error))
-      .andThen((ticket) => {
-        if (!ticket) return errAsync(createApiError('UserHasNoTicket', 400)())
-        return okAsync(undefined)
-      })
-      .andThen(() =>
-        userModel.getById(userId, { goldenTicketClaimed: { include: { batch: true } } })
-      )
-      .andThen((user) =>
-        user.status !== 'OK' ? errAsync(createApiError('UserBlocked', 400)()) : okAsync(user)
-      )
+    return userModel.getById(userId, {})
       .andThen((user) =>
         user?.accountAddress ? ok(user) : err(createApiError('UserAccountAddressNotSet', 400)())
       )
@@ -326,29 +274,29 @@ export const UserController = ({
         transactionModel.doesTransactionExist({ userId, discriminator }).andThen((exists) =>
           exists
             ? okAsync({
-                httpResponseCode: 200,
-                data: {}
-              })
+              httpResponseCode: 200,
+              data: {}
+            })
             : transactionModel
-                .add(
-                  {
-                    userId,
-                    discriminator: `DepositXrd:${userId}`,
-                    type: 'DepositXrd',
-                    traceId: ctx.traceId,
-                    accountAddress: user.accountAddress!
-                  },
-                  // @ts-ignore
-                  getPriorityByGoldenTicketType(user?.goldenTicketClaimed)
-                )
-                .map(() => ({
-                  httpResponseCode: 201,
-                  data: {}
-                }))
-                .mapErr((error) => {
-                  ctx.logger.error({ method: 'directDepositXrd.error', error })
-                  return createApiError('InternalError', 500)(error)
-                })
+              .add(
+                {
+                  userId,
+                  discriminator: `DepositXrd:${userId}`,
+                  type: 'DepositXrd',
+                  traceId: ctx.traceId,
+                  accountAddress: user.accountAddress!
+                },
+                // @ts-ignore
+                getPriorityByGoldenTicketType(user?.goldenTicketClaimed)
+              )
+              .map(() => ({
+                httpResponseCode: 201,
+                data: {}
+              }))
+              .mapErr((error) => {
+                ctx.logger.error({ method: 'directDepositXrd.error', error })
+                return createApiError('InternalError', 500)(error)
+              })
         )
       )
   }
@@ -368,7 +316,6 @@ export const UserController = ({
     getNameByReferralCode,
     setUserName,
     getReferrals,
-    directDepositXrd,
-    setEmail
+    directDepositXrd
   }
 }

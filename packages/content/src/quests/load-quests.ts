@@ -1,4 +1,3 @@
-import { type TicketType } from 'database'
 import { Language, QuestDefinitions, type QuestId } from '..'
 import QuestIndex from './quest-index.json'
 
@@ -10,9 +9,9 @@ export type Quests = {
   } & ReturnType<typeof QuestDefinitions>[key]
 }
 
-export const loadQuests = (language: Language, ticketType?: TicketType) => {
+export const loadQuests = (language: Language) => {
   const quests: Quests = {} as Quests
-  const questDefinitions = QuestDefinitions(ticketType)
+  const questDefinitions = QuestDefinitions()
 
   Object.values(questDefinitions).forEach((quest) => {
     quests[quest.id] = {

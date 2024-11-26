@@ -4,10 +4,8 @@ import {
   MessageApi,
   AccountAddressModel as AccountAddressModelFn,
   GatewayApi,
-  MailerLiteModel,
   ImageModel,
   EventModel,
-  GoldenTicketModel
 } from 'common'
 import { logger } from './helpers/logger'
 import {
@@ -68,18 +66,13 @@ const app = async () => {
     eventWorkerController: EventWorkerController({
       logger,
       dbClient,
-      mailerLiteModel: MailerLiteModel({
-        apiKey: config.mailerLite.apiKey
-      }),
-      goldenTicketModel: GoldenTicketModel(dbClient),
       transactionIntentHelper: TransactionIntentHelper({
         dbClient,
         queues,
         logger
       }),
       AccountAddressModel,
-      sendMessage,
-      tokenPriceClient
+      sendMessage
     })
   })
 

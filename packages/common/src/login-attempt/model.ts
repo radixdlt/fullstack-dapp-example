@@ -1,4 +1,4 @@
-import { LoginAttemptType, type PrismaClient, FraudScoringOutput } from 'database'
+import { LoginAttemptType, type PrismaClient } from 'database'
 
 import type { AppLogger } from '../helpers/logger'
 import { ResultAsync } from 'neverthrow'
@@ -7,7 +7,6 @@ import { createApiError } from '../helpers'
 type LoginData = {
   userId: string
   type: LoginAttemptType
-  reason: FraudScoringOutput
   assessmentId: number
 }
 
@@ -18,7 +17,6 @@ export const LoginAttemptModel = (db: PrismaClient) => (logger: AppLogger) => {
     const data = {
       type: loginData.type,
       userId: loginData.userId,
-      fraudScoring: loginData.reason,
       ipAssessmentId: loginData.assessmentId
     }
     return ResultAsync.fromPromise(

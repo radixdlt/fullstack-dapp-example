@@ -10,19 +10,6 @@
   <div class="z-index-box">
     <slot />
   </div>
-  <div
-    in:fly|global={{
-      y: 100,
-      delay: animate ? 500 : 0,
-      opacity: 1,
-      duration: animate ? 500 : 0
-    }}
-    class="jetty-image"
-    bind:clientHeight={jettyHeight}
-    style:--height={`-${jettyHeight - 5}px`}
-  >
-    <enhanced:img src="@images/jetty-excited.webp?enhanced" />
-  </div>
 </div>
 
 <style lang="scss">

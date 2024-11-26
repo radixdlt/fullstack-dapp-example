@@ -38,26 +38,14 @@ model User {
 
   events                     Event[]
   messages                   Message[]
-  email                      UserEmail?
-  phoneNumber                UserPhoneNumber?
   completedQuestRequirements CompletedQuestRequirement[]
   savedProgress              SavedProgress?
   auditLogs                  Audit[]
   questProgress              QuestProgress[]
   referredUsers              User[]                      @relation("Referrer")
   transactions               TransactionIntent[]
-  marketing                  Marketing[]
   referals                   Referral[]
-  goldenTicketClaimed        GoldenTicket?               @relation("claimedBy")
-  goldenTicketBatchesOwned   GoldenTicketBatch[]         @relation("owner")
   loginAttempts              LoginAttempt[]
-}
-
-model UserEmail {
-  userId     String  @unique
-  email      String  @id @unique
-  newsletter Boolean @default(false)
-  user       User    @relation(fields: [userId], references: [id])
 }
 
 enum ImageType {
@@ -70,17 +58,6 @@ model Image {
   id   String    @id
   url  String
   type ImageType
-}
-
-model UserPhoneNumber {
-  userId      String   @unique
-  phoneNumber String   @id @unique
-  createdAt   DateTime @default(now())
-  ip          String   @default("")
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@index([ip])
 }
 
 enum ReferralAction {
@@ -144,45 +121,19 @@ model Message {
   @@index([userId, seenAt])
 }
 
-model IpAssessment {
-  id             Int            @id @default(autoincrement())
-  ip             String
-  userAgent      String
-  acceptLanguage String
-  data           Json
-  createdAt      DateTime       @default(now())
-  loginAttempts  LoginAttempt[]
-
-  @@index([ip, createdAt])
-}
-
 enum LoginAttemptType {
   USER_CREATED
   USER_LOGIN
   USER_VERIFY
 }
 
-enum FraudScoringOutput {
-  ALLOWED
-  ALLOWED_NO_IPQS_DATA
-  ALLOWED_GOLDEN_TICKET
-  BLOCKED_IS_FARMER
-  BLOCKED_IPQS_SCORE
-  BLOCKED_SANCTIONED_COUNTRY
-  BLOCKED_BLOCKED_COUNTRY
-  BLOCKED_PERMANENTLY_BLOCKED
-}
-
 model LoginAttempt {
-  id             Int                 @id @default(autoincrement())
-  userId         String
-  ipAssessmentId Int
-  type           LoginAttemptType
-  fraudScoring   FraudScoringOutput?
-  createdAt      DateTime            @default(now())
+  id        Int              @id @default(autoincrement())
+  userId    String
+  type      LoginAttemptType
+  createdAt DateTime         @default(now())
 
-  user         User         @relation(fields: [userId], references: [id])
-  ipAssessment IpAssessment @relation(fields: [ipAssessmentId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 
   @@index(userId)
 }
@@ -251,18 +202,6 @@ enum AuditType {
   CLAIMBOX_DEPOSIT
 }
 
-enum CountryStatus {
-  ALLOWED
-  BLOCKED // Allow users with golden ticket
-  SANCTIONED // Does not allow any user, even with golden ticket
-}
-
-model BlockedCountry {
-  country     String
-  countryCode String        @id
-  status      CountryStatus @default(ALLOWED)
-}
-
 model TransactionIntent {
   discriminator String                  @id
   status        TransactionIntentStatus @default(WAITING)
@@ -312,55 +251,4 @@ model SubmittedTransaction {
 model Config {
   key   String @id
   value String
-}
-
-model Marketing {
-  id           Int     @id @default(autoincrement())
-  userId       String
-  utm_campaign String?
-  utm_medium   String?
-  utm_source   String?
-  utm_id       String?
-  utm_content  String?
-  utm_term     String?
-
-  user User @relation(fields: [userId], references: [id])
-}
-
-model GoldenTicketBatch {
-  id          String     @id
-  createdAt   DateTime   @default(now())
-  expiresAt   DateTime
-  description String?
-  type        TicketType @default(FULL)
-  ownerId     String
-
-  owner   User           @relation("owner", fields: [ownerId], references: [id])
-  tickets GoldenTicket[]
-
-  @@index(fields: [ownerId], type: Hash)
-}
-
-model GoldenTicket {
-  id        String             @id
-  batchId   String
-  userId    String?            @unique
-  claimedAt DateTime?
-  status    GoldenTicketStatus @default(CLAIMABLE)
-
-  claimedBy User?             @relation("claimedBy", fields: [userId], references: [id])
-  batch     GoldenTicketBatch @relation(fields: [batchId], references: [id])
-
-  @@index(fields: [batchId], type: Hash)
-}
-
-enum GoldenTicketStatus {
-  CLAIMABLE
-  CLAIMED
-  CLAIMED_INVALID
-}
-
-enum TicketType {
-  FULL
-  LIMITED
 }

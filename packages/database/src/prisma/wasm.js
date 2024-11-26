@@ -132,23 +132,10 @@ exports.Prisma.UserScalarFieldEnum = {
   status: 'status'
 };
 
-exports.Prisma.UserEmailScalarFieldEnum = {
-  userId: 'userId',
-  email: 'email',
-  newsletter: 'newsletter'
-};
-
 exports.Prisma.ImageScalarFieldEnum = {
   id: 'id',
   url: 'url',
   type: 'type'
-};
-
-exports.Prisma.UserPhoneNumberScalarFieldEnum = {
-  userId: 'userId',
-  phoneNumber: 'phoneNumber',
-  createdAt: 'createdAt',
-  ip: 'ip'
 };
 
 exports.Prisma.ReferralScalarFieldEnum = {
@@ -182,21 +169,10 @@ exports.Prisma.MessageScalarFieldEnum = {
   data: 'data'
 };
 
-exports.Prisma.IpAssessmentScalarFieldEnum = {
-  id: 'id',
-  ip: 'ip',
-  userAgent: 'userAgent',
-  acceptLanguage: 'acceptLanguage',
-  data: 'data',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.LoginAttemptScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  ipAssessmentId: 'ipAssessmentId',
   type: 'type',
-  fraudScoring: 'fraudScoring',
   createdAt: 'createdAt'
 };
 
@@ -235,12 +211,6 @@ exports.Prisma.AuditScalarFieldEnum = {
   data: 'data'
 };
 
-exports.Prisma.BlockedCountryScalarFieldEnum = {
-  country: 'country',
-  countryCode: 'countryCode',
-  status: 'status'
-};
-
 exports.Prisma.TransactionIntentScalarFieldEnum = {
   discriminator: 'discriminator',
   status: 'status',
@@ -268,34 +238,6 @@ exports.Prisma.SubmittedTransactionScalarFieldEnum = {
 exports.Prisma.ConfigScalarFieldEnum = {
   key: 'key',
   value: 'value'
-};
-
-exports.Prisma.MarketingScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  utm_campaign: 'utm_campaign',
-  utm_medium: 'utm_medium',
-  utm_source: 'utm_source',
-  utm_id: 'utm_id',
-  utm_content: 'utm_content',
-  utm_term: 'utm_term'
-};
-
-exports.Prisma.GoldenTicketBatchScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  expiresAt: 'expiresAt',
-  description: 'description',
-  type: 'type',
-  ownerId: 'ownerId'
-};
-
-exports.Prisma.GoldenTicketScalarFieldEnum = {
-  id: 'id',
-  batchId: 'batchId',
-  userId: 'userId',
-  claimedAt: 'claimedAt',
-  status: 'status'
 };
 
 exports.Prisma.SortOrder = {
@@ -366,17 +308,6 @@ exports.LoginAttemptType = exports.$Enums.LoginAttemptType = {
   USER_VERIFY: 'USER_VERIFY'
 };
 
-exports.FraudScoringOutput = exports.$Enums.FraudScoringOutput = {
-  ALLOWED: 'ALLOWED',
-  ALLOWED_NO_IPQS_DATA: 'ALLOWED_NO_IPQS_DATA',
-  ALLOWED_GOLDEN_TICKET: 'ALLOWED_GOLDEN_TICKET',
-  BLOCKED_IS_FARMER: 'BLOCKED_IS_FARMER',
-  BLOCKED_IPQS_SCORE: 'BLOCKED_IPQS_SCORE',
-  BLOCKED_SANCTIONED_COUNTRY: 'BLOCKED_SANCTIONED_COUNTRY',
-  BLOCKED_BLOCKED_COUNTRY: 'BLOCKED_BLOCKED_COUNTRY',
-  BLOCKED_PERMANENTLY_BLOCKED: 'BLOCKED_PERMANENTLY_BLOCKED'
-};
-
 exports.QuestStatus = exports.$Enums.QuestStatus = {
   IN_PROGRESS: 'IN_PROGRESS',
   REWARDS_DEPOSITED: 'REWARDS_DEPOSITED',
@@ -390,12 +321,6 @@ exports.AuditType = exports.$Enums.AuditType = {
   CLAIMBOX_DEPOSIT: 'CLAIMBOX_DEPOSIT'
 };
 
-exports.CountryStatus = exports.$Enums.CountryStatus = {
-  ALLOWED: 'ALLOWED',
-  BLOCKED: 'BLOCKED',
-  SANCTIONED: 'SANCTIONED'
-};
-
 exports.TransactionIntentStatus = exports.$Enums.TransactionIntentStatus = {
   WAITING: 'WAITING',
   PENDING: 'PENDING',
@@ -407,41 +332,23 @@ exports.TransactionIntentStatus = exports.$Enums.TransactionIntentStatus = {
   CANCELLED: 'CANCELLED'
 };
 
-exports.TicketType = exports.$Enums.TicketType = {
-  FULL: 'FULL',
-  LIMITED: 'LIMITED'
-};
-
-exports.GoldenTicketStatus = exports.$Enums.GoldenTicketStatus = {
-  CLAIMABLE: 'CLAIMABLE',
-  CLAIMED: 'CLAIMED',
-  CLAIMED_INVALID: 'CLAIMED_INVALID'
-};
-
 exports.Prisma.ModelName = {
   User: 'User',
-  UserEmail: 'UserEmail',
   Image: 'Image',
-  UserPhoneNumber: 'UserPhoneNumber',
   Referral: 'Referral',
   Challenge: 'Challenge',
   Event: 'Event',
   Message: 'Message',
-  IpAssessment: 'IpAssessment',
   LoginAttempt: 'LoginAttempt',
   Notification: 'Notification',
   CompletedQuestRequirement: 'CompletedQuestRequirement',
   QuestProgress: 'QuestProgress',
   SavedProgress: 'SavedProgress',
   Audit: 'Audit',
-  BlockedCountry: 'BlockedCountry',
   TransactionIntent: 'TransactionIntent',
   BatchedTransactionIntent: 'BatchedTransactionIntent',
   SubmittedTransaction: 'SubmittedTransaction',
-  Config: 'Config',
-  Marketing: 'Marketing',
-  GoldenTicketBatch: 'GoldenTicketBatch',
-  GoldenTicket: 'GoldenTicket'
+  Config: 'Config'
 };
 
 /**

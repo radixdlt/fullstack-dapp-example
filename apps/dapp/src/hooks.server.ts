@@ -1,4 +1,3 @@
-import { FraudDetectionModule } from './lib/server/auth/fraud-detection/fraud-detection'
 import { AuthController } from '$lib/server/auth/controller'
 import { type Handle } from '@sveltejs/kit'
 import { config } from '$lib/config'
@@ -14,12 +13,6 @@ import {
   MessageModel,
   NotificationModel,
   LoginAttemptModel,
-  MarketingModel,
-  ImageModel,
-  GoldenTicketModel,
-  IpAssessmentModel,
-  MailerLiteModel,
-  BlockedCountryModel,
   EventModel
 } from 'common'
 import { dbClient } from '$lib/db'
@@ -40,7 +33,6 @@ import {
 } from '$lib/server/helpers/quest-id-validation'
 import { createUnauthorizedResponse } from '$lib/server/helpers/create-error-response'
 import { ImageController } from '$lib/server/image/controller'
-import { GoldenTicketController } from '$lib/server/golden-ticket/controller'
 
 const networkId = +PUBLIC_NETWORK_ID
 
@@ -59,14 +51,7 @@ const messageModel = MessageModel(dbClient)
 const accountAddressModel = AccountAddressModel(redisClient)
 const addresses = Addresses(networkId)
 const loginAttemptModel = LoginAttemptModel(dbClient)
-const ipAssessmentModel = IpAssessmentModel(dbClient)
-const blockedCountryModel = BlockedCountryModel(dbClient)
-const mailerLiteModel = MailerLiteModel({
-  apiKey: config.mailerLite.apiKey
-})
 const notificationModel = NotificationModel(dbClient)
-const marketingModel = MarketingModel(dbClient)
-const imageModel = ImageModel(dbClient)
 
 export const handle: Handle = async ({ event, resolve }) => {
   event.locals.maintenanceMode = config.maintenanceMode
@@ -102,24 +87,12 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.getClientAddress()
 
   const userModelWithLogger = userModel(logger)
-  const goldenTicketModel = GoldenTicketModel(dbClient)(logger)
-
-  const fraudDetectionModule = FraudDetectionModule({
-    logger,
-    ipqs: config.ipqs,
-    goldenTicketModel,
-    userModel: userModelWithLogger,
-    ipAssessmentModel: ipAssessmentModel(logger),
-    blockedCountryModel: blockedCountryModel(logger)
-  })
 
   event.locals.dependencies = {
     userModel: userModelWithLogger,
     userQuestModel: userQuestModel(logger),
     transactionModel: transactionModel(logger),
-    mailerLiteModel: mailerLiteModel(logger),
     loginAttemptModel: loginAttemptModel(logger),
-    fraudDetectionModule,
     auditModel: auditModel(logger),
     accountAddressModel: accountAddressModel(logger),
     gatewayApi,
@@ -131,11 +104,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     jwt: JWT(config.jwt),
     messageModel: messageModel(logger),
     notificationModel: notificationModel(logger),
-    marketingModel: marketingModel(logger),
-    imageModel: imageModel(logger),
     systemQueue: queues.System,
     eventQueue: queues.Event,
-    goldenTicketModel,
     eventModel: eventModel(logger)
   } satisfies ControllerDependencies
 
@@ -145,8 +115,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     authController: AuthController(event.locals.dependencies),
     messageController: MessageController(event.locals.dependencies),
     notificationController: NotificationController(event.locals.dependencies),
-    imageController: ImageController(event.locals.dependencies),
-    goldenTicketController: GoldenTicketController(event.locals.dependencies)
+    imageController: ImageController(event.locals.dependencies)
   }
 
   if (event.route.id?.includes('(protected)')) {

@@ -4,7 +4,7 @@ import { ResultAsync, okAsync } from 'neverthrow'
 import type { LayoutServerLoad } from './$types'
 import { loadLandingPopup, loadQuests, type QuestId } from 'content'
 import type { $Enums } from 'database'
-import { CookieKeys, encodeBase64, utmKeys, type MarketingUtmValues } from 'common'
+import { CookieKeys, encodeBase64 } from 'common'
 import { error, type Cookies } from '@sveltejs/kit'
 
 export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) => {
@@ -16,32 +16,6 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
   const landingPopupDefinitions = loadLandingPopup('en')
   const referredBy = url.searchParams.get('ref')
   const dappReferrer = url.searchParams.get('dapp_referrer')
-
-  const storeUtmValues = (searchParams: URLSearchParams, cookie: Cookies) => {
-    const referredBy = searchParams.get('ref')
-
-    const searchParamsFormatted = new URLSearchParams(url.search.toLowerCase())
-
-    const utmValues: MarketingUtmValues = Object.fromEntries(
-      utmKeys.map((key) => [key, searchParamsFormatted.get(key)]).filter(([, value]) => value)
-    )
-
-    if (referredBy) {
-      utmValues.utm_medium = 'Referral'
-      utmValues.utm_source = referredBy
-    }
-
-    if (Object.keys(utmValues).length) {
-      encodeBase64(JSON.stringify(utmValues)).map((base64Encoded) => {
-        cookie.set(CookieKeys.Utm, base64Encoded, {
-          path: '/',
-          expires: new Date('9999-12-31'),
-          httpOnly: false
-        })
-        locals.context.logger.trace({ utmValues, base64Encoded, method: 'storeUtmValues' })
-      })
-    }
-  }
 
   if (referredBy) {
     cookies.set('referredBy', referredBy, {
@@ -69,7 +43,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
   if (questStatusResult.isOk()) {
     questStatus = questStatusResult.value
 
-    for (const questId of ['Welcome', 'WhatIsRadix', 'SetupWallet'] as const) {
+    for (const questId of ['SetupWallet'] as const) {
       const questStatusCookieValue = cookies.get(`quest-status-${questId}`) ?? ''
 
       const syncQuestStatusCookieValueWithDb =
@@ -141,7 +115,6 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
         }
       }
     }
-    storeUtmValues(url.searchParams, cookies)
   }
 
   locals.context.logger.trace({

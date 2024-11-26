@@ -4,7 +4,6 @@
 
 <div class="error-page">
   <div class="centered">
-    <img src="/jetty-worried.png" alt="worried jetty" />
     <div class="text">
       <slot />
     </div>

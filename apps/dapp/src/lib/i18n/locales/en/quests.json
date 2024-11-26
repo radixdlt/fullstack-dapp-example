@@ -63,21 +63,21 @@
     },
     "usernameCompleted": "Updated!",
     "walletDownloadPage": "Go to Wallet Download Page",
-    "title": "Get the Radix Wallet",
-    "description": "Your key to assets and dApps on Radix",
-    "introDescription": "Get the Radix Wallet to use with RadQuest or any other dApp built on Radix.",
+    "title": "Onboard New User with User Badge",
+    "description": "",
+    "introDescription": "",
     "confirmSetUsername": "Update"
   },
   "GetStuff": {
     "requirements": {
       "GetXRD": "Get ready to do transactions on Radix"
     },
-    "claimHeroBadge": "Get Hero's Badge",
+    "claimHeroBadge": "Get Badge",
     "getXrd": "Receive 50 XRD",
     "registerAccount": "Register Account",
-    "title": "Get Some (Web3) Stuff!",
-    "description": "Claim your first quest rewards",
-    "introDescription": "Do your first transactions to claim your first quest rewards right to your Radix Wallet.",
+    "title": "Transaction with User Badge Auth",
+    "description": "",
+    "introDescription": "",
     "invalidRequest": "Invalid request",
     "GetXrdMethodOptions": {
       "card": {
@@ -100,13 +100,13 @@
     "goToThorSwap": "Go to THORSwap"
   },
   "CreatingRadMorphs": {
-    "title": "Creating RadMorphs",
+    "title": "Combine and Randomly Mint NFTs",
     "requirements": {
       "OpenGiftBox": "Open a Gift Box",
       "RadGemsClaimed": "Create RadGems",
       "RadMorphCreated": "Create your first RadMorph"
     },
-    "description": "How to collect and combine",
+    "description": "",
     "introDescription": "How to collect and combine on RadQuest to make the best and most rare RadMorph NFTs."
   },
   "TransferTokens": {
@@ -138,8 +138,8 @@
     "gotoThorswap": "Go to THORSwap"
   },
   "QuestTogether": {
-    "title": "Invite Your Friends",
-    "description": "Invite your friends to give them XRD tokens and earn rewards!",
+    "title": "Simple Friend Referral",
+    "description": "",
     "rewardsTitle": "Party rewards Status",
     "rewardTiersTab": "Reward Tiers",
     "partyParticipantsTab": "Party participants",
@@ -188,8 +188,8 @@
     },
     "goToJettySwap": "Go to Jetty Swap",
     "goToLettySwap": "Go to Letty Swap",
-    "title": "Swap Tokens on a DEX",
-    "description": "Learn about Radix Wallet “guarantees”",
+    "title": "React to On-ledger Events",
+    "description": "",
     "introDescription": "Learn how to safely swap tokens on Radix using a decentralized exchange (DEX)"
   },
   "ExploreEcosystem": {

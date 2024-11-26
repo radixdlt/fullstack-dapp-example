@@ -114,7 +114,6 @@
         description={$i18n.t(`quests:${id}.description`)}
         minutesToComplete={quest.minutesToComplete}
         rewards={quest.rewards}
-        backgroundImage={quest.splashImage}
         state={questCardState[id] ?? 'locked'}
         link={`/home/${quest.category}/quest/${id}`}
         questId={id}

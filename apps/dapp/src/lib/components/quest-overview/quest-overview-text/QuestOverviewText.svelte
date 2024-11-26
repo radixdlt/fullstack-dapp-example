@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { i18n } from '$lib/i18n/i18n'
-  import ClockIcon from '@images/clock.svg'
   export let title: string
   export let description: string
   export let minutesToComplete: number
@@ -12,12 +10,7 @@
   <h3 class="title">
     {title}
   </h3>
-  <div class="icon-and-label">
-    <img src={ClockIcon} alt="Clock icon" />
-    <p class="text-label">
-      {$i18n.t('quests:minutesToComplete', { count: minutesToComplete })}
-    </p>
-  </div>
+
   <p class:reduce-opacity={reduceDescriptionOpacity} class="text-extra-light description">
     {description}
   </p>

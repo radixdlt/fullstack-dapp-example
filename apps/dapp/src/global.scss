@@ -1,43 +1,7 @@
-/* Fonts */
-@font-face {
-  font-family: 'PP Fragment';
-  src: url('/fonts/PPFragment-SerifLight.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'DM Sans';
-  src: url('/fonts/DMSans_18pt-ExtraLight.ttf') format('truetype');
-  font-weight: 200;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'DM Sans';
-  src: url('/fonts/DMSans_18pt-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'DM Sans';
-  src: url('/fonts/DMSans_18pt-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'DM Sans';
-  src: url('/fonts/DMSans_24pt-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-}
-
-/* ------------------ */
-
 /* Colors */
 body {
   /* Core colors */
-  --color-primary: #6260ff;
+  --color-primary: #60b7ff;
   --color-primary-translucent: #6260ff66;
   --color-secondary: #faeae1;
   --color-tertiary: #faeae1;
@@ -49,13 +13,9 @@ body {
   --color-error: #ff2d2d;
 
   /* Gradients */
-  --gradient-1: linear-gradient(180deg, #6260ff 0%, #a8a6ff 100%);
-  --gradient-2: linear-gradient(67deg, #f9dfcf 0%, #e6b2bb 102.4%);
-  --gradient-3: linear-gradient(270deg, #fbebe2 0%, #dbdaff 100%);
-  --gradient-4: linear-gradient(270deg, #0f151a 0%, #192d3a 100%);
-  --gradient-5: linear-gradient(0deg, #fffbf4 0%, #fffbf4 100%);
-  --gradient-6: linear-gradient(97deg, #5250ff 2.34%, #a660ff 107.14%);
-  --gradient-7: linear-gradient(270deg, #d6d6d6 0%, #fbebe2 100%);
+  --gradient-5: linear-gradient(0deg, #ffffff 0%, #ffffff 100%);
+  --gradient-6: linear-gradient(97deg, #03eeff 2.34%, #301c4b 107.14%);
+  --gradient-7: linear-gradient(270deg, #fdfdfd 0%, #6d6d6d 100%);
 
   /* Light and Dark */
   --color-light: #fffbf4;
@@ -72,9 +32,6 @@ body {
 
 /* Typography */
 body {
-  --font-main: 'DM Sans', sans-serif;
-  --font-headers: 'PP Fragment';
-
   --text-xxs: 12px;
   --text-xs: 14px;
   --text-sm: 15px;

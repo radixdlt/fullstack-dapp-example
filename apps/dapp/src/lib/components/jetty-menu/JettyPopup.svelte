@@ -1,51 +1,17 @@
 <script lang="ts">
-  import HappyJetty from '@images/jetty-happy.webp'
   import CrossIcon from '@images/cross.svg'
-  import { cubicOut } from 'svelte/easing'
-  import { tweened } from 'svelte/motion'
-  import ChevronIcon from '@images/chevron-left.svg'
-  import { fade, scale } from 'svelte/transition'
+  import { scale } from 'svelte/transition'
 
   export let notification = false
   export let hideJetty = false
   export let showDownArrow = false
-
-  const jettyPosition = tweened<number>(undefined, {
-    duration: 500,
-    easing: cubicOut
-  })
-
-  let jettyHeight: number
-
-  $: {
-    jettyPosition.set(hideJetty ? jettyHeight : 0)
-  }
 </script>
 
 <div class="jetty-popup" class:gradient-border={notification}>
-  <button
-    class="jetty-icon"
-    style:--image={`url(${HappyJetty})`}
-    style:--cross={`url(${CrossIcon})`}
-    on:click
-  >
+  <button class="jetty-icon" style:--cross={`url(${CrossIcon})`} on:click>
     {#if notification}
       <div class="notification" transition:scale={{ delay: 1_000 }} />
     {/if}
-
-    <div class="up-arrow" class:down-arrow={showDownArrow} transition:fade>
-      <img src={ChevronIcon} alt="Arrow pointing up" />
-      <img src={ChevronIcon} alt="Arrow pointing up" />
-    </div>
-
-    <div bind:clientHeight={jettyHeight} style:z-index={2}>
-      <img
-        src={HappyJetty}
-        class="jetty-img"
-        alt="jetty"
-        style:transform="translateY({$jettyPosition}px)"
-      />
-    </div>
   </button>
 </div>
 
