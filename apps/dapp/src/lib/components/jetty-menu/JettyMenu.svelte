@@ -207,7 +207,6 @@
       {#if currentMenuItem && showMenuItemContent}
         <Icon url={currentMenuItem.icon} />
       {/if}
-      {headerText}
     </div>
 
     <div class="close">
@@ -227,21 +226,6 @@
   {:else}
     <div class="content">
       <div class="main-menu-page">
-        {#if hasNotifications && latestNotification}
-          <div transition:scale>
-            <Notification
-              title={latestNotification.title}
-              text={latestNotification.text}
-              on:dismiss={popNotification}
-              on:goToQuest={() => {
-                popNotification()
-                expanded = false
-                latestNotification.action()
-              }}
-            />
-          </div>
-        {/if}
-
         {#each enabledItems as item}
           <JettyMenuButton
             text={item.text}
@@ -256,8 +240,6 @@
         {/each}
 
         {#if disabledItems.length > 0}
-          {$i18n.t('jetty:connect-your-wallet')}
-
           {#each disabledItems as item}
             <JettyMenuButton disabled text={item.text} icon={item.icon} alert={item.alert} />
           {/each}
