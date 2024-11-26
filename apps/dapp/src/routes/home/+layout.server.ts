@@ -12,7 +12,7 @@ export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) =>
   const questStatusResult = await questApi.getQuestsInformation(fetch)
   const user = await userApi.me(fetch).unwrapOr(null)
   // @ts-ignore
-  const questDefinitions = loadQuests('en', user?.goldenTicketClaimed?.type)
+  const questDefinitions = loadQuests('en')
   const landingPopupDefinitions = loadLandingPopup('en')
   const referredBy = url.searchParams.get('ref')
   const dappReferrer = url.searchParams.get('dapp_referrer')

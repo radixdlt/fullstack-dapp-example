@@ -1,0 +1,1 @@
+The next step will be to use the badge to authenticate a transaction.

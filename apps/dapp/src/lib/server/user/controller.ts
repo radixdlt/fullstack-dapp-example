@@ -43,9 +43,7 @@ export const UserController = ({
   const getUser = (userId: string): ControllerMethodOutput<UserSubset | null> =>
     userModel
       .getById(userId, {
-        email: true,
         referredByUser: true,
-        goldenTicketClaimed: { include: { batch: true } }
       })
       .map((data) => {
         const referredByUser = (data as unknown as { referredByUser: User | null }).referredByUser
@@ -123,7 +121,7 @@ export const UserController = ({
                 ? okAsync({ httpResponseCode: 200, data: undefined })
                 : transactionModel
                   // @ts-ignore
-                  .add(item, getPriorityByGoldenTicketType(user?.goldenTicketClaimed))
+                  .add(item, 1)
                   .map(() => ({
                     httpResponseCode: 201,
                     data: undefined
@@ -287,7 +285,7 @@ export const UserController = ({
                   accountAddress: user.accountAddress!
                 },
                 // @ts-ignore
-                getPriorityByGoldenTicketType(user?.goldenTicketClaimed)
+                1
               )
               .map(() => ({
                 httpResponseCode: 201,

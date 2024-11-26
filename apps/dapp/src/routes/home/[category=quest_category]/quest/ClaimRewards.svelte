@@ -70,6 +70,7 @@
   import { writable } from 'svelte/store'
   import { gatewayApi, publicConfig } from '$lib/public-config'
   import { SborHelper } from 'common'
+  import { typeToIcon } from '$lib/utils/type-to-icon'
 
   export let questId: keyof Quests
   export let text: string
@@ -146,7 +147,7 @@
   <div class="rewards-list">
     {#each rewards as { name, amount }}
       <div class="row">
-        <Icon url={''} size="large" />
+        <Icon url={typeToIcon[name]} size="large" />
         <div class="reward-text">
           {amount}
           {$i18n.t(`rewards:${name}`, { count: amount })}

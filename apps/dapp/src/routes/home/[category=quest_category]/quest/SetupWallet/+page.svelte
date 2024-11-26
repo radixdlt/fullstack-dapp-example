@@ -354,7 +354,6 @@
       bind:state={mintBadgeState}
     />
   {/if}
-
 </Quest>
 
 <style lang="scss">
