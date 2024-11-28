@@ -7,7 +7,7 @@ import GiftBox_Fancy from '@images/fancy_boox.jpg'
 import GiftBox_Elite from '@images/elite_boox.jpg'
 
 export const typeToIcon: Record<string, string> = {
-  //xrd: XRDIcon,
+  xrd: XRDIcon,
   element: ElementIcon,
   clam: ClamIcon,
   starterGiftBox: GiftBox_Starter,

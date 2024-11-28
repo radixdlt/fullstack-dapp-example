@@ -13,7 +13,8 @@ import {
   MessageModel,
   NotificationModel,
   LoginAttemptModel,
-  EventModel
+  EventModel,
+  ImageModel
 } from 'common'
 import { dbClient } from '$lib/db'
 import { RedisConnection, getQueues } from 'queues'
@@ -52,6 +53,7 @@ const accountAddressModel = AccountAddressModel(redisClient)
 const addresses = Addresses(networkId)
 const loginAttemptModel = LoginAttemptModel(dbClient)
 const notificationModel = NotificationModel(dbClient)
+const imageModel = ImageModel(dbClient)
 
 export const handle: Handle = async ({ event, resolve }) => {
   event.locals.maintenanceMode = config.maintenanceMode
@@ -61,6 +63,8 @@ export const handle: Handle = async ({ event, resolve }) => {
   if (event.request.method === 'OPTIONS') {
     return createPreflightResponse(origin)
   }
+
+
 
   if (event.url.pathname === '/.well-known/radix.json') {
     return createWellKnownResponse()
@@ -106,7 +110,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     notificationModel: notificationModel(logger),
     systemQueue: queues.System,
     eventQueue: queues.Event,
-    eventModel: eventModel(logger)
+    eventModel: eventModel(logger),
+    imageModel: imageModel(logger),
   } satisfies ControllerDependencies
 
   event.locals.controllers = {

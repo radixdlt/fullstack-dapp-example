@@ -1,0 +1,1 @@
+Now that you've got your NFT's, the next step is to do some on-ledger interactions with them.

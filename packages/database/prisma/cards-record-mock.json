@@ -1,0 +1,22 @@
+{
+  "S001": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S001",
+  "S002": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S002",
+  "S003": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S003",
+  "S004": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S004",
+  "S005": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S005",
+  "S006": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S006",
+  "S007": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S007",
+  "S008": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S008",
+  "S009": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S009",
+  "S010": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S010",
+  "S011": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S011",
+  "S012": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S012",
+  "S013": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S013",
+  "S014": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S014",
+  "S015": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S015",
+  "S016": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S016",
+  "S017": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S017",
+  "S018": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S018",
+  "S019": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S019",
+  "S020": "https://pvsns27x20.execute-api.eu-west-1.amazonaws.com/card?shape=S020"
+}

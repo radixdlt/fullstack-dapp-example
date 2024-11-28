@@ -13,6 +13,7 @@ export const validateRadmorphConfiguration = (requestBody: unknown) => {
   const parseResult = safeParse(radmorphsConfiguration, requestBody)
 
   if (!parseResult.success) {
+    console.log(parseResult.issues)
     return err(createApiError('Invalid request body', 400)(parseResult.issues))
   }
 

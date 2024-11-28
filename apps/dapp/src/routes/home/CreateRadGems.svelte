@@ -82,6 +82,8 @@
         ;
     `
 
+    console.log('transactionManifest', transactionManifest)
+
     waitingForSendElements = true
     return sendTransaction({ transactionManifest }).then(() => {
       waitingForSendElements = false
@@ -250,11 +252,6 @@
           loading={waitingForSendElements}
         >
           <div class="content">
-            <img
-              style:width="100%"
-              src="/quests-images/key/JettyConversation_MultipleRadGems.webp"
-              alt="Radgems"
-            />
 
             {$i18n.t('jetty:fuse-elements.intro1')}
 
@@ -287,9 +284,6 @@
             {/if}
           </div>
         </JettyMenuItemPage>
-        <div class="sub">
-          {$i18n.t('jetty:fuse-elements.send-elements-subtitle')}
-        </div>
       </div>
     {/key}
   {/if}

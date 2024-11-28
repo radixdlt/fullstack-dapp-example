@@ -26,10 +26,10 @@
     "not-enough-xrd": "Tap here to get more XRD so you can keep questing!"
   },
   "fuse-elements": {
-    "intro1": "Using my Web3 powers, I can fuse 5 Elements into a RadGem. Who knows what color or material it will be!",
+    "intro1": "",
     "intro2": "It looks like you have {{count}} Element(s) in your registered Radix account.",
     "more-than-max-elements": "It looks like you have {{count}} Element(s) in your registered Radix account. I can fuse up to 100 Elements at once.",
-    "enough-elements": "Give me those Elements and I'll get started with fusing them into RadGems...",
+    "enough-elements": "Send those Elements and they will be fused into RadGems...",
     "send-button": "Send {{count}} Elements",
     "create-another": "Create More",
     "not-enough-elements": "Oops! You currently only have {{count}} Element(s) in your registered Radix Account.",
@@ -63,7 +63,7 @@
     "gem-quality": "Quality: {{quality}}/25",
     "radmorph-quality": "Quality: {{quality}}/100",
     "previewing-radmorph": "Previewing RadMorph...",
-    "radmorph-preview-text": "Ready to create this RadMorph? Continue to give Jetty the Card and RadGems, and receive back the RadMorph.",
+    "radmorph-preview-text": "",
     "create-radmorph-button": "Create RadMorph",
     "start-again-button": "Start Again",
     "resources-sent-from-wallet": "Card and gems will be sent from your Radix Wallet",

@@ -1,11 +1,13 @@
 <script lang="ts">
   import { i18n } from '$lib/i18n/i18n'
   import ResourceCard from './ResourceCard.svelte'
+  import ElementImage from '@images/earlyment.jpg'
 
   export let quantity: number
 </script>
 
 <ResourceCard selectable={false}>
+  <div class="container" style:--background-image={`url(${ElementImage})`} />
 
   <svelte:fragment slot="text">
     <div class="text">
