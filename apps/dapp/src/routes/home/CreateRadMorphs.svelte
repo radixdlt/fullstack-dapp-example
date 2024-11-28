@@ -290,12 +290,6 @@
           }}
     >
       <div class="content">
-        <img
-          class="radmorph-image"
-          src="/quests-images/key/JettyConversation_RadMorphCreation.webp"
-          alt="Radmorphs"
-        />
-
         {$i18n.t('jetty:create-radmorphs.intro')}
         <p>
           {$i18n.t('jetty:create-radmorphs.intro2')}
@@ -331,7 +325,7 @@
   }
 
   .content {
-    padding: 0 var(--spacing-2xl);
+    padding: 1rem var(--spacing-2xl);
 
     @include mobile {
       padding: 0 var(--spacing-xl);

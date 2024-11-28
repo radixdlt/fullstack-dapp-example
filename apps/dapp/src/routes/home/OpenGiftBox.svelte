@@ -316,9 +316,6 @@
         <div class="title">
           {$i18n.t('jetty:open-gift-box.gift-box-opened-title')}
         </div>
-        <div class="subtitle">
-          {$i18n.t('jetty:open-gift-box.gift-box-opened-subtitle')}
-        </div>
       </div>
       <div class="rewards-page">
         <div class="cards">
@@ -384,9 +381,6 @@
           />
         </div>
       </JettyMenuItemPage>
-      <div class="sub">
-        {$i18n.t('jetty:create-radmorphs.open-gift-box-subtitles')}
-      </div>
     </div>
   {:else}
     <JettyMenuItemPage
@@ -510,6 +504,7 @@
 
   .cards {
     display: flex;
+    gap: 1rem;
     justify-content: center;
     align-items: center;
     height: 100%;

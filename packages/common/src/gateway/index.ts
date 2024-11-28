@@ -112,16 +112,6 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
     ).map((response) => response.entries.length > 0)
   }
 
-  const getInstapassBadges = (accountAddress: string) =>
-    callApi('getEntityDetailsVaultAggregated', [accountAddress]).map(([response]) => {
-      const item = response.non_fungible_resources.items.find(
-        (item) => item.resource_address === addresses.badges.instapassBadgeAddress
-      )
-
-      const vault = item?.vaults?.items.find((vault) => (vault?.items?.length || 0) > 0)
-      return vault?.items || []
-    })
-
   const getKeyValueStoreDataForUser = (
     keyValueStoreAddress: string,
     userId: string
@@ -263,7 +253,7 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
               (acc, curr) => {
                 acc[curr?.resource_address!] = {
                   amount: curr ? getAmount(curr) : 0,
-                  name: types[curr?.resource_address!],
+                  name: types[curr?.resource_address! as keyof typeof types],
                   imageUrl: (
                     curr?.explicit_metadata?.items.find((item) => item.key === 'icon_url')!.value
                       .typed as any
@@ -303,7 +293,6 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
   return {
     basePath: basePath || networkConfig.gatewayUrl,
     hasKycEntry,
-    getInstapassBadges,
     hasAtLeastTwoRadgems,
     isDepositAllowedForResource,
     networkConfig,

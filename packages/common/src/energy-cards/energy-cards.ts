@@ -26,7 +26,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: false,
-    keyImageUrl: '/morph-cards/UI_S001.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S005: {
     energyType: 'Tidal Wave',
@@ -34,7 +34,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: '/morph-cards/UI_S005.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S004: {
     energyType: 'Molten Lava',
@@ -42,7 +42,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: '/morph-cards/UI_S004.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S008: {
     energyType: 'Pyroclastic Flow',
@@ -50,7 +50,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: '/morph-cards/UI_S008.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S011: {
     energyType: 'Rainbow Curve',
@@ -58,7 +58,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: '/morph-cards/UI_S011.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S009: {
     energyType: 'Polar Blizzard',
@@ -66,7 +66,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: true,
     currentlyAvailable: true,
-    keyImageUrl: '/morph-cards/UI_S009.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S013: {
     energyType: 'Hydrothermal Vent',
@@ -74,7 +74,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: true,
     currentlyAvailable: true,
-    keyImageUrl: '/morph-cards/UI_S013.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S015: {
     energyType: 'Volcanic Lightning',
@@ -82,7 +82,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: true,
     currentlyAvailable: false,
-    keyImageUrl: '/morph-cards/UI_S015.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S006: {
     energyType: 'Storm Cell',
@@ -90,7 +90,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Common,
     limitedEdition: true,
     currentlyAvailable: false,
-    keyImageUrl: '/morph-cards/UI_S006.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S018: {
     energyType: 'Aurora Borealis',
@@ -98,7 +98,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Rare,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: '/morph-cards/UI_S018.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S012: {
     energyType: 'Magnetic Field',
@@ -106,7 +106,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Rare,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: '/morph-cards/UI_S012.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S007: {
     energyType: 'Nuclear Fusion',
@@ -114,7 +114,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Rare,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: '/morph-cards/UI_S007.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S002: {
     energyType: 'Earthquake Tremor',
@@ -122,7 +122,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Rare,
     limitedEdition: true,
     currentlyAvailable: true,
-    keyImageUrl: '/morph-cards/UI_S002.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S017: {
     energyType: 'Tropical Cyclone',
@@ -130,7 +130,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Rare,
     limitedEdition: true,
     currentlyAvailable: true,
-    keyImageUrl: '/morph-cards/UI_S017.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S003: {
     energyType: 'Gamma Rays',
@@ -138,7 +138,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Rare,
     limitedEdition: true,
     currentlyAvailable: false,
-    keyImageUrl: '/morph-cards/UI_S003.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S010: {
     energyType: 'Gravity Force',
@@ -146,7 +146,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.Rare,
     limitedEdition: true,
     currentlyAvailable: false,
-    keyImageUrl: '/morph-cards/UI_S010.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S014: {
     energyType: 'Supernova Explosion',
@@ -154,7 +154,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.UltraRare,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: '/morph-cards/UI_S014.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S019: {
     energyType: 'Black Hole',
@@ -162,7 +162,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.UltraRare,
     limitedEdition: false,
     currentlyAvailable: true,
-    keyImageUrl: '/morph-cards/UI_S019.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S016: {
     energyType: 'Fire Tornado',
@@ -170,7 +170,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.UltraRare,
     limitedEdition: true,
     currentlyAvailable: true,
-    keyImageUrl: '/morph-cards/UI_S016.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   },
   S020: {
     energyType: 'Solar Flare',
@@ -178,7 +178,7 @@ export const energyCardMap = {
     rarity: EnergyCardRarity.UltraRare,
     limitedEdition: true,
     currentlyAvailable: false,
-    keyImageUrl: '/morph-cards/UI_S020.webp'
+    keyImageUrl: '/morph-cards/merph_card.jpg'
   }
 } as const
 

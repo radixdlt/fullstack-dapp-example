@@ -63,7 +63,7 @@
   steps={[
     {
       id: '5',
-      type: 'jetty',
+      type: 'regular',
       footer: {
         next: {
           enabled: isOpenGiftBoxCompleted
@@ -93,22 +93,6 @@
     },
     {
       type: 'claimRewards'
-    },
-    {
-      id: 'complete0',
-      type: 'jetty'
-    },
-    {
-      id: 'complete1',
-      type: 'jetty'
-    },
-    {
-      id: 'complete2',
-      type: 'jetty'
-    },
-    {
-      id: 'complete3',
-      type: 'jetty'
     },
     {
       type: 'complete'

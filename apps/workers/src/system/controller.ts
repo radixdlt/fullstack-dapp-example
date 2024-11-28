@@ -6,7 +6,6 @@ import { config } from '../config'
 import { Account, AccountHelper, TransactionHelper, withSigners } from 'typescript-wallet'
 import { completeQuestRequirements } from './helpers/completeQuestRequirements'
 import { PrismaClient } from 'database'
-import { lettySwapDappDefinitionTransactionManifest } from './helpers/setLettySwapDappDefintion'
 import { QuestId } from 'content'
 
 export type SystemWorkerController = ReturnType<typeof SystemWorkerController>
@@ -185,14 +184,6 @@ export const SystemWorkerController = ({
           )
           .map(() => undefined)
 
-      case SystemJobType.UpdateLettySwapDappDefinition:
-        return TransactionHelper({
-          networkId: config.networkId,
-          onSignature: withSigners(config.networkId, 'lettySwapDappDefinition', 'payer'),
-          logger
-        })
-          .submitTransaction(lettySwapDappDefinitionTransactionManifest)
-          .map(() => undefined)
 
       case SystemJobType.MintElements: {
         return transactionHelper
@@ -468,3 +459,7 @@ export const SystemWorkerController = ({
 
   return { handler }
 }
+
+
+// don't use aws image service, use one image from local 
+// populate database with radmorph json and have script to populate oracle

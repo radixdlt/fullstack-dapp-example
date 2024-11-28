@@ -12,7 +12,8 @@ import type {
   MessageModel,
   NotificationModel,
   LoginAttemptModel,
-  EventModel
+  EventModel,
+  ImageModel
 } from 'common'
 import type { PrismaClient } from 'database'
 import type { ResultAsync } from 'neverthrow'
@@ -59,6 +60,7 @@ export type ControllerDependencies = {
   logger: AppLogger
   dbClient: PrismaClient
   addresses: Addresses
+  imageModel: ReturnType<ImageModel>
   authModel: ReturnType<typeof AuthModel>
   config: Config
   jwt: JWT
