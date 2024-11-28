@@ -60,6 +60,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     return createPreflightResponse(origin)
   }
 
+
+
   if (event.url.pathname === '/.well-known/radix.json') {
     return createWellKnownResponse()
   }
