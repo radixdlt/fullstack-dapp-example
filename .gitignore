@@ -42,3 +42,5 @@ scrypto-packages/**/target
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 storybook-static
+packages/bootstrap-accounts/target
+packages/bootstrap-accounts/Cargo.lock
