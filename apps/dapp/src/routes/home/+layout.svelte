@@ -1,20 +1,16 @@
 <script lang="ts">
   import '../../global.scss'
   import { onMount, tick } from 'svelte'
-  import { Logger, isMobile } from '@radixdlt/radix-dapp-toolkit'
+  import { isMobile } from '@radixdlt/radix-dapp-toolkit'
   import { goto } from '$app/navigation'
   import { quests, user } from '../../stores'
   import Layout from '$lib/components/layout/Layout.svelte'
-  import Tabs from '$lib/components/tabs/Tabs.svelte'
-  import { i18n } from '$lib/i18n/i18n'
   import { questApi } from '$lib/api/quest-api'
-  import { loadQuests, QuestCategory, type QuestId } from 'content'
-  import LandingPopup from './LandingPopup.svelte'
+  import { loadQuests, type QuestId } from 'content'
   import { page } from '$app/stores'
   import type { LayoutData } from './$types'
   import { useCookies } from '$lib/utils/cookies'
   import Jetty from './Jetty.svelte'
-  import ErrorPopup from './ErrorPopup.svelte'
 
   export let data: LayoutData
 

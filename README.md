@@ -13,6 +13,19 @@
 npm install
 ```
 
+### Set up scrypto environment
+
+
+### Build and deploy scrypto components to Stokenet
+
+```bash
+cd typescript wallet
+npm run wallet:create:resources
+npm run wallet:new:radquest-components
+npm run wallet:deploy-new:all-v2
+npm run wallet:set:dapp-data:radquest
+```
+
 ### Run frontend only
 
 ```bash
@@ -60,7 +73,6 @@ npm uninstall PACKAGE_NAME --workspace=NAME_OF_APP
 ## User authentication
 
 ![user auth flow](docs/user-authentication-flow.png)
-![notification auth flow](docs/notification-authentication-flow.png)
 
 ## Architecture
 
@@ -80,10 +92,6 @@ npm uninstall PACKAGE_NAME --workspace=NAME_OF_APP
 
 Frontend and public API.
 
-### Notification
-
-User notifications with real-time data.
-
 ### Transaction steam
 
 Ingests and filters through a live stream of transactions on the Radix network.
@@ -91,45 +99,3 @@ Ingests and filters through a live stream of transactions on the Radix network.
 ### Workers
 
 Processors of items in message queues.
-
-# Commit message
-
-We are enforcing commits according to a slightly modified version of [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
-
-The commit message should be structured as follows:
-
-```
-<type>(<scope>): <description>
-
-[optional body]
-
-[optional footer(s)]
-```
-
-The commit contains the following structural elements, to communicate intent to fellow developers and readers of the changelog:
-
-## Types
-
-- **feat**: introduces a new feature to the codebase (this correlates with MINOR in Semantic Versioning).
-- **fix**: patches a bug in your codebase (this correlates with PATCH in Semantic Versioning).
-- **code**: code logic addition that is not a feature.
-- **build**: somehow related to building the applications.
-- **chore**: updating dependencies or similar minor change.
-- **ci**: changes related to CI/CD
-- **docs**: changes to the documentation
-- **perf**: improving performance
-- **refactor**: refactor changes
-- **revert**: reverting a commit
-- **style**: changes to UI styling
-- **test**: changes to unit tests and/or integration tests
-
-## Scopes
-
-- **dapp**
-- **wallet**
-- **notification**
-- **stream**
-- **workers**
-- **db**
-- **jetty-swap**
-- **core** - changes that affect the whole project

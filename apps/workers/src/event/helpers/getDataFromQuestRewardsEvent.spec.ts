@@ -2,7 +2,7 @@ import { EventsItem } from '@radixdlt/babylon-gateway-api-sdk'
 import { describe, it, expect } from 'vitest'
 import { getDataFromQuestRewardsEvent } from './getDataFromQuestRewardsEvent'
 import { Addresses } from 'common'
-const addresses = Addresses(2)
+const addresses = Addresses
 
 describe('GetDataFromQuestRewardsEvent', () => {
   it('should get correct xrd amount', () => {

@@ -11,7 +11,7 @@ export type CreateBatchDepositGiftBoxRewardManifest = {
 export const createBatchDepositGiftBoxRewardManifest = (
   input: CreateBatchDepositGiftBoxRewardManifest[]
 ) => {
-  const addresses = Addresses(config.networkId)
+  const addresses = Addresses
   const { payer, system } = addresses.accounts
   const { adminBadgeAddress } = addresses.badges
   const { elementAddress, morphEnergyCardAddress } = addresses.resources
