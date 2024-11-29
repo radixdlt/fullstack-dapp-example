@@ -23,7 +23,6 @@
   const accountHasClams = writable(true)
   const addresses = Addresses(publicConfig.networkId)
   const jettySwap = writable(data.requirements?.JettySwap.isComplete)
-  const lettySwap = writable(data.requirements?.LettySwap.isComplete)
 
   let render: (id: string) => boolean
 
@@ -53,12 +52,6 @@
         $jettySwap = true
         messageApi.markAsSeen(message.id)
         if (quest && render('6')) quest.actions.next()
-      }
-
-      if (message.type === 'QuestRequirementCompleted' && message.requirementId === 'LettySwap') {
-        $lettySwap = true
-        messageApi.markAsSeen(message.id)
-        if (quest && render('19')) quest.actions.next()
       }
     })
   }
@@ -93,15 +86,6 @@
       }
     },
     { id: '18', type: 'regular', skip: accountHasClams },
-    {
-      id: '19',
-      type: 'regular',
-      footer: {
-        next: {
-          enabled: lettySwap
-        }
-      }
-    },
     { type: 'claimRewards' },
     { type: 'complete' }
   ]}
@@ -158,11 +142,6 @@
         >{$i18n.t('quests:TransferTokens.getClams')}</Button
       >
     </div>
-  {/if}
-  {#if render('19')}
-    {@html htmlReplace(text['19.md'], {
-      lettySwapLink: `<a href="${addresses.dapps.lettySwap.url}" target="_blank">LettySwap</a>`
-    })}
   {/if}
   {#if render('20')}
     {@html text['20.md']}
