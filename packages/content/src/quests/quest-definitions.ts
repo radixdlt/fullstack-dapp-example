@@ -226,10 +226,6 @@ export const QuestDefinitions = () => {
         [EventId.JettySwap]: {
           eventName: 'ClamSwapEvent',
           type: 'event'
-        },
-        [EventId.LettySwap]: {
-          eventName: 'ClamSwapEvent',
-          type: 'event'
         }
       }
     }
