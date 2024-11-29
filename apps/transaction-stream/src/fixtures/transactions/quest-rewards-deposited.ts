@@ -3,7 +3,7 @@
 import { CommittedTransactionInfo } from '@radixdlt/babylon-gateway-api-sdk'
 import { Addresses } from 'common'
 
-const addresses = Addresses(2)
+const addresses = Addresses
 
 export default [
   {

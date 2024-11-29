@@ -19,7 +19,7 @@ export type StringToSborValue<T extends SborValueKind> = Extract<
   { kind: T }
 >
 
-const addresses = Addresses(config.networkId)
+const addresses = Addresses
 
 export const getXrdAmountFromRewards = (rewardsField: ProgrammaticScryptoSborValueArray) => {
   let xrdAmount = 0

@@ -14,12 +14,12 @@ export const config = {
     fromStateVersion: parseInt(process.env.FROM_STATE_VERSION!, 10)
   },
   networkId,
-  addresses: Addresses(networkId),
+  addresses: Addresses,
   stream: {
     limitPerPage: 100
   },
   radQuest: {
-    ...Addresses(networkId)
+    ...Addresses
   },
   postgres: {
     url: process.env.DATABASE_URL,

@@ -22,7 +22,7 @@ export const config = {
   },
   networkId,
   radQuest: {
-    ...Addresses(networkId),
+    ...Addresses,
     directXrdDepositAmount: 50,
     elementsPerRadgem: 5
   },
