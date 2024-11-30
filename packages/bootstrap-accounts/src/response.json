@@ -1,0 +1,49 @@
+{
+    "ledger_state": {
+        "network": "stokenet",
+        "state_version": 108550799,
+        "proposer_round_timestamp": "2024-11-30T17:23:10.156Z",
+        "epoch": 57536,
+        "round": 1785
+    },
+    "transaction": {
+        "transaction_status": "CommittedSuccess",
+        "state_version": 108534396,
+        "epoch": 57528,
+        "round": 1296,
+        "round_timestamp": "2024-11-30T16:41:56.9Z",
+        "payload_hash": "notarizedtransaction_tdx_2_1kc9dfndngcm4rkkektcadtanfx7t53ysnq2tsyqda5jn0t94zezssmggpm",
+        "intent_hash": "txid_tdx_2_1nq3kkz7muecgsg0me092v2numtqjunjw9txdzu3q5za4jtfjsy4q03uky7",
+        "fee_paid": "1.15235445812",
+        "confirmed_at": "2024-11-30T16:41:56.9Z",
+        "raw_hex": "4d22030221022104210707020ab8e00000000000000ac2e0000000000000090a000000220101200720788c8fec22e2ff688d3362b9782d26e048a18f656aaab46dd50376ce57386d49010008000020220541038000c0566318c6318c64f798cacc6318c6318cf7be8af78a78f8a6318c6318c60c086c6f636b5f66656521018500002059dd64f00c0f010000000000000000000000000000400480000d906318c6318c6ee313598c6318c6318cf7bcaa2e954a9626318c6318c60c074163636f756e740c066372656174652100020180009a4c6318c6318c6ee30e98cc6318c6318cf7eb5aabd4a7e946318c6318c6400480000d906318c6318c6c4d63f8cc6318c6318cf7bf553d3ca51686318c6318c60c10416363657373436f6e74726f6c6c65720c06637265617465210481000000002103220201220001220001220001210280009a4c6318c6318c6cb554820c6318c6318cf7a951d7a9e547c6318c6318c687021d2eafc5f4d21911df82452aa7b9f376dfd49752325ddcd963e58e9adf16220201220001220001220001210280009a4c6318c6318c6cb554820c6318c6318cf7a951d7a9e547c6318c6318c687021d068de0f24ea1d6b91b05729f1e666447b482829453290ca94f0fcc26ee220201220001220001220001210280009a4c6318c6318c6cb554820c6318c6318cf7a951d7a9e547c6318c6318c687021de9aba466ba46e65de629da2b7908def0afc7b7c0cf3ed8f6b073fad2e52200002200004103800051068de0f24ea1d6b91b05729f1e666447b482829453290ca94f0fcc26ee0c1b7472795f6465706f7369745f62617463685f6f725f726566756e64210283002200002020002200002022010102200720788c8fec22e2ff688d3362b9782d26e048a18f656aaab46dd50376ce57386d4921012007405501d39add8e834090e4c65df665f6f2061a420ce41d7cdbd41897636f219858b436d75c0811e7e48d2d319d301400e2e5949a8f7034ec26ef58c78051da77042201012101200740bf27b225e336f135e36a898504dd3ec123eac942085255dc448fd78afbc3d2bbe482a1a867494615ca3bdaf6474325da04a6e75cb516b006545acae638e57704",
+        "receipt": {
+            "status": "CommittedSuccess",
+            "state_updates": {
+                "new_global_entities": [
+                    {
+                        "is_global": true,
+                        "entity_type": "GlobalAccount",
+                        "entity_address": "account_tdx_2_1c9gcl553snuq4x3kpmsp6akx2u05svumpurjesynrr6py9lv750t2x"
+                    },
+                    {
+                        "is_global": true,
+                        "entity_type": "GlobalAccessController",
+                        "entity_address": "accesscontroller_tdx_2_1cd7z2dnzs5f8m2ld2uwe5ntljtsq2e2xz3md0qh6gqwyxazmtvtlrn"
+                    },
+                    {
+                        "is_global": true,
+                        "entity_type": "GlobalVirtualEd25519Account",
+                        "entity_address": "account_tdx_2_12yrgmc8jf6sadwgmq4ef78nxv3rmfq5zj3fjjr9ffu8ucfhw24dtn3"
+                    },
+                    {
+                        "is_global": true,
+                        "entity_type": "GlobalNonFungibleResource",
+                        "entity_address": "resource_tdx_2_1n2jv450dtvgsejf3kqhxqjymlegxw6tdvhtz63kjn9vxqvtly3pn7e"
+                    }
+                ]
+            }
+        },
+        "manifest_classes": []
+    }
+}
