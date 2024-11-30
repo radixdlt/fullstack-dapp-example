@@ -64,10 +64,5 @@ pub async fn submit_gateway_txn(
     } else {
         return Ok(format!("Transaction Successful {}", bech32m_intent_hash))
     }
-    // match response {
-    //     Ok(result) => {
-    //         println!("Submitted transaction to gateway and response : {:#?}", result)
-    //     }
-    //     Err(error) => eprintln!("Error sending Txn: {}", error),
-    // };
+
 }
