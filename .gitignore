@@ -43,7 +43,5 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 storybook-static
 packages/bootstrap-accounts/target
-packages/bootstrap-accounts/Cargo.lock
-packages/bootstrap-accounts/202411300020_secrets-accounts.json
-packages/bootstrap-accounts/controller-accounts.json
-packages/bootstrap-accounts/secrets-accounts.json
+packages/bootstrap-accounts/*secrets-accounts.json
+packages/bootstrap-accounts/*controller-accounts.json
