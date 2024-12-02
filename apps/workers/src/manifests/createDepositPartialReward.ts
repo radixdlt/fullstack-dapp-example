@@ -4,7 +4,7 @@ import { createBatchQuestRewardsDepositManifest } from '../helpers/createBatchQu
 import { okAsync } from 'neverthrow'
 import { AppLogger } from 'common'
 
-const questDefinitions = QuestDefinitions('FULL')
+const questDefinitions = QuestDefinitions()
 
 export const createDepositPartialRewardManifest = (
   items: DepositPartialRewardJob[],
