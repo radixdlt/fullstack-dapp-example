@@ -3,6 +3,13 @@ import { config } from '../../config'
 import { transactionBuilder } from '../../transaction/transactionBuilder'
 import { ResultAsync } from 'neverthrow'
 import { typedError } from 'common'
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+// Define __dirname
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export const createSuperAdminBadge = () => {
   return ResultAsync.fromPromise(
@@ -92,8 +99,22 @@ CALL_METHOD
       .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
       .map((createdEntities): string => {
         const address = createdEntities[0].entity_address!
-        
+
+        const envFilePath = path.resolve(
+          __dirname,
+          '../../../../../packages/common/src/constants.ts'
+        )
+        const constantsFileContent = fs.readFileSync(envFilePath, 'utf8')
+        const updatedConstantsFileContent = constantsFileContent.replace(
+          /superAdminBadgeAddress:\s*'resource_tdx_2_[^']*'/,
+          `superAdminBadgeAddress: '${address}'`
+        )
+        fs.writeFileSync(envFilePath, updatedConstantsFileContent)
+
         return address
-  })
+      })
+      .mapErr((err) => {
+        console.error(err)
+      })
   })
 }

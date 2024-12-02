@@ -41,13 +41,11 @@ export const UserQuestController = ({
   }) => {
     return hasAllRequirementsCompleted(questId, userId)
       .andThen(({ isAllCompleted }) =>
-        userModel
-          .getById(userId, {})
-          .map((user) => ({
-            isAllCompleted,
-            isNotBlocked: user.status === 'OK',
-            priority: 1
-          }))
+        userModel.getById(userId, {}).map((user) => ({
+          isAllCompleted,
+          isNotBlocked: user.status === 'OK',
+          priority: 1
+        }))
       )
       .andThen(({ isAllCompleted, isNotBlocked, priority }) =>
         isAllCompleted && hasAnyRewards(questId) && isNotBlocked

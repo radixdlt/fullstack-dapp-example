@@ -1,5 +1,11 @@
+import * as fs from 'fs'
+import * as path from 'path'
 import { config } from '../../config'
 import { transactionBuilder } from '../../transaction/transactionBuilder'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export const newQuestRewards = () => {
   const transactionManifest = `
@@ -49,10 +55,25 @@ CALL_FUNCTION
   return transaction
     .submit()
     .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
-    .map(
-      (createdEntities): Record<string, string> => ({
-        kycOracleAddress: createdEntities[0].entity_address,
-        questRewardsAddress: createdEntities[1].entity_address
-      })
-    )
+    .map((createdEntities): Record<string, string> => {
+      const kycOracleAddress = createdEntities[0].entity_address!
+      const questRewardsAddress = createdEntities[1].entity_address!
+
+      const envFilePath = path.resolve(__dirname, '../../../../../packages/common/src/constants.ts')
+      const constantsFileContent = fs.readFileSync(envFilePath, 'utf8')
+
+      const updatedConstantsFileContent = constantsFileContent
+        .replace(/kycOracle:\s*'component_tdx_2_[^']*'/, `kycOracle: '${kycOracleAddress}'`)
+        .replace(
+          /questRewardsV2:\s*'component_tdx_2_[^']*'/,
+          `questRewardsV2: '${questRewardsAddress}'`
+        )
+
+      fs.writeFileSync(envFilePath, updatedConstantsFileContent)
+
+      return {
+        kycOracleAddress,
+        questRewardsAddress
+      }
+    })
 }

@@ -11,7 +11,7 @@ export type CreateBatchQuestRewardsDepositManifestInput = {
 export const createBatchQuestRewardsDepositManifest = (
   input: CreateBatchQuestRewardsDepositManifestInput[]
 ) => {
-  const addresses = Addresses
+  const addresses = Addresses(config.networkId)
   const { payer, system } = addresses.accounts
   const { adminBadgeAddress } = addresses.badges
   const { clamAddress, giftBox } = addresses.resources

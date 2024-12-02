@@ -124,15 +124,12 @@ export const ReferralHelper = ({
         include: {
           referredUsers: true,
           questProgress: true,
-          completedQuestRequirements: true,
+          completedQuestRequirements: true
         }
       }),
       (error) => ({ reason: WorkerError.FailedToGetUserFromDb, jsError: error })
     ).andThen((user) => {
-
-      return user
-        ? ok({ ...user })
-        : err({ reason: WorkerError.UserNotFound })
+      return user ? ok({ ...user }) : err({ reason: WorkerError.UserNotFound })
     })
 
   const countQuestTogetherReferrals = (userId: string) =>
@@ -177,7 +174,7 @@ export const ReferralHelper = ({
               referringUser.id,
               referringUser.questProgress,
               referringUser.completedQuestRequirements,
-              count,
+              count
             ).andThen(() =>
               sendMessage(
                 referringUser.id,

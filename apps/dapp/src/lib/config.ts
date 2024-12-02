@@ -52,7 +52,7 @@ export const config = {
     maxUserPerIp: parseInt(MAX_USER_PER_IP || '4', 10),
     networkId: publicConfig.networkId,
     dAppDefinitionAddress: publicConfig.dAppDefinitionAddress ?? '',
-    ...Addresses(publicConfig.networkId)
+    ...Addresses
   },
   logLevel: PUBLIC_LOG_LEVEL,
   maintenanceMode: MAINTENANCE_MODE === 'true'

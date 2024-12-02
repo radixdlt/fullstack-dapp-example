@@ -68,7 +68,22 @@
     "push": {
       "cache": false
     },
+    "wallet:create:resources": {
+      "cache": false
+    },
+    "wallet:new:radquest-components": {
+      "cache": false
+    },
+    "wallet:deploy:radquest": {
+      "cache": false
+    },
     "wallet:create:mnemonic": {
+      "cache": false
+    },
+    "wallet:deploy-new:all-v2": {
+      "cache": false
+    },
+    "wallet:set:dapp-data:radquest": {
       "cache": false
     },
     "wallet:create:badges": {

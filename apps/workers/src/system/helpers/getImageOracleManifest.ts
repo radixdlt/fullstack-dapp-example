@@ -1,6 +1,5 @@
 import {
   Addresses,
-  WellKnownAddresses,
   shapeDescription,
   colorDescription,
   shaderDescription,
@@ -34,7 +33,7 @@ export const radmorphUrlsToTuples = (radmorphs: { id: string; url: string }[]) =
 }
 
 export const getImageOracleManifest = (radmorphs: { id: string; url: string }[]) => {
-  const { accounts, badges, components } = Addresses
+  const { accounts, badges, components } = Addresses(config.networkId)
 
   return `
   CALL_METHOD 

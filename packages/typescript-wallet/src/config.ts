@@ -5,7 +5,7 @@ if (!process.env.PUBLIC_NETWORK_ID) throw new Error('PUBLIC_NETWORK_ID env var n
 
 const networkId = parseInt(process.env.PUBLIC_NETWORK_ID)
 const gatewayApi = GatewayApi(networkId, process.env.GATEWAY_URL)
-export const radquestEntityAddresses = Addresses
+export const radquestEntityAddresses = Addresses(parseInt(process.env.PUBLIC_NETWORK_ID))
 
 const networkName = gatewayApi.networkConfig.networkName
 

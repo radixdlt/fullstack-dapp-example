@@ -11,13 +11,15 @@ async function main() {
     systemQueue: {} as any
   })
 
-  await controller.uploadImagesJson({
-    data: Object.fromEntries(Object.entries(Morphs).slice(0, 3300)),
-    imageType: 'RadMorph'
-  }).mapErr((e) => {
-    console.log(e)
-    return e
-  })
+  await controller
+    .uploadImagesJson({
+      data: Object.fromEntries(Object.entries(Morphs).slice(0, 3300)),
+      imageType: 'RadMorph'
+    })
+    .mapErr((e) => {
+      console.log(e)
+      return e
+    })
 }
 
 main()

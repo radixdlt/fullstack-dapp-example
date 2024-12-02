@@ -3,7 +3,7 @@ import { getRewardsFromQuestRewardDepositedEvent } from './getRewardsFromQuestRe
 import { describe, it, expect } from 'vitest'
 import { Addresses } from 'common'
 
-const config = Addresses
+const config = Addresses(2)
 
 const eventData = {
   element_kind: 'Tuple',

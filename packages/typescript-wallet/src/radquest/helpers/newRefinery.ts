@@ -1,5 +1,11 @@
+import * as fs from 'fs'
+import * as path from 'path'
 import { config } from '../../config'
 import { transactionBuilder } from '../../transaction/transactionBuilder'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export const newRefinery = () => {
   const transactionManifest = `
@@ -51,12 +57,34 @@ CALL_FUNCTION
   return transaction
     .submit()
     .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
-    .map(
-      (createdEntities): Record<string, string> => ({
-        radgemForgeAddress: createdEntities[0].entity_address,
-        radmorphForgeAddress: createdEntities[1].entity_address,
-        imageOracleAddress: createdEntities[2].entity_address,
-        refineryAddress: createdEntities[3].entity_address
-      })
-    )
+    .map((createdEntities): Record<string, string> => {
+      const radgemForgeAddress = createdEntities[0].entity_address
+      const radmorphForgeAddress = createdEntities[1].entity_address
+      const imageOracleAddress = createdEntities[2].entity_address
+      const refineryAddress = createdEntities[3].entity_address
+
+      const envFilePath = path.resolve(__dirname, '../../../../../packages/common/src/constants.ts')
+      const constantsFileContent = fs.readFileSync(envFilePath, 'utf8')
+
+      const updatedConstantsFileContent = constantsFileContent
+        .replace(
+          /radgemForgeV2:\s*'component_tdx_2_[^']*'/,
+          `radgemForgeV2: '${radgemForgeAddress}'`
+        )
+        .replace(
+          /radmorphForge:\s*'component_tdx_2_[^']*'/,
+          `radmorphForge: '${radmorphForgeAddress}'`
+        )
+        .replace(/imageOracle:\s*'component_tdx_2_[^']*'/, `imageOracle: '${imageOracleAddress}'`)
+        .replace(/refinery:\s*'component_tdx_2_[^']*'/, `refinery: '${refineryAddress}'`)
+
+      fs.writeFileSync(envFilePath, updatedConstantsFileContent)
+
+      return {
+        radgemForgeAddress,
+        radmorphForgeAddress,
+        imageOracleAddress,
+        refineryAddress
+      }
+    })
 }
