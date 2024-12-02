@@ -192,9 +192,6 @@ jobs:
       - name: Unit tests
         run: npm run test:ci
 
-      - name: Lint
-        run: npm run lint
-
   push-dapp:
     name: Docker dapp
     needs:

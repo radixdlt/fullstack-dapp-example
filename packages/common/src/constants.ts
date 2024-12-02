@@ -14,10 +14,8 @@ export const Addresses = (networkId: number) => {
           superAdminBadgeAddress:
             'resource_tdx_2_1t5d4ufxeg992z405jlp45atm7ur7utr7a3j69u6hpu837fm2plj9zm',
           heroBadgeAddress:
-            'resource_tdx_2_1nfs054y3ya9zc682scek2c80369s77z5wuy089e7zhrdef72vxrkkl',
-          kycBadgeAddress: 'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan',
-          instapassBadgeAddress:
-            'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan'
+            'resource_tdx_2_1nt72qwswkjkaayfwgyy0d2un8wvpjlq2dg5lq54382wlmf6yly8vz5',
+          kycBadgeAddress: 'resource_tdx_2_1n2gxmr3m95mr2amvdtfn5slgeta5dsz9zwg9w7wc7vvxwtqraq6pan'
         },
         resources: {
           elementAddress: 'resource_tdx_2_1tkq4pl7nrs0330hwkyqlu4kgjrvjs0xy7nr8efmdsx5w8wgvg3dslf',
@@ -50,7 +48,9 @@ export const Addresses = (networkId: number) => {
           'package_tdx_2_1pkmkll2d63ugxrd5uph0ddlm0gjrgvlqmdyctr82aaneft66tehljm',
         components: {
           heroBadgeForge: 'component_tdx_2_1czggp0fz9pcarmhp8uxpy9qr8ysz46qkpr49t3jdrn8zzanujj8fpy',
-          kycOracle: 'component_tdx_2_1cz28tsleecj5advq5eeag9jn3pnfve6kmcxpc8v5ta9qyuelv5f2yh',
+          ticketMachine: 'component_tdx_2_1cr6mvq384sjshjwxgjrf20l25wcq4hqfhuezujh7l88w5ulf6gy9pf',
+          kycOracle: 'component_tdx_2_1cqgu87tk0sx6ldn7x0heev0vgc6jq4uu0tahkfumfpgmw7acxtgqd3',
+          mayaRouter: 'component_rdx1cp7hrk7k0pjavnpt5h6dsel096kzlj96r8ukw2ywqgdc5tlvpvn0as',
           questRewards: 'component_tdx_2_1czukjx0y294tgzz2w236je8sv8pr4mrz3p566rm6vlq4nfr2w2punu',
           giftBoxOpener: 'component_tdx_2_1crsll3wjqke9detnpr8r0t0ls6m5kd57fu2jr5r20qfauuy575rh5p',
           cardForge: 'component_tdx_2_1cp2r0wrszxf0qj9hqykm6nv6avzweqazxp2yu43zemp5q0prpl0rfw',
@@ -61,7 +61,6 @@ export const Addresses = (networkId: number) => {
           giftBoxOpenerV2:
             'component_tdx_2_1crrlzuynltx4dyd8j4je7tuwvg3f8r457xjx0dj0erv5cjf9dhhq87',
           cardForgeV2: 'component_tdx_2_1cpklvrnnp7uhyunkng5xelap446j0yzxl3s2yqed0mdcll0fkdrnnp',
-          ticketMachine: 'component_tdx_2_1cr6mvq384sjshjwxgjrf20l25wcq4hqfhuezujh7l88w5ulf6gy9pf',
           heroBadgeForgeV2:
             'component_tdx_2_1cprh6mf0n8xzr3zgcru0m6frr8kuuur8m6lhhnytf6elqwqm7fzxut',
           radgemForgeV2: 'component_tdx_2_1czh9dpk3fu5ud99mzzewfc9h9yymzrxv7hxuzz8p9m40mvzn50vmg0',
@@ -74,7 +73,6 @@ export const Addresses = (networkId: number) => {
             'internal_keyvaluestore_tdx_2_1kzr894n384n7arfrnc4vejxfdqawu5e83rcuph6cjjqeswlmr80gsu',
           giftBoxRecordsKeyValueStore:
             'internal_keyvaluestore_tdx_2_1krepp99ahmrzxe5qrsyhzy6e7cyvqwhg4dvtqt3pdjq94yd4xwaynq',
-          mayaRouter: 'component_rdx1cp7hrk7k0pjavnpt5h6dsel096kzlj96r8ukw2ywqgdc5tlvpvn0as',
           jettySwap: 'component_tdx_2_1czu6r9zpgsuylret7jfswwlzfgxp39spvd6wh72waqy30sd55gwz4y',
           jettySwapPriceOracle:
             'component_tdx_2_1cqcsfhgk8k8kuknmk7cmvkfu2whrz0ysd3swxggdu3lreu3lh7hyhq',
@@ -85,9 +83,8 @@ export const Addresses = (networkId: number) => {
         xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
         accounts: {
           owner: {
-            address: 'account_tdx_2_129mydulw6hteg6hwmg02mcml7z2mz25mhzvavxe2rms0xywlvptx2m',
-            accessController:
-              'accesscontroller_tdx_2_1cwm8u8e6maj4fhuuhmrftjywugln705xc0eql40ag3696kfzfefpve'
+            address: '',
+            accessController: ''
           },
           dAppDefinition: {
             address: 'account_tdx_2_12ypap8t44k4pw9p0p56aqdp0ewexjcszzsj5suxduvsfnnmxpcj5qk',
