@@ -60,7 +60,7 @@ aws secretsmanager create-secret --name secrets-account --description "Secrets f
 ### Access Controllers Generation
 - **Purpose**: Creates access controllers for each of the `payer` keys listed in `secrets-account.json`.
 
-- **Command**: Before executing the command, export the following environment variables. `SIGNER_PRIVATE_KEY` is for the fee payer account and should be in the format `ed25519:private_key_here`:
+- **Command**: Before executing the command, export the following environment variables. `SIGNER_PRIVATE_KEY` is for the fee payer account and should be in the format `ed25519:private_key_here`:  This payer account is not same as payer account generated in keypairs. Instead this account is one of yours that have xrds to pay fees for access controller creation
 
 ```bash
 export NETWORK_ID=<network-id>
