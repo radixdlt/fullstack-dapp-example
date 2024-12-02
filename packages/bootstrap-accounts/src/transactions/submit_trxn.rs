@@ -14,7 +14,7 @@ pub async fn prepare_submit_gateway_txn(
     let notarized_txn = {
         println!("Private key signing block");
         let private_key_string = std::env::var("SIGNER_PRIVATE_KEY")
-            .expect("SIGNER_PRIVATE_KEY env variable is missing");
+            .expect("SIGNER_PRIVATE_KEY env variable is missing. The format should be `export SIGNER_PRIVATE_KEY=ed25519:private_key_here` or `export SIGNE_PRIVATE_KEY=secp256k1:private_key_here`");
         let second_key = std::env::var("SECOND_SIGNER_PRIVATE_KEY").unwrap_or("UNKNOWN".to_owned());
         let third_key = std::env::var("THIRD_SIGNER_PRIVATE_KEY").unwrap_or("UNKNOWN".to_owned());
 
