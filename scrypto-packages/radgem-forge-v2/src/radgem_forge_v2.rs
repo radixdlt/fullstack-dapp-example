@@ -22,8 +22,15 @@ enum RadgemClaim {
     Claimed,
 }
 
+#[derive(ScryptoSbor, Debug, Clone, PartialEq, Eq, Default)]
+pub struct Counts {
+    pub deposited_elements: Decimal,
+    pub minted_radgems: Decimal,
+    pub claimed_radgems: Decimal,
+}
+
 #[blueprint]
-#[types(UserId, RadgemClaim)]
+#[types(UserId, RadgemClaim, Counts)]
 #[events(DepositedElementsEvent, MintedRadgemsEvent, ClaimedRadgemsEvent)]
 mod radgem_forge_v2 {
     enable_method_auth! {
@@ -37,7 +44,7 @@ mod radgem_forge_v2 {
             deposit_elements => PUBLIC;
             mint_radgems => restrict_to: [admin];
             claim_radgems => PUBLIC;
-            get_user_radgem_claims_count => PUBLIC;
+            get_user_counts => PUBLIC;
         }
     }
 
@@ -46,6 +53,7 @@ mod radgem_forge_v2 {
         admin_badge: FungibleVault,
         radgem_records: KeyValueStore<UserId, RadgemClaim>,
         radgem_vault: NonFungibleVault,
+        user_counts: KeyValueStore<UserId, Counts>,
         hero_badge_address: ResourceAddress,
         element_address: ResourceAddress,
         radgem_resource_manager: ResourceManager,
@@ -68,6 +76,7 @@ mod radgem_forge_v2 {
                 admin_badge: FungibleVault::with_bucket(admin_badge),
                 radgem_records: KeyValueStore::<UserId, RadgemClaim>::new_with_registered_type(),
                 radgem_vault: NonFungibleVault::new(radgem_resource_manager.address()),
+                user_counts: KeyValueStore::<UserId, Counts>::new_with_registered_type(),
                 hero_badge_address,
                 element_address,
                 radgem_resource_manager,
@@ -108,9 +117,8 @@ mod radgem_forge_v2 {
             UserId(local_id_string)
         }
 
-        // User deposits Elements to be turned into a RadGem. Elements are burned and an event
-        // is emitted triggering off chain logic that sends an authorised mint TX for the user.
-        pub fn deposit_elements(&self, hero_badge_proof: Proof, elements: Bucket) -> () {
+        // User deposits Elements to be turned into a RadGem
+        pub fn deposit_elements(&mut self, hero_badge_proof: Proof, elements: Bucket) -> () {
             assert!(self.enabled, "RadgemForgeV2 disabled");
             assert_eq!(elements.resource_address(), self.element_address);
 
@@ -121,7 +129,11 @@ mod radgem_forge_v2 {
             );
             let elements_per_radgem = dec!(5);
 
-            let radgem_quantity = elements_amount.checked_div(elements_per_radgem).unwrap();
+            let radgem_quantity = elements_amount
+                .checked_div(elements_per_radgem)
+                .unwrap()
+                .checked_floor()
+                .unwrap();
             let elements_to_use = radgem_quantity * elements_per_radgem;
 
             assert_eq!(
@@ -132,6 +144,22 @@ mod radgem_forge_v2 {
 
             self.admin_badge
                 .authorize_with_amount(1, || elements.burn());
+
+            let counts = self.user_counts.get_mut(&user_id);
+            match counts {
+                Some(mut counts) => counts.deposited_elements += elements_amount,
+                None => {
+                    drop(counts);
+                    self.user_counts.insert(
+                        user_id.clone(),
+                        Counts {
+                            deposited_elements: elements_amount,
+                            minted_radgems: dec!(0),
+                            claimed_radgems: dec!(0),
+                        },
+                    )
+                }
+            }
 
             Runtime::emit_event(DepositedElementsEvent {
                 user_id,
@@ -176,6 +204,8 @@ mod radgem_forge_v2 {
             // Deposit the RadGem into the vault for the user to claim later
             self.radgem_vault.put(radgem_bucket);
 
+            self.user_counts.get_mut(&user_id).unwrap().minted_radgems += radgem_data.len();
+
             Runtime::emit_event(MintedRadgemsEvent {
                 user_id,
                 radgems: new_ids.into_iter().zip(radgem_data.into_iter()).collect(),
@@ -204,6 +234,8 @@ mod radgem_forge_v2 {
                 }
             };
 
+            self.user_counts.get_mut(&user_id).unwrap().claimed_radgems += radgem_ids_taken.len();
+
             Runtime::emit_event(ClaimedRadgemsEvent {
                 user_id,
                 radgems: radgem_ids_taken,
@@ -212,11 +244,10 @@ mod radgem_forge_v2 {
             radgems
         }
 
-        pub fn get_user_radgem_claims_count(&self, user_id: UserId) -> usize {
-            match self.radgem_records.get(&user_id).as_deref() {
-                Some(RadgemClaim::Claimed) => 0,
-                Some(RadgemClaim::Unclaimed(vec)) => vec.len(),
-                None => 0,
+        pub fn get_user_counts(&self, user_id: UserId) -> Counts {
+            match self.user_counts.get(&user_id) {
+                Some(counts) => counts.to_owned(),
+                None => Counts::default(),
             }
         }
     }

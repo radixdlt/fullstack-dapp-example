@@ -1,6 +1,28 @@
 use scrypto::prelude::*;
 
-use crate::{morph_card_forge::MorphEnergyCardData, radgem_forge::RadgemData};
+#[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
+pub struct MorphEnergyCardData {
+    pub key_image_url: Url,
+    pub name: String,
+    pub description: String,
+    pub energy_type: String,
+    pub energy_description: String,
+    pub rarity: String,
+    pub quality: Decimal,
+    pub limited_edition: bool,
+}
+
+#[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
+pub struct RadgemData {
+    #[mutable]
+    pub key_image_url: Url,
+    pub name: String,
+    pub description: String,
+    pub material: String,
+    pub color: String,
+    pub rarity: String,
+    pub quality: Decimal,
+}
 
 #[derive(NonFungibleData, ScryptoSbor, PartialEq, Eq, Debug, Clone)]
 pub struct RadmorphData {

@@ -2,10 +2,7 @@ use scrypto_test::prelude::*;
 
 use radquest::{
     image_oracle::image_oracle_test::*,
-    morph_card_forge::MorphEnergyCardData,
-    quest_rewards::UserId,
-    radgem_forge::{RadgemData, COLOR, MATERIAL},
-    radmorph_forge::{radmorph_forge_test::*, RadmorphData},
+    radmorph_forge::{radmorph_forge_test::*, MorphEnergyCardData, RadgemData, RadmorphData},
     refinery::refinery_test::*,
 };
 
@@ -14,14 +11,9 @@ struct Test {
     refinery: Refinery,
     image_oracle: ImageOracle,
     radmorph_forge: RadmorphForge,
-    elements: Bucket,
     morph_card: Bucket,
     radgems: Bucket,
-    hero_badge: Bucket,
-    hero_badge_proof: Proof,
     radmorph_address: ResourceAddress,
-    user_id: UserId,
-    admin_badge_proof: Proof,
     super_admin_badge_proof: Proof,
 }
 
@@ -68,18 +60,18 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
                     key_image_url: UncheckedUrl("".to_string()),
                     name: "Crystalline Coral Radgem".to_string(),
                     description: "The Common Crystalline material of this Blood Radgem is graded at a quality of 5 out of a possible 25.".to_string(),
-                    material: MATERIAL[0].name.to_lowercase(), // crystalline,
-                    color: COLOR[0].to_lowercase(),            // blood,
-                    rarity: MATERIAL[0].rarity.name.to_lowercase(),          // common,
+                    material: "crystalline".to_string(),
+                    color: "blood".to_string(),
+                    rarity: "common".to_string(),
                     quality: dec!(5),
                 },
                 RadgemData {
                     key_image_url: UncheckedUrl("".to_string()),
                     name: "Metallic Forest Radgem".to_string(),
                     description: "The Rare Metallic material of this Forest Radgem is graded at a quality of 10 out of a possible 25.".to_string(),
-                    material: MATERIAL[1].name.to_lowercase(), // metallic,
-                    color: COLOR[1].to_lowercase(),            // forest,
-                    rarity: MATERIAL[1].rarity.name.to_lowercase(),          // rare,
+                    material: "metallic".to_string(),
+                    color: "forest".to_string(),
+                    rarity: "rare".to_string(),
                     quality: dec!(10),
                 },
             ],
@@ -137,24 +129,16 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         })?;
 
     let radmorph_address = radmorph.resource_address(&mut env)?;
-    let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
     let super_admin_badge_proof = super_admin_badge.create_proof_of_all(&mut env)?;
-    let hero_badge_proof = hero_badge.create_proof_of_all(&mut env)?;
-    let user_id = UserId(user_id_string);
 
     Ok(Test {
         env,
         refinery,
         image_oracle,
         radmorph_forge,
-        elements,
         morph_card,
         radgems,
-        hero_badge,
-        hero_badge_proof,
         radmorph_address,
-        user_id,
-        admin_badge_proof,
         super_admin_badge_proof,
     })
 }
@@ -164,240 +148,6 @@ fn can_instantiate_refinery() -> Result<(), RuntimeError> {
     // Act
     _ = arrange_test_environment()?;
     // Assert
-    Ok(())
-}
-
-#[test]
-fn can_combine_elements_deposit() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        elements,
-        refinery,
-        hero_badge_proof,
-        ..
-    } = arrange_test_environment()?;
-
-    // Act
-    refinery.combine_elements_deposit(
-        hero_badge_proof,
-        elements.take(dec!(5), &mut env)?,
-        &mut env,
-    )?;
-
-    // Assert
-    Ok(())
-}
-
-#[test]
-fn cannot_combine_elements_deposit_with_other_non_fungible() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        elements,
-        refinery,
-        ..
-    } = arrange_test_environment()?;
-
-    let nf_badge = ResourceBuilder::new_ruid_non_fungible(OwnerRole::None)
-        .mint_initial_supply([EmptyNonFungibleData {}], &mut env)?;
-
-    // Act
-    let result = refinery.combine_elements_deposit(
-        nf_badge.create_proof_of_all(&mut env)?,
-        elements.take(dec!(5), &mut env)?,
-        &mut env,
-    );
-
-    // Assert
-    assert!(result.is_err());
-    assert!(result.unwrap_err().to_string().contains("Invalid proof"));
-    Ok(())
-}
-
-#[test]
-fn can_combine_elements_mint_radgem() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        mut refinery,
-        user_id,
-        admin_badge_proof,
-        ..
-    } = arrange_test_environment()?;
-
-    // Act
-    LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_mint_radgem(
-        user_id,
-        dec!(0.318),
-        dec!(0.822),
-        dec!(0.517),
-        &mut env,
-    )?;
-
-    // Assert
-    Ok(())
-}
-
-#[test]
-fn can_combine_elements_add_radgem_image() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        mut refinery,
-        user_id,
-        admin_badge_proof,
-        radgems,
-        ..
-    } = arrange_test_environment()?;
-
-    LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_mint_radgem(
-        user_id.clone(),
-        dec!(0.97),
-        dec!(0.87),
-        dec!(0.37),
-        &mut env,
-    )?;
-
-    let mut radgem_local_id: Option<NonFungibleLocalId> = None;
-    env.with_component_state(refinery, |refinery_state: &mut RefineryState, env| {
-        radgem_local_id = refinery_state
-            .radgem_vault
-            .0
-            .non_fungible_local_ids(1, env)
-            .unwrap()
-            .pop();
-    })?;
-
-    // Act
-    refinery
-        .combine_elements_add_radgem_image(
-            user_id.clone(),
-            radgem_local_id.clone().unwrap(),
-            UncheckedUrl::of("www.new_url.test"),
-            &mut env,
-        )
-        .unwrap();
-
-    // Assert
-    let data: RadgemData = ResourceManager(radgems.resource_address(&mut env).unwrap())
-        .get_non_fungible_data(radgem_local_id.unwrap(), &mut env)
-        .unwrap();
-
-    assert_eq!(data.name, "Metallic Smoke RadGem {10}");
-    assert_eq!(data.key_image_url, UncheckedUrl::of("www.new_url.test"));
-
-    Ok(())
-}
-
-#[test]
-fn can_combine_elements_claim() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        mut refinery,
-        hero_badge_proof,
-        user_id,
-        admin_badge_proof,
-        ..
-    } = arrange_test_environment()?;
-
-    LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_mint_radgem(
-        user_id.clone(),
-        dec!(0.97),
-        dec!(0.89),
-        dec!(0.93),
-        &mut env,
-    )?;
-
-    // Act
-    let result = refinery.combine_elements_claim(hero_badge_proof, &mut env)?;
-
-    // Assert
-    assert_eq!(result.amount(&mut env)?, dec!(1));
-    Ok(())
-}
-
-#[test]
-fn can_combine_elements_claim_deposit_claim() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        mut refinery,
-        hero_badge,
-        user_id,
-        admin_badge_proof,
-        ..
-    } = arrange_test_environment()?;
-
-    LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_mint_radgem(
-        user_id.clone(),
-        dec!(0.97),
-        dec!(0.87),
-        dec!(0.43),
-        &mut env,
-    )?;
-
-    // Act
-    let result_1 =
-        refinery.combine_elements_claim(hero_badge.create_proof_of_all(&mut env)?, &mut env)?;
-
-    refinery.combine_elements_mint_radgem(
-        user_id.clone(),
-        dec!(0.16),
-        dec!(0.64),
-        dec!(0.29),
-        &mut env,
-    )?;
-
-    let result_2 =
-        refinery.combine_elements_claim(hero_badge.create_proof_of_all(&mut env)?, &mut env)?;
-
-    // Assert
-    assert_eq!(result_1.amount(&mut env)?, dec!(1));
-    assert_eq!(result_2.amount(&mut env)?, dec!(1));
-    Ok(())
-}
-
-#[test]
-fn can_combine_elements_mint_mint_claim() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        mut refinery,
-        hero_badge,
-        user_id,
-        admin_badge_proof,
-        ..
-    } = arrange_test_environment()?;
-
-    // Act
-    LocalAuthZone::push(admin_badge_proof, &mut env)?;
-    refinery.combine_elements_mint_radgem(
-        user_id.clone(),
-        dec!(0.97),
-        dec!(0.87),
-        dec!(0.43),
-        &mut env,
-    )?;
-
-    refinery.combine_elements_mint_radgem(
-        user_id.clone(),
-        dec!(0.16),
-        dec!(0.64),
-        dec!(0.29),
-        &mut env,
-    )?;
-
-    let result =
-        refinery.combine_elements_claim(hero_badge.create_proof_of_all(&mut env)?, &mut env)?;
-
-    // Assert
-    assert_eq!(result.amount(&mut env)?, dec!(2));
     Ok(())
 }
 
@@ -514,66 +264,6 @@ pub fn can_disable_refinery() -> Result<(), RuntimeError> {
 }
 
 #[test]
-pub fn cannot_combine_elements_deposit_when_disabled() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        mut refinery,
-        hero_badge_proof,
-        super_admin_badge_proof,
-        elements,
-        ..
-    } = arrange_test_environment()?;
-
-    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
-    refinery.disable(&mut env)?;
-
-    // Act
-    let result = refinery.combine_elements_deposit(
-        hero_badge_proof,
-        elements.take(dec!(5), &mut env)?,
-        &mut env,
-    );
-
-    // Assert
-    assert!(result.is_err());
-    assert!(result
-        .unwrap_err()
-        .to_string()
-        .contains("Refinery component disabled"));
-    Ok(())
-}
-
-#[test]
-pub fn can_enable_then_combine_elements_deposit_when_disabled() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        mut refinery,
-        hero_badge_proof,
-        super_admin_badge_proof,
-        elements,
-        ..
-    } = arrange_test_environment()?;
-
-    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
-    refinery.disable(&mut env)?;
-
-    // Act
-    refinery.enable(&mut env)?;
-
-    let result = refinery.combine_elements_deposit(
-        hero_badge_proof,
-        elements.take(dec!(5), &mut env)?,
-        &mut env,
-    );
-
-    // Assert
-    assert!(result.is_ok());
-    Ok(())
-}
-
-#[test]
 pub fn cannot_create_radmorph_when_disabled() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
@@ -598,30 +288,5 @@ pub fn cannot_create_radmorph_when_disabled() -> Result<(), RuntimeError> {
     // Assert
     println!("{:?}", result);
     assert!(result.is_err());
-    Ok(())
-}
-
-#[test]
-pub fn can_disable_morph_card_forge() -> Result<(), RuntimeError> {
-    // Arrange
-    let Test {
-        mut env,
-        mut radmorph_forge,
-        super_admin_badge_proof,
-        ..
-    } = arrange_test_environment()?;
-
-    // Act
-    LocalAuthZone::push(super_admin_badge_proof, &mut env)?;
-    radmorph_forge.disable(&mut env)?;
-
-    // Assert
-    env.with_component_state(
-        radmorph_forge,
-        |radmorph_forge_state: &mut RadmorphForgeState, _| {
-            assert!(!radmorph_forge_state.enabled);
-        },
-    )?;
-
     Ok(())
 }

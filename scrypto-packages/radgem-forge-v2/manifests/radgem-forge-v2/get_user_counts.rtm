@@ -5,6 +5,6 @@ CALL_METHOD
 ;
 CALL_METHOD
     Address("${radgem_forge_v2}")
-    "get_user_radgem_claims_count"
+    "get_user_counts"
     "${user_id}"
 ;
