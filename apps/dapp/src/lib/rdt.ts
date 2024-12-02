@@ -9,7 +9,8 @@ export const rdtResult = () => ResultAsync.fromPromise(rdt, (error) => error as 
 
 export const sendTransaction = (
   input: Parameters<RadixDappToolkit['walletApi']['sendTransaction']>[0]
-) => rdtResult().andThen((rdt) => {
-  console.log(input.transactionManifest)
-  return rdt.walletApi.sendTransaction(input)
-})
+) =>
+  rdtResult().andThen((rdt) => {
+    console.log(input.transactionManifest)
+    return rdt.walletApi.sendTransaction(input)
+  })

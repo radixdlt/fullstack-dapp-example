@@ -252,7 +252,6 @@
           loading={waitingForSendElements}
         >
           <div class="content">
-
             {$i18n.t('jetty:fuse-elements.intro1')}
 
             {#if enoughElementsForRadgems}

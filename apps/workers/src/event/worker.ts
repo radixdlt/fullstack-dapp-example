@@ -106,23 +106,16 @@ export const EventWorker = (
               questId: job.data.questId
             })
 
-            return getUser(job.data.userId).andThen(
-              ({ status, accountAddress, referredBy }) => {
-                if (status !== 'OK') {
-                  const { eventStatus, workerError } = dataForBlockedUser[status]
-                  return updateEventStatus(eventStatus, workerError)
-                }
-
-                return eventWorkerController
-                  .handler(
-                    job,
-                    accountAddress!,
-                    0,
-                    referredBy!
-                  )
-                  .andThen(() => updateEventStatus(EventStatus.COMPLETED, null))
+            return getUser(job.data.userId).andThen(({ status, accountAddress, referredBy }) => {
+              if (status !== 'OK') {
+                const { eventStatus, workerError } = dataForBlockedUser[status]
+                return updateEventStatus(eventStatus, workerError)
               }
-            )
+
+              return eventWorkerController
+                .handler(job, accountAddress!, 0, referredBy!)
+                .andThen(() => updateEventStatus(EventStatus.COMPLETED, null))
+            })
           })
           .orElse((error) =>
             updateEventStatus(EventStatus.ERROR, error.reason).andThen(() => err(error))

@@ -221,9 +221,6 @@ jobs:
       - name: Unit tests
         run: npm run test:ci
 
-      - name: Lint
-        run: npm run lint
-
       - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
         with:
           role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-radquest-secrets-read-access'

@@ -5,7 +5,7 @@ import { WorkerOutputError, WorkerError } from '../_types'
 export const getUserById = (
   userId: string,
   dbClient: PrismaClient,
-  include: { email?: true } = {}
+  include: any = {}
 ): ResultAsync<User, WorkerOutputError> =>
   ResultAsync.fromPromise(
     dbClient.user.findUnique({ where: { id: userId }, include }),

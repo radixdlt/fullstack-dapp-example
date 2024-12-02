@@ -13,14 +13,7 @@ export const transactionBuilder = ({
   optional
 }: {
   transactionManifest: string
-  signers: (
-    | 'owner'
-    | 'system'
-    | 'dAppDefinition'
-    | 'jetty'
-    | 'jettySwapDappDefinition'
-    | 'lettySwapDappDefinition'
-  )[]
+  signers: ('owner' | 'system' | 'dAppDefinition' | 'jetty' | 'jettySwapDappDefinition')[]
   optional?: Partial<{
     lockFee: number
     blobs: Uint8Array[]

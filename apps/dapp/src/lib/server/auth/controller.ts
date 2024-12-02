@@ -11,11 +11,7 @@ import { SignedChallenge, parseSignedChallenge } from '@radixdlt/radix-dapp-tool
 import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import type { Cookies } from '@sveltejs/kit'
 
-import {
-  type ApiError,
-  createApiError,
-  EventId
-} from 'common'
+import { type ApiError, createApiError, EventId } from 'common'
 
 import { type UserStatus, type User, type UserType } from 'database'
 
@@ -34,7 +30,7 @@ export const AuthController = ({
   userQuestModel,
   loginAttemptModel,
   gatewayApi,
-  logger,
+  logger
 }: ControllerDependencies) => {
   const { dAppDefinitionAddress, networkId, expectedOrigin } = config.dapp
 
@@ -85,9 +81,7 @@ export const AuthController = ({
       })
     })
 
-  const setUserStatus: (
-    user: User
-  ) => () => ResultAsync<SetUserStatusOutput, ApiError> =
+  const setUserStatus: (user: User) => () => ResultAsync<SetUserStatusOutput, ApiError> =
     (user: User) => () => {
       logger.trace({ method: 'login.doFraudScoring' })
 
@@ -106,9 +100,9 @@ export const AuthController = ({
 
       return user.status === 'PERMANENTLY_BLOCKED'
         ? okAsync({
-          status: 'PERMANENTLY_BLOCKED',
-          reason: 'BLOCKED_PERMANENTLY_BLOCKED'
-        } as SetUserStatusOutput)
+            status: 'PERMANENTLY_BLOCKED',
+            reason: 'BLOCKED_PERMANENTLY_BLOCKED'
+          } as SetUserStatusOutput)
         : businessLogic()
     }
 
@@ -169,32 +163,34 @@ export const AuthController = ({
           (userExists
             ? userModel.getByIdentityAddress(personaProof.address, {})
             : getReferredBy(cookies)
-              .andThen((referredBy) => userModel.create(personaProof.address, referredBy))
-              .andThen((user) =>
-                ResultAsync.combine([
-                  userQuestModel.setDownloadWalletRequirement(user.id),
-                  userQuestModel.setConnectWalletRequirement(user.id)
-                ]).map(() => user)
-              )
+                .andThen((referredBy) => userModel.create(personaProof.address, referredBy))
+                .andThen((user) =>
+                  ResultAsync.combine([
+                    userQuestModel.setDownloadWalletRequirement(user.id),
+                    userQuestModel.setConnectWalletRequirement(user.id)
+                  ]).map(() => user)
+                )
           ).map((user) => ({ user, isNewUser: !userExists }))
         )
       )
       .andThen(({ user, isNewUser }) =>
-        setUserStatus(user)().andThen(({ status }) =>
-          loginAttemptModel
-            .add({
-              type: isNewUser ? 'USER_CREATED' : 'USER_LOGIN',
-              userId: user.id
-            })
-            .map(() => ({
-              id: user.id,
-              type: user.type,
-              status: status
-            }))
-        ).orElse((error) => {
-          logger.error({ method: 'login.doFraudScoring', error })
-          return okAsync({ ...user })
-        })
+        setUserStatus(user)()
+          .andThen(({ status }) =>
+            loginAttemptModel
+              .add({
+                type: isNewUser ? 'USER_CREATED' : 'USER_LOGIN',
+                userId: user.id
+              })
+              .map(() => ({
+                id: user.id,
+                type: user.type,
+                status: status
+              }))
+          )
+          .orElse((error) => {
+            logger.error({ method: 'login.doFraudScoring', error })
+            return okAsync({ ...user })
+          })
       )
       .andThen(({ id, type, status }) =>
         jwt.createTokens(id, type).map(({ authToken, refreshToken }) => ({

@@ -64,8 +64,6 @@ export const handle: Handle = async ({ event, resolve }) => {
     return createPreflightResponse(origin)
   }
 
-
-
   if (event.url.pathname === '/.well-known/radix.json') {
     return createWellKnownResponse()
   }
@@ -111,7 +109,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     systemQueue: queues.System,
     eventQueue: queues.Event,
     eventModel: eventModel(logger),
-    imageModel: imageModel(logger),
+    imageModel: imageModel(logger)
   } satisfies ControllerDependencies
 
   event.locals.controllers = {

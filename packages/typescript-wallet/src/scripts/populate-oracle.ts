@@ -19,8 +19,11 @@ const controller = ImageController({
   systemQueue: queues.System
 })
 
-controller.populateImageOracle().map(() => {
-  console.log('Populated oracle successfully')
-}).mapErr((e) => {
-  console.error(e)
-})
+controller
+  .populateImageOracle()
+  .map(() => {
+    console.log('Populated oracle successfully')
+  })
+  .mapErr((e) => {
+    console.error(e)
+  })
