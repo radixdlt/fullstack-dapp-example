@@ -43,7 +43,7 @@ export const UserController = ({
   const getUser = (userId: string): ControllerMethodOutput<UserSubset | null> =>
     userModel
       .getById(userId, {
-        referredByUser: true,
+        referredByUser: true
       })
       .map((data) => {
         const referredByUser = (data as unknown as { referredByUser: User | null }).referredByUser
@@ -58,8 +58,8 @@ export const UserController = ({
             status: data.status,
             referredByUser: referredByUser
               ? {
-                name: referredByUser.name
-              }
+                  name: referredByUser.name
+                }
               : null
           },
           httpResponseCode: 200
@@ -120,12 +120,12 @@ export const UserController = ({
               exists
                 ? okAsync({ httpResponseCode: 200, data: undefined })
                 : transactionModel
-                  // @ts-ignore
-                  .add(item, 1)
-                  .map(() => ({
-                    httpResponseCode: 201,
-                    data: undefined
-                  }))
+                    // @ts-ignore
+                    .add(item, 1)
+                    .map(() => ({
+                      httpResponseCode: 201,
+                      data: undefined
+                    }))
             )
           })
           .mapErr((error) => {
@@ -178,9 +178,9 @@ export const UserController = ({
       .andThen((hasBadge) =>
         hasBadge
           ? errAsync({
-            httpResponseCode: 400,
-            reason: 'account already has hero badge'
-          } satisfies ApiError)
+              httpResponseCode: 400,
+              reason: 'account already has hero badge'
+            } satisfies ApiError)
           : okAsync(undefined)
       )
       .andThen(() => isAccountInDb)
@@ -252,7 +252,8 @@ export const UserController = ({
   const directDepositXrd = (ctx: ControllerMethodContext, userId: string) => {
     const discriminator = `DepositXrd:${userId}`
 
-    return userModel.getById(userId, {})
+    return userModel
+      .getById(userId, {})
       .andThen((user) =>
         user?.accountAddress ? ok(user) : err(createApiError('UserAccountAddressNotSet', 400)())
       )
@@ -272,29 +273,29 @@ export const UserController = ({
         transactionModel.doesTransactionExist({ userId, discriminator }).andThen((exists) =>
           exists
             ? okAsync({
-              httpResponseCode: 200,
-              data: {}
-            })
-            : transactionModel
-              .add(
-                {
-                  userId,
-                  discriminator: `DepositXrd:${userId}`,
-                  type: 'DepositXrd',
-                  traceId: ctx.traceId,
-                  accountAddress: user.accountAddress!
-                },
-                // @ts-ignore
-                1
-              )
-              .map(() => ({
-                httpResponseCode: 201,
+                httpResponseCode: 200,
                 data: {}
-              }))
-              .mapErr((error) => {
-                ctx.logger.error({ method: 'directDepositXrd.error', error })
-                return createApiError('InternalError', 500)(error)
               })
+            : transactionModel
+                .add(
+                  {
+                    userId,
+                    discriminator: `DepositXrd:${userId}`,
+                    type: 'DepositXrd',
+                    traceId: ctx.traceId,
+                    accountAddress: user.accountAddress!
+                  },
+                  // @ts-ignore
+                  1
+                )
+                .map(() => ({
+                  httpResponseCode: 201,
+                  data: {}
+                }))
+                .mapErr((error) => {
+                  ctx.logger.error({ method: 'directDepositXrd.error', error })
+                  return createApiError('InternalError', 500)(error)
+                })
         )
       )
   }

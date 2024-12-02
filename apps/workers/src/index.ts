@@ -5,7 +5,7 @@ import {
   AccountAddressModel as AccountAddressModelFn,
   GatewayApi,
   ImageModel,
-  EventModel,
+  EventModel
 } from 'common'
 import { logger } from './helpers/logger'
 import {

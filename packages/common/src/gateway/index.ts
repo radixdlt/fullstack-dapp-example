@@ -23,7 +23,7 @@ export type GatewayApi = ReturnType<typeof GatewayApi>
 
 export const GatewayApi = (networkId: number, basePath?: string) => {
   const networkConfig = RadixNetworkConfigById[networkId]
-  const addresses = Addresses
+  const addresses = Addresses(networkId)
 
   if (!networkConfig) throw new Error(`Network with id ${networkId} is not supported.`)
 

@@ -1,11 +1,7 @@
 import { okAsync, errAsync, err, ok, ResultAsync } from 'neverthrow'
 import { EventJob, Job } from 'queues'
 import { QuestId } from 'content'
-import {
-  EventId,
-  BusinessLogic,
-  TransactionIntentHelper,
-} from 'common'
+import { EventId, BusinessLogic, TransactionIntentHelper } from 'common'
 import { AppLogger, AccountAddressModel } from 'common'
 import { PrismaClient, User } from 'database'
 import { WorkerError, WorkerOutputError } from '../_types'
@@ -37,14 +33,13 @@ export const EventWorkerController = ({
   logger,
   AccountAddressModel,
   sendMessage,
-  transactionIntentHelper,
+  transactionIntentHelper
 }: {
   dbClient: PrismaClient
   AccountAddressModel: AccountAddressModel
   logger: AppLogger
   sendMessage: MessageHelper
   transactionIntentHelper: TransactionIntentHelper
-
 }) => {
   const handler = (
     job: Job<EventJob>,
@@ -131,11 +126,11 @@ export const EventWorkerController = ({
           .andThen(() =>
             shouldTriggerReferralRewardFlow(questId)
               ? questHelper
-                .addCompletedQuestRequirement({
-                  questId: 'JoinFriend',
-                  requirementId: 'CompleteBasicQuests'
-                })
-                .andThen(() => referralHelper.handleQuestTogetherRewards(questId))
+                  .addCompletedQuestRequirement({
+                    questId: 'JoinFriend',
+                    requirementId: 'CompleteBasicQuests'
+                  })
+                  .andThen(() => referralHelper.handleQuestTogetherRewards(questId))
               : okAsync(undefined)
           )
       }

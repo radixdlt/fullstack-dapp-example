@@ -13,17 +13,42 @@
 npm install
 ```
 
-### Set up scrypto environment
+### Build scrypto packages
+
+```
+cd scrypto-packages/radquest
+scrypto build
+
+cd scrypto-packages/hero-badge-forge-v2
+scrypto build
+
+cd scrypto-packages/quest-rewards-v2
+scrypto build
+
+cd scrypto-packages/card-forge-v2
+scrypto build
+
+cd scrypto-packages/gift-box-opener-v2
+scrypto build
+
+cd scrypto-packages/radgem-forge-v2
+scrypto build
+```
 
 
-### Build and deploy scrypto components to Stokenet
+### Deploy scrypto components to Stokenet
 
 ```bash
-cd typescript wallet
 npm run wallet:create:resources
 npm run wallet:new:radquest-components
 npm run wallet:deploy-new:all-v2
 npm run wallet:set:dapp-data:radquest
+```
+
+### Populate image oracle
+
+```bash
+npm run populate:oracle
 ```
 
 ### Run frontend only

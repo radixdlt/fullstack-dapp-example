@@ -1,5 +1,12 @@
+import * as fs from 'fs'
+import * as path from 'path'
 import { config } from '../../config'
 import { transactionBuilder } from '../../transaction/transactionBuilder'
+import { fileURLToPath } from 'url'
+
+// Define __dirname
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export const newHeroBadgeForgeV2 = (heroBadgeForgeV2Package?: string) => {
   const transactionManifest = `
@@ -47,9 +54,19 @@ CALL_FUNCTION
   return transaction
     .submit()
     .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
-    .map(
-      (createdEntities): Record<string, string> => ({
-        heroBadgeForgeV2: createdEntities[0].entity_address!
-      })
-    )
+    .map((createdEntities): Record<string, string> => {
+      const address = createdEntities[0].entity_address!
+
+      const envFilePath = path.resolve(__dirname, '../../../../../packages/common/src/constants.ts')
+      const constantsFileContent = fs.readFileSync(envFilePath, 'utf8')
+      const updatedConstantsFileContent = constantsFileContent.replace(
+        /heroBadgeForgeV2:\s*'component_tdx_2_[^']*'/,
+        `heroBadgeForgeV2: '${address}'`
+      )
+      fs.writeFileSync(envFilePath, updatedConstantsFileContent)
+
+      return {
+        heroBadgeForgeV2: address
+      }
+    })
 }
