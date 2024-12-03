@@ -169,25 +169,22 @@ export const QuestDefinitions = () => {
             amount: 1
           }
         ]
-      }
-      ,
+      },
       // Rewards displayed on quest but not given as quest is never "completed"
-      rewards:
-        [
-          {
-            name: 'simpleGiftBox',
-            amount: 1
-          },
-          {
-            name: 'fancyGiftBox',
-            amount: 1
-          },
-          {
-            name: 'eliteGiftBox',
-            amount: 1
-          }
-        ]
-      ,
+      rewards: [
+        {
+          name: 'simpleGiftBox',
+          amount: 1
+        },
+        {
+          name: 'fancyGiftBox',
+          amount: 1
+        },
+        {
+          name: 'eliteGiftBox',
+          amount: 1
+        }
+      ],
       trackedAccountAddress: false,
       minutesToComplete: 1,
       preRequisites: [],

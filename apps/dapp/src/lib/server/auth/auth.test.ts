@@ -32,7 +32,7 @@ describe('AuthController', () => {
   beforeEach(() => {
     mockCtx = createMockContext()
     ctx = mockCtx as unknown as Context
-    
+
     controller = AuthController({
       logger: methodCtx.logger,
       authModel: AuthModel(ctx.prisma),

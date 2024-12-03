@@ -1,5 +1,11 @@
+import { fileURLToPath } from 'url'
 import { config } from '../../config'
 import { transactionBuilder } from '../../transaction/transactionBuilder'
+import path from 'path'
+import fs from 'fs'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export const newHeroBadgeForge = () => {
   const transactionManifest = `
@@ -47,5 +53,17 @@ CALL_FUNCTION
   return transaction
     .submit()
     .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
-    .map((createdEntities) => createdEntities[0].entity_address!)
+    .map((createdEntities) => {
+      const address = createdEntities[0].entity_address!
+
+      const envFilePath = path.resolve(__dirname, '../../../../../packages/common/src/constants.ts')
+      const constantsFileContent = fs.readFileSync(envFilePath, 'utf8')
+      const updatedConstantsFileContent = constantsFileContent.replace(
+        /heroBadgeForgeV2:\s*'component_tdx_2_[^']*'/,
+        `heroBadgeForgeV2: '${address}'`
+      )
+      fs.writeFileSync(envFilePath, updatedConstantsFileContent)
+
+      return address
+    })
 }

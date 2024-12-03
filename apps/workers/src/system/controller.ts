@@ -184,7 +184,6 @@ export const SystemWorkerController = ({
           )
           .map(() => undefined)
 
-
       case SystemJobType.MintElements: {
         return transactionHelper
           .submitTransaction(

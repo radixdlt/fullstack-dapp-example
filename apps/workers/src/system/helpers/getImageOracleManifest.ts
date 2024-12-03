@@ -1,6 +1,5 @@
 import {
   Addresses,
-  WellKnownAddresses,
   shapeDescription,
   colorDescription,
   shaderDescription,

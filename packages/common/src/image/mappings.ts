@@ -19,8 +19,7 @@ export const colorCodeDescription = {
   dusk: 'PRP'
 } as const
 
-export const gemImageMapping = () =>
-  `/gems/geem.jpg`
+export const gemImageMapping = () => `/gems/geem.jpg`
 
 export const shapeCodeDescription = {
   'whirlpool spiral': 'S001',
