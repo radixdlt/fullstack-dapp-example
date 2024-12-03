@@ -1,0 +1,17 @@
+nameOverride: fullstack-admin
+
+fullnameOverride: fullstack-admin
+
+imagePullSecrets:
+  - name: dockerhub
+
+image:
+    repository: radixdlt/fullstack-dapp-example-admin
+    tag: {{ .StateValues.ci.tag }}
+
+service:
+  port: 3000
+
+  extraPorts:
+    - name: pm2-metrics
+      port: 9209

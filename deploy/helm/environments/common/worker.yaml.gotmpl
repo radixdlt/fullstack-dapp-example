@@ -1,0 +1,17 @@
+nameOverride: fullstack-worker
+
+fullnameOverride: fullstack-worker
+
+imagePullSecrets:
+  - name: dockerhub
+
+image:
+    repository: radixdlt/fullstack-dapp-example-worker
+    tag: {{ .StateValues.ci.tag }}
+
+service:
+  port: 3000
+
+  extraPorts:
+    - name: pm2-metrics
+      port: 9209

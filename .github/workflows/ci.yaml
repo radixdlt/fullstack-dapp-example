@@ -1,35 +1,21 @@
-name: CI
+name: CI/CD
 
 on:
   pull_request:
     branches:
       - main
-      - release/**
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - ready_for_review
-      - labeled
-      - unlabeled
   push:
     branches:
       - main
-  release:
-    types:
-      - released # A release was published, or a pre-release was changed to a release.
 
 env:
-  active_network: 'stokenet'
-  active_public_network_id: '2'
-  active_public_log_level: 'debug'
-  release_network: 'mainnet'
-  release_public_network_id: '1'
-  release_public_log_level: 'info'
-  jenkins_job_name: 'kubernetes-deployments/job/radquest'
+  network: 'stokenet'
+  network_id: '2'
+  pr_public_log_level: 'debug'
+  demo_public_log_level: 'info'
+  jenkins_job_name: 'kubernetes-deployments/job/fullstack-dapp-example'
   helm_dir: 'deploy/helm'
-  dev_eks_cluster: 'rdx-works-main-dev'
-  prod_eks_cluster: 'rtlj-prod'
+  eks_cluster: 'rdx-works-main-dev'
 
 permissions:
   id-token: write
@@ -39,24 +25,22 @@ permissions:
   packages: write
 
 jobs:
-  phylum_analyze:
-    if: ${{ github.event.pull_request }}
-    permissions:
-      id-token: write
-      pull-requests: write
-      contents: read
-    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/phylum-analyze.yml@main
-    secrets:
-      phylum_api_key: ${{ secrets.PHYLUM_API_KEY }}
-    with:
-      phylum_pr_number: ${{ github.event.number }}
-      phylum_pr_name: ${{ github.head_ref }}
-      phylum_group_name: dApp-engineering
-      phylum_project_id: 44ea0438-4c65-465c-8f6c-9ecd56011ad3
-      github_repository: ${{ github.repository }}
-      add_report_comment_to_pull_request: true
+  commitlint:
+    name: Commitlint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: RDXWorks-actions/checkout@main
+        with:
+          fetch-depth: 0
+      - name: Install dependencies
+        run: npm install
+
+      - name: Validate PR commits with commitlint
+        if: github.event_name == 'pull_request'
+        run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
   setup-tags:
+    name: Setup tags
     runs-on: ubuntu-latest
     steps:
       - uses: RDXWorks-actions/checkout@main
@@ -68,18 +52,7 @@ jobs:
         uses: RDXWorks-actions/metadata-action@master
         with:
           images: |
-            docker.io/radixdlt/radquest-dapp
-          tags: |
-            type=sha,event=pr
-            type=sha,event=branch
-            type=semver,pattern={{version}}
-
-      - name: Docker tags for swap
-        id: swap-tags
-        uses: RDXWorks-actions/metadata-action@master
-        with:
-          images: |
-            docker.io/radixdlt/radquest-swap
+            docker.io/radixdlt/fullstack-dapp-example-dapp
           tags: |
             type=sha,event=pr
             type=sha,event=branch
@@ -90,7 +63,7 @@ jobs:
         uses: RDXWorks-actions/metadata-action@master
         with:
           images: |
-            docker.io/radixdlt/radquest-admin
+            docker.io/radixdlt/fullstack-dapp-example-admin
           tags: |
             type=sha,event=pr
             type=sha,event=branch
@@ -101,7 +74,7 @@ jobs:
         uses: RDXWorks-actions/metadata-action@master
         with:
           images: |
-            docker.io/radixdlt/radquest-notification
+            docker.io/radixdlt/fullstack-dapp-example-notification
           tags: |
             type=sha,event=pr
             type=sha,event=branch
@@ -112,7 +85,7 @@ jobs:
         uses: RDXWorks-actions/metadata-action@master
         with:
           images: |
-            docker.io/radixdlt/radquest-transaction-stream
+            docker.io/radixdlt/fullstack-dapp-example-transaction-stream
           tags: |
             type=sha,event=pr
             type=sha,event=branch
@@ -123,7 +96,7 @@ jobs:
         uses: RDXWorks-actions/metadata-action@master
         with:
           images: |
-            docker.io/radixdlt/radquest-worker
+            docker.io/radixdlt/fullstack-dapp-example-worker
           tags: |
             type=sha,event=pr
             type=sha,event=branch
@@ -132,14 +105,14 @@ jobs:
       - name: Define network name
         id: build-args
         run: |
-          if [ "${{ github.event.action }}" = "released" ]; then
-            echo "NETWORK_NAME=${{ env.release_network }}" >> $GITHUB_ENV
-            echo "PUBLIC_NETWORK_ID=${{ env.release_public_network_id }}"  >> $GITHUB_OUTPUT
-            echo "PUBLIC_LOG_LEVEL=${{ env.release_public_log_level }}"  >> $GITHUB_OUTPUT
-          elif [ "${{ github.ref }}" = "refs/heads/main" -a "${{ github.event_name }}" = 'push' ] || [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "NETWORK_NAME=${{ env.active_network }}" >> $GITHUB_ENV
-            echo "PUBLIC_NETWORK_ID=${{ env.active_public_network_id }}"  >> $GITHUB_OUTPUT
-            echo "PUBLIC_LOG_LEVEL=${{ env.active_public_log_level }}"  >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "NETWORK_NAME=${{ env.network }}" >> $GITHUB_ENV
+            echo "PUBLIC_NETWORK_ID=${{ env.network_id }}"  >> $GITHUB_OUTPUT
+            echo "PUBLIC_LOG_LEVEL=${{ env.pr_public_log_level }}"  >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref }}" = "refs/heads/main" -a "${{ github.event_name }}" = 'push' ]; then
+            echo "NETWORK_NAME=${{ env.network }}" >> $GITHUB_ENV
+            echo "PUBLIC_NETWORK_ID=${{ env.network_id }}"  >> $GITHUB_OUTPUT
+            echo "PUBLIC_LOG_LEVEL=${{ env.demo_public_log_level }}"  >> $GITHUB_OUTPUT
           fi
       - id: network
         run: |
@@ -159,9 +132,6 @@ jobs:
       dapp-tags: ${{ steps.dapp-tags.outputs.tags }}
       dapp-labels: ${{ steps.dapp-tags.outputs.labels }}
       dapp-json: ${{ steps.dapp-tags.outputs.json }}
-      swap-tags: ${{ steps.swap-tags.outputs.tags }}
-      swap-labels: ${{ steps.swap-tags.outputs.labels }}
-      swap-json: ${{ steps.swap-tags.outputs.json }}
       admin-tags: ${{ steps.admin-tags.outputs.tags }}
       admin-labels: ${{ steps.admin-tags.outputs.labels }}
       admin-json: ${{ steps.admin-tags.outputs.json }}
@@ -180,6 +150,7 @@ jobs:
       public-log-level: ${{steps.build-args.outputs.PUBLIC_LOG_LEVEL}}
 
   build:
+    name: Build
     runs-on: ubuntu-latest
     needs:
       - setup-tags
@@ -224,102 +195,17 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-radquest-secrets-read-access'
-          app_name: 'radquest'
-          step_name: 'build'
-          secret_prefix: 'GH'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/radixdlt/radquest/chromatic-mj1QEZ'
-          parse_json: true
-
-      - name: Publish to Chromatic
-        if: ${{ steps.changed-svelte-files.outputs.all_changed_files }}
-        uses: chromaui/action@05a82adb1e6919df177f54777e81a2ef3e312323 # v10.6.1
-        with:
-          projectToken: ${{ env.GH_CHROMATIC_PROJECT_TOKEN }}
-          autoAcceptChanges: 'main'
-          buildScriptName: 'build:storybook'
-          workingDir: apps/dapp
-
-  snyk-scan-deps-licences:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: RDXWorks-actions/checkout@main
-      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'radquest'
-          step_name: 'snyk-scan-deps-licences'
-          secret_prefix: 'SNYK'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          parse_json: true
-      - name: Run Snyk to check for deps vulnerabilities
-        uses: RDXWorks-actions/snyk-actions/node@master
-        with:
-          args: --all-projects --org=${{ env.SNYK_PROJECTS_ORG_ID }} --severity-threshold=critical
-
-  snyk-scan-code:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: RDXWorks-actions/checkout@main
-      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'radquest'
-          step_name: 'snyk-scan-code'
-          secret_prefix: 'SNYK'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          parse_json: true
-      - name: Run Snyk to check for code vulnerabilities
-        uses: RDXWorks-actions/snyk-actions/node@master
-        continue-on-error: true # temporary until code fix
-        with:
-          args: --all-projects --org=${{ env.SNYK_PROJECTS_ORG_ID }} --severity-threshold=high
-          command: code test
-
-  snyk-sbom:
-    runs-on: ubuntu-latest
-    needs:
-      - snyk-scan-deps-licences
-      - snyk-scan-code
-    permissions: write-all
-    steps:
-      - uses: RDXWorks-actions/checkout@main
-      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'dashboard'
-          step_name: 'snyk-sbom'
-          secret_prefix: 'SNYK'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          parse_json: true
-      - name: Generate SBOM # check SBOM can be generated but nothing is done with it
-        uses: RDXWorks-actions/snyk-actions/node@master
-        with:
-          args: --all-projects --org=${{ env.SNYK_PROJECTS_ORG_ID }} --format=cyclonedx1.4+json --json-file-output sbom.json
-          command: sbom
-      - name: Upload SBOM
-        if: github.event_name == 'release'
-        uses: RDXWorks-actions/upload-release-assets@c94805dc72e4b20745f543da0f62eaee7722df7a
-        with:
-          files: sbom.json
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          release-tag: ${{ github.event.release.tag_name }}
-
   push-dapp:
     name: Docker dapp
     needs:
       - setup-tags
-      - snyk-scan-deps-licences
-      - snyk-scan-code
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
     with:
       runs_on: ubuntu-latest
       image_registry: 'docker.io'
       image_organization: 'radixdlt'
       target: 'application'
-      image_name: 'radquest-dapp'
+      image_name: 'fullstack-dapp-example-dapp'
       tag: ${{ needs.setup-tags.outputs.tag-with-network }}
       context: '.'
       dockerfile: './dockerfiles/dapp.Dockerfile'
@@ -334,45 +220,17 @@ jobs:
         PUBLIC_NETWORK_ID=${{ needs.setup-tags.outputs.public-network-id }}
         PUBLIC_LOG_LEVEL=${{ needs.setup-tags.outputs.public-log-level }}
 
-  push-swap:
-    name: Docker swap
-    needs:
-      - setup-tags
-      - snyk-scan-deps-licences
-      - snyk-scan-code
-    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
-    with:
-      runs_on: ubuntu-latest
-      image_registry: 'docker.io'
-      image_organization: 'radixdlt'
-      target: 'application'
-      image_name: 'radquest-swap'
-      tag: ${{ needs.setup-tags.outputs.tag-with-network }}
-      context: '.'
-      dockerfile: './dockerfiles/jetty-swap.Dockerfile'
-      platforms: 'linux/amd64'
-      use_gh_remote_cache: true
-      scan_image: false
-      provenance: false
-      snyk_target_ref: ${{ github.ref_name }}
-      with_sbom: false
-      build-args: |
-        PUBLIC_NETWORK_ID=${{ needs.setup-tags.outputs.public-network-id }}
-        PUBLIC_LOG_LEVEL=${{ needs.setup-tags.outputs.public-log-level }}
-
   push-admin:
     name: Docker admin
     needs:
       - setup-tags
-      - snyk-scan-deps-licences
-      - snyk-scan-code
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
     with:
       runs_on: ubuntu-latest
       image_registry: 'docker.io'
       image_organization: 'radixdlt'
       target: 'application'
-      image_name: 'radquest-admin'
+      image_name: 'fullstack-dapp-example-admin'
       tag: ${{ needs.setup-tags.outputs.tag-with-network }}
       context: '.'
       dockerfile: './dockerfiles/admin.Dockerfile'
@@ -390,15 +248,13 @@ jobs:
     name: Docker notification
     needs:
       - setup-tags
-      - snyk-scan-deps-licences
-      - snyk-scan-code
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
     with:
       runs_on: ubuntu-latest
       image_registry: 'docker.io'
       image_organization: 'radixdlt'
       target: 'application'
-      image_name: 'radquest-notification'
+      image_name: 'fullstack-dapp-example-notification'
       tag: ${{ needs.setup-tags.outputs.tag-with-network }}
       context: '.'
       dockerfile: './dockerfiles/notification.Dockerfile'
@@ -413,15 +269,13 @@ jobs:
     name: Docker transaction-stream
     needs:
       - setup-tags
-      - snyk-scan-deps-licences
-      - snyk-scan-code
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
     with:
       runs_on: ubuntu-latest
       image_registry: 'docker.io'
       image_organization: 'radixdlt'
       target: 'application'
-      image_name: 'radquest-transaction-stream'
+      image_name: 'fullstack-dapp-example-transaction-stream'
       tag: ${{ needs.setup-tags.outputs.tag-with-network }}
       context: '.'
       dockerfile: './dockerfiles/transaction-stream.Dockerfile'
@@ -436,15 +290,13 @@ jobs:
     name: Docker worker
     needs:
       - setup-tags
-      - snyk-scan-deps-licences
-      - snyk-scan-code
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
     with:
       runs_on: ubuntu-latest
       image_registry: 'docker.io'
       image_organization: 'radixdlt'
       target: 'application'
-      image_name: 'radquest-worker'
+      image_name: 'fullstack-dapp-example-worker'
       tag: ${{ needs.setup-tags.outputs.tag-with-network }}
       context: '.'
       dockerfile: './dockerfiles/workers.Dockerfile'
@@ -460,7 +312,6 @@ jobs:
     name: Deploy PR
     needs:
       - push-dapp
-      - push-swap
       - push-admin
       - push-notification
       - push-transaction-stream
@@ -471,276 +322,48 @@ jobs:
       cancel-in-progress: false
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
     with:
-      jenkins_job_name: 'kubernetes-deployments/job/radquest'
+      jenkins_job_name: 'kubernetes-deployments/job/fullstack-dapp-example'
       github_branch: '${{ github.head_ref }}'
-      application_name: 'radquest'
-      hierarchical_namespace: 'radquest-ci-pr'
+      application_name: 'fde'
+      hierarchical_namespace: 'fullstack-dapp-example-ci-pr'
       create_subnamespace: 'true'
-      kubernetes_namespace: 'radquest-pr-${{ github.event.number }}'
+      kubernetes_namespace: 'fullstack-dapp-example-pr-${{ github.event.number }}'
       aws_eks_cluster: 'rdx-works-main-dev'
-      aws_iam_role_name: 'jenkins-radquest-pr-deployer'
+      aws_iam_role_name: 'jenkins-fullstack-dapp-example-pr-deployer'
       helmfile_environment: 'pr'
       helmfile_extra_vars: 'ci.tag=${{ needs.setup-tags.outputs.tag-with-network }},ci.prNumber=${{ github.event.number }}'
     secrets:
       aws_deployment_account_id: ${{ secrets.AWS_DEV_ACCOUNT_ID }}
       secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
 
-  deploy_dev:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    name: Deploy DEV
-    needs:
-      - push-dapp
-      - push-swap
-      - push-admin
-      - push-notification
-      - push-transaction-stream
-      - push-worker
-      - setup-tags
-    concurrency: 
-      group: ${{ github.ref }}
-      cancel-in-progress: false
-    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
-    with:
-      github_environment: 'dev'
-      github_branch: '${{ github.ref }}'
-      jenkins_job_name: 'kubernetes-deployments/job/radquest'
-      application_name: 'radquest'
-      kubernetes_namespace: 'radquest-dev'
-      aws_eks_cluster: 'rdx-works-main-dev'
-      aws_iam_role_name: 'jenkins-radquest-dev-deployer'
-      helmfile_environment: 'dev'
-      helmfile_extra_vars: 'ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}'
-    secrets:
-      aws_deployment_account_id: ${{ secrets.AWS_DEV_ACCOUNT_ID }}
-      secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
+  # deploy_demo:
+  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #   name: Deploy DEMO
+  #   needs:
+  #     - push-dapp
+  #     - push-admin
+  #     - push-notification
+  #     - push-transaction-stream
+  #     - push-worker
+  #     - setup-tags
+  #   concurrency: 
+  #     group: ${{ github.ref }}
+  #     cancel-in-progress: false
+  #   uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
+  #   with:
+  #     github_environment: 'demo'
+  #     github_branch: '${{ github.ref }}'
+  #     jenkins_job_name: '${{ env.jenkins_job_name }}'
+  #     application_name: 'radquest'
+  #     kubernetes_namespace: 'radquest-dev'
+  #     aws_eks_cluster: 'rdx-works-main-dev'
+  #     aws_iam_role_name: 'jenkins-radquest-dev-deployer'
+  #     helmfile_environment: 'demo'
+  #     helmfile_extra_vars: 'ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}'
+  #   secrets:
+  #     aws_deployment_account_id: ${{ secrets.AWS_DEV_ACCOUNT_ID }}
+  #     secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
 
-  deploy_mainnet:
-    if: github.event_name == 'release' && github.event.action == 'released'
-    name: Deploy MAINNET
-    needs:
-      - push-dapp
-      - push-swap
-      - push-admin
-      - push-notification
-      - push-transaction-stream
-      - push-worker
-      - setup-tags
-    concurrency:
-      group: ${{ github.event_name }}
-      cancel-in-progress: false
-    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
-    with:
-      github_environment: 'mainnet'
-      github_branch: '${{ github.ref }}'
-      jenkins_job_name: 'kubernetes-deployments/job/radquest'
-      application_name: 'radquest'
-      kubernetes_namespace: 'radquest-mainnet'
-      aws_eks_cluster: 'rtlj-prod'
-      aws_iam_role_name: 'jenkins-radquest-mainnet-deployer'
-      helmfile_environment: 'mainnet'
-      helmfile_extra_vars: 'ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}'
-    secrets:
-      secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
-      aws_deployment_account_id: ${{ secrets.AWS_PROD_ACCOUNT_ID }}
 
-  purge_cloudflare_cache:
-    if: github.event_name == 'release' && github.event.action == 'released'
-    runs-on: ubuntu-latest
-    needs:
-      - deploy_mainnet
-    steps:
-      - name: Purge Cloudflare Cache
-        uses: RDXWorks-actions/actions-cloudflare-purge@master
-        with:
-          cf_zone: ${{ secrets.RADQUEST_CLOUDFLARE_ZONE }}
-          cf_auth: ${{ secrets.RADQUEST_CLOUDFLARE_AUTH_KEY }}
-          hosts: |
-            radquest.io
 
-  snyk-monitor:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs:
-      - push-dapp
-      - push-notification
-      - push-transaction-stream
-      - push-worker
-      - setup-tags
-    steps:
-      - uses: RDXWorks-actions/checkout@main
-      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'radquest'
-          step_name: 'snyk-monitor'
-          secret_prefix: 'SNYK'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          parse_json: true
-      - name: Enable Snyk online monitoring to check for vulnerabilities
-        uses: RDXWorks-actions/snyk-actions/node@master
-        with:
-          args: --all-projects --org=${{ env.SNYK_PROJECTS_ORG_ID }} --target-reference=${{ github.ref_name }}
-          command: monitor
 
-  snyk-container-monitor-dapp:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs:
-      - push-dapp
-      - setup-tags
-    steps:
-      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'radquest'
-          step_name: 'snyk-monitor'
-          secret_prefix: 'SNY'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          parse_json: true
-      - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'rqst-dapp'
-          dockerhub_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/dockerhub-credentials'
-          snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
-          image: docker.io/radixdlt/radquest-dapp:${{ needs.setup-tags.outputs.tag-with-network }}
-          target_ref: ${{ github.ref_name }}
-
-  snyk-container-monitor-swap:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs:
-      - push-swap
-      - setup-tags
-    steps:
-      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'radquest'
-          step_name: 'snyk-monitor'
-          secret_prefix: 'SNY'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          parse_json: true
-      - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'rqst-swap'
-          dockerhub_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/dockerhub-credentials'
-          snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
-          image: docker.io/radixdlt/radquest-swap:${{ needs.setup-tags.outputs.tag-with-network }}
-          target_ref: ${{ github.ref_name }}
-
-  snyk-container-monitor-admin:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs:
-      - push-admin
-      - setup-tags
-    steps:
-      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'radquest'
-          step_name: 'snyk-monitor'
-          secret_prefix: 'SNY'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          parse_json: true
-      - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'rqst-admin'
-          dockerhub_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/dockerhub-credentials'
-          snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
-          image: docker.io/radixdlt/radquest-admin:${{ needs.setup-tags.outputs.tag-with-network }}
-          target_ref: ${{ github.ref_name }}
-
-  snyk-container-monitor-notification:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs:
-      - push-notification
-      - setup-tags
-    steps:
-      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'radquest'
-          step_name: 'snyk-monitor'
-          secret_prefix: 'SNY'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          parse_json: true
-      - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'rqst-ntfcn'
-          dockerhub_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/dockerhub-credentials'
-          snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
-          image: docker.io/radixdlt/radquest-notification:${{ needs.setup-tags.outputs.tag-with-network }}
-          target_ref: ${{ github.ref_name }}
-
-  snyk-container-monitor-transaction-stream:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs:
-      - push-transaction-stream
-      - setup-tags
-    steps:
-      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'radquest'
-          step_name: 'snyk-monitor'
-          secret_prefix: 'SNY'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          parse_json: true
-      - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'rqst-tr-str'
-          dockerhub_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/dockerhub-credentials'
-          snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
-          image: docker.io/radixdlt/radquest-transaction-stream:${{ needs.setup-tags.outputs.tag-with-network }}
-          target_ref: ${{ github.ref_name }}
-
-  snyk-container-monitor-worker:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs:
-      - push-worker
-      - setup-tags
-    steps:
-      - uses: radixdlt/public-iac-resuable-artifacts/fetch-secrets@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'radquest'
-          step_name: 'snyk-monitor'
-          secret_prefix: 'SNY'
-          secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          parse_json: true
-      - uses: radixdlt/public-iac-resuable-artifacts/snyk-container-monitor@main
-        with:
-          role_name: 'arn:aws:iam::${{ secrets.SECRETS_ACCOUNT_ID }}:role/gh-common-secrets-read-access'
-          app_name: 'rqst-wrkr'
-          dockerhub_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/dockerhub-credentials'
-          snyk_secret_name: 'arn:aws:secretsmanager:eu-west-2:${{ secrets.SECRETS_ACCOUNT_ID }}:secret:github-actions/common/snyk-credentials-rXRpuX'
-          snyk_org_id: ${{ env.SNY_PROJECTS_ORG_ID }}
-          image: docker.io/radixdlt/radquest-worker:${{ needs.setup-tags.outputs.tag-with-network }}
-          target_ref: ${{ github.ref_name }}
-
-  commitlint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: RDXWorks-actions/checkout@main
-        with:
-          fetch-depth: 0
-      - name: Install dependencies
-        run: npm install
-
-      - name: Validate PR commits with commitlint
-        if: github.event_name == 'pull_request'
-        run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
