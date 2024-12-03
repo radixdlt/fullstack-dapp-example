@@ -27,6 +27,7 @@ struct ResultStruct {
     transaction_id: String,
     access_controller: String,
     access_controller_account: String,
+    name: String
 }
 
 #[tokio::main]
@@ -132,6 +133,7 @@ async fn main() {
                     transaction_id,
                     access_controller: access_controller[0].to_string(),
                     access_controller_account: affected_accounts[0].to_string(),
+                    name: account.name.clone(),
                 };
                 results.push(result_struct);
             }
