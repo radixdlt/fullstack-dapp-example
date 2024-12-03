@@ -21,6 +21,7 @@
     "wallet:deploy-new:all": "npx --node-options='-r dotenv/config' turbo wallet:deploy-new:all --filter typescript-wallet",
     "wallet:set:dapp-data:radquest": "npx --node-options='-r dotenv/config' turbo wallet:set:dapp-data:radquest --filter typescript-wallet",
     "wallet:populate:oracle": "npx --node-options='-r dotenv/config' turbo populate:oracle --filter typescript-wallet",
+    "wallet:set:dapp-data": "npx --node-options='-r dotenv/config' turbo wallet:set:dapp-data --filter typescript-wallet",
     "wallet:create:badges": "npx --node-options='-r dotenv/config' turbo wallet:create:badges --filter typescript-wallet",
     "wallet:create:mnemonic": "npx --node-options='-r dotenv/config' turbo wallet:create:mnemonic --filter typescript-wallet",
     "wallet:create:element": "npx --node-options='-r dotenv/config' turbo wallet:create:element --filter typescript-wallet",

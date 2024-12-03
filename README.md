@@ -137,7 +137,7 @@ Then copy the mnemonics from the `secrets-accounts.json` file into the `.env` fi
 ```bash
 npm run wallet:create:resources
 npm run wallet:deploy-new:all
-npm run wallet:set:dapp-data:radquest
+npm run wallet:set:dapp-data
 ```
 
 ### Populate image oracle
