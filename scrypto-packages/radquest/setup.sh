@@ -19,7 +19,6 @@ echo "\nGenerating Resources..."
 export super_admin_badge=`resim run manifests/create_a_super_admin_badge.rtm | grep "Resource:" | grep -o "resource_.*"`
 export admin_badge=`resim run manifests/create_admin_badges.rtm | grep "Resource:" | grep -o "resource_.*"`
 export hero_badge=`resim run manifests/create_hero_badge.rtm | grep "Resource:" | grep -o "resource_.*"`
-export kyc_badge=`resim new-simple-badge | grep -o "resource_.\S*" | sed -e "s/:#1#//"`
 export gift_box_starter=`resim run manifests/create_gift_box_starter.rtm | grep "Resource:" | grep -o "resource_.*"`
 export gift_box_simple=`resim run manifests/create_gift_box_simple.rtm | grep "Resource:" | grep -o "resource_.*"`
 export gift_box_fancy=`resim run manifests/create_gift_box_fancy.rtm | grep "Resource:" | grep -o "resource_.*"`
@@ -32,19 +31,9 @@ export clam=`resim new-token-mutable $admin_badge | grep "Resource:" | grep -o "
 
 
 echo "\nGenerating Components..."
-export hero_badge_forge=`resim run manifests/hero-badge-forge/new_hero_badge_forge.rtm | grep "Component:" | grep -o "component_.*"`
-
-quest_rewards_components=`resim run manifests/quest-rewards/new_quest_rewards.rtm | grep "Component:"`
-export kyc_oracle=`echo $quest_rewards_components | tail -n2 | head -n1 | grep -o "component_.*"`
-export quest_rewards=`echo $quest_rewards_components | tail -n1 | grep -o "component_.*"`
-
-export gift_box_opener=`resim run manifests/gift-box-opener/new_gift_box_opener.rtm | grep "Component:" | grep -o "component_.*"`
-
 refinery_components=`resim run manifests/refinery/new_refinery.rtm | grep "Component:"`
 export image_oracle=`echo $refinery_components | tail -n2 | head -n1 | grep -o "component_.*"`
 export refinery=`echo $refinery_components | tail -n1 | grep -o "component_.*"`
-
-export morph_card_forge=`resim run manifests/morph-card-forge/new_card_forge.rtm | grep "Component:" | grep -o "component_.*"`
 
 echo "\nSetup Complete & Environment Variables Set"
 echo "------------------------------------------"
@@ -60,7 +49,6 @@ echo "package = $package"
 echo "super_admin_badge = $super_admin_badge"
 echo "admin_badge = $admin_badge"
 echo "hero_badge = $hero_badge"
-echo "kyc_badge = $kyc_badge"
 echo "gift_box_starter = $gift_box_starter"
 echo "gift_box_simple = $gift_box_simple"
 echo "gift_box_fancy = $gift_box_fancy"
@@ -72,13 +60,8 @@ echo "radmorph = $radmorph"
 echo "clam = $clam"
 
 echo "\nComponent Addresses:"
-echo "hero_badge_forge = $hero_badge_forge"
-echo "quest_rewards = $quest_rewards"
-echo "kyc_oracle = $kyc_oracle"
-echo "gift_box_opener = $gift_box_opener"
 echo "refinery = $refinery"
 echo "image_oracle = $image_oracle"
-echo "morph_card_forge = $morph_card_forge"
 
 export super_admin_badge_id="1"
 export user_id="test_user_id_12345"
