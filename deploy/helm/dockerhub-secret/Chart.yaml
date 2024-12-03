@@ -1,0 +1,6 @@
+apiVersion: v2
+name: dockerhub-secret
+description: Chart to provide the common dockerhub credentials
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

@@ -1,6 +1,3 @@
-image: 
-    tag: {{ .StateValues.ci.tag }}
-
 enable_db_migrations: true
 
 params:
@@ -8,12 +5,12 @@ params:
   REDIS_PORT: "6379"
   REDIS_PASSWORD: ""
   PORT: 3000
-  DATABASE_URL: "postgresql://postgres:secretString123@postgres-postgresql:5432/radquest?schema=public"
-  RO_DATABASE_URL: postgresql://postgres:secretString123@postgres-postgresql:5432/radquest?schema=public
-  EXPECTED_ORIGIN: https://radquest-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
-  PUBLIC_DAPP_DEFINITION_ADDRESS: account_tdx_2_12ypap8t44k4pw9p0p56aqdp0ewexjcszzsj5suxduvsfnnmxpcj5qk
+  DATABASE_URL: "postgresql://postgres:secretString123@postgres-postgresql:5432/fullstack_dapp_example?schema=public"
+  RO_DATABASE_URL: postgresql://postgres:secretString123@postgres-postgresql:5432/fullstack_dapp_example?schema=public
+  EXPECTED_ORIGIN: https://fullstack-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
+  PUBLIC_DAPP_DEFINITION_ADDRESS: 
   PUBLIC_NETWORK_ID: 2
-  PUBLIC_NOTIFICATION_URL: wss://radquest-notification-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
+  PUBLIC_NOTIFICATION_URL: wss://fullstack-notification-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
   JWT_SECRET: FkaGHXoq32rYBcEHwAn2rkhawtUCe4sE
   PUBLIC_LOG_LEVEL: debug
   MAINTENANCE_MODE: false
@@ -21,26 +18,12 @@ params:
   IPQS_ALLOW_ALL: true
 
 secrets:
-  - external_secret_name: dapp-mailer-lite-api-key
-    env_variable: "MAILER_LITE_API_KEY"
-    aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
-    aws_secret_key: "mailer_lite_api_key"
-    secret_key: "mailer_lite_api_key"
-    
-  - external_secret_name: dapp-ipqs-key
-    env_variable: "IPQS_KEY"
-    aws_secret_name: "rdx-works-main/eks/radquest/dev/secrets"
-    aws_secret_key: "ipqs_key"
-    secret_key: "ipqs_key"
 
 ingress:
   enabled: true
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.rdx-works-main.extratools.works/oauth2/start
-    nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.rdx-works-main.extratools.works/oauth2/auth
+  className: nginx
   hosts:
-    - host: radquest-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
+    - host: fullstack-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
       paths:
         - path: /
           pathType: ImplementationSpecific
@@ -54,6 +37,10 @@ resources:
     memory: 128Mi
 
 metrics:
-  alert_labels:
-    cluster: rdx-works-main-dev
-    env: prs
+  enabled: true
+
+serviceMonitors:
+  - name: dapp-pm2-metrics
+    port: pm2-metrics
+    interval: 30s
+    path: /metrics

@@ -1,0 +1,20 @@
+{{- $root := . -}}
+{{- if .Values.metrics.enabled }}
+{{- range $v := .Values.serviceMonitors }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    release: prometheus-operator
+  name: {{ $v.name }}
+spec:
+  endpoints:
+    - interval: {{ $v.interval }}
+      port: {{ $v.port }}
+      path: {{ $v.path }}
+  selector:
+    matchLabels: 
+      {{- include "fullstack-dapp-example.selectorLabels" $root | nindent 6 }}
+{{- end }}
+{{- end }}

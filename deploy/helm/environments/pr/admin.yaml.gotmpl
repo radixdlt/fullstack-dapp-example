@@ -1,29 +1,36 @@
-image: 
+nameOverride: fullstack-admin
+
+fullnameOverride: fullstack-admin
+
+imagePullSecrets:
+  - name: dockerhub
+
+image:
+    repository: radixdlt/fullstack-dapp-example-admin
     tag: {{ .StateValues.ci.tag }}
+
+service:
+  port: 3000
 
 params:
   PORT: 3000
   PUBLIC_NETWORK_ID: 2
-  PUBLIC_RADQUEST_API_URL: https://radquest-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
+  PUBLIC_RADQUEST_API_URL: https://fullstack-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
   PUBLIC_LOG_LEVEL: debug
   REDIS_HOST: "redis-master"
   REDIS_PORT: "6379"
   REDIS_PASSWORD: ""
-  DATABASE_URL: "postgresql://postgres:secretString123@postgres-postgresql:5432/radquest?schema=public"
-  RO_DATABASE_URL: postgresql://postgres:secretString123@postgres-postgresql:5432/radquest?schema=public
+  DATABASE_URL: "postgresql://postgres:secretString123@postgres-postgresql:5432/fullstack_example?schema=public"
+  RO_DATABASE_URL: postgresql://postgres:secretString123@postgres-postgresql:5432/fullstack_example?schema=public
   JWT_SECRET: FkaGHXoq32rYBcEHwAn2rkhawtUCe4sE
 
 secrets:
 
 ingress:
   enabled: true
-  className: nginx-internal
-  annotations:
-    external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
-    nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.rdx-works-main.extratools.works/oauth2/start
-    nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.rdx-works-main.extratools.works/oauth2/auth
+  className: nginx
   hosts:
-    - host: radquest-admin-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
+    - host: fullstack-admin-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
       paths:
         - path: /
           pathType: ImplementationSpecific
