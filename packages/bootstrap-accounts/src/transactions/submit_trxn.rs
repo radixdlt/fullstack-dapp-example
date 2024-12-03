@@ -40,8 +40,9 @@ pub async fn prepare_submit_gateway_txn(
     let bech32m_intent_hash = transaction_hash_encoder.encode(&intent_hash).unwrap();
 
     println!("About to submit transaction {}", bech32m_intent_hash);
+    println!("Transaction hex: {}", compiled_notarized_transaction_hex);
 
-    let result = gateway_api::transaction::submit_gateway_txn(
+    let result = gateway_api::transaction_api::submit_gateway_txn(
         &bech32m_intent_hash,
         &compiled_notarized_transaction_hex,
     )
