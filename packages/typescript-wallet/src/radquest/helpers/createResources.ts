@@ -6,7 +6,7 @@ import { createElementResource } from './createElementResource'
 import { createRadgem } from './createRadgem'
 import { createEnergyCard } from './createEnergyCard'
 import { createRadmorph } from './createRadmorph'
-import { createOttercoin } from '../../clam-dex/helpers/createOttercoin'
+import { createOttercoin } from './createOttercoin'
 
 let resources: Record<string, string> = {}
 

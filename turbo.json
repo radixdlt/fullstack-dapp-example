@@ -74,16 +74,13 @@
     "wallet:new:radquest-components": {
       "cache": false
     },
-    "wallet:deploy:radquest": {
-      "cache": false
-    },
     "wallet:create:mnemonic": {
       "cache": false
     },
-    "wallet:deploy-new:all-v2": {
+    "wallet:deploy-new:all": {
       "cache": false
     },
-    "wallet:set:dapp-data:radquest": {
+    "wallet:set:dapp-data": {
       "cache": false
     },
     "populate:oracle": {

@@ -8,11 +8,10 @@ let result: Record<string, string> = {}
 mintAdminBadge({
   adminBadgeAddress: config.radQuest.badges.adminBadgeAddress,
   superAdminBadgeAddress: config.radQuest.badges.superAdminBadgeAddress,
-  amount: 7
+  amount: 2
 })
   .andThen(() => newRefinery())
-  .map(({ radgemForgeAddress, radmorphForgeAddress, imageOracleAddress, refineryAddress }) => {
-    result.radgemForge = radgemForgeAddress
+  .map(({ radmorphForgeAddress, imageOracleAddress, refineryAddress }) => {
     result.radmorphForge = radmorphForgeAddress
     result.imageOracle = imageOracleAddress
     result.refinery = refineryAddress
