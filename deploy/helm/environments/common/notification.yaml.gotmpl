@@ -1,0 +1,20 @@
+nameOverride: fullstack-notification
+
+fullnameOverride: fullstack-notification
+
+imagePullSecrets:
+  - name: dockerhub
+
+image:
+    repository: radixdlt/fullstack-dapp-example-notification
+    tag: {{ .StateValues.ci.tag }}
+
+service:
+  port: http-internal
+  port_name: 4000
+
+  extraPorts:
+    - name: ws
+      port: 9000
+    - name: pm2-metrics
+      port: 9209

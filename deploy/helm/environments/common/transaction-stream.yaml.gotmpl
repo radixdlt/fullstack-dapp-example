@@ -1,0 +1,18 @@
+nameOverride: fullstack-transaction-stream
+
+fullnameOverride: fullstack-transaction-stream
+
+imagePullSecrets:
+  - name: dockerhub
+
+image:
+    repository: radixdlt/fullstack-dapp-example-transaction-stream
+    tag: {{ .StateValues.ci.tag }}
+
+service:
+  port: 9210
+  port_name: metrics
+
+  extraPorts:
+    - name: pm2-metrics
+      port: 9209

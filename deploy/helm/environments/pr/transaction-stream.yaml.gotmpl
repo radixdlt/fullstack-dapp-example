@@ -1,9 +1,17 @@
-image: 
+nameOverride: fullstack-transaction-stream
+
+fullnameOverride: fullstack-transaction-stream
+
+imagePullSecrets:
+  - name: dockerhub
+
+image:
+    repository: radixdlt/fullstack-dapp-example-transaction-stream
     tag: {{ .StateValues.ci.tag }}
 
 params:
-  DATABASE_URL: "postgresql://postgres:secretString123@postgres-postgresql:5432/radquest?schema=public"
-  RO_DATABASE_URL: postgresql://postgres:secretString123@postgres-postgresql:5432/radquest?schema=public
+  DATABASE_URL: "postgresql://postgres:secretString123@postgres-postgresql:5432/fullstack_dapp_example?schema=public"
+  RO_DATABASE_URL: postgresql://postgres:secretString123@postgres-postgresql:5432/fullstack_dapp_example?schema=public
   REDIS_HOST: "redis-master"
   REDIS_PORT: "6379"
   REDIS_PASSWORD: ""
