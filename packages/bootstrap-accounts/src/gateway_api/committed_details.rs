@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 
-use babylon_gateway_client::{apis::configuration::Configuration, models::TransactionStatus};
-
 use crate::utils::{self, get_network_id};
+
+use super::transaction_api::TransactionStatus;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct LedgerState {
