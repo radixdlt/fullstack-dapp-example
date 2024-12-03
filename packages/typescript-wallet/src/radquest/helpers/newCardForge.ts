@@ -1,5 +1,11 @@
+import * as fs from 'fs'
+import * as path from 'path'
 import { config } from '../../config'
 import { transactionBuilder } from '../../transaction/transactionBuilder'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export const newCardForge = () => {
   const transactionManifest = `
@@ -46,5 +52,17 @@ CALL_FUNCTION
   return transaction
     .submit()
     .andThen(({ transactionId }) => transaction.helper.getCreatedEntities(transactionId))
-    .map((createdEntities) => createdEntities[0].entity_address)
+    .map((createdEntities) => {
+      const address = createdEntities[0].entity_address!
+
+      const envFilePath = path.resolve(__dirname, '../../../../../packages/common/src/constants.ts')
+      const constantsFileContent = fs.readFileSync(envFilePath, 'utf8')
+      const updatedConstantsFileContent = constantsFileContent.replace(
+        /cardForgeV2:\s*'component_tdx_2_[^']*'/,
+        `cardForgeV2: '${address}'`
+      )
+      fs.writeFileSync(envFilePath, updatedConstantsFileContent)
+
+      return address
+    })
 }
