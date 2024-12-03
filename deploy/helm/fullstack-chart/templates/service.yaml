@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "fullstack-dapp-example.fullname" . }}
+  labels:
+    {{- include "fullstack-dapp-example.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+      {{- range $v := .Values.service.extraPorts }}
+    - port: {{ $v.port }}
+      targetPort: {{ $v.name }}
+      protocol: TCP
+      name: {{ $v.name }}
+    {{- end }}
+  selector:
+    {{- include "fullstack-dapp-example.selectorLabels" . | nindent 4 }}

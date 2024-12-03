@@ -1,12 +1,11 @@
 environments:
-  dev: {}
+  demo: {}
   pr: {}
-  mainnet: {}
 ---
 helmDefaults:
   verify: false
   wait: true
-  timeout: 300
+  timeout: 60
   recreatePods: false
   force: false
   createNamespace: false
@@ -17,42 +16,43 @@ repositories:
     url: https://raw.githubusercontent.com/radixdlt/helm-charts/master/
     username: {{ requiredEnv "HELM_GH_USER" }}
     password: {{ requiredEnv "HELM_GH_PASS" }}
-  - name: kubesphere 
+  - name: kubesphere
     url: https://charts.kubesphere.io/main
+
 releases:
-  - name: dapp
-    chart: ./dapp
+  - name: dockerhub-secret
+    chart: ./dockerhub-secret
     values:
+      - secretName: docker.io/radixdlt
+
+  - name: dapp
+    chart: ./fullstack-chart
+    values:
+      - environments/common/dapp.yaml.gotmpl
       - environments/{{ .Environment.Name }}/dapp.yaml.gotmpl
 
   - name: notification
-    chart: ./notification
+    chart: ./fullstack-chart
     values:
+      - environments/common/notification.yaml.gotmpl
       - environments/{{ .Environment.Name }}/notification.yaml.gotmpl
 
   - name: transaction-stream
-    chart: ./transaction-stream
+    chart: ./fullstack-chart
     values:
+      - environments/common/transaction-stream.yaml.gotmpl
       - environments/{{ .Environment.Name }}/transaction-stream.yaml.gotmpl
 
   - name: worker
-    chart: ./worker
+    chart: ./fullstack-chart
     values:
+      - environments/common/worker.yaml.gotmpl
       - environments/{{ .Environment.Name }}/worker.yaml.gotmpl
 
-  - name: jetty-swap
-    chart: ./jetty-swap
-    values:
-      - environments/{{ .Environment.Name }}/jetty-swap.yaml.gotmpl
-
-  - name: letty-swap
-    chart: ./letty-swap
-    values:
-      - environments/{{ .Environment.Name }}/letty-swap.yaml.gotmpl
-
   - name: admin
-    chart: ./admin
+    chart: ./fullstack-chart
     values:
+      - environments/common/admin.yaml.gotmpl
       - environments/{{ .Environment.Name }}/admin.yaml.gotmpl
 
   - name: postgres
@@ -62,7 +62,7 @@ releases:
     values:
       - auth:
           postgresPassword: "secretString123"
-          database: radquest
+          database: fullstack_dapp_example
         primary:
           persistence:
             enabled: false
@@ -72,26 +72,19 @@ releases:
     version:  18.6.4
     installed: {{ eq .Environment.Name "pr" }}
     values:
-      - environments/{{ .Environment.Name }}/redis.yaml
-
-  - name: redis-exporter
-    chart: kubesphere/redis-exporter
-    version:  3.4.6
-    installed: {{ ne .Environment.Name "pr" }}
-    values:
-      - environments/{{ .Environment.Name }}/redis-exporter.yaml
+      - environments/common/redis.yaml
 
   - name: redis-commander
     chart: ./redis-commander
     values:
-      - environments/{{ .Environment.Name }}/redis-commander.yaml.gotmpl
+      - environments/common/redis-commander.yaml.gotmpl
 
   - name: developer-access
     chart: rdx-works/developer-access
     version: 1.0.0
     values:
       - project: radquest
-      - environments/{{ .Environment.Name }}/developer-access.yaml.gotmpl
+      - environments/common/developer-access.yaml.gotmpl
 
   - name: alertmanager
     chart: rdx-works/alertmanager-configs
@@ -99,5 +92,3 @@ releases:
     installed: {{ ne .Environment.Name "pr" }}
     values:
       - environments/{{ .Environment.Name }}/alertmanager.yaml.gotmpl
-
-
