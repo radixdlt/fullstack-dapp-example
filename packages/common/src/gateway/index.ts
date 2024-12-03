@@ -253,7 +253,8 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
               (acc, curr) => {
                 acc[curr?.resource_address!] = {
                   amount: curr ? getAmount(curr) : 0,
-                  name: types[curr?.resource_address! as keyof typeof types],
+                  // @ts-ignore
+                  name: types[curr?.resource_address!],
                   imageUrl: (
                     curr?.explicit_metadata?.items.find((item) => item.key === 'icon_url')!.value
                       .typed as any

@@ -7,7 +7,6 @@
     "dev": "npx --node-options='-r dotenv/config' turbo dev --concurrency 13",
     "dev:admin": "npx --node-options='-r dotenv/config' turbo dev --filter admin",
     "dev:dapp": "npx --node-options='-r dotenv/config' turbo dev --filter dapp",
-    "dev:swaps": "npx --node-options='-r dotenv/config' turbo dev --filter jetty-swap",
     "dev:notification": "npx --node-options='-r dotenv/config' turbo dev --filter notification",
     "dev:stream": "npx --node-options='-r dotenv/config' turbo dev --filter transaction-stream",
     "dev:stream:inspect": "npx --node-options='-r dotenv/config' turbo dev:inspect --filter transaction-stream",
