@@ -86,6 +86,7 @@ releases:
     chart: ./redis-commander
     values:
       - environments/common/redis-commander.yaml.gotmpl
+      - environments/{{ .Environment.Name }}/redis-commander.yaml.gotmpl
 
   - name: developer-access
     chart: rdx-works/developer-access
