@@ -8,14 +8,28 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: http
+      targetPort: {{ .Values.service.port_name }}
       protocol: TCP
       name: http
-      {{- range $v := .Values.service.extraPorts }}
+  selector:
+    {{- include "fullstack-dapp-example.selectorLabels" . | nindent 4 }}
+---
+{{- $root := . -}}
+{{- range $v := .Values.service.extraPorts }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "fullstack-dapp-example.fullname" $root }}-{{ $v.name }}
+  labels:
+    {{- include "fullstack-dapp-example.labels" $root | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
     - port: {{ $v.port }}
       targetPort: {{ $v.name }}
       protocol: TCP
       name: {{ $v.name }}
-    {{- end }}
   selector:
-    {{- include "fullstack-dapp-example.selectorLabels" . | nindent 4 }}
+    {{- include "fullstack-dapp-example.selectorLabels" $root | nindent 4 }}
+{{- end }}

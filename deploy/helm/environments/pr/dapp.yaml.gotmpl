@@ -1,5 +1,3 @@
-enable_db_migrations: true
-
 params:
   REDIS_HOST: "redis-master"
   REDIS_PORT: "6379"
@@ -15,32 +13,13 @@ params:
   PUBLIC_LOG_LEVEL: debug
   MAINTENANCE_MODE: false
   GATEWAY_URL: https://stokenet.radixdlt.com
-  IPQS_ALLOW_ALL: true
-
-secrets:
 
 ingress:
   enabled: true
-  className: nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
   hosts:
     - host: fullstack-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
       paths:
         - path: /
           pathType: ImplementationSpecific
-
-autoscaling:
-  enabled: false
-
-resources:
-  requests:
-    cpu: 50m
-    memory: 128Mi
-
-metrics:
-  enabled: true
-
-serviceMonitors:
-  - name: dapp-pm2-metrics
-    port: pm2-metrics
-    interval: 30s
-    path: /metrics

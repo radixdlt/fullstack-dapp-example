@@ -1,6 +1,6 @@
-nameOverride: fullstack-notification
+nameOverride: notification
 
-fullnameOverride: fullstack-notification
+fullnameOverride: notification
 
 imagePullSecrets:
   - name: dockerhub
@@ -10,11 +10,36 @@ image:
     tag: {{ .StateValues.ci.tag }}
 
 service:
-  port: http-internal
-  port_name: 4000
+  port: 4000
+  port_name: http-internal
 
   extraPorts:
     - name: ws
       port: 9000
+
     - name: pm2-metrics
       port: 9209
+
+replicaCount: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
+
+serviceMonitors:
+  - name: notification-metrics
+    port: http-internal
+    interval: 30s
+    path: /metrics
+  - name: notification-pm2-metrics
+    port: pm2-metrics
+    interval: 30s
+    path: /metrics

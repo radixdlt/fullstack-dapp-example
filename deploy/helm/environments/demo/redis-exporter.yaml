@@ -1,3 +1,0 @@
-redisAddress: radquest-dev-redis.rdx-works-main.internal
-rbac:
-  pspEnabled: false
