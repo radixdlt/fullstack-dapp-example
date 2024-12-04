@@ -40,24 +40,26 @@ releases:
   - name: redis
     chart: bitnami/redis
     version:  18.6.4
-    installed: {{ eq .Environment.Name "pr" }}
     values:
       - environments/common/redis.yaml
 
   - name: dapp
     chart: ./fullstack-chart
-    needs:
-      - postgres
-      - redis
     values:
       - environments/common/dapp.yaml.gotmpl
       - environments/{{ .Environment.Name }}/dapp.yaml.gotmpl
 
+  - name: admin
+    chart: ./fullstack-chart
+    needs:
+      - dapp
+    values:
+      - environments/common/admin.yaml.gotmpl
+      - environments/{{ .Environment.Name }}/admin.yaml.gotmpl
+
   - name: notification
     chart: ./fullstack-chart
     needs:
-      - postgres
-      - redis
       - dapp
     values:
       - environments/common/notification.yaml.gotmpl
@@ -66,8 +68,6 @@ releases:
   - name: transaction-stream
     chart: ./fullstack-chart
     needs:
-      - postgres
-      - redis
       - dapp
     values:
       - environments/common/transaction-stream.yaml.gotmpl
@@ -76,22 +76,10 @@ releases:
   - name: worker
     chart: ./fullstack-chart
     needs:
-      - postgres
-      - redis
       - dapp
     values:
       - environments/common/worker.yaml.gotmpl
       - environments/{{ .Environment.Name }}/worker.yaml.gotmpl
-
-  - name: admin
-    chart: ./fullstack-chart
-    needs:
-      - postgres
-      - redis
-      - dapp
-    values:
-      - environments/common/admin.yaml.gotmpl
-      - environments/{{ .Environment.Name }}/admin.yaml.gotmpl
 
   - name: redis-commander
     chart: ./redis-commander
