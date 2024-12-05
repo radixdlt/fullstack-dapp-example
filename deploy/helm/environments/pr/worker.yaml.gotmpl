@@ -1,37 +1,32 @@
-nameOverride: fullstack-worker
-
-fullnameOverride: fullstack-worker
-
-imagePullSecrets:
-  - name: dockerhub
-
-image:
-    repository: radixdlt/fullstack-dapp-example-worker
-    tag: {{ .StateValues.ci.tag }}
-
 params:
   DATABASE_URL: "postgresql://postgres:secretString123@postgres-postgresql:5432/fullstack_dapp_example?schema=public"
   RO_DATABASE_URL: postgresql://postgres:secretString123@postgres-postgresql:5432/fullstack_dapp_example?schema=public
   NOTIFICATION_INTERNAL_API_PORT: 4000
-  NOTIFICATION_INTERNAL_API_HOST: fullstack-notification
+  NOTIFICATION_INTERNAL_API_HOST: notification
   NOTIFICATION_WEBSOCKET_HOST: 9000
   PUBLIC_NETWORK_ID: 2
   REDIS_HOST: "redis-master"
   REDIS_PORT: "6379"
   REDIS_PASSWORD: ""
   LOG_LEVEL: debug
-  NOTIFICATION_INTERNAL_API_URL: http://fullstack-notification-http-internal:3001
+  NOTIFICATION_INTERNAL_API_URL: http://notification:4000
   GATEWAY_URL: https://stokenet.radixdlt.com
 
 secrets:
- 
-ingress:
-  enabled: false
+  - external_secret_name: worker-payer-mnemonic
+    env_variable: "PAYER_MNEMONIC"
+    aws_secret_name: "rdx-works-main-dev/eks/fullstack-dapp-example/stokenet/worker-payer-primary"
+    aws_secret_key: "mnemonic"
+    secret_key: "workers_stokenet_payer_mnemonic"
+  
+  - external_secret_name: worker-system-mnemonic
+    env_variable: "SYSTEM_MNEMONIC"
+    aws_secret_name: "rdx-works-main-dev/eks/fullstack-dapp-example/stokenet/worker-system-primary"
+    aws_secret_key: "mnemonic"
+    secret_key: "workers_stokenet_system_mnemonic"
 
-autoscaling:
-  enabled: false
-
-resources:
-  requests:
-    cpu: 50m
-    memory: 128Mi
+  - external_secret_name: worker-owner-mnemonic
+    env_variable: "OWNER_MNEMONIC"
+    aws_secret_name: "rdx-works-main-dev/eks/fullstack-dapp-example/stokenet/worker-owner-primary"
+    aws_secret_key: "mnemonic"
+    secret_key: "workers_stokenet_owner_mnemonic"

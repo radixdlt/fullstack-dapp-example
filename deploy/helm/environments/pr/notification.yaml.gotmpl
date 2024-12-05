@@ -1,44 +1,18 @@
-nameOverride: fullstack-notification
-
-fullnameOverride: fullstack-notification
-
-imagePullSecrets:
-  - name: dockerhub
-
-service:
-  port: 4000
-  port_name: http-internal
-
-  extraPorts:
-    - name: ws
-      port: 9000
-
-image:
-    repository: radixdlt/fullstack-dapp-example-notification
-    tag: {{ .StateValues.ci.tag }}
-
 params:
-  NOTIFICATION_INTERNAL_API_HOST: fullstack-notification
+  NOTIFICATION_INTERNAL_API_HOST: notification
   NOTIFICATION_INTERNAL_API_PORT: 4000
   NOTIFICATION_WEBSOCKET_PORT: 9000
   LOG_LEVEL: debug
   JWT_SECRET: FkaGHXoq32rYBcEHwAn2rkhawtUCe4sE
 
-secrets:
-
 ingress:
   enabled: true
-  className: nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
   hosts:
     - host: fullstack-notification-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
       paths:
         - path: /
           pathType: ImplementationSpecific
-
-autoscaling:
-  enabled: false
-
-resources:
-  requests:
-    cpu: 50m
-    memory: 128Mi
+          serviceName: notification-ws
+          servicePort: 9000
