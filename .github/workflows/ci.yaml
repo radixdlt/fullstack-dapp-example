@@ -322,7 +322,7 @@ jobs:
       cancel-in-progress: false
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
     with:
-      jenkins_job_name: '${{ env.jenkins_job_name }}''
+      jenkins_job_name: '${{ env.jenkins_job_name }}'
       github_branch: '${{ github.head_ref }}'
       application_name: 'fde'
       hierarchical_namespace: 'fullstack-dapp-example-ci-pr'
