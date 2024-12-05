@@ -35,6 +35,16 @@ cd scrypto-packages/radgem-forge-v2
 scrypto build
 ```
 
+## Create accounts and deploy account controllers
+
+Follow the steps in [/bootstrap-accounts](bootstrap accounts)
+
+You should have generated a `secrets-accounts.json` and a `controller-accounts.json` file.
+
+Copy the addresses of `owner`, `dAppDefinition`, `payer` and `system` from the resulting `secrets-accounts.json` into the `packages/common/src/constants.ts` file.
+
+Then, copy the `access_controller` values from `controller-accounts.json` and put them in the respective `accessController` fields in `packages/common/src/constants.ts`.
+
 
 ### Deploy scrypto components to Stokenet
 
