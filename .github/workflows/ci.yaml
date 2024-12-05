@@ -351,7 +351,7 @@ jobs:
       application_name: 'fde'
       kubernetes_namespace: 'fullstack-dapp-example-demo'
       aws_eks_cluster: 'rdx-works-main-dev'
-      aws_iam_role_name: 'jenkins-fullstack-dapp-demo-pr-deployer'
+      aws_iam_role_name: 'jenkins-fullstack-dapp-example-demo-deployer'
       helmfile_environment: 'demo'
       helmfile_extra_vars: 'ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}'
     secrets:
