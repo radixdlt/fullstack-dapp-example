@@ -1,14 +1,3 @@
-nameOverride: fullstack-transaction-stream
-
-fullnameOverride: fullstack-transaction-stream
-
-imagePullSecrets:
-  - name: dockerhub
-
-image:
-    repository: radixdlt/fullstack-dapp-example-transaction-stream
-    tag: {{ .StateValues.ci.tag }}
-
 params:
   DATABASE_URL: "postgresql://postgres:secretString123@postgres-postgresql:5432/fullstack_dapp_example?schema=public"
   RO_DATABASE_URL: postgresql://postgres:secretString123@postgres-postgresql:5432/fullstack_dapp_example?schema=public
@@ -18,24 +7,3 @@ params:
   LOG_LEVEL: debug
   PUBLIC_NETWORK_ID: 2
   GATEWAY_URL: https://stokenet.radixdlt.com
-
-secrets:
-
-ingress:
-  enabled: false
-
-autoscaling:
-  enabled: false
-
-resources:
-  requests:
-    cpu: 50m
-    memory: 128Mi
-    
-metrics:
-  alert_labels:
-    cluster: rdx-works-main-dev
-    env: prs
-
-alerts:
-  aws_infrastructure_enabled: false

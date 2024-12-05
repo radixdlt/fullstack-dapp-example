@@ -13,9 +13,6 @@ env:
   network_id: '2'
   pr_public_log_level: 'debug'
   demo_public_log_level: 'info'
-  jenkins_job_name: 'kubernetes-deployments/job/fullstack-dapp-example'
-  helm_dir: 'deploy/helm'
-  eks_cluster: 'rdx-works-main-dev'
 
 permissions:
   id-token: write
@@ -333,33 +330,33 @@ jobs:
       aws_deployment_account_id: ${{ secrets.AWS_DEV_ACCOUNT_ID }}
       secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
 
-  # deploy_demo:
-  #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-  #   name: Deploy DEMO
-  #   needs:
-  #     - push-dapp
-  #     - push-admin
-  #     - push-notification
-  #     - push-transaction-stream
-  #     - push-worker
-  #     - setup-tags
-  #   concurrency: 
-  #     group: ${{ github.ref }}
-  #     cancel-in-progress: false
-  #   uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
-  #   with:
-  #     github_environment: 'demo'
-  #     github_branch: '${{ github.ref }}'
-  #     jenkins_job_name: '${{ env.jenkins_job_name }}'
-  #     application_name: 'radquest'
-  #     kubernetes_namespace: 'radquest-dev'
-  #     aws_eks_cluster: 'rdx-works-main-dev'
-  #     aws_iam_role_name: 'jenkins-radquest-dev-deployer'
-  #     helmfile_environment: 'demo'
-  #     helmfile_extra_vars: 'ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}'
-  #   secrets:
-  #     aws_deployment_account_id: ${{ secrets.AWS_DEV_ACCOUNT_ID }}
-  #     secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
+  deploy_demo:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    name: Deploy DEMO
+    needs:
+      - push-dapp
+      - push-admin
+      - push-notification
+      - push-transaction-stream
+      - push-worker
+      - setup-tags
+    concurrency: 
+      group: ${{ github.ref }}
+      cancel-in-progress: false
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
+    with:
+      github_environment: 'demo'
+      github_branch: '${{ github.ref }}'
+      jenkins_job_name: 'kubernetes-deployments/job/fullstack-dapp-example'
+      application_name: 'fde'
+      kubernetes_namespace: 'fullstack-dapp-example-demo'
+      aws_eks_cluster: 'rdx-works-main-dev'
+      aws_iam_role_name: 'jenkins-fullstack-dapp-demo-pr-deployer'
+      helmfile_environment: 'demo'
+      helmfile_extra_vars: 'ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}'
+    secrets:
+      aws_deployment_account_id: ${{ secrets.AWS_DEV_ACCOUNT_ID }}
+      secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
 
 
 

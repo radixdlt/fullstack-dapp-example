@@ -1,6 +1,6 @@
-nameOverride: fullstack-dapp
+nameOverride: dapp
 
-fullnameOverride: fullstack-dapp
+fullnameOverride: dapp
 
 imagePullSecrets:
   - name: dockerhub
@@ -17,3 +17,23 @@ service:
   extraPorts:
     - name: pm2-metrics
       port: 9209
+
+replicaCount: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
+
+serviceMonitors:
+  - name: dapp-pm2-metrics
+    port: pm2-metrics
+    interval: 30s
+    path: /metrics

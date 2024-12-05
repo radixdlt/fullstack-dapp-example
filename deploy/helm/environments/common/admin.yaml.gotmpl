@@ -1,6 +1,6 @@
-nameOverride: fullstack-admin
+nameOverride: admin
 
-fullnameOverride: fullstack-admin
+fullnameOverride: admin
 
 imagePullSecrets:
   - name: dockerhub
@@ -15,3 +15,23 @@ service:
   extraPorts:
     - name: pm2-metrics
       port: 9209
+
+replicaCount: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 70
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
+
+serviceMonitors:
+  - name: admin-pm2-metrics
+    port: pm2-metrics
+    interval: 30s
+    path: /metrics
