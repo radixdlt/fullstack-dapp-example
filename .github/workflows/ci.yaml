@@ -13,9 +13,6 @@ env:
   network_id: '2'
   pr_public_log_level: 'debug'
   demo_public_log_level: 'info'
-  jenkins_job_name: 'kubernetes-deployments/job/fullstack-dapp-example'
-  helm_dir: 'deploy/helm'
-  eks_cluster: 'rdx-works-main-dev'
 
 permissions:
   id-token: write
@@ -322,7 +319,7 @@ jobs:
       cancel-in-progress: false
     uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
     with:
-      jenkins_job_name: '${{ env.jenkins_job_name }}'
+      jenkins_job_name: 'kubernetes-deployments/job/fullstack-dapp-example'
       github_branch: '${{ github.head_ref }}'
       application_name: 'fde'
       hierarchical_namespace: 'fullstack-dapp-example-ci-pr'
@@ -353,7 +350,7 @@ jobs:
     with:
       github_environment: 'demo'
       github_branch: '${{ github.ref }}'
-      jenkins_job_name: '${{ env.jenkins_job_name }}'
+      jenkins_job_name: 'kubernetes-deployments/job/fullstack-dapp-example'
       application_name: 'fde'
       kubernetes_namespace: 'fullstack-dapp-example-demo'
       aws_eks_cluster: 'rdx-works-main-dev'
