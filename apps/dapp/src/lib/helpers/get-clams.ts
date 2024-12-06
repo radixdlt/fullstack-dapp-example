@@ -2,33 +2,21 @@ import { publicConfig } from '$lib/public-config'
 import { rdt } from '$lib/rdt'
 import { GatewayApi } from 'common'
 
-const createGetClamsManifest = (accountAddress: string, userId: string) => {
+const createGetClamsManifest = (accountAddress: string) => {
   return `
   CALL_METHOD
-  Address("${accountAddress}")
-  "create_proof_of_non_fungibles"
-  Address("${publicConfig.badges.heroBadgeAddress}")
-  Array<NonFungibleLocalId>(NonFungibleLocalId("<${userId}>"))
-;
-POP_FROM_AUTH_ZONE
-  Proof("hero_badge")
-;
-CALL_METHOD
-  Address("${publicConfig.components.questRewards}")
-  "get_clams"
-  Proof("hero_badge")
-;
-
-TAKE_FROM_WORKTOP
-  Address("${publicConfig.resources.clamAddress}")
-  Decimal("10")
-  Bucket("bucket");
-
-CALL_METHOD
-  Address("${accountAddress}")
-  "try_deposit_or_abort"
-  Bucket("bucket")
-  Enum<0u8>();`
+    Address("${publicConfig.components.clamFaucet}")
+    "get_clams"
+  ;
+  TAKE_FROM_WORKTOP
+    Address("${publicConfig.resources.clamAddress}")
+    Decimal("10")
+    Bucket("bucket");
+  CALL_METHOD
+    Address("${accountAddress}")
+    "try_deposit_or_abort"
+    Bucket("bucket")
+    Enum<0u8>();`
 }
 
 export const checkAccountHasClams = (accountAddress: string) => {
@@ -44,8 +32,8 @@ export const checkAccountHasClams = (accountAddress: string) => {
     .map((res) => Number(res) > 0)
 }
 
-export const getClams = (accountAddress: string, userId: string) =>
+export const getClams = (accountAddress: string) =>
   rdt.then((rdt) => {
-    const transactionManifest = createGetClamsManifest(accountAddress, userId)
+    const transactionManifest = createGetClamsManifest(accountAddress)
     return rdt.walletApi.sendTransaction({ transactionManifest })
   })

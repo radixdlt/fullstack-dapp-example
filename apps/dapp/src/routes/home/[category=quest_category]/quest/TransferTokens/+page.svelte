@@ -44,7 +44,7 @@
 
   const handleClaimClams = () => {
     loading = true
-    getClams($user?.accountAddress!, $user?.id!).finally(() => {
+    getClams($user?.accountAddress!).finally(() => {
       checkAccountHasClams($user?.accountAddress!).map((hasClams) => {
         accountHasClams = hasClams
         accountHasClams && quest.actions.next()
