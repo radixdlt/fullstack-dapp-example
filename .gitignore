@@ -45,3 +45,4 @@ storybook-static
 packages/bootstrap-accounts/target
 packages/bootstrap-accounts/*secrets-accounts.json
 packages/bootstrap-accounts/*controller-accounts.json
+.env

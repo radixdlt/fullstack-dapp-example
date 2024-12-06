@@ -13,7 +13,7 @@ fn mnemonic_to_account(mnemonic: &str) -> Account {
     );
     let account = Account::derive(
         &mnemonic.parse().unwrap(),
-        "radix",
+        "",
         &path,
     );
     account
