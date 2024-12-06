@@ -21,7 +21,7 @@ fn mnemonic_to_account(mnemonic: &str) -> Account {
 
 #[derive(Serialize, Deserialize,Debug)]
 pub struct AccountInfo {
-    pub address: String,
+    pub address: Option<String>,
     pub private_key: String,
     pub public_key: String,
     pub mnemonic: String,
@@ -54,7 +54,11 @@ pub async fn create_keypair(name: &str) -> Result<AccountInfo, Box<dyn std::erro
     println!("Name: {}", name);
 
     let account_info = AccountInfo {
-        address: account.address.to_string(),
+        address: if name == "recovery" || name == "confirmation" {
+            Some(account.address.to_string())
+        } else {
+            None
+        },
         private_key: account.private_key.to_hex(),
         public_key: account.public_key.to_hex(),
         mnemonic: mnemonic,
