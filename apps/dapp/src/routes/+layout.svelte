@@ -91,8 +91,6 @@
       if (persona?.identityAddress) {
         ResultAsync.combine([userApi.me(), authApi.authToken()])
           .map(async ([me, authToken]) => {
-          
-
             $user = {
               ...me,
               label: persona.label

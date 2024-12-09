@@ -276,9 +276,7 @@
     {@html text['9b-1.md']}
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div
-      class="center"
-    >
+    <div class="center">
       <!-- svelte-ignore missing-declaration -->
       <Button link="https://wallet.radixdlt.com" isExternal={true}>
         {$i18n.t('quests:SetupWallet.walletDownloadPage')}

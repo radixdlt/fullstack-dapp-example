@@ -9,7 +9,7 @@ const createGetClamsManifest = (accountAddress: string) => {
     "get_clams"
   ;
   TAKE_FROM_WORKTOP
-    Address("${publicConfig.resources.clamAddress}")
+    Address("resource_tdx_2_1t5m454mwsa54u8hmlzfxl474vsynf8nm0htzhw6kkh7ksr0xkcxdrc")
     Decimal("10")
     Bucket("bucket");
   CALL_METHOD
@@ -26,7 +26,9 @@ export const checkAccountHasClams = (accountAddress: string) => {
     .map(
       (res) =>
         res[0].fungible_resources.items.find(
-          (item) => item.resource_address === publicConfig.resources.clamAddress
+          (item) =>
+            item.resource_address ===
+            'resource_tdx_2_1t5m454mwsa54u8hmlzfxl474vsynf8nm0htzhw6kkh7ksr0xkcxdrc'
         )?.vaults.items[0].amount ?? 0
     )
     .map((res) => Number(res) > 0)

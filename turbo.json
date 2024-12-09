@@ -86,6 +86,9 @@
     "wallet:set:dapp-data:radquest": {
       "cache": false
     },
+    "populate:oracle": {
+      "cache": false
+    },
     "wallet:create:badges": {
       "cache": false
     },

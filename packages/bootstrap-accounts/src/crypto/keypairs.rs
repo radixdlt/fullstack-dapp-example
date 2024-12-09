@@ -55,9 +55,9 @@ pub async fn create_keypair(name: &str) -> Result<AccountInfo, Box<dyn std::erro
 
     let account_info = AccountInfo {
         address: if name == "recovery" || name == "confirmation" {
-            Some(account.address.to_string())
-        } else {
             None
+        } else {
+            Some(account.address.to_string())
         },
         private_key: account.private_key.to_hex(),
         public_key: account.public_key.to_hex(),

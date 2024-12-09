@@ -246,7 +246,10 @@ export const trackedTransactionTypes: TrackedTransactions = {
     })
   },
   [EventId.JettySwap]: {
-    WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress),
+    WithdrawEvent: resourceWithdrawn(
+      'resource_tdx_2_1t5m454mwsa54u8hmlzfxl474vsynf8nm0htzhw6kkh7ksr0xkcxdrc',
+      'accountAddress'
+    ),
     ClamSwapEvent: eventEmittedByComponent({
       eventName: 'ClamSwapEvent',
       componentAddress: config.radQuest.components.jettySwap,
