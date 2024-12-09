@@ -11,7 +11,6 @@ import { Rola } from '@radixdlt/rola'
 import { publicConfig } from '$lib/public-config'
 import { type ErrorResponse } from '@radixdlt/babylon-gateway-api-sdk'
 import type { TransactionJob } from 'queues'
-import * as valibot from 'valibot'
 import type { User } from 'database'
 export type UserSubset = {
   id: string
@@ -25,13 +24,7 @@ export type UserSubset = {
 }
 
 const isGatewayError = (error: any): error is ErrorResponse => error.details !== undefined
-const EmailSchema = valibot.object({
-  email: valibot.pipe(
-    valibot.string(),
-    valibot.nonEmpty('Please enter your email.'),
-    valibot.email('The email is badly formatted.')
-  )
-})
+
 export type UserController = ReturnType<typeof UserController>
 export const UserController = ({
   userModel,
