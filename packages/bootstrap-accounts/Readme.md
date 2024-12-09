@@ -41,10 +41,13 @@ This tooling provides the following features:
 ### Keypair Generation
 - **Purpose**: Generates all necessary keypairs required for the application, including `owner`, `system`, `payer`, and `dapp-definition`. It also generates one key pair for confirmation role and one for recovery role.
 - **Command**: Execute the following command to generate the keypairs.
+- **Environment Variables**: Ensure that the `NETWORK_ID` environment variable is exported before running the command.
+
 ```bash
+export NETWORK_ID=2
 cargo run -- key-pairs
 ```
-- **Environment Variables**: Ensure that the `NETWORK_ID` environment variable is exported before running the command.
+
 - **Output**: Creates a file named `secrets-account.json` containing the private and public keys of all accounts.
     - **Security**: Keep `secrets-account.json` very secure as it holds sensitive information.
 - **Secret Storage**: To store the generated keys securely (e.g., using AWS Secrets Manager), use the appropriate command to create a copy of the `secrets-account.json` file.
@@ -63,7 +66,7 @@ aws secretsmanager create-secret --name secrets-account --description "Secrets f
 - **Command**: Before executing the command, export the following environment variables. `SIGNER_PRIVATE_KEY` is for the fee payer account and should be in the format `ed25519:private_key_here`:  This payer account is not same as payer account generated in keypairs. Instead this account is one of yours that have xrds to pay fees for access controller creation
 
 ```bash
-export NETWORK_ID=<network-id>
+export NETWORK_ID=2
 export SIGNER_PRIVATE_KEY=ed25519:private_key_here
 ```
 
