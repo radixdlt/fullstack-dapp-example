@@ -41,9 +41,11 @@ Follow the steps in [/bootstrap-accounts](bootstrap accounts)
 
 You should have generated a `secrets-accounts.json` and a `controller-accounts.json` file.
 
-Copy the addresses of `owner`, `dAppDefinition`, `payer` and `system` from the resulting `secrets-accounts.json` into the `packages/common/src/constants.ts` file.
+Copy the `access_controller_account` addresses of `owner`, `dAppDefinition`, `payer` and `system` from the resulting `controller-accounts.json` into the `packages/common/src/constants.ts` file, to the `address` fields.
 
 Then, copy the `access_controller` values from `controller-accounts.json` and put them in the respective `accessController` fields in `packages/common/src/constants.ts`.
+
+Then copy the mnemonics from the `secrets-accounts.json` file into the `.env` file.
 
 
 ### Deploy scrypto components to Stokenet
@@ -58,8 +60,12 @@ npm run wallet:set:dapp-data:radquest
 ### Populate image oracle
 
 ```bash
-npm run populate:oracle
+npm run wallet:populate:oracle
 ```
+
+### Add key value store address
+
+Copy the `radgemForgeV2` address in `constants.ts`. Go to https://stokenet-dashboard.radixdlt.com/ and put it in the search bar, then open the `internal state` tab and copy the address of the `radgem_records` key value store and put it in `radgemRecordsV2KeyValueStore` in `constants.ts`.
 
 ### Run frontend only
 

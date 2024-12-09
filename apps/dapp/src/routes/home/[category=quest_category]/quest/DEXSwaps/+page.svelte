@@ -20,7 +20,6 @@
 
   let quest: Quest
   let loading = false
-  const accountHasClams = writable(true)
   const addresses = Addresses(publicConfig.networkId)
   const jettySwap = writable(data.requirements?.JettySwap.isComplete)
 
@@ -36,8 +35,7 @@
     loading = true
     getClams($user?.accountAddress!).finally(() => {
       checkAccountHasClams($user?.accountAddress!).map((hasClams) => {
-        $accountHasClams = hasClams
-        if (accountHasClams && (quest.render('5') || quest.render('18'))) {
+        if (quest.render('5') || quest.render('18')) {
           quest.actions.next()
         }
         loading = false
@@ -67,7 +65,6 @@
     if (detail === '18' || detail === '5') {
       if ($user?.accountAddress) {
         checkAccountHasClams($user?.accountAddress).map((hasClams) => {
-          $accountHasClams = hasClams
           loading = false
         })
       }
@@ -85,23 +82,19 @@
         }
       }
     },
-    { id: '18', type: 'regular', skip: accountHasClams },
+    { id: '18', type: 'regular' },
     { type: 'claimRewards' },
     { type: 'complete' }
   ]}
   let:render
 >
   {#if render('5')}
-    {#if $accountHasClams}
-      {@html text['5a.md']}
-    {:else}
-      {@html text['5b.md']}
-      <div class="center">
-        <Button on:click={handleClaimClams} {loading} disabled={$isUserBlocked}>
-          {$i18n.t('quests:TransferTokens.getClams')}
-        </Button>
-      </div>
-    {/if}
+    {@html text['5b.md']}
+    <div class="center">
+      <Button on:click={handleClaimClams} {loading} disabled={$isUserBlocked}>
+        {$i18n.t('quests:TransferTokens.getClams')}
+      </Button>
+    </div>
   {/if}
   {#if render('6')}
     {@html htmlReplace(text['6.md'], {

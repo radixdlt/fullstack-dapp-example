@@ -45,7 +45,8 @@ CALL_METHOD
 
   const transactionHelper = TransactionHelper({
     networkId: config.network.networkId,
-    onSignature: withSigners(config.network.networkId, 'payer', ...signers)
+    onSignature: withSigners(config.network.networkId, 'payer', ...signers),
+    logger: appLogger
   })
 
   return {
