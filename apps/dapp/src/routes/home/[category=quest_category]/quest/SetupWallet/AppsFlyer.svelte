@@ -17,10 +17,6 @@
 
 <a
   href={`${oneLinkUrl}?${paramName}=${encode(JSON.stringify(params))}`}
-  on:click={() => {
-    // @ts-ignore
-    dataLayer.push({ event: 'dl_click_2_wallet_download' })
-  }}
   target="_blank"
   class="skip-icon"
 >

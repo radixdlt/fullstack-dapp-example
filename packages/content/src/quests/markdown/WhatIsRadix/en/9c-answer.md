@@ -1,1 +1,0 @@
-A place where you can hold your own assets, and connect them with apps.

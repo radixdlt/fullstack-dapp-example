@@ -71,7 +71,7 @@ npm run dev:dapp
 
 ```bash
 # starts all services
-docker compose up
+docker compose up -d
 
 # creates the required tables and schemas in database
 # only needed if there are changes in the schema or in a newly cloned repo
