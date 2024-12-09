@@ -5,7 +5,6 @@
   import Error from '$lib/components/error/Error.svelte'
 
   import type { Quests } from 'content'
-  import { onMount } from 'svelte'
 
   export let data: LayoutData
 
@@ -14,12 +13,6 @@
 
   const text = data.text as Quests['Welcome']['text']
 
-  onMount(() => {
-    if (!data.questStatus.Welcome) {
-      //@ts-ignore
-      dataLayer.push({ event: 'dl_click_1_lets_begin' })
-    }
-  })
 </script>
 
 <Quest

@@ -278,10 +278,6 @@
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
       class="center"
-      on:click={() => {
-        // @ts-ignore
-        dataLayer.push({ event: 'dl_click_2_wallet_download' })
-      }}
     >
       <!-- svelte-ignore missing-declaration -->
       <Button link="https://wallet.radixdlt.com" isExternal={true}>

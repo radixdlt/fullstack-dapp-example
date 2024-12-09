@@ -91,8 +91,7 @@
       if (persona?.identityAddress) {
         ResultAsync.combine([userApi.me(), authApi.authToken()])
           .map(async ([me, authToken]) => {
-            //@ts-ignore
-            dataLayer.push({ event: 'dl_click_4_wallet_connected' })
+          
 
             $user = {
               ...me,
