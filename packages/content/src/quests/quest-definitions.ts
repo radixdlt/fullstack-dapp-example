@@ -145,7 +145,6 @@ export const QuestDefinitions = () => {
       },
       nextQuest: 'TransferTokens'
     },
-
     QuestTogether: {
       id: 'QuestTogether',
       category: 'basic',

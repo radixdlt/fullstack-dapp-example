@@ -1,1 +1,0 @@
-A simple web game with a cute otter.

@@ -1,3 +1,0 @@
-Welcome to the **Radix Network**!
-
-Now in the next quest, let’s get you your **Radix Wallet**…
