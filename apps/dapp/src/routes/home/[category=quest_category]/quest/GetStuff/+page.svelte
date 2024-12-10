@@ -5,19 +5,15 @@
   import type { PageData } from './$types'
   import { derived, writable } from 'svelte/store'
   import type { Quests } from 'content'
-  import { type ComponentProps } from 'svelte'
   import { userApi } from '$lib/api/user-api'
   import { user } from '../../../../../stores'
   import Button from '$lib/components/button/Button.svelte'
   import { messageApi } from '$lib/api/message-api'
   import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { waitingWarning } from '$lib/utils/waiting-warning'
-  import GetXrdMethodOptions from './GetXrdMethodOptions.svelte'
   import { completeRequirement } from '$lib/helpers/complete-requirement.svelte'
-  import CopyTextBox from '$lib/components/copy-text-box/CopyTextBox.svelte'
-  import { shortenAddress } from '$lib/utils/shorten-address'
   import { hasEnoughXrd } from '$lib/utils/has-enough-xrd'
-  import { useCookies } from '$lib/utils/cookies'
+
 
   export let data: PageData
 
@@ -85,14 +81,8 @@
 
   $: if ($hasXrd && !data.requirements['GetXRD'].isComplete) completeRequirement(data.id, 'GetXRD')
 
-  const hasGoldenTicket = writable(false)
-  const hasInvalidGoldenTicket = writable(false)
-
   let checkXrdInterval: ReturnType<typeof setInterval> | undefined
 
-  let selectedGetXrdMethod: ComponentProps<GetXrdMethodOptions>['selectedOption'] = 'card'
-
-  $: address = $user?.accountAddress
 </script>
 
 <Quest
@@ -130,11 +120,7 @@
     {
       id: 'has-xrd',
       type: 'jetty',
-      skip: derived(
-        [hasXrd, hasGoldenTicket, hasInvalidGoldenTicket],
-        ([$hasXrd, $hasGoldenTicket, $hasInvalidGoldenTicket]) =>
-          !$hasXrd || $hasGoldenTicket || $hasInvalidGoldenTicket
-      )
+      skip: derived([hasXrd], ([$hasXrd]) => !$hasXrd)
     },
     {
       type: 'claimRewards'
@@ -145,34 +131,6 @@
   ]}
   let:render
 >
-  {#if render('0')}
-    {@html text['0.md']}
-  {/if}
-
-  {#if render('1')}
-    {@html text['1.md']}
-  {/if}
-
-  {#if render('2')}
-    {@html text['2.md']}
-  {/if}
-
-  {#if render('3')}
-    {@html text['3.md']}
-  {/if}
-
-  {#if render('4')}
-    {@html text['4.md']}
-  {/if}
-
-  {#if render('5')}
-    {@html text['5.md']}
-  {/if}
-
-  {#if render('6')}
-    {@html text['6.md']}
-  {/if}
-
   {#if render('golden-ticket-valid')}
     {@html text['8-GOLDEN.md']}
 
@@ -189,78 +147,6 @@
 
   {#if render('has-xrd')}
     {@html text['8-HASXRD.md']}
-  {/if}
-
-  {#if render('need-xrd')}
-    {@html text['8-NEEDXRD.md']}
-  {/if}
-
-  {#if render('need-xrd-2')}
-    {@html text['8-NEEDXRD-1.md']}
-  {/if}
-
-  {#if render('need-xrd-3')}
-    {@html text['8-NEEDXRD-2.md']}
-
-    <GetXrdMethodOptions bind:selectedOption={selectedGetXrdMethod} />
-  {/if}
-
-  {#if render('get-xrd')}
-    {#if selectedGetXrdMethod === 'card'}
-      {@html text['8-NEEDXRD-3.md']}
-      {#if address}
-        <CopyTextBox text={shortenAddress(address)} value={address} />
-      {/if}
-      {@html text['8-NEEDXRD-3a.md']}
-      <div class="center">
-        <Button
-          link={'https://ramp.alchemypay.org/?appId=qjpmy9BwBPRGBneF&crypto=XRD#/index'}
-          isExternal
-        >
-          {$i18n.t('quests:GetStuff.buyXRDButton')}
-        </Button>
-      </div>
-      {@html text['8-NEEDXRD-3b.md']}
-    {:else if selectedGetXrdMethod === 'exchange'}
-      {@html text['8-NEEDXRD-4.md']}
-      <div class="center">
-        <Button isExternal link="https://www.radixdlt.com/token#exchanges">
-          {$i18n.t('quests:GetStuff.viewExchangesButton')}
-        </Button>
-      </div>
-      {@html text['8-NEEDXRD-4a.md']}
-    {:else if selectedGetXrdMethod === 'thorswap'}
-      {@html text['8-NEEDXRD-5.md']}
-      {#if address}
-        <CopyTextBox text={shortenAddress(address)} value={address} />
-      {/if}
-      {@html text['8-NEEDXRD-5a.md']}
-      <div class="center">
-        <Button
-          link={'https://app.thorswap.finance/swap/ETH.ETH_XRD.XRD?sellAmount=0.001'}
-          isExternal
-        >
-          {$i18n.t('quests:GetStuff.goToThorSwap')}
-        </Button>
-      </div>
-      {@html text['8-NEEDXRD-5b.md']}
-    {/if}
-  {/if}
-
-  {#if render('9')}
-    {@html text['9.md']}
-  {/if}
-
-  {#if render('13')}
-    {@html text['13.md']}
-  {/if}
-
-  {#if render('14')}
-    {@html text['14.md']}
-  {/if}
-
-  {#if render('15')}
-    {@html text['15.md']}
   {/if}
 </Quest>
 

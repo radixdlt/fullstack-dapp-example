@@ -2,8 +2,7 @@ import type { RequestHandler } from './$types'
 import { isDevEnvironment } from '$lib/server/helpers/is-dev-environment'
 import { json } from '@sveltejs/kit'
 import { randomUUID } from 'node:crypto'
-import { BusinessLogic, EventId, Priority } from 'common'
-import { ResultAsync } from 'neverthrow'
+import { Priority } from 'common'
 
 /** @type {import('./$types').RequestHandler} */
 export const POST: RequestHandler = async ({ locals, request }) => {
@@ -74,36 +73,6 @@ export const POST: RequestHandler = async ({ locals, request }) => {
         id: randomUUID()
       }
     ])
-  } else if (type === 'simulateMayaSwap') {
-    await locals.dependencies.eventModel.add([
-      {
-        transactionId: crypto.randomUUID(),
-        traceId: crypto.randomUUID(),
-        userId,
-        eventId: EventId.MayaRouterWithdrawEvent,
-        type: EventId.MayaRouterWithdrawEvent,
-        data: {
-          amount: 100_000,
-          resourceAddress: BusinessLogic.Maya.supportedTokens.XRD
-        }
-      }
-    ])
-  } else if (type === 'claimGoldenTicket') {
-    await locals.dependencies.goldenTicketModel
-      .createBatch(1, new Date(body.expired ? Date.now() - 600 : Date.now() + 600), userId)
-      .andThen(([ticket]) =>
-        ResultAsync.fromPromise(
-          (locals.dependencies.dbClient as any).$primary().goldenTicket.update({
-            where: { id: ticket.id },
-            data: {
-              status: body.expired ? 'CLAIMED_INVALID' : 'CLAIMED',
-              userId,
-              claimedAt: new Date()
-            }
-          }),
-          (error) => error
-        )
-      )
   } else if (type === 'updateUserStatus') {
     await locals.dependencies.dbClient.user.update({
       where: { id: userId },

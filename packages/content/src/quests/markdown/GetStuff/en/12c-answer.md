@@ -1,1 +1,0 @@
-A fun RadQuest token without value.

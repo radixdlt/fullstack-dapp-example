@@ -187,36 +187,6 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
       }
     )
 
-  const getQuestsWithTrackedAccounts = (limit: number, offset: number) =>
-    ResultAsync.fromPromise<{ accountAddress: string; questId: string; id: string }[], ApiError>(
-      db.$queryRaw`
-        SELECT u."accountAddress", qp."questId", u."id"
-          FROM "User" u
-          JOIN "QuestProgress" qp ON u."id" = qp."userId"
-          LEFT JOIN "CompletedQuestRequirement" cqr1 ON u."id" = cqr1."userId" AND cqr1."requirementId" = 'JettyReceivedClams'
-          LEFT JOIN "CompletedQuestRequirement" cqr2 ON u."id" = cqr2."userId" AND cqr2."requirementId" = 'InstapassBadgeDeposited'
-          LEFT JOIN "CompletedQuestRequirement" cqr3 ON u."id" = cqr3."userId" AND cqr3."requirementId" = 'XrdStaked'
-          LEFT JOIN "CompletedQuestRequirement" cqr4 ON u."id" = cqr4."userId" AND cqr4."requirementId" = 'JettySwap'
-          LEFT JOIN "CompletedQuestRequirement" cqr5 ON u."id" = cqr5."userId" AND cqr5."requirementId" = 'LettySwap'
-          LEFT JOIN "CompletedQuestRequirement" cqr6 ON u."id" = cqr5."userId" AND cqr5."requirementId" = 'MayaRouterWithdrawEvent'
-          WHERE 
-              (qp."questId" = 'TransferTokens' AND qp."status" = 'IN_PROGRESS' AND cqr1."requirementId" IS NULL)
-              OR
-              (qp."questId" = 'Instapass' AND qp."status" = 'IN_PROGRESS' AND cqr2."requirementId" IS NULL)
-              OR
-              (qp."questId" = 'NetworkStaking' AND qp."status" = 'IN_PROGRESS' AND cqr3."requirementId" IS NULL)
-              OR
-              (qp."questId" = 'ThorSwap' AND qp."status" = 'IN_PROGRESS' AND cqr6."requirementId" IS NULL)
-              OR
-              (qp."questId" = 'DEXSwaps' AND qp."status" = 'IN_PROGRESS' AND (cqr4."requirementId" IS NULL OR cqr5."requirementId" IS NULL))
-        LIMIT ${limit}
-        OFFSET ${offset};`,
-      (error) => {
-        logger?.error({ error, method: 'getQuestsWithTrackedAccounts', model: 'UserQuestModel' })
-        return createApiError('failed to getQuestsWithTrackedAccounts', 400)()
-      }
-    )
-
   const findPrerequisites = (userId: string, preRequisites: string[]) =>
     ResultAsync.fromPromise(
       ((db as any).$primary() as PrismaClient).questProgress.findMany({
@@ -287,7 +257,6 @@ export const UserQuestModel = (db: PrismaClient) => (logger: AppLogger) => {
     getQuestsStatus,
     updateQuestStatus,
     findPrerequisites,
-    getQuestsWithTrackedAccounts,
     getDepositedRewards,
     setConnectWalletRequirement,
     setDownloadWalletRequirement,

@@ -25,7 +25,6 @@
   }
 
   const getCurrentLevel = (referralCount: number) => {
-    if ($user?.goldenTicketClaimed?.type !== 'FULL') return 'BronzeLevel' as Level
     if (referralCount >= threshold.GoldLevel) return 'SuperLevel' as Level | 'SuperLevel'
     else if (referralCount >= threshold.SilverLevel) return 'GoldLevel' as Level
     else if (referralCount >= threshold.BronzeLevel) return 'SilverLevel' as Level
@@ -42,8 +41,7 @@
     currentLevel
 
   const getNextLevel = (currentLevel: string) => {
-    if ($user?.goldenTicketClaimed?.type !== 'FULL') return 'SuperLevel'
-    else if (currentLevel === 'BronzeLevel') return 'SilverLevel'
+    if (currentLevel === 'BronzeLevel') return 'SilverLevel'
     else if (currentLevel === 'SilverLevel') return 'GoldLevel'
     else return 'SuperLevel' as Level | 'SuperLevel'
   }
@@ -100,24 +98,22 @@
       referralCount={referrals.length}
       status={progress.BronzeLevel}
     />
-    {#if $user?.goldenTicketClaimed?.type === 'FULL'}
-      <ReferralLevel
-        isOpened={rewardDisplayLevel === 'SilverLevel'}
-        level="SilverLevel"
-        on:refresh={refresh}
-        maximum={threshold.SilverLevel}
-        referralCount={referrals.length}
-        status={progress.SilverLevel}
-      />
-      <ReferralLevel
-        isOpened={rewardDisplayLevel === 'GoldLevel'}
-        level="GoldLevel"
-        on:refresh={refresh}
-        maximum={threshold.GoldLevel}
-        referralCount={referrals.length}
-        status={progress.GoldLevel}
-      />
-    {/if}
+    <ReferralLevel
+      isOpened={rewardDisplayLevel === 'SilverLevel'}
+      level="SilverLevel"
+      on:refresh={refresh}
+      maximum={threshold.SilverLevel}
+      referralCount={referrals.length}
+      status={progress.SilverLevel}
+    />
+    <ReferralLevel
+      isOpened={rewardDisplayLevel === 'GoldLevel'}
+      level="GoldLevel"
+      on:refresh={refresh}
+      maximum={threshold.GoldLevel}
+      referralCount={referrals.length}
+      status={progress.GoldLevel}
+    />
   </div>
 </div>
 

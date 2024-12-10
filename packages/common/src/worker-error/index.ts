@@ -16,7 +16,6 @@ export const WorkerError = {
   FailedToGetXrdPrice: 'FailedToGetXrdPrice',
   FailedToGetTokenPrice: 'FailedToGetTokenPrice',
   TokenPriceNotFound: 'TokenPriceNotFound',
-  FailedToAddAuditEntry: 'FailedToAddAuditEntry',
   FailedToGetTransactionFromDb: 'FailedToGetTransactionFromDb',
   MissingTransactionInDb: 'MissingTransactionInDb',
   UnhandledJob: 'UnhandledJob',

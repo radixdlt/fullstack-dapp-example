@@ -6,8 +6,6 @@ import { config } from '$lib/config'
 export const POST: RequestHandler = async ({ locals }) => {
   if (config.dapp.networkId === 1) return json({ status: 403 })
 
-  await dbClient.audit.deleteMany({ where: { userId: locals.userId } })
-
   return Promise.all([
     dbClient.user.delete({ where: { id: locals.userId } }),
     dbClient.notification.deleteMany({ where: { userId: locals.userId } }),

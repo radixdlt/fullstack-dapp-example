@@ -18,7 +18,6 @@ import {
   createAppLogger,
   EventModel,
   EventId,
-  BusinessLogic,
   Priority
 } from 'common'
 import { PrismaClient, User } from 'database'
@@ -677,80 +676,7 @@ describe('Event flows', () => {
         await waitForMessage(logger, db)(account.user.id, 'QuestRewardsClaimed')
       })
     })
-    describe('Thorswap', () => {
-      const simulateMayaSwapEvent = (
-        userId: string,
-        token: keyof typeof BusinessLogic.Maya.supportedTokens,
-        amount: string
-      ) =>
-        eventModel.add([
-          {
-            transactionId: crypto.randomUUID(),
-            traceId: crypto.randomUUID(),
-            userId,
-            eventId: EventId.MayaRouterWithdrawEvent,
-            type: EventId.MayaRouterWithdrawEvent,
-            data: {
-              amount,
-              resourceAddress: BusinessLogic.Maya.supportedTokens[token]
-            }
-          }
-        ])
 
-      it('should handle swapped xUSDC and claim quest rewards', { timeout: 60_000 }, async () => {
-        const account = await createAccount({ withHeroBadge: true, withXrd: true })
-
-        await accountAddressModel.addTrackedAddress(
-          account.user.accountAddress!,
-          'Thorswap',
-          account.user.id
-        )
-
-        await simulateMayaSwapEvent(account.user.id, 'xUSDC', '100')
-
-        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsDeposited')
-
-        await claimQuestReward(account, 'Thorswap')
-
-        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsClaimed')
-      })
-
-      it('should handle swapped xwBTC and claim quest rewards', { timeout: 60_000 }, async () => {
-        const account = await createAccount({ withHeroBadge: true, withXrd: true })
-
-        await accountAddressModel.addTrackedAddress(
-          account.user.accountAddress!,
-          'Thorswap',
-          account.user.id
-        )
-
-        await simulateMayaSwapEvent(account.user.id, 'xwBTC', '1')
-
-        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsDeposited')
-
-        await claimQuestReward(account, 'Thorswap')
-
-        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsClaimed')
-      })
-
-      it('should handle swapped xETH and claim quest rewards', { timeout: 60_000 }, async () => {
-        const account = await createAccount({ withHeroBadge: true, withXrd: true })
-
-        await accountAddressModel.addTrackedAddress(
-          account.user.accountAddress!,
-          'Thorswap',
-          account.user.id
-        )
-
-        await simulateMayaSwapEvent(account.user.id, 'xETH', '1')
-
-        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsDeposited')
-
-        await claimQuestReward(account, 'Thorswap')
-
-        await waitForMessage(logger, db)(account.user.id, 'QuestRewardsClaimed')
-      })
-    })
     describe('Quest together', () => {
       it(
         'should complete basic quests and claim referral reward',
@@ -845,79 +771,6 @@ describe('Event flows', () => {
     })
   })
 
-  describe('tracked accounts', () => {
-    it('should work for transfer tokens', { timeout: 60_000, skip: false }, async () => {
-      const { user } = await createAccount({ withXrd: true, withHeroBadge: true })
-      await startQuestAndAddTrackedAccount(user.id, 'TransferTokens')
-      const data = await userQuestModel.getQuestsWithTrackedAccounts(100, 0)
-      expect(data.isOk()).toBe(true)
-      if (data.isOk()) {
-        const userTracked = data.value.filter((el) => el.accountAddress === user.accountAddress)
-        expect(userTracked.length).toBe(1)
-      }
-    })
-
-    it('should work for advanced quests', { timeout: 60_000, skip: false }, async () => {
-      const { user } = await createAccount({
-        withXrd: true,
-        withHeroBadge: true
-      })
-      await completeTransferTokensQuest(user)
-      await userQuestModel.updateQuestStatus('TransferTokens', user.id, 'COMPLETED')
-
-      await startQuestAndAddTrackedAccount(user.id, 'Instapass')
-      await startQuestAndAddTrackedAccount(user.id, 'NetworkStaking')
-      await startQuestAndAddTrackedAccount(user.id, 'DEXSwaps')
-
-      const data = await userQuestModel.getQuestsWithTrackedAccounts(100, 0)
-      expect(data.isOk()).toBe(true)
-      if (data.isOk()) {
-        const userTracked = data.value.filter((el) => el.accountAddress === user.accountAddress)
-        console.log(userTracked)
-        expect(userTracked.length).toBe(3)
-      }
-    })
-  })
-
-  describe.skip('utm', () => {
-    it('should set users with utm', async () => {
-      const numberOfUsers = new Array(100).fill(0)
-
-      const country = ['us', 'ca', 'gb', 'se', 'ge', 'pl', 'fr', 'es', 'it', 'ru', 'jp', 'cn']
-
-      const utm_source = ['twitter', 'google', 'facebook', 'instagram', 'reddit']
-
-      const utm_medium = ['cpc', 'organic', 'referral', 'social']
-
-      const utm_campaign = ['radquest-launch', 'radquest-influencer', 'radquest-ads']
-
-      const utm_content = ['logolink', 'buttonlink', 'textlink']
-
-      const utm_term = ['web3', 'crypto', 'blockchain']
-
-      const getRandom = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)]
-
-      for (const _ of numberOfUsers) {
-        const { user } = (
-          await accountHelper.createAccount({ logger, networkId: 2 })
-        )._unsafeUnwrap()
-
-        await db.user.update({ data: { country: getRandom(country) }, where: { id: user.id } })
-
-        await db.marketing.create({
-          data: {
-            userId: user.id,
-            utm_id: crypto.randomUUID(),
-            utm_source: getRandom(utm_source),
-            utm_medium: getRandom(utm_medium),
-            utm_campaign: getRandom(utm_campaign),
-            utm_content: getRandom(utm_content),
-            utm_term: getRandom(utm_term)
-          }
-        })
-      }
-    })
-  })
 
   describe('quest completed', () => {
     it(

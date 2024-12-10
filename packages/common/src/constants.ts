@@ -50,7 +50,6 @@ export const Addresses = (networkId: number) => {
           heroBadgeForge: 'component_tdx_2_1czggp0fz9pcarmhp8uxpy9qr8ysz46qkpr49t3jdrn8zzanujj8fpy',
           ticketMachine: 'component_tdx_2_1cr6mvq384sjshjwxgjrf20l25wcq4hqfhuezujh7l88w5ulf6gy9pf',
           kycOracle: 'component_tdx_2_1cqgu87tk0sx6ldn7x0heev0vgc6jq4uu0tahkfumfpgmw7acxtgqd3',
-          mayaRouter: 'component_rdx1cp7hrk7k0pjavnpt5h6dsel096kzlj96r8ukw2ywqgdc5tlvpvn0as',
           questRewards: 'component_tdx_2_1czukjx0y294tgzz2w236je8sv8pr4mrz3p566rm6vlq4nfr2w2punu',
           giftBoxOpener: 'component_tdx_2_1crsll3wjqke9detnpr8r0t0ls6m5kd57fu2jr5r20qfauuy575rh5p',
           cardForge: 'component_tdx_2_1cp2r0wrszxf0qj9hqykm6nv6avzweqazxp2yu43zemp5q0prpl0rfw',
@@ -156,27 +155,18 @@ export const RedisKeys = {
 export const EventId = {
   DepositHeroBadge: 'DepositHeroBadge',
   JettyReceivedClams: 'JettyReceivedClams',
-  XrdStaked: 'XrdStaked',
-  MayaRouterWithdrawEvent: 'MayaRouterWithdrawEvent',
   QuestRewardDeposited: 'QuestRewardDeposited',
   QuestRewardDepositedV2: 'QuestRewardDepositedV2',
   QuestRewardClaimed: 'QuestRewardClaimed',
   QuestRewardClaimedV2: 'QuestRewardClaimedV2',
   JettySwap: 'JettySwap',
-  LettySwap: 'LettySwap',
   GiftBoxesOpenedEvent: 'GiftBoxesOpenedEvent',
   DepositedElements: 'DepositedElements',
   RadGemsClaimed: 'RadGemsClaimed',
   RadMorphCreated: 'RadMorphCreated',
-  PurchaseTicketsEvent: 'PurchaseTicketsEvent'
 } as const
 
 export type EventId = keyof typeof EventId
-
-export const CookieKeys = {
-  Utm: 'rq_ma',
-  GoldenTicket: 'golden-ticket'
-} as const
 
 export type Metadata = typeof metadata
 export type GiftBoxKey = keyof Metadata['resources']['giftBox']
@@ -218,16 +208,6 @@ export const metadata = {
 } as const
 
 export const BusinessLogic = {
-  Maya: {
-    supportedTokens: {
-      XRD: 'resource_rdx1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxradxrd',
-      xwBTC: 'resource_rdx1t580qxc7upat7lww4l2c4jckacafjeudxj5wpjrrct0p3e82sq4y75',
-      xETH: 'resource_rdx1th88qcj5syl9ghka2g9l7tw497vy5x6zaatyvgfkwcfe8n9jt2npww',
-      xUSDC: 'resource_rdx1t4upr78guuapv5ept7d7ptekk9mqhy605zgms33mcszen8l9fac8vf'
-    },
-    transferValueInUSD: 50,
-    paddingValueInUSD: 1
-  },
   QuestTogether: {
     triggerRewardAfterQuest: 'CreatingRadMorphs',
     maxReferrals: 10

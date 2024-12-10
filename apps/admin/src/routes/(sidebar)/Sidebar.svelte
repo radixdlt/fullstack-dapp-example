@@ -56,11 +56,6 @@
       icon: ReceiptSolid,
       href: '/transactions'
     },
-    {
-      name: 'Audit',
-      icon: BookOpenSolid,
-      href: '/audit'
-    },
     { name: 'Config', icon: CogOutline, href: '/config' },
     { name: 'Scripts', icon: CodeOutline, href: '/scripts' }
   ]

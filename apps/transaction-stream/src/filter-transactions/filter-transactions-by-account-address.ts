@@ -33,18 +33,7 @@ export const FilterTransactionsByAccountAddress =
     }
 
     switch (transaction.type) {
-      case EventId.XrdStaked: {
-        result = accountAddressModel.getTrackedAddressUserId(
-          transaction.accountAddress,
-          'NetworkStaking'
-        )
-        break
-      }
 
-      case EventId.MayaRouterWithdrawEvent: {
-        result = accountAddressModel.getTrackedAddressUserId(transaction.accountAddress, 'Thorswap')
-        break
-      }
 
       case EventId.JettyReceivedClams: {
         result = accountAddressModel.getTrackedAddressUserId(
@@ -54,8 +43,7 @@ export const FilterTransactionsByAccountAddress =
         break
       }
 
-      case EventId.JettySwap:
-      case EventId.LettySwap: {
+      case EventId.JettySwap: {
         result = accountAddressModel.getTrackedAddressUserId(transaction.accountAddress, 'DEXSwaps')
         break
       }

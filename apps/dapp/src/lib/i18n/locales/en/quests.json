@@ -120,23 +120,7 @@
     "copyTextButton_copied": "Copied!",
     "getClams": "Claim Clams"
   },
-  "NetworkStaking": {
-    "title": "Radix Network Staking",
-    "description": "Help the network, earn APY",
-    "introDescription": "Put your XRD to work helping secure the Radix Network – and earning you some yield",
-    "requirements": {
-      "XrdStaked": "Stake XRD using the Radix Dashboard"
-    }
-  },
-  "Thorswap": {
-    "title": "Bridge Tokens with THORSwap",
-    "description": "Move assets in and out of Radix",
-    "introDescription": "Use the THORSwap dApp to “bridge” assets into Radix and back out",
-    "requirements": {
-      "MayaRouterWithdrawEvent": "Do a swap into Radix on THORSwap of $50 value or more"
-    },
-    "gotoThorswap": "Go to THORSwap"
-  },
+
   "QuestTogether": {
     "title": "Simple Friend Referral",
     "description": "",
@@ -183,21 +167,11 @@
   "DEXSwaps": {
     "requirements": {
       "LearnAboutDexes": "Learn about DEXes",
-      "JettySwap": "Do a swap on Jetty DEX",
-      "LettySwap": "Do a swap on Letty DEX"
+      "JettySwap": "Do a swap on Jetty DEX"
     },
     "goToJettySwap": "Go to Jetty Swap",
-    "goToLettySwap": "Go to Letty Swap",
     "title": "React to On-ledger Events",
     "description": "",
     "introDescription": "Learn how to safely swap tokens on Radix using a decentralized exchange (DEX)"
-  },
-  "ExploreEcosystem": {
-    "requirements": {
-      "LearnDapps": "Learn where you can find new Radix dApps"
-    },
-    "title": "Explore the Radix Ecosystem",
-    "description": "Experience a world of new dApps",
-    "introDescription": "Start using all of the amazing dApps already in the Radix ecosystem"
   }
 }

@@ -9,16 +9,14 @@ export const POST: RequestHandler = async ({ request, cookies, locals }) => {
     ip: locals.clientIp,
     personaProof: requestBody.personaProof,
     cookies,
-    userAgent: request.headers.get('user-agent') || '',
-    acceptLanguage: request.headers.get('accept-language') || ''
   })
 
   if (loginResult.isErr()) error(loginResult.error.httpResponseCode, loginResult.error.reason)
 
-  const { authToken, headers, id, status, vpn } = loginResult.value.data
+  const { authToken, headers, id } = loginResult.value.data
 
   return json(
-    { authToken, id, status, vpn },
+    { authToken, id },
     {
       status: loginResult.value.httpResponseCode,
       headers

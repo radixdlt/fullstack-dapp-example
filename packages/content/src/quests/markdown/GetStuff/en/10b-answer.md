@@ -1,1 +1,0 @@
-Something that holds assets on the Radix Network.

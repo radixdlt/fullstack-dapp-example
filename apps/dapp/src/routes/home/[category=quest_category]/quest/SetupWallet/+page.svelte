@@ -1,26 +1,21 @@
 <script lang="ts">
-  import { onMount, type ComponentProps } from 'svelte'
-  import Quest from '../Quest.svelte'
-  import type { PageData } from './$types'
-  import { useCookies, type RequirementCookieKey } from '$lib/utils/cookies'
-  import { derived, writable } from 'svelte/store'
-  import type { Quests } from 'content'
-  import { user, ErrorPopupId, errorPopupStore } from '../../../../../stores'
   import { questApi } from '$lib/api/quest-api'
+  import { userApi } from '$lib/api/user-api'
   import Button from '$lib/components/button/Button.svelte'
   import { i18n } from '$lib/i18n/i18n'
-  import SetUsername from './SetUsername.svelte'
-  import { userApi } from '$lib/api/user-api'
-  import Checkbox from '$lib/components/checkbox/Checkbox.svelte'
-  import { htmlReplace } from '$lib/helpers/html-replace'
-  import AppsFlyer from './AppsFlyer.svelte'
   import { markNotificationAsSeen } from '$lib/notifications'
-  import { isMobile } from '@radixdlt/radix-dapp-toolkit'
-  import DepositHeroBadge from './DepositHeroBadge.svelte'
-  import { rdt } from '$lib/rdt'
-  import { OneTimeDataRequestBuilder, SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
   import { gatewayApi, publicConfig } from '$lib/public-config'
+  import { rdt } from '$lib/rdt'
+  import { useCookies, type RequirementCookieKey } from '$lib/utils/cookies'
+  import { isMobile, OneTimeDataRequestBuilder, SignedChallengeAccount } from '@radixdlt/radix-dapp-toolkit'
+  import type { Quests } from 'content'
   import { err, ok } from 'neverthrow'
+  import { onMount, type ComponentProps } from 'svelte'
+  import { derived, writable } from 'svelte/store'
+  import { ErrorPopupId, errorPopupStore, user } from '../../../../../stores'
+  import Quest from '../Quest.svelte'
+  import type { PageData } from './$types'
+  import DepositHeroBadge from './DepositHeroBadge.svelte'
 
   export let data: PageData
 
@@ -30,9 +25,6 @@
   const downloadWalletRequirementKey =
     'requirement-SetupWallet-DownloadWallet' as RequirementCookieKey
 
-  let marketingUpdatesCheckbox: boolean
-  let email = $user?.email?.email || ''
-  let confirmedWalletInstall = writable<boolean>(false)
   const walletIsLinked = writable(data.requirements.ConnectWallet?.isComplete)
   const isHeroBadgeDeposited = writable(data.requirements.DepositHeroBadge?.isComplete)
   const canDepositHeroBadge = writable<boolean>(false)
@@ -170,26 +162,6 @@
 
   let quest: Quest
 
-  const submitEmailOrProceed = async () => {
-    if (!email.length && !marketingUpdatesCheckbox) {
-      quest.actions.next()
-      return
-    }
-
-    userApi
-      .setUserFields({ fields: [{ field: 'email', email, newsletter: marketingUpdatesCheckbox }] })
-      .map(() => {
-        if ($user) {
-          $user.email = { email, newsletter: marketingUpdatesCheckbox }
-        }
-
-        quest.actions.next()
-      })
-      .mapErr(() => {
-        quest.actions.next()
-      })
-  }
-
   $: {
     if ($user && !data.requirements.ConnectWallet?.isComplete) {
       questApi.completeRequirement('SetupWallet', 'ConnectWallet')
@@ -285,37 +257,8 @@
     {@html text['9b-2.md']}
   {/if}
 
-  {#if render('10')}
-    {@html text['10.md']}
-  {/if}
-
-  {#if render('13')}
-    {@html text['13.md']}
-  {/if}
-
   {#if render('14')}
     {@html text['14.md']}
-  {/if}
-
-  {#if render('15')}
-    {@html text['15.md']}
-  {/if}
-
-  {#if render('16')}
-    {@html text['16.md']}
-  {/if}
-
-  {#if render('17')}
-    {@html text['17.md']}
-    <SetUsername />
-  {/if}
-
-  {#if render('18')}
-    {@html htmlReplace(text['18.md'], { name: $user?.name || '' })}
-  {/if}
-
-  {#if render('20')}
-    {@html text['20.md']}
   {/if}
 
   {#if render('21')}
@@ -326,10 +269,6 @@
         >{$i18n.t('quests:GetStuff.registerAccount')}
       </Button>
     </div>
-  {/if}
-
-  {#if render('23')}
-    {@html text['23.md']}
   {/if}
 
   {#if render('24')}

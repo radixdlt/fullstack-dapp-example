@@ -1,19 +1,19 @@
 <script lang="ts">
-  import type { Quests } from 'content'
-  import Quest from '../Quest.svelte'
-  import { writable } from 'svelte/store'
-  import { onDestroy, onMount } from 'svelte'
-  import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
   import { messageApi } from '$lib/api/message-api'
   import Button from '$lib/components/button/Button.svelte'
-  import { publicConfig } from '$lib/public-config'
-  import { i18n } from '$lib/i18n/i18n'
-  import { Addresses } from 'common'
-  import type { PageData } from '../DEXSwaps/$types'
-  import { markNotificationAsSeen } from '$lib/notifications'
   import { checkAccountHasClams, getClams } from '$lib/helpers/get-clams'
-  import { isUserBlocked, user } from '../../../../../stores'
   import { htmlReplace } from '$lib/helpers/html-replace'
+  import { i18n } from '$lib/i18n/i18n'
+  import { markNotificationAsSeen } from '$lib/notifications'
+  import { publicConfig } from '$lib/public-config'
+  import { webSocketClient, type WebSocketClient } from '$lib/websocket-client'
+  import { Addresses } from 'common'
+  import type { Quests } from 'content'
+  import { onDestroy, onMount } from 'svelte'
+  import { writable } from 'svelte/store'
+  import { isUserBlocked, user } from '../../../../../stores'
+  import type { PageData } from '../DEXSwaps/$types'
+  import Quest from '../Quest.svelte'
 
   export let data: PageData
   const text = data.text as Quests['DEXSwaps']['text']
@@ -101,33 +101,7 @@
       jettySwapLink: `<a href="${addresses.dapps.jettySwap.url}" target="_blank">JettySwap</a>`
     })}
   {/if}
-  {#if render('9')}
-    {@html text['9.md']}
-  {/if}
-  {#if render('10')}
-    {@html text['10.md']}
-  {/if}
-  {#if render('11')}
-    {@html text['11.md']}
-  {/if}
-  {#if render('12')}
-    {@html text['12.md']}
-  {/if}
-  {#if render('13')}
-    {@html text['13.md']}
-  {/if}
-  {#if render('14')}
-    {@html text['14.md']}
-  {/if}
-  {#if render('15')}
-    {@html text['15.md']}
-  {/if}
-  {#if render('16')}
-    {@html text['16.md']}
-  {/if}
-  {#if render('17')}
-    {@html text['17.md']}
-  {/if}
+  
   {#if render('18')}
     {@html text['18.md']}
     <div class="center">
@@ -135,9 +109,6 @@
         >{$i18n.t('quests:TransferTokens.getClams')}</Button
       >
     </div>
-  {/if}
-  {#if render('20')}
-    {@html text['20.md']}
   {/if}
 </Quest>
 

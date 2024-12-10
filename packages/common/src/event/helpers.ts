@@ -16,16 +16,6 @@ export type EventEmitter = {
   object_module_id: string
 }
 
-export const getAccountFromMayaRouterWithdrawEvent = ({ data }: EventsItem) => {
-  if (data.kind === 'Tuple') {
-    const intendedRecipient = data.fields.find((field) => field.field_name === 'intended_recipient')
-    if (intendedRecipient && intendedRecipient.kind === 'Reference') {
-      return intendedRecipient.value
-    }
-  }
-  return undefined
-}
-
 export type GetValuesFromEventResultInput = Parameters<typeof getValuesFromEventResult>[0]
 
 export const getValuesFromEventResult = (

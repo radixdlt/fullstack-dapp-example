@@ -44,11 +44,6 @@ export type Event = $Result.DefaultSelection<Prisma.$EventPayload>
  */
 export type Message = $Result.DefaultSelection<Prisma.$MessagePayload>
 /**
- * Model LoginAttempt
- * 
- */
-export type LoginAttempt = $Result.DefaultSelection<Prisma.$LoginAttemptPayload>
-/**
  * Model Notification
  * 
  */
@@ -68,11 +63,6 @@ export type QuestProgress = $Result.DefaultSelection<Prisma.$QuestProgressPayloa
  * 
  */
 export type SavedProgress = $Result.DefaultSelection<Prisma.$SavedProgressPayload>
-/**
- * Model Audit
- * 
- */
-export type Audit = $Result.DefaultSelection<Prisma.$AuditPayload>
 /**
  * Model TransactionIntent
  * 
@@ -146,15 +136,6 @@ export const EventStatus: {
 export type EventStatus = (typeof EventStatus)[keyof typeof EventStatus]
 
 
-export const LoginAttemptType: {
-  USER_CREATED: 'USER_CREATED',
-  USER_LOGIN: 'USER_LOGIN',
-  USER_VERIFY: 'USER_VERIFY'
-};
-
-export type LoginAttemptType = (typeof LoginAttemptType)[keyof typeof LoginAttemptType]
-
-
 export const QuestStatus: {
   IN_PROGRESS: 'IN_PROGRESS',
   REWARDS_DEPOSITED: 'REWARDS_DEPOSITED',
@@ -164,14 +145,6 @@ export const QuestStatus: {
 };
 
 export type QuestStatus = (typeof QuestStatus)[keyof typeof QuestStatus]
-
-
-export const AuditType: {
-  DIRECT_DEPOSIT: 'DIRECT_DEPOSIT',
-  CLAIMBOX_DEPOSIT: 'CLAIMBOX_DEPOSIT'
-};
-
-export type AuditType = (typeof AuditType)[keyof typeof AuditType]
 
 
 export const TransactionIntentStatus: {
@@ -209,17 +182,9 @@ export type EventStatus = $Enums.EventStatus
 
 export const EventStatus: typeof $Enums.EventStatus
 
-export type LoginAttemptType = $Enums.LoginAttemptType
-
-export const LoginAttemptType: typeof $Enums.LoginAttemptType
-
 export type QuestStatus = $Enums.QuestStatus
 
 export const QuestStatus: typeof $Enums.QuestStatus
-
-export type AuditType = $Enums.AuditType
-
-export const AuditType: typeof $Enums.AuditType
 
 export type TransactionIntentStatus = $Enums.TransactionIntentStatus
 
@@ -408,16 +373,6 @@ export class PrismaClient<
   get message(): Prisma.MessageDelegate<ExtArgs>;
 
   /**
-   * `prisma.loginAttempt`: Exposes CRUD operations for the **LoginAttempt** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more LoginAttempts
-    * const loginAttempts = await prisma.loginAttempt.findMany()
-    * ```
-    */
-  get loginAttempt(): Prisma.LoginAttemptDelegate<ExtArgs>;
-
-  /**
    * `prisma.notification`: Exposes CRUD operations for the **Notification** model.
     * Example usage:
     * ```ts
@@ -456,16 +411,6 @@ export class PrismaClient<
     * ```
     */
   get savedProgress(): Prisma.SavedProgressDelegate<ExtArgs>;
-
-  /**
-   * `prisma.audit`: Exposes CRUD operations for the **Audit** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Audits
-    * const audits = await prisma.audit.findMany()
-    * ```
-    */
-  get audit(): Prisma.AuditDelegate<ExtArgs>;
 
   /**
    * `prisma.transactionIntent`: Exposes CRUD operations for the **TransactionIntent** model.
@@ -989,12 +934,10 @@ export namespace Prisma {
     Challenge: 'Challenge',
     Event: 'Event',
     Message: 'Message',
-    LoginAttempt: 'LoginAttempt',
     Notification: 'Notification',
     CompletedQuestRequirement: 'CompletedQuestRequirement',
     QuestProgress: 'QuestProgress',
     SavedProgress: 'SavedProgress',
-    Audit: 'Audit',
     TransactionIntent: 'TransactionIntent',
     BatchedTransactionIntent: 'BatchedTransactionIntent',
     SubmittedTransaction: 'SubmittedTransaction',
@@ -1015,7 +958,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'user' | 'image' | 'referral' | 'challenge' | 'event' | 'message' | 'loginAttempt' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'audit' | 'transactionIntent' | 'batchedTransactionIntent' | 'submittedTransaction' | 'config'
+      modelProps: 'user' | 'image' | 'referral' | 'challenge' | 'event' | 'message' | 'notification' | 'completedQuestRequirement' | 'questProgress' | 'savedProgress' | 'transactionIntent' | 'batchedTransactionIntent' | 'submittedTransaction' | 'config'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -1439,76 +1382,6 @@ export namespace Prisma {
           }
         }
       }
-      LoginAttempt: {
-        payload: Prisma.$LoginAttemptPayload<ExtArgs>
-        fields: Prisma.LoginAttemptFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.LoginAttemptFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.LoginAttemptFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
-          }
-          findFirst: {
-            args: Prisma.LoginAttemptFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.LoginAttemptFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
-          }
-          findMany: {
-            args: Prisma.LoginAttemptFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
-          }
-          create: {
-            args: Prisma.LoginAttemptCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
-          }
-          createMany: {
-            args: Prisma.LoginAttemptCreateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.LoginAttemptCreateManyAndReturnArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
-          }
-          delete: {
-            args: Prisma.LoginAttemptDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
-          }
-          update: {
-            args: Prisma.LoginAttemptUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
-          }
-          deleteMany: {
-            args: Prisma.LoginAttemptDeleteManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          updateMany: {
-            args: Prisma.LoginAttemptUpdateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          upsert: {
-            args: Prisma.LoginAttemptUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
-          }
-          aggregate: {
-            args: Prisma.LoginAttemptAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateLoginAttempt>
-          }
-          groupBy: {
-            args: Prisma.LoginAttemptGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<LoginAttemptGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.LoginAttemptCountArgs<ExtArgs>,
-            result: $Utils.Optional<LoginAttemptCountAggregateOutputType> | number
-          }
-        }
-      }
       Notification: {
         payload: Prisma.$NotificationPayload<ExtArgs>
         fields: Prisma.NotificationFieldRefs
@@ -1786,76 +1659,6 @@ export namespace Prisma {
           count: {
             args: Prisma.SavedProgressCountArgs<ExtArgs>,
             result: $Utils.Optional<SavedProgressCountAggregateOutputType> | number
-          }
-        }
-      }
-      Audit: {
-        payload: Prisma.$AuditPayload<ExtArgs>
-        fields: Prisma.AuditFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.AuditFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$AuditPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.AuditFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$AuditPayload>
-          }
-          findFirst: {
-            args: Prisma.AuditFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$AuditPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.AuditFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$AuditPayload>
-          }
-          findMany: {
-            args: Prisma.AuditFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$AuditPayload>[]
-          }
-          create: {
-            args: Prisma.AuditCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$AuditPayload>
-          }
-          createMany: {
-            args: Prisma.AuditCreateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.AuditCreateManyAndReturnArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$AuditPayload>[]
-          }
-          delete: {
-            args: Prisma.AuditDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$AuditPayload>
-          }
-          update: {
-            args: Prisma.AuditUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$AuditPayload>
-          }
-          deleteMany: {
-            args: Prisma.AuditDeleteManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          updateMany: {
-            args: Prisma.AuditUpdateManyArgs<ExtArgs>,
-            result: Prisma.BatchPayload
-          }
-          upsert: {
-            args: Prisma.AuditUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<Prisma.$AuditPayload>
-          }
-          aggregate: {
-            args: Prisma.AuditAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateAudit>
-          }
-          groupBy: {
-            args: Prisma.AuditGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<AuditGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.AuditCountArgs<ExtArgs>,
-            result: $Utils.Optional<AuditCountAggregateOutputType> | number
           }
         }
       }
@@ -2302,24 +2105,20 @@ export namespace Prisma {
     events: number
     messages: number
     completedQuestRequirements: number
-    auditLogs: number
     questProgress: number
     referredUsers: number
     transactions: number
     referals: number
-    loginAttempts: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     events?: boolean | UserCountOutputTypeCountEventsArgs
     messages?: boolean | UserCountOutputTypeCountMessagesArgs
     completedQuestRequirements?: boolean | UserCountOutputTypeCountCompletedQuestRequirementsArgs
-    auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
     questProgress?: boolean | UserCountOutputTypeCountQuestProgressArgs
     referredUsers?: boolean | UserCountOutputTypeCountReferredUsersArgs
     transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
     referals?: boolean | UserCountOutputTypeCountReferalsArgs
-    loginAttempts?: boolean | UserCountOutputTypeCountLoginAttemptsArgs
   }
 
   // Custom InputTypes
@@ -2357,13 +2156,6 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: AuditWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
   export type UserCountOutputTypeCountQuestProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: QuestProgressWhereInput
   }
@@ -2387,13 +2179,6 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountReferalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReferralWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountLoginAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LoginAttemptWhereInput
   }
 
 
@@ -2703,12 +2488,10 @@ export namespace Prisma {
     messages?: boolean | User$messagesArgs<ExtArgs>
     completedQuestRequirements?: boolean | User$completedQuestRequirementsArgs<ExtArgs>
     savedProgress?: boolean | User$savedProgressArgs<ExtArgs>
-    auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
     questProgress?: boolean | User$questProgressArgs<ExtArgs>
     referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
     referals?: boolean | User$referalsArgs<ExtArgs>
-    loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2745,12 +2528,10 @@ export namespace Prisma {
     messages?: boolean | User$messagesArgs<ExtArgs>
     completedQuestRequirements?: boolean | User$completedQuestRequirementsArgs<ExtArgs>
     savedProgress?: boolean | User$savedProgressArgs<ExtArgs>
-    auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
     questProgress?: boolean | User$questProgressArgs<ExtArgs>
     referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
     transactions?: boolean | User$transactionsArgs<ExtArgs>
     referals?: boolean | User$referalsArgs<ExtArgs>
-    loginAttempts?: boolean | User$loginAttemptsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2765,12 +2546,10 @@ export namespace Prisma {
       messages: Prisma.$MessagePayload<ExtArgs>[]
       completedQuestRequirements: Prisma.$CompletedQuestRequirementPayload<ExtArgs>[]
       savedProgress: Prisma.$SavedProgressPayload<ExtArgs> | null
-      auditLogs: Prisma.$AuditPayload<ExtArgs>[]
       questProgress: Prisma.$QuestProgressPayload<ExtArgs>[]
       referredUsers: Prisma.$UserPayload<ExtArgs>[]
       transactions: Prisma.$TransactionIntentPayload<ExtArgs>[]
       referals: Prisma.$ReferralPayload<ExtArgs>[]
-      loginAttempts: Prisma.$LoginAttemptPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3183,8 +2962,6 @@ export namespace Prisma {
 
     savedProgress<T extends User$savedProgressArgs<ExtArgs> = {}>(args?: Subset<T, User$savedProgressArgs<ExtArgs>>): Prisma__SavedProgressClient<$Result.GetResult<Prisma.$SavedProgressPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
 
-    auditLogs<T extends User$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditPayload<ExtArgs>, T, 'findMany'> | Null>;
-
     questProgress<T extends User$questProgressArgs<ExtArgs> = {}>(args?: Subset<T, User$questProgressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestProgressPayload<ExtArgs>, T, 'findMany'> | Null>;
 
     referredUsers<T extends User$referredUsersArgs<ExtArgs> = {}>(args?: Subset<T, User$referredUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findMany'> | Null>;
@@ -3192,8 +2969,6 @@ export namespace Prisma {
     transactions<T extends User$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TransactionIntentPayload<ExtArgs>, T, 'findMany'> | Null>;
 
     referals<T extends User$referalsArgs<ExtArgs> = {}>(args?: Subset<T, User$referalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, 'findMany'> | Null>;
-
-    loginAttempts<T extends User$loginAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$loginAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findMany'> | Null>;
 
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3641,26 +3416,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.auditLogs
-   */
-  export type User$auditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Audit
-     */
-    select?: AuditSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AuditInclude<ExtArgs> | null
-    where?: AuditWhereInput
-    orderBy?: AuditOrderByWithRelationInput | AuditOrderByWithRelationInput[]
-    cursor?: AuditWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: AuditScalarFieldEnum | AuditScalarFieldEnum[]
-  }
-
-  /**
    * User.questProgress
    */
   export type User$questProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3738,26 +3493,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
-  }
-
-  /**
-   * User.loginAttempts
-   */
-  export type User$loginAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LoginAttempt
-     */
-    select?: LoginAttemptSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LoginAttemptInclude<ExtArgs> | null
-    where?: LoginAttemptWhereInput
-    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
-    cursor?: LoginAttemptWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
   }
 
   /**
@@ -8519,987 +8254,6 @@ export namespace Prisma {
 
 
   /**
-   * Model LoginAttempt
-   */
-
-  export type AggregateLoginAttempt = {
-    _count: LoginAttemptCountAggregateOutputType | null
-    _avg: LoginAttemptAvgAggregateOutputType | null
-    _sum: LoginAttemptSumAggregateOutputType | null
-    _min: LoginAttemptMinAggregateOutputType | null
-    _max: LoginAttemptMaxAggregateOutputType | null
-  }
-
-  export type LoginAttemptAvgAggregateOutputType = {
-    id: number | null
-  }
-
-  export type LoginAttemptSumAggregateOutputType = {
-    id: number | null
-  }
-
-  export type LoginAttemptMinAggregateOutputType = {
-    id: number | null
-    userId: string | null
-    type: $Enums.LoginAttemptType | null
-    createdAt: Date | null
-  }
-
-  export type LoginAttemptMaxAggregateOutputType = {
-    id: number | null
-    userId: string | null
-    type: $Enums.LoginAttemptType | null
-    createdAt: Date | null
-  }
-
-  export type LoginAttemptCountAggregateOutputType = {
-    id: number
-    userId: number
-    type: number
-    createdAt: number
-    _all: number
-  }
-
-
-  export type LoginAttemptAvgAggregateInputType = {
-    id?: true
-  }
-
-  export type LoginAttemptSumAggregateInputType = {
-    id?: true
-  }
-
-  export type LoginAttemptMinAggregateInputType = {
-    id?: true
-    userId?: true
-    type?: true
-    createdAt?: true
-  }
-
-  export type LoginAttemptMaxAggregateInputType = {
-    id?: true
-    userId?: true
-    type?: true
-    createdAt?: true
-  }
-
-  export type LoginAttemptCountAggregateInputType = {
-    id?: true
-    userId?: true
-    type?: true
-    createdAt?: true
-    _all?: true
-  }
-
-  export type LoginAttemptAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which LoginAttempt to aggregate.
-     */
-    where?: LoginAttemptWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LoginAttempts to fetch.
-     */
-    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: LoginAttemptWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LoginAttempts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LoginAttempts.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned LoginAttempts
-    **/
-    _count?: true | LoginAttemptCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: LoginAttemptAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: LoginAttemptSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: LoginAttemptMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: LoginAttemptMaxAggregateInputType
-  }
-
-  export type GetLoginAttemptAggregateType<T extends LoginAttemptAggregateArgs> = {
-        [P in keyof T & keyof AggregateLoginAttempt]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateLoginAttempt[P]>
-      : GetScalarType<T[P], AggregateLoginAttempt[P]>
-  }
-
-
-
-
-  export type LoginAttemptGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LoginAttemptWhereInput
-    orderBy?: LoginAttemptOrderByWithAggregationInput | LoginAttemptOrderByWithAggregationInput[]
-    by: LoginAttemptScalarFieldEnum[] | LoginAttemptScalarFieldEnum
-    having?: LoginAttemptScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: LoginAttemptCountAggregateInputType | true
-    _avg?: LoginAttemptAvgAggregateInputType
-    _sum?: LoginAttemptSumAggregateInputType
-    _min?: LoginAttemptMinAggregateInputType
-    _max?: LoginAttemptMaxAggregateInputType
-  }
-
-  export type LoginAttemptGroupByOutputType = {
-    id: number
-    userId: string
-    type: $Enums.LoginAttemptType
-    createdAt: Date
-    _count: LoginAttemptCountAggregateOutputType | null
-    _avg: LoginAttemptAvgAggregateOutputType | null
-    _sum: LoginAttemptSumAggregateOutputType | null
-    _min: LoginAttemptMinAggregateOutputType | null
-    _max: LoginAttemptMaxAggregateOutputType | null
-  }
-
-  type GetLoginAttemptGroupByPayload<T extends LoginAttemptGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<LoginAttemptGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof LoginAttemptGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], LoginAttemptGroupByOutputType[P]>
-            : GetScalarType<T[P], LoginAttemptGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type LoginAttemptSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    type?: boolean
-    createdAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["loginAttempt"]>
-
-  export type LoginAttemptSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    userId?: boolean
-    type?: boolean
-    createdAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["loginAttempt"]>
-
-  export type LoginAttemptSelectScalar = {
-    id?: boolean
-    userId?: boolean
-    type?: boolean
-    createdAt?: boolean
-  }
-
-  export type LoginAttemptInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type LoginAttemptIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-
-  export type $LoginAttemptPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "LoginAttempt"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      userId: string
-      type: $Enums.LoginAttemptType
-      createdAt: Date
-    }, ExtArgs["result"]["loginAttempt"]>
-    composites: {}
-  }
-
-  type LoginAttemptGetPayload<S extends boolean | null | undefined | LoginAttemptDefaultArgs> = $Result.GetResult<Prisma.$LoginAttemptPayload, S>
-
-  type LoginAttemptCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<LoginAttemptFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: LoginAttemptCountAggregateInputType | true
-    }
-
-  export interface LoginAttemptDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LoginAttempt'], meta: { name: 'LoginAttempt' } }
-    /**
-     * Find zero or one LoginAttempt that matches the filter.
-     * @param {LoginAttemptFindUniqueArgs} args - Arguments to find a LoginAttempt
-     * @example
-     * // Get one LoginAttempt
-     * const loginAttempt = await prisma.loginAttempt.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUnique<T extends LoginAttemptFindUniqueArgs<ExtArgs>>(
-      args: SelectSubset<T, LoginAttemptFindUniqueArgs<ExtArgs>>
-    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
-
-    /**
-     * Find one LoginAttempt that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {LoginAttemptFindUniqueOrThrowArgs} args - Arguments to find a LoginAttempt
-     * @example
-     * // Get one LoginAttempt
-     * const loginAttempt = await prisma.loginAttempt.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends LoginAttemptFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, LoginAttemptFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find the first LoginAttempt that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LoginAttemptFindFirstArgs} args - Arguments to find a LoginAttempt
-     * @example
-     * // Get one LoginAttempt
-     * const loginAttempt = await prisma.loginAttempt.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirst<T extends LoginAttemptFindFirstArgs<ExtArgs>>(
-      args?: SelectSubset<T, LoginAttemptFindFirstArgs<ExtArgs>>
-    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
-
-    /**
-     * Find the first LoginAttempt that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LoginAttemptFindFirstOrThrowArgs} args - Arguments to find a LoginAttempt
-     * @example
-     * // Get one LoginAttempt
-     * const loginAttempt = await prisma.loginAttempt.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends LoginAttemptFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, LoginAttemptFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find zero or more LoginAttempts that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LoginAttemptFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all LoginAttempts
-     * const loginAttempts = await prisma.loginAttempt.findMany()
-     * 
-     * // Get first 10 LoginAttempts
-     * const loginAttempts = await prisma.loginAttempt.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const loginAttemptWithIdOnly = await prisma.loginAttempt.findMany({ select: { id: true } })
-     * 
-    **/
-    findMany<T extends LoginAttemptFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, LoginAttemptFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'findMany'>>
-
-    /**
-     * Create a LoginAttempt.
-     * @param {LoginAttemptCreateArgs} args - Arguments to create a LoginAttempt.
-     * @example
-     * // Create one LoginAttempt
-     * const LoginAttempt = await prisma.loginAttempt.create({
-     *   data: {
-     *     // ... data to create a LoginAttempt
-     *   }
-     * })
-     * 
-    **/
-    create<T extends LoginAttemptCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, LoginAttemptCreateArgs<ExtArgs>>
-    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
-
-    /**
-     * Create many LoginAttempts.
-     * @param {LoginAttemptCreateManyArgs} args - Arguments to create many LoginAttempts.
-     * @example
-     * // Create many LoginAttempts
-     * const loginAttempt = await prisma.loginAttempt.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-    **/
-    createMany<T extends LoginAttemptCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, LoginAttemptCreateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many LoginAttempts and returns the data saved in the database.
-     * @param {LoginAttemptCreateManyAndReturnArgs} args - Arguments to create many LoginAttempts.
-     * @example
-     * // Create many LoginAttempts
-     * const loginAttempt = await prisma.loginAttempt.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many LoginAttempts and only return the `id`
-     * const loginAttemptWithIdOnly = await prisma.loginAttempt.createManyAndReturn({ 
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-    **/
-    createManyAndReturn<T extends LoginAttemptCreateManyAndReturnArgs<ExtArgs>>(
-      args?: SelectSubset<T, LoginAttemptCreateManyAndReturnArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'createManyAndReturn'>>
-
-    /**
-     * Delete a LoginAttempt.
-     * @param {LoginAttemptDeleteArgs} args - Arguments to delete one LoginAttempt.
-     * @example
-     * // Delete one LoginAttempt
-     * const LoginAttempt = await prisma.loginAttempt.delete({
-     *   where: {
-     *     // ... filter to delete one LoginAttempt
-     *   }
-     * })
-     * 
-    **/
-    delete<T extends LoginAttemptDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, LoginAttemptDeleteArgs<ExtArgs>>
-    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
-
-    /**
-     * Update one LoginAttempt.
-     * @param {LoginAttemptUpdateArgs} args - Arguments to update one LoginAttempt.
-     * @example
-     * // Update one LoginAttempt
-     * const loginAttempt = await prisma.loginAttempt.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    update<T extends LoginAttemptUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, LoginAttemptUpdateArgs<ExtArgs>>
-    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
-
-    /**
-     * Delete zero or more LoginAttempts.
-     * @param {LoginAttemptDeleteManyArgs} args - Arguments to filter LoginAttempts to delete.
-     * @example
-     * // Delete a few LoginAttempts
-     * const { count } = await prisma.loginAttempt.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-    **/
-    deleteMany<T extends LoginAttemptDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, LoginAttemptDeleteManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more LoginAttempts.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LoginAttemptUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many LoginAttempts
-     * const loginAttempt = await prisma.loginAttempt.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    updateMany<T extends LoginAttemptUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, LoginAttemptUpdateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one LoginAttempt.
-     * @param {LoginAttemptUpsertArgs} args - Arguments to update or create a LoginAttempt.
-     * @example
-     * // Update or create a LoginAttempt
-     * const loginAttempt = await prisma.loginAttempt.upsert({
-     *   create: {
-     *     // ... data to create a LoginAttempt
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the LoginAttempt we want to update
-     *   }
-     * })
-    **/
-    upsert<T extends LoginAttemptUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, LoginAttemptUpsertArgs<ExtArgs>>
-    ): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
-
-    /**
-     * Count the number of LoginAttempts.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LoginAttemptCountArgs} args - Arguments to filter LoginAttempts to count.
-     * @example
-     * // Count the number of LoginAttempts
-     * const count = await prisma.loginAttempt.count({
-     *   where: {
-     *     // ... the filter for the LoginAttempts we want to count
-     *   }
-     * })
-    **/
-    count<T extends LoginAttemptCountArgs>(
-      args?: Subset<T, LoginAttemptCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], LoginAttemptCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a LoginAttempt.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LoginAttemptAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends LoginAttemptAggregateArgs>(args: Subset<T, LoginAttemptAggregateArgs>): Prisma.PrismaPromise<GetLoginAttemptAggregateType<T>>
-
-    /**
-     * Group by LoginAttempt.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LoginAttemptGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends LoginAttemptGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: LoginAttemptGroupByArgs['orderBy'] }
-        : { orderBy?: LoginAttemptGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, LoginAttemptGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLoginAttemptGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the LoginAttempt model
-   */
-  readonly fields: LoginAttemptFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for LoginAttempt.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__LoginAttemptClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: 'PrismaPromise';
-
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
-
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
-  }
-
-
-
-  /**
-   * Fields of the LoginAttempt model
-   */ 
-  interface LoginAttemptFieldRefs {
-    readonly id: FieldRef<"LoginAttempt", 'Int'>
-    readonly userId: FieldRef<"LoginAttempt", 'String'>
-    readonly type: FieldRef<"LoginAttempt", 'LoginAttemptType'>
-    readonly createdAt: FieldRef<"LoginAttempt", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * LoginAttempt findUnique
-   */
-  export type LoginAttemptFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LoginAttempt
-     */
-    select?: LoginAttemptSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LoginAttemptInclude<ExtArgs> | null
-    /**
-     * Filter, which LoginAttempt to fetch.
-     */
-    where: LoginAttemptWhereUniqueInput
-  }
-
-  /**
-   * LoginAttempt findUniqueOrThrow
-   */
-  export type LoginAttemptFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LoginAttempt
-     */
-    select?: LoginAttemptSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LoginAttemptInclude<ExtArgs> | null
-    /**
-     * Filter, which LoginAttempt to fetch.
-     */
-    where: LoginAttemptWhereUniqueInput
-  }
-
-  /**
-   * LoginAttempt findFirst
-   */
-  export type LoginAttemptFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LoginAttempt
-     */
-    select?: LoginAttemptSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LoginAttemptInclude<ExtArgs> | null
-    /**
-     * Filter, which LoginAttempt to fetch.
-     */
-    where?: LoginAttemptWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LoginAttempts to fetch.
-     */
-    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for LoginAttempts.
-     */
-    cursor?: LoginAttemptWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LoginAttempts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LoginAttempts.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of LoginAttempts.
-     */
-    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
-  }
-
-  /**
-   * LoginAttempt findFirstOrThrow
-   */
-  export type LoginAttemptFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LoginAttempt
-     */
-    select?: LoginAttemptSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LoginAttemptInclude<ExtArgs> | null
-    /**
-     * Filter, which LoginAttempt to fetch.
-     */
-    where?: LoginAttemptWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LoginAttempts to fetch.
-     */
-    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for LoginAttempts.
-     */
-    cursor?: LoginAttemptWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LoginAttempts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LoginAttempts.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of LoginAttempts.
-     */
-    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
-  }
-
-  /**
-   * LoginAttempt findMany
-   */
-  export type LoginAttemptFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LoginAttempt
-     */
-    select?: LoginAttemptSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LoginAttemptInclude<ExtArgs> | null
-    /**
-     * Filter, which LoginAttempts to fetch.
-     */
-    where?: LoginAttemptWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LoginAttempts to fetch.
-     */
-    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing LoginAttempts.
-     */
-    cursor?: LoginAttemptWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LoginAttempts from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LoginAttempts.
-     */
-    skip?: number
-    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
-  }
-
-  /**
-   * LoginAttempt create
-   */
-  export type LoginAttemptCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LoginAttempt
-     */
-    select?: LoginAttemptSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LoginAttemptInclude<ExtArgs> | null
-    /**
-     * The data needed to create a LoginAttempt.
-     */
-    data: XOR<LoginAttemptCreateInput, LoginAttemptUncheckedCreateInput>
-  }
-
-  /**
-   * LoginAttempt createMany
-   */
-  export type LoginAttemptCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many LoginAttempts.
-     */
-    data: LoginAttemptCreateManyInput | LoginAttemptCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * LoginAttempt createManyAndReturn
-   */
-  export type LoginAttemptCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LoginAttempt
-     */
-    select?: LoginAttemptSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many LoginAttempts.
-     */
-    data: LoginAttemptCreateManyInput | LoginAttemptCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LoginAttemptIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * LoginAttempt update
-   */
-  export type LoginAttemptUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LoginAttempt
-     */
-    select?: LoginAttemptSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LoginAttemptInclude<ExtArgs> | null
-    /**
-     * The data needed to update a LoginAttempt.
-     */
-    data: XOR<LoginAttemptUpdateInput, LoginAttemptUncheckedUpdateInput>
-    /**
-     * Choose, which LoginAttempt to update.
-     */
-    where: LoginAttemptWhereUniqueInput
-  }
-
-  /**
-   * LoginAttempt updateMany
-   */
-  export type LoginAttemptUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update LoginAttempts.
-     */
-    data: XOR<LoginAttemptUpdateManyMutationInput, LoginAttemptUncheckedUpdateManyInput>
-    /**
-     * Filter which LoginAttempts to update
-     */
-    where?: LoginAttemptWhereInput
-  }
-
-  /**
-   * LoginAttempt upsert
-   */
-  export type LoginAttemptUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LoginAttempt
-     */
-    select?: LoginAttemptSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LoginAttemptInclude<ExtArgs> | null
-    /**
-     * The filter to search for the LoginAttempt to update in case it exists.
-     */
-    where: LoginAttemptWhereUniqueInput
-    /**
-     * In case the LoginAttempt found by the `where` argument doesn't exist, create a new LoginAttempt with this data.
-     */
-    create: XOR<LoginAttemptCreateInput, LoginAttemptUncheckedCreateInput>
-    /**
-     * In case the LoginAttempt was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<LoginAttemptUpdateInput, LoginAttemptUncheckedUpdateInput>
-  }
-
-  /**
-   * LoginAttempt delete
-   */
-  export type LoginAttemptDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LoginAttempt
-     */
-    select?: LoginAttemptSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LoginAttemptInclude<ExtArgs> | null
-    /**
-     * Filter which LoginAttempt to delete.
-     */
-    where: LoginAttemptWhereUniqueInput
-  }
-
-  /**
-   * LoginAttempt deleteMany
-   */
-  export type LoginAttemptDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which LoginAttempts to delete
-     */
-    where?: LoginAttemptWhereInput
-  }
-
-  /**
-   * LoginAttempt without action
-   */
-  export type LoginAttemptDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LoginAttempt
-     */
-    select?: LoginAttemptSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LoginAttemptInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model Notification
    */
 
@@ -13227,1023 +11981,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: SavedProgressInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model Audit
-   */
-
-  export type AggregateAudit = {
-    _count: AuditCountAggregateOutputType | null
-    _avg: AuditAvgAggregateOutputType | null
-    _sum: AuditSumAggregateOutputType | null
-    _min: AuditMinAggregateOutputType | null
-    _max: AuditMaxAggregateOutputType | null
-  }
-
-  export type AuditAvgAggregateOutputType = {
-    xrdUsdValue: Decimal | null
-    xrdPrice: Decimal | null
-  }
-
-  export type AuditSumAggregateOutputType = {
-    xrdUsdValue: Decimal | null
-    xrdPrice: Decimal | null
-  }
-
-  export type AuditMinAggregateOutputType = {
-    transactionId: string | null
-    userId: string | null
-    date: Date | null
-    type: $Enums.AuditType | null
-    xrdUsdValue: Decimal | null
-    xrdPrice: Decimal | null
-  }
-
-  export type AuditMaxAggregateOutputType = {
-    transactionId: string | null
-    userId: string | null
-    date: Date | null
-    type: $Enums.AuditType | null
-    xrdUsdValue: Decimal | null
-    xrdPrice: Decimal | null
-  }
-
-  export type AuditCountAggregateOutputType = {
-    transactionId: number
-    userId: number
-    date: number
-    type: number
-    xrdUsdValue: number
-    xrdPrice: number
-    data: number
-    _all: number
-  }
-
-
-  export type AuditAvgAggregateInputType = {
-    xrdUsdValue?: true
-    xrdPrice?: true
-  }
-
-  export type AuditSumAggregateInputType = {
-    xrdUsdValue?: true
-    xrdPrice?: true
-  }
-
-  export type AuditMinAggregateInputType = {
-    transactionId?: true
-    userId?: true
-    date?: true
-    type?: true
-    xrdUsdValue?: true
-    xrdPrice?: true
-  }
-
-  export type AuditMaxAggregateInputType = {
-    transactionId?: true
-    userId?: true
-    date?: true
-    type?: true
-    xrdUsdValue?: true
-    xrdPrice?: true
-  }
-
-  export type AuditCountAggregateInputType = {
-    transactionId?: true
-    userId?: true
-    date?: true
-    type?: true
-    xrdUsdValue?: true
-    xrdPrice?: true
-    data?: true
-    _all?: true
-  }
-
-  export type AuditAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Audit to aggregate.
-     */
-    where?: AuditWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Audits to fetch.
-     */
-    orderBy?: AuditOrderByWithRelationInput | AuditOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: AuditWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Audits from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Audits.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Audits
-    **/
-    _count?: true | AuditCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: AuditAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: AuditSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: AuditMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: AuditMaxAggregateInputType
-  }
-
-  export type GetAuditAggregateType<T extends AuditAggregateArgs> = {
-        [P in keyof T & keyof AggregateAudit]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateAudit[P]>
-      : GetScalarType<T[P], AggregateAudit[P]>
-  }
-
-
-
-
-  export type AuditGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: AuditWhereInput
-    orderBy?: AuditOrderByWithAggregationInput | AuditOrderByWithAggregationInput[]
-    by: AuditScalarFieldEnum[] | AuditScalarFieldEnum
-    having?: AuditScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: AuditCountAggregateInputType | true
-    _avg?: AuditAvgAggregateInputType
-    _sum?: AuditSumAggregateInputType
-    _min?: AuditMinAggregateInputType
-    _max?: AuditMaxAggregateInputType
-  }
-
-  export type AuditGroupByOutputType = {
-    transactionId: string
-    userId: string
-    date: Date
-    type: $Enums.AuditType
-    xrdUsdValue: Decimal
-    xrdPrice: Decimal
-    data: JsonValue
-    _count: AuditCountAggregateOutputType | null
-    _avg: AuditAvgAggregateOutputType | null
-    _sum: AuditSumAggregateOutputType | null
-    _min: AuditMinAggregateOutputType | null
-    _max: AuditMaxAggregateOutputType | null
-  }
-
-  type GetAuditGroupByPayload<T extends AuditGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<AuditGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof AuditGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], AuditGroupByOutputType[P]>
-            : GetScalarType<T[P], AuditGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type AuditSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    transactionId?: boolean
-    userId?: boolean
-    date?: boolean
-    type?: boolean
-    xrdUsdValue?: boolean
-    xrdPrice?: boolean
-    data?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["audit"]>
-
-  export type AuditSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    transactionId?: boolean
-    userId?: boolean
-    date?: boolean
-    type?: boolean
-    xrdUsdValue?: boolean
-    xrdPrice?: boolean
-    data?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["audit"]>
-
-  export type AuditSelectScalar = {
-    transactionId?: boolean
-    userId?: boolean
-    date?: boolean
-    type?: boolean
-    xrdUsdValue?: boolean
-    xrdPrice?: boolean
-    data?: boolean
-  }
-
-  export type AuditInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-  export type AuditIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
-  }
-
-  export type $AuditPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Audit"
-    objects: {
-      user: Prisma.$UserPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      transactionId: string
-      userId: string
-      date: Date
-      type: $Enums.AuditType
-      xrdUsdValue: Prisma.Decimal
-      xrdPrice: Prisma.Decimal
-      data: Prisma.JsonValue
-    }, ExtArgs["result"]["audit"]>
-    composites: {}
-  }
-
-  type AuditGetPayload<S extends boolean | null | undefined | AuditDefaultArgs> = $Result.GetResult<Prisma.$AuditPayload, S>
-
-  type AuditCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
-    Omit<AuditFindManyArgs, 'select' | 'include' | 'distinct'> & {
-      select?: AuditCountAggregateInputType | true
-    }
-
-  export interface AuditDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Audit'], meta: { name: 'Audit' } }
-    /**
-     * Find zero or one Audit that matches the filter.
-     * @param {AuditFindUniqueArgs} args - Arguments to find a Audit
-     * @example
-     * // Get one Audit
-     * const audit = await prisma.audit.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUnique<T extends AuditFindUniqueArgs<ExtArgs>>(
-      args: SelectSubset<T, AuditFindUniqueArgs<ExtArgs>>
-    ): Prisma__AuditClient<$Result.GetResult<Prisma.$AuditPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
-
-    /**
-     * Find one Audit that matches the filter or throw an error with `error.code='P2025'` 
-     * if no matches were found.
-     * @param {AuditFindUniqueOrThrowArgs} args - Arguments to find a Audit
-     * @example
-     * // Get one Audit
-     * const audit = await prisma.audit.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends AuditFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, AuditFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__AuditClient<$Result.GetResult<Prisma.$AuditPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find the first Audit that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AuditFindFirstArgs} args - Arguments to find a Audit
-     * @example
-     * // Get one Audit
-     * const audit = await prisma.audit.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirst<T extends AuditFindFirstArgs<ExtArgs>>(
-      args?: SelectSubset<T, AuditFindFirstArgs<ExtArgs>>
-    ): Prisma__AuditClient<$Result.GetResult<Prisma.$AuditPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
-
-    /**
-     * Find the first Audit that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AuditFindFirstOrThrowArgs} args - Arguments to find a Audit
-     * @example
-     * // Get one Audit
-     * const audit = await prisma.audit.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends AuditFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, AuditFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__AuditClient<$Result.GetResult<Prisma.$AuditPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
-
-    /**
-     * Find zero or more Audits that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AuditFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Audits
-     * const audits = await prisma.audit.findMany()
-     * 
-     * // Get first 10 Audits
-     * const audits = await prisma.audit.findMany({ take: 10 })
-     * 
-     * // Only select the `transactionId`
-     * const auditWithTransactionIdOnly = await prisma.audit.findMany({ select: { transactionId: true } })
-     * 
-    **/
-    findMany<T extends AuditFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, AuditFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditPayload<ExtArgs>, T, 'findMany'>>
-
-    /**
-     * Create a Audit.
-     * @param {AuditCreateArgs} args - Arguments to create a Audit.
-     * @example
-     * // Create one Audit
-     * const Audit = await prisma.audit.create({
-     *   data: {
-     *     // ... data to create a Audit
-     *   }
-     * })
-     * 
-    **/
-    create<T extends AuditCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, AuditCreateArgs<ExtArgs>>
-    ): Prisma__AuditClient<$Result.GetResult<Prisma.$AuditPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
-
-    /**
-     * Create many Audits.
-     * @param {AuditCreateManyArgs} args - Arguments to create many Audits.
-     * @example
-     * // Create many Audits
-     * const audit = await prisma.audit.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-    **/
-    createMany<T extends AuditCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, AuditCreateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Audits and returns the data saved in the database.
-     * @param {AuditCreateManyAndReturnArgs} args - Arguments to create many Audits.
-     * @example
-     * // Create many Audits
-     * const audit = await prisma.audit.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Audits and only return the `transactionId`
-     * const auditWithTransactionIdOnly = await prisma.audit.createManyAndReturn({ 
-     *   select: { transactionId: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-    **/
-    createManyAndReturn<T extends AuditCreateManyAndReturnArgs<ExtArgs>>(
-      args?: SelectSubset<T, AuditCreateManyAndReturnArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditPayload<ExtArgs>, T, 'createManyAndReturn'>>
-
-    /**
-     * Delete a Audit.
-     * @param {AuditDeleteArgs} args - Arguments to delete one Audit.
-     * @example
-     * // Delete one Audit
-     * const Audit = await prisma.audit.delete({
-     *   where: {
-     *     // ... filter to delete one Audit
-     *   }
-     * })
-     * 
-    **/
-    delete<T extends AuditDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, AuditDeleteArgs<ExtArgs>>
-    ): Prisma__AuditClient<$Result.GetResult<Prisma.$AuditPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
-
-    /**
-     * Update one Audit.
-     * @param {AuditUpdateArgs} args - Arguments to update one Audit.
-     * @example
-     * // Update one Audit
-     * const audit = await prisma.audit.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    update<T extends AuditUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, AuditUpdateArgs<ExtArgs>>
-    ): Prisma__AuditClient<$Result.GetResult<Prisma.$AuditPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
-
-    /**
-     * Delete zero or more Audits.
-     * @param {AuditDeleteManyArgs} args - Arguments to filter Audits to delete.
-     * @example
-     * // Delete a few Audits
-     * const { count } = await prisma.audit.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-    **/
-    deleteMany<T extends AuditDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, AuditDeleteManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Audits.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AuditUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Audits
-     * const audit = await prisma.audit.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    updateMany<T extends AuditUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, AuditUpdateManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one Audit.
-     * @param {AuditUpsertArgs} args - Arguments to update or create a Audit.
-     * @example
-     * // Update or create a Audit
-     * const audit = await prisma.audit.upsert({
-     *   create: {
-     *     // ... data to create a Audit
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Audit we want to update
-     *   }
-     * })
-    **/
-    upsert<T extends AuditUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, AuditUpsertArgs<ExtArgs>>
-    ): Prisma__AuditClient<$Result.GetResult<Prisma.$AuditPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
-
-    /**
-     * Count the number of Audits.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AuditCountArgs} args - Arguments to filter Audits to count.
-     * @example
-     * // Count the number of Audits
-     * const count = await prisma.audit.count({
-     *   where: {
-     *     // ... the filter for the Audits we want to count
-     *   }
-     * })
-    **/
-    count<T extends AuditCountArgs>(
-      args?: Subset<T, AuditCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], AuditCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Audit.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AuditAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends AuditAggregateArgs>(args: Subset<T, AuditAggregateArgs>): Prisma.PrismaPromise<GetAuditAggregateType<T>>
-
-    /**
-     * Group by Audit.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {AuditGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends AuditGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: AuditGroupByArgs['orderBy'] }
-        : { orderBy?: AuditGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, AuditGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAuditGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Audit model
-   */
-  readonly fields: AuditFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Audit.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__AuditClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: 'PrismaPromise';
-
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
-
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
-  }
-
-
-
-  /**
-   * Fields of the Audit model
-   */ 
-  interface AuditFieldRefs {
-    readonly transactionId: FieldRef<"Audit", 'String'>
-    readonly userId: FieldRef<"Audit", 'String'>
-    readonly date: FieldRef<"Audit", 'DateTime'>
-    readonly type: FieldRef<"Audit", 'AuditType'>
-    readonly xrdUsdValue: FieldRef<"Audit", 'Decimal'>
-    readonly xrdPrice: FieldRef<"Audit", 'Decimal'>
-    readonly data: FieldRef<"Audit", 'Json'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Audit findUnique
-   */
-  export type AuditFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Audit
-     */
-    select?: AuditSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AuditInclude<ExtArgs> | null
-    /**
-     * Filter, which Audit to fetch.
-     */
-    where: AuditWhereUniqueInput
-  }
-
-  /**
-   * Audit findUniqueOrThrow
-   */
-  export type AuditFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Audit
-     */
-    select?: AuditSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AuditInclude<ExtArgs> | null
-    /**
-     * Filter, which Audit to fetch.
-     */
-    where: AuditWhereUniqueInput
-  }
-
-  /**
-   * Audit findFirst
-   */
-  export type AuditFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Audit
-     */
-    select?: AuditSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AuditInclude<ExtArgs> | null
-    /**
-     * Filter, which Audit to fetch.
-     */
-    where?: AuditWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Audits to fetch.
-     */
-    orderBy?: AuditOrderByWithRelationInput | AuditOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Audits.
-     */
-    cursor?: AuditWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Audits from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Audits.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Audits.
-     */
-    distinct?: AuditScalarFieldEnum | AuditScalarFieldEnum[]
-  }
-
-  /**
-   * Audit findFirstOrThrow
-   */
-  export type AuditFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Audit
-     */
-    select?: AuditSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AuditInclude<ExtArgs> | null
-    /**
-     * Filter, which Audit to fetch.
-     */
-    where?: AuditWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Audits to fetch.
-     */
-    orderBy?: AuditOrderByWithRelationInput | AuditOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Audits.
-     */
-    cursor?: AuditWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Audits from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Audits.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Audits.
-     */
-    distinct?: AuditScalarFieldEnum | AuditScalarFieldEnum[]
-  }
-
-  /**
-   * Audit findMany
-   */
-  export type AuditFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Audit
-     */
-    select?: AuditSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AuditInclude<ExtArgs> | null
-    /**
-     * Filter, which Audits to fetch.
-     */
-    where?: AuditWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Audits to fetch.
-     */
-    orderBy?: AuditOrderByWithRelationInput | AuditOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Audits.
-     */
-    cursor?: AuditWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Audits from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Audits.
-     */
-    skip?: number
-    distinct?: AuditScalarFieldEnum | AuditScalarFieldEnum[]
-  }
-
-  /**
-   * Audit create
-   */
-  export type AuditCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Audit
-     */
-    select?: AuditSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AuditInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Audit.
-     */
-    data: XOR<AuditCreateInput, AuditUncheckedCreateInput>
-  }
-
-  /**
-   * Audit createMany
-   */
-  export type AuditCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Audits.
-     */
-    data: AuditCreateManyInput | AuditCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Audit createManyAndReturn
-   */
-  export type AuditCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Audit
-     */
-    select?: AuditSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * The data used to create many Audits.
-     */
-    data: AuditCreateManyInput | AuditCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AuditIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Audit update
-   */
-  export type AuditUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Audit
-     */
-    select?: AuditSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AuditInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Audit.
-     */
-    data: XOR<AuditUpdateInput, AuditUncheckedUpdateInput>
-    /**
-     * Choose, which Audit to update.
-     */
-    where: AuditWhereUniqueInput
-  }
-
-  /**
-   * Audit updateMany
-   */
-  export type AuditUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Audits.
-     */
-    data: XOR<AuditUpdateManyMutationInput, AuditUncheckedUpdateManyInput>
-    /**
-     * Filter which Audits to update
-     */
-    where?: AuditWhereInput
-  }
-
-  /**
-   * Audit upsert
-   */
-  export type AuditUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Audit
-     */
-    select?: AuditSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AuditInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Audit to update in case it exists.
-     */
-    where: AuditWhereUniqueInput
-    /**
-     * In case the Audit found by the `where` argument doesn't exist, create a new Audit with this data.
-     */
-    create: XOR<AuditCreateInput, AuditUncheckedCreateInput>
-    /**
-     * In case the Audit was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<AuditUpdateInput, AuditUncheckedUpdateInput>
-  }
-
-  /**
-   * Audit delete
-   */
-  export type AuditDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Audit
-     */
-    select?: AuditSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AuditInclude<ExtArgs> | null
-    /**
-     * Filter which Audit to delete.
-     */
-    where: AuditWhereUniqueInput
-  }
-
-  /**
-   * Audit deleteMany
-   */
-  export type AuditDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Audits to delete
-     */
-    where?: AuditWhereInput
-  }
-
-  /**
-   * Audit without action
-   */
-  export type AuditDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Audit
-     */
-    select?: AuditSelect<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AuditInclude<ExtArgs> | null
   }
 
 
@@ -18134,16 +15871,6 @@ export namespace Prisma {
   export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
 
 
-  export const LoginAttemptScalarFieldEnum: {
-    id: 'id',
-    userId: 'userId',
-    type: 'type',
-    createdAt: 'createdAt'
-  };
-
-  export type LoginAttemptScalarFieldEnum = (typeof LoginAttemptScalarFieldEnum)[keyof typeof LoginAttemptScalarFieldEnum]
-
-
   export const NotificationScalarFieldEnum: {
     notificationId: 'notificationId',
     userId: 'userId',
@@ -18179,19 +15906,6 @@ export namespace Prisma {
   };
 
   export type SavedProgressScalarFieldEnum = (typeof SavedProgressScalarFieldEnum)[keyof typeof SavedProgressScalarFieldEnum]
-
-
-  export const AuditScalarFieldEnum: {
-    transactionId: 'transactionId',
-    userId: 'userId',
-    date: 'date',
-    type: 'type',
-    xrdUsdValue: 'xrdUsdValue',
-    xrdPrice: 'xrdPrice',
-    data: 'data'
-  };
-
-  export type AuditScalarFieldEnum = (typeof AuditScalarFieldEnum)[keyof typeof AuditScalarFieldEnum]
 
 
   export const TransactionIntentScalarFieldEnum: {
@@ -18422,20 +16136,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'LoginAttemptType'
-   */
-  export type EnumLoginAttemptTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoginAttemptType'>
-    
-
-
-  /**
-   * Reference to a field of type 'LoginAttemptType[]'
-   */
-  export type ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoginAttemptType[]'>
-    
-
-
-  /**
    * Reference to a field of type 'QuestStatus'
    */
   export type EnumQuestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QuestStatus'>
@@ -18446,20 +16146,6 @@ export namespace Prisma {
    * Reference to a field of type 'QuestStatus[]'
    */
   export type ListEnumQuestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QuestStatus[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'AuditType'
-   */
-  export type EnumAuditTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuditType'>
-    
-
-
-  /**
-   * Reference to a field of type 'AuditType[]'
-   */
-  export type ListEnumAuditTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuditType[]'>
     
 
 
@@ -18513,12 +16199,10 @@ export namespace Prisma {
     messages?: MessageListRelationFilter
     completedQuestRequirements?: CompletedQuestRequirementListRelationFilter
     savedProgress?: XOR<SavedProgressNullableRelationFilter, SavedProgressWhereInput> | null
-    auditLogs?: AuditListRelationFilter
     questProgress?: QuestProgressListRelationFilter
     referredUsers?: UserListRelationFilter
     transactions?: TransactionIntentListRelationFilter
     referals?: ReferralListRelationFilter
-    loginAttempts?: LoginAttemptListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -18537,12 +16221,10 @@ export namespace Prisma {
     messages?: MessageOrderByRelationAggregateInput
     completedQuestRequirements?: CompletedQuestRequirementOrderByRelationAggregateInput
     savedProgress?: SavedProgressOrderByWithRelationInput
-    auditLogs?: AuditOrderByRelationAggregateInput
     questProgress?: QuestProgressOrderByRelationAggregateInput
     referredUsers?: UserOrderByRelationAggregateInput
     transactions?: TransactionIntentOrderByRelationAggregateInput
     referals?: ReferralOrderByRelationAggregateInput
-    loginAttempts?: LoginAttemptOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -18564,12 +16246,10 @@ export namespace Prisma {
     messages?: MessageListRelationFilter
     completedQuestRequirements?: CompletedQuestRequirementListRelationFilter
     savedProgress?: XOR<SavedProgressNullableRelationFilter, SavedProgressWhereInput> | null
-    auditLogs?: AuditListRelationFilter
     questProgress?: QuestProgressListRelationFilter
     referredUsers?: UserListRelationFilter
     transactions?: TransactionIntentListRelationFilter
     referals?: ReferralListRelationFilter
-    loginAttempts?: LoginAttemptListRelationFilter
   }, "id" | "identityAddress" | "referralCode">
 
   export type UserOrderByWithAggregationInput = {
@@ -18868,58 +16548,6 @@ export namespace Prisma {
     data?: JsonWithAggregatesFilter<"Message">
   }
 
-  export type LoginAttemptWhereInput = {
-    AND?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
-    OR?: LoginAttemptWhereInput[]
-    NOT?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
-    id?: IntFilter<"LoginAttempt"> | number
-    userId?: StringFilter<"LoginAttempt"> | string
-    type?: EnumLoginAttemptTypeFilter<"LoginAttempt"> | $Enums.LoginAttemptType
-    createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
-  }
-
-  export type LoginAttemptOrderByWithRelationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    type?: SortOrder
-    createdAt?: SortOrder
-    user?: UserOrderByWithRelationInput
-  }
-
-  export type LoginAttemptWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
-    OR?: LoginAttemptWhereInput[]
-    NOT?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
-    userId?: StringFilter<"LoginAttempt"> | string
-    type?: EnumLoginAttemptTypeFilter<"LoginAttempt"> | $Enums.LoginAttemptType
-    createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
-  }, "id">
-
-  export type LoginAttemptOrderByWithAggregationInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    type?: SortOrder
-    createdAt?: SortOrder
-    _count?: LoginAttemptCountOrderByAggregateInput
-    _avg?: LoginAttemptAvgOrderByAggregateInput
-    _max?: LoginAttemptMaxOrderByAggregateInput
-    _min?: LoginAttemptMinOrderByAggregateInput
-    _sum?: LoginAttemptSumOrderByAggregateInput
-  }
-
-  export type LoginAttemptScalarWhereWithAggregatesInput = {
-    AND?: LoginAttemptScalarWhereWithAggregatesInput | LoginAttemptScalarWhereWithAggregatesInput[]
-    OR?: LoginAttemptScalarWhereWithAggregatesInput[]
-    NOT?: LoginAttemptScalarWhereWithAggregatesInput | LoginAttemptScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"LoginAttempt"> | number
-    userId?: StringWithAggregatesFilter<"LoginAttempt"> | string
-    type?: EnumLoginAttemptTypeWithAggregatesFilter<"LoginAttempt"> | $Enums.LoginAttemptType
-    createdAt?: DateTimeWithAggregatesFilter<"LoginAttempt"> | Date | string
-  }
-
   export type NotificationWhereInput = {
     AND?: NotificationWhereInput | NotificationWhereInput[]
     OR?: NotificationWhereInput[]
@@ -19105,73 +16733,6 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"SavedProgress"> | string
     questId?: StringWithAggregatesFilter<"SavedProgress"> | string
     progress?: IntWithAggregatesFilter<"SavedProgress"> | number
-  }
-
-  export type AuditWhereInput = {
-    AND?: AuditWhereInput | AuditWhereInput[]
-    OR?: AuditWhereInput[]
-    NOT?: AuditWhereInput | AuditWhereInput[]
-    transactionId?: StringFilter<"Audit"> | string
-    userId?: StringFilter<"Audit"> | string
-    date?: DateTimeFilter<"Audit"> | Date | string
-    type?: EnumAuditTypeFilter<"Audit"> | $Enums.AuditType
-    xrdUsdValue?: DecimalFilter<"Audit"> | Decimal | DecimalJsLike | number | string
-    xrdPrice?: DecimalFilter<"Audit"> | Decimal | DecimalJsLike | number | string
-    data?: JsonFilter<"Audit">
-    user?: XOR<UserRelationFilter, UserWhereInput>
-  }
-
-  export type AuditOrderByWithRelationInput = {
-    transactionId?: SortOrder
-    userId?: SortOrder
-    date?: SortOrder
-    type?: SortOrder
-    xrdUsdValue?: SortOrder
-    xrdPrice?: SortOrder
-    data?: SortOrder
-    user?: UserOrderByWithRelationInput
-  }
-
-  export type AuditWhereUniqueInput = Prisma.AtLeast<{
-    transactionId?: string
-    AND?: AuditWhereInput | AuditWhereInput[]
-    OR?: AuditWhereInput[]
-    NOT?: AuditWhereInput | AuditWhereInput[]
-    userId?: StringFilter<"Audit"> | string
-    date?: DateTimeFilter<"Audit"> | Date | string
-    type?: EnumAuditTypeFilter<"Audit"> | $Enums.AuditType
-    xrdUsdValue?: DecimalFilter<"Audit"> | Decimal | DecimalJsLike | number | string
-    xrdPrice?: DecimalFilter<"Audit"> | Decimal | DecimalJsLike | number | string
-    data?: JsonFilter<"Audit">
-    user?: XOR<UserRelationFilter, UserWhereInput>
-  }, "transactionId">
-
-  export type AuditOrderByWithAggregationInput = {
-    transactionId?: SortOrder
-    userId?: SortOrder
-    date?: SortOrder
-    type?: SortOrder
-    xrdUsdValue?: SortOrder
-    xrdPrice?: SortOrder
-    data?: SortOrder
-    _count?: AuditCountOrderByAggregateInput
-    _avg?: AuditAvgOrderByAggregateInput
-    _max?: AuditMaxOrderByAggregateInput
-    _min?: AuditMinOrderByAggregateInput
-    _sum?: AuditSumOrderByAggregateInput
-  }
-
-  export type AuditScalarWhereWithAggregatesInput = {
-    AND?: AuditScalarWhereWithAggregatesInput | AuditScalarWhereWithAggregatesInput[]
-    OR?: AuditScalarWhereWithAggregatesInput[]
-    NOT?: AuditScalarWhereWithAggregatesInput | AuditScalarWhereWithAggregatesInput[]
-    transactionId?: StringWithAggregatesFilter<"Audit"> | string
-    userId?: StringWithAggregatesFilter<"Audit"> | string
-    date?: DateTimeWithAggregatesFilter<"Audit"> | Date | string
-    type?: EnumAuditTypeWithAggregatesFilter<"Audit"> | $Enums.AuditType
-    xrdUsdValue?: DecimalWithAggregatesFilter<"Audit"> | Decimal | DecimalJsLike | number | string
-    xrdPrice?: DecimalWithAggregatesFilter<"Audit"> | Decimal | DecimalJsLike | number | string
-    data?: JsonWithAggregatesFilter<"Audit">
   }
 
   export type TransactionIntentWhereInput = {
@@ -19397,12 +16958,10 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -19420,12 +16979,10 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -19443,12 +17000,10 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -19466,12 +17021,10 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -19768,51 +17321,6 @@ export namespace Prisma {
     data?: JsonNullValueInput | InputJsonValue
   }
 
-  export type LoginAttemptCreateInput = {
-    type: $Enums.LoginAttemptType
-    createdAt?: Date | string
-    user: UserCreateNestedOneWithoutLoginAttemptsInput
-  }
-
-  export type LoginAttemptUncheckedCreateInput = {
-    id?: number
-    userId: string
-    type: $Enums.LoginAttemptType
-    createdAt?: Date | string
-  }
-
-  export type LoginAttemptUpdateInput = {
-    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutLoginAttemptsNestedInput
-  }
-
-  export type LoginAttemptUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
-    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LoginAttemptCreateManyInput = {
-    id?: number
-    userId: string
-    type: $Enums.LoginAttemptType
-    createdAt?: Date | string
-  }
-
-  export type LoginAttemptUpdateManyMutationInput = {
-    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LoginAttemptUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
-    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type NotificationCreateInput = {
     notificationId: string
     userId: string
@@ -19983,75 +17491,6 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     questId?: StringFieldUpdateOperationsInput | string
     progress?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type AuditCreateInput = {
-    transactionId: string
-    date?: Date | string
-    type: $Enums.AuditType
-    xrdUsdValue: Decimal | DecimalJsLike | number | string
-    xrdPrice?: Decimal | DecimalJsLike | number | string
-    data?: JsonNullValueInput | InputJsonValue
-    user: UserCreateNestedOneWithoutAuditLogsInput
-  }
-
-  export type AuditUncheckedCreateInput = {
-    transactionId: string
-    userId: string
-    date?: Date | string
-    type: $Enums.AuditType
-    xrdUsdValue: Decimal | DecimalJsLike | number | string
-    xrdPrice?: Decimal | DecimalJsLike | number | string
-    data?: JsonNullValueInput | InputJsonValue
-  }
-
-  export type AuditUpdateInput = {
-    transactionId?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumAuditTypeFieldUpdateOperationsInput | $Enums.AuditType
-    xrdUsdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    xrdPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    data?: JsonNullValueInput | InputJsonValue
-    user?: UserUpdateOneRequiredWithoutAuditLogsNestedInput
-  }
-
-  export type AuditUncheckedUpdateInput = {
-    transactionId?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumAuditTypeFieldUpdateOperationsInput | $Enums.AuditType
-    xrdUsdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    xrdPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    data?: JsonNullValueInput | InputJsonValue
-  }
-
-  export type AuditCreateManyInput = {
-    transactionId: string
-    userId: string
-    date?: Date | string
-    type: $Enums.AuditType
-    xrdUsdValue: Decimal | DecimalJsLike | number | string
-    xrdPrice?: Decimal | DecimalJsLike | number | string
-    data?: JsonNullValueInput | InputJsonValue
-  }
-
-  export type AuditUpdateManyMutationInput = {
-    transactionId?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumAuditTypeFieldUpdateOperationsInput | $Enums.AuditType
-    xrdUsdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    xrdPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    data?: JsonNullValueInput | InputJsonValue
-  }
-
-  export type AuditUncheckedUpdateManyInput = {
-    transactionId?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumAuditTypeFieldUpdateOperationsInput | $Enums.AuditType
-    xrdUsdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    xrdPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    data?: JsonNullValueInput | InputJsonValue
   }
 
   export type TransactionIntentCreateInput = {
@@ -20345,12 +17784,6 @@ export namespace Prisma {
     isNot?: SavedProgressWhereInput | null
   }
 
-  export type AuditListRelationFilter = {
-    every?: AuditWhereInput
-    some?: AuditWhereInput
-    none?: AuditWhereInput
-  }
-
   export type QuestProgressListRelationFilter = {
     every?: QuestProgressWhereInput
     some?: QuestProgressWhereInput
@@ -20375,12 +17808,6 @@ export namespace Prisma {
     none?: ReferralWhereInput
   }
 
-  export type LoginAttemptListRelationFilter = {
-    every?: LoginAttemptWhereInput
-    some?: LoginAttemptWhereInput
-    none?: LoginAttemptWhereInput
-  }
-
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -20398,10 +17825,6 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type AuditOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type QuestProgressOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -20415,10 +17838,6 @@ export namespace Prisma {
   }
 
   export type ReferralOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type LoginAttemptOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -20841,52 +18260,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type EnumLoginAttemptTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.LoginAttemptType | EnumLoginAttemptTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumLoginAttemptTypeFilter<$PrismaModel> | $Enums.LoginAttemptType
-  }
-
-  export type LoginAttemptCountOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    type?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type LoginAttemptAvgOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type LoginAttemptMaxOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    type?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type LoginAttemptMinOrderByAggregateInput = {
-    id?: SortOrder
-    userId?: SortOrder
-    type?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type LoginAttemptSumOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type EnumLoginAttemptTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LoginAttemptType | EnumLoginAttemptTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumLoginAttemptTypeWithAggregatesFilter<$PrismaModel> | $Enums.LoginAttemptType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
-    _max?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
-  }
-
   export type NotificationNotificationIdUserIdCompoundUniqueInput = {
     notificationId: string
     userId: string
@@ -21001,61 +18374,6 @@ export namespace Prisma {
 
   export type SavedProgressSumOrderByAggregateInput = {
     progress?: SortOrder
-  }
-
-  export type EnumAuditTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.AuditType | EnumAuditTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.AuditType[] | ListEnumAuditTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.AuditType[] | ListEnumAuditTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumAuditTypeFilter<$PrismaModel> | $Enums.AuditType
-  }
-
-  export type AuditCountOrderByAggregateInput = {
-    transactionId?: SortOrder
-    userId?: SortOrder
-    date?: SortOrder
-    type?: SortOrder
-    xrdUsdValue?: SortOrder
-    xrdPrice?: SortOrder
-    data?: SortOrder
-  }
-
-  export type AuditAvgOrderByAggregateInput = {
-    xrdUsdValue?: SortOrder
-    xrdPrice?: SortOrder
-  }
-
-  export type AuditMaxOrderByAggregateInput = {
-    transactionId?: SortOrder
-    userId?: SortOrder
-    date?: SortOrder
-    type?: SortOrder
-    xrdUsdValue?: SortOrder
-    xrdPrice?: SortOrder
-  }
-
-  export type AuditMinOrderByAggregateInput = {
-    transactionId?: SortOrder
-    userId?: SortOrder
-    date?: SortOrder
-    type?: SortOrder
-    xrdUsdValue?: SortOrder
-    xrdPrice?: SortOrder
-  }
-
-  export type AuditSumOrderByAggregateInput = {
-    xrdUsdValue?: SortOrder
-    xrdPrice?: SortOrder
-  }
-
-  export type EnumAuditTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.AuditType | EnumAuditTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.AuditType[] | ListEnumAuditTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.AuditType[] | ListEnumAuditTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumAuditTypeWithAggregatesFilter<$PrismaModel> | $Enums.AuditType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumAuditTypeFilter<$PrismaModel>
-    _max?: NestedEnumAuditTypeFilter<$PrismaModel>
   }
 
   export type EnumTransactionIntentStatusFilter<$PrismaModel = never> = {
@@ -21260,13 +18578,6 @@ export namespace Prisma {
     connect?: SavedProgressWhereUniqueInput
   }
 
-  export type AuditCreateNestedManyWithoutUserInput = {
-    create?: XOR<AuditCreateWithoutUserInput, AuditUncheckedCreateWithoutUserInput> | AuditCreateWithoutUserInput[] | AuditUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AuditCreateOrConnectWithoutUserInput | AuditCreateOrConnectWithoutUserInput[]
-    createMany?: AuditCreateManyUserInputEnvelope
-    connect?: AuditWhereUniqueInput | AuditWhereUniqueInput[]
-  }
-
   export type QuestProgressCreateNestedManyWithoutUserInput = {
     create?: XOR<QuestProgressCreateWithoutUserInput, QuestProgressUncheckedCreateWithoutUserInput> | QuestProgressCreateWithoutUserInput[] | QuestProgressUncheckedCreateWithoutUserInput[]
     connectOrCreate?: QuestProgressCreateOrConnectWithoutUserInput | QuestProgressCreateOrConnectWithoutUserInput[]
@@ -21293,13 +18604,6 @@ export namespace Prisma {
     connectOrCreate?: ReferralCreateOrConnectWithoutUserInput | ReferralCreateOrConnectWithoutUserInput[]
     createMany?: ReferralCreateManyUserInputEnvelope
     connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
-  }
-
-  export type LoginAttemptCreateNestedManyWithoutUserInput = {
-    create?: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput> | LoginAttemptCreateWithoutUserInput[] | LoginAttemptUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
-    createMany?: LoginAttemptCreateManyUserInputEnvelope
-    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
   }
 
   export type EventUncheckedCreateNestedManyWithoutUserInput = {
@@ -21329,13 +18633,6 @@ export namespace Prisma {
     connect?: SavedProgressWhereUniqueInput
   }
 
-  export type AuditUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<AuditCreateWithoutUserInput, AuditUncheckedCreateWithoutUserInput> | AuditCreateWithoutUserInput[] | AuditUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AuditCreateOrConnectWithoutUserInput | AuditCreateOrConnectWithoutUserInput[]
-    createMany?: AuditCreateManyUserInputEnvelope
-    connect?: AuditWhereUniqueInput | AuditWhereUniqueInput[]
-  }
-
   export type QuestProgressUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<QuestProgressCreateWithoutUserInput, QuestProgressUncheckedCreateWithoutUserInput> | QuestProgressCreateWithoutUserInput[] | QuestProgressUncheckedCreateWithoutUserInput[]
     connectOrCreate?: QuestProgressCreateOrConnectWithoutUserInput | QuestProgressCreateOrConnectWithoutUserInput[]
@@ -21362,13 +18659,6 @@ export namespace Prisma {
     connectOrCreate?: ReferralCreateOrConnectWithoutUserInput | ReferralCreateOrConnectWithoutUserInput[]
     createMany?: ReferralCreateManyUserInputEnvelope
     connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
-  }
-
-  export type LoginAttemptUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput> | LoginAttemptCreateWithoutUserInput[] | LoginAttemptUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
-    createMany?: LoginAttemptCreateManyUserInputEnvelope
-    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -21453,20 +18743,6 @@ export namespace Prisma {
     update?: XOR<XOR<SavedProgressUpdateToOneWithWhereWithoutUserInput, SavedProgressUpdateWithoutUserInput>, SavedProgressUncheckedUpdateWithoutUserInput>
   }
 
-  export type AuditUpdateManyWithoutUserNestedInput = {
-    create?: XOR<AuditCreateWithoutUserInput, AuditUncheckedCreateWithoutUserInput> | AuditCreateWithoutUserInput[] | AuditUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AuditCreateOrConnectWithoutUserInput | AuditCreateOrConnectWithoutUserInput[]
-    upsert?: AuditUpsertWithWhereUniqueWithoutUserInput | AuditUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: AuditCreateManyUserInputEnvelope
-    set?: AuditWhereUniqueInput | AuditWhereUniqueInput[]
-    disconnect?: AuditWhereUniqueInput | AuditWhereUniqueInput[]
-    delete?: AuditWhereUniqueInput | AuditWhereUniqueInput[]
-    connect?: AuditWhereUniqueInput | AuditWhereUniqueInput[]
-    update?: AuditUpdateWithWhereUniqueWithoutUserInput | AuditUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: AuditUpdateManyWithWhereWithoutUserInput | AuditUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: AuditScalarWhereInput | AuditScalarWhereInput[]
-  }
-
   export type QuestProgressUpdateManyWithoutUserNestedInput = {
     create?: XOR<QuestProgressCreateWithoutUserInput, QuestProgressUncheckedCreateWithoutUserInput> | QuestProgressCreateWithoutUserInput[] | QuestProgressUncheckedCreateWithoutUserInput[]
     connectOrCreate?: QuestProgressCreateOrConnectWithoutUserInput | QuestProgressCreateOrConnectWithoutUserInput[]
@@ -21523,20 +18799,6 @@ export namespace Prisma {
     deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
   }
 
-  export type LoginAttemptUpdateManyWithoutUserNestedInput = {
-    create?: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput> | LoginAttemptCreateWithoutUserInput[] | LoginAttemptUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
-    upsert?: LoginAttemptUpsertWithWhereUniqueWithoutUserInput | LoginAttemptUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: LoginAttemptCreateManyUserInputEnvelope
-    set?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    disconnect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    delete?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    update?: LoginAttemptUpdateWithWhereUniqueWithoutUserInput | LoginAttemptUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: LoginAttemptUpdateManyWithWhereWithoutUserInput | LoginAttemptUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
-  }
-
   export type EventUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<EventCreateWithoutUserInput, EventUncheckedCreateWithoutUserInput> | EventCreateWithoutUserInput[] | EventUncheckedCreateWithoutUserInput[]
     connectOrCreate?: EventCreateOrConnectWithoutUserInput | EventCreateOrConnectWithoutUserInput[]
@@ -21587,20 +18849,6 @@ export namespace Prisma {
     delete?: SavedProgressWhereInput | boolean
     connect?: SavedProgressWhereUniqueInput
     update?: XOR<XOR<SavedProgressUpdateToOneWithWhereWithoutUserInput, SavedProgressUpdateWithoutUserInput>, SavedProgressUncheckedUpdateWithoutUserInput>
-  }
-
-  export type AuditUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<AuditCreateWithoutUserInput, AuditUncheckedCreateWithoutUserInput> | AuditCreateWithoutUserInput[] | AuditUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: AuditCreateOrConnectWithoutUserInput | AuditCreateOrConnectWithoutUserInput[]
-    upsert?: AuditUpsertWithWhereUniqueWithoutUserInput | AuditUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: AuditCreateManyUserInputEnvelope
-    set?: AuditWhereUniqueInput | AuditWhereUniqueInput[]
-    disconnect?: AuditWhereUniqueInput | AuditWhereUniqueInput[]
-    delete?: AuditWhereUniqueInput | AuditWhereUniqueInput[]
-    connect?: AuditWhereUniqueInput | AuditWhereUniqueInput[]
-    update?: AuditUpdateWithWhereUniqueWithoutUserInput | AuditUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: AuditUpdateManyWithWhereWithoutUserInput | AuditUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: AuditScalarWhereInput | AuditScalarWhereInput[]
   }
 
   export type QuestProgressUncheckedUpdateManyWithoutUserNestedInput = {
@@ -21657,20 +18905,6 @@ export namespace Prisma {
     update?: ReferralUpdateWithWhereUniqueWithoutUserInput | ReferralUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ReferralUpdateManyWithWhereWithoutUserInput | ReferralUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
-  }
-
-  export type LoginAttemptUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput> | LoginAttemptCreateWithoutUserInput[] | LoginAttemptUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: LoginAttemptCreateOrConnectWithoutUserInput | LoginAttemptCreateOrConnectWithoutUserInput[]
-    upsert?: LoginAttemptUpsertWithWhereUniqueWithoutUserInput | LoginAttemptUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: LoginAttemptCreateManyUserInputEnvelope
-    set?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    disconnect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    delete?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    connect?: LoginAttemptWhereUniqueInput | LoginAttemptWhereUniqueInput[]
-    update?: LoginAttemptUpdateWithWhereUniqueWithoutUserInput | LoginAttemptUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: LoginAttemptUpdateManyWithWhereWithoutUserInput | LoginAttemptUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
   }
 
   export type EnumImageTypeFieldUpdateOperationsInput = {
@@ -21803,24 +19037,6 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type UserCreateNestedOneWithoutLoginAttemptsInput = {
-    create?: XOR<UserCreateWithoutLoginAttemptsInput, UserUncheckedCreateWithoutLoginAttemptsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutLoginAttemptsInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type EnumLoginAttemptTypeFieldUpdateOperationsInput = {
-    set?: $Enums.LoginAttemptType
-  }
-
-  export type UserUpdateOneRequiredWithoutLoginAttemptsNestedInput = {
-    create?: XOR<UserCreateWithoutLoginAttemptsInput, UserUncheckedCreateWithoutLoginAttemptsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutLoginAttemptsInput
-    upsert?: UserUpsertWithoutLoginAttemptsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLoginAttemptsInput, UserUpdateWithoutLoginAttemptsInput>, UserUncheckedUpdateWithoutLoginAttemptsInput>
-  }
-
   export type UserCreateNestedOneWithoutCompletedQuestRequirementsInput = {
     create?: XOR<UserCreateWithoutCompletedQuestRequirementsInput, UserUncheckedCreateWithoutCompletedQuestRequirementsInput>
     connectOrCreate?: UserCreateOrConnectWithoutCompletedQuestRequirementsInput
@@ -21865,24 +19081,6 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutSavedProgressInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSavedProgressInput, UserUpdateWithoutSavedProgressInput>, UserUncheckedUpdateWithoutSavedProgressInput>
-  }
-
-  export type UserCreateNestedOneWithoutAuditLogsInput = {
-    create?: XOR<UserCreateWithoutAuditLogsInput, UserUncheckedCreateWithoutAuditLogsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAuditLogsInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type EnumAuditTypeFieldUpdateOperationsInput = {
-    set?: $Enums.AuditType
-  }
-
-  export type UserUpdateOneRequiredWithoutAuditLogsNestedInput = {
-    create?: XOR<UserCreateWithoutAuditLogsInput, UserUncheckedCreateWithoutAuditLogsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutAuditLogsInput
-    upsert?: UserUpsertWithoutAuditLogsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAuditLogsInput, UserUpdateWithoutAuditLogsInput>, UserUncheckedUpdateWithoutAuditLogsInput>
   }
 
   export type SubmittedTransactionCreateNestedManyWithoutTransactionInput = {
@@ -22312,23 +19510,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type NestedEnumLoginAttemptTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.LoginAttemptType | EnumLoginAttemptTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumLoginAttemptTypeFilter<$PrismaModel> | $Enums.LoginAttemptType
-  }
-
-  export type NestedEnumLoginAttemptTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LoginAttemptType | EnumLoginAttemptTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LoginAttemptType[] | ListEnumLoginAttemptTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumLoginAttemptTypeWithAggregatesFilter<$PrismaModel> | $Enums.LoginAttemptType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
-    _max?: NestedEnumLoginAttemptTypeFilter<$PrismaModel>
-  }
-
   export type NestedEnumQuestStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.QuestStatus | EnumQuestStatusFieldRefInput<$PrismaModel>
     in?: $Enums.QuestStatus[] | ListEnumQuestStatusFieldRefInput<$PrismaModel>
@@ -22344,23 +19525,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumQuestStatusFilter<$PrismaModel>
     _max?: NestedEnumQuestStatusFilter<$PrismaModel>
-  }
-
-  export type NestedEnumAuditTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.AuditType | EnumAuditTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.AuditType[] | ListEnumAuditTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.AuditType[] | ListEnumAuditTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumAuditTypeFilter<$PrismaModel> | $Enums.AuditType
-  }
-
-  export type NestedEnumAuditTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.AuditType | EnumAuditTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.AuditType[] | ListEnumAuditTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.AuditType[] | ListEnumAuditTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumAuditTypeWithAggregatesFilter<$PrismaModel> | $Enums.AuditType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumAuditTypeFilter<$PrismaModel>
-    _max?: NestedEnumAuditTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumTransactionIntentStatusFilter<$PrismaModel = never> = {
@@ -22417,11 +19581,9 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReferredUsersInput = {
@@ -22439,11 +19601,9 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReferredUsersInput = {
@@ -22543,34 +19703,6 @@ export namespace Prisma {
     create: XOR<SavedProgressCreateWithoutUserInput, SavedProgressUncheckedCreateWithoutUserInput>
   }
 
-  export type AuditCreateWithoutUserInput = {
-    transactionId: string
-    date?: Date | string
-    type: $Enums.AuditType
-    xrdUsdValue: Decimal | DecimalJsLike | number | string
-    xrdPrice?: Decimal | DecimalJsLike | number | string
-    data?: JsonNullValueInput | InputJsonValue
-  }
-
-  export type AuditUncheckedCreateWithoutUserInput = {
-    transactionId: string
-    date?: Date | string
-    type: $Enums.AuditType
-    xrdUsdValue: Decimal | DecimalJsLike | number | string
-    xrdPrice?: Decimal | DecimalJsLike | number | string
-    data?: JsonNullValueInput | InputJsonValue
-  }
-
-  export type AuditCreateOrConnectWithoutUserInput = {
-    where: AuditWhereUniqueInput
-    create: XOR<AuditCreateWithoutUserInput, AuditUncheckedCreateWithoutUserInput>
-  }
-
-  export type AuditCreateManyUserInputEnvelope = {
-    data: AuditCreateManyUserInput | AuditCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
   export type QuestProgressCreateWithoutUserInput = {
     questId: string
     status?: $Enums.QuestStatus
@@ -22605,12 +19737,10 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReferredByUserInput = {
@@ -22627,12 +19757,10 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReferredByUserInput = {
@@ -22697,27 +19825,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type LoginAttemptCreateWithoutUserInput = {
-    type: $Enums.LoginAttemptType
-    createdAt?: Date | string
-  }
-
-  export type LoginAttemptUncheckedCreateWithoutUserInput = {
-    id?: number
-    type: $Enums.LoginAttemptType
-    createdAt?: Date | string
-  }
-
-  export type LoginAttemptCreateOrConnectWithoutUserInput = {
-    where: LoginAttemptWhereUniqueInput
-    create: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput>
-  }
-
-  export type LoginAttemptCreateManyUserInputEnvelope = {
-    data: LoginAttemptCreateManyUserInput | LoginAttemptCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
   export type UserUpsertWithoutReferredUsersInput = {
     update: XOR<UserUpdateWithoutReferredUsersInput, UserUncheckedUpdateWithoutReferredUsersInput>
     create: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
@@ -22744,11 +19851,9 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReferredUsersInput = {
@@ -22766,11 +19871,9 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type EventUpsertWithWhereUniqueWithoutUserInput = {
@@ -22875,35 +19978,6 @@ export namespace Prisma {
   export type SavedProgressUncheckedUpdateWithoutUserInput = {
     questId?: StringFieldUpdateOperationsInput | string
     progress?: IntFieldUpdateOperationsInput | number
-  }
-
-  export type AuditUpsertWithWhereUniqueWithoutUserInput = {
-    where: AuditWhereUniqueInput
-    update: XOR<AuditUpdateWithoutUserInput, AuditUncheckedUpdateWithoutUserInput>
-    create: XOR<AuditCreateWithoutUserInput, AuditUncheckedCreateWithoutUserInput>
-  }
-
-  export type AuditUpdateWithWhereUniqueWithoutUserInput = {
-    where: AuditWhereUniqueInput
-    data: XOR<AuditUpdateWithoutUserInput, AuditUncheckedUpdateWithoutUserInput>
-  }
-
-  export type AuditUpdateManyWithWhereWithoutUserInput = {
-    where: AuditScalarWhereInput
-    data: XOR<AuditUpdateManyMutationInput, AuditUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type AuditScalarWhereInput = {
-    AND?: AuditScalarWhereInput | AuditScalarWhereInput[]
-    OR?: AuditScalarWhereInput[]
-    NOT?: AuditScalarWhereInput | AuditScalarWhereInput[]
-    transactionId?: StringFilter<"Audit"> | string
-    userId?: StringFilter<"Audit"> | string
-    date?: DateTimeFilter<"Audit"> | Date | string
-    type?: EnumAuditTypeFilter<"Audit"> | $Enums.AuditType
-    xrdUsdValue?: DecimalFilter<"Audit"> | Decimal | DecimalJsLike | number | string
-    xrdPrice?: DecimalFilter<"Audit"> | Decimal | DecimalJsLike | number | string
-    data?: JsonFilter<"Audit">
   }
 
   export type QuestProgressUpsertWithWhereUniqueWithoutUserInput = {
@@ -23018,32 +20092,6 @@ export namespace Prisma {
     xrdValue?: DecimalFilter<"Referral"> | Decimal | DecimalJsLike | number | string
   }
 
-  export type LoginAttemptUpsertWithWhereUniqueWithoutUserInput = {
-    where: LoginAttemptWhereUniqueInput
-    update: XOR<LoginAttemptUpdateWithoutUserInput, LoginAttemptUncheckedUpdateWithoutUserInput>
-    create: XOR<LoginAttemptCreateWithoutUserInput, LoginAttemptUncheckedCreateWithoutUserInput>
-  }
-
-  export type LoginAttemptUpdateWithWhereUniqueWithoutUserInput = {
-    where: LoginAttemptWhereUniqueInput
-    data: XOR<LoginAttemptUpdateWithoutUserInput, LoginAttemptUncheckedUpdateWithoutUserInput>
-  }
-
-  export type LoginAttemptUpdateManyWithWhereWithoutUserInput = {
-    where: LoginAttemptScalarWhereInput
-    data: XOR<LoginAttemptUpdateManyMutationInput, LoginAttemptUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type LoginAttemptScalarWhereInput = {
-    AND?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
-    OR?: LoginAttemptScalarWhereInput[]
-    NOT?: LoginAttemptScalarWhereInput | LoginAttemptScalarWhereInput[]
-    id?: IntFilter<"LoginAttempt"> | number
-    userId?: StringFilter<"LoginAttempt"> | string
-    type?: EnumLoginAttemptTypeFilter<"LoginAttempt"> | $Enums.LoginAttemptType
-    createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
-  }
-
   export type EventCreateWithoutReferralInput = {
     transactionId: string
     id: string
@@ -23086,11 +20134,9 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReferalsInput = {
@@ -23108,11 +20154,9 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReferalsInput = {
@@ -23179,11 +20223,9 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReferalsInput = {
@@ -23201,11 +20243,9 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutEventsInput = {
@@ -23222,12 +20262,10 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEventsInput = {
@@ -23244,12 +20282,10 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEventsInput = {
@@ -23304,12 +20340,10 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEventsInput = {
@@ -23326,12 +20360,10 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReferralUpsertWithWhereUniqueWithoutEventInput = {
@@ -23364,12 +20396,10 @@ export namespace Prisma {
     events?: EventCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMessagesInput = {
@@ -23386,12 +20416,10 @@ export namespace Prisma {
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMessagesInput = {
@@ -23424,12 +20452,10 @@ export namespace Prisma {
     events?: EventUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -23446,112 +20472,6 @@ export namespace Prisma {
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
-    questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserCreateWithoutLoginAttemptsInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    status?: $Enums.UserStatus
-    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
-    events?: EventCreateNestedManyWithoutUserInput
-    messages?: MessageCreateNestedManyWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
-    questProgress?: QuestProgressCreateNestedManyWithoutUserInput
-    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    referals?: ReferralCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutLoginAttemptsInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    referredBy?: string | null
-    status?: $Enums.UserStatus
-    events?: EventUncheckedCreateNestedManyWithoutUserInput
-    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
-    questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
-    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutLoginAttemptsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutLoginAttemptsInput, UserUncheckedCreateWithoutLoginAttemptsInput>
-  }
-
-  export type UserUpsertWithoutLoginAttemptsInput = {
-    update: XOR<UserUpdateWithoutLoginAttemptsInput, UserUncheckedUpdateWithoutLoginAttemptsInput>
-    create: XOR<UserCreateWithoutLoginAttemptsInput, UserUncheckedCreateWithoutLoginAttemptsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutLoginAttemptsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutLoginAttemptsInput, UserUncheckedUpdateWithoutLoginAttemptsInput>
-  }
-
-  export type UserUpdateWithoutLoginAttemptsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
-    events?: EventUpdateManyWithoutUserNestedInput
-    messages?: MessageUpdateManyWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
-    questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    referals?: ReferralUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutLoginAttemptsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    events?: EventUncheckedUpdateManyWithoutUserNestedInput
-    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
@@ -23572,12 +20492,10 @@ export namespace Prisma {
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCompletedQuestRequirementsInput = {
@@ -23594,12 +20512,10 @@ export namespace Prisma {
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCompletedQuestRequirementsInput = {
@@ -23632,12 +20548,10 @@ export namespace Prisma {
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompletedQuestRequirementsInput = {
@@ -23654,12 +20568,10 @@ export namespace Prisma {
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutQuestProgressInput = {
@@ -23677,11 +20589,9 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutQuestProgressInput = {
@@ -23699,11 +20609,9 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutQuestProgressInput = {
@@ -23737,11 +20645,9 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutQuestProgressInput = {
@@ -23759,11 +20665,9 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSavedProgressInput = {
@@ -23780,12 +20684,10 @@ export namespace Prisma {
     events?: EventCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentCreateNestedManyWithoutUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSavedProgressInput = {
@@ -23802,12 +20704,10 @@ export namespace Prisma {
     events?: EventUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSavedProgressInput = {
@@ -23840,12 +20740,10 @@ export namespace Prisma {
     events?: EventUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSavedProgressInput = {
@@ -23862,116 +20760,10 @@ export namespace Prisma {
     events?: EventUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserCreateWithoutAuditLogsInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    status?: $Enums.UserStatus
-    referredByUser?: UserCreateNestedOneWithoutReferredUsersInput
-    events?: EventCreateNestedManyWithoutUserInput
-    messages?: MessageCreateNestedManyWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    questProgress?: QuestProgressCreateNestedManyWithoutUserInput
-    referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentCreateNestedManyWithoutUserInput
-    referals?: ReferralCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutAuditLogsInput = {
-    id?: string
-    identityAddress: string
-    createdAt?: Date | string
-    accountAddress?: string | null
-    name?: string | null
-    country?: string | null
-    type?: $Enums.UserType
-    referralCode: string
-    referredBy?: string | null
-    status?: $Enums.UserStatus
-    events?: EventUncheckedCreateNestedManyWithoutUserInput
-    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
-    savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
-    referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
-    transactions?: TransactionIntentUncheckedCreateNestedManyWithoutUserInput
-    referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutAuditLogsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutAuditLogsInput, UserUncheckedCreateWithoutAuditLogsInput>
-  }
-
-  export type UserUpsertWithoutAuditLogsInput = {
-    update: XOR<UserUpdateWithoutAuditLogsInput, UserUncheckedUpdateWithoutAuditLogsInput>
-    create: XOR<UserCreateWithoutAuditLogsInput, UserUncheckedCreateWithoutAuditLogsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutAuditLogsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutAuditLogsInput, UserUncheckedUpdateWithoutAuditLogsInput>
-  }
-
-  export type UserUpdateWithoutAuditLogsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    referredByUser?: UserUpdateOneWithoutReferredUsersNestedInput
-    events?: EventUpdateManyWithoutUserNestedInput
-    messages?: MessageUpdateManyWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
-    referals?: ReferralUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutAuditLogsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    identityAddress?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    accountAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
-    referralCode?: StringFieldUpdateOperationsInput | string
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    events?: EventUncheckedUpdateManyWithoutUserNestedInput
-    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
-    savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
-    referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
-    transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
-    referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SubmittedTransactionCreateWithoutTransactionInput = {
@@ -24011,11 +20803,9 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressCreateNestedOneWithoutUserInput
-    auditLogs?: AuditCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressCreateNestedManyWithoutUserInput
     referredUsers?: UserCreateNestedManyWithoutReferredByUserInput
     referals?: ReferralCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTransactionsInput = {
@@ -24033,11 +20823,9 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedCreateNestedManyWithoutUserInput
     savedProgress?: SavedProgressUncheckedCreateNestedOneWithoutUserInput
-    auditLogs?: AuditUncheckedCreateNestedManyWithoutUserInput
     questProgress?: QuestProgressUncheckedCreateNestedManyWithoutUserInput
     referredUsers?: UserUncheckedCreateNestedManyWithoutReferredByUserInput
     referals?: ReferralUncheckedCreateNestedManyWithoutUserInput
-    loginAttempts?: LoginAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTransactionsInput = {
@@ -24116,11 +20904,9 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTransactionsInput = {
@@ -24138,11 +20924,9 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BatchedTransactionIntentUpsertWithoutTransactionIntentsInput = {
@@ -24295,15 +21079,6 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type AuditCreateManyUserInput = {
-    transactionId: string
-    date?: Date | string
-    type: $Enums.AuditType
-    xrdUsdValue: Decimal | DecimalJsLike | number | string
-    xrdPrice?: Decimal | DecimalJsLike | number | string
-    data?: JsonNullValueInput | InputJsonValue
-  }
-
   export type QuestProgressCreateManyUserInput = {
     questId: string
     status?: $Enums.QuestStatus
@@ -24334,12 +21109,6 @@ export namespace Prisma {
     eventId: string
     action: $Enums.ReferralAction
     xrdValue: Decimal | DecimalJsLike | number | string
-  }
-
-  export type LoginAttemptCreateManyUserInput = {
-    id?: number
-    type: $Enums.LoginAttemptType
-    createdAt?: Date | string
   }
 
   export type EventUpdateWithoutUserInput = {
@@ -24412,33 +21181,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type AuditUpdateWithoutUserInput = {
-    transactionId?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumAuditTypeFieldUpdateOperationsInput | $Enums.AuditType
-    xrdUsdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    xrdPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    data?: JsonNullValueInput | InputJsonValue
-  }
-
-  export type AuditUncheckedUpdateWithoutUserInput = {
-    transactionId?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumAuditTypeFieldUpdateOperationsInput | $Enums.AuditType
-    xrdUsdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    xrdPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    data?: JsonNullValueInput | InputJsonValue
-  }
-
-  export type AuditUncheckedUpdateManyWithoutUserInput = {
-    transactionId?: StringFieldUpdateOperationsInput | string
-    date?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumAuditTypeFieldUpdateOperationsInput | $Enums.AuditType
-    xrdUsdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    xrdPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    data?: JsonNullValueInput | InputJsonValue
-  }
-
   export type QuestProgressUpdateWithoutUserInput = {
     questId?: StringFieldUpdateOperationsInput | string
     status?: EnumQuestStatusFieldUpdateOperationsInput | $Enums.QuestStatus
@@ -24468,12 +21210,10 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUpdateManyWithoutUserNestedInput
     referredUsers?: UserUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUpdateManyWithoutUserNestedInput
     referals?: ReferralUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReferredByUserInput = {
@@ -24490,12 +21230,10 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     completedQuestRequirements?: CompletedQuestRequirementUncheckedUpdateManyWithoutUserNestedInput
     savedProgress?: SavedProgressUncheckedUpdateOneWithoutUserNestedInput
-    auditLogs?: AuditUncheckedUpdateManyWithoutUserNestedInput
     questProgress?: QuestProgressUncheckedUpdateManyWithoutUserNestedInput
     referredUsers?: UserUncheckedUpdateManyWithoutReferredByUserNestedInput
     transactions?: TransactionIntentUncheckedUpdateManyWithoutUserNestedInput
     referals?: ReferralUncheckedUpdateManyWithoutUserNestedInput
-    loginAttempts?: LoginAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutReferredByUserInput = {
@@ -24555,23 +21293,6 @@ export namespace Prisma {
     eventId?: StringFieldUpdateOperationsInput | string
     action?: EnumReferralActionFieldUpdateOperationsInput | $Enums.ReferralAction
     xrdValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-  }
-
-  export type LoginAttemptUpdateWithoutUserInput = {
-    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LoginAttemptUncheckedUpdateWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LoginAttemptUncheckedUpdateManyWithoutUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    type?: EnumLoginAttemptTypeFieldUpdateOperationsInput | $Enums.LoginAttemptType
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReferralCreateManyEventInput = {
@@ -24706,10 +21427,6 @@ export namespace Prisma {
      */
     export type MessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = MessageDefaultArgs<ExtArgs>
     /**
-     * @deprecated Use LoginAttemptDefaultArgs instead
-     */
-    export type LoginAttemptArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = LoginAttemptDefaultArgs<ExtArgs>
-    /**
      * @deprecated Use NotificationDefaultArgs instead
      */
     export type NotificationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = NotificationDefaultArgs<ExtArgs>
@@ -24725,10 +21442,6 @@ export namespace Prisma {
      * @deprecated Use SavedProgressDefaultArgs instead
      */
     export type SavedProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SavedProgressDefaultArgs<ExtArgs>
-    /**
-     * @deprecated Use AuditDefaultArgs instead
-     */
-    export type AuditArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = AuditDefaultArgs<ExtArgs>
     /**
      * @deprecated Use TransactionIntentDefaultArgs instead
      */
