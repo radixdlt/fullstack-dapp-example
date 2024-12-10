@@ -459,6 +459,5 @@ export const SystemWorkerController = ({
   return { handler }
 }
 
-
-// don't use aws image service, use one image from local 
+// don't use aws image service, use one image from local
 // populate database with radmorph json and have script to populate oracle

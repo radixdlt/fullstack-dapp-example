@@ -150,7 +150,6 @@
     hideJetty={$hideJetty}
     {poppedUp}
     {menuItems}
-    notifications={jettyNotifications}
     on:notification-opened={markLatestNotificationAsSeen}
     let:currentMenuItem
     let:back
