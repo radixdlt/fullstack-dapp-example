@@ -83,24 +83,24 @@ export const Addresses = (networkId: number) => {
         xrd: 'resource_tdx_2_1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxtfd2jc',
         accounts: {
           owner: {
-            address: 'account_tdx_2_1c98whq3nv55h8mul76r62a0dl42jhun0qpxwqn6nnukm7k7m65hswf',
+            address: 'account_tdx_2_1c8xa6ldh454mpyejjxh7a2h8h7364m0rl6dlddm0s5rqxjl6cqa5fg',
             accessController:
-              'accesscontroller_tdx_2_1cwuge6fsyew0c5ce5nnh2q6tezsnp8q92v8rpz8z6q8vvm2xnpdfmn'
+              'accesscontroller_tdx_2_1cw49w276vmh8alfm4p5cmacvut5eqtvrdd8ughzz9mtuctmdnvkpsz'
           },
           dAppDefinition: {
-            address: 'account_tdx_2_1cx62e9dv8lst4k7efdvy02p2capgglgcsgx23huy379d0cw5fk7shc',
+            address: 'account_tdx_2_1cxjxv3qga0xhq4tp5k4v8pd34laq5ny54x60xt7xpm8uxazu9dlyqx',
             accessController:
-              'accesscontroller_tdx_2_1cwcqe3rjltz395r2ej46sdy9vntl2kpmmscva90tuxun4mt0c5z8lc'
+              'accesscontroller_tdx_2_1c0hl5pezljxvzpuej58038chka0tmjgwz44c7p2dph6xph0pr5fcz0'
           },
           payer: {
-            address: 'account_tdx_2_1cxcq4fv5whskjks86tmmd4gmts488tx4l49kw9p940y2t5e0dnl420',
+            address: 'account_tdx_2_1cy6c4jlz6q6ynnz5sadd25m85asgep2se6qdu39q5z0uxmpa3tjj0z',
             accessController:
-              'accesscontroller_tdx_2_1c0wpx67gx3yf8feju40gkg9twkyeduvna5zccjpaz3vtrq9e4hnm5x'
+              'accesscontroller_tdx_2_1cd3yk44vq7zvs88e2pf4ahcnxagv96ef7e93t4ltveqkk92l5888ls'
           },
           system: {
-            address: 'account_tdx_2_1c8z0u694cpq4f5wd5kdruqwlrfy7qlvcahkzx9dkwh23zgnsy7ue3u',
+            address: 'account_tdx_2_1cyymcy9yq9estts935vtwhexpvcck8l4a0zseqd4l207ca7usghfep',
             accessController:
-              'accesscontroller_tdx_2_1cvswjpqt6489jxdh6jhw6sapvqp880083qjj83whxerec70403uxtn'
+              'accesscontroller_tdx_2_1cdf8we9acqysscdf36hc7ru50edt350gmff0t7gg9nr64dcrx0mt6x'
           },
           jetty: {
             address: 'account_tdx_2_1c9ypvf4v950yellpnkteuxk2lf8vj62dcqpgakt3wxeduck8t3ksl3',
