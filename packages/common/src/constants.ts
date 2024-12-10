@@ -123,7 +123,7 @@ export const Addresses = (networkId: number) => {
             url: 'https://instapass-lite-dev.instapass.fi/RadQuest/'
           },
           jettySwap: {
-            url: 'https://jettyswap-dev.rdx-works-main.extratools.works'
+            url: 'https://stokenet.jettyswap.io'
           },
           lettySwap: {
             url: 'https://lettyswap-dev.rdx-works-main.extratools.works'
