@@ -1,7 +1,9 @@
 use scrypto::prelude::FungibleBucket;
 use scrypto_test::prelude::*;
 
-use radgem_forge_v2::radgem_forge_v2::{radgem_forge_v2_test::RadgemForgeV2, RadgemData, UserId};
+use radgem_forge_v2::radgem_forge_v2::{
+    radgem_forge_v2_test::RadgemForgeV2, Counts, RadgemData, UserId,
+};
 
 struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,
@@ -10,7 +12,8 @@ struct Test {
     radgems_data: Vec<RadgemData>,
     elements: Bucket,
     hero_badge: Bucket,
-    hero_badge_proof: Proof,
+    hero_badge_proof_0: Proof,
+    hero_badge_proof_1: Proof,
     user_id: UserId,
     admin_badge_proof: Proof,
     super_admin_badge_proof: Proof,
@@ -84,7 +87,8 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
     let radgem_address = radgem.resource_address(&mut env)?;
     let admin_badge_proof = admin_badge.create_proof_of_all(&mut env)?;
     let super_admin_badge_proof = super_admin_badge.create_proof_of_all(&mut env)?;
-    let hero_badge_proof = hero_badge.create_proof_of_all(&mut env)?;
+    let hero_badge_proof_0 = hero_badge.create_proof_of_all(&mut env)?;
+    let hero_badge_proof_1 = hero_badge.create_proof_of_all(&mut env)?;
     let user_id = UserId(user_id_string);
     let radgems_data = vec![RadgemData {
         key_image_url: UncheckedUrl("https://example.com".to_string()),
@@ -103,7 +107,8 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
         radgems_data,
         elements,
         hero_badge,
-        hero_badge_proof,
+        hero_badge_proof_0,
+        hero_badge_proof_1,
         user_id,
         admin_badge_proof,
         super_admin_badge_proof,
@@ -124,8 +129,8 @@ fn can_deposit_elements() -> Result<(), RuntimeError> {
     let Test {
         mut env,
         elements,
-        radgem_forge_v2,
-        hero_badge_proof,
+        mut radgem_forge_v2,
+        hero_badge_proof_0: hero_badge_proof,
         ..
     } = arrange_test_environment()?;
 
@@ -146,8 +151,8 @@ fn can_deposit_lots_of_elements() -> Result<(), RuntimeError> {
     let Test {
         mut env,
         elements,
-        radgem_forge_v2,
-        hero_badge_proof,
+        mut radgem_forge_v2,
+        hero_badge_proof_0: hero_badge_proof,
         ..
     } = arrange_test_environment()?;
 
@@ -168,8 +173,8 @@ fn cannot_deposit_to_many_elements() -> Result<(), RuntimeError> {
     let Test {
         mut env,
         elements,
-        radgem_forge_v2,
-        hero_badge_proof,
+        mut radgem_forge_v2,
+        hero_badge_proof_0: hero_badge_proof,
         ..
     } = arrange_test_environment()?;
 
@@ -186,12 +191,39 @@ fn cannot_deposit_to_many_elements() -> Result<(), RuntimeError> {
 }
 
 #[test]
+fn cannot_deposit_non_multiple_of_five_elements() -> Result<(), RuntimeError> {
+    // Arrange
+    let Test {
+        mut env,
+        elements,
+        mut radgem_forge_v2,
+        hero_badge_proof_0,
+        ..
+    } = arrange_test_environment()?;
+
+    // Act
+    let result = radgem_forge_v2.deposit_elements(
+        hero_badge_proof_0,
+        elements.take(dec!(8), &mut env)?,
+        &mut env,
+    );
+
+    // Assert
+    assert!(result.is_err());
+    assert!(result
+        .unwrap_err()
+        .to_string()
+        .contains("Must provide a multiple of 5 elements"));
+    Ok(())
+}
+
+#[test]
 fn cannot_deposit_elements_with_wrong_badge() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,
         elements,
-        radgem_forge_v2,
+        mut radgem_forge_v2,
         ..
     } = arrange_test_environment()?;
 
@@ -220,8 +252,16 @@ fn can_mint_radgems() -> Result<(), RuntimeError> {
         radgems_data,
         user_id,
         admin_badge_proof,
+        hero_badge_proof_0,
+        elements,
         ..
     } = arrange_test_environment()?;
+
+    radgem_forge_v2.deposit_elements(
+        hero_badge_proof_0,
+        elements.take(dec!(0), &mut env)?,
+        &mut env,
+    )?;
 
     // Act
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
@@ -237,11 +277,19 @@ fn can_claim_radgems() -> Result<(), RuntimeError> {
     let Test {
         mut env,
         mut radgem_forge_v2,
-        hero_badge_proof,
+        hero_badge_proof_0,
+        hero_badge_proof_1,
         user_id,
         admin_badge_proof,
+        elements,
         ..
     } = arrange_test_environment()?;
+
+    radgem_forge_v2.deposit_elements(
+        hero_badge_proof_0,
+        elements.take(dec!(0), &mut env)?,
+        &mut env,
+    )?;
 
     let mut radgem_data = Vec::<RadgemData>::new();
     for _ in 0..40 {
@@ -260,7 +308,7 @@ fn can_claim_radgems() -> Result<(), RuntimeError> {
     radgem_forge_v2.mint_radgems(user_id.clone(), radgem_data, &mut env)?;
 
     // Act
-    let result = radgem_forge_v2.claim_radgems(hero_badge_proof, &mut env)?;
+    let result = radgem_forge_v2.claim_radgems(hero_badge_proof_1, &mut env)?;
 
     // Assert
     assert_eq!(result.0.amount(&mut env)?, dec!(20));
@@ -275,10 +323,18 @@ fn can_claim_mint_claim() -> Result<(), RuntimeError> {
         mut radgem_forge_v2,
         hero_badge,
         user_id,
+        hero_badge_proof_0,
         admin_badge_proof,
         radgems_data,
+        elements,
         ..
     } = arrange_test_environment()?;
+
+    radgem_forge_v2.deposit_elements(
+        hero_badge_proof_0,
+        elements.take(dec!(0), &mut env)?,
+        &mut env,
+    )?;
 
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
     radgem_forge_v2.mint_radgems(user_id.clone(), radgems_data.clone(), &mut env)?;
@@ -305,11 +361,19 @@ fn can_mint_mint_claim_radgems() -> Result<(), RuntimeError> {
         mut env,
         mut radgem_forge_v2,
         radgems_data,
-        hero_badge,
+        hero_badge_proof_0,
+        hero_badge_proof_1,
         user_id,
         admin_badge_proof,
+        elements,
         ..
     } = arrange_test_environment()?;
+
+    radgem_forge_v2.deposit_elements(
+        hero_badge_proof_0,
+        elements.take(dec!(0), &mut env)?,
+        &mut env,
+    )?;
 
     // Act
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
@@ -317,8 +381,7 @@ fn can_mint_mint_claim_radgems() -> Result<(), RuntimeError> {
 
     radgem_forge_v2.mint_radgems(user_id.clone(), radgems_data, &mut env)?;
 
-    let result =
-        radgem_forge_v2.claim_radgems(hero_badge.create_proof_of_all(&mut env)?, &mut env)?;
+    let result = radgem_forge_v2.claim_radgems(hero_badge_proof_1, &mut env)?;
 
     // Assert
     assert_eq!(result.0.amount(&mut env)?, dec!(2));
@@ -349,7 +412,7 @@ pub fn cannot_deposit_elements_when_disabled() -> Result<(), RuntimeError> {
     let Test {
         mut env,
         mut radgem_forge_v2,
-        hero_badge_proof,
+        hero_badge_proof_0: hero_badge_proof,
         super_admin_badge_proof,
         elements,
         ..
@@ -380,7 +443,7 @@ pub fn can_enable_then_combine_elements_deposit_when_disabled() -> Result<(), Ru
     let Test {
         mut env,
         mut radgem_forge_v2,
-        hero_badge_proof,
+        hero_badge_proof_0: hero_badge_proof,
         super_admin_badge_proof,
         elements,
         ..
@@ -404,30 +467,54 @@ pub fn can_enable_then_combine_elements_deposit_when_disabled() -> Result<(), Ru
 }
 
 #[test]
-fn get_user_radgem_claims_count() -> Result<(), RuntimeError> {
+fn get_user_counts() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,
         mut radgem_forge_v2,
         user_id,
+        hero_badge,
         admin_badge_proof,
         radgems_data,
+        elements,
         ..
     } = arrange_test_environment()?;
 
+    radgem_forge_v2.deposit_elements(
+        hero_badge.create_proof_of_all(&mut env)?,
+        elements.take(dec!(10), &mut env)?,
+        &mut env,
+    )?;
+
     LocalAuthZone::push(admin_badge_proof, &mut env)?;
+    radgem_forge_v2.mint_radgems(
+        user_id.clone(),
+        vec![radgems_data[0].clone(), radgems_data[0].clone()],
+        &mut env,
+    )?;
+
+    let _ = radgem_forge_v2.claim_radgems(hero_badge.create_proof_of_all(&mut env)?, &mut env)?;
+
     radgem_forge_v2.mint_radgems(user_id.clone(), radgems_data, &mut env)?;
 
     // Act
-    let result = radgem_forge_v2.get_user_radgem_claims_count(user_id, &mut env)?;
+    let result = radgem_forge_v2.get_user_counts(user_id, &mut env)?;
 
     // Assert
-    assert_eq!(result, 1);
+    println!("{:?}", result);
+    assert_eq!(
+        result,
+        Counts {
+            deposited_elements: dec!(10),
+            minted_radgems: dec!(3),
+            claimed_radgems: dec!(2)
+        }
+    );
     Ok(())
 }
 
 #[test]
-fn get_empty_user_radgem_claims_count() -> Result<(), RuntimeError> {
+fn get_empty_user_count() -> Result<(), RuntimeError> {
     // Arrange
     let Test {
         mut env,
@@ -437,9 +524,16 @@ fn get_empty_user_radgem_claims_count() -> Result<(), RuntimeError> {
     } = arrange_test_environment()?;
 
     // Act
-    let result = radgem_forge_v2.get_user_radgem_claims_count(user_id, &mut env)?;
+    let result = radgem_forge_v2.get_user_counts(user_id, &mut env)?;
 
     // Assert
-    assert_eq!(result, 0);
+    assert_eq!(
+        result,
+        Counts {
+            deposited_elements: dec!(0),
+            minted_radgems: dec!(0),
+            claimed_radgems: dec!(0)
+        }
+    );
     Ok(())
 }

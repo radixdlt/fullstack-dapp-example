@@ -1,4 +1,5 @@
 import { config } from '../../config'
+import { deployRadquestPackage } from '../helpers/deployRadquestPackage'
 import { deployCardForgeV2Package } from '../../card-forge-v2/helpers/deployCardForgeV2Package'
 import { deployGiftBoxOpenerV2Package } from '../../gift-box-opener-v2/helpers/deployGiftBoxOpenerV2Package'
 import { deployHeroBadgeForgeV2Package } from '../../hero-badge-forge-v2/helpers/deployHeroBadgeForgeV2Package'
@@ -6,6 +7,7 @@ import { deployQuestRewardsV2Package } from '../../quest-rewards-v2/helpers/depl
 import { deployRadgemForgeV2Package } from '../../radgem-forge-v2/helpers/deployRadgemForgeV2Package'
 import { logger } from '../../helpers'
 import { mintAdminBadge } from '../helpers/mintAdminBadge'
+import { newRefinery } from '../helpers/newRefinery'
 import { newCardForgeV2 } from '../../card-forge-v2/helpers/newCardForgeV2'
 import { newGiftBoxOpenerV2 } from '../../gift-box-opener-v2/helpers/newGiftBoxOpenerV2'
 import { newHeroBadgeForgeV2 } from '../../hero-badge-forge-v2/helpers/newHeroBadgeForgeV2'
@@ -16,10 +18,17 @@ import { setGiftBoxAddresses } from '../../gift-box-opener-v2/helpers/setGiftBox
 mintAdminBadge({
   adminBadgeAddress: config.radQuest.badges.adminBadgeAddress,
   superAdminBadgeAddress: config.radQuest.badges.superAdminBadgeAddress,
-  amount: 5
+  amount: 7
 })
   .map(() => logger.debug('Admin Badges minted'))
-  .andThen(() => deployHeroBadgeForgeV2Package({}))
+  .andThen(() => deployRadquestPackage({}))
+  .andThen((addresses) =>
+    newRefinery()
+      .map((res) => Object.assign(addresses, res))
+      .map(() => logger.debug('Refinery instantiated'))
+      .map(() => addresses)
+  )
+  .andThen((addresses) => deployHeroBadgeForgeV2Package(addresses))
   .andThen((addresses) =>
     newHeroBadgeForgeV2(addresses.heroBadgeForgeV2Package)
       .map((res) => Object.assign(addresses, res))

@@ -82,7 +82,6 @@
         }
       }
     },
-    { id: '18', type: 'regular' },
     { type: 'claimRewards' },
     { type: 'complete' }
   ]}
@@ -101,14 +100,35 @@
       jettySwapLink: `<a href="${addresses.dapps.jettySwap.url}" target="_blank">JettySwap</a>`
     })}
   {/if}
-  
-  {#if render('18')}
-    {@html text['18.md']}
-    <div class="center">
-      <Button on:click={handleClaimClams} {loading} disabled={$isUserBlocked}
-        >{$i18n.t('quests:TransferTokens.getClams')}</Button
-      >
-    </div>
+  {#if render('9')}
+    {@html text['9.md']}
+  {/if}
+  {#if render('10')}
+    {@html text['10.md']}
+  {/if}
+  {#if render('11')}
+    {@html text['11.md']}
+  {/if}
+  {#if render('12')}
+    {@html text['12.md']}
+  {/if}
+  {#if render('13')}
+    {@html text['13.md']}
+  {/if}
+  {#if render('14')}
+    {@html text['14.md']}
+  {/if}
+  {#if render('15')}
+    {@html text['15.md']}
+  {/if}
+  {#if render('16')}
+    {@html text['16.md']}
+  {/if}
+  {#if render('17')}
+    {@html text['17.md']}
+  {/if}
+  {#if render('20')}
+    {@html text['20.md']}
   {/if}
 </Quest>
 

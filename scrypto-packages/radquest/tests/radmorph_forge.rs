@@ -1,8 +1,6 @@
 use scrypto_test::prelude::*;
 
-use radquest::morph_card_forge::MorphEnergyCardData;
-use radquest::radgem_forge::{ RadgemData, COLOR, MATERIAL};
-use radquest::radmorph_forge::{radmorph_forge_test::*, RadmorphData};
+use radquest::radmorph_forge::{radmorph_forge_test::*, RadmorphData, MorphEnergyCardData, RadgemData};
 
 struct Test {
     env: TestEnvironment<InMemorySubstateDatabase>,
@@ -66,18 +64,18 @@ fn arrange_test_environment() -> Result<Test, RuntimeError> {
                 key_image_url: UncheckedUrl("".to_string()),
                 name: "Metallic Smoke Radgem {10/25}".to_string(),
                 description: "The Rare Metallic material of this Smoke Radgem is graded at a quality of 10 out of a possible 25.".to_string(),
-                material: MATERIAL[1].name.to_lowercase(), // metallic,
-                color: COLOR[9].to_lowercase(),            // smoke,   
-                rarity: MATERIAL[1].rarity.name.to_lowercase(), // rare
+                material: "metallic".to_string(), 
+                color: "smoke".to_string(),            
+                rarity: "rare".to_string(),
                 quality: dec!(10),
             },
             RadgemData {
                 key_image_url: UncheckedUrl("".to_string()),
                 name: "Crystalline Blood Radgem {5/25}".to_string(),
                 description: "The Common Crystalline material of this Blood Radgem is graded at a quality of 5 out of a possible 25.".to_string(),
-                material: MATERIAL[0].name.to_lowercase(), // crystalline,
-                color: COLOR[0].to_lowercase(),            // blood,   
-                rarity: MATERIAL[0].rarity.name.to_lowercase(), // common
+                material: "crystalline".to_string(), // crystalline,
+                color: "blood".to_string(),
+                rarity: "common".to_string(),
                 quality: dec!(5),
             },
         ];
@@ -200,13 +198,13 @@ fn can_mint_radmorph_with_correct_data() -> Result<(), RuntimeError> {
             card_rarity: "ultra-rare".to_string(),
             card_quality: dec!(42),
             card_limited_edition: true,
-            radgem_1_color: COLOR[0].to_lowercase(),
-            radgem_1_material: MATERIAL[0].name.to_lowercase(),
-            radgem_1_rarity: MATERIAL[0].rarity.name.to_lowercase(),
+            radgem_1_color: "blood".to_string(),
+            radgem_1_material: "crystalline".to_string(),
+            radgem_1_rarity: "common".to_string(),
             radgem_1_quality: dec!(5),
-            radgem_2_color: COLOR[9].to_lowercase(),
-            radgem_2_material: MATERIAL[1].name.to_lowercase(),
-            radgem_2_rarity: MATERIAL[1].rarity.name.to_lowercase(),
+            radgem_2_color: "smoke".to_string(),
+            radgem_2_material: "metallic".to_string(),
+            radgem_2_rarity: "rare".to_string(),
             radgem_2_quality: dec!(10),
         }
     );

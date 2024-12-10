@@ -2,10 +2,9 @@ use scrypto::prelude::*;
 
 use crate::{
     image_oracle::image_oracle::ImageOracle,
-    morph_card_forge::MorphEnergyCardData,
-    quest_rewards::UserId,
-    radgem_forge::{radgem_forge::RadgemForge, RadgemData},
-    radmorph_forge::{radmorph_forge::RadmorphForge, RadmorphData},
+    radmorph_forge::{
+        radmorph_forge::RadmorphForge, MorphEnergyCardData, RadgemData, RadmorphData,
+    },
 };
 
 #[derive(ScryptoSbor, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Clone)]
@@ -15,13 +14,7 @@ enum RadgemDeposit {
 }
 
 #[blueprint]
-#[events(
-    CombineElementsDepositedEvent,
-    CombineElementsMintedRadgemEvent,
-    CombineElementsAddedRadgemImageEvent,
-    CombineElementsClaimedEvent,
-    RadmorphCreatedEvent
-)]
+#[events(RadmorphCreatedEvent)]
 mod refinery {
 
     enable_method_auth! {
@@ -32,10 +25,6 @@ mod refinery {
         methods {
             disable => restrict_to: [super_admin];
             enable => restrict_to: [super_admin];
-            combine_elements_deposit => PUBLIC;
-            combine_elements_mint_radgem => restrict_to: [admin];
-            combine_elements_add_radgem_image => restrict_to: [admin];
-            combine_elements_claim => PUBLIC;
             create_radmorph => PUBLIC;
         }
     }
@@ -43,13 +32,10 @@ mod refinery {
     struct Refinery {
         enabled: bool,
         admin_badge: FungibleVault,
-        radgem_records: KeyValueStore<UserId, RadgemDeposit>,
-        radgem_vault: NonFungibleVault,
         hero_badge_address: ResourceAddress,
         element_address: ResourceAddress,
         radgem_address: ResourceAddress,
         morph_card_address: ResourceAddress,
-        radgem_forge: Global<RadgemForge>,
         radmorph_forge: Global<RadmorphForge>,
         image_oracle: Global<ImageOracle>,
     }
@@ -67,13 +53,6 @@ mod refinery {
             radgem_address: ResourceAddress,
             radmorph_address: ResourceAddress,
         ) -> Global<Refinery> {
-            let radgem_forge = RadgemForge::new(
-                super_admin_badge_address,
-                owner_role.clone(),
-                dapp_definition,
-                admin_badge.take(1),
-                radgem_address,
-            );
             let radmorph_forge = RadmorphForge::new(
                 super_admin_badge_address,
                 owner_role.clone(),
@@ -89,13 +68,10 @@ mod refinery {
             Self {
                 enabled: true,
                 admin_badge: FungibleVault::with_bucket(admin_badge.as_fungible()),
-                radgem_records: KeyValueStore::new(),
-                radgem_vault: NonFungibleVault::new(radgem_address),
                 hero_badge_address,
                 element_address,
                 radgem_address,
                 morph_card_address,
-                radgem_forge,
                 radmorph_forge,
                 image_oracle,
             }
@@ -120,123 +96,6 @@ mod refinery {
         pub fn enable(&mut self) {
             assert!(!self.enabled, "Refinery  already enabled");
             self.enabled = true;
-        }
-
-        fn get_user_id_from_badge_proof(&self, hero_badge: Proof) -> UserId {
-            let local_id_string = match hero_badge
-                .check(self.hero_badge_address)
-                .as_non_fungible()
-                .non_fungible_local_id()
-            {
-                NonFungibleLocalId::String(local_id) => local_id.value().to_owned(),
-                _ => unreachable!("All hero badges have String local IDs"),
-            };
-
-            UserId(local_id_string)
-        }
-
-        // User deposits Elements to be turned into a RadGem
-        pub fn combine_elements_deposit(&self, hero_badge_proof: Proof, elements: Bucket) -> () {
-            assert!(self.enabled, "Refinery component disabled");
-            assert_eq!(elements.resource_address(), self.element_address);
-            assert_eq!(elements.amount(), dec!(5));
-            let user_id = self.get_user_id_from_badge_proof(hero_badge_proof);
-
-            self.admin_badge
-                .authorize_with_amount(1, || elements.burn());
-
-            Runtime::emit_event(CombineElementsDepositedEvent { user_id });
-        }
-
-        // Mint a random RadGem
-        pub fn combine_elements_mint_radgem(
-            &mut self,
-            user_id: UserId,
-            color_seed: Decimal,
-            material_seed: Decimal,
-            quality_seed: Decimal,
-        ) -> () {
-            assert!(self.enabled, "Refinery component disabled");
-
-            let radgem_bucket = self.admin_badge.authorize_with_amount(1, || {
-                self.radgem_forge
-                    .mint_radgem(color_seed, material_seed, quality_seed)
-            });
-
-            // Update the user's RadGem record
-            if self.radgem_records.get(&user_id).is_none() {
-                self.radgem_records.insert(
-                    user_id.clone(),
-                    RadgemDeposit::Unclaimed(vec![radgem_bucket
-                        .as_non_fungible()
-                        .non_fungible_local_id()]),
-                );
-            } else {
-                let radgem_id = radgem_bucket.as_non_fungible().non_fungible_local_id();
-                let mut radgem_record = self.radgem_records.get_mut(&user_id).unwrap();
-
-                match *radgem_record {
-                    RadgemDeposit::Unclaimed(ref mut radgem_ids) => radgem_ids.push(radgem_id),
-                    RadgemDeposit::Claimed => {
-                        *radgem_record = RadgemDeposit::Unclaimed(vec![radgem_id])
-                    }
-                }
-            }
-
-            let radgem_local_id = radgem_bucket.as_non_fungible().non_fungible_local_id();
-            let radgem_data = radgem_bucket
-                .as_non_fungible()
-                .non_fungible::<RadgemData>()
-                .data();
-
-            // Deposit the RadGem into the vault for the user to claim later
-            self.radgem_vault.put(radgem_bucket.as_non_fungible());
-
-            Runtime::emit_event(CombineElementsMintedRadgemEvent {
-                user_id,
-                radgem_local_id,
-                radgem_data,
-            });
-        }
-
-        pub fn combine_elements_add_radgem_image(
-            &mut self,
-            user_id: UserId,
-            radgem_local_id: NonFungibleLocalId,
-            key_image_url: Url,
-        ) {
-            assert!(self.enabled, "Refinery component disabled");
-
-            self.admin_badge.authorize_with_amount(1, || {
-                self.radgem_forge
-                    .update_key_image(radgem_local_id, key_image_url)
-            });
-
-            Runtime::emit_event(CombineElementsAddedRadgemImageEvent { user_id });
-        }
-
-        // User claims RadGem by presenting hero badge
-        pub fn combine_elements_claim(&mut self, hero_badge_proof: Proof) -> Bucket {
-            let user_id = self.get_user_id_from_badge_proof(hero_badge_proof);
-
-            // Get the user's RadGem IDs from the record
-            let mut radgem_record = self.radgem_records.get_mut(&user_id).unwrap();
-
-            let radgems = match *radgem_record {
-                RadgemDeposit::Claimed => panic!("RadGems already claimed"),
-                RadgemDeposit::Unclaimed(ref mut radgem_ids) => {
-                    // Take the RadGems from the vault using the IDs
-                    let radgems = self
-                        .radgem_vault
-                        .take_non_fungibles(&radgem_ids.iter().cloned().collect());
-                    *radgem_record = RadgemDeposit::Claimed;
-                    radgems
-                }
-            };
-
-            Runtime::emit_event(CombineElementsClaimedEvent { user_id });
-
-            radgems.into()
         }
 
         // transforms RadGems and RadCard into a RadMorph
@@ -327,28 +186,6 @@ mod refinery {
             radmorph
         }
     }
-}
-
-#[derive(ScryptoSbor, ScryptoEvent)]
-pub struct CombineElementsDepositedEvent {
-    user_id: UserId,
-}
-
-#[derive(ScryptoSbor, ScryptoEvent)]
-pub struct CombineElementsMintedRadgemEvent {
-    user_id: UserId,
-    radgem_local_id: NonFungibleLocalId,
-    radgem_data: RadgemData,
-}
-
-#[derive(ScryptoSbor, ScryptoEvent)]
-pub struct CombineElementsAddedRadgemImageEvent {
-    user_id: UserId,
-}
-
-#[derive(ScryptoSbor, ScryptoEvent)]
-pub struct CombineElementsClaimedEvent {
-    user_id: UserId,
 }
 
 #[derive(ScryptoSbor, ScryptoEvent)]
