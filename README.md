@@ -9,6 +9,81 @@ This repository contains source code for a stripped down version of RadQuest (ra
 - Docker-based development environment
 Whether you’re studying the implementation, or learning how to build on Radix, this repository demonstrates real-world patterns and practices for dApp development.
 
+The architecture consists of several key components:
+1. **Frontend**
+   - Svelte-based dApp interface
+   - Connects to backend API and Radix network
+2. **Backend Services**
+   - Public API for frontend interactions
+   - Transaction Stream service for monitoring blockchain events
+   - Notification service for user alerts
+   - Worker processes for async task processing
+3. **Storage**
+   - PostgreSQL database for application data
+   - Redis for message queuing
+4. **Radix Components**
+   - Multiple Scrypto packages for different functionalities
+   - Image Oracle for verifying NFT images
+   - Various forge components for badge and item creation
+Each application is containerized using Docker for consistent development and deployment environments.
+
+```mermaid
+graph TB
+    subgraph "Frontend"
+        dapp[dApp - Sveltekit Application]
+    end
+
+    subgraph "Backend Services"
+        api[Public API]
+        ts[Transaction Stream Service]
+        notif[Notification Service]
+        workers[Worker Processes]
+    end
+
+    subgraph "Database"
+        db[(PostgreSQL)]
+    end
+
+    subgraph "Scrypto Components"
+        hero[Hero Badge Forge]
+        quest[Quest Rewards]
+        card[Card Forge]
+        gift[Gift Box Opener]
+        rad[RadGem Forge]
+        oracle[Image Oracle]
+    end
+
+    subgraph "Message Queue"
+        queue[(Redis Queue)]
+    end
+
+    %% Frontend connections
+    dapp --> api
+    dapp --> Radix_Ledger
+
+    %% Backend service connections
+    ts --> queue
+    ts --> db
+    api --> db
+    api --> queue
+    workers --> queue
+    workers --> db
+    workers --> Radix_Ledger
+    notif --> dapp
+    workers --> notif
+
+    %% Radix connections
+    Radix_Ledger --> hero
+    Radix_Ledger --> quest
+    Radix_Ledger --> card
+    Radix_Ledger --> gift
+    Radix_Ledger --> rad
+    Radix_Ledger --> oracle
+
+    %% Transaction monitoring
+    ts --> Radix_Ledger
+```
+
 ## Development
 
 ### Pre-requisites
