@@ -14,6 +14,7 @@
   import { invalidateAll } from '$app/navigation'
   import { GatewayApi } from 'common'
   import { resolveRDT } from '$lib/rdt'
+  import DevMode from './home/[category=quest_category]/DevMode.svelte'
 
   const { dAppDefinitionAddress, networkId } = publicConfig
 
@@ -129,6 +130,8 @@
 </div>
 
 <slot />
+
+<DevMode />
 
 <style lang="scss">
   .header {

@@ -11,13 +11,9 @@ import { SignedChallenge, parseSignedChallenge } from '@radixdlt/radix-dapp-tool
 import { ResultAsync, err, errAsync, ok, okAsync } from 'neverthrow'
 import type { Cookies } from '@sveltejs/kit'
 
-import { type ApiError, createApiError, EventId } from 'common'
+import { type ApiError, createApiError } from 'common'
 
-import { type UserStatus, type User, type UserType } from 'database'
-
-type SetUserStatusOutput = {
-  status: UserStatus
-}
+import { type UserType } from 'database'
 
 export type AuthController = ReturnType<typeof AuthController>
 export const AuthController = ({
@@ -25,12 +21,8 @@ export const AuthController = ({
   config,
   authModel,
   userModel,
-  eventModel,
-  eventQueue,
   userQuestModel,
-  loginAttemptModel,
-  gatewayApi,
-  logger
+  gatewayApi
 }: ControllerDependencies) => {
   const { dAppDefinitionAddress, networkId, expectedOrigin } = config.dapp
 
@@ -61,63 +53,15 @@ export const AuthController = ({
     return referredBy ? userModel.confirmReferralCode(referredBy) : okAsync(undefined)
   }
 
-  const retryCancelledEvents = (userId: string) =>
-    eventModel.getTemporarilyCancelledEvents(userId).andThen((events) => {
-      return ResultAsync.combineWithAllErrors(
-        events.map((event) => {
-          const jobData = {
-            data: event.data as Record<string, unknown>,
-            eventId: event.id,
-            type: event.id as EventId,
-            transactionId: event.transactionId,
-            userId: event.userId,
-            traceId: crypto.randomUUID()
-          }
-          return eventQueue.remove(jobData.transactionId).andThen(() => eventQueue.add([jobData]))
-        })
-      ).mapErr((error) => {
-        logger.error({ method: 'retryCancelledEvents', error })
-        return createApiError('failed to retry cancelled events', 400)(error)
-      })
-    })
-
-  const setUserStatus: (user: User) => () => ResultAsync<SetUserStatusOutput, ApiError> =
-    (user: User) => () => {
-      logger.trace({ method: 'login.doFraudScoring' })
-
-      const businessLogic = () => {
-        return userModel
-          .setUserStatus(user.id, 'OK')
-          .andThen(() => retryCancelledEvents(user.id))
-          .map(
-            () =>
-              ({
-                status: 'OK',
-                reason: 'ALLOWED'
-              }) as SetUserStatusOutput
-          )
-      }
-
-      return user.status === 'PERMANENTLY_BLOCKED'
-        ? okAsync({
-            status: 'PERMANENTLY_BLOCKED',
-            reason: 'BLOCKED_PERMANENTLY_BLOCKED'
-          } as SetUserStatusOutput)
-        : businessLogic()
-    }
-
   const login = (
     ctx: ControllerMethodContext,
     data: {
       ip: string
       cookies: Cookies
-      userAgent: string
-      acceptLanguage: string
       personaProof: SignedChallenge
     }
   ): ControllerMethodOutput<{
     authToken: string
-    status: UserStatus
     headers: { ['Set-Cookie']: string }
     id: string
   }> => {
@@ -173,31 +117,15 @@ export const AuthController = ({
           ).map((user) => ({ user, isNewUser: !userExists }))
         )
       )
-      .andThen(({ user, isNewUser }) =>
-        setUserStatus(user)()
-          .andThen(({ status }) =>
-            loginAttemptModel
-              .add({
-                type: isNewUser ? 'USER_CREATED' : 'USER_LOGIN',
-                userId: user.id
-              })
-              .map(() => ({
-                id: user.id,
-                type: user.type,
-                status: status
-              }))
-          )
-          .orElse((error) => {
-            logger.error({ method: 'login.doFraudScoring', error })
-            return okAsync({ ...user })
-          })
-      )
-      .andThen(({ id, type, status }) =>
+      .map(({ user }) => ({
+        id: user.id,
+        type: user.type
+      }))
+      .andThen(({ id, type }) =>
         jwt.createTokens(id, type).map(({ authToken, refreshToken }) => ({
           data: {
             authToken,
             headers: jwt.createRefreshTokenCookie(refreshToken, cookies),
-            status,
             id
           },
           httpResponseCode: 200

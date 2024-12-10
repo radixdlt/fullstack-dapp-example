@@ -11,9 +11,7 @@
   import { i18n } from '$lib/i18n/i18n'
   import SetUsername from './SetUsername.svelte'
   import { userApi } from '$lib/api/user-api'
-  import Checkbox from '$lib/components/checkbox/Checkbox.svelte'
   import { htmlReplace } from '$lib/helpers/html-replace'
-  import AppsFlyer from './AppsFlyer.svelte'
   import { markNotificationAsSeen } from '$lib/notifications'
   import { isMobile } from '@radixdlt/radix-dapp-toolkit'
   import DepositHeroBadge from './DepositHeroBadge.svelte'
@@ -30,9 +28,6 @@
   const downloadWalletRequirementKey =
     'requirement-SetupWallet-DownloadWallet' as RequirementCookieKey
 
-  let marketingUpdatesCheckbox: boolean
-  let email = $user?.email?.email || ''
-  let confirmedWalletInstall = writable<boolean>(false)
   const walletIsLinked = writable(data.requirements.ConnectWallet?.isComplete)
   const isHeroBadgeDeposited = writable(data.requirements.DepositHeroBadge?.isComplete)
   const canDepositHeroBadge = writable<boolean>(false)
@@ -169,26 +164,6 @@
   const loggedIn = derived(user, ($user) => !!$user)
 
   let quest: Quest
-
-  const submitEmailOrProceed = async () => {
-    if (!email.length && !marketingUpdatesCheckbox) {
-      quest.actions.next()
-      return
-    }
-
-    userApi
-      .setUserFields({ fields: [{ field: 'email', email, newsletter: marketingUpdatesCheckbox }] })
-      .map(() => {
-        if ($user) {
-          $user.email = { email, newsletter: marketingUpdatesCheckbox }
-        }
-
-        quest.actions.next()
-      })
-      .mapErr(() => {
-        quest.actions.next()
-      })
-  }
 
   $: {
     if ($user && !data.requirements.ConnectWallet?.isComplete) {

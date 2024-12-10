@@ -156,27 +156,18 @@ export const RedisKeys = {
 export const EventId = {
   DepositHeroBadge: 'DepositHeroBadge',
   JettyReceivedClams: 'JettyReceivedClams',
-  XrdStaked: 'XrdStaked',
-  MayaRouterWithdrawEvent: 'MayaRouterWithdrawEvent',
   QuestRewardDeposited: 'QuestRewardDeposited',
   QuestRewardDepositedV2: 'QuestRewardDepositedV2',
   QuestRewardClaimed: 'QuestRewardClaimed',
   QuestRewardClaimedV2: 'QuestRewardClaimedV2',
   JettySwap: 'JettySwap',
-  LettySwap: 'LettySwap',
   GiftBoxesOpenedEvent: 'GiftBoxesOpenedEvent',
   DepositedElements: 'DepositedElements',
   RadGemsClaimed: 'RadGemsClaimed',
   RadMorphCreated: 'RadMorphCreated',
-  PurchaseTicketsEvent: 'PurchaseTicketsEvent'
 } as const
 
 export type EventId = keyof typeof EventId
-
-export const CookieKeys = {
-  Utm: 'rq_ma',
-  GoldenTicket: 'golden-ticket'
-} as const
 
 export type Metadata = typeof metadata
 export type GiftBoxKey = keyof Metadata['resources']['giftBox']

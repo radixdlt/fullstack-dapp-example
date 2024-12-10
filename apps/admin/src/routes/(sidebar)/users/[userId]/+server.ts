@@ -30,7 +30,6 @@ export const GET = async ({ locals, params }) => {
       referredByUser: true,
       savedProgress: true,
       transactions: true,
-      loginAttempts: true
     }
   })
 

@@ -9,9 +9,6 @@ import { MessageHelper } from '../helpers/messageHelper'
 import { config } from '../config'
 import { QuestHelper } from '../helpers/questHelper'
 import { ReferralHelper } from '../helpers/referralHelper'
-import { TokenPriceClient } from '../token-price-client'
-
-const supportedTokenAddressList = new Set<string>(Object.values(BusinessLogic.Maya.supportedTokens))
 
 type GiftBoxKind = keyof typeof config.radQuest.resources.giftBox
 
@@ -138,16 +135,13 @@ export const EventWorkerController = ({
           })
           .andThen(() => questHelper.handleAllQuestRequirementCompleted('SetupWallet'))
       }
-      case EventId.JettySwap:
-      case EventId.LettySwap: {
+      case EventId.JettySwap: {
         return questHelper.handleQuestWithTrackedAccount(
           'DEXSwaps',
           type,
           ({ completedRequirements }) =>
             completedRequirements.filter(({ requirementId }) =>
-              ([EventId.JettySwap, EventId.LettySwap] as string[]).includes(
-                requirementId as EventId
-              )
+              ([EventId.JettySwap] as string[]).includes(requirementId as EventId)
             ).length === 2
         )
       }

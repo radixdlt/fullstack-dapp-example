@@ -40,12 +40,10 @@ model User {
   messages                   Message[]
   completedQuestRequirements CompletedQuestRequirement[]
   savedProgress              SavedProgress?
-  auditLogs                  Audit[]
   questProgress              QuestProgress[]
   referredUsers              User[]                      @relation("Referrer")
   transactions               TransactionIntent[]
   referals                   Referral[]
-  loginAttempts              LoginAttempt[]
 }
 
 enum ImageType {
@@ -121,23 +119,6 @@ model Message {
   @@index([userId, seenAt])
 }
 
-enum LoginAttemptType {
-  USER_CREATED
-  USER_LOGIN
-  USER_VERIFY
-}
-
-model LoginAttempt {
-  id        Int              @id @default(autoincrement())
-  userId    String
-  type      LoginAttemptType
-  createdAt DateTime         @default(now())
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@index(userId)
-}
-
 model Notification {
   notificationId String
   userId         String
@@ -180,26 +161,6 @@ enum QuestStatus {
   REWARDS_CLAIMED
   COMPLETED
   PARTIALLY_COMPLETED
-}
-
-model Audit {
-  transactionId String @id
-  userId        String
-
-  date        DateTime  @default(now())
-  type        AuditType
-  xrdUsdValue Decimal
-  xrdPrice    Decimal   @default(1)
-  data        Json      @default("{}")
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@index([userId])
-}
-
-enum AuditType {
-  DIRECT_DEPOSIT
-  CLAIMBOX_DEPOSIT
 }
 
 model TransactionIntent {

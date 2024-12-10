@@ -69,17 +69,6 @@
     )
   }
 
-  const simulateMayaSwap = async () => {
-    await fetchWrapper(
-      fetch('/api/debug', {
-        method: 'POST',
-        body: JSON.stringify({
-          type: 'simulateMayaSwap'
-        })
-      })
-    )
-  }
-
   const mintElements = async () => {
     await fetchWrapper(
       fetch('/api/debug', {
@@ -87,18 +76,6 @@
         body: JSON.stringify({
           type: 'mintElements',
           accountAddress: $user!.accountAddress
-        })
-      })
-    )
-  }
-
-  const claimGoldenTicket = async (expired: boolean) => {
-    await fetchWrapper(
-      fetch('/api/debug', {
-        method: 'POST',
-        body: JSON.stringify({
-          type: 'claimGoldenTicket',
-          expired
         })
       })
     )
@@ -168,9 +145,6 @@
         <Button on:click={setUserAsAdmin}>Set user as Admin</Button>
         <Button on:click={addReferral}>Add referral</Button>
         <Button on:click={mintElements}>Mint elements</Button>
-        <Button on:click={simulateMayaSwap}>Simulate Maya Swap</Button>
-        <Button on:click={() => claimGoldenTicket(false)}>Claim GT</Button>
-        <Button on:click={() => claimGoldenTicket(true)}>Claim expired GT</Button>
         <Button on:click={() => updateUserStatus('OK')}>Unblock</Button>
         <Button on:click={() => updateUserStatus('PERMANENTLY_BLOCKED')}>Permanent block</Button>
         <Button on:click={() => updateUserStatus('TEMPORARILY_BLOCKED')}>Temporary block</Button>

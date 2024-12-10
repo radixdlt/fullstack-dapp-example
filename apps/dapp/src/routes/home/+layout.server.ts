@@ -4,8 +4,7 @@ import { ResultAsync, okAsync } from 'neverthrow'
 import type { LayoutServerLoad } from './$types'
 import { loadLandingPopup, loadQuests, type QuestId } from 'content'
 import type { $Enums } from 'database'
-import { CookieKeys, encodeBase64 } from 'common'
-import { error, type Cookies } from '@sveltejs/kit'
+import { error } from '@sveltejs/kit'
 
 export const load: LayoutServerLoad = async ({ fetch, cookies, url, locals }) => {
   if (locals.maintenanceMode) return error(503, 'Site unavailable')

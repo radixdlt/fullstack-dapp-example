@@ -169,13 +169,6 @@ exports.Prisma.MessageScalarFieldEnum = {
   data: 'data'
 };
 
-exports.Prisma.LoginAttemptScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  type: 'type',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.NotificationScalarFieldEnum = {
   notificationId: 'notificationId',
   userId: 'userId',
@@ -199,16 +192,6 @@ exports.Prisma.SavedProgressScalarFieldEnum = {
   userId: 'userId',
   questId: 'questId',
   progress: 'progress'
-};
-
-exports.Prisma.AuditScalarFieldEnum = {
-  transactionId: 'transactionId',
-  userId: 'userId',
-  date: 'date',
-  type: 'type',
-  xrdUsdValue: 'xrdUsdValue',
-  xrdPrice: 'xrdPrice',
-  data: 'data'
 };
 
 exports.Prisma.TransactionIntentScalarFieldEnum = {
@@ -302,23 +285,12 @@ exports.EventStatus = exports.$Enums.EventStatus = {
   CANCELLED: 'CANCELLED'
 };
 
-exports.LoginAttemptType = exports.$Enums.LoginAttemptType = {
-  USER_CREATED: 'USER_CREATED',
-  USER_LOGIN: 'USER_LOGIN',
-  USER_VERIFY: 'USER_VERIFY'
-};
-
 exports.QuestStatus = exports.$Enums.QuestStatus = {
   IN_PROGRESS: 'IN_PROGRESS',
   REWARDS_DEPOSITED: 'REWARDS_DEPOSITED',
   REWARDS_CLAIMED: 'REWARDS_CLAIMED',
   COMPLETED: 'COMPLETED',
   PARTIALLY_COMPLETED: 'PARTIALLY_COMPLETED'
-};
-
-exports.AuditType = exports.$Enums.AuditType = {
-  DIRECT_DEPOSIT: 'DIRECT_DEPOSIT',
-  CLAIMBOX_DEPOSIT: 'CLAIMBOX_DEPOSIT'
 };
 
 exports.TransactionIntentStatus = exports.$Enums.TransactionIntentStatus = {
@@ -339,12 +311,10 @@ exports.Prisma.ModelName = {
   Challenge: 'Challenge',
   Event: 'Event',
   Message: 'Message',
-  LoginAttempt: 'LoginAttempt',
   Notification: 'Notification',
   CompletedQuestRequirement: 'CompletedQuestRequirement',
   QuestProgress: 'QuestProgress',
   SavedProgress: 'SavedProgress',
-  Audit: 'Audit',
   TransactionIntent: 'TransactionIntent',
   BatchedTransactionIntent: 'BatchedTransactionIntent',
   SubmittedTransaction: 'SubmittedTransaction',

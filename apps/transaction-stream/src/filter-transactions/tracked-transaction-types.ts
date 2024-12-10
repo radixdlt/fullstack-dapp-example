@@ -201,10 +201,6 @@ export const trackedTransactionTypes: TrackedTransactions = {
     }),
     WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress, 'accountAddress')
   },
-  [EventId.XrdStaked]: {
-    XrdStake: xrdStaked,
-    WithdrawEvent: resourceWithdrawn(config.radQuest.xrd, 'accountAddress')
-  },
   [EventId.DepositedElements]: {
     AddedRadgemImageEvent: eventEmittedByComponent({
       eventName: 'DepositedElementsEvent',
@@ -231,20 +227,6 @@ export const trackedTransactionTypes: TrackedTransactions = {
       key: 'accountAddress'
     })
   },
-  [EventId.MayaRouterWithdrawEvent]: {
-    MayaRouterWithdrawEvent: eventEmittedByComponent({
-      eventName: 'MayaRouterWithdrawEvent',
-      componentAddress: config.radQuest.components.mayaRouter,
-      keys: {
-        intended_recipient: {
-          kind: 'Reference',
-          key: 'accountAddress'
-        },
-        resource_address: { kind: 'Reference', key: 'resourceAddress' },
-        amount: { kind: 'Decimal', key: 'amount' }
-      }
-    })
-  },
   [EventId.JettySwap]: {
     WithdrawEvent: resourceWithdrawn(
       'resource_tdx_2_1t5m454mwsa54u8hmlzfxl474vsynf8nm0htzhw6kkh7ksr0xkcxdrc',
@@ -253,14 +235,6 @@ export const trackedTransactionTypes: TrackedTransactions = {
     ClamSwapEvent: eventEmittedByComponent({
       eventName: 'ClamSwapEvent',
       componentAddress: config.radQuest.components.jettySwap,
-      keys: {}
-    })
-  },
-  [EventId.LettySwap]: {
-    WithdrawEvent: resourceWithdrawn(config.radQuest.resources.clamAddress),
-    ClamSwapEvent: eventEmittedByComponent({
-      eventName: 'ClamSwapEvent',
-      componentAddress: config.radQuest.components.lettySwap,
       keys: {}
     })
   },
@@ -275,14 +249,4 @@ export const trackedTransactionTypes: TrackedTransactions = {
       }
     })
   },
-  [EventId.PurchaseTicketsEvent]: {
-    PurchaseTicketsEvent: eventEmittedByComponent({
-      eventName: 'PurchaseTicketsEvent',
-      componentAddress: config.radQuest.components.ticketMachine,
-      keys: {
-        user_id: { kind: 'String', key: 'userId' },
-        ticket_amount: { kind: 'Decimal', key: 'ticketAmount' }
-      }
-    })
-  }
 } as const

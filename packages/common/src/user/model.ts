@@ -46,9 +46,7 @@ type UserModelType = {
   addAccount: (userId: string, accountAddress: string) => ResultAsync<void, ApiError>
   setUserName: (userId: string, name: string) => ResultAsync<User, ApiError>
   confirmReferralCode: (referralCode: string) => ResultAsync<string | undefined, ApiError>
-  getUserIdsByIp: (ip: string) => ResultAsync<string[], ApiError>
   setUserStatus: (userId: string, status: UserStatus) => ResultAsync<undefined, ApiError>
-  countReferralCodeUsagePerIp: (userId: string, ip: string) => ResultAsync<number, ApiError>
 }
 
 export type UserModel = ReturnType<typeof UserModel>
@@ -95,44 +93,6 @@ export const UserModel =
         return err(data)
       })
     }
-
-    const getUserIdsByIp = (ip: string) => {
-      return ResultAsync.fromPromise(
-        db.$queryRaw<{ userId: string }[]>`
-      SELECT "userId" FROM "LoginAttempt" 
-        WHERE "ipAssessmentId" IN (SELECT id FROM "IpAssessment" WHERE ip = ${ip}) 
-        AND "type" = 'USER_CREATED'
-        AND "createdAt" > NOW() - interval '24 hours'
-      `,
-        (error) => {
-          logger?.error({ error, method: 'countByIp', model: 'UserModel' })
-          return createApiError('failed to count by ip', 400)(error)
-        }
-      ).map((data) => data.map((user) => user.userId))
-    }
-
-    const countReferralCodeUsagePerIp = (userId: string, ip: string) =>
-      ResultAsync.fromPromise(
-        db.$queryRaw<{ count: number }[]>`
-          SELECT COUNT(1) FROM "User" u
-            INNER JOIN "LoginAttempt" la
-              ON u.id = la."userId" 
-              AND la."createdAt" > NOW() - INTERVAL '30 minutes'
-              AND la."type" = 'USER_CREATED'
-            INNER JOIN "IpAssessment" ia
-              ON la."ipAssessmentId" = ia.id 
-              AND ia."ip" = ${ip}
-            WHERE "referredBy" = (SELECT "referralCode" FROM "User" WHERE id = ${userId});
-          `,
-        (error) => {
-          logger?.error({
-            error,
-            method: 'countReferralCodeUsagePerIp',
-            model: 'UserModel'
-          })
-          return createApiError('failed to count referral code usage', 500)(error)
-        }
-      ).map((data) => data[0].count || 0)
 
     const setUserStatus = (userId: string, status: UserStatus) => {
       return ResultAsync.fromPromise(
@@ -353,9 +313,7 @@ export const UserModel =
       getByReferralCode,
       getReferrals,
       setUserStatus,
-      getUserIdsByIp,
       addAccount,
-      countReferralCodeUsagePerIp,
       setUserName,
       isAccountAddressUsed,
       confirmReferralCode

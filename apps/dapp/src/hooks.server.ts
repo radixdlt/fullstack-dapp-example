@@ -2,7 +2,6 @@ import { AuthController } from '$lib/server/auth/controller'
 import { type Handle } from '@sveltejs/kit'
 import { config } from '$lib/config'
 import {
-  AuditModel,
   GatewayApi,
   TransactionModel,
   UserModel,
@@ -12,7 +11,6 @@ import {
   Addresses,
   MessageModel,
   NotificationModel,
-  LoginAttemptModel,
   EventModel,
   ImageModel
 } from 'common'
@@ -46,12 +44,10 @@ const eventModel = EventModel({ db: dbClient, queues })
 const authModel = AuthModel()
 const userQuestModel = UserQuestModel(dbClient)
 const transactionModel = TransactionModel(dbClient, queues)
-const auditModel = AuditModel(dbClient)
 const gatewayApi = GatewayApi(networkId, process.env.GATEWAY_URL)
 const messageModel = MessageModel(dbClient)
 const accountAddressModel = AccountAddressModel(redisClient)
 const addresses = Addresses(networkId)
-const loginAttemptModel = LoginAttemptModel(dbClient)
 const notificationModel = NotificationModel(dbClient)
 const imageModel = ImageModel(dbClient)
 
@@ -94,8 +90,6 @@ export const handle: Handle = async ({ event, resolve }) => {
     userModel: userModelWithLogger,
     userQuestModel: userQuestModel(logger),
     transactionModel: transactionModel(logger),
-    loginAttemptModel: loginAttemptModel(logger),
-    auditModel: auditModel(logger),
     accountAddressModel: accountAddressModel(logger),
     gatewayApi,
     logger,

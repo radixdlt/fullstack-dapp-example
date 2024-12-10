@@ -9,8 +9,7 @@ export const resultWrapperWithLogger =
     ResultAsync.fromPromise(method(...args), (error) => {
       logger?.error({
         error: (error as Error).message,
-        method: name,
-        model: 'GoldenTicketModel'
+        method: name
       })
       return error as Error
     })

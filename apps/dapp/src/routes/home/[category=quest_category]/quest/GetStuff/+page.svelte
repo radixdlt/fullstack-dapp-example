@@ -85,9 +85,6 @@
 
   $: if ($hasXrd && !data.requirements['GetXRD'].isComplete) completeRequirement(data.id, 'GetXRD')
 
-  const hasGoldenTicket = writable(false)
-  const hasInvalidGoldenTicket = writable(false)
-
   let checkXrdInterval: ReturnType<typeof setInterval> | undefined
 
   let selectedGetXrdMethod: ComponentProps<GetXrdMethodOptions>['selectedOption'] = 'card'
@@ -130,11 +127,7 @@
     {
       id: 'has-xrd',
       type: 'jetty',
-      skip: derived(
-        [hasXrd, hasGoldenTicket, hasInvalidGoldenTicket],
-        ([$hasXrd, $hasGoldenTicket, $hasInvalidGoldenTicket]) =>
-          !$hasXrd || $hasGoldenTicket || $hasInvalidGoldenTicket
-      )
+      skip: derived([hasXrd], ([$hasXrd]) => !$hasXrd)
     },
     {
       type: 'claimRewards'

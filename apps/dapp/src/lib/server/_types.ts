@@ -4,14 +4,12 @@ import type {
   ApiError,
   UserModel,
   TransactionModel,
-  AuditModel,
   GatewayApi,
   AccountAddressModel,
   UserQuestModel,
   Addresses,
   MessageModel,
   NotificationModel,
-  LoginAttemptModel,
   EventModel,
   ImageModel
 } from 'common'
@@ -50,8 +48,6 @@ export type Controllers = {
 export type ControllerDependencies = {
   userModel: ReturnType<UserModel>
   transactionModel: ReturnType<TransactionModel>
-  auditModel: ReturnType<AuditModel>
-  loginAttemptModel: ReturnType<LoginAttemptModel>
   gatewayApi: ReturnType<typeof GatewayApi>
   userQuestModel: ReturnType<UserQuestModel>
   accountAddressModel: ReturnType<AccountAddressModel>
