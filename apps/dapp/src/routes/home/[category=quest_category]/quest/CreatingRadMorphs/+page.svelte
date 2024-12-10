@@ -109,18 +109,6 @@
   {#if render('14')}
     {@html text['14.md']}
   {/if}
-  {#if render('complete0')}
-    {@html text['complete0.md']}
-  {/if}
-  {#if render('complete1')}
-    {@html text['complete1.md']}
-  {/if}
-  {#if render('complete2')}
-    {@html text['complete2.md']}
-  {/if}
-  {#if render('complete3')}
-    {@html text['complete3.md']}
-  {/if}
 
   {#if error}
     <Error>{$i18n.t('quests:somethingWentWrong')}</Error>

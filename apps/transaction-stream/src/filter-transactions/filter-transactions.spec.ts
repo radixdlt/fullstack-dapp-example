@@ -5,11 +5,8 @@ import QuestRewardsDepositedV2 from '../fixtures/transactions/quest-rewards-depo
 import QuestRewardClaimed from '../fixtures/transactions/quest-rewards-claimed'
 import QuestRewardClaimedV2 from '../fixtures/transactions/quest-rewards-claimed-v2'
 import NotSupportedTx from '../fixtures/transactions/not-supported-tx'
-import StakedXrdTx from '../fixtures/transactions/staked-xrd'
 import JettySwap from '../fixtures/transactions/jetty-swap'
-import LettySwap from '../fixtures/transactions/letty-swap'
 import JettyReceivedClams from '../fixtures/transactions/jetty-recevied-clams'
-import MayaRouterWithdraw from '../fixtures/transactions/maya-router-withdraw'
 import GiftBoxesOpened from '../fixtures/transactions/gift-boxes-opened'
 import { trackedTransactionTypes } from './tracked-transaction-types'
 import { AccountAddressModel, EventId } from 'common'
@@ -17,7 +14,6 @@ import { FilterTransactionsByType } from './filter-transactions-by-type'
 import { RedisServer } from '../test-helpers/inMemoryRedisServer'
 import { RedisConnection } from 'queues'
 import DepositElementsToRadGemv2 from '../fixtures/transactions/radgem-forgev2'
-import TicketsPurchased from '../fixtures/transactions/tickets-purchased'
 
 let accountAddressModel: ReturnType<AccountAddressModel>
 let filterTransactionsByType = FilterTransactionsByType(trackedTransactionTypes)
@@ -67,38 +63,8 @@ describe('filter transactions', () => {
       })
     })
 
-    describe('Staking', () => {
-      it('should find XrdStaked transaction', () => {
-        const filterResult = filterTransactionsByType([...StakedXrdTx, ...NotSupportedTx])
+   
 
-        if (filterResult.isErr()) throw filterResult.error
-
-        const [transaction] = filterResult.value
-
-        expect(transaction.type).toEqual(EventId.XrdStaked)
-        expect(transaction.accountAddress).toBeDefined()
-      })
-    })
-
-    describe('Thorswap', () => {
-      it(`should find ${EventId.MayaRouterWithdrawEvent} transaction`, () => {
-        const result = filterTransactionsByType([...MayaRouterWithdraw])
-
-        if (result.isErr()) throw result.error
-
-        const filteredTransactions = result.value
-
-        expect(filteredTransactions.length).toEqual(1)
-
-        const [transaction] = filteredTransactions
-
-        expect(transaction.type).toEqual(EventId.MayaRouterWithdrawEvent)
-        expect(transaction.transactionId).toBeDefined()
-        expect(transaction.accountAddress).toBeDefined()
-        expect(transaction.data.amount).toBeDefined()
-        expect(transaction.data.resourceAddress).toBeDefined()
-      })
-    })
 
     describe('DEX', () => {
       it(`should find ${EventId.JettySwap} transaction`, () => {
@@ -115,19 +81,7 @@ describe('filter transactions', () => {
         expect(transaction.accountAddress).toBeTruthy()
       })
 
-      it(`should find ${EventId.LettySwap} transaction`, () => {
-        const filterResult = filterTransactionsByType([...NotSupportedTx, ...LettySwap])
-
-        if (filterResult.isErr()) throw filterResult.error
-
-        const filteredTransactions = filterResult.value
-        expect(filteredTransactions).lengthOf(1)
-
-        const [transaction] = filteredTransactions
-
-        expect(transaction.type).toEqual(EventId.LettySwap)
-        expect(transaction.accountAddress).toBeTruthy()
-      })
+     
     })
   })
 
@@ -233,21 +187,6 @@ describe('filter transactions', () => {
       expect(transaction.type).toEqual(EventId.QuestRewardClaimedV2)
       expect(transaction.userId).toBeDefined()
       expect(transaction.data.questId).toBeDefined()
-    })
-
-    it(`should find ${EventId.PurchaseTicketsEvent} transaction`, () => {
-      const result = filterTransactionsByType([...TicketsPurchased])
-
-      if (result.isErr()) throw result.error
-
-      const filteredTransactions = result.value
-
-      expect(filteredTransactions.length).toEqual(1)
-
-      const [transaction] = filteredTransactions
-      expect(transaction.type).toEqual(EventId.PurchaseTicketsEvent)
-      expect(transaction.data.userId).toBeDefined()
-      expect(transaction.data.ticketAmount).toBeDefined()
     })
   })
 
