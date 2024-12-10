@@ -7,5 +7,4 @@ export const exec = () => {
     .map((res) => logger.debug(res))
     .mapErr((err) => logger.error(JSON.stringify(err, null, 2)))
 }
-
 exec()
