@@ -199,10 +199,6 @@ npm uninstall PACKAGE_NAME --workspace=NAME_OF_APP
 
 ![user auth flow](docs/user-authentication-flow.png)
 
-## Architecture
-
-![architecture diagram](docs/architecture-diagram.png)
-
 ### Folder structure
 
 ```bash
