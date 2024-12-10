@@ -1,4 +1,13 @@
-<h1 style="text-align: center;">RadQuest</h1>
+<h1 style="text-align: center;">Fullstack dApp Example</h1>
+
+## Description
+This repository contains source code for a stripped down version of RadQuest (radquest.io), an interactive onboarding platform for the Radix DeFi ecosystem. This codebase serves as a comprehensive example of building a full-stack decentralized application on Radix, featuring:
+- Multiple Scrypto components for on-chain functionality
+- A Svelte-based frontend application
+- Backend services for transaction monitoring and notifications
+- Database integration and worker processes
+- Docker-based development environment
+Whether you’re studying the implementation, or learning how to build on Radix, this repository demonstrates real-world patterns and practices for dApp development.
 
 ## Development
 
