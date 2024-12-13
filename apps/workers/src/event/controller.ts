@@ -85,8 +85,7 @@ export const EventWorkerController = ({
     })
 
     switch (type) {
-      case EventId.QuestRewardDepositedV2:
-      case EventId.QuestRewardDeposited: {
+      case EventId.QuestRewardDepositedV2: {
         const questId = job.data.data.questId as QuestId
 
         return questHelper
@@ -100,8 +99,7 @@ export const EventWorkerController = ({
           )
       }
 
-      case EventId.QuestRewardClaimedV2:
-      case EventId.QuestRewardClaimed: {
+      case EventId.QuestRewardClaimedV2: {
         const questId = job.data.data.questId as QuestId
 
         const sendQuestRewardsClaimedMessage = () =>

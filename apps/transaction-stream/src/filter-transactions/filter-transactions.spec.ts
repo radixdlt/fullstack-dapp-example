@@ -63,9 +63,6 @@ describe('filter transactions', () => {
       })
     })
 
-   
-
-
     describe('DEX', () => {
       it(`should find ${EventId.JettySwap} transaction`, () => {
         const filterResult = filterTransactionsByType([...JettySwap, ...NotSupportedTx])
@@ -80,8 +77,6 @@ describe('filter transactions', () => {
         expect(transaction.type).toEqual(EventId.JettySwap)
         expect(transaction.accountAddress).toBeTruthy()
       })
-
-     
     })
   })
 
@@ -122,24 +117,6 @@ describe('filter transactions', () => {
   })
 
   describe('Quest rewards', () => {
-    it(`should find ${EventId.QuestRewardDeposited} transaction`, () => {
-      const result = filterTransactionsByType([...QuestRewardsDeposited])
-
-      if (result.isErr()) throw result.error
-
-      const filteredTransactions = result.value
-
-      expect(filteredTransactions.length).toEqual(1)
-
-      const [transaction] = filteredTransactions
-
-      expect(transaction.transactionId).toBeDefined()
-      expect(transaction.type).toEqual(EventId.QuestRewardDeposited)
-      expect(transaction.userId).toBeDefined()
-      expect(transaction.data.questId).toBeDefined()
-      expect(transaction.data.rewards).toBeDefined()
-    })
-
     it(`should find ${EventId.QuestRewardDepositedV2} transaction`, () => {
       const result = filterTransactionsByType([...QuestRewardsDepositedV2])
 
@@ -155,22 +132,6 @@ describe('filter transactions', () => {
       expect(transaction.type).toEqual(EventId.QuestRewardDepositedV2)
       expect(transaction.data.items).toBeDefined()
       expect(transaction.data.isBatch).toBeTruthy()
-    })
-
-    it(`should find ${EventId.QuestRewardClaimed}`, () => {
-      const result = filterTransactionsByType([...QuestRewardClaimed, ...NotSupportedTx])
-
-      if (result.isErr()) throw result.error
-
-      const filteredTransactions = result.value
-
-      expect(filteredTransactions.length).toEqual(1)
-
-      const [transaction] = filteredTransactions
-
-      expect(transaction.type).toEqual(EventId.QuestRewardClaimed)
-      expect(transaction.userId).toBeDefined()
-      expect(transaction.data.questId).toBeDefined()
     })
 
     it(`should find ${EventId.QuestRewardClaimedV2}`, () => {

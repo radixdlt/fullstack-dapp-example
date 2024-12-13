@@ -38,9 +38,7 @@ export const SystemWorkerController = ({
 
     const { xrd, accounts, badges, resources, components } = config.radQuest
     const { payer, system, jetty, owner } = accounts
-    const { superAdminBadgeAddress, adminBadgeAddress, heroBadgeAddress, kycBadgeAddress } = badges
-    const { clamAddress } = resources
-    const { questRewards } = components
+    const { superAdminBadgeAddress, adminBadgeAddress, heroBadgeAddress } = badges
 
     const accountHelper = AccountHelper(dbClient)
 
@@ -174,12 +172,6 @@ export const SystemWorkerController = ({
               "create_proof_of_amount"
               Address("${superAdminBadgeAddress}")
               Decimal("1")
-            ;
-            
-            CALL_METHOD
-              Address("${questRewards}")
-              "set_kyc_badge_address"
-              Address("${kycBadgeAddress}")
             ;`
           )
           .map(() => undefined)
@@ -317,25 +309,6 @@ export const SystemWorkerController = ({
               Decimal("20");
 
 
-          ${Array(5)
-            .fill(
-              `CALL_METHOD
-            Address("${config.radQuest.components.cardForge}")
-            "mint_card"
-            "${userId}"
-            ""
-            "Test Card"
-            "This is just a test card"
-            "tidal wave"
-            "Such amazing energy"
-            "Common"
-            Decimal("10")
-            false
-          `
-            )
-            .join(';')}
-          ;
-                
             TAKE_FROM_WORKTOP
               Address("${resources.clamAddress}")
               Decimal("100")
@@ -420,13 +393,6 @@ export const SystemWorkerController = ({
               "try_deposit_or_abort"
               Bucket("clam_bucket")
               Enum<0u8>();
-
-              CALL_METHOD
-                Address("${components.heroBadgeForge}")
-                "add_user_account"
-                Address("${accountAddress!}")
-                "${userId}"
-              ;
 
               CALL_METHOD
                 Address("${payer.address}")

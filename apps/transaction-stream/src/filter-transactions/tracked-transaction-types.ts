@@ -99,22 +99,6 @@ const matchEvent = (eventName: string, componentAddress: string, event: EventsIt
   (event.emitter as EventEmitter).entity.entity_address === componentAddress
 
 export const trackedTransactionTypes: TrackedTransactions = {
-  [EventId.QuestRewardDeposited]: {
-    RewardDepositedEvent: eventEmittedByComponent({
-      eventName: 'RewardDepositedEvent',
-      componentAddress: config.radQuest.components.questRewards,
-      keys: {
-        user_id: { kind: 'String', key: 'userId' },
-        quest_id: { kind: 'String', key: 'questId' },
-        rewards: {
-          kind: 'Array',
-          key: 'rewards',
-          transform: (value) =>
-            getRewardsFromQuestRewardDepositedEvent(value as ProgrammaticScryptoSborValueArray)
-        }
-      }
-    })
-  },
   [EventId.QuestRewardDepositedV2]: {
     RewardDepositedEvent: (event: EventsItem) => {
       if (matchEvent('RewardDepositedEvent', config.radQuest.components.questRewardsV2, event)) {
@@ -141,22 +125,6 @@ export const trackedTransactionTypes: TrackedTransactions = {
 
       return undefined
     }
-  },
-  [EventId.QuestRewardClaimed]: {
-    RewardClaimedEvent: eventEmittedByComponent({
-      eventName: 'RewardClaimedEvent',
-      componentAddress: config.radQuest.components.questRewards,
-      keys: {
-        user_id: { kind: 'String', key: 'userId' },
-        quest_id: { kind: 'String', key: 'questId' },
-        rewards: {
-          kind: 'Array',
-          key: 'rewards',
-          transform: (value) =>
-            getRewardsFromQuestRewardDepositedEvent(value as ProgrammaticScryptoSborValueArray)
-        }
-      }
-    })
   },
   [EventId.QuestRewardClaimedV2]: {
     RewardClaimedEvent: eventEmittedByComponent({
@@ -248,5 +216,5 @@ export const trackedTransactionTypes: TrackedTransactions = {
         quantity: { kind: 'Decimal', key: 'quantity' }
       }
     })
-  },
+  }
 } as const

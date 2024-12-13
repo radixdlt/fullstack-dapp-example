@@ -127,9 +127,7 @@ export const RedisKeys = {
 export const EventId = {
   DepositHeroBadge: 'DepositHeroBadge',
   JettyReceivedClams: 'JettyReceivedClams',
-  QuestRewardDeposited: 'QuestRewardDeposited',
   QuestRewardDepositedV2: 'QuestRewardDepositedV2',
-  QuestRewardClaimed: 'QuestRewardClaimed',
   QuestRewardClaimedV2: 'QuestRewardClaimedV2',
   JettySwap: 'JettySwap',
   GiftBoxesOpenedEvent: 'GiftBoxesOpenedEvent',
