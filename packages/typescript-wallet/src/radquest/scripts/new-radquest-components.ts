@@ -17,13 +17,4 @@ mintAdminBadge({
     result.refinery = refineryAddress
   })
   .mapErr((err) => logger.error(err, '\n\nDid you forget to rebuild the Scrypto package?'))
-  .map(() =>
-    logger.debug(
-      '\nNew RadQuest component addresses:',
-      result,
-      `\n\nDon't forget to get the kycOracleKeyValueStore from the Dashboard!
-
-You can find it here:
-https://stokenet-dashboard.radixdlt.com/component/${result.kycOracle}/state`
-    )
-  )
+  .map(() => logger.debug('\nNew RadQuest component addresses:', result))
