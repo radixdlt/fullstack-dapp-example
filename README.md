@@ -102,35 +102,41 @@ npm install
 ```
 cd scrypto-packages/radquest
 scrypto build
-
-cd scrypto-packages/hero-badge-forge-v2
+cd ..
+cd hero-badge-forge-v2
 scrypto build
-
-cd scrypto-packages/quest-rewards-v2
+cd ..
+cd quest-rewards-v2
 scrypto build
-
-cd scrypto-packages/card-forge-v2
+cd ..
+cd card-forge-v2
 scrypto build
-
-cd scrypto-packages/gift-box-opener-v2
+cd ..
+cd gift-box-opener-v2
 scrypto build
-
-cd scrypto-packages/radgem-forge-v2
+cd ..
+cd radgem-forge-v2
 scrypto build
+cd ../..
 ```
 
 ## Create accounts and deploy account controllers
 
-Follow the steps in [/bootstrap-accounts](bootstrap accounts)
+- Follow the steps in [/bootstrap-accounts](bootstrap accounts)
 
-You should have generated a `secrets-accounts.json` and a `controller-accounts.json` file.
+  You should have generated a `secrets-accounts.json` and a `controller-accounts.json` file.
 
-Copy the `access_controller_account` addresses of `owner`, `dAppDefinition`, `payer` and `system` from the resulting `controller-accounts.json` into the `packages/common/src/constants.ts` file, to the `address` fields.
+- Copy the `access_controller_account` addresses of `owner`, `dAppDefinition`, `payer` and `system` from the resulting `controller-accounts.json` into the `packages/common/src/constants.ts` file, to the `address` fields.
 
-Then, copy the `access_controller` values from `controller-accounts.json` and put them in the respective `accessController` fields in `packages/common/src/constants.ts`.
+- Then, copy the `access_controller` values from `controller-accounts.json` and put them in the respective `accessController` fields in `packages/common/src/constants.ts`.
 
-Then copy the mnemonics from the `secrets-accounts.json` file into the `.env` file.
+- Then copy the mnemonics from the `secrets-accounts.json` file into the `.env` file.
 
+### Add testnet XRD to Payer account
+
+```bash
+npm run wallet:faucet
+```
 
 ### Deploy scrypto components to Stokenet
 
@@ -148,7 +154,10 @@ npm run wallet:populate:oracle
 
 ### Add key value store address
 
-Copy the `radgemForgeV2` address in `constants.ts`. Go to https://stokenet-dashboard.radixdlt.com/ and put it in the search bar, then open the `internal state` tab and copy the address of the `radgem_records` key value store and put it in `radgemRecordsV2KeyValueStore` in `constants.ts`.
+- Copy the `radgemForgeV2` address in `constants.ts`.
+- Go to https://stokenet-dashboard.radixdlt.com/ and put it in the search bar,
+- then open the `internal state` tab and copy the address of the `radgem_records` key value store,
+- put it in `radgemRecordsV2KeyValueStore` in `constants.ts`.
 
 ### Run frontend only
 
