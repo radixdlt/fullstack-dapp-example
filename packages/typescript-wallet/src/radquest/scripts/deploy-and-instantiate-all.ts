@@ -18,7 +18,7 @@ import { setGiftBoxAddresses } from '../../gift-box-opener-v2/helpers/setGiftBox
 mintAdminBadge({
   adminBadgeAddress: config.radQuest.badges.adminBadgeAddress,
   superAdminBadgeAddress: config.radQuest.badges.superAdminBadgeAddress,
-  amount: 7
+  amount: 9
 })
   .map(() => logger.debug('Admin Badges minted'))
   .andThen(() => deployRadquestPackage({}))
