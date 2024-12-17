@@ -99,24 +99,24 @@ npm install
 
 ### Build scrypto packages
 
-```
-cd scrypto-packages/radquest
-scrypto build
-cd ..
-cd hero-badge-forge-v2
-scrypto build
-cd ..
-cd quest-rewards-v2
-scrypto build
-cd ..
-cd card-forge-v2
-scrypto build
-cd ..
-cd gift-box-opener-v2
-scrypto build
-cd ..
-cd radgem-forge-v2
-scrypto build
+```bash
+cd scrypto-packages/radquest &&\
+scrypto build &&\
+cd .. &&\
+cd hero-badge-forge-v2 &&\
+scrypto build &&\
+cd .. &&\
+cd quest-rewards-v2 &&\
+scrypto build &&\
+cd .. &&\
+cd card-forge-v2 &&\
+scrypto build &&\
+cd .. &&\
+cd gift-box-opener-v2 &&\
+scrypto build &&\
+cd .. &&\
+cd radgem-forge-v2 &&\
+scrypto build &&\
 cd ../..
 ```
 
@@ -141,8 +141,8 @@ npm run wallet:faucet
 ### Deploy scrypto components to Stokenet
 
 ```bash
-npm run wallet:create:resources
-npm run wallet:deploy-new:all
+npm run wallet:create:resources &&\
+npm run wallet:deploy-new:all &&\
 npm run wallet:set:dapp-data
 ```
 
