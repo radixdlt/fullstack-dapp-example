@@ -93,25 +93,6 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
       return res
     })
 
-  const hasKycEntry = (userId: string) => {
-    return ResultAsync.fromPromise(
-      gatewayApiClient.state.innerClient.keyValueStoreData({
-        stateKeyValueStoreDataRequest: {
-          key_value_store_address: addresses.components.kycOracleKeyValueStore,
-          keys: [
-            {
-              key_json: {
-                kind: 'String',
-                value: userId
-              }
-            }
-          ]
-        }
-      }),
-      (jsError) => ({ reason: 'CouldNotGetKeyValueStoreDataFromGateway', jsError })
-    ).map((response) => response.entries.length > 0)
-  }
-
   const getKeyValueStoreDataForUser = (
     keyValueStoreAddress: string,
     userId: string
@@ -292,7 +273,6 @@ export const GatewayApi = (networkId: number, basePath?: string) => {
 
   return {
     basePath: basePath || networkConfig.gatewayUrl,
-    hasKycEntry,
     hasAtLeastTwoRadgems,
     isDepositAllowedForResource,
     networkConfig,

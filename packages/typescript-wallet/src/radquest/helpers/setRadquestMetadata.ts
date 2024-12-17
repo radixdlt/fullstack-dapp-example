@@ -49,7 +49,6 @@ SET_METADATA
             Address("${config.radQuest.badges.superAdminBadgeAddress}"),
             Address("${config.radQuest.badges.adminBadgeAddress}"),
             Address("${config.radQuest.badges.heroBadgeAddress}"),
-            Address("${config.radQuest.badges.kycBadgeAddress}"),
             Address("${config.radQuest.resources.clamAddress}"),
             Address("${config.radQuest.resources.elementAddress}"),
             Address("${config.radQuest.resources.giftBox.Starter}"),
@@ -60,20 +59,13 @@ SET_METADATA
             Address("${config.radQuest.resources.ottercoinAddress}"),
             Address("${config.radQuest.resources.radgemAddress}"),
             Address("${config.radQuest.resources.radmorphAddress}"),
-            Address("${config.radQuest.components.cardForge}"),
-            Address("${config.radQuest.components.giftBoxOpener}"),
-            Address("${config.radQuest.components.heroBadgeForge}"),
             Address("${config.radQuest.components.imageOracle}"),
-            Address("${config.radQuest.components.kycOracle}"),
-            Address("${config.radQuest.components.questRewards}"),
-            Address("${config.radQuest.components.radgemForge}"),
             Address("${config.radQuest.components.refinery}"),
             Address("${config.radQuest.components.heroBadgeForgeV2}"),
             Address("${config.radQuest.components.giftBoxOpenerV2}"),
             Address("${config.radQuest.components.cardForgeV2}"),
             Address("${config.radQuest.components.radgemForgeV2}"),
             Address("${config.radQuest.components.questRewardsV2}"),
-            Address("${config.radQuest.components.ticketMachine}"),
         )
     )
 ;
@@ -83,8 +75,6 @@ SET_METADATA
     Enum<Metadata::AddressArray>(
         Array<Address>(
             Address("${config.radQuest.accounts.jetty.address}"),
-            Address("${config.radQuest.accounts.jettySwapDappDefinition.address}"),
-            Address("${config.radQuest.accounts.lettySwapDappDefinition.address}")
         )
     )
 ;
