@@ -52,7 +52,7 @@ CREATE_FUNGIBLE_RESOURCE_WITH_INITIAL_SUPPLY
       "name" => Tuple(
         Some(
           Enum<Metadata::String>(
-            "RadQuest Super Admin Badge"
+            "Full Stack Example Super Admin Badge"
           )
         ),
         false

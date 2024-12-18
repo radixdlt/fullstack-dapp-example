@@ -97,7 +97,7 @@ export const createClamResource = ({
                 "icon_url" => Tuple(
                     Enum<1u8>(
                         Enum<13u8>(
-                            "https://arweave.net/29jZfSeFeAZET3XfwNHDXycPskCpuyb5T40Ns-DKkXE"
+                            "https://assets.radixdlt.com/icons/full-stack-example/clem.jpg"
                         )
                     ),
                     false

@@ -89,7 +89,7 @@ CREATE_FUNGIBLE_RESOURCE
             "icon_url" => Tuple(
                 Enum<1u8>(
                     Enum<13u8>(
-                        "https://arweave.net/ySt0lTb_mH2nH38nyqI7iiUQXfNgph4v3lEMBYKCPKs"
+                        "https://assets.radixdlt.com/icons/full-stack-example/otta_coin.png"
                     )
                 ),
                 false

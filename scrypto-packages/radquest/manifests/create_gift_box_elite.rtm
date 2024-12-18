@@ -69,7 +69,7 @@ CREATE_FUNGIBLE_RESOURCE
             "description" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "This truly elite Gift Box from RadQuest’s Jetty, reserved for only the most committed, contains only a rare or ultra-rare Morph Energy Card and a substantial quantity of Elements. Ask Jetty to open it!"
+                        "This truly elite Gift Box from the Full Stack Example, reserved for only the most committed, contains only a rare or ultra-rare Morph Energy Card and a substantial quantity of Elements. Ask Jetty to open it!"
                     )
                 ),
                 false

@@ -69,7 +69,7 @@ CREATE_FUNGIBLE_RESOURCE
             "description" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "This fancy Gift Box from RadQuest’s Jetty contains a common, rare, or sometimes even ultra-rare Morph Energy Card and a goodly quantity of Elements. Ask Jetty to open it!"
+                        "This fancy Gift Box from the Full Stack Example contains a common, rare, or sometimes even ultra-rare Morph Energy Card and a goodly quantity of Elements. Ask Jetty to open it!"
                     )
                 ),
                 false

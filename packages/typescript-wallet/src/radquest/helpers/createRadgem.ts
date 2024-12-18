@@ -159,7 +159,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
             "description" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "Two RadGems can be combined with a Morph Energy Card by RadQuest’s Jetty to produce a beautiful RadMorph NFT. Higher quality RadGems will contribute to a higher quality RadMorph."
+                        "Two RadGems can be combined with a Morph Energy Card by the Full Stack Example to produce a beautiful RadMorph NFT. Higher quality RadGems will contribute to a higher quality RadMorph."
                     )
                 ),
                 false
@@ -177,7 +177,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
             "icon_url" => Tuple(
                 Enum<1u8>(
                     Enum<13u8>(
-                        "https://arweave.net/FpzB4sovchNHrLw8tv87HYcIm89RXuwH0BS5uyypPCM"
+                        "https://assets.radixdlt.com/icons/full-stack-example/geem.jpg"
                     )
                 ),
                 false
