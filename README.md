@@ -137,6 +137,7 @@ npm run wallet:set:dapp-data
 ### Populate image oracle
 
 ```bash
+npm run db:seed &&\
 npm run wallet:populate:oracle
 ```
 
