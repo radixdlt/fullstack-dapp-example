@@ -62,10 +62,10 @@
     userApi.hasWaitingRadgemJob().map((data) => {
       waitingForRadgems.set(data)
     })
-    checkClaimAvailable($user?.id!, false)
-      .orElse(() => checkClaimAvailable($user?.id!, true))
-      .map(() => {
-        claimAvailable.set(true)
+    checkClaimAvailable($user?.id!)
+      .map((claim) => {
+        if (claim) claimAvailable.set(true)
+        else claimAvailable.set(false)
       })
       .mapErr(() => {
         claimAvailable.set(false)

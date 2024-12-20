@@ -141,13 +141,6 @@ npm run db:seed &&\
 npm run wallet:populate:oracle
 ```
 
-### Add key value store address
-
-- Copy the `radgemForgeV2` address in `constants.ts`.
-- Go to https://stokenet-dashboard.radixdlt.com/ and put it in the search bar,
-- then open the `internal state` tab and copy the address of the `radgem_records` key value store,
-- put it in `radgemRecordsV2KeyValueStore` in `constants.ts`.
-
 ### Run frontend only
 
 ```bash
