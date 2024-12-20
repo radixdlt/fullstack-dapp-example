@@ -1,0 +1,363 @@
+name: CI/CD
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+env:
+  network: 'stokenet'
+  network_id: '2'
+  pr_public_log_level: 'debug'
+  demo_public_log_level: 'info'
+
+permissions:
+  id-token: write
+  pull-requests: write
+  contents: read
+  deployments: write
+  packages: write
+
+jobs:
+  commitlint:
+    name: Commitlint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: RDXWorks-actions/checkout@main
+        with:
+          fetch-depth: 0
+      - name: Install dependencies
+        run: npm install
+
+      - name: Validate PR commits with commitlint
+        if: github.event_name == 'pull_request'
+        run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
+
+  setup-tags:
+    name: Setup tags
+    runs-on: ubuntu-latest
+    steps:
+      - uses: RDXWorks-actions/checkout@main
+        with:
+          fetch-depth: 0
+
+      - name: Docker tags for dapp
+        id: dapp-tags
+        uses: RDXWorks-actions/metadata-action@master
+        with:
+          images: |
+            docker.io/radixdlt/fullstack-dapp-example-dapp
+          tags: |
+            type=sha,event=pr
+            type=sha,event=branch
+            type=semver,pattern={{version}}
+
+      - name: Docker tags for admin
+        id: admin-tags
+        uses: RDXWorks-actions/metadata-action@master
+        with:
+          images: |
+            docker.io/radixdlt/fullstack-dapp-example-admin
+          tags: |
+            type=sha,event=pr
+            type=sha,event=branch
+            type=semver,pattern={{version}}
+
+      - name: Docker tags for notification
+        id: notification-tags
+        uses: RDXWorks-actions/metadata-action@master
+        with:
+          images: |
+            docker.io/radixdlt/fullstack-dapp-example-notification
+          tags: |
+            type=sha,event=pr
+            type=sha,event=branch
+            type=semver,pattern={{version}}
+
+      - name: Docker tags for transaction
+        id: transaction-stream-tags
+        uses: RDXWorks-actions/metadata-action@master
+        with:
+          images: |
+            docker.io/radixdlt/fullstack-dapp-example-transaction-stream
+          tags: |
+            type=sha,event=pr
+            type=sha,event=branch
+            type=semver,pattern={{version}}
+
+      - name: Docker tags for worker
+        id: worker-tags
+        uses: RDXWorks-actions/metadata-action@master
+        with:
+          images: |
+            docker.io/radixdlt/fullstack-dapp-example-worker
+          tags: |
+            type=sha,event=pr
+            type=sha,event=branch
+            type=semver,pattern={{version}}
+
+      - name: Define network name
+        id: build-args
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "NETWORK_NAME=${{ env.network }}" >> $GITHUB_ENV
+            echo "PUBLIC_NETWORK_ID=${{ env.network_id }}"  >> $GITHUB_OUTPUT
+            echo "PUBLIC_LOG_LEVEL=${{ env.pr_public_log_level }}"  >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref }}" = "refs/heads/main" -a "${{ github.event_name }}" = 'push' ]; then
+            echo "NETWORK_NAME=${{ env.network }}" >> $GITHUB_ENV
+            echo "PUBLIC_NETWORK_ID=${{ env.network_id }}"  >> $GITHUB_OUTPUT
+            echo "PUBLIC_LOG_LEVEL=${{ env.demo_public_log_level }}"  >> $GITHUB_OUTPUT
+          fi
+      - id: network
+        run: |
+          echo "network-name=${{ env.NETWORK_NAME }}" >> $GITHUB_OUTPUT
+      - id: tag-with-network
+        run: |
+          echo "tag-with-network=${{github.sha}}-${{ env.NETWORK_NAME }}" >> $GITHUB_OUTPUT
+      - run: |
+          echo "$GITHUB_OUTPUT"
+      - name: Output tag value to job summary
+        run: |
+          echo "network-name=${{ steps.network.outputs.network-name }}" >> $GITHUB_STEP_SUMMARY
+          echo "docker-tag=${{ steps.tag-with-network.outputs.tag-with-network }}" >> $GITHUB_STEP_SUMMARY
+          echo "PUBLIC_NETWORK_ID=${{ steps.build-args.outputs.PUBLIC_NETWORK_ID }}"  >> $GITHUB_STEP_SUMMARY
+          echo "PUBLIC_LOG_LEVEL=${{ steps.build-args.outputs.PUBLIC_LOG_LEVEL }}"  >> $GITHUB_STEP_SUMMARY
+    outputs:
+      dapp-tags: ${{ steps.dapp-tags.outputs.tags }}
+      dapp-labels: ${{ steps.dapp-tags.outputs.labels }}
+      dapp-json: ${{ steps.dapp-tags.outputs.json }}
+      admin-tags: ${{ steps.admin-tags.outputs.tags }}
+      admin-labels: ${{ steps.admin-tags.outputs.labels }}
+      admin-json: ${{ steps.admin-tags.outputs.json }}
+      notification-tags: ${{ steps.notification-tags.outputs.tags }}
+      notification-labels: ${{ steps.notification-tags.outputs.labels }}
+      notification-json: ${{ steps.notification-tags.outputs.json }}
+      transaction-stream-tags: ${{ steps.transaction-stream-tags.outputs.tags }}
+      transaction-stream-labels: ${{ steps.transaction-stream-tags.outputs.labels }}
+      transaction-stream-json: ${{ steps.transaction-stream-tags.outputs.json }}
+      worker-tags: ${{ steps.worker-tags.outputs.tags }}
+      worker-labels: ${{ steps.worker-tags.outputs.labels }}
+      worker-json: ${{ steps.worker-tags.outputs.json }}
+      tag-with-network: ${{steps.tag-with-network.outputs.tag-with-network}}
+      network-name: ${{steps.network.outputs.network-name}}
+      public-network-id: ${{steps.build-args.outputs.PUBLIC_NETWORK_ID}}
+      public-log-level: ${{steps.build-args.outputs.PUBLIC_LOG_LEVEL}}
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs:
+      - setup-tags
+    steps:
+      - uses: RDXWorks-actions/checkout@main
+        with:
+          fetch-depth: 0
+
+      - name: Cache Node.js modules
+        uses: RDXWorks-actions/cache@main
+        with:
+          path: |
+            node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Get changed svelte files
+        id: changed-svelte-files
+        uses: RDXWorks-actions/changed-files@main
+        with:
+          files: './apps/dapp/src/lib/components/**/*.svelte'
+
+      - name: Use Node.js
+        uses: RDXWorks-actions/setup-node@main
+        with:
+          node-version: '20.3.0'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build:ci
+
+      - name: tsc
+        run: npm run tsc
+
+      - name: Unit tests
+        run: npm run test:ci
+
+  push-dapp:
+    name: Docker dapp
+    needs:
+      - setup-tags
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
+    with:
+      runs_on: ubuntu-latest
+      image_registry: 'docker.io'
+      image_organization: 'radixdlt'
+      target: 'application'
+      image_name: 'fullstack-dapp-example-dapp'
+      tag: ${{ needs.setup-tags.outputs.tag-with-network }}
+      context: '.'
+      dockerfile: './dockerfiles/dapp.Dockerfile'
+      platforms: 'linux/amd64'
+      use_gh_remote_cache: true
+      scan_image: false
+      provenance: false
+      snyk_target_ref: ${{ github.ref_name }}
+      with_sbom: false
+      build-args: |
+        NETWORK_NAME=${{ needs.setup-tags.outputs.network-name }}
+        PUBLIC_NETWORK_ID=${{ needs.setup-tags.outputs.public-network-id }}
+        PUBLIC_LOG_LEVEL=${{ needs.setup-tags.outputs.public-log-level }}
+
+  push-admin:
+    name: Docker admin
+    needs:
+      - setup-tags
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
+    with:
+      runs_on: ubuntu-latest
+      image_registry: 'docker.io'
+      image_organization: 'radixdlt'
+      target: 'application'
+      image_name: 'fullstack-dapp-example-admin'
+      tag: ${{ needs.setup-tags.outputs.tag-with-network }}
+      context: '.'
+      dockerfile: './dockerfiles/admin.Dockerfile'
+      platforms: 'linux/amd64'
+      use_gh_remote_cache: true
+      scan_image: false
+      provenance: false
+      snyk_target_ref: ${{ github.ref_name }}
+      with_sbom: false
+      build-args: |
+        PUBLIC_NETWORK_ID=${{ needs.setup-tags.outputs.public-network-id }}
+        PUBLIC_LOG_LEVEL=${{ needs.setup-tags.outputs.public-log-level }}
+
+  push-notification:
+    name: Docker notification
+    needs:
+      - setup-tags
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
+    with:
+      runs_on: ubuntu-latest
+      image_registry: 'docker.io'
+      image_organization: 'radixdlt'
+      target: 'application'
+      image_name: 'fullstack-dapp-example-notification'
+      tag: ${{ needs.setup-tags.outputs.tag-with-network }}
+      context: '.'
+      dockerfile: './dockerfiles/notification.Dockerfile'
+      platforms: 'linux/amd64'
+      use_gh_remote_cache: true
+      scan_image: false
+      provenance: false
+      snyk_target_ref: ${{ github.ref_name }}
+      with_sbom: false
+
+  push-transaction-stream:
+    name: Docker transaction-stream
+    needs:
+      - setup-tags
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
+    with:
+      runs_on: ubuntu-latest
+      image_registry: 'docker.io'
+      image_organization: 'radixdlt'
+      target: 'application'
+      image_name: 'fullstack-dapp-example-transaction-stream'
+      tag: ${{ needs.setup-tags.outputs.tag-with-network }}
+      context: '.'
+      dockerfile: './dockerfiles/transaction-stream.Dockerfile'
+      platforms: 'linux/amd64'
+      use_gh_remote_cache: true
+      scan_image: false
+      provenance: false
+      snyk_target_ref: ${{ github.ref_name }}
+      with_sbom: false
+
+  push-worker:
+    name: Docker worker
+    needs:
+      - setup-tags
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/docker-build.yml@main
+    with:
+      runs_on: ubuntu-latest
+      image_registry: 'docker.io'
+      image_organization: 'radixdlt'
+      target: 'application'
+      image_name: 'fullstack-dapp-example-worker'
+      tag: ${{ needs.setup-tags.outputs.tag-with-network }}
+      context: '.'
+      dockerfile: './dockerfiles/workers.Dockerfile'
+      platforms: 'linux/amd64'
+      use_gh_remote_cache: true
+      scan_image: false
+      provenance: false
+      snyk_target_ref: ${{ github.ref_name }}
+      with_sbom: false
+
+  deploy_pull_request:
+    if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'deploy-pr') }}
+    name: Deploy PR
+    needs:
+      - push-dapp
+      - push-admin
+      - push-notification
+      - push-transaction-stream
+      - push-worker
+      - setup-tags
+    concurrency: 
+      group: ${{ github.head_ref }}
+      cancel-in-progress: false
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
+    with:
+      jenkins_job_name: 'kubernetes-deployments/job/fullstack-dapp-example'
+      github_branch: '${{ github.head_ref }}'
+      application_name: 'fde'
+      hierarchical_namespace: 'fullstack-dapp-example-ci-pr'
+      create_subnamespace: 'true'
+      kubernetes_namespace: 'fullstack-dapp-example-pr-${{ github.event.number }}'
+      aws_eks_cluster: 'rdx-works-main-dev'
+      aws_iam_role_name: 'jenkins-fullstack-dapp-example-pr-deployer'
+      helmfile_environment: 'pr'
+      helmfile_extra_vars: 'ci.tag=${{ needs.setup-tags.outputs.tag-with-network }},ci.prNumber=${{ github.event.number }}'
+    secrets:
+      aws_deployment_account_id: ${{ secrets.AWS_DEV_ACCOUNT_ID }}
+      secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
+
+  deploy_demo:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    name: Deploy DEMO
+    needs:
+      - push-dapp
+      - push-admin
+      - push-notification
+      - push-transaction-stream
+      - push-worker
+      - setup-tags
+    concurrency: 
+      group: ${{ github.ref }}
+      cancel-in-progress: false
+    uses: radixdlt/public-iac-resuable-artifacts/.github/workflows/jenkins-deployment.yml@main
+    with:
+      github_environment: 'demo'
+      github_branch: '${{ github.ref }}'
+      jenkins_job_name: 'kubernetes-deployments/job/fullstack-dapp-example'
+      application_name: 'fde'
+      kubernetes_namespace: 'fullstack-dapp-example-demo'
+      aws_eks_cluster: 'rdx-works-main-dev'
+      aws_iam_role_name: 'jenkins-fullstack-dapp-example-demo-deployer'
+      helmfile_environment: 'demo'
+      helmfile_extra_vars: 'ci.tag=${{ needs.setup-tags.outputs.tag-with-network }}'
+    secrets:
+      aws_deployment_account_id: ${{ secrets.AWS_DEV_ACCOUNT_ID }}
+      secrets_account_id: ${{ secrets.SECRETS_ACCOUNT_ID }}
+
+
+
+

@@ -1,0 +1,117 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "REDIS_HOST",
+    "REDIS_PORT",
+    "REDIS_PASSWORD",
+    "NOTIFICATION_INTERNAL_API_PORT",
+    "NOTIFICATION_WEBSOCKET_PORT",
+    "NOTIFICATION_INTERNAL_API_HOST",
+    "NOTIFICATION_WEBSOCKET_HOST",
+    "NOTIFICATION_INTERNAL_API_URL",
+    "WEB_API_PORT",
+    "RO_DATABASE_URL",
+    "DATABASE_URL",
+    "EXPECTED_ORIGIN",
+    "JWT_SECRET",
+    "PUBLIC_NETWORK_ID",
+    "PUBLIC_NOTIFICATION_URL",
+    "LOG_LEVEL",
+    "PUBLIC_LOG_LEVEL",
+    "PUBLIC_RADQUEST_API_URL",
+    "MNEMONIC",
+    "IPQS_KEY",
+    "NGROK_AUTH_TOKEN",
+    "DATABASE_URL",
+    "MAILER_LITE_API_KEY",
+    "OWNER_MNEMONIC",
+    "SYSTEM_MNEMONIC",
+    "PAYER_MNEMONIC",
+    "DAPP_DEFINITION_MNEMONIC",
+    "JETTY_MNEMONIC",
+    "LETTYSWAP_DAPP_DEFINITION_MNEMONIC",
+    "MAINTENANCE_MODE",
+    "QUEUE_RETRY_ATTEMPTS"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".svelte-kit/**"],
+      "cache": false
+    },
+    "lint": {
+      "cache": false
+    },
+    "format": {},
+    "svelte:check": {},
+    "test": {},
+    "test:ci": {},
+    "test:integration": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true,
+      "inputs": ["$TURBO_DEFAULT$"]
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true,
+
+      "inputs": ["$TURBO_DEFAULT$"]
+    },
+    "dev:inspect": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "generate": {
+      "cache": false
+    },
+    "push": {
+      "cache": false
+    },
+    "wallet:create:resources": {
+      "cache": false
+    },
+    "wallet:new:radquest-components": {
+      "cache": false
+    },
+    "wallet:create:mnemonic": {
+      "cache": false
+    },
+    "wallet:deploy-new:all": {
+      "cache": false
+    },
+    "wallet:set:dapp-data": {
+      "cache": false
+    },
+    "populate:oracle": {
+      "cache": false
+    },
+    "wallet:create:badges": {
+      "cache": false
+    },
+    "wallet:create:element": {
+      "cache": false
+    },
+    "wallet:list:accounts": {
+      "cache": false
+    },
+    "wallet:faucet": {
+      "cache": false
+    },
+    "wallet:mint-admin-badge": {
+      "cache": false
+    },
+    "wallet:mint-hero-badge": {
+      "cache": false
+    },
+    "build:storybook": {
+      "cache": false
+    },
+    "tsc": {
+      "cache": false
+    }
+  },
+  "ui": "tui"
+}

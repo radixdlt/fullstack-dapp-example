@@ -1,0 +1,63 @@
+replicaCount: 1
+
+image:
+  repository: radixdlt/fullstack-dapp-example
+  pullPolicy: IfNotPresent
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+  port_name: http
+
+ingress:
+  enabled: false
+
+resources: {}
+
+metrics:
+  enabled: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+volumes: []
+
+volumeMounts: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+params: {}
+
+secrets: []
+
+persistentVolumeClaims: []
+
+alerts:
+  enabled: false
+  aws_alerts: 
+    enabled: false

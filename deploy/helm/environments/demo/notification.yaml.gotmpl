@@ -1,0 +1,21 @@
+params:
+  NOTIFICATION_INTERNAL_API_PORT: 4000
+  NOTIFICATION_WEBSOCKET_PORT: 9000
+  LOG_LEVEL: debug
+
+secrets:
+  - external_secret_name: notification-jwt-secret
+    env_variable: "JWT_SECRET"
+    aws_secret_name: "rdx-works-main-dev/eks/fullstack-dapp-example/demo/secrets"
+    aws_secret_key: "jwt_secret"
+    secret_key: "jwt_secret"
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: fullstack-dapp-example-notification.radixdlt.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

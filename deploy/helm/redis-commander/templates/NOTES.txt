@@ -1,0 +1,2 @@
+1. Connect to redis-commander by running these commands:
+kubectl port-forward service/redis-commander :3000 -n {{ .Release.Namespace }}

@@ -1,0 +1,177 @@
+{
+  "copy": "Copy",
+  "copied": "Copied!",
+  "rewards": "Rewards",
+  "requirementsDescription": "Complete the tasks below to claim your rewards. You can always go back and check the information if you’re not sure how.",
+  "requirementsTitle": "What you'll do",
+  "nextButton": "Next",
+  "keyImageAlt": "Quest Image",
+  "backButton": "Back",
+  "shareButton": "Share",
+  "inProgress": "In Progress",
+  "invalidEmail": "Invalid email",
+  "continueButton": "Continue",
+  "placeholderNotFound": "Placeholder {{id}} not found",
+  "claimButton": "Claim",
+  "minutesToComplete_one": "{{count}} minute",
+  "minutesToComplete_other": "{{count}} minutes",
+  "radquest-logo-alt": "RadQuest Logo",
+  "somethingWentWrong": "Something went wrong, please try again.",
+  "completeQuest": "Complete Quest",
+  "intro-begin-quest": "Begin Quest",
+  "okButton": "OK",
+  "QuestOverviewButton": {
+    "unlocked": "Start",
+    "referralInProgress": "Check Status",
+    "comingSoon": "Coming Soon",
+    "inProgress": "Continue",
+    "claimRewards": "Claim Rewards",
+    "complete": "Recap"
+  },
+  "Welcome": {
+    "hi": "Meet Jetty",
+    "claim": "Claim",
+    "requirements": {
+      "RadQuestQuiz": "Learn about RadQuest… and your guide, Jetty"
+    },
+    "title": "Welcome to RadQuest",
+    "description": "What’s this all about?",
+    "introDescription": "Complete quests, learn about web3 and Radix, get some rewards!"
+  },
+  "JoinFriend": {
+    "requirements": {
+      "CompleteBasicQuests": "Complete the Basic Quests"
+    },
+    "title": "Join Your Friend",
+    "description": "Accept your friend’s invitation!",
+    "introDescription": "Once you’ve done the basic quests, accept your friend’s invitation and claim your reward"
+  },
+  "WhatIsRadix": {
+    "requirements": {
+      "RadixQuiz": "Learn about the Radix Network and dApps"
+    },
+    "title": "The Radix Network",
+    "description": "What is this Radix thing?",
+    "introDescription": "The Radix Network: a breakthrough “layer-1” network for mainstream-ready web3."
+  },
+  "SetupWallet": {
+    "requirements": {
+      "ConnectWallet": "Log in to RadQuest with your Radix Wallet",
+      "DownloadWallet": "Download the Radix Wallet mobile app, create your first Account",
+      "RegisterAccount": "Register your Account with RadQuest",
+      "DepositHeroBadge": "Get your Hero’s Badge"
+    },
+    "usernameCompleted": "Updated!",
+    "walletDownloadPage": "Go to Wallet Download Page",
+    "title": "Onboard New User with User Badge",
+    "description": "",
+    "introDescription": "",
+    "confirmSetUsername": "Update"
+  },
+  "GetStuff": {
+    "requirements": {
+      "GetXRD": "Get ready to do transactions on Radix"
+    },
+    "claimHeroBadge": "Get Badge",
+    "getXrd": "Receive 50 XRD",
+    "registerAccount": "Register Account",
+    "title": "Transaction with User Badge Auth",
+    "description": "",
+    "introDescription": "",
+    "invalidRequest": "Invalid request",
+    "GetXrdMethodOptions": {
+      "card": {
+        "title": "Credit or debit card",
+        "description": "Buy XRD simply and  securely online using Alchemy Pay."
+      },
+      "exchange": {
+        "title": "Exchanges",
+        "description": "Use one of many crypto exchanges that list XRD."
+      },
+      "thorSwap": {
+        "title": "THORSwap",
+        "description": "If you already have crypto in a wallet, THORSwap is a quick and easy bridge to buy XRD with BTC, ETH, or many more."
+      },
+      "available": "May be available in your country",
+      "notAvailable": "Not available in your country"
+    },
+    "buyXRDButton": "Go to Alchemy Pay",
+    "viewExchangesButton": "View Exchange List",
+    "goToThorSwap": "Go to THORSwap"
+  },
+  "CreatingRadMorphs": {
+    "title": "Combine and Randomly Mint NFTs",
+    "requirements": {
+      "OpenGiftBox": "Open a Gift Box",
+      "RadGemsClaimed": "Create RadGems",
+      "RadMorphCreated": "Create your first RadMorph"
+    },
+    "description": "",
+    "introDescription": ""
+  },
+  "TransferTokens": {
+    "requirements": {
+      "JettyReceivedClams": "Send some Clams to Jetty"
+    },
+    "title": "Transfer Tokens",
+    "description": "Transfer stuff using the Radix Wallet",
+    "introDescription": "Use the Radix Wallet’s transfer feature to send assets to other people's Accounts.",
+    "copyTextButton_copy": "Copy",
+    "copyTextButton_copied": "Copied!",
+    "getClams": "Claim Clams"
+  },
+
+  "QuestTogether": {
+    "title": "Simple Friend Referral",
+    "description": "",
+    "rewardsTitle": "Party rewards Status",
+    "rewardTiersTab": "Reward Tiers",
+    "partyParticipantsTab": "Party participants",
+    "introDescription": "You came to RadQuest following Matt’s link, join his party",
+    "introHeader": "Invite Your Friends",
+    "copyReferral": "Copy your referral link and send it to your friends.",
+    "yourReferrals": "Your Referrals",
+    "yourReferralsCount": "Your Referrals ({{count}}):",
+    "referralsSoFar": "Referrals so far!",
+    "referralsSoFarHeader": "You have {{count}} referrals so far!",
+    "referralsSoFarHeader_one": "You have {{count}} referral so far!",
+    "referralsSoFarDescription": "These friends have signed up using your link and completed the basic quests. You each get 5 XRD!",
+    "alreadyClaimed": "Already claimed: {{amount}} XRD",
+    "levelHeader": {
+      "BronzeLevel": "Invite 1 Friend",
+      "SilverLevel": "Invite 5 Friends",
+      "GoldLevel": "Invite 10 Friends",
+      "SuperLevel": ""
+    },
+    "info_1": "<strong>Your friends will get a Simple Gift Box</strong> when they use your referral link and complete all the basic quests.",
+    "info_2": " <strong>You can also earn a reward</strong> for inviting your friends. View your status on the next screen.",
+    "shareYourLink": "Share Your Referral Link:",
+    "referMore": "Refer {{count}} more friends to claim your rewards and progress to {{nextLevel}}!",
+    "BronzeLevel": "Bronze",
+    "SilverLevel": "Silver",
+    "GoldLevel": "Gold",
+    "SuperLevel": "Super",
+    "rewardsClaimed": "REWARDS CLAIMED",
+    "unlockedSuperLevel": "Wow! Referral limit reached!",
+    "rewardsWaiting": "You have rewards waiting for you! Don’t forget to claim!",
+    "unlockedSuperLevelInfo": "If you would like to apply for an invite-only referral program, please email <a href=\"mailto: hello@radixdlt.com\">hello@radixdlt.com</a>",
+    "SuperLevelInfo": "Want to keep referring? Contact Radix to find out about our influencer reward scheme!",
+    "SuperLevelButton": "Want to keep referring? Contact Radix to find out about our influencer reward scheme!",
+    "progressSuperLevel": "{{count}}+ referrals",
+    "referralsProgress": "{{referred}}/{{maximum}}",
+    "requirements": {
+      "LearnAboutParty": "Learn about Party Quest",
+      "ClaimQuestTogetherRewards": "Claim your rewards"
+    }
+  },
+  "DEXSwaps": {
+    "requirements": {
+      "LearnAboutDexes": "Learn about DEXes",
+      "JettySwap": "Do a swap on Jetty DEX"
+    },
+    "goToJettySwap": "Go to Jetty Swap",
+    "title": "React to On-ledger Events",
+    "description": "",
+    "introDescription": "Learn how to safely swap tokens on Radix using a decentralized exchange (DEX)"
+  }
+}

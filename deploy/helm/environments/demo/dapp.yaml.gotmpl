@@ -1,0 +1,40 @@
+params:
+  REDIS_HOST: common-dev-redis.rdx-works-main.internal
+  REDIS_PORT: 6379
+  REDIS_PASSWORD: 
+  PORT: 3000
+  EXPECTED_ORIGIN: https://fullstack-dapp-example.radixdlt.com
+  PUBLIC_DAPP_DEFINITION_ADDRESS: account_tdx_2_1cx62e9dv8lst4k7efdvy02p2capgglgcsgx23huy379d0cw5fk7shc
+  PUBLIC_NETWORK_ID: 2
+  PUBLIC_NOTIFICATION_URL: wss://fullstack-dapp-example-notification.radixdlt.com
+  MAINTENANCE_MODE: false
+  GATEWAY_URL: https://stokenet.radixdlt.com
+
+secrets:
+  - external_secret_name: dapp-postgres-url
+    env_variable: "DATABASE_URL"
+    aws_secret_name: "rdx-works-main-dev/eks/fullstack-dapp-example/demo/secrets"
+    aws_secret_key: "database-url"
+    secret_key: "database-url"
+
+  - external_secret_name: dapp-ro-postgres-url
+    env_variable: "RO_DATABASE_URL"
+    aws_secret_name: "rdx-works-main-dev/eks/fullstack-dapp-example/demo/secrets"
+    aws_secret_key: "ro-database-url"
+    secret_key: "ro-database-url"
+
+  - external_secret_name: dapp-jwt-secret
+    env_variable: "JWT_SECRET"
+    aws_secret_name: "rdx-works-main-dev/eks/fullstack-dapp-example/demo/secrets"
+    aws_secret_key: "jwt_secret"
+    secret_key: "jwt_secret"
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: fullstack-dapp-example.radixdlt.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

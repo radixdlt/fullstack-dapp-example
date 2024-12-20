@@ -1,0 +1,25 @@
+{
+  "rust-analyzer.linkedProjects": [
+    "./scrypto-packages/radquest/Cargo.toml",
+    "./scrypto-packages/clam-dex/Cargo.toml",
+    "./scrypto-packages/gift-box-opener-v2/Cargo.toml",
+    "./scrypto-packages/card-forge-v2/Cargo.toml",
+    "./scrypto-packages/radgem-forge-v2/Cargo.toml",
+    "./scrypto-packages/quest-rewards-v2/Cargo.toml",
+    "./scrypto-packages/hero-badge-forge-v2/Cargo.toml",
+    "./scrypto-packages/ticket-machine/Cargo.toml"
+  ],
+  "cSpell.words": [
+    "Ottercoin",
+    "radcard",
+    "radgem",
+    "radgems",
+    "radmorph",
+    "radmorphs",
+    "radquest",
+    "ruid",
+    "Sbor",
+    "substate"
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

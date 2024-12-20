@@ -1,0 +1,63 @@
+{
+  "name": "radquest",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "build:ci": "npx --node-options='-r dotenv/config' turbo build",
+    "dev": "npx --node-options='-r dotenv/config' turbo dev --concurrency 13",
+    "dev:admin": "npx --node-options='-r dotenv/config' turbo dev --filter admin",
+    "dev:dapp": "npx --node-options='-r dotenv/config' turbo dev --filter dapp",
+    "dev:notification": "npx --node-options='-r dotenv/config' turbo dev --filter notification",
+    "dev:stream": "npx --node-options='-r dotenv/config' turbo dev --filter transaction-stream",
+    "dev:stream:inspect": "npx --node-options='-r dotenv/config' turbo dev:inspect --filter transaction-stream",
+    "dev:workers": "npx --node-options='-r dotenv/config' turbo dev --filter workers",
+    "test": "npx --node-options='-r dotenv/config' turbo test",
+    "test:ci": "npx --node-options='-r dotenv/config' turbo test:ci",
+    "test:integration": "npx --node-options='-r dotenv/config' turbo test:integration",
+    "test:stream": "npx --node-options='-r dotenv/config' turbo test --filter transaction-stream",
+    "wallet:create:resources": "npx --node-options='-r dotenv/config' turbo wallet:create:resources --filter typescript-wallet",
+    "wallet:deploy:radquest": "npx --node-options='-r dotenv/config' turbo wallet:deploy:radquest --filter typescript-wallet",
+    "wallet:new:radquest-components": "npx --node-options='-r dotenv/config' turbo wallet:new:radquest-components --filter typescript-wallet",
+    "wallet:deploy-new:all": "npx --node-options='-r dotenv/config' turbo wallet:deploy-new:all --filter typescript-wallet",
+    "wallet:set:dapp-data:radquest": "npx --node-options='-r dotenv/config' turbo wallet:set:dapp-data:radquest --filter typescript-wallet",
+    "wallet:populate:oracle": "npx --node-options='-r dotenv/config' turbo populate:oracle --filter typescript-wallet",
+    "wallet:set:dapp-data": "npx --node-options='-r dotenv/config' turbo wallet:set:dapp-data --filter typescript-wallet",
+    "wallet:create:badges": "npx --node-options='-r dotenv/config' turbo wallet:create:badges --filter typescript-wallet",
+    "wallet:create:mnemonic": "npx --node-options='-r dotenv/config' turbo wallet:create:mnemonic --filter typescript-wallet",
+    "wallet:create:element": "npx --node-options='-r dotenv/config' turbo wallet:create:element --filter typescript-wallet",
+    "wallet:list:accounts": "npx --node-options='-r dotenv/config' turbo wallet:list:accounts --filter typescript-wallet",
+    "wallet:mint-admin-badge": "npx --node-options='-r dotenv/config' turbo wallet:mint-admin-badge --filter typescript-wallet",
+    "wallet:mint-hero-badge": "npx --node-options='-r dotenv/config' turbo wallet:mint-hero-badge --filter typescript-wallet",
+    "wallet:faucet": "npx --node-options='-r dotenv/config' turbo wallet:faucet --filter typescript-wallet",
+    "wallet:build": "turbo wallet:build --filter typescript-wallet",
+    "common:build": "turbo common:build --filter common",
+    "db:build": "turbo build --filter database",
+    "db:push": "turbo push --filter database",
+    "db:migrate": "npx prisma migrate dev --schema ./packages/database/prisma/schema.prisma",
+    "db:reset": " npx prisma db push --force-reset --schema ./packages/database/prisma/schema.prisma",
+    "db:seed": "npx prisma db seed --schema ./packages/database/prisma/schema.prisma",
+    "lint": "npx --node-options='-r dotenv/config' turbo lint",
+    "format": "prettier --write apps/**/* packages/**/*",
+    "content:build": "turbo content:build --filter content",
+    "queues:build": "turbo queues:build --filter queues",
+    "storybook:build": "npx turbo run build:storybook --filter=dapp",
+    "tsc": "npx turbo run tsc"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.4",
+    "@commitlint/config-conventional": "^18.4.4",
+    "prettier": "^3.1.0",
+    "turbo": "^2.1.1"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "npm@10.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "prisma":{
+    "seed": "tsx packages/database/prisma/seed.ts"
+  }
+}

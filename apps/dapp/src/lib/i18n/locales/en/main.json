@@ -1,0 +1,88 @@
+{
+  "tabs-basics": "Basics",
+  "tabs-advanced": "Advanced",
+  "external-link-icon": "External link icon",
+  "error-page": {
+    "page-not-found": "I couldn’t find that page.",
+    "something-went-wrong": "Oops! Something went wrong",
+    "go-home-button": "Go to RadQuest Home"
+  },
+  "landingPagePopup": {
+    "jetty-img-alt": "Jetty",
+    "button": "Let's begin"
+  },
+  "errorPopup": {
+    "close": "Close",
+    "XrdRewardLimit": {
+      "title": "XRD Reward Limit Reached",
+      "content": "To claim more rewards, you will need to contact RadQuest support:",
+      "button": "Get help with RadQuest rewards"
+    },
+    "CannotClaimRewards": {
+      "title": "You are currently blocked",
+      "content": "While you are blocked, you cannot claim quest rewards or make use of Jetty’s RadMorph creation features.",
+      "button": "Close"
+    },
+    "AccountAlreadyRegistered": {
+      "title": "Account Already Registered",
+      "content": "You seem to be already a RadQuest user - please log in with the Persona you originally used to continue.",
+      "button": "Close"
+    },
+    "HighDemand": {
+      "title": "RadQuest is experiencing very high demand.",
+      "content": "Your request is still in progress, but you may need to come back later.",
+      "link": "Learn more on X @radixdlt",
+      "button": "Close"
+    },
+    "PermanentlyBlocked": {
+      "title": "Account Suspended",
+      "content": "There was suspicious activity on this login and you can no longer receive rewards and certain features may not work.",
+      "button": "Close"
+    },
+    "SessionBlocked": {
+      "title": "Suspicious Activity",
+      "content": "Your connection location has unusual activity. For this login, you won't be able to claim rewards or use many of RadQuest's features.",
+      "button": "Close"
+    },
+    "GetOffVPN": {
+      "title": "VPN Detected",
+      "content": "To continue claiming rewards and using all of RadQuest's features, try turning off any VPN software you may be using.",
+      "button": "Close"
+    },
+    "NetworkCongestion": {
+      "title": "RadQuest is experiencing very high demand.",
+      "content": "If you have problems completing quests or making claims, please try again later.",
+      "link": "Learn more on X @radixdlt",
+      "button": "Close"
+    }
+  },
+  "footer": {
+    "runs-on-radix-alt": "Runs on radix icon",
+    "copyright-alt": "Copyright",
+    "join-radix": "Join the Radix Community",
+    "learn-more": "Learn more",
+    "all-rights": "Radix Publishing Ltd, 2024. All rights reserved. Radix Publishing Ltd. ",
+    "privacy-notice": "Privacy Notice",
+    "build-on-radix": "Build on Radix",
+    "get-help": "Get help with RadQuest"
+  },
+  "silverTickets": {
+    "set-expiration": "Expiration date",
+    "set-description": "Description",
+    "purchase-description": "Enter the quantity of referral links to purchase. Each link costs <b>50 XRD</b>, to be passed on to the user. It cannot be refunded.",
+    "header": "Purchase Pre-funded Referral Links",
+    "purchased-header": "Your Batches of Links",
+    "purchased-at": "Purchased at",
+    "expires-at": "Expires on",
+    "set-info": "Set Expiration and Description",
+    "claimed": "Claimed",
+    "save": "Save",
+    "enter-quantity": "Enter quantity",
+    "purchase": "Purchase Links ({{amount}} XRD)",
+    "purchase-empty": "Purchase Links",
+    "quantity": "{{amount}} Referral Links",
+    "download-csv": "Download CSV",
+    "download-qr": "Download QR Codes",
+    "not-logged-in": "To buy links, please login with a Persona that has gotten a Hero Badge on RadQuest."
+  }
+}

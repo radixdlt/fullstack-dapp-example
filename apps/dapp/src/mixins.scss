@@ -1,0 +1,98 @@
+@mixin desktop {
+  @media (min-width: 768px) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (max-width: 767px) {
+    @content;
+  }
+}
+
+@mixin short {
+  @media (max-height: 520px) {
+    @content;
+  }
+}
+
+@mixin shortMobile {
+  @media (max-height: 500px) and (max-width: 767px) {
+    @content;
+  }
+}
+
+/* Markdown Styles */
+@mixin markdownLinkStyles {
+  :global(a:not(.primary)) {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-bold);
+  }
+
+  :global(a:not(.button):not(.primary):not(.skip-icon):not([href^='mailto']))::after {
+    content: ' ';
+    width: 1rem;
+    height: 1rem;
+    margin-left: 2px;
+    transform: translateY(3px);
+    display: inline-block;
+
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    background-color: var(--color-primary);
+  }
+
+  :global(a[href^='?glossaryAnchor']) {
+    text-wrap: nowrap;
+    &::after {
+      mask-image: url('@images/book-open.svg');
+    }
+  }
+
+  :global(a[href^='https:'])::after {
+    mask-image: url('@images/external-link.svg');
+  }
+
+  :global(a:hover),
+  :global(a:hover::after) {
+    filter: brightness(0.8);
+  }
+}
+
+@mixin markdownBlockquoteStyles {
+  :global(blockquote) {
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 20px;
+    background: var(--Background-Gradient-2, linear-gradient(67deg, #f9dfcf 0%, #e6b2bb 102.4%));
+    padding: var(--spacing-lg) var(--spacing-xl);
+
+    :global(p) {
+      margin: 0;
+      color: var(--color-nearly-black);
+    }
+  }
+}
+
+@mixin markdownTextStyles {
+  :global(p:first-child) {
+    margin-top: 0;
+  }
+
+  :global(h2:first-of-type) {
+    margin-top: 0;
+  }
+
+  :global(h2) {
+    font-family: 'DM Sans';
+    font-weight: var(--font-weight-bold);
+  }
+
+  :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  :global(p) {
+    line-height: 24px;
+  }
+}

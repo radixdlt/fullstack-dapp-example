@@ -1,0 +1,215 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-1.1.x", "debian-openssl-1.1.x"]
+  output        = "../src/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  OK
+  PERMANENTLY_BLOCKED
+  TEMPORARILY_BLOCKED
+}
+
+model User {
+  id              String     @id @default("")
+  identityAddress String     @unique
+  createdAt       DateTime   @default(now())
+  accountAddress  String?
+  name            String?
+  country         String?
+  type            UserType   @default(USER)
+  referralCode    String     @unique
+  referredBy      String?
+  referredByUser  User?      @relation("Referrer", fields: [referredBy], references: [referralCode])
+  status          UserStatus @default(OK)
+
+  events                     Event[]
+  messages                   Message[]
+  completedQuestRequirements CompletedQuestRequirement[]
+  savedProgress              SavedProgress?
+  questProgress              QuestProgress[]
+  referredUsers              User[]                      @relation("Referrer")
+  transactions               TransactionIntent[]
+  referals                   Referral[]
+}
+
+enum ImageType {
+  RadMorph
+  RadGem
+  Card
+}
+
+model Image {
+  id   String    @id
+  url  String
+  type ImageType
+}
+
+enum ReferralAction {
+  INC
+  DEC
+}
+
+model Referral {
+  eventId  String         @id @unique
+  userId   String
+  action   ReferralAction
+  xrdValue Decimal
+
+  event Event @relation(fields: [eventId], references: [transactionId])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model Challenge {
+  challenge String   @id
+  createdAt DateTime @default(now())
+}
+
+enum EventStatus {
+  WAITING
+  PENDING
+  ERROR
+  COMPLETED
+  FAILED_RETRY
+  FAILED_PERMANENT
+  PAUSED
+  CANCELLED
+}
+
+model Event {
+  transactionId String      @id
+  id            String
+  userId        String
+  questId       String?
+  status        EventStatus @default(WAITING)
+  createdAt     DateTime    @default(now())
+  error         String?
+  data          Json        @default("{}")
+
+  user     User       @relation(fields: [userId], references: [id])
+  referral Referral[]
+
+  @@index([userId, status])
+}
+
+model Message {
+  id        Int       @id @default(autoincrement())
+  userId    String
+  createdAt DateTime  @default(now())
+  seenAt    DateTime?
+  data      Json
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, seenAt])
+}
+
+model Notification {
+  notificationId String
+  userId         String
+  seenAt         DateTime?
+
+  @@id([notificationId, userId])
+}
+
+model CompletedQuestRequirement {
+  questId       String
+  userId        String
+  requirementId String
+  createdAt     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([questId, userId, requirementId])
+}
+
+model QuestProgress {
+  questId String
+  userId  String
+  status  QuestStatus @default(IN_PROGRESS)
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([questId, userId])
+}
+
+model SavedProgress {
+  userId   String @id
+  questId  String
+  progress Int
+  user     User   @relation(fields: [userId], references: [id])
+}
+
+enum QuestStatus {
+  IN_PROGRESS
+  REWARDS_DEPOSITED
+  REWARDS_CLAIMED
+  COMPLETED
+  PARTIALLY_COMPLETED
+}
+
+model TransactionIntent {
+  discriminator String                  @id
+  status        TransactionIntentStatus @default(WAITING)
+  createdAt     DateTime                @default(now())
+  error         String?
+  userId        String
+  data          Json?
+  transactions  SubmittedTransaction[]
+  batchId       String?
+
+  user  User                      @relation(fields: [userId], references: [id])
+  batch BatchedTransactionIntent? @relation(fields: [batchId], references: [id])
+
+  @@index([status, createdAt])
+}
+
+model BatchedTransactionIntent {
+  id                 String                  @id
+  status             TransactionIntentStatus @default(WAITING)
+  createdAt          DateTime                @default(now())
+  error              String?
+  transactionIntents TransactionIntent[]
+
+  @@index([status, createdAt])
+}
+
+enum TransactionIntentStatus {
+  WAITING
+  PENDING
+  ERROR
+  COMPLETED
+  FAILED_RETRY
+  FAILED_PERMANENT
+  PAUSED
+  CANCELLED
+}
+
+model SubmittedTransaction {
+  transactionId     String   @id
+  transactionIntent String
+  status            String
+  createdAt         DateTime @default(now())
+
+  transaction TransactionIntent @relation(fields: [transactionIntent], references: [discriminator])
+}
+
+model Config {
+  key   String @id
+  value String
+}

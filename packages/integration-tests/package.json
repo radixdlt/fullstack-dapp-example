@@ -1,0 +1,20 @@
+{
+  "name": "integration-tests",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "test:integration": "vitest event"
+  },
+  "license": "SEE LICENSE",
+  "dependencies": {
+    "neverthrow": "^6.1.0",
+    "database": "*",
+    "content": "*",
+    "common": "*",
+    "queues": "*",
+    "typescript-wallet": "*"
+  },
+  "devDependencies": {
+    "vitest": "^1.2.1"
+  }
+}

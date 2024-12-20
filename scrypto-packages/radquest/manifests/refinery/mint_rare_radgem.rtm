@@ -1,0 +1,27 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+
+CALL_METHOD
+    Address("${account}")
+    "create_proof_of_amount"
+    Address("${admin_badge}")
+    Decimal("1")
+;
+
+CALL_METHOD
+    Address("${refinery}")
+    "combine_elements_mint_radgem"
+    "${user_id}"
+    Decimal("0.1")
+    Decimal("0.8")
+    Decimal("0.3")
+;
+
+CALL_METHOD
+    Address("${account}")
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP")
+;

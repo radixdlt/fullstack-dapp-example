@@ -1,0 +1,35 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("50")
+;
+
+CALL_METHOD
+  Address("${account}")
+  "create_proof_of_non_fungibles"
+  Address("${hero_badge}")
+  Array<NonFungibleLocalId>(NonFungibleLocalId("<${user_id}>"))
+;
+
+POP_FROM_AUTH_ZONE
+  Proof("hero_badge")
+;
+
+CALL_METHOD
+  Address("${account}")
+  "withdraw" 
+  Address("${element}")
+  Decimal("10") 
+;
+
+TAKE_ALL_FROM_WORKTOP 
+  Address("${element}") 
+  Bucket("elements")
+;
+
+CALL_METHOD
+  Address("${radgem_forge_v2}")
+  "deposit_elements"
+  Proof("hero_badge")
+  Bucket("elements")
+;

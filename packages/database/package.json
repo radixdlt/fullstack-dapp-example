@@ -1,0 +1,25 @@
+{
+  "name": "database",
+  "version": "0.0.0",
+  "main": "./src/prisma/index.js",
+  "types": "./src/prisma/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": "./src/prisma/index.js"
+  },
+  "scripts": {
+    "generate": "prisma generate",
+    "push": "prisma db push --skip-generate",
+    "clear": "prisma migrate reset --force"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.15.0",
+    "@prisma/extension-read-replicas": "^0.4.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.15.0"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "workers",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx --watch src/index.ts | npx pino-pretty",
+    "build": "tsup",
+    "test": "vitest",
+    "test:ci": "vitest run",
+    "clean": "rm -rf dist",
+    "tsc": "tsc --noEmit"
+  },
+  "license": "SEE LICENSE",
+  "dependencies": {
+    "@prisma/extension-read-replicas": "^0.4.0",
+    "bignumber.js": "^9.1.2",
+    "content": "*",
+    "database": "*",
+    "keccak256": "^1.0.6",
+    "prom-client": "^15.1.2",
+    "queues": "*",
+    "typescript-wallet": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.14",
+    "tsup": "^8.0.2",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.1"
+  }
+}

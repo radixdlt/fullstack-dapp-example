@@ -1,0 +1,268 @@
+/* Colors */
+body {
+  /* Core colors */
+  --color-primary: #60b7ff;
+  --color-primary-translucent: #6260ff66;
+  --color-secondary: #faeae1;
+  --color-tertiary: #faeae1;
+  --color-neutral: #dfdbd5;
+  --color-background-dark: #192d3a;
+  --color-background-light: #fffbf4;
+
+  /* Special */
+  --color-error: #ff2d2d;
+
+  /* Gradients */
+  --gradient-5: linear-gradient(0deg, #ffffff 0%, #ffffff 100%);
+  --gradient-6: linear-gradient(97deg, #03eeff 2.34%, #301c4b 107.14%);
+  --gradient-7: linear-gradient(270deg, #fdfdfd 0%, #6d6d6d 100%);
+
+  /* Light and Dark */
+  --color-light: #fffbf4;
+  --color-light-translucent: hsla(36, 100%, 98%, 0.2);
+  --color-dark: #111f29;
+  --color-dark-translucent: #111f2933;
+  --color-nearly-black: #192d3a;
+  background: var(--gradient-7);
+  background-color: var(--color-background-dark);
+  /* This color is visible inside safari status bar, gradient doesn't work here */
+}
+
+/* ------------------ */
+
+/* Typography */
+body {
+  --text-xxs: 12px;
+  --text-xs: 14px;
+  --text-sm: 15px;
+  --text-md: 16px;
+  --text-md2: 18px;
+  --text-md3: 24px;
+  --text-lg: 28px;
+  --text-xl: 32px;
+  --text-2xl: 36px;
+  --text-3xl: 48px;
+
+  --font-weight-extra-light: 200;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+
+  --line-height-lg: 24px;
+}
+
+/* ------------------ */
+
+/* Spacing */
+body {
+  --spacing-unit: 0.6em;
+  --spacing-xs: calc(0.25 * var(--spacing-unit));
+  --spacing-sm: calc(0.5 * var(--spacing-unit));
+  --spacing-md: calc(0.75 * var(--spacing-unit));
+  --spacing-lg: calc(1.25 * var(--spacing-unit));
+  --spacing-xl: calc(2 * var(--spacing-unit));
+  --spacing-2xl: calc(3.25 * var(--spacing-unit));
+  --spacing-3xl: calc(5.25 * var(--spacing-unit));
+  --spacing-4xl: calc(8.5 * var(--spacing-unit));
+  --spacing-5xl: calc(13.75 * var(--spacing-unit));
+}
+
+/* ------------------ */
+
+/* Common Utilities */
+body {
+  /* Borders */
+  --border-radius-sm: 2px;
+  --border-radius-md: 4px;
+  --border-radius-lg: 8px;
+  --border-radius-xl: 16px;
+  --border-radius-2xl: 24px;
+  --border-radius-3xl: 40px;
+  --border: 1.5px solid;
+  --border-lg: 2px solid;
+  --border-xl: 3px solid;
+}
+
+/* ------------------ */
+
+/* Utility Classes */
+.disabled {
+  opacity: 50%;
+  pointer-events: none;
+}
+
+.card {
+  background: var(--gradient-5);
+  border-radius: var(--border-radius-3xl);
+  box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: var(--spacing-2xl);
+
+  &.card-disabled {
+    filter: grayscale(100%) brightness(0.7);
+    pointer-events: none;
+  }
+
+  // transition: all 0.5s ease;
+  // TODO: Add selective transaition back if you know it's needed (no "all")
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
+
+.text-title {
+  font-family: var(--font-main);
+  font-size: var(--text-xl);
+  font-style: normal;
+  font-weight: var(--font-weight-regular);
+}
+
+.text-extra-light {
+  font-family: var(--font-main);
+  font-size: var(--text-md);
+  font-style: normal;
+  font-weight: var(--font-weight-extra-light);
+  letter-spacing: 0.16px;
+}
+
+.text-light {
+  font-family: var(--font-main);
+  font-size: var(--text-md);
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  letter-spacing: 0.16px;
+}
+
+.text-regular {
+  font-family: var(--font-main);
+  font-size: var(--text-md);
+  font-style: normal;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: 0.16px;
+}
+
+.text-bold {
+  font-family: var(--font-main);
+  font-size: var(--text-md);
+  font-style: normal;
+  font-weight: var(--font-weight-bold);
+}
+
+.text-label {
+  font-family: var(--font-main);
+  font-size: var(--text-xs);
+  font-style: normal;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.14px;
+  text-transform: uppercase;
+}
+
+.text-faded {
+  opacity: 0.6;
+}
+
+/* ------------------ */
+
+/* Style Reset */
+a:link,
+a:visited,
+a:hover,
+a:active,
+input:hover,
+input:focus {
+  text-decoration: none;
+}
+
+button,
+a {
+  all: unset;
+  box-sizing: border-box;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+input {
+  all: unset;
+}
+
+/* ------------------ */
+
+/* Element Styles */
+body {
+  font-family: var(--font-main);
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.25);
+  background-clip: content-box;
+  border: 5px solid transparent;
+  border-radius: 10px;
+}
+
+// Prevent iOS overscroll
+html {
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  overflow: auto;
+}
+
+a {
+  cursor: pointer;
+}
+
+button {
+  cursor: pointer;
+}
+
+h1 {
+  font-family: var(--font-headers);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-light);
+  color: var(--color-background-dark);
+  letter-spacing: 0.0225rem;
+}
+
+h2 {
+  font-family: var(--font-headers);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-light);
+  color: var(--color-background-dark);
+  letter-spacing: 0.02rem;
+  line-height: 2rem;
+}
+
+h3 {
+  font-family: var(--font-headers);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-light);
+  color: var(--color-background-dark);
+  letter-spacing: 0.0175rem;
+  line-height: 2.25rem;
+  @include shortMobile {
+    font-size: var(--text-md3);
+    line-height: 2rem;
+  }
+}
+
+* {
+  touch-action: manipulation;
+}

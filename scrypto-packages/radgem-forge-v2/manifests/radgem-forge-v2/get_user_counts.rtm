@@ -1,0 +1,10 @@
+CALL_METHOD
+    Address("component_sim1cptxxxxxxxxxfaucetxxxxxxxxx000527798379xxxxxxxxxhkrefh")
+    "lock_fee"
+    Decimal("5")
+;
+CALL_METHOD
+    Address("${radgem_forge_v2}")
+    "get_user_counts"
+    "${user_id}"
+;

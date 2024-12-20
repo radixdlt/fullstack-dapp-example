@@ -1,0 +1,24 @@
+{
+  "name": "queues",
+  "version": "0.1.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {},
+  "license": "SEE LICENSE",
+  "dependencies": {
+    "bullmq": "^5.3.1",
+    "common": "*",
+    "prom-client": "^15.1.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.5",
+    "rollup": "^4.1.5",
+    "rollup-plugin-dts": "^6.1.0",
+    "tsup": "^8.0.2",
+    "vitest": "^1.2.1"
+  }
+}

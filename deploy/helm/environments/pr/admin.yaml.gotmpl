@@ -1,0 +1,21 @@
+params:
+  PORT: 3000
+  PUBLIC_NETWORK_ID: 2
+  PUBLIC_RADQUEST_API_URL: https://fullstack-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
+  PUBLIC_LOG_LEVEL: debug
+  REDIS_HOST: "redis-master"
+  REDIS_PORT: "6379"
+  REDIS_PASSWORD: ""
+  DATABASE_URL: "postgresql://postgres:secretString123@postgres-postgresql:5432/fullstack_dapp_example?schema=public"
+  RO_DATABASE_URL: postgresql://postgres:secretString123@postgres-postgresql:5432/fullstack_dapp_example?schema=public
+  JWT_SECRET: FkaGHXoq32rYBcEHwAn2rkhawtUCe4sE
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: fullstack-admin-pr-{{ .StateValues.ci.prNumber }}.rdx-works-main.extratools.works
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

@@ -1,0 +1,1 @@
+With XRD in your account, you can make a transaction to claim some NFT's.

@@ -1,0 +1,101 @@
+version: '3.9'
+
+services:
+  dapp:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/dapp.Dockerfile
+      target: application
+      args:
+        - PUBLIC_NETWORK_ID=2
+        - PUBLIC_LOG_LEVEL=debug
+    expose:
+      - '3000'
+    ports:
+      - '3000:3000'
+    environment:
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - PORT=${WEB_API_PORT}
+      - DATABASE_URL=postgresql://user:password@postgres:5433/radquest?schema=public
+      - JWT_SECRET=${JWT_SECRET}
+      - EXPECTED_ORIGIN=http://localhost:3000
+      - PUBLIC_DAPP_DEFINITION_ADDRESS=${PUBLIC_DAPP_DEFINITION_ADDRESS}
+      - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
+      - PUBLIC_LOG_LEVEL=debug
+      - PUBLIC_NOTIFICATION_URL=${PUBLIC_NOTIFICATION_URL}
+      - MAINTENANCE_MODE=${MAINTENANCE_MODE}
+    command: pm2-runtime apps/dapp/build/index.js
+
+  notification:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/notification.Dockerfile
+      target: application
+    expose:
+      - '9000'
+    ports:
+      - '4000:4000'
+      - '9000:9000'
+    environment:
+      - INTERNAL_API_PORT=${NOTIFICATION_INTERNAL_API_PORT}
+      - WEBSOCKET_PORT=${NOTIFICATION_WEBSOCKET_PORT}
+      - JWT_SECRET=${JWT_SECRET}
+      - LOG_LEVEL=${PUBLIC_LOG_LEVEL}
+    command: pm2-runtime apps/notification/dist/index.cjs
+
+  transaction-stream:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/transaction-stream.Dockerfile
+      target: application
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - LOG_LEVEL=${PUBLIC_LOG_LEVEL}
+      - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
+      - DATABASE_URL=postgresql://user:password@postgres:5433/radquest?schema=public
+    command: pm2-runtime apps/transaction-stream/dist/index.cjs
+
+  workers:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/workers.Dockerfile
+      target: application
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - NOTIFICATION_INTERNAL_API_PORT=${NOTIFICATION_INTERNAL_API_PORT}
+      - NOTIFICATION_WEBSOCKET_HOST=${NOTIFICATION_WEBSOCKET_HOST}
+      - DATABASE_URL=postgresql://user:password@postgres:5433/radquest?schema=public
+      - LOG_LEVEL=${PUBLIC_LOG_LEVEL}
+      - MNEMONIC=${MNEMONIC}
+      - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
+    command: pm2-runtime apps/workers/dist/index.cjs
+
+  admin:
+    build:
+      context: ./
+      dockerfile: ./dockerfiles/admin.Dockerfile
+      target: application
+      args:
+        - PUBLIC_NETWORK_ID=2
+        - PUBLIC_LOG_LEVEL=debug
+    expose:
+      - '3002'
+    ports:
+      - '3002:3002'
+    environment:
+      - PORT=3002
+      - PUBLIC_NETWORK_ID=${PUBLIC_NETWORK_ID}
+      - PUBLIC_RADQUEST_API_URL=${PUBLIC_RADQUEST_API_URL}
+      - PUBLIC_LOG_LEVEL=debug
+      - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - DATABASE_URL=postgresql://user:password@postgres:5433/radquest?schema=public
+      - JWT_SECRET=${JWT_SECRET}
+    command: pm2-runtime apps/admin/build/index.js
