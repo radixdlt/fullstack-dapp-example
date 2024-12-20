@@ -7,7 +7,7 @@
   import { sendTransaction } from '$lib/rdt'
   import LoadingSpinner from '$lib/components/loading-spinner/LoadingSpinner.svelte'
   import { createEventDispatcher, onMount } from 'svelte'
-  import { ResultAsync } from 'neverthrow'
+  import { err, ok, ResultAsync } from 'neverthrow'
   import ClaimRadGem, { checkClaimAvailable } from './ClaimRadGem.svelte'
   import { messageApi } from '$lib/api/message-api'
   import { context } from '$lib/components/jetty-menu/JettyMenu.svelte'
@@ -118,7 +118,10 @@
     ResultAsync.combineWithAllErrors([
       userApi.hasWaitingRadgemJob(),
       checkAmountOfElements(),
-      checkClaimAvailable($user?.id!, useV2)
+      checkClaimAvailable($user?.id!).andThen((claim) => {
+        if (!claim) return err('No claim available')
+        return ok(claim)
+      })
     ])
       .map(([hasWaitingRadgemJob, _]) => {
         waitingForElementsDeposited = !claimAvailable && !elementsDeposited && hasWaitingRadgemJob

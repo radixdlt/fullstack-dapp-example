@@ -100,24 +100,12 @@ npm install
 ### Build scrypto packages
 
 ```bash
-cd scrypto-packages/radquest &&\
-scrypto build &&\
-cd .. &&\
-cd hero-badge-forge-v2 &&\
-scrypto build &&\
-cd .. &&\
-cd quest-rewards-v2 &&\
-scrypto build &&\
-cd .. &&\
-cd card-forge-v2 &&\
-scrypto build &&\
-cd .. &&\
-cd gift-box-opener-v2 &&\
-scrypto build &&\
-cd .. &&\
-cd radgem-forge-v2 &&\
-scrypto build &&\
-cd ../..
+cd scrypto-packages/radquest && scrypto build && cd ../.. &&\
+cd scrypto-packages/hero-badge-forge-v2 && scrypto build && cd ../.. &&\
+cd scrypto-packages/quest-rewards-v2 && scrypto build && cd ../.. &&\
+cd scrypto-packages/card-forge-v2 && scrypto build && cd ../.. &&\
+cd scrypto-packages/gift-box-opener-v2 && scrypto build && cd ../.. &&\
+cd scrypto-packages/radgem-forge-v2 && scrypto build && cd ../..
 ```
 
 ## Create accounts and deploy account controllers
@@ -149,15 +137,9 @@ npm run wallet:set:dapp-data
 ### Populate image oracle
 
 ```bash
+npm run db:seed &&\
 npm run wallet:populate:oracle
 ```
-
-### Add key value store address
-
-- Copy the `radgemForgeV2` address in `constants.ts`.
-- Go to https://stokenet-dashboard.radixdlt.com/ and put it in the search bar,
-- then open the `internal state` tab and copy the address of the `radgem_records` key value store,
-- put it in `radgemRecordsV2KeyValueStore` in `constants.ts`.
 
 ### Run frontend only
 
@@ -170,14 +152,20 @@ npm run dev:dapp
 ```bash
 # starts all services
 docker compose up -d
+```
 
+```bash
 # creates the required tables and schemas in database
 # only needed if there are changes in the schema or in a newly cloned repo
 npm run db:push
+```
 
+```bash
 # builds commonjs version of database client
 npm run db:build
+```
 
+```bash
 # runs all applications in development mode
 npm run dev
 ```

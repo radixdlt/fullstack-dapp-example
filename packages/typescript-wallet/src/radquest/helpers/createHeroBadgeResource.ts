@@ -185,7 +185,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
             "icon_url" => Tuple(
                 Enum<1u8>(
                     Enum<13u8>(
-                        "https://arweave.net/TkgiEdjcsfohra5z1lRojXbujnLfHXqUticbAhr7yVw"
+                        "https://assets.radixdlt.com/icons/full-stack-example/heero_bidge.webp"
                     )
                 ),
                 false

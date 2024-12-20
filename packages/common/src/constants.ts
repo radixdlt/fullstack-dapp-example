@@ -52,11 +52,7 @@ export const Addresses = (networkId: number) => {
             'component_tdx_2_1cp6hq3yph5huye84szyux3ff8cj0aldav436wj3sl4k04ljygqpkkl',
           radgemForgeV2: 'component_tdx_2_1cztk5tp592fqe49544e2qx3s3cygp8nhuthsfxwjk999c6q4lss3xu',
           questRewardsV2: 'component_tdx_2_1crgwq23j9ckz3yac3wvyqh38j3xyvkyv0mf3r77vjthjrdymjs70n3',
-          radgemRecordsV2KeyValueStore:
-            'internal_keyvaluestore_tdx_2_1kqf8du0f0eujg8qjq78wg76q25w9544v9elmryw8c3wl4ef4etmym8',
           giftBoxOpener: 'component_tdx_2_1crsll3wjqke9detnpr8r0t0ls6m5kd57fu2jr5r20qfauuy575rh5p',
-          giftBoxRecordsKeyValueStore:
-            'internal_keyvaluestore_tdx_2_1krepp99ahmrzxe5qrsyhzy6e7cyvqwhg4dvtqt3pdjq94yd4xwaynq',
           jettySwap: 'component_tdx_2_1czu6r9zpgsuylret7jfswwlzfgxp39spvd6wh72waqy30sd55gwz4y',
           jettySwapPriceOracle:
             'component_tdx_2_1cqcsfhgk8k8kuknmk7cmvkfu2whrz0ysd3swxggdu3lreu3lh7hyhq',
@@ -148,29 +144,29 @@ export const metadata = {
       Starter: {
         name: 'Starter Gift Boxes',
         description:
-          'This Gift Box from RadQuest’s Jetty will get you started with a common Morph Energy Card and enough Elements to create a couple of RadGems. Ask Jetty to open it!',
-        iconUrl: 'https://arweave.net/ykgYDzucDR-laXkFu-Mtb00sb_6jNq-VMKebHMAv32k',
+          'This Gift Box from the Full Stack Example will get you started with a common Morph Energy Card and enough Elements to create a couple of RadGems.',
+        iconUrl: 'https://assets.radixdlt.com/icons/full-stack-example/starter_boox.webp',
         tags: ['radquest']
       },
       Simple: {
         name: 'Simple Gift Boxes',
         description:
-          'This simple Gift Box from RadQuest’s Jetty contains a common or rare Morph Energy Card and a handful of Elements. Ask Jetty to open it!',
-        iconUrl: 'https://arweave.net/dh4CsYX8ZXBCZboy03TwvYdEdOk8D9iNHmIxMpM0UjM',
+          'This simple Gift Box from the Full Stack Example contains a common or rare Morph Energy Card and a handful of Elements.',
+        iconUrl: 'https://assets.radixdlt.com/icons/full-stack-example/simple_boox.webp',
         tags: ['radquest']
       },
       Fancy: {
         name: 'Fancy Gift Boxes',
         description:
-          'This fancy Gift Box from RadQuest’s Jetty contains a common, rare, or sometimes even ultra-rare Morph Energy Card and a goodly quantity of Elements. Ask Jetty to open it!',
-        iconUrl: 'https://arweave.net/Ba8bp5mqJYicUGvyEznwA63HF7DZevO_LyZEwAw9GWs',
+          'This fancy Gift Box from the Full Stack Example contains a common, rare, or sometimes even ultra-rare Morph Energy Card and a goodly quantity of Elements.',
+        iconUrl: 'https://assets.radixdlt.com/icons/full-stack-example/fancy_boox.webp',
         tags: ['radquest']
       },
       Elite: {
         name: 'Elite Gift Boxes',
         description:
-          'This truly elite Gift Box from RadQuest’s Jetty, reserved for only the most committed, contains only a rare or ultra-rare Morph Energy Card and a substantial quantity of Elements. Ask Jetty to open it!',
-        iconUrl: 'https://arweave.net/vdrkR2hi0dII5R_GEWsshock2ER8EKLs93Qb_L___gA',
+          'This truly elite Gift Box from the Full Stack Example, reserved for only the most committed, contains only a rare or ultra-rare Morph Energy Card and a substantial quantity of Elements.',
+        iconUrl: 'https://assets.radixdlt.com/icons/full-stack-example/elite_boox.webp',
         tags: ['radquest']
       }
     }

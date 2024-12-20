@@ -2,38 +2,38 @@ import { config } from '../../config'
 import { transactionBuilder } from '../../transaction/transactionBuilder'
 
 export const setRadquestMetadata = () => {
-  const radquestDppDefinition = config.radQuest.accounts.dAppDefinition.address
+  const radquestDappDefinition = config.radQuest.accounts.dAppDefinition.address
   const transactionManifest = `
 SET_METADATA
-    Address("${radquestDppDefinition}")
+    Address("${radquestDappDefinition}")
     "account_type"
     Enum<Metadata::String>(
         "dapp definition"
     )
 ;
 SET_METADATA
-    Address("${radquestDppDefinition}")
+    Address("${radquestDappDefinition}")
     "name"
     Enum<Metadata::String>(
-        "RadQuest"
+        "Full Stack Example"
     )
 ;
 SET_METADATA
-    Address("${radquestDppDefinition}")
+    Address("${radquestDappDefinition}")
     "description"
     Enum<Metadata::String>(
-        "RadQuest is a dApp created by the creators of the Radix Network and Radix Wallet to help people get started on Radix and learn about web3, while having a little fun and earning some rewards."
+        "The Full Stack Example demonstrates how to build a full stack application on Radix."
     )
 ;
 SET_METADATA
-    Address("${radquestDppDefinition}")
+    Address("${radquestDappDefinition}")
     "icon_url"
     Enum<Metadata::Url>(
-        "https://assets.radixdlt.com/icons/RadQuest.webp"
+        "https://assets.radixdlt.com/icons/full-stack-example/otta_coin.webp"
     )
 ;
 SET_METADATA
-    Address("${radquestDppDefinition}")
+    Address("${radquestDappDefinition}")
     "claimed_websites"
     Enum<Metadata::OriginArray>(
         Array<String>(
@@ -42,7 +42,7 @@ SET_METADATA
     )
 ;
 SET_METADATA
-    Address("${radquestDppDefinition}")
+    Address("${radquestDappDefinition}")
     "claimed_entities"
     Enum<Metadata::AddressArray>(
         Array<Address>(
@@ -66,15 +66,6 @@ SET_METADATA
             Address("${config.radQuest.components.cardForgeV2}"),
             Address("${config.radQuest.components.radgemForgeV2}"),
             Address("${config.radQuest.components.questRewardsV2}"),
-        )
-    )
-;
-SET_METADATA
-    Address("${radquestDppDefinition}")
-    "dapp_definitions"
-    Enum<Metadata::AddressArray>(
-        Array<Address>(
-            Address("${config.radQuest.accounts.jetty.address}"),
         )
     )
 ;

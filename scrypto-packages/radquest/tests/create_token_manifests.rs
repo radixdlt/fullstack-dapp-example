@@ -160,25 +160,25 @@ fn create_gift_box() {
     let gift_boxes = [GiftBox {
         name: "Starter Gift Boxes".into(),
         manifest_name: "create_gift_box_starter".into(),
-        description: "This Gift Box from RadQuest’s Jetty will get you started with a common Morph Energy Card and enough Elements to create a couple of RadGems. Ask Jetty to open it!".into(),
+        description: "This Gift Box from the Full Stack Example will get you started with a common Morph Energy Card and enough Elements to create a couple of RadGems. Ask Jetty to open it!".into(),
         icon_url: Url::of("https://arweave.net/ykgYDzucDR-laXkFu-Mtb00sb_6jNq-VMKebHMAv32k"),
     },
     GiftBox {
         name: "Simple Gift Boxes".into(),
         manifest_name: "create_gift_box_simple".into(),
-        description: "This simple Gift Box from RadQuest’s Jetty contains a common or rare Morph Energy Card and a handful of Elements. Ask Jetty to open it!".into(),
+        description: "This simple Gift Box from the Full Stack Example contains a common or rare Morph Energy Card and a handful of Elements. Ask Jetty to open it!".into(),
         icon_url: Url::of("https://arweave.net/dh4CsYX8ZXBCZboy03TwvYdEdOk8D9iNHmIxMpM0UjM"),
     },
     GiftBox {
         name: "Fancy Gift Boxes".into(),
         manifest_name: "create_gift_box_fancy".into(),
-        description: "This fancy Gift Box from RadQuest’s Jetty contains a common, rare, or sometimes even ultra-rare Morph Energy Card and a goodly quantity of Elements. Ask Jetty to open it!".into(),
+        description: "This fancy Gift Box from the Full Stack Example contains a common, rare, or sometimes even ultra-rare Morph Energy Card and a goodly quantity of Elements. Ask Jetty to open it!".into(),
         icon_url: Url::of("https://arweave.net/Ba8bp5mqJYicUGvyEznwA63HF7DZevO_LyZEwAw9GWs"),
     },
     GiftBox {
         name: "Elite Gift Boxes".into(),
         manifest_name: "create_gift_box_elite".into(),
-        description: "This truly elite Gift Box from RadQuest’s Jetty, reserved for only the most committed, contains only a rare or ultra-rare Morph Energy Card and a substantial quantity of Elements. Ask Jetty to open it!".into(),
+        description: "This truly elite Gift Box from the Full Stack Example, reserved for only the most committed, contains only a rare or ultra-rare Morph Energy Card and a substantial quantity of Elements. Ask Jetty to open it!".into(),
         icon_url: Url::of("https://arweave.net/vdrkR2hi0dII5R_GEWsshock2ER8EKLs93Qb_L___gA"),
     }];
 
@@ -245,7 +245,7 @@ fn create_element() {
         metadata!(
             init {
                 "name" => "Elements", updatable;
-                "description" => "Elements are the common token of the RadQuest realm. They can be fused by RadQuest’s Jetty to produce RadGems that can be used for much more…", updatable;
+                "description" => "Elements are the common token of the RadQuest realm. They can be fused by the Full Stack Example to produce RadGems that can be used for much more…", updatable;
                 "tags" => vec!["radquest"], updatable;
                 "icon_url" => Url::of("https://arweave.net/vZ1h_-irsZf675M4b-FIAUnrsiPqzObbNzedxfbLh94"), updatable;
                 "dapp_definitions" => vec!["${dapp_definition}"], updatable;
@@ -302,7 +302,7 @@ fn create_radgem() {
         metadata!(
             init {
               "name" => "RadGems", updatable;
-              "description" => "Two RadGems can be combined with a Morph Energy Card by RadQuest’s Jetty to produce a beautiful RadMorph NFT. Higher quality RadGems will contribute to a higher quality RadMorph.", updatable;
+              "description" => "Two RadGems can be combined with a Morph Energy Card by the Full Stack Example to produce a beautiful RadMorph NFT. Higher quality RadGems will contribute to a higher quality RadMorph.", updatable;
               "tags" => vec!["radquest"], updatable;
               "icon_url" => Url::of("https://arweave.net/FpzB4sovchNHrLw8tv87HYcIm89RXuwH0BS5uyypPCM"), updatable;
               "dapp_definitions" => ["${dapp_definition}"], updatable;
@@ -356,9 +356,9 @@ fn create_morph_energy_card() {
           init {
             "name" => "Morph Energy Cards", updatable;
             "description" => 
-"A Morph Energy Card can be combined with 2 RadGems by RadQuest’s Jetty to produce a beautiful RadMorph NFT. Higher quality Energy Cards will contribute to a higher quality RadMorph.
+"A Morph Energy Card can be combined with 2 RadGems by the Full Stack Example to produce a beautiful RadMorph NFT. Higher quality Energy Cards will contribute to a higher quality RadMorph.
 
-Morph Energy Cards allow RadQuest’s Jetty to harness the primordial energies of the universe to morph two RadGems into different shapes to create intricate, beautiful, and collectible RadMorphs.", updatable;
+Morph Energy Cards allow the Full Stack Example to harness the primordial energies of the universe to morph two RadGems into different shapes to create intricate, beautiful, and collectible RadMorphs.", updatable;
             "tags" => vec!["radquest"], updatable;
             "icon_url" => Url::of("https://arweave.net/7y9rpsafHpVU2sFE-VbtU5FE2UTjynRW7acTI7T1Dr8"), updatable;
             "dapp_definitions" => ["${dapp_definition}"], updatable;

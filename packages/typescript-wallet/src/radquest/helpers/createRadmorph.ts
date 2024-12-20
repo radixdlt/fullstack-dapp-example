@@ -200,7 +200,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
             "icon_url" => Tuple(
                 Enum<1u8>(
                     Enum<13u8>(
-                        "https://arweave.net/8-9CpBahyQm6IbNC6u4jb6TKyfEjaLIclc9FOcaVLII"
+                        "https://assets.radixdlt.com/icons/full-stack-example/radmerph.webp"
                     )
                 ),
                 false

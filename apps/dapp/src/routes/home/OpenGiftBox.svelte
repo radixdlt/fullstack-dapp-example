@@ -53,19 +53,6 @@
         }
       })
 
-  export const getV1Rewards = (userId: string) =>
-    gateway
-      .getKeyValueStoreDataForUser(publicConfig.components.giftBoxRecordsKeyValueStore, userId)
-      .andThen((data) => getLastGiftBoxContent(data))
-      .andThen((data) => {
-        if (!data) return okAsync(undefined)
-        const { amountOfElements, morphCardId } = data
-        return getCardData(morphCardId).map((cardData) => ({
-          amountOfElements,
-          ...cardData
-        }))
-      })
-
   export const getGiftBoxV2RewardsStatus = (userId: string) =>
     gateway.getGiftBoxV2RewardsStatus(userId)
 
@@ -76,16 +63,11 @@
     data.openedGiftBoxes - data.depositedRewards > 0
 
   export const getGiftBoxStatus = (userId: string) =>
-    ResultAsync.combineWithAllErrors([getV1Rewards(userId), getGiftBoxV2RewardsStatus(userId)]).map(
-      ([v1, v2]) =>
-        v1
-          ? { version: 'v1' as const, giftBoxRewardsAvailable: true, waitingForGiftBox: false }
-          : {
-              version: 'v2' as const,
-              giftBoxRewardsAvailable: isV2ReadyToClaim(v2),
-              waitingForGiftBox: isV2PendingDeposit(v2)
-            }
-    )
+    getGiftBoxV2RewardsStatus(userId).map((status) => ({
+      version: 'v2' as const,
+      giftBoxRewardsAvailable: isV2ReadyToClaim(status),
+      waitingForGiftBox: isV2PendingDeposit(status)
+    }))
 </script>
 
 <script lang="ts">
@@ -234,17 +216,15 @@
         loadingLedgerData = false
         waitingForDepositedRewards = status.waitingForGiftBox
         if (status.giftBoxRewardsAvailable) {
-          ;(status.version === 'v1' ? getV1Rewards($user!.id) : getV2Rewards()).map(
-            (rewardsData) => {
-              if (!rewardsData) {
-                loadingClaimStatus = false
-                return
-              }
-              rewards = rewardsData
-              readyToClaim = status.version
+          getV2Rewards().map((rewardsData) => {
+            if (!rewardsData) {
               loadingClaimStatus = false
+              return
             }
-          )
+            rewards = rewardsData
+            readyToClaim = status.version
+            loadingClaimStatus = false
+          })
         } else {
           loadingClaimStatus = false
         }

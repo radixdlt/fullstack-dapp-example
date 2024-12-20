@@ -146,7 +146,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
             "description" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "A Morph Energy Card can be combined with 2 RadGems by RadQuest’s Jetty to produce a beautiful RadMorph NFT. Higher quality Energy Cards will contribute to a higher quality RadMorph.\n\nMorph Energy Cards allow RadQuest’s Jetty to harness the primordial energies of the universe to morph two RadGems into different shapes to create intricate, beautiful, and collectible RadMorphs."
+                        "A Morph Energy Card can be combined with 2 RadGems by the Full Stack Example to produce a beautiful RadMorph NFT. Higher quality Energy Cards will contribute to a higher quality RadMorph.\n\nMorph Energy Cards allow the Full Stack Example to harness the primordial energies of the universe to morph two RadGems into different shapes to create intricate, beautiful, and collectible RadMorphs."
                     )
                 ),
                 false
@@ -164,7 +164,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
             "icon_url" => Tuple(
                 Enum<1u8>(
                     Enum<13u8>(
-                        "https://arweave.net/7y9rpsafHpVU2sFE-VbtU5FE2UTjynRW7acTI7T1Dr8"
+                        "https://assets.radixdlt.com/icons/full-stack-example/merph_card.webp"
                     )
                 ),
                 false

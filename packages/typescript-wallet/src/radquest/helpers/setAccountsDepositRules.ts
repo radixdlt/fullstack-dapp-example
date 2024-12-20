@@ -24,11 +24,6 @@ CALL_METHOD
     Enum<DefaultDepositRule::Reject>()
 ;
 CALL_METHOD
-    Address("${config.radQuest.accounts.jetty.address}")
-    "set_default_deposit_rule"
-    Enum<DefaultDepositRule::Reject>()
-;
-CALL_METHOD
     Address("${config.radQuest.accounts.system.address}")
     "set_resource_preference"
     Address("${config.radQuest.badges.adminBadgeAddress}")
@@ -40,17 +35,11 @@ CALL_METHOD
     Address("${config.radQuest.xrd}")
     Enum<ResourcePreference::Allowed>()
 ;
-CALL_METHOD
-    Address("${config.radQuest.accounts.jetty.address}")
-    "set_resource_preference"
-    Address("${config.radQuest.resources.clamAddress}")
-    Enum<ResourcePreference::Allowed>()
-;
 `
 
   const transaction = transactionBuilder({
     transactionManifest,
-    signers: ['dAppDefinition', 'jetty', 'owner', 'system']
+    signers: ['dAppDefinition', 'owner', 'system']
   })
 
   return transaction.submit()

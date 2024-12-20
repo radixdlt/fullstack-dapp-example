@@ -42,7 +42,7 @@ CALL_FUNCTION
             )
         )
     )
-    Address("${config.radQuest.accounts.jetty.address}")
+    Address("${config.radQuest.accounts.dAppDefinition.address}")
     Bucket("admin_badge")
     Address("${config.radQuest.badges.heroBadgeAddress}")
 ;

@@ -1,31 +1,21 @@
 <script lang="ts" context="module">
-  const claimAvailableInKeyValueStore = (
-    storeData: StateKeyValueStoreDataResponse
-  ): ResultAsync<string[], string> => {
-    const unclaimed = storeData.entries.find(
-      ({ value }) =>
-        value.programmatic_json.kind === 'Enum' &&
-        value.programmatic_json.variant_name === 'Unclaimed'
-    )
+  export const checkClaimAvailable = (userId: string) => {
+    const manifest = `
+    CALL_METHOD
+        Address("${publicConfig.components.radgemForgeV2}")
+        "get_user_counts"
+        "${userId}"
+    ;
+    `
+    const res = gatewayApi.preview(manifest).map((res: any) => {
+      return (
+        res.receipt.output[0].programmatic_json.fields[1].value >
+        res.receipt.output[0].programmatic_json.fields[2].value
+      )
+    })
 
-    if (unclaimed) {
-      const nftIds = (
-        (unclaimed.value.programmatic_json as ProgrammaticScryptoSborValueTuple).fields[0] as any
-      ).elements.map((element: any) => element.value) as string[]
-      return okAsync(nftIds)
-    }
-
-    return errAsync('No claim available')
+    return res
   }
-
-  const getKeyValueStoreData = (userId: string, v2: boolean) =>
-    gatewayApi.getKeyValueStoreDataForUser(
-      publicConfig.components[v2 ? 'radgemRecordsV2KeyValueStore' : 'radgemRecordsKeyValueStore'],
-      userId
-    )
-
-  export const checkClaimAvailable = (userId: string, v2: boolean) =>
-    getKeyValueStoreData(userId, v2).andThen(claimAvailableInKeyValueStore)
 </script>
 
 <script lang="ts">
@@ -144,15 +134,10 @@
   )
 
   onMount(() => {
-    checkClaimAvailable($user?.id!, false)
-      .map((data) => {
-        useV2 = false
-        return data
-      })
-      .orElse(() => checkClaimAvailable($user?.id!, true))
+    checkClaimAvailable($user?.id!)
       .andThen((value) => {
-        ids = value
-        return getRadgemPreview()
+        if (value) return getRadgemPreview()
+        return okAsync([])
       })
       .map((_preview) => {
         data = _preview

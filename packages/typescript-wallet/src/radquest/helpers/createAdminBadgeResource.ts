@@ -62,7 +62,7 @@ CREATE_FUNGIBLE_RESOURCE
             "name" => Tuple(
                 Enum<1u8>(
                     Enum<0u8>(
-                        "RadQuest Admin Badge"
+                        "Full Stack Example Admin Badge"
                     )
                 ),
                 false

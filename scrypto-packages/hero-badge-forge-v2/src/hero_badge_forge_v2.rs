@@ -124,7 +124,7 @@ mod hero_badge_forge_v2 {
                         .mint_non_fungible(&NonFungibleLocalId::string(user_id.0.to_owned()).unwrap(), HeroBadgeData {
                             name: "Your Hero Badge".to_string(),
                             description: "Your progress through your RadQuest journey is tracked right on your Hero Badge. Take a look at the “quests_completed” to see what you’ve accomplished!".to_string(),
-                            key_image_url: Url::of("https://arweave.net/TkgiEdjcsfohra5z1lRojXbujnLfHXqUticbAhr7yVw"),
+                            key_image_url: Url::of("https://assets.radixdlt.com/icons/full-stack-example/heero_bidge.webp"),
                             quest_counter: quests_completed.len() as u32,
                             quests_completed,
                         })
