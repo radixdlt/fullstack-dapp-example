@@ -14,13 +14,7 @@ CREATE TYPE "ReferralAction" AS ENUM ('INC', 'DEC');
 CREATE TYPE "EventStatus" AS ENUM ('WAITING', 'PENDING', 'ERROR', 'COMPLETED', 'FAILED_RETRY', 'FAILED_PERMANENT', 'PAUSED', 'CANCELLED');
 
 -- CreateEnum
-CREATE TYPE "LoginAttemptType" AS ENUM ('USER_CREATED', 'USER_LOGIN', 'USER_VERIFY');
-
--- CreateEnum
 CREATE TYPE "QuestStatus" AS ENUM ('IN_PROGRESS', 'REWARDS_DEPOSITED', 'REWARDS_CLAIMED', 'COMPLETED', 'PARTIALLY_COMPLETED');
-
--- CreateEnum
-CREATE TYPE "AuditType" AS ENUM ('DIRECT_DEPOSIT', 'CLAIMBOX_DEPOSIT');
 
 -- CreateEnum
 CREATE TYPE "TransactionIntentStatus" AS ENUM ('WAITING', 'PENDING', 'ERROR', 'COMPLETED', 'FAILED_RETRY', 'FAILED_PERMANENT', 'PAUSED', 'CANCELLED');
@@ -94,16 +88,6 @@ CREATE TABLE "Message" (
 );
 
 -- CreateTable
-CREATE TABLE "LoginAttempt" (
-    "id" SERIAL NOT NULL,
-    "userId" TEXT NOT NULL,
-    "type" "LoginAttemptType" NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "LoginAttempt_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Notification" (
     "notificationId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
@@ -138,19 +122,6 @@ CREATE TABLE "SavedProgress" (
     "progress" INTEGER NOT NULL,
 
     CONSTRAINT "SavedProgress_pkey" PRIMARY KEY ("userId")
-);
-
--- CreateTable
-CREATE TABLE "Audit" (
-    "transactionId" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "type" "AuditType" NOT NULL,
-    "xrdUsdValue" DECIMAL(65,30) NOT NULL,
-    "xrdPrice" DECIMAL(65,30) NOT NULL DEFAULT 1,
-    "data" JSONB NOT NULL DEFAULT '{}',
-
-    CONSTRAINT "Audit_pkey" PRIMARY KEY ("transactionId")
 );
 
 -- CreateTable
@@ -213,12 +184,6 @@ CREATE INDEX "Event_userId_status_idx" ON "Event"("userId", "status");
 CREATE INDEX "Message_userId_seenAt_idx" ON "Message"("userId", "seenAt");
 
 -- CreateIndex
-CREATE INDEX "LoginAttempt_userId_idx" ON "LoginAttempt"("userId");
-
--- CreateIndex
-CREATE INDEX "Audit_userId_idx" ON "Audit"("userId");
-
--- CreateIndex
 CREATE INDEX "TransactionIntent_status_createdAt_idx" ON "TransactionIntent"("status", "createdAt");
 
 -- CreateIndex
@@ -240,9 +205,6 @@ ALTER TABLE "Event" ADD CONSTRAINT "Event_userId_fkey" FOREIGN KEY ("userId") RE
 ALTER TABLE "Message" ADD CONSTRAINT "Message_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "LoginAttempt" ADD CONSTRAINT "LoginAttempt_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "CompletedQuestRequirement" ADD CONSTRAINT "CompletedQuestRequirement_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -250,9 +212,6 @@ ALTER TABLE "QuestProgress" ADD CONSTRAINT "QuestProgress_userId_fkey" FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE "SavedProgress" ADD CONSTRAINT "SavedProgress_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Audit" ADD CONSTRAINT "Audit_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "TransactionIntent" ADD CONSTRAINT "TransactionIntent_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
