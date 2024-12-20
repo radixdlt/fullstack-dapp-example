@@ -128,7 +128,7 @@ fn create_hero_badge() {
         },
         metadata!(
             init {
-              "name" => "RadQuest Hero Badges", updatable;
+              "name" => "Full Stack Example Hero Badges", updatable;
               "description" =>"A unique Hero Badge NFT is given to every RadQuest quester. It is presented whenever interacting with RadQuest, like claiming rewards or crafting RadMorphs.", updatable;
               "tags" => vec!["radquest", "badge"], updatable;
               "icon_url" => Url::of("https://arweave.net/TkgiEdjcsfohra5z1lRojXbujnLfHXqUticbAhr7yVw"), updatable;
