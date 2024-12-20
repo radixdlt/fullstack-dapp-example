@@ -164,7 +164,7 @@ CREATE_NON_FUNGIBLE_RESOURCE
             "icon_url" => Tuple(
                 Enum<1u8>(
                     Enum<13u8>(
-                        "https://assets.radixdlt.com/icons/full-stack-example/merph_card.jpg"
+                        "https://assets.radixdlt.com/icons/full-stack-example/merph_card.webp"
                     )
                 ),
                 false

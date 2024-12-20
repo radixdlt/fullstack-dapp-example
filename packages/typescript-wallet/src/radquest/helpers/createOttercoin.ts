@@ -89,7 +89,7 @@ CREATE_FUNGIBLE_RESOURCE
             "icon_url" => Tuple(
                 Enum<1u8>(
                     Enum<13u8>(
-                        "https://assets.radixdlt.com/icons/full-stack-example/otta_coin.png"
+                        "https://assets.radixdlt.com/icons/full-stack-example/otta_coin.webp"
                     )
                 ),
                 false

@@ -29,7 +29,7 @@ SET_METADATA
     Address("${radquestDappDefinition}")
     "icon_url"
     Enum<Metadata::Url>(
-        "https://assets.radixdlt.com/icons/full-stack-example/otta_coin.png"
+        "https://assets.radixdlt.com/icons/full-stack-example/otta_coin.webp"
     )
 ;
 SET_METADATA
