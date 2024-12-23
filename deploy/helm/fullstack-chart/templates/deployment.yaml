@@ -39,7 +39,11 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["/bin/sh", "-c", "-e"]
           args:
+            {{- if eq (default .Values.dbSeed false) true }}
+            - npx prisma migrate deploy --schema packages/database/prisma/schema.prisma && cd packages/database && npx prisma db seed
+            {{- else }}
             - npx prisma migrate deploy --schema packages/database/prisma/schema.prisma
+            {{- end }}
           env:
           {{- range $secret := .Values.secrets }}
           - name: {{ $secret.env_variable }}
@@ -52,7 +56,7 @@ spec:
           - name: {{ $key }}
             value: {{ $value | quote }}
           {{- end }}
-      {{- end }}
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
