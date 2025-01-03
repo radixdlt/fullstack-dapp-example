@@ -131,8 +131,6 @@
 
 <slot />
 
-<DevMode />
-
 <style lang="scss">
   .header {
     height: 10dvh;
