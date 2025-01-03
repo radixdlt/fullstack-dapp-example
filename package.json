@@ -57,7 +57,7 @@
     "apps/*",
     "packages/*"
   ],
-  "prisma":{
+  "prisma": {
     "seed": "tsx packages/database/prisma/seed.ts"
   }
 }
