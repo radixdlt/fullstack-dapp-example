@@ -100,17 +100,13 @@ npm install
 ### Build scrypto packages
 
 ```bash
-cd scrypto-packages/radquest && scrypto build && cd ../.. &&\
-cd scrypto-packages/hero-badge-forge-v2 && scrypto build && cd ../.. &&\
-cd scrypto-packages/quest-rewards-v2 && scrypto build && cd ../.. &&\
-cd scrypto-packages/card-forge-v2 && scrypto build && cd ../.. &&\
-cd scrypto-packages/gift-box-opener-v2 && scrypto build && cd ../.. &&\
-cd scrypto-packages/radgem-forge-v2 && scrypto build && cd ../..
-```
+ ./setup.sh
+``
 
-## Create accounts and deploy account controllers
+Above script iterates over all scrypto packages inside this repository and build them
 
-- Follow the steps in [/bootstrap-accounts](bootstrap accounts)
+
+- Follow the steps in [packages/bootstrap-accounts/Readme.md](packages/bootstrap-accounts/Readme.md)
 
   You should have generated a `secrets-accounts.json` and a `controller-accounts.json` file.
 
@@ -134,19 +130,6 @@ npm run wallet:deploy-new:all &&\
 npm run wallet:set:dapp-data
 ```
 
-### Populate image oracle
-
-```bash
-npm run db:seed &&\
-npm run wallet:populate:oracle
-```
-
-### Run frontend only
-
-```bash
-npm run dev:dapp
-```
-
 ### Run the full-stack
 
 ```bash
@@ -168,6 +151,19 @@ npm run db:build
 ```bash
 # runs all applications in development mode
 npm run dev
+```
+
+### Populate image oracle
+
+```bash
+npm run db:seed &&\
+npm run wallet:populate:oracle
+```
+
+### Run frontend only
+
+```bash
+npm run dev:dapp
 ```
 
 ### Install dependency
