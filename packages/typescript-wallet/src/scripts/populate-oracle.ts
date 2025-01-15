@@ -23,6 +23,7 @@ controller
   .populateImageOracle()
   .map(() => {
     console.log('Populated oracle successfully')
+    process.exit(0)
   })
   .mapErr((e) => {
     console.error(e)
