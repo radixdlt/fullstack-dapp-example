@@ -11,6 +11,7 @@
   import { useCookies } from '$lib/utils/cookies'
   import { onMount, tick } from 'svelte'
   import { derived } from 'svelte/store'
+  import DevMode from './DevMode.svelte'
 
   export let data: LayoutData
 
@@ -123,6 +124,8 @@
 </Carousel>
 
 <slot />
+
+<DevMode />
 
 <style lang="scss">
   :global(.carousel > .item) {
