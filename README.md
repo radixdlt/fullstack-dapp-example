@@ -206,9 +206,14 @@ npm run db:push
 npm run db:build
 ```
 
+### Populate image oracle
 ```bash
-# Populate image oracle
-npm run db:seed &&\
+# seeds database with images
+npm run db:seed
+```
+
+```bash
+# adds a job to the system queue to populate the image oracle
 npm run wallet:populate:oracle
 ```
 
