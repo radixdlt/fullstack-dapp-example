@@ -122,18 +122,76 @@ Above script iterates over all scrypto packages inside this repository and build
 npm run wallet:faucet
 ```
 
-### Deploy scrypto components to Stokenet
+### Create all resources on-ledger
 
 ```bash
-npm run wallet:create:resources &&\
-npm run wallet:deploy-new:all &&\
+npm run wallet:create:resources
+```
+
+#### Replace the following resources in the `constants.ts` file
+```json
+badges: {
+  adminBadgeAddress: 'resource_tdx_2_1t...,
+  superAdminBadgeAddress: 'resource_tdx_2_1t...,
+  heroBadgeAddress: 'resource_tdx_2_1n...,
+},
+resources: {
+  elementAddress: 'resource_tdx_2_1t...,
+  clamAddress: 'resource_tdx_2_1t...,
+  radgemAddress: 'resource_tdx_2_1n...,
+  morphEnergyCardAddress:
+    'resource_tdx_2_1n...,
+  radmorphAddress: 'resource_tdx_2_1n...,
+  ottercoinAddress:
+    'resource_tdx_2_1t...,
+  giftBox: {
+    Starter: 'resource_tdx_2_1t...,
+    Simple: 'resource_tdx_2_1t...,
+    Fancy: 'resource_tdx_2_1t...,
+    Elite: 'resource_tdx_2_1...'
+  }
+}
+```
+
+### Deploy packages and instantiate components from blueprints
+
+```bash
+npm run wallet:deploy-new:all
+```
+
+#### Replace the following items in the `constants.ts` file
+```json
+{
+  radquestPackage: 'package_tdx_2_1...',
+  heroBadgeForgeV2Package: 'package_tdx_2_1...',
+  questRewardsV2Package: 'package_tdx_2_1...',
+  cardForgeV2Package: 'package_tdx_2_1...',
+  giftBoxOpenerV2Package: 'package_tdx_2_1...',
+  radgemForgeV2Package: 'package_tdx_2_1...',
+  components: {
+    radgemForgeAddress: 'component_tdx_2_1...,
+    radmorphForgeAddress: 'component_tdx_2_1...,
+    imageOracleAddress: 'component_tdx_2_1...,
+    refineryAddress: 'component_tdx_2_1...,
+    heroBadgeForgeV2: 'component_tdx_2_1...,
+    questRewardsV2: 'component_tdx_2_1...,
+    cardForgeV2: 'component_tdx_2_1...,
+    giftBoxOpenerV2: 'component_tdx_2_1...,
+    radgemForgeV2: 'component_tdx_2_1...'
+  }
+}
+
+```
+
+### Set dApp definition metadata
+```bash
 npm run wallet:set:dapp-data
 ```
 
 ### Run the full-stack
 
 ```bash
-# starts all services
+# starts all services (Redis, Postgres, etc.)
 docker compose up -d
 ```
 
@@ -159,35 +217,27 @@ npm run wallet:populate:oracle
 npm run dev
 ```
 
-
-
-### Run frontend only
-
-```bash
-npm run dev:dapp
-```
-
-### Install dependency
-
-```bash
-# run in project root folder
-npm install PACKAGE_NAME --workspace=NAME_OF_APP
-```
-
-### Update dependency
-
-```bash
-# run in project root folder
-npm update PACKAGE_NAME --workspace=NAME_OF_APP
-```
-
-### Uninstall dependency
-
-```bash
-# run in project root folder
-npm uninstall PACKAGE_NAME --workspace=NAME_OF_APP
-```
-
 ## User authentication
 
-![user auth flow](docs/user-authentication-flow.png)
+```mermaid
+sequenceDiagram
+    actor User
+    participant Frontend
+    participant Backend
+    participant Wallet
+
+    User->>Frontend: Initiate Login
+    Frontend->>Backend: Request Auth Challenge
+    Backend->>Backend: Generate Challenge
+    Backend-->>Frontend: Return Challenge
+    Frontend->>Wallet: Request Challenge Signing
+    Wallet->>User: Prompt for Approval
+    User->>Wallet: Approve Signing
+    Wallet-->>Frontend: Return Signed Challenge
+    Frontend->>Backend: Submit Signed Challenge
+    Backend->>Backend: Verify Signature
+    Backend->>Backend: Generate Session Token
+    Backend-->>Frontend: Return Session Token
+    Frontend->>Frontend: Store Session Token
+    Frontend-->>User: Show Logged In State
+```
