@@ -149,16 +149,17 @@ npm run db:build
 ```
 
 ```bash
+# Populate image oracle
+npm run db:seed &&\
+npm run wallet:populate:oracle
+```
+
+```bash
 # runs all applications in development mode
 npm run dev
 ```
 
-### Populate image oracle
 
-```bash
-npm run db:seed &&\
-npm run wallet:populate:oracle
-```
 
 ### Run frontend only
 
