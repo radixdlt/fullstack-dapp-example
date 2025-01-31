@@ -1,7 +1,7 @@
 <h1 style="text-align: center;">Fullstack dApp Example</h1>
 
 ## Description
-This repository contains source code for a stripped down version of RadQuest (radquest.io), an interactive onboarding platform for the Radix DeFi ecosystem. This codebase serves as a comprehensive example of building a full-stack decentralized application on Radix, featuring:
+This repository contains source code for a stripped down version of [RadQuest](https://radquest.io), an interactive onboarding platform for the Radix DeFi ecosystem. This codebase serves as a comprehensive example of building a full-stack decentralized application on Radix, featuring:
 - Multiple Scrypto components for on-chain functionality
 - A Svelte-based frontend application
 - Backend services for transaction monitoring and notifications
@@ -101,7 +101,7 @@ npm install
 
 ```bash
  ./setup.sh
-``
+```
 
 Above script iterates over all scrypto packages inside this repository and build them
 
@@ -190,25 +190,3 @@ npm uninstall PACKAGE_NAME --workspace=NAME_OF_APP
 ## User authentication
 
 ![user auth flow](docs/user-authentication-flow.png)
-
-### Folder structure
-
-```bash
-├── apps
-    ├── dapp
-    ├── notification
-    ├── transaction-stream
-    └── workers
-```
-
-### dApp
-
-Frontend and public API.
-
-### Transaction steam
-
-Ingests and filters through a live stream of transactions on the Radix network.
-
-### Workers
-
-Processors of items in message queues.
