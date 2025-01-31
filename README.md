@@ -130,25 +130,25 @@ npm run wallet:create:resources
 
 #### Replace the following resources in the `constants.ts` file
 ```json
-badges: {
-  adminBadgeAddress: 'resource_tdx_2_1t...,
-  superAdminBadgeAddress: 'resource_tdx_2_1t...,
-  heroBadgeAddress: 'resource_tdx_2_1n...,
-},
-resources: {
-  elementAddress: 'resource_tdx_2_1t...,
-  clamAddress: 'resource_tdx_2_1t...,
-  radgemAddress: 'resource_tdx_2_1n...,
-  morphEnergyCardAddress:
-    'resource_tdx_2_1n...,
-  radmorphAddress: 'resource_tdx_2_1n...,
-  ottercoinAddress:
-    'resource_tdx_2_1t...,
-  giftBox: {
-    Starter: 'resource_tdx_2_1t...,
-    Simple: 'resource_tdx_2_1t...,
-    Fancy: 'resource_tdx_2_1t...,
-    Elite: 'resource_tdx_2_1...'
+{
+  "badges": {
+    "adminBadgeAddress": "resource_tdx_2_1t...",
+    "superAdminBadgeAddress": "resource_tdx_2_1t...", 
+    "heroBadgeAddress": "resource_tdx_2_1n..."
+  },
+  "resources": {
+    "elementAddress": "resource_tdx_2_1t...",
+    "clamAddress": "resource_tdx_2_1t...",
+    "radgemAddress": "resource_tdx_2_1n...",
+    "morphEnergyCardAddress": "resource_tdx_2_1n...",
+    "radmorphAddress": "resource_tdx_2_1n...",
+    "ottercoinAddress": "resource_tdx_2_1t...",
+    "giftBox": {
+      "Starter": "resource_tdx_2_1t...",
+      "Simple": "resource_tdx_2_1t...",
+      "Fancy": "resource_tdx_2_1t...",
+      "Elite": "resource_tdx_2_1..."
+    }
   }
 }
 ```
@@ -162,25 +162,24 @@ npm run wallet:deploy-new:all
 #### Replace the following items in the `constants.ts` file
 ```json
 {
-  radquestPackage: 'package_tdx_2_1...',
-  heroBadgeForgeV2Package: 'package_tdx_2_1...',
-  questRewardsV2Package: 'package_tdx_2_1...',
-  cardForgeV2Package: 'package_tdx_2_1...',
-  giftBoxOpenerV2Package: 'package_tdx_2_1...',
-  radgemForgeV2Package: 'package_tdx_2_1...',
-  components: {
-    radgemForgeAddress: 'component_tdx_2_1...,
-    radmorphForgeAddress: 'component_tdx_2_1...,
-    imageOracleAddress: 'component_tdx_2_1...,
-    refineryAddress: 'component_tdx_2_1...,
-    heroBadgeForgeV2: 'component_tdx_2_1...,
-    questRewardsV2: 'component_tdx_2_1...,
-    cardForgeV2: 'component_tdx_2_1...,
-    giftBoxOpenerV2: 'component_tdx_2_1...,
-    radgemForgeV2: 'component_tdx_2_1...'
+  "radquestPackage": "package_tdx_2_1...",
+  "heroBadgeForgeV2Package": "package_tdx_2_1...", 
+  "questRewardsV2Package": "package_tdx_2_1...",
+  "cardForgeV2Package": "package_tdx_2_1...",
+  "giftBoxOpenerV2Package": "package_tdx_2_1...",
+  "radgemForgeV2Package": "package_tdx_2_1...",
+  "components": {
+    "radgemForgeAddress": "component_tdx_2_1...",
+    "radmorphForgeAddress": "component_tdx_2_1...",
+    "imageOracleAddress": "component_tdx_2_1...",
+    "refineryAddress": "component_tdx_2_1...",
+    "heroBadgeForgeV2": "component_tdx_2_1...",
+    "questRewardsV2": "component_tdx_2_1...",
+    "cardForgeV2": "component_tdx_2_1...",
+    "giftBoxOpenerV2": "component_tdx_2_1...",
+    "radgemForgeV2": "component_tdx_2_1..."
   }
 }
-
 ```
 
 ### Set dApp definition metadata
